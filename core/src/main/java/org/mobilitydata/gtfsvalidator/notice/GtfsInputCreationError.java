@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
@@ -23,8 +22,8 @@ import com.google.common.collect.ImmutableMap;
  * Describes a runtime exception while creating a @code{GtfsInput}
  */
 public class GtfsInputCreationError extends SystemError {
-    public GtfsInputCreationError(String exceptionClassName,
-                                  String message) {
+
+    public GtfsInputCreationError(String exceptionClassName, String message) {
         super(ImmutableMap.of("exception", exceptionClassName, "message", message));
     }
 

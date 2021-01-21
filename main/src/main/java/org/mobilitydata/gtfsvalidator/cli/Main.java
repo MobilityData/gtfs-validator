@@ -19,13 +19,6 @@ package org.mobilitydata.gtfsvalidator.cli;
 import com.beust.jcommander.JCommander;
 import com.google.common.base.Strings;
 import com.google.common.flogger.FluentLogger;
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.GtfsInputCreationError;
@@ -33,6 +26,14 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /** The main entry point for GTFS Validator CLI. */
 public class Main {
@@ -95,13 +96,15 @@ public class Main {
   /**
    * Generates and exports reports for both validation notices and system errors reports
    */
-  private static void generateAndExportReports(final Arguments args,
-                                               final NoticeContainer noticeContainer) {
+  private static void generateAndExportReports(
+          final Arguments args, final NoticeContainer noticeContainer) {
     new File(args.getOutputBase()).mkdirs();
     try {
-      Files.write(Paths.get(args.getOutputBase(), "report.json"),
+      Files.write(
+              Paths.get(args.getOutputBase(), "report.json"),
               noticeContainer.exportValidationNotices().getBytes(StandardCharsets.UTF_8));
-      Files.write(Paths.get(args.getOutputBase(), "system_errors.json"),
+      Files.write(
+              Paths.get(args.getOutputBase(), "system_errors.json"),
               noticeContainer.exportSystemErrors().getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store report files");
