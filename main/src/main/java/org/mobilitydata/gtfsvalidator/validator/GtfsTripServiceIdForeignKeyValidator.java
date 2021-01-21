@@ -28,42 +28,39 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 
 /**
- * Validates that service_id field in "trips.txt" references a valid service_id in "calendar.txt" or "calendar_date.txt".
- * <p>
- * Generated notice: {@link ForeignKeyError}.
+ * Validates that service_id field in "trips.txt" references a valid service_id in "calendar.txt" or
+ * "calendar_date.txt".
+ *
+ * <p>Generated notice: {@link ForeignKeyError}.
  */
 @GtfsValidator
 public class GtfsTripServiceIdForeignKeyValidator extends FileValidator {
-    @Inject
-    GtfsTripTableContainer tripContainer;
-    @Inject
-    GtfsCalendarTableContainer calendarContainer;
-    @Inject
-    GtfsCalendarDateTableContainer calendarDateContainer;
+  @Inject GtfsTripTableContainer tripContainer;
+  @Inject GtfsCalendarTableContainer calendarContainer;
+  @Inject GtfsCalendarDateTableContainer calendarDateContainer;
 
-    @Override
-    public void validate(NoticeContainer noticeContainer) {
-        for (GtfsTrip trip : tripContainer.getEntities()) {
-            String childKey = trip.serviceId();
-            if (!hasReferencedKey(childKey, calendarContainer, calendarDateContainer)) {
-                noticeContainer.addValidationNotice(new ForeignKeyError(
-                    GtfsCalendarDateTableLoader.FILENAME,
-                    GtfsCalendarDateTableLoader.SERVICE_ID_FIELD_NAME,
-                    GtfsCalendarTableLoader.FILENAME + " or " +
-                        GtfsCalendarDateTableLoader.FILENAME,
-                    GtfsCalendarTableLoader.SERVICE_ID_FIELD_NAME, childKey,
-                    trip.csvRowNumber()));
-            }
-        }
-
+  @Override
+  public void validate(NoticeContainer noticeContainer) {
+    for (GtfsTrip trip : tripContainer.getEntities()) {
+      String childKey = trip.serviceId();
+      if (!hasReferencedKey(childKey, calendarContainer, calendarDateContainer)) {
+        noticeContainer.addValidationNotice(
+            new ForeignKeyError(
+                GtfsCalendarDateTableLoader.FILENAME,
+                GtfsCalendarDateTableLoader.SERVICE_ID_FIELD_NAME,
+                GtfsCalendarTableLoader.FILENAME + " or " + GtfsCalendarDateTableLoader.FILENAME,
+                GtfsCalendarTableLoader.SERVICE_ID_FIELD_NAME,
+                childKey,
+                trip.csvRowNumber()));
+      }
     }
+  }
 
-    private boolean hasReferencedKey(String childKey,
-                                     GtfsCalendarTableContainer calendarContainer,
-                                     GtfsCalendarDateTableContainer calendarDateContainer) {
-        return calendarContainer.byServiceId(childKey) != null
-                || !calendarDateContainer.byServiceId(childKey).isEmpty();
-    }
-
+  private boolean hasReferencedKey(
+      String childKey,
+      GtfsCalendarTableContainer calendarContainer,
+      GtfsCalendarDateTableContainer calendarDateContainer) {
+    return calendarContainer.byServiceId(childKey) != null
+        || !calendarDateContainer.byServiceId(childKey).isEmpty();
+  }
 }
-

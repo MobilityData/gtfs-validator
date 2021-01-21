@@ -16,32 +16,32 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.table.GtfsFrequencyTableLoader.FILENAME;
+
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.StartAndEndTimeOutOfOrderNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFrequency;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
-import static org.mobilitydata.gtfsvalidator.table.GtfsFrequencyTableLoader.FILENAME;
-
 /**
- * Validates `frequencies.start_time` is before or equal to `frequencies.end_time` for a single entity.
- * <p>
- * Generated notice: {@link StartAndEndTimeOutOfOrderNotice}.
+ * Validates `frequencies.start_time` is before or equal to `frequencies.end_time` for a single
+ * entity.
+ *
+ * <p>Generated notice: {@link StartAndEndTimeOutOfOrderNotice}.
  */
 @GtfsValidator
 public class FrequencyTimeInOrderValidator extends SingleEntityValidator<GtfsFrequency> {
-    @Override
-    public void validate(GtfsFrequency frequency, NoticeContainer noticeContainer) {
-        // validate() will only be called if startTime and endTime have been populated for this frequency
-        GtfsTime startTime = frequency.startTime();
-        GtfsTime endTime = frequency.endTime();
-        if (startTime.isAfter(endTime)) {
-            noticeContainer.addValidationNotice(
-                new StartAndEndTimeOutOfOrderNotice(
-                    FILENAME, frequency.tripId(), frequency.csvRowNumber(),
-                    startTime, endTime));
-        }
+  @Override
+  public void validate(GtfsFrequency frequency, NoticeContainer noticeContainer) {
+    // validate() will only be called if startTime and endTime have been populated for this
+    // frequency
+    GtfsTime startTime = frequency.startTime();
+    GtfsTime endTime = frequency.endTime();
+    if (startTime.isAfter(endTime)) {
+      noticeContainer.addValidationNotice(
+          new StartAndEndTimeOutOfOrderNotice(
+              FILENAME, frequency.tripId(), frequency.csvRowNumber(), startTime, endTime));
     }
+  }
 }
-

@@ -25,24 +25,27 @@ import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
 
 /**
  * Validates that start_date <= end_date for all rows in "calendar.txt".
- * <p>
- * Generated notice: {@link StartAndEndDateOutOfOrderNotice}.
+ *
+ * <p>Generated notice: {@link StartAndEndDateOutOfOrderNotice}.
  */
 @GtfsValidator
 public class CalendarServiceDateValidator extends FileValidator {
-    @Inject
-    GtfsCalendarTableContainer calendarTable;
+  @Inject GtfsCalendarTableContainer calendarTable;
 
-    @Override
-    public void validate(NoticeContainer noticeContainer) {
-        for (GtfsCalendar calendar : calendarTable.getEntities()) {
-            if (calendar.hasStartDate() && calendar.hasEndDate() && calendar.startDate().isAfter(calendar.endDate())) {
-                noticeContainer.addValidationNotice(
-                    new StartAndEndDateOutOfOrderNotice(
-                        calendarTable.gtfsFilename(), calendar.serviceId(),
-                        calendar.csvRowNumber(), calendar.startDate(),
-                        calendar.endDate()));
-            }
-        }
+  @Override
+  public void validate(NoticeContainer noticeContainer) {
+    for (GtfsCalendar calendar : calendarTable.getEntities()) {
+      if (calendar.hasStartDate()
+          && calendar.hasEndDate()
+          && calendar.startDate().isAfter(calendar.endDate())) {
+        noticeContainer.addValidationNotice(
+            new StartAndEndDateOutOfOrderNotice(
+                calendarTable.gtfsFilename(),
+                calendar.serviceId(),
+                calendar.csvRowNumber(),
+                calendar.startDate(),
+                calendar.endDate()));
+      }
     }
+  }
 }

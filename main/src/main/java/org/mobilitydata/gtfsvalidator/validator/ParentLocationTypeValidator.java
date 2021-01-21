@@ -26,45 +26,47 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 
 /**
  * Validates `location_type` of the referenced `parent_station`.
- * <p>
- * Generated notice: {@link WrongParentLocationTypeNotice}.
+ *
+ * <p>Generated notice: {@link WrongParentLocationTypeNotice}.
  */
 @GtfsValidator
 public class ParentLocationTypeValidator extends FileValidator {
-    @Inject
-    GtfsStopTableContainer stopTable;
+  @Inject GtfsStopTableContainer stopTable;
 
-    private GtfsLocationType expectedParentLocationType(GtfsLocationType locationType) {
-        switch (locationType) {
-            case STOP:
-            case ENTRANCE:
-            case GENERIC_NODE:
-                return GtfsLocationType.STATION;
-            case BOARDING_AREA:
-                return GtfsLocationType.STOP;
-            default:
-                return GtfsLocationType.UNRECOGNIZED;
-        }
+  private GtfsLocationType expectedParentLocationType(GtfsLocationType locationType) {
+    switch (locationType) {
+      case STOP:
+      case ENTRANCE:
+      case GENERIC_NODE:
+        return GtfsLocationType.STATION;
+      case BOARDING_AREA:
+        return GtfsLocationType.STOP;
+      default:
+        return GtfsLocationType.UNRECOGNIZED;
     }
+  }
 
-    @Override
-    public void validate(NoticeContainer noticeContainer) {
-        for (GtfsStop location : stopTable.getEntities()) {
-            if (!location.hasParentStation()) {
-                continue;
-            }
-            GtfsStop parentLocation = stopTable.byStopId(location.parentStation());
-            GtfsLocationType expected = expectedParentLocationType(location.locationType());
-            if (expected != GtfsLocationType.UNRECOGNIZED && parentLocation.locationType() != expected) {
-                noticeContainer.addValidationNotice(
-                    new WrongParentLocationTypeNotice(
-                        location.csvRowNumber(), location.stopId(),
-                        location.stopName(), location.locationTypeValue(),
-                        parentLocation.csvRowNumber(), location.parentStation(),
-                        parentLocation.stopName(),
-                        parentLocation.locationTypeValue(),
-                        expected.getNumber()));
-            }
-        }
+  @Override
+  public void validate(NoticeContainer noticeContainer) {
+    for (GtfsStop location : stopTable.getEntities()) {
+      if (!location.hasParentStation()) {
+        continue;
+      }
+      GtfsStop parentLocation = stopTable.byStopId(location.parentStation());
+      GtfsLocationType expected = expectedParentLocationType(location.locationType());
+      if (expected != GtfsLocationType.UNRECOGNIZED && parentLocation.locationType() != expected) {
+        noticeContainer.addValidationNotice(
+            new WrongParentLocationTypeNotice(
+                location.csvRowNumber(),
+                location.stopId(),
+                location.stopName(),
+                location.locationTypeValue(),
+                parentLocation.csvRowNumber(),
+                location.parentStation(),
+                parentLocation.stopName(),
+                parentLocation.locationTypeValue(),
+                expected.getNumber()));
+      }
     }
+  }
 }

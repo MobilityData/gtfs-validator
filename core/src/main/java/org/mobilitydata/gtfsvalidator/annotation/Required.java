@@ -23,8 +23,8 @@ import java.lang.annotation.Target;
 
 /**
  * Adds a validation that the field or a file is required.
- * <p>
- * Example.
+ *
+ * <p>Example.
  *
  * <pre>
  *   @GtfsTable("agency.txt")
@@ -40,5 +40,4 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-public @interface Required {
-}
+public @interface Required {}
