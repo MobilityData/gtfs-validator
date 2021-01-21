@@ -64,6 +64,7 @@ public class AgencyConsistencyValidator extends FileValidator {
         boolean hasLanguage = agencyTable.getEntities().get(0).hasAgencyLang();
         Locale commonLanguage = agencyTable.getEntities().get(0).agencyLang();
         // Timezone and language must be the same for all agencies.
+        // FIXME: agencies could have different languages. This related to #549.
         for (int i = 1; i < agencyCount; ++i) {
             GtfsAgency agency = agencyTable.getEntities().get(i);
             if (!commonTimezone.equals(agency.agencyTimezone())) {
