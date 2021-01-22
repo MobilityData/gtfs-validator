@@ -16,116 +16,143 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static com.google.common.truth.Truth.assertThat;
+
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.RouteColorContrastNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
-import org.mockito.ArgumentCaptor;
-
-import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
 
 public class RouteColorContrastValidatorTest {
 
-    @Test
-    public void noRouteColorShouldNotGenerateNotice() {
-        NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-        GtfsRoute mockRoute = mock(GtfsRoute.class);
-        when(mockRoute.hasRouteColor()).thenReturn(false);
+  public static GtfsRoute createRoute(
+      long csvRowNumber,
+      String routeId,
+      String agencyId,
+      String routeShortName,
+      String routeLongName,
+      String routeDesc,
+      int routeType,
+      String routeUrl,
+      GtfsColor routeColor,
+      GtfsColor routeTextColor,
+      int continuousPickup,
+      int continuousDropOff) {
+    return new GtfsRoute.Builder()
+        .setCsvRowNumber(csvRowNumber)
+        .setRouteId(routeId)
+        .setAgencyId(agencyId)
+        .setRouteShortName(routeShortName)
+        .setRouteLongName(routeLongName)
+        .setRouteDesc(routeDesc)
+        .setRouteType(routeType)
+        .setRouteUrl(routeUrl)
+        .setRouteColor(routeColor)
+        .setRouteTextColor(routeTextColor)
+        .setContinuousPickup(continuousPickup)
+        .setContinuousDropOff(continuousDropOff)
+        .build();
+  }
 
-        RouteColorContrastValidator underTest = new RouteColorContrastValidator();
+  @Test
+  public void noRouteColorShouldNotGenerateNotice() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsRoute route =
+        createRoute(
+            2,
+            "route id value",
+            "agency id value",
+            "route short name value",
+            "route long name value",
+            "route desc value",
+            2,
+            "route url value",
+            null,
+            GtfsColor.fromInt(222),
+            1,
+            1);
 
-        underTest.validate(mockRoute, mockNoticeContainer);
+    RouteColorContrastValidator underTest = new RouteColorContrastValidator();
+    underTest.validate(route, noticeContainer);
+    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+  }
 
-        verifyNoInteractions(mockNoticeContainer);
-        verify(mockRoute, times(1)).hasRouteColor();
-        verifyNoMoreInteractions(mockRoute);
-    }
+  @Test
+  public void noRouteTextColorShouldNotGenerateNotice() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsRoute route =
+        createRoute(
+            2,
+            "route id value",
+            "agency id value",
+            "route short name value",
+            "route long name value",
+            "route desc value",
+            2,
+            "route url value",
+            GtfsColor.fromInt(222),
+            null,
+            1,
+            1);
 
-    @Test
-    public void noRouteTextColorShouldNotGenerateNotice() {
-        NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-        GtfsRoute mockRoute = mock(GtfsRoute.class);
-        when(mockRoute.hasRouteColor()).thenReturn(true);
-        when(mockRoute.hasRouteTextColor()).thenReturn(false);
+    RouteColorContrastValidator underTest = new RouteColorContrastValidator();
+    underTest.validate(route, noticeContainer);
+    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+  }
 
-        RouteColorContrastValidator underTest = new RouteColorContrastValidator();
+  @Test
+  public void contrastingRouteColorAndRouteTextColorShouldNotGenerateNotice() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    // route.route_color: white
+    // route.route_text_color: black
+    GtfsRoute route =
+        createRoute(
+            2,
+            "route id value",
+            "agency id value",
+            "route short name value",
+            "route long name value",
+            "route desc value",
+            2,
+            "route url value",
+            GtfsColor.fromString("ffffff"),
+            GtfsColor.fromString("000000"),
+            1,
+            1);
 
-        underTest.validate(mockRoute, mockNoticeContainer);
+    RouteColorContrastValidator underTest = new RouteColorContrastValidator();
+    underTest.validate(route, noticeContainer);
+    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+  }
 
-        verifyNoInteractions(mockNoticeContainer);
-        verify(mockRoute, times(1)).hasRouteColor();
-        verify(mockRoute, times(1)).hasRouteTextColor();
-        verifyNoMoreInteractions(mockRoute);
-    }
+  @Test
+  public void nonContrastingRouteColorAndRouteTextColorShouldGenerateNotice() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsRoute route =
+        createRoute(
+            2,
+            "route id value",
+            "agency id value",
+            "route short name value",
+            "route long name value",
+            "route desc value",
+            2,
+            "route url value",
+            GtfsColor.fromString("4a4444"),
+            GtfsColor.fromString("3d3838"),
+            1,
+            1);
 
-    @Test
-    public void contrastingRouteColorAndRouteTextColorShouldNotGenerateNotice() {
-        NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-        GtfsRoute mockRoute = mock(GtfsRoute.class);
-        when(mockRoute.hasRouteColor()).thenReturn(true);
-        when(mockRoute.hasRouteTextColor()).thenReturn(true);
-        GtfsColor mockColor = mock(GtfsColor.class);
-        when(mockColor.rec601Luma()).thenReturn(100, 20);
-        when(mockRoute.routeTextColor()).thenReturn(mockColor);
-        when(mockRoute.routeColor()).thenReturn(mockColor);
+    RouteColorContrastValidator underTest = new RouteColorContrastValidator();
+    underTest.validate(route, noticeContainer);
 
-        RouteColorContrastValidator underTest = new RouteColorContrastValidator();
-
-        underTest.validate(mockRoute, mockNoticeContainer);
-
-        verifyNoInteractions(mockNoticeContainer);
-        verify(mockRoute, times(1)).hasRouteColor();
-        verify(mockRoute, times(1)).hasRouteTextColor();
-        verify(mockRoute, times(1)).routeColor();
-        verify(mockRoute, times(1)).routeTextColor();
-        verify(mockColor, times(2)).rec601Luma();
-        verifyNoMoreInteractions(mockRoute, mockColor);
-    }
-
-    @Test
-    public void nonContrastingRouteColorAndRouteTextColorShouldGenerateNotice() {
-        NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-        GtfsRoute mockRoute = mock(GtfsRoute.class);
-        when(mockRoute.hasRouteColor()).thenReturn(true);
-        when(mockRoute.hasRouteTextColor()).thenReturn(true);
-        when(mockRoute.routeId()).thenReturn("route id value");
-        when(mockRoute.csvRowNumber()).thenReturn(2L);
-        GtfsColor mockColor = mock(GtfsColor.class);
-        when(mockColor.rec601Luma()).thenReturn(100, 80);
-        when(mockColor.toHtmlColor()).thenReturn("route color value", "route text color value");
-        when(mockRoute.routeTextColor()).thenReturn(mockColor);
-        when(mockRoute.routeColor()).thenReturn(mockColor);
-
-        RouteColorContrastValidator underTest = new RouteColorContrastValidator();
-
-        underTest.validate(mockRoute, mockNoticeContainer);
-
-        final ArgumentCaptor<RouteColorContrastNotice> captor =
-                ArgumentCaptor.forClass(RouteColorContrastNotice.class);
-
-        verify(mockNoticeContainer, times(1)).addValidationNotice(captor.capture());
-        RouteColorContrastNotice notice = captor.getValue();
-        assertThat(notice.getCode()).matches("route_color_contrast");
-        assertThat(notice.getContext()).containsEntry("routeId","route id value" );
-        assertThat(notice.getContext()).containsEntry("csvRowNumber", 2L);
-        assertThat(notice.getContext()).containsEntry("routeColor", "route color value");
-        assertThat(notice.getContext()).containsEntry("routeTextColor", "route text color value");
-
-        verify(mockRoute, times(1)).routeId();
-        verify(mockRoute, times(1)).csvRowNumber();
-        verify(mockRoute, times(1)).hasRouteColor();
-        verify(mockRoute, times(1)).hasRouteTextColor();
-        verify(mockRoute, times(2)).routeColor();
-        verify(mockRoute, times(2)).routeTextColor();
-        verify(mockColor, times(2)).rec601Luma();
-        verify(mockColor, times(2)).toHtmlColor();
-        verifyNoMoreInteractions(mockRoute, mockColor);
-    }
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactly(
+            new RouteColorContrastNotice(
+                "route id value",
+                2,
+                GtfsColor.fromString("4a4444"),
+                GtfsColor.fromString("3d3838")));
+  }
 }
