@@ -19,25 +19,33 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * The values of the given key and rows of one table cannot be found a values of the given key in another table.
- * <p>
- * This is the case when a foreign key of one table references a non-existing value in its original table.
+ * The values of the given key and rows of one table cannot be found a values of the given key in
+ * another table.
+ *
+ * <p>This is the case when a foreign key of one table references a non-existing value in its
+ * original table.
  */
 public class ForeignKeyError extends ValidationNotice {
-    public ForeignKeyError(String childFilename, String childFieldName,
-                           String parentFilename, String parentFieldName,
-                           String fieldValue, long csvRowNumber) {
-        super(new ImmutableMap.Builder<String, Object>().
-                put("childFilename", childFilename)
-                .put("childFieldName", childFieldName)
-                .put("parentFilename", parentFilename)
-                .put("parentFieldName", parentFieldName)
-                .put("fieldValue", fieldValue)
-                .put("csvRowNumber", csvRowNumber).build());
-    }
+  public ForeignKeyError(
+      String childFilename,
+      String childFieldName,
+      String parentFilename,
+      String parentFieldName,
+      String fieldValue,
+      long csvRowNumber) {
+    super(
+        new ImmutableMap.Builder<String, Object>()
+            .put("childFilename", childFilename)
+            .put("childFieldName", childFieldName)
+            .put("parentFilename", parentFilename)
+            .put("parentFieldName", parentFieldName)
+            .put("fieldValue", fieldValue)
+            .put("csvRowNumber", csvRowNumber)
+            .build());
+  }
 
-    @Override
-    public String getCode() {
-        return "foreign_key_error";
-    }
+  @Override
+  public String getCode() {
+    return "foreign_key_error";
+  }
 }

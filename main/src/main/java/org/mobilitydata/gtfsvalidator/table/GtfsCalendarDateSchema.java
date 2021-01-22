@@ -27,14 +27,14 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 @GtfsTable("calendar_dates.txt")
 @ConditionallyRequired
 public interface GtfsCalendarDateSchema extends GtfsEntity {
-    @FieldType(FieldTypeEnum.ID)
-    @Required
-    @Index
-    String serviceId();
+  @FieldType(FieldTypeEnum.ID)
+  @Required
+  @Index
+  String serviceId();
 
-    @Required
-    GtfsDate date();
+  @Required
+  GtfsDate date();
 
-    @Required
-    GtfsCalendarDateExceptionType exceptionType();
+  @Required
+  GtfsCalendarDateExceptionType exceptionType();
 }

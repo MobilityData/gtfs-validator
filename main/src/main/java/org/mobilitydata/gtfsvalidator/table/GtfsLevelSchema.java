@@ -24,13 +24,13 @@ import org.mobilitydata.gtfsvalidator.annotation.Required;
 
 @GtfsTable("levels.txt")
 public interface GtfsLevelSchema extends GtfsEntity {
-    @FieldType(FieldTypeEnum.ID)
-    @PrimaryKey
-    @Required
-    String levelId();
+  @FieldType(FieldTypeEnum.ID)
+  @PrimaryKey
+  @Required
+  String levelId();
 
-    @Required
-    double levelIndex();
+  @Required
+  double levelIndex();
 
-    String levelName();
+  String levelName();
 }
