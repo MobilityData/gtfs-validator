@@ -16,6 +16,9 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static com.google.common.truth.Truth.assertThat;
+
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -27,78 +30,74 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 
-import java.util.List;
-
-import static com.google.common.truth.Truth.assertThat;
-
 @RunWith(JUnit4.class)
 public class LocationTypeSingleEntityValidatorTest {
-    private List<ValidationNotice> validateStop(GtfsStop stop) {
-        NoticeContainer container = new NoticeContainer();
-        LocationTypeSingleEntityValidator validator = new LocationTypeSingleEntityValidator();
-        validator.validate(stop, container);
-        return container.getValidationNotices();
+  private List<ValidationNotice> validateStop(GtfsStop stop) {
+    NoticeContainer container = new NoticeContainer();
+    LocationTypeSingleEntityValidator validator = new LocationTypeSingleEntityValidator();
+    validator.validate(stop, container);
+    return container.getValidationNotices();
+  }
+
+  @Test
+  public void stationWithParentStation() {
+    GtfsStop.Builder builder =
+        new GtfsStop.Builder()
+            .setStopId("s0")
+            .setCsvRowNumber(1)
+            .setStopName("Stop 0")
+            .setLocationType(GtfsLocationType.STATION.getNumber());
+
+    assertThat(validateStop(builder.build())).isEmpty();
+
+    builder.setParentStation("parent");
+    assertThat(validateStop(builder.build()))
+        .containsExactly(new StationWithParentStationNotice(1, "s0", "Stop 0", "parent"));
+  }
+
+  @Test
+  public void platformWithoutParentStation() {
+    // A GTFS stop with platform_code field should have parent_station.
+    GtfsStop.Builder builder =
+        new GtfsStop.Builder()
+            .setStopId("s0")
+            .setCsvRowNumber(1)
+            .setStopName("Stop 0")
+            .setLocationType(GtfsLocationType.STOP.getNumber())
+            .setPlatformCode("1")
+            .setParentStation("parent");
+
+    assertThat(validateStop(builder.build())).isEmpty();
+
+    builder.setParentStation(null);
+    assertThat(validateStop(builder.build()))
+        .containsExactly(new PlatformWithoutParentStationNotice(1, "s0", "Stop 0"));
+
+    // A GTFS stop without platform_code may be an isolated stop and may have no parent_station.
+    builder.setPlatformCode(null);
+    assertThat(validateStop(builder.build())).isEmpty();
+  }
+
+  @Test
+  public void locationWithoutParentStationNotice() {
+    for (GtfsLocationType locationType :
+        new GtfsLocationType[] {
+          GtfsLocationType.ENTRANCE, GtfsLocationType.GENERIC_NODE, GtfsLocationType.BOARDING_AREA
+        }) {
+      GtfsStop.Builder builder =
+          new GtfsStop.Builder()
+              .setStopId("s0")
+              .setCsvRowNumber(1)
+              .setStopName("Stop 0")
+              .setLocationType(locationType.getNumber())
+              .setParentStation("parent");
+
+      assertThat(validateStop(builder.build())).isEmpty();
+
+      builder.setParentStation(null);
+      assertThat(validateStop(builder.build()))
+          .containsExactly(
+              new LocationWithoutParentStationNotice(1, "s0", "Stop 0", locationType.getNumber()));
     }
-
-    @Test
-    public void stationWithParentStation() {
-        GtfsStop.Builder builder =
-            new GtfsStop.Builder()
-                .setStopId("s0")
-                .setCsvRowNumber(1)
-                .setStopName("Stop 0")
-                .setLocationType(GtfsLocationType.STATION.getNumber());
-
-        assertThat(validateStop(builder.build())).isEmpty();
-
-        builder.setParentStation("parent");
-        assertThat(validateStop(builder.build()))
-            .containsExactly(new StationWithParentStationNotice(
-                1, "s0", "Stop 0", "parent"));
-    }
-
-    @Test
-    public void platformWithoutParentStation() {
-        // A GTFS stop with platform_code field should have parent_station.
-        GtfsStop.Builder builder =
-            new GtfsStop.Builder()
-                .setStopId("s0")
-                .setCsvRowNumber(1)
-                .setStopName("Stop 0")
-                .setLocationType(GtfsLocationType.STOP.getNumber())
-                .setPlatformCode("1")
-                .setParentStation("parent");
-
-        assertThat(validateStop(builder.build())).isEmpty();
-
-        builder.setParentStation(null);
-        assertThat(validateStop(builder.build()))
-            .containsExactly(
-                new PlatformWithoutParentStationNotice(1, "s0", "Stop 0"));
-
-        // A GTFS stop without platform_code may be an isolated stop and may have no parent_station.
-        builder.setPlatformCode(null);
-        assertThat(validateStop(builder.build())).isEmpty();
-    }
-
-    @Test
-    public void locationWithoutParentStationNotice() {
-        for (GtfsLocationType locationType : new GtfsLocationType[]{GtfsLocationType.ENTRANCE,
-                GtfsLocationType.GENERIC_NODE, GtfsLocationType.BOARDING_AREA}) {
-            GtfsStop.Builder builder =
-                new GtfsStop.Builder()
-                    .setStopId("s0")
-                    .setCsvRowNumber(1)
-                    .setStopName("Stop 0")
-                    .setLocationType(locationType.getNumber())
-                    .setParentStation("parent");
-
-            assertThat(validateStop(builder.build())).isEmpty();
-
-            builder.setParentStation(null);
-            assertThat(validateStop(builder.build()))
-                .containsExactly(new LocationWithoutParentStationNotice(
-                    1, "s0", "Stop 0", locationType.getNumber()));
-        }
-    }
+  }
 }

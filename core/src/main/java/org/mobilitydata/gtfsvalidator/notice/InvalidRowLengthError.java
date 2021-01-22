@@ -18,21 +18,19 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * A row in the input file has a different number of values than specified by the CSV header.
- */
+/** A row in the input file has a different number of values than specified by the CSV header. */
 public class InvalidRowLengthError extends ValidationNotice {
-    public InvalidRowLengthError(String filename, long csvRowNumber, int rowLength, int headerCount) {
-        super(ImmutableMap.of(
-                "filename", filename,
-                "csvRowNumber", csvRowNumber,
-                "rowLength", rowLength,
-                "headerCount", headerCount
-        ));
-    }
+  public InvalidRowLengthError(String filename, long csvRowNumber, int rowLength, int headerCount) {
+    super(
+        ImmutableMap.of(
+            "filename", filename,
+            "csvRowNumber", csvRowNumber,
+            "rowLength", rowLength,
+            "headerCount", headerCount));
+  }
 
-    @Override
-    public String getCode() {
-        return "invalid_row_length";
-    }
+  @Override
+  public String getCode() {
+    return "invalid_row_length";
+  }
 }

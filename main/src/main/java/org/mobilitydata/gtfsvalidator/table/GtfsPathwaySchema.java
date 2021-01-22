@@ -28,42 +28,42 @@ import org.mobilitydata.gtfsvalidator.annotation.Required;
 
 @GtfsTable("pathways.txt")
 public interface GtfsPathwaySchema extends GtfsEntity {
-    @FieldType(FieldTypeEnum.ID)
-    @PrimaryKey
-    @Required
-    String pathwayId();
+  @FieldType(FieldTypeEnum.ID)
+  @PrimaryKey
+  @Required
+  String pathwayId();
 
-    @FieldType(FieldTypeEnum.ID)
-    @Required
-    @ForeignKey(table = "stops.txt", field = "stop_id")
-    String fromStopId();
+  @FieldType(FieldTypeEnum.ID)
+  @Required
+  @ForeignKey(table = "stops.txt", field = "stop_id")
+  String fromStopId();
 
-    @FieldType(FieldTypeEnum.ID)
-    @Required
-    @ForeignKey(table = "stops.txt", field = "stop_id")
-    String toStopId();
+  @FieldType(FieldTypeEnum.ID)
+  @Required
+  @ForeignKey(table = "stops.txt", field = "stop_id")
+  String toStopId();
 
-    @Required
-    GtfsPathwayMode pathwayMode();
+  @Required
+  GtfsPathwayMode pathwayMode();
 
-    @Required
-    int isBidirectional();
+  @Required
+  int isBidirectional();
 
-    @NonNegative
-    double length();
+  @NonNegative
+  double length();
 
-    @Positive
-    int traversalTime();
+  @Positive
+  int traversalTime();
 
-    @NonZero
-    int stairCount();
+  @NonZero
+  int stairCount();
 
-    double maxSlope();
+  double maxSlope();
 
-    @Positive
-    double minWidth();
+  @Positive
+  double minWidth();
 
-    String signpostedAs();
+  String signpostedAs();
 
-    String reversedSignpostedAs();
+  String reversedSignpostedAs();
 }
