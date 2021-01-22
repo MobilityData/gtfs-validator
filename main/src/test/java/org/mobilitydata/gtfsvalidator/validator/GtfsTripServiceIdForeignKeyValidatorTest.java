@@ -17,119 +17,130 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableLoader.SERVICE_ID_FIELD_NAME;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
-import org.junit.Before;
+import java.util.Set;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.ForeignKeyError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDate;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableLoader;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableLoader;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mobilitydata.gtfsvalidator.type.GtfsDate;
+import org.mobilitydata.gtfsvalidator.util.CalendarUtilTest;
 
 public class GtfsTripServiceIdForeignKeyValidatorTest {
-  @Mock final GtfsTripTableContainer mockTripTable = mock(GtfsTripTableContainer.class);
-  @Mock final GtfsCalendarTableContainer mockCalendarTable = mock(GtfsCalendarTableContainer.class);
+  static final Set<DayOfWeek> weekDays =
+      ImmutableSet.of(
+          DayOfWeek.MONDAY,
+          DayOfWeek.TUESDAY,
+          DayOfWeek.WEDNESDAY,
+          DayOfWeek.THURSDAY,
+          DayOfWeek.FRIDAY);
 
-  @Mock
-  final GtfsCalendarDateTableContainer mockCalendarDateTable =
-      mock(GtfsCalendarDateTableContainer.class);
+  private static GtfsTripTableContainer createTripTable(
+      NoticeContainer noticeContainer, List<GtfsTrip> entities) {
+    return GtfsTripTableContainer.forEntities(entities, noticeContainer);
+  }
 
-  @InjectMocks
-  final GtfsTripServiceIdForeignKeyValidator underTest = new GtfsTripServiceIdForeignKeyValidator();
+  public static GtfsTrip createTrip(
+      long csvRowNumber, String routeId, String serviceId, String tripId, String shapeId) {
+    return new GtfsTrip.Builder()
+        .setCsvRowNumber(csvRowNumber)
+        .setRouteId(routeId)
+        .setServiceId(serviceId)
+        .setTripId(tripId)
+        .setShapeId(shapeId)
+        .build();
+  }
 
-  @Before
-  public void openMocks() {
-    MockitoAnnotations.openMocks(this);
+  private static GtfsCalendarTableContainer createCalendarTable(
+      NoticeContainer noticeContainer, List<GtfsCalendar> entities) {
+
+    return GtfsCalendarTableContainer.forEntities(entities, noticeContainer);
+  }
+
+  public static GtfsCalendarDate createCalendarDate(
+      long csvRowNumber, String serviceId, GtfsDate date, int exceptionType) {
+    return new GtfsCalendarDate.Builder()
+        .setCsvRowNumber(csvRowNumber)
+        .setServiceId(serviceId)
+        .setDate(date)
+        .setExceptionType(exceptionType)
+        .build();
+  }
+
+  private static GtfsCalendarDateTableContainer createCalendarDateTable(
+      NoticeContainer noticeContainer, List<GtfsCalendarDate> entities) {
+
+    return GtfsCalendarDateTableContainer.forEntities(entities, noticeContainer);
   }
 
   @Test
   public void tripServiceIdInCalendarTableShouldNotGenerateNotice() {
-    NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-    GtfsTrip mockTrip = mock(GtfsTrip.class);
-    when(mockTrip.serviceId()).thenReturn("service id value");
-    List<GtfsTrip> tripCollection = new ArrayList<>();
-    tripCollection.add(mockTrip);
-    GtfsCalendar mockCalendar = mock(GtfsCalendar.class);
-    when(mockTripTable.getEntities()).thenReturn(tripCollection);
-    when(mockCalendarTable.byServiceId("service id value")).thenReturn(mockCalendar);
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsTripServiceIdForeignKeyValidator underTest = new GtfsTripServiceIdForeignKeyValidator();
+    underTest.calendarContainer =
+        createCalendarTable(
+            noticeContainer,
+            ImmutableList.of(
+                CalendarUtilTest.createGtfsCalendar(
+                    "WEEK", LocalDate.of(2021, 1, 14), LocalDate.of(2021, 1, 10), weekDays)));
+    underTest.tripContainer =
+        createTripTable(
+            noticeContainer,
+            ImmutableList.of(createTrip(1, "route id", "WEEK", "trip id", "shape id")));
+    underTest.calendarDateContainer = createCalendarDateTable(noticeContainer, ImmutableList.of());
 
-    underTest.validate(mockNoticeContainer);
-
-    verifyNoInteractions(mockNoticeContainer);
-    verify(mockCalendarTable, times(1)).byServiceId("service id value");
-    //noinspection ResultOfMethodCallIgnored stubbed method
-    verify(mockTripTable, times(1)).getEntities();
+    underTest.validate(noticeContainer);
+    assertThat(noticeContainer.getValidationNotices()).isEmpty();
   }
 
   @Test
   public void tripServiceIdInCalendarDateTableShouldNotGenerateNotice() {
-    NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-    GtfsTrip mockTrip = mock(GtfsTrip.class);
-    when(mockTrip.serviceId()).thenReturn("service id value");
-    List<GtfsTrip> tripCollection = new ArrayList<>();
-    tripCollection.add(mockTrip);
-    GtfsCalendarDate mockCalendarDate = mock(GtfsCalendarDate.class);
-    when(mockTripTable.getEntities()).thenReturn(tripCollection);
-    when(mockCalendarDateTable.byServiceId("service id value"))
-        .thenReturn(Collections.singletonList(mockCalendarDate));
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsTripServiceIdForeignKeyValidator underTest = new GtfsTripServiceIdForeignKeyValidator();
+    underTest.calendarContainer = createCalendarTable(noticeContainer, ImmutableList.of());
+    underTest.tripContainer =
+        createTripTable(
+            noticeContainer,
+            ImmutableList.of(createTrip(1, "route id", "WEEK", "trip id", "shape id")));
+    underTest.calendarDateContainer =
+        createCalendarDateTable(
+            noticeContainer,
+            ImmutableList.of(createCalendarDate(2, "WEEK", GtfsDate.fromEpochDay(24354), 2)));
 
-    underTest.validate(mockNoticeContainer);
-
-    verifyNoInteractions(mockNoticeContainer);
-    verify(mockCalendarTable, times(1)).byServiceId("service id value");
-    //noinspection ResultOfMethodCallIgnored stubbed method
-    verify(mockTripTable, times(1)).getEntities();
+    underTest.validate(noticeContainer);
+    assertThat(noticeContainer.getValidationNotices()).isEmpty();
   }
 
   @Test
   public void tripServiceIdNotInDataShouldGenerateNotice() {
-    NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-    GtfsTrip mockTrip = mock(GtfsTrip.class);
-    when(mockTrip.serviceId()).thenReturn("service id value");
-    when(mockTrip.csvRowNumber()).thenReturn(2L);
-    List<GtfsTrip> tripCollection = new ArrayList<>();
-    tripCollection.add(mockTrip);
-    when(mockTripTable.getEntities()).thenReturn(tripCollection);
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsTripServiceIdForeignKeyValidator underTest = new GtfsTripServiceIdForeignKeyValidator();
+    underTest.calendarContainer = createCalendarTable(noticeContainer, ImmutableList.of());
+    underTest.tripContainer =
+        createTripTable(
+            noticeContainer,
+            ImmutableList.of(createTrip(1, "route id", "WEEK", "trip id", "shape id")));
+    underTest.calendarDateContainer = createCalendarDateTable(noticeContainer, ImmutableList.of());
 
-    underTest.validate(mockNoticeContainer);
-
-    ArgumentCaptor<ForeignKeyError> captor = ArgumentCaptor.forClass(ForeignKeyError.class);
-
-    verify(mockNoticeContainer, times(1)).addValidationNotice(captor.capture());
-    ForeignKeyError notice = captor.getValue();
-    assertThat(notice.getCode()).matches("foreign_key_error");
-    assertThat(notice.getContext())
-        .containsEntry("childFilename", GtfsCalendarDateTableLoader.FILENAME);
-    assertThat(notice.getContext()).containsEntry("childFieldName", SERVICE_ID_FIELD_NAME);
-    assertThat(notice.getContext())
-        .containsEntry(
-            "parentFilename",
-            GtfsCalendarTableLoader.FILENAME + " or " + GtfsCalendarDateTableLoader.FILENAME);
-    assertThat(notice.getContext())
-        .containsEntry("parentFieldName", GtfsCalendarTableLoader.SERVICE_ID_FIELD_NAME);
-    assertThat(notice.getContext()).containsEntry("fieldValue", "service id value");
-    assertThat(notice.getContext()).containsEntry("csvRowNumber", 2L);
-
-    verify(mockCalendarTable, times(1)).byServiceId("service id value");
-    //noinspection ResultOfMethodCallIgnored stubbed method
-    verify(mockTripTable, times(1)).getEntities();
+    underTest.validate(noticeContainer);
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactly(
+            new ForeignKeyError(
+                "calendar_dates.txt",
+                "service_id",
+                "calendar.txt or calendar_dates.txt",
+                "service_id",
+                "WEEK",
+                1));
   }
 }
