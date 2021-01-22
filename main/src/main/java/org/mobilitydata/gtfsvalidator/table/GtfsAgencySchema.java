@@ -16,6 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import java.time.ZoneId;
+import java.util.Locale;
 import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
 import org.mobilitydata.gtfsvalidator.annotation.FieldType;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
@@ -23,35 +25,32 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
 
-import java.time.ZoneId;
-import java.util.Locale;
-
 @GtfsTable("agency.txt")
 @Required
 public interface GtfsAgencySchema extends GtfsEntity {
-    @FieldType(FieldTypeEnum.ID)
-    @PrimaryKey
-    @ConditionallyRequired
-    String agencyId();
+  @FieldType(FieldTypeEnum.ID)
+  @PrimaryKey
+  @ConditionallyRequired
+  String agencyId();
 
-    @Required
-    String agencyName();
+  @Required
+  String agencyName();
 
-    @FieldType(FieldTypeEnum.URL)
-    @Required
-    String agencyUrl();
+  @FieldType(FieldTypeEnum.URL)
+  @Required
+  String agencyUrl();
 
-    @Required
-    ZoneId agencyTimezone();
+  @Required
+  ZoneId agencyTimezone();
 
-    Locale agencyLang();
+  Locale agencyLang();
 
-    @FieldType(FieldTypeEnum.PHONE_NUMBER)
-    String agencyPhone();
+  @FieldType(FieldTypeEnum.PHONE_NUMBER)
+  String agencyPhone();
 
-    @FieldType(FieldTypeEnum.URL)
-    String agencyFareUrl();
+  @FieldType(FieldTypeEnum.URL)
+  String agencyFareUrl();
 
-    @FieldType(FieldTypeEnum.EMAIL)
-    String agencyEmail();
+  @FieldType(FieldTypeEnum.EMAIL)
+  String agencyEmail();
 }

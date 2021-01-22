@@ -28,37 +28,37 @@ import org.mobilitydata.gtfsvalidator.annotation.Required;
 @GtfsTable("trips.txt")
 @Required
 public interface GtfsTripSchema extends GtfsEntity {
-    @FieldType(FieldTypeEnum.ID)
-    @Required
-    @PrimaryKey
-    String tripId();
+  @FieldType(FieldTypeEnum.ID)
+  @Required
+  @PrimaryKey
+  String tripId();
 
-    @FieldType(FieldTypeEnum.ID)
-    @Required
-    @ForeignKey(table = "routes.txt", field = "route_id")
-    String routeId();
+  @FieldType(FieldTypeEnum.ID)
+  @Required
+  @ForeignKey(table = "routes.txt", field = "route_id")
+  String routeId();
 
-    @FieldType(FieldTypeEnum.ID)
-    @Required
-    String serviceId();
+  @FieldType(FieldTypeEnum.ID)
+  @Required
+  String serviceId();
 
-    String tripHeadsign();
+  String tripHeadsign();
 
-    String tripShortName();
+  String tripShortName();
 
-    GtfsTripDirectionId directionId();
+  GtfsTripDirectionId directionId();
 
-    @FieldType(FieldTypeEnum.ID)
-    @Index
-    String blockId();
+  @FieldType(FieldTypeEnum.ID)
+  @Index
+  String blockId();
 
-    @FieldType(FieldTypeEnum.ID)
-    @ForeignKey(table = "shapes.txt", field = "shape_id")
-    @Index
-    @ConditionallyRequired
-    String shapeId();
+  @FieldType(FieldTypeEnum.ID)
+  @ForeignKey(table = "shapes.txt", field = "shape_id")
+  @Index
+  @ConditionallyRequired
+  String shapeId();
 
-    GtfsWheelchairBoarding wheelchairAccessible();
+  GtfsWheelchairBoarding wheelchairAccessible();
 
-    GtfsBikesAllowed bikesAllowed();
+  GtfsBikesAllowed bikesAllowed();
 }

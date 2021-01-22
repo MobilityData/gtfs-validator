@@ -19,22 +19,20 @@ package org.mobilitydata.gtfsvalidator.notice;
 import java.util.Map;
 
 /**
- * SystemError is the base class for all notices related to retrieving and
- * processing a GTFS feed. The system errors are not related to the content of
- * the feed itself.
- * <p>
- * System errors include internal errors in the validator
- * (e.g., runtime exceptions) and failure to download or to store a feed.
- * <p>
- * Users should not normally inherit from this class. All validators written by
- * users should generate subclasses of {@link ValidationNotice}.
- * <p>
- * A validation-as-a-service solution should not share system errors with
- * external clients because that may leak internal information. Only validation
- * notices should be shared.
+ * SystemError is the base class for all notices related to retrieving and processing a GTFS feed.
+ * The system errors are not related to the content of the feed itself.
+ *
+ * <p>System errors include internal errors in the validator (e.g., runtime exceptions) and failure
+ * to download or to store a feed.
+ *
+ * <p>Users should not normally inherit from this class. All validators written by users should
+ * generate subclasses of {@link ValidationNotice}.
+ *
+ * <p>A validation-as-a-service solution should not share system errors with external clients
+ * because that may leak internal information. Only validation notices should be shared.
  */
 public abstract class SystemError extends Notice {
-    public SystemError(Map<String, Object> context) {
-        super(context);
-    }
+  public SystemError(Map<String, Object> context) {
+    super(context);
+  }
 }
