@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * Describes a runtime exception while creating a @code{GtfsInput}
+ * Describes a runtime exception while creating a code{@GtfsInput}.
  */
 public class GtfsInputCreationError extends SystemError {
 
