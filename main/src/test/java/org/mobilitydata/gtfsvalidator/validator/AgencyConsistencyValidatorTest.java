@@ -1,237 +1,195 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
 
+import com.google.common.collect.ImmutableList;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import org.junit.Before;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableLoader;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 public class AgencyConsistencyValidatorTest {
-  @Mock final GtfsAgencyTableContainer mockAgencyTable = mock(GtfsAgencyTableContainer.class);
-  @InjectMocks final AgencyConsistencyValidator underTest = new AgencyConsistencyValidator();
 
-  @Before
-  public void openMocks() {
-    MockitoAnnotations.openMocks(this);
+  private static GtfsAgencyTableContainer createAgencyTable(
+      NoticeContainer noticeContainer, List<GtfsAgency> entities) {
+    return GtfsAgencyTableContainer.forEntities(entities, noticeContainer);
   }
 
-  @Test
-  public void noMoreThanTwoAgenciesShouldNotGenerateNotice() {
-    NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-    when(mockAgencyTable.entityCount()).thenReturn(1);
-
-    underTest.validate(mockNoticeContainer);
-    verifyNoInteractions(mockNoticeContainer);
+  public static GtfsAgency createAgency(
+      long csvRowNumber,
+      String agencyId,
+      String agencyName,
+      String agencyUrl,
+      ZoneId agencyTimezone,
+      Locale agencyLang) {
+    return new GtfsAgency.Builder()
+        .setCsvRowNumber(csvRowNumber)
+        .setAgencyId(agencyId)
+        .setAgencyName(agencyName)
+        .setAgencyUrl(agencyUrl)
+        .setAgencyTimezone(agencyTimezone)
+        .setAgencyLang(agencyLang)
+        .build();
   }
 
   @Test
   public void multipleAgenciesPresentButNoAgencyIdSetShouldGenerateNotice() {
-    NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-    when(mockAgencyTable.entityCount()).thenReturn(2);
-    List<GtfsAgency> agencyCollection = new ArrayList<>();
-    GtfsAgency mockAgency0 = mock(GtfsAgency.class);
-    when(mockAgency0.hasAgencyId()).thenReturn(true);
-    when(mockAgency0.hasAgencyLang()).thenReturn(true);
-    when(mockAgency0.agencyTimezone()).thenReturn(ZoneId.systemDefault());
-    when(mockAgency0.agencyLang()).thenReturn(Locale.forLanguageTag("en"));
-    GtfsAgency mockAgency1 = mock(GtfsAgency.class);
-    when(mockAgency1.hasAgencyId()).thenReturn(false);
-    when(mockAgency1.hasAgencyLang()).thenReturn(true);
-    when(mockAgency1.agencyTimezone()).thenReturn(ZoneId.systemDefault());
-    when(mockAgency1.agencyLang()).thenReturn(Locale.forLanguageTag("en"));
-    when(mockAgency1.csvRowNumber()).thenReturn(1L);
-    agencyCollection.add(mockAgency0);
-    agencyCollection.add(mockAgency1);
+    NoticeContainer noticeContainer = new NoticeContainer();
+    AgencyConsistencyValidator underTest = new AgencyConsistencyValidator();
+    underTest.agencyTable =
+        createAgencyTable(
+            noticeContainer,
+            ImmutableList.of(
+                createAgency(
+                    0,
+                    "first agency",
+                    "agency name",
+                    "url value",
+                    ZoneId.of("America/Montreal"),
+                    Locale.CANADA),
+                createAgency(
+                    1,
+                    null,
+                    "agency name",
+                    "url value",
+                    ZoneId.of("America/Montreal"),
+                    Locale.CANADA)));
 
-    when(mockAgencyTable.gtfsFilename()).thenReturn("agency.txt");
-    when(mockAgencyTable.getEntities()).thenReturn(agencyCollection);
-
-    underTest.validate(mockNoticeContainer);
-
-    final ArgumentCaptor<MissingRequiredFieldError> captor =
-        ArgumentCaptor.forClass(MissingRequiredFieldError.class);
-
-    verify(mockNoticeContainer, times(1)).addValidationNotice(captor.capture());
-    MissingRequiredFieldError notice = captor.getValue();
-
-    assertThat(notice.getCode()).matches("missing_required_field");
-    assertThat(notice.getContext()).containsEntry("filename", "agency.txt");
-    assertThat(notice.getContext()).containsEntry("csvRowNumber", 1L);
-    assertThat(notice.getContext())
-        .containsEntry("fieldName", GtfsAgencyTableLoader.AGENCY_ID_FIELD_NAME);
-    verify(mockAgencyTable, times(1)).entityCount();
-    //noinspection ResultOfMethodCallIgnored stubbed method
-    verify(mockAgencyTable, times(5)).getEntities();
-    verify(mockAgencyTable, times(1)).gtfsFilename();
-    verify(mockAgency1, times(1)).csvRowNumber();
-    verify(mockAgency0, times(1)).hasAgencyId();
-    verify(mockAgency0, times(1)).hasAgencyLang();
-    verify(mockAgency0, times(1)).agencyTimezone();
-    verify(mockAgency0, times(1)).agencyLang();
-    verify(mockAgency1, times(1)).hasAgencyId();
-    verify(mockAgency1, times(1)).agencyTimezone();
-    verify(mockAgency1, times(2)).hasAgencyLang();
-    verify(mockAgency1, times(1)).agencyLang();
-
-    verifyNoMoreInteractions(mockAgencyTable, mockAgency0, mockAgency1, mockNoticeContainer);
+    underTest.validate(noticeContainer);
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactly(new MissingRequiredFieldError("agency.txt", 1, "agency_id"));
   }
 
   @Test
   public void agenciesWithDifferentTimezoneShouldGenerateNotice() {
-    NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-    when(mockAgencyTable.entityCount()).thenReturn(2);
-    List<GtfsAgency> agencyCollection = new ArrayList<>();
-    GtfsAgency mockAgency0 = mock(GtfsAgency.class);
-    when(mockAgency0.hasAgencyId()).thenReturn(true);
-    when(mockAgency0.hasAgencyLang()).thenReturn(true);
-    when(mockAgency0.agencyTimezone()).thenReturn(ZoneId.of("America/Bogota"));
-    when(mockAgency0.agencyLang()).thenReturn(Locale.forLanguageTag("en"));
-    GtfsAgency mockAgency1 = mock(GtfsAgency.class);
-    when(mockAgency1.hasAgencyId()).thenReturn(true);
-    when(mockAgency1.hasAgencyLang()).thenReturn(true);
-    when(mockAgency1.agencyTimezone()).thenReturn(ZoneId.of("America/Montreal"));
-    when(mockAgency1.agencyLang()).thenReturn(Locale.forLanguageTag("en"));
-    when(mockAgency1.csvRowNumber()).thenReturn(1L);
-    agencyCollection.add(mockAgency0);
-    agencyCollection.add(mockAgency1);
+    NoticeContainer noticeContainer = new NoticeContainer();
+    AgencyConsistencyValidator underTest = new AgencyConsistencyValidator();
+    underTest.agencyTable =
+        createAgencyTable(
+            noticeContainer,
+            ImmutableList.of(
+                createAgency(
+                    0,
+                    "first agency",
+                    "first agency name",
+                    "first url value",
+                    ZoneId.of("America/Bogota"),
+                    Locale.CANADA),
+                createAgency(
+                    1,
+                    "second agency",
+                    "second agency name",
+                    "second url value",
+                    ZoneId.of("America/Montreal"),
+                    Locale.CANADA)));
 
-    when(mockAgencyTable.gtfsFilename()).thenReturn("agency.txt");
-    when(mockAgencyTable.getEntities()).thenReturn(agencyCollection);
-
-    underTest.validate(mockNoticeContainer);
-
-    final ArgumentCaptor<InconsistentAgencyFieldNotice> captor =
-        ArgumentCaptor.forClass(InconsistentAgencyFieldNotice.class);
-
-    verify(mockNoticeContainer, times(1)).addValidationNotice(captor.capture());
-    InconsistentAgencyFieldNotice notice = captor.getValue();
-
-    assertThat(notice.getCode()).matches("inconsistent_agency_field");
-    assertThat(notice.getContext()).containsEntry("csvRowNumber", 1L);
-    assertThat(notice.getContext())
-        .containsEntry("fieldName", GtfsAgencyTableLoader.AGENCY_TIMEZONE_FIELD_NAME);
-    assertThat(notice.getContext()).containsEntry("expected", "America/Bogota");
-    assertThat(notice.getContext()).containsEntry("actual", "America/Montreal");
-    verify(mockAgencyTable, times(1)).entityCount();
-    //noinspection ResultOfMethodCallIgnored stubbed method
-    verify(mockAgencyTable, times(5)).getEntities();
-    verify(mockAgency1, times(1)).csvRowNumber();
-    verify(mockAgency0, times(1)).hasAgencyId();
-    verify(mockAgency0, times(1)).hasAgencyLang();
-    verify(mockAgency0, times(1)).agencyTimezone();
-    verify(mockAgency0, times(1)).agencyLang();
-    verify(mockAgency1, times(1)).hasAgencyId();
-    verify(mockAgency1, times(2)).agencyTimezone();
-    verify(mockAgency1, times(2)).hasAgencyLang();
-    verify(mockAgency1, times(1)).agencyLang();
-
-    verifyNoMoreInteractions(mockAgencyTable, mockAgency0, mockAgency1, mockNoticeContainer);
+    underTest.validate(noticeContainer);
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactly(
+            new InconsistentAgencyFieldNotice(
+                1, "agency_timezone", "America/Bogota", "America/Montreal"));
   }
 
   @Test
   public void agenciesWithSameTimezoneShouldNotGenerateNotice() {
-    NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-    when(mockAgencyTable.entityCount()).thenReturn(2);
-    List<GtfsAgency> agencyCollection = new ArrayList<>();
-    GtfsAgency mockAgency0 = mock(GtfsAgency.class);
-    when(mockAgency0.hasAgencyId()).thenReturn(true);
-    when(mockAgency0.hasAgencyLang()).thenReturn(true);
-    when(mockAgency0.agencyTimezone()).thenReturn(ZoneId.of("America/Bogota"));
-    when(mockAgency0.agencyLang()).thenReturn(Locale.forLanguageTag("en"));
-    GtfsAgency mockAgency1 = mock(GtfsAgency.class);
-    when(mockAgency1.hasAgencyId()).thenReturn(true);
-    when(mockAgency1.hasAgencyLang()).thenReturn(true);
-    when(mockAgency1.agencyTimezone()).thenReturn(ZoneId.of("America/Bogota"));
-    when(mockAgency1.agencyLang()).thenReturn(Locale.forLanguageTag("en"));
-    when(mockAgency1.csvRowNumber()).thenReturn(1L);
-    agencyCollection.add(mockAgency0);
-    agencyCollection.add(mockAgency1);
+    NoticeContainer noticeContainer = new NoticeContainer();
+    AgencyConsistencyValidator underTest = new AgencyConsistencyValidator();
+    underTest.agencyTable =
+        createAgencyTable(
+            noticeContainer,
+            ImmutableList.of(
+                createAgency(
+                    0,
+                    "first agency",
+                    "first agency name",
+                    "first url value",
+                    ZoneId.of("America/Montreal"),
+                    Locale.CANADA),
+                createAgency(
+                    1,
+                    "second agency",
+                    "second agency name",
+                    "second url value",
+                    ZoneId.of("America/Montreal"),
+                    Locale.CANADA)));
 
-    when(mockAgencyTable.gtfsFilename()).thenReturn("agency.txt");
-    when(mockAgencyTable.getEntities()).thenReturn(agencyCollection);
-
-    underTest.validate(mockNoticeContainer);
-
-    verifyNoInteractions(mockNoticeContainer);
-
-    verify(mockAgencyTable, times(1)).entityCount();
-    //noinspection ResultOfMethodCallIgnored stubbed method
-    verify(mockAgencyTable, times(5)).getEntities();
-    verify(mockAgency0, times(1)).hasAgencyId();
-    verify(mockAgency0, times(1)).hasAgencyLang();
-    verify(mockAgency0, times(1)).agencyTimezone();
-    verify(mockAgency0, times(1)).agencyLang();
-    verify(mockAgency1, times(1)).hasAgencyId();
-    verify(mockAgency1, times(1)).agencyTimezone();
-    verify(mockAgency1, times(2)).hasAgencyLang();
-    verify(mockAgency1, times(1)).agencyLang();
-
-    verifyNoMoreInteractions(mockAgencyTable, mockAgency0, mockAgency1, mockNoticeContainer);
+    underTest.validate(noticeContainer);
+    assertThat(noticeContainer.getValidationNotices()).isEmpty();
   }
 
-  @SuppressWarnings("EmptyMethod") // will be implemented later
   @Test
-  public void agenciesWithDifferentLanguagesShouldNotGenerateNotice() {
-    // TODO: implement after discussion on #549 and #560
+  public void agenciesWithDifferentLanguagesShouldGenerateNotice() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    AgencyConsistencyValidator underTest = new AgencyConsistencyValidator();
+    underTest.agencyTable =
+        createAgencyTable(
+            noticeContainer,
+            ImmutableList.of(
+                createAgency(
+                    0,
+                    "first agency",
+                    "first agency name",
+                    "first url value",
+                    ZoneId.of("America/Montreal"),
+                    Locale.CANADA),
+                createAgency(
+                    1,
+                    "second agency",
+                    "second agency name",
+                    "second url value",
+                    ZoneId.of("America/Montreal"),
+                    Locale.FRANCE)));
+
+    underTest.validate(noticeContainer);
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactly(new InconsistentAgencyFieldNotice(1, "agency_lang", "en", "fr"));
   }
 
   @Test
   public void agenciesWithSameLanguagesShouldNotGenerateNotice() {
-    NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-    when(mockAgencyTable.entityCount()).thenReturn(2);
-    List<GtfsAgency> agencyCollection = new ArrayList<>();
-    GtfsAgency mockAgency0 = mock(GtfsAgency.class);
-    when(mockAgency0.hasAgencyId()).thenReturn(true);
-    when(mockAgency0.hasAgencyLang()).thenReturn(true);
-    when(mockAgency0.agencyTimezone()).thenReturn(ZoneId.of("America/Chicago"));
-    when(mockAgency0.agencyLang()).thenReturn(Locale.forLanguageTag("en"));
-    GtfsAgency mockAgency1 = mock(GtfsAgency.class);
-    when(mockAgency1.hasAgencyId()).thenReturn(true);
-    when(mockAgency1.hasAgencyLang()).thenReturn(true);
-    when(mockAgency1.agencyTimezone()).thenReturn(ZoneId.of("America/Chicago"));
-    when(mockAgency1.agencyLang()).thenReturn(Locale.forLanguageTag("en"));
-    when(mockAgency1.csvRowNumber()).thenReturn(1L);
-    agencyCollection.add(mockAgency0);
-    agencyCollection.add(mockAgency1);
+    NoticeContainer noticeContainer = new NoticeContainer();
+    AgencyConsistencyValidator underTest = new AgencyConsistencyValidator();
+    underTest.agencyTable =
+        createAgencyTable(
+            noticeContainer,
+            ImmutableList.of(
+                createAgency(
+                    0,
+                    "first agency",
+                    "first agency name",
+                    "first url value",
+                    ZoneId.of("America/Montreal"),
+                    Locale.CANADA),
+                createAgency(
+                    1,
+                    "second agency",
+                    "second agency name",
+                    "second url value",
+                    ZoneId.of("America/Montreal"),
+                    Locale.CANADA)));
 
-    when(mockAgencyTable.gtfsFilename()).thenReturn("agency.txt");
-    when(mockAgencyTable.getEntities()).thenReturn(agencyCollection);
-
-    underTest.validate(mockNoticeContainer);
-
-    verifyNoInteractions(mockNoticeContainer);
-
-    verify(mockAgencyTable, times(1)).entityCount();
-    //noinspection ResultOfMethodCallIgnored stubbed method
-    verify(mockAgencyTable, times(5)).getEntities();
-    verify(mockAgency0, times(1)).hasAgencyId();
-    verify(mockAgency0, times(1)).hasAgencyLang();
-    verify(mockAgency0, times(1)).agencyTimezone();
-    verify(mockAgency0, times(1)).agencyLang();
-    verify(mockAgency1, times(1)).hasAgencyId();
-    verify(mockAgency1, times(1)).agencyTimezone();
-    verify(mockAgency1, times(2)).hasAgencyLang();
-    verify(mockAgency1, times(1)).agencyLang();
-
-    verifyNoMoreInteractions(mockAgencyTable, mockAgency0, mockAgency1, mockNoticeContainer);
+    underTest.validate(noticeContainer);
+    assertThat(noticeContainer.getValidationNotices()).isEmpty();
   }
 }
