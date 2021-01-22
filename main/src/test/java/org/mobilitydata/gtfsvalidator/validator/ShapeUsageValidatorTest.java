@@ -17,16 +17,9 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
+import com.google.common.collect.ImmutableList;
 import java.util.List;
-import org.junit.Before;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.UnusedShapeNotice;
@@ -34,71 +27,95 @@ import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 public class ShapeUsageValidatorTest {
-  @Mock final GtfsShapeTableContainer mockShapeTable = mock(GtfsShapeTableContainer.class);
-  @Mock final GtfsTripTableContainer mockTripTable = mock(GtfsTripTableContainer.class);
-  @InjectMocks final ShapeUsageValidator underTest = new ShapeUsageValidator();
 
-  @Before
-  public void openMocks() {
-    MockitoAnnotations.openMocks(this);
+  private static GtfsShapeTableContainer createShapeTable(
+      NoticeContainer noticeContainer, List<GtfsShape> entities) {
+    return GtfsShapeTableContainer.forEntities(entities, noticeContainer);
+  }
+
+  private static GtfsTripTableContainer createTripTable(
+      NoticeContainer noticeContainer, List<GtfsTrip> entities) {
+    return GtfsTripTableContainer.forEntities(entities, noticeContainer);
+  }
+
+  public static GtfsShape createShapePoint(
+      long csvRowNumber,
+      String shapeId,
+      double shapePtLat,
+      double shapePtLon,
+      int shapePtSequence,
+      double shapeDistTraveled) {
+    return new GtfsShape.Builder()
+        .setCsvRowNumber(csvRowNumber)
+        .setShapeId(shapeId)
+        .setShapePtLat(shapePtLat)
+        .setShapePtLon(shapePtLon)
+        .setShapePtSequence(shapePtSequence)
+        .setShapeDistTraveled(shapeDistTraveled)
+        .build();
+  }
+
+  public static GtfsTrip createTrip(
+      long csvRowNumber, String routeId, String serviceId, String tripId, String shapeId) {
+    return new GtfsTrip.Builder()
+        .setCsvRowNumber(csvRowNumber)
+        .setRouteId(routeId)
+        .setServiceId(serviceId)
+        .setTripId(tripId)
+        .setShapeId(shapeId)
+        .build();
   }
 
   @Test
   public void allShapeUsedShouldNotGenerateNotice() {
-    NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-    GtfsShape mockShape = mock(GtfsShape.class);
-    when(mockShape.shapeId()).thenReturn("shape id value");
-    List<GtfsShape> shapeCollection = new ArrayList<>();
-    shapeCollection.add(mockShape);
-    when(mockShapeTable.getEntities()).thenReturn(shapeCollection);
-    GtfsTrip mockTrip = mock(GtfsTrip.class);
-    List<GtfsTrip> tripCollection = new ArrayList<>();
-    tripCollection.add(mockTrip);
-    when(mockTripTable.byShapeId("shape id value")).thenReturn(tripCollection);
+    NoticeContainer noticeContainer = new NoticeContainer();
+    ShapeUsageValidator underTest = new ShapeUsageValidator();
 
-    underTest.validate(mockNoticeContainer);
+    underTest.shapeTable =
+        createShapeTable(
+            noticeContainer,
+            ImmutableList.of(
+                createShapePoint(1, "first shape id", 45.0d, 45.0d, 2, 40.0d),
+                createShapePoint(3, "second shape id", 45.0d, 45.0d, 2, 40.0d)));
+    underTest.tripTable =
+        createTripTable(
+            noticeContainer,
+            ImmutableList.of(
+                createTrip(
+                    2, "route id value", "service id value", "first trip id", "first shape id"),
+                createTrip(
+                    4,
+                    "other route id value",
+                    "other service id value",
+                    "second trip id",
+                    "second shape id")));
 
-    verifyNoInteractions(mockNoticeContainer, mockTrip);
-    //noinspection ResultOfMethodCallIgnored stubbed method
-    verify(mockShapeTable, times(1)).getEntities();
-    verify(mockShape, times(1)).shapeId();
-    verify(mockTripTable, times(1)).byShapeId("shape id value");
-    verifyNoMoreInteractions(mockTrip, mockShape, mockShapeTable);
+    underTest.validate(noticeContainer);
+    assertThat(noticeContainer.getValidationNotices()).isEmpty();
   }
 
   @Test
   public void unusedShapeShouldGenerateNotice() {
-    NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-    GtfsShape mockShape = mock(GtfsShape.class);
-    when(mockShape.shapeId()).thenReturn("shape id value");
-    when(mockShape.csvRowNumber()).thenReturn(2L);
-    List<GtfsShape> shapeCollection = new ArrayList<>();
-    shapeCollection.add(mockShape);
-    when(mockShapeTable.getEntities()).thenReturn(shapeCollection);
-    List<GtfsTrip> tripCollection = new ArrayList<>();
-    when(mockTripTable.byShapeId("shape id value")).thenReturn(tripCollection);
+    NoticeContainer noticeContainer = new NoticeContainer();
+    ShapeUsageValidator underTest = new ShapeUsageValidator();
 
-    underTest.validate(mockNoticeContainer);
+    underTest.shapeTable =
+        createShapeTable(
+            noticeContainer,
+            ImmutableList.of(
+                createShapePoint(1, "first shape id", 45.0d, 45.0d, 2, 40.0d),
+                createShapePoint(3, "second shape id", 45.0d, 45.0d, 2, 40.0d)));
+    underTest.tripTable =
+        createTripTable(
+            noticeContainer,
+            ImmutableList.of(
+                createTrip(
+                    2, "route id value", "service id value", "first trip id", "first shape id")));
 
-    ArgumentCaptor<UnusedShapeNotice> captor = ArgumentCaptor.forClass(UnusedShapeNotice.class);
-
-    verify(mockNoticeContainer, times(1)).addValidationNotice(captor.capture());
-    UnusedShapeNotice notice = captor.getValue();
-    assertThat(notice.getCode()).matches("unused_shape");
-    assertThat(notice.getContext()).containsEntry("shapeId", "shape id value");
-    assertThat(notice.getContext()).containsEntry("csvRowNumber", 2L);
-
-    //noinspection ResultOfMethodCallIgnored stubbed method
-    verify(mockShapeTable, times(1)).getEntities();
-    verify(mockShape, times(1)).shapeId();
-    verify(mockTripTable, times(1)).byShapeId("shape id value");
-    verify(mockShape, times(1)).csvRowNumber();
-    verifyNoMoreInteractions(mockShape, mockShapeTable);
+    underTest.validate(noticeContainer);
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactly(new UnusedShapeNotice("second shape id", 3));
   }
 }
