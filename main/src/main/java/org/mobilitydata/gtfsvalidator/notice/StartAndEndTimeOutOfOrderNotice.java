@@ -17,25 +17,22 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 public class StartAndEndTimeOutOfOrderNotice extends ValidationNotice {
-    public StartAndEndTimeOutOfOrderNotice(String filename,
-                                           String entityId,
-                                           long csvRowNumber,
-                                           GtfsTime startTime,
-                                           GtfsTime endTime) {
-        super(ImmutableMap.of(
-                "filename", filename,
-                "csvRowNumber", csvRowNumber,
-                "entityId", entityId,
-                "startTime", startTime.toHHMMSS(),
-                "endTime", endTime.toHHMMSS()));
-    }
+  public StartAndEndTimeOutOfOrderNotice(
+      String filename, String entityId, long csvRowNumber, GtfsTime startTime, GtfsTime endTime) {
+    super(
+        ImmutableMap.of(
+            "filename", filename,
+            "csvRowNumber", csvRowNumber,
+            "entityId", entityId,
+            "startTime", startTime.toHHMMSS(),
+            "endTime", endTime.toHHMMSS()));
+  }
 
-    @Override
-    public String getCode() {
-        return "start_and_end_time_out_of_order";
-    }
+  @Override
+  public String getCode() {
+    return "start_and_end_time_out_of_order";
+  }
 }

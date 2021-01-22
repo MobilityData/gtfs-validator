@@ -27,45 +27,44 @@ import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 
-
 @GtfsTable("routes.txt")
 @Required
 public interface GtfsRouteSchema extends GtfsEntity {
-    @FieldType(FieldTypeEnum.ID)
-    @PrimaryKey
-    @Required
-    String routeId();
+  @FieldType(FieldTypeEnum.ID)
+  @PrimaryKey
+  @Required
+  String routeId();
 
-    @FieldType(FieldTypeEnum.ID)
-    @ForeignKey(table = "agency.txt", field = "agency_id")
-    @ConditionallyRequired
-    String agencyId();
+  @FieldType(FieldTypeEnum.ID)
+  @ForeignKey(table = "agency.txt", field = "agency_id")
+  @ConditionallyRequired
+  String agencyId();
 
-    @ConditionallyRequired
-    String routeShortName();
+  @ConditionallyRequired
+  String routeShortName();
 
-    @ConditionallyRequired
-    String routeLongName();
+  @ConditionallyRequired
+  String routeLongName();
 
-    String routeDesc();
+  String routeDesc();
 
-    GtfsRouteType routeType();
+  GtfsRouteType routeType();
 
-    @FieldType(FieldTypeEnum.URL)
-    String routeUrl();
+  @FieldType(FieldTypeEnum.URL)
+  String routeUrl();
 
-    @DefaultValue("FFFFFF")
-    GtfsColor routeColor();
+  @DefaultValue("FFFFFF")
+  GtfsColor routeColor();
 
-    @DefaultValue("000000")
-    GtfsColor routeTextColor();
+  @DefaultValue("000000")
+  GtfsColor routeTextColor();
 
-    @NonNegative
-    int routeSortOrder();
+  @NonNegative
+  int routeSortOrder();
 
-    @DefaultValue("1")
-    GtfsContinuousPickupDropOff continuousPickup();
+  @DefaultValue("1")
+  GtfsContinuousPickupDropOff continuousPickup();
 
-    @DefaultValue("1")
-    GtfsContinuousPickupDropOff continuousDropOff();
+  @DefaultValue("1")
+  GtfsContinuousPickupDropOff continuousDropOff();
 }

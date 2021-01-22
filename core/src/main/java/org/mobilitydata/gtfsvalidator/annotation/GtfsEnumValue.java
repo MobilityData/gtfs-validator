@@ -23,12 +23,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Specifies a value for a GTFS enum. This information will be used to generate the actual Java class for the enum.
- * <p>
- * This annotation should be applied to an interface called ${TypeName}Enum and the annotation processor creates a
- * ${TypeName} Java enum for it.
- * <p>
- * Example. Annotation processor creates {@code GtfsLocationType} for the given schema.
+ * Specifies a value for a GTFS enum. This information will be used to generate the actual Java
+ * class for the enum.
+ *
+ * <p>This annotation should be applied to an interface called ${TypeName}Enum and the annotation
+ * processor creates a ${TypeName} Java enum for it.
+ *
+ * <p>Example. Annotation processor creates {@code GtfsLocationType} for the given schema.
  *
  * <pre>
  *   @GtfsEnumValue(name = "STOP", value = 0)
@@ -44,7 +45,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 @Repeatable(GtfsEnumValues.class)
 public @interface GtfsEnumValue {
-    String name();
+  String name();
 
-    int value();
+  int value();
 }
