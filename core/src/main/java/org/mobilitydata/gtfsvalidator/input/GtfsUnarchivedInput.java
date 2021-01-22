@@ -25,30 +25,29 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * Implements support for unarchived GTFS directories.
- */
+/** Implements support for unarchived GTFS directories. */
 public class GtfsUnarchivedInput extends GtfsInput {
-    private final Set<String> filenames;
-    private final Path directory;
+  private final Set<String> filenames;
+  private final Path directory;
 
-    public GtfsUnarchivedInput(Path directory) throws IOException {
-        this.directory = directory;
-        try (Stream<Path> stream = Files.list(directory)) {
-            this.filenames = stream
-                    .filter(Files::isRegularFile)
-                    .map(x -> x.getFileName().toString())
-                    .collect(Collectors.toSet());
-        }
+  public GtfsUnarchivedInput(Path directory) throws IOException {
+    this.directory = directory;
+    try (Stream<Path> stream = Files.list(directory)) {
+      this.filenames =
+          stream
+              .filter(Files::isRegularFile)
+              .map(x -> x.getFileName().toString())
+              .collect(Collectors.toSet());
     }
+  }
 
-    @Override
-    public Set<String> getFilenames() {
-        return Collections.unmodifiableSet(filenames);
-    }
+  @Override
+  public Set<String> getFilenames() {
+    return Collections.unmodifiableSet(filenames);
+  }
 
-    @Override
-    public InputStream getFile(String filename) throws IOException {
-        return Files.newInputStream(directory.resolve(filename));
-    }
+  @Override
+  public InputStream getFile(String filename) throws IOException {
+    return Files.newInputStream(directory.resolve(filename));
+  }
 }

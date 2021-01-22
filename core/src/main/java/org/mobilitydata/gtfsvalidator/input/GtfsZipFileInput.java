@@ -28,45 +28,42 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-/**
- * Implements support for GTFS ZIP archives.
- */
+/** Implements support for GTFS ZIP archives. */
 public class GtfsZipFileInput extends GtfsInput {
-    private final Set<String> filenames = new HashSet();
-    private final ZipFile zipFile;
+  private final Set<String> filenames = new HashSet();
+  private final ZipFile zipFile;
 
-    public GtfsZipFileInput(File file) throws IOException {
-        zipFile = new ZipFile(file);
-        for (Enumeration<? extends ZipEntry> i = zipFile.entries(); i
-                .hasMoreElements(); ) {
-            ZipEntry entry = i.nextElement();
-            if (!isInsideZipDirectory(entry)) {
-                filenames.add(entry.getName());
-            }
-        }
+  public GtfsZipFileInput(File file) throws IOException {
+    zipFile = new ZipFile(file);
+    for (Enumeration<? extends ZipEntry> i = zipFile.entries(); i.hasMoreElements(); ) {
+      ZipEntry entry = i.nextElement();
+      if (!isInsideZipDirectory(entry)) {
+        filenames.add(entry.getName());
+      }
     }
+  }
 
-    static boolean isInsideZipDirectory(ZipEntry entry) {
-        // We do not use File.separator because the .zip file specification states:
-        // All slashes MUST be forward slashes '/' as opposed to backwards slashes '\' for compatibility with Amiga and
-        // UNIX file systems etc.
-        //
-        // Directory names in end with '/'.
-        return entry.getName().contains("/");
-    }
+  static boolean isInsideZipDirectory(ZipEntry entry) {
+    // We do not use File.separator because the .zip file specification states:
+    // All slashes MUST be forward slashes '/' as opposed to backwards slashes '\' for compatibility
+    // with Amiga and
+    // UNIX file systems etc.
+    //
+    // Directory names in end with '/'.
+    return entry.getName().contains("/");
+  }
 
-    @Override
-    public Set<String> getFilenames() {
-        return Collections.unmodifiableSet(filenames);
-    }
+  @Override
+  public Set<String> getFilenames() {
+    return Collections.unmodifiableSet(filenames);
+  }
 
-    @Override
-    public InputStream getFile(String filename) throws IOException {
-        ZipEntry entry = zipFile.getEntry(filename);
-        if (entry == null) {
-            throw new FileNotFoundException(
-                    Paths.get(zipFile.getName(), filename).toString());
-        }
-        return zipFile.getInputStream(entry);
+  @Override
+  public InputStream getFile(String filename) throws IOException {
+    ZipEntry entry = zipFile.getEntry(filename);
+    if (entry == null) {
+      throw new FileNotFoundException(Paths.get(zipFile.getName(), filename).toString());
     }
+    return zipFile.getInputStream(entry);
+  }
 }

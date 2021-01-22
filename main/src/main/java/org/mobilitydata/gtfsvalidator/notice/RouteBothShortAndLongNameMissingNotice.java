@@ -18,19 +18,17 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * Both short_name and long_name are missing for a route.
- */
+/** Both short_name and long_name are missing for a route. */
 public class RouteBothShortAndLongNameMissingNotice extends ValidationNotice {
-    public RouteBothShortAndLongNameMissingNotice(String routeId,
-                                                  long csvRowNumber) {
-        super(ImmutableMap.of(
-                "routeId", routeId,
-                "csvRowNumber", csvRowNumber));
-    }
+  public RouteBothShortAndLongNameMissingNotice(String routeId, long csvRowNumber) {
+    super(
+        ImmutableMap.of(
+            "routeId", routeId,
+            "csvRowNumber", csvRowNumber));
+  }
 
-    @Override
-    public String getCode() {
-        return "route_both_short_and_long_name_missing";
-    }
+  @Override
+  public String getCode() {
+    return "route_both_short_and_long_name_missing";
+  }
 }

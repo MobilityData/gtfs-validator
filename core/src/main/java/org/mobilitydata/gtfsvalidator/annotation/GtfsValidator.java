@@ -22,9 +22,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotates both custom and automatically generated validators to make them discoverable on the fly.
- * <p>
- * Example.
+ * Annotates both custom and automatically generated validators to make them discoverable on the
+ * fly.
+ *
+ * <p>Example.
  *
  * <pre>
  *   @GtfsValidator
@@ -40,5 +41,4 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface GtfsValidator {
-}
+public @interface GtfsValidator {}

@@ -23,10 +23,10 @@ import java.lang.annotation.Target;
 
 /**
  * Injects a table container to a validator.
- * <p>
- * This annotation should be placed on a public or a package-visible member field.
- * <p>
- * Example.
+ *
+ * <p>This annotation should be placed on a public or a package-visible member field.
+ *
+ * <p>Example.
  *
  * <pre>
  *   @GtfsValidator
@@ -38,5 +38,4 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Inject {
-}
+public @interface Inject {}

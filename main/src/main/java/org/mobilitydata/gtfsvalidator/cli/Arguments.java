@@ -18,52 +18,65 @@ package org.mobilitydata.gtfsvalidator.cli;
 
 import com.beust.jcommander.Parameter;
 
-/**
- * Command-line arguments for GTFS Validator CLI.
- */
+/** Command-line arguments for GTFS Validator CLI. */
 public class Arguments {
 
-    @Parameter(names = {"-i", "--input"}, description = "Location of the input GTFS ZIP or unarchived directory")
-    private String input;
+  @Parameter(
+      names = {"-i", "--input"},
+      description = "Location of the input GTFS ZIP or unarchived directory")
+  private String input;
 
-    @Parameter(names = {"-o", "--output_base"}, description = "Base directory to store the outputs", required = true)
-    private String outputBase;
+  @Parameter(
+      names = {"-o", "--output_base"},
+      description = "Base directory to store the outputs",
+      required = true)
+  private String outputBase;
 
-    @Parameter(names = {"-t", "--threads"}, description = "Number of threads to use")
-    private int numThreads = 1;
+  @Parameter(
+      names = {"-t", "--threads"},
+      description = "Number of threads to use")
+  private int numThreads = 1;
 
-    @Parameter(names = {"-f", "--feed_name"}, description = "Name of the feed, e.g., `nl-openov`. " +
-            "It must start from two-letter country code (ISO 3166-1 alpha-2)")
-    private String feedName;
+  @Parameter(
+      names = {"-f", "--feed_name"},
+      description =
+          "Name of the feed, e.g., `nl-openov`. "
+              + "It must start from two-letter country code (ISO 3166-1 alpha-2)")
+  private String feedName;
 
-    @Parameter(names = {"-u", "--url"}, description = "Fully qualified URL to download GTFS archive")
-    private String url;
+  @Parameter(
+      names = {"-u", "--url"},
+      description = "Fully qualified URL to download GTFS archive")
+  private String url;
 
-    @Parameter(names = {"-s", "--storage_directory"}, description = "Target path where to store the GTFS archive " +
-            "downloaded from network (if not provided, the ZIP will be stored in memory)")
-    private String storageDirectory;
+  @Parameter(
+      names = {"-s", "--storage_directory"},
+      description =
+          "Target path where to store the GTFS archive "
+              + "downloaded from network (if not provided, the ZIP will be stored in memory)")
+  private String storageDirectory;
 
-    public String getInput() {
-        return input;
-    }
+  public String getInput() {
+    return input;
+  }
 
-    public String getOutputBase() {
-        return outputBase;
-    }
+  public String getOutputBase() {
+    return outputBase;
+  }
 
-    public int getNumThreads() {
-        return numThreads;
-    }
+  public int getNumThreads() {
+    return numThreads;
+  }
 
-    public String getFeedName() {
-        return feedName;
-    }
+  public String getFeedName() {
+    return feedName;
+  }
 
-    public String getUrl() {
-        return url;
-    }
+  public String getUrl() {
+    return url;
+  }
 
-    public String getStorageDirectory() {
-        return storageDirectory;
-    }
+  public String getStorageDirectory() {
+    return storageDirectory;
+  }
 }

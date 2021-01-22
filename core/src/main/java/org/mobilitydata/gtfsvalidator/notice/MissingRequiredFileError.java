@@ -18,16 +18,14 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * A required file is missing.
- */
+/** A required file is missing. */
 public class MissingRequiredFileError extends ValidationNotice {
-    public MissingRequiredFileError(String filename) {
-        super(ImmutableMap.of("filename", filename));
-    }
+  public MissingRequiredFileError(String filename) {
+    super(ImmutableMap.of("filename", filename));
+  }
 
-    @Override
-    public String getCode() {
-        return "missing_required_file";
-    }
+  @Override
+  public String getCode() {
+    return "missing_required_file";
+  }
 }
