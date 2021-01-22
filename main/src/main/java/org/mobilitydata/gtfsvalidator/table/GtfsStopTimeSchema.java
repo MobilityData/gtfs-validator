@@ -32,44 +32,44 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 @GtfsTable("stop_times.txt")
 @Required
 public interface GtfsStopTimeSchema extends GtfsEntity {
-    @FieldType(FieldTypeEnum.ID)
-    @Required
-    @ForeignKey(table = "trips.txt", field = "trip_id")
-    @FirstKey
-    String tripId();
+  @FieldType(FieldTypeEnum.ID)
+  @Required
+  @ForeignKey(table = "trips.txt", field = "trip_id")
+  @FirstKey
+  String tripId();
 
-    @ConditionallyRequired
-    GtfsTime arrivalTime();
+  @ConditionallyRequired
+  GtfsTime arrivalTime();
 
-    @ConditionallyRequired
-    GtfsTime departureTime();
+  @ConditionallyRequired
+  GtfsTime departureTime();
 
-    @FieldType(FieldTypeEnum.ID)
-    @Required
-    @ForeignKey(table = "stops.txt", field = "stop_id")
-    String stopId();
+  @FieldType(FieldTypeEnum.ID)
+  @Required
+  @ForeignKey(table = "stops.txt", field = "stop_id")
+  String stopId();
 
-    @Required
-    @NonNegative
-    @SequenceKey
-    int stopSequence();
+  @Required
+  @NonNegative
+  @SequenceKey
+  int stopSequence();
 
-    @CachedField
-    String stopHeadsign();
+  @CachedField
+  String stopHeadsign();
 
-    GtfsPickupDropOff pickupType();
+  GtfsPickupDropOff pickupType();
 
-    GtfsPickupDropOff dropOffType();
+  GtfsPickupDropOff dropOffType();
 
-    @DefaultValue("1")
-    GtfsContinuousPickupDropOff continuousPickup();
+  @DefaultValue("1")
+  GtfsContinuousPickupDropOff continuousPickup();
 
-    @DefaultValue("1")
-    GtfsContinuousPickupDropOff continuousDropOff();
+  @DefaultValue("1")
+  GtfsContinuousPickupDropOff continuousDropOff();
 
-    @NonNegative
-    double shapeDistTraveled();
+  @NonNegative
+  double shapeDistTraveled();
 
-    @DefaultValue("1")
-    GtfsStopTimesTimepoint timepoint();
+  @DefaultValue("1")
+  GtfsStopTimesTimepoint timepoint();
 }
