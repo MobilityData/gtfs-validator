@@ -92,7 +92,9 @@ public class Main {
     System.out.println(feedContainer.tableTotals());
   }
 
-  /** Generates and exports reports for both validation notices and system errors reports */
+  /**
+   * Generates and exports reports for both validation notices and system errors reports.
+   */
   private static void exportReport(final String outputBase, final NoticeContainer noticeContainer) {
     new File(outputBase).mkdirs();
     try {
