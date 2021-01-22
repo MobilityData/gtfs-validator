@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC, MobilityData IO 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,5 +38,10 @@ public class GtfsColorTest {
   @Test
   public void toHtmlColor() {
     assertThat(GtfsColor.fromInt(0x11ff00).toHtmlColor()).isEqualTo("#11FF00");
+  }
+
+  @Test
+  public void rec601Luma() {
+    assertThat(GtfsColor.fromString("00bfff").rec601Luma()).isEqualTo(140);
   }
 }
