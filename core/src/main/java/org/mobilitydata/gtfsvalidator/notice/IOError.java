@@ -19,16 +19,16 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * Describes a runtime exception while creating a code{@GtfsInput}.
+ * This is related to Input and Output operations in the code.
  */
-public class GtfsInputCreationError extends SystemError {
+public class IOError extends SystemError {
 
-    public GtfsInputCreationError(String exceptionClassName, String message) {
-        super(ImmutableMap.of("exception", exceptionClassName, "message", message));
-    }
+  public IOError(String message) {
+    super(ImmutableMap.of("message", message));
+  }
 
-    @Override
-    public String getCode() {
-        return "runtime_exception_at_gtfs_input_creation";
-    }
+  @Override
+  public String getCode() {
+    return "io_exception";
+  }
 }

@@ -28,8 +28,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
-import org.mobilitydata.gtfsvalidator.notice.GtfsInputCreationError;
+import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.ThreadInterruptedError;
+import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
@@ -76,8 +78,14 @@ public class Main {
         gtfsInput = GtfsInput.createFromPath(Paths.get(args.getInput()));
       }
     } catch (IOException | URISyntaxException | InterruptedException e) {
-      noticeContainer.addSystemError(
-          new GtfsInputCreationError(e.getClass().getCanonicalName(), e.getMessage()));
+      if (e instanceof IOException) {
+        noticeContainer.addSystemError(new IOError(e.getMessage()));
+      }
+      if (e instanceof URISyntaxException) {
+        noticeContainer.addSystemError(new URISyntaxError(e.getMessage()));
+      } else {
+        noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
+      }
       exportReport(args.getOutputBase(), noticeContainer);
       logger.atSevere().withCause(e).log("Cannot load GTFS feed");
       return;
