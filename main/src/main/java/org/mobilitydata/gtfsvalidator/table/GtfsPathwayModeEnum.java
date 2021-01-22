@@ -25,5 +25,4 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValue;
 @GtfsEnumValue(name = "ELEVATOR", value = 5)
 @GtfsEnumValue(name = "FARE_GATE", value = 6)
 @GtfsEnumValue(name = "EXIT_GATE", value = 7)
-public interface GtfsPathwayModeEnum {
-}
+public interface GtfsPathwayModeEnum {}

@@ -16,38 +16,37 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import java.util.Locale;
 import org.mobilitydata.gtfsvalidator.annotation.CachedField;
 import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
 
-import java.util.Locale;
-
 @GtfsTable("translations.txt")
 public interface GtfsTranslationSchema extends GtfsEntity {
-    @Required
-    @CachedField
-    String tableName();
+  @Required
+  @CachedField
+  String tableName();
 
-    @Required
-    @CachedField
-    String fieldName();
+  @Required
+  @CachedField
+  String fieldName();
 
-    @Required
-    Locale language();
+  @Required
+  Locale language();
 
-    @Required
-    String translation();
+  @Required
+  String translation();
 
-    @ConditionallyRequired
-    @CachedField
-    String recordId();
+  @ConditionallyRequired
+  @CachedField
+  String recordId();
 
-    @ConditionallyRequired
-    @CachedField
-    String recordSubId();
+  @ConditionallyRequired
+  @CachedField
+  String recordSubId();
 
-    @ConditionallyRequired
-    @CachedField
-    String fieldValue();
+  @ConditionallyRequired
+  @CachedField
+  String fieldValue();
 }

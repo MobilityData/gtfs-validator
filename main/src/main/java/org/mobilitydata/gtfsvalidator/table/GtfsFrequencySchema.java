@@ -25,20 +25,20 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 @GtfsTable("frequencies.txt")
 public interface GtfsFrequencySchema extends GtfsEntity {
-    @Required
-    @ForeignKey(table = "trips.txt", field = "trip_id")
-    @Index
-    String tripId();
+  @Required
+  @ForeignKey(table = "trips.txt", field = "trip_id")
+  @Index
+  String tripId();
 
-    @Required
-    GtfsTime startTime();
+  @Required
+  GtfsTime startTime();
 
-    @Required
-    GtfsTime endTime();
+  @Required
+  GtfsTime endTime();
 
-    @Required
-    @Positive
-    int headwaySecs();
+  @Required
+  @Positive
+  int headwaySecs();
 
-    GtfsFrequencyExactTimes exactTimes();
+  GtfsFrequencyExactTimes exactTimes();
 }

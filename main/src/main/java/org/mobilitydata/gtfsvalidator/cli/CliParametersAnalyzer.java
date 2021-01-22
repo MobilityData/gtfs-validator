@@ -18,31 +18,32 @@ package org.mobilitydata.gtfsvalidator.cli;
 
 import com.google.common.flogger.FluentLogger;
 
-/**
- * Provides convenient method to validate the requirement on CLI parameters
- */
+/** Provides convenient method to validate the requirement on CLI parameters */
 public class CliParametersAnalyzer {
-    private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
-    /**
-     * Check validity of CLI parameter combination
-     *
-     * @return true if CLI parameter combination is legal, otherwise return false
-     */
-    public boolean isValid(Arguments args) {
-        if (args.getInput() == null && args.getUrl() == null) {
-            logger.atSevere().log("One of the two following CLI parameter must be provided: '--input' and '--url'");
-            return false;
-        }
-        if (args.getInput() != null && args.getUrl() != null) {
-            logger.atSevere().log("The two following CLI parameters cannot be provided at the same time:" +
-                    " '--input' and '--url'");
-            return false;
-        }
-        if (args.getStorageDirectory() != null && args.getUrl() == null) {
-            logger.atSevere().log("CLI parameter '--storage_directory' must not be provided if '--url' is not provided");
-            return false;
-        }
-        return true;
+  /**
+   * Check validity of CLI parameter combination
+   *
+   * @return true if CLI parameter combination is legal, otherwise return false
+   */
+  public boolean isValid(Arguments args) {
+    if (args.getInput() == null && args.getUrl() == null) {
+      logger.atSevere().log(
+          "One of the two following CLI parameter must be provided: '--input' and '--url'");
+      return false;
     }
+    if (args.getInput() != null && args.getUrl() != null) {
+      logger.atSevere().log(
+          "The two following CLI parameters cannot be provided at the same time:"
+              + " '--input' and '--url'");
+      return false;
+    }
+    if (args.getStorageDirectory() != null && args.getUrl() == null) {
+      logger.atSevere().log(
+          "CLI parameter '--storage_directory' must not be provided if '--url' is not provided");
+      return false;
+    }
+    return true;
+  }
 }

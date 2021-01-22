@@ -23,13 +23,13 @@ import java.lang.annotation.Target;
 
 /**
  * Specifies the primary key in a GTFS table.
- * <p>
- * This also adds a validation that all values are unique.
- * <p>
- * Note that {@code @PrimaryKey} does not imply that the field is required and you need to put an extra
- * {@code @Required} annotation in this case.
- * <p>
- * Example.
+ *
+ * <p>This also adds a validation that all values are unique.
+ *
+ * <p>Note that {@code @PrimaryKey} does not imply that the field is required and you need to put an
+ * extra {@code @Required} annotation in this case.
+ *
+ * <p>Example.
  *
  * <pre>
  *   @GtfsTable("stops.txt")
@@ -40,8 +40,8 @@ import java.lang.annotation.Target;
  *       String stopId();
  *   }
  * </pre>
- * <p>
- * This also adds a method to the container class to find an entity by its primary key.
+ *
+ * <p>This also adds a method to the container class to find an entity by its primary key.
  *
  * <pre>
  *   @Generated
@@ -54,5 +54,4 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.SOURCE)
-public @interface PrimaryKey {
-}
+public @interface PrimaryKey {}

@@ -19,19 +19,20 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * Short name of a route is too long (more than 12 characters, https://gtfs.org/best-practices/#routestxt).
+ * Short name of a route is too long (more than 12 characters,
+ * https://gtfs.org/best-practices/#routestxt).
  */
 public class RouteShortNameTooLongNotice extends ValidationNotice {
-    public RouteShortNameTooLongNotice(String routeId,
-                                       long csvRowNumber, String routeShortName) {
-        super(ImmutableMap.of(
-                "routeId", routeId,
-                "csvRowNumber", csvRowNumber,
-                "routeShortName", routeShortName));
-    }
+  public RouteShortNameTooLongNotice(String routeId, long csvRowNumber, String routeShortName) {
+    super(
+        ImmutableMap.of(
+            "routeId", routeId,
+            "csvRowNumber", csvRowNumber,
+            "routeShortName", routeShortName));
+  }
 
-    @Override
-    public String getCode() {
-        return "route_short_name_too_long";
-    }
+  @Override
+  public String getCode() {
+    return "route_short_name_too_long";
+  }
 }

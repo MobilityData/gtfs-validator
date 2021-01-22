@@ -18,21 +18,26 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * The values in the given column of the input rows are out of range.
- */
+/** The values in the given column of the input rows are out of range. */
 public class NumberOutOfRangeError extends ValidationNotice {
-    public NumberOutOfRangeError(String filename, long csvRowNumber, String fieldName, String fieldType, Object fieldValue) {
-        super(ImmutableMap.of("filename", filename,
-                "csvRowNumber", csvRowNumber,
-                "fieldName", fieldName,
-                "fieldType", fieldType,
-                "fieldValue", fieldValue));
-    }
+  public NumberOutOfRangeError(
+      String filename, long csvRowNumber, String fieldName, String fieldType, Object fieldValue) {
+    super(
+        ImmutableMap.of(
+            "filename",
+            filename,
+            "csvRowNumber",
+            csvRowNumber,
+            "fieldName",
+            fieldName,
+            "fieldType",
+            fieldType,
+            "fieldValue",
+            fieldValue));
+  }
 
-    @Override
-    public String getCode() {
-        return "number_out_of_range";
-    }
+  @Override
+  public String getCode() {
+    return "number_out_of_range";
+  }
 }
-

@@ -25,20 +25,19 @@ import org.mobilitydata.gtfsvalidator.annotation.Required;
 
 @GtfsTable("transfers.txt")
 public interface GtfsTransferSchema extends GtfsEntity {
-    @FieldType(FieldTypeEnum.ID)
-    @Required
-    @ForeignKey(table = "stops.txt", field = "stop_id")
-    String fromStopId();
+  @FieldType(FieldTypeEnum.ID)
+  @Required
+  @ForeignKey(table = "stops.txt", field = "stop_id")
+  String fromStopId();
 
-    @FieldType(FieldTypeEnum.ID)
-    @Required
-    @ForeignKey(table = "stops.txt", field = "stop_id")
-    String toStopId();
+  @FieldType(FieldTypeEnum.ID)
+  @Required
+  @ForeignKey(table = "stops.txt", field = "stop_id")
+  String toStopId();
 
-    @Required
-    GtfsTransferType transferType();
+  @Required
+  GtfsTransferType transferType();
 
-    @NonNegative
-    int minTransferTime();
+  @NonNegative
+  int minTransferTime();
 }
-

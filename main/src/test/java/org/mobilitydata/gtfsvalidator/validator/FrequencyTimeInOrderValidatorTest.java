@@ -16,6 +16,14 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -25,98 +33,89 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFrequency;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 import org.mockito.ArgumentCaptor;
 
-import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
 @RunWith(JUnit4.class)
 public class FrequencyTimeInOrderValidatorTest {
 
-    @Test
-    public void startTimeBeforeEndTimeShouldNotGenerateNotice() {
-        NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-        GtfsFrequency mockFrequency = mock(GtfsFrequency.class);
-        GtfsTime mockStartTime = mock(GtfsTime.class);
-        GtfsTime mockEndTime = mock(GtfsTime.class);
-        when(mockFrequency.startTime()).thenReturn(mockStartTime);
-        when(mockFrequency.endTime()).thenReturn(mockEndTime);
-        when(mockStartTime.isAfter(mockEndTime)).thenReturn(false);
+  @Test
+  public void startTimeBeforeEndTimeShouldNotGenerateNotice() {
+    NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
+    GtfsFrequency mockFrequency = mock(GtfsFrequency.class);
+    GtfsTime mockStartTime = mock(GtfsTime.class);
+    GtfsTime mockEndTime = mock(GtfsTime.class);
+    when(mockFrequency.startTime()).thenReturn(mockStartTime);
+    when(mockFrequency.endTime()).thenReturn(mockEndTime);
+    when(mockStartTime.isAfter(mockEndTime)).thenReturn(false);
 
-        FrequencyTimeInOrderValidator underTest = new FrequencyTimeInOrderValidator();
+    FrequencyTimeInOrderValidator underTest = new FrequencyTimeInOrderValidator();
 
-        underTest.validate(mockFrequency, mockNoticeContainer);
+    underTest.validate(mockFrequency, mockNoticeContainer);
 
-        verifyNoInteractions(mockNoticeContainer);
-        verify(mockStartTime, times(1)).isAfter(mockEndTime);
-        verify(mockFrequency, times(1)).startTime();
-        verify(mockFrequency, times(1)).endTime();
-        verifyNoMoreInteractions(mockEndTime, mockStartTime, mockFrequency);
-    }
+    verifyNoInteractions(mockNoticeContainer);
+    verify(mockStartTime, times(1)).isAfter(mockEndTime);
+    verify(mockFrequency, times(1)).startTime();
+    verify(mockFrequency, times(1)).endTime();
+    verifyNoMoreInteractions(mockEndTime, mockStartTime, mockFrequency);
+  }
 
-    @Test
-    public void startTimeAfterEndTimeShouldGenerateNotice() {
-        NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-        GtfsFrequency mockFrequency = mock(GtfsFrequency.class);
-        GtfsTime mockStartTime = mock(GtfsTime.class);
-        GtfsTime mockEndTime = mock(GtfsTime.class);
-        when(mockFrequency.startTime()).thenReturn(mockStartTime);
-        when(mockFrequency.endTime()).thenReturn(mockEndTime);
-        when(mockFrequency.tripId()).thenReturn("trip id value");
-        when(mockFrequency.csvRowNumber()).thenReturn(4L);
-        when(mockStartTime.isAfter(mockEndTime)).thenReturn(true);
-        when(mockStartTime.toHHMMSS()).thenReturn("start time value");
-        when(mockEndTime.toHHMMSS()).thenReturn("end time value");
+  @Test
+  public void startTimeAfterEndTimeShouldGenerateNotice() {
+    NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
+    GtfsFrequency mockFrequency = mock(GtfsFrequency.class);
+    GtfsTime mockStartTime = mock(GtfsTime.class);
+    GtfsTime mockEndTime = mock(GtfsTime.class);
+    when(mockFrequency.startTime()).thenReturn(mockStartTime);
+    when(mockFrequency.endTime()).thenReturn(mockEndTime);
+    when(mockFrequency.tripId()).thenReturn("trip id value");
+    when(mockFrequency.csvRowNumber()).thenReturn(4L);
+    when(mockStartTime.isAfter(mockEndTime)).thenReturn(true);
+    when(mockStartTime.toHHMMSS()).thenReturn("start time value");
+    when(mockEndTime.toHHMMSS()).thenReturn("end time value");
 
-        FrequencyTimeInOrderValidator underTest = new FrequencyTimeInOrderValidator();
+    FrequencyTimeInOrderValidator underTest = new FrequencyTimeInOrderValidator();
 
-        underTest.validate(mockFrequency, mockNoticeContainer);
+    underTest.validate(mockFrequency, mockNoticeContainer);
 
-        final ArgumentCaptor<StartAndEndTimeOutOfOrderNotice> captor =
-                ArgumentCaptor.forClass(StartAndEndTimeOutOfOrderNotice.class);
+    final ArgumentCaptor<StartAndEndTimeOutOfOrderNotice> captor =
+        ArgumentCaptor.forClass(StartAndEndTimeOutOfOrderNotice.class);
 
-        verify(mockNoticeContainer, times(1))
-            .addValidationNotice(captor.capture());
+    verify(mockNoticeContainer, times(1)).addValidationNotice(captor.capture());
 
-        StartAndEndTimeOutOfOrderNotice notice = captor.getValue();
+    StartAndEndTimeOutOfOrderNotice notice = captor.getValue();
 
-        assertThat(notice.getCode()).matches("start_and_end_time_out_of_order");
-        assertThat(notice.getContext()).containsEntry("filename", "frequencies.txt");
-        assertThat(notice.getContext()).containsEntry("csvRowNumber", 4L);
-        assertThat(notice.getContext()).containsEntry("entityId", "trip id value");
-        assertThat(notice.getContext()).containsEntry("startTime", "start time value");
-        assertThat(notice.getContext()).containsEntry("endTime", "end time value");
+    assertThat(notice.getCode()).matches("start_and_end_time_out_of_order");
+    assertThat(notice.getContext()).containsEntry("filename", "frequencies.txt");
+    assertThat(notice.getContext()).containsEntry("csvRowNumber", 4L);
+    assertThat(notice.getContext()).containsEntry("entityId", "trip id value");
+    assertThat(notice.getContext()).containsEntry("startTime", "start time value");
+    assertThat(notice.getContext()).containsEntry("endTime", "end time value");
 
-        verify(mockStartTime, times(1)).isAfter(mockEndTime);
-        verify(mockFrequency, times(1)).startTime();
-        verify(mockFrequency, times(1)).endTime();
-        verify(mockFrequency, times(1)).csvRowNumber();
-        verify(mockFrequency, times(1)).tripId();
-        verify(mockStartTime, times(1)).toHHMMSS();
-        verify(mockEndTime, times(1)).toHHMMSS();
-        verifyNoMoreInteractions(mockEndTime, mockStartTime, mockFrequency);
-    }
+    verify(mockStartTime, times(1)).isAfter(mockEndTime);
+    verify(mockFrequency, times(1)).startTime();
+    verify(mockFrequency, times(1)).endTime();
+    verify(mockFrequency, times(1)).csvRowNumber();
+    verify(mockFrequency, times(1)).tripId();
+    verify(mockStartTime, times(1)).toHHMMSS();
+    verify(mockEndTime, times(1)).toHHMMSS();
+    verifyNoMoreInteractions(mockEndTime, mockStartTime, mockFrequency);
+  }
 
-    @Test
-    public void startTimeEqualToEndTimeShouldNotGenerateNotice() {
-        NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-        GtfsFrequency mockFrequency = mock(GtfsFrequency.class);
-        // .equals() method cannot be stubbed: we use real object for GtfsTime
-        GtfsTime startTime = GtfsTime.fromHourMinuteSecond(12, 30, 45);
-        GtfsTime endTime = GtfsTime.fromHourMinuteSecond(12, 30, 45);
-        when(mockFrequency.startTime()).thenReturn(startTime);
-        when(mockFrequency.endTime()).thenReturn(endTime);
+  @Test
+  public void startTimeEqualToEndTimeShouldNotGenerateNotice() {
+    NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
+    GtfsFrequency mockFrequency = mock(GtfsFrequency.class);
+    // .equals() method cannot be stubbed: we use real object for GtfsTime
+    GtfsTime startTime = GtfsTime.fromHourMinuteSecond(12, 30, 45);
+    GtfsTime endTime = GtfsTime.fromHourMinuteSecond(12, 30, 45);
+    when(mockFrequency.startTime()).thenReturn(startTime);
+    when(mockFrequency.endTime()).thenReturn(endTime);
 
-        FrequencyTimeInOrderValidator underTest = new FrequencyTimeInOrderValidator();
+    FrequencyTimeInOrderValidator underTest = new FrequencyTimeInOrderValidator();
 
-        underTest.validate(mockFrequency, mockNoticeContainer);
+    underTest.validate(mockFrequency, mockNoticeContainer);
 
-        verifyNoInteractions(mockNoticeContainer);
-        verify(mockFrequency, times(1)).startTime();
-        verify(mockFrequency, times(1)).endTime();
-        verifyNoMoreInteractions(mockFrequency);
-    }
+    verifyNoInteractions(mockNoticeContainer);
+    verify(mockFrequency, times(1)).startTime();
+    verify(mockFrequency, times(1)).endTime();
+    verifyNoMoreInteractions(mockFrequency);
+  }
 }
