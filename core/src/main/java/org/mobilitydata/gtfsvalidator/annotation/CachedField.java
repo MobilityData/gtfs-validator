@@ -18,12 +18,13 @@ package org.mobilitydata.gtfsvalidator.annotation;
 
 /**
  * Enables caching of values for a given field to optimize memory usage.
- * <p>
- * See {@code FieldCache} for details.
- * <p>
- * Note that caching is already automatically enabled for certain field types (ID, date, time, color, language code).
- * <p>
- * Example.
+ *
+ * <p>See {@code FieldCache} for details.
+ *
+ * <p>Note that caching is already automatically enabled for certain field types (ID, date, time,
+ * color, language code).
+ *
+ * <p>Example.
  *
  * <pre>
  *   @GtfsTable("stop_times.txt")
@@ -34,5 +35,4 @@ package org.mobilitydata.gtfsvalidator.annotation;
  *   }
  * </pre>
  */
-public @interface CachedField {
-}
+public @interface CachedField {}

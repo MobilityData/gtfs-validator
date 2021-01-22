@@ -22,12 +22,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Specifies a reference to a foreign key. A validator for data integrity will be generated automatically.
- * <p>
- * Note that {@code @ForeignKey} does not imply that the field is required and you need to put an extra
- * {@code @Required} annotation in this case.
- * <p>
- * Example.
+ * Specifies a reference to a foreign key. A validator for data integrity will be generated
+ * automatically.
+ *
+ * <p>Note that {@code @ForeignKey} does not imply that the field is required and you need to put an
+ * extra {@code @Required} annotation in this case.
+ *
+ * <p>Example.
  *
  * <pre>
  *   @GtfsTable("trips.txt")
@@ -42,7 +43,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.SOURCE)
 public @interface ForeignKey {
-    String table();
+  String table();
 
-    String field();
+  String field();
 }
