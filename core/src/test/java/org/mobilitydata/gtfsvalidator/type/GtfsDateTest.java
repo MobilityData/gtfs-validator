@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC, MobilityData IO 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,78 +24,54 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.time.LocalDate;
-
-import static com.google.common.truth.Truth.assertThat;
-import static org.junit.Assert.assertThrows;
-
 @RunWith(JUnit4.class)
 public class GtfsDateTest {
-    @Test
-    public void fromString() {
-        assertThat(GtfsDate.fromString("20200901").getLocalDate())
-                .isEqualTo(LocalDate.of(2020, 9, 1));
-        assertThat(GtfsDate.fromString("19970103").getLocalDate())
-                .isEqualTo(LocalDate.of(1997, 1, 3));
+  @Test
+  public void fromString() {
+    assertThat(GtfsDate.fromString("20200901").getLocalDate()).isEqualTo(LocalDate.of(2020, 9, 1));
+    assertThat(GtfsDate.fromString("19970103").getLocalDate()).isEqualTo(LocalDate.of(1997, 1, 3));
 
-        assertThrows(IllegalArgumentException.class, () -> GtfsDate.fromString("0"));
-        assertThrows(IllegalArgumentException.class, () -> GtfsDate.fromString("qwerty"));
-        assertThrows(IllegalArgumentException.class, () -> GtfsDate.fromString("today"));
-    }
+    assertThrows(IllegalArgumentException.class, () -> GtfsDate.fromString("0"));
+    assertThrows(IllegalArgumentException.class, () -> GtfsDate.fromString("qwerty"));
+    assertThrows(IllegalArgumentException.class, () -> GtfsDate.fromString("today"));
+  }
 
-    @Test
-    public void dateFromLocalDateShouldReturnGtfsDateWithSameData() {
-        GtfsDate underTest = GtfsDate.fromLocalDate(LocalDate.of(2022,1,20));
-        assertThat(underTest.getDay()).isEqualTo(20);
-        assertThat(underTest.getMonth()).isEqualTo(1);
-        assertThat(underTest.getYear()).isEqualTo(2022);
-    }
+  @Test
+  public void getDayMonthYear() {
+    GtfsDate underTest = GtfsDate.fromLocalDate(LocalDate.of(2022, 1, 20));
+    assertThat(underTest.getDay()).isEqualTo(20);
+    assertThat(underTest.getMonth()).isEqualTo(1);
+    assertThat(underTest.getYear()).isEqualTo(2022);
+  }
 
-    @Test
-    public void dateFromEpochShouldReturnGtfsDateWithSameData() {
-        GtfsDate underTest = GtfsDate.fromEpochDay(18614);
-        assertThat(underTest.getDay()).isEqualTo(18);
-        assertThat(underTest.getMonth()).isEqualTo(12);
-        assertThat(underTest.getYear()).isEqualTo(2020);
-    }
+  @Test
+  public void dateFromEpochShouldReturnGtfsDateWithSameData() {
+    assertThat(GtfsDate.fromEpochDay(18614).getLocalDate()).isEqualTo(LocalDate.ofEpochDay(18614));
+  }
 
-    @Test
-    public void gtfsDateShouldBeComparable() {
-        GtfsDate firstGtfsDate = GtfsDate.fromEpochDay(18614);
-        GtfsDate secondGtfsDate = GtfsDate.fromEpochDay(20614);
+  @Test
+  public void gtfsDateShouldBeComparable() {
+    GtfsDate firstGtfsDate = GtfsDate.fromEpochDay(18614);
+    GtfsDate secondGtfsDate = GtfsDate.fromEpochDay(20614);
 
-        assertThat(firstGtfsDate.compareTo(secondGtfsDate)).isLessThan(0);
-        assertThat(secondGtfsDate.compareTo(firstGtfsDate)).isAtLeast(1);
-        assertThat(firstGtfsDate.compareTo(firstGtfsDate)).isEqualTo(0);
-    }
+    assertThat(firstGtfsDate.compareTo(secondGtfsDate)).isLessThan(0);
+    assertThat(secondGtfsDate.compareTo(firstGtfsDate)).isGreaterThan(1);
+    assertThat(firstGtfsDate.compareTo(firstGtfsDate)).isEqualTo(0);
+  }
 
-    @Test
-    public void firstDateShouldBeIdentifiedAsBeforeSecondDate() {
-        GtfsDate firstGtfsDate = GtfsDate.fromEpochDay(18614);
-        GtfsDate secondGtfsDate = GtfsDate.fromEpochDay(20614);
+  @Test
+  public void firstDateShouldBeIdentifiedAsBeforeSecondDate() {
+    GtfsDate firstGtfsDate = GtfsDate.fromEpochDay(18614);
+    GtfsDate secondGtfsDate = GtfsDate.fromEpochDay(20614);
 
-        assertThat(firstGtfsDate.isBefore(secondGtfsDate)).isTrue();
-        assertThat(firstGtfsDate.isAfter(secondGtfsDate)).isFalse();
-    }
+    assertThat(firstGtfsDate.isBefore(secondGtfsDate)).isTrue();
+    assertThat(firstGtfsDate.isAfter(secondGtfsDate)).isFalse();
+  }
 
-    @Test
-    public void secondDateShouldBeIdentifiedAsAfterFirstDate() {
-        GtfsDate firstGtfsDate = GtfsDate.fromEpochDay(18614);
-        GtfsDate secondGtfsDate = GtfsDate.fromEpochDay(20614);
-
-        assertThat(secondGtfsDate.isAfter(firstGtfsDate)).isTrue();
-        assertThat(secondGtfsDate.isBefore(firstGtfsDate)).isFalse();
-    }
-
-    @Test
-    public void gtfsDateShouldNotBeIdentifiedAsBeforeItself() {
-        GtfsDate underTest = GtfsDate.fromEpochDay(18614);
-        assertThat(underTest.isBefore(underTest)).isFalse();
-    }
-
-    @Test
-    public void gtfsDateShouldNotBeIdentifiedAsAfterItself() {
-        GtfsDate underTest = GtfsDate.fromEpochDay(18614);
-        assertThat(underTest.isAfter(underTest)).isFalse();
-    }
+  @Test
+  public void gtfsDateShouldNotBeIdentifiedAsBeforeItself() {
+    GtfsDate underTest = GtfsDate.fromEpochDay(18614);
+    assertThat(underTest.isBefore(underTest)).isFalse();
+    assertThat(underTest.isAfter(underTest)).isFalse();
+  }
 }
