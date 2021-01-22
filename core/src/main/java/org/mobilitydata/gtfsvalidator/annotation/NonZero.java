@@ -18,8 +18,8 @@ package org.mobilitydata.gtfsvalidator.annotation;
 
 /**
  * Generates a validation that an integer or a double (float) field is not zero.
- * <p>
- * Example.
+ *
+ * <p>Example.
  *
  * <pre>
  *   @GtfsTable("pathways.txt")
@@ -29,5 +29,4 @@ package org.mobilitydata.gtfsvalidator.annotation;
  *   }
  * </pre>
  */
-public @interface NonZero {
-}
+public @interface NonZero {}

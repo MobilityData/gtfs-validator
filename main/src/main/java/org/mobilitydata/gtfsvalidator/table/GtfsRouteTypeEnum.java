@@ -28,5 +28,4 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValue;
 @GtfsEnumValue(name = "FUNICULAR", value = 7)
 @GtfsEnumValue(name = "TROLLEYBUS", value = 11)
 @GtfsEnumValue(name = "MONORAIL", value = 12)
-public interface GtfsRouteTypeEnum {
-}
+public interface GtfsRouteTypeEnum {}

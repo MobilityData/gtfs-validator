@@ -22,12 +22,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Asks annotation processor to create an index for quick search on a given field. The field does not need to have
- * unique values.
- * <p>
- * Note that {@code PrimaryKey} already implies an index.
- * <p>
- * Example.
+ * Asks annotation processor to create an index for quick search on a given field. The field does
+ * not need to have unique values.
+ *
+ * <p>Note that {@code PrimaryKey} already implies an index.
+ *
+ * <p>Example.
  *
  * <pre>
  *   @GtfsTable("stops.txt")
@@ -37,8 +37,8 @@ import java.lang.annotation.Target;
  *       String zoneId();
  *   }
  * </pre>
- * <p>
- * This generated the following method.
+ *
+ * <p>This generated the following method.
  *
  * <pre>
  *   public class GtfsStopTableContainer extends GtfsTableContainer<GtfsStop> {
@@ -50,5 +50,4 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.SOURCE)
-public @interface Index {
-}
+public @interface Index {}

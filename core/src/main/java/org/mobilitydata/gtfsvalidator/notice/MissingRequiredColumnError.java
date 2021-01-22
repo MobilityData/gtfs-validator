@@ -18,17 +18,14 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * A required column is missing in the input file.
- */
+/** A required column is missing in the input file. */
 public class MissingRequiredColumnError extends ValidationNotice {
-    public MissingRequiredColumnError(String filename, String fieldName) {
-        super(ImmutableMap.of("filename", filename,
-                "fieldName", fieldName));
-    }
+  public MissingRequiredColumnError(String filename, String fieldName) {
+    super(ImmutableMap.of("filename", filename, "fieldName", fieldName));
+  }
 
-    @Override
-    public String getCode() {
-        return "missing_required_column";
-    }
+  @Override
+  public String getCode() {
+    return "missing_required_column";
+  }
 }
