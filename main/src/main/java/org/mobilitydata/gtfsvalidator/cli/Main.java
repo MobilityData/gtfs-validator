@@ -19,14 +19,6 @@ package org.mobilitydata.gtfsvalidator.cli;
 import com.beust.jcommander.JCommander;
 import com.google.common.base.Strings;
 import com.google.common.flogger.FluentLogger;
-import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
-import org.mobilitydata.gtfsvalidator.input.GtfsInput;
-import org.mobilitydata.gtfsvalidator.notice.GtfsInputCreationError;
-import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
-import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -34,6 +26,13 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
+import org.mobilitydata.gtfsvalidator.input.GtfsInput;
+import org.mobilitydata.gtfsvalidator.notice.GtfsInputCreationError;
+import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
+import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
 /** The main entry point for GTFS Validator CLI. */
 public class Main {
