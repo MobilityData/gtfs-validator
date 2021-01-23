@@ -37,19 +37,19 @@ public class CsvRowTest {
     reader.close();
 
     String[] columnValues = {
-        "stop_id",
-        "stop_code",
-        "stop_name",
-        "tts_stop_name",
-        "stop_desc",
-        "stop_lat",
-        "stop_lon",
-        "location_type",
-        "parent_station",
-        "stop_timezone",
-        "wheelchair_boarding",
-        "level_id",
-        "platform_code"
+      "stop_id",
+      "stop_code",
+      "stop_name",
+      "tts_stop_name",
+      "stop_desc",
+      "stop_lat",
+      "stop_lon",
+      "location_type",
+      "parent_station",
+      "stop_timezone",
+      "wheelchair_boarding",
+      "level_id",
+      "platform_code"
     };
 
     CsvRow underTest = new CsvRow(csvFile, 3, columnValues);
