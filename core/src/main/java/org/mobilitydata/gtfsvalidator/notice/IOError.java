@@ -18,9 +18,7 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * This is related to Input and Output operations in the code.
- */
+/** This is related to Input and Output operations in the code. */
 public class IOError extends SystemError {
 
   public IOError(String message) {
