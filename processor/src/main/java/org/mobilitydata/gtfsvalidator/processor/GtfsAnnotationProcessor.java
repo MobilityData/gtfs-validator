@@ -27,10 +27,6 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValue;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValues;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
@@ -39,6 +35,7 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValue;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValues;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 
@@ -65,8 +62,8 @@ public class GtfsAnnotationProcessor extends AbstractProcessor {
 
   @Override
   public Set<String> getSupportedAnnotationTypes() {
-      return ImmutableSet.of(GtfsTable.class.getName(), GtfsEnumValues.class.getName(),
-          GtfsEnumValue.class.getName());
+    return ImmutableSet.of(
+        GtfsTable.class.getName(), GtfsEnumValues.class.getName(), GtfsEnumValue.class.getName());
   }
 
   @Override
