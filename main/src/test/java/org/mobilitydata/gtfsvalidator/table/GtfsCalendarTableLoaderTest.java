@@ -40,8 +40,7 @@ public class GtfsCalendarTableLoaderTest {
     ValidatorLoader validatorLoader = new ValidatorLoader();
     Reader reader =
         new StringReader(
-            "service_id,monday,tuesday,wednesday,thursday,friday,saturday,sunday,start_date,end_date"
-                + System.lineSeparator()
+            "service_id,monday,tuesday,wednesday,thursday,friday,saturday,sunday,start_date,end_date\n"
                 + "service id value,1,0,0,0,0,0,0,20201122,20201210");
     GtfsCalendarTableLoader loader = new GtfsCalendarTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
@@ -70,8 +69,7 @@ public class GtfsCalendarTableLoaderTest {
     ValidatorLoader validatorLoader = new ValidatorLoader();
     Reader reader =
         new StringReader(
-            "service_id,monday,tuesday,wednesday,thursday,friday,saturday,sunday,start_date,end_date"
-                + System.lineSeparator()
+            "service_id,monday,tuesday,wednesday,thursday,friday,saturday,sunday,start_date,end_date\n"
                 + "service id value,,0,0,0,0,0,0,20201122,20201210");
     GtfsCalendarTableLoader loader = new GtfsCalendarTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
