@@ -26,6 +26,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
+import org.mobilitydata.gtfsvalidator.notice.EmptyFileNotice;
+import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
@@ -101,15 +103,8 @@ public class GtfsAgencyTableLoaderTest {
     GtfsAgencyTableContainer tableContainer =
         (GtfsAgencyTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
 
-    assertThat(noticeContainer.getValidationNotices()).isNotEmpty();
-    assertThat(noticeContainer.getValidationNotices().get(0).getCode())
-        .matches("missing_required_field");
-    assertThat(noticeContainer.getValidationNotices().get(0).getContext())
-        .containsEntry("filename", "agency.txt");
-    assertThat(noticeContainer.getValidationNotices().get(0).getContext())
-        .containsEntry("csvRowNumber", 2L);
-    assertThat(noticeContainer.getValidationNotices().get(0).getContext())
-        .containsEntry("fieldName", "agency_name");
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactly(new MissingRequiredFieldError("agemcy.txt", 2, "agency_name"));
     assertThat(tableContainer.entityCount()).isEqualTo(0);
     reader.close();
   }
@@ -122,9 +117,8 @@ public class GtfsAgencyTableLoaderTest {
     NoticeContainer noticeContainer = new NoticeContainer();
     loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
 
-    assertThat(noticeContainer.getValidationNotices()).isNotEmpty();
-    assertThat(noticeContainer.getValidationNotices().get(0).getClass().getSimpleName())
-        .isEqualTo("EmptyFileNotice");
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactly(new EmptyFileNotice("agency.txt"));
     reader.close();
   }
 }
