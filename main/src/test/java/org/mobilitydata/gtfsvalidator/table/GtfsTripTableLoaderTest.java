@@ -40,8 +40,7 @@ public class GtfsTripTableLoaderTest {
     ValidatorLoader validatorLoader = new ValidatorLoader();
     Reader reader =
         new StringReader(
-            "route_id,service_id,trip_id\n"
-                + "route id value,service id value,trip id value");
+            "route_id,service_id,trip_id\n" + "route id value,service id value,trip id value");
     GtfsTripTableLoader loader = new GtfsTripTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
     GtfsTripTableContainer tableContainer =
@@ -61,9 +60,7 @@ public class GtfsTripTableLoaderTest {
   public void missingRequiredFieldShouldGenerateNotice() throws IOException {
     ValidatorLoader validatorLoader = new ValidatorLoader();
     Reader reader =
-        new StringReader(
-            "route_id,service_id,trip_id\n"
-                + "route id value,,trip id value");
+        new StringReader("route_id,service_id,trip_id\n" + "route id value,,trip id value");
     GtfsTripTableLoader loader = new GtfsTripTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
     GtfsTripTableContainer tableContainer =
