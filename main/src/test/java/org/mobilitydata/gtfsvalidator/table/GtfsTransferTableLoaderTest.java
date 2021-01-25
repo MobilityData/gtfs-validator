@@ -30,7 +30,7 @@ import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
-/** Runs GtfsFareAttributeContainer on test CSV data. */
+/** Runs GtfsTransferTableLoaderTest on test CSV data. */
 @RunWith(JUnit4.class)
 public class GtfsTransferTableLoaderTest {
   private static final GtfsFeedName FEED_NAME = GtfsFeedName.parseString("au-sydney-buses");
