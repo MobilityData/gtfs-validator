@@ -62,9 +62,7 @@ public class GtfsTransferTableLoaderTest {
   public void missingRequiredFieldShouldGenerateNotice() throws IOException {
     ValidatorLoader validatorLoader = new ValidatorLoader();
     Reader reader =
-        new StringReader(
-            "from_stop_id,to_stop_id,transfer_type\n"
-                + "origin stop id value,,2");
+        new StringReader("from_stop_id,to_stop_id,transfer_type\n" + "origin stop id value,,2");
     GtfsTransferTableLoader loader = new GtfsTransferTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
     GtfsTransferTableContainer tableContainer =
