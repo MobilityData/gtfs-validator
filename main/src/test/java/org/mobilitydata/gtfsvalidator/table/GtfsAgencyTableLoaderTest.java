@@ -43,8 +43,7 @@ public class GtfsAgencyTableLoaderTest {
     Reader reader =
         new StringReader(
             "agency_id,agency_name,agency_url,agency_timezone,agency_lang,"
-                + "agency_phone,agency_fare_url,agency_email"
-                + System.lineSeparator()
+                + "agency_phone,agency_fare_url,agency_email\n"
                 + "agency id value,agency name value,https://www.mobilitydata.org,America/Montreal,fr,514-234-7894,"
                 + "https://www.mobilitydata.org,hello@mobilitydata.org");
     GtfsAgencyTableLoader loader = new GtfsAgencyTableLoader();
@@ -70,8 +69,7 @@ public class GtfsAgencyTableLoaderTest {
     // agencyId is null
     reader =
         new StringReader(
-            "agency_id,agency_name,agency_url,agency_timezone"
-                + System.lineSeparator()
+            "agency_id,agency_name,agency_url,agency_timezone\n"
                 + ",agency name value,https://www.mobilitydata.org,America/Montreal");
     loader = new GtfsAgencyTableLoader();
     tableContainer =
@@ -95,8 +93,7 @@ public class GtfsAgencyTableLoaderTest {
     // agencyId is not null
     Reader reader =
         new StringReader(
-            "agency_id,agency_name,agency_url,agency_timezone"
-                + System.lineSeparator()
+            "agency_id,agency_name,agency_url,agency_timezone\n"
                 + "agency id value,,https://www.mobilitydata.org,America/Montreal");
     GtfsAgencyTableLoader loader = new GtfsAgencyTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
