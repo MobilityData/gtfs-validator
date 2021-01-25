@@ -17,124 +17,162 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mobilitydata.gtfsvalidator.table.GtfsRouteTableLoader.AGENCY_ID_FIELD_NAME;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
+import com.google.common.collect.ImmutableList;
+import java.time.ZoneId;
 import java.util.List;
-import org.junit.Before;
+import java.util.Locale;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 public class RouteAgencyIdValidatorTest {
-  @Mock final GtfsAgencyTableContainer mockAgencyTable = mock(GtfsAgencyTableContainer.class);
-  @Mock final GtfsRouteTableContainer mockRouteTable = mock(GtfsRouteTableContainer.class);
+  private static GtfsAgencyTableContainer createAgencyTable(
+      NoticeContainer noticeContainer, List<GtfsAgency> entities) {
+    return GtfsAgencyTableContainer.forEntities(entities, noticeContainer);
+  }
 
-  @InjectMocks final RouteAgencyIdValidator underTest = new RouteAgencyIdValidator();
+  public static GtfsAgency createAgency(
+      long csvRowNumber,
+      String agencyId,
+      String agencyName,
+      String agencyUrl,
+      ZoneId agencyTimezone,
+      Locale agencyLang) {
+    return new GtfsAgency.Builder()
+        .setCsvRowNumber(csvRowNumber)
+        .setAgencyId(agencyId)
+        .setAgencyName(agencyName)
+        .setAgencyUrl(agencyUrl)
+        .setAgencyTimezone(agencyTimezone)
+        .setAgencyLang(agencyLang)
+        .build();
+  }
 
-  @Before
-  public void openMocks() {
-    MockitoAnnotations.openMocks(this);
+  private static GtfsRouteTableContainer createRouteTable(
+      NoticeContainer noticeContainer, List<GtfsRoute> entities) {
+    return GtfsRouteTableContainer.forEntities(entities, noticeContainer);
+  }
+
+  public static GtfsRoute createRoute(
+      long csvRowNumber,
+      String routeId,
+      String agencyId,
+      String routeShortName,
+      String routeLongName,
+      String routeDesc,
+      int routeType) {
+    return new GtfsRoute.Builder()
+        .setCsvRowNumber(csvRowNumber)
+        .setRouteId(routeId)
+        .setAgencyId(agencyId)
+        .setRouteShortName(routeShortName)
+        .setRouteLongName(routeLongName)
+        .setRouteDesc(routeDesc)
+        .setRouteType(routeType)
+        .build();
   }
 
   @Test
   public void onlyOneAgencyInDatasetShouldNotGenerateNotice() {
-    NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-    when(mockAgencyTable.entityCount()).thenReturn(1);
-
-    underTest.validate(mockNoticeContainer);
-
-    verifyNoInteractions(mockNoticeContainer, mockRouteTable);
-    verify(mockAgencyTable, times(1)).entityCount();
-    verifyNoMoreInteractions(mockAgencyTable);
+    NoticeContainer noticeContainer = new NoticeContainer();
+    RouteAgencyIdValidator underTest = new RouteAgencyIdValidator();
+    underTest.agencyTable =
+        createAgencyTable(
+            noticeContainer,
+            ImmutableList.of(
+                createAgency(
+                    2,
+                    null,
+                    "route id value",
+                    "www.mobilitydata.org",
+                    ZoneId.of("America/Montreal"),
+                    Locale.CANADA)));
+    underTest.routeTable =
+        createRouteTable(
+            noticeContainer,
+            ImmutableList.of(
+                createRoute(
+                    3, "route id value", null, "short name", "long name", "route desc", 2)));
+    underTest.validate(noticeContainer);
   }
 
   @Test
   public void undefinedRouteAgencyIdShouldGenerateNotice() {
-    NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-    when(mockAgencyTable.entityCount()).thenReturn(2);
-    when(mockRouteTable.gtfsFilename()).thenReturn("routes.txt");
+    NoticeContainer noticeContainer = new NoticeContainer();
+    RouteAgencyIdValidator underTest = new RouteAgencyIdValidator();
+    underTest.agencyTable =
+        createAgencyTable(
+            noticeContainer,
+            ImmutableList.of(
+                createAgency(
+                    2,
+                    "first agency id",
+                    "agency name",
+                    "www.mobilitydata.org",
+                    ZoneId.of("America/Montreal"),
+                    Locale.CANADA),
+                createAgency(
+                    3,
+                    "second agency id",
+                    "second agency name",
+                    "www.mobilitydata.org",
+                    ZoneId.of("America/Montreal"),
+                    Locale.CANADA)));
+    underTest.routeTable =
+        createRouteTable(
+            noticeContainer,
+            ImmutableList.of(
+                createRoute(
+                    3, "route id value", null, "short name", "long name", "route desc", 2)));
 
-    GtfsRoute mockRoute0 = mock(GtfsRoute.class);
-    when(mockRoute0.hasAgencyId()).thenReturn(true);
-    GtfsRoute mockRoute1 = mock(GtfsRoute.class);
-    when(mockRoute1.hasAgencyId()).thenReturn(true);
-    GtfsRoute mockRoute2 = mock(GtfsRoute.class);
-    when(mockRoute2.hasAgencyId()).thenReturn(false);
-    when(mockRoute2.csvRowNumber()).thenReturn(3L);
+    underTest.validate(noticeContainer);
 
-    List<GtfsRoute> routeCollection = new ArrayList<>();
-    routeCollection.add(mockRoute0);
-    routeCollection.add(mockRoute1);
-    routeCollection.add(mockRoute2);
-    when(mockRouteTable.getEntities()).thenReturn(routeCollection);
-
-    underTest.validate(mockNoticeContainer);
-
-    ArgumentCaptor<MissingRequiredFieldError> captor =
-        ArgumentCaptor.forClass(MissingRequiredFieldError.class);
-
-    verify(mockNoticeContainer, times(1)).addValidationNotice(captor.capture());
-    MissingRequiredFieldError notice = captor.getValue();
-    assertThat(notice.getCode()).matches("missing_required_field");
-    assertThat(notice.getContext()).containsEntry("filename", "routes.txt");
-    assertThat(notice.getContext()).containsEntry("csvRowNumber", 3L);
-    assertThat(notice.getContext()).containsEntry("fieldName", AGENCY_ID_FIELD_NAME);
-
-    verify(mockAgencyTable, times(1)).entityCount();
-    verify(mockRoute0, times(1)).hasAgencyId();
-    verify(mockRoute1, times(1)).hasAgencyId();
-    verify(mockRoute2, times(1)).hasAgencyId();
-    verify(mockRouteTable, times(1)).gtfsFilename();
-    //noinspection ResultOfMethodCallIgnored stubbed method
-    verify(mockRouteTable, times(1)).getEntities();
-    verify(mockRoute2, times(1)).csvRowNumber();
-
-    verifyNoMoreInteractions(mockAgencyTable, mockRouteTable, mockRoute0, mockRoute1, mockRoute2);
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactly(new MissingRequiredFieldError("routes.txt", 3, "agency_id"));
   }
 
   @Test
   public void definedRouteAgencyIdShouldNotGenerateNotice() {
-    NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-    when(mockAgencyTable.entityCount()).thenReturn(3);
-    when(mockRouteTable.gtfsFilename()).thenReturn("routes.txt");
+    NoticeContainer noticeContainer = new NoticeContainer();
+    RouteAgencyIdValidator underTest = new RouteAgencyIdValidator();
+    underTest.agencyTable =
+        createAgencyTable(
+            noticeContainer,
+            ImmutableList.of(
+                createAgency(
+                    2,
+                    "first agency id",
+                    "agency name",
+                    "www.mobilitydata.org",
+                    ZoneId.of("America/Montreal"),
+                    Locale.CANADA),
+                createAgency(
+                    3,
+                    "second agency id",
+                    "second agency name",
+                    "www.mobilitydata.org",
+                    ZoneId.of("America/Montreal"),
+                    Locale.CANADA)));
+    underTest.routeTable =
+        createRouteTable(
+            noticeContainer,
+            ImmutableList.of(
+                createRoute(
+                    3,
+                    "route id value",
+                    "first agency id",
+                    "short name",
+                    "long name",
+                    "route desc",
+                    2)));
 
-    GtfsRoute mockRoute0 = mock(GtfsRoute.class);
-    when(mockRoute0.hasAgencyId()).thenReturn(true);
-    GtfsRoute mockRoute1 = mock(GtfsRoute.class);
-    when(mockRoute1.hasAgencyId()).thenReturn(true);
-    GtfsRoute mockRoute2 = mock(GtfsRoute.class);
-    when(mockRoute2.hasAgencyId()).thenReturn(true);
+    underTest.validate(noticeContainer);
 
-    List<GtfsRoute> routeCollection = new ArrayList<>();
-    routeCollection.add(mockRoute0);
-    routeCollection.add(mockRoute1);
-    routeCollection.add(mockRoute2);
-    when(mockRouteTable.getEntities()).thenReturn(routeCollection);
-
-    underTest.validate(mockNoticeContainer);
-
-    verifyNoInteractions(mockNoticeContainer);
-    verify(mockAgencyTable, times(1)).entityCount();
-    verify(mockRoute0, times(1)).hasAgencyId();
-    verify(mockRoute1, times(1)).hasAgencyId();
-    verify(mockRoute2, times(1)).hasAgencyId();
-    //noinspection ResultOfMethodCallIgnored stubbed method
-    verify(mockRouteTable, times(1)).getEntities();
-
-    verifyNoMoreInteractions(mockAgencyTable, mockRouteTable, mockRoute0, mockRoute1, mockRoute2);
+    assertThat(noticeContainer.getValidationNotices()).isEmpty();
   }
 }
