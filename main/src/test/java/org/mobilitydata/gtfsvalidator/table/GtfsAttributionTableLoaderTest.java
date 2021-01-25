@@ -16,6 +16,11 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import static com.google.common.truth.Truth.assertThat;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -23,69 +28,66 @@ import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.TimeZone;
-
-import static com.google.common.truth.Truth.assertThat;
-
-/**
- * Runs GtfsAttributionTableContainer on test CSV data.
- */
+/** Runs GtfsAttributionTableContainer on test CSV data. */
 @RunWith(JUnit4.class)
 public class GtfsAttributionTableLoaderTest {
-    private static final GtfsFeedName FEED_NAME = GtfsFeedName.parseString("au-sydney-buses");
+  private static final GtfsFeedName FEED_NAME = GtfsFeedName.parseString("au-sydney-buses");
 
-    @Test
-    public void validFile() throws IOException {
-        ValidatorLoader validatorLoader = new ValidatorLoader();
-        Reader reader =
-                new StringReader(
-                        "attribution_id,organization_name" + System.lineSeparator() +
-                                "attribution id value,MobilityData");
-        GtfsAttributionTableLoader loader = new GtfsAttributionTableLoader();
-        NoticeContainer noticeContainer = new NoticeContainer();
-        GtfsAttributionTableContainer tableContainer =
-                (GtfsAttributionTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
+  @Test
+  public void validFile() throws IOException {
+    ValidatorLoader validatorLoader = new ValidatorLoader();
+    Reader reader =
+        new StringReader(
+            "attribution_id,organization_name"
+                + System.lineSeparator()
+                + "attribution id value,MobilityData");
+    GtfsAttributionTableLoader loader = new GtfsAttributionTableLoader();
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsAttributionTableContainer tableContainer =
+        (GtfsAttributionTableContainer)
+            loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
 
-        assertThat(noticeContainer.getNotices()).isEmpty();
-        assertThat(tableContainer.entityCount()).isEqualTo(1);
-        reader.close();
-    }
+    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(tableContainer.entityCount()).isEqualTo(1);
+    reader.close();
+  }
 
-    @Test
-    public void missingRequiredField() throws IOException {
-        ValidatorLoader validatorLoader = new ValidatorLoader();
-        Reader reader =
-                new StringReader(
-                        "organization_name, attribution_id" + System.lineSeparator() +
-                                ",attribution id value");
-        GtfsAttributionTableLoader loader = new GtfsAttributionTableLoader();
-        NoticeContainer noticeContainer = new NoticeContainer();
-        GtfsAttributionTableContainer tableContainer =
-                (GtfsAttributionTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
+  @Test
+  public void missingRequiredField() throws IOException {
+    ValidatorLoader validatorLoader = new ValidatorLoader();
+    Reader reader =
+        new StringReader(
+            "organization_name, attribution_id" + System.lineSeparator() + ",attribution id value");
+    GtfsAttributionTableLoader loader = new GtfsAttributionTableLoader();
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsAttributionTableContainer tableContainer =
+        (GtfsAttributionTableContainer)
+            loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
 
-        assertThat(noticeContainer.getNotices()).isNotEmpty();
-        assertThat(noticeContainer.getNotices().get(0).getCode()).matches("missing_required_field");
-        assertThat(noticeContainer.getNotices().get(0).getContext()).containsEntry("filename", "attributions.txt");
-        assertThat(noticeContainer.getNotices().get(0).getContext()).containsEntry("csvRowNumber", 2L);
-        assertThat(noticeContainer.getNotices().get(0).getContext()).containsEntry("fieldName", "organization_name");
-        assertThat(tableContainer.entityCount()).isEqualTo(0);
-        reader.close();
-    }
+    assertThat(noticeContainer.getValidationNotices()).isNotEmpty();
+    assertThat(noticeContainer.getValidationNotices().get(0).getCode())
+        .matches("missing_required_field");
+    assertThat(noticeContainer.getValidationNotices().get(0).getContext())
+        .containsEntry("filename", "attributions.txt");
+    assertThat(noticeContainer.getValidationNotices().get(0).getContext())
+        .containsEntry("csvRowNumber", 2L);
+    assertThat(noticeContainer.getValidationNotices().get(0).getContext())
+        .containsEntry("fieldName", "organization_name");
+    assertThat(tableContainer.entityCount()).isEqualTo(0);
+    reader.close();
+  }
 
-    @Test
-    public void emptyFile() throws IOException {
-        ValidatorLoader validatorLoader = new ValidatorLoader();
-        Reader reader = new StringReader("");
-        GtfsAttributionTableLoader loader = new GtfsAttributionTableLoader();
-        NoticeContainer noticeContainer = new NoticeContainer();
-        loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
+  @Test
+  public void emptyFile() throws IOException {
+    ValidatorLoader validatorLoader = new ValidatorLoader();
+    Reader reader = new StringReader("");
+    GtfsAttributionTableLoader loader = new GtfsAttributionTableLoader();
+    NoticeContainer noticeContainer = new NoticeContainer();
+    loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
 
-        assertThat(noticeContainer.getNotices()).isNotEmpty();
-        assertThat(noticeContainer.getNotices().get(0).getClass().getSimpleName())
-                .isEqualTo("EmptyFileNotice");
-        reader.close();
-    }
+    assertThat(noticeContainer.getValidationNotices()).isNotEmpty();
+    assertThat(noticeContainer.getValidationNotices().get(0).getClass().getSimpleName())
+        .isEqualTo("EmptyFileNotice");
+    reader.close();
+  }
 }
