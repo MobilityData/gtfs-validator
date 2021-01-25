@@ -40,8 +40,7 @@ public class GtfsTripTableLoaderTest {
     ValidatorLoader validatorLoader = new ValidatorLoader();
     Reader reader =
         new StringReader(
-            "route_id,service_id,trip_id"
-                + System.lineSeparator()
+            "route_id,service_id,trip_id\n"
                 + "route id value,service id value,trip id value");
     GtfsTripTableLoader loader = new GtfsTripTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
@@ -63,8 +62,7 @@ public class GtfsTripTableLoaderTest {
     ValidatorLoader validatorLoader = new ValidatorLoader();
     Reader reader =
         new StringReader(
-            "route_id,service_id,trip_id"
-                + System.lineSeparator()
+            "route_id,service_id,trip_id\n"
                 + "route id value,,trip id value");
     GtfsTripTableLoader loader = new GtfsTripTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
