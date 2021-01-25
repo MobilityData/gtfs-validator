@@ -40,8 +40,7 @@ public class GtfsRouteTableLoaderTest {
     ValidatorLoader validatorLoader = new ValidatorLoader();
     Reader reader =
         new StringReader(
-            "route_id,agency_id,route_short_name,route_long_name,route_type"
-                + System.lineSeparator()
+            "route_id,agency_id,route_short_name,route_long_name,route_type\n"
                 + "route id value,agency id value,short name,long name,2");
     GtfsRouteTableLoader loader = new GtfsRouteTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
@@ -65,8 +64,7 @@ public class GtfsRouteTableLoaderTest {
     ValidatorLoader validatorLoader = new ValidatorLoader();
     Reader reader =
         new StringReader(
-            "route_id,agency_id,route_short_name,route_long_name,route_type"
-                + System.lineSeparator()
+            "route_id,agency_id,route_short_name,route_long_name,route_type\n"
                 + "route id value,agency id value,short name,long name,");
     GtfsRouteTableLoader loader = new GtfsRouteTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
