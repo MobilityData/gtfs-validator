@@ -27,6 +27,6 @@ public class IOError extends SystemError {
 
   @Override
   public String getCode() {
-    return "io_exception";
+    return "io_error";
   }
 }

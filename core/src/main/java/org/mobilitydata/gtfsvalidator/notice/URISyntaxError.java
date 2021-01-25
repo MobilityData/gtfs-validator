@@ -27,6 +27,6 @@ public class URISyntaxError extends SystemError {
 
   @Override
   public String getCode() {
-    return "uri_syntax_exception";
+    return "uri_syntax_error";
   }
 }
