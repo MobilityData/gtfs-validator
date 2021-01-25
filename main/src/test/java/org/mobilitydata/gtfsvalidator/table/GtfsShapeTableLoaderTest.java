@@ -16,84 +16,79 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
-import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
+import static com.google.common.truth.Truth.assertThat;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
+import org.mobilitydata.gtfsvalidator.notice.EmptyFileNotice;
+import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
+import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
-import static com.google.common.truth.Truth.assertThat;
-
-/**
- * Runs GtfsShapeTableLoader on test CSV data.
- */
+/** Runs GtfsShapeTableLoader on test CSV data. */
 @RunWith(JUnit4.class)
 public class GtfsShapeTableLoaderTest {
-    private static final GtfsFeedName FEED_NAME = GtfsFeedName.parseString("au-sydney-buses");
+  private static final GtfsFeedName FEED_NAME = GtfsFeedName.parseString("au-sydney-buses");
 
-    @Test
-    public void validFileShouldNotGenerateNotice() throws IOException {
-        ValidatorLoader validatorLoader = new ValidatorLoader();
-        Reader reader =
-                new StringReader(
-                        "shape_id,shape_pt_lat,shape_pt_lon,shape_pt_sequence"
-                                + System.lineSeparator() +
-                                "shape id value,30.34,10.76,20");
-        GtfsShapeTableLoader loader = new GtfsShapeTableLoader();
-        NoticeContainer noticeContainer = new NoticeContainer();
-        GtfsShapeTableContainer tableContainer =
-                (GtfsShapeTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
+  @Test
+  public void validFileShouldNotGenerateNotice() throws IOException {
+    ValidatorLoader validatorLoader = new ValidatorLoader();
+    Reader reader =
+        new StringReader(
+            "shape_id,shape_pt_lat,shape_pt_lon,shape_pt_sequence"
+                + System.lineSeparator()
+                + "shape id value,30.34,10.76,20");
+    GtfsShapeTableLoader loader = new GtfsShapeTableLoader();
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsShapeTableContainer tableContainer =
+        (GtfsShapeTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
+    reader.close();
 
-        assertThat(noticeContainer.getNotices()).isEmpty();
-        assertThat(tableContainer.entityCount()).isEqualTo(1);
-        GtfsShape shape = tableContainer.byShapeId("shape id value").get(0);
-        assertThat(shape).isNotNull();
-        assertThat(shape.shapeId()).matches("shape id value");
-        assertThat(shape.shapePtLat()).isEqualTo(30.34);
-        assertThat(shape.shapePtLon()).isEqualTo(10.76);
-        assertThat(shape.shapePtSequence()).isEqualTo(20);
+    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(tableContainer.entityCount()).isEqualTo(1);
+    GtfsShape shape = tableContainer.byShapeId("shape id value").get(0);
+    assertThat(shape).isNotNull();
+    assertThat(shape.shapeId()).matches("shape id value");
+    assertThat(shape.shapePtLat()).isEqualTo(30.34);
+    assertThat(shape.shapePtLon()).isEqualTo(10.76);
+    assertThat(shape.shapePtSequence()).isEqualTo(20);
+  }
 
-        reader.close();
-    }
+  @Test
+  public void missingRequiredFieldShouldGenerateNotice() throws IOException {
+    ValidatorLoader validatorLoader = new ValidatorLoader();
+    Reader reader =
+        new StringReader(
+            "shape_id,shape_pt_lat,shape_pt_lon,shape_pt_sequence"
+                + System.lineSeparator()
+                + "shape id value,,10.76,20");
+    GtfsShapeTableLoader loader = new GtfsShapeTableLoader();
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsShapeTableContainer tableContainer =
+        (GtfsShapeTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
+    reader.close();
 
-    @Test
-    public void missingRequiredFieldShouldGenerateNotice() throws IOException {
-        ValidatorLoader validatorLoader = new ValidatorLoader();
-        Reader reader =
-                new StringReader(
-                        "shape_id,shape_pt_lat,shape_pt_lon,shape_pt_sequence"
-                                + System.lineSeparator() +
-                                "shape id value,,10.76,20");
-        GtfsShapeTableLoader loader = new GtfsShapeTableLoader();
-        NoticeContainer noticeContainer = new NoticeContainer();
-        GtfsShapeTableContainer tableContainer =
-                (GtfsShapeTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactly(new MissingRequiredFieldError("shapes.txt", 2, "shape_pt_lat"));
+    assertThat(tableContainer.entityCount()).isEqualTo(0);
+  }
 
-        assertThat(noticeContainer.getNotices()).isNotEmpty();
-        assertThat(noticeContainer.getNotices().get(0).getCode()).matches("missing_required_field");
-        assertThat(noticeContainer.getNotices().get(0).getContext()).containsEntry("filename", "shapes.txt");
-        assertThat(noticeContainer.getNotices().get(0).getContext()).containsEntry("csvRowNumber", 2L);
-        assertThat(noticeContainer.getNotices().get(0).getContext()).containsEntry("fieldName", "shape_pt_lat");
-        assertThat(tableContainer.entityCount()).isEqualTo(0);
-        reader.close();
-    }
+  @Test
+  public void emptyFileShouldGenerateNotice() throws IOException {
+    ValidatorLoader validatorLoader = new ValidatorLoader();
+    Reader reader = new StringReader("");
+    GtfsShapeTableLoader loader = new GtfsShapeTableLoader();
+    NoticeContainer noticeContainer = new NoticeContainer();
 
-    @Test
-    public void emptyFileShouldGenerateNotice() throws IOException {
-        ValidatorLoader validatorLoader = new ValidatorLoader();
-        Reader reader = new StringReader("");
-        GtfsShapeTableLoader loader = new GtfsShapeTableLoader();
-        NoticeContainer noticeContainer = new NoticeContainer();
+    loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
+    reader.close();
 
-        loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
-
-        assertThat(noticeContainer.getNotices()).isNotEmpty();
-        assertThat(noticeContainer.getNotices().get(0).getClass().getSimpleName()).isEqualTo("EmptyFileNotice");
-        reader.close();
-    }
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactly(new EmptyFileNotice("shapes.txt"));
+  }
 }
