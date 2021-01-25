@@ -40,8 +40,7 @@ public class GtfsPathwayTableLoaderTest {
     ValidatorLoader validatorLoader = new ValidatorLoader();
     Reader reader =
         new StringReader(
-            "pathway_id,from_stop_id,to_stop_id,pathway_mode,is_bidirectional"
-                + System.lineSeparator()
+            "pathway_id,from_stop_id,to_stop_id,pathway_mode,is_bidirectional\n"
                 + "pathway id value,1,3,3,0");
     GtfsPathwayTableLoader loader = new GtfsPathwayTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
@@ -65,8 +64,7 @@ public class GtfsPathwayTableLoaderTest {
     ValidatorLoader validatorLoader = new ValidatorLoader();
     Reader reader =
         new StringReader(
-            "pathway_id,from_stop_id,to_stop_id,pathway_mode,is_bidirectional"
-                + System.lineSeparator()
+            "pathway_id,from_stop_id,to_stop_id,pathway_mode,is_bidirectional\n"
                 + "pathway id value,,3,3,0");
     GtfsPathwayTableLoader loader = new GtfsPathwayTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
