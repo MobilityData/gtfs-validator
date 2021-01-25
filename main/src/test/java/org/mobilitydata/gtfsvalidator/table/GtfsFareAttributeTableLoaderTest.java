@@ -41,8 +41,7 @@ public class GtfsFareAttributeTableLoaderTest {
     ValidatorLoader validatorLoader = new ValidatorLoader();
     Reader reader =
         new StringReader(
-            "fare_id,price,currency_type,payment_method,transfers\n"
-                + "fare id value,2.5,CAD,0,0");
+            "fare_id,price,currency_type,payment_method,transfers\n" + "fare id value,2.5,CAD,0,0");
     GtfsFareAttributeTableLoader loader = new GtfsFareAttributeTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
     GtfsFareAttributeTableContainer tableContainer =
@@ -67,8 +66,7 @@ public class GtfsFareAttributeTableLoaderTest {
     ValidatorLoader validatorLoader = new ValidatorLoader();
     Reader reader =
         new StringReader(
-            "fare_id,price,currency_type,payment_method,transfers\n"
-                + "fare id value,2.5,,0,0");
+            "fare_id,price,currency_type,payment_method,transfers\n" + "fare id value,2.5,,0,0");
     GtfsFareAttributeTableLoader loader = new GtfsFareAttributeTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
     GtfsFareAttributeTableContainer tableContainer =
