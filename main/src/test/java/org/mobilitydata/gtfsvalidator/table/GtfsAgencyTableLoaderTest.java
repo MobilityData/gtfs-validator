@@ -104,7 +104,7 @@ public class GtfsAgencyTableLoaderTest {
         (GtfsAgencyTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new MissingRequiredFieldError("agemcy.txt", 2, "agency_name"));
+        .containsExactly(new MissingRequiredFieldError("agency.txt", 2, "agency_name"));
     assertThat(tableContainer.entityCount()).isEqualTo(0);
     reader.close();
   }
