@@ -58,7 +58,7 @@ public class GtfsAgencyTableLoaderTest {
     assertThat(agency.agencyId()).isEqualTo("agency id value");
     assertThat(agency.agencyName()).isEqualTo("agency name value");
     assertThat(agency.agencyUrl()).isEqualTo("https://www.mobilitydata.org");
-    assertThat(agency.agencyTimezone()).isEqualTo(TimeZone.getTimeZone("America/Montreal"));
+    assertThat(agency.agencyTimezone().getId()).matches("America/Montreal");
     assertThat(agency.agencyLang()).isEqualTo(Locale.forLanguageTag("fr"));
     assertThat(agency.agencyPhone()).matches("514-234-7894");
     assertThat(agency.agencyFareUrl()).matches("https://www.mobilitydata.org");
@@ -83,7 +83,7 @@ public class GtfsAgencyTableLoaderTest {
     assertThat(agency.agencyId()).isEmpty();
     assertThat(agency.agencyName()).isEqualTo("agency name value");
     assertThat(agency.agencyUrl()).isEqualTo("https://www.mobilitydata.org");
-    assertThat(agency.agencyTimezone()).isEqualTo(TimeZone.getTimeZone("America/Montreal"));
+    assertThat(agency.agencyTimezone().getId()).matches("America/Montreal");
 
     reader.close();
   }
