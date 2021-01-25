@@ -16,61 +16,60 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import static com.google.common.truth.Truth.assertThat;
+
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.mock;
-
 @RunWith(JUnit4.class)
 public class GtfsCalendarDateTableContainerTest {
-    @Test
-    public void forEmptyFile() {
-        GtfsCalendarDateTableContainer tableContainer = GtfsCalendarDateTableContainer.forEmptyFile();
-        assertThat(tableContainer.getEntities()).isEmpty();
-        assertThat(tableContainer.gtfsFilename()).matches("calendar_dates.txt");
-        assertThat(tableContainer.isEmptyFile()).isTrue();
-        assertThat(tableContainer.hasInvalidHeaders()).isFalse();
-        assertThat(tableContainer.isMissingFile()).isFalse();
-    }
+  @Test
+  public void forEmptyFile() {
+    GtfsCalendarDateTableContainer tableContainer = GtfsCalendarDateTableContainer.forEmptyFile();
+    assertThat(tableContainer.getEntities()).isEmpty();
+    assertThat(tableContainer.gtfsFilename()).matches("calendar_dates.txt");
+    assertThat(tableContainer.isEmptyFile()).isTrue();
+    assertThat(tableContainer.hasInvalidHeaders()).isFalse();
+    assertThat(tableContainer.isMissingFile()).isFalse();
+  }
 
-    @Test
-    public void forMissingFile() {
-        GtfsCalendarDateTableContainer tableContainer = GtfsCalendarDateTableContainer.forMissingFile();
-        assertThat(tableContainer.getEntities()).isEmpty();
-        assertThat(tableContainer.gtfsFilename()).matches("calendar_dates.txt");
-        assertThat(tableContainer.isEmptyFile()).isFalse();
-        assertThat(tableContainer.hasInvalidHeaders()).isFalse();
-        assertThat(tableContainer.isMissingFile()).isTrue();
-    }
+  @Test
+  public void forMissingFile() {
+    GtfsCalendarDateTableContainer tableContainer = GtfsCalendarDateTableContainer.forMissingFile();
+    assertThat(tableContainer.getEntities()).isEmpty();
+    assertThat(tableContainer.gtfsFilename()).matches("calendar_dates.txt");
+    assertThat(tableContainer.isEmptyFile()).isFalse();
+    assertThat(tableContainer.hasInvalidHeaders()).isFalse();
+    assertThat(tableContainer.isMissingFile()).isTrue();
+  }
 
-    @Test
-    public void forInvalidHeaders() {
-        GtfsCalendarDateTableContainer tableContainer = GtfsCalendarDateTableContainer.forInvalidHeaders();
-        assertThat(tableContainer.getEntities()).isEmpty();
-        assertThat(tableContainer.gtfsFilename()).matches("calendar_dates.txt");
-        assertThat(tableContainer.isEmptyFile()).isFalse();
-        assertThat(tableContainer.hasInvalidHeaders()).isTrue();
-        assertThat(tableContainer.isMissingFile()).isFalse();
-    }
+  @Test
+  public void forInvalidHeaders() {
+    GtfsCalendarDateTableContainer tableContainer =
+        GtfsCalendarDateTableContainer.forInvalidHeaders();
+    assertThat(tableContainer.getEntities()).isEmpty();
+    assertThat(tableContainer.gtfsFilename()).matches("calendar_dates.txt");
+    assertThat(tableContainer.isEmptyFile()).isFalse();
+    assertThat(tableContainer.hasInvalidHeaders()).isTrue();
+    assertThat(tableContainer.isMissingFile()).isFalse();
+  }
 
-    @Test
-    public void forEntities() {
-        NoticeContainer noticeContainer = new NoticeContainer();
-        List<GtfsCalendarDate> calendarDateCollection = new ArrayList<>();
-        GtfsCalendarDate mockCalendarDate = mock(GtfsCalendarDate.class);
-        calendarDateCollection.add(mockCalendarDate);
-        GtfsCalendarDateTableContainer tableContainer =
-                GtfsCalendarDateTableContainer.forEntities(calendarDateCollection, noticeContainer);
-        assertThat(tableContainer.getEntities().isEmpty()).isFalse();
-        assertThat(tableContainer.isEmptyFile()).isFalse();
-        assertThat(tableContainer.gtfsFilename()).matches("calendar_dates.txt");
-        assertThat(tableContainer.hasInvalidHeaders()).isFalse();
-        assertThat(tableContainer.isMissingFile()).isFalse();
-    }
+  @Test
+  public void forEntities() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    List<GtfsCalendarDate> calendarDateCollection = new ArrayList<>();
+    GtfsCalendarDate calendarDate = new GtfsCalendarDate.Builder().build();
+    calendarDateCollection.add(calendarDate);
+    GtfsCalendarDateTableContainer tableContainer =
+        GtfsCalendarDateTableContainer.forEntities(calendarDateCollection, noticeContainer);
+    assertThat(tableContainer.getEntities().isEmpty()).isFalse();
+    assertThat(tableContainer.isEmptyFile()).isFalse();
+    assertThat(tableContainer.gtfsFilename()).matches("calendar_dates.txt");
+    assertThat(tableContainer.hasInvalidHeaders()).isFalse();
+    assertThat(tableContainer.isMissingFile()).isFalse();
+  }
 }
