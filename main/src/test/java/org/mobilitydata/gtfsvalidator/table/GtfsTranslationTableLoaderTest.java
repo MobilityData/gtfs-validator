@@ -41,8 +41,7 @@ public class GtfsTranslationTableLoaderTest {
     ValidatorLoader validatorLoader = new ValidatorLoader();
     Reader reader =
         new StringReader(
-            "table_name,field_name,language,translation"
-                + System.lineSeparator()
+            "table_name,field_name,language,translation\n"
                 + "table name value,field name value,fr,translation value");
     GtfsTranslationTableLoader loader = new GtfsTranslationTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
@@ -65,8 +64,7 @@ public class GtfsTranslationTableLoaderTest {
     ValidatorLoader validatorLoader = new ValidatorLoader();
     Reader reader =
         new StringReader(
-            "table_name,field_name,language,translation"
-                + System.lineSeparator()
+            "table_name,field_name,language,translation\n"
                 + "table name value,field name value,,translation value");
     GtfsTranslationTableLoader loader = new GtfsTranslationTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
