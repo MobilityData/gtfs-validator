@@ -16,61 +16,61 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import static com.google.common.truth.Truth.assertThat;
+
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.mock;
-
 @RunWith(JUnit4.class)
 public class GtfsFareAttributeTableContainerTest {
-    @Test
-    public void forEmptyFile() {
-        GtfsFareAttributeTableContainer tableContainer = GtfsFareAttributeTableContainer.forEmptyFile();
-        assertThat(tableContainer.getEntities()).isEmpty();
-        assertThat(tableContainer.gtfsFilename()).matches("fare_attributes.txt");
-        assertThat(tableContainer.isEmptyFile()).isTrue();
-        assertThat(tableContainer.hasInvalidHeaders()).isFalse();
-        assertThat(tableContainer.isMissingFile()).isFalse();
-    }
+  @Test
+  public void forEmptyFile() {
+    GtfsFareAttributeTableContainer tableContainer = GtfsFareAttributeTableContainer.forEmptyFile();
+    assertThat(tableContainer.getEntities()).isEmpty();
+    assertThat(tableContainer.gtfsFilename()).matches("fare_attributes.txt");
+    assertThat(tableContainer.isEmptyFile()).isTrue();
+    assertThat(tableContainer.hasInvalidHeaders()).isFalse();
+    assertThat(tableContainer.isMissingFile()).isFalse();
+  }
 
-    @Test
-    public void forMissingFile() {
-        GtfsFareAttributeTableContainer tableContainer = GtfsFareAttributeTableContainer.forMissingFile();
-        assertThat(tableContainer.getEntities()).isEmpty();
-        assertThat(tableContainer.gtfsFilename()).matches("fare_attributes.txt");
-        assertThat(tableContainer.isEmptyFile()).isFalse();
-        assertThat(tableContainer.hasInvalidHeaders()).isFalse();
-        assertThat(tableContainer.isMissingFile()).isTrue();
-    }
+  @Test
+  public void forMissingFile() {
+    GtfsFareAttributeTableContainer tableContainer =
+        GtfsFareAttributeTableContainer.forMissingFile();
+    assertThat(tableContainer.getEntities()).isEmpty();
+    assertThat(tableContainer.gtfsFilename()).matches("fare_attributes.txt");
+    assertThat(tableContainer.isEmptyFile()).isFalse();
+    assertThat(tableContainer.hasInvalidHeaders()).isFalse();
+    assertThat(tableContainer.isMissingFile()).isTrue();
+  }
 
-    @Test
-    public void forInvalidHeaders() {
-        GtfsFareAttributeTableContainer tableContainer = GtfsFareAttributeTableContainer.forInvalidHeaders();
-        assertThat(tableContainer.getEntities()).isEmpty();
-        assertThat(tableContainer.gtfsFilename()).matches("fare_attributes.txt");
-        assertThat(tableContainer.isEmptyFile()).isFalse();
-        assertThat(tableContainer.hasInvalidHeaders()).isTrue();
-        assertThat(tableContainer.isMissingFile()).isFalse();
-    }
+  @Test
+  public void forInvalidHeaders() {
+    GtfsFareAttributeTableContainer tableContainer =
+        GtfsFareAttributeTableContainer.forInvalidHeaders();
+    assertThat(tableContainer.getEntities()).isEmpty();
+    assertThat(tableContainer.gtfsFilename()).matches("fare_attributes.txt");
+    assertThat(tableContainer.isEmptyFile()).isFalse();
+    assertThat(tableContainer.hasInvalidHeaders()).isTrue();
+    assertThat(tableContainer.isMissingFile()).isFalse();
+  }
 
-    @Test
-    public void forEntities() {
-        NoticeContainer noticeContainer = new NoticeContainer();
-        List<GtfsFareAttribute> fareAttributeCollection = new ArrayList<>();
-        GtfsFareAttribute mockFareAttribute = mock(GtfsFareAttribute.class);
-        fareAttributeCollection.add(mockFareAttribute);
-        GtfsFareAttributeTableContainer tableContainer =
-                GtfsFareAttributeTableContainer.forEntities(fareAttributeCollection, noticeContainer);
-        assertThat(tableContainer.getEntities().isEmpty()).isFalse();
-        assertThat(tableContainer.isEmptyFile()).isFalse();
-        assertThat(tableContainer.gtfsFilename()).matches("fare_attributes.txt");
-        assertThat(tableContainer.hasInvalidHeaders()).isFalse();
-        assertThat(tableContainer.isMissingFile()).isFalse();
-    }
+  @Test
+  public void forEntities() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    List<GtfsFareAttribute> fareAttributeCollection = new ArrayList<>();
+    GtfsFareAttribute fareAttribute = new GtfsFareAttribute.Builder().build();
+    fareAttributeCollection.add(fareAttribute);
+    GtfsFareAttributeTableContainer tableContainer =
+        GtfsFareAttributeTableContainer.forEntities(fareAttributeCollection, noticeContainer);
+    assertThat(tableContainer.getEntities().isEmpty()).isFalse();
+    assertThat(tableContainer.isEmptyFile()).isFalse();
+    assertThat(tableContainer.gtfsFilename()).matches("fare_attributes.txt");
+    assertThat(tableContainer.hasInvalidHeaders()).isFalse();
+    assertThat(tableContainer.isMissingFile()).isFalse();
+  }
 }
