@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,5 +34,44 @@ public class GtfsDateTest {
     assertThrows(IllegalArgumentException.class, () -> GtfsDate.fromString("0"));
     assertThrows(IllegalArgumentException.class, () -> GtfsDate.fromString("qwerty"));
     assertThrows(IllegalArgumentException.class, () -> GtfsDate.fromString("today"));
+  }
+
+  @Test
+  public void getDayMonthYear() {
+    GtfsDate underTest = GtfsDate.fromLocalDate(LocalDate.of(2022, 1, 20));
+    assertThat(underTest.getDay()).isEqualTo(20);
+    assertThat(underTest.getMonth()).isEqualTo(1);
+    assertThat(underTest.getYear()).isEqualTo(2022);
+  }
+
+  @Test
+  public void dateFromEpochShouldReturnGtfsDateWithSameData() {
+    assertThat(GtfsDate.fromEpochDay(18614).getLocalDate()).isEqualTo(LocalDate.ofEpochDay(18614));
+  }
+
+  @Test
+  public void gtfsDateShouldBeComparable() {
+    GtfsDate firstGtfsDate = GtfsDate.fromEpochDay(18614);
+    GtfsDate secondGtfsDate = GtfsDate.fromEpochDay(20614);
+
+    assertThat(firstGtfsDate.compareTo(secondGtfsDate)).isLessThan(0);
+    assertThat(secondGtfsDate.compareTo(firstGtfsDate)).isGreaterThan(1);
+    assertThat(firstGtfsDate.compareTo(firstGtfsDate)).isEqualTo(0);
+  }
+
+  @Test
+  public void firstDateShouldBeIdentifiedAsBeforeSecondDate() {
+    GtfsDate firstGtfsDate = GtfsDate.fromEpochDay(18614);
+    GtfsDate secondGtfsDate = GtfsDate.fromEpochDay(20614);
+
+    assertThat(firstGtfsDate.isBefore(secondGtfsDate)).isTrue();
+    assertThat(firstGtfsDate.isAfter(secondGtfsDate)).isFalse();
+  }
+
+  @Test
+  public void gtfsDateShouldNotBeIdentifiedAsBeforeItself() {
+    GtfsDate underTest = GtfsDate.fromEpochDay(18614);
+    assertThat(underTest.isBefore(underTest)).isFalse();
+    assertThat(underTest.isAfter(underTest)).isFalse();
   }
 }

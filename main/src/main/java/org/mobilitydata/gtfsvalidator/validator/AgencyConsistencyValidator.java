@@ -75,6 +75,8 @@ public class AgencyConsistencyValidator extends FileValidator {
                 commonTimezone.getId(),
                 agency.agencyTimezone().getId()));
       }
+      // FIXME: this should be a warning. See
+      // https://github.com/MobilityData/gtfs-validator/issues/549.
       if (hasLanguage != agency.hasAgencyLang()
           || (hasLanguage
               && agency.hasAgencyLang()
