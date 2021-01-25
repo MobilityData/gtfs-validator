@@ -63,7 +63,6 @@ public class GtfsTripServiceIdForeignKeyValidatorTest {
 
   private static GtfsCalendarTableContainer createCalendarTable(
       NoticeContainer noticeContainer, List<GtfsCalendar> entities) {
-
     return GtfsCalendarTableContainer.forEntities(entities, noticeContainer);
   }
 
@@ -79,7 +78,6 @@ public class GtfsTripServiceIdForeignKeyValidatorTest {
 
   private static GtfsCalendarDateTableContainer createCalendarDateTable(
       NoticeContainer noticeContainer, List<GtfsCalendarDate> entities) {
-
     return GtfsCalendarDateTableContainer.forEntities(entities, noticeContainer);
   }
 
@@ -92,7 +90,7 @@ public class GtfsTripServiceIdForeignKeyValidatorTest {
             noticeContainer,
             ImmutableList.of(
                 CalendarUtilTest.createGtfsCalendar(
-                    "WEEK", LocalDate.of(2021, 1, 14), LocalDate.of(2021, 1, 10), weekDays)));
+                    "WEEK", LocalDate.of(2021, 1, 14), LocalDate.of(2021, 1, 24), weekDays)));
     underTest.tripContainer =
         createTripTable(
             noticeContainer,
