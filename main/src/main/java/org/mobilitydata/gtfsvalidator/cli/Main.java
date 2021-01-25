@@ -66,7 +66,7 @@ public class Main {
     feedLoader.setNumThreads(args.getNumThreads());
     NoticeContainer noticeContainer = new NoticeContainer();
     GtfsFeedContainer feedContainer;
-    GtfsInput gtfsInput;
+    GtfsInput gtfsInput = null;
     try {
       if (args.getInput() == null) {
         if (Strings.isNullOrEmpty(args.getStorageDirectory())) {
@@ -77,17 +77,18 @@ public class Main {
       } else {
         gtfsInput = GtfsInput.createFromPath(Paths.get(args.getInput()));
       }
-    } catch (IOException | URISyntaxException | InterruptedException e) {
-      if (e instanceof IOException) {
-        noticeContainer.addSystemError(new IOError(e.getMessage()));
-      }
-      if (e instanceof URISyntaxException) {
-        noticeContainer.addSystemError(new URISyntaxError(e.getMessage()));
-      } else {
-        noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
-      }
-      exportReport(args.getOutputBase(), noticeContainer);
+    } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot load GTFS feed");
+      noticeContainer.addSystemError(new IOError(e.getMessage()));
+    } catch (URISyntaxException e) {
+      logger.atSevere().withCause(e).log("Syntax error in URL");
+      noticeContainer.addSystemError(new URISyntaxError(e.getMessage()));
+    } catch (InterruptedException e) {
+      logger.atSevere().withCause(e).log("Interrupted thread");
+      noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
+    }
+    if (gtfsInput == null) {
+      exportReport(args.getOutputBase(), noticeContainer);
       return;
     }
     feedContainer =
