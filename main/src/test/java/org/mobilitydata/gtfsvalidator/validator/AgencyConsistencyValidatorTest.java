@@ -65,14 +65,14 @@ public class AgencyConsistencyValidatorTest {
                     0,
                     "first agency",
                     "agency name",
-                    "url value",
+                    "www.mobilitydata.org",
                     ZoneId.of("America/Montreal"),
                     Locale.CANADA),
                 createAgency(
                     1,
                     null,
                     "agency name",
-                    "url value",
+                    "www.mobilitydata.org",
                     ZoneId.of("America/Montreal"),
                     Locale.CANADA)));
 
@@ -93,14 +93,14 @@ public class AgencyConsistencyValidatorTest {
                     0,
                     "first agency",
                     "first agency name",
-                    "first url value",
+                    "www.mobilitydata.org",
                     ZoneId.of("America/Bogota"),
                     Locale.CANADA),
                 createAgency(
                     1,
                     "second agency",
                     "second agency name",
-                    "second url value",
+                    "www.mobilitydata.org",
                     ZoneId.of("America/Montreal"),
                     Locale.CANADA)));
 
@@ -123,14 +123,14 @@ public class AgencyConsistencyValidatorTest {
                     0,
                     "first agency",
                     "first agency name",
-                    "first url value",
+                    "www.mobilitydata.org",
                     ZoneId.of("America/Montreal"),
                     Locale.CANADA),
                 createAgency(
                     1,
                     "second agency",
                     "second agency name",
-                    "second url value",
+                    "www.mobilitydata.org",
                     ZoneId.of("America/Montreal"),
                     Locale.CANADA)));
 
@@ -150,14 +150,14 @@ public class AgencyConsistencyValidatorTest {
                     0,
                     "first agency",
                     "first agency name",
-                    "first url value",
+                    "www.mobilitydata.org",
                     ZoneId.of("America/Montreal"),
                     Locale.CANADA),
                 createAgency(
                     1,
                     "second agency",
                     "second agency name",
-                    "second url value",
+                    "www.mobilitydata.org",
                     ZoneId.of("America/Montreal"),
                     Locale.FRANCE)));
 
@@ -178,14 +178,14 @@ public class AgencyConsistencyValidatorTest {
                     0,
                     "first agency",
                     "first agency name",
-                    "first url value",
+                    "www.mobilitydata.org",
                     ZoneId.of("America/Montreal"),
                     Locale.CANADA),
                 createAgency(
                     1,
                     "second agency",
                     "second agency name",
-                    "second url value",
+                    "www.mobilitydata.org",
                     ZoneId.of("America/Montreal"),
                     Locale.CANADA)));
 
