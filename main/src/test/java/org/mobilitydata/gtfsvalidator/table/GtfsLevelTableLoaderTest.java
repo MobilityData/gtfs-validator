@@ -25,6 +25,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
+import org.mobilitydata.gtfsvalidator.notice.EmptyFileNotice;
+import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
@@ -62,7 +64,8 @@ public class GtfsLevelTableLoaderTest {
     GtfsLevelTableContainer tableContainer =
         (GtfsLevelTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
 
-    assertThat(noticeContainer.getValidationNotices()).isNotEmpty();
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactly(new MissingRequiredFieldError("levels.txt", 2, "level_id"));
     assertThat(tableContainer.entityCount()).isEqualTo(0);
     reader.close();
   }
@@ -73,12 +76,10 @@ public class GtfsLevelTableLoaderTest {
     Reader reader = new StringReader("");
     GtfsLevelTableLoader loader = new GtfsLevelTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
-    GtfsLevelTableContainer tableContainer =
-        (GtfsLevelTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
+    loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
 
-    assertThat(noticeContainer.getValidationNotices()).isNotEmpty();
-    assertThat(noticeContainer.getValidationNotices().get(0).getClass().getSimpleName())
-        .isEqualTo("EmptyFileNotice");
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactly(new EmptyFileNotice("levels.txt"));
     reader.close();
   }
 }
