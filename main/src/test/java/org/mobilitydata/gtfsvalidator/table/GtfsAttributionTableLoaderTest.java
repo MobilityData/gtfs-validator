@@ -40,9 +40,7 @@ public class GtfsAttributionTableLoaderTest {
     ValidatorLoader validatorLoader = new ValidatorLoader();
     Reader reader =
         new StringReader(
-            "attribution_id,organization_name"
-                + System.lineSeparator()
-                + "attribution id value,MobilityData");
+            "attribution_id,organization_name\n" + "attribution id value,MobilityData");
     GtfsAttributionTableLoader loader = new GtfsAttributionTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
     GtfsAttributionTableContainer tableContainer =
@@ -58,8 +56,7 @@ public class GtfsAttributionTableLoaderTest {
   public void missingRequiredField() throws IOException {
     ValidatorLoader validatorLoader = new ValidatorLoader();
     Reader reader =
-        new StringReader(
-            "organization_name, attribution_id" + System.lineSeparator() + ",attribution id value");
+        new StringReader("organization_name, attribution_id\n" + ",attribution id value");
     GtfsAttributionTableLoader loader = new GtfsAttributionTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
     GtfsAttributionTableContainer tableContainer =
