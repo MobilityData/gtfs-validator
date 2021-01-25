@@ -43,7 +43,6 @@ public class CalendarServiceDateValidatorTest {
 
   private static GtfsCalendarTableContainer createCalendarTable(
       NoticeContainer noticeContainer, List<GtfsCalendar> entities) {
-
     return GtfsCalendarTableContainer.forEntities(entities, noticeContainer);
   }
 
