@@ -49,6 +49,7 @@ public class GtfsFeedInfoTableLoaderTest {
     GtfsFeedInfoTableContainer tableContainer =
         (GtfsFeedInfoTableContainer)
             loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
+    reader.close();
 
     assertThat(noticeContainer.getValidationNotices()).isEmpty();
     assertThat(tableContainer.entityCount()).isEqualTo(1);
@@ -57,8 +58,6 @@ public class GtfsFeedInfoTableLoaderTest {
     assertThat(feedInfo.feedPublisherName()).matches("feed publisher name value");
     assertThat(feedInfo.feedPublisherUrl()).matches("https://www.mobilitydata.org");
     assertThat(feedInfo.feedLang()).isEqualTo(Locale.forLanguageTag("en"));
-
-    reader.close();
   }
 
   @Test
@@ -89,9 +88,9 @@ public class GtfsFeedInfoTableLoaderTest {
     NoticeContainer noticeContainer = new NoticeContainer();
 
     loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
+    reader.close();
 
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(new EmptyFileNotice("feed_info.txt"));
-    reader.close();
   }
 }
