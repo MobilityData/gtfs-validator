@@ -16,25 +16,25 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import static com.google.common.truth.Truth.assertThat;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import static com.google.common.truth.Truth.assertThat;
-
 @RunWith(JUnit4.class)
 public class GtfsTransferTypeTest {
-    @Test
-    public void shouldReturnEnumValue() {
-        assertThat(GtfsTransferType.forNumber(0)).isEqualTo(GtfsTransferType.RECOMMENDED);
-        assertThat(GtfsTransferType.forNumber(1)).isEqualTo(GtfsTransferType.TIMED);
-        assertThat(GtfsTransferType.forNumber(2)).isEqualTo(GtfsTransferType.MINIMUM_TIME);
-        assertThat(GtfsTransferType.forNumber(3)).isEqualTo(GtfsTransferType.IMPOSSIBLE);
-    }
+  @Test
+  public void shouldReturnEnumValue() {
+    assertThat(GtfsTransferType.forNumber(0)).isEqualTo(GtfsTransferType.RECOMMENDED);
+    assertThat(GtfsTransferType.forNumber(1)).isEqualTo(GtfsTransferType.TIMED);
+    assertThat(GtfsTransferType.forNumber(2)).isEqualTo(GtfsTransferType.MINIMUM_TIME);
+    assertThat(GtfsTransferType.forNumber(3)).isEqualTo(GtfsTransferType.IMPOSSIBLE);
+  }
 
-    @Test
-    public void shouldReturnNull() {
-        assertThat(GtfsTransferType.forNumber(-1)).isNull();
-        assertThat(GtfsTransferType.forNumber(4)).isNull();
-    }
+  @Test
+  public void shouldReturnNull() {
+    assertThat(GtfsTransferType.forNumber(-1)).isNull();
+    assertThat(GtfsTransferType.forNumber(4)).isNull();
+  }
 }
