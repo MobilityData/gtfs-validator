@@ -16,26 +16,26 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import static com.google.common.truth.Truth.assertThat;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import static com.google.common.truth.Truth.assertThat;
-
 @RunWith(JUnit4.class)
 public class GtfsLocationTypeTest {
-    @Test
-    public void shouldReturnEnumValue() {
-        assertThat(GtfsLocationType.forNumber(0)).isEqualTo(GtfsLocationType.STOP);
-        assertThat(GtfsLocationType.forNumber(1)).isEqualTo(GtfsLocationType.STATION);
-        assertThat(GtfsLocationType.forNumber(2)).isEqualTo(GtfsLocationType.ENTRANCE);
-        assertThat(GtfsLocationType.forNumber(3)).isEqualTo(GtfsLocationType.GENERIC_NODE);
-        assertThat(GtfsLocationType.forNumber(4)).isEqualTo(GtfsLocationType.BOARDING_AREA);
-    }
+  @Test
+  public void shouldReturnEnumValue() {
+    assertThat(GtfsLocationType.forNumber(0)).isEqualTo(GtfsLocationType.STOP);
+    assertThat(GtfsLocationType.forNumber(1)).isEqualTo(GtfsLocationType.STATION);
+    assertThat(GtfsLocationType.forNumber(2)).isEqualTo(GtfsLocationType.ENTRANCE);
+    assertThat(GtfsLocationType.forNumber(3)).isEqualTo(GtfsLocationType.GENERIC_NODE);
+    assertThat(GtfsLocationType.forNumber(4)).isEqualTo(GtfsLocationType.BOARDING_AREA);
+  }
 
-    @Test
-    public void shouldReturnNull() {
-        assertThat(GtfsLocationType.forNumber(-1)).isNull();
-        assertThat(GtfsLocationType.forNumber(5)).isNull();
-    }
+  @Test
+  public void shouldReturnNull() {
+    assertThat(GtfsLocationType.forNumber(-1)).isNull();
+    assertThat(GtfsLocationType.forNumber(5)).isNull();
+  }
 }
