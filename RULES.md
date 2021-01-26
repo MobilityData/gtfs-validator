@@ -266,19 +266,6 @@ Trip frequencies must not overlap in time
 
 * [GTFS frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
 
-Value of field `location_type` of parent found in field `parent_station` is invalid.
-
-According to spec
-- _Stop/platform_ can only have _Station_ as parent
-- _Station_ can NOT have a parent
-- _Entrance/exit_ or _generic node_ can only have _Station_ as parent
-- _Boarding Area_ can only have _Platform_ as parent 
-
-Any other combination raise this error.
-
-#### References:
-* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
-
 <a name="StationWithParentStationNotice"/>
 
 ### StationWithParentStationNotice
