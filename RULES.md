@@ -55,7 +55,7 @@ Note that the notice ID naming conventions changed in `v2` to make contributions
 |                          	| [E050](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E050)      	| Trips must be used in `stop_times.txt`                                  	|
 |                          	| [E051](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E051)      	| Trips must have more than one stop to be usable                         	|
 |                          	| [E052](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E052)      	| Stop too far from trip shape                                            	|
-|                          	| [E053](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E053)      	| Trip frequencies overlap                                                	|
+| [`OverlappingTripFrequenciesNotice`](#OverlappingTripFrequenciesNotice) | [E053](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E053)      	| Trip frequencies overlap                                                	|
 |                          	| [E054](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E054)      	| Block trips must not have overlapping stop times                        	|
 |                          	| [E056](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E056)      	| Missing `calendar_dates.txt` and `calendar.txt` files                   	|
 |                          	| [E057](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E057)      	| Decreasing `shape_dist_traveled` in `stop_times.txt`| 
@@ -255,6 +255,16 @@ Any other combination raise this error.
 
 #### References:
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+
+<a name="OverlappingTripFrequenciesNotice"/>
+
+### OverlappingTripFrequenciesNotice
+
+Trip frequencies must not overlap in time
+
+#### References:
+
+* [GTFS frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
 
 <a name="StationWithParentStationNotice"/>
 
