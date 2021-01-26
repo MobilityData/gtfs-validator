@@ -32,7 +32,7 @@ public class GtfsAttributionRoleTest {
   }
 
   @Test
-  public void shouldBeInterpretedAsNull() {
+  public void shouldReturnNull() {
     assertThat(GtfsAttributionRole.forNumber(-1)).isNull();
     assertThat(GtfsAttributionRole.forNumber(3)).isNull();
   }
