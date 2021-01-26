@@ -25,9 +25,9 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
 
 /**
- * Validates : * start_date <= end_date for all rows in "feed_info.txt" * feed_info.start_date is
- * provided if feed_info.end_date is provided * feed_info.end_date is provided if
- * feed_info.start_date is provided
+ * Validates 3 rules: 1) start_date <= end_date for all rows in "feed_info.txt" 2)
+ * feed_info.start_date is provided if feed_info.end_date is provided 3) feed_info.end_date is
+ * provided if feed_info.start_date is provided.
  *
  * <p>Generated notice: {@link StartAndEndDateOutOfOrderNotice}.
  */
@@ -38,19 +38,18 @@ public class FeedServiceDateValidator extends FileValidator {
   @Override
   public void validate(NoticeContainer noticeContainer) {
     for (GtfsFeedInfo feedInfo : feedInfoTable.getEntities()) {
-      if (!feedInfo.hasFeedStartDate() || !feedInfo.hasFeedEndDate()) {
-        if (feedInfo.hasFeedStartDate() && !feedInfo.hasFeedEndDate()) {
-          noticeContainer.addValidationNotice(
-              new MissingRequiredFieldError(
-                  feedInfoTable.gtfsFilename(), feedInfo.csvRowNumber(), "feed_end_date"));
-        } else if (!feedInfo.hasFeedStartDate() && feedInfo.hasFeedEndDate()) {
-          noticeContainer.addValidationNotice(
-              new MissingRequiredFieldError(
-                  feedInfoTable.gtfsFilename(), feedInfo.csvRowNumber(), "feed_start_date"));
-        }
-        return;
+      if (feedInfo.hasFeedStartDate() && !feedInfo.hasFeedEndDate()) {
+        noticeContainer.addValidationNotice(
+            new MissingRequiredFieldError(
+                feedInfoTable.gtfsFilename(), feedInfo.csvRowNumber(), "feed_end_date"));
+      } else if (!feedInfo.hasFeedStartDate() && feedInfo.hasFeedEndDate()) {
+        noticeContainer.addValidationNotice(
+            new MissingRequiredFieldError(
+                feedInfoTable.gtfsFilename(), feedInfo.csvRowNumber(), "feed_start_date"));
       }
-      if (feedInfo.feedStartDate().isAfter(feedInfo.feedEndDate())) {
+      if (feedInfo.hasFeedStartDate()
+          && feedInfo.hasFeedEndDate()
+          && feedInfo.feedStartDate().isAfter(feedInfo.feedEndDate())) {
         noticeContainer.addValidationNotice(
             new StartAndEndDateOutOfOrderNotice(
                 feedInfoTable.gtfsFilename(), feedInfo.csvRowNumber(),
