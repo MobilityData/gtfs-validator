@@ -20,4 +20,4 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValue;
 
 @GtfsEnumValue(name = "APPROXIMATE", value = 0)
 @GtfsEnumValue(name = "EXACT", value = 1)
-public interface GtfsStopTimesTimepointEnum {}
+public interface GtfsStopTimeTimepointEnum {}
