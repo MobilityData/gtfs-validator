@@ -40,7 +40,7 @@ public class TripUsageValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    // Do not report the same shape_id multiple times.
+    // Do not report the same trip_id multiple times.
     Set<String> reportedTrips = new HashSet<>();
     for (GtfsTrip trip : tripTable.getEntities()) {
       String tripId = trip.tripId();
