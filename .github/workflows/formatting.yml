@@ -5,27 +5,10 @@ on:
     branches: [ master ]
     paths-ignore:
       - '**.md'
-  pull_request:
-    branches: [ master ]
-    paths-ignore:
-      - '**.md'
-  pull_request_target:
-    branches: [ master ]
-    paths-ignore:
-      - '**.md'
 
 jobs:
   formatting:
     runs-on: ubuntu-latest
     steps:
-      - if: github.event_name != 'pull_request_target' && github.event_name != 'pull_request'
-        uses: actions/checkout@v2
-      - if: github.event_name == 'pull_request'
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-      - if: github.event_name == 'pull_request_target'
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request_target.head.ref }}
+      - uses: actions/checkout@v2 # v2 minimum required
       - uses: axel-op/googlejavaformat-action@v3
