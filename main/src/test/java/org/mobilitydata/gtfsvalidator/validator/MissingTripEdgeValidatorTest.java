@@ -120,7 +120,12 @@ public class MissingTripEdgeValidatorTest {
     NoticeContainer noticeContainer = new NoticeContainer();
     MissingTripEdgeValidator underTest = new MissingTripEdgeValidator();
     underTest.tripTable =
-        createTripTable(noticeContainer, ImmutableList.of(createTrip(3, "trip id value")));
+        createTripTable(
+            noticeContainer,
+            ImmutableList.of(
+                createTrip(2, "some id value"),
+                createTrip(3, "trip id value"),
+                createTrip(2, "another id value")));
     underTest.stopTimeTable =
         createStopTimeTable(
             noticeContainer,

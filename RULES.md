@@ -50,7 +50,7 @@ Note that the notice ID naming conventions changed in `v2` to make contributions
 |                          	| [E039](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E039)      	| `feed_start_date` after `feed_end_date`                                 	|
 |                          	| [E040](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E040)      	| Dataset should be valid for at least the next 7 days                    	|
 |                          	| [E043](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E043)      	| Duplicated field                                                        	|
-|[`MissingTripEdgeNotice`](#MissingTripEdgeNotice) | [E044](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E044)      	| Missing trip edge `arrival_time` and `departure_time` |
+|[`MissingTripEdgeNotice`](#MissingTripEdgeNotice) | [E044](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E044)      	| Missing trip edge `arrival_time` or `departure_time` |
 |                          	| [E046](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E046)      	| Fast travel between stops in `stop_times.txt`                           	|
 |                          	| [E048](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E048)      	| `end_time` after `start_time` in `frequencies.txt`                      	|
 |[`UnusedTripNotice`](#UnusedTripNotice)| [E050](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E050)      	| Trips must be used in `stop_times.txt`                                  	|
@@ -298,4 +298,4 @@ Trips must be referred to at least once in `stop_times.txt`.
 First and last stop of a trip must define both `arrival_time` and `departure_time` fields.
 
 #### References:
-* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
+* [stop_times.txt specification](http://gtfs.org/reference/static/#stpo_timestxt)

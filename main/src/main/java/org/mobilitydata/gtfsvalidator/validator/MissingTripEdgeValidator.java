@@ -43,41 +43,42 @@ public class MissingTripEdgeValidator extends FileValidator {
         .forEach(
             trip -> {
               List<GtfsStopTime> stopTimesForTrip = stopTimeTable.byTripId(trip.tripId());
-              if (!stopTimesForTrip.isEmpty()) {
-                GtfsStopTime tripFirstStop = stopTimesForTrip.get(0);
-                GtfsStopTime tripLastStop = stopTimesForTrip.get(stopTimesForTrip.size() - 1);
-                if (!tripFirstStop.hasArrivalTime()) {
-                  noticeContainer.addValidationNotice(
-                      new MissingTripEdgeNotice(
-                          tripFirstStop.csvRowNumber(),
-                          tripFirstStop.stopSequence(),
-                          trip.tripId(),
-                          "arrival_time"));
-                }
-                if (!tripFirstStop.hasDepartureTime()) {
-                  noticeContainer.addValidationNotice(
-                      new MissingTripEdgeNotice(
-                          tripFirstStop.csvRowNumber(),
-                          tripFirstStop.stopSequence(),
-                          trip.tripId(),
-                          "departure_time"));
-                }
-                if (!tripLastStop.hasArrivalTime()) {
-                  noticeContainer.addValidationNotice(
-                      new MissingTripEdgeNotice(
-                          tripLastStop.csvRowNumber(),
-                          tripLastStop.stopSequence(),
-                          trip.tripId(),
-                          "arrival_time"));
-                }
-                if (!tripLastStop.hasDepartureTime()) {
-                  noticeContainer.addValidationNotice(
-                      new MissingTripEdgeNotice(
-                          tripLastStop.csvRowNumber(),
-                          tripLastStop.stopSequence(),
-                          trip.tripId(),
-                          "departure_time"));
-                }
+              if (stopTimesForTrip.isEmpty()) {
+                return;
+              }
+              GtfsStopTime tripFirstStop = stopTimesForTrip.get(0);
+              GtfsStopTime tripLastStop = stopTimesForTrip.get(stopTimesForTrip.size() - 1);
+              if (!tripFirstStop.hasArrivalTime()) {
+                noticeContainer.addValidationNotice(
+                    new MissingTripEdgeNotice(
+                        tripFirstStop.csvRowNumber(),
+                        tripFirstStop.stopSequence(),
+                        trip.tripId(),
+                        "arrival_time"));
+              }
+              if (!tripFirstStop.hasDepartureTime()) {
+                noticeContainer.addValidationNotice(
+                    new MissingTripEdgeNotice(
+                        tripFirstStop.csvRowNumber(),
+                        tripFirstStop.stopSequence(),
+                        trip.tripId(),
+                        "departure_time"));
+              }
+              if (!tripLastStop.hasArrivalTime()) {
+                noticeContainer.addValidationNotice(
+                    new MissingTripEdgeNotice(
+                        tripLastStop.csvRowNumber(),
+                        tripLastStop.stopSequence(),
+                        trip.tripId(),
+                        "arrival_time"));
+              }
+              if (!tripLastStop.hasDepartureTime()) {
+                noticeContainer.addValidationNotice(
+                    new MissingTripEdgeNotice(
+                        tripLastStop.csvRowNumber(),
+                        tripLastStop.stopSequence(),
+                        trip.tripId(),
+                        "departure_time"));
               }
             });
   }
