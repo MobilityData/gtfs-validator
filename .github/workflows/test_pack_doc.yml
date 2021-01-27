@@ -13,16 +13,6 @@ on:
     types: [ prereleased, released ]
 
 jobs:
-  formatting:
-    runs-on: ubuntu-latest
-    steps:
-      - if: github.event_name != 'pull_request'
-        uses: actions/checkout@v2
-      - if: github.event_name == 'pull_request'
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-      - uses: axel-op/googlejavaformat-action@v3
   test:
     runs-on: ubuntu-latest
     steps:
