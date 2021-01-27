@@ -35,7 +35,6 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 @GtfsValidator
 public class TripUsageValidator extends FileValidator {
   @Inject GtfsTripTableContainer tripTable;
-
   @Inject GtfsStopTimeTableContainer stopTimeTable;
 
   @Override
