@@ -32,7 +32,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
-import java.io.Reader;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -202,13 +202,14 @@ public class TableLoaderGenerator {
     MethodSpec.Builder method =
         MethodSpec.methodBuilder("load")
             .addModifiers(Modifier.PUBLIC)
-            .addParameter(Reader.class, "reader")
+            .addParameter(InputStream.class, "inputStream")
             .addParameter(GtfsFeedName.class, "feedName")
             .addParameter(ValidatorLoader.class, "validatorLoader")
             .addParameter(NoticeContainer.class, "noticeContainer")
             .returns(
                 ParameterizedTypeName.get(ClassName.get(GtfsTableContainer.class), gtfsEntityType))
-            .addStatement("$T csvFile = new $T(reader, FILENAME)", CsvFile.class, CsvFile.class)
+            .addStatement(
+                "$T csvFile = new $T(inputStream, FILENAME)", CsvFile.class, CsvFile.class)
             .beginControlFlow("if (csvFile.isEmpty())")
             .addStatement(
                 "noticeContainer.addValidationNotice(new $T(FILENAME))", EmptyFileNotice.class)
