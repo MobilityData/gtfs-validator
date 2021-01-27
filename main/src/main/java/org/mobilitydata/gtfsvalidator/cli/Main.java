@@ -43,9 +43,9 @@ public class Main {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
   public static void main(String[] argv) {
-    Arguments args = new Arguments();
+        Arguments args = new Arguments();
     CliParametersAnalyzer cliParametersAnalyzer = new CliParametersAnalyzer();
-    new JCommander(args).parse(argv);
+     new JCommander(args).parse(argv);
     if (!cliParametersAnalyzer.isValid(args)) {
       System.exit(1);
     }
@@ -53,10 +53,10 @@ public class Main {
     ValidatorLoader loader = new ValidatorLoader();
     GtfsFeedLoader feedLoader = new GtfsFeedLoader();
 
-    GtfsFeedName feedName = GtfsFeedName.parseString(args.getFeedName());
+        GtfsFeedName feedName = GtfsFeedName.parseString(args.getFeedName());
     System.out.println("Feed name: " + feedName.getCountryFirstName());
     System.out.println("Input: " + args.getInput());
-    System.out.println("URL: " + args.getUrl());
+        System.out.println("URL: " + args.getUrl());
     System.out.println("Output: " + args.getOutputBase());
     System.out.println("Path to archive storage directory: " + args.getStorageDirectory());
     System.out.println("Table loaders: " + feedLoader.listTableLoaders());
