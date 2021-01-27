@@ -77,12 +77,16 @@ public class GtfsFeedName {
    * @param feedName GTFS feed name in country-first or country-last format
    * @return a valid GtfsFeedName object
    * @throws IllegalArgumentException
-   */
+   *
+   *
+   *
+   * */
   public static GtfsFeedName parseString(String feedName) throws IllegalArgumentException {
-    String[] separated = feedName.split("-");
-    if (separated.length < 2) {
+      String[] separated = feedName.split("-");
+    if (separated.length < 2)
+    {
       throw new IllegalArgumentException(INVALID_FEED_NAME_MESSAGE);
-    }
+        }
 
     if (isValidCountryFirstFeedName(feedName)) {
       return new GtfsFeedName(feedName);

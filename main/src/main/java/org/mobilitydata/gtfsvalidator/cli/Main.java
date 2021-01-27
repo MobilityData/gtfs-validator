@@ -42,13 +42,14 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 public class Main {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
-  public static void main(String[] argv) {
+  public static void main(String[] argv)
+
+  {
         Arguments args = new Arguments();
     CliParametersAnalyzer cliParametersAnalyzer = new CliParametersAnalyzer();
      new JCommander(args).parse(argv);
     if (!cliParametersAnalyzer.isValid(args)) {
-      System.exit(1);
-    }
+      System.exit(1); }
 
     ValidatorLoader loader = new ValidatorLoader();
     GtfsFeedLoader feedLoader = new GtfsFeedLoader();
