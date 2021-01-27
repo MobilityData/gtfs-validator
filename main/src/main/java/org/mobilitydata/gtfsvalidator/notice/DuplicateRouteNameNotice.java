@@ -14,10 +14,19 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.table;
+package org.mobilitydata.gtfsvalidator.notice;
 
-import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValue;
+import com.google.common.collect.ImmutableMap;
 
-@GtfsEnumValue(name = "APPROXIMATE", value = 0)
-@GtfsEnumValue(name = "EXACT", value = 1)
-public interface GtfsStopTimesTimepointEnum {}
+public class DuplicateRouteNameNotice extends ValidationNotice {
+  public DuplicateRouteNameNotice(String duplicatedField, long csvRowNumber, String routeId) {
+    super(
+        ImmutableMap.of(
+            "duplicatedField", duplicatedField, "csvRowNumber", csvRowNumber, "routeId", routeId));
+  }
+
+  @Override
+  public String getCode() {
+    return "duplicate_route_name";
+  }
+}

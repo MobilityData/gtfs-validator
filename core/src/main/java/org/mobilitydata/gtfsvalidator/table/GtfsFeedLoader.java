@@ -18,11 +18,8 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import com.google.common.flogger.FluentLogger;
 import com.google.common.reflect.ClassPath;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -82,10 +79,6 @@ public class GtfsFeedLoader {
     }
   }
 
-  private static Reader createFileReader(InputStream stream) {
-    return new BufferedReader(new InputStreamReader(stream));
-  }
-
   public String listTableLoaders() {
     return String.join(" ", tableLoaders.keySet());
   }
@@ -112,11 +105,11 @@ public class GtfsFeedLoader {
       } else {
         loaderCallables.add(
             () -> {
-              Reader reader = createFileReader(gtfsInput.getFile(filename));
+              InputStream inputStream = gtfsInput.getFile(filename);
               NoticeContainer loaderNotices = new NoticeContainer();
               GtfsTableContainer tableContainer;
               try {
-                tableContainer = loader.load(reader, feedName, validatorLoader, loaderNotices);
+                tableContainer = loader.load(inputStream, feedName, validatorLoader, loaderNotices);
               } catch (RuntimeException e) {
                 // This handler should prevent ExecutionException for
                 // this thread. We catch an exception here for storing
@@ -129,7 +122,7 @@ public class GtfsFeedLoader {
                 // it as missing for continuing validation.
                 tableContainer = loader.loadMissingFile(validatorLoader, loaderNotices);
               } finally {
-                reader.close();
+                inputStream.close();
               }
               return new TableAndNoticeContainers(tableContainer, loaderNotices);
             });

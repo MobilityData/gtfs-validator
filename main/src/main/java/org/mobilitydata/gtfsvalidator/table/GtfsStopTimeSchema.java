@@ -71,5 +71,5 @@ public interface GtfsStopTimeSchema extends GtfsEntity {
   double shapeDistTraveled();
 
   @DefaultValue("1")
-  GtfsStopTimesTimepoint timepoint();
+  GtfsStopTimeTimepoint timepoint();
 }
