@@ -56,7 +56,12 @@ public class MatchingFeedAndAgencyLangValidator extends FileValidator {
     Set<String> agencyLangCollection = new HashSet<>();
     agencyTable
         .getEntities()
-        .forEach(agency -> agencyLangCollection.add(agency.agencyLang().getISO3Language()));
+        .forEach(
+            agency -> {
+              if (agency.hasAgencyLang()) {
+                agencyLangCollection.add(agency.agencyLang().getISO3Language());
+              }
+            });
     if (feedInfoFeedLang.equals(Locale.forLanguageTag("mul"))) {
       // If feed_lang is mul and there isn't more than one agency_lang, that's an error
       if (agencyLangCollection.size() <= 1) {

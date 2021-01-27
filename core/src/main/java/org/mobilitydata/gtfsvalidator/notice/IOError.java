@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,19 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.table;
+package org.mobilitydata.gtfsvalidator.notice;
 
-import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValue;
+import com.google.common.collect.ImmutableMap;
 
-@GtfsEnumValue(name = "APPROXIMATE", value = 0)
-@GtfsEnumValue(name = "EXACT", value = 1)
-public interface GtfsStopTimesTimepointEnum {}
+/** This is related to Input and Output operations in the code. */
+public class IOError extends SystemError {
+
+  public IOError(String message) {
+    super(ImmutableMap.of("message", message));
+  }
+
+  @Override
+  public String getCode() {
+    return "io_error";
+  }
+}
