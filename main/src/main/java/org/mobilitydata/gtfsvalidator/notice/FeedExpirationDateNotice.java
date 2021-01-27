@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC, MobilityData IO
+ * Copyright 2021 MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,10 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
 public class FeedExpirationDateNotice extends ValidationNotice {
   public FeedExpirationDateNotice(
-      long csvRowNumber, GtfsDate currentDate, GtfsDate feedEndDate, GtfsDate suggestedExpiryDate) {
+      long csvRowNumber,
+      GtfsDate currentDate,
+      GtfsDate feedEndDate,
+      GtfsDate suggestedExpirationDate) {
     super(
         ImmutableMap.of(
             "csvRowNumber",
@@ -30,8 +33,8 @@ public class FeedExpirationDateNotice extends ValidationNotice {
             currentDate.toYYYYMMDD(),
             "feedEndDate",
             feedEndDate.toYYYYMMDD(),
-            "suggestedExpiryDate",
-            suggestedExpiryDate));
+            "suggestedExpirationDate",
+            suggestedExpirationDate));
   }
 
   @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC, MobilityData IO
+ * Copyright 2021 MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,11 +50,10 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
                 currentDate,
                 entity.feedEndDate(),
                 currentDatePlusSevenDays));
+        return;
       }
-      if (entity.feedEndDate().equals(currentDatePlusSevenDays)
-          || entity.feedEndDate().isAfter(currentDatePlusSevenDays)
-              && (entity.feedEndDate().equals(currentDatePlusThirtyDays)
-                  || entity.feedEndDate().isBefore(currentDatePlusThirtyDays))) {
+      if (entity.feedEndDate().equals(currentDatePlusThirtyDays)
+          || entity.feedEndDate().isBefore(currentDatePlusThirtyDays)) {
         noticeContainer.addValidationNotice(
             new FeedExpirationDateNotice(
                 entity.csvRowNumber(),

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC, MobilityData IO
+ * Copyright 2021 MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ public class FeedExpirationDateValidatorTest {
     return new GtfsFeedInfo.Builder()
         .setCsvRowNumber(1)
         .setFeedPublisherName("feed publisher name value")
-        .setFeedPublisherUrl("www.mobilitydata.org")
+        .setFeedPublisherUrl("https://www.mobilitydata.org")
         .setFeedLang(Locale.CANADA)
         .setFeedEndDate(feedEndDate)
         .build();
