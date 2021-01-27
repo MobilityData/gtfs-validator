@@ -277,11 +277,13 @@ Field `parent_station` must be empty when `location_type` is 2.
 
 ### DuplicateRouteNameNotice
 
-All routes should have different `routes.route_long_name`. If routes have the same `routes.route_long_name`, they must be different routes serving different areas; and must not be different trips of the same route or different directions of the same route.
-Note that two routes can have the same `routes.route_long_name` if they do not belong to the same agency.
+All routes should have different routes.route_long_name - if two routes.route_long_name are the same, and the two routes belong to the same agency, a notice is generated.
 
-All routes should have different `rouytes.route_short_name`. If routes have the same `routes.route_short_name`, they must be different routes serving different areas; and must not be different trips of the same route or different directions of the same route. 
-Note that two routes can have the same `routes.route_short_name` if they do not belong to the same agency.
+Note that there may be valid cases where routes may have the same routes.route_long_name and this notice can be ignored. For example, routes may have the same routes.route_long_name if they serve difference areas. However, they must not be different trips of the same route or different directions of the same route - these cases should always have unique routes.route_long_name.
+
+All routes should have different routes.route_short_name - if two routes.route_short_name are the same, and the two routes belong to the same agency, a notice is generated.
+
+Note that there may be valid cases where routes may have the same routes.route_short_name and this notice can be ignored. For example, routes may have the same routes.route_short_name if they serve difference areas. However, they must not be different trips of the same route or different directions of the same route - these cases should always have unique routes.route_short_name.
 
 #### References:
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)

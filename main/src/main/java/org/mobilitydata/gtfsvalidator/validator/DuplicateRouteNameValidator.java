@@ -40,15 +40,15 @@ public class DuplicateRouteNameValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    final Map<String, GtfsRoute> routeByRouteLongName = new HashMap<>();
-    final Map<String, GtfsRoute> routeByShortName = new HashMap<>();
+    final Map<String, GtfsRoute> routeByRouteLongName = new HashMap<>(routeTable.entityCount());
+    final Map<String, GtfsRoute> routeByShortName = new HashMap<>(routeTable.entityCount());
     routeTable
         .getEntities()
         .forEach(
             route -> {
               if (route.hasRouteLongName()) {
                 if (routeByRouteLongName.containsKey(route.routeLongName())) {
-                  if (areRouteFromSameAgency(
+                  if (areRoutesFromSameAgency(
                       route.agencyId(),
                       routeByRouteLongName.get(route.routeLongName()).agencyId())) {
                     noticeContainer.addValidationNotice(
@@ -61,7 +61,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
               }
               if (route.hasRouteShortName()) {
                 if (routeByShortName.containsKey(route.routeShortName())) {
-                  if (areRouteFromSameAgency(
+                  if (areRoutesFromSameAgency(
                       route.agencyId(), routeByShortName.get(route.routeShortName()).agencyId())) {
                     noticeContainer.addValidationNotice(
                         new DuplicateRouteNameNotice(
@@ -81,8 +81,8 @@ public class DuplicateRouteNameValidator extends FileValidator {
    * @param otherRouteAgencyId second agency_id
    * @return true if both agency ids are equals returns false otherwise.
    */
-  private boolean areRouteFromSameAgency(
+  private boolean areRoutesFromSameAgency(
       final String routeAgencyId, final String otherRouteAgencyId) {
-    return routeAgencyId.equals(otherRouteAgencyId);
+    return routeAgencyId.equalsIgnoreCase(otherRouteAgencyId);
   }
 }
