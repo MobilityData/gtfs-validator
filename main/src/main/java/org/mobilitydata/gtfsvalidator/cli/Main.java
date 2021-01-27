@@ -81,7 +81,7 @@ public class Main {
       logger.atSevere().withCause(e).log("Cannot load GTFS feed");
       noticeContainer.addSystemError(new IOError(e.getMessage()));
     } catch (URISyntaxException e) {
-      logger.atSevere().withCause(e).log("Syntax error in URL");
+      logger.atSevere().withCause(e).log("Syntax error in URI");
       noticeContainer.addSystemError(new URISyntaxError(e.getMessage()));
     } catch (InterruptedException e) {
       logger.atSevere().withCause(e).log("Interrupted thread");
