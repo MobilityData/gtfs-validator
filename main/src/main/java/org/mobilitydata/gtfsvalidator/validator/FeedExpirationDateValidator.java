@@ -24,7 +24,9 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
 /**
- * Validates a feed's expiration date
+ * Validates a feed's expiration date: 1) At any time, the published GTFS dataset should be valid
+ * for at least the next 7 days 2) If possible, the GTFS dataset should cover at least the next 30
+ * days of service.
  *
  * <p>Generated notice:
  *
