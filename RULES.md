@@ -50,6 +50,7 @@ Note that the notice ID naming conventions changed in `v2` to make contributions
 |                          	| [E039](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E039)      	| `feed_start_date` after `feed_end_date`                                 	|
 |                          	| [E040](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E040)      	| Dataset should be valid for at least the next 7 days                    	|
 |                          	| [E043](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E043)      	| Duplicated field                                                        	|
+|[`MissingTripEdgeNotice`](#MissingTripEdgeNotice) | [E044](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E044)      	| Missing trip edge `arrival_time` and `departure_time` |
 |                          	| [E046](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E046)      	| Fast travel between stops in `stop_times.txt`                           	|
 |                          	| [E048](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E048)      	| `end_time` after `start_time` in `frequencies.txt`                      	|
 |                          	| [E050](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E050)      	| Trips must be used in `stop_times.txt`                                  	|
@@ -284,6 +285,13 @@ Note that there may be valid cases where routes may have the same routes.route_l
 All routes should have different routes.route_short_name - if two routes.route_short_name are the same, and the two routes belong to the same agency, a notice is generated.
 
 Note that there may be valid cases where routes may have the same routes.route_short_name and this notice can be ignored. For example, routes may have the same routes.route_short_name if they serve difference areas. However, they must not be different trips of the same route or different directions of the same route - these cases should always have unique routes.route_short_name.
+
+#### References:
+* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
+
+### MissingTripEdgeNotice
+
+First and last stop of a trip must define both `arrival_time` and `departure_time` fields.
 
 #### References:
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
