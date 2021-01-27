@@ -33,7 +33,12 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
-/** The main entry point for GTFS Validator CLI. */
+/**
+ *
+ * The main entry point for GTFS Validator CLI.
+ *
+ *
+ * */
 public class Main {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
@@ -45,7 +50,7 @@ public class Main {
       System.exit(1);
     }
 
-    ValidatorLoader validatorLoader = new ValidatorLoader();
+    ValidatorLoader loader = new ValidatorLoader();
     GtfsFeedLoader feedLoader = new GtfsFeedLoader();
 
     GtfsFeedName feedName = GtfsFeedName.parseString(args.getFeedName());
@@ -56,7 +61,7 @@ public class Main {
     System.out.println("Path to archive storage directory: " + args.getStorageDirectory());
     System.out.println("Table loaders: " + feedLoader.listTableLoaders());
     System.out.println("Validators:");
-    System.out.println(validatorLoader.listValidators());
+    System.out.println(loader.listValidators());
 
     final long startNanos = System.nanoTime();
     // Input.
@@ -80,7 +85,7 @@ public class Main {
       return;
     }
     feedContainer =
-        feedLoader.loadAndValidate(gtfsInput, feedName, validatorLoader, noticeContainer);
+        feedLoader.loadAndValidate(gtfsInput, feedName, loader, noticeContainer);
 
     // Output.
     new File(args.getOutputBase()).mkdirs();
