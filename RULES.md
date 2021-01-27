@@ -48,7 +48,7 @@ Note that the notice ID naming conventions changed in `v2` to make contributions
 |                          	| [E029](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E029)      	| Missing field `agency_id` for file `agency.txt` with more than 1 record 	|
 |                          	| [E031](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E031)      	| Invalid `agency_id`                                                     	|
 |                          	| [E039](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E039)      	| `feed_start_date` after `feed_end_date`                                 	|
-|                          	| [E040](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E040)      	| Dataset should be valid for at least the next 7 days                    	|
+|[`FeedExpirationDateNotice`](#FeedExpirationDateNotice)| [E040](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E040), [W009](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W009)      	| Dataset should be valid for at least the next 7 days. Dataset should cover at least the next 30 days of service. |
 |                          	| [E043](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E043)      	| Duplicated field                                                        	|
 |                          	| [E046](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E046)      	| Fast travel between stops in `stop_times.txt`                           	|
 |                          	| [E048](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E048)      	| `end_time` after `start_time` in `frequencies.txt`                      	|
@@ -68,7 +68,6 @@ Note that the notice ID naming conventions changed in `v2` to make contributions
 |                           | [W006](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W006)        	| Missing route short name                                                        	|
 |                           | [W007](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W007)        	| Missing route long name                                                         	|
 |                           | [W008](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W008)        	| Route long name contains short name                                             	|
-|                           | [W009](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W009)        	| Dataset should cover at least the next 30 days of service                       	|
 | [`MissingRequiredFieldError`](#MissingRequiredFieldError) | [W010](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W010)        	| `feed_end_date` should be provided if `feed_start_date` is provided             	|
 | [`MissingRequiredFieldError`](#MissingRequiredFieldError) | [W011](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W011)        	| `feed_start_date` should be provided if `feed_end_date` is provided             	|
 |[`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)| [W014](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W014)        	| Duplicate `routes.route_long_name`                                              	|
@@ -291,3 +290,12 @@ Note that there may be valid cases where routes may have the same routes.route_s
 ### UnusedTripNotice
 
 Trips must be referred to at least once in `stop_times.txt`.
+
+
+### FeedExpirationDateNotice
+
+At any time, the published GTFS dataset should be valid for at least the next 7 days, and ideally for as long as the operator is confident that the schedule will continue to be operated.
+If possible, the GTFS dataset should cover at least the next 30 days of service.
+
+#### References:
+* [Dataset Publishing & General Practices](http://gtfs.org/best-practices/#dataset-publishing--general-practices)
