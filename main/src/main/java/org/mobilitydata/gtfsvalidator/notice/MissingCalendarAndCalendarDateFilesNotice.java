@@ -18,9 +18,7 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * GTFS files `calendar.txt` and `calendar_dates.txt` cannot be missing from the GTFS archive.
- */
+/** GTFS files `calendar.txt` and `calendar_dates.txt` cannot be missing from the GTFS archive. */
 public class MissingCalendarAndCalendarDateFilesNotice extends ValidationNotice {
   public MissingCalendarAndCalendarDateFilesNotice() {
     super(ImmutableMap.of());
