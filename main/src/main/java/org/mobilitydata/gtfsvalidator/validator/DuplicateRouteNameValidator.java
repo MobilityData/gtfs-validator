@@ -40,23 +40,38 @@ public class DuplicateRouteNameValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    final Map<String, GtfsRoute> routeByRouteLongName = new HashMap<>(routeTable.entityCount());
+    final Map<String, GtfsRoute> routeByLongName = new HashMap<>(routeTable.entityCount());
     final Map<String, GtfsRoute> routeByShortName = new HashMap<>(routeTable.entityCount());
+    final Map<String, GtfsRoute> routeByShortAndLongName = new HashMap<>(routeTable.entityCount());
     routeTable
         .getEntities()
         .forEach(
             route -> {
+              if (route.hasRouteShortName() && route.hasRouteLongName()) {
+                if (routeByShortAndLongName.containsKey(
+                    route.routeShortName() + route.routeLongName())) {
+                  noticeContainer.addValidationNotice(
+                      new DuplicateRouteNameNotice(
+                          "route_short_name and route_long_name",
+                          route.csvRowNumber(),
+                          route.routeId()));
+                  return;
+                } else {
+                  routeByShortAndLongName.put(
+                      route.routeShortName() + route.routeLongName(), route);
+                }
+              }
               if (route.hasRouteLongName()) {
-                if (routeByRouteLongName.containsKey(route.routeLongName())) {
+                if (routeByLongName.containsKey(route.routeLongName())) {
                   if (areRoutesFromSameAgency(
-                      route.agencyId(),
-                      routeByRouteLongName.get(route.routeLongName()).agencyId())) {
+                      route.agencyId(), routeByLongName.get(route.routeLongName()).agencyId())) {
                     noticeContainer.addValidationNotice(
                         new DuplicateRouteNameNotice(
                             "route_long_name", route.csvRowNumber(), route.routeId()));
                   }
+                  return;
                 } else {
-                  routeByRouteLongName.put(route.routeLongName(), route);
+                  routeByLongName.put(route.routeLongName(), route);
                 }
               }
               if (route.hasRouteShortName()) {
