@@ -14,3 +14,4 @@ jobs:
       - uses: axel-op/googlejavaformat-action@v3
         with:
           commitMessage: "chore: Google Java Format"
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
