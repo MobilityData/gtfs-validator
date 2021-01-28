@@ -19,8 +19,7 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * Short name of a route is too long (more than 12 characters,
- * https://gtfs.org/best-practices/#routestxt).
+ * GTFS files `calendar.txt` and `calendar_dates.txt` cannot be missing from the GTFS archive.
  */
 public class MissingCalendarAndCalendarDateFilesNotice extends ValidationNotice {
   public MissingCalendarAndCalendarDateFilesNotice() {
