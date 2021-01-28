@@ -71,9 +71,7 @@ Note that the notice ID naming conventions changed in `v2` to make contributions
 |                           | [W008](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W008)        	| Route long name contains short name                                             	|
 | [`MissingRequiredFieldError`](#MissingRequiredFieldError) | [W010](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W010)        	| `feed_end_date` should be provided if `feed_start_date` is provided             	|
 | [`MissingRequiredFieldError`](#MissingRequiredFieldError) | [W011](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W011)        	| `feed_start_date` should be provided if `feed_end_date` is provided             	|
-|[`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)| [W014](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W014)        	| Duplicate `routes.route_long_name`                                              	|
-|[`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)| [W015](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W015)        	| Duplicate `routes.route_short_name`                                             	|
-|                           | [W016](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W016)        	| Duplicate combination of fields `route_long_name` and `routes.route_short_name` 	|
+|[`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)| [W014](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W014), [W015](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W015), [W016](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W016)| Duplicate `routes.route_long_name`. Duplicate `routes.route_short_name`. Duplicate combination of fields `route_long_name` and `routes.route_short_name` |
 
 ## Notices
 
@@ -277,13 +275,15 @@ Field `parent_station` must be empty when `location_type` is 2.
 
 ### DuplicateRouteNameNotice
 
-All routes should have different routes.route_long_name - if two routes.route_long_name are the same, and the two routes belong to the same agency, a notice is generated.
+All routes should have different `routes.route_long_name` - if two `routes.route_long_name` are the same, and the two routes belong to the same agency, a notice is generated.
 
-Note that there may be valid cases where routes may have the same routes.route_long_name and this notice can be ignored. For example, routes may have the same routes.route_long_name if they serve difference areas. However, they must not be different trips of the same route or different directions of the same route - these cases should always have unique routes.route_long_name.
+Note that there may be valid cases where routes may have the same `routes.route_long_name` and this notice can be ignored. For example, routes may have the same `routes.route_long_name` if they serve difference areas. However, they must not be different trips of the same route or different directions of the same route - these cases should always have unique `routes.route_long_name`.
 
-All routes should have different routes.route_short_name - if two routes.route_short_name are the same, and the two routes belong to the same agency, a notice is generated.
+All routes should have different `routes.route_short_name` - if two `routes.route_short_name` are the same, and the two routes belong to the same agency, a notice is generated.
 
-Note that there may be valid cases where routes may have the same routes.route_short_name and this notice can be ignored. For example, routes may have the same routes.route_short_name if they serve difference areas. However, they must not be different trips of the same route or different directions of the same route - these cases should always have unique routes.route_short_name.
+Note that there may be valid cases where routes may have the same `routes.route_short_name` and this notice can be ignored. For example, routes may have the same routes.route_short_name if they serve difference areas. However, they must not be different trips of the same route or different directions of the same route - these cases should always have unique `routes.route_short_name`.
+
+The same combination of `route_short_name` and `route_long_name` should not be used for more than one route.
 
 #### References:
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
@@ -306,4 +306,4 @@ If possible, the GTFS dataset should cover at least the next 30 days of service.
 First and last stop of a trip must define both `arrival_time` and `departure_time` fields.
 
 #### References:
-* [stop_times.txt specification](http://gtfs.org/reference/static/#stpo_timestxt)
+* [stop_times.txt specification](http://gtfs.org/reference/static/#stop_timestxt)

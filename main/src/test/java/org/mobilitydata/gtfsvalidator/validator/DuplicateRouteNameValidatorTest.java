@@ -124,7 +124,6 @@ public class DuplicateRouteNameValidatorTest {
             List.of(
                 new DuplicateRouteNameNotice("route_short_name", 4, "2nd route id value"),
                 new DuplicateRouteNameNotice("route_short_name", 8, "3rd route id value")));
-    ;
   }
 
   @Test
@@ -157,5 +156,31 @@ public class DuplicateRouteNameValidatorTest {
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices()).isEmpty();
+  }
+
+  @Test
+  public void duplicateRouteNamesCombinationShouldGenerateNotice() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    DuplicateRouteNameValidator underTest = new DuplicateRouteNameValidator();
+    underTest.routeTable =
+        createRouteTable(
+            noticeContainer,
+            ImmutableList.of(
+                createRoute(2, "1st route id value", "agency id", "short name", "long name", 2),
+                createRoute(4, "2nd route id value", "agency id", "short name", "long name", 3),
+                createRoute(
+                    8,
+                    "3rd route id value",
+                    "agency id",
+                    "other short value",
+                    "other long name",
+                    3)));
+
+    underTest.validate(noticeContainer);
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactlyElementsIn(
+            List.of(
+                new DuplicateRouteNameNotice(
+                    "route_short_name and route_long_name", 4, "2nd route id value")));
   }
 }
