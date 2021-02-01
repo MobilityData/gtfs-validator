@@ -59,7 +59,7 @@ Note that the notice ID naming conventions changed in `v2` to make contributions
 | [`OverlappingTripFrequenciesNotice`](#OverlappingTripFrequenciesNotice) | [E053](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E053)      	| Trip frequencies overlap                                                	|
 |                          	| [E054](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E054)      	| Block trips must not have overlapping stop times                        	|
 |[`MissingCalendarAndCalendarDateFilesNotice`](#MissingCalendarAndCalendarDateFilesNotice)| [E056](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E056)      	| Missing `calendar_dates.txt` and `calendar.txt` files                   	|
-|                          	| [E057](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E057)      	| Decreasing `shape_dist_traveled` in `stop_times.txt`| 
+|[`DecreasingStopTimeDistanceNotice`](#DecreasingStopTimeDistanceNotice)| [E057](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E057)      	| Decreasing `shape_dist_traveled` in `stop_times.txt`| 
 |                          	| [E059](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E059)      	| GTFS dataset too big                                                    	|
 |                          	| [E060](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E060)      	| Fatal internal error -- please report                                   	|
 |                          	| [E061](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E061)      	| Out of memory                                                           	|
@@ -315,6 +315,10 @@ A trip must visit more than one stop in stop_times.txt to be usable by passenger
 ### MissingCalendarAndCalendarDateFilesNotice
 
 Both files calendar_dates.txt and calendar.txt are missing from the GTFS archive. At least one of the files must be provided.
+
+### DecreasingStopTimeDistanceNotice
+
+Stop times in a trip should have increasing distance.
 
 ### StopTooFarFromTripShapeNotice
 
