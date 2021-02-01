@@ -50,6 +50,7 @@ import org.mobilitydata.gtfsvalidator.parsing.CsvRow;
 import org.mobilitydata.gtfsvalidator.parsing.FieldCache;
 import org.mobilitydata.gtfsvalidator.parsing.RowParser;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableLoader;
 import org.mobilitydata.gtfsvalidator.validator.TableHeaderValidator;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
@@ -214,7 +215,10 @@ public class TableLoaderGenerator {
             .addStatement(
                 "noticeContainer.addValidationNotice(new $T(FILENAME))", EmptyFileNotice.class)
             .addStatement(
-                "$T table = $T.forEmptyFile()", tableContainerTypeName, tableContainerTypeName)
+                "$T table = new $T($T.EMPTY_FILE)",
+                tableContainerTypeName,
+                tableContainerTypeName,
+                TableStatus.class)
             .addStatement("validatorLoader.invokeSingleFileValidators(table, noticeContainer)")
             .addStatement("return table")
             .endControlFlow()
@@ -222,7 +226,8 @@ public class TableLoaderGenerator {
                 "if (!new $T().validate(FILENAME, csvFile.getColumnNames(), "
                     + "getColumnNames(), getRequiredColumnNames(), noticeContainer))",
                 TableHeaderValidator.class)
-            .addStatement("return $T.forInvalidHeaders()", tableContainerTypeName)
+            .addStatement(
+                "return new $T($T.INVALID_HEADERS)", tableContainerTypeName, TableStatus.class)
             .endControlFlow();
 
     for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
@@ -255,7 +260,8 @@ public class TableLoaderGenerator {
         .addStatement(
             "$T entities = new $T<>()",
             ParameterizedTypeName.get(ClassName.get(List.class), gtfsEntityType),
-            ArrayList.class);
+            ArrayList.class)
+        .addStatement("boolean hasUnparsableRows = false");
     method.beginControlFlow("for ($T row : csvFile)", CsvRow.class);
 
     method
@@ -291,7 +297,9 @@ public class TableLoaderGenerator {
     }
 
     method
-        .beginControlFlow("if (!rowParser.hasParseErrorsInRow())")
+        .beginControlFlow("if (rowParser.hasParseErrorsInRow())")
+        .addStatement("hasUnparsableRows = true")
+        .nextControlFlow("else")
         .addStatement("$T entity = builder.build()", gtfsEntityType)
         .addStatement("validatorLoader.invokeSingleEntityValidators(entity, noticeContainer)")
         .addStatement("entities.add(entity)")
@@ -317,12 +325,18 @@ public class TableLoaderGenerator {
     }
 
     method
+        .beginControlFlow("if (hasUnparsableRows)")
+        .addStatement("logger.atSevere().log($S, FILENAME)", "Failed to parse some rows in %s")
+        .addStatement(
+            "return new $T($T.UNPARSABLE_ROWS)", tableContainerTypeName, TableStatus.class)
+        .nextControlFlow("else")
         .addStatement(
             "$T table = $T.forEntities(entities, noticeContainer)",
             tableContainerTypeName,
             tableContainerTypeName)
         .addStatement("validatorLoader.invokeSingleFileValidators(table, noticeContainer)")
-        .addStatement("return table");
+        .addStatement("return table")
+        .endControlFlow();
 
     return method.build();
   }
@@ -356,9 +370,10 @@ public class TableLoaderGenerator {
                 ParameterizedTypeName.get(ClassName.get(GtfsTableContainer.class), gtfsEntityType))
             .addAnnotation(Override.class)
             .addStatement(
-                "$T table = $T.forMissingFile()",
+                "$T table = new $T($T.MISSING_FILE)",
                 classNames.tableContainerTypeName(),
-                classNames.tableContainerTypeName())
+                classNames.tableContainerTypeName(),
+                TableStatus.class)
             .beginControlFlow("if (isRequired())")
             .addStatement(
                 "noticeContainer.addValidationNotice(new $T(gtfsFilename()))",

@@ -31,6 +31,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDate;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.util.CalendarUtilTest;
 
@@ -120,8 +121,8 @@ public class MissingCalendarAndCalendarDateValidatorTest {
     NoticeContainer noticeContainer = new NoticeContainer();
     MissingCalendarAndCalendarDateValidator underTest =
         new MissingCalendarAndCalendarDateValidator();
-    underTest.calendarTable = GtfsCalendarTableContainer.forMissingFile();
-    underTest.calendarDateTable = GtfsCalendarDateTableContainer.forMissingFile();
+    underTest.calendarTable = new GtfsCalendarTableContainer(TableStatus.MISSING_FILE);
+    underTest.calendarDateTable = new GtfsCalendarDateTableContainer(TableStatus.MISSING_FILE);
     underTest.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
