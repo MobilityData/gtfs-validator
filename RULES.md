@@ -55,7 +55,7 @@ Note that the notice ID naming conventions changed in `v2` to make contributions
 |                          	| [E048](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E048)      	| `end_time` after `start_time` in `frequencies.txt`                      	|
 |[`UnusedTripNotice`](#UnusedTripNotice)| [E050](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E050)      	| Trips must be used in `stop_times.txt`                                  	|
 |                          	| [E051](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E051)      	| Trips must have more than one stop to be usable                         	|
-|                          	| [E052](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E052)      	| Stop too far from trip shape                                            	|
+|[`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)| [E052](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E052)      	| Stop too far from trip shape                                            	|
 | [`OverlappingTripFrequenciesNotice`](#OverlappingTripFrequenciesNotice) | [E053](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E053)      	| Trip frequencies overlap                                                	|
 |                          	| [E054](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E054)      	| Block trips must not have overlapping stop times                        	|
 |[`MissingCalendarAndCalendarDateFilesNotice`](#MissingCalendarAndCalendarDateFilesNotice)| [E056](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E056)      	| Missing `calendar_dates.txt` and `calendar.txt` files                   	|
@@ -315,3 +315,10 @@ A trip must visit more than one stop in stop_times.txt to be usable by passenger
 ### MissingCalendarAndCalendarDateFilesNotice
 
 Both files calendar_dates.txt and calendar.txt are missing from the GTFS archive. At least one of the files must be provided.
+
+### StopTooFarFromTripShapeNotice
+
+Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100 meters of stop locations which a trip serves.
+
+#### References:
+* [GTFS Best Practices shapes.txt](https://gtfs.org/best-practices/#shapestxt)
