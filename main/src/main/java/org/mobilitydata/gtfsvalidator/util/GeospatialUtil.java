@@ -128,7 +128,7 @@ public class GeospatialUtil {
     stopTimes.forEach(
         stopTime -> {
           GtfsStop stop = stopTable.byStopId(stopTime.stopId());
-          if (stop == null || stop.hasStopLat() || stop.hasStopLon()) {
+          if (stop == null || !stop.hasStopLat() || !stop.hasStopLon()) {
             // Lat/lon are optional for location_type 4 - skip to the next stop if they aren't
             // provided
             return;
