@@ -39,12 +39,13 @@ public class StopTooFarFromTripShapeValidatorTest {
   }
 
   public static GtfsTrip createTrip(
-      long csvRowNumber, String routeId, String serviceId, String tripId) {
+      long csvRowNumber, String routeId, String serviceId, String tripId, String shapeId) {
     return new GtfsTrip.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setRouteId(routeId)
         .setServiceId(serviceId)
         .setTripId(tripId)
+        .setShapeId(shapeId)
         .build();
   }
 
@@ -76,12 +77,13 @@ public class StopTooFarFromTripShapeValidatorTest {
   }
 
   public static GtfsStop createStop(
-      long csvRowNumber, String stopId, double stopLat, double stopLon) {
+      long csvRowNumber, String stopId, double stopLat, double stopLon, int locationType) {
     return new GtfsStop.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setStopId(stopId)
         .setStopLat(stopLat)
         .setStopLon(stopLon)
+        .setLocationType(locationType)
         .build();
   }
 
@@ -96,10 +98,10 @@ public class StopTooFarFromTripShapeValidatorTest {
         createStopTable(
             noticeContainer,
             ImmutableList.of(
-                createStop(2, "1001", 28.05811731042478D, -82.41616877502503D),
-                createStop(4, "1002", 28.05812364854794D, -82.41617370439423D),
+                createStop(2, "1001", 28.05811731042478D, -82.41616877502503D, 0),
+                createStop(4, "1002", 28.05812364854794D, -82.41617370439423D, 0),
                 // this location is outside buffer
-                createStop(5, "1003", 28.05673053256373f, -82.4170801432763D)));
+                createStop(5, "1003", 28.05673053256373f, -82.4170801432763D, 0)));
     underTest.stopTimeTable =
         createStopTimeTable(
             noticeContainer,
@@ -113,17 +115,15 @@ public class StopTooFarFromTripShapeValidatorTest {
             ImmutableList.of(
                 createShapePoint(5, "shape id", 28.05724310653972D, -82.41350776611507D, 1, 400f),
                 createShapePoint(6, "shape id", 28.05746701492806D, -82.41493135129478D, 2, 400f),
-                createShapePoint(7, "shape id", 28.05800068503469f, -82.4159394137605D, 3, 400f),
-                createShapePoint(9, "shape id", 28.05808869825447D, -82.41648754043338D, 4, 400f),
-                createShapePoint(
-                    11, "shape id", 28.05809979887893D, -82.41773971025437D, 5, 400f)));
+                createShapePoint(7, "shape id", 28.05800068503469D, -82.4159394137605D, 3, 400f),
+                createShapePoint(8, "shape id", 28.05808869825447D, -82.41648754043338D, 4, 400f),
+                createShapePoint(9, "shape id", 28.05809979887893D, -82.41773971025437D, 5, 400f)));
     underTest.tripTable =
         createTripTable(
-            noticeContainer, ImmutableList.of(createTrip(55, "route id", "service id", "t1")));
-
+            noticeContainer,
+            ImmutableList.of(createTrip(55, "route id", "service id", "t1", "shape id")));
     underTest.validate(noticeContainer);
 
-    // FIXME: fix this test
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(new StopTooFarFromTripShapeNotice("1003", 3, "t1", "shape id", 100));
   }
@@ -139,8 +139,8 @@ public class StopTooFarFromTripShapeValidatorTest {
         createStopTable(
             noticeContainer,
             ImmutableList.of(
-                createStop(2, "1001", 28.05811731042478D, -82.41616877502503D),
-                createStop(4, "1002", 28.05812364854794D, -82.41617370439423D)));
+                createStop(2, "1001", 28.05811731042478D, -82.41616877502503D, 4),
+                createStop(4, "1002", 28.05812364854794D, -82.41617370439423D, 4)));
     underTest.stopTimeTable =
         createStopTimeTable(
             noticeContainer,
@@ -157,7 +157,8 @@ public class StopTooFarFromTripShapeValidatorTest {
                 createShapePoint(9, "shape id", 28.05809979887893D, -82.41773971025437D, 5, 400f)));
     underTest.tripTable =
         createTripTable(
-            noticeContainer, ImmutableList.of(createTrip(55, "route id", "service id", "t1")));
+            noticeContainer,
+            ImmutableList.of(createTrip(55, "route id", "service id", "t1", "shape id")));
 
     underTest.validate(noticeContainer);
 
