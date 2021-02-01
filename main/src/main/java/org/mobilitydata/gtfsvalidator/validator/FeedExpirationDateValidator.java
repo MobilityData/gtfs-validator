@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import java.time.LocalDate;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
+import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.FeedExpirationDateNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
@@ -37,12 +38,15 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 @GtfsValidator
 public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedInfo> {
 
+  @Inject ValidationContext context;
+
   @Override
   public void validate(GtfsFeedInfo entity, NoticeContainer noticeContainer) {
     if (entity.hasFeedEndDate()) {
-      GtfsDate currentDate = GtfsDate.fromLocalDate(LocalDate.now());
-      GtfsDate currentDatePlusSevenDays = GtfsDate.fromLocalDate(LocalDate.now().plusDays(7));
-      GtfsDate currentDatePlusThirtyDays = GtfsDate.fromLocalDate(LocalDate.now().plusDays(30));
+      LocalDate now = context.now().toLocalDate();
+      GtfsDate currentDate = GtfsDate.fromLocalDate(now);
+      GtfsDate currentDatePlusSevenDays = GtfsDate.fromLocalDate(now.plusDays(7));
+      GtfsDate currentDatePlusThirtyDays = GtfsDate.fromLocalDate(now.plusDays(30));
       if (entity.feedEndDate().isBefore(currentDatePlusSevenDays)) {
         noticeContainer.addValidationNotice(
             new FeedExpirationDateNotice(

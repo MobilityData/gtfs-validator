@@ -26,6 +26,8 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
@@ -34,6 +36,7 @@ import org.mobilitydata.gtfsvalidator.notice.ThreadInterruptedError;
 import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
+import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
 /** The main entry point for GTFS Validator CLI. */
@@ -91,8 +94,13 @@ public class Main {
       exportReport(args.getOutputBase(), noticeContainer);
       return;
     }
+    ValidationContext validationContext =
+        ValidationContext.builder()
+            .setFeedName(feedName)
+            .setNow(ZonedDateTime.now(ZoneId.systemDefault()))
+            .build();
     feedContainer =
-        feedLoader.loadAndValidate(gtfsInput, feedName, validatorLoader, noticeContainer);
+        feedLoader.loadAndValidate(gtfsInput, validationContext, validatorLoader, noticeContainer);
 
     // Output
     exportReport(args.getOutputBase(), noticeContainer);
