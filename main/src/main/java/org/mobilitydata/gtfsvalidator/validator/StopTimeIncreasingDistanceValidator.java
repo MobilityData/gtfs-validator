@@ -44,7 +44,7 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
         GtfsStopTime curr = stopTimeList.get(i);
         if (prev.hasShapeDistTraveled()
             && curr.hasShapeDistTraveled()
-            && prev.shapeDistTraveled() > curr.shapeDistTraveled()) {
+            && prev.shapeDistTraveled() >= curr.shapeDistTraveled()) {
           noticeContainer.addValidationNotice(
               new DecreasingStopTimeDistanceNotice(
                   curr.tripId(),

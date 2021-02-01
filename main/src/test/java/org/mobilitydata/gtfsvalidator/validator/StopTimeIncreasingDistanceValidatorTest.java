@@ -78,6 +78,24 @@ public class StopTimeIncreasingDistanceValidatorTest {
   }
 
   @Test
+  public void twoShapesWithTheSameDistanceShouldGenerateNotice() {
+    StopTimeIncreasingDistanceValidator underTest = new StopTimeIncreasingDistanceValidator();
+    NoticeContainer noticeContainer = new NoticeContainer();
+    underTest.stopTimeTable =
+        createStopTimeTable(
+            noticeContainer,
+            ImmutableList.of(
+                createStopTime(1, "first trip", "s0", 2, 10.0d),
+                createStopTime(2, "first trip", "s1", 42, 45.0d),
+                createStopTime(3, "first trip", "s2", 46, 45.0d)));
+
+    underTest.validate(noticeContainer);
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactly(
+            new DecreasingStopTimeDistanceNotice("first trip", 3, 45.0d, 46, 2, 45.0d, 42));
+  }
+
+  @Test
   public void oneIntermediateShapeWithDecreasingDistanceAlongShapeShouldGenerateNotice() {
     StopTimeIncreasingDistanceValidator underTest = new StopTimeIncreasingDistanceValidator();
     NoticeContainer noticeContainer = new NoticeContainer();
