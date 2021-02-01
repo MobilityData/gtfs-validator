@@ -23,7 +23,7 @@ import java.util.Objects;
 
 /** Base class for all notices produced by GTFS validator. */
 public abstract class Notice {
-  private Map<String, Object> context;
+  private final Map<String, Object> context;
 
   public Notice(Map<String, Object> context) {
     this.context = context;
@@ -46,14 +46,18 @@ public abstract class Notice {
       return true;
     }
     if (other instanceof Notice) {
-      return context.equals(((Notice) other).context);
+      Notice otherNotice = (Notice) other;
+      return getCode().equals(otherNotice.getCode())
+          && getContext().equals(otherNotice.getContext());
     }
     return false;
   }
 
   @Override
   public String toString() {
-    return getCode() + " " + Joiner.on(",").withKeyValueSeparator("=").join(context);
+    return getCode()
+        + " "
+        + Joiner.on(",").useForNull("null").withKeyValueSeparator("=").join(context);
   }
 
   @Override

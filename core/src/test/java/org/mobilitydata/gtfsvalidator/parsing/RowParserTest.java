@@ -18,7 +18,10 @@ package org.mobilitydata.gtfsvalidator.parsing;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Locale;
@@ -26,19 +29,26 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
+import org.mobilitydata.gtfsvalidator.notice.FieldParsingError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
-import org.mockito.Mockito;
 
 @RunWith(JUnit4.class)
 public class RowParserTest {
+  private static final String FILENAME = "stops.txt";
+  private static final String FIELD_NAME = "some_field";
+
+  private static InputStream toInputStream(String s) {
+    return new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
+  }
 
   private RowParser createParser(String feedName, String cellValue) {
+    InputStream inputStream = toInputStream(FIELD_NAME + "\n" + cellValue);
+    CsvFile csvFile = new CsvFile(inputStream, FILENAME);
     NoticeContainer noticeContainer = new NoticeContainer();
-    CsvRow csvRow = Mockito.mock(CsvRow.class);
-    Mockito.when(csvRow.asString(0)).thenReturn(cellValue);
+    CsvRow csvRow = csvFile.iterator().next();
     RowParser parser = new RowParser(GtfsFeedName.parseString(feedName), noticeContainer);
     parser.setRow(csvRow);
     return parser;
@@ -206,5 +216,29 @@ public class RowParserTest {
     assertThat(createParser("-181").asLongitude(0, true)).isNull();
     assertThat(createParser("181").asLongitude(0, true)).isNull();
     assertThat(createParser("invalid").asLongitude(0, true)).isNull();
+  }
+
+  @Test
+  public void errorsInRequiredFields() {
+    // A valid value does not generate any errors.
+    RowParser parser = createParser("12:20:30");
+    assertThat(parser.asTime(0, RowParser.REQUIRED))
+        .isEqualTo(GtfsTime.fromHourMinuteSecond(12, 20, 30));
+    assertThat(parser.hasErrorsInRequiredFields()).isFalse();
+
+    // Invalid value for a required field is critical for a row.
+    parser = createParser("invalid");
+    assertThat(parser.asTime(0, RowParser.REQUIRED)).isNull();
+    assertThat(parser.hasErrorsInRequiredFields()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices())
+        .containsExactly(new FieldParsingError(FILENAME, 2, FIELD_NAME, "time", "invalid"));
+
+    // Invalid value for an optional field is not critical for a row but an error is still
+    // generated.
+    parser = createParser("invalid");
+    assertThat(parser.asTime(0, RowParser.OPTIONAL)).isNull();
+    assertThat(parser.hasErrorsInRequiredFields()).isFalse();
+    assertThat(parser.getNoticeContainer().getValidationNotices())
+        .containsExactly(new FieldParsingError(FILENAME, 2, FIELD_NAME, "time", "invalid"));
   }
 }

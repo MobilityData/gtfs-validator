@@ -291,7 +291,7 @@ public class TableLoaderGenerator {
     }
 
     method
-        .beginControlFlow("if (!rowParser.hasParseErrorsInRow())")
+        .beginControlFlow("if (!rowParser.hasErrorsInRequiredFields())")
         .addStatement("$T entity = builder.build()", gtfsEntityType)
         .addStatement("validatorLoader.invokeSingleEntityValidators(entity, noticeContainer)")
         .addStatement("entities.add(entity)")

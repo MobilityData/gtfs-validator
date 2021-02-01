@@ -167,7 +167,7 @@ public class RowParser {
         }
       };
   private CsvRow row;
-  private boolean parseErrorsInRow;
+  private boolean errorsInRequiredFields;
 
   public RowParser(GtfsFeedName feedName, NoticeContainer noticeContainer) {
     this.feedName = feedName;
@@ -180,16 +180,17 @@ public class RowParser {
 
   public void setRow(CsvRow row) {
     this.row = row;
-    this.parseErrorsInRow = false;
+    this.errorsInRequiredFields = false;
   }
 
-  public boolean hasParseErrorsInRow() {
-    return parseErrorsInRow;
+  public boolean hasErrorsInRequiredFields() {
+    return errorsInRequiredFields;
   }
 
   public void checkRowColumnCount(CsvFile csvFile) {
     if (row.getColumnCount() != csvFile.getColumnCount()) {
       addErrorInRow(
+          OPTIONAL,
           new InvalidRowLengthError(
               csvFile.getFileName(),
               row.getRowNumber(),
@@ -203,6 +204,7 @@ public class RowParser {
     String s = row.asString(columnIndex);
     if (required && s == null) {
       addErrorInRow(
+          required,
           new MissingRequiredFieldError(
               row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex)));
     }
@@ -262,6 +264,7 @@ public class RowParser {
         case POSITIVE:
           if (value <= 0) {
             addErrorInRow(
+                required,
                 new NumberOutOfRangeError(
                     row.getFileName(),
                     row.getRowNumber(),
@@ -273,6 +276,7 @@ public class RowParser {
         case NON_NEGATIVE:
           if (value < 0) {
             addErrorInRow(
+                required,
                 new NumberOutOfRangeError(
                     row.getFileName(),
                     row.getRowNumber(),
@@ -284,6 +288,7 @@ public class RowParser {
         case NON_ZERO:
           if (value == 0) {
             addErrorInRow(
+                required,
                 new NumberOutOfRangeError(
                     row.getFileName(),
                     row.getRowNumber(),
@@ -320,6 +325,7 @@ public class RowParser {
         case POSITIVE:
           if (value <= 0) {
             addErrorInRow(
+                required,
                 new NumberOutOfRangeError(
                     row.getFileName(),
                     row.getRowNumber(),
@@ -331,6 +337,7 @@ public class RowParser {
         case NON_NEGATIVE:
           if (value < 0) {
             addErrorInRow(
+                required,
                 new NumberOutOfRangeError(
                     row.getFileName(),
                     row.getRowNumber(),
@@ -342,6 +349,7 @@ public class RowParser {
         case NON_ZERO:
           if (value == 0) {
             addErrorInRow(
+                required,
                 new NumberOutOfRangeError(
                     row.getFileName(),
                     row.getRowNumber(),
@@ -369,6 +377,7 @@ public class RowParser {
         case POSITIVE:
           if (compareToZero <= 0) {
             addErrorInRow(
+                required,
                 new NumberOutOfRangeError(
                     row.getFileName(),
                     row.getRowNumber(),
@@ -380,6 +389,7 @@ public class RowParser {
         case NON_NEGATIVE:
           if (compareToZero < 0) {
             addErrorInRow(
+                required,
                 new NumberOutOfRangeError(
                     row.getFileName(),
                     row.getRowNumber(),
@@ -391,6 +401,7 @@ public class RowParser {
         case NON_ZERO:
           if (compareToZero == 0) {
             addErrorInRow(
+                required,
                 new NumberOutOfRangeError(
                     row.getFileName(),
                     row.getRowNumber(),
@@ -420,12 +431,14 @@ public class RowParser {
       i = Integer.parseInt(s);
     } catch (Exception ex) {
       addErrorInRow(
+          required,
           new FieldParsingError(
               row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), "enum", s));
       return null;
     }
     if (enumCreator.convert(i) == null) {
       addErrorInRow(
+          required,
           new UnexpectedEnumValueError(
               row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), i));
     }
@@ -442,8 +455,10 @@ public class RowParser {
     return dateParser.parseField(columnIndex, required);
   }
 
-  private void addErrorInRow(ValidationNotice error) {
-    parseErrorsInRow = true;
+  private void addErrorInRow(boolean required, ValidationNotice error) {
+    if (required) {
+      errorsInRequiredFields = true;
+    }
     noticeContainer.addValidationNotice(error);
   }
 
@@ -476,6 +491,7 @@ public class RowParser {
         return parseString(s);
       } catch (Exception ex) {
         addErrorInRow(
+            required,
             new FieldParsingError(
                 row.getFileName(),
                 row.getRowNumber(),
