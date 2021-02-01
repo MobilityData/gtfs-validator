@@ -18,6 +18,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
@@ -115,7 +116,7 @@ public class BlockTripsWithOverlappingStopTimesValidatorTest {
     BlockTripsWithOverlappingStopTimesValidator validator =
         new BlockTripsWithOverlappingStopTimesValidator();
     validator.calendarTable = createCalendarTable(noticeContainer);
-    validator.calendarDateTable = GtfsCalendarDateTableContainer.forMissingFile();
+    validator.calendarDateTable = new GtfsCalendarDateTableContainer(TableStatus.MISSING_FILE);
     validator.tripTable =
         createTripTable(
             new String[] {"t0", "t1", "t2", "t3", "t4", "t5"},
@@ -147,7 +148,7 @@ public class BlockTripsWithOverlappingStopTimesValidatorTest {
     BlockTripsWithOverlappingStopTimesValidator validator =
         new BlockTripsWithOverlappingStopTimesValidator();
     validator.calendarTable = createCalendarTable(noticeContainer);
-    validator.calendarDateTable = GtfsCalendarDateTableContainer.forMissingFile();
+    validator.calendarDateTable = new GtfsCalendarDateTableContainer(TableStatus.MISSING_FILE);
     validator.tripTable =
         createTripTable(
             new String[] {"t0", "t1", "t2"},
@@ -179,7 +180,7 @@ public class BlockTripsWithOverlappingStopTimesValidatorTest {
     BlockTripsWithOverlappingStopTimesValidator validator =
         new BlockTripsWithOverlappingStopTimesValidator();
     validator.calendarTable = createCalendarTable(noticeContainer);
-    validator.calendarDateTable = GtfsCalendarDateTableContainer.forMissingFile();
+    validator.calendarDateTable = new GtfsCalendarDateTableContainer(TableStatus.MISSING_FILE);
     validator.tripTable =
         createTripTable(
             new String[] {"t0", "t1"}, new String[] {"WEEK", "WEEK-ALT"}, "b1", noticeContainer);
@@ -209,7 +210,7 @@ public class BlockTripsWithOverlappingStopTimesValidatorTest {
     BlockTripsWithOverlappingStopTimesValidator validator =
         new BlockTripsWithOverlappingStopTimesValidator();
     validator.calendarTable = createCalendarTable(noticeContainer);
-    validator.calendarDateTable = GtfsCalendarDateTableContainer.forMissingFile();
+    validator.calendarDateTable = new GtfsCalendarDateTableContainer(TableStatus.MISSING_FILE);
     validator.tripTable =
         createTripTable(
             new String[] {"t0", "t1"}, new String[] {"WEEK", "WEEK"}, "b1", noticeContainer);

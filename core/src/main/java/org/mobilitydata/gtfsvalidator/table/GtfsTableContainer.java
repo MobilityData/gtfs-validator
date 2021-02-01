@@ -28,9 +28,16 @@ import java.util.List;
  * @param <T> subclass of {@code GtfsEntity}
  */
 public abstract class GtfsTableContainer<T extends GtfsEntity> {
-  private boolean emptyFile = false;
-  private boolean missingFile = false;
-  private boolean invalidHeaders = false;
+
+  private final TableStatus tableStatus;
+
+  public GtfsTableContainer(TableStatus tableStatus) {
+    this.tableStatus = tableStatus;
+  }
+
+  public TableStatus getTableStatus() {
+    return tableStatus;
+  }
 
   public abstract Class<T> getEntityClass();
 
@@ -43,16 +50,12 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
   public abstract String gtfsFilename();
 
   /**
-   * Tells if the file is empty, i.e. it has no rows and even no headers.
+   * Tells if the file is completely empty, i.e. it has no rows and even no headers.
    *
    * @return true if the file is empty, false otherwise
    */
   public boolean isEmptyFile() {
-    return emptyFile;
-  }
-
-  public void setEmptyFile(boolean emptyFile) {
-    this.emptyFile = emptyFile;
+    return tableStatus == TableStatus.EMPTY_FILE;
   }
 
   /**
@@ -61,15 +64,7 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
    * @return true if the file is missing, false otherwise
    */
   public boolean isMissingFile() {
-    return missingFile;
-  }
-
-  public void setMissingFile(boolean missingFile) {
-    this.missingFile = missingFile;
-  }
-
-  public boolean hasInvalidHeaders() {
-    return invalidHeaders;
+    return tableStatus == TableStatus.MISSING_FILE;
   }
 
   /**
@@ -79,7 +74,56 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
    *
    * @return true if the file has invalid headers, false otherwise
    */
-  public void setInvalidHeaders(boolean invalidHeaders) {
-    this.invalidHeaders = invalidHeaders;
+  public boolean hasInvalidHeaders() {
+    return tableStatus == TableStatus.INVALID_HEADERS;
+  }
+
+  /**
+   * Tells if some of the rows failed to parse, e.g., have missing required fields or invalid field
+   * values.
+   *
+   * <p>This does not include cross-file or cross-row validation. This also does not include
+   * single-entity validation.
+   *
+   * @return true if some of the rows failed to parse, false otherwise
+   */
+  public boolean hasUnparsableRows() {
+    return tableStatus == TableStatus.UNPARSABLE_ROWS;
+  }
+
+  /**
+   * Tells if the file is required according to GTFS.
+   *
+   * <p>Note that a required file may be empty.
+   *
+   * @return true if the file is required, false otherwise
+   */
+  public abstract boolean isRequired();
+
+  /**
+   * Tells if the file was successfully parsed.
+   *
+   * <p>If all files in the feed were successfully parsed, then file validators may be executed.
+   *
+   * <p>A successfully parsed file must meet the following conditions:
+   *
+   * <ul>
+   *   <li>all headers are valid, required headers are present;
+   *   <li>all rows are successfully parsed;
+   *   <li>if the file is required, it is present in the feed.
+   * </ul>
+   *
+   * @return true if file was successfully parsed, false otherwise
+   */
+  public boolean isParsedSuccessfully() {
+    return !hasInvalidHeaders() && !hasUnparsableRows() && !(isRequired() && isMissingFile());
+  }
+
+  public enum TableStatus {
+    EMPTY_FILE,
+    MISSING_FILE,
+    PARSABLE_HEADERS_AND_ROWS,
+    INVALID_HEADERS,
+    UNPARSABLE_ROWS,
   }
 }

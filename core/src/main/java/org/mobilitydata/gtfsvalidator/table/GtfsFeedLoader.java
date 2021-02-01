@@ -96,8 +96,8 @@ public class GtfsFeedLoader {
     ExecutorService exec = Executors.newFixedThreadPool(numThreads);
 
     List<Callable<TableAndNoticeContainers>> loaderCallables = new ArrayList<>();
-    Map<String, GtfsTableLoader> remainingLoaders =
-        (Map<String, GtfsTableLoader>) tableLoaders.clone();
+    Map<String, GtfsTableLoader<?>> remainingLoaders =
+        (Map<String, GtfsTableLoader<?>>) tableLoaders.clone();
     for (String filename : gtfsInput.getFilenames()) {
       GtfsTableLoader loader = remainingLoaders.remove(filename.toLowerCase());
       if (loader == null) {
@@ -128,7 +128,7 @@ public class GtfsFeedLoader {
             });
       }
     }
-    ArrayList<GtfsTableContainer> tableContainers = new ArrayList<>();
+    ArrayList<GtfsTableContainer<?>> tableContainers = new ArrayList<>();
     tableContainers.ensureCapacity(tableLoaders.size());
     for (GtfsTableLoader loader : remainingLoaders.values()) {
       tableContainers.add(loader.loadMissingFile(validatorLoader, noticeContainer));
@@ -160,6 +160,15 @@ public class GtfsFeedLoader {
         noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
       }
       GtfsFeedContainer feed = new GtfsFeedContainer(tableContainers);
+      if (!feed.isParsedSuccessfully()) {
+        // No need to call file validators if any file failed to parse. File validations in that
+        // case may lead to confusing error messages.
+        //
+        // Consider we failed to parse a row trip.txt but there is another row in stop_times.txt
+        // that references a trip. Then foreign key validator may notify about a missing trip_id
+        // which would be wrong.
+        return feed;
+      }
       List<Callable<NoticeContainer>> validatorCallables = new ArrayList<>();
       for (FileValidator validator : validatorLoader.createMultiFileValidators(feed)) {
         validatorCallables.add(
