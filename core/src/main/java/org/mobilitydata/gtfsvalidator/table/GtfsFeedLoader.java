@@ -29,7 +29,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsLoader;
-import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.RuntimeExceptionInLoaderError;
@@ -38,6 +37,7 @@ import org.mobilitydata.gtfsvalidator.notice.ThreadExecutionError;
 import org.mobilitydata.gtfsvalidator.notice.ThreadInterruptedError;
 import org.mobilitydata.gtfsvalidator.notice.UnknownFileNotice;
 import org.mobilitydata.gtfsvalidator.validator.FileValidator;
+import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
 /**
@@ -89,7 +89,7 @@ public class GtfsFeedLoader {
 
   public GtfsFeedContainer loadAndValidate(
       GtfsInput gtfsInput,
-      GtfsFeedName feedName,
+      ValidationContext validationContext,
       ValidatorLoader validatorLoader,
       NoticeContainer noticeContainer) {
     logger.atInfo().log("Loading in %d threads", numThreads);
@@ -109,7 +109,8 @@ public class GtfsFeedLoader {
               NoticeContainer loaderNotices = new NoticeContainer();
               GtfsTableContainer tableContainer;
               try {
-                tableContainer = loader.load(inputStream, feedName, validatorLoader, loaderNotices);
+                tableContainer =
+                    loader.load(inputStream, validationContext, validatorLoader, loaderNotices);
               } catch (RuntimeException e) {
                 // This handler should prevent ExecutionException for
                 // this thread. We catch an exception here for storing
@@ -120,7 +121,8 @@ public class GtfsFeedLoader {
                         filename, e.getClass().getCanonicalName(), e.getMessage()));
                 // Since the file was not loaded successfully, we treat
                 // it as missing for continuing validation.
-                tableContainer = loader.loadMissingFile(validatorLoader, loaderNotices);
+                tableContainer =
+                    loader.loadMissingFile(validationContext, validatorLoader, loaderNotices);
               } finally {
                 inputStream.close();
               }
@@ -131,7 +133,8 @@ public class GtfsFeedLoader {
     ArrayList<GtfsTableContainer<?>> tableContainers = new ArrayList<>();
     tableContainers.ensureCapacity(tableLoaders.size());
     for (GtfsTableLoader loader : remainingLoaders.values()) {
-      tableContainers.add(loader.loadMissingFile(validatorLoader, noticeContainer));
+      tableContainers.add(
+          loader.loadMissingFile(validationContext, validatorLoader, noticeContainer));
     }
     try {
       try {
@@ -170,7 +173,8 @@ public class GtfsFeedLoader {
         return feed;
       }
       List<Callable<NoticeContainer>> validatorCallables = new ArrayList<>();
-      for (FileValidator validator : validatorLoader.createMultiFileValidators(feed)) {
+      for (FileValidator validator :
+          validatorLoader.createMultiFileValidators(feed, validationContext)) {
         validatorCallables.add(
             () -> {
               NoticeContainer validatorNotices = new NoticeContainer();

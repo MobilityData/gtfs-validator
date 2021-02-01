@@ -41,7 +41,6 @@ import javax.lang.model.element.Modifier;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsLoader;
-import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.notice.EmptyFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -52,7 +51,9 @@ import org.mobilitydata.gtfsvalidator.parsing.RowParser;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableLoader;
+import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
 import org.mobilitydata.gtfsvalidator.validator.TableHeaderValidator;
+import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
 /**
@@ -204,7 +205,7 @@ public class TableLoaderGenerator {
         MethodSpec.methodBuilder("load")
             .addModifiers(Modifier.PUBLIC)
             .addParameter(InputStream.class, "inputStream")
-            .addParameter(GtfsFeedName.class, "feedName")
+            .addParameter(ValidationContext.class, "validationContext")
             .addParameter(ValidatorLoader.class, "validatorLoader")
             .addParameter(NoticeContainer.class, "noticeContainer")
             .returns(
@@ -219,7 +220,9 @@ public class TableLoaderGenerator {
                 tableContainerTypeName,
                 tableContainerTypeName,
                 TableStatus.class)
-            .addStatement("validatorLoader.invokeSingleFileValidators(table, noticeContainer)")
+            .addStatement(
+                "validatorLoader.invokeSingleFileValidators(table, validationContext,"
+                    + " noticeContainer)")
             .addStatement("return table")
             .endControlFlow()
             .beginControlFlow(
@@ -254,14 +257,24 @@ public class TableLoaderGenerator {
     }
 
     method
-        .addStatement("$T.Builder builder = new $T.Builder()", gtfsEntityType, gtfsEntityType)
+        .addStatement("final $T.Builder builder = new $T.Builder()", gtfsEntityType, gtfsEntityType)
         .addStatement(
-            "$T rowParser = new $T(feedName, noticeContainer)", RowParser.class, RowParser.class)
+            "final $T rowParser = new $T(validationContext.feedName(), noticeContainer)",
+            RowParser.class,
+            RowParser.class)
         .addStatement(
-            "$T entities = new $T<>()",
+            "final $T entities = new $T<>()",
             ParameterizedTypeName.get(ClassName.get(List.class), gtfsEntityType),
             ArrayList.class)
-        .addStatement("boolean hasUnparsableRows = false");
+        .addStatement("boolean hasUnparsableRows = false")
+        .addStatement(
+            "final $T singleEntityValidators = validatorLoader.createSingleEntityValidators("
+                + "$T.class, validationContext)",
+            ParameterizedTypeName.get(
+                ClassName.get(List.class),
+                ParameterizedTypeName.get(
+                    ClassName.get(SingleEntityValidator.class), gtfsEntityType)),
+            gtfsEntityType);
     method.beginControlFlow("for ($T row : csvFile)", CsvRow.class);
 
     method
@@ -301,7 +314,9 @@ public class TableLoaderGenerator {
         .addStatement("hasUnparsableRows = true")
         .nextControlFlow("else")
         .addStatement("$T entity = builder.build()", gtfsEntityType)
-        .addStatement("validatorLoader.invokeSingleEntityValidators(entity, noticeContainer)")
+        .addStatement(
+            "ValidatorLoader.invokeSingleEntityValidators(entity, singleEntityValidators,"
+                + " noticeContainer)")
         .addStatement("entities.add(entity)")
         .endControlFlow();
 
@@ -334,7 +349,8 @@ public class TableLoaderGenerator {
             "$T table = $T.forEntities(entities, noticeContainer)",
             tableContainerTypeName,
             tableContainerTypeName)
-        .addStatement("validatorLoader.invokeSingleFileValidators(table, noticeContainer)")
+        .addStatement(
+            "validatorLoader.invokeSingleFileValidators(table, validationContext, noticeContainer)")
         .addStatement("return table")
         .endControlFlow();
 
@@ -364,6 +380,7 @@ public class TableLoaderGenerator {
     MethodSpec.Builder method =
         MethodSpec.methodBuilder("loadMissingFile")
             .addModifiers(Modifier.PUBLIC)
+            .addParameter(ValidationContext.class, "validationContext")
             .addParameter(ValidatorLoader.class, "validatorLoader")
             .addParameter(NoticeContainer.class, "noticeContainer")
             .returns(
@@ -379,7 +396,9 @@ public class TableLoaderGenerator {
                 "noticeContainer.addValidationNotice(new $T(gtfsFilename()))",
                 MissingRequiredFileError.class)
             .endControlFlow()
-            .addStatement("validatorLoader.invokeSingleFileValidators(table, noticeContainer)")
+            .addStatement(
+                "validatorLoader.invokeSingleFileValidators(table, validationContext,"
+                    + " noticeContainer)")
             .addStatement("return table");
 
     return method.build();
