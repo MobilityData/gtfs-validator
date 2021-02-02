@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.notice.FieldParsingError;
 import org.mobilitydata.gtfsvalidator.notice.InvalidRowLengthError;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
+import org.mobilitydata.gtfsvalidator.notice.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.NumberOutOfRangeError;
 import org.mobilitydata.gtfsvalidator.notice.UnexpectedEnumValueError;
@@ -216,6 +217,18 @@ public class RowParser {
 
   @Nullable
   public String asId(int columnIndex, boolean required) {
+    String value = row.asString(columnIndex);
+    if (value == null) {
+      return asString(columnIndex, required);
+    }
+    for (char ch : value.toCharArray()) {
+      if (!(ch >= 32 && ch < 127)) {
+        addErrorInRow(
+            new NonAsciiOrNonPrintableCharNotice(
+                row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex)));
+        break;
+      }
+    }
     return asString(columnIndex, required);
   }
 
