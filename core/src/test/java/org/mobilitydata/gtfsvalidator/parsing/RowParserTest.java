@@ -193,7 +193,8 @@ public class RowParserTest {
     RowParser parser = createParser("קום");
     // .קום :the .COM equivalent in Hebrew
     parser.asId(0, true);
-    assertThat(parser.getNoticeContainer().getValidationNotices()).containsExactly(new NonAsciiOrNonPrintableCharNotice("filename", 8L, "column name" ));
+    assertThat(parser.getNoticeContainer().getValidationNotices())
+        .containsExactly(new NonAsciiOrNonPrintableCharNotice("filename", 8L, "column name"));
   }
 
   @Test
