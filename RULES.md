@@ -322,7 +322,7 @@ Stop times in a trip should have increasing distance.
 
 ### NonAsciiOrNonPrintableCharNotice
 
-A value of filed with type `id contains non ASCII or non printable characters. This is not recommended.
+A value of filed with type `id` contains non ASCII or non printable characters. This is not recommended.
 
 #### References:
 * [Field type recommendations](http://gtfs.org/reference/static/#field-types)
