@@ -218,7 +218,7 @@ public class RowParser {
   @Nullable
   public String asId(int columnIndex, boolean required) {
     String value = row.asString(columnIndex);
-    if(value == null) {
+    if (value == null) {
       return asString(columnIndex, required);
     }
     for (char ch : value.toCharArray()) {
