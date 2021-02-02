@@ -31,6 +31,6 @@ public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
 
   @Override
   public String getCode() {
-    return "invalid_row_length";
+    return "id_contains_non_ascii_characters";
   }
 }
