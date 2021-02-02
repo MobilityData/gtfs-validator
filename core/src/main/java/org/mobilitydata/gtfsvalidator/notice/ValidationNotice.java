@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,5 +29,7 @@ import java.util.Map;
 public abstract class ValidationNotice extends Notice {
   public ValidationNotice(Map<String, Object> context) {
     super(context);
+    // by default severityLevel is set to SeverityLevel.WARNING
+    this.setSeverityLevel(SeverityLevel.WARNING);
   }
 }

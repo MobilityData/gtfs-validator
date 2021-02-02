@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,5 +34,7 @@ import java.util.Map;
 public abstract class SystemError extends Notice {
   public SystemError(Map<String, Object> context) {
     super(context);
+    // by default SystemError.severity is set to SeverityLevel.SYSTEM_ERROR
+    this.setSeverityLevel(SeverityLevel.SYSTEM_ERROR);
   }
 }

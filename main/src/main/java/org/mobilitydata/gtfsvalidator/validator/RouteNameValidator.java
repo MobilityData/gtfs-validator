@@ -17,7 +17,12 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.*;
+import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.RouteBothShortAndLongNameMissingNotice;
+import org.mobilitydata.gtfsvalidator.notice.RouteShortAndLongNameEqualNotice;
+import org.mobilitydata.gtfsvalidator.notice.RouteShortNameTooLongNotice;
+import org.mobilitydata.gtfsvalidator.notice.SameNameAndDescriptionForRouteNotice;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 
 /**
@@ -42,8 +47,10 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
     final boolean hasShortName = entity.hasRouteShortName();
 
     if (!hasLongName && !hasShortName) {
-      noticeContainer.addValidationNotice(
-          new RouteBothShortAndLongNameMissingNotice(entity.routeId(), entity.csvRowNumber()));
+      RouteBothShortAndLongNameMissingNotice notice =
+          new RouteBothShortAndLongNameMissingNotice(entity.routeId(), entity.csvRowNumber());
+      notice.setSeverityLevel(SeverityLevel.ERROR);
+      noticeContainer.addValidationNotice(notice);
     }
 
     if (hasShortName
