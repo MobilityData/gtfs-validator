@@ -33,6 +33,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
 
 @RunWith(JUnit4.class)
 public class MatchingFeedAndAgencyLangValidatorTest {
@@ -67,8 +68,8 @@ public class MatchingFeedAndAgencyLangValidatorTest {
   public void noFeedInfoShouldNotGenerateNotice() {
     NoticeContainer noticeContainer = new NoticeContainer();
     MatchingFeedAndAgencyLangValidator validator = new MatchingFeedAndAgencyLangValidator();
-    validator.agencyTable = GtfsAgencyTableContainer.forEmptyFile();
-    validator.feedInfoTable = GtfsFeedInfoTableContainer.forEmptyFile();
+    validator.agencyTable = new GtfsAgencyTableContainer(TableStatus.EMPTY_FILE);
+    validator.feedInfoTable = new GtfsFeedInfoTableContainer(TableStatus.EMPTY_FILE);
     validator.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices()).isEmpty();

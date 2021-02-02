@@ -65,7 +65,7 @@ Note that the notice ID naming conventions changed in `v2` to make contributions
 |                          	| [E061](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E061)      	| Out of memory                                                           	|
 |                           | [W001](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W001)          | Input zip archive contains folder | 
 |                           | [W002](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W002)          | Non standard field name | 
-|                           | [W003](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W003)        	| Non ascii or non printable char in `id`                                         	|
+|[`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)| [W003](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W003)        	| Non ascii or non printable char in `id`                                         	|
 |                           | [W006](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W006)        	| Missing route short name                                                        	|
 |                           | [W007](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W007)        	| Missing route long name                                                         	|
 |                           | [W008](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W008)        	| Route long name contains short name                                             	|
@@ -319,6 +319,13 @@ Both files calendar_dates.txt and calendar.txt are missing from the GTFS archive
 ### DecreasingStopTimeDistanceNotice
 
 Stop times in a trip should have increasing distance.
+
+### NonAsciiOrNonPrintableCharNotice
+
+A value of filed with type `id` contains non ASCII or non printable characters. This is not recommended.
+
+#### References:
+* [Field type recommendations](http://gtfs.org/reference/static/#field-types)
 
 ### StopTooFarFromTripShapeNotice
 
