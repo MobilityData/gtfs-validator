@@ -38,8 +38,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 public class GeospatialUtil {
   static final int KILOMETER_TO_METER_CONVERSION_FACTOR =
       1000; // conversion factor from kilometers to meters
-
-  static final double METER_TO_KILOMETER_CONVERSION_FACTOR =
+  static final float METER_TO_KILOMETER_CONVERSION_FACTOR =
       1 / 1000; // conversion factor from kilometers to meters
   static final double TRIP_BUFFER_METERS =
       100; // Per GTFS Best Practices (https://gtfs.org/best-practices/#shapestxt)
