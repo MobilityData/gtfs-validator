@@ -20,8 +20,7 @@ import com.google.common.collect.ImmutableMap;
 
 /** A row in the input file has a different number of values than specified by the CSV header. */
 public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
-  public NonAsciiOrNonPrintableCharNotice(
-      String filename, long csvRowNumber, String columnName) {
+  public NonAsciiOrNonPrintableCharNotice(String filename, long csvRowNumber, String columnName) {
     super(
         ImmutableMap.of(
             "filename", filename,
