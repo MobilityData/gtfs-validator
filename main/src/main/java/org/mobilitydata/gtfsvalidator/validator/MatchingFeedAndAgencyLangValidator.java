@@ -16,79 +16,62 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import java.util.HashSet;
 import java.util.Locale;
-import java.util.Set;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.FeedInfoLangAndAgencyLangMismatchNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
 
 /**
- * Files `agency.txt` and `feed_info.txt` must define matching `agency.agency_lang` and
- * `feed_info.feed_lang`. The default language may be multilingual for datasets with the original
- * text in multiple languages. In such cases, the feed_lang field should contain the language code
- * mul defined by the norm ISO 639-2. If `feed_lang` is not `mul` and does not match with
- * `agency_lang`, that's an error If there is more than one `agency_lang` and `feed_lang` isn't
- * `mul`, that's an error If `feed_lang` is `mul` and there isn't more than one `agency_lang`,
- * that's an error
+ * Validates that {@code agency.agency_lang} and {@code feed_info.feed_lang} are matching.
+ * <p>
+ * {@code agency.agency_lang} is optional, so it is acceptable to omit that field.
+ * <p>
+ * The default language may be multilingual for datasets with the original text in multiple
+ * languages. In such cases, the {@code feed_lang} field should contain the language code {@code
+ * mul} defined by the norm ISO 639-2. If {@code feed_lang} is not {@code mul} and does not match
+ * with {@code agency_lang}, that's an error.
  *
- * <p>#### References: [GTFS feed_info.txt
- * specification](http://gtfs.org/reference/static/#feed_infotxt) [GTFS agency.txt
- * specification](http://gtfs.org/reference/static/#agencytxt)
+ * <p>References:
+ *
+ * <ul>
+ *   <li><a href="http://gtfs.org/reference/static/#feed_infotxt")">GTFS feed_info.txt specification</a>
+ *   <li><a href="http://gtfs.org/reference/static/#agencytxt">GTFS agency.txt specification</a>
+ * </ul>
  *
  * <p>Generated notice: {@link FeedInfoLangAndAgencyLangMismatchNotice}.
  */
 @GtfsValidator
 public class MatchingFeedAndAgencyLangValidator extends FileValidator {
-  @Inject GtfsFeedInfoTableContainer feedInfoTable;
-  @Inject GtfsAgencyTableContainer agencyTable;
+
+  @Inject
+  GtfsFeedInfoTableContainer feedInfoTable;
+  @Inject
+  GtfsAgencyTableContainer agencyTable;
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    if (feedInfoTable.entityCount() == 0) {
+    // If there are no feed info entries or if no feed lang has been specified, we don't do any validation.
+    if (feedInfoTable.entityCount() == 0 || !feedInfoTable.getSingleEntity().hasFeedLang()) {
       return;
     }
-    // the previous early return ensures feedInfoTable is not empty
-    Locale feedInfoFeedLang = feedInfoTable.getEntities().get(0).feedLang();
-    Set<String> agencyLangCollection = new HashSet<>();
-    agencyTable
-        .getEntities()
-        .forEach(
-            agency -> {
-              if (agency.hasAgencyLang()) {
-                agencyLangCollection.add(agency.agencyLang().getISO3Language());
-              }
-            });
-    if (feedInfoFeedLang.equals(Locale.forLanguageTag("mul"))) {
-      // If feed_lang is mul and there isn't more than one agency_lang, that's an error
-      if (agencyLangCollection.size() <= 1) {
+    final Locale feedLang = feedInfoTable.getSingleEntity().feedLang();
+    if (feedLang.equals(Locale.forLanguageTag("mul"))) {
+      // A multilanguage feed may have different agency_lang.
+      return;
+    }
+    for (GtfsAgency agency : agencyTable.getEntities()) {
+      if (agency.hasAgencyLang() &&
+          !feedLang.equals(agency.agencyLang())) {
         noticeContainer.addValidationNotice(
             new FeedInfoLangAndAgencyLangMismatchNotice(
-                feedInfoFeedLang.getISO3Language(), agencyLangCollection));
-        return;
+                agency.csvRowNumber(), agency.agencyId(), agency.agencyName(),
+                agency.agencyLang().toLanguageTag(),
+                feedLang.toLanguageTag()));
       }
-      return;
     }
-    // If there is more than one agency_lang and feed_lang isn't mul, that's an error
-    if (agencyLangCollection.size() > 1) {
-      noticeContainer.addValidationNotice(
-          new FeedInfoLangAndAgencyLangMismatchNotice(
-              feedInfoFeedLang.getISO3Language(), agencyLangCollection));
-      return;
-    }
-    agencyTable
-        .getEntities()
-        .forEach(
-            agency -> {
-              // If feed_lang is not mul and differs from agency_lang, that's an error
-              if (!feedInfoFeedLang.equals(agency.agencyLang())) {
-                noticeContainer.addValidationNotice(
-                    new FeedInfoLangAndAgencyLangMismatchNotice(
-                        feedInfoFeedLang.getISO3Language(), agencyLangCollection));
-              }
-            });
   }
 }
