@@ -273,6 +273,8 @@ Field `parent_station` must be empty when `location_type` is 2.
 #### References:
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 
+<a name="DuplicateRouteNameNotice"/>
+
 ### DuplicateRouteNameNotice
 
 All routes should have different `routes.route_long_name` - if two `routes.route_long_name` are the same, and the two routes belong to the same agency, a notice is generated.
@@ -288,10 +290,13 @@ The same combination of `route_short_name` and `route_long_name` should not be u
 #### References:
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 
+<a name="UnusedTripNotice"/>
+
 ### UnusedTripNotice
 
 Trips must be referred to at least once in `stop_times.txt`.
 
+<a name="FeedExpirationDateNotice"/>
 
 ### FeedExpirationDateNotice
 
@@ -301,6 +306,8 @@ If possible, the GTFS dataset should cover at least the next 30 days of service.
 #### References:
 * [Dataset Publishing & General Practices](http://gtfs.org/best-practices/#dataset-publishing--general-practices)
 
+<a name="MissingTripEdgeNotice"/>
+
 ### MissingTripEdgeNotice
 
 First and last stop of a trip must define both `arrival_time` and `departure_time` fields.
@@ -308,13 +315,19 @@ First and last stop of a trip must define both `arrival_time` and `departure_tim
 #### References:
 * [stop_times.txt specification](http://gtfs.org/reference/static/#stop_timestxt)
 
+<a name="UnusableTripNotice"/>
+
 ### UnusableTripNotice
 
 A trip must visit more than one stop in stop_times.txt to be usable by passengers for boarding and alighting.
 
+<a name="MissingCalendarAndCalendarDateFilesNotice"/>
+
 ### MissingCalendarAndCalendarDateFilesNotice
 
 Both files calendar_dates.txt and calendar.txt are missing from the GTFS archive. At least one of the files must be provided.
+
+<a name="DecreasingStopTimeDistanceNotice"/>
 
 ### DecreasingStopTimeDistanceNotice
 
