@@ -16,6 +16,12 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
+/**
+ * Describes the level of severity encountered during validation. 1) WARNING: the GTFS dataset lacks
+ * of quality e.g {@code UnusedTripNotice} 2) ERROR: the GTFS dataset does not comply to an explicit
+ * rule e.g. {@code MissingCalendarAndCalendarDateFilesNotice} 3) SYSTEM_ERROR: level of severity to
+ * represent an internal error
+ */
 public enum SeverityLevel {
   WARNING,
 
