@@ -84,14 +84,14 @@ public class GeospatialUtilTest {
 
   @Test
   public void distanceFromToSameCoordinateIsZero() {
-    assertThat(GeospatialUtil.distanceBetweenMeter(45.508888, -73.561668, 45.508888, -73.561668))
+    assertThat(GeospatialUtil.distanceInMeterBetween(45.508888, -73.561668, 45.508888, -73.561668))
         .isEqualTo(0);
   }
 
   @Test
   public void distanceReferenceCheck() {
     // geographic data extracted and validated with an external tool
-    assertThat(GeospatialUtil.distanceBetweenMeter(45.508888, -73.561668, 45.507753, -73.562677))
+    assertThat(GeospatialUtil.distanceInMeterBetween(45.508888, -73.561668, 45.507753, -73.562677))
         .isEqualTo(148);
   }
 
@@ -128,8 +128,8 @@ public class GeospatialUtilTest {
     GtfsStopTableContainer stopTable =
         GtfsStopTableContainer.forEntities(
             ImmutableList.of(
-                createStop(2, "1001", 28.05811731042478D, -82.41616877502503D, 2),
-                createStop(4, "1002", 28.05812364854794D, -82.41617370439423D, 2)),
+                createStop(2, "1001", 28.05808869825447D, -82.41648754043338D, 0),
+                createStop(4, "1002", 28.05809979887893D, -82.41773971025437D,  0)),
             noticeContainer);
 
     List<StopTooFarFromTripShapeNotice> underTest =
@@ -174,10 +174,10 @@ public class GeospatialUtilTest {
     GtfsStopTableContainer stopTable =
         GtfsStopTableContainer.forEntities(
             ImmutableList.of(
-                createStop(2, "1001", 28.05811731042478D, -82.41616877502503D, 4),
-                createStop(4, "1002", 28.05812364854794D, -82.41617370439423D, 4),
+                createStop(2, "1001", 28.05808869825447D, -82.41648754043338D, 4),
+                createStop(4, "1002", 28.05809979887893D, -82.41773971025437D, 4),
                 // this location is outside buffer
-                createStop(5, "1003", 28.05673053256373D, -82.4170801432763D, 4)),
+                createStop(5, "1003", 17.05673053256373D, -45.4170801432763D, 4)),
             noticeContainer);
 
     List<StopTooFarFromTripShapeNotice> underTest =
@@ -225,8 +225,8 @@ public class GeospatialUtilTest {
     GtfsStopTableContainer stopTable =
         GtfsStopTableContainer.forEntities(
             ImmutableList.of(
-                createStop(2, "1001", 28.05811731042478D, -82.41616877502503D, 0),
-                createStop(4, "1002", 28.05812364854794D, -82.41617370439423D, 0),
+                createStop(2, "1001", 28.05808869825447D, -82.41648754043338D, 0),
+                createStop(4, "1002", 28.05809979887893D, -82.41773971025437D, 0),
                 // this location is outside buffer
                 createStop(5, "1003", 28.05673053256373D, -82.4170801432763D, 4)),
             noticeContainer);
@@ -275,8 +275,8 @@ public class GeospatialUtilTest {
     GtfsStopTableContainer stopTable =
         GtfsStopTableContainer.forEntities(
             ImmutableList.of(
-                createStop(2, "1001", 28.05811731042478D, -82.41616877502503D, 2),
-                createStop(4, "1002", 28.05812364854794D, -82.41617370439423D, 2)),
+                createStop(2, "1001", 28.05811731042478D, -82.41616877502503D, 0),
+                createStop(4, "1002", 28.05812364854794D, -82.41617370439423D, 0)),
             noticeContainer);
 
     List<StopTooFarFromTripShapeNotice> underTest =
@@ -420,7 +420,7 @@ public class GeospatialUtilTest {
         GtfsStopTableContainer.forEntities(
             ImmutableList.of(
                 // this location is inside buffer
-                createStop(4, "1002", 28.05812364854794D, -82.41617370439423D, 2)),
+                createStop(2, "1001", 28.05724310653972D, -82.41350776611507D, 0)),
             noticeContainer);
 
     Set<String> testedCache = new HashSet<>();

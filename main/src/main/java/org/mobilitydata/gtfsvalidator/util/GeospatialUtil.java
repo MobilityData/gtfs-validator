@@ -38,10 +38,13 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 public class GeospatialUtil {
   static final int KILOMETER_TO_METER_CONVERSION_FACTOR =
       1000; // conversion factor from kilometers to meters
+
+  static final double METER_TO_KILOMETER_CONVERSION_FACTOR =
+      1 / 1000; // conversion factor from kilometers to meters
   static final double TRIP_BUFFER_METERS =
       100; // Per GTFS Best Practices (https://gtfs.org/best-practices/#shapestxt)
   public static final double TRIP_BUFFER_DEGREES =
-      DistanceUtils.KM_TO_DEG * (TRIP_BUFFER_METERS / 1000.0d);
+      DistanceUtils.KM_TO_DEG * TRIP_BUFFER_METERS * METER_TO_KILOMETER_CONVERSION_FACTOR;
 
   private GeospatialUtil() {}
 
@@ -72,7 +75,7 @@ public class GeospatialUtil {
    * @param toLng longitude of the second coordinates
    * @return the calculation result in meters
    */
-  public static int distanceBetweenMeter(
+  public static int distanceInMeterBetween(
       double fromLat, double fromLng, double toLat, double toLng) {
     final ShapeFactory shapeFactory = getShapeFactory();
     final DistanceCalculator distanceCalculator = getDistanceCalculator();
