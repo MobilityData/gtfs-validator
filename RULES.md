@@ -334,7 +334,7 @@ Both files calendar_dates.txt and calendar.txt are missing from the GTFS archive
 
 ### DecreasingStopTimeDistanceNotice
 
-The combination of `fare_rules.origin_id`, `fare_rules.contains_id` and `fare_rules.destination_id` fields should be unique in GTFS file `fare_rules.txt`.
+Stop times in a trip should have increasing distance.
 
 ### NonAsciiOrNonPrintableCharNotice
 
