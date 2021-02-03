@@ -59,14 +59,9 @@ jobs:
         with:
           name: Test report - Java -- ${{ steps.prep.outputs.versionTag }}
           path: |
-            adapter/exporter/build/reports/tests/
-            adapter/parser/build/reports/tests/
-            adapter/repository/in-memory-simple/build/reports/tests/
-            adapter/tree/build/reports/tests/
-            adapter/utils/build/reports/tests/
-            adapter/validator/build/reports/tests/
-            domain/build/reports/tests/
-            usecase/build/reports/tests/
+            core/build/reports/tests/
+            main/build/reports/tests/
+            processor/build/reports/tests/
 
   pack:
     needs: [test]
