@@ -25,6 +25,7 @@ public class CliParametersAnalyzer {
   /**
    * Check validity of CLI parameter combination
    *
+   * @param args CLI arguments
    * @return true if CLI parameter combination is legal, otherwise return false
    */
   public boolean isValid(Arguments args) {

@@ -30,10 +30,10 @@ import java.lang.annotation.Target;
  * <p>Example.
  *
  * <pre>
- *   @GtfsTable("stops.txt")
+ *   {@literal @}GtfsTable("stops.txt")
  *   public interface GtfsStopSchema extends GtfsEntity {
- *       @FieldType(FieldTypeEnum.ID)
- *       @Index
+ *       {@literal @}FieldType(FieldTypeEnum.ID)
+ *       {@literal @}Index
  *       String zoneId();
  *   }
  * </pre>
@@ -41,8 +41,8 @@ import java.lang.annotation.Target;
  * <p>This generated the following method.
  *
  * <pre>
- *   public class GtfsStopTableContainer extends GtfsTableContainer<GtfsStop> {
- *       public List<GtfsStop> byZoneId(String key) {
+ *   public class GtfsStopTableContainer extends GtfsTableContainer &lt; GtfsStop&gt; {
+ *       public List &lt; GtfsStop&gt; byZoneId(String key) {
  *           // ...
  *       }
  *   }

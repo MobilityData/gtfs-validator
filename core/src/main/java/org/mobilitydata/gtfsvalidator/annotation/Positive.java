@@ -22,9 +22,9 @@ package org.mobilitydata.gtfsvalidator.annotation;
  * <p>Example.
  *
  * <pre>
- *   @GtfsTable("pathways.txt")
+ *   {@literal @}GtfsTable("pathways.txt")
  *   public interface GtfsPathwaySchema extends GtfsEntity {
- *       @Positive
+ *       {@literal @}Positive
  *       int traversalTime();
  *   }
  * </pre>

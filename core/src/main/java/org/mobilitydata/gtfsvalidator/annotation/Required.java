@@ -27,14 +27,13 @@ import java.lang.annotation.Target;
  * <p>Example.
  *
  * <pre>
- *   @GtfsTable("agency.txt")
+ *   {@literal @}GtfsTable("agency.txt")
  *   public interface GtfsAgencySchema extends GtfsEntity {
- *       @FieldType(FieldTypeEnum.ID)
- *       @PrimaryKey
+ *       {@literal @}FieldType(FieldTypeEnum.ID)
+ *       {@literal @}PrimaryKey
  *       String agencyId();
  *
- *       @Required
- *       String agencyName();
+ *       {@literal @}String agencyName();
  *   }
  * </pre>
  */
