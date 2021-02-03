@@ -28,7 +28,8 @@ public class RouteShortNameTooLongNotice extends ValidationNotice {
         ImmutableMap.of(
             "routeId", routeId,
             "csvRowNumber", csvRowNumber,
-            "routeShortName", routeShortName));
+            "routeShortName", routeShortName),
+        SeverityLevel.WARNING);
   }
 
   @Override

@@ -16,16 +16,20 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-/**
- * Describes the level of severity encountered during validation. 1) WARNING: the GTFS dataset lacks
- * of quality e.g {@code UnusedTripNotice} 2) ERROR: the GTFS dataset does not comply to an explicit
- * rule e.g. {@code MissingCalendarAndCalendarDateFilesNotice} 3) SYSTEM_ERROR: level of severity to
- * represent an internal error
- */
+/** Describes the level of severity of a notice generated during validation. */
 public enum SeverityLevel {
+  /**
+   * INFO - is used for things that do not affect the feed's quality, such as unknown files or
+   * unknown fields
+   */
+  INFO,
+
+  /**
+   * WARNING - is used for things that affects the feed's quality (e.g., insufficient color
+   * contrast) but the feed remains functional
+   */
   WARNING,
 
-  ERROR,
-
-  SYSTEM_ERROR;
+  /** ERROR - is used when the feed cannot function (e.g., broken foreign key reference) */
+  ERROR
 }

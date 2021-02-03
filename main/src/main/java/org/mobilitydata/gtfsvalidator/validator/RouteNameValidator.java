@@ -47,10 +47,8 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
     final boolean hasShortName = entity.hasRouteShortName();
 
     if (!hasLongName && !hasShortName) {
-      RouteBothShortAndLongNameMissingNotice notice =
-          new RouteBothShortAndLongNameMissingNotice(entity.routeId(), entity.csvRowNumber());
-      notice.setSeverityLevel(SeverityLevel.ERROR);
-      noticeContainer.addValidationNotice(notice);
+      noticeContainer.addValidationNotice(
+          new RouteBothShortAndLongNameMissingNotice(entity.routeId(), entity.csvRowNumber()));
     }
 
     if (hasShortName

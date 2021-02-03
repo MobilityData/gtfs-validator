@@ -26,8 +26,9 @@ public abstract class Notice {
   private Map<String, Object> context;
   private SeverityLevel severityLevel;
 
-  public Notice(Map<String, Object> context) {
+  public Notice(Map<String, Object> context, SeverityLevel severityLevel) {
     this.context = context;
+    this.severityLevel = severityLevel;
   }
 
   public Map<String, Object> getContext() {
@@ -36,10 +37,6 @@ public abstract class Notice {
 
   public SeverityLevel getSeverityLevel() {
     return this.severityLevel;
-  }
-
-  public void setSeverityLevel(SeverityLevel severityLevel) {
-    this.severityLevel = severityLevel;
   }
 
   /**
@@ -55,18 +52,23 @@ public abstract class Notice {
       return true;
     }
     if (other instanceof Notice) {
-      return context.equals(((Notice) other).context);
+      return context.equals(((Notice) other).context)
+          && severityLevel.equals(((Notice) other).severityLevel);
     }
     return false;
   }
 
   @Override
   public String toString() {
-    return getCode() + " " + Joiner.on(",").withKeyValueSeparator("=").join(context);
+    return getCode()
+        + " "
+        + Joiner.on(",").withKeyValueSeparator("=").join(context)
+        + " "
+        + getSeverityLevel().toString();
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getCode(), getContext());
+    return Objects.hash(getCode(), getContext(), getSeverityLevel());
   }
 }

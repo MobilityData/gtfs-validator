@@ -27,9 +27,12 @@ import java.util.Map;
  * notices.
  */
 public abstract class ValidationNotice extends Notice {
+  // default constructor: might be removed later during refactor.
   public ValidationNotice(Map<String, Object> context) {
-    super(context);
     // by default severityLevel is set to SeverityLevel.WARNING
-    this.setSeverityLevel(SeverityLevel.WARNING);
+    super(context, SeverityLevel.ERROR);
+  }
+  public ValidationNotice(Map<String, Object> context, SeverityLevel severityLevel) {
+    super(context, severityLevel);
   }
 }
