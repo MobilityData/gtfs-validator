@@ -129,7 +129,7 @@ public class GeospatialUtilTest {
         GtfsStopTableContainer.forEntities(
             ImmutableList.of(
                 createStop(2, "1001", 28.05808869825447D, -82.41648754043338D, 0),
-                createStop(4, "1002", 28.05809979887893D, -82.41773971025437D,  0)),
+                createStop(4, "1002", 28.05809979887893D, -82.41773971025437D, 0)),
             noticeContainer);
 
     List<StopTooFarFromTripShapeNotice> underTest =
