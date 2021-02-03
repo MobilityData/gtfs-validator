@@ -33,7 +33,7 @@ import java.lang.annotation.Target;
  *       {@literal @}PrimaryKey
  *       String agencyId();
  *
- *       {@literal @}String agencyName();
+ *       {@literal @}Required String agencyName();
  *   }
  * </pre>
  */
