@@ -29,6 +29,21 @@ public class MissingTripEdgeNotice extends ValidationNotice {
             "specifiedField", specifiedField));
   }
 
+  public MissingTripEdgeNotice(
+      long csvRowNumber,
+      int stopSequence,
+      String tripId,
+      String specifiedField,
+      SeverityLevel severityLevel) {
+    super(
+        ImmutableMap.of(
+            "csvRowNumber", csvRowNumber,
+            "stopSequence", stopSequence,
+            "tripId", tripId,
+            "specifiedField", specifiedField),
+        severityLevel);
+  }
+
   @Override
   public String getCode() {
     return "missing_trip_edge_arrival_time_departure_time";

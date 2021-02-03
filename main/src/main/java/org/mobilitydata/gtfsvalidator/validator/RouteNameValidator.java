@@ -22,7 +22,6 @@ import org.mobilitydata.gtfsvalidator.notice.RouteBothShortAndLongNameMissingNot
 import org.mobilitydata.gtfsvalidator.notice.RouteShortAndLongNameEqualNotice;
 import org.mobilitydata.gtfsvalidator.notice.RouteShortNameTooLongNotice;
 import org.mobilitydata.gtfsvalidator.notice.SameNameAndDescriptionForRouteNotice;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 
 /**
