@@ -77,8 +77,7 @@ public class AgencyConsistencyValidatorTest {
                     Locale.CANADA)));
 
     underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new MissingRequiredFieldError("agency.txt", 1, "agency_id"));
+    assertThat(noticeContainer.getValidationNotices()).isEmpty();
   }
 
   @Test
