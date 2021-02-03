@@ -32,11 +32,11 @@ import java.lang.annotation.Target;
  * <p>Example. Annotation processor creates {@code GtfsLocationType} for the given schema.
  *
  * <pre>
- *   @GtfsEnumValue(name = "STOP", value = 0)
- *   @GtfsEnumValue(name = "STATION", value = 1)
- *   @GtfsEnumValue(name = "ENTRANCE", value = 2)
- *   @GtfsEnumValue(name = "GENERIC_NODE", value = 3)
- *   @GtfsEnumValue(name = "BOARDING_AREA", value = 4)
+ *   {@literal @}GtfsEnumValue(name = "STOP", value = 0)
+ *   {@literal @}GtfsEnumValue(name = "STATION", value = 1)
+ *   {@literal @}GtfsEnumValue(name = "ENTRANCE", value = 2)
+ *   {@literal @}GtfsEnumValue(name = "GENERIC_NODE", value = 3)
+ *   {@literal @}GtfsEnumValue(name = "BOARDING_AREA", value = 4)
  *   public interface GtfsLocationTypeEnum {
  *   }
  * </pre>

@@ -25,7 +25,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
 
 /**
- * Validates 3 rules: 1) start_date <= end_date for all rows in "feed_info.txt" 2)
+ * Validates 3 rules: 1) start_date &lt;= end_date for all rows in "feed_info.txt" 2)
  * feed_info.start_date is provided if feed_info.end_date is provided 3) feed_info.end_date is
  * provided if feed_info.start_date is provided.
  *

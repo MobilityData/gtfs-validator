@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * return type in the schema definition:
  *
  * <pre>
- *   @GtfsTable("routes.txt")
+ *   {@literal @}GtfsTable("routes.txt")
  *   public interface GtfsRouteSchema extends GtfsEntity {
  *       // Field type TEXT is deducted from String.
  *       String routeShortName();
@@ -39,12 +39,12 @@ import java.lang.annotation.Target;
  * PHONE_NUMBER} instead of {@code TEXT}, you have to use this annotation.
  *
  * <pre>
- *   @GtfsTable("stops.txt")
+ *   {@literal @}GtfsTable("stops.txt")
  *   public interface GtfsStopSchema extends GtfsEntity {
- *     @FieldType(FieldTypeEnum.LATITUDE)
+ *     {@literal @}FieldType(FieldTypeEnum.LATITUDE)
  *     double stopLat();
  *
- *     @FieldType(FieldTypeEnum.LONGITUDE)
+ *     {@literal @}FieldType(FieldTypeEnum.LONGITUDE)
  *     double stopLon();
  *   }
  * </pre>

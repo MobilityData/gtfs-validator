@@ -36,8 +36,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader;
  * <ul>
  *   <li>{@link StopTimeWithOnlyArrivalOrDepartureTimeNotice} - a single departure_time or
  *       arrival_time is defined for a row (both or none are expected)
- *   <li>{@link StopTimeWithDepartureBeforeArrivalTimeNotice} - departure_time < arrival_time
- *   <li>{@link StopTimeWithArrivalBeforePreviousDepartureTimeNotice} - prev(arrival_time) <
+ *   <li>{@link StopTimeWithDepartureBeforeArrivalTimeNotice} - departure_time &lt; arrival_time
+ *   <li>{@link StopTimeWithArrivalBeforePreviousDepartureTimeNotice} - prev(arrival_time) &lt;
  *       curr(departure_time)
  * </ul>
  */

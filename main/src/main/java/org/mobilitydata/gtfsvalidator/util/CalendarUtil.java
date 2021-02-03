@@ -103,7 +103,7 @@ public final class CalendarUtil {
   }
 
   /**
-   * Converts a map {service id -> ServicePeriod} to map {service id -> set of dates}.
+   * Converts a map {service id to ServicePeriod} to map {service id to set of dates}.
    *
    * @param servicePeriods mapping from service id to {@link ServicePeriod}
    * @return mapping from service id to a set of included days
