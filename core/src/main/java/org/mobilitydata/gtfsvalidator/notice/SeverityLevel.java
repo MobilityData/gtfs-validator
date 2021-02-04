@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2021 MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,20 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import com.google.common.collect.ImmutableMap;
+/** Describes the level of severity of a notice generated during validation. */
+public enum SeverityLevel {
+  /**
+   * INFO - is used for things that do not affect the feed's quality, such as unknown files or
+   * unknown fields
+   */
+  INFO,
 
-/** A file is unknown. */
-public class UnknownFileNotice extends ValidationNotice {
-  public UnknownFileNotice(String filename) {
-    super(ImmutableMap.of("filename", filename), SeverityLevel.INFO);
-  }
+  /**
+   * WARNING - is used for things that affects the feed's quality (e.g., insufficient color
+   * contrast) but the feed remains functional
+   */
+  WARNING,
 
-  @Override
-  public String getCode() {
-    return "unexpected_file";
-  }
+  /** ERROR - is used when the feed cannot function (e.g., broken foreign key reference) */
+  ERROR
 }
