@@ -55,7 +55,8 @@ public class MissingTripEdgeValidator extends FileValidator {
                         tripFirstStop.csvRowNumber(),
                         tripFirstStop.stopSequence(),
                         trip.tripId(),
-                        "arrival_time"));
+                        "arrival_time",
+                        SeverityLevel.ERROR));
               }
               if (!tripFirstStop.hasDepartureTime()) {
                 noticeContainer.addValidationNotice(
@@ -72,7 +73,8 @@ public class MissingTripEdgeValidator extends FileValidator {
                         tripLastStop.csvRowNumber(),
                         tripLastStop.stopSequence(),
                         trip.tripId(),
-                        "arrival_time"));
+                        "arrival_time",
+                        SeverityLevel.ERROR));
               }
               if (!tripLastStop.hasDepartureTime()) {
                 noticeContainer.addValidationNotice(

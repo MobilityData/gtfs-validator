@@ -20,16 +20,6 @@ import com.google.common.collect.ImmutableMap;
 
 public class MissingTripEdgeNotice extends ValidationNotice {
   public MissingTripEdgeNotice(
-      long csvRowNumber, int stopSequence, String tripId, String specifiedField) {
-    super(
-        ImmutableMap.of(
-            "csvRowNumber", csvRowNumber,
-            "stopSequence", stopSequence,
-            "tripId", tripId,
-            "specifiedField", specifiedField));
-  }
-
-  public MissingTripEdgeNotice(
       long csvRowNumber,
       int stopSequence,
       String tripId,
