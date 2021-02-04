@@ -27,10 +27,10 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
 
 /**
  * Validates that {@code agency.agency_lang} and {@code feed_info.feed_lang} are matching.
- * <p>
- * {@code agency.agency_lang} is optional, so it is acceptable to omit that field.
- * <p>
- * The default language may be multilingual for datasets with the original text in multiple
+ *
+ * <p>{@code agency.agency_lang} is optional, so it is acceptable to omit that field.
+ *
+ * <p>The default language may be multilingual for datasets with the original text in multiple
  * languages. In such cases, the {@code feed_lang} field should contain the language code {@code
  * mul} defined by the norm ISO 639-2. If {@code feed_lang} is not {@code mul} and does not match
  * with {@code agency_lang}, that's an error.
@@ -38,7 +38,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
  * <p>References:
  *
  * <ul>
- *   <li><a href="http://gtfs.org/reference/static/#feed_infotxt")">GTFS feed_info.txt specification</a>
+ *   <li><a href="http://gtfs.org/reference/static/#feed_infotxt")">GTFS feed_info.txt
+ *       specification</a>
  *   <li><a href="http://gtfs.org/reference/static/#agencytxt">GTFS agency.txt specification</a>
  * </ul>
  *
@@ -47,14 +48,13 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
 @GtfsValidator
 public class MatchingFeedAndAgencyLangValidator extends FileValidator {
 
-  @Inject
-  GtfsFeedInfoTableContainer feedInfoTable;
-  @Inject
-  GtfsAgencyTableContainer agencyTable;
+  @Inject GtfsFeedInfoTableContainer feedInfoTable;
+  @Inject GtfsAgencyTableContainer agencyTable;
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    // If there are no feed info entries or if no feed lang has been specified, we don't do any validation.
+    // If there are no feed info entries or if no feed lang has been specified, we don't do any
+    // validation.
     if (feedInfoTable.entityCount() == 0 || !feedInfoTable.getSingleEntity().hasFeedLang()) {
       return;
     }
@@ -64,11 +64,12 @@ public class MatchingFeedAndAgencyLangValidator extends FileValidator {
       return;
     }
     for (GtfsAgency agency : agencyTable.getEntities()) {
-      if (agency.hasAgencyLang() &&
-          !feedLang.equals(agency.agencyLang())) {
+      if (agency.hasAgencyLang() && !feedLang.equals(agency.agencyLang())) {
         noticeContainer.addValidationNotice(
             new FeedInfoLangAndAgencyLangMismatchNotice(
-                agency.csvRowNumber(), agency.agencyId(), agency.agencyName(),
+                agency.csvRowNumber(),
+                agency.agencyId(),
+                agency.agencyName(),
                 agency.agencyLang().toLanguageTag(),
                 feedLang.toLanguageTag()));
       }

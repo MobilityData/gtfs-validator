@@ -17,10 +17,10 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Set;
 
 public class FeedInfoLangAndAgencyLangMismatchNotice extends ValidationNotice {
-  public FeedInfoLangAndAgencyLangMismatchNotice(long csvRowNumber, String agencyId, String agencyName, String agencyLang, String feedLang) {
+  public FeedInfoLangAndAgencyLangMismatchNotice(
+      long csvRowNumber, String agencyId, String agencyName, String agencyLang, String feedLang) {
     super(
         ImmutableMap.of(
             "csvRowNumber", csvRowNumber,
