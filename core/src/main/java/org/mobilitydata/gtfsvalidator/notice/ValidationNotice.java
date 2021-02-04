@@ -32,6 +32,7 @@ public abstract class ValidationNotice extends Notice {
     // by default severityLevel is set to SeverityLevel.ERROR
     super(context, SeverityLevel.ERROR);
   }
+
   public ValidationNotice(Map<String, Object> context, SeverityLevel severityLevel) {
     super(context, severityLevel);
   }
