@@ -21,7 +21,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.MissingTripEdgeNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
@@ -55,8 +54,7 @@ public class MissingTripEdgeValidator extends FileValidator {
                         tripFirstStop.csvRowNumber(),
                         tripFirstStop.stopSequence(),
                         trip.tripId(),
-                        "arrival_time",
-                        SeverityLevel.ERROR));
+                        "arrival_time"));
               }
               if (!tripFirstStop.hasDepartureTime()) {
                 noticeContainer.addValidationNotice(
@@ -64,8 +62,7 @@ public class MissingTripEdgeValidator extends FileValidator {
                         tripFirstStop.csvRowNumber(),
                         tripFirstStop.stopSequence(),
                         trip.tripId(),
-                        "departure_time",
-                        SeverityLevel.WARNING));
+                        "departure_time"));
               }
               if (!tripLastStop.hasArrivalTime()) {
                 noticeContainer.addValidationNotice(
@@ -73,8 +70,7 @@ public class MissingTripEdgeValidator extends FileValidator {
                         tripLastStop.csvRowNumber(),
                         tripLastStop.stopSequence(),
                         trip.tripId(),
-                        "arrival_time",
-                        SeverityLevel.ERROR));
+                        "arrival_time"));
               }
               if (!tripLastStop.hasDepartureTime()) {
                 noticeContainer.addValidationNotice(
@@ -82,8 +78,7 @@ public class MissingTripEdgeValidator extends FileValidator {
                         tripLastStop.csvRowNumber(),
                         tripLastStop.stopSequence(),
                         trip.tripId(),
-                        "departure_time",
-                        SeverityLevel.WARNING));
+                        "departure_time"));
               }
             });
   }
