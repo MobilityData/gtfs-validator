@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public abstract class SystemError extends Notice {
   public SystemError(Map<String, Object> context) {
-    // by default SystemError.severity is set to SeverityLevel.EEROR
+    // by default SystemError.severity is set to SeverityLevel.ERROR
     super(context, SeverityLevel.ERROR);
   }
 }
