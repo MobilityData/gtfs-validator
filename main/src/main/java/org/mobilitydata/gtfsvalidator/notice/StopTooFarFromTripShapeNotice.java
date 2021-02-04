@@ -18,14 +18,24 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/** A file is unknown. */
-public class UnknownFileNotice extends ValidationNotice {
-  public UnknownFileNotice(String filename) {
-    super(ImmutableMap.of("filename", filename), SeverityLevel.INFO);
+public class StopTooFarFromTripShapeNotice extends ValidationNotice {
+  public StopTooFarFromTripShapeNotice(
+      final String stopId,
+      final int stopSequence,
+      final String tripId,
+      final String shapeId,
+      final double stopShapeThreshold) {
+    super(
+        ImmutableMap.of(
+            "stopId", stopId,
+            "stopSequence", stopSequence,
+            "tripId", tripId,
+            "shapeId", shapeId,
+            "stopShapeThreshold", stopShapeThreshold));
   }
 
   @Override
   public String getCode() {
-    return "unexpected_file";
+    return "stop_too_far_from_trip_shape";
   }
 }

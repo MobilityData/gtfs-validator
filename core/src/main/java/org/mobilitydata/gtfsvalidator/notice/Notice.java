@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,13 +24,19 @@ import java.util.Objects;
 /** Base class for all notices produced by GTFS validator. */
 public abstract class Notice {
   private Map<String, Object> context;
+  private SeverityLevel severityLevel;
 
-  public Notice(Map<String, Object> context) {
+  public Notice(Map<String, Object> context, SeverityLevel severityLevel) {
     this.context = context;
+    this.severityLevel = severityLevel;
   }
 
   public Map<String, Object> getContext() {
     return Collections.unmodifiableMap(context);
+  }
+
+  public SeverityLevel getSeverityLevel() {
+    return this.severityLevel;
   }
 
   /**
@@ -46,18 +52,23 @@ public abstract class Notice {
       return true;
     }
     if (other instanceof Notice) {
-      return context.equals(((Notice) other).context);
+      return context.equals(((Notice) other).context)
+          && severityLevel.equals(((Notice) other).severityLevel);
     }
     return false;
   }
 
   @Override
   public String toString() {
-    return getCode() + " " + Joiner.on(",").withKeyValueSeparator("=").join(context);
+    return getCode()
+        + " "
+        + Joiner.on(",").withKeyValueSeparator("=").join(context)
+        + " "
+        + getSeverityLevel().toString();
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getCode(), getContext());
+    return Objects.hash(getCode(), getContext(), getSeverityLevel());
   }
 }

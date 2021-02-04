@@ -59,14 +59,9 @@ jobs:
         with:
           name: Test report - Java -- ${{ steps.prep.outputs.versionTag }}
           path: |
-            adapter/exporter/build/reports/tests/
-            adapter/parser/build/reports/tests/
-            adapter/repository/in-memory-simple/build/reports/tests/
-            adapter/tree/build/reports/tests/
-            adapter/utils/build/reports/tests/
-            adapter/validator/build/reports/tests/
-            domain/build/reports/tests/
-            usecase/build/reports/tests/
+            core/build/reports/tests/
+            main/build/reports/tests/
+            processor/build/reports/tests/
 
   pack:
     needs: [test]
@@ -108,4 +103,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Application - cli executable .jar -- ${{ steps.prep.outputs.versionTag }}
-          path: application/cli-app/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
+          path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
