@@ -88,7 +88,8 @@ public class MissingTripEdgeValidatorTest {
     underTest.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new MissingTripEdgeNotice(2, 1, "trip id value", "arrival_time"));
+        .containsExactly(
+            new MissingTripEdgeNotice(2, 1, "trip id value", "arrival_time", SeverityLevel.ERROR));
   }
 
   @Test
@@ -146,7 +147,8 @@ public class MissingTripEdgeValidatorTest {
     underTest.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new MissingTripEdgeNotice(10, 5, "trip id value", "arrival_time"));
+        .containsExactly(
+            new MissingTripEdgeNotice(10, 5, "trip id value", "arrival_time", SeverityLevel.ERROR));
   }
 
   @Test
