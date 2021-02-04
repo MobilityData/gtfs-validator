@@ -17,7 +17,11 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.*;
+import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.RouteBothShortAndLongNameMissingNotice;
+import org.mobilitydata.gtfsvalidator.notice.RouteShortAndLongNameEqualNotice;
+import org.mobilitydata.gtfsvalidator.notice.RouteShortNameTooLongNotice;
+import org.mobilitydata.gtfsvalidator.notice.SameNameAndDescriptionForRouteNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 
 /**
