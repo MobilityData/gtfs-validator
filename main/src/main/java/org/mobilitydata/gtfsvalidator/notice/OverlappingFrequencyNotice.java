@@ -7,7 +7,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
  * Two frequency entries referring to the same trip may not have an overlapping time range.
  *
  * <p>Two entries X and Y are considered to directly overlap if <i>X.start_time &lt;= Y.start_time</i>
- * and <i>Y.start_time &lt; X.end_time</i>.
+ * and <i>Y.start_time &lt;X.end_time</i>.
  */
 public class OverlappingFrequencyNotice extends ValidationNotice {
   public OverlappingFrequencyNotice(
