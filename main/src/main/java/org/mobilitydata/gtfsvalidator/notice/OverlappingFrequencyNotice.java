@@ -22,7 +22,8 @@ public class OverlappingFrequencyNotice extends ValidationNotice {
             "prevEndTime", prevEndTime.toHHMMSS(),
             "currCsvRowNumber", currCsvRowNumber,
             "currStartTime", currStartTime.toHHMMSS(),
-            "tripId", tripId));
+            "tripId", tripId),
+        SeverityLevel.WARNING);
   }
 
   @Override

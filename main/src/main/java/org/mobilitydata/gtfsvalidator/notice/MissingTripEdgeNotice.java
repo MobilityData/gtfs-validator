@@ -18,6 +18,16 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
+/**
+ * "First and last stop of a trip must define both `arrival_time` and `departure_time` fields."
+ *
+ * <p>"If there are not separate times for arrival and departure at a stop, enter the same value for
+ * arrival_time and departure_time."
+ *
+ * <p>(http://gtfs.org/reference/static/#stpo_timestxt)
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
+ */
 public class MissingTripEdgeNotice extends ValidationNotice {
   public MissingTripEdgeNotice(
       long csvRowNumber, int stopSequence, String tripId, String specifiedField) {

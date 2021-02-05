@@ -23,6 +23,8 @@ import javax.annotation.Nullable;
 /**
  * The values in the given column of the input rows do not represent valid values according to the
  * column type, or have values that conflict with others according to the requirements on the input.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class FieldParsingError extends ValidationNotice {
 

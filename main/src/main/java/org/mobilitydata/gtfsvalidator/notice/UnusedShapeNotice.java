@@ -18,12 +18,19 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
+/**
+ * A {@code GtfsShape} should be referred to at least once in {@code GtfsTripTableContainer}
+ * station).
+ *
+ * <p>Severity: {@code SeverityLevel.WARNING}
+ */
 public class UnusedShapeNotice extends ValidationNotice {
   public UnusedShapeNotice(String shapeId, long csvRowNumber) {
     super(
         ImmutableMap.of(
             "shapeId", shapeId,
-            "csvRowNumber", csvRowNumber));
+            "csvRowNumber", csvRowNumber),
+        SeverityLevel.WARNING);
   }
 
   @Override

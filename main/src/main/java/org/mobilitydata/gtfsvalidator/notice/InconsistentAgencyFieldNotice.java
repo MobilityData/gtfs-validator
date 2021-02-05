@@ -18,6 +18,11 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
+/**
+ * Inconsistency among {@code GtfsAgency} fields
+ *
+ * <p>Severity: {@code SeverityLevel.WARNING}
+ */
 public class InconsistentAgencyFieldNotice extends ValidationNotice {
   public InconsistentAgencyFieldNotice(
       long csvRowNumber, String fieldName, String expected, String actual) {
@@ -26,7 +31,8 @@ public class InconsistentAgencyFieldNotice extends ValidationNotice {
             "csvRowNumber", csvRowNumber,
             "fieldName", fieldName,
             "expected", expected,
-            "actual", actual));
+            "actual", actual),
+        SeverityLevel.WARNING);
   }
 
   @Override

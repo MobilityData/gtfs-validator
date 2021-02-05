@@ -18,7 +18,11 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/** A file is unknown. */
+/**
+ * A file is unknown.
+ *
+ * <p>Severity: {@code SeverityLevel.INFO}
+ */
 public class UnknownFileNotice extends ValidationNotice {
   public UnknownFileNotice(String filename) {
     super(ImmutableMap.of("filename", filename), SeverityLevel.INFO);

@@ -7,6 +7,8 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p>{@link java.util.concurrent.ExecutionException} is thrown when attempting to retrieve the
  * result of a task that aborted by throwing an exception.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class ThreadExecutionError extends SystemError {
   public ThreadExecutionError(String exceptionClassName, String message) {
