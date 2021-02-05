@@ -18,6 +18,11 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
+/**
+ * A {@code GtfsTrip} should be referred to by at least two {@code GtfsStopTime}
+ *
+ * <p>Severity: {@code SeverityLevel.WARNING}
+ */
 public class UnusableTripNotice extends ValidationNotice {
   public UnusableTripNotice(long csvRowNumber, String tripId) {
     super(

@@ -18,6 +18,11 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
+/**
+ * {@code agency.agency_lang} and {@code feed_info.feed_lang} do not match
+ *
+ * <p>Severity: {@code SeverityLevel.WARNING}
+ */
 public class FeedInfoLangAndAgencyLangMismatchNotice extends ValidationNotice {
   public FeedInfoLangAndAgencyLangMismatchNotice(
       long csvRowNumber, String agencyId, String agencyName, String agencyLang, String feedLang) {
@@ -27,7 +32,8 @@ public class FeedInfoLangAndAgencyLangMismatchNotice extends ValidationNotice {
             "agencyId", agencyId,
             "agencyName", agencyName,
             "agencyLang", agencyLang,
-            "feedLang", feedLang));
+            "feedLang", feedLang),
+        SeverityLevel.WARNING);
   }
 
   @Override

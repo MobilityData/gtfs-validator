@@ -18,7 +18,15 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/** Stop times of a trip have increasing distance (stops.shape_dist_traveled) */
+/**
+ * When sorted on `stops.stop_sequence` key, stop times should have increasing values for
+ * `stops.shape_dist_traveled`
+ *
+ * <p>"Values used for shape_dist_traveled must increase along with stop_sequence"
+ * (http://gtfs.org/reference/static/#stoptimestxt)
+ *
+ * <p>Severity: {@code SeverityLevel.WARNING}
+ */
 public class DecreasingStopTimeDistanceNotice extends ValidationNotice {
   public DecreasingStopTimeDistanceNotice(
       String tripId,
@@ -37,7 +45,8 @@ public class DecreasingStopTimeDistanceNotice extends ValidationNotice {
             .put("prevCsvRowNumber", prevCsvRowNumber)
             .put("prevStopTimeDistTraveled", prevStopTimeDistTraveled)
             .put("prevStopSequence", prevStopSequence)
-            .build());
+            .build(),
+        SeverityLevel.WARNING);
   }
 
   @Override

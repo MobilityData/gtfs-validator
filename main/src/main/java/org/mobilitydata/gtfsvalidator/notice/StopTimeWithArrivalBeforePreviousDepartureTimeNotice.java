@@ -19,6 +19,11 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
+/**
+ * Two {@code GtfsTime} are out of order
+ *
+ * <p>Severity: {@code SeverityLevel.WARNING}
+ */
 public class StopTimeWithArrivalBeforePreviousDepartureTimeNotice extends ValidationNotice {
   public StopTimeWithArrivalBeforePreviousDepartureTimeNotice(
       long csvRowNumber,
@@ -32,7 +37,8 @@ public class StopTimeWithArrivalBeforePreviousDepartureTimeNotice extends Valida
             "prevCsvRowNumber", prevCsvRowNumber,
             "tripId", tripId,
             "departureTime", departureTime.toHHMMSS(),
-            "arrivalTime", arrivalTime.toHHMMSS()));
+            "arrivalTime", arrivalTime.toHHMMSS()),
+        SeverityLevel.WARNING);
   }
 
   @Override

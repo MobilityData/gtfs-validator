@@ -18,7 +18,11 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/** A row in the input file has a different number of values than specified by the CSV header. */
+/**
+ * A row in the input file has a different number of values than specified by the CSV header.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
+ */
 public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
   public NonAsciiOrNonPrintableCharNotice(String filename, long csvRowNumber, String columnName) {
     super(

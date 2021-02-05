@@ -18,7 +18,11 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/** A station has `parent_station` field set. */
+/**
+ * A station has `parent_station` field set.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
+ */
 public class StationWithParentStationNotice extends ValidationNotice {
   public StationWithParentStationNotice(
       long csvRowNumber, String stopId, String stopName, String parentStation) {

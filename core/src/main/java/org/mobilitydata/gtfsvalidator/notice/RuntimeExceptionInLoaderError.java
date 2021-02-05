@@ -6,6 +6,8 @@ import javax.annotation.Nullable;
 /**
  * Describes a runtime exception during loading a table. This normally indicates a bug in validator
  * code.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class RuntimeExceptionInLoaderError extends SystemError {
   public RuntimeExceptionInLoaderError(

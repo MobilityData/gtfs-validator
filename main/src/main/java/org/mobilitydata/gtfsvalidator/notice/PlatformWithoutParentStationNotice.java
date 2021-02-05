@@ -22,6 +22,8 @@ import com.google.common.collect.ImmutableMap;
  * A platform has no `parent_station` field set.
  *
  * <p>This is different from {@code LocationWithoutParentStationNotice} since it is less severe.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class PlatformWithoutParentStationNotice extends ValidationNotice {
   public PlatformWithoutParentStationNotice(long csvRowNumber, String stopId, String stopName) {

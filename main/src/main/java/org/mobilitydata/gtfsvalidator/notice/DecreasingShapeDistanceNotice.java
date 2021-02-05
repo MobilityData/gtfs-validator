@@ -18,6 +18,15 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
+/**
+ * When sorted on `shapes.shape_pt_sequence` key, shape points should have increasing values for
+ * `shapes.shape_dist_traveled`
+ *
+ * <p>"Values must increase along with shape_pt_sequence."
+ * (http://gtfs.org/reference/static/#shapestxt)
+ *
+ * <p>Severity: {@code SeverityLevel.WARNING}
+ */
 public class DecreasingShapeDistanceNotice extends ValidationNotice {
   public DecreasingShapeDistanceNotice(
       String shapeId,
@@ -36,7 +45,8 @@ public class DecreasingShapeDistanceNotice extends ValidationNotice {
             .put("prevCsvRowNumber", prevCsvRowNumber)
             .put("prevShapeDistTraveled", prevShapeDistTraveled)
             .put("prevShapePtSequence", prevShapePtSequence)
-            .build());
+            .build(),
+        SeverityLevel.WARNING);
   }
 
   @Override
