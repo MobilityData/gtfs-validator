@@ -18,6 +18,12 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
+/**
+ * "Route alignments (in shapes.txt) should be within 100 meters of stop locations which a trip
+ * serves." (http://gtfs.org/best-practices/#shapestxt)
+ *
+ * <p>Severity: {@code SeverityLevel.WARNING}
+ */
 public class StopTooFarFromTripShapeNotice extends ValidationNotice {
   public StopTooFarFromTripShapeNotice(
       final String stopId,
@@ -31,7 +37,8 @@ public class StopTooFarFromTripShapeNotice extends ValidationNotice {
             "stopSequence", stopSequence,
             "tripId", tripId,
             "shapeId", shapeId,
-            "stopShapeThreshold", stopShapeThreshold));
+            "stopShapeThreshold", stopShapeThreshold),
+        SeverityLevel.WARNING);
   }
 
   @Override

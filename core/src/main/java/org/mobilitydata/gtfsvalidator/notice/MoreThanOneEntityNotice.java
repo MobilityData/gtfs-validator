@@ -20,10 +20,12 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * A notice that the file is expected to have a single entity but has more (e.g., "feed_info.txt").
+ *
+ * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class MoreThanOneEntityNotice extends ValidationNotice {
   public MoreThanOneEntityNotice(String filename, long entityCount) {
-    super(ImmutableMap.of("filename", filename, "entityCount", entityCount));
+    super(ImmutableMap.of("filename", filename, "entityCount", entityCount), SeverityLevel.WARNING);
   }
 
   @Override

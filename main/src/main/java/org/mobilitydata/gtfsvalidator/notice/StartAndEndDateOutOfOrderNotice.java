@@ -19,6 +19,11 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
+/**
+ * Two {@code GtfsDate} are out of order
+ *
+ * <p>Severity: {@code SeverityLevel.WARNING}
+ */
 public class StartAndEndDateOutOfOrderNotice extends ValidationNotice {
   public StartAndEndDateOutOfOrderNotice(
       String filename, long csvRowNumber, GtfsDate startDate, GtfsDate endDate) {
@@ -31,7 +36,8 @@ public class StartAndEndDateOutOfOrderNotice extends ValidationNotice {
             "startDate",
             startDate.toYYYYMMDD(),
             "endDate",
-            endDate.toYYYYMMDD()));
+            endDate.toYYYYMMDD()),
+        SeverityLevel.WARNING);
   }
 
   public StartAndEndDateOutOfOrderNotice(
@@ -47,7 +53,8 @@ public class StartAndEndDateOutOfOrderNotice extends ValidationNotice {
             "startDate",
             startDate.toYYYYMMDD(),
             "endDate",
-            endDate.toYYYYMMDD()));
+            endDate.toYYYYMMDD()),
+        SeverityLevel.WARNING);
   }
 
   @Override

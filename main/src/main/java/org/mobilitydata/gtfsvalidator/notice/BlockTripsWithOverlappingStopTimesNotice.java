@@ -3,7 +3,11 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
-/** Describes two trips with the same block id that have overlapping stop times. */
+/**
+ * Describes two trips with the same block id that have overlapping stop times.
+ *
+ * <p>Severity: {@code SeverityLevel.WARNING}
+ */
 public class BlockTripsWithOverlappingStopTimesNotice extends ValidationNotice {
   public BlockTripsWithOverlappingStopTimesNotice(
       long csvRowNumberA,
@@ -24,7 +28,8 @@ public class BlockTripsWithOverlappingStopTimesNotice extends ValidationNotice {
             .put("serviceIdB", serviceIdB)
             .put("blockId", blockId)
             .put("intersection", intersection.toYYYYMMDD())
-            .build());
+            .build(),
+        SeverityLevel.WARNING);
   }
 
   @Override
