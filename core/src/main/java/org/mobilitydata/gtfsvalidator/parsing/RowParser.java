@@ -27,6 +27,7 @@ import org.apache.commons.validator.routines.UrlValidator;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.notice.FieldParsingError;
 import org.mobilitydata.gtfsvalidator.notice.InvalidRowLengthError;
+import org.mobilitydata.gtfsvalidator.notice.LeadingOrTrailingWhitespacesNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
 import org.mobilitydata.gtfsvalidator.notice.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -208,6 +209,15 @@ public class RowParser {
       addNoticeInRow(
           new MissingRequiredFieldError(
               row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex)));
+    }
+    if (s != null) {
+      final String trimmed = s.strip();
+      if (trimmed.length() < s.length()) {
+        addNoticeInRow(
+            new LeadingOrTrailingWhitespacesNotice(
+                row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), s));
+        s = trimmed;
+      }
     }
     return s;
   }
