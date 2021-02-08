@@ -41,6 +41,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableLoader;
  */
 @GtfsValidator
 public class AgencyConsistencyValidator extends FileValidator {
+
   @Inject GtfsAgencyTableContainer agencyTable;
 
   @Override
@@ -61,10 +62,8 @@ public class AgencyConsistencyValidator extends FileValidator {
       }
     }
 
+    // agency_timezone field is required and it must be the same for all agencies.
     ZoneId commonTimezone = agencyTable.getEntities().get(0).agencyTimezone();
-    boolean hasLanguage = agencyTable.getEntities().get(0).hasAgencyLang();
-    Locale commonLanguage = agencyTable.getEntities().get(0).agencyLang();
-    // Timezone and language must be the same for all agencies.
     for (int i = 1; i < agencyCount; ++i) {
       GtfsAgency agency = agencyTable.getEntities().get(i);
       if (!commonTimezone.equals(agency.agencyTimezone())) {
@@ -75,18 +74,26 @@ public class AgencyConsistencyValidator extends FileValidator {
                 commonTimezone.getId(),
                 agency.agencyTimezone().getId()));
       }
-      // FIXME: this should be a warning. See
-      // https://github.com/MobilityData/gtfs-validator/issues/549.
-      if (hasLanguage != agency.hasAgencyLang()
-          || (hasLanguage
-              && agency.hasAgencyLang()
-              && !commonLanguage.equals(agency.agencyLang()))) {
+    }
+
+    // agency_lang field is optional. All provided values must be the same for all agencies.
+    Locale commonLanguage = null;
+    for (int i = 0; i < agencyCount; ++i) {
+      GtfsAgency agency = agencyTable.getEntities().get(i);
+      if (!agency.hasAgencyLang()) {
+        // This is OK to omit agency_lang.
+        continue;
+      }
+      if (commonLanguage == null) {
+        // This is the first agency that has language specified.
+        commonLanguage = agency.agencyLang();
+      } else if (!commonLanguage.equals(agency.agencyLang())) {
         noticeContainer.addValidationNotice(
             new InconsistentAgencyFieldNotice(
                 agency.csvRowNumber(),
                 GtfsAgencyTableLoader.AGENCY_LANG_FIELD_NAME,
-                hasLanguage ? commonLanguage.getLanguage() : "",
-                agency.hasAgencyLang() ? agency.agencyLang().getLanguage() : ""));
+                commonLanguage.getLanguage(),
+                agency.agencyLang().getLanguage()));
       }
     }
   }
