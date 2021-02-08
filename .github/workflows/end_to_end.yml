@@ -2,7 +2,7 @@ name: End to end
 
 on:
   push:
-    branches: [ master, transport-agency-name ] #<-- replace transport-agency-name by the name of the agency/publisher
+    branches: [ master, extend-end-to-end ] #<-- replace transport-agency-name by the name of the agency/publisher
 
 jobs:
   run-on-data:
@@ -55,6 +55,8 @@ jobs:
         run: java -jar main/build/libs/*.jar --url http://www.mst.org/google/google_transit.zip --output_base output --feed_name us-mst --storage_directory mst.zip
       - name: Validate dataset from issue 398 -- Orange County Transportation Authority
         run: java -jar main/build/libs/*.jar --url https://octa.net/current/google_transit.zip --output_base output --feed_name us-octa --storage_directory octa.zip
+      - name: Validate dataset from issue 400 -- Siskiyou Transit and General Express
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/siskiyou-transit-and-general-express/492/latest/download --output_base output --feed_name us-siskiyou --storage_directory siskiyou.zip
       - name: Validate dataset from issue 400 -- Siskiyou Transit and General Express
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/siskiyou-transit-and-general-express/492/latest/download --output_base output --feed_name us-siskiyou --storage_directory siskiyou.zip
       - name: Persist datasets
