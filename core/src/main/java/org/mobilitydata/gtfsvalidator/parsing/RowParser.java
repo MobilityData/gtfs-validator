@@ -211,12 +211,12 @@ public class RowParser {
               row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex)));
     }
     if (s != null) {
-      final String trimmed = s.strip();
-      if (trimmed.length() < s.length()) {
+      final String stripped = s.strip();
+      if (stripped.length() < s.length()) {
         addNoticeInRow(
             new LeadingOrTrailingWhitespacesNotice(
                 row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), s));
-        s = trimmed;
+        s = stripped;
       }
     }
     return s;
