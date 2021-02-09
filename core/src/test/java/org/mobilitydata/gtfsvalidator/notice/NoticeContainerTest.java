@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
@@ -26,6 +27,7 @@ import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class NoticeContainerTest {
+
   @Test
   public void exportJson() {
     NoticeContainer container = new NoticeContainer();
@@ -37,11 +39,12 @@ public class NoticeContainerTest {
     assertThat(container.exportValidationNotices())
         .isEqualTo(
             "{\"notices\":["
-                + "{\"code\":\"missing_required_file\",\"totalNotices\":2,\"notices\":"
+                + "{\"code\":\"missing_required_file\",\"severity\":\"ERROR\","
+                + "\"totalNotices\":2,\"notices\":"
                 + "[{\"filename\":\"stops.txt\"},{\"filename\":\"agency.txt\"}]}]}");
     assertThat(container.exportSystemErrors())
         .isEqualTo(
-            "{\"notices\":[{\"code\":\"runtime_exception_in_validator\","
+            "{\"notices\":[{\"code\":\"runtime_exception_in_validator\",\"severity\":\"ERROR\","
                 + "\"totalNotices\":1,"
                 + "\"notices\":"
                 + "[{\"validator\":\"FaultyValidator\","
@@ -56,10 +59,32 @@ public class NoticeContainerTest {
     // Use HashMap because ImmutableMap does not support nulls.
     Map<String, Object> context = new HashMap<>();
     context.put("nullField", null);
-    container.addValidationNotice(new TestValidationNotice("test_notice", context));
+    container.addValidationNotice(
+        new TestValidationNotice("test_notice", context, SeverityLevel.ERROR));
     assertThat(container.exportValidationNotices())
         .isEqualTo(
-            "{\"notices\":[{\"code\":\"test_notice\",\"totalNotices\":1,\"notices\":[{\"nullField\":null}]}]}");
+            "{\"notices\":[{\"code\":\"test_notice\",\"severity\":\"ERROR\","
+                + "\"totalNotices\":1,\"notices\":[{\"nullField\":null}]}]}");
+  }
+
+  @Test
+  public void exportSeverities() {
+    NoticeContainer container = new NoticeContainer();
+    container.addValidationNotice(
+        new TestValidationNotice("notice_a", ImmutableMap.of("keyA", 1), SeverityLevel.ERROR));
+    container.addValidationNotice(
+        new TestValidationNotice("notice_b", ImmutableMap.of("keyB", 2), SeverityLevel.ERROR));
+    container.addValidationNotice(
+        new TestValidationNotice("notice_a", ImmutableMap.of("keyC", 3), SeverityLevel.INFO));
+    assertThat(container.exportValidationNotices())
+        .isEqualTo(
+            "{\"notices\":["
+                + "{\"code\":\"notice_a\",\"severity\":\"INFO\",\"totalNotices\":1,"
+                + "\"notices\":[{\"keyC\":3}]},"
+                + "{\"code\":\"notice_a\",\"severity\":\"ERROR\",\"totalNotices\":1,"
+                + "\"notices\":[{\"keyA\":1}]},"
+                + "{\"code\":\"notice_b\",\"severity\":\"ERROR\",\"totalNotices\":1,"
+                + "\"notices\":[{\"keyB\":2}]}]}");
   }
 
   @Test
@@ -84,10 +109,12 @@ public class NoticeContainerTest {
   }
 
   private static class TestValidationNotice extends ValidationNotice {
+
     private final String code;
 
-    public TestValidationNotice(String code, Map<String, Object> context) {
-      super(context);
+    public TestValidationNotice(
+        String code, Map<String, Object> context, SeverityLevel severityLevel) {
+      super(context, severityLevel);
       this.code = code;
     }
 

@@ -24,6 +24,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeVariableName;
 import javax.lang.model.element.Modifier;
+import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.table.GtfsEnum;
 
 /**
@@ -59,6 +60,7 @@ public class EnumGenerator {
     TypeSpec.Builder enumType =
         TypeSpec.enumBuilder(enumDescriptor.name())
             .addModifiers(Modifier.PUBLIC)
+            .addAnnotation(Generated.class)
             .addSuperinterface(GtfsEnum.class);
 
     int minValue = 0;
