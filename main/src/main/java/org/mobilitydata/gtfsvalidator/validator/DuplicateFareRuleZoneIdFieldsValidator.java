@@ -47,25 +47,20 @@ public class DuplicateFareRuleZoneIdFieldsValidator extends FileValidator {
         .getEntities()
         .forEach(
             fareRule -> {
-              if (fareRule.hasOriginId()
-                  && fareRule.hasRouteId()
-                  && fareRule.hasDestinationId()
-                  && fareRule.hasContainsId()) {
-                String fieldsCombination =
-                    fareRule.routeId()
-                        + fareRule.originId()
-                        + fareRule.containsId()
-                        + fareRule.destinationId();
-                if (fareRuleByZoneIdFieldsCombination.containsKey(fieldsCombination)) {
-                  noticeContainer.addValidationNotice(
-                      new DuplicateFareRuleZoneIdFieldsNotice(
-                          fareRule.csvRowNumber(),
-                          fareRule.fareId(),
-                          fareRuleByZoneIdFieldsCombination.get(fieldsCombination).csvRowNumber(),
-                          fareRuleByZoneIdFieldsCombination.get(fieldsCombination).fareId()));
-                } else {
-                  fareRuleByZoneIdFieldsCombination.put(fieldsCombination, fareRule);
-                }
+              String fieldsCombination =
+                  fareRule.routeId()
+                      + fareRule.originId()
+                      + fareRule.containsId()
+                      + fareRule.destinationId();
+              if (fareRuleByZoneIdFieldsCombination.containsKey(fieldsCombination)) {
+                noticeContainer.addValidationNotice(
+                    new DuplicateFareRuleZoneIdFieldsNotice(
+                        fareRule.csvRowNumber(),
+                        fareRule.fareId(),
+                        fareRuleByZoneIdFieldsCombination.get(fieldsCombination).csvRowNumber(),
+                        fareRuleByZoneIdFieldsCombination.get(fieldsCombination).fareId()));
+              } else {
+                fareRuleByZoneIdFieldsCombination.put(fieldsCombination, fareRule);
               }
             });
   }
