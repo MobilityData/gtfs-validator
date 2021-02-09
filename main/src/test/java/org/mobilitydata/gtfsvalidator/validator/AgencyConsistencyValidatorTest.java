@@ -24,7 +24,8 @@ import java.util.List;
 import java.util.Locale;
 import javax.annotation.Nullable;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyFieldNotice;
+import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyLangNotice;
+import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyTimezoneNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
@@ -108,8 +109,7 @@ public class AgencyConsistencyValidatorTest {
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
-            new InconsistentAgencyFieldNotice(
-                1, "agency_timezone", "America/Bogota", "America/Montreal"));
+            new InconsistentAgencyTimezoneNotice(1, "America/Bogota", "America/Montreal"));
   }
 
   @Test
@@ -164,7 +164,7 @@ public class AgencyConsistencyValidatorTest {
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new InconsistentAgencyFieldNotice(1, "agency_lang", "en", "fr"));
+        .containsExactly(new InconsistentAgencyLangNotice(1, "en", "fr"));
   }
 
   @Test

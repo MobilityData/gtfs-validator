@@ -20,7 +20,8 @@ import java.time.ZoneId;
 import java.util.Locale;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
-import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyFieldNotice;
+import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyLangNotice;
+import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyTimezoneNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
@@ -35,8 +36,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableLoader;
  *
  * <ul>
  *   <li>{@link MissingRequiredFieldError} - multiple agencies present but no agency_id set
- *   <li>{@link InconsistentAgencyFieldNotice} - inconsistent timezone or language among the
- *       agencies
+ *   <li>{@link InconsistentAgencyTimezoneNotice} - inconsistent timezone among the agencies
+ *   <li>{@link InconsistentAgencyLangNotice} - inconsistent language among the agencies
  * </ul>
  */
 @GtfsValidator
@@ -68,11 +69,8 @@ public class AgencyConsistencyValidator extends FileValidator {
       GtfsAgency agency = agencyTable.getEntities().get(i);
       if (!commonTimezone.equals(agency.agencyTimezone())) {
         noticeContainer.addValidationNotice(
-            new InconsistentAgencyFieldNotice(
-                agency.csvRowNumber(),
-                GtfsAgencyTableLoader.AGENCY_TIMEZONE_FIELD_NAME,
-                commonTimezone.getId(),
-                agency.agencyTimezone().getId()));
+            new InconsistentAgencyTimezoneNotice(
+                agency.csvRowNumber(), commonTimezone.getId(), agency.agencyTimezone().getId()));
       }
     }
 
@@ -89,9 +87,8 @@ public class AgencyConsistencyValidator extends FileValidator {
         commonLanguage = agency.agencyLang();
       } else if (!commonLanguage.equals(agency.agencyLang())) {
         noticeContainer.addValidationNotice(
-            new InconsistentAgencyFieldNotice(
+            new InconsistentAgencyLangNotice(
                 agency.csvRowNumber(),
-                GtfsAgencyTableLoader.AGENCY_LANG_FIELD_NAME,
                 commonLanguage.getLanguage(),
                 agency.agencyLang().getLanguage()));
       }

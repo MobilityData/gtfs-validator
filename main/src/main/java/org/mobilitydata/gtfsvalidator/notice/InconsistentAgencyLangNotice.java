@@ -18,19 +18,18 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-public class InconsistentAgencyFieldNotice extends ValidationNotice {
-  public InconsistentAgencyFieldNotice(
-      long csvRowNumber, String fieldName, String expected, String actual) {
+public class InconsistentAgencyLangNotice extends ValidationNotice {
+  public InconsistentAgencyLangNotice(long csvRowNumber, String expected, String actual) {
     super(
         ImmutableMap.of(
             "csvRowNumber", csvRowNumber,
-            "fieldName", fieldName,
             "expected", expected,
-            "actual", actual));
+            "actual", actual),
+        SeverityLevel.WARNING);
   }
 
   @Override
   public String getCode() {
-    return "inconsistent_agency_field";
+    return "inconsistent_agency_lang";
   }
 }
