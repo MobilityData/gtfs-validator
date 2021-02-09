@@ -19,8 +19,8 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * Rows from `fare_rules.txt` must be unique based on `fare_rules.route_id`,
- * `fare_rules.origin_id`, `fare_rules.contains_id` and `fare_rules.destination_id`.
+ * Rows from `fare_rules.txt` must be unique based on `fare_rules.route_id`, `fare_rules.origin_id`,
+ * `fare_rules.contains_id` and `fare_rules.destination_id`.
  */
 public class DuplicateFareRuleZoneIdFieldsNotice extends ValidationNotice {
   public DuplicateFareRuleZoneIdFieldsNotice(

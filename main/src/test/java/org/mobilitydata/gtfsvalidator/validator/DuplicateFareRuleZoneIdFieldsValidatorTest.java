@@ -111,6 +111,7 @@ public class DuplicateFareRuleZoneIdFieldsValidatorTest {
                 createFareRule(99, "other fare id value", "route id", null, "by id", "to id")));
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new DuplicateFareRuleZoneIdFieldsNotice(99, "other fare id value", 3, "fare id value"));
+        .containsExactly(
+            new DuplicateFareRuleZoneIdFieldsNotice(99, "other fare id value", 3, "fare id value"));
   }
 }
