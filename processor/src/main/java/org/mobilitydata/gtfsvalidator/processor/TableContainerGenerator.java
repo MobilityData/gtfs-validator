@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.processor;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.byKeyMapName;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.byKeyMethodName;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldNameField;
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.hasMethodName;
 import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_PACKAGE_NAME;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -48,6 +49,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
  * <p>E.g., GtfsStopTableContainer class is generated for "stops.txt".
  */
 public class TableContainerGenerator {
+
   private final GtfsFileDescriptor fileDescriptor;
   private final GtfsEntityClasses classNames;
 
@@ -274,6 +276,9 @@ public class TableContainerGenerator {
       String byKeyMap = byKeyMapName(primaryKey.name());
       method.beginControlFlow("for ($T newEntity : entities)", gtfsEntityType);
       method
+          .beginControlFlow("if (!newEntity.$L())", hasMethodName(primaryKey.name()))
+          .addStatement("continue")
+          .endControlFlow()
           .addStatement(
               "$T oldEntity = $L.getOrDefault(newEntity.$L(), null)",
               classNames.entityImplementationTypeName(),
