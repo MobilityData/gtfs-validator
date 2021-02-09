@@ -33,9 +33,15 @@ public class DuplicateFareRuleZoneIdFieldsValidatorTest {
   }
 
   public static GtfsFareRule createFareRule(
-      long csvRowNumber, String fareId, String originId, String containsId, String destinationId) {
+      long csvRowNumber,
+      String fareId,
+      String routeId,
+      String originId,
+      String containsId,
+      String destinationId) {
     return new GtfsFareRule.Builder()
         .setCsvRowNumber(csvRowNumber)
+        .setRouteId(routeId)
         .setFareId(fareId)
         .setOriginId(originId)
         .setContainsId(containsId)
@@ -51,8 +57,14 @@ public class DuplicateFareRuleZoneIdFieldsValidatorTest {
         createFareRuleTable(
             noticeContainer,
             ImmutableList.of(
-                createFareRule(3, "fare id value", "from id", "by id", "to id"),
-                createFareRule(99, "other fare id value", "from id", "by id", "to id")));
+                createFareRule(3, "fare id value", "route id value", "from id", "by id", "to id"),
+                createFareRule(
+                    99,
+                    "other fare id value",
+                    "route id value",
+                    "from id",
+                    "by id",
+                    "to id")));
     underTest.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
@@ -68,8 +80,9 @@ public class DuplicateFareRuleZoneIdFieldsValidatorTest {
         createFareRuleTable(
             noticeContainer,
             ImmutableList.of(
-                createFareRule(3, "fare id value", "from id", "by id", "to id"),
-                createFareRule(99, "other fare id value", "other from id", "by id", "to id")));
+                createFareRule(3, "fare id value", "route id", "from id", "by id", "to id"),
+                createFareRule(
+                    99, "other fare id value", "route id", "other from id", "by id", "to id")));
     underTest.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices()).isEmpty();

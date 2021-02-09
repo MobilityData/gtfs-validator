@@ -26,8 +26,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFareRule;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareRuleTableContainer;
 
 /**
- * Validates: unique combination of `fare_rules.origin_id`, `fare_rules.contains_id` and
- * `fare_rules.destination_id` fields in GTFS file `fare_rules.txt`
+ * Validates: unique combination of `fare_rules.route_id`, `fare_rules.origin_id`,
+ * `fare_rules.contains_id` and `fare_rules.destination_id` fields in GTFS file `fare_rules.txt`
  *
  * <p>Generated notice:
  *
@@ -48,10 +48,14 @@ public class DuplicateFareRuleZoneIdFieldsValidator extends FileValidator {
         .forEach(
             fareRule -> {
               if (fareRule.hasOriginId()
+                  && fareRule.hasRouteId()
                   && fareRule.hasDestinationId()
                   && fareRule.hasContainsId()) {
                 String fieldsCombination =
-                    fareRule.originId() + fareRule.containsId() + fareRule.destinationId();
+                    fareRule.routeId()
+                        + fareRule.originId()
+                        + fareRule.containsId()
+                        + fareRule.destinationId();
                 if (fareRuleByZoneIdFieldsCombination.containsKey(fieldsCombination)) {
                   noticeContainer.addValidationNotice(
                       new DuplicateFareRuleZoneIdFieldsNotice(
@@ -60,9 +64,7 @@ public class DuplicateFareRuleZoneIdFieldsValidator extends FileValidator {
                           fareRuleByZoneIdFieldsCombination.get(fieldsCombination).csvRowNumber(),
                           fareRuleByZoneIdFieldsCombination.get(fieldsCombination).fareId()));
                 } else {
-                  fareRuleByZoneIdFieldsCombination.put(
-                      fareRule.originId() + fareRule.containsId() + fareRule.destinationId(),
-                      fareRule);
+                  fareRuleByZoneIdFieldsCombination.put(fieldsCombination, fareRule);
                 }
               }
             });
