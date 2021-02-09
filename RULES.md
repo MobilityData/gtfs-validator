@@ -388,3 +388,9 @@ Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100
 
 #### References:
 * [GTFS Best Practices shapes.txt](https://gtfs.org/best-practices/#shapestxt)
+
+<a name="DuplicateFareRuleZoneIdFieldsNotice"/>
+
+### DuplicateFareRuleZoneIdFieldsNotice
+
+The combination of `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.contains_id` and `fare_rules.destination_id` fields should be unique in GTFS file `fare_rules.txt`.
