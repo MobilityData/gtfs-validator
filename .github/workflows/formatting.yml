@@ -1,0 +1,17 @@
+name: Format code
+
+on:
+  push:
+    branches: [ master ]
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2 # v2 minimum required
+      - uses: axel-op/googlejavaformat-action@v3
+        with:
+          commitMessage: "chore: Google Java Format"
+          githubToken: ${{ secrets.GITHUB_TOKEN }}

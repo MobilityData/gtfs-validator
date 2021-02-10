@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.processor;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.byKeyMapName;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.byKeyMethodName;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldNameField;
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.hasMethodName;
 import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_PACKAGE_NAME;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -48,6 +49,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
  * <p>E.g., GtfsStopTableContainer class is generated for "stops.txt".
  */
 public class TableContainerGenerator {
+
   private final GtfsFileDescriptor fileDescriptor;
   private final GtfsEntityClasses classNames;
 
@@ -131,6 +133,14 @@ public class TableContainerGenerator {
             .addStatement("return $T.FILENAME", classNames.tableLoaderTypeName())
             .build());
 
+    typeSpec.addMethod(
+        MethodSpec.methodBuilder("isRequired")
+            .addAnnotation(Override.class)
+            .addModifiers(Modifier.PUBLIC)
+            .returns(boolean.class)
+            .addStatement("return $L", fileDescriptor.required())
+            .build());
+
     typeSpec.addField(
         ParameterizedTypeName.get(ClassName.get(List.class), gtfsEntityType),
         "entities",
@@ -162,69 +172,32 @@ public class TableContainerGenerator {
       addListMultimapWithGetters(typeSpec, indexField, classNames.entityImplementationTypeName());
     }
 
-    typeSpec.addMethod(generateConstructor());
-    typeSpec.addMethod(generateForEntitiesMethod());
-    typeSpec.addMethod(generateForEmptyFileMethod());
-    typeSpec.addMethod(generateForMissingFileMethod());
+    typeSpec.addMethod(generateConstructorWithEntities());
+    typeSpec.addMethod(generateConstructorWithStatus());
     typeSpec.addMethod(generateSetupIndicesMethod());
-    typeSpec.addMethod(generateForInvalidHeadersMethod());
+    typeSpec.addMethod(generateForEntitiesMethod());
 
     return typeSpec.build();
   }
 
-  private MethodSpec generateConstructor() {
+  private MethodSpec generateConstructorWithEntities() {
     return MethodSpec.constructorBuilder()
         .addModifiers(Modifier.PRIVATE)
         .addParameter(
             ParameterizedTypeName.get(
                 ClassName.get(List.class), classNames.entityImplementationTypeName()),
             "entities")
+        .addStatement("super(TableStatus.PARSABLE_HEADERS_AND_ROWS)")
         .addStatement("this.entities = entities")
         .build();
   }
 
-  private MethodSpec generateForEmptyFileMethod() {
-    TypeName tableContainerTypeName = classNames.tableContainerTypeName();
-    return MethodSpec.methodBuilder("forEmptyFile")
-        .returns(tableContainerTypeName)
-        .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-        .addStatement(
-            "$T table = new $T(new $T<>())",
-            tableContainerTypeName,
-            tableContainerTypeName,
-            ArrayList.class)
-        .addStatement("table.setEmptyFile(true)")
-        .addStatement("return table")
-        .build();
-  }
-
-  private MethodSpec generateForMissingFileMethod() {
-    TypeName tableContainerTypeName = classNames.tableContainerTypeName();
-    return MethodSpec.methodBuilder("forMissingFile")
-        .returns(tableContainerTypeName)
-        .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-        .addStatement(
-            "$T table = new $T(new $T<>())",
-            tableContainerTypeName,
-            tableContainerTypeName,
-            ArrayList.class)
-        .addStatement("table.setMissingFile(true)")
-        .addStatement("return table")
-        .build();
-  }
-
-  private MethodSpec generateForInvalidHeadersMethod() {
-    TypeName tableContainerTypeName = classNames.tableContainerTypeName();
-    return MethodSpec.methodBuilder("forInvalidHeaders")
-        .returns(tableContainerTypeName)
-        .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-        .addStatement(
-            "$T table = new $T(new $T<>())",
-            tableContainerTypeName,
-            tableContainerTypeName,
-            ArrayList.class)
-        .addStatement("table.setInvalidHeaders(true)")
-        .addStatement("return table")
+  private MethodSpec generateConstructorWithStatus() {
+    return MethodSpec.constructorBuilder()
+        .addModifiers(Modifier.PUBLIC)
+        .addParameter(GtfsTableContainer.TableStatus.class, "tableStatus")
+        .addStatement("super(tableStatus)")
+        .addStatement("this.entities = new $T<>()", ArrayList.class)
         .build();
   }
 
@@ -239,8 +212,6 @@ public class TableContainerGenerator {
             "entities")
         .addParameter(NoticeContainer.class, "noticeContainer")
         .addStatement("$T table = new $T(entities)", tableContainerTypeName, tableContainerTypeName)
-        .addStatement("table.setEmptyFile(false)")
-        .addStatement("table.setMissingFile(false)")
         .addStatement("table.setupIndices(noticeContainer)")
         .addStatement("return table")
         .build();
@@ -305,6 +276,9 @@ public class TableContainerGenerator {
       String byKeyMap = byKeyMapName(primaryKey.name());
       method.beginControlFlow("for ($T newEntity : entities)", gtfsEntityType);
       method
+          .beginControlFlow("if (!newEntity.$L())", hasMethodName(primaryKey.name()))
+          .addStatement("continue")
+          .endControlFlow()
           .addStatement(
               "$T oldEntity = $L.getOrDefault(newEntity.$L(), null)",
               classNames.entityImplementationTypeName(),

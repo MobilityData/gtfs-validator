@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
+import org.mobilitydata.gtfsvalidator.notice.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
@@ -39,6 +40,9 @@ public class RowParserTest {
     NoticeContainer noticeContainer = new NoticeContainer();
     CsvRow csvRow = Mockito.mock(CsvRow.class);
     Mockito.when(csvRow.asString(0)).thenReturn(cellValue);
+    Mockito.when(csvRow.getFileName()).thenReturn("filename");
+    Mockito.when(csvRow.getRowNumber()).thenReturn(8L);
+    Mockito.when(csvRow.getColumnName(0)).thenReturn("column name");
     RowParser parser = new RowParser(GtfsFeedName.parseString(feedName), noticeContainer);
     parser.setRow(csvRow);
     return parser;
@@ -186,6 +190,24 @@ public class RowParserTest {
   @Test
   public void asId() {
     assertThat(createParser("32tgklu34y3k").asId(0, true)).isEqualTo("32tgklu34y3k");
+    RowParser parser = createParser("קום");
+    // .קום :the .COM equivalent in Hebrew
+    parser.asId(0, true);
+    assertThat(parser.getNoticeContainer().getValidationNotices())
+        .containsExactly(new NonAsciiOrNonPrintableCharNotice("filename", 8L, "column name"));
+    // Non-ASCII characters in ID are not an error. Validation may continue.
+    assertThat(parser.hasParseErrorsInRow()).isFalse();
+  }
+
+  @Test
+  public void hasOnlyPrintableAscii() {
+    assertThat(RowParser.hasOnlyPrintableAscii("abc")).isTrue();
+    assertThat(RowParser.hasOnlyPrintableAscii("a bc")).isTrue();
+    assertThat(RowParser.hasOnlyPrintableAscii("@<>&*()!")).isTrue();
+    // Cyrillic - not ASCII.
+    assertThat(RowParser.hasOnlyPrintableAscii("Привет!")).isFalse();
+    // Non-printable.
+    assertThat(RowParser.hasOnlyPrintableAscii("\01\23")).isFalse();
   }
 
   @Test

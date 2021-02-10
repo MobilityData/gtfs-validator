@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2021 MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,18 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.table;
+package org.mobilitydata.gtfsvalidator.notice;
 
-import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValue;
+import com.google.common.collect.ImmutableMap;
 
-@GtfsEnumValue(name = "APPROXIMATE", value = 0)
-@GtfsEnumValue(name = "EXACT", value = 1)
-public interface GtfsStopTimesTimepointEnum {}
+/** GTFS files `calendar.txt` and `calendar_dates.txt` cannot be missing from the GTFS archive. */
+public class MissingCalendarAndCalendarDateFilesNotice extends ValidationNotice {
+  public MissingCalendarAndCalendarDateFilesNotice() {
+    super(ImmutableMap.of());
+  }
+
+  @Override
+  public String getCode() {
+    return "missing_calendar_and_calendar_date_files";
+  }
+}

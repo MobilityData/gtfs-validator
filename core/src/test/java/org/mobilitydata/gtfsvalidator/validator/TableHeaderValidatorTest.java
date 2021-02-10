@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ public class TableHeaderValidatorTest {
   }
 
   @Test
-  public void unknownColumn() {
+  public void unknownColumnShouldGenerateNotice() {
     NoticeContainer container = new NoticeContainer();
 
     assertThat(
@@ -63,7 +63,7 @@ public class TableHeaderValidatorTest {
   }
 
   @Test
-  public void missingRequiredColumn() {
+  public void missingRequiredColumnShouldGenerateNotice() {
     NoticeContainer container = new NoticeContainer();
 
     assertThat(
@@ -80,7 +80,7 @@ public class TableHeaderValidatorTest {
   }
 
   @Test
-  public void duplicatedColumn() {
+  public void duplicatedColumnShouldGenerateNotice() {
     NoticeContainer container = new NoticeContainer();
 
     assertThat(
@@ -97,7 +97,7 @@ public class TableHeaderValidatorTest {
   }
 
   @Test
-  public void emptyFile() {
+  public void emptyFileShouldNotGenerateNotice() {
     NoticeContainer container = new NoticeContainer();
 
     assertThat(

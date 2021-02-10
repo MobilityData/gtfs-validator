@@ -16,10 +16,10 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
-import java.io.Reader;
+import java.io.InputStream;
 import java.util.Set;
-import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
 /**
@@ -40,11 +40,13 @@ public abstract class GtfsTableLoader<T extends GtfsEntity> {
   public abstract Set<String> getRequiredColumnNames();
 
   public abstract GtfsTableContainer<T> load(
-      Reader reader,
-      GtfsFeedName feedName,
+      InputStream inputStream,
+      ValidationContext validationContext,
       ValidatorLoader validatorLoader,
       NoticeContainer noticeContainer);
 
   public abstract GtfsTableContainer<T> loadMissingFile(
-      ValidatorLoader validatorLoader, NoticeContainer noticeContainer);
+      ValidationContext validationContext,
+      ValidatorLoader validatorLoader,
+      NoticeContainer noticeContainer);
 }

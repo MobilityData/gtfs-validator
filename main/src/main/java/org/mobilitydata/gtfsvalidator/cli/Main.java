@@ -26,11 +26,17 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
+import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.ThreadInterruptedError;
+import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
+import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
 /** The main entry point for GTFS Validator CLI. */
@@ -63,7 +69,7 @@ public class Main {
     feedLoader.setNumThreads(args.getNumThreads());
     NoticeContainer noticeContainer = new NoticeContainer();
     GtfsFeedContainer feedContainer;
-    GtfsInput gtfsInput;
+    GtfsInput gtfsInput = null;
     try {
       if (args.getInput() == null) {
         if (Strings.isNullOrEmpty(args.getStorageDirectory())) {
@@ -74,30 +80,47 @@ public class Main {
       } else {
         gtfsInput = GtfsInput.createFromPath(Paths.get(args.getInput()));
       }
-    } catch (IOException | URISyntaxException | InterruptedException e) {
-      // FIXME: Add system errors to noticeContainer here.
+    } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot load GTFS feed");
+      noticeContainer.addSystemError(new IOError(e.getMessage()));
+    } catch (URISyntaxException e) {
+      logger.atSevere().withCause(e).log("Syntax error in URI");
+      noticeContainer.addSystemError(new URISyntaxError(e.getMessage()));
+    } catch (InterruptedException e) {
+      logger.atSevere().withCause(e).log("Interrupted thread");
+      noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
+    }
+    if (gtfsInput == null) {
+      exportReport(args.getOutputBase(), noticeContainer);
       return;
     }
+    ValidationContext validationContext =
+        ValidationContext.builder()
+            .setFeedName(feedName)
+            .setNow(ZonedDateTime.now(ZoneId.systemDefault()))
+            .build();
     feedContainer =
-        feedLoader.loadAndValidate(gtfsInput, feedName, validatorLoader, noticeContainer);
+        feedLoader.loadAndValidate(gtfsInput, validationContext, validatorLoader, noticeContainer);
 
-    // Output.
-    new File(args.getOutputBase()).mkdirs();
+    // Output
+    exportReport(args.getOutputBase(), noticeContainer);
+    final long endNanos = System.nanoTime();
+    System.out.printf("Validation took %.3f seconds%n", (endNanos - startNanos) / 1e9);
+    System.out.println(feedContainer.tableTotals());
+  }
+
+  /** Generates and exports reports for both validation notices and system errors reports. */
+  private static void exportReport(final String outputBase, final NoticeContainer noticeContainer) {
+    new File(outputBase).mkdirs();
     try {
       Files.write(
-          Paths.get(args.getOutputBase(), "report.json"),
+          Paths.get(outputBase, "report.json"),
           noticeContainer.exportValidationNotices().getBytes(StandardCharsets.UTF_8));
       Files.write(
-          Paths.get(args.getOutputBase(), "system_errors.json"),
+          Paths.get(outputBase, "system_errors.json"),
           noticeContainer.exportSystemErrors().getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store report files");
     }
-
-    final long endNanos = System.nanoTime();
-    System.out.println(
-        String.format("Validation took %.3f seconds", (endNanos - startNanos) / 1e9));
-    System.out.println(feedContainer.tableTotals());
   }
 }

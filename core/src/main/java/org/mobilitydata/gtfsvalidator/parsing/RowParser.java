@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,10 @@ import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.notice.FieldParsingError;
 import org.mobilitydata.gtfsvalidator.notice.InvalidRowLengthError;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
+import org.mobilitydata.gtfsvalidator.notice.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.NumberOutOfRangeError;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.UnexpectedEnumValueError;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
@@ -44,6 +46,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
  * throw an exception.
  */
 public class RowParser {
+
   public static final boolean REQUIRED = true;
   public static final boolean OPTIONAL = false;
   private final NoticeContainer noticeContainer;
@@ -189,7 +192,7 @@ public class RowParser {
 
   public void checkRowColumnCount(CsvFile csvFile) {
     if (row.getColumnCount() != csvFile.getColumnCount()) {
-      addErrorInRow(
+      addNoticeInRow(
           new InvalidRowLengthError(
               csvFile.getFileName(),
               row.getRowNumber(),
@@ -202,7 +205,7 @@ public class RowParser {
   public String asString(int columnIndex, boolean required) {
     String s = row.asString(columnIndex);
     if (required && s == null) {
-      addErrorInRow(
+      addNoticeInRow(
           new MissingRequiredFieldError(
               row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex)));
     }
@@ -214,9 +217,24 @@ public class RowParser {
     return asString(columnIndex, required);
   }
 
+  static boolean hasOnlyPrintableAscii(String s) {
+    for (int i = 0, n = s.length(); i < n; ++i) {
+      if (!(s.charAt(i) >= 32 && s.charAt(i) < 127)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   @Nullable
   public String asId(int columnIndex, boolean required) {
-    return asString(columnIndex, required);
+    String value = asString(columnIndex, required);
+    if (value != null && !hasOnlyPrintableAscii(value)) {
+      addNoticeInRow(
+          new NonAsciiOrNonPrintableCharNotice(
+              row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex)));
+    }
+    return value;
   }
 
   @Nullable
@@ -261,7 +279,7 @@ public class RowParser {
       switch (bounds) {
         case POSITIVE:
           if (value <= 0) {
-            addErrorInRow(
+            addNoticeInRow(
                 new NumberOutOfRangeError(
                     row.getFileName(),
                     row.getRowNumber(),
@@ -272,7 +290,7 @@ public class RowParser {
           break;
         case NON_NEGATIVE:
           if (value < 0) {
-            addErrorInRow(
+            addNoticeInRow(
                 new NumberOutOfRangeError(
                     row.getFileName(),
                     row.getRowNumber(),
@@ -283,7 +301,7 @@ public class RowParser {
           break;
         case NON_ZERO:
           if (value == 0) {
-            addErrorInRow(
+            addNoticeInRow(
                 new NumberOutOfRangeError(
                     row.getFileName(),
                     row.getRowNumber(),
@@ -319,7 +337,7 @@ public class RowParser {
       switch (bounds) {
         case POSITIVE:
           if (value <= 0) {
-            addErrorInRow(
+            addNoticeInRow(
                 new NumberOutOfRangeError(
                     row.getFileName(),
                     row.getRowNumber(),
@@ -330,7 +348,7 @@ public class RowParser {
           break;
         case NON_NEGATIVE:
           if (value < 0) {
-            addErrorInRow(
+            addNoticeInRow(
                 new NumberOutOfRangeError(
                     row.getFileName(),
                     row.getRowNumber(),
@@ -341,7 +359,7 @@ public class RowParser {
           break;
         case NON_ZERO:
           if (value == 0) {
-            addErrorInRow(
+            addNoticeInRow(
                 new NumberOutOfRangeError(
                     row.getFileName(),
                     row.getRowNumber(),
@@ -368,7 +386,7 @@ public class RowParser {
       switch (bounds) {
         case POSITIVE:
           if (compareToZero <= 0) {
-            addErrorInRow(
+            addNoticeInRow(
                 new NumberOutOfRangeError(
                     row.getFileName(),
                     row.getRowNumber(),
@@ -379,7 +397,7 @@ public class RowParser {
           break;
         case NON_NEGATIVE:
           if (compareToZero < 0) {
-            addErrorInRow(
+            addNoticeInRow(
                 new NumberOutOfRangeError(
                     row.getFileName(),
                     row.getRowNumber(),
@@ -390,7 +408,7 @@ public class RowParser {
           break;
         case NON_ZERO:
           if (compareToZero == 0) {
-            addErrorInRow(
+            addNoticeInRow(
                 new NumberOutOfRangeError(
                     row.getFileName(),
                     row.getRowNumber(),
@@ -419,13 +437,13 @@ public class RowParser {
     try {
       i = Integer.parseInt(s);
     } catch (Exception ex) {
-      addErrorInRow(
+      addNoticeInRow(
           new FieldParsingError(
               row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), "enum", s));
       return null;
     }
     if (enumCreator.convert(i) == null) {
-      addErrorInRow(
+      addNoticeInRow(
           new UnexpectedEnumValueError(
               row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), i));
     }
@@ -442,9 +460,11 @@ public class RowParser {
     return dateParser.parseField(columnIndex, required);
   }
 
-  private void addErrorInRow(ValidationNotice error) {
-    parseErrorsInRow = true;
-    noticeContainer.addValidationNotice(error);
+  private void addNoticeInRow(ValidationNotice notice) {
+    if (notice.getSeverityLevel().ordinal() >= SeverityLevel.ERROR.ordinal()) {
+      parseErrorsInRow = true;
+    }
+    noticeContainer.addValidationNotice(notice);
   }
 
   public enum NumberBounds {
@@ -455,10 +475,12 @@ public class RowParser {
 
   @FunctionalInterface
   public interface EnumCreator<E> {
+
     E convert(int t);
   }
 
   abstract class ValueParser<T> {
+
     private final String formatName;
 
     public ValueParser(String formatName) {
@@ -475,7 +497,7 @@ public class RowParser {
       try {
         return parseString(s);
       } catch (Exception ex) {
-        addErrorInRow(
+        addNoticeInRow(
             new FieldParsingError(
                 row.getFileName(),
                 row.getRowNumber(),

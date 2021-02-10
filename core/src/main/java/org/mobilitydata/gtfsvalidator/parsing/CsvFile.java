@@ -18,10 +18,17 @@ package org.mobilitydata.gtfsvalidator.parsing;
 
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
-import java.io.Reader;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CodingErrorAction;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Iterator;
 import javax.annotation.Nullable;
+import org.apache.commons.io.ByteOrderMark;
+import org.apache.commons.io.input.BOMInputStream;
 
 /**
  * Reading support for a CSV file in GTFS feed. The file normally has headers and 0 or several data
@@ -34,8 +41,20 @@ public class CsvFile implements Iterable<CsvRow> {
   private final String filename;
   private String[] columnNames;
 
-  public CsvFile(Reader reader, String filename) {
+  public CsvFile(InputStream inputStream, String filename) {
     this.filename = filename;
+
+    // Only UTF-8 is supported according to GTFS reference. We may add optional support for other
+    // encodings later.
+    final BOMInputStream bomInputStream = new BOMInputStream(inputStream, ByteOrderMark.UTF_8);
+    final CharsetDecoder decoder =
+        StandardCharsets.UTF_8
+            .newDecoder()
+            .replaceWith("\uFFFD")
+            .onMalformedInput(CodingErrorAction.REPLACE);
+    final BufferedReader reader =
+        new BufferedReader(new InputStreamReader(bomInputStream, decoder));
+
     CsvParserSettings settings = new CsvParserSettings();
     settings.getFormat().setLineSeparator("\n");
     settings.getFormat().setDelimiter(',');

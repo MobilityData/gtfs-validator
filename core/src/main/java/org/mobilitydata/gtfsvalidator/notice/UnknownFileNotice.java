@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 /** A file is unknown. */
 public class UnknownFileNotice extends ValidationNotice {
   public UnknownFileNotice(String filename) {
-    super(ImmutableMap.of("filename", filename));
+    super(ImmutableMap.of("filename", filename), SeverityLevel.INFO);
   }
 
   @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2021 MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,19 +18,19 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-public class InconsistentAgencyFieldNotice extends ValidationNotice {
-  public InconsistentAgencyFieldNotice(
-      long csvRowNumber, String fieldName, String expected, String actual) {
+public class MissingTripEdgeNotice extends ValidationNotice {
+  public MissingTripEdgeNotice(
+      long csvRowNumber, int stopSequence, String tripId, String specifiedField) {
     super(
         ImmutableMap.of(
             "csvRowNumber", csvRowNumber,
-            "fieldName", fieldName,
-            "expected", expected,
-            "actual", actual));
+            "stopSequence", stopSequence,
+            "tripId", tripId,
+            "specifiedField", specifiedField));
   }
 
   @Override
   public String getCode() {
-    return "inconsistent_agency_field";
+    return "missing_trip_edge_arrival_time_departure_time";
   }
 }
