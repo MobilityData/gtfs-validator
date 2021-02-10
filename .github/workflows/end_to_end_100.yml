@@ -40,6 +40,9 @@ jobs:
           versionTag: ${{ steps.prep.outputs.versionTag }}
         with:
           arguments: shadowJar
+          
+      - name: Validate dataset from -- Norway
+        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/norsk-reiseinformasjon-as/791/latest/download --output_base output --feed_name no-norway --storage_directory norway.zip
    
    #see https://github.com/MobilityData/gtfs-validator/pull/712#issuecomment-776110813
       - name: Validate dataset from -- Ruter (Oslo, Norway)
@@ -78,8 +81,6 @@ jobs:
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/mzdik-radom/1008/latest/download --output_base output --feed_name pl-mzdik --storage_directory mzdik.zip
       - name: Validate dataset from -- MKV (Miskolc, Hungary)
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/mvk-zrt/839/latest/download --output_base output --feed_name hu-mkv --storage_directory mkv.zip
-      - name: Validate dataset from -- Norway
-        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/norsk-reiseinformasjon-as/791/latest/download --output_base output --feed_name no-norway --storage_directory norway.zip
       - name: Validate dataset from -- PTV (Melbourne, Australia)
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ptv/497/latest/download --output_base output --feed_name au-ptv --storage_directory ptv.zip
       - name: Validate dataset from -- Pays de la Loire (France)
