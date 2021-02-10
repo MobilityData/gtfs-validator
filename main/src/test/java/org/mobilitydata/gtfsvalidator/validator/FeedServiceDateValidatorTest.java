@@ -6,7 +6,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Locale;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
+import org.mobilitydata.gtfsvalidator.notice.MissingFeedInfoDateNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.StartAndEndDateOutOfOrderNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
@@ -108,7 +108,7 @@ public class FeedServiceDateValidatorTest {
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new MissingRequiredFieldError("feed_info.txt", 1, "feed_start_date"));
+        .containsExactly(new MissingFeedInfoDateNotice(1, "feed_start_date"));
   }
 
   @Test
@@ -131,7 +131,7 @@ public class FeedServiceDateValidatorTest {
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new MissingRequiredFieldError("feed_info.txt", 1, "feed_end_date"));
+        .containsExactly(new MissingFeedInfoDateNotice(1, "feed_end_date"));
   }
 
   @Test
@@ -142,7 +142,7 @@ public class FeedServiceDateValidatorTest {
             noticeContainer,
             ImmutableList.of(
                 createFeedInfo(
-                    1, "name value", "www.mobilitydata.org", Locale.CANADA, null, null)));
+                    1, "name value", "https://www.mobilitydata.org", Locale.CANADA, null, null)));
 
     FeedServiceDateValidator underTest = new FeedServiceDateValidator();
     underTest.feedInfoTable = gtfsFeedInfoTable;
@@ -161,7 +161,7 @@ public class FeedServiceDateValidatorTest {
                 createFeedInfo(
                     1,
                     "name value",
-                    "www.mobilitydata.org",
+                    "https://www.mobilitydata.org",
                     Locale.CANADA,
                     GtfsDate.fromEpochDay(450),
                     GtfsDate.fromEpochDay(555))));
