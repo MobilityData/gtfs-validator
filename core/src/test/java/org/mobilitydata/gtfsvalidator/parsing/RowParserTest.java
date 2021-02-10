@@ -195,6 +195,19 @@ public class RowParserTest {
     parser.asId(0, true);
     assertThat(parser.getNoticeContainer().getValidationNotices())
         .containsExactly(new NonAsciiOrNonPrintableCharNotice("filename", 8L, "column name"));
+    // Non-ASCII characters in ID are not an error. Validation may continue.
+    assertThat(parser.hasParseErrorsInRow()).isFalse();
+  }
+
+  @Test
+  public void hasOnlyPrintableAscii() {
+    assertThat(RowParser.hasOnlyPrintableAscii("abc")).isTrue();
+    assertThat(RowParser.hasOnlyPrintableAscii("a bc")).isTrue();
+    assertThat(RowParser.hasOnlyPrintableAscii("@<>&*()!")).isTrue();
+    // Cyrillic - not ASCII.
+    assertThat(RowParser.hasOnlyPrintableAscii("Привет!")).isFalse();
+    // Non-printable.
+    assertThat(RowParser.hasOnlyPrintableAscii("\01\23")).isFalse();
   }
 
   @Test
