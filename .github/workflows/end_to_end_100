@@ -1,4 +1,4 @@
-name: End to end
+name: End to end 100
 
 on:
   push:
