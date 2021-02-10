@@ -1,0 +1,128 @@
+name: End to end
+
+on:
+  push:
+    branches: [ master, extend-end-to-end ] #<-- replace transport-agency-name by the name of the agency/publisher
+
+jobs:
+  run-on-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Prepare version name
+        id: prep
+        run: |
+          VERSION_TAG=edge
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION_TAG=${GITHUB_REF#refs/tags/}
+          elif [[ $GITHUB_REF == refs/heads/* ]]; then
+            VERSION_TAG=-$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+          elif [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION_TAG=-pr-${{ github.event.number }}
+          fi
+          if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
+            VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
+          fi
+          echo ::set-output name=versionTag::${VERSION_TAG}
+      - name: Set up JDK 1.11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.11
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+      - name: Package cli app jar with Gradle
+        uses: eskatos/gradle-command-action@v1
+        env:
+          versionTag: ${{ steps.prep.outputs.versionTag }}
+        with:
+          arguments: shadowJar
+   
+   #see https://github.com/MobilityData/gtfs-validator/pull/712#issuecomment-776110813
+      - name: Validate dataset from -- Ruter (Oslo, Norway)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ruter/240/latest/download --output_base output --feed_name nn-ruter --storage_directory ruter.zip
+      - name: Validate dataset from -- TAG (Grenoble, France)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/tag/594/latest/download --output_base output --feed_name fr-tag --storage_directory tag.zip
+      - name: Validate dataset from -- Translink (Vancouver, Canada)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/translink-vancouver/29/latest/download --output_base output --feed_name ca-translink --storage_directory transkink.zip
+      - name: Validate dataset from -- VAG (Freiburg, Germany)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/freiburger-verkehrs-ag/1228/latest/download --output_base output --feed_name de-vag --storage_directory vag.zip
+      - name: Validate dataset from -- AC Transit (Oakland, CA, USA)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ac-transit/1269/latest/download --output_base output --feed_name us-actransit --storage_directory actransit.zip
+      - name: Validate dataset from -- AMT (Montreal, QC, Canada)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/agence-metropolitaine-de-transport/128/latest/download --output_base output --feed_name ca-amt --storage_directory amtmtl.zip
+      - name: Validate dataset from -- Bay of Plenty Regional Council (Tauranga, New Zealand)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/bay-of-plenty-regional-council/1162/latest/download --output_base output --feed_name nz-bayplenty --storage_directory bayplenty.zip
+      - name: Validate dataset from -- BHTRANS (Belo Horizonte, Brazil)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/bhtrans/640/latest/download --output_base output --feed_name pt-bhtrans --storage_directory bhtrans.zip
+      - name: Validate dataset from -- LYNX (Orlando, FL, USA)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/central-florida-regional-transportation-authority/373/latest/download --output_base output --feed_name us-lynx --storage_directory lynx.zip
+      - name: Validate dataset from -- dBus (San Sebastián , Spain)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/compania-del-tranvia-de-san-sebastian/702/latest/download --output_base output --feed_name es-dbus --storage_directory dbus.zip
+      - name: Validate dataset from -- Collegamenti marittimi Moby (Sardinia, Italy)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/collegamenti-marittimi-moby/1135/latest/download --output_base output --feed_name it-moby --storage_directory moby.zip
+      - name: Validate dataset from -- Comboios de Portugal (Lisbon, Portugal)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/comboios-de-portugal/1004/latest/download --output_base output --feed_name pt-comboios --storage_directory comboios.zip
+      - name: Validate dataset from -- Ferries (Finland)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ferries/734/latest/download --output_base output --feed_name fi-ferries --storage_directory ferries.zip
+      - name: Validate dataset from -- IDFM (Paris, France)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ile-de-france-mobilite/1214/latest/download --output_base output --feed_name fr-idfm --storage_directory idfm.zip
+      - name: Validate dataset from -- Maanteeamet (Estonia)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/maanteeamet/510/latest/download --output_base output --feed_name et-maanteeamet --storage_directory maanteeamet.zip
+      - name: Validate dataset from -- Nagaibus (Gunma, Japan)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/nagaibus/1212/latest/download --output_base output --feed_name jp-nagaibus --storage_directory nagaibus.zip
+      - name: Validate dataset from -- MZDiK Radom (Radom, Poland)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/mzdik-radom/1008/latest/download --output_base output --feed_name pl-mzdik --storage_directory mzdik.zip
+      - name: Validate dataset from -- MKV (Miskolc, Hungary)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/mvk-zrt/839/latest/download --output_base output --feed_name hu-mkv --storage_directory mkv.zip
+      - name: Validate dataset from -- Norway
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/norsk-reiseinformasjon-as/791/latest/download --output_base output --feed_name no-norway --storage_directory norway.zip
+      - name: Validate dataset from -- PTV (Melbourne, Australia)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ptv/497/latest/download --output_base output --feed_name au-ptv --storage_directory ptv.zip
+      - name: Validate dataset from -- Pays de la Loire (France)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/region-des-pays-de-la-loire/1071/latest/download --output_base output --feed_name fr-loire --storage_directory loire.zip
+      - name: Validate dataset from -- RATP (Paris, France)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/regie-autonome-des-transports-parisiens/413/latest/download --output_base output --feed_name fr-ratp --storage_directory ratp.zip
+      - name: Validate dataset from -- Semitan (Nantes, France)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/semitan/592/latest/download --output_base output --feed_name fr-semitan --storage_directory semitan.zip
+      - name: Validate dataset from -- STIB-MIVB (Brussels, Belgium)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/societe-des-transports-intercommunaux-de-bruxelles/527/latest/download --output_base output --feed_name fr-stibmivb --storage_directory stibmivb.zip
+      - name: Validate dataset from -- STO (Gatineau, QC, Canada)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/societe-de-transport-de-loutaouais/828/latest/download --output_base output --feed_name ca-sto --storage_directory sto.zip
+      - name: Validate dataset from -- TrafikLab (Sweden)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/trafiklab/50/latest/download --output_base output --feed_name sv-trafiklab --storage_directory trafiklab.zip
+
+      - name: Validate dataset from -- Greater Sydney
+        run: java -jar main/build/libs/*.jar --url https://openmobilitydata.org/p/transport-for-nsw/237/latest/download --output_base output --feed_name au-gs --storage_directory gs.zip
+      - name: Validate dataset from -- SMART
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/sonoma-marin-area-rail-transit/1050/20200930/download --output_base output --feed_name us-smart --storage_directory smart.zip
+      - name: Validate dataset from -- STM
+        run: java -jar main/build/libs/*.jar --url https://openmobilitydata.org/p/societe-de-transport-de-montreal/39/latest/download --output_base output --feed_name ca-stm --storage_directory stm.zip
+      - name: Validate dataset from -- MBTA
+        run: java -jar main/build/libs/*.jar --url https://cdn.mbta.com/MBTA_GTFS.zip --output_base output --feed_name us-mbta --storage_directory mbta.zip
+      - name: Validate dataset from issue 379 -- Bay Area Rapid Transit
+        run: java -jar main/build/libs/*.jar --url http://www.bart.gov/dev/schedules/google_transit.zip --output_base output --feed_name us-bart --storage_directory bart.zip
+      - name: Validate dataset from issue 399 -- Monterey-Salinas Transit
+        run: java -jar main/build/libs/*.jar --url http://www.mst.org/google/google_transit.zip --output_base output --feed_name us-mst --storage_directory mst.zip
+      - name: Validate dataset from issue 398 -- Orange County Transportation Authority
+        run: java -jar main/build/libs/*.jar --url https://octa.net/current/google_transit.zip --output_base output --feed_name us-octa --storage_directory octa.zip
+      - name: Validate dataset from issue 400 -- Siskiyou Transit and General Express
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/siskiyou-transit-and-general-express/492/latest/download --output_base output --feed_name us-siskiyou --storage_directory siskiyou.zip
+      - name: Validate dataset from -- AMT (Genova, Italy)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/amt-genova/1011/latest/download --output_base output --feed_name it-amtgenova --storage_directory amtgenova.zip
+      - name: Validate dataset from -- Bibus (Brest, France)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/bibus/593/latest/download --output_base output --feed_name fr-bibus --storage_directory bibus.zip
+
+      - name: Persist datasets
+        uses: actions/upload-artifact@v2
+        with:
+          name: dataset_all
+          path: ./*.zip
+      - name: Persist reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: validation_report_all
+          path: output
