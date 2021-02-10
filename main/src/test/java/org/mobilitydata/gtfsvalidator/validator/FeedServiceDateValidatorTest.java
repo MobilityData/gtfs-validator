@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Locale;
 import org.junit.Test;
+import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.StartAndEndDateOutOfOrderNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
@@ -88,7 +89,7 @@ public class FeedServiceDateValidatorTest {
   }
 
   @Test
-  public void noStartDateShouldNotGenerateNotice() {
+  public void noStartDateShouldGenerateNotice() {
     NoticeContainer noticeContainer = new NoticeContainer();
     GtfsFeedInfoTableContainer gtfsFeedInfoTable =
         createFeedInfoTable(
@@ -106,11 +107,12 @@ public class FeedServiceDateValidatorTest {
     underTest.feedInfoTable = gtfsFeedInfoTable;
 
     underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactly(new MissingRequiredFieldError("feed_info.txt", 1, "feed_start_date"));
   }
 
   @Test
-  public void noEndDateShouldNotGenerateNotice() {
+  public void noEndDateShouldGenerateNotice() {
     NoticeContainer noticeContainer = new NoticeContainer();
     GtfsFeedInfoTableContainer gtfsFeedInfoTable =
         createFeedInfoTable(
@@ -128,7 +130,8 @@ public class FeedServiceDateValidatorTest {
     underTest.feedInfoTable = gtfsFeedInfoTable;
 
     underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactly(new MissingRequiredFieldError("feed_info.txt", 1, "feed_end_date"));
   }
 
   @Test
