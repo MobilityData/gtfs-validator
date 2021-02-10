@@ -57,8 +57,13 @@ jobs:
         run: java -jar main/build/libs/*.jar --url https://octa.net/current/google_transit.zip --output_base output --feed_name us-octa --storage_directory octa.zip
       - name: Validate dataset from issue 400 -- Siskiyou Transit and General Express
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/siskiyou-transit-and-general-express/492/latest/download --output_base output --feed_name us-siskiyou --storage_directory siskiyou.zip
-      - name: Validate dataset from issue 400 -- Siskiyou Transit and General Express
-        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/siskiyou-transit-and-general-express/492/latest/download --output_base output --feed_name us-siskiyou --storage_directory siskiyou.zip
+      - name: Validate dataset from -- AMT (Genova, Italy)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/amt-genova/1011/latest/download --output_base output --feed_name it-amtgenova --storage_directory amtgenova.zip
+      - name: Validate dataset from -- Bibus (Brest, France)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/bibus/593/latest/download --output_base output --feed_name fr-bibus --storage_directory bibus.zip
+      - name: Validate dataset from -- Metro (Christchurch, New Zealand)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/christchurch-metro/41/latest/download --output_base output --feed_name nz-metro --storage_directory metro.zip
+#see https://github.com/MobilityData/gtfs-validator/pull/712#issuecomment-776110813
       - name: Persist datasets
         uses: actions/upload-artifact@v2
         with:
