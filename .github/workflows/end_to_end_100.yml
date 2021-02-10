@@ -43,7 +43,7 @@ jobs:
    
    #see https://github.com/MobilityData/gtfs-validator/pull/712#issuecomment-776110813
       - name: Validate dataset from -- Ruter (Oslo, Norway)
-        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ruter/240/latest/download --output_base output --feed_name nn-ruter --storage_directory ruter.zip
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ruter/240/latest/download --output_base output --feed_name no-ruter --storage_directory ruter.zip
       - name: Validate dataset from -- TAG (Grenoble, France)
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/tag/594/latest/download --output_base output --feed_name fr-tag --storage_directory tag.zip
       - name: Validate dataset from -- Translink (Vancouver, Canada)
@@ -57,7 +57,7 @@ jobs:
       - name: Validate dataset from -- Bay of Plenty Regional Council (Tauranga, New Zealand)
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/bay-of-plenty-regional-council/1162/latest/download --output_base output --feed_name nz-bayplenty --storage_directory bayplenty.zip
       - name: Validate dataset from -- BHTRANS (Belo Horizonte, Brazil)
-        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/bhtrans/640/latest/download --output_base output --feed_name pt-bhtrans --storage_directory bhtrans.zip
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/bhtrans/640/latest/download --output_base output --feed_name br-bhtrans --storage_directory bhtrans.zip
       - name: Validate dataset from -- LYNX (Orlando, FL, USA)
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/central-florida-regional-transportation-authority/373/latest/download --output_base output --feed_name us-lynx --storage_directory lynx.zip
       - name: Validate dataset from -- dBus (San Sebastián , Spain)
@@ -71,7 +71,7 @@ jobs:
       - name: Validate dataset from -- IDFM (Paris, France)
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ile-de-france-mobilite/1214/latest/download --output_base output --feed_name fr-idfm --storage_directory idfm.zip
       - name: Validate dataset from -- Maanteeamet (Estonia)
-        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/maanteeamet/510/latest/download --output_base output --feed_name et-maanteeamet --storage_directory maanteeamet.zip
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/maanteeamet/510/latest/download --output_base output --feed_name ee-maanteeamet --storage_directory maanteeamet.zip
       - name: Validate dataset from -- Nagaibus (Gunma, Japan)
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/nagaibus/1212/latest/download --output_base output --feed_name jp-nagaibus --storage_directory nagaibus.zip
       - name: Validate dataset from -- MZDiK Radom (Radom, Poland)
@@ -89,11 +89,11 @@ jobs:
       - name: Validate dataset from -- Semitan (Nantes, France)
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/semitan/592/latest/download --output_base output --feed_name fr-semitan --storage_directory semitan.zip
       - name: Validate dataset from -- STIB-MIVB (Brussels, Belgium)
-        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/societe-des-transports-intercommunaux-de-bruxelles/527/latest/download --output_base output --feed_name fr-stibmivb --storage_directory stibmivb.zip
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/societe-des-transports-intercommunaux-de-bruxelles/527/latest/download --output_base output --feed_name be-stibmivb --storage_directory stibmivb.zip
       - name: Validate dataset from -- STO (Gatineau, QC, Canada)
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/societe-de-transport-de-loutaouais/828/latest/download --output_base output --feed_name ca-sto --storage_directory sto.zip
       - name: Validate dataset from -- TrafikLab (Sweden)
-        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/trafiklab/50/latest/download --output_base output --feed_name sv-trafiklab --storage_directory trafiklab.zip
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/trafiklab/50/latest/download --output_base output --feed_name se-trafiklab --storage_directory trafiklab.zip
 
       - name: Validate dataset from -- Greater Sydney
         run: java -jar main/build/libs/*.jar --url https://openmobilitydata.org/p/transport-for-nsw/237/latest/download --output_base output --feed_name au-gs --storage_directory gs.zip
