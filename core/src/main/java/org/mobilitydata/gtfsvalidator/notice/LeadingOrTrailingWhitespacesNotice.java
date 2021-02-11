@@ -21,12 +21,11 @@ import com.google.common.collect.ImmutableMap;
 /**
  * The value in CSV file has leading or trailing whitespaces.
  *
- * <p>This warning is emitted for values protected with double quotes since whitespaces for
+ * <p>This notice is emitted for values protected with double quotes since whitespaces for
  * non-protected values are trimmed automatically by CSV parser.
  *
- * <p>Note that this is a warning: not an error because the feed may be still parsed and also not an
- * info because leading and trailing whitespaces are ambiguous and we want the feed providers to be
- * aware of them.
+ * <p>This is an error in the upstream validator but GTFS consumers can patch it to be a warning if
+ * they have feeds that give leading or trailing whitespaces.
  *
  * <p>GTFS Validator strips whitespaces from protected values. We do not see any use case when such
  * a whitespace may be needed. On the other hand, some real-world feeds use trailing whitespaces for
@@ -48,7 +47,7 @@ public class LeadingOrTrailingWhitespacesNotice extends ValidationNotice {
             fieldName,
             "fieldValue",
             fieldValue),
-        SeverityLevel.WARNING);
+        SeverityLevel.ERROR);
   }
 
   @Override

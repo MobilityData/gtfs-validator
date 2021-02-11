@@ -59,7 +59,7 @@ public class CsvFile implements Iterable<CsvRow> {
     settings.getFormat().setLineSeparator("\n");
     settings.getFormat().setDelimiter(',');
     settings.setHeaderExtractionEnabled(true);
-    // Explicitly disable trimming of whitespaces because we will emit warnings for them.
+    // Explicitly disable trimming of whitespaces because we will emit notices for them.
     settings.setIgnoreLeadingWhitespacesInQuotes(false);
     settings.setIgnoreTrailingWhitespacesInQuotes(false);
     parser = new CsvParser(settings);

@@ -29,6 +29,7 @@ import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.notice.LeadingOrTrailingWhitespacesNotice;
 import org.mobilitydata.gtfsvalidator.notice.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
@@ -233,12 +234,14 @@ public class RowParserTest {
 
   @Test
   public void whitespaces() {
-    // Protected whitespaces are stripped. This is a warning, not an error.
+    // Protected whitespaces are stripped. This is an error but GTFS consumers may patch it to be a
+    // warning.
     RowParser parser = createParser(" 1\t");
     assertThat(parser.asInteger(0, true)).isEqualTo(1);
-    assertThat(parser.hasParseErrorsInRow()).isFalse();
-    assertThat(parser.getNoticeContainer().getValidationNotices())
-        .containsExactly(
-            new LeadingOrTrailingWhitespacesNotice("filename", 8, "column name", " 1\t"));
+    LeadingOrTrailingWhitespacesNotice notice =
+        new LeadingOrTrailingWhitespacesNotice("filename", 8, "column name", " 1\t");
+    assertThat(parser.hasParseErrorsInRow())
+        .isEqualTo(notice.getSeverityLevel() == SeverityLevel.ERROR);
+    assertThat(parser.getNoticeContainer().getValidationNotices()).containsExactly(notice);
   }
 }
