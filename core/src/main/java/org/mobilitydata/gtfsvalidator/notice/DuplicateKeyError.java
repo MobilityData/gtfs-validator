@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * The values of the given key and rows are duplicates.
  *
- * <p>Severity: {@code SeverityLevel.INFO}
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class DuplicateKeyError extends ValidationNotice {
   public DuplicateKeyError(
