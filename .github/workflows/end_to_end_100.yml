@@ -40,16 +40,6 @@ jobs:
           versionTag: ${{ steps.prep.outputs.versionTag }}
         with:
           arguments: shadowJar
-          
-      - name: Validate dataset from -- Norway
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/norsk-reiseinformasjon-as/791/latest/download --output_base output --feed_name no-norway --storage_directory norway.zip
-      - name: Validate dataset from -- IDFM (Paris, France)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ile-de-france-mobilite/1214/latest/download --output_base output --feed_name fr-idfm --storage_directory idfm.zip
-      - name: Validate dataset from -- OVapi (Netherland)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ov/814/latest/download --output_base output --feed_name nl-ovapi --storage_directory ovapi.zip
-      #- name: Validate dataset from -- Colectivos (Buenos Aires, Argentina)
-      #  run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/colectivos-buenos-aires/1037/latest/download --output_base output --feed_name ar-colectivos --storage_directory colectivos.zip
-      # Commnted out as it took 90 minuts to validate on that run: https://github.com/f8full/gtfs-validator/runs/1871861681?check_suite_focus=true
    
    #see https://github.com/MobilityData/gtfs-validator/pull/712#issuecomment-776110813
       - name: Validate dataset from -- Ruter (Oslo, Norway)
