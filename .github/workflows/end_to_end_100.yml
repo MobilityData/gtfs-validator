@@ -188,7 +188,7 @@ jobs:
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/lake-champlain-ferries/1247/latest/download --output_base output --feed_name ca-lcf --storage_directory lcf.zip
       - name: Validate dataset from -- Metz (Metz, France)
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/metz-metropole/850/latest/download --output_base output --feed_name fr-metz --storage_directory metz.zip
-      - name: Validate dataset from --NYC Ferry (New York City, NY, USA)
+      - name: Validate dataset from -- NYC Ferry (New York City, NY, USA)
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/nyc-ferry/944/latest/download --output_base output --feed_name us-nycferry --storage_directory nycferry.zip
       - name: Validate dataset from -- OpenOV (Luxembourg)
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/openov/621/latest/download --output_base output --feed_name lu-openov --storage_directory openov.zip
@@ -202,6 +202,57 @@ jobs:
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/praha/801/latest/download --output_base output --feed_name cz-praha --storage_directory praha.zip
       - name: Validate dataset from -- Komunikacja Miejska (Plock, Poland)
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/przyjazdy-pl-plock/1211/latest/download --output_base output --feed_name pl-plock --storage_directory plock.zip
+        
+      - name: Validate dataset from -- ZTZ Rybnik (Rybnik, Poland)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ztz-rybnik/1114/latest/download --output_base output --feed_name pl-ztz --storage_directory ztz.zip
+      - name: Validate dataset from -- ZTM Poznań (Poznań, Poland)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ztm-pozna/992/latest/download --output_base output --feed_name pl-ztm --storage_directory ztm.zip
+      - name: Validate dataset from -- Yamanashi (Yamanashi, Japan)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/yamanashi/813/latest/download --output_base output --feed_name jp-yamanashi --storage_directory yamanashi.zip
+      - name: Validate dataset from -- Weekendbus (Pest County, Hungary)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/weekendbus/887/latest/download --output_base output --feed_name hu-weekendbus --storage_directory weekendbus.zip
+      - name: Validate dataset from -- Washington State Ferries (Seattle, WA, USA)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/washington-state-ferries/586/latest/download --output_base output --feed_name us-wst --storage_directory wst.zip
+      - name: Validate dataset from -- De Lijn (Flanders, Belgium)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/vlaamse-vervoersmaatschappij-de-lijn/530/latest/download --output_base output --feed_name be-delijn --storage_directory delijn.zip
+      - name: Validate dataset from -- Vilnius Transport (Vilnius, Lithuania)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/vilnius-transport/635/latest/download --output_base output --feed_name lt-vilnius --storage_directory vilnius.zip
+      - name: Validate dataset from -- Via Rail Canada (Canada)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/via-rail-canada/971/latest/download --output_base output --feed_name ca-via --storage_directory via.zip
+      - name: Validate dataset from -- Tuvisa EuskoTran (Vitoria-Gasteiz, Spain)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/tuvisa-euskotran/239/latest/download --output_base output --feed_name es-tet --storage_directory tet.zip
+      - name: Validate dataset from -- ATD (Rīga, Latvia)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/valsts-sia-autotransporta-direkcija/1227/latest/download --output_base output --feed_name lv-atd --storage_directory atd.zip
+      - name: Validate dataset from -- VBB (Berlin, Germany)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/verkehrsverbund-berlin-brandenburg/213/latest/download --output_base output --feed_name de-vbb --storage_directory vbb.zip
+      - name: Validate dataset from -- TransLink SEQ (Brisbane, Australia)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/translink/21/latest/download --output_base output --feed_name au-seq --storage_directory seq.zip
+      - name: Validate dataset from -- Transperth (Perth, Australia)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/transperth/2/latest/download --output_base output --feed_name au-transperth --storage_directory transperth.zip
+      - name: Validate dataset from -- Transport for Greater Manchester (Manchester, United Kingdom)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/transport-for-greater-manchester/224/latest/download --output_base output --feed_name uk-tgm --storage_directory tgm.zip
+      - name: Validate dataset from -- Dublin Bus (Dublin, Ireland)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/transport-for-ireland/782/latest/download --output_base output --feed_name ie-dublinbus --storage_directory dublinbus.zip
+      - name: Validate dataset from -- Trenord (Trenord, Italy)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/trenord/724/latest/download --output_base output --feed_name it-trenord --storage_directory trenord.zip
+      - name: Validate dataset from -- Transcollines (La Pêche, QC, CA)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/transcollines/1275/latest/download --output_base output --feed_name ca-transcollines --storage_directory transcollines.zip
+      - name: Validate dataset from -- Tisséo (Toulouse, France)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/tisseo/595/latest/download --output_base output --feed_name fr-tisseo --storage_directory tisseo.zip
+      - name: Validate dataset from -- SWU (Ulm, Germany)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/swu-verkehr-gmbh/512/latest/download --output_base output --feed_name de-swu --storage_directory swu.zip
+      - name: Validate dataset from -- Miaoli (Miaoli County, Taiwan, Republic of China)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/taiwan/954/latest/download --output_base output --feed_name tw-miaoli --storage_directory miaoli.zip
+      - name: Validate dataset from -- SMTD (Springfield, IL, USA)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/springfield-mass-transit-district/534/latest/download --output_base output --feed_name us-smtd --storage_directory smtd.zip
+      - name: Validate dataset from -- SPTrans (São Paulo, Brazil)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/sulfertagus/1005/latest/download --output_base output --feed_name br-sptrans --storage_directory sptrans.zip
+      - name: Validate dataset from -- SMS (Stanford, CA, USA)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/stanford-marguerite-shuttle/736/latest/download --output_base output --feed_name us-sms --storage_directory sms.zip
+      - name: Validate dataset from -- Semitan (Nantes, France)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/semitan/592/latest/download --output_base output --feed_name fr-semitan --storage_directory semitan.zip
+      - name: Validate dataset from -- STS (Sherbrooke, Canada)
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/societe-de-transport-de-sherbrooke/827/latest/download --output_base output --feed_name ca-sts --storage_directory sts.zip
 
 
       - name: Persist datasets
