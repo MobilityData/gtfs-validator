@@ -29,3 +29,8 @@ Provide a clear and concise description of what actually happened.
 
 **Screenshots:** 
 Visual examples can help us better understand the issue.
+
+**Environment versions**
+- validator version: 
+- Java version: 
+- OS versions:
