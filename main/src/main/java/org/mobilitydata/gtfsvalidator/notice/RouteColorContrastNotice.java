@@ -21,7 +21,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 
 /**
  * "The color difference between route_color and route_text_color should provide sufficient contrast
- * when viewed on a black and white screen." (http://gtfs.org/best-practices/#shapestxt)
+ * when viewed on a black and white screen." (http://gtfs.org/best-practices/#routestxt)
  *
  * <p>Severity: {@code SeverityLevel.WARNING}
  */

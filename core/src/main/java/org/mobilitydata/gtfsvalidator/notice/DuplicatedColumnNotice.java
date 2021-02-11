@@ -33,7 +33,7 @@ public class DuplicatedColumnNotice extends ValidationNotice {
             "fieldName", fieldName,
             "firstIndex", firstIndex,
             "secondIndex", secondIndex),
-        SeverityLevel.INFO);
+        SeverityLevel.WARNING);
   }
 
   @Override

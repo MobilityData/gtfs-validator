@@ -25,7 +25,7 @@ import com.google.common.collect.ImmutableMap;
  * <p>"Values used for shape_dist_traveled must increase along with stop_sequence"
  * (http://gtfs.org/reference/static/#stoptimestxt)
  *
- * <p>Severity: {@code SeverityLevel.WARNING}
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class DecreasingStopTimeDistanceNotice extends ValidationNotice {
   public DecreasingStopTimeDistanceNotice(
@@ -45,8 +45,7 @@ public class DecreasingStopTimeDistanceNotice extends ValidationNotice {
             .put("prevCsvRowNumber", prevCsvRowNumber)
             .put("prevStopTimeDistTraveled", prevStopTimeDistTraveled)
             .put("prevStopSequence", prevStopSequence)
-            .build(),
-        SeverityLevel.WARNING);
+            .build());
   }
 
   @Override

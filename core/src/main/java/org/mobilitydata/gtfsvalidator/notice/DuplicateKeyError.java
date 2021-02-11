@@ -39,8 +39,7 @@ public class DuplicateKeyError extends ValidationNotice {
             "newCsvRowNumber",
             newCsvRowNumber,
             fieldName,
-            fieldValue),
-        SeverityLevel.INFO);
+            fieldValue));
   }
 
   public DuplicateKeyError(
@@ -62,8 +61,7 @@ public class DuplicateKeyError extends ValidationNotice {
             fieldName1,
             fieldValue1,
             fieldName2,
-            fieldValue2),
-        SeverityLevel.INFO);
+            fieldValue2));
   }
 
   @Override

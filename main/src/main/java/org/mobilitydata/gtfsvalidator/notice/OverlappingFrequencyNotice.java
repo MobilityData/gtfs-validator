@@ -8,6 +8,8 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
  *
  * <p>Two entries X and Y are considered to directly overlap if <i>X.start_time <= Y.start_time</i>
  * and <i>Y.start_time < X.end_time</i>.
+ *
+ * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class OverlappingFrequencyNotice extends ValidationNotice {
   public OverlappingFrequencyNotice(

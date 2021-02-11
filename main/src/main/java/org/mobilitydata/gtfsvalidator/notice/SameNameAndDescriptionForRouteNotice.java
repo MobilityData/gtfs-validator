@@ -24,7 +24,7 @@ import com.google.common.collect.ImmutableMap;
  * `routes.route_long_name`/`routes/route_short_name.
  * <p>"Do not simply duplicate the name of the location." (http://gtfs.org/reference/static#routestxt)
  *
- * <p>Severity: {@code SeverityLevel.WARNING}
+ * <p>Severity: {@code SeverityLevel.ERROR}
  * */
 public class SameNameAndDescriptionForRouteNotice extends ValidationNotice {
   public SameNameAndDescriptionForRouteNotice(
@@ -36,8 +36,7 @@ public class SameNameAndDescriptionForRouteNotice extends ValidationNotice {
             .put("csvRowNumber", csvRowNumber)
             .put("routeDesc", routeDesc)
             .put("specifiedField", routeShortOrLongName)
-            .build(),
-        SeverityLevel.WARNING);
+            .build());
   }
 
   @Override

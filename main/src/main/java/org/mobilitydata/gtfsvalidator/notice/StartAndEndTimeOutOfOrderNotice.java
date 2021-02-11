@@ -22,7 +22,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 /**
  * Two {@code GtfsTime} are out of order
  *
- * <p>Severity: {@code SeverityLevel.WARNING}
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class StartAndEndTimeOutOfOrderNotice extends ValidationNotice {
   public StartAndEndTimeOutOfOrderNotice(
@@ -33,8 +33,7 @@ public class StartAndEndTimeOutOfOrderNotice extends ValidationNotice {
             "csvRowNumber", csvRowNumber,
             "entityId", entityId,
             "startTime", startTime.toHHMMSS(),
-            "endTime", endTime.toHHMMSS()),
-        SeverityLevel.WARNING);
+            "endTime", endTime.toHHMMSS()));
   }
 
   @Override

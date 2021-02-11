@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * An enum has an unexpected value.
  *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class UnexpectedEnumValueError extends ValidationNotice {
   public UnexpectedEnumValueError(
@@ -35,7 +35,8 @@ public class UnexpectedEnumValueError extends ValidationNotice {
             "fieldName",
             fieldName,
             "fieldValue",
-            fieldValue));
+            fieldValue),
+        SeverityLevel.WARNING);
   }
 
   @Override

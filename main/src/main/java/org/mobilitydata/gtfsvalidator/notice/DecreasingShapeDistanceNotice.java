@@ -25,7 +25,7 @@ import com.google.common.collect.ImmutableMap;
  * <p>"Values must increase along with shape_pt_sequence."
  * (http://gtfs.org/reference/static/#shapestxt)
  *
- * <p>Severity: {@code SeverityLevel.WARNING}
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class DecreasingShapeDistanceNotice extends ValidationNotice {
   public DecreasingShapeDistanceNotice(
@@ -45,8 +45,7 @@ public class DecreasingShapeDistanceNotice extends ValidationNotice {
             .put("prevCsvRowNumber", prevCsvRowNumber)
             .put("prevShapeDistTraveled", prevShapeDistTraveled)
             .put("prevShapePtSequence", prevShapePtSequence)
-            .build(),
-        SeverityLevel.WARNING);
+            .build());
   }
 
   @Override

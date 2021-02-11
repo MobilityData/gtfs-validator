@@ -22,7 +22,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 /**
  * Two {@code GtfsTime} are out of order
  *
- * <p>Severity: {@code SeverityLevel.WARNING}
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class StopTimeWithDepartureBeforeArrivalTimeNotice extends ValidationNotice {
   public StopTimeWithDepartureBeforeArrivalTimeNotice(
@@ -37,8 +37,7 @@ public class StopTimeWithDepartureBeforeArrivalTimeNotice extends ValidationNoti
             "tripId", tripId,
             "stopSequence", stopSequence,
             "departureTime", departureTime.toHHMMSS(),
-            "arrivalTime", arrivalTime.toHHMMSS()),
-        SeverityLevel.WARNING);
+            "arrivalTime", arrivalTime.toHHMMSS()));
   }
 
   @Override
