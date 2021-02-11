@@ -18,19 +18,23 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/** ID value contains something different from printable ASCII characters. */
-public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
-  public NonAsciiOrNonPrintableCharNotice(String filename, long csvRowNumber, String columnName) {
+/**
+ * Rows from `fare_rules.txt` must be unique based on `fare_rules.route_id`, `fare_rules.origin_id`,
+ * `fare_rules.contains_id` and `fare_rules.destination_id`.
+ */
+public class DuplicateFareRuleZoneIdFieldsNotice extends ValidationNotice {
+  public DuplicateFareRuleZoneIdFieldsNotice(
+      long csvRowNumber, String fareId, long previousCsvRowNumber, String previousFareId) {
     super(
         ImmutableMap.of(
-            "filename", filename,
             "csvRowNumber", csvRowNumber,
-            "columnName", columnName),
-        SeverityLevel.WARNING);
+            "fareId", fareId,
+            "previousCsvRowNumber", previousCsvRowNumber,
+            "previousFareId", previousFareId));
   }
 
   @Override
   public String getCode() {
-    return "id_contains_non_ascii_characters";
+    return "duplicate_fare_rule_zone_id_fields";
   }
 }

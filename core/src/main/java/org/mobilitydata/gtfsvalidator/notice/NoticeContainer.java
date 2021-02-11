@@ -68,11 +68,12 @@ public class NoticeContainer {
     JsonArray jsonNotices = new JsonArray();
     root.add("notices", jsonNotices);
 
-    ListMultimap<Integer, T> noticesByType = groupNoticesByType(notices);
-    for (Collection<T> noticesOfType : noticesByType.asMap().values()) {
+    for (Collection<T> noticesOfType : groupNoticesByTypeAndSeverity(notices).asMap().values()) {
       JsonObject noticesOfTypeJson = new JsonObject();
       jsonNotices.add(noticesOfTypeJson);
-      noticesOfTypeJson.addProperty("code", noticesOfType.iterator().next().getCode());
+      T firstNotice = noticesOfType.iterator().next();
+      noticesOfTypeJson.addProperty("code", firstNotice.getCode());
+      noticesOfTypeJson.addProperty("severity", firstNotice.getSeverityLevel().toString());
       noticesOfTypeJson.addProperty("totalNotices", noticesOfType.size());
       JsonArray noticesArrayJson = new JsonArray();
       noticesOfTypeJson.add("notices", noticesArrayJson);
@@ -90,10 +91,11 @@ public class NoticeContainer {
     return DEFAULT_GSON.toJson(root);
   }
 
-  private static <T extends Notice> ListMultimap<Integer, T> groupNoticesByType(List<T> notices) {
-    ListMultimap<Integer, T> noticesByType = MultimapBuilder.treeKeys().arrayListValues().build();
+  private static <T extends Notice> ListMultimap<String, T> groupNoticesByTypeAndSeverity(
+      List<T> notices) {
+    ListMultimap<String, T> noticesByType = MultimapBuilder.treeKeys().arrayListValues().build();
     for (T notice : notices) {
-      noticesByType.put(notice.getClass().hashCode(), notice);
+      noticesByType.put(notice.getCode() + notice.getSeverityLevel().ordinal(), notice);
     }
     return noticesByType;
   }

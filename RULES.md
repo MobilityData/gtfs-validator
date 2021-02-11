@@ -10,7 +10,7 @@ Note that the notice ID naming conventions changed in `v2` to make contributions
 
 | Error ID (v2.0+) | Error ID (v1.x) 	| Error Title                                                             	|
 |--------------------------	|--------------------	|-------------------------------------------------------------------------	|
-| [`MissingRequiredFieldError`](#MissingRequiredFieldError) | [E015](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E015), [W010](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W010), [W011](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W011), [E029](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E029)      	| Missing required `field`. `feed_end_date` should be provided if `feed_start_date` is provided. `feed_start_date` should be provided if `feed_end_date` is provided. Missing field `agency_id` for file `agency.txt` with more than 1 record.                                                	|
+| [`MissingRequiredFieldError`](#MissingRequiredFieldError) | [E015](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E015), [E029](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E029)      	| Missing required `field`. Missing field `agency_id` for file `agency.txt` with more than 1 record.                                                	|
 | [`DuplicatedColumnNotice`](#DuplicatedColumnNotice)  |        	            | Duplicated column                                                      	|
 | [`MissingRequiredColumn`](#MissingRequiredColumn)   | [E001](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E001)          | Missing required column                                                  	|
 | [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice) |        	            | More than one row in CSV                                                 	|
@@ -67,6 +67,7 @@ Note that the notice ID naming conventions changed in `v2` to make contributions
 |                           | [W006](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W006)        	| Missing route short name                                                        	|
 |                           | [W007](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W007)        	| Missing route long name                                                         	|
 |                           | [W008](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W008)        	| Route long name contains short name                                             	|
+|[`MissingFeedInfoDateNotice`](#MissingFeedInfoDateNotice)| [W010](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W010), [W011](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W011)| `feed_end_date` should be provided if `feed_start_date` is provided. `feed_start_date` should be provided if `feed_end_date` is provided. |
 |[`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)| [W014](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W014), [W015](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W015), [W016](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W016)| Duplicate `routes.route_long_name`. Duplicate `routes.route_short_name`. Duplicate combination of fields `route_long_name` and `routes.route_short_name` |
 || [W014](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W014), [W015](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W015), [W016](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W016)| Duplicate `routes.route_long_name`. Duplicate `routes.route_short_name`. Duplicate combination of fields `route_long_name` and `routes.route_short_name` |
 
@@ -388,3 +389,15 @@ Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100
 
 #### References:
 * [GTFS Best Practices shapes.txt](https://gtfs.org/best-practices/#shapestxt)
+
+<a name="DuplicateFareRuleZoneIdFieldsNotice"/>
+
+### DuplicateFareRuleZoneIdFieldsNotice
+
+The combination of `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.contains_id` and `fare_rules.destination_id` fields should be unique in GTFS file `fare_rules.txt`.
+
+<a name="MissingFeedInfoDateNotice"/>
+
+### MissingFeedInfoDateNotice
+
+Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one field is provided the second one should also be provided.

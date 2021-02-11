@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 MobilityData IO
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,19 +18,18 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/** ID value contains something different from printable ASCII characters. */
-public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
-  public NonAsciiOrNonPrintableCharNotice(String filename, long csvRowNumber, String columnName) {
+public class InconsistentAgencyLangNotice extends ValidationNotice {
+  public InconsistentAgencyLangNotice(long csvRowNumber, String expected, String actual) {
     super(
         ImmutableMap.of(
-            "filename", filename,
             "csvRowNumber", csvRowNumber,
-            "columnName", columnName),
+            "expected", expected,
+            "actual", actual),
         SeverityLevel.WARNING);
   }
 
   @Override
   public String getCode() {
-    return "id_contains_non_ascii_characters";
+    return "inconsistent_agency_lang";
   }
 }

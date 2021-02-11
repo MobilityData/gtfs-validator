@@ -22,8 +22,10 @@ import com.google.common.collect.ImmutableList;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Locale;
+import javax.annotation.Nullable;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyFieldNotice;
+import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyLangNotice;
+import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyTimezoneNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
@@ -42,7 +44,7 @@ public class AgencyConsistencyValidatorTest {
       String agencyName,
       String agencyUrl,
       ZoneId agencyTimezone,
-      Locale agencyLang) {
+      @Nullable Locale agencyLang) {
     return new GtfsAgency.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setAgencyId(agencyId)
@@ -107,8 +109,7 @@ public class AgencyConsistencyValidatorTest {
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
-            new InconsistentAgencyFieldNotice(
-                1, "agency_timezone", "America/Bogota", "America/Montreal"));
+            new InconsistentAgencyTimezoneNotice(1, "America/Bogota", "America/Montreal"));
   }
 
   @Test
@@ -163,7 +164,7 @@ public class AgencyConsistencyValidatorTest {
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new InconsistentAgencyFieldNotice(1, "agency_lang", "en", "fr"));
+        .containsExactly(new InconsistentAgencyLangNotice(1, "en", "fr"));
   }
 
   @Test
@@ -188,6 +189,40 @@ public class AgencyConsistencyValidatorTest {
                     "www.mobilitydata.org",
                     ZoneId.of("America/Montreal"),
                     Locale.CANADA)));
+
+    underTest.validate(noticeContainer);
+    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+  }
+
+  @Test
+  public void agenciesWithOmittedLanguageShouldNotGenerateNotice() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    AgencyConsistencyValidator underTest = new AgencyConsistencyValidator();
+    underTest.agencyTable =
+        createAgencyTable(
+            noticeContainer,
+            ImmutableList.of(
+                createAgency(
+                    1,
+                    "first agency",
+                    "first agency name",
+                    "www.mobilitydata.org",
+                    ZoneId.of("America/Montreal"),
+                    null),
+                createAgency(
+                    2,
+                    "second agency",
+                    "second agency name",
+                    "www.mobilitydata.org",
+                    ZoneId.of("America/Montreal"),
+                    Locale.CANADA_FRENCH),
+                createAgency(
+                    3,
+                    "third agency",
+                    "third agency name",
+                    "www.mobilitydata.org",
+                    ZoneId.of("America/Montreal"),
+                    Locale.CANADA_FRENCH)));
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices()).isEmpty();

@@ -1,0 +1,62 @@
+name: End to end big
+
+on:
+  push:
+    branches: [ master, extend-end-to-end ] #<-- replace transport-agency-name by the name of the agency/publisher
+
+jobs:
+  run-on-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Prepare version name
+        id: prep
+        run: |
+          VERSION_TAG=edge
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION_TAG=${GITHUB_REF#refs/tags/}
+          elif [[ $GITHUB_REF == refs/heads/* ]]; then
+            VERSION_TAG=-$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+          elif [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION_TAG=-pr-${{ github.event.number }}
+          fi
+          if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
+            VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
+          fi
+          echo ::set-output name=versionTag::${VERSION_TAG}
+      - name: Set up JDK 1.11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.11
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+      - name: Package cli app jar with Gradle
+        uses: eskatos/gradle-command-action@v1
+        env:
+          versionTag: ${{ steps.prep.outputs.versionTag }}
+        with:
+          arguments: shadowJar
+          
+      - name: Validate dataset from -- Norway
+        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/norsk-reiseinformasjon-as/791/latest/download --output_base output --feed_name no-norway --storage_directory norway.zip
+      - name: Validate dataset from -- IDFM (Paris, France)
+        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ile-de-france-mobilite/1214/latest/download --output_base output --feed_name fr-idfm --storage_directory idfm.zip
+      - name: Validate dataset from -- OVapi (Netherland)
+        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ov/814/latest/download --output_base output --feed_name nl-ovapi --storage_directory ovapi.zip
+      - name: Validate dataset from -- Colectivos (Buenos Aires, Argentina)
+        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/colectivos-buenos-aires/1037/latest/download --output_base output --feed_name ar-colectivos --storage_directory colectivos.zip
+   
+      - name: Persist datasets
+        uses: actions/upload-artifact@v2
+        with:
+          name: dataset_all
+          path: ./*.zip
+      - name: Persist reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: validation_report_all
+          path: output
