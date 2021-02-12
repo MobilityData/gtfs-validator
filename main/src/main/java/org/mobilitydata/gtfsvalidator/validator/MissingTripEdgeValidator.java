@@ -16,14 +16,13 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import java.util.List;
+import com.google.common.collect.Multimaps;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.MissingTripEdgeNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 
 /**
  * Validates: the first and last stop times (when ordering by `stop_sequence` value) of a trip
@@ -33,16 +32,13 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
  */
 @GtfsValidator
 public class MissingTripEdgeValidator extends FileValidator {
-  @Inject GtfsTripTableContainer tripTable;
   @Inject GtfsStopTimeTableContainer stopTimeTable;
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    tripTable
-        .getEntities()
+    Multimaps.asMap(stopTimeTable.byTripIdMap())
         .forEach(
-            trip -> {
-              List<GtfsStopTime> stopTimesForTrip = stopTimeTable.byTripId(trip.tripId());
+            (tripId, stopTimesForTrip) -> {
               if (stopTimesForTrip.isEmpty()) {
                 return;
               }
@@ -53,7 +49,7 @@ public class MissingTripEdgeValidator extends FileValidator {
                     new MissingTripEdgeNotice(
                         tripFirstStop.csvRowNumber(),
                         tripFirstStop.stopSequence(),
-                        trip.tripId(),
+                        tripId,
                         "arrival_time"));
               }
               if (!tripFirstStop.hasDepartureTime()) {
@@ -61,7 +57,7 @@ public class MissingTripEdgeValidator extends FileValidator {
                     new MissingTripEdgeNotice(
                         tripFirstStop.csvRowNumber(),
                         tripFirstStop.stopSequence(),
-                        trip.tripId(),
+                        tripId,
                         "departure_time"));
               }
               if (!tripLastStop.hasArrivalTime()) {
@@ -69,7 +65,7 @@ public class MissingTripEdgeValidator extends FileValidator {
                     new MissingTripEdgeNotice(
                         tripLastStop.csvRowNumber(),
                         tripLastStop.stopSequence(),
-                        trip.tripId(),
+                        tripId,
                         "arrival_time"));
               }
               if (!tripLastStop.hasDepartureTime()) {
@@ -77,7 +73,7 @@ public class MissingTripEdgeValidator extends FileValidator {
                     new MissingTripEdgeNotice(
                         tripLastStop.csvRowNumber(),
                         tripLastStop.stopSequence(),
-                        trip.tripId(),
+                        tripId,
                         "departure_time"));
               }
             });
