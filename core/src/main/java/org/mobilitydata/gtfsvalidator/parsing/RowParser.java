@@ -29,6 +29,7 @@ import org.mobilitydata.gtfsvalidator.notice.FieldParsingError;
 import org.mobilitydata.gtfsvalidator.notice.InvalidRowLengthError;
 import org.mobilitydata.gtfsvalidator.notice.LeadingOrTrailingWhitespacesNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
+import org.mobilitydata.gtfsvalidator.notice.NewLineInValueNotice;
 import org.mobilitydata.gtfsvalidator.notice.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.NumberOutOfRangeError;
@@ -211,6 +212,11 @@ public class RowParser {
               row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex)));
     }
     if (s != null) {
+      if (s.indexOf('\n') != -1 || s.indexOf('\r') != -1) {
+        addNoticeInRow(
+            new NewLineInValueNotice(
+                row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), s));
+      }
       final String stripped = s.strip();
       if (stripped.length() < s.length()) {
         addNoticeInRow(

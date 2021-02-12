@@ -27,6 +27,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.notice.LeadingOrTrailingWhitespacesNotice;
+import org.mobilitydata.gtfsvalidator.notice.NewLineInValueNotice;
 import org.mobilitydata.gtfsvalidator.notice.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
@@ -233,7 +234,7 @@ public class RowParserTest {
   }
 
   @Test
-  public void whitespaces() {
+  public void whitespaceInValue() {
     // Protected whitespaces are stripped. This is an error but GTFS consumers may patch it to be a
     // warning.
     RowParser parser = createParser(" 1\t");
@@ -243,5 +244,23 @@ public class RowParserTest {
     assertThat(parser.hasParseErrorsInRow())
         .isEqualTo(notice.getSeverityLevel() == SeverityLevel.ERROR);
     assertThat(parser.getNoticeContainer().getValidationNotices()).containsExactly(notice);
+  }
+
+  @Test
+  public void newLineInValue() {
+    RowParser parser = createParser("a\nb");
+    assertThat(parser.asText(0, true)).isEqualTo("a\nb");
+    assertThat(parser.hasParseErrorsInRow()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices())
+        .containsExactly(new NewLineInValueNotice("filename", 8, "column name", "a\nb"));
+  }
+
+  @Test
+  public void carriageReturnInValue() {
+    RowParser parser = createParser("a\rb");
+    assertThat(parser.asText(0, true)).isEqualTo("a\rb");
+    assertThat(parser.hasParseErrorsInRow()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices())
+        .containsExactly(new NewLineInValueNotice("filename", 8, "column name", "a\rb"));
   }
 }
