@@ -136,12 +136,12 @@ public class RowParser {
             new NewLineInValueNotice(
                 row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), s));
       }
-      final String stripped = s.strip();
-      if (stripped.length() < s.length()) {
+      final String trimmed = s.trim();
+      if (trimmed.length() < s.length()) {
         addNoticeInRow(
             new LeadingOrTrailingWhitespacesNotice(
                 row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), s));
-        s = stripped;
+        s = trimmed;
       }
     }
     return s;
