@@ -46,7 +46,7 @@ public class MissingTripEdgeValidator extends FileValidator {
                     new MissingTripEdgeNotice(
                         tripFirstStop.csvRowNumber(),
                         tripFirstStop.stopSequence(),
-                        trip.tripId(),
+                        tripId,
                         "arrival_time"));
               }
               if (!tripFirstStop.hasDepartureTime()) {
