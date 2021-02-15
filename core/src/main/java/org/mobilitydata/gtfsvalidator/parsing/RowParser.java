@@ -25,6 +25,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
+import org.mobilitydata.gtfsvalidator.notice.EmptyRowNotice;
 import org.mobilitydata.gtfsvalidator.notice.FieldParsingError;
 import org.mobilitydata.gtfsvalidator.notice.InvalidRowLengthError;
 import org.mobilitydata.gtfsvalidator.notice.LeadingOrTrailingWhitespacesNotice;
@@ -192,7 +193,28 @@ public class RowParser {
     return parseErrorsInRow;
   }
 
-  public void checkRowColumnCount(CsvFile csvFile) {
+  /**
+   * Checks whether the row lengths (cell count) is the same as the amount of file headers.
+   *
+   * This function may add notices to {@code noticeContainer}.
+   *
+   * @return true if the row length is equal to column count
+   */
+  public boolean checkRowLength() {
+    if (row.getColumnCount() == 0) {
+      // Empty row.
+      return false;
+    }
+
+    CsvFile csvFile = row.getCsvFile();
+    if (row.getColumnCount() == 1 && row.asString(0) == null) {
+      // If the last row has only spaces and does not end with a newline, then Univocity parser
+      // interprets it as a non-empty row that has a single column which is empty (sic!). We are
+      // unsure if this is a bug or feature in Univocity, so we show a warning.
+      addNoticeInRow(new EmptyRowNotice(csvFile.getFileName(), row.getRowNumber()));
+      return false;
+    }
+
     if (row.getColumnCount() != csvFile.getColumnCount()) {
       addNoticeInRow(
           new InvalidRowLengthError(
@@ -200,7 +222,9 @@ public class RowParser {
               row.getRowNumber(),
               row.getColumnCount(),
               csvFile.getColumnCount()));
+      return false;
     }
+    return true;
   }
 
   @Nullable

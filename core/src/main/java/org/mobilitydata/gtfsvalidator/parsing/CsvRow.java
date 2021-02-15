@@ -19,7 +19,9 @@ package org.mobilitydata.gtfsvalidator.parsing;
 import com.google.common.base.Strings;
 import javax.annotation.Nullable;
 
-/** Read access to a data row in a CSV file. */
+/**
+ * Read access to a data row in a CSV file.
+ */
 public class CsvRow {
   private final CsvFile csvFile;
   private final long rowNumber;
@@ -29,6 +31,10 @@ public class CsvRow {
     this.csvFile = csvFile;
     this.rowNumber = rowNumber;
     this.columnValues = columnValues;
+  }
+
+  public CsvFile getCsvFile() {
+    return csvFile;
   }
 
   public long getRowNumber() {
