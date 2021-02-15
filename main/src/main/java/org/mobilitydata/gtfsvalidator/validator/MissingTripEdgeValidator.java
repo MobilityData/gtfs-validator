@@ -39,9 +39,6 @@ public class MissingTripEdgeValidator extends FileValidator {
     Multimaps.asMap(stopTimeTable.byTripIdMap())
         .forEach(
             (tripId, stopTimesForTrip) -> {
-              if (stopTimesForTrip.isEmpty()) {
-                return;
-              }
               GtfsStopTime tripFirstStop = stopTimesForTrip.get(0);
               GtfsStopTime tripLastStop = stopTimesForTrip.get(stopTimesForTrip.size() - 1);
               if (!tripFirstStop.hasArrivalTime()) {
