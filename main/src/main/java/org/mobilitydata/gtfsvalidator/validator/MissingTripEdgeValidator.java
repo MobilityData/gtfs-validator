@@ -16,6 +16,9 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME;
+
 import com.google.common.collect.Multimaps;
 import java.util.List;
 import java.util.Map.Entry;
@@ -38,8 +41,8 @@ public class MissingTripEdgeValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    for (Entry<String, List<GtfsStopTime>> entry : Multimaps.asMap(stopTimeTable.byTripIdMap())
-        .entrySet()) {
+    for (Entry<String, List<GtfsStopTime>> entry :
+        Multimaps.asMap(stopTimeTable.byTripIdMap()).entrySet()) {
       String tripId = entry.getKey();
       List<GtfsStopTime> stopTimesForTrip = entry.getValue();
       GtfsStopTime tripFirstStop = stopTimesForTrip.get(0);
@@ -50,7 +53,7 @@ public class MissingTripEdgeValidator extends FileValidator {
                 tripFirstStop.csvRowNumber(),
                 tripFirstStop.stopSequence(),
                 tripId,
-                "arrival_time"));
+                ARRIVAL_TIME_FIELD_NAME));
       }
       if (!tripFirstStop.hasDepartureTime()) {
         noticeContainer.addValidationNotice(
@@ -58,7 +61,7 @@ public class MissingTripEdgeValidator extends FileValidator {
                 tripFirstStop.csvRowNumber(),
                 tripFirstStop.stopSequence(),
                 tripId,
-                "departure_time"));
+                DEPARTURE_TIME_FIELD_NAME));
       }
       if (!tripLastStop.hasArrivalTime()) {
         noticeContainer.addValidationNotice(
@@ -66,7 +69,7 @@ public class MissingTripEdgeValidator extends FileValidator {
                 tripLastStop.csvRowNumber(),
                 tripLastStop.stopSequence(),
                 tripId,
-                "arrival_time"));
+                ARRIVAL_TIME_FIELD_NAME));
       }
       if (!tripLastStop.hasDepartureTime()) {
         noticeContainer.addValidationNotice(
@@ -74,7 +77,7 @@ public class MissingTripEdgeValidator extends FileValidator {
                 tripLastStop.csvRowNumber(),
                 tripLastStop.stopSequence(),
                 tripId,
-                "departure_time"));
+                DEPARTURE_TIME_FIELD_NAME));
       }
     }
   }
