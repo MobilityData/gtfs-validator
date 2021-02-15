@@ -17,6 +17,8 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import com.google.common.collect.Multimaps;
+import java.util.List;
+import java.util.Map.Entry;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.MissingTripEdgeNotice;
@@ -36,43 +38,44 @@ public class MissingTripEdgeValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    Multimaps.asMap(stopTimeTable.byTripIdMap())
-        .forEach(
-            (tripId, stopTimesForTrip) -> {
-              GtfsStopTime tripFirstStop = stopTimesForTrip.get(0);
-              GtfsStopTime tripLastStop = stopTimesForTrip.get(stopTimesForTrip.size() - 1);
-              if (!tripFirstStop.hasArrivalTime()) {
-                noticeContainer.addValidationNotice(
-                    new MissingTripEdgeNotice(
-                        tripFirstStop.csvRowNumber(),
-                        tripFirstStop.stopSequence(),
-                        tripId,
-                        "arrival_time"));
-              }
-              if (!tripFirstStop.hasDepartureTime()) {
-                noticeContainer.addValidationNotice(
-                    new MissingTripEdgeNotice(
-                        tripFirstStop.csvRowNumber(),
-                        tripFirstStop.stopSequence(),
-                        tripId,
-                        "departure_time"));
-              }
-              if (!tripLastStop.hasArrivalTime()) {
-                noticeContainer.addValidationNotice(
-                    new MissingTripEdgeNotice(
-                        tripLastStop.csvRowNumber(),
-                        tripLastStop.stopSequence(),
-                        tripId,
-                        "arrival_time"));
-              }
-              if (!tripLastStop.hasDepartureTime()) {
-                noticeContainer.addValidationNotice(
-                    new MissingTripEdgeNotice(
-                        tripLastStop.csvRowNumber(),
-                        tripLastStop.stopSequence(),
-                        tripId,
-                        "departure_time"));
-              }
-            });
+    for (Entry<String, List<GtfsStopTime>> entry : Multimaps.asMap(stopTimeTable.byTripIdMap())
+        .entrySet()) {
+      String tripId = entry.getKey();
+      List<GtfsStopTime> stopTimesForTrip = entry.getValue();
+      GtfsStopTime tripFirstStop = stopTimesForTrip.get(0);
+      GtfsStopTime tripLastStop = stopTimesForTrip.get(stopTimesForTrip.size() - 1);
+      if (!tripFirstStop.hasArrivalTime()) {
+        noticeContainer.addValidationNotice(
+            new MissingTripEdgeNotice(
+                tripFirstStop.csvRowNumber(),
+                tripFirstStop.stopSequence(),
+                tripId,
+                "arrival_time"));
+      }
+      if (!tripFirstStop.hasDepartureTime()) {
+        noticeContainer.addValidationNotice(
+            new MissingTripEdgeNotice(
+                tripFirstStop.csvRowNumber(),
+                tripFirstStop.stopSequence(),
+                tripId,
+                "departure_time"));
+      }
+      if (!tripLastStop.hasArrivalTime()) {
+        noticeContainer.addValidationNotice(
+            new MissingTripEdgeNotice(
+                tripLastStop.csvRowNumber(),
+                tripLastStop.stopSequence(),
+                tripId,
+                "arrival_time"));
+      }
+      if (!tripLastStop.hasDepartureTime()) {
+        noticeContainer.addValidationNotice(
+            new MissingTripEdgeNotice(
+                tripLastStop.csvRowNumber(),
+                tripLastStop.stopSequence(),
+                tripId,
+                "departure_time"));
+      }
+    }
   }
 }
