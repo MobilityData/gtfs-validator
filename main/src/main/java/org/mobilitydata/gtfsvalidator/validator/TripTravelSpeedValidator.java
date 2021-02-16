@@ -24,7 +24,9 @@ import org.mobilitydata.gtfsvalidator.notice.FastTravelBetweenStopsNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 import org.mobilitydata.gtfsvalidator.util.GeospatialUtil;
@@ -38,88 +40,75 @@ import org.mobilitydata.gtfsvalidator.util.GeospatialUtil;
  */
 @GtfsValidator
 public class TripTravelSpeedValidator extends FileValidator {
-  private static final float METER_PER_SECOND_TO_KMH_CONVERSION_FACTOR = 3.6f;
+  private static final double METER_PER_SECOND_TO_KMH_CONVERSION_FACTOR = 3.6D;
   @Inject GtfsTripTableContainer tripTable;
   @Inject GtfsStopTimeTableContainer stopTimeTable;
   @Inject GtfsStopTableContainer stopTable;
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    tripTable
-        .getEntities()
-        .forEach(
-            trip -> {
-              var previousStopsData =
-                  new Object() {
-                    final List<Integer> accumulatedStopSequence = new ArrayList<>();
-                    GtfsTime departureTime = null;
-                    double latitude;
-                    double longitude;
-                    // used to accumulate distance between stops with same arrival and departure
-                    // times
-                    int accumulatedDistanceMeter = 0;
-                  };
+    for (GtfsTrip trip : tripTable.getEntities()) {
+      var previousStopsData =
+          new Object() {
+            final List<Integer> accumulatedStopSequence = new ArrayList<>();
+            GtfsTime departureTime = null;
+            double latitude;
+            double longitude;
+            // used to accumulate distance between stops with same arrival and departure
+            // times
+            int accumulatedDistanceMeter = 0;
+          };
 
-              stopTimeTable
-                  .byTripId(trip.tripId())
-                  .forEach(
-                      stopTime -> {
+      for (GtfsStopTime stopTime :
+          stopTimeTable.byTripId(trip.tripId())) { // prepare data for current iteration
+        GtfsStop currentStop = stopTable.byStopId(stopTime.stopId());
+        double currentStopLat = currentStop.stopLat();
+        double currentStopLon = currentStop.stopLon();
 
-                        // prepare data for current iteration
-                        GtfsStop currentStop = stopTable.byStopId(stopTime.stopId());
-                        double currentStopLat = currentStop.stopLat();
-                        double currentStopLon = currentStop.stopLon();
+        GtfsTime currentArrivalTime = stopTime.arrivalTime();
+        double distanceFromPreviousStopMeter =
+            GeospatialUtil.distanceInMeterBetween(
+                previousStopsData.latitude,
+                previousStopsData.longitude,
+                currentStopLat,
+                currentStopLon);
+        boolean sameArrivalAndDeparture = false;
 
-                        GtfsTime currentArrivalTime = stopTime.arrivalTime();
-                        int distanceFromPreviousStopMeter =
-                            GeospatialUtil.distanceBetweenMeter(
-                                previousStopsData.latitude,
-                                previousStopsData.longitude,
-                                currentStopLat,
-                                currentStopLon);
-                        boolean sameArrivalAndDeparture = false;
+        if (previousStopsData.departureTime != null && currentArrivalTime != null) {
+          sameArrivalAndDeparture = currentArrivalTime.equals(previousStopsData.departureTime);
 
-                        if (previousStopsData.departureTime != null && currentArrivalTime != null) {
-                          sameArrivalAndDeparture =
-                              currentArrivalTime.equals(previousStopsData.departureTime);
+          if (!sameArrivalAndDeparture) {
+            int durationSecond =
+                currentArrivalTime.getSecondsSinceMidnight()
+                    - previousStopsData.departureTime.getSecondsSinceMidnight();
+            double distanceMeter =
+                distanceFromPreviousStopMeter + previousStopsData.accumulatedDistanceMeter;
+            double speedMeterPerSecond = distanceMeter / durationSecond;
 
-                          if (!sameArrivalAndDeparture) {
-                            int durationSecond =
-                                currentArrivalTime.getSecondsSinceMidnight()
-                                    - previousStopsData.departureTime.getSecondsSinceMidnight();
-                            int distanceMeter =
-                                distanceFromPreviousStopMeter
-                                    + previousStopsData.accumulatedDistanceMeter;
-                            int speedMeterPerSecond = distanceMeter / durationSecond;
+            if (speedMeterPerSecond > 42) { // roughly 150 km per hour. Put it in default parameters
+              previousStopsData.accumulatedStopSequence.add(stopTime.stopSequence());
 
-                            if (speedMeterPerSecond
-                                > 42) { // roughly 150 km per hour. Put it in default parameters
-                              previousStopsData.accumulatedStopSequence.add(
-                                  stopTime.stopSequence());
+              noticeContainer.addValidationNotice(
+                  new FastTravelBetweenStopsNotice(
+                      trip.tripId(),
+                      speedMeterPerSecond * METER_PER_SECOND_TO_KMH_CONVERSION_FACTOR,
+                      new ArrayList<>(previousStopsData.accumulatedStopSequence)));
+            }
+          }
+        }
+        // Prepare data for next iteration
+        if (sameArrivalAndDeparture) {
+          previousStopsData.accumulatedDistanceMeter += distanceFromPreviousStopMeter;
+        } else {
+          previousStopsData.accumulatedDistanceMeter = 0;
+          previousStopsData.accumulatedStopSequence.clear();
+        }
 
-                              noticeContainer.addValidationNotice(
-                                  new FastTravelBetweenStopsNotice(
-                                      trip.tripId(),
-                                      speedMeterPerSecond
-                                          * METER_PER_SECOND_TO_KMH_CONVERSION_FACTOR,
-                                      new ArrayList<>(previousStopsData.accumulatedStopSequence)));
-                            }
-                          }
-                        }
-                        // Prepare data for next iteration
-                        if (sameArrivalAndDeparture) {
-                          previousStopsData.accumulatedDistanceMeter +=
-                              distanceFromPreviousStopMeter;
-                        } else {
-                          previousStopsData.accumulatedDistanceMeter = 0;
-                          previousStopsData.accumulatedStopSequence.clear();
-                        }
-
-                        previousStopsData.departureTime = stopTime.departureTime();
-                        previousStopsData.latitude = currentStopLat;
-                        previousStopsData.longitude = currentStopLon;
-                        previousStopsData.accumulatedStopSequence.add(stopTime.stopSequence());
-                      });
-            });
+        previousStopsData.departureTime = stopTime.departureTime();
+        previousStopsData.latitude = currentStopLat;
+        previousStopsData.longitude = currentStopLon;
+        previousStopsData.accumulatedStopSequence.add(stopTime.stopSequence());
+      }
+    }
   }
 }
