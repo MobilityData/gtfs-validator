@@ -31,6 +31,10 @@ public class CsvRow {
     this.columnValues = columnValues;
   }
 
+  public CsvFile getCsvFile() {
+    return csvFile;
+  }
+
   public long getRowNumber() {
     return rowNumber;
   }
