@@ -21,7 +21,7 @@ import java.util.List;
 
 public class FastTravelBetweenStopsNotice extends ValidationNotice {
   public FastTravelBetweenStopsNotice(
-      String tripId, float speedkmh, List<Integer> stopSequenceList) {
+      String tripId, double speedkmh, List<Integer> stopSequenceList) {
     super(
         new ImmutableMap.Builder<String, Object>()
             .put("tripId", tripId)
