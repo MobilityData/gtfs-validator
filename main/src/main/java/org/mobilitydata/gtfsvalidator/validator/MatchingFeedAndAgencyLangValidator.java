@@ -40,7 +40,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
  * <ul>
  *   <li>&lt;a href="http://gtfs.org/reference/static/#feed_infotxt")"&gt;GTFS feed_info.txt
  *       specification&lt;/a&gt;
- *   <li>&lt;a href="http://gtfs.org/reference/static/#agencytxt"&gt;GTFS agency.txt specification&lt;/a&gt;
+ *   <li>&lt;a href="http://gtfs.org/reference/static/#agencytxt"&gt;GTFS agency.txt
+ *       specification&lt;/a&gt;
  * </ul>
  *
  * <p>Generated notice: {@link FeedInfoLangAndAgencyLangMismatchNotice}.

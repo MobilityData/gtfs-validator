@@ -15,8 +15,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFrequencyTableContainer;
 /**
  * Validates that <i>frequencies.txt</i> entries referring to the same trip do not overlap.
  *
- * <p>Two entries X and Y are considered to directly overlap if <i>X.start_time &lt;= Y.start_time</i>
- * and <i>Y.start_time &lt; X.end_time</i>.
+ * <p>Two entries X and Y are considered to directly overlap if <i>X.start_time &lt;=
+ * Y.start_time</i> and <i>Y.start_time &lt; X.end_time</i>.
  *
  * <p>Time complexity: <i>O(n log n)</i> where <i>n</i> is the number of entries in
  * <i>frequencies.txt</i>.
