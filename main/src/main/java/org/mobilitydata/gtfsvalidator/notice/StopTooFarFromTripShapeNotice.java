@@ -31,7 +31,7 @@ public class StopTooFarFromTripShapeNotice extends ValidationNotice {
             "stopSequence", stopSequence,
             "tripId", tripId,
             "shapeId", shapeId,
-            "stopShapeThreshold", stopShapeThreshold));
+            "stopShapeThresholdMeters", stopShapeThreshold));
   }
 
   @Override
