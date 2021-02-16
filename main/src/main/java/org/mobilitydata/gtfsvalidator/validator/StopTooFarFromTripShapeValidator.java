@@ -49,8 +49,6 @@ public class StopTooFarFromTripShapeValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    List<StopTooFarFromTripShapeNotice> notices = new ArrayList<>();
-
     // Cache for previously tested shape_id and stop_id pairs - we don't need to test them more than
     // once
     final Set<String> testedCache = new HashSet<>();
@@ -74,10 +72,9 @@ public class StopTooFarFromTripShapeValidator extends FileValidator {
               shapeTable.byShapeId(trip.shapeId()),
               stopTable,
               testedCache);
-      notices.addAll(noticesForTrip);
-    }
-    for (StopTooFarFromTripShapeNotice notice : notices) {
-      noticeContainer.addValidationNotice(notice);
+      for (StopTooFarFromTripShapeNotice notice : noticesForTrip) {
+        noticeContainer.addValidationNotice(notice);
+      }
     }
   }
 }
