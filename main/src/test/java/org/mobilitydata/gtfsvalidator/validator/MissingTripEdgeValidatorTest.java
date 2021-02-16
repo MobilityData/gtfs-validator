@@ -69,8 +69,6 @@ public class MissingTripEdgeValidatorTest {
   public void tripWithFirstStopMissingArrivalTimeShouldGenerateNotice() {
     NoticeContainer noticeContainer = new NoticeContainer();
     MissingTripEdgeValidator underTest = new MissingTripEdgeValidator();
-    underTest.tripTable =
-        createTripTable(noticeContainer, ImmutableList.of(createTrip(3, "trip id value")));
     underTest.stopTimeTable =
         createStopTimeTable(
             noticeContainer,
@@ -94,8 +92,6 @@ public class MissingTripEdgeValidatorTest {
   public void tripWithFirstStopMissingDepartureTimeShouldGenerateNotice() {
     NoticeContainer noticeContainer = new NoticeContainer();
     MissingTripEdgeValidator underTest = new MissingTripEdgeValidator();
-    underTest.tripTable =
-        createTripTable(noticeContainer, ImmutableList.of(createTrip(3, "trip id value")));
     underTest.stopTimeTable =
         createStopTimeTable(
             noticeContainer,
@@ -119,13 +115,6 @@ public class MissingTripEdgeValidatorTest {
   public void tripWithLastStopMissingArrivalTimeShouldGenerateNotices() {
     NoticeContainer noticeContainer = new NoticeContainer();
     MissingTripEdgeValidator underTest = new MissingTripEdgeValidator();
-    underTest.tripTable =
-        createTripTable(
-            noticeContainer,
-            ImmutableList.of(
-                createTrip(2, "some id value"),
-                createTrip(3, "trip id value"),
-                createTrip(2, "another id value")));
     underTest.stopTimeTable =
         createStopTimeTable(
             noticeContainer,
@@ -150,8 +139,6 @@ public class MissingTripEdgeValidatorTest {
   public void tripWithLastStopMissingDepartureTimeShouldGenerateNotices() {
     NoticeContainer noticeContainer = new NoticeContainer();
     MissingTripEdgeValidator underTest = new MissingTripEdgeValidator();
-    underTest.tripTable =
-        createTripTable(noticeContainer, ImmutableList.of(createTrip(3, "trip id value")));
     underTest.stopTimeTable =
         createStopTimeTable(
             noticeContainer,
@@ -176,8 +163,6 @@ public class MissingTripEdgeValidatorTest {
   public void tripWithValidEdgesShouldNotGenerateNotice() {
     NoticeContainer noticeContainer = new NoticeContainer();
     MissingTripEdgeValidator underTest = new MissingTripEdgeValidator();
-    underTest.tripTable =
-        createTripTable(noticeContainer, ImmutableList.of(createTrip(3, "trip id value")));
     underTest.stopTimeTable =
         createStopTimeTable(
             noticeContainer,

@@ -26,8 +26,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
+import org.mobilitydata.gtfsvalidator.notice.LeadingOrTrailingWhitespacesNotice;
+import org.mobilitydata.gtfsvalidator.notice.NewLineInValueNotice;
 import org.mobilitydata.gtfsvalidator.notice.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
@@ -195,6 +198,19 @@ public class RowParserTest {
     parser.asId(0, true);
     assertThat(parser.getNoticeContainer().getValidationNotices())
         .containsExactly(new NonAsciiOrNonPrintableCharNotice("filename", 8L, "column name"));
+    // Non-ASCII characters in ID are not an error. Validation may continue.
+    assertThat(parser.hasParseErrorsInRow()).isFalse();
+  }
+
+  @Test
+  public void hasOnlyPrintableAscii() {
+    assertThat(RowParser.hasOnlyPrintableAscii("abc")).isTrue();
+    assertThat(RowParser.hasOnlyPrintableAscii("a bc")).isTrue();
+    assertThat(RowParser.hasOnlyPrintableAscii("@<>&*()!")).isTrue();
+    // Cyrillic - not ASCII.
+    assertThat(RowParser.hasOnlyPrintableAscii("Привет!")).isFalse();
+    // Non-printable.
+    assertThat(RowParser.hasOnlyPrintableAscii("\01\23")).isFalse();
   }
 
   @Test
@@ -215,5 +231,36 @@ public class RowParserTest {
     assertThat(createParser("-181").asLongitude(0, true)).isNull();
     assertThat(createParser("181").asLongitude(0, true)).isNull();
     assertThat(createParser("invalid").asLongitude(0, true)).isNull();
+  }
+
+  @Test
+  public void whitespaceInValue() {
+    // Protected whitespaces are stripped. This is an error but GTFS consumers may patch it to be a
+    // warning.
+    RowParser parser = createParser(" 1\t");
+    assertThat(parser.asInteger(0, true)).isEqualTo(1);
+    LeadingOrTrailingWhitespacesNotice notice =
+        new LeadingOrTrailingWhitespacesNotice("filename", 8, "column name", " 1\t");
+    assertThat(parser.hasParseErrorsInRow())
+        .isEqualTo(notice.getSeverityLevel() == SeverityLevel.ERROR);
+    assertThat(parser.getNoticeContainer().getValidationNotices()).containsExactly(notice);
+  }
+
+  @Test
+  public void newLineInValue() {
+    RowParser parser = createParser("a\nb");
+    assertThat(parser.asText(0, true)).isEqualTo("a\nb");
+    assertThat(parser.hasParseErrorsInRow()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices())
+        .containsExactly(new NewLineInValueNotice("filename", 8, "column name", "a\nb"));
+  }
+
+  @Test
+  public void carriageReturnInValue() {
+    RowParser parser = createParser("a\rb");
+    assertThat(parser.asText(0, true)).isEqualTo("a\rb");
+    assertThat(parser.hasParseErrorsInRow()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices())
+        .containsExactly(new NewLineInValueNotice("filename", 8, "column name", "a\rb"));
   }
 }

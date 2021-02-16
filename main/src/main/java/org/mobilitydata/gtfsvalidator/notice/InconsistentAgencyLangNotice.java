@@ -18,14 +18,18 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/** A file is unknown. */
-public class UnknownFileNotice extends ValidationNotice {
-  public UnknownFileNotice(String filename) {
-    super(ImmutableMap.of("filename", filename), SeverityLevel.INFO);
+public class InconsistentAgencyLangNotice extends ValidationNotice {
+  public InconsistentAgencyLangNotice(long csvRowNumber, String expected, String actual) {
+    super(
+        ImmutableMap.of(
+            "csvRowNumber", csvRowNumber,
+            "expected", expected,
+            "actual", actual),
+        SeverityLevel.WARNING);
   }
 
   @Override
   public String getCode() {
-    return "unexpected_file";
+    return "inconsistent_agency_lang";
   }
 }

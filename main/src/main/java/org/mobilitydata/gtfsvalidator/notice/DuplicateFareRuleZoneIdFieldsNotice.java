@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2021 MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,23 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/** A file is unknown. */
-public class UnknownFileNotice extends ValidationNotice {
-  public UnknownFileNotice(String filename) {
-    super(ImmutableMap.of("filename", filename), SeverityLevel.INFO);
+/**
+ * Rows from `fare_rules.txt` must be unique based on `fare_rules.route_id`, `fare_rules.origin_id`,
+ * `fare_rules.contains_id` and `fare_rules.destination_id`.
+ */
+public class DuplicateFareRuleZoneIdFieldsNotice extends ValidationNotice {
+  public DuplicateFareRuleZoneIdFieldsNotice(
+      long csvRowNumber, String fareId, long previousCsvRowNumber, String previousFareId) {
+    super(
+        ImmutableMap.of(
+            "csvRowNumber", csvRowNumber,
+            "fareId", fareId,
+            "previousCsvRowNumber", previousCsvRowNumber,
+            "previousFareId", previousFareId));
   }
 
   @Override
   public String getCode() {
-    return "unexpected_file";
+    return "duplicate_fare_rule_zone_id_fields";
   }
 }

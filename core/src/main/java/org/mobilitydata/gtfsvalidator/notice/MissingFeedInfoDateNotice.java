@@ -18,19 +18,21 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-public class InconsistentAgencyFieldNotice extends ValidationNotice {
-  public InconsistentAgencyFieldNotice(
-      long csvRowNumber, String fieldName, String expected, String actual) {
+/**
+ * Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one field is
+ * provided the second one should also be provided.
+ *
+ * <p>Severity: {@code SeverityLevel.WARNING}
+ */
+public class MissingFeedInfoDateNotice extends ValidationNotice {
+  public MissingFeedInfoDateNotice(long csvRowNumber, String fieldName) {
     super(
-        ImmutableMap.of(
-            "csvRowNumber", csvRowNumber,
-            "fieldName", fieldName,
-            "expected", expected,
-            "actual", actual));
+        ImmutableMap.of("csvRowNumber", csvRowNumber, "fieldName", fieldName),
+        SeverityLevel.WARNING);
   }
 
   @Override
   public String getCode() {
-    return "inconsistent_agency_field";
+    return "missing_feed_info_start_date_or_end_date";
   }
 }

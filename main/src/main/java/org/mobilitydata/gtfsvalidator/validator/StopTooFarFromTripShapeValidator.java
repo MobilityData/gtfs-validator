@@ -16,9 +16,11 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.collect.Multimaps;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
@@ -28,6 +30,7 @@ import org.mobilitydata.gtfsvalidator.notice.StopTooFarFromTripShapeNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
@@ -53,26 +56,29 @@ public class StopTooFarFromTripShapeValidator extends FileValidator {
     // once
     final Set<String> testedCache = new HashSet<>();
 
-    stopTimeTable
-        .byTripIdMap()
-        .forEach(
-            (tripId, tripStopTimes) -> {
-              GtfsTrip trip = tripTable.byTripId(tripId);
-              if (trip == null || !trip.hasShapeId()) {
-                // No shape for this trip - skip to the next trip
-                return;
-              }
-              // Check for possible errors for this combination of stop times and shape points for
-              // this trip_id
-              List<StopTooFarFromTripShapeNotice> noticesForTrip =
-                  GeospatialUtil.checkStopsWithinTripShape(
-                      trip,
-                      stopTimeTable.byTripId(tripId),
-                      shapeTable.byShapeId(trip.shapeId()),
-                      stopTable,
-                      testedCache);
-              notices.addAll(noticesForTrip);
-            });
-    notices.forEach(noticeContainer::addValidationNotice);
+    for (Entry<String, List<GtfsStopTime>> entry :
+        Multimaps.asMap(stopTimeTable.byTripIdMap()).entrySet()) {
+      String tripId = entry.getKey();
+      List<GtfsStopTime> stopTimesForTrip = entry.getValue();
+      GtfsTrip trip = tripTable.byTripId(tripId);
+      if (trip == null || !trip.hasShapeId()) {
+        // No shape for this trip - skip to the next trip
+        continue;
+      }
+      // Check for possible errors for this combination of stop times and shape points for
+      // this trip_id
+      List<StopTooFarFromTripShapeNotice> noticesForTrip =
+          GeospatialUtil.checkStopsWithinTripShape(
+              tripId,
+              stopTimesForTrip,
+              trip.shapeId(),
+              shapeTable.byShapeId(trip.shapeId()),
+              stopTable,
+              testedCache);
+      notices.addAll(noticesForTrip);
+    }
+    for (StopTooFarFromTripShapeNotice notice : notices) {
+      noticeContainer.addValidationNotice(notice);
+    }
   }
 }

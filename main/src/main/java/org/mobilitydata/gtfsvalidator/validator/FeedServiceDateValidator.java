@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
-import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
+import org.mobilitydata.gtfsvalidator.notice.MissingFeedInfoDateNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.StartAndEndDateOutOfOrderNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
@@ -40,12 +40,10 @@ public class FeedServiceDateValidator extends FileValidator {
     for (GtfsFeedInfo feedInfo : feedInfoTable.getEntities()) {
       if (feedInfo.hasFeedStartDate() && !feedInfo.hasFeedEndDate()) {
         noticeContainer.addValidationNotice(
-            new MissingRequiredFieldError(
-                feedInfoTable.gtfsFilename(), feedInfo.csvRowNumber(), "feed_end_date"));
+            new MissingFeedInfoDateNotice(feedInfo.csvRowNumber(), "feed_end_date"));
       } else if (!feedInfo.hasFeedStartDate() && feedInfo.hasFeedEndDate()) {
         noticeContainer.addValidationNotice(
-            new MissingRequiredFieldError(
-                feedInfoTable.gtfsFilename(), feedInfo.csvRowNumber(), "feed_start_date"));
+            new MissingFeedInfoDateNotice(feedInfo.csvRowNumber(), "feed_start_date"));
       }
       if (feedInfo.hasFeedStartDate()
           && feedInfo.hasFeedEndDate()
