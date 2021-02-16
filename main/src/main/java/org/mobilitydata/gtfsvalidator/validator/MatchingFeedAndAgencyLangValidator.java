@@ -38,9 +38,9 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
  * <p>References:
  *
  * <ul>
- *   <li><a href="http://gtfs.org/reference/static/#feed_infotxt")">GTFS feed_info.txt
- *       specification</a>
- *   <li><a href="http://gtfs.org/reference/static/#agencytxt">GTFS agency.txt specification</a>
+ *   <li>&lt;a href="http://gtfs.org/reference/static/#feed_infotxt")"&gt;GTFS feed_info.txt
+ *       specification&lt;/a&gt;
+ *   <li>&lt;a href="http://gtfs.org/reference/static/#agencytxt"&gt;GTFS agency.txt specification&lt;/a&gt;
  * </ul>
  *
  * <p>Generated notice: {@link FeedInfoLangAndAgencyLangMismatchNotice}.

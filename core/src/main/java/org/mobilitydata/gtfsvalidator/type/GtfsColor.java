@@ -67,6 +67,8 @@ public class GtfsColor {
   /**
    * Returns the luma [0, 255] of the color based on Rec 601 standard. It corresponds to a human's
    * perception of the color's brightness. See https://en.wikipedia.org/wiki/Luma_(video).
+   *
+   * @return the rec601 Luma value
    */
   public int rec601Luma() {
     int r = (rgb & 0xff0000) >> 16;

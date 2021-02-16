@@ -74,7 +74,7 @@ public class CsvRow {
    * empty string) asString(3) == null (index out of bounds) asString(-1) == null (index out of
    * bounds)
    *
-   * @param columnIndex
+   * @param columnIndex the column index
    * @return value for the requested column or null
    */
   @Nullable

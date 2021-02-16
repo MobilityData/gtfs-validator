@@ -22,7 +22,15 @@ public class ServicePeriod {
   private final Set<LocalDate> addedDays;
   private final Set<LocalDate> removedDays;
 
-  /** Creates a service period for the given pattern, added and removed days. */
+  /**
+   * Creates a service period for the given pattern, added and removed days.
+   *
+   * @param serviceStart date on which the service starts
+   * @param serviceEnd date on which the service ends
+   * @param weeklyPattern weekly pattern for ServicePeriod, in the format 0b0SSFTWTM
+   * @param addedDays set of dates during which service is added
+   * @param removedDays set of dates during which service is removed
+   */
   public ServicePeriod(
       LocalDate serviceStart,
       LocalDate serviceEnd,
@@ -43,6 +51,8 @@ public class ServicePeriod {
    * Creates a service period from the given dates.
    *
    * <p>serviceStart and serviceEnd will be set to {@code LocalDate.EPOCH}.
+   *
+   * @param dates service dates
    */
   public ServicePeriod(Set<LocalDate> dates) {
     this.serviceStart = LocalDate.EPOCH;
