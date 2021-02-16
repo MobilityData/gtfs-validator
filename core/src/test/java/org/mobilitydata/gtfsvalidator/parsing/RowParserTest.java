@@ -282,14 +282,14 @@ public class RowParserTest {
     // The final row in this test contains only spaces and does not end with a new line. Univocity
     // parser treats it as a non-empty row that contains a single column which holds null.
     InputStream inputStream = toInputStream("stop_id,stop_name\n  ");
-    CsvFile csvFile = new CsvFile(inputStream, "stops.txt");
+    CsvFile csvFile = new CsvFile(inputStream, TEST_FILENAME);
 
     assertThat(csvFile.isEmpty()).isFalse();
     assertThat(csvFile.getColumnCount()).isEqualTo(2);
 
     CsvRow csvRow = csvFile.iterator().next();
-    RowParser parser = new RowParser(GtfsFeedName.parseString(TEST_FEED_NAME),
-        new NoticeContainer());
+    RowParser parser =
+        new RowParser(GtfsFeedName.parseString(TEST_FEED_NAME), new NoticeContainer());
     parser.setRow(csvRow);
 
     assertThat(parser.checkRowLength()).isFalse();
@@ -303,14 +303,14 @@ public class RowParserTest {
   @Test
   public void checkRowLengthInvalidRowLength() throws IOException {
     InputStream inputStream = toInputStream("stop_id,stop_name\n" + "s1");
-    CsvFile csvFile = new CsvFile(inputStream, "stops.txt");
+    CsvFile csvFile = new CsvFile(inputStream, TEST_FILENAME);
 
     assertThat(csvFile.isEmpty()).isFalse();
     assertThat(csvFile.getColumnCount()).isEqualTo(2);
 
     CsvRow csvRow = csvFile.iterator().next();
-    RowParser parser = new RowParser(GtfsFeedName.parseString(TEST_FEED_NAME),
-        new NoticeContainer());
+    RowParser parser =
+        new RowParser(GtfsFeedName.parseString(TEST_FEED_NAME), new NoticeContainer());
     parser.setRow(csvRow);
 
     assertThat(parser.checkRowLength()).isFalse();
@@ -320,5 +320,4 @@ public class RowParserTest {
 
     inputStream.close();
   }
-
 }

@@ -196,7 +196,7 @@ public class RowParser {
   /**
    * Checks whether the row lengths (cell count) is the same as the amount of file headers.
    *
-   * This function may add notices to {@code noticeContainer}.
+   * <p>This function may add notices to {@code noticeContainer}.
    *
    * @return true if the row length is equal to column count
    */

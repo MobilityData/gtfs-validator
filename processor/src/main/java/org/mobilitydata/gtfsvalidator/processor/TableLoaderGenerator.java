@@ -132,22 +132,22 @@ public class TableLoaderGenerator {
 
     typeSpec.addField(
         FieldSpec.builder(
-            FluentLogger.class, "logger", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
+                FluentLogger.class, "logger", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
             .initializer("$T.forEnclosingClass()", FluentLogger.class)
             .build());
     typeSpec.addField(
         FieldSpec.builder(
-            String.class, "FILENAME", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+                String.class, "FILENAME", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
             .initializer("$S", fileDescriptor.filename())
             .build());
     for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
       typeSpec.addField(
           FieldSpec.builder(
-              String.class,
-              fieldNameField(field.name()),
-              Modifier.PUBLIC,
-              Modifier.STATIC,
-              Modifier.FINAL)
+                  String.class,
+                  fieldNameField(field.name()),
+                  Modifier.PUBLIC,
+                  Modifier.STATIC,
+                  Modifier.FINAL)
               .initializer("$S", gtfsColumnName(field.name()))
               .build());
     }

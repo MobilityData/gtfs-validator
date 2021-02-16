@@ -20,8 +20,8 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * A row in the input file has only spaces.
- * <p>
- * Some CSV parsers, such as Univocity, may misinterpret it as a non-empty row that has a single
+ *
+ * <p>Some CSV parsers, such as Univocity, may misinterpret it as a non-empty row that has a single
  * column which is empty, hence we show a warning.
  */
 public class EmptyRowNotice extends ValidationNotice {
