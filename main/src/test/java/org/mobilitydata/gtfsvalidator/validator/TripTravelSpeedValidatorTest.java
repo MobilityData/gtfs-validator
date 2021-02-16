@@ -130,7 +130,7 @@ public class TripTravelSpeedValidatorTest {
     underTest.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new FastTravelBetweenStopsNotice("t1", 298.8f, List.of(0, 1)));
+        .containsExactly(new FastTravelBetweenStopsNotice("t1", 299.3383739629327D, List.of(0, 1)));
   }
 
   @Test
@@ -186,7 +186,7 @@ public class TripTravelSpeedValidatorTest {
     underTest.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new FastTravelBetweenStopsNotice("t1", 396.0f, List.of(1, 2, 3)));
+        .containsExactly(new FastTravelBetweenStopsNotice("t1", 398.1887657929889D, List.of(1, 2, 3)));
   }
 
   @Test
