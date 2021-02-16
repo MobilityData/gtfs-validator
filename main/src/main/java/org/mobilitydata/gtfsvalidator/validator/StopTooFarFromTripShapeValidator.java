@@ -25,7 +25,6 @@ import java.util.Set;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.StartAndEndDateOutOfOrderNotice;
 import org.mobilitydata.gtfsvalidator.notice.StopTooFarFromTripShapeNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
@@ -39,7 +38,7 @@ import org.mobilitydata.gtfsvalidator.util.GeospatialUtil;
 /**
  * Validates: a {@link GtfsStop} is within a distance threshold for a trip shape.
  *
- * <p>Generated notice: {@link StartAndEndDateOutOfOrderNotice}.
+ * <p>Generated notice: {@link StopTooFarFromTripShapeNotice}.
  */
 @GtfsValidator
 public class StopTooFarFromTripShapeValidator extends FileValidator {

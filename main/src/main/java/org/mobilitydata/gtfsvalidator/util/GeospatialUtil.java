@@ -33,7 +33,6 @@ import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
-import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 
 public class GeospatialUtil {
   static final double KILOMETER_TO_METER_CONVERSION_FACTOR =
@@ -66,10 +65,11 @@ public class GeospatialUtil {
   }
 
   /**
-   * Return the distance between two points given there lat/lon positions in the specified unit.
-   * The distance is computed following the haversine formula. See https://locationtech.github.io/spatial4j/apidocs/org/locationtech/spatial4j/context/SpatialContext.html
-   * Note that points of origin (from) and destination (to) can be swapped.
-   * Result is expressed in meters.
+   * Return the distance between two points given there lat/lon positions in meters. the distance is
+   * computed following the haversine formula. See
+   * https://locationtech.github.io/spatial4j/apidocs/org/locationtech/spatial4j/context/SpatialContext.html
+   * Note that points of origin (from) and destination (to) can be swapped. Result is expressed in
+   * meters.
    *
    * @param fromLat latitude of the first coordinates
    * @param fromLng longitude of the first coordinates
@@ -84,20 +84,20 @@ public class GeospatialUtil {
     final Point origin = shapeFactory.pointXY(fromLng, fromLat);
     final Point destination = shapeFactory.pointXY(toLng, toLat);
     return DistanceUtils.DEG_TO_KM
-            * distanceCalculator.distance(origin, destination)
-            * KILOMETER_TO_METER_CONVERSION_FACTOR;
+        * distanceCalculator.distance(origin, destination)
+        * KILOMETER_TO_METER_CONVERSION_FACTOR;
   }
 
   /**
-   * Returns a list of notices for the given input, one for each stop that is too far from the
-   * trip shapePoints
+   * Returns a list of notices for the given input, one for each stop that is too far from the trip
+   * shapePoints
    *
    * @param tripId trip_id for this GTFS trip
    * @param stopTimes a list of StopTimes for a trip, sorted by stop_sequence
    * @param shapeId the shape_id for this GTFS trip
    * @param shapePoints a list of ShapePoints for a trip, sorted by shape_pt_sequence
-   * @param stopTable a container for all stops (keyed on stop_id), needed to obtain the latitude and
-   *     longitude for each stop on the trip
+   * @param stopTable a container for all stops (keyed on stop_id), needed to obtain the latitude
+   *     and longitude for each stop on the trip
    * @param testedCache a cache for previously tested shape_id and stop_id pairs (keyed on
    *     shape_id+stop_id). If the combination of shape_id and stop_id appears in this set, we
    *     shouldn't test it again. Shapes and stops tested in this method execution will be added to
@@ -112,10 +112,7 @@ public class GeospatialUtil {
       final GtfsStopTableContainer stopTable,
       final Set<String> testedCache) {
     List<StopTooFarFromTripShapeNotice> notices = new ArrayList<>();
-    if (stopTimes == null
-        || stopTimes.isEmpty()
-        || shapePoints == null
-        || shapePoints.isEmpty()) {
+    if (stopTimes == null || stopTimes.isEmpty() || shapePoints == null || shapePoints.isEmpty()) {
       // Nothing to do - return empty list
       return notices;
     }
@@ -148,16 +145,11 @@ public class GeospatialUtil {
         continue;
       }
       testedCache.add(shapeId + stop.stopId());
-      Point p =
-          getShapeFactory().pointXY(stop.stopLon(), stop.stopLat());
+      Point p = getShapeFactory().pointXY(stop.stopLon(), stop.stopLat());
       if (!shapeBuffer.relate(p).equals(SpatialRelation.CONTAINS)) {
         notices.add(
             new StopTooFarFromTripShapeNotice(
-                stopTime.stopId(),
-                stopTime.stopSequence(),
-                tripId,
-                shapeId,
-                TRIP_BUFFER_METERS));
+                stopTime.stopId(), stopTime.stopSequence(), tripId, shapeId, TRIP_BUFFER_METERS));
       }
     }
 
