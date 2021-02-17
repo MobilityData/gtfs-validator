@@ -101,7 +101,7 @@ public class FieldCache<T> {
   /**
    * Returns the amount of cache hits.
    *
-   * @return
+   * @return the amount of cache hits
    */
   public int getCacheHits() {
     return getLookupCount() - getCacheMisses();

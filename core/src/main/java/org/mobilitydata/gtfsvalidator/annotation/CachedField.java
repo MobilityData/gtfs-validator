@@ -15,7 +15,6 @@
  */
 
 package org.mobilitydata.gtfsvalidator.annotation;
-
 /**
  * Enables caching of values for a given field to optimize memory usage.
  *
@@ -27,10 +26,10 @@ package org.mobilitydata.gtfsvalidator.annotation;
  * <p>Example.
  *
  * <pre>
- *   @GtfsTable("stop_times.txt")
- *   @Required
+ *   {@literal @}GtfsTable("stop_times.txt")
+ *   {@literal @}Required
  *   public interface GtfsStopTimeSchema extends GtfsEntity {
- *       @CachedField
+ *       {@literal @}CachedField
  *       String stopHeadsign();
  *   }
  * </pre>
