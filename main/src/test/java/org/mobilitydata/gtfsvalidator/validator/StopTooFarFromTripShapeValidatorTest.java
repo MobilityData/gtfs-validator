@@ -695,7 +695,7 @@ public class StopTooFarFromTripShapeValidatorTest {
             "shape2",
             underTest.shapeTable.byShapeId("shape2"),
             underTest.stopTable,
-            Set.of("shape11002", "shape11001", "shape11003"));
+            Set.of("shape11001", "shape11002", "shape11003"));
 
         Mockito.verifyNoMoreInteractions(underTest);
   }
