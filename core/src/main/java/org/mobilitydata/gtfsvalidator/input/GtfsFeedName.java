@@ -51,6 +51,9 @@ public class GtfsFeedName {
    *
    * <p>Examples of valid names: "nl-openov", "au-sydney-buses". Examples of invalid names:
    * "openov-nl", "zz-buses".
+   *
+   * @param s the given string
+   * @return true if the given string is a valid name for a GTFS feed
    */
   public static boolean isValidCountryFirstFeedName(String s) {
     return FEED_NAME_PATTERN.matcher(s).matches() && isValidISOAlpha2(s.substring(0, 2));
@@ -61,6 +64,9 @@ public class GtfsFeedName {
    *
    * <p>We support "UK" as an additional country code equivalent to the ISO 3166-1 Alpha 2 code
    * "GB".
+   *
+   * @param s the given string
+   * @return true if the given string is a valid ISO Alpha 2 country code (case insensitive)
    */
   public static boolean isValidISOAlpha2(String s) {
     if (s.length() != 2) {
@@ -76,7 +82,7 @@ public class GtfsFeedName {
    *
    * @param feedName GTFS feed name in country-first or country-last format
    * @return a valid GtfsFeedName object
-   * @throws IllegalArgumentException
+   * @throws IllegalArgumentException if illegal @param feedName
    */
   public static GtfsFeedName parseString(String feedName) throws IllegalArgumentException {
     String[] separated = feedName.split("-");

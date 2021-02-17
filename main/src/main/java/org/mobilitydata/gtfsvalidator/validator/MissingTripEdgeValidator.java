@@ -16,14 +16,18 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME;
+
+import com.google.common.collect.Multimaps;
 import java.util.List;
+import java.util.Map.Entry;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.MissingTripEdgeNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 
 /**
  * Validates: the first and last stop times (when ordering by `stop_sequence` value) of a trip
@@ -33,53 +37,48 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
  */
 @GtfsValidator
 public class MissingTripEdgeValidator extends FileValidator {
-  @Inject GtfsTripTableContainer tripTable;
   @Inject GtfsStopTimeTableContainer stopTimeTable;
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    tripTable
-        .getEntities()
-        .forEach(
-            trip -> {
-              List<GtfsStopTime> stopTimesForTrip = stopTimeTable.byTripId(trip.tripId());
-              if (stopTimesForTrip.isEmpty()) {
-                return;
-              }
-              GtfsStopTime tripFirstStop = stopTimesForTrip.get(0);
-              GtfsStopTime tripLastStop = stopTimesForTrip.get(stopTimesForTrip.size() - 1);
-              if (!tripFirstStop.hasArrivalTime()) {
-                noticeContainer.addValidationNotice(
-                    new MissingTripEdgeNotice(
-                        tripFirstStop.csvRowNumber(),
-                        tripFirstStop.stopSequence(),
-                        trip.tripId(),
-                        "arrival_time"));
-              }
-              if (!tripFirstStop.hasDepartureTime()) {
-                noticeContainer.addValidationNotice(
-                    new MissingTripEdgeNotice(
-                        tripFirstStop.csvRowNumber(),
-                        tripFirstStop.stopSequence(),
-                        trip.tripId(),
-                        "departure_time"));
-              }
-              if (!tripLastStop.hasArrivalTime()) {
-                noticeContainer.addValidationNotice(
-                    new MissingTripEdgeNotice(
-                        tripLastStop.csvRowNumber(),
-                        tripLastStop.stopSequence(),
-                        trip.tripId(),
-                        "arrival_time"));
-              }
-              if (!tripLastStop.hasDepartureTime()) {
-                noticeContainer.addValidationNotice(
-                    new MissingTripEdgeNotice(
-                        tripLastStop.csvRowNumber(),
-                        tripLastStop.stopSequence(),
-                        trip.tripId(),
-                        "departure_time"));
-              }
-            });
+    for (Entry<String, List<GtfsStopTime>> entry :
+        Multimaps.asMap(stopTimeTable.byTripIdMap()).entrySet()) {
+      String tripId = entry.getKey();
+      List<GtfsStopTime> stopTimesForTrip = entry.getValue();
+      GtfsStopTime tripFirstStop = stopTimesForTrip.get(0);
+      GtfsStopTime tripLastStop = stopTimesForTrip.get(stopTimesForTrip.size() - 1);
+      if (!tripFirstStop.hasArrivalTime()) {
+        noticeContainer.addValidationNotice(
+            new MissingTripEdgeNotice(
+                tripFirstStop.csvRowNumber(),
+                tripFirstStop.stopSequence(),
+                tripId,
+                ARRIVAL_TIME_FIELD_NAME));
+      }
+      if (!tripFirstStop.hasDepartureTime()) {
+        noticeContainer.addValidationNotice(
+            new MissingTripEdgeNotice(
+                tripFirstStop.csvRowNumber(),
+                tripFirstStop.stopSequence(),
+                tripId,
+                DEPARTURE_TIME_FIELD_NAME));
+      }
+      if (!tripLastStop.hasArrivalTime()) {
+        noticeContainer.addValidationNotice(
+            new MissingTripEdgeNotice(
+                tripLastStop.csvRowNumber(),
+                tripLastStop.stopSequence(),
+                tripId,
+                ARRIVAL_TIME_FIELD_NAME));
+      }
+      if (!tripLastStop.hasDepartureTime()) {
+        noticeContainer.addValidationNotice(
+            new MissingTripEdgeNotice(
+                tripLastStop.csvRowNumber(),
+                tripLastStop.stopSequence(),
+                tripId,
+                DEPARTURE_TIME_FIELD_NAME));
+      }
+    }
   }
 }

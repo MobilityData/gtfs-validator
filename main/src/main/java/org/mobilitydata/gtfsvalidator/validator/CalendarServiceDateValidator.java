@@ -24,7 +24,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
 
 /**
- * Validates that start_date <= end_date for all rows in "calendar.txt".
+ * Validates that start_date &lt;= end_date for all rows in "calendar.txt".
  *
  * <p>Generated notice: {@link StartAndEndDateOutOfOrderNotice}.
  */

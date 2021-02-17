@@ -18,7 +18,11 @@ package org.mobilitydata.gtfsvalidator.parsing;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Locale;
@@ -26,7 +30,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
+import org.mobilitydata.gtfsvalidator.notice.EmptyRowNotice;
+import org.mobilitydata.gtfsvalidator.notice.InvalidRowLengthError;
 import org.mobilitydata.gtfsvalidator.notice.LeadingOrTrailingWhitespacesNotice;
+import org.mobilitydata.gtfsvalidator.notice.NewLineInValueNotice;
 import org.mobilitydata.gtfsvalidator.notice.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
@@ -38,11 +45,18 @@ import org.mockito.Mockito;
 @RunWith(JUnit4.class)
 public class RowParserTest {
 
+  private static String TEST_FEED_NAME = "au-sydney-buses";
+  private static String TEST_FILENAME = "stops.txt";
+
+  private static InputStream toInputStream(String s) {
+    return new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
+  }
+
   private RowParser createParser(String feedName, String cellValue) {
     NoticeContainer noticeContainer = new NoticeContainer();
     CsvRow csvRow = Mockito.mock(CsvRow.class);
     Mockito.when(csvRow.asString(0)).thenReturn(cellValue);
-    Mockito.when(csvRow.getFileName()).thenReturn("filename");
+    Mockito.when(csvRow.getFileName()).thenReturn(TEST_FILENAME);
     Mockito.when(csvRow.getRowNumber()).thenReturn(8L);
     Mockito.when(csvRow.getColumnName(0)).thenReturn("column name");
     RowParser parser = new RowParser(GtfsFeedName.parseString(feedName), noticeContainer);
@@ -51,7 +65,7 @@ public class RowParserTest {
   }
 
   private RowParser createParser(String cellValue) {
-    return createParser("au-sydney-buses", cellValue);
+    return createParser(TEST_FEED_NAME, cellValue);
   }
 
   @Test
@@ -196,7 +210,7 @@ public class RowParserTest {
     // .קום :the .COM equivalent in Hebrew
     parser.asId(0, true);
     assertThat(parser.getNoticeContainer().getValidationNotices())
-        .containsExactly(new NonAsciiOrNonPrintableCharNotice("filename", 8L, "column name"));
+        .containsExactly(new NonAsciiOrNonPrintableCharNotice(TEST_FILENAME, 8L, "column name"));
     // Non-ASCII characters in ID are not an error. Validation may continue.
     assertThat(parser.hasParseErrorsInRow()).isFalse();
   }
@@ -233,15 +247,77 @@ public class RowParserTest {
   }
 
   @Test
-  public void whitespaces() {
+  public void whitespaceInValue() {
     // Protected whitespaces are stripped. This is an error but GTFS consumers may patch it to be a
     // warning.
     RowParser parser = createParser(" 1\t");
     assertThat(parser.asInteger(0, true)).isEqualTo(1);
     LeadingOrTrailingWhitespacesNotice notice =
-        new LeadingOrTrailingWhitespacesNotice("filename", 8, "column name", " 1\t");
+        new LeadingOrTrailingWhitespacesNotice(TEST_FILENAME, 8, "column name", " 1\t");
     assertThat(parser.hasParseErrorsInRow())
         .isEqualTo(notice.getSeverityLevel() == SeverityLevel.ERROR);
     assertThat(parser.getNoticeContainer().getValidationNotices()).containsExactly(notice);
+  }
+
+  @Test
+  public void newLineInValue() {
+    RowParser parser = createParser("a\nb");
+    assertThat(parser.asText(0, true)).isEqualTo("a\nb");
+    assertThat(parser.hasParseErrorsInRow()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices())
+        .containsExactly(new NewLineInValueNotice(TEST_FILENAME, 8, "column name", "a\nb"));
+  }
+
+  @Test
+  public void carriageReturnInValue() {
+    RowParser parser = createParser("a\rb");
+    assertThat(parser.asText(0, true)).isEqualTo("a\rb");
+    assertThat(parser.hasParseErrorsInRow()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices())
+        .containsExactly(new NewLineInValueNotice(TEST_FILENAME, 8, "column name", "a\rb"));
+  }
+
+  @Test
+  public void checkRowLengthEmptyRow() throws IOException {
+    // The final row in this test contains only spaces and does not end with a new line. Univocity
+    // parser treats it as a non-empty row that contains a single column which holds null.
+    InputStream inputStream = toInputStream("stop_id,stop_name\n  ");
+    CsvFile csvFile = new CsvFile(inputStream, TEST_FILENAME);
+
+    assertThat(csvFile.isEmpty()).isFalse();
+    assertThat(csvFile.getColumnCount()).isEqualTo(2);
+
+    CsvRow csvRow = csvFile.iterator().next();
+    RowParser parser =
+        new RowParser(GtfsFeedName.parseString(TEST_FEED_NAME), new NoticeContainer());
+    parser.setRow(csvRow);
+
+    assertThat(parser.checkRowLength()).isFalse();
+    assertThat(parser.hasParseErrorsInRow()).isFalse();
+    assertThat(parser.getNoticeContainer().getValidationNotices())
+        .containsExactly(new EmptyRowNotice(TEST_FILENAME, 2));
+
+    inputStream.close();
+  }
+
+  @Test
+  public void checkRowLengthInvalidRowLength() throws IOException {
+    InputStream inputStream = toInputStream("stop_id,stop_name\n" + "s1");
+    CsvFile csvFile = new CsvFile(inputStream, TEST_FILENAME);
+
+    assertThat(csvFile.isEmpty()).isFalse();
+    assertThat(csvFile.getColumnCount()).isEqualTo(2);
+
+    CsvRow csvRow = csvFile.iterator().next();
+    RowParser parser =
+        new RowParser(GtfsFeedName.parseString(TEST_FEED_NAME), new NoticeContainer());
+    parser.setRow(csvRow);
+
+    assertThat(parser.checkRowLength()).isFalse();
+    assertThat(parser.hasParseErrorsInRow()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices())
+        .containsExactly(new InvalidRowLengthError(TEST_FILENAME, 2, 1, 2));
+
+    inputStream.close();
   }
 }

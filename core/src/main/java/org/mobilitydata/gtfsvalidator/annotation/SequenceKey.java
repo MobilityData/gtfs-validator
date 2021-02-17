@@ -30,16 +30,16 @@ import java.lang.annotation.Target;
  * an extra {@code @Required} annotation in this case.
  *
  * <pre>
- *   @GtfsTable("stop_times.txt")
+ *   {@literal @}GtfsTable("stop_times.txt")
  *   public interface GtfsStopTimeSchema extends GtfsEntity {
- *     @Required
- *     @ForeignKey(table = "trips.txt", field = "trip_id")
- *     @FirstKey
+ *     {@literal @}Required
+ *     {@literal @}ForeignKey(table = "trips.txt", field = "trip_id")
+ *     {@literal @}FirstKey
  *     String tripId();
  *
- *     @Required
- *     @NonNegative
- *     @SequenceKey
+ *     {@literal @}Required
+ *     {@literal @}NonNegative
+ *     {@literal @}SequenceKey
  *     int stopSequence();
  *  }
  * </pre>

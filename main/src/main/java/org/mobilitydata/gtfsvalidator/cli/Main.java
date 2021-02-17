@@ -105,6 +105,13 @@ public class Main {
     // Output
     exportReport(args.getOutputBase(), noticeContainer);
     final long endNanos = System.nanoTime();
+    if (!feedContainer.isParsedSuccessfully()) {
+      System.out.println(" ----------------------------------------- ");
+      System.out.println("|       !!!    PARSING FAILED    !!!      |");
+      System.out.println("|   Most validators were never invoked.   |");
+      System.out.println("|   Please see report.json for details.   |");
+      System.out.println(" ----------------------------------------- ");
+    }
     System.out.printf("Validation took %.3f seconds%n", (endNanos - startNanos) / 1e9);
     System.out.println(feedContainer.tableTotals());
   }

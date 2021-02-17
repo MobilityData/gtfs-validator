@@ -63,6 +63,7 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
  * <p>E.g., GtfsStopTableLoader class is generated for "stops.txt".
  */
 public class TableLoaderGenerator {
+
   private static final int LOG_EVERY_N_ROWS = 200000;
   private final GtfsFileDescriptor fileDescriptor;
   private final GtfsEntityClasses classNames;
@@ -284,7 +285,7 @@ public class TableLoaderGenerator {
 
     method
         .addStatement("rowParser.setRow(row)")
-        .addStatement("rowParser.checkRowColumnCount(csvFile)")
+        .beginControlFlow("if (rowParser.checkRowLength())")
         .addStatement("builder.clear()")
         .addStatement(
             "builder.$L(row.getRowNumber())", FieldNameConverter.setterMethodName("csvRowNumber"));
@@ -310,14 +311,16 @@ public class TableLoaderGenerator {
     }
 
     method
-        .beginControlFlow("if (rowParser.hasParseErrorsInRow())")
-        .addStatement("hasUnparsableRows = true")
-        .nextControlFlow("else")
+        .beginControlFlow("if (!rowParser.hasParseErrorsInRow())")
         .addStatement("$T entity = builder.build()", gtfsEntityType)
         .addStatement(
             "ValidatorLoader.invokeSingleEntityValidators(entity, singleEntityValidators,"
                 + " noticeContainer)")
         .addStatement("entities.add(entity)")
+        .endControlFlow()
+        .endControlFlow()
+        .beginControlFlow("if (rowParser.hasParseErrorsInRow())")
+        .addStatement("hasUnparsableRows = true")
         .endControlFlow();
 
     method.endControlFlow(); // end for (row)

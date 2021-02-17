@@ -14,7 +14,11 @@ public abstract class ValidationContext {
     return new AutoValue_ValidationContext.Builder();
   }
 
-  /** Represents a name of a GTFS feed, such as "nl-openov". */
+  /**
+   * Represents a name of a GTFS feed, such as "nl-openov".
+   *
+   * @return the @code{GtfsFeedName} representing the feed's name
+   */
   public abstract GtfsFeedName feedName();
 
   /**
@@ -27,6 +31,8 @@ public abstract class ValidationContext {
    *   <li>current date and time is changing but it should not randomly affect validation notices;
    *   <li>unit tests may need to override the current time.
    * </ul>
+   *
+   * @return The time when validation started as @code{ZonedDateTime}
    */
   public abstract ZonedDateTime now();
 
