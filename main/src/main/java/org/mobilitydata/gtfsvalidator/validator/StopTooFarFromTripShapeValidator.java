@@ -103,7 +103,7 @@ public class StopTooFarFromTripShapeValidator extends FileValidator {
    *     this testedCache.
    * @return a list of notices, one for each stop that is too far from the trip shape
    */
-  private List<StopTooFarFromTripShapeNotice> checkStopsWithinTripShape(
+  List<StopTooFarFromTripShapeNotice> checkStopsWithinTripShape(
       final String tripId,
       final List<GtfsStopTime> stopTimes,
       final String shapeId,

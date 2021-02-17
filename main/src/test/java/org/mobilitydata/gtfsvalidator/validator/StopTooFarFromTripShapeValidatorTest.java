@@ -20,7 +20,9 @@ import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.StopTooFarFromTripShapeNotice;
@@ -32,6 +34,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
+import org.mockito.Mockito;
 
 public class StopTooFarFromTripShapeValidatorTest {
 
@@ -622,5 +625,78 @@ public class StopTooFarFromTripShapeValidatorTest {
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices()).isEmpty();
+  }
+
+  @Test
+  public void eachTripShouldOnlyBeProcessedOnce() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    StopTooFarFromTripShapeValidator underTest =
+        Mockito.spy(new StopTooFarFromTripShapeValidator());
+
+    underTest.tripTable =
+        createTripTable(
+            noticeContainer,
+            ImmutableList.of(
+                createTrip(4, "r1", "service1", "t1", "shape1"),
+                createTrip(9, "r2", "service2", "t2", "shape2")));
+
+    underTest.stopTimeTable =
+        createStopTimeTable(
+            noticeContainer,
+            ImmutableList.of(
+                createStopTime(5, "t1", "1001", 1),
+                createStopTime(8, "t1", "1002", 2),
+                createStopTime(9, "t1", "1003", 3),
+                createStopTime(10, "t2", "1004", 4),
+                createStopTime(11, "t2", "1005", 5)));
+
+    underTest.shapeTable =
+        createShapeTable(
+            noticeContainer,
+            ImmutableList.of(
+                createShapePoint(5, "shape1", 28.05724310653972D, -82.41350776611507D, 1, 400f),
+                createShapePoint(6, "shape1", 28.05746701492806D, -82.41493135129478D, 2, 400f),
+                createShapePoint(7, "shape1", 28.05800068503469D, -82.4159394137605D, 3, 400f),
+                createShapePoint(8, "shape2", 16.373032D, -61.459167D, 4, 400f),
+                createShapePoint(9, "shape2", 16.371539D, -61.459886D, 5, 400f)));
+
+    underTest.stopTable =
+        createStopTable(
+            noticeContainer,
+            ImmutableList.of(
+                createStop(2, "1001", 28.05808869825447D, -82.41648754043338D, 0),
+                createStop(4, "1002", 28.05808869825447D, -82.41648754043338D, 0),
+                // this location is outside buffer of shape1
+                createStop(5, "1003", 28.05673053256373D, -82.4170801432763D, 4),
+                createStop(7, "1004", 16.373032D, -61.459167D, 4),
+                // this location is outside buffer of shape2
+                createStop(8, "1005", 28.05673053256373D, -82.4170801432763D, 4)));
+
+    underTest.validate(noticeContainer);
+
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactlyElementsIn(
+            new StopTooFarFromTripShapeNotice[] {
+              new StopTooFarFromTripShapeNotice("1003", 3, "t1", "shape1", 100),
+              new StopTooFarFromTripShapeNotice("1005", 5, "t2", "shape2", 100),
+            });
+    Mockito.verify(underTest, Mockito.times(1))
+        .checkStopsWithinTripShape(
+            "t1",
+            underTest.stopTimeTable.byTripId("t1"),
+            "shape1",
+            underTest.shapeTable.byShapeId("shape1"),
+            underTest.stopTable,
+            Set.of());
+    Mockito.verify(underTest, Mockito.times(1))
+        .checkStopsWithinTripShape(
+            "t2",
+            underTest.stopTimeTable.byTripId("t2"),
+            "shape2",
+            underTest.shapeTable.byShapeId("shape2"),
+            underTest.stopTable,
+            Set.of("shape11002", "shape11001", "shape11003"));
+
+        Mockito.verifyNoMoreInteractions(underTest);
   }
 }
