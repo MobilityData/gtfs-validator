@@ -6,7 +6,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 /**
  * Describes two trips with the same block id that have overlapping stop times.
  *
- * <p>Severity: {@code SeverityLevel.WARNING}
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class BlockTripsWithOverlappingStopTimesNotice extends ValidationNotice {
   public BlockTripsWithOverlappingStopTimesNotice(
