@@ -17,6 +17,8 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
@@ -34,6 +36,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 public class StopTooFarFromTripShapeValidatorTest {
@@ -680,23 +683,51 @@ public class StopTooFarFromTripShapeValidatorTest {
               new StopTooFarFromTripShapeNotice("1003", 3, "t1", "shape1", 100),
               new StopTooFarFromTripShapeNotice("1005", 5, "t2", "shape2", 100),
             });
-    Mockito.verify(underTest, Mockito.times(1))
-        .checkStopsWithinTripShape(
-            "t1",
-            underTest.stopTimeTable.byTripId("t1"),
-            "shape1",
-            underTest.shapeTable.byShapeId("shape1"),
-            underTest.stopTable,
-            Set.of());
-    Mockito.verify(underTest, Mockito.times(1))
-        .checkStopsWithinTripShape(
-            "t2",
-            underTest.stopTimeTable.byTripId("t2"),
-            "shape2",
-            underTest.shapeTable.byShapeId("shape2"),
-            underTest.stopTable,
-            Set.of("shape11001", "shape11002", "shape11003"));
 
-        Mockito.verifyNoMoreInteractions(underTest);
+    ArgumentCaptor<String> tripIdCapture = ArgumentCaptor.forClass(String.class);
+    ArgumentCaptor<List<GtfsStopTime>> stopTimeCapture = ArgumentCaptor.forClass(List.class);
+    ArgumentCaptor<String> shapeIdCapture = ArgumentCaptor.forClass(String.class);
+    ArgumentCaptor<List<GtfsShape>> shapesCapture = ArgumentCaptor.forClass(List.class);
+    ArgumentCaptor<GtfsStopTableContainer> stopTableCapture = ArgumentCaptor
+        .forClass(GtfsStopTableContainer.class);
+    ArgumentCaptor<Set<String>> cacheCapture = ArgumentCaptor.forClass(Set.class);
+
+    verify(underTest, times(1)).validate(noticeContainer);
+    verify(underTest, times(2)).checkStopsWithinTripShape(
+        tripIdCapture.capture(),
+        stopTimeCapture.capture(),
+        shapeIdCapture.capture(),
+        shapesCapture.capture(),
+        stopTableCapture.capture(),
+        cacheCapture.capture()
+    );
+
+    // Make sure we only captured 2 sets of input parameters, one for each invocation
+    assertThat(tripIdCapture.getAllValues().size()).isEqualTo(2);
+    assertThat(stopTimeCapture.getAllValues().size()).isEqualTo(2);
+    assertThat(shapeIdCapture.getAllValues().size()).isEqualTo(2);
+    assertThat(shapesCapture.getAllValues().size()).isEqualTo(2);
+    assertThat(stopTableCapture.getAllValues().size()).isEqualTo(2);
+    assertThat(cacheCapture.getAllValues().size()).isEqualTo(2);
+
+    // Check first execution parameters of checkStopsWithinTripShape()
+    assertThat(tripIdCapture.getAllValues().get(0)).isEqualTo("t1");
+    assertThat(stopTimeCapture.getAllValues().get(0)).isEqualTo(underTest.stopTimeTable.byTripId("t1"));
+    assertThat(shapeIdCapture.getAllValues().get(0)).isEqualTo("shape1");
+    assertThat(shapesCapture.getAllValues().get(0)).isEqualTo(underTest.shapeTable.byShapeId("shape1"));
+    assertThat(stopTableCapture.getAllValues().get(0)).isEqualTo(underTest.stopTable);
+
+    // Check 2nd execution parameters of checkStopsWithinTripShape()
+    assertThat(tripIdCapture.getAllValues().get(1)).isEqualTo("t2");
+    assertThat(stopTimeCapture.getAllValues().get(1)).isEqualTo(underTest.stopTimeTable.byTripId("t2"));
+    assertThat(shapeIdCapture.getAllValues().get(1)).isEqualTo("shape2");
+    assertThat(shapesCapture.getAllValues().get(1)).isEqualTo(underTest.shapeTable.byShapeId("shape2"));
+    assertThat(stopTableCapture.getAllValues().get(1)).isEqualTo(underTest.stopTable);
+
+    // Note that the contents of the cache are the final state, not the state at specific invocation because it's passed by reference and not value
+    assertThat(cacheCapture.getAllValues().get(0)).isEqualTo(Set.of("shape11001", "shape11002", "shape11003", "shape21005", "shape21004"));
+    assertThat(cacheCapture.getAllValues().get(1)).isEqualTo(Set.of("shape11001", "shape11002", "shape11003", "shape21005", "shape21004"));
+
+    Mockito.verifyNoMoreInteractions(underTest);
   }
 }
