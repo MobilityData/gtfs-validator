@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 MobilityData IO
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,21 +18,32 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/** ID value contains something different from printable ASCII characters. */
-public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
-  public NonAsciiOrNonPrintableCharNotice(
-      String filename, long csvRowNumber, String columnName, String fieldValue) {
+/**
+ * A field cannot be parsed as time.
+ *
+ * <p>Time must be in the {@code HH:MM:SS} or {@code H:MM:SS} format.
+ *
+ * <p>Example: {@code 14:30:00} for 2:30PM or {@code 25:35:00} for 1:35AM on the next day.
+ */
+public class InvalidTimeNotice extends ValidationNotice {
+
+  public InvalidTimeNotice(
+      String filename, long csvRowNumber, String fieldName, String fieldValue) {
     super(
         ImmutableMap.of(
-            "filename", filename,
-            "csvRowNumber", csvRowNumber,
-            "columnName", columnName,
-            "fieldValue", fieldValue),
-        SeverityLevel.WARNING);
+            "filename",
+            filename,
+            "csvRowNumber",
+            csvRowNumber,
+            "fieldName",
+            fieldName,
+            "fieldValue",
+            fieldValue),
+        SeverityLevel.ERROR);
   }
 
   @Override
   public String getCode() {
-    return "id_contains_non_ascii_characters";
+    return "invalid_time";
   }
 }
