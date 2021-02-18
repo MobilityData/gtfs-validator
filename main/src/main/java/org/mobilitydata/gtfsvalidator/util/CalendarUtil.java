@@ -52,8 +52,8 @@ public final class CalendarUtil {
               calendar.saturdayValue(),
               calendar.sundayValue());
     } else {
-      serviceStart = LocalDate.EPOCH;
-      serviceEnd = LocalDate.EPOCH;
+      serviceStart = ServicePeriod.EPOCH;
+      serviceEnd = ServicePeriod.EPOCH;
       weeklyPattern = 0;
     }
 

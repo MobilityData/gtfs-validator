@@ -16,6 +16,13 @@ import java.util.TreeSet;
  * <p>This class is immutable.
  */
 public class ServicePeriod {
+  /**
+   * The epoch year LocalDate, '1970-01-01'.
+   *
+   * <p>{@code LocalDate.EPOCH} is not available in Java 8, so we have to define it here.
+   */
+  public static final LocalDate EPOCH = LocalDate.of(1970, 1, 1);
+
   private final LocalDate serviceStart;
   private final LocalDate serviceEnd;
   private final byte weeklyPattern;
@@ -50,13 +57,13 @@ public class ServicePeriod {
   /**
    * Creates a service period from the given dates.
    *
-   * <p>serviceStart and serviceEnd will be set to {@code LocalDate.EPOCH}.
+   * <p>serviceStart and serviceEnd will be set to {@link #EPOCH}.
    *
    * @param dates service dates
    */
   public ServicePeriod(Set<LocalDate> dates) {
-    this.serviceStart = LocalDate.EPOCH;
-    this.serviceEnd = LocalDate.EPOCH;
+    this.serviceStart = EPOCH;
+    this.serviceEnd = EPOCH;
     this.weeklyPattern = 0;
     this.addedDays = Preconditions.checkNotNull(dates);
     this.removedDays = ImmutableSet.of();
