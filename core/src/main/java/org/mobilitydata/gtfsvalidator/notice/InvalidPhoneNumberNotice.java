@@ -22,8 +22,7 @@ import com.google.common.collect.ImmutableMap;
  * A field contains a malformed phone number.
  *
  * <p>Definitions for valid phone numbers are quite vague. We perform strict validation in the
- * upstream using the Google libphonenumber but we allow GTFS consumers to patch the severity level
- * of that validation.
+ * upstream using the Google libphonenumber.
  *
  * <p><a href="https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md">GTFS
  * reference</a> does not provide any special requirements or standards.

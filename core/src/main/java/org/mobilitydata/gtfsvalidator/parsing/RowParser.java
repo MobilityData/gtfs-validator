@@ -196,7 +196,6 @@ public class RowParser {
 
   @Nullable
   public Locale asLanguageCode(int columnIndex, boolean required) {
-    // FIXME: Enhance checks for IETF BCP 47 language code.
     return parseAsType(
         columnIndex, required, Locale::forLanguageTag, InvalidLanguageCodeNotice::new);
   }

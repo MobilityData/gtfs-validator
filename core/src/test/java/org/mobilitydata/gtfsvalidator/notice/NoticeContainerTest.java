@@ -107,20 +107,4 @@ public class NoticeContainerTest {
     assertThat(c1.getValidationNotices()).containsExactly(n1, n2);
     assertThat(c1.getSystemErrors()).containsExactly(e1, e2);
   }
-
-  private static class TestValidationNotice extends ValidationNotice {
-
-    private final String code;
-
-    public TestValidationNotice(
-        String code, Map<String, Object> context, SeverityLevel severityLevel) {
-      super(context, severityLevel);
-      this.code = code;
-    }
-
-    @Override
-    public String getCode() {
-      return code;
-    }
-  }
 }

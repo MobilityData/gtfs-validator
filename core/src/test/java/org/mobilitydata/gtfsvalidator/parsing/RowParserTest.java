@@ -25,13 +25,13 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Locale;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.notice.EmptyRowNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidEmailNotice;
+import org.mobilitydata.gtfsvalidator.notice.InvalidPhoneNumberNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidRowLengthError;
 import org.mobilitydata.gtfsvalidator.notice.InvalidUrlNotice;
 import org.mobilitydata.gtfsvalidator.notice.LeadingOrTrailingWhitespacesNotice;
@@ -179,8 +179,13 @@ public class RowParserTest {
 
   @Test
   public void asLanguageCode() {
-    assertThat(createParser("ru_RU").asLanguageCode(0, true).getLanguage())
-        .isEqualTo(Locale.forLanguageTag("ru_RU").getLanguage());
+    // Russian of Russia.
+    assertThat(createParser("ru-RU").asLanguageCode(0, true).toLanguageTag()).isEqualTo("ru-RU");
+    // Zürich German.
+    assertThat(createParser("gsw-u-sd-chzh").asLanguageCode(0, true).toLanguageTag())
+        .isEqualTo("gsw-u-sd-chzh");
+    // Latin American Spanish.
+    assertThat(createParser("es-419").asLanguageCode(0, true).toLanguageTag()).isEqualTo("es-419");
   }
 
   @Test
@@ -197,7 +202,7 @@ public class RowParserTest {
     assertThat(parser.asPhoneNumber(0, true)).isNull();
     assertThat(parser.hasParseErrorsInRow()).isTrue();
     assertThat(parser.getNoticeContainer().getValidationNotices())
-        .containsExactly(new InvalidEmailNotice(TEST_FILENAME, 8, "column name", "invalid"));
+        .containsExactly(new InvalidPhoneNumberNotice(TEST_FILENAME, 8, "column name", "invalid"));
   }
 
   @Test
