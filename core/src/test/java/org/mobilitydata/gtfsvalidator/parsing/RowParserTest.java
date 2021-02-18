@@ -25,13 +25,15 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Locale;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.notice.EmptyRowNotice;
+import org.mobilitydata.gtfsvalidator.notice.InvalidEmailNotice;
+import org.mobilitydata.gtfsvalidator.notice.InvalidPhoneNumberNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidRowLengthError;
+import org.mobilitydata.gtfsvalidator.notice.InvalidUrlNotice;
 import org.mobilitydata.gtfsvalidator.notice.LeadingOrTrailingWhitespacesNotice;
 import org.mobilitydata.gtfsvalidator.notice.NewLineInValueNotice;
 import org.mobilitydata.gtfsvalidator.notice.NonAsciiOrNonPrintableCharNotice;
@@ -69,10 +71,17 @@ public class RowParserTest {
   }
 
   @Test
-  public void asUrl() {
+  public void asUrlValid() {
     assertThat(createParser("http://google.com").asUrl(0, true)).isEqualTo("http://google.com");
+  }
 
-    assertThat(createParser("invalid").asUrl(0, true)).isNull();
+  @Test
+  public void asUrlInvalid() {
+    RowParser parser = createParser("invalid");
+    assertThat(parser.asUrl(0, true)).isNull();
+    assertThat(parser.hasParseErrorsInRow()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices())
+        .containsExactly(new InvalidUrlNotice(TEST_FILENAME, 8, "column name", "invalid"));
   }
 
   @Test
@@ -136,11 +145,18 @@ public class RowParserTest {
   }
 
   @Test
-  public void asEmail() {
+  public void asEmailValid() {
     assertThat(createParser("no-reply@google.com").asEmail(0, true))
         .isEqualTo("no-reply@google.com");
+  }
 
-    assertThat(createParser("invalid").asEmail(0, true)).isNull();
+  @Test
+  public void asEmailInvalid() {
+    RowParser parser = createParser("invalid");
+    assertThat(parser.asEmail(0, true)).isNull();
+    assertThat(parser.hasParseErrorsInRow()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices())
+        .containsExactly(new InvalidEmailNotice(TEST_FILENAME, 8, "column name", "invalid"));
   }
 
   @Test
@@ -163,8 +179,13 @@ public class RowParserTest {
 
   @Test
   public void asLanguageCode() {
-    assertThat(createParser("ru_RU").asLanguageCode(0, true).getLanguage())
-        .isEqualTo(Locale.forLanguageTag("ru_RU").getLanguage());
+    // Russian of Russia.
+    assertThat(createParser("ru-RU").asLanguageCode(0, true).toLanguageTag()).isEqualTo("ru-RU");
+    // Zürich German.
+    assertThat(createParser("gsw-u-sd-chzh").asLanguageCode(0, true).toLanguageTag())
+        .isEqualTo("gsw-u-sd-chzh");
+    // Latin American Spanish.
+    assertThat(createParser("es-419").asLanguageCode(0, true).toLanguageTag()).isEqualTo("es-419");
   }
 
   @Test
@@ -173,8 +194,15 @@ public class RowParserTest {
         .isEqualTo("(650) 253-0000");
     assertThat(createParser("ch-feed", "044 668 18 00").asPhoneNumber(0, true))
         .isEqualTo("044 668 18 00");
+  }
 
-    assertThat(createParser("au-feed", "invalid").asPhoneNumber(0, true)).isNull();
+  @Test
+  public void asPhoneInvalid() {
+    RowParser parser = createParser("us-feed", "invalid");
+    assertThat(parser.asPhoneNumber(0, true)).isNull();
+    assertThat(parser.hasParseErrorsInRow()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices())
+        .containsExactly(new InvalidPhoneNumberNotice(TEST_FILENAME, 8, "column name", "invalid"));
   }
 
   @Test
@@ -210,7 +238,8 @@ public class RowParserTest {
     // .קום :the .COM equivalent in Hebrew
     parser.asId(0, true);
     assertThat(parser.getNoticeContainer().getValidationNotices())
-        .containsExactly(new NonAsciiOrNonPrintableCharNotice(TEST_FILENAME, 8L, "column name"));
+        .containsExactly(
+            new NonAsciiOrNonPrintableCharNotice(TEST_FILENAME, 8L, "column name", "קום"));
     // Non-ASCII characters in ID are not an error. Validation may continue.
     assertThat(parser.hasParseErrorsInRow()).isFalse();
   }

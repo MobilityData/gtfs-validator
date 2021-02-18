@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 MobilityData IO
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,25 +19,32 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * ID value contains something different from printable ASCII characters.
+ * A field contains a wrong language code.
  *
- * <p>An ID field value is an internal ID, not intended to be shown to riders, and is a sequence of
- * any UTF-8 characters. Using only printable ASCII characters is recommended.
+ * <p>Language codes must follow <a href="http://www.rfc-editor.org/rfc/bcp/bcp47.txt">IETF BCP
+ * 47</a>.
+ *
+ * <p>Example: {@code en} for English, {@code en-US} for American English or {@code de} for German.
  */
-public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
-  public NonAsciiOrNonPrintableCharNotice(
-      String filename, long csvRowNumber, String columnName, String fieldValue) {
+public class InvalidLanguageCodeNotice extends ValidationNotice {
+
+  public InvalidLanguageCodeNotice(
+      String filename, long csvRowNumber, String fieldName, String fieldValue) {
     super(
         ImmutableMap.of(
-            "filename", filename,
-            "csvRowNumber", csvRowNumber,
-            "columnName", columnName,
-            "fieldValue", fieldValue),
-        SeverityLevel.WARNING);
+            "filename",
+            filename,
+            "csvRowNumber",
+            csvRowNumber,
+            "fieldName",
+            fieldName,
+            "fieldValue",
+            fieldValue),
+        SeverityLevel.ERROR);
   }
 
   @Override
   public String getCode() {
-    return "id_contains_non_ascii_characters";
+    return "invalid_language_code";
   }
 }

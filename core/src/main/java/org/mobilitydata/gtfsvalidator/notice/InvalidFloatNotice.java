@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 MobilityData IO
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,26 +18,26 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/**
- * ID value contains something different from printable ASCII characters.
- *
- * <p>An ID field value is an internal ID, not intended to be shown to riders, and is a sequence of
- * any UTF-8 characters. Using only printable ASCII characters is recommended.
- */
-public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
-  public NonAsciiOrNonPrintableCharNotice(
-      String filename, long csvRowNumber, String columnName, String fieldValue) {
+/** A field cannot be parsed as a floating point number. */
+public class InvalidFloatNotice extends ValidationNotice {
+
+  public InvalidFloatNotice(
+      String filename, long csvRowNumber, String fieldName, String fieldValue) {
     super(
         ImmutableMap.of(
-            "filename", filename,
-            "csvRowNumber", csvRowNumber,
-            "columnName", columnName,
-            "fieldValue", fieldValue),
-        SeverityLevel.WARNING);
+            "filename",
+            filename,
+            "csvRowNumber",
+            csvRowNumber,
+            "fieldName",
+            fieldName,
+            "fieldValue",
+            fieldValue),
+        SeverityLevel.ERROR);
   }
 
   @Override
   public String getCode() {
-    return "id_contains_non_ascii_characters";
+    return "invalid_float";
   }
 }
