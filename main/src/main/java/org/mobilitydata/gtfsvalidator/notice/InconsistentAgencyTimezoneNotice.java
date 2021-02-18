@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * Inconsistency Timezone among agencies.
+ * Inconsistent Timezone among agencies.
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
