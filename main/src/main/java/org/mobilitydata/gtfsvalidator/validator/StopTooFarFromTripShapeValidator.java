@@ -134,11 +134,6 @@ public class StopTooFarFromTripShapeValidator extends FileValidator {
         // provided
         continue;
       }
-      if (!(stop.locationType() == GtfsLocationType.STOP)
-          && !(stop.locationType() == GtfsLocationType.BOARDING_AREA)) {
-        // This rule only applies to stops of location_type 0 and 4 - skip to next stop
-        continue;
-      }
       if (testedCache.contains(shapeId + stop.stopId())) {
         // We've already tested this combination of shape ID and stop ID - skip to next stop
         continue;
