@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * Inconsistency Timezone among agencies.
  *
- * <p>Severity: {@code SeverityLevel.WARNING}
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class InconsistentAgencyTimezoneNotice extends ValidationNotice {
   public InconsistentAgencyTimezoneNotice(long csvRowNumber, String expected, String actual) {
@@ -29,8 +29,7 @@ public class InconsistentAgencyTimezoneNotice extends ValidationNotice {
         ImmutableMap.of(
             "csvRowNumber", csvRowNumber,
             "expected", expected,
-            "actual", actual),
-        SeverityLevel.WARNING);
+            "actual", actual));
   }
 
   @Override

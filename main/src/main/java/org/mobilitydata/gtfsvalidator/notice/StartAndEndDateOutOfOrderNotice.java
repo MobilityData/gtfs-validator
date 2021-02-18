@@ -22,7 +22,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 /**
  * Two {@code GtfsDate} are out of order
  *
- * <p>Severity: {@code SeverityLevel.WARNING}
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class StartAndEndDateOutOfOrderNotice extends ValidationNotice {
   public StartAndEndDateOutOfOrderNotice(
@@ -36,8 +36,7 @@ public class StartAndEndDateOutOfOrderNotice extends ValidationNotice {
             "startDate",
             startDate.toYYYYMMDD(),
             "endDate",
-            endDate.toYYYYMMDD()),
-        SeverityLevel.WARNING);
+            endDate.toYYYYMMDD()));
   }
 
   public StartAndEndDateOutOfOrderNotice(
@@ -53,8 +52,7 @@ public class StartAndEndDateOutOfOrderNotice extends ValidationNotice {
             "startDate",
             startDate.toYYYYMMDD(),
             "endDate",
-            endDate.toYYYYMMDD()),
-        SeverityLevel.WARNING);
+            endDate.toYYYYMMDD()));
   }
 
   @Override
