@@ -116,15 +116,13 @@ public class StopTooFarFromTripShapeValidator extends FileValidator {
       return notices;
     }
 
-    // Create a polyline from the GTFS shapes data
+    // Create a buffered polyline from the GTFS shapes data
     ShapeFactory.LineStringBuilder lineBuilder = GeospatialUtil.getShapeFactory().lineString();
     for (GtfsShape shapePoint : shapePoints) {
       lineBuilder.pointXY(shapePoint.shapePtLon(), shapePoint.shapePtLat());
     }
-    Shape shapeLine = lineBuilder.build();
-
-    // Create the buffered version of the trip as a polygon
-    Shape shapeBuffer = shapeLine.getBuffered(TRIP_BUFFER_DEGREES, shapeLine.getContext());
+    lineBuilder.buffer(TRIP_BUFFER_DEGREES);
+    Shape shapeBuffer = lineBuilder.build();
 
     // Check if each stop is within the buffer polygon
     for (GtfsStopTime stopTime : stopTimes) {
