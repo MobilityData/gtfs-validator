@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 MobilityData IO
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,25 +19,32 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * ID value contains something different from printable ASCII characters.
+ * A field contains an invalid color value.
  *
- * <p>An ID field value is an internal ID, not intended to be shown to riders, and is a sequence of
- * any UTF-8 characters. Using only printable ASCII characters is recommended.
+ * <p>A color must be encoded as a six-digit hexadecimal number. The leading "#" is not included.
+ *
+ * <p>Example: {@code FFFFFF} for white, {@code 000000} for black or {@code 0039A6} for the A,C,E
+ * lines in NYMTA.
  */
-public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
-  public NonAsciiOrNonPrintableCharNotice(
-      String filename, long csvRowNumber, String columnName, String fieldValue) {
+public class InvalidColorNotice extends ValidationNotice {
+
+  public InvalidColorNotice(
+      String filename, long csvRowNumber, String fieldName, String fieldValue) {
     super(
         ImmutableMap.of(
-            "filename", filename,
-            "csvRowNumber", csvRowNumber,
-            "columnName", columnName,
-            "fieldValue", fieldValue),
-        SeverityLevel.WARNING);
+            "filename",
+            filename,
+            "csvRowNumber",
+            csvRowNumber,
+            "fieldName",
+            fieldName,
+            "fieldValue",
+            fieldValue),
+        SeverityLevel.ERROR);
   }
 
   @Override
   public String getCode() {
-    return "id_contains_non_ascii_characters";
+    return "invalid_color";
   }
 }

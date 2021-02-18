@@ -19,15 +19,28 @@ package org.mobilitydata.gtfsvalidator.parsing;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import java.math.BigDecimal;
 import java.time.ZoneId;
+import java.time.zone.ZoneRulesException;
 import java.util.Currency;
 import java.util.Locale;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import javax.annotation.Nullable;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.notice.EmptyRowNotice;
-import org.mobilitydata.gtfsvalidator.notice.FieldParsingError;
+import org.mobilitydata.gtfsvalidator.notice.InvalidColorNotice;
+import org.mobilitydata.gtfsvalidator.notice.InvalidCurrencyNotice;
+import org.mobilitydata.gtfsvalidator.notice.InvalidDateNotice;
+import org.mobilitydata.gtfsvalidator.notice.InvalidEmailNotice;
+import org.mobilitydata.gtfsvalidator.notice.InvalidFloatNotice;
+import org.mobilitydata.gtfsvalidator.notice.InvalidIntegerNotice;
+import org.mobilitydata.gtfsvalidator.notice.InvalidLanguageCodeNotice;
+import org.mobilitydata.gtfsvalidator.notice.InvalidPhoneNumberNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidRowLengthError;
+import org.mobilitydata.gtfsvalidator.notice.InvalidTimeNotice;
+import org.mobilitydata.gtfsvalidator.notice.InvalidTimezoneNotice;
+import org.mobilitydata.gtfsvalidator.notice.InvalidUrlNotice;
 import org.mobilitydata.gtfsvalidator.notice.LeadingOrTrailingWhitespacesNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
 import org.mobilitydata.gtfsvalidator.notice.NewLineInValueNotice;
@@ -54,124 +67,6 @@ public class RowParser {
   public static final boolean OPTIONAL = false;
   private final NoticeContainer noticeContainer;
   private final GtfsFeedName feedName;
-  private final ValueParser<Integer> integerParser =
-      new ValueParser("integer") {
-        @Override
-        Integer parseString(String s) {
-          return Integer.parseInt(s);
-        }
-      };
-  private final ValueParser<Double> floatParser =
-      new ValueParser("float") {
-        @Override
-        Double parseString(String s) {
-          return Double.parseDouble(s);
-        }
-      };
-  private final ValueParser<BigDecimal> decimalParser =
-      new ValueParser("decimal") {
-        @Override
-        BigDecimal parseString(String s) {
-          return new BigDecimal(s);
-        }
-      };
-  private final ValueParser<ZoneId> timezoneParser =
-      new ValueParser("timezone") {
-        @Override
-        ZoneId parseString(String s) {
-          return ZoneId.of(s);
-        }
-      };
-  private final ValueParser<Locale> languageCodeParser =
-      new ValueParser("language code") {
-        // FIXME: Enhance checks for IETF BCP 47 language code.
-        @Override
-        Locale parseString(String s) {
-          return Locale.forLanguageTag(s);
-        }
-      };
-  private final ValueParser<GtfsColor> colorParser =
-      new ValueParser("color") {
-        @Override
-        GtfsColor parseString(String s) {
-          return GtfsColor.fromString(s);
-        }
-      };
-  private final ValueParser<Double> latitudeParser =
-      new ValueParser("latitude") {
-        @Override
-        Double parseString(String s) {
-          double d = Double.parseDouble(s);
-          if (!(-90 <= d && d <= 90)) {
-            throw new IllegalArgumentException("Latitude must be within [-90, 90]" + s);
-          }
-          return d;
-        }
-      };
-  private final ValueParser<Double> longitudeParser =
-      new ValueParser("longitude") {
-        @Override
-        Double parseString(String s) {
-          double d = Double.parseDouble(s);
-          if (!(-180 <= d && d <= 180)) {
-            throw new IllegalArgumentException("Longitude must be within [-180, 180]" + s);
-          }
-          return d;
-        }
-      };
-  private final ValueParser<Currency> currencyParser =
-      new ValueParser("currency") {
-        @Override
-        Currency parseString(String s) {
-          return Currency.getInstance(s);
-        }
-      };
-  private final ValueParser<GtfsDate> dateParser =
-      new ValueParser("date") {
-        @Override
-        GtfsDate parseString(String s) {
-          return GtfsDate.fromString(s);
-        }
-      };
-  private final ValueParser<GtfsTime> timeParser =
-      new ValueParser("time") {
-        @Override
-        GtfsTime parseString(String s) {
-          return GtfsTime.fromString(s);
-        }
-      };
-  private final ValueParser<String> emailParser =
-      new ValueParser("email") {
-        @Override
-        String parseString(String s) {
-          if (!EmailValidator.getInstance().isValid(s)) {
-            throw new IllegalArgumentException("Invalid email " + s);
-          }
-          return s;
-        }
-      };
-  private final ValueParser<String> urlParser =
-      new ValueParser("URL") {
-        @Override
-        String parseString(String s) {
-          if (!UrlValidator.getInstance().isValid(s)) {
-            throw new IllegalArgumentException("Invalid URL " + s);
-          }
-          return s;
-        }
-      };
-  private final ValueParser<String> phoneNumberParser =
-      new ValueParser("phone number") {
-        private final PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-
-        @Override
-        String parseString(String s) {
-          if (!phoneUtil.isPossibleNumber(s, feedName.getISOAlpha2CountryCode())) {
-            throw new IllegalArgumentException("Invalid phone number " + s);
-          }
-          return s;
-        }
-      };
   private CsvRow row;
   private boolean parseErrorsInRow;
 
@@ -268,218 +163,180 @@ public class RowParser {
 
   @Nullable
   public String asId(int columnIndex, boolean required) {
-    String value = asString(columnIndex, required);
-    if (value != null && !hasOnlyPrintableAscii(value)) {
-      addNoticeInRow(
-          new NonAsciiOrNonPrintableCharNotice(
-              row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex)));
-    }
-    return value;
+    return asValidatedString(
+        columnIndex,
+        required,
+        RowParser::hasOnlyPrintableAscii,
+        NonAsciiOrNonPrintableCharNotice::new);
   }
 
   @Nullable
   public String asUrl(int columnIndex, boolean required) {
-    return urlParser.parseField(columnIndex, required);
+    return asValidatedString(
+        columnIndex, required, s -> UrlValidator.getInstance().isValid(s), InvalidUrlNotice::new);
   }
 
   @Nullable
   public String asEmail(int columnIndex, boolean required) {
-    return emailParser.parseField(columnIndex, required);
+    return asValidatedString(
+        columnIndex,
+        required,
+        s -> EmailValidator.getInstance().isValid(s),
+        InvalidEmailNotice::new);
   }
 
   @Nullable
   public String asPhoneNumber(int columnIndex, boolean required) {
-    return phoneNumberParser.parseField(columnIndex, required);
+    return asValidatedString(
+        columnIndex,
+        required,
+        s -> PhoneNumberUtil.getInstance().isPossibleNumber(s, feedName.getISOAlpha2CountryCode()),
+        InvalidPhoneNumberNotice::new);
   }
 
   @Nullable
   public Locale asLanguageCode(int columnIndex, boolean required) {
-    return languageCodeParser.parseField(columnIndex, required);
+    return parseAsType(
+        columnIndex, required, Locale::forLanguageTag, InvalidLanguageCodeNotice::new);
   }
 
   @Nullable
   public ZoneId asTimezone(int columnIndex, boolean required) {
-    return timezoneParser.parseField(columnIndex, required);
+    return parseAsType(columnIndex, required, ZoneId::of, InvalidTimezoneNotice::new);
   }
 
   @Nullable
   public Currency asCurrencyCode(int columnIndex, boolean required) {
-    return currencyParser.parseField(columnIndex, required);
+    return parseAsType(columnIndex, required, Currency::getInstance, InvalidCurrencyNotice::new);
   }
 
   @Nullable
   public Double asFloat(int columnIndex, boolean required) {
-    return floatParser.parseField(columnIndex, required);
+    return parseAsType(columnIndex, required, Double::parseDouble, InvalidFloatNotice::new);
   }
 
   @Nullable
   public Double asFloat(int columnIndex, boolean required, NumberBounds bounds) {
-    Double value = asFloat(columnIndex, required);
-    if (value != null) {
-      switch (bounds) {
-        case POSITIVE:
-          if (value <= 0) {
-            addNoticeInRow(
-                new NumberOutOfRangeError(
-                    row.getFileName(),
-                    row.getRowNumber(),
-                    row.getColumnName(columnIndex),
-                    "positive float",
-                    value));
-          }
-          break;
-        case NON_NEGATIVE:
-          if (value < 0) {
-            addNoticeInRow(
-                new NumberOutOfRangeError(
-                    row.getFileName(),
-                    row.getRowNumber(),
-                    row.getColumnName(columnIndex),
-                    "non-negative float",
-                    value));
-          }
-          break;
-        case NON_ZERO:
-          if (value == 0) {
-            addNoticeInRow(
-                new NumberOutOfRangeError(
-                    row.getFileName(),
-                    row.getRowNumber(),
-                    row.getColumnName(columnIndex),
-                    "non-zero float",
-                    value));
-          }
-          break;
-      }
-    }
-    return value;
+    return checkBounds(asFloat(columnIndex, required), 0.0, columnIndex, "float", bounds);
   }
 
   @Nullable
   public Double asLatitude(int columnIndex, boolean required) {
-    return latitudeParser.parseField(columnIndex, required);
-  }
-
-  @Nullable
-  public Double asLongitude(int columnIndex, boolean required) {
-    return longitudeParser.parseField(columnIndex, required);
-  }
-
-  @Nullable
-  public Integer asInteger(int columnIndex, boolean required) {
-    return integerParser.parseField(columnIndex, required);
-  }
-
-  @Nullable
-  public Integer asInteger(int columnIndex, boolean required, NumberBounds bounds) {
-    Integer value = asInteger(columnIndex, required);
-    if (value != null) {
-      switch (bounds) {
-        case POSITIVE:
-          if (value <= 0) {
-            addNoticeInRow(
-                new NumberOutOfRangeError(
-                    row.getFileName(),
-                    row.getRowNumber(),
-                    row.getColumnName(columnIndex),
-                    "positive integer",
-                    value));
-          }
-          break;
-        case NON_NEGATIVE:
-          if (value < 0) {
-            addNoticeInRow(
-                new NumberOutOfRangeError(
-                    row.getFileName(),
-                    row.getRowNumber(),
-                    row.getColumnName(columnIndex),
-                    "non-negative integer",
-                    value));
-          }
-          break;
-        case NON_ZERO:
-          if (value == 0) {
-            addNoticeInRow(
-                new NumberOutOfRangeError(
-                    row.getFileName(),
-                    row.getRowNumber(),
-                    row.getColumnName(columnIndex),
-                    "non-zero integer",
-                    value));
-          }
-          break;
-      }
+    Double value = asFloat(columnIndex, required);
+    if (value != null && !(-90 <= value && value <= 90)) {
+      addNoticeInRow(
+          new NumberOutOfRangeError(
+              row.getFileName(),
+              row.getRowNumber(),
+              row.getColumnName(columnIndex),
+              "latitude within [-90, 90]",
+              value));
+      return null;
     }
     return value;
   }
 
   @Nullable
+  public Double asLongitude(int columnIndex, boolean required) {
+    Double value = asFloat(columnIndex, required);
+    if (value != null && !(-180 <= value && value <= 180)) {
+      addNoticeInRow(
+          new NumberOutOfRangeError(
+              row.getFileName(),
+              row.getRowNumber(),
+              row.getColumnName(columnIndex),
+              "longitude within [-180, 180]",
+              value));
+      return null;
+    }
+    return value;
+  }
+
+  @Nullable
+  public Integer asInteger(int columnIndex, boolean required) {
+    return parseAsType(columnIndex, required, Integer::parseInt, InvalidIntegerNotice::new);
+  }
+
+  @Nullable
+  public Integer asInteger(int columnIndex, boolean required, NumberBounds bounds) {
+    return checkBounds(asInteger(columnIndex, required), 0, columnIndex, "integer", bounds);
+  }
+
+  @Nullable
   public BigDecimal asDecimal(int columnIndex, boolean required) {
-    return decimalParser.parseField(columnIndex, required);
+    return parseAsType(columnIndex, required, BigDecimal::new, InvalidFloatNotice::new);
   }
 
   @Nullable
   public BigDecimal asDecimal(int columnIndex, boolean required, NumberBounds bounds) {
-    BigDecimal value = asDecimal(columnIndex, required);
-    if (value != null) {
-      final int compareToZero = value.compareTo(new BigDecimal(0));
-      switch (bounds) {
-        case POSITIVE:
-          if (compareToZero <= 0) {
-            addNoticeInRow(
-                new NumberOutOfRangeError(
-                    row.getFileName(),
-                    row.getRowNumber(),
-                    row.getColumnName(columnIndex),
-                    "positive decimal",
-                    value));
-          }
-          break;
-        case NON_NEGATIVE:
-          if (compareToZero < 0) {
-            addNoticeInRow(
-                new NumberOutOfRangeError(
-                    row.getFileName(),
-                    row.getRowNumber(),
-                    row.getColumnName(columnIndex),
-                    "non-negative decimal",
-                    value));
-          }
-          break;
-        case NON_ZERO:
-          if (compareToZero == 0) {
-            addNoticeInRow(
-                new NumberOutOfRangeError(
-                    row.getFileName(),
-                    row.getRowNumber(),
-                    row.getColumnName(columnIndex),
-                    "non-zero decimal",
-                    value));
-          }
-          break;
-      }
+    return checkBounds(
+        asDecimal(columnIndex, required), new BigDecimal(0), columnIndex, "decimal", bounds);
+  }
+
+  /**
+   * Checks that the value meets boundary requirements.
+   *
+   * @param value the value to check
+   * @param zero a zero instance for the given type
+   * @param columnIndex index of CSV column where the value is located
+   * @param typeName short descriptive type name, such as "integer"
+   * @param bounds boundary requirements
+   * @param <T> the actual type of the value
+   * @return the same value as passed to the function
+   */
+  private <T extends Comparable<T>> T checkBounds(
+      @Nullable T value, T zero, int columnIndex, String typeName, NumberBounds bounds) {
+    if (value == null) {
+      return null;
+    }
+    final int compareToZero = value.compareTo(zero);
+    switch (bounds) {
+      case POSITIVE:
+        if (compareToZero <= 0) {
+          addNoticeInRow(
+              new NumberOutOfRangeError(
+                  row.getFileName(),
+                  row.getRowNumber(),
+                  row.getColumnName(columnIndex),
+                  "positive " + typeName,
+                  value));
+        }
+        break;
+      case NON_NEGATIVE:
+        if (compareToZero < 0) {
+          addNoticeInRow(
+              new NumberOutOfRangeError(
+                  row.getFileName(),
+                  row.getRowNumber(),
+                  row.getColumnName(columnIndex),
+                  "non-negative " + typeName,
+                  value));
+        }
+        break;
+      case NON_ZERO:
+        if (compareToZero == 0) {
+          addNoticeInRow(
+              new NumberOutOfRangeError(
+                  row.getFileName(),
+                  row.getRowNumber(),
+                  row.getColumnName(columnIndex),
+                  "non-zero " + typeName,
+                  value));
+        }
+        break;
     }
     return value;
   }
 
   @Nullable
   public GtfsColor asColor(int columnIndex, boolean required) {
-    return colorParser.parseField(columnIndex, required);
+    return parseAsType(columnIndex, required, GtfsColor::fromString, InvalidColorNotice::new);
   }
 
   @Nullable
   public <E> Integer asEnum(int columnIndex, boolean required, EnumCreator<E> enumCreator) {
-    String s = asString(columnIndex, required);
-    if (s == null) {
-      return null;
-    }
-    int i;
-    try {
-      i = Integer.parseInt(s);
-    } catch (Exception ex) {
-      addNoticeInRow(
-          new FieldParsingError(
-              row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), "enum", s));
+    Integer i = asInteger(columnIndex, required);
+    if (i == null) {
       return null;
     }
     if (enumCreator.convert(i) == null) {
@@ -492,16 +349,31 @@ public class RowParser {
 
   @Nullable
   public GtfsTime asTime(int columnIndex, boolean required) {
-    return timeParser.parseField(columnIndex, required);
+    return parseAsType(columnIndex, required, GtfsTime::fromString, InvalidTimeNotice::new);
   }
 
   @Nullable
   public GtfsDate asDate(int columnIndex, boolean required) {
-    return dateParser.parseField(columnIndex, required);
+    return parseAsType(columnIndex, required, GtfsDate::fromString, InvalidDateNotice::new);
   }
 
+  /**
+   * Tells if a given notice is an {@code ERROR}.
+   *
+   * @param notice the notice to check
+   * @return true if the notice is an error, false otherwise
+   */
+  private static boolean isError(ValidationNotice notice) {
+    return notice.getSeverityLevel().ordinal() >= SeverityLevel.ERROR.ordinal();
+  }
+
+  /**
+   * Adds notice to the container and updates {@link #parseErrorsInRow} if the notice is an error.
+   *
+   * @param notice
+   */
   private void addNoticeInRow(ValidationNotice notice) {
-    if (notice.getSeverityLevel().ordinal() >= SeverityLevel.ERROR.ordinal()) {
+    if (isError(notice)) {
       parseErrorsInRow = true;
     }
     noticeContainer.addValidationNotice(notice);
@@ -519,33 +391,87 @@ public class RowParser {
     E convert(int t);
   }
 
-  abstract class ValueParser<T> {
-
-    private final String formatName;
-
-    public ValueParser(String formatName) {
-      this.formatName = formatName;
+  /**
+   * Parses a string to a given type: {@link GtfsTime}, {@link GtfsColor} etc. and adds notices if
+   * parsing failed.
+   *
+   * @param columnIndex index of the column to parse
+   * @param required whether the value is required according to GTFS
+   * @param parsingFunction function that converts string to an object to return
+   * @param noticingFunction function to create a notice about parse errors
+   * @param <T> the type to return
+   * @return a parsed object or null if the value is missing or invalid
+   */
+  @Nullable
+  private <T> T parseAsType(
+      int columnIndex,
+      boolean required,
+      Function<String, T> parsingFunction,
+      NoticingFunction noticingFunction) {
+    String s = asString(columnIndex, required);
+    if (s == null) {
+      return null;
     }
+    try {
+      return parsingFunction.apply(s);
+    } catch (IllegalArgumentException | ZoneRulesException e) {
+      // Most parsing functions throw an IllegalArgumentException but ZoneId.of() throws
+      // a ZoneRulesException.
+      addNoticeInRow(
+          noticingFunction.apply(
+              row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), s));
+      return null;
+    }
+  }
 
-    abstract T parseString(String s);
-
-    final T parseField(int columnIndex, boolean required) {
-      String s = asString(columnIndex, required);
-      if (s == null) {
+  /**
+   * Validates a string as URL, phone number etc. and adds notices for invalid values.
+   *
+   * <ul>
+   *   <li>If {@code validatingFunction} returns true, then the value is considered valid and {@code
+   *       asValidatedString} returns it.
+   *   <li>If {@code noticingFunction} returns an error, then the value is considered invalid and
+   *       {@code asValidatedString} returns null.
+   *   <li>If {@code noticingFunction} returns a warning or notice, then the value is considered
+   *       valid and {@code asValidatedString} returns it.
+   * </ul>
+   *
+   * @param columnIndex index of the column to parse
+   * @param required whether the value is required according to GTFS
+   * @param validatingFunction the predicate to validate a given string
+   * @param noticingFunction function to create a notice about parse errors
+   * @return the cell value at the given column or null if the value is missing or invalid
+   */
+  @Nullable
+  private String asValidatedString(
+      int columnIndex,
+      boolean required,
+      Predicate<String> validatingFunction,
+      NoticingFunction noticingFunction) {
+    String s = asString(columnIndex, required);
+    if (s == null) {
+      return null;
+    }
+    if (!validatingFunction.test(s)) {
+      ValidationNotice notice =
+          noticingFunction.apply(
+              row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), s);
+      addNoticeInRow(notice);
+      if (isError(notice)) {
         return null;
       }
-      try {
-        return parseString(s);
-      } catch (Exception ex) {
-        addNoticeInRow(
-            new FieldParsingError(
-                row.getFileName(),
-                row.getRowNumber(),
-                row.getColumnName(columnIndex),
-                formatName,
-                s));
-        return null;
-      }
     }
+    return s;
+  }
+
+  /**
+   * Generates a validation notice for the given value at the given position in a file.
+   *
+   * @param <T> the type of a returned notice
+   */
+  @FunctionalInterface
+  private interface NoticingFunction<T extends ValidationNotice> {
+
+    T apply(String filename, long csvRowNumber, String fieldName, String fieldValue);
   }
 }

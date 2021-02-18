@@ -52,8 +52,10 @@ public abstract class Notice {
       return true;
     }
     if (other instanceof Notice) {
-      return context.equals(((Notice) other).context)
-          && severityLevel.equals(((Notice) other).severityLevel);
+      Notice otherNotice = (Notice) other;
+      return context.equals(otherNotice.context)
+          && getCode().equals(otherNotice.getCode())
+          && severityLevel.equals(otherNotice.severityLevel);
     }
     return false;
   }
