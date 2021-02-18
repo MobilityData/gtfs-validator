@@ -359,58 +359,6 @@ public class StopTooFarFromTripShapeValidatorTest {
    * don't support.
    */
   @Test
-  public void stopLocationTypeNotZeroOrFourShouldNotGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    StopTooFarFromTripShapeValidator underTest = new StopTooFarFromTripShapeValidator();
-
-    underTest.tripTable =
-        createTripTable(
-            noticeContainer, ImmutableList.of(createTrip(4, "r1", "service1", "t1", "shape1")));
-
-    underTest.stopTimeTable =
-        createStopTimeTable(
-            noticeContainer,
-            ImmutableList.of(
-                createStopTime(5, "t1", "1001", 1),
-                createStopTime(8, "t1", "1002", 2),
-                createStopTime(9, "t1", "1003", 3)));
-
-    underTest.shapeTable =
-        createShapeTable(
-            noticeContainer,
-            ImmutableList.of(
-                createShapePoint(5, "shape1", 28.05724310653972D, -82.41350776611507D, 1, 400f),
-                createShapePoint(6, "shape1", 28.05746701492806D, -82.41493135129478D, 2, 400f),
-                createShapePoint(7, "shape1", 28.05800068503469f, -82.4159394137605D, 3, 400f),
-                createShapePoint(8, "shape1", 28.05808869825447D, -82.41648754043338D, 4, 400f),
-                createShapePoint(9, "shape1", 28.05809979887893D, -82.41773971025437D, 5, 400f)));
-
-    underTest.stopTable =
-        createStopTable(
-            noticeContainer,
-            ImmutableList.of(
-                createStop(2, "1001", 28.05811731042478D, -82.41616877502503D, 2),
-                createStop(4, "1002", 28.05812364854794D, -82.41617370439423D, 2),
-                // this location is outside buffer
-                createStop(5, "1003", 28.05673053256373D, -82.4170801432763D, 2)));
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
-  }
-
-  /**
-   * See map of trip shape and stops (in GeoJSON) at
-   * https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a
-   *
-   * <p>For debugging, you can export a JTS-version of the buffer in WKT format using code at
-   * https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a#gistcomment-3425554. The WKT
-   * output can then be visualized at https://arthur-e.github.io/Wicket/sandbox-gmaps3.html.
-   *
-   * <p>The spatial4j version of the buffer can't easily be visualized using GeoJSON or WKT because
-   * it uses a LineString and a proprietary "buffer" extension to GeoJSON and WKT, which most tools
-   * don't support.
-   */
-  @Test
   public void singleStopWithinBufferShouldNotGenerateNotice() {
     NoticeContainer noticeContainer = new NoticeContainer();
     StopTooFarFromTripShapeValidator underTest = new StopTooFarFromTripShapeValidator();
