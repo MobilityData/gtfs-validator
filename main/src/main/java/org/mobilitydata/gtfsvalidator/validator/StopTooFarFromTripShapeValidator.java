@@ -59,11 +59,11 @@ import org.mobilitydata.gtfsvalidator.util.GeospatialUtil;
  * be compared against every trip shape point.
  *
  * <p>However, in a typical case where most trips have independent shapes and the trips that do re-use
- * shapes share most of the same stops, and therefore the time complexity has a tighter bound of
- * <i>O(n)</i>, where <i>n</i> is the number of records in <i>stop_times.txt<i>. This is because
- * <i>p</i> is a fixed constant less than the number of records in <i>shapes.txt</i> and each point
- * is not processed more than once. Note that this point-in-polygon operation can still take a
- * reasonable amount of time to execute (the constant/overhead can be large) and should be considered
+ * shapes share most of the same stops, the time complexity has a tighter bound of <i>O(n)</i>,
+ * where <i>n</i> is the number of records in <i>stop_times.txt</i>. This is because <i>p</i> is a
+ * fixed constant less than the number of records in <i>shapes.txt</i> and each point is not
+ * processed more than once. Note that this point-in-polygon operation can still take a reasonable
+ * amount of time to execute (the constant/overhead can be large) and should be considered
  * expensive. A cache is used to avoid calculating the distance between the same stop and shape more
  * than once when multiple trips share the same shape.
  *
