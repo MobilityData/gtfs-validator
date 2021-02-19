@@ -19,27 +19,35 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * A station has `parent_station` field set.
+ * A field cannot be parsed as a timezone.
+ *
+ * <p>Timezones are defined at <a href="https://www.iana.org/time-zones">www.iana.org</a>. Timezone
+ * names never contain the space character but may contain an underscore. Refer to <a
+ * href="http://en.wikipedia.org/wiki/List_of_tz_zones">Wikipedia</a> for a list of valid values.
+ *
+ * <p>Example: {@code Asia/Tokyo}, {@code America/Los_Angeles} or {@code Africa/Cairo}.
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class StationWithParentStationNotice extends ValidationNotice {
-  public StationWithParentStationNotice(
-      long csvRowNumber, String stopId, String stopName, String parentStation) {
+public class InvalidTimezoneNotice extends ValidationNotice {
+
+  public InvalidTimezoneNotice(
+      String filename, long csvRowNumber, String fieldName, String fieldValue) {
     super(
         ImmutableMap.of(
-            "stopId",
-            stopId,
-            "stopName",
-            stopName,
+            "filename",
+            filename,
             "csvRowNumber",
             csvRowNumber,
-            "parentStation",
-            parentStation));
+            "fieldName",
+            fieldName,
+            "fieldValue",
+            fieldValue),
+        SeverityLevel.ERROR);
   }
 
   @Override
   public String getCode() {
-    return "station_with_parent_station";
+    return "invalid_timezone";
   }
 }

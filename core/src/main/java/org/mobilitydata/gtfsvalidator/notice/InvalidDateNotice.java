@@ -19,17 +19,33 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * A required column is missing in the input file.
+ * A field cannot be parsed as date.
+ *
+ * <p>Dates must have the YYYYMMDD format.
+ *
+ * <p>Example: {@code 20180913} for September 13th, 2018.
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class MissingRequiredColumnError extends ValidationNotice {
-  public MissingRequiredColumnError(String filename, String fieldName) {
-    super(ImmutableMap.of("filename", filename, "fieldName", fieldName));
+public class InvalidDateNotice extends ValidationNotice {
+
+  public InvalidDateNotice(
+      String filename, long csvRowNumber, String fieldName, String fieldValue) {
+    super(
+        ImmutableMap.of(
+            "filename",
+            filename,
+            "csvRowNumber",
+            csvRowNumber,
+            "fieldName",
+            fieldName,
+            "fieldValue",
+            fieldValue),
+        SeverityLevel.ERROR);
   }
 
   @Override
   public String getCode() {
-    return "missing_required_column";
+    return "invalid_date";
   }
 }

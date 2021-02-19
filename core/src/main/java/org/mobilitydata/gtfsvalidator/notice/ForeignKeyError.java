@@ -24,6 +24,8 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p>This is the case when a foreign key of one table references a non-existing value in its
  * original table.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class ForeignKeyError extends ValidationNotice {
   public ForeignKeyError(

@@ -18,6 +18,11 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
+/**
+ * Missing `stop_times.arrival_time` or `stop_times.departure_time`
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
+ */
 public class StopTimeWithOnlyArrivalOrDepartureTimeNotice extends ValidationNotice {
   public StopTimeWithOnlyArrivalOrDepartureTimeNotice(
       long csvRowNumber, String tripId, int stopSequence, String specifiedField) {

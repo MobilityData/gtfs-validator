@@ -19,17 +19,34 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * A required column is missing in the input file.
+ * A field contains a wrong language code.
+ *
+ * <p>Language codes must follow <a href="http://www.rfc-editor.org/rfc/bcp/bcp47.txt">IETF BCP
+ * 47</a>.
+ *
+ * <p>Example: {@code en} for English, {@code en-US} for American English or {@code de} for German.
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class MissingRequiredColumnError extends ValidationNotice {
-  public MissingRequiredColumnError(String filename, String fieldName) {
-    super(ImmutableMap.of("filename", filename, "fieldName", fieldName));
+public class InvalidLanguageCodeNotice extends ValidationNotice {
+
+  public InvalidLanguageCodeNotice(
+      String filename, long csvRowNumber, String fieldName, String fieldValue) {
+    super(
+        ImmutableMap.of(
+            "filename",
+            filename,
+            "csvRowNumber",
+            csvRowNumber,
+            "fieldName",
+            fieldName,
+            "fieldValue",
+            fieldValue),
+        SeverityLevel.ERROR);
   }
 
   @Override
   public String getCode() {
-    return "missing_required_column";
+    return "invalid_language_code";
   }
 }

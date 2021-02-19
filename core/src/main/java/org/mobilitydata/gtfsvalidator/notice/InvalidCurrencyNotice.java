@@ -19,17 +19,35 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * A required column is missing in the input file.
+ * A field contains a wrong currency code.
+ *
+ * <p>Currency code must follow <a href="https://en.wikipedia.org/wiki/ISO_4217#Active_codes">ISO
+ * 4217</a>.
+ *
+ * <p>Example: {@code CAD} for Canadian dollars, {@code EUR} for euros or {@code JPY} for Japanese
+ * yen.
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class MissingRequiredColumnError extends ValidationNotice {
-  public MissingRequiredColumnError(String filename, String fieldName) {
-    super(ImmutableMap.of("filename", filename, "fieldName", fieldName));
+public class InvalidCurrencyNotice extends ValidationNotice {
+
+  public InvalidCurrencyNotice(
+      String filename, long csvRowNumber, String fieldName, String fieldValue) {
+    super(
+        ImmutableMap.of(
+            "filename",
+            filename,
+            "csvRowNumber",
+            csvRowNumber,
+            "fieldName",
+            fieldName,
+            "fieldValue",
+            fieldValue),
+        SeverityLevel.ERROR);
   }
 
   @Override
   public String getCode() {
-    return "missing_required_column";
+    return "invalid_currency";
   }
 }

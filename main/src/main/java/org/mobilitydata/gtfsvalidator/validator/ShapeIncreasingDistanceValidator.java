@@ -43,7 +43,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
         GtfsShape curr = shapeList.get(i);
         if (prev.hasShapeDistTraveled()
             && curr.hasShapeDistTraveled()
-            && prev.shapeDistTraveled() > curr.shapeDistTraveled()) {
+            && prev.shapeDistTraveled() >= curr.shapeDistTraveled()) {
           noticeContainer.addValidationNotice(
               new DecreasingShapeDistanceNotice(
                   curr.shapeId(),

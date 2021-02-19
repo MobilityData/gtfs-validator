@@ -18,7 +18,11 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/** A CSV file is empty. */
+/**
+ * A CSV file is empty.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
+ */
 public class EmptyFileNotice extends ValidationNotice {
 
   public EmptyFileNotice(String filename) {

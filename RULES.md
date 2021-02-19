@@ -6,9 +6,16 @@ Rules are declared in the `Notice` modules:
  
 Note that the notice ID naming conventions changed in `v2` to make contributions of new rules easier by reducing the likelihood of conflicting IDs during parallel development. The table below indicates the ID used in gtfs-validator `v2` and higher in the first column and the legacy ID for `v1.x` in the second column.
 
+## Definitions
+Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
+
+* `ERROR` notices are for items that the [GTFS reference specification](https://github.com/google/transit/tree/master/gtfs/spec/en) explictly requires or prohibits (e.g., using the language "must"). The validator uses [RFC2119](https://tools.ietf.org/html/rfc2119) to interpret the language in the GTFS spec.
+* `WARNING` notices are for items that will affect the quality of GTFS datasets but the GTFS spec does expressly require or prohibit. For example, these might be items recommended using the language "should" or "should not" in the GTFS spec, or items recommended in the MobilityData [GTFS Best Practices](https://gtfs.org/best-practices/).
+* `INFO` notices are for items that do not affect the feed's quality, such as unknown files or unknown fields.
+
 ## Table of Notices [WIP]
 
-| Error ID (v2.0+) | Error ID (v1.x) 	| Error Title                                                             	|
+| Notice ID (v2.0+) | Notice ID (v1.x) 	| Notice Title                                                             	|
 |--------------------------	|--------------------	|-------------------------------------------------------------------------	|
 | [`MissingRequiredFieldError`](#MissingRequiredFieldError) | [E015](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E015), [E029](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E029)      	| Missing required `field`. Missing field `agency_id` for file `agency.txt` with more than 1 record.                                                	|
 | [`DuplicatedColumnNotice`](#DuplicatedColumnNotice)  |        	            | Duplicated column                                                      	|
@@ -17,7 +24,7 @@ Note that the notice ID naming conventions changed in `v2` to make contributions
 | [`MissingRequiredFileError`](#MissingRequiredFileError)| [E003](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E003)      	| Missing required `file`                                                 	|
 | [`InvalidRowLengthError`](#InvalidRowLengthError)   | [E004](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E004)      	| Invalid csv row length                                                  	|
 | [`FieldParsingError`](#FieldParsingError)       | [E005](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E005), [E006](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E006), [E017](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E017)    	| Cannot parse value                            |
-| [`DuplicatedKeyError`](#DuplicatedKeyError)      | [E020](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E020)      	| Duplicated entity                                                       	|
+| [`DuplicateKeyError`](#DuplicateKeyError)      | [E020](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E020)      	| Duplicated entity                                                       	|
 | [`NumberOfOutRangeError`](#NumberOfOutRangeError)   | [E010](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E010), [E011](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E011)      	| Field value out of range                                      	|
 | [`UnexpectedEnumValueError`](#UnexpectedEnumValueError) | [E021](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E021), [E026](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E026)      	| Unexpected `enum` value                                                 	|
 | [`UnknownFileNotice`](#UnknownFileNotice)           | [W004](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W004)        	| Extra `file` found                                                              	|
@@ -54,7 +61,7 @@ Note that the notice ID naming conventions changed in `v2` to make contributions
 |[`UnusableTripNotice`](#UnusableTripNotice)| [E051](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E051)      	| Trips must have more than one stop to be usable                         	|
 |[`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)| [E052](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E052)      	| Stop too far from trip shape                                            	|
 | [`OverlappingFrequencyNotice`](#OverlappingFrequencyNotice) | [E053](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E053)      	| Trip frequencies overlap                                                	|
-|[`BlockTripsWithOverlappingStopTimes`](#BlockTripsWithOverlappingStopTimes)| [E054](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E054)      	| Block trips must not have overlapping stop times                        	|
+|[`BlockTripsWithOverlappingStopTimesNotice`](#BlockTripsWithOverlappingStopTimesNotice)| [E054](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E054)      	| Block trips must not have overlapping stop times                        	|
 |[`FeedInfoLangAndAgencyLangMismatchNotice`](#FeedInfoLangAndAgencyLangMismatchNotice)|  [E055](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E055)       	| Mismatching feed and agency language fields                        	|
 |[`MissingCalendarAndCalendarDateFilesNotice`](#MissingCalendarAndCalendarDateFilesNotice)| [E056](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E056)      	| Missing `calendar_dates.txt` and `calendar.txt` files                   	|
 |[`DecreasingStopTimeDistanceNotice`](#DecreasingStopTimeDistanceNotice)| [E057](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E057)      	| Decreasing `shape_dist_traveled` in `stop_times.txt`| 
@@ -115,9 +122,9 @@ A row in the input file has a different number of values than specified by the C
 
 The values in the given column of the input rows do not represent valid values according to the column type, or have values that conflict with others according to the requirements on the input.
 
-<a name="DuplicatedKeyError"/>
+<a name="DuplicateKeyError"/>
 
-### DuplicatedKeyError
+### DuplicateKeyError
 
 The values of the given key and rows are duplicates.
 

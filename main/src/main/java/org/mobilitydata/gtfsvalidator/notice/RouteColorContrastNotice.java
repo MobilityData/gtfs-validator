@@ -19,6 +19,12 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 
+/**
+ * "The color difference between route_color and route_text_color should provide sufficient contrast
+ * when viewed on a black and white screen." (http://gtfs.org/best-practices/#routestxt)
+ *
+ * <p>Severity: {@code SeverityLevel.WARNING}
+ */
 public class RouteColorContrastNotice extends ValidationNotice {
   public RouteColorContrastNotice(
       String routeId, long csvRowNumber, GtfsColor routeColor, GtfsColor routeTextColor) {
@@ -31,7 +37,8 @@ public class RouteColorContrastNotice extends ValidationNotice {
             "routeColor",
             routeColor.toHtmlColor(),
             "routeTextColor",
-            routeTextColor.toHtmlColor()));
+            routeTextColor.toHtmlColor()),
+        SeverityLevel.WARNING);
   }
 
   @Override

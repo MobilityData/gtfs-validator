@@ -18,6 +18,11 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
+/**
+ * Inconsistent Timezone among agencies.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
+ */
 public class InconsistentAgencyTimezoneNotice extends ValidationNotice {
   public InconsistentAgencyTimezoneNotice(long csvRowNumber, String expected, String actual) {
     super(

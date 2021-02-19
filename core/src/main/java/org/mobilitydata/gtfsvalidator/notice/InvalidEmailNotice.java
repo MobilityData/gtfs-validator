@@ -19,27 +19,35 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * A station has `parent_station` field set.
+ * A field contains a malformed email address.
+ *
+ * <p>Definitions for valid emails are quite vague. We perform strict validation in the upstream
+ * using the Apache Commons EmailValidator.
+ *
+ * <p><a href="https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md">GTFS
+ * reference</a> does not provide any special requirements or standards.
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class StationWithParentStationNotice extends ValidationNotice {
-  public StationWithParentStationNotice(
-      long csvRowNumber, String stopId, String stopName, String parentStation) {
+public class InvalidEmailNotice extends ValidationNotice {
+
+  public InvalidEmailNotice(
+      String filename, long csvRowNumber, String fieldName, String fieldValue) {
     super(
         ImmutableMap.of(
-            "stopId",
-            stopId,
-            "stopName",
-            stopName,
+            "filename",
+            filename,
             "csvRowNumber",
             csvRowNumber,
-            "parentStation",
-            parentStation));
+            "fieldName",
+            fieldName,
+            "fieldValue",
+            fieldValue),
+        SeverityLevel.ERROR);
   }
 
   @Override
   public String getCode() {
-    return "station_with_parent_station";
+    return "invalid_email";
   }
 }

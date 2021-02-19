@@ -19,17 +19,34 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * A required column is missing in the input file.
+ * A field contains an invalid color value.
+ *
+ * <p>A color must be encoded as a six-digit hexadecimal number. The leading "#" is not included.
+ *
+ * <p>Example: {@code FFFFFF} for white, {@code 000000} for black or {@code 0039A6} for the A,C,E
+ * lines in NYMTA.
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class MissingRequiredColumnError extends ValidationNotice {
-  public MissingRequiredColumnError(String filename, String fieldName) {
-    super(ImmutableMap.of("filename", filename, "fieldName", fieldName));
+public class InvalidColorNotice extends ValidationNotice {
+
+  public InvalidColorNotice(
+      String filename, long csvRowNumber, String fieldName, String fieldValue) {
+    super(
+        ImmutableMap.of(
+            "filename",
+            filename,
+            "csvRowNumber",
+            csvRowNumber,
+            "fieldName",
+            fieldName,
+            "fieldValue",
+            fieldValue),
+        SeverityLevel.ERROR);
   }
 
   @Override
   public String getCode() {
-    return "missing_required_column";
+    return "invalid_color";
   }
 }

@@ -19,6 +19,14 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
+/**
+ * At any time, the published GTFS dataset should be valid for at least the next 7 days, and ideally
+ * for as long as the operator is confident that the schedule will continue to be operated. If
+ * possible, the GTFS dataset should cover at least the next 30 days of service.
+ * (http://gtfs.org/best-practices/#feed_infotxt)
+ *
+ * <p>Severity: {@code SeverityLevel.WARNING}
+ */
 public class FeedExpirationDateNotice extends ValidationNotice {
   public FeedExpirationDateNotice(
       long csvRowNumber,
@@ -34,7 +42,8 @@ public class FeedExpirationDateNotice extends ValidationNotice {
             "feedEndDate",
             feedEndDate.toYYYYMMDD(),
             "suggestedExpirationDate",
-            suggestedExpirationDate));
+            suggestedExpirationDate),
+        SeverityLevel.WARNING);
   }
 
   @Override

@@ -19,17 +19,33 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * A required column is missing in the input file.
+ * A field cannot be parsed as time.
+ *
+ * <p>Time must be in the {@code H:MM:SS}, {@code HH:MM:SS} or {@code HHH:MM:SS} format.
+ *
+ * <p>Example: {@code 14:30:00} for 2:30PM or {@code 25:35:00} for 1:35AM on the next day.
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class MissingRequiredColumnError extends ValidationNotice {
-  public MissingRequiredColumnError(String filename, String fieldName) {
-    super(ImmutableMap.of("filename", filename, "fieldName", fieldName));
+public class InvalidTimeNotice extends ValidationNotice {
+
+  public InvalidTimeNotice(
+      String filename, long csvRowNumber, String fieldName, String fieldValue) {
+    super(
+        ImmutableMap.of(
+            "filename",
+            filename,
+            "csvRowNumber",
+            csvRowNumber,
+            "fieldName",
+            fieldName,
+            "fieldValue",
+            fieldValue),
+        SeverityLevel.ERROR);
   }
 
   @Override
   public String getCode() {
-    return "missing_required_column";
+    return "invalid_time";
   }
 }
