@@ -99,4 +99,22 @@ public class ShapeIncreasingDistanceValidatorTest {
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(new DecreasingShapeDistanceNotice("first shape", 2, 9.0d, 2, 1, 10.0d, 1));
   }
+
+  @Test
+  public void shapeWithEqualDistanceAlongShapeShouldGenerateNotice() {
+    ShapeIncreasingDistanceValidator underTest = new ShapeIncreasingDistanceValidator();
+    NoticeContainer noticeContainer = new NoticeContainer();
+    underTest.table =
+        createShapeTable(
+            noticeContainer,
+            ImmutableList.of(
+                createShapePoint(1, "first shape", 30.0d, 45, 1, 10.0d),
+                createShapePoint(2, "first shape", 31.0d, 42, 2, 45.0d),
+                createShapePoint(3, "first shape", 29.0d, 46, 3, 45.0)));
+
+    underTest.validate(noticeContainer);
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactly(
+            new DecreasingShapeDistanceNotice("first shape", 3, 45.0d, 3, 2, 45.0d, 2));
+  }
 }
