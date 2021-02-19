@@ -6,9 +6,23 @@ Rules are declared in the `Notice` modules:
  
 Note that the notice ID naming conventions changed in `v2` to make contributions of new rules easier by reducing the likelihood of conflicting IDs during parallel development. The table below indicates the ID used in gtfs-validator `v2` and higher in the first column and the legacy ID for `v1.x` in the second column.
 
+## Definitions
+Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
+* `INFO` notices are used for things that do not affect the feed's quality, such as unknown files or unknown fields
+
+e.g. [UnknownColumnNotice](https://github.com/MobilityData/gtfs-validator/blob/ac337d026cfe63a8318bd86a20e7b91934700389/core/src/main/java/org/mobilitydata/gtfsvalidator/notice/UnknownColumnNotice.java#L26)
+
+* `WARNING` notices are used for things that affects the feed's quality (e.g., insufficient color contrast) but the feed remains functional
+
+e.g. [RouteColorContrastNotice](https://github.com/MobilityData/gtfs-validator/blob/eea17a0d189458829fd20ddca14f3944876056a9/main/src/main/java/org/mobilitydata/gtfsvalidator/notice/RouteColorContrastNotice.java#L28)
+
+* `ERROR` notices are used when the feed cannot function (e.g., broken foreign key reference) 
+
+ e.g. [InvalidCurrencyNotice](https://github.com/MobilityData/gtfs-validator/blob/eea17a0d189458829fd20ddca14f3944876056a9/core/src/main/java/org/mobilitydata/gtfsvalidator/notice/InvalidCurrencyNotice.java#L32)
+ 
 ## Table of Notices [WIP]
 
-| Error ID (v2.0+) | Error ID (v1.x) 	| Error Title                                                             	|
+| Notice ID (v2.0+) | Notice ID (v1.x) 	| Notice Title                                                             	|
 |--------------------------	|--------------------	|-------------------------------------------------------------------------	|
 | [`MissingRequiredFieldError`](#MissingRequiredFieldError) | [E015](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E015), [E029](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E029)      	| Missing required `field`. Missing field `agency_id` for file `agency.txt` with more than 1 record.                                                	|
 | [`DuplicatedColumnNotice`](#DuplicatedColumnNotice)  |        	            | Duplicated column                                                      	|
