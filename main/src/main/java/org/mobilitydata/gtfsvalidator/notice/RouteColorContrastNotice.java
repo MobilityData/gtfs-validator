@@ -37,7 +37,8 @@ public class RouteColorContrastNotice extends ValidationNotice {
             "routeColor",
             routeColor.toHtmlColor(),
             "routeTextColor",
-            routeTextColor.toHtmlColor()));
+            routeTextColor.toHtmlColor()),
+        SeverityLevel.WARNING);
   }
 
   @Override
