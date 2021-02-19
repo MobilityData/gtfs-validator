@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * The input file CSV header has the same column name repeated.
  *
- * <p>Severity: {@code SeverityLevel.WARNING}
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class DuplicatedColumnNotice extends ValidationNotice {
   // Indices should start from 1.
@@ -32,8 +32,7 @@ public class DuplicatedColumnNotice extends ValidationNotice {
             "filename", filename,
             "fieldName", fieldName,
             "firstIndex", firstIndex,
-            "secondIndex", secondIndex),
-        SeverityLevel.WARNING);
+            "secondIndex", secondIndex));
   }
 
   @Override
