@@ -18,7 +18,8 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/** A field cannot be parsed as a floating point number.
+/**
+ * A field cannot be parsed as a floating point number.
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
