@@ -24,6 +24,8 @@ import com.google.common.collect.ImmutableMap;
  * <p>Dates must have the YYYYMMDD format.
  *
  * <p>Example: {@code 20180913} for September 13th, 2018.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class InvalidDateNotice extends ValidationNotice {
 

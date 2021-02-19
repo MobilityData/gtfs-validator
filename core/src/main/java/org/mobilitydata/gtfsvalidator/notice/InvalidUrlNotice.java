@@ -34,6 +34,8 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p>However, some production feeds may use certain characters without escaping and those URL may
  * be still openable in modern browsers.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class InvalidUrlNotice extends ValidationNotice {
 

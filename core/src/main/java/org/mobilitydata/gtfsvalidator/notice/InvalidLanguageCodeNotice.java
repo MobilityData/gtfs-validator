@@ -25,6 +25,8 @@ import com.google.common.collect.ImmutableMap;
  * 47</a>.
  *
  * <p>Example: {@code en} for English, {@code en-US} for American English or {@code de} for German.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class InvalidLanguageCodeNotice extends ValidationNotice {
 

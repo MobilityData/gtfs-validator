@@ -25,6 +25,8 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p>Example: {@code FFFFFF} for white, {@code 000000} for black or {@code 0039A6} for the A,C,E
  * lines in NYMTA.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class InvalidColorNotice extends ValidationNotice {
 
