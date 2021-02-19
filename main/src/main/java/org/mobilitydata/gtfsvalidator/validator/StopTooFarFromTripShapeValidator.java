@@ -169,8 +169,7 @@ public class StopTooFarFromTripShapeValidator extends FileValidator {
     for (GtfsStopTime stopTime : stopTimes) {
       GtfsStop stop = stopTable.byStopId(stopTime.stopId());
       if (stop == null || !stop.hasStopLat() || !stop.hasStopLon()) {
-        // Lat/lon are optional for location_type 4 - skip to the next stop if they aren't
-        // provided
+        // Skip to the next stop on invalid data (stop_times.stop_id stops must have locations)
         continue;
       }
       if (testedCache.contains(shapeId + stop.stopId())) {
