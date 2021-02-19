@@ -24,14 +24,10 @@ import org.locationtech.spatial4j.shape.Point;
 import org.locationtech.spatial4j.shape.ShapeFactory;
 
 public class GeospatialUtil {
-  public static final double TRIP_BUFFER_METERS =
-      100.0d; // Per GTFS Best Practices (https://gtfs.org/best-practices/#shapestxt)
-  static final double KILOMETER_TO_METER_CONVERSION_FACTOR =
+  public static final double KILOMETER_TO_METER_CONVERSION_FACTOR =
       1000.0d; // conversion factor from kilometers to meters
-  static final double METER_TO_KILOMETER_CONVERSION_FACTOR =
+  public static final double METER_TO_KILOMETER_CONVERSION_FACTOR =
       1 / 1000.0d; // conversion factor from kilometers to meters
-  public static final double TRIP_BUFFER_DEGREES =
-      DistanceUtils.KM_TO_DEG * TRIP_BUFFER_METERS * METER_TO_KILOMETER_CONVERSION_FACTOR;
 
   private GeospatialUtil() {}
 
