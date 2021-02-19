@@ -8,18 +8,11 @@ Note that the notice ID naming conventions changed in `v2` to make contributions
 
 ## Definitions
 Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
-* `INFO` notices are used for things that do not affect the feed's quality, such as unknown files or unknown fields
 
-e.g. [UnknownColumnNotice](https://github.com/MobilityData/gtfs-validator/blob/ac337d026cfe63a8318bd86a20e7b91934700389/core/src/main/java/org/mobilitydata/gtfsvalidator/notice/UnknownColumnNotice.java#L26)
+* `ERROR` notices are for items that the [GTFS reference specification](https://github.com/google/transit/tree/master/gtfs/spec/en) explictly requires or prohibits (e.g., using the language "must"). The validator uses [RFC2119](https://tools.ietf.org/html/rfc2119) to interpret the language in the GTFS spec.
+* `WARNING` notices are for items that will affect the quality of GTFS datasets but the GTFS spec does expressly require or prohibit. For example, these might be items recommended using the language "should" or "should not" in the GTFS spec, or items recommended in the MobilityData [GTFS Best Practices](https://gtfs.org/best-practices/).
+* `INFO` notices are for items that do not affect the feed's quality, such as unknown files or unknown fields.
 
-* `WARNING` notices are used for things that affects the feed's quality (e.g., insufficient color contrast) but the feed remains functional
-
-e.g. [RouteColorContrastNotice](https://github.com/MobilityData/gtfs-validator/blob/eea17a0d189458829fd20ddca14f3944876056a9/main/src/main/java/org/mobilitydata/gtfsvalidator/notice/RouteColorContrastNotice.java#L28)
-
-* `ERROR` notices are used when the feed cannot function (e.g., broken foreign key reference) 
-
- e.g. [InvalidCurrencyNotice](https://github.com/MobilityData/gtfs-validator/blob/eea17a0d189458829fd20ddca14f3944876056a9/core/src/main/java/org/mobilitydata/gtfsvalidator/notice/InvalidCurrencyNotice.java#L32)
- 
 ## Table of Notices [WIP]
 
 | Notice ID (v2.0+) | Notice ID (v1.x) 	| Notice Title                                                             	|
