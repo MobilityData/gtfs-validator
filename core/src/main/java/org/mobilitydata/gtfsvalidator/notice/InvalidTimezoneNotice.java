@@ -26,6 +26,8 @@ import com.google.common.collect.ImmutableMap;
  * href="http://en.wikipedia.org/wiki/List_of_tz_zones">Wikipedia</a> for a list of valid values.
  *
  * <p>Example: {@code Asia/Tokyo}, {@code America/Los_Angeles} or {@code Africa/Cairo}.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class InvalidTimezoneNotice extends ValidationNotice {
 

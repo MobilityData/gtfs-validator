@@ -26,6 +26,8 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p>Example: {@code CAD} for Canadian dollars, {@code EUR} for euros or {@code JPY} for Japanese
  * yen.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class InvalidCurrencyNotice extends ValidationNotice {
 

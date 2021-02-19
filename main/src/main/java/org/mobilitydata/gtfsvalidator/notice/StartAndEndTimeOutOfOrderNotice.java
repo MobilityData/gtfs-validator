@@ -19,6 +19,11 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
+/**
+ * Two {@code GtfsTime} are out of order
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
+ */
 public class StartAndEndTimeOutOfOrderNotice extends ValidationNotice {
   public StartAndEndTimeOutOfOrderNotice(
       String filename, String entityId, long csvRowNumber, GtfsTime startTime, GtfsTime endTime) {

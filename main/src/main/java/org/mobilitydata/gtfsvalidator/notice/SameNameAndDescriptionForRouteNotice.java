@@ -20,6 +20,12 @@ import static org.mobilitydata.gtfsvalidator.table.GtfsRouteTableLoader.FILENAME
 
 import com.google.common.collect.ImmutableMap;
 
+/** A {@code GtfsRoute} has identical value for `routes.route_desc` and
+ * `routes.route_long_name`{@code /}`routes`{@code /}route_short_name.
+ * <p>"Do not simply duplicate the name of the location." (http://gtfs.org/reference/static#routestxt)
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
+ * */
 public class SameNameAndDescriptionForRouteNotice extends ValidationNotice {
   public SameNameAndDescriptionForRouteNotice(
       long csvRowNumber, String routeId, String routeDesc, String routeShortOrLongName) {

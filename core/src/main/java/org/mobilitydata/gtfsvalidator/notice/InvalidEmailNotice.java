@@ -26,6 +26,8 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p><a href="https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md">GTFS
  * reference</a> does not provide any special requirements or standards.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class InvalidEmailNotice extends ValidationNotice {
 

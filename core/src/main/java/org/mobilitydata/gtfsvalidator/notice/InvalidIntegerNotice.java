@@ -18,7 +18,10 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/** A field cannot be parsed as an integer. */
+/** A field cannot be parsed as an integer.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
+ */
 public class InvalidIntegerNotice extends ValidationNotice {
 
   public InvalidIntegerNotice(

@@ -18,11 +18,18 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
+/**
+ * All routes should have different `routes.route_long_name`. All routes should have different
+ * `routes.route_short_name`.
+ *
+ * <p>Severity: {@code SeverityLevel.WARNING}
+ */
 public class DuplicateRouteNameNotice extends ValidationNotice {
   public DuplicateRouteNameNotice(String duplicatedField, long csvRowNumber, String routeId) {
     super(
         ImmutableMap.of(
-            "duplicatedField", duplicatedField, "csvRowNumber", csvRowNumber, "routeId", routeId));
+            "duplicatedField", duplicatedField, "csvRowNumber", csvRowNumber, "routeId", routeId),
+        SeverityLevel.WARNING);
   }
 
   @Override

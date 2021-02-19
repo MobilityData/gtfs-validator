@@ -21,6 +21,8 @@ import com.google.common.collect.ImmutableMap;
 /**
  * Short name of a route is too long (more than 12 characters,
  * https://gtfs.org/best-practices/#routestxt).
+ *
+ * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class RouteShortNameTooLongNotice extends ValidationNotice {
   public RouteShortNameTooLongNotice(String routeId, long csvRowNumber, String routeShortName) {
@@ -28,7 +30,8 @@ public class RouteShortNameTooLongNotice extends ValidationNotice {
         ImmutableMap.of(
             "routeId", routeId,
             "csvRowNumber", csvRowNumber,
-            "routeShortName", routeShortName));
+            "routeShortName", routeShortName),
+        SeverityLevel.WARNING);
   }
 
   @Override
