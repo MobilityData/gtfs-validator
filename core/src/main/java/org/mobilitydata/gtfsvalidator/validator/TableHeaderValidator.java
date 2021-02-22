@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import org.mobilitydata.gtfsvalidator.notice.DuplicatedColumnNotice;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredColumnError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.UnknownColumnNotice;
@@ -32,7 +33,7 @@ public class TableHeaderValidator {
       String[] actualColumns,
       Set<String> supportedColumns,
       Set<String> requiredColumns,
-      NoticeContainer noticeContainer) {
+      NoticeContainer noticeContainer) throws ErrorDetectedException {
     boolean isValid = true;
     if (actualColumns.length == 0) {
       // This is an empty file.
