@@ -56,6 +56,11 @@ public class Arguments {
               + "downloaded from network (if not provided, the ZIP will be stored in memory)")
   private String storageDirectory;
 
+  @Parameter(
+      names = {"-a", "--abort_on_error"},
+      description = "Stop validation process on first error")
+  private boolean abortOnError = true;
+
   public String getInput() {
     return input;
   }
@@ -78,5 +83,9 @@ public class Arguments {
 
   public String getStorageDirectory() {
     return storageDirectory;
+  }
+
+  public boolean getAbortOnError() {
+    return abortOnError;
   }
 }
