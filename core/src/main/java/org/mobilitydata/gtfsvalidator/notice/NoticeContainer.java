@@ -39,12 +39,16 @@ public class NoticeContainer {
   private final List<ValidationNotice> validationNotices = new ArrayList<>();
   private final List<SystemError> systemErrors = new ArrayList<>();
 
-  public void addValidationNotice(ValidationNotice notice) {
+  public void addValidationNotice(ValidationNotice notice) throws ErrorDetectedException {
     validationNotices.add(notice);
+    if (notice.getSeverityLevel().equals(SeverityLevel.ERROR)) {
+      throw new ErrorDetectedException(notice.toString());
+    }
   }
 
-  public void addSystemError(SystemError error) {
+  public void addSystemError(SystemError error) throws ErrorDetectedException {
     systemErrors.add(error);
+    throw new ErrorDetectedException(error.toString());
   }
 
   public List<ValidationNotice> getValidationNotices() {
