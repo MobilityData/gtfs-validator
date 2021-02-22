@@ -39,6 +39,7 @@ import java.util.Map;
 import javax.lang.model.element.Modifier;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyError;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.MoreThanOneEntityNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
@@ -213,6 +214,7 @@ public class TableContainerGenerator {
         .addParameter(NoticeContainer.class, "noticeContainer")
         .addStatement("$T table = new $T(entities)", tableContainerTypeName, tableContainerTypeName)
         .addStatement("table.setupIndices(noticeContainer)")
+        .addException(ErrorDetectedException.class)
         .addStatement("return table")
         .build();
   }
@@ -224,6 +226,7 @@ public class TableContainerGenerator {
         MethodSpec.methodBuilder("setupIndices")
             .addModifiers(Modifier.PRIVATE)
             .addParameter(NoticeContainer.class, "noticeContainer")
+            .addException(ErrorDetectedException.class)
             .returns(void.class);
 
     if (fileDescriptor.singleRow()) {
