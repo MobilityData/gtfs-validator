@@ -22,9 +22,9 @@ package org.mobilitydata.gtfsvalidator.annotation;
  * <p>Example.
  *
  * <pre>
- *   @GtfsTable("stop_times.txt")
+ *   {@literal @}GtfsTable("stop_times.txt")
  *   public interface GtfsStopTimeSchema extends GtfsEntity {
- *       @NonNegative
+ *       {@literal @}onNegative
  *       double shapeDistTraveled();
  *   }
  * </pre>

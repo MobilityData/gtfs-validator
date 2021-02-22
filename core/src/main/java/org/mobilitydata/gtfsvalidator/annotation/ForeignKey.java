@@ -31,11 +31,11 @@ import java.lang.annotation.Target;
  * <p>Example.
  *
  * <pre>
- *   @GtfsTable("trips.txt")
+ *   {@literal @}GtfsTable("trips.txt")
  *   public interface GtfsTripSchema extends GtfsEntity {
- *     @FieldType(FieldTypeEnum.ID)
- *     @Required
- *     @ForeignKey(table = "routes.txt", field = "route_id")
+ *     {@literal @}FieldType(FieldTypeEnum.ID)
+ *     {@literal @}Required
+ *     {@literal @}ForeignKey(table = "routes.txt", field = "route_id")
  *     String routeId();
  *   }
  * </pre>

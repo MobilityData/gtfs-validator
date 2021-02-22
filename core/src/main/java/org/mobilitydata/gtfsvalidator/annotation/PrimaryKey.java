@@ -32,11 +32,11 @@ import java.lang.annotation.Target;
  * <p>Example.
  *
  * <pre>
- *   @GtfsTable("stops.txt")
+ *   {@literal @}GtfsTable("stops.txt")
  *   public interface GtfsStopSchema extends GtfsEntity {
- *       @FieldType(FieldTypeEnum.ID)
- *       @Required
- *       @PrimaryKey
+ *       {@literal @}FieldType(FieldTypeEnum.ID)
+ *       {@literal @}Required
+ *       {@literal @}PrimaryKey
  *       String stopId();
  *   }
  * </pre>
@@ -44,8 +44,8 @@ import java.lang.annotation.Target;
  * <p>This also adds a method to the container class to find an entity by its primary key.
  *
  * <pre>
- *   @Generated
- *   public class GtfsStopTableContainer extends GtfsTableContainer<GtfsStop> {
+ *   {@literal @}Generated
+ *   public class GtfsStopTableContainer extends GtfsTableContainer&lt;GtfsStop&gt; {
  *       public GtfsStop byStopId(String key) {
  *           // ...
  *       }

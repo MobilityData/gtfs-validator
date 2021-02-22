@@ -18,7 +18,11 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/** Short and long name are equal for a route. */
+/**
+ * Short and long name are equal for a route.
+ *
+ * <p>Severity: {@code SeverityLevel.WARNING}
+ */
 public class RouteShortAndLongNameEqualNotice extends ValidationNotice {
   public RouteShortAndLongNameEqualNotice(
       String routeId, long csvRowNumber, String routeShortName, String routeLongName) {
@@ -27,7 +31,8 @@ public class RouteShortAndLongNameEqualNotice extends ValidationNotice {
             "routeId", routeId,
             "csvRowNumber", csvRowNumber,
             "routeShortName", routeShortName,
-            "routeLongName", routeLongName));
+            "routeLongName", routeLongName),
+        SeverityLevel.WARNING);
   }
 
   @Override

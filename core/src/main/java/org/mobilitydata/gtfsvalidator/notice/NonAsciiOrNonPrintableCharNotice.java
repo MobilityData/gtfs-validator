@@ -18,14 +18,21 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/** ID value contains something different from printable ASCII characters. */
+/**
+ * ID value contains something different from printable ASCII characters.
+ *
+ * <p>An ID field value is an internal ID, not intended to be shown to riders, and is a sequence of
+ * any UTF-8 characters. Using only printable ASCII characters is recommended.
+ */
 public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
-  public NonAsciiOrNonPrintableCharNotice(String filename, long csvRowNumber, String columnName) {
+  public NonAsciiOrNonPrintableCharNotice(
+      String filename, long csvRowNumber, String columnName, String fieldValue) {
     super(
         ImmutableMap.of(
             "filename", filename,
             "csvRowNumber", csvRowNumber,
-            "columnName", columnName),
+            "columnName", columnName,
+            "fieldValue", fieldValue),
         SeverityLevel.WARNING);
   }
 

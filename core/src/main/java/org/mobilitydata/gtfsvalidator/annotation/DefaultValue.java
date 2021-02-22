@@ -24,9 +24,9 @@ package org.mobilitydata.gtfsvalidator.annotation;
  * <p>Example.
  *
  * <pre>
- *   @GtfsTable("routes.txt")
+ *   {@literal @}GtfsTable("routes.txt")
  *   public interface GtfsRouteSchema extends GtfsEntity {
- *       @DefaultValue("FFFFFF")
+ *       {@literal @}DefaultValue("FFFFFF")
  *       GtfsColor routeColor();
  *   }
  * </pre>

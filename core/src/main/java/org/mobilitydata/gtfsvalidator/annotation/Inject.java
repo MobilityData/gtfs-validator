@@ -29,9 +29,9 @@ import java.lang.annotation.Target;
  * <p>Example.
  *
  * <pre>
- *   @GtfsValidator
+ *   {@literal @}GtfsValidator
  *   public class AgencyConsistencyValidator extends FileValidator {
- *       @Inject
+ *       {@literal @}Inject
  *       GtfsAgencyTableContainer agencyTable;
  *   }
  * </pre>

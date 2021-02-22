@@ -18,7 +18,11 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/** Indicates that a string could not be parsed as a URI reference. */
+/**
+ * Indicates that a string could not be parsed as a URI reference.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
+ */
 public class URISyntaxError extends SystemError {
 
   public URISyntaxError(String message) {

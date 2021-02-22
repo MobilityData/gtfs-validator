@@ -33,14 +33,15 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
  * <p>The default language may be multilingual for datasets with the original text in multiple
  * languages. In such cases, the {@code feed_lang} field should contain the language code {@code
  * mul} defined by the norm ISO 639-2. If {@code feed_lang} is not {@code mul} and does not match
- * with {@code agency_lang}, that's an error.
+ * with {@code agency_lang}, a notice should be generated.
  *
  * <p>References:
  *
  * <ul>
- *   <li><a href="http://gtfs.org/reference/static/#feed_infotxt")">GTFS feed_info.txt
- *       specification</a>
- *   <li><a href="http://gtfs.org/reference/static/#agencytxt">GTFS agency.txt specification</a>
+ *   <li>&lt;a href="http://gtfs.org/reference/static/#feed_infotxt")"&gt;GTFS feed_info.txt
+ *       specification&lt;/a&gt;
+ *   <li>&lt;a href="http://gtfs.org/reference/static/#agencytxt"&gt;GTFS agency.txt
+ *       specification&lt;/a&gt;
  * </ul>
  *
  * <p>Generated notice: {@link FeedInfoLangAndAgencyLangMismatchNotice}.

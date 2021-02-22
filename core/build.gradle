@@ -22,6 +22,7 @@ group 'org.mobilitydata'
 version "gtfs-validator-${System.getenv("versionTag")}"
 
 sourceCompatibility = JavaVersion.VERSION_11
+compileTestJava.options.encoding = "UTF-8"
 
 repositories {
     mavenCentral()

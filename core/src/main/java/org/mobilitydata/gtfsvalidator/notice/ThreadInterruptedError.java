@@ -7,6 +7,8 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p>{@link InterruptedException} is thrown when a thread is waiting, sleeping, or otherwise
  * occupied, and the thread is interrupted, either before or during the activity.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class ThreadInterruptedError extends SystemError {
   public ThreadInterruptedError(String message) {

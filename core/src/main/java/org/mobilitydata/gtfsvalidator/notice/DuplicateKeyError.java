@@ -18,7 +18,11 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/** The values of the given key and rows are duplicates. */
+/**
+ * The values of the given key and rows are duplicates.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
+ */
 public class DuplicateKeyError extends ValidationNotice {
   public DuplicateKeyError(
       String filename,

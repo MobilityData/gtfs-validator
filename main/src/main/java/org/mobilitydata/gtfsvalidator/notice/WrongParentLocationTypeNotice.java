@@ -21,6 +21,8 @@ import com.google.common.collect.ImmutableMap;
 /**
  * Incorrect type of the parent location (e.g., a parent for a stop or an entrance must be a
  * station).
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class WrongParentLocationTypeNotice extends ValidationNotice {
   public WrongParentLocationTypeNotice(

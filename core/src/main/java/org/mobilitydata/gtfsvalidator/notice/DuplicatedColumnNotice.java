@@ -18,7 +18,11 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-/** The input file CSV header has the same column name repeated. */
+/**
+ * The input file CSV header has the same column name repeated.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
+ */
 public class DuplicatedColumnNotice extends ValidationNotice {
   // Indices should start from 1.
   public DuplicatedColumnNotice(
