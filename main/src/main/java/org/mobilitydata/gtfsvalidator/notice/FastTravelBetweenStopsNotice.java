@@ -19,6 +19,11 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
 
+/**
+ * Trip is too fast
+ *
+ * <p>SeverityLevel: {@code SeverityLevel.WARNING}
+ */
 public class FastTravelBetweenStopsNotice extends ValidationNotice {
   public FastTravelBetweenStopsNotice(
       String tripId, double speedkmh, List<Integer> stopSequenceList) {
@@ -27,7 +32,8 @@ public class FastTravelBetweenStopsNotice extends ValidationNotice {
             .put("tripId", tripId)
             .put("speedkmh", speedkmh)
             .put("stopSequenceList", stopSequenceList)
-            .build());
+            .build(),
+        SeverityLevel.WARNING);
   }
 
   @Override
