@@ -21,6 +21,7 @@ import java.util.List;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.DecreasingShapeDistanceNotice;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
@@ -35,7 +36,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
   @Inject GtfsShapeTableContainer table;
 
   @Override
-  public void validate(NoticeContainer noticeContainer) {
+  public void validate(NoticeContainer noticeContainer) throws ErrorDetectedException {
     for (List<GtfsShape> shapeList : Multimaps.asMap(table.byShapeIdMap()).values()) {
       // GtfsShape objects are sorted based on @SequenceKey annotation on shape_pt_sequence field.
       for (int i = 1; i < shapeList.size(); ++i) {

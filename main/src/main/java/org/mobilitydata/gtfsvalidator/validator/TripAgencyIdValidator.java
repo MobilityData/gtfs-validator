@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
@@ -38,7 +39,7 @@ public class TripAgencyIdValidator extends FileValidator {
   @Inject GtfsRouteTableContainer routeTable;
 
   @Override
-  public void validate(NoticeContainer noticeContainer) {
+  public void validate(NoticeContainer noticeContainer) throws ErrorDetectedException {
     if (agencyTable.entityCount() < 2) {
       // routes.agency_id is not required when there is a single agency.
       return;

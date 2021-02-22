@@ -22,6 +22,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.DecreasingShapeDistanceNotice;
 import org.mobilitydata.gtfsvalidator.notice.DecreasingStopTimeDistanceNotice;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
@@ -36,7 +37,7 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
   @Inject GtfsStopTimeTableContainer stopTimeTable;
 
   @Override
-  public void validate(NoticeContainer noticeContainer) {
+  public void validate(NoticeContainer noticeContainer) throws ErrorDetectedException {
     for (List<GtfsStopTime> stopTimeList : Multimaps.asMap(stopTimeTable.byTripIdMap()).values()) {
       // GtfsStopTime objects are sorted based on @SequenceKey annotation on stop_sequence field.
       for (int i = 1; i < stopTimeList.size(); ++i) {

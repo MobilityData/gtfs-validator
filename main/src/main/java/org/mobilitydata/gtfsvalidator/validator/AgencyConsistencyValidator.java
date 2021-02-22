@@ -20,6 +20,7 @@ import java.time.ZoneId;
 import java.util.Locale;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyLangNotice;
 import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyTimezoneNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
@@ -46,7 +47,7 @@ public class AgencyConsistencyValidator extends FileValidator {
   @Inject GtfsAgencyTableContainer agencyTable;
 
   @Override
-  public void validate(NoticeContainer noticeContainer) {
+  public void validate(NoticeContainer noticeContainer) throws ErrorDetectedException {
     final int agencyCount = agencyTable.entityCount();
     if (agencyCount < 2) {
       return;

@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.UnusableTripNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
@@ -35,7 +36,7 @@ public class TripUsabilityValidator extends FileValidator {
   @Inject GtfsStopTimeTableContainer stopTimeTable;
 
   @Override
-  public void validate(NoticeContainer noticeContainer) {
+  public void validate(NoticeContainer noticeContainer) throws ErrorDetectedException {
     for (GtfsTrip trip : tripTable.getEntities()) {
       String tripId = trip.tripId();
       if (stopTimeTable.byTripId(tripId).size() <= 1) {

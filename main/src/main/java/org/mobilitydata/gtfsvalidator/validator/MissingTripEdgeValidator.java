@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.MissingTripEdgeNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
@@ -40,7 +41,7 @@ public class MissingTripEdgeValidator extends FileValidator {
   @Inject GtfsStopTimeTableContainer stopTimeTable;
 
   @Override
-  public void validate(NoticeContainer noticeContainer) {
+  public void validate(NoticeContainer noticeContainer) throws ErrorDetectedException {
     for (Entry<String, List<GtfsStopTime>> entry :
         Multimaps.asMap(stopTimeTable.byTripIdMap()).entrySet()) {
       String tripId = entry.getKey();

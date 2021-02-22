@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.UnusedShapeNotice;
 import org.mobilitydata.gtfsvalidator.notice.UnusedTripNotice;
@@ -38,7 +39,7 @@ public class TripUsageValidator extends FileValidator {
   @Inject GtfsStopTimeTableContainer stopTimeTable;
 
   @Override
-  public void validate(NoticeContainer noticeContainer) {
+  public void validate(NoticeContainer noticeContainer) throws ErrorDetectedException {
     // Do not report the same trip_id multiple times.
     Set<String> reportedTrips = new HashSet<>();
     for (GtfsTrip trip : tripTable.getEntities()) {

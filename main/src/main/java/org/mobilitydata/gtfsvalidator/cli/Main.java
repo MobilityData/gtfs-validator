@@ -30,6 +30,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ThreadInterruptedError;
@@ -68,8 +69,9 @@ public class Main {
     // Input.
     feedLoader.setNumThreads(args.getNumThreads());
     NoticeContainer noticeContainer = new NoticeContainer();
-    GtfsFeedContainer feedContainer;
+    GtfsFeedContainer feedContainer = null;
     GtfsInput gtfsInput = null;
+    try {
     try {
       if (args.getInput() == null) {
         if (Strings.isNullOrEmpty(args.getStorageDirectory())) {
@@ -102,6 +104,9 @@ public class Main {
     feedContainer =
         feedLoader.loadAndValidate(gtfsInput, validationContext, validatorLoader, noticeContainer);
 
+    } catch (ErrorDetectedException e) {
+      System.out.println("Error detected in validation process. Will abort.");
+    }
     // Output
     exportReport(args.getOutputBase(), noticeContainer);
     final long endNanos = System.nanoTime();

@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.ForeignKeyError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
@@ -40,7 +41,7 @@ public class GtfsTripServiceIdForeignKeyValidator extends FileValidator {
   @Inject GtfsCalendarDateTableContainer calendarDateContainer;
 
   @Override
-  public void validate(NoticeContainer noticeContainer) {
+  public void validate(NoticeContainer noticeContainer) throws ErrorDetectedException {
     for (GtfsTrip trip : tripContainer.getEntities()) {
       String childKey = trip.serviceId();
       if (!hasReferencedKey(childKey, calendarContainer, calendarDateContainer)) {

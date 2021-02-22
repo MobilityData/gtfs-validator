@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 import java.util.Locale;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.FeedInfoLangAndAgencyLangMismatchNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
@@ -53,7 +54,7 @@ public class MatchingFeedAndAgencyLangValidator extends FileValidator {
   @Inject GtfsAgencyTableContainer agencyTable;
 
   @Override
-  public void validate(NoticeContainer noticeContainer) {
+  public void validate(NoticeContainer noticeContainer) throws ErrorDetectedException {
     // If there are no feed info entries or if no feed lang has been specified, we don't do any
     // validation.
     if (feedInfoTable.entityCount() == 0 || !feedInfoTable.getSingleEntity().hasFeedLang()) {

@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.OverlappingFrequencyNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFrequency;
@@ -28,7 +29,7 @@ public class OverlappingFrequencyValidator extends FileValidator {
   @Inject GtfsFrequencyTableContainer table;
 
   @Override
-  public void validate(NoticeContainer noticeContainer) {
+  public void validate(NoticeContainer noticeContainer) throws ErrorDetectedException {
     for (List<GtfsFrequency> unorderedList : Multimaps.asMap(table.byTripIdMap()).values()) {
       List<GtfsFrequency> frequencyList = new ArrayList<>(unorderedList);
       Collections.sort(

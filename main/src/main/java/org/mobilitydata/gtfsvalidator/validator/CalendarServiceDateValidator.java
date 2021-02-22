@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.StartAndEndDateOutOfOrderNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
@@ -33,7 +34,7 @@ public class CalendarServiceDateValidator extends FileValidator {
   @Inject GtfsCalendarTableContainer calendarTable;
 
   @Override
-  public void validate(NoticeContainer noticeContainer) {
+  public void validate(NoticeContainer noticeContainer) throws ErrorDetectedException {
     for (GtfsCalendar calendar : calendarTable.getEntities()) {
       if (calendar.hasStartDate()
           && calendar.hasEndDate()

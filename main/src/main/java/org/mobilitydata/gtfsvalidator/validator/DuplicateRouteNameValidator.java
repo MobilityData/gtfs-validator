@@ -21,6 +21,7 @@ import java.util.Map;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateRouteNameNotice;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
@@ -39,54 +40,52 @@ public class DuplicateRouteNameValidator extends FileValidator {
   @Inject GtfsRouteTableContainer routeTable;
 
   @Override
-  public void validate(NoticeContainer noticeContainer) {
+  public void validate(NoticeContainer noticeContainer) throws ErrorDetectedException {
     final Map<String, GtfsRoute> routeByLongName = new HashMap<>(routeTable.entityCount());
     final Map<String, GtfsRoute> routeByShortName = new HashMap<>(routeTable.entityCount());
     final Map<String, GtfsRoute> routeByShortAndLongName = new HashMap<>(routeTable.entityCount());
-    routeTable
-        .getEntities()
-        .forEach(
-            route -> {
-              if (route.hasRouteShortName() && route.hasRouteLongName()) {
-                if (routeByShortAndLongName.containsKey(
-                    route.routeShortName() + route.routeLongName())) {
-                  noticeContainer.addValidationNotice(
-                      new DuplicateRouteNameNotice(
-                          "route_short_name and route_long_name",
-                          route.csvRowNumber(),
-                          route.routeId()));
-                  return;
-                } else {
-                  routeByShortAndLongName.put(
-                      route.routeShortName() + route.routeLongName(), route);
-                }
-              }
-              if (route.hasRouteLongName()) {
-                if (routeByLongName.containsKey(route.routeLongName())) {
-                  if (areRoutesFromSameAgency(
-                      route.agencyId(), routeByLongName.get(route.routeLongName()).agencyId())) {
-                    noticeContainer.addValidationNotice(
-                        new DuplicateRouteNameNotice(
-                            "route_long_name", route.csvRowNumber(), route.routeId()));
-                  }
-                  return;
-                } else {
-                  routeByLongName.put(route.routeLongName(), route);
-                }
-              }
-              if (route.hasRouteShortName()) {
-                if (routeByShortName.containsKey(route.routeShortName())) {
-                  if (areRoutesFromSameAgency(
-                      route.agencyId(), routeByShortName.get(route.routeShortName()).agencyId())) {
-                    noticeContainer.addValidationNotice(
-                        new DuplicateRouteNameNotice(
-                            "route_short_name", route.csvRowNumber(), route.routeId()));
-                  }
-                } else {
-                  routeByShortName.put(route.routeShortName(), route);
-                }
-              }
-            });
+    for (GtfsRoute route : routeTable
+        .getEntities()) {
+      if (route.hasRouteShortName() && route.hasRouteLongName()) {
+        if (routeByShortAndLongName.containsKey(
+            route.routeShortName() + route.routeLongName())) {
+          noticeContainer.addValidationNotice(
+              new DuplicateRouteNameNotice(
+                  "route_short_name and route_long_name",
+                  route.csvRowNumber(),
+                  route.routeId()));
+          continue;
+        } else {
+          routeByShortAndLongName.put(
+              route.routeShortName() + route.routeLongName(), route);
+        }
+      }
+      if (route.hasRouteLongName()) {
+        if (routeByLongName.containsKey(route.routeLongName())) {
+          if (areRoutesFromSameAgency(
+              route.agencyId(), routeByLongName.get(route.routeLongName()).agencyId())) {
+            noticeContainer.addValidationNotice(
+                new DuplicateRouteNameNotice(
+                    "route_long_name", route.csvRowNumber(), route.routeId()));
+          }
+          continue;
+        } else {
+          routeByLongName.put(route.routeLongName(), route);
+        }
+      }
+      if (route.hasRouteShortName()) {
+        if (routeByShortName.containsKey(route.routeShortName())) {
+          if (areRoutesFromSameAgency(
+              route.agencyId(), routeByShortName.get(route.routeShortName()).agencyId())) {
+            noticeContainer.addValidationNotice(
+                new DuplicateRouteNameNotice(
+                    "route_short_name", route.csvRowNumber(), route.routeId()));
+          }
+        } else {
+          routeByShortName.put(route.routeShortName(), route);
+        }
+      }
+    }
   }
 
   /**

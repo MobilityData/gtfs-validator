@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.RouteColorContrastNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
@@ -37,7 +38,8 @@ public class RouteColorContrastValidator extends SingleEntityValidator<GtfsRoute
   private static final int MAX_ROUTE_COLOR_LUMA_DIFFERENCE = 72;
 
   @Override
-  public void validate(GtfsRoute entity, NoticeContainer noticeContainer) {
+  public void validate(GtfsRoute entity, NoticeContainer noticeContainer)
+      throws ErrorDetectedException {
     if (!entity.hasRouteColor() || !entity.hasRouteTextColor()) {
       // Some of the colors is not given explicitly.
       return;

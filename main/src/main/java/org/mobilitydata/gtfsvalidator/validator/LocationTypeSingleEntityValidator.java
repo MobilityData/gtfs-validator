@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.LocationWithoutParentStationNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.PlatformWithoutParentStationNotice;
@@ -44,7 +45,7 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
   }
 
   @Override
-  public void validate(GtfsStop location, NoticeContainer noticeContainer) {
+  public void validate(GtfsStop location, NoticeContainer noticeContainer) throws ErrorDetectedException {
     if (location.hasParentStation()) {
       if (location.locationType() == GtfsLocationType.STATION) {
         noticeContainer.addValidationNotice(

@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.UnusedShapeNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
@@ -38,7 +39,7 @@ public class ShapeUsageValidator extends FileValidator {
   @Inject GtfsShapeTableContainer shapeTable;
 
   @Override
-  public void validate(NoticeContainer noticeContainer) {
+  public void validate(NoticeContainer noticeContainer) throws ErrorDetectedException {
     // Do not report the same shape_id multiple times.
     Set<String> reportedShapes = new HashSet<>();
     for (GtfsShape shape : shapeTable.getEntities()) {

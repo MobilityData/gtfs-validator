@@ -29,6 +29,7 @@ import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.notice.EmptyRowNotice;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.InvalidColorNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidCurrencyNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidDateNotice;
@@ -95,7 +96,7 @@ public class RowParser {
    *
    * @return true if the row length is equal to column count
    */
-  public boolean checkRowLength() {
+  public boolean checkRowLength() throws ErrorDetectedException {
     if (row.getColumnCount() == 0) {
       // Empty row.
       return false;
@@ -123,7 +124,7 @@ public class RowParser {
   }
 
   @Nullable
-  public String asString(int columnIndex, boolean required) {
+  public String asString(int columnIndex, boolean required) throws ErrorDetectedException {
     String s = row.asString(columnIndex);
     if (required && s == null) {
       addNoticeInRow(
@@ -148,7 +149,7 @@ public class RowParser {
   }
 
   @Nullable
-  public String asText(int columnIndex, boolean required) {
+  public String asText(int columnIndex, boolean required) throws ErrorDetectedException {
     return asString(columnIndex, required);
   }
 
@@ -162,7 +163,7 @@ public class RowParser {
   }
 
   @Nullable
-  public String asId(int columnIndex, boolean required) {
+  public String asId(int columnIndex, boolean required) throws ErrorDetectedException {
     return asValidatedString(
         columnIndex,
         required,
@@ -171,13 +172,13 @@ public class RowParser {
   }
 
   @Nullable
-  public String asUrl(int columnIndex, boolean required) {
+  public String asUrl(int columnIndex, boolean required) throws ErrorDetectedException {
     return asValidatedString(
         columnIndex, required, s -> UrlValidator.getInstance().isValid(s), InvalidUrlNotice::new);
   }
 
   @Nullable
-  public String asEmail(int columnIndex, boolean required) {
+  public String asEmail(int columnIndex, boolean required) throws ErrorDetectedException {
     return asValidatedString(
         columnIndex,
         required,
@@ -186,7 +187,7 @@ public class RowParser {
   }
 
   @Nullable
-  public String asPhoneNumber(int columnIndex, boolean required) {
+  public String asPhoneNumber(int columnIndex, boolean required) throws ErrorDetectedException {
     return asValidatedString(
         columnIndex,
         required,
@@ -195,33 +196,34 @@ public class RowParser {
   }
 
   @Nullable
-  public Locale asLanguageCode(int columnIndex, boolean required) {
+  public Locale asLanguageCode(int columnIndex, boolean required) throws ErrorDetectedException {
     return parseAsType(
         columnIndex, required, Locale::forLanguageTag, InvalidLanguageCodeNotice::new);
   }
 
   @Nullable
-  public ZoneId asTimezone(int columnIndex, boolean required) {
+  public ZoneId asTimezone(int columnIndex, boolean required) throws ErrorDetectedException {
     return parseAsType(columnIndex, required, ZoneId::of, InvalidTimezoneNotice::new);
   }
 
   @Nullable
-  public Currency asCurrencyCode(int columnIndex, boolean required) {
+  public Currency asCurrencyCode(int columnIndex, boolean required) throws ErrorDetectedException {
     return parseAsType(columnIndex, required, Currency::getInstance, InvalidCurrencyNotice::new);
   }
 
   @Nullable
-  public Double asFloat(int columnIndex, boolean required) {
+  public Double asFloat(int columnIndex, boolean required) throws ErrorDetectedException {
     return parseAsType(columnIndex, required, Double::parseDouble, InvalidFloatNotice::new);
   }
 
   @Nullable
-  public Double asFloat(int columnIndex, boolean required, NumberBounds bounds) {
+  public Double asFloat(int columnIndex, boolean required, NumberBounds bounds)
+      throws ErrorDetectedException {
     return checkBounds(asFloat(columnIndex, required), 0.0, columnIndex, "float", bounds);
   }
 
   @Nullable
-  public Double asLatitude(int columnIndex, boolean required) {
+  public Double asLatitude(int columnIndex, boolean required) throws ErrorDetectedException {
     Double value = asFloat(columnIndex, required);
     if (value != null && !(-90 <= value && value <= 90)) {
       addNoticeInRow(
@@ -237,7 +239,7 @@ public class RowParser {
   }
 
   @Nullable
-  public Double asLongitude(int columnIndex, boolean required) {
+  public Double asLongitude(int columnIndex, boolean required) throws ErrorDetectedException {
     Double value = asFloat(columnIndex, required);
     if (value != null && !(-180 <= value && value <= 180)) {
       addNoticeInRow(
@@ -253,22 +255,24 @@ public class RowParser {
   }
 
   @Nullable
-  public Integer asInteger(int columnIndex, boolean required) {
+  public Integer asInteger(int columnIndex, boolean required) throws ErrorDetectedException {
     return parseAsType(columnIndex, required, Integer::parseInt, InvalidIntegerNotice::new);
   }
 
   @Nullable
-  public Integer asInteger(int columnIndex, boolean required, NumberBounds bounds) {
+  public Integer asInteger(int columnIndex, boolean required, NumberBounds bounds)
+      throws ErrorDetectedException {
     return checkBounds(asInteger(columnIndex, required), 0, columnIndex, "integer", bounds);
   }
 
   @Nullable
-  public BigDecimal asDecimal(int columnIndex, boolean required) {
+  public BigDecimal asDecimal(int columnIndex, boolean required) throws ErrorDetectedException {
     return parseAsType(columnIndex, required, BigDecimal::new, InvalidFloatNotice::new);
   }
 
   @Nullable
-  public BigDecimal asDecimal(int columnIndex, boolean required, NumberBounds bounds) {
+  public BigDecimal asDecimal(int columnIndex, boolean required, NumberBounds bounds)
+      throws ErrorDetectedException {
     return checkBounds(
         asDecimal(columnIndex, required), new BigDecimal(0), columnIndex, "decimal", bounds);
   }
@@ -285,7 +289,8 @@ public class RowParser {
    * @return the same value as passed to the function
    */
   private <T extends Comparable<T>> T checkBounds(
-      @Nullable T value, T zero, int columnIndex, String typeName, NumberBounds bounds) {
+      @Nullable T value, T zero, int columnIndex, String typeName, NumberBounds bounds)
+      throws ErrorDetectedException {
     if (value == null) {
       return null;
     }
@@ -329,12 +334,13 @@ public class RowParser {
   }
 
   @Nullable
-  public GtfsColor asColor(int columnIndex, boolean required) {
+  public GtfsColor asColor(int columnIndex, boolean required) throws ErrorDetectedException {
     return parseAsType(columnIndex, required, GtfsColor::fromString, InvalidColorNotice::new);
   }
 
   @Nullable
-  public <E> Integer asEnum(int columnIndex, boolean required, EnumCreator<E> enumCreator) {
+  public <E> Integer asEnum(int columnIndex, boolean required, EnumCreator<E> enumCreator)
+      throws ErrorDetectedException {
     Integer i = asInteger(columnIndex, required);
     if (i == null) {
       return null;
@@ -348,12 +354,12 @@ public class RowParser {
   }
 
   @Nullable
-  public GtfsTime asTime(int columnIndex, boolean required) {
+  public GtfsTime asTime(int columnIndex, boolean required) throws ErrorDetectedException {
     return parseAsType(columnIndex, required, GtfsTime::fromString, InvalidTimeNotice::new);
   }
 
   @Nullable
-  public GtfsDate asDate(int columnIndex, boolean required) {
+  public GtfsDate asDate(int columnIndex, boolean required) throws ErrorDetectedException {
     return parseAsType(columnIndex, required, GtfsDate::fromString, InvalidDateNotice::new);
   }
 
@@ -372,7 +378,7 @@ public class RowParser {
    *
    * @param notice
    */
-  private void addNoticeInRow(ValidationNotice notice) {
+  private void addNoticeInRow(ValidationNotice notice) throws ErrorDetectedException {
     if (isError(notice)) {
       parseErrorsInRow = true;
     }
@@ -407,7 +413,7 @@ public class RowParser {
       int columnIndex,
       boolean required,
       Function<String, T> parsingFunction,
-      NoticingFunction noticingFunction) {
+      NoticingFunction noticingFunction) throws ErrorDetectedException {
     String s = asString(columnIndex, required);
     if (s == null) {
       return null;
@@ -447,7 +453,7 @@ public class RowParser {
       int columnIndex,
       boolean required,
       Predicate<String> validatingFunction,
-      NoticingFunction noticingFunction) {
+      NoticingFunction noticingFunction) throws ErrorDetectedException {
     String s = asString(columnIndex, required);
     if (s == null) {
       return null;

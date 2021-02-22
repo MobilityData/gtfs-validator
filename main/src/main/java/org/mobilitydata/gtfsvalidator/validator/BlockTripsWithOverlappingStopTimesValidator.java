@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.BlockTripsWithOverlappingStopTimesNotice;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
@@ -38,7 +39,7 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
   @Inject GtfsCalendarDateTableContainer calendarDateTable;
 
   @Override
-  public void validate(NoticeContainer noticeContainer) {
+  public void validate(NoticeContainer noticeContainer) throws ErrorDetectedException {
     // If there are no trip or stop time entries, then we can stop right now.
     if (tripTable.entityCount() == 0 || stopTimeTable.entityCount() == 0) {
       return;

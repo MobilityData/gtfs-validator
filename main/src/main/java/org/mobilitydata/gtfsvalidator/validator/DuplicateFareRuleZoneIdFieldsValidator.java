@@ -21,6 +21,7 @@ import java.util.Map;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateFareRuleZoneIdFieldsNotice;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareRule;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareRuleTableContainer;
@@ -40,28 +41,26 @@ public class DuplicateFareRuleZoneIdFieldsValidator extends FileValidator {
   @Inject GtfsFareRuleTableContainer fareRuleTable;
 
   @Override
-  public void validate(NoticeContainer noticeContainer) {
+  public void validate(NoticeContainer noticeContainer) throws ErrorDetectedException {
     final Map<String, GtfsFareRule> fareRuleByZoneIdFieldsCombination =
         new HashMap<>(fareRuleTable.entityCount());
-    fareRuleTable
-        .getEntities()
-        .forEach(
-            fareRule -> {
-              String fieldsCombination =
-                  fareRule.routeId()
-                      + fareRule.originId()
-                      + fareRule.containsId()
-                      + fareRule.destinationId();
-              if (fareRuleByZoneIdFieldsCombination.containsKey(fieldsCombination)) {
-                noticeContainer.addValidationNotice(
-                    new DuplicateFareRuleZoneIdFieldsNotice(
-                        fareRule.csvRowNumber(),
-                        fareRule.fareId(),
-                        fareRuleByZoneIdFieldsCombination.get(fieldsCombination).csvRowNumber(),
-                        fareRuleByZoneIdFieldsCombination.get(fieldsCombination).fareId()));
-              } else {
-                fareRuleByZoneIdFieldsCombination.put(fieldsCombination, fareRule);
-              }
-            });
+    for (GtfsFareRule fareRule : fareRuleTable
+        .getEntities()) {
+      String fieldsCombination =
+          fareRule.routeId()
+              + fareRule.originId()
+              + fareRule.containsId()
+              + fareRule.destinationId();
+      if (fareRuleByZoneIdFieldsCombination.containsKey(fieldsCombination)) {
+        noticeContainer.addValidationNotice(
+            new DuplicateFareRuleZoneIdFieldsNotice(
+                fareRule.csvRowNumber(),
+                fareRule.fareId(),
+                fareRuleByZoneIdFieldsCombination.get(fieldsCombination).csvRowNumber(),
+                fareRuleByZoneIdFieldsCombination.get(fieldsCombination).fareId()));
+      } else {
+        fareRuleByZoneIdFieldsCombination.put(fieldsCombination, fareRule);
+      }
+    }
   }
 }

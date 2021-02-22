@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.MissingCalendarAndCalendarDateFilesNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
@@ -39,7 +40,7 @@ public class MissingCalendarAndCalendarDateValidator extends FileValidator {
   @Inject GtfsCalendarDateTableContainer calendarDateTable;
 
   @Override
-  public void validate(NoticeContainer noticeContainer) {
+  public void validate(NoticeContainer noticeContainer) throws ErrorDetectedException {
     if (calendarTable.isMissingFile() && calendarDateTable.isMissingFile()) {
       noticeContainer.addValidationNotice(new MissingCalendarAndCalendarDateFilesNotice());
     }

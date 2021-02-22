@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.RouteBothShortAndLongNameMissingNotice;
 import org.mobilitydata.gtfsvalidator.notice.RouteShortAndLongNameEqualNotice;
@@ -41,7 +42,7 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
   private static final int MAX_SHORT_NAME_LENGTH = 12;
 
   @Override
-  public void validate(GtfsRoute entity, NoticeContainer noticeContainer) {
+  public void validate(GtfsRoute entity, NoticeContainer noticeContainer) throws ErrorDetectedException {
     final boolean hasLongName = entity.hasRouteLongName();
     final boolean hasShortName = entity.hasRouteShortName();
 

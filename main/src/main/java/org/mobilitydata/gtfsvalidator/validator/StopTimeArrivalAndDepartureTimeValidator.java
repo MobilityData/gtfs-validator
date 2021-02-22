@@ -20,6 +20,7 @@ import com.google.common.collect.Multimaps;
 import java.util.List;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.StopTimeWithArrivalBeforePreviousDepartureTimeNotice;
 import org.mobilitydata.gtfsvalidator.notice.StopTimeWithDepartureBeforeArrivalTimeNotice;
@@ -46,7 +47,7 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
   @Inject GtfsStopTimeTableContainer table;
 
   @Override
-  public void validate(NoticeContainer noticeContainer) {
+  public void validate(NoticeContainer noticeContainer) throws ErrorDetectedException {
     for (List<GtfsStopTime> stopTimeList : Multimaps.asMap(table.byTripIdMap()).values()) {
       int previousDepartureRow = -1;
       for (int i = 0; i < stopTimeList.size(); ++i) {

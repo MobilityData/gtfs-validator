@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.StartAndEndDateOutOfOrderNotice;
 import org.mobilitydata.gtfsvalidator.notice.StopTooFarFromTripShapeNotice;
@@ -46,7 +47,7 @@ public class StopTooFarFromTripShapeValidator extends FileValidator {
   @Inject GtfsStopTableContainer stopTable;
 
   @Override
-  public void validate(NoticeContainer noticeContainer) {
+  public void validate(NoticeContainer noticeContainer) throws ErrorDetectedException {
     List<StopTooFarFromTripShapeNotice> notices = new ArrayList<>();
 
     // Cache for previously tested shape_id and stop_id pairs - we don't need to test them more than
@@ -73,6 +74,8 @@ public class StopTooFarFromTripShapeValidator extends FileValidator {
                       testedCache);
               notices.addAll(noticesForTrip);
             });
-    notices.forEach(noticeContainer::addValidationNotice);
+    for (StopTooFarFromTripShapeNotice notice : notices) {
+      noticeContainer.addValidationNotice(notice);
+    }
   }
 }
