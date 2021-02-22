@@ -19,7 +19,8 @@ package org.mobilitydata.gtfsvalidator.notice;
 /** Describes the level of severity of a notice generated during validation. */
 public enum SeverityLevel {
   /**
-   * INFO - for items that do not affect the feed's quality, such as unknown files or unknown fields.
+   * INFO - for items that do not affect the feed's quality, such as unknown files or unknown
+   * fields.
    */
   INFO,
 
@@ -31,8 +32,11 @@ public enum SeverityLevel {
    */
   WARNING,
 
-  /** ERROR - for items that the GTFS spec (https://github.com/google/transit/tree/master/gtfs/spec/en)
-   * explicitly requires or prohibits (e.g., using the language "must"). The validator uses RFC2119
-   * (https://tools.ietf.org/html/rfc2119) to interpret the language in the GTFS spec. */
+  /**
+   * ERROR - for items that the GTFS spec
+   * (https://github.com/google/transit/tree/master/gtfs/spec/en) explicitly requires or prohibits
+   * (e.g., using the language "must"). The validator uses RFC2119
+   * (https://tools.ietf.org/html/rfc2119) to interpret the language in the GTFS spec.
+   */
   ERROR
 }
