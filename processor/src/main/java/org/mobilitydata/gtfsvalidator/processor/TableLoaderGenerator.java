@@ -42,6 +42,7 @@ import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsLoader;
 import org.mobilitydata.gtfsvalidator.notice.EmptyFileNotice;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvFile;
@@ -209,6 +210,7 @@ public class TableLoaderGenerator {
             .addParameter(ValidationContext.class, "validationContext")
             .addParameter(ValidatorLoader.class, "validatorLoader")
             .addParameter(NoticeContainer.class, "noticeContainer")
+            .addException(ErrorDetectedException.class)
             .returns(
                 ParameterizedTypeName.get(ClassName.get(GtfsTableContainer.class), gtfsEntityType))
             .addStatement(
@@ -386,6 +388,7 @@ public class TableLoaderGenerator {
             .addParameter(ValidationContext.class, "validationContext")
             .addParameter(ValidatorLoader.class, "validatorLoader")
             .addParameter(NoticeContainer.class, "noticeContainer")
+            .addException(ErrorDetectedException.class)
             .returns(
                 ParameterizedTypeName.get(ClassName.get(GtfsTableContainer.class), gtfsEntityType))
             .addAnnotation(Override.class)

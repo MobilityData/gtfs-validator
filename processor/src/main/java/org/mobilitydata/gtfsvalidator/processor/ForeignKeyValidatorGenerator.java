@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.ForeignKeyError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.validator.FileValidator;
@@ -106,6 +107,7 @@ public class ForeignKeyValidatorGenerator {
             .addAnnotation(Override.class)
             .returns(void.class)
             .addParameter(NoticeContainer.class, "noticeContainer")
+            .addException(ErrorDetectedException.class)
             .beginControlFlow(
                 "for ($T childEntity: childContainer.getEntities())",
                 childClasses.entityImplementationTypeName())

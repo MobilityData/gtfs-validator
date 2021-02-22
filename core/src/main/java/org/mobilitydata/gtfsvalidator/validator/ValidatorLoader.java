@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
@@ -156,7 +157,8 @@ public class ValidatorLoader {
    * @param <T> type of the GTFS entity
    */
   public static <T extends GtfsEntity> void invokeSingleEntityValidators(
-      T entity, List<SingleEntityValidator<T>> validators, NoticeContainer noticeContainer) {
+      T entity, List<SingleEntityValidator<T>> validators, NoticeContainer noticeContainer)
+      throws ErrorDetectedException {
     for (SingleEntityValidator<T> validator : validators) {
       validator.validate(entity, noticeContainer);
     }
@@ -173,7 +175,7 @@ public class ValidatorLoader {
   public <T extends GtfsEntity> void invokeSingleFileValidators(
       GtfsTableContainer<T> table,
       ValidationContext validationContext,
-      NoticeContainer noticeContainer) {
+      NoticeContainer noticeContainer) throws ErrorDetectedException {
     for (Class<? extends FileValidator> validatorClass :
         singleFileValidators.get(table.getClass())) {
       FileValidator validator;

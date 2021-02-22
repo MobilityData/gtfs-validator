@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import java.io.InputStream;
 import java.util.Set;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
@@ -43,10 +44,10 @@ public abstract class GtfsTableLoader<T extends GtfsEntity> {
       InputStream inputStream,
       ValidationContext validationContext,
       ValidatorLoader validatorLoader,
-      NoticeContainer noticeContainer);
+      NoticeContainer noticeContainer) throws ErrorDetectedException;
 
   public abstract GtfsTableContainer<T> loadMissingFile(
       ValidationContext validationContext,
       ValidatorLoader validatorLoader,
-      NoticeContainer noticeContainer);
+      NoticeContainer noticeContainer) throws ErrorDetectedException;
 }

@@ -28,8 +28,11 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsLoader;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
+import org.mobilitydata.gtfsvalidator.notice.ErrorDetectedException;
+import org.mobilitydata.gtfsvalidator.notice.Notice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.RuntimeExceptionInLoaderError;
 import org.mobilitydata.gtfsvalidator.notice.RuntimeExceptionInValidatorError;
@@ -91,7 +94,8 @@ public class GtfsFeedLoader {
       GtfsInput gtfsInput,
       ValidationContext validationContext,
       ValidatorLoader validatorLoader,
-      NoticeContainer noticeContainer) {
+      NoticeContainer noticeContainer)
+      throws ErrorDetectedException {
     logger.atInfo().log("Loading in %d threads", numThreads);
     ExecutorService exec = Executors.newFixedThreadPool(numThreads);
 
@@ -138,26 +142,25 @@ public class GtfsFeedLoader {
     }
     try {
       try {
-        exec.invokeAll(loaderCallables)
-            .forEach(
-                f -> {
-                  try {
-                    TableAndNoticeContainers containers = f.get();
-                    tableContainers.add(containers.tableContainer);
-                    noticeContainer.addAll(containers.noticeContainer);
-                  } catch (ExecutionException e) {
-                    // All runtime exceptions should be caught above.
-                    // ExecutionException is not expected to happen.
-                    logger.atSevere().withCause(e).log("Execution exception in loader");
-                    final Throwable cause = e.getCause();
-                    noticeContainer.addSystemError(
-                        new ThreadExecutionError(
-                            cause.getClass().getCanonicalName(), cause.getMessage()));
-                  } catch (InterruptedException e) {
-                    logger.atSevere().withCause(e).log("Interrupted during loading a GTFS tables");
-                    noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
-                  }
-                });
+        for (Future<TableAndNoticeContainers> f : exec.invokeAll(loaderCallables)) {
+          try {
+            TableAndNoticeContainers containers = f.get();
+            tableContainers.add(containers.tableContainer);
+            noticeContainer.addAll(containers.noticeContainer);
+//          } catch (ErrorDetectedException e) {
+//            noticeContainer.addValidationNotice(Notice.fromMessage(e.getCause().getMessage()));
+          } catch (ExecutionException e) {
+            // All runtime exceptions should be caught above.
+            // ExecutionException is not expected to happen.
+            logger.atSevere().withCause(e).log("Execution exception in loader");
+            final Throwable cause = e.getCause();
+            noticeContainer.addSystemError(
+                new ThreadExecutionError(cause.getClass().getCanonicalName(), cause.getMessage()));
+          } catch (InterruptedException e) {
+            logger.atSevere().withCause(e).log("Interrupted during loading a GTFS tables");
+            noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
+          }
+        }
       } catch (InterruptedException e) {
         logger.atSevere().withCause(e).log("Interrupted during loading GTFS tables");
         noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
@@ -196,25 +199,21 @@ public class GtfsFeedLoader {
             });
       }
       try {
-        exec.invokeAll(validatorCallables)
-            .forEach(
-                container -> {
-                  try {
-                    noticeContainer.addAll(container.get());
-                  } catch (ExecutionException e) {
-                    // All runtime exceptions should be caught above.
-                    // ExecutionException is not expected to happen.
-                    logger.atSevere().withCause(e).log("Execution exception in validator");
-                    final Throwable cause = e.getCause();
-                    noticeContainer.addSystemError(
-                        new ThreadExecutionError(
-                            cause.getClass().getCanonicalName(), cause.getMessage()));
-                  } catch (InterruptedException e) {
-                    logger.atSevere().withCause(e).log(
-                        "Interrupted during validation of GTFS tables");
-                    noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
-                  }
-                });
+        for (Future<NoticeContainer> container : exec.invokeAll(validatorCallables)) {
+          try {
+            noticeContainer.addAll(container.get());
+          } catch (ExecutionException e) {
+            // All runtime exceptions should be caught above.
+            // ExecutionException is not expected to happen.
+            logger.atSevere().withCause(e).log("Execution exception in validator");
+            final Throwable cause = e.getCause();
+            noticeContainer.addSystemError(
+                new ThreadExecutionError(cause.getClass().getCanonicalName(), cause.getMessage()));
+          } catch (InterruptedException e) {
+            logger.atSevere().withCause(e).log("Interrupted during validation of GTFS tables");
+            noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
+          }
+        }
       } catch (InterruptedException e) {
         logger.atSevere().withCause(e).log("Interrupted during validation of GTFS tables");
         noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
