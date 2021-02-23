@@ -677,10 +677,16 @@ public class StopTooFarFromTripShapeValidatorTest {
 
     // Note that the contents of the cache are the final state, not the state at specific invocation
     // because it's passed by reference and not value
+    Set<String> expected = new java.util.HashSet<>();
+    expected.add("shape11001");
+    expected.add("shape11002");
+    expected.add("shape11003");
+    expected.add("shape21005");
+    expected.add("shape21004");
     assertThat(cacheCapture.getAllValues().get(0))
-        .isEqualTo(Set.of("shape11001", "shape11002", "shape11003", "shape21005", "shape21004"));
+        .isEqualTo(expected);
     assertThat(cacheCapture.getAllValues().get(1))
-        .isEqualTo(Set.of("shape11001", "shape11002", "shape11003", "shape21005", "shape21004"));
+        .isEqualTo(expected);
 
     Mockito.verifyNoMoreInteractions(underTest);
   }
