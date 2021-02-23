@@ -683,10 +683,8 @@ public class StopTooFarFromTripShapeValidatorTest {
     expected.add("shape11003");
     expected.add("shape21005");
     expected.add("shape21004");
-    assertThat(cacheCapture.getAllValues().get(0))
-        .isEqualTo(expected);
-    assertThat(cacheCapture.getAllValues().get(1))
-        .isEqualTo(expected);
+    assertThat(cacheCapture.getAllValues().get(0)).isEqualTo(expected);
+    assertThat(cacheCapture.getAllValues().get(1)).isEqualTo(expected);
 
     Mockito.verifyNoMoreInteractions(underTest);
   }
