@@ -47,14 +47,14 @@ import org.mobilitydata.gtfsvalidator.util.GeospatialUtil;
  * <p>Generated notice: {@link StopTooFarFromTripShapeNotice}.
  *
  * <p>Time complexity: <i>O(n * p)</i>, where <i>n</i> is the number of records in
- * <i>stop_times.txt</i>
- * and <i>p</i> is the number of points in a trip shape. This assumes that the time complexity to
- * check if the stop location lies within the buffered trip shape is <i>O(p)</i> (see below).
+ * <i>stop_times.txt</i> and <i>p</i> is the number of points in a trip shape. This assumes that the
+ * time complexity to check if the stop location lies within the buffered trip shape is <i>O(p)</i>
+ * (see below).
  *
- * <p>In an extreme, not-very-likely case where a GTFS file consists of entirely of
- * trips that reuse the same shape but all have disjoint sets of stops along that shape, <i>p</i>
- * may be the number of records in <i>shapes.txt</i>. This is because every stop time must be
- * compared against every trip shape point.
+ * <p>In an extreme, not-very-likely case where a GTFS file consists of entirely of trips that reuse
+ * the same shape but all have disjoint sets of stops along that shape, <i>p</i> may be the number
+ * of records in <i>shapes.txt</i>. This is because every stop time must be compared against every
+ * trip shape point.
  *
  * <p>However, in a typical case where most trips have independent shapes and the trips that do
  * re-use shapes share most of the same stops, the time complexity has a tighter bound of
@@ -67,9 +67,10 @@ import org.mobilitydata.gtfsvalidator.util.GeospatialUtil;
  *
  * <p>This validator uses spatial4j Euclidean operations to check if the stop location lies within
  * the buffered trip shape, which as mentioned above has a time complexity of <i>O(p)</i>, where p
- * is the number of points in a trip shape. See:
- * * https://github.com/locationtech/spatial4j/blob/1f6e2047f0574a430fc711cf2cd5adf141a8bda9/src/main/java/org/locationtech/spatial4j/shape/impl/BufferedLineString.java#L107
- * * https://github.com/locationtech/spatial4j/blob/1f6e2047f0574a430fc711cf2cd5adf141a8bda9/src/main/java/org/locationtech/spatial4j/shape/impl/InfBufLine.java#L81
+ * is the number of points in a trip shape. See: *
+ * https://github.com/locationtech/spatial4j/blob/1f6e2047f0574a430fc711cf2cd5adf141a8bda9/src/main/java/org/locationtech/spatial4j/shape/impl/BufferedLineString.java#L107
+ * *
+ * https://github.com/locationtech/spatial4j/blob/1f6e2047f0574a430fc711cf2cd5adf141a8bda9/src/main/java/org/locationtech/spatial4j/shape/impl/InfBufLine.java#L81
  *
  * <p>A future running time optimization could be caching the buffered line for each shape when it
  * is first constructed. However, this is not currently implemented because shapes.txt is typically
@@ -77,7 +78,8 @@ import org.mobilitydata.gtfsvalidator.util.GeospatialUtil;
  * initialization overhead for each shape IFF multiple trips share the same shape.
  *
  * <p>If additional accuracy is desired geodesic calculations may be use instead of Euclidean
- * calculations, although this comes at a performance cost - see https://github.com/MobilityData/gtfs-validator/pull/750#discussion_r578667817.
+ * calculations, although this comes at a performance cost - see
+ * https://github.com/MobilityData/gtfs-validator/pull/750#discussion_r578667817.
  */
 @GtfsValidator
 public class StopTooFarFromTripShapeValidator extends FileValidator {
@@ -85,17 +87,14 @@ public class StopTooFarFromTripShapeValidator extends FileValidator {
   static final double TRIP_BUFFER_METERS =
       100.0d; // Per GTFS Best Practices (https://gtfs.org/best-practices/#shapestxt)
   static final double TRIP_BUFFER_DEGREES =
-      DistanceUtils.KM_TO_DEG * TRIP_BUFFER_METERS
+      DistanceUtils.KM_TO_DEG
+          * TRIP_BUFFER_METERS
           * GeospatialUtil.METER_TO_KILOMETER_CONVERSION_FACTOR;
 
-  @Inject
-  GtfsStopTimeTableContainer stopTimeTable;
-  @Inject
-  GtfsTripTableContainer tripTable;
-  @Inject
-  GtfsShapeTableContainer shapeTable;
-  @Inject
-  GtfsStopTableContainer stopTable;
+  @Inject GtfsStopTimeTableContainer stopTimeTable;
+  @Inject GtfsTripTableContainer tripTable;
+  @Inject GtfsShapeTableContainer shapeTable;
+  @Inject GtfsStopTableContainer stopTable;
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
@@ -132,16 +131,16 @@ public class StopTooFarFromTripShapeValidator extends FileValidator {
    * Returns a list of notices for the given input, one for each stop that is too far from the trip
    * shapePoints
    *
-   * @param tripId      trip_id for this GTFS trip
-   * @param stopTimes   a list of StopTimes for a trip, sorted by stop_sequence
-   * @param shapeId     the shape_id for this GTFS trip
+   * @param tripId trip_id for this GTFS trip
+   * @param stopTimes a list of StopTimes for a trip, sorted by stop_sequence
+   * @param shapeId the shape_id for this GTFS trip
    * @param shapePoints a list of ShapePoints for a trip, sorted by shape_pt_sequence
-   * @param stopTable   a container for all stops (keyed on stop_id), needed to obtain the latitude
-   *                    and longitude for each stop on the trip
+   * @param stopTable a container for all stops (keyed on stop_id), needed to obtain the latitude
+   *     and longitude for each stop on the trip
    * @param testedCache a cache for previously tested shape_id and stop_id pairs (keyed on
-   *                    shape_id+stop_id). If the combination of shape_id and stop_id appears in
-   *                    this set, we shouldn't test it again. Shapes and stops tested in this method
-   *                    execution will be added to this testedCache.
+   *     shape_id+stop_id). If the combination of shape_id and stop_id appears in this set, we
+   *     shouldn't test it again. Shapes and stops tested in this method execution will be added to
+   *     this testedCache.
    * @return a list of notices, one for each stop that is too far from the trip shape
    */
   List<StopTooFarFromTripShapeNotice> checkStopsWithinTripShape(
@@ -157,7 +156,8 @@ public class StopTooFarFromTripShapeValidator extends FileValidator {
       return notices;
     }
 
-    // Create a buffered polyline from the GTFS shapes data - uses Euclidean operations (not geodesic)
+    // Create a buffered polyline from the GTFS shapes data - uses Euclidean operations (not
+    // geodesic)
     ShapeFactory.LineStringBuilder lineBuilder = GeospatialUtil.getShapeFactory().lineString();
     for (GtfsShape shapePoint : shapePoints) {
       lineBuilder.pointXY(shapePoint.shapePtLon(), shapePoint.shapePtLat());
