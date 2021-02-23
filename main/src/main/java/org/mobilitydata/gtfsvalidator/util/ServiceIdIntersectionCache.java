@@ -13,7 +13,7 @@ import java.util.SortedSet;
  * <p>This class is not thread-safe.
  */
 public class ServiceIdIntersectionCache {
-  private static final LocalDate NO_OVERLAP = LocalDate.EPOCH;
+  private static final LocalDate NO_OVERLAP = ServicePeriod.EPOCH;
   private final Map<String, SortedSet<LocalDate>> serviceDates;
   // The cache stores LocalDate instead of Optional<LocalDate> for size
   // efficiency. If services do not overlap, we store null.

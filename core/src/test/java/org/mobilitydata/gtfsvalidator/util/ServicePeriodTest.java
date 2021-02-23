@@ -92,8 +92,8 @@ public class ServicePeriodTest {
   public void addedAndRemovedDays() {
     assertThat(
             new ServicePeriod(
-                    LocalDate.EPOCH,
-                    LocalDate.EPOCH,
+                    ServicePeriod.EPOCH,
+                    ServicePeriod.EPOCH,
                     (byte) 0,
                     ImmutableSortedSet.of(
                         LocalDate.of(2021, 1, 3),
