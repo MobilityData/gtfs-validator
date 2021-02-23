@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.collect.ImmutableList;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.FastTravelBetweenStopsNotice;
@@ -59,13 +60,12 @@ public class TripTravelSpeedValidatorTest {
     return GtfsTripTableContainer.forEntities(entities, noticeContainer);
   }
 
-  public static GtfsTrip createTrip(
-      long csvRowNumber, String routeId, String serviceId, String tripId) {
+  private static GtfsTrip createTrip() {
     return new GtfsTrip.Builder()
-        .setCsvRowNumber(csvRowNumber)
-        .setRouteId(routeId)
-        .setServiceId(serviceId)
-        .setTripId(tripId)
+        .setCsvRowNumber(34)
+        .setRouteId("route id")
+        .setServiceId("service id")
+        .setTripId("t1")
         .build();
   }
 
@@ -74,7 +74,7 @@ public class TripTravelSpeedValidatorTest {
     return GtfsStopTableContainer.forEntities(entities, noticeContainer);
   }
 
-  public static GtfsStop createStop(
+  private static GtfsStop createStop(
       long csvRowNumber, String stopId, double stopLat, double stopLon) {
     return new GtfsStop.Builder()
         .setCsvRowNumber(csvRowNumber)
@@ -97,9 +97,7 @@ public class TripTravelSpeedValidatorTest {
                 createStop(3, "s1", 16.251053D, -61.591241D),
                 createStop(4, "s2", 16.242191D, -61.588554D)));
 
-    underTest.tripTable =
-        createTripTable(
-            noticeContainer, ImmutableList.of(createTrip(34, "route id", "service id", "t1")));
+    underTest.tripTable = createTripTable(noticeContainer, ImmutableList.of(createTrip()));
 
     underTest.stopTimeTable =
         createStopTimeTable(
@@ -130,7 +128,8 @@ public class TripTravelSpeedValidatorTest {
     underTest.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new FastTravelBetweenStopsNotice("t1", 299.3383739629327D, List.of(0, 1)));
+        .containsExactly(
+            new FastTravelBetweenStopsNotice("t1", 299.3383739629327D, Arrays.asList(0, 1)));
   }
 
   @Test
@@ -146,9 +145,7 @@ public class TripTravelSpeedValidatorTest {
                 createStop(4, "s2", 16.242191D, -61.588554D),
                 createStop(5, "s3", 16.249092D, -61.494831D)));
 
-    underTest.tripTable =
-        createTripTable(
-            noticeContainer, ImmutableList.of(createTrip(34, "route id", "service id", "t1")));
+    underTest.tripTable = createTripTable(noticeContainer, ImmutableList.of(createTrip()));
 
     underTest.stopTimeTable =
         createStopTimeTable(
@@ -186,7 +183,8 @@ public class TripTravelSpeedValidatorTest {
     underTest.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new FastTravelBetweenStopsNotice("t1", 398.1887657929889D, List.of(1, 2, 3)));
+        .containsExactly(
+            new FastTravelBetweenStopsNotice("t1", 398.1887657929889D, Arrays.asList(1, 2, 3)));
   }
 
   @Test
@@ -201,9 +199,7 @@ public class TripTravelSpeedValidatorTest {
                 createStop(3, "s1", 16.251053D, -61.591241D),
                 createStop(4, "s2", 16.242191D, -61.588554D)));
 
-    underTest.tripTable =
-        createTripTable(
-            noticeContainer, ImmutableList.of(createTrip(34, "route id", "service id", "t1")));
+    underTest.tripTable = createTripTable(noticeContainer, ImmutableList.of(createTrip()));
 
     underTest.stopTimeTable =
         createStopTimeTable(
@@ -234,5 +230,87 @@ public class TripTravelSpeedValidatorTest {
     underTest.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices()).isEmpty();
+  }
+
+  @Test
+  public void fastTravelBetweenForMissingDepartureTimeShouldGenerateNotice() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    TripTravelSpeedValidator underTest = new TripTravelSpeedValidator();
+    underTest.stopTable =
+        createStopTable(
+            noticeContainer,
+            ImmutableList.of(
+                createStop(2, "s0", 16.251233D, -61.591997D),
+                createStop(3, "s1", 16.251053D, -61.591241D),
+                createStop(4, "s2", 16.242191D, -61.588554D)));
+
+    underTest.tripTable = createTripTable(noticeContainer, ImmutableList.of(createTrip()));
+
+    underTest.stopTimeTable =
+        createStopTimeTable(
+            noticeContainer,
+            ImmutableList.of(
+                createStopTime(
+                    4,
+                    "t1",
+                    "s0",
+                    0,
+                    GtfsTime.fromSecondsSinceMidnight(130),
+                    GtfsTime.fromSecondsSinceMidnight(100)),
+                createStopTime(5, "t1", "s1", 1, null, GtfsTime.fromSecondsSinceMidnight(131)),
+                createStopTime(
+                    6,
+                    "t1",
+                    "s2",
+                    4,
+                    GtfsTime.fromSecondsSinceMidnight(77000),
+                    GtfsTime.fromSecondsSinceMidnight(30000))));
+
+    underTest.validate(noticeContainer);
+
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactly(
+            new FastTravelBetweenStopsNotice("t1", 299.3383739629327D, Arrays.asList(0, 1)));
+  }
+
+  @Test
+  public void fastTravelBetweenForMissingArrivalTimeShouldGenerateNotice() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    TripTravelSpeedValidator underTest = new TripTravelSpeedValidator();
+    underTest.stopTable =
+        createStopTable(
+            noticeContainer,
+            ImmutableList.of(
+                createStop(2, "s0", 16.251233D, -61.591997D),
+                createStop(3, "s1", 16.251053D, -61.591241D),
+                createStop(4, "s2", 16.242191D, -61.588554D)));
+
+    underTest.tripTable = createTripTable(noticeContainer, ImmutableList.of(createTrip()));
+
+    underTest.stopTimeTable =
+        createStopTimeTable(
+            noticeContainer,
+            ImmutableList.of(
+                createStopTime(
+                    4,
+                    "t1",
+                    "s0",
+                    0,
+                    GtfsTime.fromSecondsSinceMidnight(130),
+                    GtfsTime.fromSecondsSinceMidnight(100)),
+                createStopTime(5, "t1", "s1", 1, GtfsTime.fromSecondsSinceMidnight(230), null),
+                createStopTime(
+                    6,
+                    "t1",
+                    "s2",
+                    4,
+                    GtfsTime.fromSecondsSinceMidnight(77000),
+                    GtfsTime.fromSecondsSinceMidnight(30000))));
+
+    underTest.validate(noticeContainer);
+
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactly(
+            new FastTravelBetweenStopsNotice("t1", 299.3383739629327D, Arrays.asList(0, 1)));
   }
 }
