@@ -30,14 +30,14 @@ public class StopTooFarFromTripShapeNotice extends ValidationNotice {
       final int stopSequence,
       final String tripId,
       final String shapeId,
-      final double stopShapeThreshold) {
+      final double stopShapeThresholdMeters) {
     super(
         ImmutableMap.of(
             "stopId", stopId,
             "stopSequence", stopSequence,
             "tripId", tripId,
             "shapeId", shapeId,
-            "stopShapeThreshold", stopShapeThreshold),
+            "stopShapeThresholdMeters", stopShapeThresholdMeters),
         SeverityLevel.WARNING);
   }
 
