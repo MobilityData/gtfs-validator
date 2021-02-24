@@ -27,8 +27,8 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class DecreasingStopTimeDistanceNotice extends ValidationNotice {
-  public DecreasingStopTimeDistanceNotice(
+public class DecreasingOrEqualStopTimeDistanceNotice extends ValidationNotice {
+  public DecreasingOrEqualStopTimeDistanceNotice(
       String tripId,
       long csvRowNumber,
       double shapeDistTraveled,
@@ -50,6 +50,6 @@ public class DecreasingStopTimeDistanceNotice extends ValidationNotice {
 
   @Override
   public String getCode() {
-    return "decreasing_stop_time_distance";
+    return "decreasing_or_equal_stop_time_distance";
   }
 }

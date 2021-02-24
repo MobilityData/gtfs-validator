@@ -27,8 +27,8 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class DecreasingShapeDistanceNotice extends ValidationNotice {
-  public DecreasingShapeDistanceNotice(
+public class DecreasingOrEqualShapeDistanceNotice extends ValidationNotice {
+  public DecreasingOrEqualShapeDistanceNotice(
       String shapeId,
       long csvRowNumber,
       double shapeDistTraveled,
@@ -50,6 +50,6 @@ public class DecreasingShapeDistanceNotice extends ValidationNotice {
 
   @Override
   public String getCode() {
-    return "decreasing_shape_distance";
+    return "decreasing_or_equal_shape_distance";
   }
 }
