@@ -246,7 +246,7 @@ For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must 
 
 ### DecreasingOrEqualShapeDistanceNotice
 
-`shape_dist_traveled` should increase along a shape.
+When sorted by `shape.shape_pt_sequence`, two consecutive shape points should have increasing values for `shape_dist_traveled`. If the values are equal, this is considered as an error.  
 
 <a name="WrongParentLocationTypeNotice"/>
 
@@ -342,7 +342,7 @@ Both files calendar_dates.txt and calendar.txt are missing from the GTFS archive
 
 ### DecreasingOrEqualStopTimeDistanceNotice
 
-Stop times in a trip should have increasing distance.
+When sorted by `stop_times.stop_pt_sequence`, two consecutive stop times in a trip should have increasing distance. If the values are equal, this is considered as an error.  
 
 ### NonAsciiOrNonPrintableCharNotice
 
