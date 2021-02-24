@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 MobilityData IO
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,37 +19,37 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * When sorted on `stops.stop_sequence` key, stop times should have increasing values for
- * `stops.shape_dist_traveled`
+ * When sorted on `shapes.shape_pt_sequence` key, shape points should have strictly increasing values for
+ * `shapes.shape_dist_traveled`
  *
- * <p>"Values used for shape_dist_traveled must increase along with stop_sequence"
- * (http://gtfs.org/reference/static/#stoptimestxt)
+ * <p>"Values must increase along with shape_pt_sequence."
+ * (http://gtfs.org/reference/static/#shapestxt)
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class DecreasingStopTimeDistanceNotice extends ValidationNotice {
-  public DecreasingStopTimeDistanceNotice(
-      String tripId,
+public class DecreasingOrEqualShapeDistanceNotice extends ValidationNotice {
+  public DecreasingOrEqualShapeDistanceNotice(
+      String shapeId,
       long csvRowNumber,
       double shapeDistTraveled,
-      int stopSequence,
+      int shapePtSequence,
       long prevCsvRowNumber,
-      double prevStopTimeDistTraveled,
-      int prevStopSequence) {
+      double prevShapeDistTraveled,
+      int prevShapePtSequence) {
     super(
         new ImmutableMap.Builder<String, Object>()
-            .put("tripId", tripId)
+            .put("shapeId", shapeId)
             .put("csvRowNumber", csvRowNumber)
             .put("shapeDistTraveled", shapeDistTraveled)
-            .put("stopSequence", stopSequence)
+            .put("shapePtSequence", shapePtSequence)
             .put("prevCsvRowNumber", prevCsvRowNumber)
-            .put("prevStopTimeDistTraveled", prevStopTimeDistTraveled)
-            .put("prevStopSequence", prevStopSequence)
+            .put("prevShapeDistTraveled", prevShapeDistTraveled)
+            .put("prevShapePtSequence", prevShapePtSequence)
             .build());
   }
 
   @Override
   public String getCode() {
-    return "decreasing_stop_time_distance";
+    return "decreasing_or_equal_shape_distance";
   }
 }

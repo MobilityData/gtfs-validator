@@ -20,8 +20,8 @@ import com.google.common.collect.Multimaps;
 import java.util.List;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
-import org.mobilitydata.gtfsvalidator.notice.DecreasingShapeDistanceNotice;
-import org.mobilitydata.gtfsvalidator.notice.DecreasingStopTimeDistanceNotice;
+import org.mobilitydata.gtfsvalidator.notice.DecreasingOrEqualShapeDistanceNotice;
+import org.mobilitydata.gtfsvalidator.notice.DecreasingOrEqualStopTimeDistanceNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
@@ -29,7 +29,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 /**
  * Validates: stop times of a trip have increasing distance (stops.shape_dist_traveled)
  *
- * <p>Generated notice: {@link DecreasingShapeDistanceNotice}.
+ * <p>Generated notice: {@link DecreasingOrEqualShapeDistanceNotice}.
  */
 @GtfsValidator
 public class StopTimeIncreasingDistanceValidator extends FileValidator {
@@ -46,7 +46,7 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
             && curr.hasShapeDistTraveled()
             && prev.shapeDistTraveled() >= curr.shapeDistTraveled()) {
           noticeContainer.addValidationNotice(
-              new DecreasingStopTimeDistanceNotice(
+              new DecreasingOrEqualStopTimeDistanceNotice(
                   curr.tripId(),
                   curr.csvRowNumber(),
                   curr.shapeDistTraveled(),
