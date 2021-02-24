@@ -26,12 +26,13 @@ import java.util.List;
  */
 public class FastTravelBetweenStopsNotice extends ValidationNotice {
   public FastTravelBetweenStopsNotice(
-      String tripId, double speedkmh, List<Integer> stopSequenceList) {
+      String tripId, double speedkmh, int firstStopSequence, int lastStopSequence) {
     super(
         new ImmutableMap.Builder<String, Object>()
             .put("tripId", tripId)
             .put("speedkmh", speedkmh)
-            .put("stopSequenceList", stopSequenceList)
+            .put("firstStopSequence", firstStopSequence)
+            .put("lastStopSequence", lastStopSequence)
             .build(),
         SeverityLevel.WARNING);
   }
