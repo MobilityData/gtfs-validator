@@ -411,4 +411,4 @@ Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one
 
 ### FastTravelBetweenStopsNotice
 
-As implemented in the original [Google Python GTFS validator](https://github.com/google/transitfeed/wiki/FeedValidator), the calculated speed between stops should not be greater than 150 km/h (SI) or 42 mph. 
+As implemented in the original [Google Python GTFS validator](https://github.com/google/transitfeed/wiki/FeedValidator), the calculated speed between stops should not be greater than 150 km/h (42 m/s SI or 93 mph). 
