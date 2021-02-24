@@ -97,7 +97,8 @@ public class ShapeIncreasingDistanceValidatorTest {
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new DecreasingOrEqualShapeDistanceNotice("first shape", 2, 9.0d, 2, 1, 10.0d, 1));
+        .containsExactly(
+            new DecreasingOrEqualShapeDistanceNotice("first shape", 2, 9.0d, 2, 1, 10.0d, 1));
   }
 
   @Test

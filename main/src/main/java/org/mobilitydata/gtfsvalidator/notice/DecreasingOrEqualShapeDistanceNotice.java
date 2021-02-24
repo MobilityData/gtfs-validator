@@ -19,8 +19,8 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * When sorted on `shapes.shape_pt_sequence` key, shape points should have strictly increasing values for
- * `shapes.shape_dist_traveled`
+ * When sorted on `shapes.shape_pt_sequence` key, shape points should have strictly increasing
+ * values for `shapes.shape_dist_traveled`
  *
  * <p>"Values must increase along with shape_pt_sequence."
  * (http://gtfs.org/reference/static/#shapestxt)
