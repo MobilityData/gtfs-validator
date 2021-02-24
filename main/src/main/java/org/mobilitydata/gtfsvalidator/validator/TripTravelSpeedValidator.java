@@ -35,16 +35,18 @@ import org.mobilitydata.gtfsvalidator.util.GeospatialUtil;
 /**
  * Validates: all records of `trips.txt` refer to a collection of {@code GtfsStopTime} from file
  * `stop_times.txt` of which -when sorted by `stop_sequence`- the travel speed between each stop is
- * not above 150 km/h
+ * not above 150 km/h (93 mph or 42 m/s).
  *
- * <p>Time complexity: <i>O(n * p)</i>, where <i>n</i> is the number of records in
- * <i>stop_times.txt</i> and <i>p</i> is the number of points in a trip shape.
+ * <p>Time complexity: <i>O(n)</i>, where <i>n</i> is the number of records in
+ * <i>stop_times.txt</i>.
  *
  * <p>Generated notice: {@link FastTravelBetweenStopsNotice}.
  */
 @GtfsValidator
 public class TripTravelSpeedValidator extends FileValidator {
-  private static final double METER_PER_SECOND_TO_KMH_CONVERSION_FACTOR = 3.6D;
+
+  private static final double METER_PER_SECOND_TO_KMH_CONVERSION_FACTOR = 3.6d;
+  private static final int MAX_SPEED_MPS = 42; // 150 km/h or 93.2 mph
   @Inject GtfsTripTableContainer tripTable;
   @Inject GtfsStopTimeTableContainer stopTimeTable;
   @Inject GtfsStopTableContainer stopTable;
@@ -53,7 +55,8 @@ public class TripTravelSpeedValidator extends FileValidator {
   public void validate(NoticeContainer noticeContainer) {
     for (Entry<String, List<GtfsStopTime>> entry :
         Multimaps.asMap(stopTimeTable.byTripIdMap()).entrySet()) {
-      List<FastTravelBetweenStopsNotice> noticesForTrip = checkSpeedAlongTrip(entry);
+      List<FastTravelBetweenStopsNotice> noticesForTrip =
+          checkSpeedAlongTrip(entry.getKey(), entry.getValue());
       for (FastTravelBetweenStopsNotice notice : noticesForTrip) {
         noticeContainer.addValidationNotice(notice);
       }
@@ -61,70 +64,73 @@ public class TripTravelSpeedValidator extends FileValidator {
   }
 
   /**
-   * Calculates the travel speed between {@code GtfsStopTime}. Generates a {@code
-   * FastTravelBetweenStopsNotice} if the travel speed between {@code GtfsStopTimes} is greater than
-   * 150 km/h.
+   * Calculates the travel speed between {@code GtfsStopTime} for a single {@code GtfsTrip}. The
+   * algorithm calculates the distance between each pair of stop times. It allows for blank
+   * arrival/departure records (e.g., non-timepoints) and skips over them but still accumulates
+   * distance. The algorithm will stop in case the conditions to generate a {@code
+   * StopTimeWithArrivalBeforePreviousDepartureTimeNotice} are met. A {@code
+   * FastTravelBetweenStopsNotice} is generated as soon as a travel speed above 150 km/h (93 mph or
+   * 42 m/s) between stops is detected.
    *
-   * @param tripStopTimes the list of {@code GtfsStopTimes} sorted by stop_times.stop_sequence for a
-   *     {@code GtfsTrip}
-   * @return the list of {@code FastTravelBetweenStopsNotice} generated when checking speed travel
-   *     along the given trip
+   * @param tripId the trip_id as a string
+   * @param tripStopTimes the list of {@code GtfsStopTimes} sorted by stop_times.stop_sequence for
+   *     the {@code GtfsTrip} related to the tripId provided as parameter
+   * @return the list of {@code FastTravelBetweenStopsNotice} for this trip
    */
   private List<FastTravelBetweenStopsNotice> checkSpeedAlongTrip(
-      Entry<String, List<GtfsStopTime>> tripStopTimes) {
-    var previousStopsData =
-        new Object() {
-          final List<Integer> accumulatedStopSequence = new ArrayList<>();
-          GtfsTime departureTime = null;
-          double latitude;
-          double longitude;
-          // used to accumulate distance between stops with same arrival and departure
-          // times
-          int accumulatedDistanceMeter = 0;
-        };
+      String tripId, List<GtfsStopTime> tripStopTimes) {
+    final List<Integer> accumulatedStopSequence = new ArrayList<>();
+    GtfsTime prevDepartureTime = null;
+    double prevStopLat = 0d;
+    double prevStopLon = 0d;
+    // used to accumulate distance between stops with same arrival and departure
+    // times
+    double accumulatedDistanceMeter = 0;
     List<FastTravelBetweenStopsNotice> notices = new ArrayList<>();
-    for (GtfsStopTime stopTime : tripStopTimes.getValue()) { // prepare data for current iteration
+    for (GtfsStopTime stopTime : tripStopTimes) { // prepare data for current iteration
       GtfsStop currentStop = stopTable.byStopId(stopTime.stopId());
-      double currentStopLat = currentStop.stopLat();
-      double currentStopLon = currentStop.stopLon();
       GtfsTime currentArrivalTime = stopTime.arrivalTime();
-      double distanceFromPreviousStopMeter =
+      double distanceFromPreviousStopMeters =
           GeospatialUtil.distanceInMeterBetween(
-              previousStopsData.latitude,
-              previousStopsData.longitude,
-              currentStopLat,
-              currentStopLon);
+              prevStopLat, prevStopLon, currentStop.stopLat(), currentStop.stopLon());
       boolean sameArrivalAndDeparture = false;
-      if (previousStopsData.departureTime != null && currentArrivalTime != null) {
-        sameArrivalAndDeparture = currentArrivalTime.equals(previousStopsData.departureTime);
+      if (prevDepartureTime != null && stopTime.hasArrivalTime() && stopTime.hasDepartureTime()) {
+        // Abort here if there is a StopTimeWithArrivalBeforePreviousDepartureTimeNotice for this
+        // trip
+        if (stopTime.arrivalTime().isBefore(prevDepartureTime)) {
+          return notices;
+        }
+        sameArrivalAndDeparture = currentArrivalTime.equals(prevDepartureTime);
         if (!sameArrivalAndDeparture) {
           int durationSecond =
               currentArrivalTime.getSecondsSinceMidnight()
-                  - previousStopsData.departureTime.getSecondsSinceMidnight();
-          double distanceMeter =
-              distanceFromPreviousStopMeter + previousStopsData.accumulatedDistanceMeter;
+                  - prevDepartureTime.getSecondsSinceMidnight();
+          double distanceMeter = distanceFromPreviousStopMeters + accumulatedDistanceMeter;
           double speedMeterPerSecond = distanceMeter / durationSecond;
-          if (speedMeterPerSecond > 42) { // roughly 150 km per hour. Put it in default parameters
-            previousStopsData.accumulatedStopSequence.add(stopTime.stopSequence());
+          if (speedMeterPerSecond > MAX_SPEED_MPS) {
+            accumulatedStopSequence.add(stopTime.stopSequence());
             notices.add(
                 new FastTravelBetweenStopsNotice(
-                    tripStopTimes.getKey(),
+                    tripId,
                     speedMeterPerSecond * METER_PER_SECOND_TO_KMH_CONVERSION_FACTOR,
-                    new ArrayList<>(previousStopsData.accumulatedStopSequence)));
+                    accumulatedStopSequence.get(0),
+                    stopTime.stopSequence()));
           }
         }
       }
       // Prepare data for next iteration
-      if (sameArrivalAndDeparture) {
-        previousStopsData.accumulatedDistanceMeter += distanceFromPreviousStopMeter;
+      if (!stopTime.hasArrivalTime() || !stopTime.hasDepartureTime() || sameArrivalAndDeparture) {
+        accumulatedDistanceMeter += distanceFromPreviousStopMeters;
       } else {
-        previousStopsData.accumulatedDistanceMeter = 0;
-        previousStopsData.accumulatedStopSequence.clear();
+        accumulatedDistanceMeter = 0;
+        accumulatedStopSequence.clear();
       }
-      previousStopsData.departureTime = stopTime.departureTime();
-      previousStopsData.latitude = currentStopLat;
-      previousStopsData.longitude = currentStopLon;
-      previousStopsData.accumulatedStopSequence.add(stopTime.stopSequence());
+      if (stopTime.hasDepartureTime()) {
+        prevDepartureTime = stopTime.departureTime();
+      }
+      prevStopLat = currentStop.stopLat();
+      prevStopLon = currentStop.stopLon();
+      accumulatedStopSequence.add(stopTime.stopSequence());
     }
     return notices;
   }
