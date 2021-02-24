@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * When sorted on `stops.stop_sequence` key, stop times should have increasing values for
+ * When sorted on `stops.stop_sequence` key, stop times should have strictly increasing values for
  * `stops.shape_dist_traveled`
  *
  * <p>"Values used for shape_dist_traveled must increase along with stop_sequence"
