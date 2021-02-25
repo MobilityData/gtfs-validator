@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
-import org.mobilitydata.gtfsvalidator.notice.FastTravelBetweenStopsNotice;
+import org.mobilitydata.gtfsvalidator.notice.ExcessiveTripTravelSpeedNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
@@ -40,13 +40,13 @@ import org.mobilitydata.gtfsvalidator.util.GeospatialUtil;
  * <p>Time complexity: <i>O(n)</i>, where <i>n</i> is the number of records in
  * <i>stop_times.txt</i>.
  *
- * <p>Generated notice: {@link FastTravelBetweenStopsNotice}.
+ * <p>Generated notice: {@link ExcessiveTripTravelSpeedNotice}.
  */
 @GtfsValidator
-public class TripTravelSpeedValidator extends FileValidator {
+public class ExcessiveTravelSpeedValidator extends FileValidator {
 
   private static final double METER_PER_SECOND_TO_KMH_CONVERSION_FACTOR = 3.6d;
-  private static final int MAX_SPEED_MPS = 42; // 150 km/h or 93.2 mph
+  private static final int MAX_SPEED_METERS_PER_HOUR = 42; // 150 km/h or 93.2 mph
   @Inject GtfsTripTableContainer tripTable;
   @Inject GtfsStopTimeTableContainer stopTimeTable;
   @Inject GtfsStopTableContainer stopTable;
@@ -55,9 +55,9 @@ public class TripTravelSpeedValidator extends FileValidator {
   public void validate(NoticeContainer noticeContainer) {
     for (Entry<String, List<GtfsStopTime>> entry :
         Multimaps.asMap(stopTimeTable.byTripIdMap()).entrySet()) {
-      List<FastTravelBetweenStopsNotice> noticesForTrip =
+      List<ExcessiveTripTravelSpeedNotice> noticesForTrip =
           checkSpeedAlongTrip(entry.getKey(), entry.getValue());
-      for (FastTravelBetweenStopsNotice notice : noticesForTrip) {
+      for (ExcessiveTripTravelSpeedNotice notice : noticesForTrip) {
         noticeContainer.addValidationNotice(notice);
       }
     }
@@ -77,16 +77,16 @@ public class TripTravelSpeedValidator extends FileValidator {
    *     the {@code GtfsTrip} related to the tripId provided as parameter
    * @return the list of {@code FastTravelBetweenStopsNotice} for this trip
    */
-  private List<FastTravelBetweenStopsNotice> checkSpeedAlongTrip(
+  private List<ExcessiveTripTravelSpeedNotice> checkSpeedAlongTrip(
       String tripId, List<GtfsStopTime> tripStopTimes) {
-    final List<Integer> accumulatedStopSequence = new ArrayList<>();
+    int beginStopSequence = tripStopTimes.get(0).stopSequence();
     GtfsTime prevDepartureTime = null;
     double prevStopLat = 0d;
     double prevStopLon = 0d;
     // used to accumulate distance between stops with same arrival and departure
     // times
     double accumulatedDistanceMeter = 0;
-    List<FastTravelBetweenStopsNotice> notices = new ArrayList<>();
+    List<ExcessiveTripTravelSpeedNotice> notices = new ArrayList<>();
     for (GtfsStopTime stopTime : tripStopTimes) { // prepare data for current iteration
       GtfsStop currentStop = stopTable.byStopId(stopTime.stopId());
       GtfsTime currentArrivalTime = stopTime.arrivalTime();
@@ -95,9 +95,9 @@ public class TripTravelSpeedValidator extends FileValidator {
               prevStopLat, prevStopLon, currentStop.stopLat(), currentStop.stopLon());
       boolean sameArrivalAndDeparture = false;
       if (prevDepartureTime != null && stopTime.hasArrivalTime() && stopTime.hasDepartureTime()) {
+        if (stopTime.arrivalTime().isBefore(prevDepartureTime)) {
         // Abort here if there is a StopTimeWithArrivalBeforePreviousDepartureTimeNotice for this
         // trip
-        if (stopTime.arrivalTime().isBefore(prevDepartureTime)) {
           return notices;
         }
         sameArrivalAndDeparture = currentArrivalTime.equals(prevDepartureTime);
@@ -107,13 +107,12 @@ public class TripTravelSpeedValidator extends FileValidator {
                   - prevDepartureTime.getSecondsSinceMidnight();
           double distanceMeter = distanceFromPreviousStopMeters + accumulatedDistanceMeter;
           double speedMeterPerSecond = distanceMeter / durationSecond;
-          if (speedMeterPerSecond > MAX_SPEED_MPS) {
-            accumulatedStopSequence.add(stopTime.stopSequence());
+          if (speedMeterPerSecond > MAX_SPEED_METERS_PER_HOUR) {
             notices.add(
-                new FastTravelBetweenStopsNotice(
+                new ExcessiveTripTravelSpeedNotice(
                     tripId,
                     speedMeterPerSecond * METER_PER_SECOND_TO_KMH_CONVERSION_FACTOR,
-                    accumulatedStopSequence.get(0),
+                    beginStopSequence,
                     stopTime.stopSequence()));
           }
         }
@@ -121,16 +120,16 @@ public class TripTravelSpeedValidator extends FileValidator {
       // Prepare data for next iteration
       if (!stopTime.hasArrivalTime() || !stopTime.hasDepartureTime() || sameArrivalAndDeparture) {
         accumulatedDistanceMeter += distanceFromPreviousStopMeters;
+
       } else {
         accumulatedDistanceMeter = 0;
-        accumulatedStopSequence.clear();
+        beginStopSequence = stopTime.stopSequence();
       }
       if (stopTime.hasDepartureTime()) {
         prevDepartureTime = stopTime.departureTime();
       }
       prevStopLat = currentStop.stopLat();
       prevStopLon = currentStop.stopLon();
-      accumulatedStopSequence.add(stopTime.stopSequence());
     }
     return notices;
   }
