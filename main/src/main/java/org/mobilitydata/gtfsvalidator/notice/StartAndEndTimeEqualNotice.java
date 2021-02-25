@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
+import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 /**
  * Equal `frequencies.start_time` and `frequencies.start_time` from same row of GTFS file
@@ -26,13 +27,13 @@ import com.google.common.collect.ImmutableMap;
  */
 public class StartAndEndTimeEqualNotice extends ValidationNotice {
   public StartAndEndTimeEqualNotice(
-      String filename, String entityId, long csvRowNumber, String time) {
+      String filename, String entityId, long csvRowNumber, GtfsTime time) {
     super(
         ImmutableMap.of(
             "filename", filename,
             "csvRowNumber", csvRowNumber,
             "entityId", entityId,
-            "time", time),
+            "time", time.toHHMMSS()),
         SeverityLevel.WARNING);
   }
 
