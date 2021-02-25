@@ -24,8 +24,8 @@ import java.util.List;
  *
  * <p>SeverityLevel: {@code SeverityLevel.WARNING}
  */
-public class ExcessiveTripTravelSpeedNotice extends ValidationNotice {
-  public ExcessiveTripTravelSpeedNotice(
+public class TooFastTravelNotice extends ValidationNotice {
+  public TooFastTravelNotice(
       String tripId, double speedkmh, int firstStopSequence, int lastStopSequence) {
     super(
         new ImmutableMap.Builder<String, Object>()
@@ -39,6 +39,6 @@ public class ExcessiveTripTravelSpeedNotice extends ValidationNotice {
 
   @Override
   public String getCode() {
-    return "excessive_trip_travel_speed";
+    return "too_fast_travel";
   }
 }

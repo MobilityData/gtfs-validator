@@ -21,7 +21,7 @@ import static com.google.common.truth.Truth.assertThat;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.notice.ExcessiveTripTravelSpeedNotice;
+import org.mobilitydata.gtfsvalidator.notice.TooFastTravelNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
@@ -31,7 +31,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
-public class ExcessiveTravelSpeedValidatorTest {
+public class TooFastTravelValidatorTest {
   private static GtfsStopTableContainer createStopTable(
       NoticeContainer noticeContainer, List<GtfsStop> entities) {
     return GtfsStopTableContainer.forEntities(entities, noticeContainer);
@@ -88,7 +88,7 @@ public class ExcessiveTravelSpeedValidatorTest {
     // sample table descriptions available at:
     // https://gist.github.com/lionel-nj/473f265f1bc0404c8e4738bbe4977649
     NoticeContainer noticeContainer = new NoticeContainer();
-    ExcessiveTravelSpeedValidator underTest = new ExcessiveTravelSpeedValidator();
+    TooFastTravelValidator underTest = new TooFastTravelValidator();
     underTest.stopTable =
         createStopTable(
             noticeContainer,
@@ -125,7 +125,7 @@ public class ExcessiveTravelSpeedValidatorTest {
     underTest.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new ExcessiveTripTravelSpeedNotice("t1", 200.15114352186376d, 0, 1));
+        .containsExactly(new TooFastTravelNotice("t1", 200.15114352186376d, 0, 1));
   }
 
   @Test
@@ -133,7 +133,7 @@ public class ExcessiveTravelSpeedValidatorTest {
     // sample table descriptions available at:
     // https://gist.github.com/lionel-nj/d21cc8b1519d4f44f9ebd53858cda78d
     NoticeContainer noticeContainer = new NoticeContainer();
-    ExcessiveTravelSpeedValidator underTest = new ExcessiveTravelSpeedValidator();
+    TooFastTravelValidator underTest = new TooFastTravelValidator();
     underTest.stopTable =
         createStopTable(
             noticeContainer,
@@ -177,7 +177,7 @@ public class ExcessiveTravelSpeedValidatorTest {
     underTest.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new ExcessiveTripTravelSpeedNotice("t1", 800.604574087455d, 1, 3));
+        .containsExactly(new TooFastTravelNotice("t1", 800.604574087455d, 1, 3));
   }
 
   @Test
@@ -185,7 +185,7 @@ public class ExcessiveTravelSpeedValidatorTest {
     // sample table descriptions available at:
     // https://gist.github.com/lionel-nj/c556bfa6ae2622166c594eed51f4b468
     NoticeContainer noticeContainer = new NoticeContainer();
-    ExcessiveTravelSpeedValidator underTest = new ExcessiveTravelSpeedValidator();
+    TooFastTravelValidator underTest = new TooFastTravelValidator();
     underTest.stopTable =
         createStopTable(
             noticeContainer,
@@ -229,7 +229,7 @@ public class ExcessiveTravelSpeedValidatorTest {
     // sample table descriptions available at:
     // https://gist.github.com/lionel-nj/2924c8c7b8ee4e52aec04fec166849b4
     NoticeContainer noticeContainer = new NoticeContainer();
-    ExcessiveTravelSpeedValidator underTest = new ExcessiveTravelSpeedValidator();
+    TooFastTravelValidator underTest = new TooFastTravelValidator();
     underTest.stopTable =
         createStopTable(
             noticeContainer,
@@ -261,7 +261,7 @@ public class ExcessiveTravelSpeedValidatorTest {
     underTest.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new ExcessiveTripTravelSpeedNotice("t1", 800.604574087455d, 0, 4));
+        .containsExactly(new TooFastTravelNotice("t1", 800.604574087455d, 0, 4));
   }
 
   @Test
@@ -269,7 +269,7 @@ public class ExcessiveTravelSpeedValidatorTest {
     // sample table descriptions available at:
     // https://gist.github.com/lionel-nj/e1a1095287677758598cb4e897b4f439
     NoticeContainer noticeContainer = new NoticeContainer();
-    ExcessiveTravelSpeedValidator underTest = new ExcessiveTravelSpeedValidator();
+    TooFastTravelValidator underTest = new TooFastTravelValidator();
     underTest.stopTable =
         createStopTable(
             noticeContainer,
@@ -308,7 +308,7 @@ public class ExcessiveTravelSpeedValidatorTest {
     // sample table descriptions available at:
     // https://gist.github.com/lionel-nj/dc1996244f2d2a86ababb8ae81b8eab0
     NoticeContainer noticeContainer = new NoticeContainer();
-    ExcessiveTravelSpeedValidator underTest = new ExcessiveTravelSpeedValidator();
+    TooFastTravelValidator underTest = new TooFastTravelValidator();
     underTest.stopTable =
         createStopTable(
             noticeContainer,
@@ -340,7 +340,7 @@ public class ExcessiveTravelSpeedValidatorTest {
     underTest.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new ExcessiveTripTravelSpeedNotice("t1", 400.3022870437275, 0, 4));
+        .containsExactly(new TooFastTravelNotice("t1", 400.3022870437275, 0, 4));
 }
 
   @Test
@@ -348,7 +348,7 @@ public class ExcessiveTravelSpeedValidatorTest {
     // sample table descriptions available at:
     // https://gist.github.com/lionel-nj/633d17dade4955230f67f567f32365d9
     NoticeContainer noticeContainer = new NoticeContainer();
-    ExcessiveTravelSpeedValidator underTest = new ExcessiveTravelSpeedValidator();
+    TooFastTravelValidator underTest = new TooFastTravelValidator();
     underTest.stopTable =
         createStopTable(
             noticeContainer,
@@ -387,7 +387,7 @@ public class ExcessiveTravelSpeedValidatorTest {
     // sample table descriptions available at:
     // https://gist.github.com/lionel-nj/d88be566850d47ea60cbcab0e869052c
     NoticeContainer noticeContainer = new NoticeContainer();
-    ExcessiveTravelSpeedValidator underTest = new ExcessiveTravelSpeedValidator();
+    TooFastTravelValidator underTest = new TooFastTravelValidator();
     underTest.stopTable =
         createStopTable(
             noticeContainer,
@@ -438,7 +438,7 @@ public class ExcessiveTravelSpeedValidatorTest {
     // sample table descriptions available at:
     // https://gist.github.com/lionel-nj/583b53f2e46f02f0276877831cc7a54e
     NoticeContainer noticeContainer = new NoticeContainer();
-    ExcessiveTravelSpeedValidator underTest = new ExcessiveTravelSpeedValidator();
+    TooFastTravelValidator underTest = new TooFastTravelValidator();
     underTest.stopTable =
         createStopTable(
             noticeContainer,
@@ -481,7 +481,7 @@ public class ExcessiveTravelSpeedValidatorTest {
     underTest.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new ExcessiveTripTravelSpeedNotice("t1", 600.4534305655912, 0, 3));
+        .containsExactly(new TooFastTravelNotice("t1", 600.4534305655912, 0, 3));
   }
 
   @Test
@@ -489,7 +489,7 @@ public class ExcessiveTravelSpeedValidatorTest {
     // sample table descriptions available at:
     // https://gist.github.com/lionel-nj/b2fe94906679fe30ca2c444fa8c92ce0
     NoticeContainer noticeContainer = new NoticeContainer();
-    ExcessiveTravelSpeedValidator underTest = new ExcessiveTravelSpeedValidator();
+    TooFastTravelValidator underTest = new TooFastTravelValidator();
     underTest.stopTable =
         createStopTable(
             noticeContainer,

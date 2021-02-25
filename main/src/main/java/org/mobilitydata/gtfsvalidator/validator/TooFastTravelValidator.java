@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
-import org.mobilitydata.gtfsvalidator.notice.ExcessiveTripTravelSpeedNotice;
+import org.mobilitydata.gtfsvalidator.notice.TooFastTravelNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
@@ -40,10 +40,10 @@ import org.mobilitydata.gtfsvalidator.util.GeospatialUtil;
  * <p>Time complexity: <i>O(n)</i>, where <i>n</i> is the number of records in
  * <i>stop_times.txt</i>.
  *
- * <p>Generated notice: {@link ExcessiveTripTravelSpeedNotice}.
+ * <p>Generated notice: {@link TooFastTravelNotice}.
  */
 @GtfsValidator
-public class ExcessiveTravelSpeedValidator extends FileValidator {
+public class TooFastTravelValidator extends FileValidator {
 
   private static final double METER_PER_SECOND_TO_KMH_CONVERSION_FACTOR = 3.6d;
   private static final int MAX_SPEED_METERS_PER_HOUR = 42; // 150 km/h or 93.2 mph
@@ -55,9 +55,9 @@ public class ExcessiveTravelSpeedValidator extends FileValidator {
   public void validate(NoticeContainer noticeContainer) {
     for (Entry<String, List<GtfsStopTime>> entry :
         Multimaps.asMap(stopTimeTable.byTripIdMap()).entrySet()) {
-      List<ExcessiveTripTravelSpeedNotice> noticesForTrip =
+      List<TooFastTravelNotice> noticesForTrip =
           checkSpeedAlongTrip(entry.getKey(), entry.getValue());
-      for (ExcessiveTripTravelSpeedNotice notice : noticesForTrip) {
+      for (TooFastTravelNotice notice : noticesForTrip) {
         noticeContainer.addValidationNotice(notice);
       }
     }
@@ -77,7 +77,7 @@ public class ExcessiveTravelSpeedValidator extends FileValidator {
    *     the {@code GtfsTrip} related to the tripId provided as parameter
    * @return the list of {@code FastTravelBetweenStopsNotice} for this trip
    */
-  private List<ExcessiveTripTravelSpeedNotice> checkSpeedAlongTrip(
+  private List<TooFastTravelNotice> checkSpeedAlongTrip(
       String tripId, List<GtfsStopTime> tripStopTimes) {
     int beginStopSequence = tripStopTimes.get(0).stopSequence();
     GtfsTime prevDepartureTime = null;
@@ -86,7 +86,7 @@ public class ExcessiveTravelSpeedValidator extends FileValidator {
     // used to accumulate distance between stops with same arrival and departure
     // times
     double accumulatedDistanceMeter = 0;
-    List<ExcessiveTripTravelSpeedNotice> notices = new ArrayList<>();
+    List<TooFastTravelNotice> notices = new ArrayList<>();
     for (GtfsStopTime stopTime : tripStopTimes) { // prepare data for current iteration
       GtfsStop currentStop = stopTable.byStopId(stopTime.stopId());
       GtfsTime currentArrivalTime = stopTime.arrivalTime();
@@ -109,7 +109,7 @@ public class ExcessiveTravelSpeedValidator extends FileValidator {
           double speedMeterPerSecond = distanceMeter / durationSecond;
           if (speedMeterPerSecond > MAX_SPEED_METERS_PER_HOUR) {
             notices.add(
-                new ExcessiveTripTravelSpeedNotice(
+                new TooFastTravelNotice(
                     tripId,
                     speedMeterPerSecond * METER_PER_SECOND_TO_KMH_CONVERSION_FACTOR,
                     beginStopSequence,
