@@ -36,7 +36,7 @@ import com.google.common.collect.ImmutableMap;
 public class LeadingOrTrailingWhitespacesNotice extends ValidationNotice {
 
   public LeadingOrTrailingWhitespacesNotice(
-      String filename, long csvRowNumber, String fieldName, String fieldValue) {
+      String filename, long csvRowNumber, String fieldName, String fieldValue, SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "filename",
@@ -47,7 +47,7 @@ public class LeadingOrTrailingWhitespacesNotice extends ValidationNotice {
             fieldName,
             "fieldValue",
             fieldValue),
-        SeverityLevel.ERROR);
+        severityLevel);
   }
 
   @Override

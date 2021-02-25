@@ -23,6 +23,7 @@ import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.DecreasingShapeDistanceNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 
@@ -80,7 +81,7 @@ public class ShapeIncreasingDistanceValidatorTest {
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
-            new DecreasingShapeDistanceNotice("first shape", 3, 40.0d, 3, 2, 45.0d, 2));
+            new DecreasingShapeDistanceNotice("first shape", 3, 40.0d, 3, 2, 45.0d, 2, SeverityLevel.ERROR));
   }
 
   @Test
@@ -97,7 +98,7 @@ public class ShapeIncreasingDistanceValidatorTest {
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new DecreasingShapeDistanceNotice("first shape", 2, 9.0d, 2, 1, 10.0d, 1));
+        .containsExactly(new DecreasingShapeDistanceNotice("first shape", 2, 9.0d, 2, 1, 10.0d, 1, SeverityLevel.ERROR));
   }
 
   @Test
@@ -115,6 +116,6 @@ public class ShapeIncreasingDistanceValidatorTest {
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
-            new DecreasingShapeDistanceNotice("first shape", 3, 45.0d, 3, 2, 45.0d, 2));
+            new DecreasingShapeDistanceNotice("first shape", 3, 45.0d, 3, 2, 45.0d, 2, SeverityLevel.ERROR));
   }
 }

@@ -23,6 +23,7 @@ import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateFareRuleZoneIdFieldsNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareRule;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareRuleTableContainer;
 
@@ -64,7 +65,7 @@ public class DuplicateFareRuleZoneIdFieldsValidatorTest {
 
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
-            new DuplicateFareRuleZoneIdFieldsNotice(99, "other fare id value", 3, "fare id value"));
+            new DuplicateFareRuleZoneIdFieldsNotice(99, "other fare id value", 3, "fare id value", SeverityLevel.ERROR));
   }
 
   @Test
@@ -112,6 +113,6 @@ public class DuplicateFareRuleZoneIdFieldsValidatorTest {
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
-            new DuplicateFareRuleZoneIdFieldsNotice(99, "other fare id value", 3, "fare id value"));
+            new DuplicateFareRuleZoneIdFieldsNotice(99, "other fare id value", 3, "fare id value", SeverityLevel.ERROR));
   }
 }

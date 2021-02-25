@@ -17,7 +17,8 @@ public class BlockTripsWithOverlappingStopTimesNotice extends ValidationNotice {
       String tripIdB,
       String serviceIdB,
       String blockId,
-      GtfsDate intersection) {
+      GtfsDate intersection,
+      SeverityLevel severityLevel) {
     super(
         new ImmutableMap.Builder<String, Object>()
             .put("csvRowNumberA", csvRowNumberA)
@@ -29,7 +30,7 @@ public class BlockTripsWithOverlappingStopTimesNotice extends ValidationNotice {
             .put("blockId", blockId)
             .put("intersection", intersection.toYYYYMMDD())
             .build(),
-        SeverityLevel.WARNING);
+        severityLevel);
   }
 
   @Override

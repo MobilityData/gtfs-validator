@@ -20,6 +20,7 @@ import static org.mobilitydata.gtfsvalidator.table.GtfsFrequencyTableLoader.FILE
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.StartAndEndTimeOutOfOrderNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFrequency;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
@@ -41,7 +42,7 @@ public class FrequencyTimeInOrderValidator extends SingleEntityValidator<GtfsFre
     if (startTime.isAfter(endTime)) {
       noticeContainer.addValidationNotice(
           new StartAndEndTimeOutOfOrderNotice(
-              FILENAME, frequency.tripId(), frequency.csvRowNumber(), startTime, endTime));
+              FILENAME, frequency.tripId(), frequency.csvRowNumber(), startTime, endTime, SeverityLevel.ERROR));
     }
   }
 }

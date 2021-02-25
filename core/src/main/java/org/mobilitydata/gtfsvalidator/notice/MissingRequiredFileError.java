@@ -24,8 +24,8 @@ import com.google.common.collect.ImmutableMap;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class MissingRequiredFileError extends ValidationNotice {
-  public MissingRequiredFileError(String filename) {
-    super(ImmutableMap.of("filename", filename));
+  public MissingRequiredFileError(String filename, SeverityLevel severityLevel) {
+    super(ImmutableMap.of("filename", filename), severityLevel);
   }
 
   @Override

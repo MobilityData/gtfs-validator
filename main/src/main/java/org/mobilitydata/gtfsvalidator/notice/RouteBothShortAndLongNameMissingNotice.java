@@ -24,11 +24,11 @@ import com.google.common.collect.ImmutableMap;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class RouteBothShortAndLongNameMissingNotice extends ValidationNotice {
-  public RouteBothShortAndLongNameMissingNotice(String routeId, long csvRowNumber) {
+  public RouteBothShortAndLongNameMissingNotice(String routeId, long csvRowNumber, SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "routeId", routeId,
-            "csvRowNumber", csvRowNumber));
+            "csvRowNumber", csvRowNumber), severityLevel);
   }
 
   @Override

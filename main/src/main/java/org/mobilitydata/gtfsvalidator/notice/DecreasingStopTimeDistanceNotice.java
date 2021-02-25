@@ -35,7 +35,8 @@ public class DecreasingStopTimeDistanceNotice extends ValidationNotice {
       int stopSequence,
       long prevCsvRowNumber,
       double prevStopTimeDistTraveled,
-      int prevStopSequence) {
+      int prevStopSequence,
+      SeverityLevel severityLevel) {
     super(
         new ImmutableMap.Builder<String, Object>()
             .put("tripId", tripId)
@@ -45,7 +46,7 @@ public class DecreasingStopTimeDistanceNotice extends ValidationNotice {
             .put("prevCsvRowNumber", prevCsvRowNumber)
             .put("prevStopTimeDistTraveled", prevStopTimeDistTraveled)
             .put("prevStopSequence", prevStopSequence)
-            .build());
+            .build(), severityLevel);
   }
 
   @Override

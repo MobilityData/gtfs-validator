@@ -23,6 +23,7 @@ import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.MissingTripEdgeNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
@@ -85,7 +86,7 @@ public class MissingTripEdgeValidatorTest {
     underTest.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new MissingTripEdgeNotice(2, 1, "trip id value", "arrival_time"));
+        .containsExactly(new MissingTripEdgeNotice(2, 1, "trip id value", "arrival_time", SeverityLevel.ERROR));
   }
 
   @Test
@@ -108,7 +109,7 @@ public class MissingTripEdgeValidatorTest {
     underTest.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new MissingTripEdgeNotice(2, 1, "trip id value", "departure_time"));
+        .containsExactly(new MissingTripEdgeNotice(2, 1, "trip id value", "departure_time", SeverityLevel.ERROR));
   }
 
   @Test
@@ -132,7 +133,7 @@ public class MissingTripEdgeValidatorTest {
     underTest.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new MissingTripEdgeNotice(10, 5, "trip id value", "arrival_time"));
+        .containsExactly(new MissingTripEdgeNotice(10, 5, "trip id value", "arrival_time", SeverityLevel.ERROR));
   }
 
   @Test
@@ -156,7 +157,7 @@ public class MissingTripEdgeValidatorTest {
     underTest.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new MissingTripEdgeNotice(10, 5, "trip id value", "departure_time"));
+        .containsExactly(new MissingTripEdgeNotice(10, 5, "trip id value", "departure_time", SeverityLevel.ERROR));
   }
 
   @Test

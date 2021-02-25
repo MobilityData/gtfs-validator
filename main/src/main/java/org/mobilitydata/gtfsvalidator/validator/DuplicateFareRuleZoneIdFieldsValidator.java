@@ -22,6 +22,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateFareRuleZoneIdFieldsNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareRule;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareRuleTableContainer;
 
@@ -58,7 +59,7 @@ public class DuplicateFareRuleZoneIdFieldsValidator extends FileValidator {
                         fareRule.csvRowNumber(),
                         fareRule.fareId(),
                         fareRuleByZoneIdFieldsCombination.get(fieldsCombination).csvRowNumber(),
-                        fareRuleByZoneIdFieldsCombination.get(fieldsCombination).fareId()));
+                        fareRuleByZoneIdFieldsCombination.get(fieldsCombination).fareId(), SeverityLevel.ERROR));
               } else {
                 fareRuleByZoneIdFieldsCombination.put(fieldsCombination, fareRule);
               }

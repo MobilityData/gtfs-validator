@@ -28,6 +28,7 @@ import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyLangNotice;
 import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyTimezoneNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 
@@ -80,7 +81,8 @@ public class AgencyConsistencyValidatorTest {
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new MissingRequiredFieldError("agency.txt", 1, "agency_id"));
+        .containsExactly(
+            new MissingRequiredFieldError("agency.txt", 1, "agency_id", SeverityLevel.ERROR));
   }
 
   @Test
@@ -109,7 +111,8 @@ public class AgencyConsistencyValidatorTest {
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
-            new InconsistentAgencyTimezoneNotice(1, "America/Bogota", "America/Montreal"));
+            new InconsistentAgencyTimezoneNotice(
+                1, "America/Bogota", "America/Montreal", SeverityLevel.ERROR));
   }
 
   @Test
@@ -164,7 +167,7 @@ public class AgencyConsistencyValidatorTest {
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new InconsistentAgencyLangNotice(1, "en", "fr"));
+        .containsExactly(new InconsistentAgencyLangNotice(1, "en", "fr", SeverityLevel.WARNING));
   }
 
   @Test

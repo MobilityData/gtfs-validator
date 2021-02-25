@@ -35,7 +35,7 @@ import com.google.common.collect.ImmutableMap;
 public class NewLineInValueNotice extends ValidationNotice {
 
   public NewLineInValueNotice(
-      String filename, long csvRowNumber, String fieldName, String fieldValue) {
+      String filename, long csvRowNumber, String fieldName, String fieldValue, SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "filename",
@@ -46,7 +46,7 @@ public class NewLineInValueNotice extends ValidationNotice {
             fieldName,
             "fieldValue",
             fieldValue),
-        SeverityLevel.ERROR);
+        severityLevel);
   }
 
   @Override

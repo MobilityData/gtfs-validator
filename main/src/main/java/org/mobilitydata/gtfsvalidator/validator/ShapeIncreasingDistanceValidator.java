@@ -22,6 +22,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.DecreasingShapeDistanceNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 
@@ -29,6 +30,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
  * Validates that shape_dist_traveled along a shape in "shapes.txt" are not decreasing.
  *
  * <p>Generated notice: {@link DecreasingShapeDistanceNotice}.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 @GtfsValidator
 public class ShapeIncreasingDistanceValidator extends FileValidator {
@@ -52,7 +55,8 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
                   curr.shapePtSequence(),
                   prev.csvRowNumber(),
                   prev.shapeDistTraveled(),
-                  prev.shapePtSequence()));
+                  prev.shapePtSequence(),
+                  SeverityLevel.ERROR));
         }
       }
     }

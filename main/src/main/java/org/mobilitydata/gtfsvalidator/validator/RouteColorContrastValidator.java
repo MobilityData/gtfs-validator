@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.RouteColorContrastNotice;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 
 /**
@@ -49,7 +50,7 @@ public class RouteColorContrastValidator extends SingleEntityValidator<GtfsRoute
               entity.routeId(),
               entity.csvRowNumber(),
               entity.routeColor(),
-              entity.routeTextColor()));
+              entity.routeTextColor(), SeverityLevel.WARNING));
     }
   }
 }

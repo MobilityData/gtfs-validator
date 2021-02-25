@@ -9,6 +9,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.OverlappingFrequencyNotice;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsFrequency;
 import org.mobilitydata.gtfsvalidator.table.GtfsFrequencyTableContainer;
 
@@ -47,7 +48,7 @@ public class OverlappingFrequencyValidator extends FileValidator {
                   prev.endTime(),
                   curr.csvRowNumber(),
                   curr.startTime(),
-                  prev.tripId()));
+                  prev.tripId(), SeverityLevel.ERROR));
         }
       }
     }

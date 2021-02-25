@@ -27,7 +27,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsColor;
  */
 public class RouteColorContrastNotice extends ValidationNotice {
   public RouteColorContrastNotice(
-      String routeId, long csvRowNumber, GtfsColor routeColor, GtfsColor routeTextColor) {
+      String routeId, long csvRowNumber, GtfsColor routeColor, GtfsColor routeTextColor, SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "routeId",
@@ -38,7 +38,7 @@ public class RouteColorContrastNotice extends ValidationNotice {
             routeColor.toHtmlColor(),
             "routeTextColor",
             routeTextColor.toHtmlColor()),
-        SeverityLevel.WARNING);
+        severityLevel);
   }
 
   @Override

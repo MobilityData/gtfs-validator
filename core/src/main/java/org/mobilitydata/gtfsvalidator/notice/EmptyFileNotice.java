@@ -25,8 +25,8 @@ import com.google.common.collect.ImmutableMap;
  */
 public class EmptyFileNotice extends ValidationNotice {
 
-  public EmptyFileNotice(String filename) {
-    super(ImmutableMap.of("filename", filename));
+  public EmptyFileNotice(String filename, SeverityLevel severityLevel) {
+    super(ImmutableMap.of("filename", filename), severityLevel);
   }
 
   @Override

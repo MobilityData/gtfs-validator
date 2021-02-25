@@ -21,6 +21,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.FeedExpirationDateNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
@@ -53,7 +54,7 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
                 entity.csvRowNumber(),
                 currentDate,
                 entity.feedEndDate(),
-                currentDatePlusSevenDays));
+                currentDatePlusSevenDays, SeverityLevel.WARNING));
         return;
       }
       if (entity.feedEndDate().compareTo(currentDatePlusThirtyDays) <= 0) {
@@ -62,7 +63,7 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
                 entity.csvRowNumber(),
                 currentDate,
                 entity.feedEndDate(),
-                currentDatePlusThirtyDays));
+                currentDatePlusThirtyDays, SeverityLevel.WARNING));
       }
     }
   }

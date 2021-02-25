@@ -29,7 +29,7 @@ public class DuplicateKeyError extends ValidationNotice {
       long oldCsvRowNumber,
       long newCsvRowNumber,
       String fieldName,
-      Object fieldValue) {
+      Object fieldValue, SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "filename",
@@ -39,7 +39,7 @@ public class DuplicateKeyError extends ValidationNotice {
             "newCsvRowNumber",
             newCsvRowNumber,
             fieldName,
-            fieldValue));
+            fieldValue), severityLevel);
   }
 
   public DuplicateKeyError(
@@ -49,7 +49,8 @@ public class DuplicateKeyError extends ValidationNotice {
       String fieldName1,
       Object fieldValue1,
       String fieldName2,
-      Object fieldValue2) {
+      Object fieldValue2,
+      SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "filename",
@@ -61,7 +62,7 @@ public class DuplicateKeyError extends ValidationNotice {
             fieldName1,
             fieldValue1,
             fieldName2,
-            fieldValue2));
+            fieldValue2), severityLevel);
   }
 
   @Override

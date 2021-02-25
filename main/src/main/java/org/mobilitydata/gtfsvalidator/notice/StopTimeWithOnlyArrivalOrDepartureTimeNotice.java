@@ -25,13 +25,13 @@ import com.google.common.collect.ImmutableMap;
  */
 public class StopTimeWithOnlyArrivalOrDepartureTimeNotice extends ValidationNotice {
   public StopTimeWithOnlyArrivalOrDepartureTimeNotice(
-      long csvRowNumber, String tripId, int stopSequence, String specifiedField) {
+      long csvRowNumber, String tripId, int stopSequence, String specifiedField, SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "csvRowNumber", csvRowNumber,
             "tripId", tripId,
             "stopSequence", stopSequence,
-            "specifiedField", specifiedField));
+            "specifiedField", specifiedField), severityLevel);
   }
 
   @Override

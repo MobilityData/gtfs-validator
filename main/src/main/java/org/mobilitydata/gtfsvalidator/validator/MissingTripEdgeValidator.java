@@ -26,6 +26,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.MissingTripEdgeNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 
@@ -53,7 +54,7 @@ public class MissingTripEdgeValidator extends FileValidator {
                 tripFirstStop.csvRowNumber(),
                 tripFirstStop.stopSequence(),
                 tripId,
-                ARRIVAL_TIME_FIELD_NAME));
+                ARRIVAL_TIME_FIELD_NAME, SeverityLevel.ERROR));
       }
       if (!tripFirstStop.hasDepartureTime()) {
         noticeContainer.addValidationNotice(
@@ -61,7 +62,7 @@ public class MissingTripEdgeValidator extends FileValidator {
                 tripFirstStop.csvRowNumber(),
                 tripFirstStop.stopSequence(),
                 tripId,
-                DEPARTURE_TIME_FIELD_NAME));
+                DEPARTURE_TIME_FIELD_NAME, SeverityLevel.ERROR));
       }
       if (!tripLastStop.hasArrivalTime()) {
         noticeContainer.addValidationNotice(
@@ -69,7 +70,7 @@ public class MissingTripEdgeValidator extends FileValidator {
                 tripLastStop.csvRowNumber(),
                 tripLastStop.stopSequence(),
                 tripId,
-                ARRIVAL_TIME_FIELD_NAME));
+                ARRIVAL_TIME_FIELD_NAME, SeverityLevel.ERROR));
       }
       if (!tripLastStop.hasDepartureTime()) {
         noticeContainer.addValidationNotice(
@@ -77,7 +78,7 @@ public class MissingTripEdgeValidator extends FileValidator {
                 tripLastStop.csvRowNumber(),
                 tripLastStop.stopSequence(),
                 tripId,
-                DEPARTURE_TIME_FIELD_NAME));
+                DEPARTURE_TIME_FIELD_NAME, SeverityLevel.ERROR));
       }
     }
   }

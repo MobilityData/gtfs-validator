@@ -24,13 +24,13 @@ import com.google.common.collect.ImmutableMap;
  * <p>Severity: {@code SeverityLevel.INFO}
  */
 public class UnknownColumnNotice extends ValidationNotice {
-  public UnknownColumnNotice(String filename, String fieldName, int index) {
+  public UnknownColumnNotice(String filename, String fieldName, int index, SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "filename", filename,
             "fieldName", fieldName,
             "index", index),
-        SeverityLevel.INFO);
+        severityLevel);
   }
 
   @Override

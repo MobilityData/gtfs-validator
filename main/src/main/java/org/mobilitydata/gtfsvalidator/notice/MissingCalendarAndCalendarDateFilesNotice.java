@@ -24,8 +24,8 @@ import com.google.common.collect.ImmutableMap;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class MissingCalendarAndCalendarDateFilesNotice extends ValidationNotice {
-  public MissingCalendarAndCalendarDateFilesNotice() {
-    super(ImmutableMap.of());
+  public MissingCalendarAndCalendarDateFilesNotice(SeverityLevel severityLevel) {
+    super(ImmutableMap.of(), severityLevel);
   }
 
   @Override

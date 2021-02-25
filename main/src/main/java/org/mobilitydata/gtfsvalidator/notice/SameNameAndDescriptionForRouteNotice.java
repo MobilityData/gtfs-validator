@@ -31,7 +31,7 @@ import com.google.common.collect.ImmutableMap;
  */
 public class SameNameAndDescriptionForRouteNotice extends ValidationNotice {
   public SameNameAndDescriptionForRouteNotice(
-      long csvRowNumber, String routeId, String routeDesc, String routeShortOrLongName) {
+      long csvRowNumber, String routeId, String routeDesc, String routeShortOrLongName, SeverityLevel severityLevel) {
     super(
         new ImmutableMap.Builder<String, Object>()
             .put("filename", FILENAME)
@@ -39,7 +39,7 @@ public class SameNameAndDescriptionForRouteNotice extends ValidationNotice {
             .put("csvRowNumber", csvRowNumber)
             .put("routeDesc", routeDesc)
             .put("specifiedField", routeShortOrLongName)
-            .build());
+            .build(), severityLevel);
   }
 
   @Override

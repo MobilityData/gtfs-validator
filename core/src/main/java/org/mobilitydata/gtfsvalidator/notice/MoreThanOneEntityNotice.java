@@ -24,8 +24,8 @@ import com.google.common.collect.ImmutableMap;
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class MoreThanOneEntityNotice extends ValidationNotice {
-  public MoreThanOneEntityNotice(String filename, long entityCount) {
-    super(ImmutableMap.of("filename", filename, "entityCount", entityCount), SeverityLevel.WARNING);
+  public MoreThanOneEntityNotice(String filename, long entityCount, SeverityLevel severityLevel) {
+    super(ImmutableMap.of("filename", filename, "entityCount", entityCount), severityLevel);
   }
 
   @Override

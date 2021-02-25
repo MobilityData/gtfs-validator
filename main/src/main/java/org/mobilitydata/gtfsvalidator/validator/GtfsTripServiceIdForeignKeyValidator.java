@@ -20,6 +20,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.ForeignKeyError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableLoader;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
@@ -51,7 +52,8 @@ public class GtfsTripServiceIdForeignKeyValidator extends FileValidator {
                 GtfsCalendarTableLoader.FILENAME + " or " + GtfsCalendarDateTableLoader.FILENAME,
                 GtfsCalendarTableLoader.SERVICE_ID_FIELD_NAME,
                 childKey,
-                trip.csvRowNumber()));
+                trip.csvRowNumber(),
+                SeverityLevel.ERROR));
       }
     }
   }

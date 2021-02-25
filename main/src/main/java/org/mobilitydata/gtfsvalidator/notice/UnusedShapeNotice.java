@@ -25,12 +25,12 @@ import com.google.common.collect.ImmutableMap;
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class UnusedShapeNotice extends ValidationNotice {
-  public UnusedShapeNotice(String shapeId, long csvRowNumber) {
+  public UnusedShapeNotice(String shapeId, long csvRowNumber, SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "shapeId", shapeId,
             "csvRowNumber", csvRowNumber),
-        SeverityLevel.WARNING);
+        severityLevel);
   }
 
   @Override

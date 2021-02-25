@@ -26,14 +26,14 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
  */
 public class StartAndEndTimeOutOfOrderNotice extends ValidationNotice {
   public StartAndEndTimeOutOfOrderNotice(
-      String filename, String entityId, long csvRowNumber, GtfsTime startTime, GtfsTime endTime) {
+      String filename, String entityId, long csvRowNumber, GtfsTime startTime, GtfsTime endTime, SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "filename", filename,
             "csvRowNumber", csvRowNumber,
             "entityId", entityId,
             "startTime", startTime.toHHMMSS(),
-            "endTime", endTime.toHHMMSS()));
+            "endTime", endTime.toHHMMSS()), severityLevel);
   }
 
   @Override

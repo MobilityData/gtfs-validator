@@ -21,6 +21,7 @@ import java.util.Set;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.UnusedShapeNotice;
 import org.mobilitydata.gtfsvalidator.notice.UnusedTripNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
@@ -44,7 +45,7 @@ public class TripUsageValidator extends FileValidator {
     for (GtfsTrip trip : tripTable.getEntities()) {
       String tripId = trip.tripId();
       if (reportedTrips.add(tripId) && stopTimeTable.byTripId(tripId).isEmpty()) {
-        noticeContainer.addValidationNotice(new UnusedTripNotice(tripId, trip.csvRowNumber()));
+        noticeContainer.addValidationNotice(new UnusedTripNotice(tripId, trip.csvRowNumber(), SeverityLevel.WARNING));
       }
     }
   }

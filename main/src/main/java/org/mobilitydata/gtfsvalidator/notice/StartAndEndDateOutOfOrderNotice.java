@@ -26,7 +26,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
  */
 public class StartAndEndDateOutOfOrderNotice extends ValidationNotice {
   public StartAndEndDateOutOfOrderNotice(
-      String filename, long csvRowNumber, GtfsDate startDate, GtfsDate endDate) {
+      String filename, long csvRowNumber, GtfsDate startDate, GtfsDate endDate, SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "filename",
@@ -36,11 +36,11 @@ public class StartAndEndDateOutOfOrderNotice extends ValidationNotice {
             "startDate",
             startDate.toYYYYMMDD(),
             "endDate",
-            endDate.toYYYYMMDD()));
+            endDate.toYYYYMMDD()), severityLevel);
   }
 
   public StartAndEndDateOutOfOrderNotice(
-      String filename, String entityId, long csvRowNumber, GtfsDate startDate, GtfsDate endDate) {
+      String filename, String entityId, long csvRowNumber, GtfsDate startDate, GtfsDate endDate, SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "filename",
@@ -52,7 +52,7 @@ public class StartAndEndDateOutOfOrderNotice extends ValidationNotice {
             "startDate",
             startDate.toYYYYMMDD(),
             "endDate",
-            endDate.toYYYYMMDD()));
+            endDate.toYYYYMMDD()), severityLevel);
   }
 
   @Override

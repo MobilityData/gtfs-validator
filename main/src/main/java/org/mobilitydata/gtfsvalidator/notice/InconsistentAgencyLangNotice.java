@@ -18,14 +18,19 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
+/**
+ * Inconsistent language among agencies.
+ *
+ * <p>Severity: {@code SeverityLevel.WARNING}
+ */
 public class InconsistentAgencyLangNotice extends ValidationNotice {
-  public InconsistentAgencyLangNotice(long csvRowNumber, String expected, String actual) {
+  public InconsistentAgencyLangNotice(long csvRowNumber, String expected, String actual, SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "csvRowNumber", csvRowNumber,
             "expected", expected,
             "actual", actual),
-        SeverityLevel.WARNING);
+        severityLevel);
   }
 
   @Override

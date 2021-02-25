@@ -35,7 +35,8 @@ public class DecreasingShapeDistanceNotice extends ValidationNotice {
       int shapePtSequence,
       long prevCsvRowNumber,
       double prevShapeDistTraveled,
-      int prevShapePtSequence) {
+      int prevShapePtSequence,
+      SeverityLevel severityLevel) {
     super(
         new ImmutableMap.Builder<String, Object>()
             .put("shapeId", shapeId)
@@ -45,7 +46,7 @@ public class DecreasingShapeDistanceNotice extends ValidationNotice {
             .put("prevCsvRowNumber", prevCsvRowNumber)
             .put("prevShapeDistTraveled", prevShapeDistTraveled)
             .put("prevShapePtSequence", prevShapePtSequence)
-            .build());
+            .build(), severityLevel);
   }
 
   @Override

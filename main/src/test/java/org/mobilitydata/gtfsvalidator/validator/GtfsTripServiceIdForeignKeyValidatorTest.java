@@ -27,6 +27,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.ForeignKeyError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDate;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
@@ -139,6 +140,6 @@ public class GtfsTripServiceIdForeignKeyValidatorTest {
                 "calendar.txt or calendar_dates.txt",
                 "service_id",
                 "WEEK",
-                1));
+                1, SeverityLevel.ERROR));
   }
 }

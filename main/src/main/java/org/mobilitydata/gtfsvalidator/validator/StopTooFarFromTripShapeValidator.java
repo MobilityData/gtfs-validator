@@ -30,6 +30,7 @@ import org.locationtech.spatial4j.shape.SpatialRelation;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.StopTooFarFromTripShapeNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
@@ -182,7 +183,7 @@ public class StopTooFarFromTripShapeValidator extends FileValidator {
       if (!shapeBuffer.relate(p).equals(SpatialRelation.CONTAINS)) {
         notices.add(
             new StopTooFarFromTripShapeNotice(
-                stopTime.stopId(), stopTime.stopSequence(), tripId, shapeId, TRIP_BUFFER_METERS));
+                stopTime.stopId(), stopTime.stopSequence(), tripId, shapeId, TRIP_BUFFER_METERS, SeverityLevel.WARNING));
       }
     }
 

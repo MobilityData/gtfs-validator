@@ -27,6 +27,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.MissingCalendarAndCalendarDateFilesNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDate;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
@@ -126,6 +127,6 @@ public class MissingCalendarAndCalendarDateValidatorTest {
     underTest.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new MissingCalendarAndCalendarDateFilesNotice());
+        .containsExactly(new MissingCalendarAndCalendarDateFilesNotice(SeverityLevel.ERROR));
   }
 }

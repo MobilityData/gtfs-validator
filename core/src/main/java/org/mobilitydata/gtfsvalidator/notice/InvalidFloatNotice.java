@@ -26,7 +26,7 @@ import com.google.common.collect.ImmutableMap;
 public class InvalidFloatNotice extends ValidationNotice {
 
   public InvalidFloatNotice(
-      String filename, long csvRowNumber, String fieldName, String fieldValue) {
+      String filename, long csvRowNumber, String fieldName, String fieldValue, SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "filename",
@@ -37,7 +37,7 @@ public class InvalidFloatNotice extends ValidationNotice {
             fieldName,
             "fieldValue",
             fieldValue),
-        SeverityLevel.ERROR);
+        severityLevel);
   }
 
   @Override

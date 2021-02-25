@@ -30,7 +30,7 @@ import com.google.common.collect.ImmutableMap;
 public class InvalidTimeNotice extends ValidationNotice {
 
   public InvalidTimeNotice(
-      String filename, long csvRowNumber, String fieldName, String fieldValue) {
+      String filename, long csvRowNumber, String fieldName, String fieldValue, SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "filename",
@@ -41,7 +41,7 @@ public class InvalidTimeNotice extends ValidationNotice {
             fieldName,
             "fieldValue",
             fieldValue),
-        SeverityLevel.ERROR);
+        severityLevel);
   }
 
   @Override

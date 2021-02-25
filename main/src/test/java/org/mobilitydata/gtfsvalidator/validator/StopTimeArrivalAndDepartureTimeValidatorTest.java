@@ -22,6 +22,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.StopTimeWithArrivalBeforePreviousDepartureTimeNotice;
 import org.mobilitydata.gtfsvalidator.notice.StopTimeWithDepartureBeforeArrivalTimeNotice;
 import org.mobilitydata.gtfsvalidator.notice.StopTimeWithOnlyArrivalOrDepartureTimeNotice;
@@ -112,7 +113,7 @@ public class StopTimeArrivalAndDepartureTimeValidatorTest {
                 "first trip id",
                 2,
                 GtfsTime.fromSecondsSinceMidnight(340),
-                GtfsTime.fromSecondsSinceMidnight(518)));
+                GtfsTime.fromSecondsSinceMidnight(518), SeverityLevel.ERROR));
   }
 
   @Test
@@ -147,7 +148,7 @@ public class StopTimeArrivalAndDepartureTimeValidatorTest {
                 1,
                 "first trip id",
                 GtfsTime.fromSecondsSinceMidnight(420),
-                GtfsTime.fromSecondsSinceMidnight(518)));
+                GtfsTime.fromSecondsSinceMidnight(518), SeverityLevel.ERROR));
   }
 
   @Test
@@ -199,7 +200,7 @@ public class StopTimeArrivalAndDepartureTimeValidatorTest {
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
             new StopTimeWithOnlyArrivalOrDepartureTimeNotice(
-                1, "first trip id", 2, "departure_time"));
+                1, "first trip id", 2, "departure_time", SeverityLevel.ERROR));
   }
 
   @Test
@@ -223,6 +224,6 @@ public class StopTimeArrivalAndDepartureTimeValidatorTest {
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
             new StopTimeWithOnlyArrivalOrDepartureTimeNotice(
-                1, "first trip id", 2, "arrival_time"));
+                1, "first trip id", 2, "arrival_time", SeverityLevel.ERROR));
   }
 }

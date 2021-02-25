@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.BlockTripsWithOverlappingStopTimesNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
@@ -170,7 +171,7 @@ public class BlockTripsWithOverlappingStopTimesValidatorTest {
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
             new BlockTripsWithOverlappingStopTimesNotice(
-                1, "t0", "WEEK", 2, "t1", "WEEK", "b1", GtfsDate.fromString("20210104")));
+                1, "t0", "WEEK", 2, "t1", "WEEK", "b1", GtfsDate.fromString("20210104"), SeverityLevel.WARNING));
   }
 
   @Test
@@ -198,7 +199,7 @@ public class BlockTripsWithOverlappingStopTimesValidatorTest {
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
             new BlockTripsWithOverlappingStopTimesNotice(
-                1, "t0", "WEEK", 2, "t1", "WEEK-ALT", "b1", GtfsDate.fromString("20210104")));
+                1, "t0", "WEEK", 2, "t1", "WEEK-ALT", "b1", GtfsDate.fromString("20210104"), SeverityLevel.WARNING));
   }
 
   @Test

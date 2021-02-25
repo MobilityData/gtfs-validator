@@ -22,6 +22,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateRouteNameNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
 
@@ -54,7 +55,8 @@ public class DuplicateRouteNameValidator extends FileValidator {
                       new DuplicateRouteNameNotice(
                           "route_short_name and route_long_name",
                           route.csvRowNumber(),
-                          route.routeId()));
+                          route.routeId(),
+                          SeverityLevel.WARNING));
                   return;
                 } else {
                   routeByShortAndLongName.put(
@@ -67,7 +69,10 @@ public class DuplicateRouteNameValidator extends FileValidator {
                       route.agencyId(), routeByLongName.get(route.routeLongName()).agencyId())) {
                     noticeContainer.addValidationNotice(
                         new DuplicateRouteNameNotice(
-                            "route_long_name", route.csvRowNumber(), route.routeId()));
+                            "route_long_name",
+                            route.csvRowNumber(),
+                            route.routeId(),
+                            SeverityLevel.WARNING));
                   }
                   return;
                 } else {
@@ -80,7 +85,10 @@ public class DuplicateRouteNameValidator extends FileValidator {
                       route.agencyId(), routeByShortName.get(route.routeShortName()).agencyId())) {
                     noticeContainer.addValidationNotice(
                         new DuplicateRouteNameNotice(
-                            "route_short_name", route.csvRowNumber(), route.routeId()));
+                            "route_short_name",
+                            route.csvRowNumber(),
+                            route.routeId(),
+                            SeverityLevel.WARNING));
                   }
                 } else {
                   routeByShortName.put(route.routeShortName(), route);

@@ -44,6 +44,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsLoader;
 import org.mobilitydata.gtfsvalidator.notice.EmptyFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.parsing.CsvFile;
 import org.mobilitydata.gtfsvalidator.parsing.CsvRow;
 import org.mobilitydata.gtfsvalidator.parsing.FieldCache;
@@ -140,6 +141,10 @@ public class TableLoaderGenerator {
                 String.class, "FILENAME", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
             .initializer("$S", fileDescriptor.filename())
             .build());
+    typeSpec.addField(
+        SeverityLevel.class,
+        "severityLevel",
+        Modifier.PRIVATE);
     for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
       typeSpec.addField(
           FieldSpec.builder(
@@ -215,7 +220,7 @@ public class TableLoaderGenerator {
                 "$T csvFile = new $T(inputStream, FILENAME)", CsvFile.class, CsvFile.class)
             .beginControlFlow("if (csvFile.isEmpty())")
             .addStatement(
-                "noticeContainer.addValidationNotice(new $T(FILENAME))", EmptyFileNotice.class)
+                "noticeContainer.addValidationNotice(new $T(FILENAME, severityLevel.ERROR))", EmptyFileNotice.class)
             .addStatement(
                 "$T table = new $T($T.EMPTY_FILE)",
                 tableContainerTypeName,
@@ -396,7 +401,7 @@ public class TableLoaderGenerator {
                 TableStatus.class)
             .beginControlFlow("if (isRequired())")
             .addStatement(
-                "noticeContainer.addValidationNotice(new $T(gtfsFilename()))",
+                "noticeContainer.addValidationNotice(new $T(gtfsFilename(), severityLevel.ERROR))",
                 MissingRequiredFileError.class)
             .endControlFlow()
             .addStatement(

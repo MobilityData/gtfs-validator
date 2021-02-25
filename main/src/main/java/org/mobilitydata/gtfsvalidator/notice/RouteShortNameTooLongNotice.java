@@ -25,13 +25,13 @@ import com.google.common.collect.ImmutableMap;
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class RouteShortNameTooLongNotice extends ValidationNotice {
-  public RouteShortNameTooLongNotice(String routeId, long csvRowNumber, String routeShortName) {
+  public RouteShortNameTooLongNotice(String routeId, long csvRowNumber, String routeShortName, SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "routeId", routeId,
             "csvRowNumber", csvRowNumber,
             "routeShortName", routeShortName),
-        SeverityLevel.WARNING);
+        severityLevel);
   }
 
   @Override

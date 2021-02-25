@@ -25,7 +25,7 @@ import com.google.common.collect.ImmutableMap;
  */
 public class NumberOutOfRangeError extends ValidationNotice {
   public NumberOutOfRangeError(
-      String filename, long csvRowNumber, String fieldName, String fieldType, Object fieldValue) {
+      String filename, long csvRowNumber, String fieldName, String fieldType, Object fieldValue, SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "filename",
@@ -37,7 +37,7 @@ public class NumberOutOfRangeError extends ValidationNotice {
             "fieldType",
             fieldType,
             "fieldValue",
-            fieldValue));
+            fieldValue), severityLevel);
   }
 
   @Override

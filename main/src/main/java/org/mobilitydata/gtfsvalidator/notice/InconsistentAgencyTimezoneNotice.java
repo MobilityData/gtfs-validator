@@ -24,12 +24,12 @@ import com.google.common.collect.ImmutableMap;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class InconsistentAgencyTimezoneNotice extends ValidationNotice {
-  public InconsistentAgencyTimezoneNotice(long csvRowNumber, String expected, String actual) {
+  public InconsistentAgencyTimezoneNotice(long csvRowNumber, String expected, String actual, SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "csvRowNumber", csvRowNumber,
             "expected", expected,
-            "actual", actual));
+            "actual", actual), severityLevel);
   }
 
   @Override

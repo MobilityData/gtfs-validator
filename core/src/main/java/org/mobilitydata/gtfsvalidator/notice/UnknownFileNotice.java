@@ -24,8 +24,8 @@ import com.google.common.collect.ImmutableMap;
  * <p>Severity: {@code SeverityLevel.INFO}
  */
 public class UnknownFileNotice extends ValidationNotice {
-  public UnknownFileNotice(String filename) {
-    super(ImmutableMap.of("filename", filename), SeverityLevel.INFO);
+  public UnknownFileNotice(String filename, SeverityLevel severityLevel) {
+    super(ImmutableMap.of("filename", filename), severityLevel);
   }
 
   @Override

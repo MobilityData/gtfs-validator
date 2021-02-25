@@ -23,6 +23,7 @@ import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.DecreasingShapeDistanceNotice;
 import org.mobilitydata.gtfsvalidator.notice.DecreasingStopTimeDistanceNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 
@@ -53,7 +54,7 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
                   curr.stopSequence(),
                   prev.csvRowNumber(),
                   prev.shapeDistTraveled(),
-                  prev.stopSequence()));
+                  prev.stopSequence(), SeverityLevel.ERROR));
         }
       }
     }

@@ -25,7 +25,7 @@ import com.google.common.collect.ImmutableMap;
  */
 public class FeedInfoLangAndAgencyLangMismatchNotice extends ValidationNotice {
   public FeedInfoLangAndAgencyLangMismatchNotice(
-      long csvRowNumber, String agencyId, String agencyName, String agencyLang, String feedLang) {
+      long csvRowNumber, String agencyId, String agencyName, String agencyLang, String feedLang, SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "csvRowNumber", csvRowNumber,
@@ -33,7 +33,7 @@ public class FeedInfoLangAndAgencyLangMismatchNotice extends ValidationNotice {
             "agencyName", agencyName,
             "agencyLang", agencyLang,
             "feedLang", feedLang),
-        SeverityLevel.WARNING);
+        severityLevel);
   }
 
   @Override

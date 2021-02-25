@@ -22,6 +22,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.UnusableTripNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
@@ -104,6 +105,6 @@ public class TripUsabilityValidatorTest {
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new UnusableTripNotice(1, "t0"));
+        .containsExactly(new UnusableTripNotice(1, "t0", SeverityLevel.WARNING));
   }
 }

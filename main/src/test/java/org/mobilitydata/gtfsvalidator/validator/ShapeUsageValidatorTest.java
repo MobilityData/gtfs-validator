@@ -22,6 +22,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.UnusedShapeNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
@@ -116,6 +117,6 @@ public class ShapeUsageValidatorTest {
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new UnusedShapeNotice("second shape id", 3));
+        .containsExactly(new UnusedShapeNotice("second shape id", 3, SeverityLevel.WARNING));
   }
 }

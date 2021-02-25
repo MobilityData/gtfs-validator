@@ -24,6 +24,7 @@ import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyLangNotice;
 import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyTimezoneNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableLoader;
@@ -59,7 +60,7 @@ public class AgencyConsistencyValidator extends FileValidator {
             new MissingRequiredFieldError(
                 agencyTable.gtfsFilename(),
                 agency.csvRowNumber(),
-                GtfsAgencyTableLoader.AGENCY_ID_FIELD_NAME));
+                GtfsAgencyTableLoader.AGENCY_ID_FIELD_NAME, SeverityLevel.ERROR));
       }
     }
 
@@ -70,7 +71,7 @@ public class AgencyConsistencyValidator extends FileValidator {
       if (!commonTimezone.equals(agency.agencyTimezone())) {
         noticeContainer.addValidationNotice(
             new InconsistentAgencyTimezoneNotice(
-                agency.csvRowNumber(), commonTimezone.getId(), agency.agencyTimezone().getId()));
+                agency.csvRowNumber(), commonTimezone.getId(), agency.agencyTimezone().getId(), SeverityLevel.ERROR));
       }
     }
 
@@ -90,7 +91,7 @@ public class AgencyConsistencyValidator extends FileValidator {
             new InconsistentAgencyLangNotice(
                 agency.csvRowNumber(),
                 commonLanguage.getLanguage(),
-                agency.agencyLang().getLanguage()));
+                agency.agencyLang().getLanguage(), SeverityLevel.WARNING));
       }
     }
   }

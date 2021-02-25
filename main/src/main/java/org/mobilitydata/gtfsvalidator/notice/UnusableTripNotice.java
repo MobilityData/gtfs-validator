@@ -24,11 +24,11 @@ import com.google.common.collect.ImmutableMap;
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class UnusableTripNotice extends ValidationNotice {
-  public UnusableTripNotice(long csvRowNumber, String tripId) {
+  public UnusableTripNotice(long csvRowNumber, String tripId, SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "csvRowNumber", csvRowNumber,
-            "tripId", tripId));
+            "tripId", tripId), severityLevel);
   }
 
   @Override

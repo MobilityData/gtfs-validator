@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.UnusedTripNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
@@ -124,6 +125,6 @@ public class TripUsageValidatorTest {
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new UnusedTripNotice("unused trip id value", 3));
+        .containsExactly(new UnusedTripNotice("unused trip id value", 3, SeverityLevel.WARNING));
   }
 }

@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.UnusableTripNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
@@ -39,7 +40,7 @@ public class TripUsabilityValidator extends FileValidator {
     for (GtfsTrip trip : tripTable.getEntities()) {
       String tripId = trip.tripId();
       if (stopTimeTable.byTripId(tripId).size() <= 1) {
-        noticeContainer.addValidationNotice(new UnusableTripNotice(trip.csvRowNumber(), tripId));
+        noticeContainer.addValidationNotice(new UnusableTripNotice(trip.csvRowNumber(), tripId, SeverityLevel.WARNING));
       }
     }
   }

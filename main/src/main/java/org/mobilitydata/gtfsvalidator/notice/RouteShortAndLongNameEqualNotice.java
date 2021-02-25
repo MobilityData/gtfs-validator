@@ -25,14 +25,14 @@ import com.google.common.collect.ImmutableMap;
  */
 public class RouteShortAndLongNameEqualNotice extends ValidationNotice {
   public RouteShortAndLongNameEqualNotice(
-      String routeId, long csvRowNumber, String routeShortName, String routeLongName) {
+      String routeId, long csvRowNumber, String routeShortName, String routeLongName, SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "routeId", routeId,
             "csvRowNumber", csvRowNumber,
             "routeShortName", routeShortName,
             "routeLongName", routeLongName),
-        SeverityLevel.WARNING);
+        severityLevel);
   }
 
   @Override

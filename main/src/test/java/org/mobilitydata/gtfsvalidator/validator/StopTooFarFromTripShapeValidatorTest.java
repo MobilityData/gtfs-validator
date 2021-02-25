@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Set;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.StopTooFarFromTripShapeNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
@@ -158,7 +159,7 @@ public class StopTooFarFromTripShapeValidatorTest {
     underTest.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new StopTooFarFromTripShapeNotice("1003", 3, "t1", "shape id", 100));
+        .containsExactly(new StopTooFarFromTripShapeNotice("1003", 3, "t1", "shape id", 100, SeverityLevel.WARNING));
   }
 
   @Test
@@ -251,7 +252,7 @@ public class StopTooFarFromTripShapeValidatorTest {
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new StopTooFarFromTripShapeNotice("1003", 3, "t1", "shape1", 100));
+        .containsExactly(new StopTooFarFromTripShapeNotice("1003", 3, "t1", "shape1", 100, SeverityLevel.WARNING));
   }
 
   /**
@@ -627,8 +628,8 @@ public class StopTooFarFromTripShapeValidatorTest {
     assertThat(noticeContainer.getValidationNotices())
         .containsExactlyElementsIn(
             new StopTooFarFromTripShapeNotice[] {
-              new StopTooFarFromTripShapeNotice("1003", 3, "t1", "shape1", 100),
-              new StopTooFarFromTripShapeNotice("1005", 5, "t2", "shape2", 100),
+              new StopTooFarFromTripShapeNotice("1003", 3, "t1", "shape1", 100, SeverityLevel.WARNING),
+              new StopTooFarFromTripShapeNotice("1005", 5, "t2", "shape2", 100, SeverityLevel.WARNING),
             });
 
     ArgumentCaptor<String> tripIdCapture = ArgumentCaptor.forClass(String.class);

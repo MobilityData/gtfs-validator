@@ -20,6 +20,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
@@ -49,7 +50,7 @@ public class TripAgencyIdValidator extends FileValidator {
             new MissingRequiredFieldError(
                 routeTable.gtfsFilename(),
                 route.csvRowNumber(),
-                GtfsRouteTableLoader.AGENCY_ID_FIELD_NAME));
+                GtfsRouteTableLoader.AGENCY_ID_FIELD_NAME, SeverityLevel.ERROR));
       }
       // No need to check reference integrity because it is done by a validator generated from
       // @ForeignKey annotation.

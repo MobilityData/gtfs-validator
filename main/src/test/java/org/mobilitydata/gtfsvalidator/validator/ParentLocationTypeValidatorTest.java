@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.notice.WrongParentLocationTypeNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
@@ -88,7 +89,7 @@ public class ParentLocationTypeValidatorTest {
                 "parent",
                 "Parent location",
                 GtfsLocationType.ENTRANCE.getNumber(),
-                GtfsLocationType.STATION.getNumber()));
+                GtfsLocationType.STATION.getNumber(), SeverityLevel.ERROR));
   }
 
   @Test
@@ -106,7 +107,7 @@ public class ParentLocationTypeValidatorTest {
                 "parent",
                 "Parent location",
                 GtfsLocationType.STOP.getNumber(),
-                GtfsLocationType.STATION.getNumber()));
+                GtfsLocationType.STATION.getNumber(), SeverityLevel.ERROR));
   }
 
   @Test
@@ -124,7 +125,7 @@ public class ParentLocationTypeValidatorTest {
                 "parent",
                 "Parent location",
                 GtfsLocationType.STOP.getNumber(),
-                GtfsLocationType.STATION.getNumber()));
+                GtfsLocationType.STATION.getNumber(), SeverityLevel.ERROR));
   }
 
   @Test
@@ -142,7 +143,7 @@ public class ParentLocationTypeValidatorTest {
                 "parent",
                 "Parent location",
                 GtfsLocationType.STATION.getNumber(),
-                GtfsLocationType.STOP.getNumber()));
+                GtfsLocationType.STOP.getNumber(), SeverityLevel.ERROR));
   }
 
   @Test

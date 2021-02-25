@@ -21,6 +21,7 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.RouteColorContrastNotice;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 
@@ -153,6 +154,6 @@ public class RouteColorContrastValidatorTest {
                 "route id value",
                 2,
                 GtfsColor.fromString("4a4444"),
-                GtfsColor.fromString("3d3838")));
+                GtfsColor.fromString("3d3838"), SeverityLevel.WARNING));
   }
 }

@@ -32,7 +32,7 @@ import com.google.common.collect.ImmutableMap;
 public class InvalidPhoneNumberNotice extends ValidationNotice {
 
   public InvalidPhoneNumberNotice(
-      String filename, long csvRowNumber, String fieldName, String fieldValue) {
+      String filename, long csvRowNumber, String fieldName, String fieldValue, SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "filename",
@@ -43,7 +43,7 @@ public class InvalidPhoneNumberNotice extends ValidationNotice {
             fieldName,
             "fieldValue",
             fieldValue),
-        SeverityLevel.ERROR);
+        severityLevel);
   }
 
   @Override

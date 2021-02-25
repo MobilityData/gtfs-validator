@@ -23,6 +23,7 @@ import java.util.TreeSet;
 import org.mobilitydata.gtfsvalidator.notice.DuplicatedColumnNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredColumnError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.UnknownColumnNotice;
 
 /** A validator that checks table headers for required columns etc. */
@@ -47,18 +48,18 @@ public class TableHeaderValidator {
       // Column indices are zero-based. We add 1 to make them 1-based.
       if (prev != null) {
         noticeContainer.addValidationNotice(
-            new DuplicatedColumnNotice(filename, column, prev + 1, i + 1));
+            new DuplicatedColumnNotice(filename, column, prev + 1, i + 1, SeverityLevel.ERROR));
         isValid = false;
       }
       if (!supportedColumns.contains(column)) {
-        noticeContainer.addValidationNotice(new UnknownColumnNotice(filename, column, i + 1));
+        noticeContainer.addValidationNotice(new UnknownColumnNotice(filename, column, i + 1, SeverityLevel.INFO));
       }
       missingColumns.remove(column);
     }
     if (!missingColumns.isEmpty()) {
       isValid = false;
       for (String column : missingColumns) {
-        noticeContainer.addValidationNotice(new MissingRequiredColumnError(filename, column));
+        noticeContainer.addValidationNotice(new MissingRequiredColumnError(filename, column, SeverityLevel.ERROR));
       }
     }
     return isValid;

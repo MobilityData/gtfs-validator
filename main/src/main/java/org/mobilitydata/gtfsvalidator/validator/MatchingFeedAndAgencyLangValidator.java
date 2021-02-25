@@ -21,6 +21,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.FeedInfoLangAndAgencyLangMismatchNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
@@ -72,7 +73,7 @@ public class MatchingFeedAndAgencyLangValidator extends FileValidator {
                 agency.agencyId(),
                 agency.agencyName(),
                 agency.agencyLang().toLanguageTag(),
-                feedLang.toLanguageTag()));
+                feedLang.toLanguageTag(), SeverityLevel.WARNING));
       }
     }
   }

@@ -23,15 +23,17 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p>Some CSV parsers, such as Univocity, may misinterpret it as a non-empty row that has a single
  * column which is empty, hence we show a warning.
+ *
+ * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class EmptyRowNotice extends ValidationNotice {
 
-  public EmptyRowNotice(String filename, long csvRowNumber) {
+  public EmptyRowNotice(String filename, long csvRowNumber, SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "filename", filename,
             "csvRowNumber", csvRowNumber),
-        SeverityLevel.WARNING);
+        severityLevel);
   }
 
   @Override

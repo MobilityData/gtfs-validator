@@ -20,6 +20,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.LocationWithoutParentStationNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.PlatformWithoutParentStationNotice;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.StationWithParentStationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
@@ -50,7 +51,7 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
         noticeContainer.addValidationNotice(
             new StationWithParentStationNotice(
                 location.csvRowNumber(), location.stopId(),
-                location.stopName(), location.parentStation()));
+                location.stopName(), location.parentStation(), SeverityLevel.ERROR));
       }
     } else if (location.locationType() == GtfsLocationType.STOP) {
       if (!location.platformCode().isEmpty()) {
@@ -58,13 +59,13 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
         // LocationWithoutParentStationNotice because it is less severe.
         noticeContainer.addValidationNotice(
             new PlatformWithoutParentStationNotice(
-                location.csvRowNumber(), location.stopId(), location.stopName()));
+                location.csvRowNumber(), location.stopId(), location.stopName(), SeverityLevel.WARNING));
       }
     } else if (requiresParentStation(location.locationType())) {
       noticeContainer.addValidationNotice(
           new LocationWithoutParentStationNotice(
               location.csvRowNumber(), location.stopId(),
-              location.stopName(), location.locationTypeValue()));
+              location.stopName(), location.locationTypeValue(), SeverityLevel.ERROR));
     }
   }
 }

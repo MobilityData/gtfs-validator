@@ -31,7 +31,7 @@ import com.google.common.collect.ImmutableMap;
 public class InvalidLanguageCodeNotice extends ValidationNotice {
 
   public InvalidLanguageCodeNotice(
-      String filename, long csvRowNumber, String fieldName, String fieldValue) {
+      String filename, long csvRowNumber, String fieldName, String fieldValue, SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "filename",
@@ -42,7 +42,7 @@ public class InvalidLanguageCodeNotice extends ValidationNotice {
             fieldName,
             "fieldValue",
             fieldValue),
-        SeverityLevel.ERROR);
+        severityLevel);
   }
 
   @Override

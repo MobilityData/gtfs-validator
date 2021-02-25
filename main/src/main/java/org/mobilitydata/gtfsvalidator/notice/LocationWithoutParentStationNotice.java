@@ -28,7 +28,11 @@ import com.google.common.collect.ImmutableMap;
  */
 public class LocationWithoutParentStationNotice extends ValidationNotice {
   public LocationWithoutParentStationNotice(
-      long csvRowNumber, String stopId, String stopName, int locationType) {
+      long csvRowNumber,
+      String stopId,
+      String stopName,
+      int locationType,
+      SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "csvRowNumber",
@@ -38,7 +42,8 @@ public class LocationWithoutParentStationNotice extends ValidationNotice {
             "stopName",
             stopName,
             "locationType",
-            locationType));
+            locationType),
+        severityLevel);
   }
 
   @Override

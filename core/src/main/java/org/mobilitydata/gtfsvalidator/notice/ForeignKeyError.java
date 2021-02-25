@@ -34,7 +34,8 @@ public class ForeignKeyError extends ValidationNotice {
       String parentFilename,
       String parentFieldName,
       String fieldValue,
-      long csvRowNumber) {
+      long csvRowNumber,
+      SeverityLevel severityLevel) {
     super(
         new ImmutableMap.Builder<String, Object>()
             .put("childFilename", childFilename)
@@ -43,7 +44,8 @@ public class ForeignKeyError extends ValidationNotice {
             .put("parentFieldName", parentFieldName)
             .put("fieldValue", fieldValue)
             .put("csvRowNumber", csvRowNumber)
-            .build());
+            .build(),
+        severityLevel);
   }
 
   @Override

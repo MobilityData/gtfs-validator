@@ -17,14 +17,15 @@ public class OverlappingFrequencyNotice extends ValidationNotice {
       GtfsTime prevEndTime,
       long currCsvRowNumber,
       GtfsTime currStartTime,
-      String tripId) {
+      String tripId,
+      SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "prevCsvRowNumber", prevCsvRowNumber,
             "prevEndTime", prevEndTime.toHHMMSS(),
             "currCsvRowNumber", currCsvRowNumber,
             "currStartTime", currStartTime.toHHMMSS(),
-            "tripId", tripId));
+            "tripId", tripId), severityLevel);
   }
 
   @Override
