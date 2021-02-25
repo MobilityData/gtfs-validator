@@ -21,8 +21,8 @@ import static com.google.common.truth.Truth.assertThat;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.notice.TooFastTravelNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.TooFastTravelNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
@@ -37,8 +37,7 @@ public class TooFastTravelValidatorTest {
     return GtfsStopTableContainer.forEntities(entities, noticeContainer);
   }
 
-  private static GtfsStop createStop(
-      long csvRowNumber, String stopId, double stopLon) {
+  private static GtfsStop createStop(long csvRowNumber, String stopId, double stopLon) {
     return new GtfsStop.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setStopId(stopId)
@@ -341,7 +340,7 @@ public class TooFastTravelValidatorTest {
 
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(new TooFastTravelNotice("t1", 400.3022870437275, 0, 4));
-}
+  }
 
   @Test
   public void noFastTravelMissingDepartureTimeShouldNotGenerateNotice() {

@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
-import org.mobilitydata.gtfsvalidator.notice.TooFastTravelNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.TooFastTravelNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
@@ -96,8 +96,8 @@ public class TooFastTravelValidator extends FileValidator {
       boolean sameArrivalAndDeparture = false;
       if (prevDepartureTime != null && stopTime.hasArrivalTime() && stopTime.hasDepartureTime()) {
         if (stopTime.arrivalTime().isBefore(prevDepartureTime)) {
-        // Abort here if there is a StopTimeWithArrivalBeforePreviousDepartureTimeNotice for this
-        // trip
+          // Abort here if there is a StopTimeWithArrivalBeforePreviousDepartureTimeNotice for this
+          // trip
           return notices;
         }
         sameArrivalAndDeparture = currentArrivalTime.equals(prevDepartureTime);

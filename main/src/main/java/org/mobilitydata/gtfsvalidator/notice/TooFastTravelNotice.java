@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.List;
 
 /**
  * Trip is too fast
