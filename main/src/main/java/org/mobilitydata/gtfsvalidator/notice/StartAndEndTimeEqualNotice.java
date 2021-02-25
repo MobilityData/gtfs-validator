@@ -20,8 +20,11 @@ import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 /**
- * Equal `frequencies.start_time` and `frequencies.start_time` from same row of GTFS file
+ * Equal `frequencies.start_time` and `frequencies.end_time` from same row of GTFS file
  * `frequencies.txt`.
+ *
+ * <p>The GTFS spec is currently unclear how this case should be handled (e.g., is it a trip that
+ * circulates once?). It is recommended to use a trip not defined via frequencies.txt for this case.
  *
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
@@ -39,6 +42,6 @@ public class StartAndEndTimeEqualNotice extends ValidationNotice {
 
   @Override
   public String getCode() {
-    return "equal_start_and_end_time";
+    return "start_and_end_time_out_of_order";
   }
 }

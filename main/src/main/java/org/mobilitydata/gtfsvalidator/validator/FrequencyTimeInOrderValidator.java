@@ -27,7 +27,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 /**
  * Validates `frequencies.start_time` is before or equal to `frequencies.end_time` for a single
- * entity. not allow `frequencies.start_time` and `frequencies.end_time` to be equal.
+ * entity. Does not allow `frequencies.start_time` and `frequencies.end_time` to be equal.
  *
  * <p>Generated notice:
  *
