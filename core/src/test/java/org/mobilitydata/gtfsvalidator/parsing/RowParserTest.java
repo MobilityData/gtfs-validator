@@ -194,6 +194,10 @@ public class RowParserTest {
         .isEqualTo("(650) 253-0000");
     assertThat(createParser("ch-feed", "044 668 18 00").asPhoneNumber(0, true))
         .isEqualTo("044 668 18 00");
+    assertThat(createParser("nl-feed", "+49 341 913 540 42").asPhoneNumber(0, true))
+        .isEqualTo("+49 341 913 540 42");
+    assertThat(createParser("nl-feed", "004980038762246").asPhoneNumber(0, true))
+        .isEqualTo("004980038762246");
   }
 
   @Test
@@ -203,6 +207,13 @@ public class RowParserTest {
     assertThat(parser.hasParseErrorsInRow()).isTrue();
     assertThat(parser.getNoticeContainer().getValidationNotices())
         .containsExactly(new InvalidPhoneNumberNotice(TEST_FILENAME, 8, "column name", "invalid"));
+
+    parser = createParser("nl-feed", "003280038762246");
+    assertThat(parser.asPhoneNumber(0, true)).isNull();
+    assertThat(parser.hasParseErrorsInRow()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices())
+        .containsExactly(
+            new InvalidPhoneNumberNotice(TEST_FILENAME, 8, "column name", "003280038762246"));
   }
 
   @Test
