@@ -212,7 +212,8 @@ public class RowParserTest {
     assertThat(parser.asPhoneNumber(0, true)).isNull();
     assertThat(parser.hasParseErrorsInRow()).isTrue();
     assertThat(parser.getNoticeContainer().getValidationNotices())
-        .containsExactly(new InvalidPhoneNumberNotice(TEST_FILENAME, 8, "column name", "003280038762246"));
+        .containsExactly(
+            new InvalidPhoneNumberNotice(TEST_FILENAME, 8, "column name", "003280038762246"));
   }
 
   @Test
