@@ -77,6 +77,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 |[`MissingFeedInfoDateNotice`](#MissingFeedInfoDateNotice)| [W010](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W010), [W011](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W011)| `feed_end_date` should be provided if `feed_start_date` is provided. `feed_start_date` should be provided if `feed_end_date` is provided. |
 |[`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)| [W014](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W014), [W015](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W015), [W016](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W016)| Duplicate `routes.route_long_name`. Duplicate `routes.route_short_name`. Duplicate combination of fields `route_long_name` and `routes.route_short_name` |
 || [W014](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W014), [W015](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W015), [W016](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W016)| Duplicate `routes.route_long_name`. Duplicate `routes.route_short_name`. Duplicate combination of fields `route_long_name` and `routes.route_short_name` |
+|[`StartAndEndTimeEqualNotice`](#StartAndEndTimeEqualNotice)|| Equal `frequencies.start_time` and `frequencies.end_time`. |
 
 ## Notices
 
@@ -389,6 +390,12 @@ A location that must have `parent_station` field does not have it. The following
 ### StartAndEndTimeOutOfOrderNotice
 
 Start and end times have been found to be out-of-order in GTFS file `frequencies.txt`.
+
+<a name="StartAndEndTimeEqualNotice"/>
+
+### StartAndEndTimeEqualNotice
+
+Start and end times have been found to be equal in GTFS file `frequencies.txt`.
 
 ### StopTooFarFromTripShapeNotice
 
