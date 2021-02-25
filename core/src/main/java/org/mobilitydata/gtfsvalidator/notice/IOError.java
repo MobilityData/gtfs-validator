@@ -25,8 +25,8 @@ import com.google.common.collect.ImmutableMap;
  */
 public class IOError extends SystemError {
 
-  public IOError(String message) {
-    super(ImmutableMap.of("message", message));
+  public IOError(String message, SeverityLevel severityLevel) {
+    super(ImmutableMap.of("message", message), severityLevel);
   }
 
   @Override

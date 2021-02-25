@@ -11,7 +11,10 @@ import javax.annotation.Nullable;
  */
 public class RuntimeExceptionInLoaderError extends SystemError {
   public RuntimeExceptionInLoaderError(
-      String filename, String exceptionClassName, @Nullable String message) {
+      String filename,
+      String exceptionClassName,
+      @Nullable String message,
+      SeverityLevel severityLevel) {
     // Throwable.getMessage() may return null, so we need to support it gracefully.
     super(
         ImmutableMap.of(
@@ -20,7 +23,8 @@ public class RuntimeExceptionInLoaderError extends SystemError {
             "exception",
             exceptionClassName,
             "message",
-            message == null ? "" : message));
+            message == null ? "" : message),
+        severityLevel);
   }
 
   @Override

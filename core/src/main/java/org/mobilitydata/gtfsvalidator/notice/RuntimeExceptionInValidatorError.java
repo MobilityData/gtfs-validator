@@ -10,10 +10,14 @@ import com.google.common.collect.ImmutableMap;
  */
 public class RuntimeExceptionInValidatorError extends SystemError {
   public RuntimeExceptionInValidatorError(
-      String validatorClassName, String exceptionClassName, String message) {
+      String validatorClassName,
+      String exceptionClassName,
+      String message,
+      SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
-            "validator", validatorClassName, "exception", exceptionClassName, "message", message));
+            "validator", validatorClassName, "exception", exceptionClassName, "message", message),
+        severityLevel);
   }
 
   @Override

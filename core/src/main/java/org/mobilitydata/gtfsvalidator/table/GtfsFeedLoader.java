@@ -119,7 +119,10 @@ public class GtfsFeedLoader {
                 logger.atSevere().withCause(e).log("Runtime exception when loading %s", filename);
                 loaderNotices.addSystemError(
                     new RuntimeExceptionInLoaderError(
-                        filename, e.getClass().getCanonicalName(), e.getMessage()));
+                        filename,
+                        e.getClass().getCanonicalName(),
+                        e.getMessage(),
+                        SeverityLevel.ERROR));
                 // Since the file was not loaded successfully, we treat
                 // it as missing for continuing validation.
                 tableContainer =
@@ -153,15 +156,19 @@ public class GtfsFeedLoader {
                     final Throwable cause = e.getCause();
                     noticeContainer.addSystemError(
                         new ThreadExecutionError(
-                            cause.getClass().getCanonicalName(), cause.getMessage()));
+                            cause.getClass().getCanonicalName(),
+                            cause.getMessage(),
+                            SeverityLevel.ERROR));
                   } catch (InterruptedException e) {
                     logger.atSevere().withCause(e).log("Interrupted during loading a GTFS tables");
-                    noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
+                    noticeContainer.addSystemError(
+                        new ThreadInterruptedError(e.getMessage(), SeverityLevel.ERROR));
                   }
                 });
       } catch (InterruptedException e) {
         logger.atSevere().withCause(e).log("Interrupted during loading GTFS tables");
-        noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
+        noticeContainer.addSystemError(
+            new ThreadInterruptedError(e.getMessage(), SeverityLevel.ERROR));
       }
       GtfsFeedContainer feed = new GtfsFeedContainer(tableContainers);
       if (!feed.isParsedSuccessfully()) {
@@ -191,7 +198,8 @@ public class GtfsFeedLoader {
                     new RuntimeExceptionInValidatorError(
                         validator.getClass().getCanonicalName(),
                         e.getClass().getCanonicalName(),
-                        e.getMessage()));
+                        e.getMessage(),
+                        SeverityLevel.ERROR));
               }
               return validatorNotices;
             });
@@ -209,16 +217,20 @@ public class GtfsFeedLoader {
                     final Throwable cause = e.getCause();
                     noticeContainer.addSystemError(
                         new ThreadExecutionError(
-                            cause.getClass().getCanonicalName(), cause.getMessage()));
+                            cause.getClass().getCanonicalName(),
+                            cause.getMessage(),
+                            SeverityLevel.ERROR));
                   } catch (InterruptedException e) {
                     logger.atSevere().withCause(e).log(
                         "Interrupted during validation of GTFS tables");
-                    noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
+                    noticeContainer.addSystemError(
+                        new ThreadInterruptedError(e.getMessage(), SeverityLevel.ERROR));
                   }
                 });
       } catch (InterruptedException e) {
         logger.atSevere().withCause(e).log("Interrupted during validation of GTFS tables");
-        noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
+        noticeContainer.addSystemError(
+            new ThreadInterruptedError(e.getMessage(), SeverityLevel.ERROR));
       }
       return feed;
     } finally {

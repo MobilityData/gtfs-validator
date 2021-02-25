@@ -11,8 +11,8 @@ import com.google.common.collect.ImmutableMap;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class ThreadInterruptedError extends SystemError {
-  public ThreadInterruptedError(String message) {
-    super(ImmutableMap.of("message", message));
+  public ThreadInterruptedError(String message, SeverityLevel severityLevel) {
+    super(ImmutableMap.of("message", message), severityLevel);
   }
 
   @Override

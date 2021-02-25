@@ -32,6 +32,7 @@ import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ThreadInterruptedError;
 import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
@@ -82,13 +83,14 @@ public class Main {
       }
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot load GTFS feed");
-      noticeContainer.addSystemError(new IOError(e.getMessage()));
+      noticeContainer.addSystemError(new IOError(e.getMessage(), SeverityLevel.ERROR));
     } catch (URISyntaxException e) {
       logger.atSevere().withCause(e).log("Syntax error in URI");
-      noticeContainer.addSystemError(new URISyntaxError(e.getMessage()));
+      noticeContainer.addSystemError(new URISyntaxError(e.getMessage(), SeverityLevel.ERROR));
     } catch (InterruptedException e) {
       logger.atSevere().withCause(e).log("Interrupted thread");
-      noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
+      noticeContainer.addSystemError(
+          new ThreadInterruptedError(e.getMessage(), SeverityLevel.ERROR));
     }
     if (gtfsInput == null) {
       exportReport(args.getOutputBase(), noticeContainer);
