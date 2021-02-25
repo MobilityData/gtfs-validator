@@ -21,7 +21,7 @@ import static com.google.common.truth.Truth.assertThat;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.notice.DecreasingStopTimeDistanceNotice;
+import org.mobilitydata.gtfsvalidator.notice.DecreasingOrEqualStopTimeDistanceNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
@@ -75,7 +75,7 @@ public class StopTimeIncreasingDistanceValidatorTest {
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
-            new DecreasingStopTimeDistanceNotice("first trip", 3, 4.0d, 46, 2, 45.0d, 42, SeverityLevel.ERROR));
+            new DecreasingOrEqualStopTimeDistanceNotice("first trip", 3, 4.0d, 46, 2, 45.0d, 42, SeverityLevel.ERROR));
   }
 
   @Test
@@ -93,7 +93,7 @@ public class StopTimeIncreasingDistanceValidatorTest {
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
-            new DecreasingStopTimeDistanceNotice("first trip", 3, 45.0d, 46, 2, 45.0d, 42, SeverityLevel.ERROR));
+            new DecreasingOrEqualStopTimeDistanceNotice("first trip", 3, 45.0d, 46, 2, 45.0d, 42, SeverityLevel.ERROR));
   }
 
   @Test
@@ -111,6 +111,6 @@ public class StopTimeIncreasingDistanceValidatorTest {
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
-            new DecreasingStopTimeDistanceNotice("first trip", 2, 8.6d, 42, 1, 10.0d, 2, SeverityLevel.ERROR));
+            new DecreasingOrEqualStopTimeDistanceNotice("first trip", 2, 8.6d, 42, 1, 10.0d, 2, SeverityLevel.ERROR));
   }
 }

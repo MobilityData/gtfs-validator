@@ -40,7 +40,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 | [`StopTimeWithOnlyArrivalOrDepartureTimeNotice`](#StopTimeWithOnlyArrivalOrDepartureTimeNotice)                         	| [E044](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E044)     	| Missing `stop_time.arrival_time` or `stop_time.departure_time`                    	|
 | [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](#StopTimeWithArrivalBeforePreviousDepartureTimeNotice)                         	| [E049](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E049)      	| Backwards time travel between stops in `stop_times.txt`               	|
 | [`StopTimeWithDepartureBeforeArrivalTimeNotice`](#StopTimeWithDepartureBeforeArrivalTimeNotice), [`StartAndEndTimeOutOfOrderNotice`](#StartAndEndTimeOutOfOrderNotice)                        	| [E045](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E045)      	| `arrival_time` after `departure_time` in `stop_times.txt`. `end_time` after `start_time` in `frequencies.txt`.                	|
-| [`DecreasingShapeDistanceNotice`](#DecreasingShapeDistanceNotice)| [E058](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E058)   	| Decreasing `shape_dist_traveled` in `stop_times.txt`                    	|
+| [`DecreasingOrEqualShapeDistanceNotice`](#DecreasingOrEqualShapeDistanceNotice)| [E058](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E058)   	| Decreasing or equal `shape_dist_traveled` in `stop_times.txt`                    	|
 | [`WrongParentLocationTypeNotice`](#WrongParentLocationTypeNotice), [`LocationWithoutParentNotice`](#LocationWithoutParentNotice), [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)| [E041](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E041)      	| Invalid parent `location_type` for stop                                 	|
 | [`StationWithParentStationNotice`](#StationWithParentStationNotice)| [E042](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E042)      	| Station stop (`location_type`=2) has a parent stop                      	|
 |[`URISyntaxError`](#URISyntaxError)| [E007](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E007)          | Cannot `download` archive | 
@@ -55,7 +55,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 |[`FeedExpirationDateNotice`](#FeedExpirationDateNotice)| [E040](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E040), [W009](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W009)      	| Dataset should be valid for at least the next 7 days. Dataset should cover at least the next 30 days of service. |
 |                          	| [E043](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E043)      	| Duplicated field                                                        	|
 |[`MissingTripEdgeNotice`](#MissingTripEdgeNotice) | [E044](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E044)      	| Missing trip edge `arrival_time` or `departure_time` |
-|                          	| [E046](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E046)      	| Fast travel between stops in `stop_times.txt`                           	|
+|[`TooFastTravelNotice`](#TooFastTravelNotice)| [E046](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E046)      	| Fast travel between stops in `stop_times.txt`                           	|
 |                          	| [E048](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E048)      	| `end_time` after `start_time` in `frequencies.txt`                      	|
 |[`UnusedTripNotice`](#UnusedTripNotice)| [E050](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E050)      	| Trips must be used in `stop_times.txt`                                  	|
 |[`UnusableTripNotice`](#UnusableTripNotice)| [E051](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E051)      	| Trips must have more than one stop to be usable                         	|
@@ -64,7 +64,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 |[`BlockTripsWithOverlappingStopTimesNotice`](#BlockTripsWithOverlappingStopTimesNotice)| [E054](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E054)      	| Block trips must not have overlapping stop times                        	|
 |[`FeedInfoLangAndAgencyLangMismatchNotice`](#FeedInfoLangAndAgencyLangMismatchNotice)|  [E055](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E055)       	| Mismatching feed and agency language fields                        	|
 |[`MissingCalendarAndCalendarDateFilesNotice`](#MissingCalendarAndCalendarDateFilesNotice)| [E056](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E056)      	| Missing `calendar_dates.txt` and `calendar.txt` files                   	|
-|[`DecreasingStopTimeDistanceNotice`](#DecreasingStopTimeDistanceNotice)| [E057](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E057)      	| Decreasing `shape_dist_traveled` in `stop_times.txt`| 
+|[`DecreasingOrEqualStopTimeDistanceNotice`](#DecreasingOrEqualStopTimeDistanceNotice)| [E057](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E057)      	| Decreasing or equal `shape_dist_traveled` in `stop_times.txt`| 
 |                          	| [E059](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E059)      	| GTFS dataset too big                                                    	|
 |                          	| [E060](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E060)      	| Fatal internal error -- please report                                   	|
 |                          	| [E061](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E061)      	| Out of memory                                                           	|
@@ -242,11 +242,11 @@ The `departure_time` must not precede the `arrival_time` in `stop_times.txt` if 
 
 For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must not precede the `departure_time` of n-th stoptime in sequence.
 
-<a name="DecreasingShapeDistanceNotice"/>
+<a name="DecreasingOrEqualShapeDistanceNotice"/>
 
-### DecreasingShapeDistanceNotice
+### DecreasingOrEqualShapeDistanceNotice
 
-`shape_dist_traveled` should increase along a shape.
+When sorted by `shape.shape_pt_sequence`, two consecutive shape points should have increasing values for `shape_dist_traveled`. If the values are equal, this is considered as an error.  
 
 <a name="WrongParentLocationTypeNotice"/>
 
@@ -338,11 +338,11 @@ A trip must visit more than one stop in stop_times.txt to be usable by passenger
 
 Both files calendar_dates.txt and calendar.txt are missing from the GTFS archive. At least one of the files must be provided.
 
-<a name="DecreasingStopTimeDistanceNotice"/>
+<a name="DecreasingOrEqualStopTimeDistanceNotice"/>
 
-### DecreasingStopTimeDistanceNotice
+### DecreasingOrEqualStopTimeDistanceNotice
 
-Stop times in a trip should have increasing distance.
+When sorted by `stop_times.stop_pt_sequence`, two consecutive stop times in a trip should have increasing distance. If the values are equal, this is considered as an error.  
 
 ### NonAsciiOrNonPrintableCharNotice
 
@@ -408,3 +408,7 @@ The combination of `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.co
 ### MissingFeedInfoDateNotice
 
 Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one field is provided the second one should also be provided.
+
+### TooFastTravelNotice
+
+As implemented in the original [Google Python GTFS validator](https://github.com/google/transitfeed/wiki/FeedValidator), the calculated speed between stops should not be greater than 150 km/h (42 m/s SI or 93 mph). 
