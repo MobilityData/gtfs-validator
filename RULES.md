@@ -55,7 +55,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 |[`FeedExpirationDateNotice`](#FeedExpirationDateNotice)| [E040](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E040), [W009](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W009)      	| Dataset should be valid for at least the next 7 days. Dataset should cover at least the next 30 days of service. |
 |                          	| [E043](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E043)      	| Duplicated field                                                        	|
 |[`MissingTripEdgeNotice`](#MissingTripEdgeNotice) | [E044](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E044)      	| Missing trip edge `arrival_time` or `departure_time` |
-|[`FastTravelBetweenStopsNotice`](#FastTravelBetweenStopsNotice)| [E046](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E046)      	| Fast travel between stops in `stop_times.txt`                           	|
+|[`ExcessiveTripTravelSpeedNotice`](#ExcessiveTripTravelSpeedNotice)| [E046](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E046)      	| Fast travel between stops in `stop_times.txt`                           	|
 |                          	| [E048](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E048)      	| `end_time` after `start_time` in `frequencies.txt`                      	|
 |[`UnusedTripNotice`](#UnusedTripNotice)| [E050](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E050)      	| Trips must be used in `stop_times.txt`                                  	|
 |[`UnusableTripNotice`](#UnusableTripNotice)| [E051](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E051)      	| Trips must have more than one stop to be usable                         	|
@@ -409,6 +409,6 @@ The combination of `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.co
 
 Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one field is provided the second one should also be provided.
 
-### FastTravelBetweenStopsNotice
+### ExcessiveTripTravelSpeedNotice
 
 As implemented in the original [Google Python GTFS validator](https://github.com/google/transitfeed/wiki/FeedValidator), the calculated speed between stops should not be greater than 150 km/h (42 m/s SI or 93 mph). 
