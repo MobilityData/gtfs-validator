@@ -26,8 +26,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFrequency;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 /**
- * Validates `frequencies.start_time` is before to `frequencies.end_time` for a single
- * entity.
+ * Validates `frequencies.start_time` is before to `frequencies.end_time` for a single entity.
  *
  * <p>Validates if `frequencies.start_time` and `frequencies.end_time` are not equal.
  *
