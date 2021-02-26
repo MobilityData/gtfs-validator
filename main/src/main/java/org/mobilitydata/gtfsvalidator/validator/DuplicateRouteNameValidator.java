@@ -109,7 +109,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
   }
 
   /**
-   * Generate a key used to store {@code GtfsRoute} by `routes.route_long_name`
+   * Generate a key used to store {@code GtfsRoute} by `routes.route_long_name`.
    *
    * @param route the {@code GtfsRoute} to generate the key from
    * @return `routes.route_long_name`+`route.routeType`
@@ -119,7 +119,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
   }
 
   /**
-   * Generate a key used to store {@code GtfsRoute} by `routes.route_short_name`
+   * Generate a key used to store {@code GtfsRoute} by `routes.route_short_name`.
    *
    * @param route the {@code GtfsRoute} to generate the key from
    * @return `routes.route_short_name`+`route.routeType`
@@ -130,7 +130,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
 
   /**
    * Generate a key used to store {@code GtfsRoute} by both `routes.route_short_name` and
-   * `routes.route_long_name`
+   * `routes.route_long_name`.
    *
    * @param route the {@code GtfsRoute} to generate the key from
    * @return `routes.route_short_name`+`routes.route_long_name`+`route.routeType`
