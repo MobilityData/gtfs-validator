@@ -134,7 +134,7 @@ public class GtfsTripServiceIdForeignKeyValidatorTest {
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
             new ForeignKeyError(
-                "calendar_dates.txt",
+                "trips.txt",
                 "service_id",
                 "calendar.txt or calendar_dates.txt",
                 "service_id",

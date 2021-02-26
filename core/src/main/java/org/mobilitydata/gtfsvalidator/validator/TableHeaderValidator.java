@@ -16,11 +16,13 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.base.Strings;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import org.mobilitydata.gtfsvalidator.notice.DuplicatedColumnNotice;
+import org.mobilitydata.gtfsvalidator.notice.EmptyColumnNameNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredColumnError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.UnknownColumnNotice;
@@ -43,8 +45,12 @@ public class TableHeaderValidator {
     TreeSet<String> missingColumns = new TreeSet<>(requiredColumns);
     for (int i = 0; i < actualColumns.length; ++i) {
       String column = actualColumns[i];
-      Integer prev = columnIndices.putIfAbsent(column, i);
       // Column indices are zero-based. We add 1 to make them 1-based.
+      if (Strings.isNullOrEmpty(column)) {
+        noticeContainer.addValidationNotice(new EmptyColumnNameNotice(filename, i + 1));
+        continue;
+      }
+      Integer prev = columnIndices.putIfAbsent(column, i);
       if (prev != null) {
         noticeContainer.addValidationNotice(
             new DuplicatedColumnNotice(filename, column, prev + 1, i + 1));

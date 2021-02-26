@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.DuplicatedColumnNotice;
+import org.mobilitydata.gtfsvalidator.notice.EmptyColumnNameNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredColumnError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.UnknownColumnNotice;
@@ -110,5 +111,23 @@ public class TableHeaderValidatorTest {
                     container))
         .isTrue();
     assertThat(container.getValidationNotices().isEmpty()).isTrue();
+  }
+
+  @Test
+  public void emptyColumnNameShouldGenerateNotice() {
+    NoticeContainer container = new NoticeContainer();
+
+    assertThat(
+            new TableHeaderValidator()
+                .validate(
+                    "stops.txt",
+                    new String[] {"stop_id", null, "stop_name", ""},
+                    ImmutableSet.of("stop_id", "stop_name"),
+                    ImmutableSet.of("stop_id"),
+                    container))
+        .isTrue();
+    assertThat(container.getValidationNotices())
+        .containsExactly(
+            new EmptyColumnNameNotice("stops.txt", 2), new EmptyColumnNameNotice("stops.txt", 4));
   }
 }

@@ -18,8 +18,8 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateRouteNameNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;

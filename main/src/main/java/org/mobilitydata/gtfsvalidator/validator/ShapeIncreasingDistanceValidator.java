@@ -18,8 +18,8 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import com.google.common.collect.Multimaps;
 import java.util.List;
+import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.DecreasingOrEqualShapeDistanceNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
