@@ -99,6 +99,7 @@ public class ForeignKeyValidatorGenerator {
         FieldSpec.builder(childClasses.tableContainerTypeName(), "childContainer")
             .addAnnotation(Inject.class)
             .build());
+
     MethodSpec.Builder validateMethod =
         MethodSpec.methodBuilder("validate")
             .addModifiers(Modifier.PUBLIC)
