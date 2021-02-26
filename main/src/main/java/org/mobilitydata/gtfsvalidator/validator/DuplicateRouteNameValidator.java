@@ -82,9 +82,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
                 if (routeByShortName.containsKey(getRouteShortNameKey(route))) {
                   if (areRoutesFromSameAgency(
                       route.agencyId(),
-                      routeByShortName
-                          .get(getRouteShortNameKey(route))
-                          .agencyId())) {
+                      routeByShortName.get(getRouteShortNameKey(route)).agencyId())) {
                     noticeContainer.addValidationNotice(
                         new DuplicateRouteNameNotice(
                             "route_short_name", route.csvRowNumber(), route.routeId()));
