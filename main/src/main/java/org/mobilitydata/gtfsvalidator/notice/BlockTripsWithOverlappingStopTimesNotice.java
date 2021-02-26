@@ -8,8 +8,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class
-BlockTripsWithOverlappingStopTimesNotice extends ValidationNotice {
+public class BlockTripsWithOverlappingStopTimesNotice extends ValidationNotice {
   public BlockTripsWithOverlappingStopTimesNotice(
       long csvRowNumberA,
       String tripIdA,

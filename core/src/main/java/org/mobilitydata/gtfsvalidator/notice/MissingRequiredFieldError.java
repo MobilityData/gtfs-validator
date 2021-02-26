@@ -26,8 +26,8 @@ import com.google.common.collect.ImmutableMap;
 public class MissingRequiredFieldError extends ValidationNotice {
   public MissingRequiredFieldError(String filename, long csvRowNumber, String fieldName) {
     super(
-        ImmutableMap.of(
-            "filename", filename, "csvRowNumber", csvRowNumber, "fieldName", fieldName), SeverityLevel.ERROR);
+        ImmutableMap.of("filename", filename, "csvRowNumber", csvRowNumber, "fieldName", fieldName),
+        SeverityLevel.ERROR);
   }
 
   @Override

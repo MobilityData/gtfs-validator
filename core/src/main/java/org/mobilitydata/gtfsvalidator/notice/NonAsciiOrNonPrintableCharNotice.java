@@ -28,10 +28,7 @@ import com.google.common.collect.ImmutableMap;
  */
 public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
   public NonAsciiOrNonPrintableCharNotice(
-      String filename,
-      long csvRowNumber,
-      String columnName,
-      String fieldValue) {
+      String filename, long csvRowNumber, String columnName, String fieldValue) {
     super(
         ImmutableMap.of(
             "filename", filename,
