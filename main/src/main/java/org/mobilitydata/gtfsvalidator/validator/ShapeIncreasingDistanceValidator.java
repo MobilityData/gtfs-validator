@@ -28,9 +28,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 /**
  * Validates that shape_dist_traveled along a shape in "shapes.txt" are not decreasing.
  *
- * <p>Generated notice: {@link DecreasingOrEqualShapeDistanceNotice}. *
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>Generated notice: {@link DecreasingOrEqualShapeDistanceNotice}.
  */
 @GtfsValidator
 public class ShapeIncreasingDistanceValidator extends FileValidator {
