@@ -32,8 +32,8 @@ import java.util.Map;
  * because that may leak internal information. Only validation notices should be shared.
  */
 public abstract class SystemError extends Notice {
-  public SystemError(Map<String, Object> context, SeverityLevel severityLevel) {
+  public SystemError(Map<String, Object> context) {
     // by default SystemError.severity is set to SeverityLevel.ERROR
-    super(context, severityLevel);
+    super(context, SeverityLevel.ERROR);
   }
 }

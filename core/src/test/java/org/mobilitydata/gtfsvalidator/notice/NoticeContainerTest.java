@@ -35,10 +35,7 @@ public class NoticeContainerTest {
     container.addValidationNotice(new MissingRequiredFileError("agency.txt"));
     container.addSystemError(
         new RuntimeExceptionInValidatorError(
-            "FaultyValidator",
-            "java.lang.IndexOutOfBoundsException",
-            "Index 0 out of bounds",
-            SeverityLevel.ERROR));
+            "FaultyValidator", "java.lang.IndexOutOfBoundsException", "Index 0 out of bounds"));
     assertThat(container.exportValidationNotices())
         .isEqualTo(
             "{\"notices\":["
@@ -96,16 +93,10 @@ public class NoticeContainerTest {
     ValidationNotice n2 = new UnknownFileNotice("unknown.txt");
     SystemError e1 =
         new RuntimeExceptionInValidatorError(
-            "Validator1",
-            "java.lang.IndexOutOfBoundsException",
-            "Index 0 out of bounds",
-            SeverityLevel.ERROR);
+            "Validator1", "java.lang.IndexOutOfBoundsException", "Index 0 out of bounds");
     SystemError e2 =
         new RuntimeExceptionInValidatorError(
-            "Validator2",
-            "java.lang.NegativeArraySizeException",
-            "Index -1 out of bounds",
-            SeverityLevel.ERROR);
+            "Validator2", "java.lang.NegativeArraySizeException", "Index -1 out of bounds");
     NoticeContainer c1 = new NoticeContainer();
     c1.addValidationNotice(n1);
     c1.addSystemError(e1);

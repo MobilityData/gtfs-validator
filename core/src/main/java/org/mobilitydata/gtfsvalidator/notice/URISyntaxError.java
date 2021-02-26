@@ -25,8 +25,8 @@ import com.google.common.collect.ImmutableMap;
  */
 public class URISyntaxError extends SystemError {
 
-  public URISyntaxError(String message, SeverityLevel severityLevel) {
-    super(ImmutableMap.of("message", message), severityLevel);
+  public URISyntaxError(String message) {
+    super(ImmutableMap.of("message", message));
   }
 
   @Override
