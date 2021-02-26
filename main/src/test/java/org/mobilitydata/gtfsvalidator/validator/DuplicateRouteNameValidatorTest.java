@@ -68,9 +68,9 @@ public class DuplicateRouteNameValidatorTest {
                 createRoute(
                     2, "1st route id value", "agency id", "short name", "duplicate value", 2),
                 createRoute(
-                    4, "2nd route id value", "agency id", "other short name", "duplicate value", 3),
+                    4, "2nd route id value", "agency id", "other short name", "duplicate value", 2),
                 createRoute(
-                    8, "3rd route id value", "agency id", "another one", "duplicate value", 3)));
+                    8, "3rd route id value", "agency id", "another one", "duplicate value", 2)));
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
@@ -113,9 +113,9 @@ public class DuplicateRouteNameValidatorTest {
                 createRoute(
                     2, "1st route id value", "agency id", "duplicate value", "1st long name", 2),
                 createRoute(
-                    4, "2nd route id value", "agency id", "duplicate value", "2nd long name", 3),
+                    4, "2nd route id value", "agency id", "duplicate value", "2nd long name", 2),
                 createRoute(
-                    8, "3rd route id value", "agency id", "duplicate value", "3rd long name", 3)));
+                    8, "3rd route id value", "agency id", "duplicate value", "3rd long name", 2)));
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
@@ -133,6 +133,7 @@ public class DuplicateRouteNameValidatorTest {
             noticeContainer,
             ImmutableList.of(
                 createRoute(2, "1st route id value", "agency id", null, "1st value", 2),
+                createRoute(5, "4th route id value", "agency id", null, "1st value", 3),
                 createRoute(4, "2nd route id value", "another agency id", null, "2nd value", 3),
                 createRoute(8, "3rd route id value", "another one", null, "3rd value", 3)));
 
@@ -149,6 +150,7 @@ public class DuplicateRouteNameValidatorTest {
             noticeContainer,
             ImmutableList.of(
                 createRoute(2, "1st route id value", "agency id", "1st value", null, 2),
+                createRoute(5, "4th route id value", "agency id", "1st value", null, 3),
                 createRoute(4, "2nd route id value", "another agency id", "2nd value", null, 3),
                 createRoute(8, "3rd route id value", "another one", "3rd value", null, 3)));
 
@@ -165,7 +167,8 @@ public class DuplicateRouteNameValidatorTest {
             noticeContainer,
             ImmutableList.of(
                 createRoute(2, "1st route id value", "agency id", "short name", "long name", 2),
-                createRoute(4, "2nd route id value", "agency id", "short name", "long name", 3),
+                createRoute(5, "4th route id value", "agency id", "short name", "long value", 3),
+                createRoute(4, "2nd route id value", "agency id", "short name", "long name", 2),
                 createRoute(
                     8,
                     "3rd route id value",

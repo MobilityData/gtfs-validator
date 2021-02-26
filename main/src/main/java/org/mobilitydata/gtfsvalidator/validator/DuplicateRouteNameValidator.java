@@ -49,7 +49,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
             route -> {
               if (route.hasRouteShortName() && route.hasRouteLongName()) {
                 if (routeByShortAndLongName.containsKey(
-                    route.routeShortName() + route.routeLongName())) {
+                    route.routeShortName() + route.routeLongName() + route.routeType())) {
                   noticeContainer.addValidationNotice(
                       new DuplicateRouteNameNotice(
                           "route_short_name and route_long_name",
@@ -58,32 +58,32 @@ public class DuplicateRouteNameValidator extends FileValidator {
                   return;
                 } else {
                   routeByShortAndLongName.put(
-                      route.routeShortName() + route.routeLongName(), route);
+                      route.routeShortName() + route.routeLongName() + route.routeType(), route);
                 }
               }
               if (route.hasRouteLongName()) {
-                if (routeByLongName.containsKey(route.routeLongName())) {
+                if (routeByLongName.containsKey(route.routeLongName() + route.routeType())) {
                   if (areRoutesFromSameAgency(
-                      route.agencyId(), routeByLongName.get(route.routeLongName()).agencyId())) {
+                      route.agencyId(), routeByLongName.get(route.routeLongName() + route.routeType()).agencyId())) {
                     noticeContainer.addValidationNotice(
                         new DuplicateRouteNameNotice(
                             "route_long_name", route.csvRowNumber(), route.routeId()));
                   }
                   return;
                 } else {
-                  routeByLongName.put(route.routeLongName(), route);
+                  routeByLongName.put(route.routeLongName() + route.routeType(), route);
                 }
               }
               if (route.hasRouteShortName()) {
-                if (routeByShortName.containsKey(route.routeShortName())) {
+                if (routeByShortName.containsKey(route.routeShortName() + route.routeType())) {
                   if (areRoutesFromSameAgency(
-                      route.agencyId(), routeByShortName.get(route.routeShortName()).agencyId())) {
+                      route.agencyId(), routeByShortName.get(route.routeShortName() + route.routeType()).agencyId())) {
                     noticeContainer.addValidationNotice(
                         new DuplicateRouteNameNotice(
                             "route_short_name", route.csvRowNumber(), route.routeId()));
                   }
                 } else {
-                  routeByShortName.put(route.routeShortName(), route);
+                  routeByShortName.put(route.routeShortName() + route.routeType(), route);
                 }
               }
             });
