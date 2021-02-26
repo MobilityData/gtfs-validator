@@ -37,7 +37,8 @@ public class StopTimeWithDepartureBeforeArrivalTimeNotice extends ValidationNoti
             "tripId", tripId,
             "stopSequence", stopSequence,
             "departureTime", departureTime.toHHMMSS(),
-            "arrivalTime", arrivalTime.toHHMMSS()));
+            "arrivalTime", arrivalTime.toHHMMSS()),
+        SeverityLevel.ERROR);
   }
 
   @Override

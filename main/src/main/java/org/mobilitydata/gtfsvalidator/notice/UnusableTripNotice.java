@@ -28,7 +28,8 @@ public class UnusableTripNotice extends ValidationNotice {
     super(
         ImmutableMap.of(
             "csvRowNumber", csvRowNumber,
-            "tripId", tripId));
+            "tripId", tripId),
+        SeverityLevel.WARNING);
   }
 
   @Override

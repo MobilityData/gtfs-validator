@@ -32,7 +32,7 @@ public class DuplicatedColumnNotice extends ValidationNotice {
             "filename", filename,
             "fieldName", fieldName,
             "firstIndex", firstIndex,
-            "secondIndex", secondIndex));
+            "secondIndex", secondIndex), SeverityLevel.ERROR);
   }
 
   @Override

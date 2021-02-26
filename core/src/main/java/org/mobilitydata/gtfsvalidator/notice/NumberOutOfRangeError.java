@@ -37,7 +37,8 @@ public class NumberOutOfRangeError extends ValidationNotice {
             "fieldType",
             fieldType,
             "fieldValue",
-            fieldValue));
+            fieldValue),
+        SeverityLevel.ERROR);
   }
 
   @Override

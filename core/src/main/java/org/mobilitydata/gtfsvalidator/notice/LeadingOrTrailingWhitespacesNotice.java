@@ -32,6 +32,8 @@ import com.google.common.collect.ImmutableMap;
  * some values and omit them for the others. This is causing the largest problem when a primary key
  * and a foreign key differ just by a whitespace: it is clear that they are intended to be the same,
  * that is why we always strip whitespaces.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class LeadingOrTrailingWhitespacesNotice extends ValidationNotice {
 

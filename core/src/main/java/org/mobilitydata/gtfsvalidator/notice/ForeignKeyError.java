@@ -43,7 +43,8 @@ public class ForeignKeyError extends ValidationNotice {
             .put("parentFieldName", parentFieldName)
             .put("fieldValue", fieldValue)
             .put("csvRowNumber", csvRowNumber)
-            .build());
+            .build(),
+        SeverityLevel.ERROR);
   }
 
   @Override

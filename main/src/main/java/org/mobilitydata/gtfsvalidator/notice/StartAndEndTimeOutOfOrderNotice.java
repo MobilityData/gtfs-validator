@@ -33,7 +33,8 @@ public class StartAndEndTimeOutOfOrderNotice extends ValidationNotice {
             "csvRowNumber", csvRowNumber,
             "entityId", entityId,
             "startTime", startTime.toHHMMSS(),
-            "endTime", endTime.toHHMMSS()));
+            "endTime", endTime.toHHMMSS()),
+        SeverityLevel.ERROR);
   }
 
   @Override

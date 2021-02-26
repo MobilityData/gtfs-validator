@@ -28,7 +28,8 @@ public class RouteBothShortAndLongNameMissingNotice extends ValidationNotice {
     super(
         ImmutableMap.of(
             "routeId", routeId,
-            "csvRowNumber", csvRowNumber));
+            "csvRowNumber", csvRowNumber),
+        SeverityLevel.ERROR);
   }
 
   @Override

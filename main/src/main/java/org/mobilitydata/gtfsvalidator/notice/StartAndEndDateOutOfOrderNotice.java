@@ -36,7 +36,8 @@ public class StartAndEndDateOutOfOrderNotice extends ValidationNotice {
             "startDate",
             startDate.toYYYYMMDD(),
             "endDate",
-            endDate.toYYYYMMDD()));
+            endDate.toYYYYMMDD()),
+        SeverityLevel.ERROR);
   }
 
   public StartAndEndDateOutOfOrderNotice(
@@ -52,7 +53,8 @@ public class StartAndEndDateOutOfOrderNotice extends ValidationNotice {
             "startDate",
             startDate.toYYYYMMDD(),
             "endDate",
-            endDate.toYYYYMMDD()));
+            endDate.toYYYYMMDD()),
+        SeverityLevel.ERROR);
   }
 
   @Override

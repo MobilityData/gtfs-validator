@@ -39,7 +39,8 @@ public class SameNameAndDescriptionForRouteNotice extends ValidationNotice {
             .put("csvRowNumber", csvRowNumber)
             .put("routeDesc", routeDesc)
             .put("specifiedField", routeShortOrLongName)
-            .build());
+            .build(),
+        SeverityLevel.ERROR);
   }
 
   @Override

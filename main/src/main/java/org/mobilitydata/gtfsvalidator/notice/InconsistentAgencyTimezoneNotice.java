@@ -29,7 +29,8 @@ public class InconsistentAgencyTimezoneNotice extends ValidationNotice {
         ImmutableMap.of(
             "csvRowNumber", csvRowNumber,
             "expected", expected,
-            "actual", actual));
+            "actual", actual),
+        SeverityLevel.ERROR);
   }
 
   @Override

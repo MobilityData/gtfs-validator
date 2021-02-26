@@ -46,7 +46,8 @@ public class WrongParentLocationTypeNotice extends ValidationNotice {
             .put("parentStopName", parentStopName)
             .put("parentLocationType", parentLocationType)
             .put("expectedLocationType", expectedLocationType)
-            .build());
+            .build(),
+        SeverityLevel.ERROR);
   }
 
   @Override

@@ -24,7 +24,7 @@ import com.google.common.collect.ImmutableMap;
  * <p>"If there are not separate times for arrival and departure at a stop, enter the same value for
  * arrival_time and departure_time."
  *
- * <p>(http://gtfs.org/reference/static/#stpo_timestxt)
+ * <p>(http://gtfs.org/reference/static/#stop_timestxt)
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
@@ -36,7 +36,8 @@ public class MissingTripEdgeNotice extends ValidationNotice {
             "csvRowNumber", csvRowNumber,
             "stopSequence", stopSequence,
             "tripId", tripId,
-            "specifiedField", specifiedField));
+            "specifiedField", specifiedField),
+        SeverityLevel.ERROR);
   }
 
   @Override

@@ -31,7 +31,8 @@ public class StopTimeWithOnlyArrivalOrDepartureTimeNotice extends ValidationNoti
             "csvRowNumber", csvRowNumber,
             "tripId", tripId,
             "stopSequence", stopSequence,
-            "specifiedField", specifiedField));
+            "specifiedField", specifiedField),
+        SeverityLevel.ERROR);
   }
 
   @Override

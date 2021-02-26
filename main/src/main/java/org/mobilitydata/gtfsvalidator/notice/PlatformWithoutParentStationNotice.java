@@ -23,7 +23,7 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p>This is different from {@code LocationWithoutParentStationNotice} since it is less severe.
  *
- * <p>Severity: {@code SeverityLevel.WARNIING}
+ * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class PlatformWithoutParentStationNotice extends ValidationNotice {
   public PlatformWithoutParentStationNotice(long csvRowNumber, String stopId, String stopName) {

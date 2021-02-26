@@ -38,7 +38,8 @@ public class LocationWithoutParentStationNotice extends ValidationNotice {
             "stopName",
             stopName,
             "locationType",
-            locationType));
+            locationType),
+        SeverityLevel.ERROR);
   }
 
   @Override

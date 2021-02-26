@@ -25,7 +25,7 @@ import com.google.common.collect.ImmutableMap;
  */
 public class MissingRequiredColumnError extends ValidationNotice {
   public MissingRequiredColumnError(String filename, String fieldName) {
-    super(ImmutableMap.of("filename", filename, "fieldName", fieldName));
+    super(ImmutableMap.of("filename", filename, "fieldName", fieldName), SeverityLevel.ERROR);
   }
 
   @Override

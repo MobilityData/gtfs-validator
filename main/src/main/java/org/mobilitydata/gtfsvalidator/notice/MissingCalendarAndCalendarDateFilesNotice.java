@@ -25,7 +25,7 @@ import com.google.common.collect.ImmutableMap;
  */
 public class MissingCalendarAndCalendarDateFilesNotice extends ValidationNotice {
   public MissingCalendarAndCalendarDateFilesNotice() {
-    super(ImmutableMap.of());
+    super(ImmutableMap.of(), SeverityLevel.ERROR);
   }
 
   @Override

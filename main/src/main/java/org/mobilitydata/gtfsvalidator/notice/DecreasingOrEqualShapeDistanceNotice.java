@@ -45,7 +45,8 @@ public class DecreasingOrEqualShapeDistanceNotice extends ValidationNotice {
             .put("prevCsvRowNumber", prevCsvRowNumber)
             .put("prevShapeDistTraveled", prevShapeDistTraveled)
             .put("prevShapePtSequence", prevShapePtSequence)
-            .build());
+            .build(),
+        SeverityLevel.ERROR);
   }
 
   @Override

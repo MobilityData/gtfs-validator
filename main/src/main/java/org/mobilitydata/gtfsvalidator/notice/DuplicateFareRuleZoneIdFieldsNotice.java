@@ -21,6 +21,8 @@ import com.google.common.collect.ImmutableMap;
 /**
  * Rows from `fare_rules.txt` must be unique based on `fare_rules.route_id`, `fare_rules.origin_id`,
  * `fare_rules.contains_id` and `fare_rules.destination_id`.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class DuplicateFareRuleZoneIdFieldsNotice extends ValidationNotice {
   public DuplicateFareRuleZoneIdFieldsNotice(
@@ -30,7 +32,8 @@ public class DuplicateFareRuleZoneIdFieldsNotice extends ValidationNotice {
             "csvRowNumber", csvRowNumber,
             "fareId", fareId,
             "previousCsvRowNumber", previousCsvRowNumber,
-            "previousFareId", previousFareId));
+            "previousFareId", previousFareId),
+        SeverityLevel.ERROR);
   }
 
   @Override

@@ -31,6 +31,8 @@ import com.google.common.collect.ImmutableMap;
  *   f11,"f12
  *   f21,"f22"
  * </pre>
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class NewLineInValueNotice extends ValidationNotice {
 

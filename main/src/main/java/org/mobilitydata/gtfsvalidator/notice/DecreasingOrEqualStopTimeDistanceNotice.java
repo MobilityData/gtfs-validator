@@ -45,7 +45,8 @@ public class DecreasingOrEqualStopTimeDistanceNotice extends ValidationNotice {
             .put("prevCsvRowNumber", prevCsvRowNumber)
             .put("prevStopTimeDistTraveled", prevStopTimeDistTraveled)
             .put("prevStopSequence", prevStopSequence)
-            .build());
+            .build(),
+        SeverityLevel.ERROR);
   }
 
   @Override

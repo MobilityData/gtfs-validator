@@ -23,10 +23,15 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p>An ID field value is an internal ID, not intended to be shown to riders, and is a sequence of
  * any UTF-8 characters. Using only printable ASCII characters is recommended.
+ *
+ * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
   public NonAsciiOrNonPrintableCharNotice(
-      String filename, long csvRowNumber, String columnName, String fieldValue) {
+      String filename,
+      long csvRowNumber,
+      String columnName,
+      String fieldValue) {
     super(
         ImmutableMap.of(
             "filename", filename,
