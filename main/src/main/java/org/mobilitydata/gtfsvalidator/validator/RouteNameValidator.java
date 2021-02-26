@@ -55,10 +55,8 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
         && entity.routeShortName().equalsIgnoreCase(entity.routeLongName())) {
       noticeContainer.addValidationNotice(
           new RouteShortAndLongNameEqualNotice(
-              entity.routeId(),
-              entity.csvRowNumber(),
-              entity.routeShortName(),
-              entity.routeLongName()));
+              entity.routeId(), entity.csvRowNumber(),
+              entity.routeShortName(), entity.routeLongName()));
     }
 
     if (hasShortName && entity.routeShortName().length() > MAX_SHORT_NAME_LENGTH) {
