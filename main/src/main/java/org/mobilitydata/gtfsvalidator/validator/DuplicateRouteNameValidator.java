@@ -98,6 +98,6 @@ public class DuplicateRouteNameValidator extends FileValidator {
    */
   private boolean areRoutesFromSameAgency(
       final String routeAgencyId, final String otherRouteAgencyId) {
-    return routeAgencyId.equalsIgnoreCase(otherRouteAgencyId);
+    return routeAgencyId.equals(otherRouteAgencyId);
   }
 }

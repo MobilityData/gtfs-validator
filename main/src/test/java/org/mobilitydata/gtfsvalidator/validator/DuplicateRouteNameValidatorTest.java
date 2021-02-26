@@ -51,7 +51,9 @@ public class DuplicateRouteNameValidatorTest {
                     "other short name",
                     "duplicate value",
                     3),
-                createRoute(8, "3rd route id value", null, "another one", "duplicate value", 3)));
+                createRoute(8, "3rd route id value", null, "another one", "duplicate value", 2),
+                createRoute(
+                    8, "4th route id value", "agenCY ID", "other sname", "duplicate value", 2)));
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices()).isEmpty();
