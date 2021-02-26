@@ -28,9 +28,10 @@ import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
 /**
  * Validates unicity of short and long name for all routes.
  *
- * <p>When a {@code GtfsRoute} names are found to be duplicate a {@code DuplicateRouteNameNotice} is
- * generated and added to the {@code NoticeContainer} except if routes are from the same agency
- * (values for `route.agency_id` are case-sensitive) or routes have different `routes.route_type`.
+ * <p>When a {@code GtfsRoute} short and/or long names are found to be duplicate a {@code
+ * DuplicateRouteNameNotice} is generated and added to the {@code NoticeContainer} except if routes
+ * are from the same agency (values for `route.agency_id` are case-sensitive) or routes have
+ * different `routes.route_type`.
  *
  * <p>Generated notice:
  *
