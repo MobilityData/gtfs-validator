@@ -97,7 +97,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
   }
 
   /**
-   * Determines if two routes are from the same agency
+   * Determines if two routes are from the same agency: ids are case-sensitive.
    *
    * @param routeAgencyId first agency_id
    * @param otherRouteAgencyId second agency_id
