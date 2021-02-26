@@ -22,8 +22,8 @@ import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.DEPAR
 import com.google.common.collect.Multimaps;
 import java.util.List;
 import java.util.Map.Entry;
+import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.MissingTripEdgeNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;

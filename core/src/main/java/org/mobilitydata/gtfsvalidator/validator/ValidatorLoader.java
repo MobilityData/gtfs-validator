@@ -28,8 +28,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
@@ -205,6 +205,7 @@ public class ValidatorLoader {
         throw new InstantiationException(
             "Cannot inject a field of type " + field.getType().getSimpleName());
       }
+      field.setAccessible(true);
       field.set(validator, table);
     }
     return validator;
@@ -229,6 +230,7 @@ public class ValidatorLoader {
         throw new InstantiationException(
             "Cannot find " + field.getType().getSimpleName() + " in feed container");
       }
+      field.setAccessible(true);
       field.set(validator, table);
     }
     return validator;
@@ -241,6 +243,7 @@ public class ValidatorLoader {
         && field.getType().isAssignableFrom(ValidationContext.class))) {
       return false;
     }
+    field.setAccessible(true);
     field.set(validator, validationContext);
     return true;
   }

@@ -17,8 +17,8 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import java.util.Locale;
+import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.FeedInfoLangAndAgencyLangMismatchNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
