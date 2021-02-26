@@ -40,6 +40,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 | [`StopTimeWithOnlyArrivalOrDepartureTimeNotice`](#StopTimeWithOnlyArrivalOrDepartureTimeNotice)                         	| [E044](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E044)     	| Missing `stop_time.arrival_time` or `stop_time.departure_time`                    	|
 | [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](#StopTimeWithArrivalBeforePreviousDepartureTimeNotice)                         	| [E049](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E049)      	| Backwards time travel between stops in `stop_times.txt`               	|
 | [`StopTimeWithDepartureBeforeArrivalTimeNotice`](#StopTimeWithDepartureBeforeArrivalTimeNotice), [`StartAndEndTimeOutOfOrderNotice`](#StartAndEndTimeOutOfOrderNotice)                        	| [E045](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E045)      	| `arrival_time` after `departure_time` in `stop_times.txt`. `end_time` after `start_time` in `frequencies.txt`.                	|
+|[`StartAndEndTimeEqualNotice`](#StartAndEndTimeEqualNotice)|| Equal `frequencies.start_time` and `frequencies.end_time`. |
 | [`DecreasingOrEqualShapeDistanceNotice`](#DecreasingOrEqualShapeDistanceNotice)| [E058](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E058)   	| Decreasing or equal `shape_dist_traveled` in `stop_times.txt`                    	|
 | [`WrongParentLocationTypeNotice`](#WrongParentLocationTypeNotice), [`LocationWithoutParentNotice`](#LocationWithoutParentNotice), [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)| [E041](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E041)      	| Invalid parent `location_type` for stop                                 	|
 | [`StationWithParentStationNotice`](#StationWithParentStationNotice)| [E042](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E042)      	| Station stop (`location_type`=2) has a parent stop                      	|
@@ -389,6 +390,12 @@ A location that must have `parent_station` field does not have it. The following
 ### StartAndEndTimeOutOfOrderNotice
 
 Start and end times have been found to be out-of-order in GTFS file `frequencies.txt`.
+
+<a name="StartAndEndTimeEqualNotice"/>
+
+### StartAndEndTimeEqualNotice
+
+Start and end times have been found to be equal in GTFS file `frequencies.txt`. The GTFS spec is currently unclear how this case should be handled (e.g., is it a trip that circulates once?). It is recommended to use a trip not defined via frequencies.txt for this case.
 
 ### StopTooFarFromTripShapeNotice
 
