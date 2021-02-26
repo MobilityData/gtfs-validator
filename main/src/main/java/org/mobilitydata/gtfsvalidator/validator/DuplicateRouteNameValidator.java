@@ -68,7 +68,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
                 if (routeByLongName.containsKey(getRouteLongNameKey(route))) {
                   if (areRoutesFromSameAgency(
                       route.agencyId(),
-                      routeByLongName.get(route.routeLongName() + route.routeType()).agencyId())) {
+                      routeByLongName.get(getRouteLongNameKey(route)).agencyId())) {
                     noticeContainer.addValidationNotice(
                         new DuplicateRouteNameNotice(
                             "route_long_name", route.csvRowNumber(), route.routeId()));
@@ -83,7 +83,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
                   if (areRoutesFromSameAgency(
                       route.agencyId(),
                       routeByShortName
-                          .get(route.routeShortName() + route.routeType())
+                          .get(getRouteShortNameKey(route))
                           .agencyId())) {
                     noticeContainer.addValidationNotice(
                         new DuplicateRouteNameNotice(
