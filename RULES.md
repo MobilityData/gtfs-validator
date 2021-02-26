@@ -395,7 +395,7 @@ Start and end times have been found to be out-of-order in GTFS file `frequencies
 
 ### StartAndEndTimeEqualNotice
 
-Start and end times have been found to be equal in GTFS file `frequencies.txt`.
+Start and end times have been found to be equal in GTFS file `frequencies.txt`. The GTFS spec is currently unclear how this case should be handled (e.g., is it a trip that circulates once?). It is recommended to use a trip not defined via frequencies.txt for this case.
 
 ### StopTooFarFromTripShapeNotice
 

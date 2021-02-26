@@ -26,12 +26,15 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFrequency;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 /**
- * Validates `frequencies.start_time` is before or equal to `frequencies.end_time` for a single
- * entity. Does not allow `frequencies.start_time` and `frequencies.end_time` to be equal.
+ * Validates `frequencies.start_time` is before to `frequencies.end_time` for a single
+ * entity.
+ *
+ * <p>Validates if `frequencies.start_time` and `frequencies.end_time` are not equal.
  *
  * <p>Generated notice:
  *
  * <p>- {@link StartAndEndTimeOutOfOrderNotice}.
+ *
  * <p>- {@link StartAndEndTimeEqualNotice}.
  */
 @GtfsValidator
@@ -44,7 +47,8 @@ public class FrequencyTimeInOrderValidator extends SingleEntityValidator<GtfsFre
     GtfsTime endTime = frequency.endTime();
     if (startTime.equals(endTime)) {
       noticeContainer.addValidationNotice(
-          new StartAndEndTimeEqualNotice(FILENAME, frequency.tripId(), frequency.csvRowNumber(), startTime));
+          new StartAndEndTimeEqualNotice(
+              FILENAME, frequency.tripId(), frequency.csvRowNumber(), startTime));
       return;
     }
     if (startTime.isAfter(endTime)) {
