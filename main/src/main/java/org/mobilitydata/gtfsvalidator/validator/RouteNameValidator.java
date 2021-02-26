@@ -22,7 +22,6 @@ import org.mobilitydata.gtfsvalidator.notice.RouteBothShortAndLongNameMissingNot
 import org.mobilitydata.gtfsvalidator.notice.RouteShortAndLongNameEqualNotice;
 import org.mobilitydata.gtfsvalidator.notice.RouteShortNameTooLongNotice;
 import org.mobilitydata.gtfsvalidator.notice.SameNameAndDescriptionForRouteNotice;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 
 /**
@@ -48,7 +47,7 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
 
     if (!hasLongName && !hasShortName) {
       noticeContainer.addValidationNotice(
-          new RouteBothShortAndLongNameMissingNotice(entity.routeId(), entity.csvRowNumber(), SeverityLevel.ERROR));
+          new RouteBothShortAndLongNameMissingNotice(entity.routeId(), entity.csvRowNumber()));
     }
 
     if (hasShortName
@@ -56,14 +55,16 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
         && entity.routeShortName().equalsIgnoreCase(entity.routeLongName())) {
       noticeContainer.addValidationNotice(
           new RouteShortAndLongNameEqualNotice(
-              entity.routeId(), entity.csvRowNumber(),
-              entity.routeShortName(), entity.routeLongName(), SeverityLevel.WARNING));
+              entity.routeId(),
+              entity.csvRowNumber(),
+              entity.routeShortName(),
+              entity.routeLongName()));
     }
 
     if (hasShortName && entity.routeShortName().length() > MAX_SHORT_NAME_LENGTH) {
       noticeContainer.addValidationNotice(
           new RouteShortNameTooLongNotice(
-              entity.routeId(), entity.csvRowNumber(), entity.routeShortName(), SeverityLevel.WARNING));
+              entity.routeId(), entity.csvRowNumber(), entity.routeShortName()));
     }
     if (entity.hasRouteDesc()) {
       String routeDesc = entity.routeDesc();
@@ -71,13 +72,13 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
       if (hasShortName && !isValidRouteDesc(routeDesc, entity.routeShortName())) {
         noticeContainer.addValidationNotice(
             new SameNameAndDescriptionForRouteNotice(
-                entity.csvRowNumber(), routeId, routeDesc, "route_short_name", SeverityLevel.ERROR));
+                entity.csvRowNumber(), routeId, routeDesc, "route_short_name"));
         return;
       }
       if (hasLongName && !isValidRouteDesc(routeDesc, entity.routeLongName())) {
         noticeContainer.addValidationNotice(
             new SameNameAndDescriptionForRouteNotice(
-                entity.csvRowNumber(), routeId, routeDesc, "route_long_name", SeverityLevel.ERROR));
+                entity.csvRowNumber(), routeId, routeDesc, "route_long_name"));
       }
     }
   }

@@ -19,7 +19,6 @@ package org.mobilitydata.gtfsvalidator.validator;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.StartAndEndDateOutOfOrderNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
@@ -45,7 +44,7 @@ public class CalendarServiceDateValidator extends FileValidator {
                 calendar.serviceId(),
                 calendar.csvRowNumber(),
                 calendar.startDate(),
-                calendar.endDate(), SeverityLevel.ERROR));
+                calendar.endDate()));
       }
     }
   }

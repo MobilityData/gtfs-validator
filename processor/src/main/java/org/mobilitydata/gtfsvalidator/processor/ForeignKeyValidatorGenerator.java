@@ -31,7 +31,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.ForeignKeyError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.validator.FileValidator;
 
 /**
@@ -100,7 +99,6 @@ public class ForeignKeyValidatorGenerator {
         FieldSpec.builder(childClasses.tableContainerTypeName(), "childContainer")
             .addAnnotation(Inject.class)
             .build());
-    typeSpec.addField(SeverityLevel.class, "severityLevel", Modifier.PRIVATE);
     MethodSpec.Builder validateMethod =
         MethodSpec.methodBuilder("validate")
             .addModifiers(Modifier.PUBLIC)
@@ -118,7 +116,7 @@ public class ForeignKeyValidatorGenerator {
             .beginControlFlow("if (!hasReferencedKey(childKey, parentContainer))")
             .addStatement(
                 "noticeContainer.addValidationNotice(new $T($S, $S, $S, $S, childKey,"
-                    + " childEntity.csvRowNumber(), severityLevel.ERROR))",
+                    + " childEntity.csvRowNumber()))",
                 ForeignKeyError.class,
                 childFile.filename(),
                 FieldNameConverter.gtfsColumnName(childField.name()),

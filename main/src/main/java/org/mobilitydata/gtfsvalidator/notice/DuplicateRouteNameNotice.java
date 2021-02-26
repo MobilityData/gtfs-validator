@@ -26,11 +26,11 @@ import com.google.common.collect.ImmutableMap;
  */
 public class DuplicateRouteNameNotice extends ValidationNotice {
   public DuplicateRouteNameNotice(
-      String duplicatedField, long csvRowNumber, String routeId, SeverityLevel severityLevel) {
+      String duplicatedField, long csvRowNumber, String routeId) {
     super(
         ImmutableMap.of(
             "duplicatedField", duplicatedField, "csvRowNumber", csvRowNumber, "routeId", routeId),
-        severityLevel);
+        SeverityLevel.WARNING);
   }
 
   @Override

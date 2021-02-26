@@ -140,7 +140,6 @@ public class TableLoaderGenerator {
                 String.class, "FILENAME", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
             .initializer("$S", fileDescriptor.filename())
             .build());
-
     for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
       typeSpec.addField(
           FieldSpec.builder(

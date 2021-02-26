@@ -25,10 +25,10 @@ import com.google.common.collect.ImmutableMap;
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class MissingFeedInfoDateNotice extends ValidationNotice {
-  public MissingFeedInfoDateNotice(long csvRowNumber, String fieldName, SeverityLevel severityLevel) {
+  public MissingFeedInfoDateNotice(long csvRowNumber, String fieldName) {
     super(
         ImmutableMap.of("csvRowNumber", csvRowNumber, "fieldName", fieldName),
-        severityLevel);
+        SeverityLevel.WARNING);
   }
 
   @Override

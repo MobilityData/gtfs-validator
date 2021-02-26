@@ -22,7 +22,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.DecreasingOrEqualShapeDistanceNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 
@@ -55,8 +54,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
                   curr.shapePtSequence(),
                   prev.csvRowNumber(),
                   prev.shapeDistTraveled(),
-                  prev.shapePtSequence(),
-                  SeverityLevel.ERROR));
+                  prev.shapePtSequence()));
         }
       }
     }

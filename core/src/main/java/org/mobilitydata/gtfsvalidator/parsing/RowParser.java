@@ -125,8 +125,7 @@ public class RowParser {
       // If the last row has only spaces and does not end with a newline, then Univocity parser
       // interprets it as a non-empty row that has a single column which is empty (sic!). We are
       // unsure if this is a bug or feature in Univocity, so we show a warning.
-      addNoticeInRow(
-          new EmptyRowNotice(csvFile.getFileName(), row.getRowNumber()));
+      addNoticeInRow(new EmptyRowNotice(csvFile.getFileName(), row.getRowNumber()));
       return false;
     }
 
@@ -148,27 +147,19 @@ public class RowParser {
     if (required && s == null) {
       addNoticeInRow(
           new MissingRequiredFieldError(
-              row.getFileName(),
-              row.getRowNumber(),
-              row.getColumnName(columnIndex)));
+              row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex)));
     }
     if (s != null) {
       if (s.indexOf('\n') != -1 || s.indexOf('\r') != -1) {
         addNoticeInRow(
             new NewLineInValueNotice(
-                row.getFileName(),
-                row.getRowNumber(),
-                row.getColumnName(columnIndex),
-                s));
+                row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), s));
       }
       final String trimmed = s.trim();
       if (trimmed.length() < s.length()) {
         addNoticeInRow(
             new LeadingOrTrailingWhitespacesNotice(
-                row.getFileName(),
-                row.getRowNumber(),
-                row.getColumnName(columnIndex),
-                s));
+                row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), s));
         s = trimmed;
       }
     }
@@ -192,10 +183,7 @@ public class RowParser {
   @Nullable
   public String asUrl(int columnIndex, boolean required) {
     return asValidatedString(
-        columnIndex,
-        required,
-        s -> UrlValidator.getInstance().isValid(s),
-        InvalidUrlNotice::new);
+        columnIndex, required, s -> UrlValidator.getInstance().isValid(s), InvalidUrlNotice::new);
   }
 
   @Nullable
@@ -219,31 +207,22 @@ public class RowParser {
   @Nullable
   public Locale asLanguageCode(int columnIndex, boolean required) {
     return parseAsType(
-        columnIndex,
-        required,
-        Locale::forLanguageTag,
-        InvalidLanguageCodeNotice::new);
+        columnIndex, required, Locale::forLanguageTag, InvalidLanguageCodeNotice::new);
   }
 
   @Nullable
   public ZoneId asTimezone(int columnIndex, boolean required) {
-    return parseAsType(
-        columnIndex, required, ZoneId::of, InvalidTimezoneNotice::new);
+    return parseAsType(columnIndex, required, ZoneId::of, InvalidTimezoneNotice::new);
   }
 
   @Nullable
   public Currency asCurrencyCode(int columnIndex, boolean required) {
-    return parseAsType(
-        columnIndex,
-        required,
-        Currency::getInstance,
-        InvalidCurrencyNotice::new);
+    return parseAsType(columnIndex, required, Currency::getInstance, InvalidCurrencyNotice::new);
   }
 
   @Nullable
   public Double asFloat(int columnIndex, boolean required) {
-    return parseAsType(
-        columnIndex, required, Double::parseDouble, InvalidFloatNotice::new);
+    return parseAsType(columnIndex, required, Double::parseDouble, InvalidFloatNotice::new);
   }
 
   @Nullable
@@ -285,8 +264,7 @@ public class RowParser {
 
   @Nullable
   public Integer asInteger(int columnIndex, boolean required) {
-    return parseAsType(
-        columnIndex, required, Integer::parseInt, InvalidIntegerNotice::new);
+    return parseAsType(columnIndex, required, Integer::parseInt, InvalidIntegerNotice::new);
   }
 
   @Nullable
@@ -296,8 +274,7 @@ public class RowParser {
 
   @Nullable
   public BigDecimal asDecimal(int columnIndex, boolean required) {
-    return parseAsType(
-        columnIndex, required, BigDecimal::new, InvalidFloatNotice::new);
+    return parseAsType(columnIndex, required, BigDecimal::new, InvalidFloatNotice::new);
   }
 
   @Nullable
@@ -363,8 +340,7 @@ public class RowParser {
 
   @Nullable
   public GtfsColor asColor(int columnIndex, boolean required) {
-    return parseAsType(
-        columnIndex, required, GtfsColor::fromString, InvalidColorNotice::new);
+    return parseAsType(columnIndex, required, GtfsColor::fromString, InvalidColorNotice::new);
   }
 
   @Nullable
@@ -376,25 +352,19 @@ public class RowParser {
     if (enumCreator.convert(i) == null) {
       addNoticeInRow(
           new UnexpectedEnumValueError(
-              row.getFileName(),
-              row.getRowNumber(),
-              row.getColumnName(columnIndex),
-              i,
-              SeverityLevel.WARNING));
+              row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), i));
     }
     return i;
   }
 
   @Nullable
   public GtfsTime asTime(int columnIndex, boolean required) {
-    return parseAsType(
-        columnIndex, required, GtfsTime::fromString, InvalidTimeNotice::new);
+    return parseAsType(columnIndex, required, GtfsTime::fromString, InvalidTimeNotice::new);
   }
 
   @Nullable
   public GtfsDate asDate(int columnIndex, boolean required) {
-    return parseAsType(
-        columnIndex, required, GtfsDate::fromString, InvalidDateNotice::new);
+    return parseAsType(columnIndex, required, GtfsDate::fromString, InvalidDateNotice::new);
   }
 
   /**
@@ -437,10 +407,7 @@ public class RowParser {
       // a ZoneRulesException.
       addNoticeInRow(
           noticingFunction.apply(
-              row.getFileName(),
-              row.getRowNumber(),
-              row.getColumnName(columnIndex),
-              s));
+              row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), s));
       return null;
     }
   }
@@ -476,10 +443,7 @@ public class RowParser {
     if (!validatingFunction.test(s)) {
       ValidationNotice notice =
           noticingFunction.apply(
-              row.getFileName(),
-              row.getRowNumber(),
-              row.getColumnName(columnIndex),
-              s);
+              row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), s);
       addNoticeInRow(notice);
       if (isError(notice)) {
         return null;
@@ -508,10 +472,6 @@ public class RowParser {
   @FunctionalInterface
   private interface NoticingFunction<T extends ValidationNotice> {
 
-    T apply(
-        String filename,
-        long csvRowNumber,
-        String fieldName,
-        String fieldValue );
+    T apply(String filename, long csvRowNumber, String fieldName, String fieldValue);
   }
 }

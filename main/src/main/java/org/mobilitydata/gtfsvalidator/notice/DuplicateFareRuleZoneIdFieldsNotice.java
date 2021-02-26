@@ -26,13 +26,14 @@ import com.google.common.collect.ImmutableMap;
  */
 public class DuplicateFareRuleZoneIdFieldsNotice extends ValidationNotice {
   public DuplicateFareRuleZoneIdFieldsNotice(
-      long csvRowNumber, String fareId, long previousCsvRowNumber, String previousFareId, SeverityLevel severityLevel) {
+      long csvRowNumber, String fareId, long previousCsvRowNumber, String previousFareId) {
     super(
         ImmutableMap.of(
             "csvRowNumber", csvRowNumber,
             "fareId", fareId,
             "previousCsvRowNumber", previousCsvRowNumber,
-            "previousFareId", previousFareId), severityLevel);
+            "previousFareId", previousFareId),
+        SeverityLevel.ERROR);
   }
 
   @Override

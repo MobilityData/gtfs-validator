@@ -11,7 +11,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.BlockTripsWithOverlappingStopTimesNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
@@ -80,7 +79,7 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
                 tripB.tripId(),
                 tripB.serviceId(),
                 tripA.blockId(),
-                GtfsDate.fromLocalDate(overlap.intersection), SeverityLevel.WARNING));
+                GtfsDate.fromLocalDate(overlap.intersection)));
       }
     }
   }

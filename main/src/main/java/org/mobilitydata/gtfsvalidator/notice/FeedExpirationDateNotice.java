@@ -32,7 +32,7 @@ public class FeedExpirationDateNotice extends ValidationNotice {
       long csvRowNumber,
       GtfsDate currentDate,
       GtfsDate feedEndDate,
-      GtfsDate suggestedExpirationDate, SeverityLevel severityLevel) {
+      GtfsDate suggestedExpirationDate) {
     super(
         ImmutableMap.of(
             "csvRowNumber",
@@ -43,7 +43,7 @@ public class FeedExpirationDateNotice extends ValidationNotice {
             feedEndDate.toYYYYMMDD(),
             "suggestedExpirationDate",
             suggestedExpirationDate),
-        severityLevel);
+        SeverityLevel.WARNING);
   }
 
   @Override

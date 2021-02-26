@@ -30,15 +30,15 @@ public class StopTimeWithDepartureBeforeArrivalTimeNotice extends ValidationNoti
       String tripId,
       int stopSequence,
       GtfsTime departureTime,
-      GtfsTime arrivalTime,
-      SeverityLevel severityLevel) {
+      GtfsTime arrivalTime) {
     super(
         ImmutableMap.of(
             "csvRowNumber", csvRowNumber,
             "tripId", tripId,
             "stopSequence", stopSequence,
             "departureTime", departureTime.toHHMMSS(),
-            "arrivalTime", arrivalTime.toHHMMSS()), severityLevel);
+            "arrivalTime", arrivalTime.toHHMMSS()),
+        SeverityLevel.ERROR);
   }
 
   @Override

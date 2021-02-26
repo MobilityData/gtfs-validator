@@ -19,7 +19,6 @@ package org.mobilitydata.gtfsvalidator.validator;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.WrongParentLocationTypeNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
@@ -66,7 +65,7 @@ public class ParentLocationTypeValidator extends FileValidator {
                 location.parentStation(),
                 parentLocation.stopName(),
                 parentLocation.locationTypeValue(),
-                expected.getNumber(), SeverityLevel.ERROR));
+                expected.getNumber()));
       }
     }
   }

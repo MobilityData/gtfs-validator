@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Set;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.StartAndEndDateOutOfOrderNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
@@ -81,7 +80,7 @@ public class CalendarServiceDateValidatorTest {
                 "WEEK",
                 0,
                 GtfsDate.fromLocalDate(LocalDate.of(2021, 1, 14)),
-                GtfsDate.fromLocalDate(LocalDate.of(2021, 1, 10)), SeverityLevel.ERROR));
+                GtfsDate.fromLocalDate(LocalDate.of(2021, 1, 10))));
   }
 
   @Test

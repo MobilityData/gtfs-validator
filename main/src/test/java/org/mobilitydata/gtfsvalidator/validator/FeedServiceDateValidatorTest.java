@@ -8,7 +8,6 @@ import java.util.Locale;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.MissingFeedInfoDateNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.StartAndEndDateOutOfOrderNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
@@ -86,7 +85,7 @@ public class FeedServiceDateValidatorTest {
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
             new StartAndEndDateOutOfOrderNotice(
-                "feed_info.txt", 1L, GtfsDate.fromEpochDay(450), GtfsDate.fromEpochDay(340), SeverityLevel.ERROR));
+                "feed_info.txt", 1L, GtfsDate.fromEpochDay(450), GtfsDate.fromEpochDay(340)));
   }
 
   @Test
@@ -109,7 +108,7 @@ public class FeedServiceDateValidatorTest {
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new MissingFeedInfoDateNotice(1, "feed_start_date", SeverityLevel.ERROR));
+        .containsExactly(new MissingFeedInfoDateNotice(1, "feed_start_date"));
   }
 
   @Test
@@ -132,7 +131,7 @@ public class FeedServiceDateValidatorTest {
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new MissingFeedInfoDateNotice(1, "feed_end_date", SeverityLevel.ERROR));
+        .containsExactly(new MissingFeedInfoDateNotice(1, "feed_end_date"));
   }
 
   @Test

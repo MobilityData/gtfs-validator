@@ -8,7 +8,8 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class BlockTripsWithOverlappingStopTimesNotice extends ValidationNotice {
+public class
+BlockTripsWithOverlappingStopTimesNotice extends ValidationNotice {
   public BlockTripsWithOverlappingStopTimesNotice(
       long csvRowNumberA,
       String tripIdA,
@@ -17,8 +18,7 @@ public class BlockTripsWithOverlappingStopTimesNotice extends ValidationNotice {
       String tripIdB,
       String serviceIdB,
       String blockId,
-      GtfsDate intersection,
-      SeverityLevel severityLevel) {
+      GtfsDate intersection) {
     super(
         new ImmutableMap.Builder<String, Object>()
             .put("csvRowNumberA", csvRowNumberA)
@@ -30,7 +30,7 @@ public class BlockTripsWithOverlappingStopTimesNotice extends ValidationNotice {
             .put("blockId", blockId)
             .put("intersection", intersection.toYYYYMMDD())
             .build(),
-        severityLevel);
+        SeverityLevel.ERROR);
   }
 
   @Override

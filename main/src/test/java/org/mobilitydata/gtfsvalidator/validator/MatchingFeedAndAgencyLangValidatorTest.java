@@ -27,7 +27,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.FeedInfoLangAndAgencyLangMismatchNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
@@ -113,7 +112,7 @@ public class MatchingFeedAndAgencyLangValidatorTest {
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
             new FeedInfoLangAndAgencyLangMismatchNotice(
-                2, "agencyCa", "agencyCa name", "fr-CA", "fr-FR", SeverityLevel.WARNING));
+                2, "agencyCa", "agencyCa name", "fr-CA", "fr-FR"));
   }
 
   @Test

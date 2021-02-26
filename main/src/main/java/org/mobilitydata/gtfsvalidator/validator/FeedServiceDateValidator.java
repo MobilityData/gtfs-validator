@@ -20,7 +20,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.MissingFeedInfoDateNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.StartAndEndDateOutOfOrderNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
@@ -41,10 +40,10 @@ public class FeedServiceDateValidator extends FileValidator {
     for (GtfsFeedInfo feedInfo : feedInfoTable.getEntities()) {
       if (feedInfo.hasFeedStartDate() && !feedInfo.hasFeedEndDate()) {
         noticeContainer.addValidationNotice(
-            new MissingFeedInfoDateNotice(feedInfo.csvRowNumber(), "feed_end_date", SeverityLevel.ERROR));
+            new MissingFeedInfoDateNotice(feedInfo.csvRowNumber(), "feed_end_date"));
       } else if (!feedInfo.hasFeedStartDate() && feedInfo.hasFeedEndDate()) {
         noticeContainer.addValidationNotice(
-            new MissingFeedInfoDateNotice(feedInfo.csvRowNumber(), "feed_start_date", SeverityLevel.ERROR));
+            new MissingFeedInfoDateNotice(feedInfo.csvRowNumber(), "feed_start_date"));
       }
       if (feedInfo.hasFeedStartDate()
           && feedInfo.hasFeedEndDate()
@@ -52,7 +51,7 @@ public class FeedServiceDateValidator extends FileValidator {
         noticeContainer.addValidationNotice(
             new StartAndEndDateOutOfOrderNotice(
                 feedInfoTable.gtfsFilename(), feedInfo.csvRowNumber(),
-                feedInfo.feedStartDate(), feedInfo.feedEndDate(), SeverityLevel.ERROR));
+                feedInfo.feedStartDate(), feedInfo.feedEndDate()));
       }
     }
   }

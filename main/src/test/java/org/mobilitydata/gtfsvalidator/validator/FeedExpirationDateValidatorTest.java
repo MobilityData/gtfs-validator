@@ -26,7 +26,6 @@ import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.notice.FeedExpirationDateNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
@@ -67,8 +66,7 @@ public class FeedExpirationDateValidatorTest {
                 1,
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()),
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(3)),
-                GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(7)),
-                SeverityLevel.WARNING));
+                GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(7))));
   }
 
   @Test
@@ -81,8 +79,7 @@ public class FeedExpirationDateValidatorTest {
                 1,
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()),
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(7)),
-                GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(30)),
-                SeverityLevel.WARNING));
+                GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(30))));
   }
 
   @Test
@@ -95,8 +92,7 @@ public class FeedExpirationDateValidatorTest {
                 1,
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()),
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(23)),
-                GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(30)),
-                SeverityLevel.WARNING));
+                GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(30))));
   }
 
   @Test
@@ -109,8 +105,7 @@ public class FeedExpirationDateValidatorTest {
                 1,
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()),
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(30)),
-                GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(30)),
-                SeverityLevel.WARNING));
+                GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(30))));
   }
 
   @Test

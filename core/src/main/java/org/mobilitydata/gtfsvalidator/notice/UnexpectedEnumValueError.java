@@ -25,7 +25,7 @@ import com.google.common.collect.ImmutableMap;
  */
 public class UnexpectedEnumValueError extends ValidationNotice {
   public UnexpectedEnumValueError(
-      String filename, long csvRowNumber, String fieldName, int fieldValue, SeverityLevel severityLevel) {
+      String filename, long csvRowNumber, String fieldName, int fieldValue) {
     super(
         ImmutableMap.of(
             "filename",
@@ -36,7 +36,7 @@ public class UnexpectedEnumValueError extends ValidationNotice {
             fieldName,
             "fieldValue",
             fieldValue),
-        severityLevel);
+        SeverityLevel.WARNING);
   }
 
   @Override

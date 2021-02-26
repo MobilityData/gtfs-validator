@@ -9,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.OverlappingFrequencyNotice;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFrequency;
 import org.mobilitydata.gtfsvalidator.table.GtfsFrequencyTableContainer;
@@ -81,7 +80,7 @@ public class OverlappingFrequencyValidatorTest {
                 createFrequency(3, "t0", "06:00:00", "10:00:00", 300)))
         .containsExactly(
             new OverlappingFrequencyNotice(
-                2, GtfsTime.fromString("07:00:00"), 3, GtfsTime.fromString("06:00:00"), "t0", SeverityLevel.ERROR));
+                2, GtfsTime.fromString("07:00:00"), 3, GtfsTime.fromString("06:00:00"), "t0"));
   }
 
   @Test
@@ -92,7 +91,7 @@ public class OverlappingFrequencyValidatorTest {
                 createFrequency(3, "t0", "05:00:00", "06:30:00", 300)))
         .containsExactly(
             new OverlappingFrequencyNotice(
-                3, GtfsTime.fromString("06:30:00"), 2, GtfsTime.fromString("05:00:00"), "t0", SeverityLevel.ERROR));
+                3, GtfsTime.fromString("06:30:00"), 2, GtfsTime.fromString("05:00:00"), "t0"));
   }
 
   @Test
@@ -103,7 +102,7 @@ public class OverlappingFrequencyValidatorTest {
                 createFrequency(3, "t0", "06:30:00", "07:00:00", 300)))
         .containsExactly(
             new OverlappingFrequencyNotice(
-                2, GtfsTime.fromString("07:00:00"), 3, GtfsTime.fromString("06:30:00"), "t0", SeverityLevel.ERROR));
+                2, GtfsTime.fromString("07:00:00"), 3, GtfsTime.fromString("06:30:00"), "t0"));
   }
 
   @Test
@@ -114,7 +113,7 @@ public class OverlappingFrequencyValidatorTest {
                 createFrequency(3, "t0", "08:00:00", "11:00:00", 300)))
         .containsExactly(
             new OverlappingFrequencyNotice(
-                2, GtfsTime.fromString("12:00:00"), 3, GtfsTime.fromString("08:00:00"), "t0", SeverityLevel.ERROR));
+                2, GtfsTime.fromString("12:00:00"), 3, GtfsTime.fromString("08:00:00"), "t0"));
   }
 
   @Test
@@ -126,8 +125,8 @@ public class OverlappingFrequencyValidatorTest {
                 createFrequency(4, "t0", "05:20:00", "05:40:00", 300)))
         .containsExactly(
             new OverlappingFrequencyNotice(
-                3, GtfsTime.fromString("05:15:00"), 2, GtfsTime.fromString("05:00:00"), "t0", SeverityLevel.ERROR),
+                3, GtfsTime.fromString("05:15:00"), 2, GtfsTime.fromString("05:00:00"), "t0"),
             new OverlappingFrequencyNotice(
-                2, GtfsTime.fromString("05:25:00"), 4, GtfsTime.fromString("05:20:00"), "t0", SeverityLevel.ERROR));
+                2, GtfsTime.fromString("05:25:00"), 4, GtfsTime.fromString("05:20:00"), "t0"));
   }
 }

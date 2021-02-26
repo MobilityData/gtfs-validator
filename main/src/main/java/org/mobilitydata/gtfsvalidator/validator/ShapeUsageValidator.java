@@ -21,7 +21,6 @@ import java.util.Set;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.UnusedShapeNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
@@ -45,7 +44,7 @@ public class ShapeUsageValidator extends FileValidator {
     for (GtfsShape shape : shapeTable.getEntities()) {
       String shapeId = shape.shapeId();
       if (reportedShapes.add(shapeId) && tripTable.byShapeId(shapeId).isEmpty()) {
-        noticeContainer.addValidationNotice(new UnusedShapeNotice(shapeId, shape.csvRowNumber(), SeverityLevel.WARNING));
+        noticeContainer.addValidationNotice(new UnusedShapeNotice(shapeId, shape.csvRowNumber()));
       }
     }
   }

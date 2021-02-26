@@ -52,8 +52,7 @@ public class GtfsTripServiceIdForeignKeyValidator extends FileValidator {
                 GtfsCalendarTableLoader.FILENAME + " or " + GtfsCalendarDateTableLoader.FILENAME,
                 GtfsCalendarTableLoader.SERVICE_ID_FIELD_NAME,
                 childKey,
-                trip.csvRowNumber(),
-                SeverityLevel.ERROR));
+                trip.csvRowNumber()));
       }
     }
   }

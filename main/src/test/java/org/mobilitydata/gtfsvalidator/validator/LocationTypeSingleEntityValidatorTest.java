@@ -25,7 +25,6 @@ import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.LocationWithoutParentStationNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.PlatformWithoutParentStationNotice;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.StationWithParentStationNotice;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
@@ -53,7 +52,7 @@ public class LocationTypeSingleEntityValidatorTest {
 
     builder.setParentStation("parent");
     assertThat(validateStop(builder.build()))
-        .containsExactly(new StationWithParentStationNotice(1, "s0", "Stop 0", "parent", SeverityLevel.ERROR));
+        .containsExactly(new StationWithParentStationNotice(1, "s0", "Stop 0", "parent"));
   }
 
   @Test
@@ -72,7 +71,7 @@ public class LocationTypeSingleEntityValidatorTest {
 
     builder.setParentStation(null);
     assertThat(validateStop(builder.build()))
-        .containsExactly(new PlatformWithoutParentStationNotice(1, "s0", "Stop 0", SeverityLevel.WARNING));
+        .containsExactly(new PlatformWithoutParentStationNotice(1, "s0", "Stop 0"));
 
     // A GTFS stop without platform_code may be an isolated stop and may have no parent_station.
     builder.setPlatformCode(null);
@@ -98,7 +97,7 @@ public class LocationTypeSingleEntityValidatorTest {
       builder.setParentStation(null);
       assertThat(validateStop(builder.build()))
           .containsExactly(
-              new LocationWithoutParentStationNotice(1, "s0", "Stop 0", locationType.getNumber(), SeverityLevel.ERROR));
+              new LocationWithoutParentStationNotice(1, "s0", "Stop 0", locationType.getNumber()));
     }
   }
 }

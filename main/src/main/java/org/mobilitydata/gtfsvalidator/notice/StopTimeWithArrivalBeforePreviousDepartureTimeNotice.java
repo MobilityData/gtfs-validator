@@ -30,8 +30,7 @@ public class StopTimeWithArrivalBeforePreviousDepartureTimeNotice extends Valida
       long prevCsvRowNumber,
       String tripId,
       GtfsTime arrivalTime,
-      GtfsTime departureTime,
-      SeverityLevel severityLevel) {
+      GtfsTime departureTime) {
     super(
         ImmutableMap.of(
             "csvRowNumber", csvRowNumber,
@@ -39,7 +38,7 @@ public class StopTimeWithArrivalBeforePreviousDepartureTimeNotice extends Valida
             "tripId", tripId,
             "departureTime", departureTime.toHHMMSS(),
             "arrivalTime", arrivalTime.toHHMMSS()),
-        severityLevel);
+        SeverityLevel.ERROR);
   }
 
   @Override

@@ -27,7 +27,6 @@ import org.mobilitydata.gtfsvalidator.notice.RouteBothShortAndLongNameMissingNot
 import org.mobilitydata.gtfsvalidator.notice.RouteShortAndLongNameEqualNotice;
 import org.mobilitydata.gtfsvalidator.notice.RouteShortNameTooLongNotice;
 import org.mobilitydata.gtfsvalidator.notice.SameNameAndDescriptionForRouteNotice;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 
@@ -53,7 +52,7 @@ public class RouteNameValidatorTest {
   @Test
   public void routeBothShortAndLongNameMissing() {
     assertThat(validateRoute(createRoute(null, null, null)))
-        .containsExactly(new RouteBothShortAndLongNameMissingNotice("r1", 1, SeverityLevel.ERROR));
+        .containsExactly(new RouteBothShortAndLongNameMissingNotice("r1", 1));
     assertThat(validateRoute(createRoute("S", null, null))).isEmpty();
     assertThat(validateRoute(createRoute(null, "Long", null))).isEmpty();
     assertThat(validateRoute(createRoute("S", "Long", null))).isEmpty();
@@ -62,10 +61,10 @@ public class RouteNameValidatorTest {
   @Test
   public void routeShortAndLongNameEqual() {
     assertThat(validateRoute(createRoute("S", "S", null)))
-        .containsExactly(new RouteShortAndLongNameEqualNotice("r1", 1, "S", "S", SeverityLevel.WARNING));
+        .containsExactly(new RouteShortAndLongNameEqualNotice("r1", 1, "S", "S"));
     // Compare case-insensitive.
     assertThat(validateRoute(createRoute("SA", "Sa", null)))
-        .containsExactly(new RouteShortAndLongNameEqualNotice("r1", 1, "SA", "Sa", SeverityLevel.WARNING));
+        .containsExactly(new RouteShortAndLongNameEqualNotice("r1", 1, "SA", "Sa"));
 
     assertThat(validateRoute(createRoute("S", "Long", null))).isEmpty();
   }
@@ -73,7 +72,7 @@ public class RouteNameValidatorTest {
   @Test
   public void routeShortNameTooLong() {
     assertThat(validateRoute(createRoute("THISISMYSHORTNAME", null, null)))
-        .containsExactly(new RouteShortNameTooLongNotice("r1", 1, "THISISMYSHORTNAME", SeverityLevel.WARNING));
+        .containsExactly(new RouteShortNameTooLongNotice("r1", 1, "THISISMYSHORTNAME"));
 
     assertThat(validateRoute(createRoute("SH", null, null))).isEmpty();
   }
@@ -82,22 +81,22 @@ public class RouteNameValidatorTest {
   public void equalRouteShortNameAndRouteDescShouldGenerateNotice() {
     assertThat(validateRoute(createRoute("duplicate", null, "duplicate")))
         .containsExactly(
-            new SameNameAndDescriptionForRouteNotice(1, "r1", "duplicate", "route_short_name", SeverityLevel.ERROR));
+            new SameNameAndDescriptionForRouteNotice(1, "r1", "duplicate", "route_short_name"));
     // include difference with lower case and upper case characters
     assertThat(validateRoute(createRoute("DuplicATE", null, "duplicate")))
         .containsExactly(
-            new SameNameAndDescriptionForRouteNotice(1, "r1", "duplicate", "route_short_name", SeverityLevel.ERROR));
+            new SameNameAndDescriptionForRouteNotice(1, "r1", "duplicate", "route_short_name"));
   }
 
   @Test
   public void equalRouteLongNameAndRouteDescShouldGenerateNotice() {
     assertThat(validateRoute(createRoute(null, "duplicate", "duplicate")))
         .containsExactly(
-            new SameNameAndDescriptionForRouteNotice(1, "r1", "duplicate", "route_long_name", SeverityLevel.ERROR));
+            new SameNameAndDescriptionForRouteNotice(1, "r1", "duplicate", "route_long_name"));
     // include difference with lower case and upper case characters
     assertThat(validateRoute(createRoute(null, "duplicate", "DuplicATE")))
         .containsExactly(
-            new SameNameAndDescriptionForRouteNotice(1, "r1", "DuplicATE", "route_long_name", SeverityLevel.ERROR));
+            new SameNameAndDescriptionForRouteNotice(1, "r1", "DuplicATE", "route_long_name"));
   }
 
   @Test
@@ -118,9 +117,9 @@ public class RouteNameValidatorTest {
   @Test
   public void equalRouteShortNameRouteLongNameAndRouteDescShouldGenerateTwoNotices() {
     assertThat(validateRoute(createRoute("duplicate", "duplicate", "duplicate")))
-        .contains(new RouteShortAndLongNameEqualNotice("r1", 1, "duplicate", "duplicate", SeverityLevel.WARNING));
+        .contains(new RouteShortAndLongNameEqualNotice("r1", 1, "duplicate", "duplicate"));
     assertThat(validateRoute(createRoute("duplicate", "duplicate", "duplicate")))
         .contains(
-            new SameNameAndDescriptionForRouteNotice(1, "r1", "duplicate", "route_short_name", SeverityLevel.ERROR));
+            new SameNameAndDescriptionForRouteNotice(1, "r1", "duplicate", "route_short_name"));
   }
 }

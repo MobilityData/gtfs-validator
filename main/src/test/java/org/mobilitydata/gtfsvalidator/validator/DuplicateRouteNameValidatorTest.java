@@ -7,7 +7,6 @@ import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateRouteNameNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
 
@@ -76,8 +75,8 @@ public class DuplicateRouteNameValidatorTest {
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
-            new DuplicateRouteNameNotice("route_long_name", 4, "2nd route id value", SeverityLevel.WARNING),
-            new DuplicateRouteNameNotice("route_long_name", 8, "3rd route id value", SeverityLevel.WARNING));
+            new DuplicateRouteNameNotice("route_long_name", 4, "2nd route id value"),
+            new DuplicateRouteNameNotice("route_long_name", 8, "3rd route id value"));
   }
 
   @Test
@@ -121,8 +120,8 @@ public class DuplicateRouteNameValidatorTest {
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
-            new DuplicateRouteNameNotice("route_short_name", 4, "2nd route id value", SeverityLevel.WARNING),
-            new DuplicateRouteNameNotice("route_short_name", 8, "3rd route id value", SeverityLevel.WARNING));
+            new DuplicateRouteNameNotice("route_short_name", 4, "2nd route id value"),
+            new DuplicateRouteNameNotice("route_short_name", 8, "3rd route id value"));
   }
 
   @Test
@@ -179,6 +178,6 @@ public class DuplicateRouteNameValidatorTest {
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
             new DuplicateRouteNameNotice(
-                "route_short_name and route_long_name", 4, "2nd route id value", SeverityLevel.WARNING));
+                "route_short_name and route_long_name", 4, "2nd route id value"));
   }
 }

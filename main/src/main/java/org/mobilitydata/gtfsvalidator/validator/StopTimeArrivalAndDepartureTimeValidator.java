@@ -21,7 +21,6 @@ import java.util.List;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.StopTimeWithArrivalBeforePreviousDepartureTimeNotice;
 import org.mobilitydata.gtfsvalidator.notice.StopTimeWithDepartureBeforeArrivalTimeNotice;
 import org.mobilitydata.gtfsvalidator.notice.StopTimeWithOnlyArrivalOrDepartureTimeNotice;
@@ -62,8 +61,7 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
                   stopTime.stopSequence(),
                   hasArrival
                       ? GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME
-                      : GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME,
-                  SeverityLevel.ERROR));
+                      : GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME));
         }
         if (hasDeparture && hasArrival) {
           if (stopTime.departureTime().isBefore(stopTime.arrivalTime())) {
@@ -73,8 +71,7 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
                     stopTime.tripId(),
                     stopTime.stopSequence(),
                     stopTime.departureTime(),
-                    stopTime.arrivalTime(),
-                    SeverityLevel.ERROR));
+                    stopTime.arrivalTime()));
           }
         }
         if (hasArrival
@@ -88,8 +85,7 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
                   stopTimeList.get(previousDepartureRow).csvRowNumber(),
                   stopTime.tripId(),
                   stopTime.arrivalTime(),
-                  stopTimeList.get(previousDepartureRow).departureTime(),
-                  SeverityLevel.ERROR));
+                  stopTimeList.get(previousDepartureRow).departureTime()));
         }
         if (hasDeparture) {
           previousDepartureRow = i;

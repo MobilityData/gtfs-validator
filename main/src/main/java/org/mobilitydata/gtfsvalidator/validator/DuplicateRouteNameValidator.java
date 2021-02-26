@@ -22,7 +22,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateRouteNameNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
 
@@ -55,8 +54,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
                       new DuplicateRouteNameNotice(
                           "route_short_name and route_long_name",
                           route.csvRowNumber(),
-                          route.routeId(),
-                          SeverityLevel.WARNING));
+                          route.routeId()));
                   return;
                 } else {
                   routeByShortAndLongName.put(
@@ -71,8 +69,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
                         new DuplicateRouteNameNotice(
                             "route_long_name",
                             route.csvRowNumber(),
-                            route.routeId(),
-                            SeverityLevel.WARNING));
+                            route.routeId()));
                   }
                   return;
                 } else {
@@ -87,8 +84,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
                         new DuplicateRouteNameNotice(
                             "route_short_name",
                             route.csvRowNumber(),
-                            route.routeId(),
-                            SeverityLevel.WARNING));
+                            route.routeId()));
                   }
                 } else {
                   routeByShortName.put(route.routeShortName(), route);

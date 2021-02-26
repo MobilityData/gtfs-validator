@@ -34,7 +34,7 @@ public class WrongParentLocationTypeNotice extends ValidationNotice {
       String parentStation,
       String parentStopName,
       int parentLocationType,
-      int expectedLocationType, SeverityLevel severityLevel) {
+      int expectedLocationType) {
     super(
         new ImmutableMap.Builder<String, Object>()
             .put("csvRowNumber", csvRowNumber)
@@ -46,7 +46,8 @@ public class WrongParentLocationTypeNotice extends ValidationNotice {
             .put("parentStopName", parentStopName)
             .put("parentLocationType", parentLocationType)
             .put("expectedLocationType", expectedLocationType)
-            .build(), severityLevel);
+            .build(),
+        SeverityLevel.ERROR);
   }
 
   @Override
