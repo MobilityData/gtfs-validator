@@ -67,9 +67,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
                       route.agencyId(), routeByLongName.get(route.routeLongName()).agencyId())) {
                     noticeContainer.addValidationNotice(
                         new DuplicateRouteNameNotice(
-                            "route_long_name",
-                            route.csvRowNumber(),
-                            route.routeId()));
+                            "route_long_name", route.csvRowNumber(), route.routeId()));
                   }
                   return;
                 } else {
@@ -82,9 +80,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
                       route.agencyId(), routeByShortName.get(route.routeShortName()).agencyId())) {
                     noticeContainer.addValidationNotice(
                         new DuplicateRouteNameNotice(
-                            "route_short_name",
-                            route.csvRowNumber(),
-                            route.routeId()));
+                            "route_short_name", route.csvRowNumber(), route.routeId()));
                   }
                 } else {
                   routeByShortName.put(route.routeShortName(), route);
