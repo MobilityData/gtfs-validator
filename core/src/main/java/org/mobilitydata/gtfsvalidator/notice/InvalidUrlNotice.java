@@ -39,7 +39,7 @@ import com.google.common.collect.ImmutableMap;
  */
 public class InvalidUrlNotice extends ValidationNotice {
 
-  public InvalidUrlNotice(String filename, long csvRowNumber, String fieldName, String fieldValue, SeverityLevel severityLevel) {
+  public InvalidUrlNotice(String filename, long csvRowNumber, String fieldName, String fieldValue) {
     super(
         ImmutableMap.of(
             "filename",
@@ -50,7 +50,7 @@ public class InvalidUrlNotice extends ValidationNotice {
             fieldName,
             "fieldValue",
             fieldValue),
-        severityLevel);
+        SeverityLevel.ERROR);
   }
 
   @Override

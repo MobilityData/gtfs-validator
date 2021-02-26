@@ -24,13 +24,13 @@ import com.google.common.collect.ImmutableMap;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class InvalidRowLengthError extends ValidationNotice {
-  public InvalidRowLengthError(String filename, long csvRowNumber, int rowLength, int headerCount, SeverityLevel severityLevel) {
+  public InvalidRowLengthError(String filename, long csvRowNumber, int rowLength, int headerCount) {
     super(
         ImmutableMap.of(
             "filename", filename,
             "csvRowNumber", csvRowNumber,
             "rowLength", rowLength,
-            "headerCount", headerCount), severityLevel);
+            "headerCount", headerCount), SeverityLevel.ERROR);
   }
 
   @Override

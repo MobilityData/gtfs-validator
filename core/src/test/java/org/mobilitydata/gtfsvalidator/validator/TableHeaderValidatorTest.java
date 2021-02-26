@@ -25,7 +25,6 @@ import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.DuplicatedColumnNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredColumnError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.UnknownColumnNotice;
 
 @RunWith(JUnit4.class)
@@ -60,7 +59,7 @@ public class TableHeaderValidatorTest {
                     container))
         .isTrue();
     assertThat(container.getValidationNotices())
-        .containsExactly(new UnknownColumnNotice("stops.txt", "stop_extra", 3, SeverityLevel.INFO));
+        .containsExactly(new UnknownColumnNotice("stops.txt", "stop_extra", 3));
   }
 
   @Test
@@ -77,7 +76,7 @@ public class TableHeaderValidatorTest {
                     container))
         .isFalse();
     assertThat(container.getValidationNotices())
-        .containsExactly(new MissingRequiredColumnError("stops.txt", "stop_id", SeverityLevel.ERROR));
+        .containsExactly(new MissingRequiredColumnError("stops.txt", "stop_id"));
   }
 
   @Test
@@ -94,7 +93,7 @@ public class TableHeaderValidatorTest {
                     container))
         .isFalse();
     assertThat(container.getValidationNotices())
-        .containsExactly(new DuplicatedColumnNotice("stops.txt", "stop_id", 1, 3, SeverityLevel.ERROR));
+        .containsExactly(new DuplicatedColumnNotice("stops.txt", "stop_id", 1, 3));
   }
 
   @Test

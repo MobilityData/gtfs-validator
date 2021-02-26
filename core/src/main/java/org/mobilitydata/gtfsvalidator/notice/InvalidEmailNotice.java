@@ -32,7 +32,7 @@ import com.google.common.collect.ImmutableMap;
 public class InvalidEmailNotice extends ValidationNotice {
 
   public InvalidEmailNotice(
-      String filename, long csvRowNumber, String fieldName, String fieldValue, SeverityLevel severityLevel) {
+      String filename, long csvRowNumber, String fieldName, String fieldValue) {
     super(
         ImmutableMap.of(
             "filename",
@@ -43,7 +43,7 @@ public class InvalidEmailNotice extends ValidationNotice {
             fieldName,
             "fieldValue",
             fieldValue),
-        severityLevel);
+        SeverityLevel.ERROR);
   }
 
   @Override

@@ -28,12 +28,12 @@ import com.google.common.collect.ImmutableMap;
  */
 public class EmptyRowNotice extends ValidationNotice {
 
-  public EmptyRowNotice(String filename, long csvRowNumber, SeverityLevel severityLevel) {
+  public EmptyRowNotice(String filename, long csvRowNumber) {
     super(
         ImmutableMap.of(
             "filename", filename,
             "csvRowNumber", csvRowNumber),
-        severityLevel);
+        SeverityLevel.WARNING);
   }
 
   @Override

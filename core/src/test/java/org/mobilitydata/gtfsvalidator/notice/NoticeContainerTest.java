@@ -31,8 +31,8 @@ public class NoticeContainerTest {
   @Test
   public void exportJson() {
     NoticeContainer container = new NoticeContainer();
-    container.addValidationNotice(new MissingRequiredFileError("stops.txt", SeverityLevel.ERROR));
-    container.addValidationNotice(new MissingRequiredFileError("agency.txt", SeverityLevel.ERROR));
+    container.addValidationNotice(new MissingRequiredFileError("stops.txt"));
+    container.addValidationNotice(new MissingRequiredFileError("agency.txt"));
     container.addSystemError(
         new RuntimeExceptionInValidatorError(
             "FaultyValidator",
@@ -92,8 +92,8 @@ public class NoticeContainerTest {
 
   @Test
   public void addAll() {
-    ValidationNotice n1 = new MissingRequiredFileError("stops.txt", SeverityLevel.ERROR);
-    ValidationNotice n2 = new UnknownFileNotice("unknown.txt", SeverityLevel.INFO);
+    ValidationNotice n1 = new MissingRequiredFileError("stops.txt");
+    ValidationNotice n2 = new UnknownFileNotice("unknown.txt");
     SystemError e1 =
         new RuntimeExceptionInValidatorError(
             "Validator1",

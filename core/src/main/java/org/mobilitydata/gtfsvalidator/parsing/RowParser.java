@@ -126,7 +126,7 @@ public class RowParser {
       // interprets it as a non-empty row that has a single column which is empty (sic!). We are
       // unsure if this is a bug or feature in Univocity, so we show a warning.
       addNoticeInRow(
-          new EmptyRowNotice(csvFile.getFileName(), row.getRowNumber(), SeverityLevel.WARNING));
+          new EmptyRowNotice(csvFile.getFileName(), row.getRowNumber()));
       return false;
     }
 
@@ -136,8 +136,7 @@ public class RowParser {
               csvFile.getFileName(),
               row.getRowNumber(),
               row.getColumnCount(),
-              csvFile.getColumnCount(),
-              SeverityLevel.ERROR));
+              csvFile.getColumnCount()));
       return false;
     }
     return true;
@@ -151,8 +150,7 @@ public class RowParser {
           new MissingRequiredFieldError(
               row.getFileName(),
               row.getRowNumber(),
-              row.getColumnName(columnIndex),
-              SeverityLevel.ERROR));
+              row.getColumnName(columnIndex)));
     }
     if (s != null) {
       if (s.indexOf('\n') != -1 || s.indexOf('\r') != -1) {
@@ -161,8 +159,7 @@ public class RowParser {
                 row.getFileName(),
                 row.getRowNumber(),
                 row.getColumnName(columnIndex),
-                s,
-                SeverityLevel.ERROR));
+                s));
       }
       final String trimmed = s.trim();
       if (trimmed.length() < s.length()) {
@@ -171,8 +168,7 @@ public class RowParser {
                 row.getFileName(),
                 row.getRowNumber(),
                 row.getColumnName(columnIndex),
-                s,
-                SeverityLevel.ERROR));
+                s));
         s = trimmed;
       }
     }
@@ -190,8 +186,7 @@ public class RowParser {
         columnIndex,
         required,
         RowParser::hasOnlyPrintableAscii,
-        NonAsciiOrNonPrintableCharNotice::new,
-        SeverityLevel.WARNING);
+        NonAsciiOrNonPrintableCharNotice::new);
   }
 
   @Nullable
@@ -200,8 +195,7 @@ public class RowParser {
         columnIndex,
         required,
         s -> UrlValidator.getInstance().isValid(s),
-        InvalidUrlNotice::new,
-        SeverityLevel.ERROR);
+        InvalidUrlNotice::new);
   }
 
   @Nullable
@@ -210,8 +204,7 @@ public class RowParser {
         columnIndex,
         required,
         s -> EmailValidator.getInstance().isValid(s),
-        InvalidEmailNotice::new,
-        SeverityLevel.ERROR);
+        InvalidEmailNotice::new);
   }
 
   @Nullable
@@ -220,8 +213,7 @@ public class RowParser {
         columnIndex,
         required,
         s -> PhoneNumberUtil.getInstance().isPossibleNumber(s, feedName.getISOAlpha2CountryCode()),
-        InvalidPhoneNumberNotice::new,
-        SeverityLevel.ERROR);
+        InvalidPhoneNumberNotice::new);
   }
 
   @Nullable
@@ -230,14 +222,13 @@ public class RowParser {
         columnIndex,
         required,
         Locale::forLanguageTag,
-        InvalidLanguageCodeNotice::new,
-        SeverityLevel.ERROR);
+        InvalidLanguageCodeNotice::new);
   }
 
   @Nullable
   public ZoneId asTimezone(int columnIndex, boolean required) {
     return parseAsType(
-        columnIndex, required, ZoneId::of, InvalidTimezoneNotice::new, SeverityLevel.ERROR);
+        columnIndex, required, ZoneId::of, InvalidTimezoneNotice::new);
   }
 
   @Nullable
@@ -246,14 +237,13 @@ public class RowParser {
         columnIndex,
         required,
         Currency::getInstance,
-        InvalidCurrencyNotice::new,
-        SeverityLevel.ERROR);
+        InvalidCurrencyNotice::new);
   }
 
   @Nullable
   public Double asFloat(int columnIndex, boolean required) {
     return parseAsType(
-        columnIndex, required, Double::parseDouble, InvalidFloatNotice::new, SeverityLevel.ERROR);
+        columnIndex, required, Double::parseDouble, InvalidFloatNotice::new);
   }
 
   @Nullable
@@ -271,8 +261,7 @@ public class RowParser {
               row.getRowNumber(),
               row.getColumnName(columnIndex),
               "latitude within [-90, 90]",
-              value,
-              SeverityLevel.ERROR));
+              value));
       return null;
     }
     return value;
@@ -288,8 +277,7 @@ public class RowParser {
               row.getRowNumber(),
               row.getColumnName(columnIndex),
               "longitude within [-180, 180]",
-              value,
-              SeverityLevel.ERROR));
+              value));
       return null;
     }
     return value;
@@ -298,7 +286,7 @@ public class RowParser {
   @Nullable
   public Integer asInteger(int columnIndex, boolean required) {
     return parseAsType(
-        columnIndex, required, Integer::parseInt, InvalidIntegerNotice::new, SeverityLevel.ERROR);
+        columnIndex, required, Integer::parseInt, InvalidIntegerNotice::new);
   }
 
   @Nullable
@@ -309,7 +297,7 @@ public class RowParser {
   @Nullable
   public BigDecimal asDecimal(int columnIndex, boolean required) {
     return parseAsType(
-        columnIndex, required, BigDecimal::new, InvalidFloatNotice::new, SeverityLevel.ERROR);
+        columnIndex, required, BigDecimal::new, InvalidFloatNotice::new);
   }
 
   @Nullable
@@ -344,8 +332,7 @@ public class RowParser {
                   row.getRowNumber(),
                   row.getColumnName(columnIndex),
                   "positive " + typeName,
-                  value,
-                  SeverityLevel.ERROR));
+                  value));
         }
         break;
       case NON_NEGATIVE:
@@ -356,8 +343,7 @@ public class RowParser {
                   row.getRowNumber(),
                   row.getColumnName(columnIndex),
                   "non-negative " + typeName,
-                  value,
-                  SeverityLevel.ERROR));
+                  value));
         }
         break;
       case NON_ZERO:
@@ -368,8 +354,7 @@ public class RowParser {
                   row.getRowNumber(),
                   row.getColumnName(columnIndex),
                   "non-zero " + typeName,
-                  value,
-                  SeverityLevel.ERROR));
+                  value));
         }
         break;
     }
@@ -379,7 +364,7 @@ public class RowParser {
   @Nullable
   public GtfsColor asColor(int columnIndex, boolean required) {
     return parseAsType(
-        columnIndex, required, GtfsColor::fromString, InvalidColorNotice::new, SeverityLevel.ERROR);
+        columnIndex, required, GtfsColor::fromString, InvalidColorNotice::new);
   }
 
   @Nullable
@@ -403,13 +388,13 @@ public class RowParser {
   @Nullable
   public GtfsTime asTime(int columnIndex, boolean required) {
     return parseAsType(
-        columnIndex, required, GtfsTime::fromString, InvalidTimeNotice::new, SeverityLevel.ERROR);
+        columnIndex, required, GtfsTime::fromString, InvalidTimeNotice::new);
   }
 
   @Nullable
   public GtfsDate asDate(int columnIndex, boolean required) {
     return parseAsType(
-        columnIndex, required, GtfsDate::fromString, InvalidDateNotice::new, SeverityLevel.ERROR);
+        columnIndex, required, GtfsDate::fromString, InvalidDateNotice::new);
   }
 
   /**
@@ -440,8 +425,7 @@ public class RowParser {
       int columnIndex,
       boolean required,
       Function<String, T> parsingFunction,
-      NoticingFunction noticingFunction,
-      SeverityLevel severityLevel) {
+      NoticingFunction noticingFunction) {
     String s = asString(columnIndex, required);
     if (s == null) {
       return null;
@@ -456,8 +440,7 @@ public class RowParser {
               row.getFileName(),
               row.getRowNumber(),
               row.getColumnName(columnIndex),
-              s,
-              severityLevel));
+              s));
       return null;
     }
   }
@@ -485,8 +468,7 @@ public class RowParser {
       int columnIndex,
       boolean required,
       Predicate<String> validatingFunction,
-      NoticingFunction noticingFunction,
-      SeverityLevel severityLevel) {
+      NoticingFunction noticingFunction) {
     String s = asString(columnIndex, required);
     if (s == null) {
       return null;
@@ -497,8 +479,7 @@ public class RowParser {
               row.getFileName(),
               row.getRowNumber(),
               row.getColumnName(columnIndex),
-              s,
-              severityLevel);
+              s);
       addNoticeInRow(notice);
       if (isError(notice)) {
         return null;
@@ -531,7 +512,6 @@ public class RowParser {
         String filename,
         long csvRowNumber,
         String fieldName,
-        String fieldValue,
-        SeverityLevel severityLevel);
+        String fieldValue );
   }
 }

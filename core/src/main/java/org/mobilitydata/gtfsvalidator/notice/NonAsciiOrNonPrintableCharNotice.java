@@ -31,15 +31,14 @@ public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
       String filename,
       long csvRowNumber,
       String columnName,
-      String fieldValue,
-      SeverityLevel severityLevel) {
+      String fieldValue) {
     super(
         ImmutableMap.of(
             "filename", filename,
             "csvRowNumber", csvRowNumber,
             "columnName", columnName,
             "fieldValue", fieldValue),
-        severityLevel);
+        SeverityLevel.WARNING);
   }
 
   @Override

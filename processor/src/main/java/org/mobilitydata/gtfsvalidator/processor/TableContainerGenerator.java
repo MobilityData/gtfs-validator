@@ -41,7 +41,6 @@ import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyError;
 import org.mobilitydata.gtfsvalidator.notice.MoreThanOneEntityNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 
 /**
@@ -147,11 +146,6 @@ public class TableContainerGenerator {
         "entities",
         Modifier.PRIVATE);
 
-    typeSpec.addField(
-        SeverityLevel.class,
-        "severityLevel",
-        Modifier.PRIVATE);
-
     typeSpec.addMethod(
         MethodSpec.methodBuilder("getEntities")
             .addAnnotation(Override.class)
@@ -236,7 +230,7 @@ public class TableContainerGenerator {
       method
           .beginControlFlow("if (entities.size() > 1)")
           .addStatement(
-              "noticeContainer.addValidationNotice(new $T(gtfsFilename(), entities.size(), severityLevel.WARNING))",
+              "noticeContainer.addValidationNotice(new $T(gtfsFilename(), entities.size()))",
               MoreThanOneEntityNotice.class)
           .endControlFlow();
     } else if (fileDescriptor.sequenceKey().isPresent() && fileDescriptor.firstKey().isPresent()) {
@@ -266,7 +260,7 @@ public class TableContainerGenerator {
                   + "gtfsFilename(), a.csvRowNumber(), "
                   + "b.csvRowNumber(), "
                   + "$T.$L, a.$L(), "
-                  + "$T.$L, a.$L(), severityLevel.ERROR))",
+                  + "$T.$L, a.$L()))",
               DuplicateKeyError.class,
               loaderType,
               fieldNameField(firstKey.name()),
@@ -293,7 +287,7 @@ public class TableContainerGenerator {
           .beginControlFlow("if (oldEntity != null)")
           .addStatement(
               "noticeContainer.addValidationNotice(new $T(gtfsFilename(),"
-                  + " newEntity.csvRowNumber(), oldEntity.csvRowNumber(), $T.$L, newEntity.$L(), severityLevel.ERROR))",
+                  + " newEntity.csvRowNumber(), oldEntity.csvRowNumber(), $T.$L, newEntity.$L()))",
               DuplicateKeyError.class,
               loaderType,
               fieldNameField(primaryKey.name()),

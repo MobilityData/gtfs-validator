@@ -81,7 +81,7 @@ public class RowParserTest {
     assertThat(parser.asUrl(0, true)).isNull();
     assertThat(parser.hasParseErrorsInRow()).isTrue();
     assertThat(parser.getNoticeContainer().getValidationNotices())
-        .containsExactly(new InvalidUrlNotice(TEST_FILENAME, 8, "column name", "invalid", SeverityLevel.ERROR));
+        .containsExactly(new InvalidUrlNotice(TEST_FILENAME, 8, "column name", "invalid"));
   }
 
   @Test
@@ -156,7 +156,7 @@ public class RowParserTest {
     assertThat(parser.asEmail(0, true)).isNull();
     assertThat(parser.hasParseErrorsInRow()).isTrue();
     assertThat(parser.getNoticeContainer().getValidationNotices())
-        .containsExactly(new InvalidEmailNotice(TEST_FILENAME, 8, "column name", "invalid", SeverityLevel.ERROR));
+        .containsExactly(new InvalidEmailNotice(TEST_FILENAME, 8, "column name", "invalid"));
   }
 
   @Test
@@ -206,14 +206,14 @@ public class RowParserTest {
     assertThat(parser.asPhoneNumber(0, true)).isNull();
     assertThat(parser.hasParseErrorsInRow()).isTrue();
     assertThat(parser.getNoticeContainer().getValidationNotices())
-        .containsExactly(new InvalidPhoneNumberNotice(TEST_FILENAME, 8, "column name", "invalid", SeverityLevel.ERROR));
+        .containsExactly(new InvalidPhoneNumberNotice(TEST_FILENAME, 8, "column name", "invalid"));
 
     parser = createParser("nl-feed", "003280038762246");
     assertThat(parser.asPhoneNumber(0, true)).isNull();
     assertThat(parser.hasParseErrorsInRow()).isTrue();
     assertThat(parser.getNoticeContainer().getValidationNotices())
         .containsExactly(
-            new InvalidPhoneNumberNotice(TEST_FILENAME, 8, "column name", "003280038762246", SeverityLevel.ERROR));
+            new InvalidPhoneNumberNotice(TEST_FILENAME, 8, "column name", "003280038762246"));
   }
 
   @Test
@@ -250,7 +250,7 @@ public class RowParserTest {
     parser.asId(0, true);
     assertThat(parser.getNoticeContainer().getValidationNotices())
         .containsExactly(
-            new NonAsciiOrNonPrintableCharNotice(TEST_FILENAME, 8L, "column name","קום", SeverityLevel.WARNING));
+            new NonAsciiOrNonPrintableCharNotice(TEST_FILENAME, 8L, "column name","קום"));
     // Non-ASCII characters in ID are not an error. Validation may continue.
     assertThat(parser.hasParseErrorsInRow()).isFalse();
   }
@@ -293,7 +293,7 @@ public class RowParserTest {
     RowParser parser = createParser(" 1\t");
     assertThat(parser.asInteger(0, true)).isEqualTo(1);
     LeadingOrTrailingWhitespacesNotice notice =
-        new LeadingOrTrailingWhitespacesNotice(TEST_FILENAME, 8, "column name", " 1\t", SeverityLevel.ERROR);
+        new LeadingOrTrailingWhitespacesNotice(TEST_FILENAME, 8, "column name", " 1\t");
     assertThat(parser.hasParseErrorsInRow())
         .isEqualTo(notice.getSeverityLevel() == SeverityLevel.ERROR);
     assertThat(parser.getNoticeContainer().getValidationNotices()).containsExactly(notice);
@@ -305,7 +305,7 @@ public class RowParserTest {
     assertThat(parser.asText(0, true)).isEqualTo("a\nb");
     assertThat(parser.hasParseErrorsInRow()).isTrue();
     assertThat(parser.getNoticeContainer().getValidationNotices())
-        .containsExactly(new NewLineInValueNotice(TEST_FILENAME, 8, "column name", "a\nb", SeverityLevel.ERROR));
+        .containsExactly(new NewLineInValueNotice(TEST_FILENAME, 8, "column name", "a\nb"));
   }
 
   @Test
@@ -314,7 +314,7 @@ public class RowParserTest {
     assertThat(parser.asText(0, true)).isEqualTo("a\rb");
     assertThat(parser.hasParseErrorsInRow()).isTrue();
     assertThat(parser.getNoticeContainer().getValidationNotices())
-        .containsExactly(new NewLineInValueNotice(TEST_FILENAME, 8, "column name", "a\rb", SeverityLevel.ERROR));
+        .containsExactly(new NewLineInValueNotice(TEST_FILENAME, 8, "column name", "a\rb"));
   }
 
   @Test
@@ -335,7 +335,7 @@ public class RowParserTest {
     assertThat(parser.checkRowLength()).isFalse();
     assertThat(parser.hasParseErrorsInRow()).isFalse();
     assertThat(parser.getNoticeContainer().getValidationNotices())
-        .containsExactly(new EmptyRowNotice(TEST_FILENAME, 2, SeverityLevel.WARNING));
+        .containsExactly(new EmptyRowNotice(TEST_FILENAME, 2));
 
     inputStream.close();
   }
@@ -356,7 +356,7 @@ public class RowParserTest {
     assertThat(parser.checkRowLength()).isFalse();
     assertThat(parser.hasParseErrorsInRow()).isTrue();
     assertThat(parser.getNoticeContainer().getValidationNotices())
-        .containsExactly(new InvalidRowLengthError(TEST_FILENAME, 2, 1, 2, SeverityLevel.ERROR));
+        .containsExactly(new InvalidRowLengthError(TEST_FILENAME, 2, 1, 2));
 
     inputStream.close();
   }

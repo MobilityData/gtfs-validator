@@ -102,7 +102,7 @@ public class GtfsFeedLoader {
     for (String filename : gtfsInput.getFilenames()) {
       GtfsTableLoader loader = remainingLoaders.remove(filename.toLowerCase());
       if (loader == null) {
-        noticeContainer.addValidationNotice(new UnknownFileNotice(filename, SeverityLevel.INFO));
+        noticeContainer.addValidationNotice(new UnknownFileNotice(filename));
       } else {
         loaderCallables.add(
             () -> {

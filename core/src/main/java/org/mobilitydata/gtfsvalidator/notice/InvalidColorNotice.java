@@ -31,7 +31,7 @@ import com.google.common.collect.ImmutableMap;
 public class InvalidColorNotice extends ValidationNotice {
 
   public InvalidColorNotice(
-      String filename, long csvRowNumber, String fieldName, String fieldValue, SeverityLevel severityLevel) {
+      String filename, long csvRowNumber, String fieldName, String fieldValue) {
     super(
         ImmutableMap.of(
             "filename",
@@ -42,7 +42,7 @@ public class InvalidColorNotice extends ValidationNotice {
             fieldName,
             "fieldValue",
             fieldValue),
-        severityLevel);
+        SeverityLevel.ERROR);
   }
 
   @Override
