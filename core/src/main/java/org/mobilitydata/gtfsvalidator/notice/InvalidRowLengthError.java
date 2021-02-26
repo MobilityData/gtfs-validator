@@ -30,7 +30,8 @@ public class InvalidRowLengthError extends ValidationNotice {
             "filename", filename,
             "csvRowNumber", csvRowNumber,
             "rowLength", rowLength,
-            "headerCount", headerCount), SeverityLevel.ERROR);
+            "headerCount", headerCount),
+        SeverityLevel.ERROR);
   }
 
   @Override
