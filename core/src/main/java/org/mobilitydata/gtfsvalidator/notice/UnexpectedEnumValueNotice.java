@@ -23,8 +23,8 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
-public class UnexpectedEnumValueError extends ValidationNotice {
-  public UnexpectedEnumValueError(
+public class UnexpectedEnumValueNotice extends ValidationNotice {
+  public UnexpectedEnumValueNotice(
       String filename, long csvRowNumber, String fieldName, int fieldValue) {
     super(
         ImmutableMap.of(

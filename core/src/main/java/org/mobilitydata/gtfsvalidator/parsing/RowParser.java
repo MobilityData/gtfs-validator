@@ -48,7 +48,7 @@ import org.mobilitydata.gtfsvalidator.notice.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.NumberOutOfRangeError;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
-import org.mobilitydata.gtfsvalidator.notice.UnexpectedEnumValueError;
+import org.mobilitydata.gtfsvalidator.notice.UnexpectedEnumValueNotice;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
@@ -341,7 +341,7 @@ public class RowParser {
     }
     if (enumCreator.convert(i) == null) {
       addNoticeInRow(
-          new UnexpectedEnumValueError(
+          new UnexpectedEnumValueNotice(
               row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), i));
     }
     return i;
