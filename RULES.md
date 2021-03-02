@@ -20,8 +20,8 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 
 ## Errors
 
-| Name and code                                                                                                                                                             	| Description                                                                                                                                                 	|
-|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------	|
+| Name and code                                                                                                                                                                	| Description                                                                                                                                                 	|
+|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------	|
 | [`BlockTripsWithOverlappingStopTimesNotice`](#BlockTripsWithOverlappingStopTimesNotice)<br>(`block_trips_with_overlapping_stop_times`)                                       	| Block trips with overlapping stop times.                                                                                                                    	|
 | [`DecreasingOrEqualShapeDistanceNotice`](#DecreasingOrEqualShapeDistanceNotice)<br>(`decreasing_or_equal_shape_distance`)                                                    	| Decreasing or equal `shape_dist_traveled` in `shapes.txt`.                                                                                                  	|
 | [`DecreasingOrEqualStopTimeDistanceNotice`](#DecreasingOrEqualStopTimeDistanceNotice)<br>(`decreasing_or_equal_stop_time_distance`)                                          	| Decreasing or equal `shape_dist_traveled` in `stop_times.txt`.                                                                                              	|
@@ -38,8 +38,8 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 | [`InvalidFloatNotice`](#InvalidFloatNotice)<br>(`invalid_float`)                                                                                                             	| A field cannot be parsed as a floating point number.                                                                                                        	|
 | [`InvalidIntegerNotice`](#InvalidIntegerNotice)<br>(`invalid_integer`)                                                                                                       	| A field cannot be parsed as an integer.                                                                                                                     	|
 | [`InvalidLanguageCodeNotice`](#InvalidLanguageCodeNotice)<br>(`invalid_language_code`)                                                                                       	| A field contains a wrong language code.                                                                                                                     	|
-| [`InvalidPhoneNotice`](#InvalidPhoneNotice)<br>(`invalid_phone_number`)                                                                                                      	| A field contains a malformed phone number.                                                                                                                  	|
-| [`InvalidRowLengthNotice`](#InvalidRowLengthNotice)<br>(`invalid_row_length`)                                                                                                	| Invalid csv row length.                                                                                                                                     	|
+| [`InvalidPhoneNumberNotice`](#InvalidPhoneNumberNotice)<br>(`invalid_phone_number`)                                                                                          	| A field contains a malformed phone number.                                                                                                                  	|
+| [`InvalidRowLengthError`](#InvalidRowLengthError)<br>(`invalid_row_length`)                                                                                                  	| Invalid csv row length.                                                                                                                                     	|
 | [`InvalidTimeNotice`](#InvalidTimeNotice)<br>(`invalid_time`)                                                                                                                	| A field cannot be parsed as time.                                                                                                                           	|
 | [`InvalidTimezoneNotice`](#InvalidTimezoneNotice)<br>(`invalid_timezone`)                                                                                                    	| A field cannot be parsed as a timezone.                                                                                                                     	|
 | [`InvalidUrlNotice`](#InvalidUrlNotice)<br>(`invalid_url`)                                                                                                                   	| A field contains a malformed URL.                                                                                                                           	|
@@ -61,14 +61,15 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 | [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](#StopTimeWithArrivalBeforePreviousDepartureTimeNotice)<br>(`stop_time_with_arrival_before_previous_departure_time`) 	| Backwards time travel between stops in `stop_times.txt`                                                                                                     	|
 | [`StopTimeWithDepartureBeforeArrivalTimeNotice`](#StopTimeWithDepartureBeforeArrivalTimeNotice)<br>(`stop_time_with_departure_before_arrival_time`)                          	| Two time fields are out of order.                                                                                                                           	|
 | [`StopTimeWithOnlyArrivalOrDepartureTimeNotice`](#StopTimeWithOnlyArrivalOrDepartureTimeNotice)<br>(`stop_time_with_only_arrival_or_departure_time`)                         	| Missing `stop_times.arrival_time` or `stop_times.departure_time`.                                                                                           	|
+| [`URISyntaxError`](#URISyntaxError)<br>(`uri_syntax_error`)                                                                                                                  	| A string could not be parsed as a URI reference.                                                                                                            	|
 | [`WrongParentLocationTypeNotice`](#WrongParentLocationTypeNotice)<br>(`wrong_parent_location_type`)                                                                          	| Incorrect type of the parent location.                                                                                                                      	|
 
 <a name="WARNINGS"/>
 
 ## Warnings
 
-| Name and code                                                                                                                 	| Description                                                                                                                                                 	|
-|-------------------------------------------------------------------------------------------------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------	|
+| Name and code                                                                                                                    	| Description                                                                                                                                                 	|
+|----------------------------------------------------------------------------------------------------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------	|
 | [`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)<br>(`duplicate_route_name`)                                              	| Duplicate  `routes.route_long_name`. Duplicate `routes.route_short_name`. Duplicate combination of fields `route_long_name`  and `routes.route_short_name`. 	|
 | [`EmptyColumnNameNotice`](#EmptyColumnNameNotice)<br>(`empty_column_name`)                                                       	| A column name is empty.                                                                                                                                     	|
 | [`EmptyRowNotice`](#EmptyRowNotice)<br>(`unexpected_file`)                                                                       	| A file is unknown.                                                                                                                                          	|
@@ -89,6 +90,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 | [`UnusableTripNotice`](#UnusableTripNotice)<br>(`unusable_trip`)                                                                 	| Trips must have more than one stop to be usable.                                                                                                            	|
 | [`UnusedShapeNotice`](#UnusedShapeNotice)<br>(`unused_shape`)                                                                    	| Shape is not used in GTFS file `trips.txt`.                                                                                                                 	|
 | [`UnusedTripNotice`](#UnusedTripNotice)<br>(`unused_trip`)                                                                       	| Trip is not be used in `stop_times.txt`                                                                                                                     	|
+
 <a name="INFOS"/>
 
 ## Info
@@ -273,18 +275,18 @@ Value of field with type `language` is not valid. Language codes must follow <a 
 #### References:
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 
-<a name="InvalidPhoneNotice"/>
+<a name="InvalidPhoneNumberNotice"/>
 
-### InvalidPhoneNotice
+### InvalidPhoneNumberNotice
 
 Value of field with type `phone number` is not valid.
 
 #### References:
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 
-<a name="InvalidRowLengthNotice"/>
+<a name="InvalidRowLengthError"/>
 
-### InvalidRowLengthNotice
+### InvalidRowLengthError
 
 A row in the input file has a different number of values than specified by the CSV header.
 
@@ -557,6 +559,12 @@ A column is unknown.
 ### UnknownFileNotice
 
 A file is unknown.
+
+<a name="URISyntaxError"/>
+
+### URISyntaxError
+
+A string could not be parsed as a URI reference.
 
 <a name="WrongParentLocationTypeNotice"/>
 
