@@ -39,23 +39,23 @@ _Depends on: nothing_
 ### Data pipeline 📥➡️♨➡️📤
 
 1️⃣ **Inputs**
-- Local GTFS archive
+- A local GTFS archive or fully qualified URL to download distance a GTFS archive from
 - Command line arguments 
 
-2️⃣  **Validator loading**
-- locate all validators and load them
+2️⃣ **Validator loading**
+- Locate all validators and load them
 
-3️⃣  **Feed loading**
-- create `GtfsInput`
-  - read GTFS files
-  - create `GtfsTableContainer` from data
+3️⃣ **Feed loading**
+- Create `GtfsInput`
+  - Read GTFS files
+  - Create `GtfsTableContainer` from data
+- Invoke and execute all `SingleEntityValidator`
 
 4️⃣ **Validators execution**
-- `SingleEntityValidator` for a given file are invoked and executed as soon as the file is loaded into memory (step 3)
-- `FileValidator` (for multiple files) are invoked and executed right after the whole GTFS archives is loaded into memory.
+- Invoke and execute all `FileValidator` in parallel
  
 5️⃣ **Notice export**
 1. Creates path to export notices as specified by command line input `--output` (or `-o`).
-1. Export notices in `NoticeContainer` as `.json` file. 
+1. Export notices in `NoticeContainer`. Notices are alphabetically sorted, and stored by type sorted  `.json` file. 
 
-🔚 **Output: validation result report** 
+🔚 **Output: validation result and system errors reports** 
