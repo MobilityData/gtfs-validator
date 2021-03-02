@@ -1,10 +1,11 @@
 # Implemented rules
 
 Rules are declared in the `Notice` modules: 
-- [Notice related to CSV structure issues](https://github.com/MobilityData/gtfs-validator/tree/master/core/src/java/org/mobilitydata/gtfsvalidator/notice) 
-- [Notices related to GTFS semantic rules issues](https://github.com/MobilityData/gtfs-validator/tree/master/domain/src/main/java/org/mobilitydata/gtfsvalidator/notice). 
+- [Notices related to file parsing and data types](https://github.com/MobilityData/gtfs-validator/tree/master/core/src/java/org/mobilitydata/gtfsvalidator/notice) 
+- ```
+- [Notices related to GTFS semantics/business logic](https://github.com/MobilityData/gtfs-validator/tree/master/domain/src/main/java/org/mobilitydata/gtfsvalidator/notice). 
  
-Note that the notice ID naming conventions changed in `v2` to make contributions of new rules easier by reducing the likelihood of conflicting IDs during parallel development. Please refer to [MIGRATION_V1_V2.md](https://github.com/MobilityData/gtfs-validator/MIGRATION_V1_V2.md) to have the correspondance between v1 and v2 nomenclature of notices.
+Note that the notice ID naming conventions changed in `v2` to make contributions of new rules easier by reducing the likelihood of conflicting IDs during parallel development. Please refer to [MIGRATION_V1_V2.md](https://github.com/MobilityData/gtfs-validator/MIGRATION_V1_V2.md) for a mapping between v1 and v2 rules.
 
 ## Definitions
 Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
@@ -16,7 +17,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 <!--suppress ALL -->
 <a name="ERRORS"/>
 
-## Error notices
+## Errors
 
 | Name and code                                                                                                                                                             	| Description                                                                                                                                                 	|
 |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------	|
@@ -63,7 +64,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 
 <a name="WARNINGS"/>
 
-## Warning notices
+## Warnings
 
 | Name and code                                                                                                                 	| Description                                                                                                                                                 	|
 |-------------------------------------------------------------------------------------------------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------	|
@@ -89,7 +90,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 | [`UnusedTripNotice`](#UnusedTripNotice)<br>(`unused_trip`)                                                                       	| Trip is not be used in `stop_times.txt`                                                                                                                     	|
 <a name="INFOS"/>
 
-## Info notices
+## Info
 
 | Name and code                                                       	| Description               	|
 |---------------------------------------------------------------------	|---------------------------	|
