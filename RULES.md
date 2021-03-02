@@ -86,7 +86,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 | [`StartAndEndTimeEqualNotice`](#StartAndEndTimeEqualNotice)<br>(`start_and_end_time_out_of_order`)                               	| Equal `frequencies.start_time` and `frequencies.end_time`.                                                                                                  	|
 | [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)<br>(`stop_too_far_from_trip_shape`)                            	| Stop too far from trip shape.                                                                                                                               	|
 | [`TooFastTravelNotice`](#TooFastTravelNotice)<br>(`too_fast_travel`)                                                             	| Fast travel between stops in `stop_times.txt`.                                                                                                              	|
-| [`UnexpectedEnumValueError`](#UnexpectedEnumValueError)<br>(`unexpected_enum_value`)                                             	| An enum has an unexpected value.                                                                                                                            	|
+| [`UnexpectedEnumValueNotice`](#UnexpectedEnumValueNotice)<br>(`unexpected_enum_value`)                                             	| An enum has an unexpected value.                                                                                                                            	|
 | [`UnusableTripNotice`](#UnusableTripNotice)<br>(`unusable_trip`)                                                                 	| Trips must have more than one stop to be usable.                                                                                                            	|
 | [`UnusedShapeNotice`](#UnusedShapeNotice)<br>(`unused_shape`)                                                                    	| Shape is not used in GTFS file `trips.txt`.                                                                                                                 	|
 | [`UnusedTripNotice`](#UnusedTripNotice)<br>(`unused_trip`)                                                                       	| Trip is not be used in `stop_times.txt`                                                                                                                     	|
@@ -524,9 +524,9 @@ Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100
 
 As implemented in the original [Google Python GTFS validator](https://github.com/google/transitfeed/wiki/FeedValidator), the calculated speed between stops should not be greater than 150 km/h (42 m/s SI or 93 mph). 
 
-<a name="UnexpectedEnumValueError"/>
+<a name="UnexpectedEnumValueNotice"/>
 
-### UnexpectedEnumValueError
+### UnexpectedEnumValueNotice
 
 An enum has an unexpected value.
 
