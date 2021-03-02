@@ -33,7 +33,7 @@ import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ThreadInterruptedError;
-import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
+import org.mobilitydata.gtfsvalidator.notice.InvalidUriSyntax;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
 import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
@@ -85,7 +85,7 @@ public class Main {
       noticeContainer.addSystemError(new IOError(e.getMessage()));
     } catch (URISyntaxException e) {
       logger.atSevere().withCause(e).log("Syntax error in URI");
-      noticeContainer.addSystemError(new URISyntaxError(e.getMessage()));
+      noticeContainer.addSystemError(new InvalidUriSyntax(e.getMessage()));
     } catch (InterruptedException e) {
       logger.atSevere().withCause(e).log("Interrupted thread");
       noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));

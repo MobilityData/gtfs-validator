@@ -40,6 +40,6 @@ public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
 
   @Override
   public String getCode() {
-    return "id_contains_non_ascii_characters";
+    return "non_ascii_or_non_printable_char";
   }
 }

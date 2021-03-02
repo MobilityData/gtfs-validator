@@ -30,6 +30,6 @@ public class UnknownFileNotice extends ValidationNotice {
 
   @Override
   public String getCode() {
-    return "unexpected_file";
+    return "unknown_file";
   }
 }

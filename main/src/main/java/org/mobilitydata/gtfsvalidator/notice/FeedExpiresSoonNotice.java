@@ -27,8 +27,8 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
  *
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
-public class FeedExpirationDateNotice extends ValidationNotice {
-  public FeedExpirationDateNotice(
+public class FeedExpiresSoonNotice extends ValidationNotice {
+  public FeedExpiresSoonNotice(
       long csvRowNumber,
       GtfsDate currentDate,
       GtfsDate feedEndDate,

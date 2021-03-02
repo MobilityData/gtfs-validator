@@ -11,8 +11,8 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class OverlappingFrequencyNotice extends ValidationNotice {
-  public OverlappingFrequencyNotice(
+public class OverlappingFrequenciesNotice extends ValidationNotice {
+  public OverlappingFrequenciesNotice(
       long prevCsvRowNumber,
       GtfsTime prevEndTime,
       long currCsvRowNumber,
@@ -30,6 +30,6 @@ public class OverlappingFrequencyNotice extends ValidationNotice {
 
   @Override
   public String getCode() {
-    return "overlapping_frequency";
+    return "overlapping_frequencies";
   }
 }

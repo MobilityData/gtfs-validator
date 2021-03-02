@@ -8,7 +8,7 @@ import java.util.List;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.OverlappingFrequencyNotice;
+import org.mobilitydata.gtfsvalidator.notice.OverlappingFrequenciesNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFrequency;
 import org.mobilitydata.gtfsvalidator.table.GtfsFrequencyTableContainer;
 
@@ -21,7 +21,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFrequencyTableContainer;
  * <p>Time complexity: <i>O(n log n)</i> where <i>n</i> is the number of entries in
  * <i>frequencies.txt</i>.
  *
- * <p>Generated notice: {@link OverlappingFrequencyNotice}.
+ * <p>Generated notice: {@link OverlappingFrequenciesNotice}.
  */
 @GtfsValidator
 public class OverlappingFrequencyValidator extends FileValidator {
@@ -42,7 +42,7 @@ public class OverlappingFrequencyValidator extends FileValidator {
         GtfsFrequency curr = frequencyList.get(i);
         if (curr.startTime().isBefore(prev.endTime())) {
           noticeContainer.addValidationNotice(
-              new OverlappingFrequencyNotice(
+              new OverlappingFrequenciesNotice(
                   prev.csvRowNumber(),
                   prev.endTime(),
                   curr.csvRowNumber(),

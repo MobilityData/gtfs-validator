@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
-import org.mobilitydata.gtfsvalidator.notice.FeedExpirationDateNotice;
+import org.mobilitydata.gtfsvalidator.notice.FeedExpiresSoonNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
@@ -62,7 +62,7 @@ public class FeedExpirationDateValidatorTest {
             validateFeedInfo(
                 createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(3)))))
         .containsExactly(
-            new FeedExpirationDateNotice(
+            new FeedExpiresSoonNotice(
                 1,
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()),
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(3)),
@@ -75,7 +75,7 @@ public class FeedExpirationDateValidatorTest {
             validateFeedInfo(
                 createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(7)))))
         .containsExactly(
-            new FeedExpirationDateNotice(
+            new FeedExpiresSoonNotice(
                 1,
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()),
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(7)),
@@ -88,7 +88,7 @@ public class FeedExpirationDateValidatorTest {
             validateFeedInfo(
                 createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(23)))))
         .containsExactly(
-            new FeedExpirationDateNotice(
+            new FeedExpiresSoonNotice(
                 1,
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()),
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(23)),
@@ -101,7 +101,7 @@ public class FeedExpirationDateValidatorTest {
             validateFeedInfo(
                 createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(30)))))
         .containsExactly(
-            new FeedExpirationDateNotice(
+            new FeedExpiresSoonNotice(
                 1,
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()),
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(30)),

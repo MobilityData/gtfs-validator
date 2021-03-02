@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 import java.time.LocalDate;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.FeedExpirationDateNotice;
+import org.mobilitydata.gtfsvalidator.notice.FeedExpiresSoonNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
@@ -32,7 +32,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
  * <p>Generated notice:
  *
  * <ul>
- *   <li>{@link FeedExpirationDateNotice}
+ *   <li>{@link FeedExpiresSoonNotice}
  * </ul>
  */
 @GtfsValidator
@@ -49,7 +49,7 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
       GtfsDate currentDatePlusThirtyDays = GtfsDate.fromLocalDate(now.plusDays(30));
       if (entity.feedEndDate().isBefore(currentDatePlusSevenDays)) {
         noticeContainer.addValidationNotice(
-            new FeedExpirationDateNotice(
+            new FeedExpiresSoonNotice(
                 entity.csvRowNumber(),
                 currentDate,
                 entity.feedEndDate(),
@@ -58,7 +58,7 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
       }
       if (entity.feedEndDate().compareTo(currentDatePlusThirtyDays) <= 0) {
         noticeContainer.addValidationNotice(
-            new FeedExpirationDateNotice(
+            new FeedExpiresSoonNotice(
                 entity.csvRowNumber(),
                 currentDate,
                 entity.feedEndDate(),

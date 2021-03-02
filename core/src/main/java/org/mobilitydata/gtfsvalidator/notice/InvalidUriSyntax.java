@@ -23,14 +23,14 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class URISyntaxError extends SystemError {
+public class InvalidUriSyntax extends SystemError {
 
-  public URISyntaxError(String message) {
+  public InvalidUriSyntax(String message) {
     super(ImmutableMap.of("message", message));
   }
 
   @Override
   public String getCode() {
-    return "uri_syntax_error";
+    return "invalid_uri_syntax";
   }
 }
