@@ -13,6 +13,9 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 * `WARNING` notices are for items that will affect the quality of GTFS datasets but the GTFS spec does expressly require or prohibit. For example, these might be items recommended using the language "should" or "should not" in the GTFS spec, or items recommended in the MobilityData [GTFS Best Practices](https://gtfs.org/best-practices/).
 * `INFO` notices are for items that do not affect the feed's quality, such as unknown files or unknown fields.
 
+<!--suppress ALL -->
+<a name="ERRORS"/>
+
 ## Error notices
 
 | Notice name                                                                                                     	| Notice description                                                                                                                                           	| Notice code                                             	|
@@ -58,6 +61,8 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 | [`StopTimeWithOnlyArrivalOrDepartureTimeNotice`](#StopTimeWithOnlyArrivalOrDepartureTimeNotice)                 	| Missing `stop_times.arrival_time` or `stop_times.departure_time`.                                                                                           	| `stop_time_with_only_arrival_or_departure_time`         	|
 | [`WrongParentLocationTypeNotice`](#WrongParentLocationTypeNotice)                                               	| Incorrect type of the parent location.                                                                                                                      	| `wrong_parent_location_type`                            	|
 
+<a name="WARNINGS"/>
+
 ## Warning notices
 
 | Notice name                                                                       	| Notice description                                                                                                                                          	| Notice code                                	|
@@ -83,6 +88,8 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 | [`UnusedShapeNotice`](#UnusedShapeNotice)                                         	| Shape is not used in GTFS file `trips.txt`.                                                                                                                 	| `unused_shape`                             	|
 | [`UnusedTripNotice`](#UnusedTripNotice)                                           	| Trip is not be used in `stop_times.txt`                                                                                                                     	| `unused_trip`                              	|
 
+<a name="INFOS"/>
+
 ## Info notices
 
 | Notice name                                   	| Notice description           	| Notice code     	|
@@ -92,7 +99,6 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 
 ## Notices
 
-<!--suppress ALL -->
 <a name="BlockTripsWithOverlappingStopTimesNotice"/>
 
 ### BlockTripsWithOverlappingStopTimesNotice
