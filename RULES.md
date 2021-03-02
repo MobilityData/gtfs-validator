@@ -41,6 +41,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 | [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)                                     	| The value in CSV file has leading or trailing whitespaces.                                                                                                  	| `leading_or_trailing_whitespace`                        	|
 | [`LocationWithoutParentStationNotice`](#LocationWithoutParentStationNotice)                                     	| A location that must have `parent_station` field does not have it.                                                                                          	| `location_without_parent_station`                       	|
 | [`MissingCalendarAndCalendarDateFilesNotice`](#MissingCalendarAndCalendarDateFilesNotice)                       	| Missing GTFS files `calendar.txt` and `calendar_dates.txt`.                                                                                                  	| `missing_calendar_and_calendar_date_files`              	|
+| [`MissingRequiredColumnError`](#MissingRequiredColumnError)                                                       | A required column is missing in the input file.                                                                                                              	| `missing_required_column`                                	|
 | [`MissingRequiredFieldError`](#MissingRequiredFieldError)                                                       	| A required field is missing.                                                                                                                                	| `missing_required_field`                                	|
 | [`MissingRequiredFileError`](#MissingRequiredFileError)                                                         	| A required file is missing.                                                                                                                                 	| `missing_required_file`                                 	|
 | [`MissingTripEdgeNotice`](#MissingTripEdgeNotice)                                                               	| Missing trip edge `arrival_time` or `departure_time`.                                                                                                       	| `missing_trip_edge_arrival_time_departure_time`         	|
@@ -323,11 +324,8 @@ A location that must have `parent_station` field does not have it. The following
 #### References:
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 
-
-
 #### References:
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
-
 
 <a name="MissingCalendarAndCalendarDateFilesNotice"/>
 
@@ -340,6 +338,12 @@ Both files calendar_dates.txt and calendar.txt are missing from the GTFS archive
 ### MissingFeedInfoDateNotice
 
 Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one field is provided the second one should also be provided.
+
+<a name="MissingRequiredColumnError"/>
+
+### MissingRequiredColumnError
+
+A required column is missing in the input file.
 
 <a name="MissingRequiredFieldError"/>
 
