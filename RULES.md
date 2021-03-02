@@ -5,7 +5,7 @@ Rules are declared in the `Notice` modules:
 - ```
 - [Notices related to GTFS semantics/business logic](https://github.com/MobilityData/gtfs-validator/tree/master/domain/src/main/java/org/mobilitydata/gtfsvalidator/notice). 
  
-Note that the notice ID naming conventions changed in `v2` to make contributions of new rules easier by reducing the likelihood of conflicting IDs during parallel development. Please refer to [MIGRATION_V1_V2.md](https://github.com/MobilityData/gtfs-validator/MIGRATION_V1_V2.md) for a mapping between v1 and v2 rules.
+Note that the notice ID naming conventions changed in `v2` to make contributions of new rules easier by reducing the likelihood of conflicting IDs during parallel development. Please refer to [MIGRATION_V1_V2.md](/docs/MIGRATION_V1_V2.md) for a mapping between v1 and v2 rules.
 
 ## Definitions
 Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
@@ -15,6 +15,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 * `INFO` notices are for items that do not affect the feed's quality, such as unknown files or unknown fields.
 
 <!--suppress ALL -->
+
 <a name="ERRORS"/>
 
 ## Errors
