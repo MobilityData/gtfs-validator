@@ -26,8 +26,8 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class LocationWithoutParentStationNotice extends ValidationNotice {
-  public LocationWithoutParentStationNotice(
+public class StopLocationWithoutParentStationNotice extends ValidationNotice {
+  public StopLocationWithoutParentStationNotice(
       long csvRowNumber, String stopId, String stopName, int locationType) {
     super(
         ImmutableMap.of(

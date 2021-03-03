@@ -25,7 +25,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
-import org.mobilitydata.gtfsvalidator.notice.WrongParentLocationTypeNotice;
+import org.mobilitydata.gtfsvalidator.notice.StopWithWrongParentLocationTypeNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
@@ -79,7 +79,7 @@ public class ParentLocationTypeValidatorTest {
     assertThat(validateChildAndParent(GtfsLocationType.STOP, GtfsLocationType.STATION)).isEmpty();
     assertThat(validateChildAndParent(GtfsLocationType.STOP, GtfsLocationType.ENTRANCE))
         .contains(
-            new WrongParentLocationTypeNotice(
+            new StopWithWrongParentLocationTypeNotice(
                 1,
                 "child",
                 "Child location",
@@ -97,7 +97,7 @@ public class ParentLocationTypeValidatorTest {
         .isEmpty();
     assertThat(validateChildAndParent(GtfsLocationType.ENTRANCE, GtfsLocationType.STOP))
         .contains(
-            new WrongParentLocationTypeNotice(
+            new StopWithWrongParentLocationTypeNotice(
                 1,
                 "child",
                 "Child location",
@@ -115,7 +115,7 @@ public class ParentLocationTypeValidatorTest {
         .isEmpty();
     assertThat(validateChildAndParent(GtfsLocationType.GENERIC_NODE, GtfsLocationType.STOP))
         .contains(
-            new WrongParentLocationTypeNotice(
+            new StopWithWrongParentLocationTypeNotice(
                 1,
                 "child",
                 "Child location",
@@ -133,7 +133,7 @@ public class ParentLocationTypeValidatorTest {
         .isEmpty();
     assertThat(validateChildAndParent(GtfsLocationType.BOARDING_AREA, GtfsLocationType.STATION))
         .contains(
-            new WrongParentLocationTypeNotice(
+            new StopWithWrongParentLocationTypeNotice(
                 1,
                 "child",
                 "Child location",

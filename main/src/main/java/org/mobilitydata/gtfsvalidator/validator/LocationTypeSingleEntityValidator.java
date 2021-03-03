@@ -17,9 +17,9 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.LocationWithoutParentStationNotice;
+import org.mobilitydata.gtfsvalidator.notice.StopLocationWithoutParentStationNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.PlatformWithoutParentStationNotice;
+import org.mobilitydata.gtfsvalidator.notice.StopPlatformWithoutParentStationNotice;
 import org.mobilitydata.gtfsvalidator.notice.StationWithParentStationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
@@ -31,8 +31,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStop;
  *
  * <ul>
  *   <li>{@link StationWithParentStationNotice}
- *   <li>{@link PlatformWithoutParentStationNotice}
- *   <li>{@link LocationWithoutParentStationNotice}
+ *   <li>{@link StopPlatformWithoutParentStationNotice}
+ *   <li>{@link StopLocationWithoutParentStationNotice}
  * </ul>
  */
 @GtfsValidator
@@ -57,12 +57,12 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
         // This is a platform since it has platform_code. This is a separate notice from
         // LocationWithoutParentStationNotice because it is less severe.
         noticeContainer.addValidationNotice(
-            new PlatformWithoutParentStationNotice(
+            new StopPlatformWithoutParentStationNotice(
                 location.csvRowNumber(), location.stopId(), location.stopName()));
       }
     } else if (requiresParentStation(location.locationType())) {
       noticeContainer.addValidationNotice(
-          new LocationWithoutParentStationNotice(
+          new StopLocationWithoutParentStationNotice(
               location.csvRowNumber(), location.stopId(),
               location.stopName(), location.locationTypeValue()));
     }

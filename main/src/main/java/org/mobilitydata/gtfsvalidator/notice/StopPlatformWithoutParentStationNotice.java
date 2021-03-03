@@ -25,8 +25,8 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
-public class PlatformWithoutParentStationNotice extends ValidationNotice {
-  public PlatformWithoutParentStationNotice(long csvRowNumber, String stopId, String stopName) {
+public class StopPlatformWithoutParentStationNotice extends ValidationNotice {
+  public StopPlatformWithoutParentStationNotice(long csvRowNumber, String stopId, String stopName) {
     super(
         ImmutableMap.of("csvRowNumber", csvRowNumber, "stopId", stopId, "stopName", stopName),
         SeverityLevel.WARNING);

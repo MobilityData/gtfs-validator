@@ -24,8 +24,8 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class WrongParentLocationTypeNotice extends ValidationNotice {
-  public WrongParentLocationTypeNotice(
+public class StopWithWrongParentLocationTypeNotice extends ValidationNotice {
+  public StopWithWrongParentLocationTypeNotice(
       long csvRowNumber,
       String stopId,
       String stopName,

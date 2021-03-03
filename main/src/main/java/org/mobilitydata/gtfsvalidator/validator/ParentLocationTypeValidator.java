@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.WrongParentLocationTypeNotice;
+import org.mobilitydata.gtfsvalidator.notice.StopWithWrongParentLocationTypeNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
@@ -27,7 +27,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 /**
  * Validates `location_type` of the referenced `parent_station`.
  *
- * <p>Generated notice: {@link WrongParentLocationTypeNotice}.
+ * <p>Generated notice: {@link StopWithWrongParentLocationTypeNotice}.
  */
 @GtfsValidator
 public class ParentLocationTypeValidator extends FileValidator {
@@ -56,7 +56,7 @@ public class ParentLocationTypeValidator extends FileValidator {
       GtfsLocationType expected = expectedParentLocationType(location.locationType());
       if (expected != GtfsLocationType.UNRECOGNIZED && parentLocation.locationType() != expected) {
         noticeContainer.addValidationNotice(
-            new WrongParentLocationTypeNotice(
+            new StopWithWrongParentLocationTypeNotice(
                 location.csvRowNumber(),
                 location.stopId(),
                 location.stopName(),
