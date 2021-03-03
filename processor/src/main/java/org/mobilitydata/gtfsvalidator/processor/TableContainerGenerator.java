@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyError;
@@ -64,7 +65,7 @@ public class TableContainerGenerator {
   }
 
   private static void addListMultimapWithGetters(
-      TypeSpec.Builder typeSpec, GtfsFieldDescriptor indexField, GtfsFieldDescriptor sequenceField,
+      TypeSpec.Builder typeSpec, GtfsFieldDescriptor indexField, @Nullable GtfsFieldDescriptor sequenceField,
       TypeName entityTypeName) {
     TypeName keyMapType =
         ParameterizedTypeName.get(
@@ -75,7 +76,7 @@ public class TableContainerGenerator {
         FieldSpec.builder(keyMapType, fieldName, Modifier.PRIVATE)
             .initializer("$T.create()", ParameterizedTypeName.get(ArrayListMultimap.class))
             .build());
-    String sortedBy = sequenceField != null ? " sorted by " + sequenceField.name() : "";
+    String sortedBy = sequenceField != null ? " sorted by " + FieldNameConverter.gtfsColumnName(sequenceField.name()) : "";
     typeSpec.addMethod(
         MethodSpec.methodBuilder(methodName)
             .addModifiers(Modifier.PUBLIC)
@@ -89,7 +90,7 @@ public class TableContainerGenerator {
             .addModifiers(Modifier.PUBLIC)
             .returns(keyMapType)
             .addStatement("return $L", fieldName)
-            .addJavadoc("@return ListMultimap keyed on " + indexField.name() + " with values that are Lists of " + entityTypeName + sortedBy)
+            .addJavadoc("@return ListMultimap keyed on " + FieldNameConverter.gtfsColumnName(indexField.name()) + " with values that are Lists of " + entityTypeName + sortedBy)
             .build());
   }
 
