@@ -16,7 +16,7 @@ java -jar gtfs-validator-v2.0.jar --input relative/path/to/dataset.zip --output 
 ...which will:
  1. Search for a GTFS dataset located at `relative/path/to/dataset.zip`
  1. Validate the GTFS data and output the results to the directory located at `relative/output/path`. 
- 1. Export the validation report to `JSON` by default. This folder will contain a single `.json` file with information related to the validation process. The validation report will be named as `report.json`. 
+ 1. Export the validation and system errors reports to `JSON` by default. This folder will contain a single `.json` file with information related to the validation process. The validation report will be named as `report.json` and the system errors report can be found under the name of `system_errors.json`. 
 
 ### on a hosted GTFS zip file at a URL
 Sample usage:
@@ -34,7 +34,7 @@ Please note that since downloading will take time, we recommend validating repea
 
 1. [Fork this repository](/docs/REPRODUCE_ERRORS.md#fork-this-repository-detailed-instructions)
 1. Open a PR on master within it
-1. Edit the file `.github/workflows/end_to_end.yml` following instructions on lines 5, 43-45 and **push** on your PR branch (see detailed instructions [here](/docs/REPRODUCE_ERRORS.md##create-a-pull-request-pr))
+1. Edit the file `.github/workflows/end_to_end.yml` following instructions on lines 5, 43-45 and **push** on your PR branch (see detailed instructions [here](/docs/REPRODUCE_ERRORS.md#create-a-pull-request-pr))
 1. Name your branch from the agency/authority/publisher of the feed you are testing
 
 You should now see the workflow `End to end / run-on-data` start automatically in your PR checks, running the validator on the dataset you just added. The validation report is collected as a run artifact in the Actions tab of your fork repository on GitHub.
