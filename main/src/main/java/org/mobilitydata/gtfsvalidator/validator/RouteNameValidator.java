@@ -21,7 +21,7 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.RouteBothShortAndLongNameMissingNotice;
 import org.mobilitydata.gtfsvalidator.notice.RouteShortAndLongNameEqualNotice;
 import org.mobilitydata.gtfsvalidator.notice.RouteShortNameTooLongNotice;
-import org.mobilitydata.gtfsvalidator.notice.SameNameAndDescriptionForRouteNotice;
+import org.mobilitydata.gtfsvalidator.notice.RouteSameNameAndDescriptionNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 
 /**
@@ -33,7 +33,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
  *   <li>{@link RouteBothShortAndLongNameMissingNotice}
  *   <li>{@link RouteShortAndLongNameEqualNotice}
  *   <li>{@link RouteShortNameTooLongNotice}
- *   <li>{@link SameNameAndDescriptionForRouteNotice}
+ *   <li>{@link RouteSameNameAndDescriptionNotice}
  * </ul>
  */
 @GtfsValidator
@@ -69,13 +69,13 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
       String routeId = entity.routeId();
       if (hasShortName && !isValidRouteDesc(routeDesc, entity.routeShortName())) {
         noticeContainer.addValidationNotice(
-            new SameNameAndDescriptionForRouteNotice(
+            new RouteSameNameAndDescriptionNotice(
                 entity.csvRowNumber(), routeId, routeDesc, "route_short_name"));
         return;
       }
       if (hasLongName && !isValidRouteDesc(routeDesc, entity.routeLongName())) {
         noticeContainer.addValidationNotice(
-            new SameNameAndDescriptionForRouteNotice(
+            new RouteSameNameAndDescriptionNotice(
                 entity.csvRowNumber(), routeId, routeDesc, "route_long_name"));
       }
     }

@@ -29,8 +29,8 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class SameNameAndDescriptionForRouteNotice extends ValidationNotice {
-  public SameNameAndDescriptionForRouteNotice(
+public class RouteSameNameAndDescriptionNotice extends ValidationNotice {
+  public RouteSameNameAndDescriptionNotice(
       long csvRowNumber, String routeId, String routeDesc, String routeShortOrLongName) {
     super(
         new ImmutableMap.Builder<String, Object>()
@@ -45,6 +45,6 @@ public class SameNameAndDescriptionForRouteNotice extends ValidationNotice {
 
   @Override
   public String getCode() {
-    return "same_route_name_and_description";
+    return "route_same_name_and_description_notice";
   }
 }
