@@ -65,7 +65,9 @@ public class TableContainerGenerator {
   }
 
   private static void addListMultimapWithGetters(
-      TypeSpec.Builder typeSpec, GtfsFieldDescriptor indexField, @Nullable GtfsFieldDescriptor sequenceField,
+      TypeSpec.Builder typeSpec,
+      GtfsFieldDescriptor indexField,
+      @Nullable GtfsFieldDescriptor sequenceField,
       TypeName entityTypeName) {
     TypeName keyMapType =
         ParameterizedTypeName.get(
@@ -76,7 +78,10 @@ public class TableContainerGenerator {
         FieldSpec.builder(keyMapType, fieldName, Modifier.PRIVATE)
             .initializer("$T.create()", ParameterizedTypeName.get(ArrayListMultimap.class))
             .build());
-    String sortedBy = sequenceField != null ? " sorted by " + FieldNameConverter.gtfsColumnName(sequenceField.name()) : "";
+    String sortedBy =
+        sequenceField != null
+            ? " sorted by " + FieldNameConverter.gtfsColumnName(sequenceField.name())
+            : "";
     typeSpec.addMethod(
         MethodSpec.methodBuilder(methodName)
             .addModifiers(Modifier.PUBLIC)
@@ -90,7 +95,12 @@ public class TableContainerGenerator {
             .addModifiers(Modifier.PUBLIC)
             .returns(keyMapType)
             .addStatement("return $L", fieldName)
-            .addJavadoc("@return ListMultimap keyed on " + FieldNameConverter.gtfsColumnName(indexField.name()) + " with values that are Lists of " + entityTypeName + sortedBy)
+            .addJavadoc(
+                "@return ListMultimap keyed on "
+                    + FieldNameConverter.gtfsColumnName(indexField.name())
+                    + " with values that are Lists of "
+                    + entityTypeName
+                    + sortedBy)
             .build());
   }
 
@@ -173,7 +183,10 @@ public class TableContainerGenerator {
               .build());
     } else if (fileDescriptor.sequenceKey().isPresent()) {
       addListMultimapWithGetters(
-          typeSpec, fileDescriptor.firstKey().get(), fileDescriptor.sequenceKey().get(), classNames.entityImplementationTypeName());
+          typeSpec,
+          fileDescriptor.firstKey().get(),
+          fileDescriptor.sequenceKey().get(),
+          classNames.entityImplementationTypeName());
     } else if (fileDescriptor.primaryKey().isPresent()) {
       addMapWithGetter(
           typeSpec, fileDescriptor.primaryKey().get(), classNames.entityImplementationTypeName());
