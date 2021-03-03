@@ -18,7 +18,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 
 <a name="ERRORS"/>
 
-## Errors
+## Table of errors
 
 | Name                                                                                                            	| Description                                                                                                                                                 	|
 |-----------------------------------------------------------------------------------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------	|
@@ -66,7 +66,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 
 <a name="WARNINGS"/>
 
-## Warnings
+## Table of warnings
 
 | Name                                                                              	| Description                                                                                                                                                 	|
 |-----------------------------------------------------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------	|
@@ -93,7 +93,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 
 <a name="INFOS"/>
 
-## Info
+## Table of info
 
 | Name                                          	| Description               	|
 |-----------------------------------------------	|---------------------------	|
@@ -102,7 +102,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 
 ## Notices
 
-<a name="BlockTripsWithOverlappingStopTimesNotice"/>
+### Errors
 
 ### BlockTripsWithOverlappingStopTimesNotice
 
@@ -132,23 +132,6 @@ The input file CSV header has the same column name repeated.
 
 The combination of `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.contains_id` and `fare_rules.destination_id` fields should be unique in GTFS file `fare_rules.txt`.
 
-<a name="DuplicateRouteNameNotice"/>
-
-### DuplicateRouteNameNotice
-
-All routes should have different `routes.route_long_name` - if two `routes.route_long_name` are the same, and the two routes belong to the same agency, a notice is generated.
-
-Note that there may be valid cases where routes may have the same `routes.route_long_name` and this notice can be ignored. For example, routes may have the same `routes.route_long_name` if they serve difference areas. However, they must not be different trips of the same route or different directions of the same route - these cases should always have unique `routes.route_long_name`.
-
-All routes should have different `routes.route_short_name` - if two `routes.route_short_name` are the same, and the two routes belong to the same agency, a notice is generated.
-
-Note that there may be valid cases where routes may have the same `routes.route_short_name` and this notice can be ignored. For example, routes may have the same routes.route_short_name if they serve difference areas. However, they must not be different trips of the same route or different directions of the same route - these cases should always have unique `routes.route_short_name`.
-
-The same combination of `route_short_name` and `route_long_name` should not be used for more than one route.
-
-#### References:
-* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
-
 <a name="DuplicateKeyError"/>
 
 ### DuplicateKeyError
@@ -161,49 +144,11 @@ The values of the given key and rows are duplicates.
 
 Empty csv file found in the archive: file does not have any headers, or is a required file and does not have any data. The GTFS specification requires the first line of each file to contain field names and required files must have data.
 
-<a name="EmptyColumnNameNotice"/>
-
-### EmptyColumnNameNotice
-
-A column name has not been provided. Such columns are skipped by the validator.
-
-<a name="EmptyRowNotice"/>
-
-### EmptyRowNotice
-
-A row in the input file has only spaces.
-
-<a name="FeedExpirationDateNotice"/>
-
-### FeedExpirationDateNotice
-
-At any time, the published GTFS dataset should be valid for at least the next 7 days, and ideally for as long as the operator is confident that the schedule will continue to be operated.
-If possible, the GTFS dataset should cover at least the next 30 days of service.
-
-<a name="FeedInfoLangAndAgencyLangMismatchNotice"/>
-
-### FeedInfoLangAndAgencyLangMismatchNotice
-1. Files `agency.txt` and `feed_info.txt` must define matching `agency.agency_lang` and `feed_info.feed_lang`.
-  The default language may be multilingual for datasets with the original text in multiple languages. In such cases, the feed_lang field should contain the language code mul defined by the norm ISO 639-2.
-  * If `feed_lang` is not `mul` and does not match with `agency_lang`, that's an error
-  * If there is more than one `agency_lang` and `feed_lang` isn't `mul`, that's an error
-  * If `feed_lang` is `mul` and there isn't more than one `agency_lang`, that's an error
-
-#### References:
-* [GTFS feed_info.txt specification](http://gtfs.org/reference/static/#feed_infotxt)
-* [GTFS agency.txt specification](http://gtfs.org/reference/static/#agencytxt)
-
 <a name="ForeignKeyError"/>
 
 ### ForeignKeyError
 
 The values of the given key and rows of one table cannot be found a values of the given key in another table.
-
-<a name="InconsistentAgencyLangNotice"/>
-
-### InconsistentAgencyLangNotice
-
-Agencies from GTFS `agency.txt` have been found to have different languages.
 
 <a name="InconsistentAgencyTimezoneNotice"/>
 
@@ -342,12 +287,6 @@ A location that must have `parent_station` field does not have it. The following
 
 Both files calendar_dates.txt and calendar.txt are missing from the GTFS archive. At least one of the files must be provided.
 
-<a name="MissingFeedInfoDateNotice"/>
-
-### MissingFeedInfoDateNotice
-
-Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one field is provided the second one should also be provided.
-
 <a name="MissingRequiredColumnError"/>
 
 ### MissingRequiredColumnError
@@ -372,23 +311,11 @@ A required file is missing.
 
 First and last stop of a trip must define both `arrival_time` and `departure_time` fields.
 
-<a name="MissingRequiredColumn"/>
-
-### MoreThanOneEntityNotice
-
-The file is expected to have a single entity but has more (e.g., "feed_info.txt").
-
 <a name="NewLineInValueNotice"/>
 
 ### NewLineInValueNotice
 
 A value in CSV file has a new line or carriage return.
-
-<a name="NonAsciiOrNonPrintableCharNotice"/>
-
-### NonAsciiOrNonPrintableCharNotice
-
-A value of filed with type `id` contains non ASCII or non printable characters. This is not recommended.
 
 <a name="NumberOutOfRangeError"/>
 
@@ -406,12 +333,6 @@ Trip frequencies must not overlap in time
 
 * [GTFS frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
 
-<a name="PlatformWithoutParentStationNotice"/>
-
-### PlatformWithoutParentStationNotice
-
-A platform has no `parent_station` field set.
-
 #### References:
 
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
@@ -422,35 +343,9 @@ A platform has no `parent_station` field set.
 
 Both short_name and long_name are missing for a route.
 
-<a name="RouteColorContrastNotice"/>
-
-### RouteColorContrastNotice
-
-A route's color and `route_text_color` should be contrasting.
-
 #### References:
 
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
-
-<a name="RouteShortAndLongNameEqualNotice"/>
-
-### RouteShortAndLongNameEqualNotice
-
-Short and long name are equal for a route.
-
-#### References:
-
-* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
-
-<a name="RouteShortNameTooLongNotice"/>
-
-### RouteShortNameTooLongNotice
-
-Short name of a route is too long (more than 12 characters).
-
-#### References:
-
-* [routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
 
 <a name="SameNameAndDescriptionForRouteNotice"/>
 
@@ -473,11 +368,6 @@ References:
 
 Start and end dates are out-of-order in GTFS files `feed_info.txt` or `calendar.txt`.
 
-<a name="StartAndEndTimeEqualNotice"/>
-
-### StartAndEndTimeEqualNotice
-
-Start and end times are equal in GTFS file `frequencies.txt`. The GTFS spec is currently unclear how this case should be handled (e.g., is it a trip that circulates once?). It is recommended to use a trip not defined via frequencies.txt for this case.
 
 <a name="StartAndEndTimeOutOfOrderNotice"/>
 
@@ -509,57 +399,6 @@ The `departure_time` must not precede the `arrival_time` in `stop_times.txt` if 
 
 Missing `stop_time.arrival_time` or `stop_time.departure_time`
 
-<a name="StopTooFarFromTripShapeNotice"/>
-
-### StopTooFarFromTripShapeNotice
-
-Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100 meters of stop locations which a trip serves.
-
-#### References:
-* [GTFS Best Practices shapes.txt](https://gtfs.org/best-practices/#shapestxt)
-
-<a name="TooFastTravelNotice"/>
-
-### TooFastTravelNotice
-
-As implemented in the original [Google Python GTFS validator](https://github.com/google/transitfeed/wiki/FeedValidator), the calculated speed between stops should not be greater than 150 km/h (42 m/s SI or 93 mph). 
-
-<a name="UnexpectedEnumValueNotice"/>
-
-### UnexpectedEnumValueNotice
-
-An enum has an unexpected value.
-
-<a name="UnusableTripNotice"/>
-
-### UnusableTripNotice
-
-A trip must visit more than one stop in stop_times.txt to be usable by passengers for boarding and alighting.
-
-<a name="UnusedShapeNotice"/>
-
-### UnusedShapeNotice
-
-All records defined by GTFS `shapes.txt` should be used in `trips.txt`.
-
-<a name="UnusedTripNotice"/>
-
-### UnusedTripNotice
-
-Trips must be referred to at least once in `stop_times.txt`.
-
-<a name="UnknownColumnNotice"/>
-
-### UnknownColumnNotice
-
-A column is unknown.
-
-<a name="UnknownFileNotice"/>
-
-### UnknownFileNotice
-
-A file is unknown.
-
 <a name="URISyntaxError"/>
 
 ### URISyntaxError
@@ -582,3 +421,171 @@ Any other combination raise this error.
 
 #### References:
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+
+### Warnings
+
+<a name="DuplicateRouteNameNotice"/>
+
+#### DuplicateRouteNameNotice
+
+All routes should have different `routes.route_long_name` - if two `routes.route_long_name` are the same, and the two routes belong to the same agency, a notice is generated.
+
+Note that there may be valid cases where routes may have the same `routes.route_long_name` and this notice can be ignored. For example, routes may have the same `routes.route_long_name` if they serve difference areas. However, they must not be different trips of the same route or different directions of the same route - these cases should always have unique `routes.route_long_name`.
+
+All routes should have different `routes.route_short_name` - if two `routes.route_short_name` are the same, and the two routes belong to the same agency, a notice is generated.
+
+Note that there may be valid cases where routes may have the same `routes.route_short_name` and this notice can be ignored. For example, routes may have the same routes.route_short_name if they serve difference areas. However, they must not be different trips of the same route or different directions of the same route - these cases should always have unique `routes.route_short_name`.
+
+The same combination of `route_short_name` and `route_long_name` should not be used for more than one route.
+
+##### References:
+* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
+
+<a name="EmptyColumnNameNotice"/>
+
+#### EmptyColumnNameNotice
+
+A column name has not been provided. Such columns are skipped by the validator.
+
+<a name="EmptyRowNotice"/>
+
+#### EmptyRowNotice
+
+A row in the input file has only spaces.
+
+<a name="FeedExpirationDateNotice"/>
+
+#### FeedExpirationDateNotice
+
+At any time, the published GTFS dataset should be valid for at least the next 7 days, and ideally for as long as the operator is confident that the schedule will continue to be operated.
+If possible, the GTFS dataset should cover at least the next 30 days of service.
+
+<a name="FeedInfoLangAndAgencyLangMismatchNotice"/>
+
+#### FeedInfoLangAndAgencyLangMismatchNotice
+1. Files `agency.txt` and `feed_info.txt` must define matching `agency.agency_lang` and `feed_info.feed_lang`.
+  The default language may be multilingual for datasets with the original text in multiple languages. In such cases, the feed_lang field should contain the language code mul defined by the norm ISO 639-2.
+  * If `feed_lang` is not `mul` and does not match with `agency_lang`, that's an error
+  * If there is more than one `agency_lang` and `feed_lang` isn't `mul`, that's an error
+  * If `feed_lang` is `mul` and there isn't more than one `agency_lang`, that's an error
+
+##### References:
+* [GTFS feed_info.txt specification](http://gtfs.org/reference/static/#feed_infotxt)
+* [GTFS agency.txt specification](http://gtfs.org/reference/static/#agencytxt)
+
+<a name="InconsistentAgencyLangNotice"/>
+
+#### InconsistentAgencyLangNotice
+
+Agencies from GTFS `agency.txt` have been found to have different languages.
+
+<a name="MissingFeedInfoDateNotice"/>
+
+#### MissingFeedInfoDateNotice
+
+Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one field is provided the second one should also be provided.
+
+<a name="MoreThanOneEntityNotice"/>
+
+#### MoreThanOneEntityNotice
+
+The file is expected to have a single entity but has more (e.g., "feed_info.txt").
+
+<a name="NonAsciiOrNonPrintableCharNotice"/>
+
+#### NonAsciiOrNonPrintableCharNotice
+
+A value of filed with type `id` contains non ASCII or non printable characters. This is not recommended.
+
+<a name="PlatformWithoutParentStationNotice"/>
+
+#### PlatformWithoutParentStationNotice
+
+A platform has no `parent_station` field set.
+
+<a name="RouteColorContrastNotice"/>
+
+#### RouteColorContrastNotice
+
+A route's color and `route_text_color` should be contrasting.
+
+<a name="RouteShortAndLongNameEqualNotice"/>
+
+#### RouteShortAndLongNameEqualNotice
+
+Short and long name are equal for a route.
+
+##### References:
+
+* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
+
+<a name="RouteShortNameTooLongNotice"/>
+
+#### RouteShortNameTooLongNotice
+
+Short name of a route is too long (more than 12 characters).
+
+##### References:
+
+* [routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
+
+<a name="StartAndEndTimeEqualNotice"/>
+
+#### StartAndEndTimeEqualNotice
+
+Start and end times are equal in GTFS file `frequencies.txt`. The GTFS spec is currently unclear how this case should be handled (e.g., is it a trip that circulates once?). It is recommended to use a trip not defined via frequencies.txt for this case.
+
+<a name="StopTooFarFromTripShapeNotice"/>
+
+#### StopTooFarFromTripShapeNotice
+
+Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100 meters of stop locations which a trip serves.
+
+##### References:
+* [GTFS Best Practices shapes.txt](https://gtfs.org/best-practices/#shapestxt)
+
+<a name="TooFastTravelNotice"/>
+
+#### TooFastTravelNotice
+
+As implemented in the original [Google Python GTFS validator](https://github.com/google/transitfeed/wiki/FeedValidator), the calculated speed between stops should not be greater than 150 km/h (42 m/s SI or 93 mph). 
+
+<a name="UnexpectedEnumValueNotice"/>
+
+#### UnexpectedEnumValueNotice
+
+An enum has an unexpected value.
+
+<a name="UnusableTripNotice"/>
+
+#### UnusableTripNotice
+
+A trip must visit more than one stop in stop_times.txt to be usable by passengers for boarding and alighting.
+
+<a name="UnusedShapeNotice"/>
+
+#### UnusedShapeNotice
+
+All records defined by GTFS `shapes.txt` should be used in `trips.txt`.
+
+<a name="UnusedTripNotice"/>
+
+#### UnusedTripNotice
+
+Trips must be referred to at least once in `stop_times.txt`.
+
+### Info
+
+<a name="UnknownColumnNotice"/>
+
+#### UnknownColumnNotice
+
+A column is unknown.
+
+<a name="UnknownFileNotice"/>
+
+#### UnknownFileNotice
+
+A file is unknown.
+
+<a name="BlockTripsWithOverlappingStopTimesNotice"/>
