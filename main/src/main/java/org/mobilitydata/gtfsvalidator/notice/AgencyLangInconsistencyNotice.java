@@ -19,22 +19,22 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * Inconsistent Timezone among agencies.
+ * Inconsistent language among agencies.
  *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>Severity: {@code SeverityLevel.WARNING}
  */
-public class InconsistentAgencyTimezoneNotice extends ValidationNotice {
-  public InconsistentAgencyTimezoneNotice(long csvRowNumber, String expected, String actual) {
+public class AgencyLangInconsistencyNotice extends ValidationNotice {
+  public AgencyLangInconsistencyNotice(long csvRowNumber, String expected, String actual) {
     super(
         ImmutableMap.of(
             "csvRowNumber", csvRowNumber,
             "expected", expected,
             "actual", actual),
-        SeverityLevel.ERROR);
+        SeverityLevel.WARNING);
   }
 
   @Override
   public String getCode() {
-    return "inconsistent_agency_timezone";
+    return "inconsistent_agency_lang";
   }
 }

@@ -20,8 +20,8 @@ import java.time.ZoneId;
 import java.util.Locale;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyLangNotice;
-import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyTimezoneNotice;
+import org.mobilitydata.gtfsvalidator.notice.AgencyLangInconsistencyNotice;
+import org.mobilitydata.gtfsvalidator.notice.AgencyTimezoneInconsistencyNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
@@ -36,8 +36,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableLoader;
  *
  * <ul>
  *   <li>{@link MissingRequiredFieldError} - multiple agencies present but no agency_id set
- *   <li>{@link InconsistentAgencyTimezoneNotice} - inconsistent timezone among the agencies
- *   <li>{@link InconsistentAgencyLangNotice} - inconsistent language among the agencies
+ *   <li>{@link AgencyTimezoneInconsistencyNotice} - inconsistent timezone among the agencies
+ *   <li>{@link AgencyLangInconsistencyNotice} - inconsistent language among the agencies
  * </ul>
  */
 @GtfsValidator
@@ -69,7 +69,7 @@ public class AgencyConsistencyValidator extends FileValidator {
       GtfsAgency agency = agencyTable.getEntities().get(i);
       if (!commonTimezone.equals(agency.agencyTimezone())) {
         noticeContainer.addValidationNotice(
-            new InconsistentAgencyTimezoneNotice(
+            new AgencyTimezoneInconsistencyNotice(
                 agency.csvRowNumber(), commonTimezone.getId(), agency.agencyTimezone().getId()));
       }
     }
@@ -87,7 +87,7 @@ public class AgencyConsistencyValidator extends FileValidator {
         commonLanguage = agency.agencyLang();
       } else if (!commonLanguage.equals(agency.agencyLang())) {
         noticeContainer.addValidationNotice(
-            new InconsistentAgencyLangNotice(
+            new AgencyLangInconsistencyNotice(
                 agency.csvRowNumber(),
                 commonLanguage.getLanguage(),
                 agency.agencyLang().getLanguage()));
