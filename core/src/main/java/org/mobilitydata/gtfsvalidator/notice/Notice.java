@@ -24,6 +24,7 @@ import java.util.Objects;
 
 /** Base class for all notices produced by GTFS validator. */
 public abstract class Notice {
+  private static String NOTICE_SUBSTRING = "notice";
   private Map<String, Object> context;
   private SeverityLevel severityLevel;
 
@@ -41,12 +42,17 @@ public abstract class Notice {
   }
 
   /**
-   * Returns a descriptive type-specific name for this notice.
+   * Returns a descriptive type-specific name for this notice based on the class simple name.
    *
    * @return notice code, e.g., "foreign_key_error".
    */
   public String getCode() {
-    return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, getClass().getSimpleName());
+    String toReturn =
+        CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, getClass().getSimpleName());
+    if (toReturn.endsWith(NOTICE_SUBSTRING)) {
+      toReturn = toReturn.replace(NOTICE_SUBSTRING, "");
+    }
+    return toReturn;
   }
 
   @Override
