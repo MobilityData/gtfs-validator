@@ -19,12 +19,12 @@ public class NoticeTest {
             new TestValidationNotice(
                 "code1", ImmutableMap.of("key1", "value1"), SeverityLevel.ERROR));
 
-    // Different code.
+    // Different notices
     assertThat(
             new TestValidationNotice(
                 "code1", ImmutableMap.of("key1", "value1"), SeverityLevel.ERROR))
         .isNotEqualTo(
-            new TestValidationNotice(
+            new OtherTestValidationNotice(
                 "code2", ImmutableMap.of("key1", "value1"), SeverityLevel.ERROR));
 
     // Different context.
