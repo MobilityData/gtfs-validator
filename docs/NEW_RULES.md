@@ -1,5 +1,4 @@
 # How to add a new validation rule _i.e._ a validator?
-
 Adding a new validator is relatively simple:
 1. Create a class for the validator that implements one of the interfaces `FileValidator`, or `SingleEntityValidator`.
 
@@ -27,7 +26,6 @@ Validators are tested against data samples.
 One can also refer to [`this example`](../main/src/test/java/org/mobilitydata/gtfsvalidator/validator/FeedExpirationDateValidatorTest.java).
  
 ### Test a `FileValidator`
-
 1️⃣ Create the relevant [`GtfsTableContainer`](../core/src/main/java/org/mobilitydata/gtfsvalidator/table/GtfsTableContainer.java).
 
 2️⃣ Create the relevant [`GtfsEntity`](../core/src/main/java/org/mobilitydata/gtfsvalidator/table/GtfsEntity.java) needed to populate the previous tables.
