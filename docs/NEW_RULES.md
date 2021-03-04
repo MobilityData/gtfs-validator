@@ -11,32 +11,31 @@ Adding a new validator is relatively simple:
 1. Write the validation rule logic in overridden `validate` method with the correct set of parameters.
 
 ## How to test the newly added validator?
-`gtfs-validator` tests rely on [`JUnit 4`](https://junit.org/junit4/), [`Mockito`](https://site.mockito.org/) and [`Google Truth`](https://github.com/google/truth).
+`gtfs-validator` tests rely on [`JUnit 4`](https://junit.org/junit4/), and [`Google Truth`](https://github.com/google/truth).
+
+Validators are tested against data samples.
 
 ### Test a `SingleEntityValidator` 
-1️⃣ Mock a `NoticeContainer`
+1️⃣ Create a [`GtfsEntity`](../core/src/main/java/org/mobilitydata/gtfsvalidator/table/GtfsEntity.java).
 
-2️⃣ Mock a `GtfsEntity` and stub its methods that are used in the validator
+2️⃣ Create a [`NoticeContainer`](../core/src/main/java/org/mobilitydata/gtfsvalidator/notice/NoticeContainer.java).
 
-3️⃣ Execute the validator on the mocked `GtfsEntity`
+3️⃣ Execute the validator one the previously defined parameters (`GtfsEntity` and `NoticeContainer`).
 
-4️⃣ Verify interactions with the `NoticeContainer`
+4️⃣ Verify the content of `NoticeContainer`.
 
-5️⃣ Verify interactions with the mocked `GtfsEntity` 
-
+One can also refer to [`this example`](../main/src/test/java/org/mobilitydata/gtfsvalidator/validator/FeedExpirationDateValidatorTest.java).
+ 
 ### Test a `FileValidator`
-1️⃣ Create a class constant `NoticeContainer` and annotate it `@Mock`
 
-2️⃣ Declare the validator to be tested as a class constat and annotate it `@InjectMocks`: mockito will inject the `NoticeContainer`.
+1️⃣ Create the relevant [`GtfsTableContainer`](../core/src/main/java/org/mobilitydata/gtfsvalidator/table/GtfsTableContainer.java).
 
-3️⃣ Implement `initMocks`  method. Annotate it `@Before` so that it is ran before all tests of the class.
+2️⃣ Create the relevant [`GtfsEntity`](../core/src/main/java/org/mobilitydata/gtfsvalidator/table/GtfsEntity.java) needed to populate the previous tables.
 
-4️⃣ Stub all required methods for all mocks used.
+3️⃣ Create a [`NoticeContainer`](../core/src/main/java/org/mobilitydata/gtfsvalidator/notice/NoticeContainer.java).
 
-5️⃣ Verify interactions with the `NoticeContainer`
+4️⃣ Execute the validator one the previously defined parameters (`GtfsEntity` and `NoticeContainer`).
 
-6️⃣ Verify interactions with all mocks
+5️⃣ Verify the content of `NoticeContainer`.
 
-## Resources
-
-[Use Mockito to Mock Autowired Fields](https://dzone.com/articles/use-mockito-mock-autowired)
+One can also refer to [`this example`](../main/src/test/java/org/mobilitydata/gtfsvalidator/validator/TripUsageValidatorTest.java).
