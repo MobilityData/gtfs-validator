@@ -14,9 +14,4 @@ public class ThreadExecutionError extends SystemError {
   public ThreadExecutionError(String exceptionClassName, String message) {
     super(ImmutableMap.of("exception", exceptionClassName, "message", message));
   }
-
-  @Override
-  public String getCode() {
-    return "thread_execution";
-  }
 }

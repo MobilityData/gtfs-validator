@@ -40,9 +40,4 @@ public class NumberOutOfRangeError extends ValidationNotice {
             fieldValue),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "number_out_of_range";
-  }
 }

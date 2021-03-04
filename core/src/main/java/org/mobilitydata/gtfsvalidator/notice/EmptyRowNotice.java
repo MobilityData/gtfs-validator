@@ -35,9 +35,4 @@ public class EmptyRowNotice extends ValidationNotice {
             "csvRowNumber", csvRowNumber),
         SeverityLevel.WARNING);
   }
-
-  @Override
-  public String getCode() {
-    return "empty_row";
-  }
 }

@@ -50,9 +50,4 @@ public class NewLineInValueNotice extends ValidationNotice {
             fieldValue),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "new_line_in_value";
-  }
 }

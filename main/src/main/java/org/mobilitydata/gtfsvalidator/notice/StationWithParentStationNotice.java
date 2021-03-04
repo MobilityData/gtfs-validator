@@ -38,9 +38,4 @@ public class StationWithParentStationNotice extends ValidationNotice {
             parentStation),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "station_with_parent_station";
-  }
 }

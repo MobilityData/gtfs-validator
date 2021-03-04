@@ -27,9 +27,4 @@ public class UnknownFileNotice extends ValidationNotice {
   public UnknownFileNotice(String filename) {
     super(ImmutableMap.of("filename", filename), SeverityLevel.INFO);
   }
-
-  @Override
-  public String getCode() {
-    return "unexpected_file";
-  }
 }

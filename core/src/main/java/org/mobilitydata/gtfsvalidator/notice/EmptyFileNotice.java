@@ -28,9 +28,4 @@ public class EmptyFileNotice extends ValidationNotice {
   public EmptyFileNotice(String filename) {
     super(ImmutableMap.of("filename", filename), SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "empty_file";
-  }
 }

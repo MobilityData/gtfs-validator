@@ -35,9 +35,4 @@ public class FeedInfoLangAndAgencyLangMismatchNotice extends ValidationNotice {
             "feedLang", feedLang),
         SeverityLevel.WARNING);
   }
-
-  @Override
-  public String getCode() {
-    return "feed_info_lang_and_agency_lang_mismatch";
-  }
 }

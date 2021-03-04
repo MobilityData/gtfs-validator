@@ -38,9 +38,4 @@ public class UnexpectedEnumValueError extends ValidationNotice {
             fieldValue),
         SeverityLevel.WARNING);
   }
-
-  @Override
-  public String getCode() {
-    return "unexpected_enum_value";
-  }
 }

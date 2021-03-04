@@ -31,9 +31,4 @@ public class DuplicateRouteNameNotice extends ValidationNotice {
             "duplicatedField", duplicatedField, "csvRowNumber", csvRowNumber, "routeId", routeId),
         SeverityLevel.WARNING);
   }
-
-  @Override
-  public String getCode() {
-    return "duplicate_route_name";
-  }
 }

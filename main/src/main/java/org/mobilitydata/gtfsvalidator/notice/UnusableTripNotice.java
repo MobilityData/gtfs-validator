@@ -31,9 +31,4 @@ public class UnusableTripNotice extends ValidationNotice {
             "tripId", tripId),
         SeverityLevel.WARNING);
   }
-
-  @Override
-  public String getCode() {
-    return "unusable_trip";
-  }
 }

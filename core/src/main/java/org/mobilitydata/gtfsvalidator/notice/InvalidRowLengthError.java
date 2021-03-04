@@ -33,9 +33,4 @@ public class InvalidRowLengthError extends ValidationNotice {
             "headerCount", headerCount),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "invalid_row_length";
-  }
 }

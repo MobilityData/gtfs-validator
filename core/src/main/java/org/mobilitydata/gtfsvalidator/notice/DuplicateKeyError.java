@@ -65,9 +65,4 @@ public class DuplicateKeyError extends ValidationNotice {
             fieldValue2),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "duplicate_key";
-  }
 }

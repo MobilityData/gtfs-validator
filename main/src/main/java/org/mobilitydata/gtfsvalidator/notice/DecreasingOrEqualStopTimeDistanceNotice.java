@@ -48,9 +48,4 @@ public class DecreasingOrEqualStopTimeDistanceNotice extends ValidationNotice {
             .build(),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "decreasing_or_equal_stop_time_distance";
-  }
 }

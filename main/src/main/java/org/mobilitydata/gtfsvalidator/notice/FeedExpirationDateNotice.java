@@ -45,9 +45,4 @@ public class FeedExpirationDateNotice extends ValidationNotice {
             suggestedExpirationDate),
         SeverityLevel.WARNING);
   }
-
-  @Override
-  public String getCode() {
-    return "feed_expires_soon";
-  }
 }

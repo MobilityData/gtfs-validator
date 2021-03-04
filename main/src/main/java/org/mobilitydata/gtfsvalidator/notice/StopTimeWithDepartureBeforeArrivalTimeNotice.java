@@ -40,9 +40,4 @@ public class StopTimeWithDepartureBeforeArrivalTimeNotice extends ValidationNoti
             "arrivalTime", arrivalTime.toHHMMSS()),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "stop_time_with_departure_before_arrival_time";
-  }
 }
