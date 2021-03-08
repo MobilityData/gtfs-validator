@@ -53,12 +53,12 @@ public class AttributionWithoutRoleValidatorTest {
         createAttributionTable(
             noticeContainer,
             ImmutableList.of(
-                createAttribution(3, 0, 0, 0), createAttribution(8, null, null, null)));
+                createAttribution(3, 0, 0, 0), createAttribution(8, null, null, null), createAttribution(13, 5, 0, 0)));
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
         .containsExactlyElementsIn(
             new AttributionWithoutRoleNotice[] {
-              new AttributionWithoutRoleNotice(3), new AttributionWithoutRoleNotice(8)
+              new AttributionWithoutRoleNotice(3), new AttributionWithoutRoleNotice(8),  new AttributionWithoutRoleNotice(13)
             });
   }
 
