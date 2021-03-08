@@ -54,7 +54,7 @@ public abstract class Notice {
     if (other instanceof Notice) {
       Notice otherNotice = (Notice) other;
       return context.equals(otherNotice.context)
-          && getClass().getSimpleName().equals(otherNotice.getClass().getSimpleName())
+          && getClass().equals(otherNotice.getClass())
           && severityLevel.equals(otherNotice.severityLevel);
     }
     return false;
@@ -71,6 +71,6 @@ public abstract class Notice {
 
   @Override
   public int hashCode() {
-    return Objects.hash(getClass().getSimpleName(), getContext(), getSeverityLevel());
+    return Objects.hash(getClass(), getContext(), getSeverityLevel());
   }
 }
