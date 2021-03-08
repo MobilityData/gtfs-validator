@@ -35,6 +35,6 @@ public class AgencyTimezoneInconsistencyNotice extends ValidationNotice {
 
   @Override
   public String getCode() {
-    return "inconsistent_agency_timezone";
+    return "agency_timezone_inconsistency";
   }
 }

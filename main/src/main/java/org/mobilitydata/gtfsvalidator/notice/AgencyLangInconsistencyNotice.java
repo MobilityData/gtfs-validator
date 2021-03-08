@@ -35,6 +35,6 @@ public class AgencyLangInconsistencyNotice extends ValidationNotice {
 
   @Override
   public String getCode() {
-    return "inconsistent_agency_lang";
+    return "agency_lang_inconsistency";
   }
 }

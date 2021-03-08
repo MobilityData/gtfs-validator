@@ -52,6 +52,6 @@ public class StopWithWrongParentLocationTypeNotice extends ValidationNotice {
 
   @Override
   public String getCode() {
-    return "wrong_parent_location_type";
+    return "stop_with_wrong_parent_location_type";
   }
 }

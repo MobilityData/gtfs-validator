@@ -44,6 +44,6 @@ public class StopLocationWithoutParentStationNotice extends ValidationNotice {
 
   @Override
   public String getCode() {
-    return "location_without_parent_station";
+    return "stop_location_without_parent_station";
   }
 }

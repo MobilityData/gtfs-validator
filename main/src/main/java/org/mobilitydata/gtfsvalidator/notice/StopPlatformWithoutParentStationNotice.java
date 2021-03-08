@@ -34,6 +34,6 @@ public class StopPlatformWithoutParentStationNotice extends ValidationNotice {
 
   @Override
   public String getCode() {
-    return "platform_without_parent_station";
+    return "stop_platform_without_parent_station";
   }
 }
