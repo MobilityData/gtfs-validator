@@ -32,7 +32,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsAttributionTableContainer;
  * <p>Generated notices:
  *
  * <ul>
- *   <li>{@link AttributionWithoutRoleNotice} - is_producer, is_operator, and is_authority and
+ *   <li>{@link AttributionWithoutRoleNotice} - is_producer, is_operator, and is_authority are
  *       undefined or set to 0
  * </ul>
  */
