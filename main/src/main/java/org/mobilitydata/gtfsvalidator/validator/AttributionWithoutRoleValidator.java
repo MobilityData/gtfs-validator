@@ -44,14 +44,14 @@ public class AttributionWithoutRoleValidator extends FileValidator {
   @Override
   public void validate(NoticeContainer noticeContainer) {
     for (GtfsAttribution attribution : attributionTable.getEntities()) {
-      if (hasRole(attribution)) {
+      if (isMissingRole(attribution)) {
         noticeContainer.addValidationNotice(
             new AttributionWithoutRoleNotice(attribution.csvRowNumber()));
       }
     }
   }
 
-  private boolean hasRole(GtfsAttribution attribution) {
+  private boolean isMissingRole(GtfsAttribution attribution) {
     return (attribution.isProducer() != GtfsAttributionRole.ASSIGNED)
         && (attribution.isAuthority() != GtfsAttributionRole.ASSIGNED)
         && (attribution.isOperator() != GtfsAttributionRole.ASSIGNED);
