@@ -70,13 +70,15 @@ public class TranslationConditionalRequirementsValidator extends FileValidator {
   @Override
   public void validate(NoticeContainer noticeContainer) {
     for (GtfsTranslation translation : translationTable.getEntities()) {
-      if (StringUtils.removeEnd(translation.tableName(), TXT_SUFFIX)
+      if (translation
+          .tableName()
           .equals(StringUtils.removeEnd(GtfsStopTimeTableLoader.FILENAME, TXT_SUFFIX))) {
         if ((translation.hasRecordId() && translation.hasRecordSubId())) {
           noticeContainer.addValidationNotice(
               new TranslationRecordSubIdDefinedNotice(translation.csvRowNumber()));
         }
-      } else if (StringUtils.removeEnd(translation.tableName(), TXT_SUFFIX)
+      } else if (translation
+          .tableName()
           .equals(StringUtils.removeEnd(GtfsFeedInfoTableLoader.FILENAME, TXT_SUFFIX))) {
         if (translation.hasRecordId()) {
           noticeContainer.addValidationNotice(

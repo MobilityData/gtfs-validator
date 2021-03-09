@@ -64,9 +64,9 @@ public class TranslationConditionalRequirementsValidatorTest {
             noticeContainer,
             ImmutableList.of(
                 createTranslation(
-                    5, GtfsFeedInfoTableLoader.FILENAME, "record id value", null, null),
-                createTranslation(15, GtfsFeedInfoTableLoader.FILENAME, null, null, null),
-                createTranslation(6, GtfsFeedInfoTableLoader.FILENAME, "", null, null)));
+                    5, "feed_info", "record id value", null, null),
+                createTranslation(15, "feed_info", null, null, null),
+                createTranslation(6, "feed_info", "", null, null)));
 
     translationConditionalRequirementsValidator.validate(noticeContainer);
 
@@ -87,8 +87,8 @@ public class TranslationConditionalRequirementsValidatorTest {
             noticeContainer,
             ImmutableList.of(
                 createTranslation(
-                    5, GtfsRouteTableLoader.FILENAME, "record id", null, "field value"),
-                createTranslation(15, GtfsRouteTableLoader.FILENAME, null, null, "field value")));
+                    5, "routes", "record id", null, "field value"),
+                createTranslation(15, "routes", null, null, "field value")));
 
     translationConditionalRequirementsValidator.validate(noticeContainer);
 
@@ -105,9 +105,9 @@ public class TranslationConditionalRequirementsValidatorTest {
         createTranslationTable(
             noticeContainer,
             ImmutableList.of(
-                createTranslation(6, GtfsRouteTableLoader.FILENAME, null, null, ""),
+                createTranslation(6, "routes", null, null, ""),
                 createTranslation(
-                    15, GtfsRouteTableLoader.FILENAME, "record id value", "record sub id", "")));
+                    15, "routes", "record id value", "record sub id", "")));
 
     translationConditionalRequirementsValidator.validate(noticeContainer);
 
@@ -124,9 +124,9 @@ public class TranslationConditionalRequirementsValidatorTest {
         createTranslationTable(
             noticeContainer,
             ImmutableList.of(
-                createTranslation(5, GtfsFeedInfoTableLoader.FILENAME, null, "record sub id", null),
-                createTranslation(15, GtfsFeedInfoTableLoader.FILENAME, null, null, null),
-                createTranslation(6, GtfsFeedInfoTableLoader.FILENAME, null, "", null)));
+                createTranslation(5, "feed_info", null, "record sub id", null),
+                createTranslation(15, "feed_info", null, null, null),
+                createTranslation(6, "feed_info", null, "", null)));
 
     translationConditionalRequirementsValidator.validate(noticeContainer);
 
@@ -146,9 +146,9 @@ public class TranslationConditionalRequirementsValidatorTest {
         createTranslationTable(
             noticeContainer,
             ImmutableList.of(
-                createTranslation(15, GtfsRouteTableLoader.FILENAME, null, null, "field value"),
+                createTranslation(15, "routes", null, null, "field value"),
                 createTranslation(
-                    5, GtfsRouteTableLoader.FILENAME, null, "record sub id", "field value")));
+                    5, "routes", null, "record sub id", "field value")));
 
     translationConditionalRequirementsValidator.validate(noticeContainer);
 
@@ -166,11 +166,11 @@ public class TranslationConditionalRequirementsValidatorTest {
             noticeContainer,
             ImmutableList.of(
                 createTranslation(
-                    5, GtfsStopTimeTableLoader.FILENAME, "record id value", "record sub id", null),
+                    5, "stop_times", "record id value", "record sub id", null),
                 createTranslation(
-                    15, GtfsStopTimeTableLoader.FILENAME, "record id value", null, "field value"),
+                    15, "stop_times", "record id value", null, "field value"),
                 createTranslation(
-                    9, GtfsStopTimeTableLoader.FILENAME, "record id value", "", null)));
+                    9, "stop_times", "record id value", "", null)));
 
     translationConditionalRequirementsValidator.validate(noticeContainer);
 
@@ -190,9 +190,9 @@ public class TranslationConditionalRequirementsValidatorTest {
         createTranslationTable(
             noticeContainer,
             ImmutableList.of(
-                createTranslation(5, GtfsFeedInfoTableLoader.FILENAME, null, null, "field value"),
-                createTranslation(15, GtfsFeedInfoTableLoader.FILENAME, null, null, null),
-                createTranslation(6, GtfsFeedInfoTableLoader.FILENAME, null, null, "field value")));
+                createTranslation(5, "feed_info", null, null, "field value"),
+                createTranslation(15, "feed_info", null, null, null),
+                createTranslation(6, "feed_info", null, null, "field value")));
 
     translationConditionalRequirementsValidator.validate(noticeContainer);
 
@@ -212,9 +212,9 @@ public class TranslationConditionalRequirementsValidatorTest {
         createTranslationTable(
             noticeContainer,
             ImmutableList.of(
-                createTranslation(15, GtfsRouteTableLoader.FILENAME, "", null, "field value"),
+                createTranslation(15, "routes", "", null, "field value"),
                 createTranslation(
-                    5, GtfsRouteTableLoader.FILENAME, "", "record sub id value", null)));
+                    5, "routes", "", "record sub id value", null)));
 
     translationConditionalRequirementsValidator.validate(noticeContainer);
 
