@@ -34,7 +34,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader;
 import org.mobilitydata.gtfsvalidator.table.GtfsTranslation;
 import org.mobilitydata.gtfsvalidator.table.GtfsTranslationTableContainer;
 
-public class TranslationIllegalFieldValueCombinationValidatorTest {
+public class TranslationConditionalRequirementsValidatorTest {
   private static GtfsTranslationTableContainer createTranslationTable(
       NoticeContainer noticeContainer, List<GtfsTranslation> entities) {
     return GtfsTranslationTableContainer.forEntities(entities, noticeContainer);
@@ -57,9 +57,9 @@ public class TranslationIllegalFieldValueCombinationValidatorTest {
   @Test
   public void recordIdIsForbiddenIfTableNameIsFeedInfo() {
     NoticeContainer noticeContainer = new NoticeContainer();
-    TranslationIllegalFieldValueCombinationValidator underTest =
-        new TranslationIllegalFieldValueCombinationValidator();
-    underTest.translationTable =
+    TranslationConditionalRequirementsValidator translationConditionalRequirementsValidator =
+        new TranslationConditionalRequirementsValidator();
+    translationConditionalRequirementsValidator.translationTable =
         createTranslationTable(
             noticeContainer,
             ImmutableList.of(
@@ -68,7 +68,7 @@ public class TranslationIllegalFieldValueCombinationValidatorTest {
                 createTranslation(15, GtfsFeedInfoTableLoader.FILENAME, null, null, null),
                 createTranslation(6, GtfsFeedInfoTableLoader.FILENAME, "", null, null)));
 
-    underTest.validate(noticeContainer);
+    translationConditionalRequirementsValidator.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
         .containsExactlyElementsIn(
@@ -80,9 +80,9 @@ public class TranslationIllegalFieldValueCombinationValidatorTest {
   @Test
   public void recordIdIsForbiddenIfFieldValueIsDefined() {
     NoticeContainer noticeContainer = new NoticeContainer();
-    TranslationIllegalFieldValueCombinationValidator underTest =
-        new TranslationIllegalFieldValueCombinationValidator();
-    underTest.translationTable =
+    TranslationConditionalRequirementsValidator translationConditionalRequirementsValidator =
+        new TranslationConditionalRequirementsValidator();
+    translationConditionalRequirementsValidator.translationTable =
         createTranslationTable(
             noticeContainer,
             ImmutableList.of(
@@ -91,7 +91,7 @@ public class TranslationIllegalFieldValueCombinationValidatorTest {
                 createTranslation(15, GtfsRouteTableLoader.FILENAME, null, null, "field value"),
                 createTranslation(6, GtfsRouteTableLoader.FILENAME, "", null, "field value")));
 
-    underTest.validate(noticeContainer);
+    translationConditionalRequirementsValidator.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
         .containsExactlyElementsIn(
@@ -103,9 +103,9 @@ public class TranslationIllegalFieldValueCombinationValidatorTest {
   @Test
   public void recordIdIsRequiredIfFieldValueIsEmpty() {
     NoticeContainer noticeContainer = new NoticeContainer();
-    TranslationIllegalFieldValueCombinationValidator underTest =
-        new TranslationIllegalFieldValueCombinationValidator();
-    underTest.translationTable =
+    TranslationConditionalRequirementsValidator translationConditionalRequirementsValidator =
+        new TranslationConditionalRequirementsValidator();
+    translationConditionalRequirementsValidator.translationTable =
         createTranslationTable(
             noticeContainer,
             ImmutableList.of(
@@ -113,7 +113,7 @@ public class TranslationIllegalFieldValueCombinationValidatorTest {
                 createTranslation(
                     15, GtfsRouteTableLoader.FILENAME, "record id value", "record sub id", "")));
 
-    underTest.validate(noticeContainer);
+    translationConditionalRequirementsValidator.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(new TranslationRecordIdNotDefinedNotice(6));
@@ -122,9 +122,9 @@ public class TranslationIllegalFieldValueCombinationValidatorTest {
   @Test
   public void recordSubIdIsForbiddenIfTableNameIsFeedInfo() {
     NoticeContainer noticeContainer = new NoticeContainer();
-    TranslationIllegalFieldValueCombinationValidator underTest =
-        new TranslationIllegalFieldValueCombinationValidator();
-    underTest.translationTable =
+    TranslationConditionalRequirementsValidator translationConditionalRequirementsValidator =
+        new TranslationConditionalRequirementsValidator();
+    translationConditionalRequirementsValidator.translationTable =
         createTranslationTable(
             noticeContainer,
             ImmutableList.of(
@@ -132,7 +132,7 @@ public class TranslationIllegalFieldValueCombinationValidatorTest {
                 createTranslation(15, GtfsFeedInfoTableLoader.FILENAME, null, null, null),
                 createTranslation(6, GtfsFeedInfoTableLoader.FILENAME, null, "", null)));
 
-    underTest.validate(noticeContainer);
+    translationConditionalRequirementsValidator.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
         .containsExactlyElementsIn(
@@ -144,9 +144,9 @@ public class TranslationIllegalFieldValueCombinationValidatorTest {
   @Test
   public void recordSubIdIsForbiddenIfFieldValueIsDefined() {
     NoticeContainer noticeContainer = new NoticeContainer();
-    TranslationIllegalFieldValueCombinationValidator underTest =
-        new TranslationIllegalFieldValueCombinationValidator();
-    underTest.translationTable =
+    TranslationConditionalRequirementsValidator translationConditionalRequirementsValidator =
+        new TranslationConditionalRequirementsValidator();
+    translationConditionalRequirementsValidator.translationTable =
         createTranslationTable(
             noticeContainer,
             ImmutableList.of(
@@ -154,7 +154,7 @@ public class TranslationIllegalFieldValueCombinationValidatorTest {
                 createTranslation(
                     5, GtfsRouteTableLoader.FILENAME, null, "record sub id", "field value")));
 
-    underTest.validate(noticeContainer);
+    translationConditionalRequirementsValidator.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(new TranslationRecordSubIdDefinedNotice(5));
@@ -163,9 +163,9 @@ public class TranslationIllegalFieldValueCombinationValidatorTest {
   @Test
   public void recordSubIdIsForbiddenIfTableNameIsStopTimesAndRecordIdIsDefined() {
     NoticeContainer noticeContainer = new NoticeContainer();
-    TranslationIllegalFieldValueCombinationValidator underTest =
-        new TranslationIllegalFieldValueCombinationValidator();
-    underTest.translationTable =
+    TranslationConditionalRequirementsValidator translationConditionalRequirementsValidator =
+        new TranslationConditionalRequirementsValidator();
+    translationConditionalRequirementsValidator.translationTable =
         createTranslationTable(
             noticeContainer,
             ImmutableList.of(
@@ -176,7 +176,7 @@ public class TranslationIllegalFieldValueCombinationValidatorTest {
                 createTranslation(
                     9, GtfsStopTimeTableLoader.FILENAME, "record id value", "", null)));
 
-    underTest.validate(noticeContainer);
+    translationConditionalRequirementsValidator.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
         .containsExactlyElementsIn(
@@ -188,9 +188,9 @@ public class TranslationIllegalFieldValueCombinationValidatorTest {
   @Test
   public void fieldValueIsForbiddenIfTableNameIsFeedInfo() {
     NoticeContainer noticeContainer = new NoticeContainer();
-    TranslationIllegalFieldValueCombinationValidator underTest =
-        new TranslationIllegalFieldValueCombinationValidator();
-    underTest.translationTable =
+    TranslationConditionalRequirementsValidator translationConditionalRequirementsValidator =
+        new TranslationConditionalRequirementsValidator();
+    translationConditionalRequirementsValidator.translationTable =
         createTranslationTable(
             noticeContainer,
             ImmutableList.of(
@@ -198,7 +198,7 @@ public class TranslationIllegalFieldValueCombinationValidatorTest {
                 createTranslation(15, GtfsFeedInfoTableLoader.FILENAME, null, null, null),
                 createTranslation(6, GtfsFeedInfoTableLoader.FILENAME, null, null, "field value")));
 
-    underTest.validate(noticeContainer);
+    translationConditionalRequirementsValidator.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
         .containsExactlyElementsIn(
@@ -210,9 +210,9 @@ public class TranslationIllegalFieldValueCombinationValidatorTest {
   @Test
   public void fieldValueIsRequiredIfRecordIdIsEmpty() {
     NoticeContainer noticeContainer = new NoticeContainer();
-    TranslationIllegalFieldValueCombinationValidator underTest =
-        new TranslationIllegalFieldValueCombinationValidator();
-    underTest.translationTable =
+    TranslationConditionalRequirementsValidator translationConditionalRequirementsValidator =
+        new TranslationConditionalRequirementsValidator();
+    translationConditionalRequirementsValidator.translationTable =
         createTranslationTable(
             noticeContainer,
             ImmutableList.of(
@@ -220,7 +220,7 @@ public class TranslationIllegalFieldValueCombinationValidatorTest {
                 createTranslation(
                     5, GtfsRouteTableLoader.FILENAME, "", "record sub id value", null)));
 
-    underTest.validate(noticeContainer);
+    translationConditionalRequirementsValidator.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(new TranslationFieldValueNotDefinedNotice(5));

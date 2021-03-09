@@ -62,7 +62,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTranslationTableContainer;
  * </ul>
  */
 @GtfsValidator
-public class TranslationIllegalFieldValueCombinationValidator extends FileValidator {
+public class TranslationConditionalRequirementsValidator extends FileValidator {
 
   private static final String TXT_SUFFIX = ".txt";
   @Inject GtfsTranslationTableContainer translationTable;
