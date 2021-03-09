@@ -1,7 +1,14 @@
 # Architecture description
 `gtfs-validator` counts three principal modules: [`main`](/main), [`processor`](/processor) and [`core`](/core). These modules dependencies are illustrated in the following diagram:
-
 ![architecture schema](https://user-images.githubusercontent.com/35747326/101182386-610e9400-3624-11eb-84b9-ec935e44aa2b.png)
+
+This new architecture leverages `AutoValue` and annotations to auto-generate the following classes used for loading and validation:
+* all classes used to internally represent GTFS data (such as `GtfsStopTime.java`) 
+* `*Schema.java` (such as `GtfsAgencySchema.java`)
+* `*Enum.java` (such as `GtfsFrequencyExactTimeEnum.java`)
+* `*Container.java` (such as `GtfsAgencyTableContainer.java`)
+* `*Loader.java` (such as `GtfsAgencyTableLoader.java`)
+* `*ForeignKeyValidator.java` (such as `GtfsAttributionAgencyIdForeignKeyValidator.java`)
 
 ### Main
 _Depends on: `processor` and `core`_
