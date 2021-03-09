@@ -6,6 +6,8 @@ Rules are declared in the `Notice` modules:
  
 Note that the notice ID naming conventions changed in `v2` to make contributions of new rules easier by reducing the likelihood of conflicting IDs during parallel development. The table below indicates the ID used in gtfs-validator `v2` and higher in the first column and the legacy ID for `v1.x` in the second column.
 
+<a name="definitions"/>
+
 ## Definitions
 Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 

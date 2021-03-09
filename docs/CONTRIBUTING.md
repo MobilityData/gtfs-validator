@@ -8,16 +8,16 @@ All contributions to this project are welcome. To propose changes, we encourage 
 
 If you're looking for somewhere to start, check out the issues labeled ["Good first issue"](https://github.com/MobilityData/gtfs-validator/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) or [Community](https://github.com/MobilityData/gtfs-validator/issues?q=is%3Aopen+is%3Aissue+label%3Acommunity).
 
+### Issue and PR templates
+We encourage contributors to format pull request titles following the Conventional Commit Specification.
+
 ## Having problems?
 Have you encountered an error? A critical step in troubleshooting is being able to reproduce the problem. Instructions to publicly reproduce errors using GitHub Actions can be found in our [guide to reproduce errors.](/docs/REPRODUCE_ERRORS.md)
 
 ## Code template
 
-###Issue and PR templates
-Issue templates have been designed to ease the processes to suggest a new feature or report a bug. We encourage contributors not only to format their PR's title following the [Conventional Commit Specification](https://www.conventionalcommits.org/en/v1.0.0/), but also use the PR templates made available on this repository.
-
 ### Coding style
-Sticking to a single consistent and documented coding style for this project is important to ensure that code reviewers dedicate their attention to the functionality of the validation, as opposed to disagreements about the coding style (and avoid bike-shedding). 
+"Sticking to a single consistent and documented coding style for this project is important to ensure that code reviewers dedicate their attention to the functionality of the validation, as opposed to disagreements about the coding style (and avoid [bike-shedding](https://en.wikipedia.org/wiki/Law_of_triviality))." 
 This project uses the [Google Java Style](https://google.github.io/styleguide/javaguide.html). IDE plugins to automatically format your code in this style are [here](https://github.com/google/google-java-format).
 
 ## How do I add a new validation rule?

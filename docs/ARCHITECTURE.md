@@ -46,9 +46,8 @@ _Depends on: nothing_
 - Locate all validators annotated with `@GtfsValidator` and load them
 
 3️⃣ **Feed loading**
-- Create `GtfsInput`
-  - Read GTFS files
-  - Create `GtfsTableContainer` from data
+- Read GTFS files
+- Create `GtfsTableContainer` from data
 - Invoke and execute all `SingleEntityValidators` to validate data types, etc.
 
 4️⃣ **Validators execution**
@@ -57,5 +56,3 @@ _Depends on: nothing_
 5️⃣ **Notice export**
 1. Creates path to export notices as specified by command line input `--output` (or `-o`).
 1. Export notices from `NoticeContainer` to two JSON files in the specified directory - `report.json` for validator results and `system_errors.json` for any software errors that occurred during validation. Notices are alphabetically sorted in the `.json` files. 
-
-🔚 **Output: validation result and system errors reports** 
