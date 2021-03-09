@@ -88,16 +88,12 @@ public class TranslationConditionalRequirementsValidatorTest {
             ImmutableList.of(
                 createTranslation(
                     5, GtfsRouteTableLoader.FILENAME, "record id", null, "field value"),
-                createTranslation(15, GtfsRouteTableLoader.FILENAME, null, null, "field value"),
-                createTranslation(6, GtfsRouteTableLoader.FILENAME, "", null, "field value")));
+                createTranslation(15, GtfsRouteTableLoader.FILENAME, null, null, "field value")));
 
     translationConditionalRequirementsValidator.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactlyElementsIn(
-            new TranslationRecordIdDefinedNotice[] {
-              new TranslationRecordIdDefinedNotice(5), new TranslationRecordIdDefinedNotice(6)
-            });
+        .containsExactly(new TranslationRecordIdDefinedNotice(5));
   }
 
   @Test
