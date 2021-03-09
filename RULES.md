@@ -431,8 +431,8 @@ As implemented in the original [Google Python GTFS validator](https://github.com
 ### TranslationFieldValueDefinedNotice
 
 Field `translations.field_value` is:
-- forbidden if `table_name` is `feed_info`
-- forbidden if `record_id` is defined.
+- forbidden if `translations.table_name` is `feed_info`
+- forbidden if `translations.record_id` is defined.
 
 #### References:
 * [translations.txt specification](https://gtfs.org/best-practices/#translationstxt)
@@ -442,7 +442,7 @@ Field `translations.field_value` is:
 ### TranslationFieldValueNotDefinedNotice
 
 Field `translations.field_value` is:
-- required if `record_id` is empty.
+- required if `translations.record_id` is empty.
 
 #### References:
 * [translations.txt specification](https://gtfs.org/best-practices/#translationstxt)
@@ -452,8 +452,8 @@ Field `translations.field_value` is:
 ### TranslationRecordIdDefinedNotice
 
 Field `translations.record_id` is:
-- forbidden if `table_name` is `feed_info`
-- forbidden if `field_value` is defined.
+- forbidden if `translations.table_name` is `feed_info`
+- forbidden if `translations.field_value` is defined.
 
 #### References:
 * [translations.txt specification](https://gtfs.org/best-practices/#translationstxt)
@@ -463,7 +463,7 @@ Field `translations.record_id` is:
 ### TranslationRecordIdNotDefinedNotice
 
 Field `translations.record_id` is:
-- required if `field_value` is empty.
+- required if `translations.field_value` is empty.
 
 #### References:
 * [translations.txt specification](https://gtfs.org/best-practices/#translationstxt)
@@ -473,8 +473,8 @@ Field `translations.record_id` is:
 ### TranslationRecordSubIdDefinedNotice
 
 Field `translations.record_id` is:
-- forbidden if `table_name` is `feed_info`
-- forbidden if `field_value` is defined.
+- forbidden if `translations.table_name` is `feed_info`
+- forbidden if `translations.field_value` is defined.
 
 #### References:
 * [translations.txt specification](https://gtfs.org/best-practices/#translationstxt)
@@ -484,8 +484,8 @@ Field `translations.record_id` is:
 ### TranslationRecordSubIdNotDefinedNotice
 
 Field `translations.record_id` is:
-- forbidden if `table_name` is `feed_info`
-- forbidden if `field_value` is defined.
+- forbidden if `translations.table_name` is `feed_info`
+- forbidden if `translations.field_value` is defined.
 
 #### References:
 * [translations.txt specification](https://gtfs.org/best-practices/#translationstxt)
