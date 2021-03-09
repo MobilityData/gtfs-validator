@@ -47,31 +47,37 @@ public class AttributionWithoutRoleValidatorTest {
   @Test
   public void attributionWithoutRoleShouldGenerateNotice() {
     NoticeContainer noticeContainer = new NoticeContainer();
-    AttributionWithoutRoleValidator underTest = new AttributionWithoutRoleValidator();
+    AttributionWithoutRoleValidator attributionWithoutRouteValidator =
+        new AttributionWithoutRoleValidator();
 
-    underTest.attributionTable =
+    attributionWithoutRouteValidator.attributionTable =
         createAttributionTable(
             noticeContainer,
             ImmutableList.of(
-                createAttribution(3, 0, 0, 0), createAttribution(8, null, null, null), createAttribution(13, 5, 0, 0)));
-    underTest.validate(noticeContainer);
+                createAttribution(3, 0, 0, 0),
+                createAttribution(8, null, null, null),
+                createAttribution(13, 5, 0, 0)));
+    attributionWithoutRouteValidator.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
         .containsExactlyElementsIn(
             new AttributionWithoutRoleNotice[] {
-              new AttributionWithoutRoleNotice(3), new AttributionWithoutRoleNotice(8),  new AttributionWithoutRoleNotice(13)
+              new AttributionWithoutRoleNotice(3),
+              new AttributionWithoutRoleNotice(8),
+              new AttributionWithoutRoleNotice(13)
             });
   }
 
   @Test
   public void attributionWithRoleShouldNotGenerateNotice() {
     NoticeContainer noticeContainer = new NoticeContainer();
-    AttributionWithoutRoleValidator underTest = new AttributionWithoutRoleValidator();
+    AttributionWithoutRoleValidator attributionWithoutRouteValidator =
+        new AttributionWithoutRoleValidator();
 
-    underTest.attributionTable =
+    attributionWithoutRouteValidator.attributionTable =
         createAttributionTable(
             noticeContainer,
             ImmutableList.of(createAttribution(3, 1, 0, 0), createAttribution(8, null, 1, null)));
-    underTest.validate(noticeContainer);
+    attributionWithoutRouteValidator.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices()).isEmpty();
   }
 }

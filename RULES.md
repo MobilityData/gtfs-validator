@@ -425,7 +425,7 @@ As implemented in the original [Google Python GTFS validator](https://github.com
 
 ### AttributionWithoutRoleNotice
 
-At least one of the fields is_producer, is_operator, or is_authority should be set at 1.
+At least one of the fields `is_producer`, `is_operator`, or `is_authority` should be set to 1.
 
 #### References:
-* [attributions.txt specification](https://gtfs.org/best-practices/#attributionsstxt)
+* [attributions.txt specification](https://gtfs.org/reference/static#attributionstxt)
