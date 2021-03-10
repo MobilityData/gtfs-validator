@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,14 @@ import java.util.List;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.StopTimeTimepointWithoutTimeNotice;
 import org.mobilitydata.gtfsvalidator.notice.StopTimeWithArrivalBeforePreviousDepartureTimeNotice;
 import org.mobilitydata.gtfsvalidator.notice.StopTimeWithDepartureBeforeArrivalTimeNotice;
 import org.mobilitydata.gtfsvalidator.notice.StopTimeWithOnlyArrivalOrDepartureTimeNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTimepoint;
 
 /**
  * Validates departure_time and arrival_time fields in "stop_times.txt".
@@ -39,6 +41,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader;
  *   <li>{@link StopTimeWithDepartureBeforeArrivalTimeNotice} - departure_time &lt; arrival_time
  *   <li>{@link StopTimeWithArrivalBeforePreviousDepartureTimeNotice} - prev(arrival_time) &lt;
  *       curr(departure_time)
+ *   <li>{@link StopTimeTimepointWithoutTimeNotice} - a timepoint does not specifies arrival_time or
+ *       departure_time
  * </ul>
  */
 @GtfsValidator
@@ -53,6 +57,14 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
         GtfsStopTime stopTime = stopTimeList.get(i);
         final boolean hasDeparture = stopTime.hasDepartureTime();
         final boolean hasArrival = stopTime.hasArrivalTime();
+        if (stopTime.timepoint() == GtfsStopTimeTimepoint.EXACT && !hasArrival) {
+          noticeContainer.addValidationNotice(
+              new StopTimeTimepointWithoutTimeNotice(stopTime.csvRowNumber(), "arrival_time"));
+        }
+        if (stopTime.timepoint() == GtfsStopTimeTimepoint.EXACT && !hasDeparture) {
+          noticeContainer.addValidationNotice(
+              new StopTimeTimepointWithoutTimeNotice(stopTime.csvRowNumber(), "departure_time"));
+        }
         if (hasArrival != hasDeparture) {
           noticeContainer.addValidationNotice(
               new StopTimeWithOnlyArrivalOrDepartureTimeNotice(

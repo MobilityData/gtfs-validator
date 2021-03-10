@@ -78,6 +78,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 |[`MissingFeedInfoDateNotice`](#MissingFeedInfoDateNotice)| [W010](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W010), [W011](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W011)| `feed_end_date` should be provided if `feed_start_date` is provided. `feed_start_date` should be provided if `feed_end_date` is provided. |
 |[`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)| [W014](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W014), [W015](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W015), [W016](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W016)| Duplicate `routes.route_long_name`. Duplicate `routes.route_short_name`. Duplicate combination of fields `route_long_name` and `routes.route_short_name` |
 || [W014](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W014), [W015](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W015), [W016](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W016)| Duplicate `routes.route_long_name`. Duplicate `routes.route_short_name`. Duplicate combination of fields `route_long_name` and `routes.route_short_name` |
+|[`StopTimeTimepointWithoutTimeNotice`](#StopTimeTimepointWithoutTimeNotice)| [E019](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E019)| `arrival_time` or `departure_time` not specified for timepoint |
 
 ## Notices
 
@@ -419,3 +420,9 @@ Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one
 ### TooFastTravelNotice
 
 As implemented in the original [Google Python GTFS validator](https://github.com/google/transitfeed/wiki/FeedValidator), the calculated speed between stops should not be greater than 150 km/h (42 m/s SI or 93 mph). 
+
+<a name="StopTimeTimepointWithoutTimeNotice"/>
+
+### StopTimeTimepointWithoutTimeNotice
+
+Timepoints from GTFS file `stop_times.txt` should defined values for `stop_times.arrival_time` and `stop_times.departure_time`. 
