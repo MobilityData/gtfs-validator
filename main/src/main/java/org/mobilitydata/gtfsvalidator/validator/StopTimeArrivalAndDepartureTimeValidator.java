@@ -57,13 +57,15 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
         GtfsStopTime stopTime = stopTimeList.get(i);
         final boolean hasDeparture = stopTime.hasDepartureTime();
         final boolean hasArrival = stopTime.hasArrivalTime();
-        if (stopTime.timepoint() == GtfsStopTimeTimepoint.EXACT && !hasArrival) {
+        if (isTimepoint(stopTime) && !hasArrival) {
           noticeContainer.addValidationNotice(
-              new StopTimeTimepointWithoutTimeNotice(stopTime.csvRowNumber(), "arrival_time"));
+              new StopTimeTimepointWithoutTimeNotice(
+                  stopTime.csvRowNumber(), GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME));
         }
-        if (stopTime.timepoint() == GtfsStopTimeTimepoint.EXACT && !hasDeparture) {
+        if (isTimepoint(stopTime) && !hasDeparture) {
           noticeContainer.addValidationNotice(
-              new StopTimeTimepointWithoutTimeNotice(stopTime.csvRowNumber(), "departure_time"));
+              new StopTimeTimepointWithoutTimeNotice(
+                  stopTime.csvRowNumber(), GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME));
         }
         if (hasArrival != hasDeparture) {
           noticeContainer.addValidationNotice(
@@ -104,5 +106,9 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
         }
       }
     }
+  }
+
+  private boolean isTimepoint(GtfsStopTime stopTime) {
+    return stopTime.timepoint() == GtfsStopTimeTimepoint.EXACT;
   }
 }

@@ -293,4 +293,31 @@ public class StopTimeArrivalAndDepartureTimeValidatorTest {
                   1, "first trip id", 2, "departure_time")
             });
   }
+
+  @Test
+  public void timepointWithNoTimeShouldGenerateNotices() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    StopTimeArrivalAndDepartureTimeValidator underTest =
+        new StopTimeArrivalAndDepartureTimeValidator();
+    underTest.table =
+        createStopTimeTable(
+            noticeContainer,
+            ImmutableList.of(
+                createStopTime(
+                    1,
+                    "first trip id",
+                    null,
+                    null,
+                    "stop id",
+                    2,
+                    1)));
+
+    underTest.validate(noticeContainer);
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactlyElementsIn(
+            new ValidationNotice[] {
+              new StopTimeTimepointWithoutTimeNotice(1, "arrival_time"),
+              new StopTimeTimepointWithoutTimeNotice(1, "departure_time")
+            });
+  }
 }

@@ -435,4 +435,4 @@ At least one of the fields `is_producer`, `is_operator`, or `is_authority` shoul
 
 ### StopTimeTimepointWithoutTimeNotice
 
-Timepoints from GTFS file `stop_times.txt` should defined values for `stop_times.arrival_time` and `stop_times.departure_time`. 
+Timepoints from GTFS file `stop_times.txt` should defined values for both `stop_times.arrival_time` and `stop_times.departure_time` fields. 
