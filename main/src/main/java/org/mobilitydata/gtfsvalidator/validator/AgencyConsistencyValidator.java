@@ -19,9 +19,9 @@ package org.mobilitydata.gtfsvalidator.validator;
 import java.time.ZoneId;
 import java.util.Locale;
 import javax.inject.Inject;
+import org.apache.commons.lang3.StringUtils;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.AgencyIdBlankNotice;
-import org.mobilitydata.gtfsvalidator.notice.AgencyIdMissingNotice;
+import org.mobilitydata.gtfsvalidator.notice.AgencyIdMissingOrBlankNotice;
 import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyLangNotice;
 import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyTimezoneNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
@@ -40,8 +40,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableLoader;
  *   <li>{@link MissingRequiredFieldError} - multiple agencies present but no agency_id set
  *   <li>{@link InconsistentAgencyTimezoneNotice} - inconsistent timezone among the agencies
  *   <li>{@link InconsistentAgencyLangNotice} - inconsistent language among the agencies
- *   <li>{@link AgencyIdBlankNotice} - agency_id is blank, e.g. " "
- *   <li>{@link AgencyIdMissingNotice} - agency_id is missing
+ *   <li>{@link AgencyIdMissingOrBlankNotice} - agency_id is missing or blank (i.e. agency_id is a
+ *       sequence of white spaces)
  * </ul>
  */
 @GtfsValidator
@@ -55,27 +55,27 @@ public class AgencyConsistencyValidator extends FileValidator {
 
     if (agencyCount < 2) {
       for (GtfsAgency agency : agencyTable.getEntities()) {
-        if (!agency.hasAgencyId()) {
-          noticeContainer.addValidationNotice(new AgencyIdMissingNotice(agency.csvRowNumber()));
-        }
-        if (isAgencyIdBlank(agency)) {
-          noticeContainer.addValidationNotice(new AgencyIdBlankNotice(agency.csvRowNumber()));
+        if (isAgencyIdMissingOrBlank(agency)) {
+          noticeContainer.addValidationNotice(
+              new AgencyIdMissingOrBlankNotice(agency.csvRowNumber()));
         }
       }
       return;
     }
 
     for (GtfsAgency agency : agencyTable.getEntities()) {
-      if (!agency.hasAgencyId()) {
-        // agency_id is required when there are 2 or more agencies.
-        noticeContainer.addValidationNotice(
-            new MissingRequiredFieldError(
-                agencyTable.gtfsFilename(),
-                agency.csvRowNumber(),
-                GtfsAgencyTableLoader.AGENCY_ID_FIELD_NAME));
-      }
-      if (isAgencyIdBlank(agency)) {
-        noticeContainer.addValidationNotice(new AgencyIdBlankNotice(agency.csvRowNumber()));
+      if (isAgencyIdMissingOrBlank(agency)) {
+        if (!agency.hasAgencyId()) {
+          // agency_id is required when there are 2 or more agencies.
+          noticeContainer.addValidationNotice(
+              new MissingRequiredFieldError(
+                  agencyTable.gtfsFilename(),
+                  agency.csvRowNumber(),
+                  GtfsAgencyTableLoader.AGENCY_ID_FIELD_NAME));
+        } else {
+          noticeContainer.addValidationNotice(
+              new AgencyIdMissingOrBlankNotice(agency.csvRowNumber()));
+        }
       }
     }
 
@@ -112,13 +112,14 @@ public class AgencyConsistencyValidator extends FileValidator {
   }
 
   /**
-   * Checks is an `agency.agency_id` is blank i.e. `agency_id` is a sequence of whitespaces
+   * Checks is an `agency.agency_id` is missing or blank i.e. `agency_id` is a sequence of
+   * whitespaces
    *
    * @param agency the {@code GtfsAgency} to check the id
-   * @return true if `agency.agency_id` is blank (i.e. `agency_id` is a sequence of whitespaces),
-   *     false otherwise
+   * @return true if `agency.agency_id` is missing or blank (i.e. `agency_id` is a sequence of
+   *     whitespaces), false otherwise
    */
-  private boolean isAgencyIdBlank(GtfsAgency agency) {
+  private boolean isAgencyIdMissingOrBlank(GtfsAgency agency) {
     return !agency.hasAgencyId() || StringUtils.isBlank(agency.agencyId());
   }
 }

@@ -19,12 +19,12 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * `agency.agency_id` should not be blank.
+ * `agency.agency_id` should be provided even if `agency.txt` only counts one unique row.
  *
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
-public class AgencyIdBlankNotice extends ValidationNotice {
-  public AgencyIdBlankNotice(long csvRowNumber) {
+public class AgencyIdMissingOrBlankNotice extends ValidationNotice {
+  public AgencyIdMissingOrBlankNotice(long csvRowNumber) {
     super(
         new ImmutableMap.Builder<String, Object>().put("csvRowNumber", csvRowNumber).build(),
         SeverityLevel.WARNING);
@@ -32,6 +32,6 @@ public class AgencyIdBlankNotice extends ValidationNotice {
 
   @Override
   public String getCode() {
-    return "agency_id_blank";
+    return "agency_id_missing_or_blank";
   }
 }

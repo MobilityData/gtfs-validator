@@ -24,8 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import javax.annotation.Nullable;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.notice.AgencyIdBlankNotice;
-import org.mobilitydata.gtfsvalidator.notice.AgencyIdMissingNotice;
+import org.mobilitydata.gtfsvalidator.notice.AgencyIdMissingOrBlankNotice;
 import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyLangNotice;
 import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyTimezoneNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
@@ -248,7 +247,7 @@ public class AgencyConsistencyValidatorTest {
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new AgencyIdMissingNotice(1));
+        .containsExactly(new AgencyIdMissingOrBlankNotice(1));
   }
 
   @Test
@@ -268,7 +267,8 @@ public class AgencyConsistencyValidatorTest {
                     null)));
 
     underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices()).containsExactly(new AgencyIdBlankNotice(1));
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactly(new AgencyIdMissingOrBlankNotice(1));
   }
 
   @Test
@@ -304,6 +304,8 @@ public class AgencyConsistencyValidatorTest {
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
         .containsExactlyElementsIn(
-            new AgencyIdBlankNotice[] {new AgencyIdBlankNotice(1), new AgencyIdBlankNotice(2)});
+            new AgencyIdMissingOrBlankNotice[] {
+              new AgencyIdMissingOrBlankNotice(1), new AgencyIdMissingOrBlankNotice(2)
+            });
   }
 }
