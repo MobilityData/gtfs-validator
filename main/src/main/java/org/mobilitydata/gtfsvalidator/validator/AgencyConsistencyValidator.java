@@ -119,6 +119,6 @@ public class AgencyConsistencyValidator extends FileValidator {
    *     false otherwise
    */
   private boolean isAgencyIdBlank(GtfsAgency agency) {
-    return agency.hasAgencyId() && agency.agencyId().chars().allMatch(Character::isWhitespace);
+    return !agency.hasAgencyId() || StringUtils.isBlank(agency.agencyId());
   }
 }
