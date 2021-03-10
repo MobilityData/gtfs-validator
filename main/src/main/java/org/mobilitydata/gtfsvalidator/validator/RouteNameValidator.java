@@ -19,7 +19,9 @@ package org.mobilitydata.gtfsvalidator.validator;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.RouteBothShortAndLongNameMissingNotice;
+import org.mobilitydata.gtfsvalidator.notice.RouteLongNameMissingOrEmptyNotice;
 import org.mobilitydata.gtfsvalidator.notice.RouteShortAndLongNameEqualNotice;
+import org.mobilitydata.gtfsvalidator.notice.RouteShortNameMissingOrEmptyNotice;
 import org.mobilitydata.gtfsvalidator.notice.RouteShortNameTooLongNotice;
 import org.mobilitydata.gtfsvalidator.notice.SameNameAndDescriptionForRouteNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
@@ -30,6 +32,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
  * <p>Generated notices:
  *
  * <ul>
+ *   <li>{@link RouteShortNameMissingOrEmptyNotice}
+ *   <li>{@link RouteLongNameMissingOrEmptyNotice}
  *   <li>{@link RouteBothShortAndLongNameMissingNotice}
  *   <li>{@link RouteShortAndLongNameEqualNotice}
  *   <li>{@link RouteShortNameTooLongNotice}
@@ -45,12 +49,14 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
     final boolean hasLongName = entity.hasRouteLongName();
     final boolean hasShortName = entity.hasRouteShortName();
 
-    if (!hasLongName && !hasShortName) {
+    if (isPresentName(entity.routeLongName()) && !isPresentName(entity.routeShortName())) {
+      noticeContainer.addValidationNotice(new RouteShortNameMissingOrEmptyNotice(entity.csvRowNumber()));
+    } else if (!isPresentName(entity.routeLongName()) && isPresentName(entity.routeShortName())) {
+      noticeContainer.addValidationNotice(new RouteLongNameMissingOrEmptyNotice(entity.csvRowNumber()));
+    } else if (!hasLongName && !hasShortName) {
       noticeContainer.addValidationNotice(
           new RouteBothShortAndLongNameMissingNotice(entity.routeId(), entity.csvRowNumber()));
-    }
-
-    if (hasShortName
+    } else if (hasShortName
         && hasLongName
         && entity.routeShortName().equalsIgnoreCase(entity.routeLongName())) {
       noticeContainer.addValidationNotice(
@@ -58,7 +64,6 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
               entity.routeId(), entity.csvRowNumber(),
               entity.routeShortName(), entity.routeLongName()));
     }
-
     if (hasShortName && entity.routeShortName().length() > MAX_SHORT_NAME_LENGTH) {
       noticeContainer.addValidationNotice(
           new RouteShortNameTooLongNotice(
@@ -84,5 +89,14 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
   private boolean isValidRouteDesc(String routeDesc, String routeShortOrLongName) {
     // ignore lower case and upper case difference
     return !routeDesc.equalsIgnoreCase(routeShortOrLongName);
+  }
+
+  /**
+   * @param routeName a name of a Route
+   * @return true if this {@code GtfsRoute} name (hsort or long) is not missing or empty, false
+   *     otherwise.
+   */
+  private boolean isPresentName(final String routeName) {
+    return routeName != null && !routeName.isEmpty();
   }
 }

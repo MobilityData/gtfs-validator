@@ -24,7 +24,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.RouteBothShortAndLongNameMissingNotice;
+import org.mobilitydata.gtfsvalidator.notice.RouteLongNameMissingOrEmptyNotice;
 import org.mobilitydata.gtfsvalidator.notice.RouteShortAndLongNameEqualNotice;
+import org.mobilitydata.gtfsvalidator.notice.RouteShortNameMissingOrEmptyNotice;
 import org.mobilitydata.gtfsvalidator.notice.RouteShortNameTooLongNotice;
 import org.mobilitydata.gtfsvalidator.notice.SameNameAndDescriptionForRouteNotice;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -53,8 +55,6 @@ public class RouteNameValidatorTest {
   public void routeBothShortAndLongNameMissing() {
     assertThat(validateRoute(createRoute(null, null, null)))
         .containsExactly(new RouteBothShortAndLongNameMissingNotice("r1", 1));
-    assertThat(validateRoute(createRoute("S", null, null))).isEmpty();
-    assertThat(validateRoute(createRoute(null, "Long", null))).isEmpty();
     assertThat(validateRoute(createRoute("S", "Long", null))).isEmpty();
   }
 
@@ -71,42 +71,44 @@ public class RouteNameValidatorTest {
 
   @Test
   public void routeShortNameTooLong() {
-    assertThat(validateRoute(createRoute("THISISMYSHORTNAME", null, null)))
+    assertThat(validateRoute(createRoute("THISISMYSHORTNAME", "long name", null)))
         .containsExactly(new RouteShortNameTooLongNotice("r1", 1, "THISISMYSHORTNAME"));
 
-    assertThat(validateRoute(createRoute("SH", null, null))).isEmpty();
+    assertThat(validateRoute(createRoute("SH", "long name", null))).isEmpty();
   }
 
   @Test
   public void equalRouteShortNameAndRouteDescShouldGenerateNotice() {
-    assertThat(validateRoute(createRoute("duplicate", null, "duplicate")))
+    assertThat(validateRoute(createRoute("duplicate", "long name", "duplicate")))
         .containsExactly(
             new SameNameAndDescriptionForRouteNotice(1, "r1", "duplicate", "route_short_name"));
     // include difference with lower case and upper case characters
-    assertThat(validateRoute(createRoute("DuplicATE", null, "duplicate")))
+    assertThat(validateRoute(createRoute("DuplicATE", "long name", "duplicate")))
         .containsExactly(
             new SameNameAndDescriptionForRouteNotice(1, "r1", "duplicate", "route_short_name"));
   }
 
   @Test
   public void equalRouteLongNameAndRouteDescShouldGenerateNotice() {
-    assertThat(validateRoute(createRoute(null, "duplicate", "duplicate")))
+    assertThat(validateRoute(createRoute("S", "duplicate", "duplicate")))
         .containsExactly(
             new SameNameAndDescriptionForRouteNotice(1, "r1", "duplicate", "route_long_name"));
     // include difference with lower case and upper case characters
-    assertThat(validateRoute(createRoute(null, "duplicate", "DuplicATE")))
+    assertThat(validateRoute(createRoute("S", "duplicate", "DuplicATE")))
         .containsExactly(
             new SameNameAndDescriptionForRouteNotice(1, "r1", "DuplicATE", "route_long_name"));
   }
 
   @Test
-  public void noLongNameDifferentRouteShortNameAndRouteDescShouldNotGenerateNotice() {
-    assertThat(validateRoute(createRoute("short name", null, "desc"))).isEmpty();
+  public void noLongNameDifferentRouteShortNameAndRouteDescShouldGenerateNotice() {
+    assertThat(validateRoute(createRoute("short name", null, "desc")))
+        .containsExactly(new RouteLongNameMissingOrEmptyNotice(1));
   }
 
   @Test
-  public void noShortNameDifferentRouteLongNameAndRouteDescShouldNotGenerateNotice() {
-    assertThat(validateRoute(createRoute(null, "long name", "desc"))).isEmpty();
+  public void noShortNameDifferentRouteLongNameAndRouteDescShouldGenerateNotice() {
+    assertThat(validateRoute(createRoute(null, "long name", "desc")))
+        .containsExactly(new RouteShortNameMissingOrEmptyNotice(1));
   }
 
   @Test
@@ -121,5 +123,21 @@ public class RouteNameValidatorTest {
     assertThat(validateRoute(createRoute("duplicate", "duplicate", "duplicate")))
         .contains(
             new SameNameAndDescriptionForRouteNotice(1, "r1", "duplicate", "route_short_name"));
+  }
+
+  @Test
+  public void nullOrEmptyRouteLongNameShouldGenerateNotice() {
+    assertThat(validateRoute(createRoute("short name", null, "desc")))
+        .containsExactly(new RouteLongNameMissingOrEmptyNotice(1));
+    assertThat(validateRoute(createRoute("short name", "", "desc")))
+        .containsExactly(new RouteLongNameMissingOrEmptyNotice(1));
+  }
+
+  @Test
+  public void nullOrEmptyShortNameShouldGenerateNotice() {
+    assertThat(validateRoute(createRoute(null, "long name", "desc")))
+        .containsExactly(new RouteShortNameMissingOrEmptyNotice(1));
+    assertThat(validateRoute(createRoute("", "long name", "desc")))
+        .containsExactly(new RouteShortNameMissingOrEmptyNotice(1));
   }
 }
