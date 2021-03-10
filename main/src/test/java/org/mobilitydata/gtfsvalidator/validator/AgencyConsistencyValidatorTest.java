@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC, MobilityData IO
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Locale;
 import javax.annotation.Nullable;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.notice.AgencyIdBlankNotice;
-import org.mobilitydata.gtfsvalidator.notice.AgencyIdMissingNotice;
 import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyLangNotice;
 import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyTimezoneNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
@@ -228,82 +226,5 @@ public class AgencyConsistencyValidatorTest {
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices()).isEmpty();
-  }
-
-  @Test
-  public void uniqueAgencyWithoutIdShouldGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    AgencyConsistencyValidator underTest = new AgencyConsistencyValidator();
-    underTest.agencyTable =
-        createAgencyTable(
-            noticeContainer,
-            ImmutableList.of(
-                createAgency(
-                    1,
-                    null,
-                    "first agency name",
-                    "www.mobilitydata.org",
-                    ZoneId.of("America/Montreal"),
-                    null)));
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new AgencyIdMissingNotice(1));
-  }
-
-  @Test
-  public void uniqueAgencyWithBlankIdShouldGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    AgencyConsistencyValidator underTest = new AgencyConsistencyValidator();
-    underTest.agencyTable =
-        createAgencyTable(
-            noticeContainer,
-            ImmutableList.of(
-                createAgency(
-                    1,
-                    "    ",
-                    "first agency name",
-                    "www.mobilitydata.org",
-                    ZoneId.of("America/Montreal"),
-                    null)));
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices()).containsExactly(new AgencyIdBlankNotice(1));
-  }
-
-  @Test
-  public void multipleAgencyWithBlankIdShouldGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    AgencyConsistencyValidator underTest = new AgencyConsistencyValidator();
-    underTest.agencyTable =
-        createAgencyTable(
-            noticeContainer,
-            ImmutableList.of(
-                createAgency(
-                    1,
-                    "    ",
-                    "first agency name",
-                    "www.mobilitydata.org",
-                    ZoneId.of("America/Montreal"),
-                    null),
-                createAgency(
-                    2,
-                    "     ",
-                    "second agency name",
-                    "www.mobilitydata.org",
-                    ZoneId.of("America/Montreal"),
-                    Locale.CANADA_FRENCH),
-                createAgency(
-                    3,
-                    "third agency",
-                    "third agency name",
-                    "www.mobilitydata.org",
-                    ZoneId.of("America/Montreal"),
-                    Locale.CANADA_FRENCH)));
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
-        .containsExactlyElementsIn(
-            new AgencyIdBlankNotice[] {new AgencyIdBlankNotice(1), new AgencyIdBlankNotice(2)});
   }
 }

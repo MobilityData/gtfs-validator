@@ -81,8 +81,6 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 |[`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)| [W014](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W014), [W015](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W015), [W016](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W016)| Duplicate `routes.route_long_name`. Duplicate `routes.route_short_name`. Duplicate combination of fields `route_long_name` and `routes.route_short_name` |
 || [W014](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W014), [W015](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W015), [W016](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W016)| Duplicate `routes.route_long_name`. Duplicate `routes.route_short_name`. Duplicate combination of fields `route_long_name` and `routes.route_short_name` |
 |[`AttributionWithoutRoleNotice`](#AttributionWithoutRoleNotice)| [E019](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E019)| Attribution with no role |
-|[`AgencyIdBlankNotice`](#AgencyIdBlankNotice)| [E031](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E031)| Blank `agency.agency_id`. |
-|[`AgencyIdMissingNotice`](#AgencyIdMissingNotice)| [E031](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E031)| Unique agency from `agency.txt` with no value defined for `agency.agency_id`.  |
 
 ## Notices
 
@@ -433,21 +431,3 @@ At least one of the fields `is_producer`, `is_operator`, or `is_authority` shoul
 
 #### References:
 * [attributions.txt specification](https://gtfs.org/reference/static#attributionstxt)
-
-<a name="AgencyIdBlankNotice"/>
-
-### AgencyIdBlankNotice
-
-When provided `agency.agency_id` should not be blank
-
-#### References:
-* [agency.txt Best practices](http://gtfs.org/best-practices/#agencytxt)
-
-<a name="AgencyIdMissingNotice"/>
-
-### AgencyIdMissingNotice
-
-`agency.agency_id` should be provided even if `agency.txt` contains an unique row.
-
-#### References:
-* [agency.txt Best practices](http://gtfs.org/best-practices/#agencytxt)
