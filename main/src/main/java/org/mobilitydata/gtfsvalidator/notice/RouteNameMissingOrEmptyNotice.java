@@ -19,20 +19,21 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * {@code GtfsRoute} short name is missing or empty
+ * {@code GtfsRoute} name is missing or empty
  *
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
-public class RouteShortNameMissingOrEmptyNotice extends ValidationNotice {
-  public RouteShortNameMissingOrEmptyNotice(long csvRowNumber){
+public class RouteNameMissingOrEmptyNotice extends ValidationNotice {
+  public RouteNameMissingOrEmptyNotice(long csvRowNumber, String missingOrEmptyField){
     super(
         ImmutableMap.of(
-            "csvRowNumber", csvRowNumber),
+            "csvRowNumber", csvRowNumber,
+            "missingOrEmptyField", missingOrEmptyField),
         SeverityLevel.WARNING);
   }
 
   @Override
   public String getCode() {
-    return "route_short_name_missing_or_empty";
+    return "route_name_missing_or_empty";
   }
 }

@@ -79,8 +79,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 |[`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)| [W014](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W014), [W015](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W015), [W016](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W016)| Duplicate `routes.route_long_name`. Duplicate `routes.route_short_name`. Duplicate combination of fields `route_long_name` and `routes.route_short_name` |
 || [W014](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W014), [W015](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W015), [W016](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W016)| Duplicate `routes.route_long_name`. Duplicate `routes.route_short_name`. Duplicate combination of fields `route_long_name` and `routes.route_short_name` |
 |[`AttributionWithoutRoleNotice`](#AttributionWithoutRoleNotice)| [E019](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E019)| Attribution with no role |
-| [`RouteShortNameMissingOrEmptyNotice`](#RouteShortNameMissingOrEmptyNotice)   | [W006](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E001)          | Missing or empty `routes.short_name`                                                  	|
-| [`RouteLongNameMissingOrEmptyNotice`](#RouteLongNameMissingOrEmptyNotice)   | [W007](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E001)          | Missing or empty `routes.long_name`                                                  	|
+| [`RouteNameMissingOrEmptyNotice`](#RouteNameMissingOrEmptyNotice)   | [W006](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W006), [W007](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W007)          | `routes.route_short_name` or `routes.route_long_name` is missing or empty                                                  	|
 
 ## Notices
 
@@ -432,20 +431,13 @@ At least one of the fields `is_producer`, `is_operator`, or `is_authority` shoul
 #### References:
 * [attributions.txt specification](https://gtfs.org/reference/static#attributionstxt)
 
-<a name="RouteLongNameMissingOrEmptyNotice"/>
+<a name="RouteNameMissingOrEmptyNotice"/>
 
-### RouteLongNameMissingOrEmptyNotice
+### RouteNameMissingOrEmptyNotice
 
-`routes.route_long_name` should not be empty or missing
-
-#### References:
-* [Python validator original implementation](https://github.com/google/transitfeed/blob/master/transitfeed/route.py)
-
-<a name="RouteShortNameMissingOrEmptyNotice"/>
-
-### RouteShortNameMissingOrEmptyNotice
-
-`routes.route_short_name` should not be empty or mossing
+One of the following fields is missing or empty: 
+- `routes.route_short_name` 
+- `routes.route_long_name`
 
 #### References:
 * [Python validator original implementation](https://github.com/google/transitfeed/blob/master/transitfeed/route.py)

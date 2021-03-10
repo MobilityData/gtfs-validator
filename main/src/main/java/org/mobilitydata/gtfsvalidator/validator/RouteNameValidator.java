@@ -19,9 +19,8 @@ package org.mobilitydata.gtfsvalidator.validator;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.RouteBothShortAndLongNameMissingNotice;
-import org.mobilitydata.gtfsvalidator.notice.RouteLongNameMissingOrEmptyNotice;
+import org.mobilitydata.gtfsvalidator.notice.RouteNameMissingOrEmptyNotice;
 import org.mobilitydata.gtfsvalidator.notice.RouteShortAndLongNameEqualNotice;
-import org.mobilitydata.gtfsvalidator.notice.RouteShortNameMissingOrEmptyNotice;
 import org.mobilitydata.gtfsvalidator.notice.RouteShortNameTooLongNotice;
 import org.mobilitydata.gtfsvalidator.notice.SameNameAndDescriptionForRouteNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
@@ -32,8 +31,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
  * <p>Generated notices:
  *
  * <ul>
- *   <li>{@link RouteShortNameMissingOrEmptyNotice}
- *   <li>{@link RouteLongNameMissingOrEmptyNotice}
+ *   <li>{@link RouteNameMissingOrEmptyNotice}
  *   <li>{@link RouteBothShortAndLongNameMissingNotice}
  *   <li>{@link RouteShortAndLongNameEqualNotice}
  *   <li>{@link RouteShortNameTooLongNotice}
@@ -50,9 +48,11 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
     final boolean hasShortName = entity.hasRouteShortName();
 
     if (isPresentName(entity.routeLongName()) && !isPresentName(entity.routeShortName())) {
-      noticeContainer.addValidationNotice(new RouteShortNameMissingOrEmptyNotice(entity.csvRowNumber()));
+      noticeContainer.addValidationNotice(
+          new RouteNameMissingOrEmptyNotice(entity.csvRowNumber(), "route_short_name"));
     } else if (!isPresentName(entity.routeLongName()) && isPresentName(entity.routeShortName())) {
-      noticeContainer.addValidationNotice(new RouteLongNameMissingOrEmptyNotice(entity.csvRowNumber()));
+      noticeContainer.addValidationNotice(
+          new RouteNameMissingOrEmptyNotice(entity.csvRowNumber(), "route_long_name"));
     } else if (!hasLongName && !hasShortName) {
       noticeContainer.addValidationNotice(
           new RouteBothShortAndLongNameMissingNotice(entity.routeId(), entity.csvRowNumber()));
