@@ -102,11 +102,15 @@ public class RouteNameValidatorTest {
   public void noLongNameDifferentRouteShortNameAndRouteDescShouldGenerateNotice() {
     assertThat(validateRoute(createRoute("short name", null, "desc")))
         .containsExactly(new RouteNameMissingOrEmptyNotice(1, "route_long_name"));
+    assertThat(validateRoute(createRoute("short name", "", "desc")))
+        .containsExactly(new RouteNameMissingOrEmptyNotice(1, "route_long_name"));
   }
 
   @Test
   public void noShortNameDifferentRouteLongNameAndRouteDescShouldGenerateNotice() {
     assertThat(validateRoute(createRoute(null, "long name", "desc")))
+        .containsExactly(new RouteNameMissingOrEmptyNotice(1, "route_short_name"));
+    assertThat(validateRoute(createRoute("", "long name", "desc")))
         .containsExactly(new RouteNameMissingOrEmptyNotice(1, "route_short_name"));
   }
 
@@ -122,21 +126,5 @@ public class RouteNameValidatorTest {
     assertThat(validateRoute(createRoute("duplicate", "duplicate", "duplicate")))
         .contains(
             new SameNameAndDescriptionForRouteNotice(1, "r1", "duplicate", "route_short_name"));
-  }
-
-  @Test
-  public void nullOrEmptyRouteLongNameShouldGenerateNotice() {
-    assertThat(validateRoute(createRoute("short name", null, "desc")))
-        .containsExactly(new RouteNameMissingOrEmptyNotice(1, "route_long_name"));
-    assertThat(validateRoute(createRoute("short name", "", "desc")))
-        .containsExactly(new RouteNameMissingOrEmptyNotice(1, "route_long_name"));
-  }
-
-  @Test
-  public void nullOrEmptyShortNameShouldGenerateNotice() {
-    assertThat(validateRoute(createRoute(null, "long name", "desc")))
-        .containsExactly(new RouteNameMissingOrEmptyNotice(1, "route_short_name"));
-    assertThat(validateRoute(createRoute("", "long name", "desc")))
-        .containsExactly(new RouteNameMissingOrEmptyNotice(1, "route_short_name"));
   }
 }
