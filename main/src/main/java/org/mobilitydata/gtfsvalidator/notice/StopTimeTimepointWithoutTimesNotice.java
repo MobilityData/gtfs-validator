@@ -21,19 +21,23 @@ import com.google.common.collect.ImmutableMap;
 /**
  * Timepoint without time
  *
- * <p>Severity: {@code SeverityLevel.WARNING}
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class StopTimeTimepointWithoutTimeNotice extends ValidationNotice {
-  public StopTimeTimepointWithoutTimeNotice(final long csvRowNumber, final String specifiedField) {
+public class StopTimeTimepointWithoutTimesNotice extends ValidationNotice {
+  public StopTimeTimepointWithoutTimesNotice(
+      final long csvRowNumber,
+      final String tripId,
+      final long stopSequence) {
     super(
         ImmutableMap.of(
             "csvRowNumber", csvRowNumber,
-            "specifiedField", specifiedField),
-        SeverityLevel.WARNING);
+            "tripId", tripId,
+            "stopSequence", stopSequence),
+        SeverityLevel.ERROR);
   }
 
   @Override
   public String getCode() {
-    return "stop_time_timepoint_without_time";
+    return "stop_time_timepoint_without_times";
   }
 }

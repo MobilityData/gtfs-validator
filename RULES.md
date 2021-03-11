@@ -79,7 +79,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 |[`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)| [W014](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W014), [W015](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W015), [W016](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W016)| Duplicate `routes.route_long_name`. Duplicate `routes.route_short_name`. Duplicate combination of fields `route_long_name` and `routes.route_short_name` |
 || [W014](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W014), [W015](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W015), [W016](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W016)| Duplicate `routes.route_long_name`. Duplicate `routes.route_short_name`. Duplicate combination of fields `route_long_name` and `routes.route_short_name` |
 |[`AttributionWithoutRoleNotice`](#AttributionWithoutRoleNotice)| [E019](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E019)| Attribution with no role |
-|[`StopTimeTimepointWithoutTimeNotice`](#StopTimeTimepointWithoutTimeNotice)| [E019](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E019)| `arrival_time` or `departure_time` not specified for timepoint |
+|[`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)| [E019](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E019)| `arrival_time` or `departure_time` not specified for timepoint |
 
 ## Notices
 
@@ -433,6 +433,9 @@ At least one of the fields `is_producer`, `is_operator`, or `is_authority` shoul
 
 <a name="StopTimeTimepointWithoutTimeNotice"/>
 
-### StopTimeTimepointWithoutTimeNotice
+### StopTimeTimepointWithoutTimesNotice
 
-Timepoints from GTFS file `stop_times.txt` should defined values for both `stop_times.arrival_time` and `stop_times.departure_time` fields. 
+Any record with `stop_times.timepoint` set to 1 must define a value for `stop_times.arrival_time` and `stop_times.departure_time` fields. 
+
+#### References:
+* [GTFS stop_times.txt specification](https://gtfs.org/reference/static#stoptimestxt)

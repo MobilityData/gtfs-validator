@@ -21,7 +21,7 @@ import java.util.List;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.StopTimeTimepointWithoutTimeNotice;
+import org.mobilitydata.gtfsvalidator.notice.StopTimeTimepointWithoutTimesNotice;
 import org.mobilitydata.gtfsvalidator.notice.StopTimeWithArrivalBeforePreviousDepartureTimeNotice;
 import org.mobilitydata.gtfsvalidator.notice.StopTimeWithDepartureBeforeArrivalTimeNotice;
 import org.mobilitydata.gtfsvalidator.notice.StopTimeWithOnlyArrivalOrDepartureTimeNotice;
@@ -41,8 +41,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTimepoint;
  *   <li>{@link StopTimeWithDepartureBeforeArrivalTimeNotice} - departure_time &lt; arrival_time
  *   <li>{@link StopTimeWithArrivalBeforePreviousDepartureTimeNotice} - prev(arrival_time) &lt;
  *       curr(departure_time)
- *   <li>{@link StopTimeTimepointWithoutTimeNotice} - a timepoint does not specifies arrival_time or
- *       departure_time
+ *   <li>{@link StopTimeTimepointWithoutTimesNotice} - a timepoint does not specifies arrival_time
+ *       or departure_time
  * </ul>
  */
 @GtfsValidator
@@ -57,15 +57,12 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
         GtfsStopTime stopTime = stopTimeList.get(i);
         final boolean hasDeparture = stopTime.hasDepartureTime();
         final boolean hasArrival = stopTime.hasArrivalTime();
-        if (isTimepoint(stopTime) && !hasArrival) {
-          noticeContainer.addValidationNotice(
-              new StopTimeTimepointWithoutTimeNotice(
-                  stopTime.csvRowNumber(), GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME));
-        }
-        if (isTimepoint(stopTime) && !hasDeparture) {
-          noticeContainer.addValidationNotice(
-              new StopTimeTimepointWithoutTimeNotice(
-                  stopTime.csvRowNumber(), GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME));
+        if (isTimepoint(stopTime)) {
+          if (!hasArrival || !hasDeparture) {
+            noticeContainer.addValidationNotice(
+                new StopTimeTimepointWithoutTimesNotice(
+                    stopTime.csvRowNumber(), stopTime.tripId(), stopTime.stopSequence()));
+          }
         }
         if (hasArrival != hasDeparture) {
           noticeContainer.addValidationNotice(
