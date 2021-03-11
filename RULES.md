@@ -435,7 +435,7 @@ At least one of the fields `is_producer`, `is_operator`, or `is_authority` shoul
 
 ### StopTimeTimepointWithoutTimesNotice
 
-Any record with `stop_times.timepoint` set to 1 must define a value for `stop_times.arrival_time` and `stop_times.departure_time` fields. 
+Any record with `stop_times.timepoint` set to 1 should define a value for `stop_times.arrival_time` and `stop_times.departure_time` fields. 
 
 #### References:
 * [GTFS stop_times.txt specification](https://gtfs.org/reference/static#stoptimestxt)
