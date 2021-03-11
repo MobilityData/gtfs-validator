@@ -33,7 +33,7 @@ public class StopTimeTimepointWithoutTimesNotice extends ValidationNotice {
             "csvRowNumber", csvRowNumber,
             "tripId", tripId,
             "stopSequence", stopSequence),
-        SeverityLevel.ERROR);
+        SeverityLevel.WARNING);
   }
 
   @Override
