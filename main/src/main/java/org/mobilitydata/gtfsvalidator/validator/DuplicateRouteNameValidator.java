@@ -54,7 +54,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
         .forEach(
             route -> {
               if (route.hasRouteShortName() && route.hasRouteLongName()) {
-                if (routeByShortAndLongName.containsKey(getShortAndLongNameHash(route))) {
+                if (routeByShortAndLongName.containsKey(getShortAndLongNameRouteTypeHash(route))) {
                   noticeContainer.addValidationNotice(
                       new DuplicateRouteNameNotice(
                           "route_short_name and route_long_name",
@@ -62,34 +62,34 @@ public class DuplicateRouteNameValidator extends FileValidator {
                           route.routeId()));
                   return;
                 } else {
-                  routeByShortAndLongName.put(getShortAndLongNameHash(route), route);
+                  routeByShortAndLongName.put(getShortAndLongNameRouteTypeHash(route), route);
                 }
               }
               if (route.hasRouteLongName()) {
-                if (routeByLongName.containsKey(getRouteLongNameHash(route))) {
+                if (routeByLongName.containsKey(getRouteLongNameRouteTypeHash(route))) {
                   if (areRoutesFromSameAgency(
                       route.agencyId(),
-                      routeByLongName.get(getRouteLongNameHash(route)).agencyId())) {
+                      routeByLongName.get(getRouteLongNameRouteTypeHash(route)).agencyId())) {
                     noticeContainer.addValidationNotice(
                         new DuplicateRouteNameNotice(
                             "route_long_name", route.csvRowNumber(), route.routeId()));
                   }
                   return;
                 } else {
-                  routeByLongName.put(getRouteLongNameHash(route), route);
+                  routeByLongName.put(getRouteLongNameRouteTypeHash(route), route);
                 }
               }
               if (route.hasRouteShortName()) {
-                if (routeByShortName.containsKey(getRouteShortNameHash(route))) {
+                if (routeByShortName.containsKey(getRouteShortNameRouteTypeHash(route))) {
                   if (areRoutesFromSameAgency(
                       route.agencyId(),
-                      routeByShortName.get(getRouteShortNameHash(route)).agencyId())) {
+                      routeByShortName.get(getRouteShortNameRouteTypeHash(route)).agencyId())) {
                     noticeContainer.addValidationNotice(
                         new DuplicateRouteNameNotice(
                             "route_short_name", route.csvRowNumber(), route.routeId()));
                   }
                 } else {
-                  routeByShortName.put(getRouteShortNameHash(route), route);
+                  routeByShortName.put(getRouteShortNameRouteTypeHash(route), route);
                 }
               }
             });
@@ -115,7 +115,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
    * @param route the {@code GtfsRoute} to generate the hash from
    * @return the hash associated to `routes.route_long_name` and `routes.route_type`.
    */
-  private int getRouteLongNameHash(GtfsRoute route) {
+  private int getRouteLongNameRouteTypeHash(GtfsRoute route) {
     return Objects.hash(route.routeLongName(), route.routeType());
   }
 
@@ -127,7 +127,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
    * @param route the {@code GtfsRoute} to generate the hash from
    * @return the hash associated to `routes.route_short_name` and `routes.route_type`.
    */
-  private int getRouteShortNameHash(GtfsRoute route) {
+  private int getRouteShortNameRouteTypeHash(GtfsRoute route) {
     return Objects.hash(route.routeShortName(), route.routeType());
   }
 
@@ -140,7 +140,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
    * @return the hash associated to `routes.route_long_name`, `routes.route_short_name` and
    *     `routes.route_type`.
    */
-  private int getShortAndLongNameHash(GtfsRoute route) {
+  private int getShortAndLongNameRouteTypeHash(GtfsRoute route) {
     return Objects.hash(route.routeShortName(), route.routeLongName(), route.routeType());
   }
 }
