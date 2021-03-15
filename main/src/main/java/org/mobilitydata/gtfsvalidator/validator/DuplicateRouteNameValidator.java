@@ -54,7 +54,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
         .forEach(
             route -> {
               if (route.hasRouteShortName() && route.hasRouteLongName()) {
-                if (routeByShortAndLongName.containsKey(getShortAndLongNameKey(route))) {
+                if (routeByShortAndLongName.containsKey(getShortAndLongNameHash(route))) {
                   noticeContainer.addValidationNotice(
                       new DuplicateRouteNameNotice(
                           "route_short_name and route_long_name",
@@ -62,34 +62,34 @@ public class DuplicateRouteNameValidator extends FileValidator {
                           route.routeId()));
                   return;
                 } else {
-                  routeByShortAndLongName.put(getShortAndLongNameKey(route), route);
+                  routeByShortAndLongName.put(getShortAndLongNameHash(route), route);
                 }
               }
               if (route.hasRouteLongName()) {
-                if (routeByLongName.containsKey(getRouteLongNameKey(route))) {
+                if (routeByLongName.containsKey(getRouteLongNameHash(route))) {
                   if (areRoutesFromSameAgency(
                       route.agencyId(),
-                      routeByLongName.get(getRouteLongNameKey(route)).agencyId())) {
+                      routeByLongName.get(getRouteLongNameHash(route)).agencyId())) {
                     noticeContainer.addValidationNotice(
                         new DuplicateRouteNameNotice(
                             "route_long_name", route.csvRowNumber(), route.routeId()));
                   }
                   return;
                 } else {
-                  routeByLongName.put(getRouteLongNameKey(route), route);
+                  routeByLongName.put(getRouteLongNameHash(route), route);
                 }
               }
               if (route.hasRouteShortName()) {
-                if (routeByShortName.containsKey(getRouteShortNameKey(route))) {
+                if (routeByShortName.containsKey(getRouteShortNameHash(route))) {
                   if (areRoutesFromSameAgency(
                       route.agencyId(),
-                      routeByShortName.get(getRouteShortNameKey(route)).agencyId())) {
+                      routeByShortName.get(getRouteShortNameHash(route)).agencyId())) {
                     noticeContainer.addValidationNotice(
                         new DuplicateRouteNameNotice(
                             "route_short_name", route.csvRowNumber(), route.routeId()));
                   }
                 } else {
-                  routeByShortName.put(getRouteShortNameKey(route), route);
+                  routeByShortName.put(getRouteShortNameHash(route), route);
                 }
               }
             });
@@ -115,7 +115,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
    * @param route the {@code GtfsRoute} to generate the hash from
    * @return the hash associated to `routes.route_long_name` and `routes.route_type`.
    */
-  private int getRouteLongNameKey(GtfsRoute route) {
+  private int getRouteLongNameHash(GtfsRoute route) {
     return Objects.hash(route.routeLongName(), route.routeType());
   }
 
@@ -127,7 +127,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
    * @param route the {@code GtfsRoute} to generate the hash from
    * @return the hash associated to `routes.route_short_name` and `routes.route_type`.
    */
-  private int getRouteShortNameKey(GtfsRoute route) {
+  private int getRouteShortNameHash(GtfsRoute route) {
     return Objects.hash(route.routeShortName(), route.routeType());
   }
 
@@ -140,7 +140,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
    * @return the hash associated to `routes.route_long_name`, `routes.route_short_name` and
    *     `routes.route_type`.
    */
-  private int getShortAndLongNameKey(GtfsRoute route) {
+  private int getShortAndLongNameHash(GtfsRoute route) {
     return Objects.hash(route.routeShortName(), route.routeLongName(), route.routeType());
   }
 }
