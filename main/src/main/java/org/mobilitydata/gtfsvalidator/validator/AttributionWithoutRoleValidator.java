@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 MobilityData IO
+ * Copyright 2021 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,44 +16,32 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.AttributionWithoutRoleNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsAttribution;
 import org.mobilitydata.gtfsvalidator.table.GtfsAttributionRole;
-import org.mobilitydata.gtfsvalidator.table.GtfsAttributionTableContainer;
 
 /**
- * Validates that for all attributions from GTFS file `attributions.txt`: at least one of the fields
- * is_producer, is_operator, or is_authority is set at 1
- * (http://gtfs.org/reference/static#attributionstxt).
+ * Validates that an attribution has at least one role: is_producer, is_operator, or is_authority.
  *
- * <p>Generated notices:
- *
- * <ul>
- *   <li>{@link AttributionWithoutRoleNotice} - is_producer, is_operator, and is_authority are
- *       undefined or set to 0
- * </ul>
+ * <p>Generated notice: {@link AttributionWithoutRoleNotice}.
  */
 @GtfsValidator
-public class AttributionWithoutRoleValidator extends FileValidator {
+public class AttributionWithoutRoleValidator extends SingleEntityValidator<GtfsAttribution> {
 
-  @Inject GtfsAttributionTableContainer attributionTable;
-
-  @Override
-  public void validate(NoticeContainer noticeContainer) {
-    for (GtfsAttribution attribution : attributionTable.getEntities()) {
-      if (isMissingRole(attribution)) {
-        noticeContainer.addValidationNotice(
-            new AttributionWithoutRoleNotice(attribution.csvRowNumber()));
-      }
-    }
+  private static boolean hasSomeRole(GtfsAttribution attribution) {
+    return attribution.isProducer().equals(GtfsAttributionRole.ASSIGNED)
+        || attribution.isAuthority().equals(GtfsAttributionRole.ASSIGNED)
+        || attribution.isOperator().equals(GtfsAttributionRole.ASSIGNED);
   }
 
-  private boolean isMissingRole(GtfsAttribution attribution) {
-    return (attribution.isProducer() != GtfsAttributionRole.ASSIGNED)
-        && (attribution.isAuthority() != GtfsAttributionRole.ASSIGNED)
-        && (attribution.isOperator() != GtfsAttributionRole.ASSIGNED);
+  @Override
+  public void validate(GtfsAttribution attribution, NoticeContainer noticeContainer) {
+    if (!hasSomeRole(attribution)) {
+      noticeContainer.addValidationNotice(
+          new AttributionWithoutRoleNotice(
+              attribution.csvRowNumber(), attribution.attributionId()));
+    }
   }
 }
