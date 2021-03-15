@@ -27,10 +27,13 @@ import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import java.math.BigDecimal;
 import java.time.ZoneId;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
@@ -46,6 +49,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
  * <p>E.g., GtfsStop class is generated for "stops.txt".
  */
 public class EntityImplementationGenerator {
+
   private static final String CSV_ROW_NUMBER = "csvRowNumber";
   private final GtfsFileDescriptor fileDescriptor;
   private final GtfsEntityClasses classNames;
@@ -151,6 +155,10 @@ public class EntityImplementationGenerator {
     }
   }
 
+  private static Class<?> nullabilityAnnotation(GtfsFieldDescriptor field) {
+    return getDefaultValue(field).toString().equals("null") ? Nullable.class : Nonnull.class;
+  }
+
   private static TypeName getClassFieldType(GtfsFieldDescriptor field) {
     if (field.type() == FieldTypeEnum.ENUM) {
       return TypeName.INT;
@@ -169,9 +177,7 @@ public class EntityImplementationGenerator {
     }
     for (int i = 0; i <= lastBitFieldNumber(fileDescriptor.fields().size()); ++i) {
       typeSpec.addField(
-          FieldSpec.builder(int.class, "bitField" + i + "_", Modifier.PRIVATE)
-              .initializer("0")
-              .build());
+          FieldSpec.builder(int.class, "bitField" + i + "_", Modifier.PRIVATE).build());
     }
   }
 
@@ -199,6 +205,12 @@ public class EntityImplementationGenerator {
     for (TypeMirror superinterface : fileDescriptor.interfaces()) {
       typeSpec.addSuperinterface(superinterface);
     }
+
+    typeSpec.addMethod(
+        MethodSpec.constructorBuilder()
+            .addModifiers(Modifier.PRIVATE)
+            .addJavadoc("Use {@link Builder} class to construct an object.")
+            .build());
 
     addEntityOrBuilderFields(typeSpec);
     addDefaultValueFields(typeSpec);
@@ -229,7 +241,8 @@ public class EntityImplementationGenerator {
         MethodSpec.methodBuilder(getterMethodName(field.name()))
             .addModifiers(Modifier.PUBLIC)
             .returns(TypeName.get(field.javaType()))
-            .addAnnotation(Override.class);
+            .addAnnotation(Override.class)
+            .addAnnotation(nullabilityAnnotation(field));
     if (field.type() == FieldTypeEnum.ENUM) {
       method
           .addStatement(
@@ -269,6 +282,13 @@ public class EntityImplementationGenerator {
         TypeSpec.classBuilder("Builder")
             .addModifiers(Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC);
 
+    typeSpec.addMethod(
+        MethodSpec.constructorBuilder()
+            .addModifiers(Modifier.PUBLIC)
+            .addComment("Initialize all fields to default values.")
+            .addStatement("clear()")
+            .build());
+
     addEntityOrBuilderFields(typeSpec);
 
     typeSpec.addMethod(
@@ -291,6 +311,7 @@ public class EntityImplementationGenerator {
       typeSpec.addMethod(
           MethodSpec.methodBuilder(getterMethodName(field.name()))
               .addModifiers(Modifier.PUBLIC)
+              .addAnnotation(nullabilityAnnotation(field))
               .returns(getClassFieldType(field))
               .addStatement("return $L", field.name())
               .build());
@@ -298,7 +319,10 @@ public class EntityImplementationGenerator {
           MethodSpec.methodBuilder(setterMethodName(field.name()))
               .addModifiers(Modifier.PUBLIC)
               .returns(classNames.entityBuilderTypeName())
-              .addParameter(getClassFieldType(field).box(), "value")
+              .addParameter(
+                  ParameterSpec.builder(getClassFieldType(field).box(), "value")
+                      .addAnnotation(Nullable.class)
+                      .build())
               .beginControlFlow("if (value == null)")
               .addStatement("$L = $L", field.name(), fieldDefaultName(field.name()))
               .addStatement(
