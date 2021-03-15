@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateRouteNameNotice;
@@ -45,9 +46,9 @@ public class DuplicateRouteNameValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    final Map<String, GtfsRoute> routeByLongName = new HashMap<>(routeTable.entityCount());
-    final Map<String, GtfsRoute> routeByShortName = new HashMap<>(routeTable.entityCount());
-    final Map<String, GtfsRoute> routeByShortAndLongName = new HashMap<>(routeTable.entityCount());
+    final Map<Integer, GtfsRoute> routeByLongName = new HashMap<>(routeTable.entityCount());
+    final Map<Integer, GtfsRoute> routeByShortName = new HashMap<>(routeTable.entityCount());
+    final Map<Integer, GtfsRoute> routeByShortAndLongName = new HashMap<>(routeTable.entityCount());
     routeTable
         .getEntities()
         .forEach(
@@ -107,33 +108,39 @@ public class DuplicateRouteNameValidator extends FileValidator {
   }
 
   /**
-   * Generate a key used to store {@code GtfsRoute} by `routes.route_long_name`.
+   * Generate an hash associated to `routes.route_long_name` and `routes.route_type`. This hash is
+   * used to interact with routeByLongName (variable defined in this class' validate method) to
+   * store and retrieve routes by short name.
    *
-   * @param route the {@code GtfsRoute} to generate the key from
-   * @return `routes.route_long_name`+`route.routeType`
+   * @param route the {@code GtfsRoute} to generate the hash from
+   * @return the hash associated to `routes.route_long_name` and `routes.route_type`.
    */
-  private String getRouteLongNameKey(GtfsRoute route) {
-    return route.routeLongName() + route.routeType();
+  private int getRouteLongNameKey(GtfsRoute route) {
+    return Objects.hash(route.routeLongName(), route.routeType());
   }
 
   /**
-   * Generate a key used to store {@code GtfsRoute} by `routes.route_short_name`.
+   * Generate an hash associated to `routes.route_short_name` and `routes.route_type`. This hash is
+   * used to interact with routeByShortName (variable defined in this class' validate method) to
+   * store and retrieve routes by short name.
    *
-   * @param route the {@code GtfsRoute} to generate the key from
-   * @return `routes.route_short_name`+`route.routeType`
+   * @param route the {@code GtfsRoute} to generate the hash from
+   * @return the hash associated to `routes.route_short_name` and `routes.route_type`.
    */
-  private String getRouteShortNameKey(GtfsRoute route) {
-    return route.routeShortName() + route.routeType();
+  private int getRouteShortNameKey(GtfsRoute route) {
+    return Objects.hash(route.routeShortName(), route.routeType());
   }
 
   /**
-   * Generate a key used to store {@code GtfsRoute} by both `routes.route_short_name` and
-   * `routes.route_long_name`.
+   * Generate an hash associated to `routes.route_long_name`, `routes.route_short_name` and
+   * `routes.route_type`. This hash is used to interact with routeByShortAndLongName (variable
+   * defined in this class' validate method) to store and retrieve routes by short and long name.
    *
-   * @param route the {@code GtfsRoute} to generate the key from
-   * @return `routes.route_short_name`+`routes.route_long_name`+`route.routeType`
+   * @param route the {@code GtfsRoute} to generate the hash from
+   * @return the hash associated to `routes.route_long_name`, `routes.route_short_name` and
+   *     `routes.route_type`.
    */
-  private String getShortAndLongNameKey(GtfsRoute route) {
-    return route.routeShortName() + route.routeLongName() + route.routeType();
+  private int getShortAndLongNameKey(GtfsRoute route) {
+    return Objects.hash(route.routeShortName(), route.routeLongName(), route.routeType());
   }
 }
