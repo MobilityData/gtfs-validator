@@ -18,17 +18,13 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.StartAndEndDateOutOfOrderNotice;
-import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
-import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.util.CalendarUtilTest;
 
@@ -41,23 +37,15 @@ public class CalendarServiceDateValidatorTest {
           DayOfWeek.THURSDAY,
           DayOfWeek.FRIDAY);
 
-  private static GtfsCalendarTableContainer createCalendarTable(
-      NoticeContainer noticeContainer, List<GtfsCalendar> entities) {
-    return GtfsCalendarTableContainer.forEntities(entities, noticeContainer);
-  }
-
   @Test
   public void startDateBeforeEndDateShouldNotGenerateNotice() {
     NoticeContainer noticeContainer = new NoticeContainer();
     CalendarServiceDateValidator underTest = new CalendarServiceDateValidator();
-    underTest.calendarTable =
-        createCalendarTable(
-            noticeContainer,
-            ImmutableList.of(
-                CalendarUtilTest.createGtfsCalendar(
-                    "WEEK", LocalDate.of(2021, 1, 4), LocalDate.of(2021, 4, 10), weekDays)));
 
-    underTest.validate(noticeContainer);
+    underTest.validate(
+        CalendarUtilTest.createGtfsCalendar(
+            "WEEK", LocalDate.of(2021, 1, 4), LocalDate.of(2021, 4, 10), weekDays),
+        noticeContainer);
     assertThat(noticeContainer.getValidationNotices().isEmpty());
   }
 
@@ -65,14 +53,11 @@ public class CalendarServiceDateValidatorTest {
   public void startDateAfterEndDateShouldGenerateNotice() {
     NoticeContainer noticeContainer = new NoticeContainer();
     CalendarServiceDateValidator underTest = new CalendarServiceDateValidator();
-    underTest.calendarTable =
-        createCalendarTable(
-            noticeContainer,
-            ImmutableList.of(
-                CalendarUtilTest.createGtfsCalendar(
-                    "WEEK", LocalDate.of(2021, 1, 14), LocalDate.of(2021, 1, 10), weekDays)));
 
-    underTest.validate(noticeContainer);
+    underTest.validate(
+        CalendarUtilTest.createGtfsCalendar(
+            "WEEK", LocalDate.of(2021, 1, 14), LocalDate.of(2021, 1, 10), weekDays),
+        noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
             new StartAndEndDateOutOfOrderNotice(
@@ -87,14 +72,11 @@ public class CalendarServiceDateValidatorTest {
   public void sameStartAndEndDateShouldNotGenerateNotice() {
     NoticeContainer noticeContainer = new NoticeContainer();
     CalendarServiceDateValidator underTest = new CalendarServiceDateValidator();
-    underTest.calendarTable =
-        createCalendarTable(
-            noticeContainer,
-            ImmutableList.of(
-                CalendarUtilTest.createGtfsCalendar(
-                    "WEEK", LocalDate.of(2021, 1, 4), LocalDate.of(2021, 1, 4), weekDays)));
 
-    underTest.validate(noticeContainer);
+    underTest.validate(
+        CalendarUtilTest.createGtfsCalendar(
+            "WEEK", LocalDate.of(2021, 1, 4), LocalDate.of(2021, 1, 4), weekDays),
+        noticeContainer);
     assertThat(noticeContainer.getValidationNotices().isEmpty());
   }
 }
