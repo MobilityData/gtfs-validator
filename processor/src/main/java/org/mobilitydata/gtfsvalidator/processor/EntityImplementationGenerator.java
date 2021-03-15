@@ -29,6 +29,7 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+import java.math.BigDecimal;
 import java.time.ZoneId;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
@@ -127,6 +128,8 @@ public class EntityImplementationGenerator {
       case LATITUDE:
       case LONGITUDE:
         return CodeBlock.of("0");
+      case DECIMAL:
+        return CodeBlock.of("$T.ZERO", BigDecimal.class);
       case COLOR:
         return CodeBlock.of("$T.fromInt(0)", GtfsColor.class);
       case TEXT:
