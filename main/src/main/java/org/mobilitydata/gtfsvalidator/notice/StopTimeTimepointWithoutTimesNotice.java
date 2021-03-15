@@ -27,12 +27,14 @@ public class StopTimeTimepointWithoutTimesNotice extends ValidationNotice {
   public StopTimeTimepointWithoutTimesNotice(
       final long csvRowNumber,
       final String tripId,
-      final long stopSequence) {
+      final long stopSequence,
+      final String specifiedField) {
     super(
         ImmutableMap.of(
             "csvRowNumber", csvRowNumber,
             "tripId", tripId,
-            "stopSequence", stopSequence),
+            "stopSequence", stopSequence,
+            "specifiedField", specifiedField),
         SeverityLevel.WARNING);
   }
 
