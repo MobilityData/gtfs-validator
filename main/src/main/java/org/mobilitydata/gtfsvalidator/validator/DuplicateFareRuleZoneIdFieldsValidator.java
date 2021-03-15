@@ -63,11 +63,11 @@ public class DuplicateFareRuleZoneIdFieldsValidator extends FileValidator {
   }
 
   /**
-   * Returns the hashcode associated to the combination of `fare_rules.route_id`,
+   * Returns the hashcode associated to the combination of `fare_rules.origin_id`,
    * `fare_rules.contains_id` and `fare_rules.destination_id`.
    *
    * @param fareRule
-   * @return the hashcode associated to the combination of this {@code GtfsFareRule} `route_id`,
+   * @return the hashcode associated to the combination of this {@code GtfsFareRule} `origin_id`,
    *     `contains_id` and `destination_id`.
    */
   private int getZoneFieldsCombinationHash(GtfsFareRule fareRule) {
