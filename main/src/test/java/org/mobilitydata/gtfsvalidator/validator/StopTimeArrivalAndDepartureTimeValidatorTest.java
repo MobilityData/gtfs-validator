@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.StopTimeWithArrivalBeforePreviousDepartureTimeNotice;
 import org.mobilitydata.gtfsvalidator.notice.StopTimeWithOnlyArrivalOrDepartureTimeNotice;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
@@ -51,46 +52,41 @@ public class StopTimeArrivalAndDepartureTimeValidatorTest {
     return GtfsStopTimeTableContainer.forEntities(entities, noticeContainer);
   }
 
+  private static List<ValidationNotice> generateNotices(List<GtfsStopTime> stopTimes) {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    new StopTimeArrivalAndDepartureTimeValidator(
+            GtfsStopTimeTableContainer.forEntities(stopTimes, noticeContainer))
+        .validate(noticeContainer);
+    return noticeContainer.getValidationNotices();
+  }
+
   @Test
   public void departureTimeAndArrivalTimeNotProvidedShouldNotGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    StopTimeArrivalAndDepartureTimeValidator underTest =
-        new StopTimeArrivalAndDepartureTimeValidator();
-    underTest.table =
-        createStopTimeTable(
-            noticeContainer,
-            ImmutableList.of(createStopTime(0, "first trip id", null, null, "stop id", 2)));
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(
+            generateNotices(
+                ImmutableList.of(createStopTime(0, "first trip id", null, null, "stop id", 2))))
+        .isEmpty();
   }
 
   @Test
   public void stopTimeWithArrivalBeforePreviousDepartureTimeShouldGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    StopTimeArrivalAndDepartureTimeValidator underTest =
-        new StopTimeArrivalAndDepartureTimeValidator();
-    underTest.table =
-        createStopTimeTable(
-            noticeContainer,
-            ImmutableList.of(
-                createStopTime(
-                    1,
-                    "first trip id",
-                    GtfsTime.fromSecondsSinceMidnight(340), // arrival time
-                    GtfsTime.fromSecondsSinceMidnight(518), // departure time
-                    "stop id",
-                    2),
-                createStopTime(
-                    2,
-                    "first trip id",
-                    GtfsTime.fromSecondsSinceMidnight(420), // arrival time
-                    GtfsTime.fromSecondsSinceMidnight(747), // departure time
-                    "stop id",
-                    3)));
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createStopTime(
+                        1,
+                        "first trip id",
+                        GtfsTime.fromSecondsSinceMidnight(340), // arrival time
+                        GtfsTime.fromSecondsSinceMidnight(518), // departure time
+                        "stop id",
+                        2),
+                    createStopTime(
+                        2,
+                        "first trip id",
+                        GtfsTime.fromSecondsSinceMidnight(420), // arrival time
+                        GtfsTime.fromSecondsSinceMidnight(747), // departure time
+                        "stop id",
+                        3))))
         .containsExactly(
             new StopTimeWithArrivalBeforePreviousDepartureTimeNotice(
                 2,
@@ -102,51 +98,38 @@ public class StopTimeArrivalAndDepartureTimeValidatorTest {
 
   @Test
   public void stopTimeWithArrivalAfterPreviousDepartureTimeShouldNotGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    StopTimeArrivalAndDepartureTimeValidator underTest =
-        new StopTimeArrivalAndDepartureTimeValidator();
-    underTest.table =
-        createStopTimeTable(
-            noticeContainer,
-            ImmutableList.of(
-                createStopTime(
-                    1,
-                    "first trip id",
-                    GtfsTime.fromSecondsSinceMidnight(340), // arrival time
-                    GtfsTime.fromSecondsSinceMidnight(420), // departure time
-                    "stop id",
-                    2),
-                createStopTime(
-                    2,
-                    "first trip id",
-                    GtfsTime.fromSecondsSinceMidnight(518), // arrival time
-                    GtfsTime.fromSecondsSinceMidnight(747), // departure time
-                    "stop id",
-                    3)));
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createStopTime(
+                        1,
+                        "first trip id",
+                        GtfsTime.fromSecondsSinceMidnight(340), // arrival time
+                        GtfsTime.fromSecondsSinceMidnight(420), // departure time
+                        "stop id",
+                        2),
+                    createStopTime(
+                        2,
+                        "first trip id",
+                        GtfsTime.fromSecondsSinceMidnight(518), // arrival time
+                        GtfsTime.fromSecondsSinceMidnight(747), // departure time
+                        "stop id",
+                        3))))
+        .isEmpty();
   }
 
   @Test
   public void missingArrivalTimeShouldGenerateNoticeIfDepartureTimeIsProvided() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    StopTimeArrivalAndDepartureTimeValidator underTest =
-        new StopTimeArrivalAndDepartureTimeValidator();
-    underTest.table =
-        createStopTimeTable(
-            noticeContainer,
-            ImmutableList.of(
-                createStopTime(
-                    1,
-                    "first trip id",
-                    null,
-                    GtfsTime.fromSecondsSinceMidnight(518), // departure time
-                    "stop id",
-                    2)));
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createStopTime(
+                        1,
+                        "first trip id",
+                        null,
+                        GtfsTime.fromSecondsSinceMidnight(518), // departure time
+                        "stop id",
+                        2))))
         .containsExactly(
             new StopTimeWithOnlyArrivalOrDepartureTimeNotice(
                 1, "first trip id", 2, "departure_time"));
@@ -154,23 +137,16 @@ public class StopTimeArrivalAndDepartureTimeValidatorTest {
 
   @Test
   public void missingDepartureTimeShouldGenerateNoticeIfArrivalTimeIsProvided() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    StopTimeArrivalAndDepartureTimeValidator underTest =
-        new StopTimeArrivalAndDepartureTimeValidator();
-    underTest.table =
-        createStopTimeTable(
-            noticeContainer,
-            ImmutableList.of(
-                createStopTime(
-                    1,
-                    "first trip id",
-                    GtfsTime.fromSecondsSinceMidnight(518), // arrival time
-                    null,
-                    "stop id",
-                    2)));
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createStopTime(
+                        1,
+                        "first trip id",
+                        GtfsTime.fromSecondsSinceMidnight(518), // arrival time
+                        null,
+                        "stop id",
+                        2))))
         .containsExactly(
             new StopTimeWithOnlyArrivalOrDepartureTimeNotice(
                 1, "first trip id", 2, "arrival_time"));

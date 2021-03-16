@@ -41,7 +41,12 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader;
  */
 @GtfsValidator
 public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
-  @Inject GtfsStopTimeTableContainer table;
+  private final GtfsStopTimeTableContainer table;
+
+  @Inject
+  StopTimeArrivalAndDepartureTimeValidator(GtfsStopTimeTableContainer table) {
+    this.table = table;
+  }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
