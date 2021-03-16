@@ -66,27 +66,6 @@ public class StopTimeArrivalAndDepartureTimeValidatorTest {
   }
 
   @Test
-  public void departureTimeAfterArrivalTimeShouldNotGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    StopTimeArrivalAndDepartureTimeValidator underTest =
-        new StopTimeArrivalAndDepartureTimeValidator();
-    underTest.table =
-        createStopTimeTable(
-            noticeContainer,
-            ImmutableList.of(
-                createStopTime(
-                    0,
-                    "first trip id",
-                    GtfsTime.fromSecondsSinceMidnight(340),
-                    GtfsTime.fromSecondsSinceMidnight(518),
-                    "stop id",
-                    2)));
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
-  }
-
-  @Test
   public void stopTimeWithArrivalBeforePreviousDepartureTimeShouldGenerateNotice() {
     NoticeContainer noticeContainer = new NoticeContainer();
     StopTimeArrivalAndDepartureTimeValidator underTest =
