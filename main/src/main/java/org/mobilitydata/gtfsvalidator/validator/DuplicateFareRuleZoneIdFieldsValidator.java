@@ -49,17 +49,15 @@ public class DuplicateFareRuleZoneIdFieldsValidator extends FileValidator {
         .forEach(
             fareRule -> {
               int hash = getHash(fareRule);
-              GtfsFareRule otherFareRule = fareRuleByZoneIdFieldsCombination.get(hash);
-              if (otherFareRule == null) {
-                fareRuleByZoneIdFieldsCombination.put(hash, fareRule);
-                return;
+              GtfsFareRule otherFareRule = fareRuleByZoneIdFieldsCombination.putIfAbsent(hash, fareRule);
+              if (otherFareRule != null) {
+                noticeContainer.addValidationNotice(
+                    new DuplicateFareRuleZoneIdFieldsNotice(
+                        fareRule.csvRowNumber(),
+                        fareRule.fareId(),
+                        otherFareRule.csvRowNumber(),
+                        otherFareRule.fareId()));
               }
-              noticeContainer.addValidationNotice(
-                  new DuplicateFareRuleZoneIdFieldsNotice(
-                      fareRule.csvRowNumber(),
-                      fareRule.fareId(),
-                      otherFareRule.csvRowNumber(),
-                      otherFareRule.fareId()));
             });
   }
 
@@ -67,7 +65,7 @@ public class DuplicateFareRuleZoneIdFieldsValidator extends FileValidator {
    * Returns the hashcode associated to the combination of "fare_rules.origin_id",
    * "fare_rules.contains_id" and "fare_rules.destination_id".
    *
-   * @param fareRule  the {@code GtfsFareRule} to generate the hash from
+   * @param fareRule the {@code GtfsFareRule} to generate the hash from
    * @return the hashcode associated to the combination of this {@code GtfsFareRule} "origin_id",
    *     "contains_id" and "destination_id".
    */
