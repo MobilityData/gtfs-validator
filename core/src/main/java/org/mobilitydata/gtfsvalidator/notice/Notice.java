@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
+import com.google.common.base.CaseFormat;
 import com.google.common.base.Joiner;
 import java.util.Collections;
 import java.util.Map;
@@ -47,7 +48,10 @@ public abstract class Notice {
    * @return notice code, e.g., "foreign_key_error".
    */
   public String getCode() {
-    return StringUtils.removeEnd(getClass().getSimpleName(), NOTICE_SUFFIX);
+
+    return StringUtils.removeEnd(
+        CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, getClass().getSimpleName()),
+        NOTICE_SUFFIX);
   }
 
   @Override
