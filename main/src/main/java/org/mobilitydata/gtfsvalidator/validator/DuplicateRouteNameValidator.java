@@ -52,24 +52,21 @@ public class DuplicateRouteNameValidator extends FileValidator {
         .getEntities()
         .forEach(
             route -> {
-              int hash;
+              int hash = getLongNameAndTypeHash(route);
               GtfsRoute otherRoute;
               if (route.hasRouteLongName()) {
-                hash = getLongNameAndTypeHash(route);
-                otherRoute = routeByLongName.get(hash);
+                otherRoute = routeByLongName.putIfAbsent(hash, route);
                 if (otherRoute != null) {
                   if (areRoutesFromSameAgency(route, otherRoute)) {
                     noticeContainer.addValidationNotice(
                         new DuplicateRouteNameNotice(
                             "route_long_name", route.csvRowNumber(), route.routeId()));
                   }
-                } else {
-                  routeByLongName.put(hash, route);
                 }
               }
               if (route.hasRouteShortName()) {
                 hash = getShortNameAndTypeHash(route);
-                otherRoute = routeByShortName.get(hash);
+                otherRoute = routeByShortName.putIfAbsent(hash, route);
                 if (otherRoute != null) {
                   if (areRoutesFromSameAgency(route, otherRoute)) {
                     noticeContainer.addValidationNotice(
