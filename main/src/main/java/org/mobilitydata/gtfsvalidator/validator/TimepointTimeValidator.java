@@ -38,27 +38,24 @@ public class TimepointTimeValidator extends SingleEntityValidator<GtfsStopTime> 
 
   @Override
   public void validate(GtfsStopTime stopTime, NoticeContainer noticeContainer) {
-    if (isTimepoint(stopTime)) {
-      if (!stopTime.hasArrivalTime() && !stopTime.hasDepartureTime()) {
-        noticeContainer.addValidationNotice(
-            new StopTimeTimepointWithoutTimesNotice(
-                stopTime.csvRowNumber(),
-                stopTime.tripId(),
-                stopTime.stopSequence(),
-                String.format(
-                    "%s and %s",
-                    GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME,
-                    GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME)));
-      } else if (!stopTime.hasArrivalTime() || !stopTime.hasDepartureTime()) {
-        noticeContainer.addValidationNotice(
-            new StopTimeTimepointWithoutTimesNotice(
-                stopTime.csvRowNumber(),
-                stopTime.tripId(),
-                stopTime.stopSequence(),
-                stopTime.hasArrivalTime()
-                    ? GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME
-                    : GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME));
-      }
+    if (!isTimepoint(stopTime)) {
+      return;
+    }
+    if (!stopTime.hasArrivalTime()) {
+      noticeContainer.addValidationNotice(
+          new StopTimeTimepointWithoutTimesNotice(
+              stopTime.csvRowNumber(),
+              stopTime.tripId(),
+              stopTime.stopSequence(),
+              String.format(GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME)));
+    }
+    if (!stopTime.hasDepartureTime()) {
+      noticeContainer.addValidationNotice(
+          new StopTimeTimepointWithoutTimesNotice(
+              stopTime.csvRowNumber(),
+              stopTime.tripId(),
+              stopTime.stopSequence(),
+              GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME));
     }
   }
 

@@ -18,81 +18,73 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.StopTimeTimepointWithoutTimesNotice;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 public class TimepointTimeValidatorTest {
 
-  private static GtfsStopTime createStopTime(
-      long csvRowNumber,
-      String tripId,
-      GtfsTime arrivalTime,
-      GtfsTime departureTime,
-      String stopId,
-      int stopSequence,
-      int timepoint) {
-    return new GtfsStopTime.Builder()
-        .setCsvRowNumber(csvRowNumber)
-        .setTripId(tripId)
-        .setArrivalTime(arrivalTime)
-        .setDepartureTime(departureTime)
-        .setStopSequence(stopSequence)
-        .setStopId(stopId)
-        .setTimepoint(timepoint)
-        .build();
+  private static List<ValidationNotice> generateNotices(GtfsStopTime stopTime) {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    TimepointTimeValidator validator = new TimepointTimeValidator();
+    validator.validate(stopTime, noticeContainer);
+    return noticeContainer.getValidationNotices();
   }
 
   @Test
   public void timepointWithNoTimeShouldGenerateNotices() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    TimepointTimeValidator underTest = new TimepointTimeValidator();
-
-    underTest.validate(
-        createStopTime(1, "first trip id", null, null, "stop id", 2, 1), noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
+    assertThat(
+            generateNotices(
+                new GtfsStopTime.Builder()
+                    .setCsvRowNumber(1)
+                    .setTripId("first trip id")
+                    .setArrivalTime(null)
+                    .setDepartureTime(null)
+                    .setStopId("stop id")
+                    .setStopSequence(2)
+                    .setTimepoint(1)
+                    .build()))
         .containsExactly(
             new StopTimeTimepointWithoutTimesNotice(
-                1,
-                "first trip id",
-                2,
-                String.format(
-                    "%s and %s",
-                    GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME,
-                    GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME)));
+                1, "first trip id", 2, GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME),
+            new StopTimeTimepointWithoutTimesNotice(
+                1, "first trip id", 2, GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME));
   }
 
   @Test
   public void timepointWithBothTimesShouldNotGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    TimepointTimeValidator underTest = new TimepointTimeValidator();
-
-    underTest.validate(
-        createStopTime(
-            1,
-            "first trip id",
-            GtfsTime.fromSecondsSinceMidnight(518),
-            GtfsTime.fromSecondsSinceMidnight(820),
-            "stop id",
-            2,
-            1),
-        noticeContainer);
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(
+            generateNotices(
+                new GtfsStopTime.Builder()
+                    .setCsvRowNumber(1)
+                    .setTripId("first trip id")
+                    .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
+                    .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(580))
+                    .setStopId("stop id")
+                    .setStopSequence(2)
+                    .setTimepoint(1)
+                    .build()))
+        .isEmpty();
   }
 
   @Test
   public void missingDepartureTimeShouldGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    TimepointTimeValidator underTest = new TimepointTimeValidator();
-
-    underTest.validate(
-        createStopTime(
-            1, "first trip id", GtfsTime.fromSecondsSinceMidnight(518), null, "stop id", 2, 1),
-        noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
+    assertThat(
+            generateNotices(
+                new GtfsStopTime.Builder()
+                    .setCsvRowNumber(1)
+                    .setTripId("first trip id")
+                    .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
+                    .setDepartureTime(null)
+                    .setStopId("stop id")
+                    .setStopSequence(2)
+                    .setTimepoint(1)
+                    .build()))
         .containsExactly(
             new StopTimeTimepointWithoutTimesNotice(
                 1, "first trip id", 2, GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME));
@@ -100,16 +92,47 @@ public class TimepointTimeValidatorTest {
 
   @Test
   public void missingArrivalTimeShouldGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    TimepointTimeValidator underTest = new TimepointTimeValidator();
-
-    underTest.validate(
-        createStopTime(
-            1, "first trip id", null, GtfsTime.fromSecondsSinceMidnight(518), "stop id", 2, 1),
-        noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
+    assertThat(
+            generateNotices(
+                new GtfsStopTime.Builder()
+                    .setCsvRowNumber(1)
+                    .setTripId("first trip id")
+                    .setArrivalTime(null)
+                    .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(450))
+                    .setStopId("stop id")
+                    .setStopSequence(2)
+                    .setTimepoint(1)
+                    .build()))
         .containsExactly(
             new StopTimeTimepointWithoutTimesNotice(
                 1, "first trip id", 2, GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME));
+  }
+
+  @Test
+  public void nonTimepointShouldNotGenerateNotice() {
+    assertThat(
+            generateNotices(
+                new GtfsStopTime.Builder()
+                    .setCsvRowNumber(1)
+                    .setTripId("first trip id")
+                    .setArrivalTime(null)
+                    .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(580))
+                    .setStopId("stop id")
+                    .setStopSequence(2)
+                    .setTimepoint(0)
+                    .build()))
+        .isEmpty();
+
+    assertThat(
+            generateNotices(
+                new GtfsStopTime.Builder()
+                    .setCsvRowNumber(1)
+                    .setTripId("first trip id")
+                    .setArrivalTime(null)
+                    .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(580))
+                    .setStopId("stop id")
+                    .setStopSequence(2)
+                    .build()))
+        .isEmpty();
   }
 }
