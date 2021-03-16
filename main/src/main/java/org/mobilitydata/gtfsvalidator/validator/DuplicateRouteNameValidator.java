@@ -31,8 +31,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
  *
  * <p>When a {@code GtfsRoute} short and/or long names are found to be duplicate a {@code
  * DuplicateRouteNameNotice} is generated and added to the {@code NoticeContainer} except if routes
- * are from the same agency (values for `route.agency_id` are case-sensitive) or routes have
- * different `routes.route_type`.
+ * are from the same agency (values for "route.agency_id" are case-sensitive) or routes have
+ * different "routes.route_type".
  *
  * <p>Generated notice:
  *
@@ -95,24 +95,24 @@ public class DuplicateRouteNameValidator extends FileValidator {
   }
 
   /**
-   * Generate an hash associated to `routes.route_long_name` and `routes.route_type`. This hash is
+   * Generate an hash associated to "routes.route_long_name" and "routes.route_type". This hash is
    * used to interact with routeByLongName (variable defined in this class' validate method) to
    * store and retrieve routes by short name.
    *
    * @param route the {@code GtfsRoute} to generate the hash from
-   * @return the hash associated to `routes.route_long_name` and `routes.route_type`.
+   * @return the hash associated to "routes.route_long_name" and "routes.route_type".
    */
   private int getLongNameAndTypeHash(GtfsRoute route) {
     return Objects.hash(route.routeLongName(), route.routeType());
   }
 
   /**
-   * Generate an hash associated to `routes.route_short_name` and `routes.route_type`. This hash is
+   * Generate an hash associated to "routes.route_short_name" and "routes.route_type". This hash is
    * used to interact with routeByShortName (variable defined in this class' validate method) to
    * store and retrieve routes by short name.
    *
    * @param route the {@code GtfsRoute} to generate the hash from
-   * @return the hash associated to `routes.route_short_name` and `routes.route_type`.
+   * @return the hash associated to "routes.route_short_name" and "routes.route_type".
    */
   private int getShortNameAndTypeHash(GtfsRoute route) {
     return Objects.hash(route.routeShortName(), route.routeType());
