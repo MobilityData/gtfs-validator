@@ -48,8 +48,8 @@ public class DuplicateFareRuleZoneIdFieldsValidator extends FileValidator {
         .getEntities()
         .forEach(
             fareRule -> {
-              int hash = getHash(fareRule);
-              GtfsFareRule otherFareRule = fareRuleByZoneIdFieldsCombination.putIfAbsent(hash, fareRule);
+              GtfsFareRule otherFareRule =
+                  fareRuleByZoneIdFieldsCombination.putIfAbsent(getHash(fareRule), fareRule);
               if (otherFareRule != null) {
                 noticeContainer.addValidationNotice(
                     new DuplicateFareRuleZoneIdFieldsNotice(
