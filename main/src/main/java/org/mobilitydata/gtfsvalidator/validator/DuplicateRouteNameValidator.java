@@ -52,10 +52,9 @@ public class DuplicateRouteNameValidator extends FileValidator {
         .getEntities()
         .forEach(
             route -> {
-              int hash = getLongNameAndTypeHash(route);
               GtfsRoute otherRoute;
               if (route.hasRouteLongName()) {
-                otherRoute = routeByLongName.putIfAbsent(hash, route);
+                otherRoute = routeByLongName.putIfAbsent(getLongNameAndTypeHash(route), route);
                 if (otherRoute != null) {
                   if (areRoutesFromSameAgency(route, otherRoute)) {
                     noticeContainer.addValidationNotice(
@@ -65,16 +64,13 @@ public class DuplicateRouteNameValidator extends FileValidator {
                 }
               }
               if (route.hasRouteShortName()) {
-                hash = getShortNameAndTypeHash(route);
-                otherRoute = routeByShortName.putIfAbsent(hash, route);
+                otherRoute = routeByShortName.putIfAbsent(getShortNameAndTypeHash(route), route);
                 if (otherRoute != null) {
                   if (areRoutesFromSameAgency(route, otherRoute)) {
                     noticeContainer.addValidationNotice(
                         new DuplicateRouteNameNotice(
                             "route_short_name", route.csvRowNumber(), route.routeId()));
                   }
-                } else {
-                  routeByShortName.put(hash, route);
                 }
               }
             });
