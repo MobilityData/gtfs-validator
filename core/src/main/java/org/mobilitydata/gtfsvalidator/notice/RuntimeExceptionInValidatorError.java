@@ -15,9 +15,4 @@ public class RuntimeExceptionInValidatorError extends SystemError {
         ImmutableMap.of(
             "validator", validatorClassName, "exception", exceptionClassName, "message", message));
   }
-
-  @Override
-  public String getCode() {
-    return "runtime_exception_in_validator";
-  }
 }

@@ -43,9 +43,4 @@ public class InvalidDateNotice extends ValidationNotice {
             fieldValue),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "invalid_date";
-  }
 }

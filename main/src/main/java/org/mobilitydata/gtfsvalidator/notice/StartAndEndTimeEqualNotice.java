@@ -39,9 +39,4 @@ public class StartAndEndTimeEqualNotice extends ValidationNotice {
             "time", time.toHHMMSS()),
         SeverityLevel.WARNING);
   }
-
-  @Override
-  public String getCode() {
-    return "start_and_end_time_out_of_order";
-  }
 }

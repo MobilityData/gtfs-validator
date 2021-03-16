@@ -29,9 +29,4 @@ public class MissingRequiredFieldError extends ValidationNotice {
         ImmutableMap.of("filename", filename, "csvRowNumber", csvRowNumber, "fieldName", fieldName),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "missing_required_field";
-  }
 }

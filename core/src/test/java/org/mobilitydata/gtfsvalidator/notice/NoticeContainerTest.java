@@ -39,12 +39,12 @@ public class NoticeContainerTest {
     assertThat(container.exportValidationNotices())
         .isEqualTo(
             "{\"notices\":["
-                + "{\"code\":\"missing_required_file\",\"severity\":\"ERROR\","
+                + "{\"code\":\"missing_required_file_error\",\"severity\":\"ERROR\","
                 + "\"totalNotices\":2,\"notices\":"
                 + "[{\"filename\":\"stops.txt\"},{\"filename\":\"agency.txt\"}]}]}");
     assertThat(container.exportSystemErrors())
         .isEqualTo(
-            "{\"notices\":[{\"code\":\"runtime_exception_in_validator\",\"severity\":\"ERROR\","
+            "{\"notices\":[{\"code\":\"runtime_exception_in_validator_error\",\"severity\":\"ERROR\","
                 + "\"totalNotices\":1,"
                 + "\"notices\":"
                 + "[{\"validator\":\"FaultyValidator\","

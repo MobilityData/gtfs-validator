@@ -32,9 +32,4 @@ public class UnusedShapeNotice extends ValidationNotice {
             "csvRowNumber", csvRowNumber),
         SeverityLevel.WARNING);
   }
-
-  @Override
-  public String getCode() {
-    return "unused_shape";
-  }
 }

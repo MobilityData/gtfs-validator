@@ -41,9 +41,4 @@ public class LocationWithoutParentStationNotice extends ValidationNotice {
             locationType),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "location_without_parent_station";
-  }
 }

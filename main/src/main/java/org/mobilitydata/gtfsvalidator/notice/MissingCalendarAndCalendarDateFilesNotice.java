@@ -27,9 +27,4 @@ public class MissingCalendarAndCalendarDateFilesNotice extends ValidationNotice 
   public MissingCalendarAndCalendarDateFilesNotice() {
     super(ImmutableMap.of(), SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "missing_calendar_and_calendar_date_files";
-  }
 }

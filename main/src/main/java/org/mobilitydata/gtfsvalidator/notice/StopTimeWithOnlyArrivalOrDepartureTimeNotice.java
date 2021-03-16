@@ -34,9 +34,4 @@ public class StopTimeWithOnlyArrivalOrDepartureTimeNotice extends ValidationNoti
             "specifiedField", specifiedField),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "stop_time_with_only_arrival_or_departure_time";
-  }
 }

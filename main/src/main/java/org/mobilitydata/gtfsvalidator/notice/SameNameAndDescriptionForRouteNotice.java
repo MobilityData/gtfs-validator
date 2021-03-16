@@ -42,9 +42,4 @@ public class SameNameAndDescriptionForRouteNotice extends ValidationNotice {
             .build(),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "same_route_name_and_description";
-  }
 }

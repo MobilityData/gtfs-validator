@@ -39,9 +39,4 @@ public class MissingTripEdgeNotice extends ValidationNotice {
             "specifiedField", specifiedField),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "missing_trip_edge_arrival_time_departure_time";
-  }
 }

@@ -45,9 +45,4 @@ public class InvalidTimezoneNotice extends ValidationNotice {
             fieldValue),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "invalid_timezone";
-  }
 }

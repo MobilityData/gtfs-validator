@@ -34,9 +34,4 @@ public class RouteShortAndLongNameEqualNotice extends ValidationNotice {
             "routeLongName", routeLongName),
         SeverityLevel.WARNING);
   }
-
-  @Override
-  public String getCode() {
-    return "route_short_and_long_name_equal";
-  }
 }

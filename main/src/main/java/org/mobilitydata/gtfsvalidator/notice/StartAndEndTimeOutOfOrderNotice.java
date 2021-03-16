@@ -36,9 +36,4 @@ public class StartAndEndTimeOutOfOrderNotice extends ValidationNotice {
             "endTime", endTime.toHHMMSS()),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "start_and_end_time_out_of_order";
-  }
 }
