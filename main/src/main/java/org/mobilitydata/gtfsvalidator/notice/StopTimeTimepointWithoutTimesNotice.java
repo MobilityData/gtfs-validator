@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * Timepoint without time
  *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class StopTimeTimepointWithoutTimesNotice extends ValidationNotice {
   public StopTimeTimepointWithoutTimesNotice(
