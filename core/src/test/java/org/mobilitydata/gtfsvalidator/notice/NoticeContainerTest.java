@@ -45,9 +45,8 @@ public class NoticeContainerTest {
     assertThat(container.exportSystemErrors())
         .isEqualTo(
             "{\"notices\":[{\"code\":\"runtime_exception_in_validator_error\",\"severity\":\"ERROR\","
-                + "\"totalNotices\":1,\"notices\":[{\"validator\":\"FaultyValidator\","
-                + "\"exception\":\"java.lang.IndexOutOfBoundsException\",\"message\":\"Index 0 out"
-                + " of bounds\"}]}]}");
+                + "\"totalNotices\":1,\"notices\":[{\"validator\":\"FaultyValidator\",\"exception\":\"java.lang.IndexOutOfBoundsException\",\"message\":\"Index"
+                + " 0 out of bounds\"}]}]}");
   }
 
   @Test
