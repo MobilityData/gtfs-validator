@@ -50,7 +50,7 @@ public abstract class Notice {
   public String getCode() {
 
     return StringUtils.removeEnd(
-        CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, getClass().getSimpleName()),
+        CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, getClass().getSimpleName()),
         NOTICE_SUFFIX);
   }
 
