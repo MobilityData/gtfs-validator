@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 MobilityData IO
+ * Copyright 2021 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,66 +18,73 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import com.google.common.collect.ImmutableList;
 import java.util.List;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.AttributionWithoutRoleNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsAttribution;
-import org.mobilitydata.gtfsvalidator.table.GtfsAttributionTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsAttributionRole;
 
+@RunWith(JUnit4.class)
 public class AttributionWithoutRoleValidatorTest {
 
-  private static GtfsAttributionTableContainer createAttributionTable(
-      NoticeContainer noticeContainer, List<GtfsAttribution> entities) {
-    return GtfsAttributionTableContainer.forEntities(entities, noticeContainer);
-  }
+  private static final Integer ASSIGNED = GtfsAttributionRole.ASSIGNED.getNumber();
 
-  public static GtfsAttribution createAttribution(
-      long csvRowNumber, Integer isProducer, Integer isAuthority, Integer isOperator) {
-    return new GtfsAttribution.Builder()
-        .setCsvRowNumber(csvRowNumber)
-        .setOrganizationName("organization name value")
-        .setIsProducer(isProducer)
-        .setIsAuthority(isAuthority)
-        .setIsOperator(isOperator)
-        .build();
+  private static List<ValidationNotice> generateNotices(GtfsAttribution attribution) {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    AttributionWithoutRoleValidator validator = new AttributionWithoutRoleValidator();
+    validator.validate(attribution, noticeContainer);
+    return noticeContainer.getValidationNotices();
   }
 
   @Test
   public void attributionWithoutRoleShouldGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    AttributionWithoutRoleValidator attributionWithoutRouteValidator =
-        new AttributionWithoutRoleValidator();
+    assertThat(
+            generateNotices(
+                new GtfsAttribution.Builder()
+                    .setCsvRowNumber(2)
+                    .setAttributionId("attr-1")
+                    .build()))
+        .containsExactly(new AttributionWithoutRoleNotice(2, "attr-1"));
+  }
 
-    attributionWithoutRouteValidator.attributionTable =
-        createAttributionTable(
-            noticeContainer,
-            ImmutableList.of(
-                createAttribution(3, 0, 0, 0),
-                createAttribution(8, null, null, null),
-                createAttribution(13, 5, 0, 0)));
-    attributionWithoutRouteValidator.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
-        .containsExactlyElementsIn(
-            new AttributionWithoutRoleNotice[] {
-              new AttributionWithoutRoleNotice(3),
-              new AttributionWithoutRoleNotice(8),
-              new AttributionWithoutRoleNotice(13)
-            });
+  @Test
+  public void attributionWithoutRoleAndNoIdShouldGenerateNotice() {
+    assertThat(
+            generateNotices(
+                new GtfsAttribution.Builder().setCsvRowNumber(2).setAttributionId("").build()))
+        .containsExactly(new AttributionWithoutRoleNotice(2, ""));
   }
 
   @Test
   public void attributionWithRoleShouldNotGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    AttributionWithoutRoleValidator attributionWithoutRouteValidator =
-        new AttributionWithoutRoleValidator();
+    assertThat(
+            generateNotices(
+                new GtfsAttribution.Builder().setCsvRowNumber(2).setIsAuthority(ASSIGNED).build()))
+        .isEmpty();
+    assertThat(
+            generateNotices(
+                new GtfsAttribution.Builder().setCsvRowNumber(2).setIsOperator(ASSIGNED).build()))
+        .isEmpty();
+    assertThat(
+            generateNotices(
+                new GtfsAttribution.Builder().setCsvRowNumber(2).setIsProducer(ASSIGNED).build()))
+        .isEmpty();
+  }
 
-    attributionWithoutRouteValidator.attributionTable =
-        createAttributionTable(
-            noticeContainer,
-            ImmutableList.of(createAttribution(3, 1, 0, 0), createAttribution(8, null, 1, null)));
-    attributionWithoutRouteValidator.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+  @Test
+  public void attributionWithAllRolesShouldNotGenerateNotice() {
+    assertThat(
+            generateNotices(
+                new GtfsAttribution.Builder()
+                    .setCsvRowNumber(2)
+                    .setIsAuthority(ASSIGNED)
+                    .setIsOperator(ASSIGNED)
+                    .setIsProducer(ASSIGNED)
+                    .build()))
+        .isEmpty();
   }
 }

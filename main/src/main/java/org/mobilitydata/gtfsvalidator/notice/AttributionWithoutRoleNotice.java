@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 MobilityData IO
+ * Copyright 2021 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,9 +25,10 @@ import com.google.common.collect.ImmutableMap;
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class AttributionWithoutRoleNotice extends ValidationNotice {
-  public AttributionWithoutRoleNotice(long csvRowNumber) {
+
+  public AttributionWithoutRoleNotice(long csvRowNumber, String attributionId) {
     super(
-        new ImmutableMap.Builder<String, Object>().put("csvRowNumber", csvRowNumber).build(),
+        ImmutableMap.of("csvRowNumber", csvRowNumber, "attributionId", attributionId),
         SeverityLevel.WARNING);
   }
 
