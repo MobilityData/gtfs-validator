@@ -23,7 +23,6 @@ import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.StopTimeWithArrivalBeforePreviousDepartureTimeNotice;
-import org.mobilitydata.gtfsvalidator.notice.StopTimeWithDepartureBeforeArrivalTimeNotice;
 import org.mobilitydata.gtfsvalidator.notice.StopTimeWithOnlyArrivalOrDepartureTimeNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
@@ -85,34 +84,6 @@ public class StopTimeArrivalAndDepartureTimeValidatorTest {
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices()).isEmpty();
-  }
-
-  @Test
-  public void departureTimeBeforeArrivalTimeShouldGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    StopTimeArrivalAndDepartureTimeValidator underTest =
-        new StopTimeArrivalAndDepartureTimeValidator();
-    underTest.table =
-        createStopTimeTable(
-            noticeContainer,
-            ImmutableList.of(
-                createStopTime(
-                    1,
-                    "first trip id",
-                    GtfsTime.fromSecondsSinceMidnight(518),
-                    GtfsTime.fromSecondsSinceMidnight(340),
-                    "stop id",
-                    2)));
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(
-            new StopTimeWithDepartureBeforeArrivalTimeNotice(
-                1,
-                "first trip id",
-                2,
-                GtfsTime.fromSecondsSinceMidnight(340),
-                GtfsTime.fromSecondsSinceMidnight(518)));
   }
 
   @Test

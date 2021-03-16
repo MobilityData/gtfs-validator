@@ -8,7 +8,6 @@ import java.util.Locale;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.MissingFeedInfoDateNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.StartAndEndDateOutOfOrderNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
@@ -61,31 +60,6 @@ public class FeedServiceDateValidatorTest {
 
     underTest.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices().isEmpty());
-  }
-
-  @Test
-  public void startDateAfterEndDateShouldGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    GtfsFeedInfoTableContainer gtfsFeedInfoTable =
-        createFeedInfoTable(
-            noticeContainer,
-            ImmutableList.of(
-                createFeedInfo(
-                    1,
-                    "name value",
-                    "url value",
-                    Locale.CANADA,
-                    GtfsDate.fromEpochDay(450),
-                    GtfsDate.fromEpochDay(340))));
-
-    FeedServiceDateValidator underTest = new FeedServiceDateValidator();
-    underTest.feedInfoTable = gtfsFeedInfoTable;
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(
-            new StartAndEndDateOutOfOrderNotice(
-                "feed_info.txt", 1L, GtfsDate.fromEpochDay(450), GtfsDate.fromEpochDay(340)));
   }
 
   @Test
