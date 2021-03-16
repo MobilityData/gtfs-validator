@@ -122,17 +122,5 @@ public class TimepointTimeValidatorTest {
                     .setTimepoint(0)
                     .build()))
         .isEmpty();
-
-    assertThat(
-            generateNotices(
-                new GtfsStopTime.Builder()
-                    .setCsvRowNumber(1)
-                    .setTripId("first trip id")
-                    .setArrivalTime(null)
-                    .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(580))
-                    .setStopId("stop id")
-                    .setStopSequence(2)
-                    .build()))
-        .isEmpty();
   }
 }
