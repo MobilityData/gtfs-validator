@@ -37,9 +37,4 @@ public class StopTimeTimepointWithoutTimesNotice extends ValidationNotice {
             "specifiedField", specifiedField),
         SeverityLevel.WARNING);
   }
-
-  @Override
-  public String getCode() {
-    return "stop_time_timepoint_without_times";
-  }
 }
