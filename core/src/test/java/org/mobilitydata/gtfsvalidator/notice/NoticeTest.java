@@ -25,8 +25,7 @@ public class NoticeTest {
             new TestValidationNotice(
                 "code1", ImmutableMap.of("key1", "value1"), SeverityLevel.ERROR))
         .isNotEqualTo(
-            new OtherTestValidationNotice(
-                "code2", ImmutableMap.of("key1", "value1"), SeverityLevel.ERROR));
+            new OtherTestValidationNotice(ImmutableMap.of("key1", "value1"), SeverityLevel.ERROR));
 
     // Different context.
     assertThat(
@@ -45,19 +44,18 @@ public class NoticeTest {
                 "code1", ImmutableMap.of("key1", "value1"), SeverityLevel.INFO));
   }
 
+  @Test
+  public void getCode() {
+    assertThat(
+            new OtherTestValidationNotice(ImmutableMap.of("key1", "value1"), SeverityLevel.ERROR)
+                .getCode())
+        .matches("other_test_validation");
+  }
+
   private static class OtherTestValidationNotice extends ValidationNotice {
 
-    private final String code;
-
-    public OtherTestValidationNotice(
-        String code, Map<String, Object> context, SeverityLevel severityLevel) {
+    public OtherTestValidationNotice(Map<String, Object> context, SeverityLevel severityLevel) {
       super(context, severityLevel);
-      this.code = code;
-    }
-
-    @Override
-    public String getCode() {
-      return code;
     }
   }
 }
