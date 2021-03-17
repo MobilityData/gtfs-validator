@@ -92,6 +92,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 | [`UnusableTripNotice`](#UnusableTripNotice)                                       	| Trips must have more than one stop to be usable.                                                                                                            	|
 | [`UnusedShapeNotice`](#UnusedShapeNotice)                                         	| Shape is not used in GTFS file `trips.txt`.                                                                                                                 	|
 | [`UnusedTripNotice`](#UnusedTripNotice)                                           	| Trip is not be used in `stop_times.txt`                                                                                                                     	|
+
 <a name="INFOS"/>
 
 ## Table of info
