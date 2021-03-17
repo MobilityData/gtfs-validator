@@ -29,6 +29,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 | [`DuplicateKeyError`](#DuplicateKeyError)                                                                       	| Duplicated entity.                                                                                                                                          	|
 | [`EmptyFileNotice`](#EmptyFileNotice)                                                                           	| A CSV file is empty.                                                                                                                                        	|
 | [`ForeignKeyError`](#ForeignKeyError)                                                                           	| Wrong foreign key.                                                                                                                                          	|
+| [`IOError`](#IOError)                                                                                           	| Error in IO operation.                                                                                                                                      	|
 | [`InconsistentAgencyTimezoneNotice`](#InconsistentAgencyTimezoneNotice)                                         	| Inconsistent Timezone among agencies.                                                                                                                       	|
 | [`InvalidColorNotice`](#InvalidColorNotice)                                                                     	| A field contains an invalid color value.                                                                                                                    	|
 | [`InvalidCurrencyNotice`](#InvalidCurrencyNotice)                                                               	| A field contains a wrong currency code.                                                                                                                     	|
@@ -183,6 +184,12 @@ Agencies from GTFS `agency.txt` have been found to have different timezones.
 
 #### References:
 * [GTFS agency.txt specification](https://gtfs.org/reference/static/#agencytxt)
+
+<a name="IOError"/>
+
+### IOError
+
+Error in IO operation.
 
 <a name="InvalidColorNotice"/>
 
