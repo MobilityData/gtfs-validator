@@ -23,16 +23,13 @@ import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateFareRuleZoneIdFieldsNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareRule;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareRuleTableContainer;
 
 public class DuplicateFareRuleZoneIdFieldsValidatorTest {
-  private static GtfsFareRuleTableContainer createFareRuleTable(
-      NoticeContainer noticeContainer, List<GtfsFareRule> entities) {
-    return GtfsFareRuleTableContainer.forEntities(entities, noticeContainer);
-  }
 
-  private static GtfsFareRule createFareRule(
+  public static GtfsFareRule createFareRule(
       long csvRowNumber,
       String fareId,
       String routeId,
@@ -49,71 +46,56 @@ public class DuplicateFareRuleZoneIdFieldsValidatorTest {
         .build();
   }
 
+  private static List<ValidationNotice> generateNotices(List<GtfsFareRule> fareRules) {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    new DuplicateFareRuleZoneIdFieldsValidator(
+            GtfsFareRuleTableContainer.forEntities(fareRules, noticeContainer))
+        .validate(noticeContainer);
+    return noticeContainer.getValidationNotices();
+  }
+
   @Test
   public void duplicateFareRuleZoneIdValuesShouldGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    DuplicateFareRuleZoneIdFieldsValidator underTest = new DuplicateFareRuleZoneIdFieldsValidator();
-    underTest.fareRuleTable =
-        createFareRuleTable(
-            noticeContainer,
-            ImmutableList.of(
-                createFareRule(3, "fare id value", "route id value", "from id", "by id", "to id"),
-                createFareRule(
-                    99, "other fare id value", "route id value", "from id", "by id", "to id")));
-    underTest.validate(noticeContainer);
-
-    assertThat(noticeContainer.getValidationNotices())
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createFareRule(
+                        3, "fare id value", "route id value", "from id", "by id", "to id"),
+                    createFareRule(
+                        99, "other fare id value", "route id value", "from id", "by id", "to id"))))
         .containsExactly(
             new DuplicateFareRuleZoneIdFieldsNotice(99, "other fare id value", 3, "fare id value"));
   }
 
   @Test
   public void noDuplicateRowValueShouldNotGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    DuplicateFareRuleZoneIdFieldsValidator underTest = new DuplicateFareRuleZoneIdFieldsValidator();
-    underTest.fareRuleTable =
-        createFareRuleTable(
-            noticeContainer,
-            ImmutableList.of(
-                createFareRule(3, "fare id value", "route id", "from id", "by id", "to id"),
-                createFareRule(
-                    99, "other fare id value", "route id", "other from id", "by id", "to id")));
-    underTest.validate(noticeContainer);
-
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createFareRule(3, "fare id value", "route id", "from id", "by id", "to id"),
+                    createFareRule(
+                        99, "other fare id value", "route id", "other from id", "by id", "to id"))))
+        .isEmpty();
   }
 
   @Test
   public void noDuplicateRowWithEmptyValuesValueShouldNotGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    DuplicateFareRuleZoneIdFieldsValidator underTest = new DuplicateFareRuleZoneIdFieldsValidator();
-    underTest.fareRuleTable =
-        createFareRuleTable(
-            noticeContainer,
-            ImmutableList.of(
-                createFareRule(3, "fare id value", "route id", null, "by id", "to id"),
-                createFareRule(
-                    99, "other fare id value", "route id", "other from id", null, "to id"),
-                createFareRule(
-                    101, "other fare id value", null, "other from id", null, "to id")
-                ));
-    underTest.validate(noticeContainer);
-
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createFareRule(3, "fare id value", "route id", null, "by id", "to id"),
+                    createFareRule(
+                        99, "other fare id value", "route id", "other from id", null, "to id"))))
+        .isEmpty();
   }
 
   @Test
   public void duplicateFareRuleWithSomeEmptyValuesShouldGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    DuplicateFareRuleZoneIdFieldsValidator underTest = new DuplicateFareRuleZoneIdFieldsValidator();
-    underTest.fareRuleTable =
-        createFareRuleTable(
-            noticeContainer,
-            ImmutableList.of(
-                createFareRule(3, "fare id value", "route id", null, "by id", "to id"),
-                createFareRule(99, "other fare id value", "route id", null, "by id", "to id")));
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createFareRule(3, "fare id value", "route id", null, "by id", "to id"),
+                    createFareRule(99, "other fare id value", "route id", null, "by id", "to id"))))
         .containsExactly(
             new DuplicateFareRuleZoneIdFieldsNotice(99, "other fare id value", 3, "fare id value"));
   }

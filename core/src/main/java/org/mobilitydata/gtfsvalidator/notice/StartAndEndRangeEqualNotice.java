@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,23 +17,40 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 /**
- * Two {@code GtfsTime} are out of order
+ * Start and end range fields are equal for a certain GTFS entity.
+ *
+ * <p>Example: {@code start_time == end_time} for {@code frequencies.txt}.
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class StartAndEndTimeOutOfOrderNotice extends ValidationNotice {
-  public StartAndEndTimeOutOfOrderNotice(
-      String filename, String entityId, long csvRowNumber, GtfsTime startTime, GtfsTime endTime) {
+public class StartAndEndRangeEqualNotice extends ValidationNotice {
+
+  public StartAndEndRangeEqualNotice(
+      String filename, long csvRowNumber, String entityId, String start, String end) {
     super(
         ImmutableMap.of(
             "filename", filename,
             "csvRowNumber", csvRowNumber,
             "entityId", entityId,
-            "startTime", startTime.toHHMMSS(),
-            "endTime", endTime.toHHMMSS()),
+            "start", start,
+            "end", end),
         SeverityLevel.ERROR);
+  }
+
+  public StartAndEndRangeEqualNotice(String filename, long csvRowNumber, String start, String end) {
+    super(
+        ImmutableMap.of(
+            "filename", filename,
+            "csvRowNumber", csvRowNumber,
+            "start", start,
+            "end", end),
+        SeverityLevel.ERROR);
+  }
+
+  @Override
+  public String getCode() {
+    return "start_and_end_range_equal";
   }
 }

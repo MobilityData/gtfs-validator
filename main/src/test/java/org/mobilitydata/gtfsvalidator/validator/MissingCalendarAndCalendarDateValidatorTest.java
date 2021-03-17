@@ -27,6 +27,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.MissingCalendarAndCalendarDateFilesNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDate;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
@@ -64,68 +65,61 @@ public class MissingCalendarAndCalendarDateValidatorTest {
     return GtfsCalendarDateTableContainer.forEntities(entities, noticeContainer);
   }
 
+  private static List<ValidationNotice> generateNotices(
+      GtfsCalendarTableContainer calendarTable, GtfsCalendarDateTableContainer calendarDateTable) {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    new MissingCalendarAndCalendarDateValidator(calendarTable, calendarDateTable)
+        .validate(noticeContainer);
+    return noticeContainer.getValidationNotices();
+  }
+
+  private static List<ValidationNotice> generateNotices(
+      List<GtfsCalendar> calendars, List<GtfsCalendarDate> calendarDates) {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    new MissingCalendarAndCalendarDateValidator(
+            GtfsCalendarTableContainer.forEntities(calendars, noticeContainer),
+            GtfsCalendarDateTableContainer.forEntities(calendarDates, noticeContainer))
+        .validate(noticeContainer);
+    return noticeContainer.getValidationNotices();
+  }
+
   @Test
   public void bothFilesProvidedShouldNotGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    MissingCalendarAndCalendarDateValidator underTest =
-        new MissingCalendarAndCalendarDateValidator();
-    underTest.calendarTable =
-        createCalendarTable(
-            noticeContainer,
-            ImmutableList.of(
-                CalendarUtilTest.createGtfsCalendar(
-                    "WEEK", LocalDate.of(2021, 1, 4), LocalDate.of(2021, 4, 10), weekDays)));
-    underTest.calendarDateTable =
-        createCalendarDateTable(
-            noticeContainer,
-            ImmutableList.of(createCalendarDate(2, "WEEK", GtfsDate.fromEpochDay(24354), 2)));
-    underTest.validate(noticeContainer);
-
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    CalendarUtilTest.createGtfsCalendar(
+                        "WEEK", LocalDate.of(2021, 1, 4), LocalDate.of(2021, 4, 10), weekDays)),
+                ImmutableList.of(createCalendarDate(2, "WEEK", GtfsDate.fromEpochDay(24354), 2))))
+        .isEmpty();
   }
 
   @Test
   public void calendarOnlyProvidedShouldNotGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    MissingCalendarAndCalendarDateValidator underTest =
-        new MissingCalendarAndCalendarDateValidator();
-    underTest.calendarTable =
-        createCalendarTable(
-            noticeContainer,
-            ImmutableList.of(
-                CalendarUtilTest.createGtfsCalendar(
-                    "WEEK", LocalDate.of(2021, 1, 4), LocalDate.of(2021, 4, 10), weekDays)));
-    underTest.calendarDateTable = createCalendarDateTable(noticeContainer, ImmutableList.of());
-    underTest.validate(noticeContainer);
-
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    CalendarUtilTest.createGtfsCalendar(
+                        "WEEK", LocalDate.of(2021, 1, 4), LocalDate.of(2021, 4, 10), weekDays)),
+                ImmutableList.of()))
+        .isEmpty();
   }
 
   @Test
   public void calendarDateOnlyProvidedShouldNotGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    MissingCalendarAndCalendarDateValidator underTest =
-        new MissingCalendarAndCalendarDateValidator();
-    underTest.calendarTable = createCalendarTable(noticeContainer, ImmutableList.of());
-    underTest.calendarDateTable =
-        createCalendarDateTable(
-            noticeContainer,
-            ImmutableList.of(createCalendarDate(2, "WEEK", GtfsDate.fromEpochDay(24354), 2)));
-    underTest.validate(noticeContainer);
-
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(
+            generateNotices(
+                ImmutableList.of(),
+                ImmutableList.of(createCalendarDate(2, "WEEK", GtfsDate.fromEpochDay(24354), 2))))
+        .isEmpty();
   }
 
   @Test
   public void bothMissingFilesShouldGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    MissingCalendarAndCalendarDateValidator underTest =
-        new MissingCalendarAndCalendarDateValidator();
-    underTest.calendarTable = new GtfsCalendarTableContainer(TableStatus.MISSING_FILE);
-    underTest.calendarDateTable = new GtfsCalendarDateTableContainer(TableStatus.MISSING_FILE);
-    underTest.validate(noticeContainer);
-
-    assertThat(noticeContainer.getValidationNotices())
+    assertThat(
+            generateNotices(
+                new GtfsCalendarTableContainer(TableStatus.MISSING_FILE),
+                new GtfsCalendarDateTableContainer(TableStatus.MISSING_FILE)))
         .containsExactly(new MissingCalendarAndCalendarDateFilesNotice());
   }
 }

@@ -23,22 +23,13 @@ import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.UnusedShapeNotice;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 
 public class ShapeUsageValidatorTest {
-
-  private static GtfsShapeTableContainer createShapeTable(
-      NoticeContainer noticeContainer, List<GtfsShape> entities) {
-    return GtfsShapeTableContainer.forEntities(entities, noticeContainer);
-  }
-
-  private static GtfsTripTableContainer createTripTable(
-      NoticeContainer noticeContainer, List<GtfsTrip> entities) {
-    return GtfsTripTableContainer.forEntities(entities, noticeContainer);
-  }
 
   public static GtfsShape createShapePoint(
       long csvRowNumber,
@@ -68,54 +59,49 @@ public class ShapeUsageValidatorTest {
         .build();
   }
 
+  private static List<ValidationNotice> generateNotices(
+      List<GtfsShape> shapes, List<GtfsTrip> trips) {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    new ShapeUsageValidator(
+            GtfsTripTableContainer.forEntities(trips, noticeContainer),
+            GtfsShapeTableContainer.forEntities(shapes, noticeContainer))
+        .validate(noticeContainer);
+    return noticeContainer.getValidationNotices();
+  }
+
   @Test
   public void allShapeUsedShouldNotGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    ShapeUsageValidator underTest = new ShapeUsageValidator();
-
-    underTest.shapeTable =
-        createShapeTable(
-            noticeContainer,
-            ImmutableList.of(
-                createShapePoint(1, "first shape id", 45.0d, 45.0d, 2, 40.0d),
-                createShapePoint(3, "second shape id", 45.0d, 45.0d, 2, 40.0d)));
-    underTest.tripTable =
-        createTripTable(
-            noticeContainer,
-            ImmutableList.of(
-                createTrip(
-                    2, "route id value", "service id value", "first trip id", "first shape id"),
-                createTrip(
-                    4,
-                    "other route id value",
-                    "other service id value",
-                    "second trip id",
-                    "second shape id")));
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createShapePoint(1, "first shape id", 45.0d, 45.0d, 2, 40.0d),
+                    createShapePoint(3, "second shape id", 45.0d, 45.0d, 2, 40.0d)),
+                ImmutableList.of(
+                    createTrip(
+                        2, "route id value", "service id value", "first trip id", "first shape id"),
+                    createTrip(
+                        4,
+                        "other route id value",
+                        "other service id value",
+                        "second trip id",
+                        "second shape id"))))
+        .isEmpty();
   }
 
   @Test
   public void unusedShapeShouldGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    ShapeUsageValidator underTest = new ShapeUsageValidator();
-
-    underTest.shapeTable =
-        createShapeTable(
-            noticeContainer,
-            ImmutableList.of(
-                createShapePoint(1, "first shape id", 45.0d, 45.0d, 2, 40.0d),
-                createShapePoint(3, "second shape id", 45.0d, 45.0d, 2, 40.0d)));
-    underTest.tripTable =
-        createTripTable(
-            noticeContainer,
-            ImmutableList.of(
-                createTrip(
-                    2, "route id value", "service id value", "first trip id", "first shape id")));
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createShapePoint(1, "first shape id", 45.0d, 45.0d, 2, 40.0d),
+                    createShapePoint(3, "second shape id", 45.0d, 45.0d, 2, 40.0d)),
+                ImmutableList.of(
+                    createTrip(
+                        2,
+                        "route id value",
+                        "service id value",
+                        "first trip id",
+                        "first shape id"))))
         .containsExactly(new UnusedShapeNotice("second shape id", 3));
   }
 }

@@ -38,7 +38,12 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFareRuleTableContainer;
  */
 @GtfsValidator
 public class DuplicateFareRuleZoneIdFieldsValidator extends FileValidator {
-  @Inject GtfsFareRuleTableContainer fareRuleTable;
+  private final GtfsFareRuleTableContainer fareRuleTable;
+
+  @Inject
+  DuplicateFareRuleZoneIdFieldsValidator(GtfsFareRuleTableContainer fareRuleTable) {
+    this.fareRuleTable = fareRuleTable;
+  }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {

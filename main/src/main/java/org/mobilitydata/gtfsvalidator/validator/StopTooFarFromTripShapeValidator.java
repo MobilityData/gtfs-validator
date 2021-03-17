@@ -91,10 +91,22 @@ public class StopTooFarFromTripShapeValidator extends FileValidator {
           * TRIP_BUFFER_METERS
           * GeospatialUtil.METER_TO_KILOMETER_CONVERSION_FACTOR;
 
-  @Inject GtfsStopTimeTableContainer stopTimeTable;
-  @Inject GtfsTripTableContainer tripTable;
-  @Inject GtfsShapeTableContainer shapeTable;
-  @Inject GtfsStopTableContainer stopTable;
+  private final GtfsStopTimeTableContainer stopTimeTable;
+  private final GtfsTripTableContainer tripTable;
+  private final GtfsShapeTableContainer shapeTable;
+  private final GtfsStopTableContainer stopTable;
+
+  @Inject
+  StopTooFarFromTripShapeValidator(
+      GtfsStopTimeTableContainer stopTimeTable,
+      GtfsTripTableContainer tripTable,
+      GtfsShapeTableContainer shapeTable,
+      GtfsStopTableContainer stopTable) {
+    this.stopTimeTable = stopTimeTable;
+    this.tripTable = tripTable;
+    this.shapeTable = shapeTable;
+    this.stopTable = stopTable;
+  }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {

@@ -56,9 +56,12 @@ public class GtfsTimeTest {
   }
 
   @Test
-  public void toHHMMSSShouldReturnFormattedRepresentationOfGtfsTime() {
+  public void toHHMMSS() {
+    assertThat(GtfsTime.fromHourMinuteSecond(2, 20, 20).toHHMMSS()).matches("02:20:20");
     assertThat(GtfsTime.fromHourMinuteSecond(12, 20, 20).toHHMMSS()).matches("12:20:20");
     assertThat(GtfsTime.fromHourMinuteSecond(25, 20, 20).toHHMMSS()).matches("25:20:20");
+
+    assertThat(GtfsTime.fromHourMinuteSecond(12, 20, 20).toString()).matches("12:20:20");
   }
 
   @Test

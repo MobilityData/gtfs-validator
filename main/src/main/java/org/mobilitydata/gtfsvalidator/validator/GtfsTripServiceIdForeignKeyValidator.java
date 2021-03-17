@@ -36,9 +36,19 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTripTableLoader;
  */
 @GtfsValidator
 public class GtfsTripServiceIdForeignKeyValidator extends FileValidator {
-  @Inject GtfsTripTableContainer tripContainer;
-  @Inject GtfsCalendarTableContainer calendarContainer;
-  @Inject GtfsCalendarDateTableContainer calendarDateContainer;
+  private final GtfsTripTableContainer tripContainer;
+  private final GtfsCalendarTableContainer calendarContainer;
+  private final GtfsCalendarDateTableContainer calendarDateContainer;
+
+  @Inject
+  GtfsTripServiceIdForeignKeyValidator(
+      GtfsTripTableContainer tripContainer,
+      GtfsCalendarTableContainer calendarContainer,
+      GtfsCalendarDateTableContainer calendarDateContainer) {
+    this.tripContainer = tripContainer;
+    this.calendarContainer = calendarContainer;
+    this.calendarDateContainer = calendarDateContainer;
+  }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
