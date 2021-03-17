@@ -2,7 +2,6 @@
 
 Rules are declared in the `Notice` modules: 
 - [Notices related to file parsing and data types](https://github.com/MobilityData/gtfs-validator/tree/master/core/src/java/org/mobilitydata/gtfsvalidator/notice) 
-- ```
 - [Notices related to GTFS semantics/business logic](https://github.com/MobilityData/gtfs-validator/tree/master/domain/src/main/java/org/mobilitydata/gtfsvalidator/notice). 
  
 Note that the notice ID naming conventions changed in `v2` to make contributions of new rules easier by reducing the likelihood of conflicting IDs during parallel development. Please refer to [MIGRATION_V1_V2.md](/docs/MIGRATION_V1_V2.md) for a mapping between v1 and v2 rules.
@@ -110,11 +109,17 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 
 Trips with the same block id have overlapping stop times.
 
+#### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+
 <a name="DecreasingOrEqualShapeDistanceNotice"/>
 
 ### DecreasingOrEqualShapeDistanceNotice
 
 When sorted by `shape.shape_pt_sequence`, two consecutive shape points should have increasing values for `shape_dist_traveled`. If the values are equal, this is considered as an error.  
+
+#### References:
+* [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)
 
 <a name="DecreasingOrEqualStopTimeDistanceNotice"/>
 
@@ -122,11 +127,17 @@ When sorted by `shape.shape_pt_sequence`, two consecutive shape points should ha
 
 When sorted by `stop_times.stop_pt_sequence`, two consecutive stop times in a trip should have increasing distance. If the values are equal, this is considered as an error.  
 
+#### References:
+* [stops.txt specification](https://gtfs.org/reference/static#stopstxt)
+
 <a name="DuplicatedColumnNotice"/>
 
 ### DuplicatedColumnNotice
 
 The input file CSV header has the same column name repeated.
+
+#### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="DuplicateFareRuleZoneIdFieldsNotice"/>
 
@@ -134,11 +145,17 @@ The input file CSV header has the same column name repeated.
 
 The combination of `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.contains_id` and `fare_rules.destination_id` fields should be unique in GTFS file `fare_rules.txt`.
 
+#### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+
 <a name="DuplicateKeyError"/>
 
 ### DuplicateKeyError
 
 The values of the given key and rows are duplicates.
+
+#### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="EmptyFileNotice"/>
 
@@ -146,17 +163,26 @@ The values of the given key and rows are duplicates.
 
 Empty csv file found in the archive: file does not have any headers, or is a required file and does not have any data. The GTFS specification requires the first line of each file to contain field names and required files must have data.
 
+#### References:
+* [GTFS files requirements](https://gtfs.org/reference/static#file-requirements)
+
 <a name="ForeignKeyError"/>
 
 ### ForeignKeyError
 
 The values of the given key and rows of one table cannot be found a values of the given key in another table.
 
+#### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+
 <a name="InconsistentAgencyTimezoneNotice"/>
 
 ### InconsistentAgencyTimezoneNotice
 
 Agencies from GTFS `agency.txt` have been found to have different timezones.
+
+#### References:
+* [GTFS agency.txt specification](https://gtfs.org/reference/static/#agencytxt)
 
 <a name="InvalidColorNotice"/>
 
@@ -237,6 +263,9 @@ Value of field with type `phone number` is not valid.
 
 A row in the input file has a different number of values than specified by the CSV header.
 
+#### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+
 <a name="InvalidTimeNotice"/>
 
 ### InvalidTimeNotice
@@ -271,14 +300,14 @@ Value of field with type `url` is not valid.
 
 The value in CSV file has leading or trailing whitespaces.
 
+#### References:
+* [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
+
 <a name="LocationWithoutParentStationNotice"/>
 
 ### LocationWithoutParentStationNotice
 
 A location that must have `parent_station` field does not have it. The following location types must have `parent_station`: entrance, generic node, boarding_area.
-
-#### References:
-* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 
 #### References:
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
@@ -289,11 +318,18 @@ A location that must have `parent_station` field does not have it. The following
 
 Both files calendar_dates.txt and calendar.txt are missing from the GTFS archive. At least one of the files must be provided.
 
+#### References:
+* [calendar.txt specification](http://gtfs.org/reference/static/#calendartxt)
+* [calendar_dates.txt specification](http://gtfs.org/reference/static/#calendar_datestxt)
+
 <a name="MissingRequiredColumnError"/>
 
 ### MissingRequiredColumnError
 
 A required column is missing in the input file.
+
+#### References:
+* [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
 
 <a name="MissingRequiredFieldError"/>
 
@@ -301,11 +337,17 @@ A required column is missing in the input file.
 
 The given field has no value in some input row, even though values are required.
 
+#### References:
+* [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
+
 <a name="MissingRequiredFileError"/>
 
 ### MissingRequiredFileError
 
 A required file is missing.
+
+#### References:
+* [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
 
 <a name="MissingTripEdgeNotice"/>
 
@@ -313,17 +355,30 @@ A required file is missing.
 
 First and last stop of a trip must define both `arrival_time` and `departure_time` fields.
 
+#### References:
+* [stop_times.txt specification](https://gtfs.org/reference/static/#stop_timestxt)
+
 <a name="NewLineInValueNotice"/>
 
 ### NewLineInValueNotice
 
 A value in CSV file has a new line or carriage return.
 
+#### References:
+* [GTFS file requirements](https://gtfs.org/reference/static/#file-requirements)
+
 <a name="NumberOutOfRangeError"/>
 
 ### NumberOutOfRangeError
 
 The values in the given column of the input rows are out of range.
+
+#### References:
+* [GTFS file requirements](https://gtfs.org/reference/static/#file-requirements)
+
+#### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+* [GTFS field types](http://gtfs.org/reference/static/#field-types)
 
 <a name="OverlappingFrequencyNotice"/>
 
@@ -332,12 +387,7 @@ The values in the given column of the input rows are out of range.
 Trip frequencies must not overlap in time
 
 #### References:
-
-* [GTFS frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
-
-#### References:
-
-* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+* [frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
 
 <a name="RouteBothShortAndLongNameMissingNotice"/>
 
@@ -346,7 +396,6 @@ Trip frequencies must not overlap in time
 Both short_name and long_name are missing for a route.
 
 #### References:
-
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 
 <a name="SameNameAndDescriptionForRouteNotice"/>
@@ -359,10 +408,9 @@ The GTFS spec defines `routes.txt` [route_description](https://gtfs.org/referenc
 
 See the GTFS and GTFS Best Practices links below for more examples of how to populate the `route_short_name`, `route_long_name`, and `route_description` fields.
 
-References:
-
-[GTFS routes.txt](http://gtfs.org/reference/static/#routestxt)
-[GTFS routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
+#### References:
+[routes.txt specification](http://gtfs.org/reference/static/#routestxt)
+[routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
 
 <a name="StartAndEndDateOutOfOrderNotice"/>
 
@@ -370,6 +418,8 @@ References:
 
 Start and end dates are out-of-order in GTFS files `feed_info.txt` or `calendar.txt`.
 
+#### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="StartAndEndTimeOutOfOrderNotice"/>
 
@@ -377,11 +427,17 @@ Start and end dates are out-of-order in GTFS files `feed_info.txt` or `calendar.
 
 Start and end times are out-of-order in GTFS file `frequencies.txt`.
 
+#### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+
 <a name="StationWithParentStationNotice"/>
 
 ### StationWithParentStationNotice
 
 Field `parent_station` must be empty when `location_type` is 2.
+
+#### References:
+[stop_times.txt](http://gtfs.org/reference/static/#stop_timestxt)
 
 <a name="StopTimeWithArrivalBeforePreviousDepartureTimeNotice"/>
 
@@ -389,11 +445,17 @@ Field `parent_station` must be empty when `location_type` is 2.
 
 For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must not precede the `departure_time` of n-th stoptime in sequence.
 
+#### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+
 <a name="StopTimeWithDepartureBeforeArrivalTimeNotice"/>
 
 ### StopTimeWithDepartureBeforeArrivalTimeNotice
 
 The `departure_time` must not precede the `arrival_time` in `stop_times.txt` if both are given. 
+
+#### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="StopTimeWithOnlyArrivalOrDepartureTimeNotice"/>
 
@@ -401,11 +463,17 @@ The `departure_time` must not precede the `arrival_time` in `stop_times.txt` if 
 
 Missing `stop_time.arrival_time` or `stop_time.departure_time`
 
+#### References:
+* [stop_times.txt specification](http://gtfs.org/reference/static/#stop_timestxt)
+
 <a name="URISyntaxError"/>
 
 ### URISyntaxError
 
 A string could not be parsed as a URI reference.
+
+#### References:
+* [GTFS field types](http://gtfs.org/reference/static/#field_types)
 
 <a name="WrongParentLocationTypeNotice"/>
 
@@ -428,11 +496,11 @@ Any other combination raise this error.
 
 <a name="AttributionWithoutRoleNotice"/>
 
-### AttributionWithoutRoleNotice
+#### AttributionWithoutRoleNotice
 
 At least one of the fields `is_producer`, `is_operator`, or `is_authority` should be set to 1.
 
-#### References:
+##### References:
 * [attributions.txt specification](https://gtfs.org/reference/static#attributionstxt)
 
 <a name="DuplicateRouteNameNotice"/>
@@ -458,11 +526,17 @@ The same combination of `route_short_name` and `route_long_name` should not be u
 
 A column name has not been provided. Such columns are skipped by the validator.
 
+##### References:
+* [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
+
 <a name="EmptyRowNotice"/>
 
 #### EmptyRowNotice
 
 A row in the input file has only spaces.
+
+##### References:
+* [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
 
 <a name="FeedExpirationDateNotice"/>
 
@@ -470,6 +544,9 @@ A row in the input file has only spaces.
 
 At any time, the published GTFS dataset should be valid for at least the next 7 days, and ideally for as long as the operator is confident that the schedule will continue to be operated.
 If possible, the GTFS dataset should cover at least the next 30 days of service.
+
+##### References:
+* [General Publishing & General Practices](https://gtfs.org/best-practices/#dataset-publishing--general-practices)
 
 <a name="FeedInfoLangAndAgencyLangMismatchNotice"/>
 
@@ -490,11 +567,17 @@ If possible, the GTFS dataset should cover at least the next 30 days of service.
 
 Agencies from GTFS `agency.txt` have been found to have different languages.
 
+##### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+
 <a name="MissingFeedInfoDateNotice"/>
 
 #### MissingFeedInfoDateNotice
 
 Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one field is provided the second one should also be provided.
+
+##### References:
+* [feed_info.txt Best practices](http://gtfs.org/best-practices/#feed_infotxt)
 
 <a name="MoreThanOneEntityNotice"/>
 
@@ -502,11 +585,17 @@ Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one
 
 The file is expected to have a single entity but has more (e.g., "feed_info.txt").
 
+##### References:
+* [GTFS field definition](http://gtfs.org/reference/static#field-definitions)
+
 <a name="NonAsciiOrNonPrintableCharNotice"/>
 
 #### NonAsciiOrNonPrintableCharNotice
 
 A value of filed with type `id` contains non ASCII or non printable characters. This is not recommended.
+
+##### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="PlatformWithoutParentStationNotice"/>
 
@@ -514,11 +603,18 @@ A value of filed with type `id` contains non ASCII or non printable characters. 
 
 A platform has no `parent_station` field set.
 
+#### References:
+* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+
 <a name="RouteColorContrastNotice"/>
 
 #### RouteColorContrastNotice
 
 A route's color and `route_text_color` should be contrasting.
+
+#### References:
+* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
+* [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="RouteShortAndLongNameEqualNotice"/>
 
@@ -527,7 +623,6 @@ A route's color and `route_text_color` should be contrasting.
 Short and long name are equal for a route.
 
 ##### References:
-
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 
 <a name="RouteShortNameTooLongNotice"/>
@@ -537,7 +632,6 @@ Short and long name are equal for a route.
 Short name of a route is too long (more than 12 characters).
 
 ##### References:
-
 * [routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
 
 <a name="StartAndEndTimeEqualNotice"/>
@@ -545,6 +639,9 @@ Short name of a route is too long (more than 12 characters).
 #### StartAndEndTimeEqualNotice
 
 Start and end times are equal in GTFS file `frequencies.txt`. The GTFS spec is currently unclear how this case should be handled (e.g., is it a trip that circulates once?). It is recommended to use a trip not defined via frequencies.txt for this case.
+
+#### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="StopTimeTimepointWithoutTimeNotice"/>
 
@@ -570,11 +667,17 @@ Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100
 
 As implemented in the original [Google Python GTFS validator](https://github.com/google/transitfeed/wiki/FeedValidator), the calculated speed between stops should not be greater than 150 km/h (42 m/s SI or 93 mph). 
 
+#### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+
 <a name="UnexpectedEnumValueNotice"/>
 
 #### UnexpectedEnumValueNotice
 
 An enum has an unexpected value.
+
+#### References:
+* [GTFs field definitions](http://gtfs.org/reference/static/#field-definitions)
 
 <a name="UnusableTripNotice"/>
 
@@ -582,17 +685,26 @@ An enum has an unexpected value.
 
 A trip must visit more than one stop in stop_times.txt to be usable by passengers for boarding and alighting.
 
+#### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+
 <a name="UnusedShapeNotice"/>
 
 #### UnusedShapeNotice
 
 All records defined by GTFS `shapes.txt` should be used in `trips.txt`.
 
+#### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+
 <a name="UnusedTripNotice"/>
 
 #### UnusedTripNotice
 
 Trips must be referred to at least once in `stop_times.txt`.
+
+#### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
 
 ### Info
 
@@ -602,10 +714,15 @@ Trips must be referred to at least once in `stop_times.txt`.
 
 A column is unknown.
 
+#### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+
 <a name="UnknownFileNotice"/>
 
 #### UnknownFileNotice
 
 A file is unknown.
 
-<a name="BlockTripsWithOverlappingStopTimesNotice"/>
+#### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+
