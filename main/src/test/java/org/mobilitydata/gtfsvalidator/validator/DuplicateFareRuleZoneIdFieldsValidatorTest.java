@@ -74,7 +74,10 @@ public class DuplicateFareRuleZoneIdFieldsValidatorTest {
                 ImmutableList.of(
                     createFareRule(3, "fare id value", "route id", "from id", "by id", "to id"),
                     createFareRule(
-                        99, "other fare id value", "route id", "other from id", "by id", "to id"))))
+                        99, "other fare id value", "route id", "other from id", "by id", "to id"),
+                    createFareRule(
+                        101, "other fare id value", "route id", "other from id", "by id", "to id")
+                    )))
         .isEmpty();
   }
 
