@@ -66,10 +66,11 @@ public class DuplicateFareRuleZoneIdFieldsValidator extends FileValidator {
    * "fare_rules.contains_id" and "fare_rules.destination_id".
    *
    * @param fareRule the {@code GtfsFareRule} to generate the hash from
-   * @return the hashcode associated to the combination of this {@code GtfsFareRule} "origin_id",
-   *     "contains_id" and "destination_id".
+   * @return the hashcode associated to the combination of this {@code GtfsFareRule} "route_id",
+   *     "origin_id", "contains_id" and "destination_id".
    */
   private int getHash(GtfsFareRule fareRule) {
-    return Objects.hash(fareRule.originId(), fareRule.containsId(), fareRule.destinationId());
+    return Objects.hash(
+        fareRule.routeId(), fareRule.originId(), fareRule.containsId(), fareRule.destinationId());
   }
 }

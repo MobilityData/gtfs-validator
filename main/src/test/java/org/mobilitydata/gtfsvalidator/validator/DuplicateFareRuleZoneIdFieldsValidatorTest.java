@@ -32,7 +32,7 @@ public class DuplicateFareRuleZoneIdFieldsValidatorTest {
     return GtfsFareRuleTableContainer.forEntities(entities, noticeContainer);
   }
 
-  public static GtfsFareRule createFareRule(
+  private static GtfsFareRule createFareRule(
       long csvRowNumber,
       String fareId,
       String routeId,
@@ -93,7 +93,10 @@ public class DuplicateFareRuleZoneIdFieldsValidatorTest {
             ImmutableList.of(
                 createFareRule(3, "fare id value", "route id", null, "by id", "to id"),
                 createFareRule(
-                    99, "other fare id value", "route id", "other from id", null, "to id")));
+                    99, "other fare id value", "route id", "other from id", null, "to id"),
+                createFareRule(
+                    99, "other fare id value", null, "other from id", null, "to id")
+                ));
     underTest.validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices()).isEmpty();
