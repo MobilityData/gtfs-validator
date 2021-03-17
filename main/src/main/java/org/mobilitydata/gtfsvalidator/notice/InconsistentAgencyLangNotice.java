@@ -32,9 +32,4 @@ public class InconsistentAgencyLangNotice extends ValidationNotice {
             "actual", actual),
         SeverityLevel.WARNING);
   }
-
-  @Override
-  public String getCode() {
-    return "inconsistent_agency_lang";
-  }
 }

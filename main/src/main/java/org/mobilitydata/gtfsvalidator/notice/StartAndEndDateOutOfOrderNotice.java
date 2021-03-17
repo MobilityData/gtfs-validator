@@ -56,9 +56,4 @@ public class StartAndEndDateOutOfOrderNotice extends ValidationNotice {
             endDate.toYYYYMMDD()),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "start_and_end_date_out_of_order";
-  }
 }

@@ -48,9 +48,4 @@ public class DecreasingOrEqualShapeDistanceNotice extends ValidationNotice {
             .build(),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "decreasing_or_equal_shape_distance";
-  }
 }

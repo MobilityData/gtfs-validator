@@ -70,6 +70,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 
 | Name                                                                              	| Description                                                                                                                                                 	|
 |-----------------------------------------------------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------	|
+| [`AttributionWithoutRoleNotice`](#AttributionWithoutRoleNotice)                   	| Attribution with no role.                                                                                                                                   	|
 | [`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)                           	| Duplicate  `routes.route_long_name`. Duplicate `routes.route_short_name`. Duplicate combination of fields `route_long_name`  and `routes.route_short_name`. 	|
 | [`EmptyColumnNameNotice`](#EmptyColumnNameNotice)                                 	| A column name is empty.                                                                                                                                     	|
 | [`EmptyRowNotice`](#EmptyRowNotice)                                               	| A file is unknown.                                                                                                                                          	|
@@ -84,13 +85,13 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 | [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	| Short and long name are equal for a route.                                                                                                                  	|
 | [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	| Short name of a route is too long (more than 12 characters).                                                                                                	|
 | [`StartAndEndTimeEqualNotice`](#StartAndEndTimeEqualNotice)                       	| Equal `frequencies.start_time` and `frequencies.end_time`.                                                                                                  	|
+| [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	| `arrival_time` or `departure_time` not specified for timepoint.                                                                                             	|
 | [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	| Stop too far from trip shape.                                                                                                                               	|
 | [`TooFastTravelNotice`](#TooFastTravelNotice)                                     	| Fast travel between stops in `stop_times.txt`.                                                                                                              	|
 | [`UnexpectedEnumValueNotice`](#UnexpectedEnumValueNotice)                         	| An enum has an unexpected value.                                                                                                                            	|
 | [`UnusableTripNotice`](#UnusableTripNotice)                                       	| Trips must have more than one stop to be usable.                                                                                                            	|
 | [`UnusedShapeNotice`](#UnusedShapeNotice)                                         	| Shape is not used in GTFS file `trips.txt`.                                                                                                                 	|
 | [`UnusedTripNotice`](#UnusedTripNotice)                                           	| Trip is not be used in `stop_times.txt`                                                                                                                     	|
-
 <a name="INFOS"/>
 
 ## Table of info
@@ -424,6 +425,15 @@ Any other combination raise this error.
 
 ### Warnings
 
+<a name="AttributionWithoutRoleNotice"/>
+
+### AttributionWithoutRoleNotice
+
+At least one of the fields `is_producer`, `is_operator`, or `is_authority` should be set to 1.
+
+#### References:
+* [attributions.txt specification](https://gtfs.org/reference/static#attributionstxt)
+
 <a name="DuplicateRouteNameNotice"/>
 
 #### DuplicateRouteNameNotice
@@ -534,6 +544,15 @@ Short name of a route is too long (more than 12 characters).
 #### StartAndEndTimeEqualNotice
 
 Start and end times are equal in GTFS file `frequencies.txt`. The GTFS spec is currently unclear how this case should be handled (e.g., is it a trip that circulates once?). It is recommended to use a trip not defined via frequencies.txt for this case.
+
+<a name="StopTimeTimepointWithoutTimeNotice"/>
+
+### StopTimeTimepointWithoutTimesNotice
+
+Any record with `stop_times.timepoint` set to 1 should define a value for `stop_times.arrival_time` and `stop_times.departure_time` fields. 
+
+#### References:
+* [GTFS stop_times.txt specification](https://gtfs.org/reference/static#stoptimestxt)
 
 <a name="StopTooFarFromTripShapeNotice"/>
 

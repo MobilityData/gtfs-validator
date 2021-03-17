@@ -37,9 +37,4 @@ public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
             "fieldValue", fieldValue),
         SeverityLevel.WARNING);
   }
-
-  @Override
-  public String getCode() {
-    return "id_contains_non_ascii_characters";
-  }
 }

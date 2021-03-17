@@ -35,9 +35,4 @@ public class TooFastTravelNotice extends ValidationNotice {
             .build(),
         SeverityLevel.WARNING);
   }
-
-  @Override
-  public String getCode() {
-    return "too_fast_travel";
-  }
 }

@@ -49,9 +49,4 @@ public class WrongParentLocationTypeNotice extends ValidationNotice {
             .build(),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "wrong_parent_location_type";
-  }
 }

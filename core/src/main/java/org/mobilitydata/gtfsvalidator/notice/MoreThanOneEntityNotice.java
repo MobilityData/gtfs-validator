@@ -27,9 +27,4 @@ public class MoreThanOneEntityNotice extends ValidationNotice {
   public MoreThanOneEntityNotice(String filename, long entityCount) {
     super(ImmutableMap.of("filename", filename, "entityCount", entityCount), SeverityLevel.WARNING);
   }
-
-  @Override
-  public String getCode() {
-    return "more_than_one_entity";
-  }
 }

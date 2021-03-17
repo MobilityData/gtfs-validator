@@ -27,9 +27,4 @@ public class OverlappingFrequencyNotice extends ValidationNotice {
             "tripId", tripId),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "overlapping_frequency";
-  }
 }

@@ -31,9 +31,4 @@ public class RouteBothShortAndLongNameMissingNotice extends ValidationNotice {
             "csvRowNumber", csvRowNumber),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "route_both_short_and_long_name_missing";
-  }
 }

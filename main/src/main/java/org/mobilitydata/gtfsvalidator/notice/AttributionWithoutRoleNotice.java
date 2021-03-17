@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2021 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,25 +19,16 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * The values in the given column of the input rows are out of range.
+ * A row from GTFS file `attributions.txt` has fields `attributions.is_producer`,
+ * `attributions.is_operator`, and `attributions.is_authority` not defined or set at 0.
  *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>Severity: {@code SeverityLevel.WARNING}
  */
-public class NumberOutOfRangeError extends ValidationNotice {
-  public NumberOutOfRangeError(
-      String filename, long csvRowNumber, String fieldName, String fieldType, Object fieldValue) {
+public class AttributionWithoutRoleNotice extends ValidationNotice {
+
+  public AttributionWithoutRoleNotice(long csvRowNumber, String attributionId) {
     super(
-        ImmutableMap.of(
-            "filename",
-            filename,
-            "csvRowNumber",
-            csvRowNumber,
-            "fieldName",
-            fieldName,
-            "fieldType",
-            fieldType,
-            "fieldValue",
-            fieldValue),
-        SeverityLevel.ERROR);
+        ImmutableMap.of("csvRowNumber", csvRowNumber, "attributionId", attributionId),
+        SeverityLevel.WARNING);
   }
 }

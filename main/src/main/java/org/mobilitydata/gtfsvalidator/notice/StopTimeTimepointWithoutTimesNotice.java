@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2021 MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,25 +19,22 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * The values in the given column of the input rows are out of range.
+ * Timepoint without time
  *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>Severity: {@code SeverityLevel.WARNING}
  */
-public class NumberOutOfRangeError extends ValidationNotice {
-  public NumberOutOfRangeError(
-      String filename, long csvRowNumber, String fieldName, String fieldType, Object fieldValue) {
+public class StopTimeTimepointWithoutTimesNotice extends ValidationNotice {
+  public StopTimeTimepointWithoutTimesNotice(
+      final long csvRowNumber,
+      final String tripId,
+      final long stopSequence,
+      final String specifiedField) {
     super(
         ImmutableMap.of(
-            "filename",
-            filename,
-            "csvRowNumber",
-            csvRowNumber,
-            "fieldName",
-            fieldName,
-            "fieldType",
-            fieldType,
-            "fieldValue",
-            fieldValue),
-        SeverityLevel.ERROR);
+            "csvRowNumber", csvRowNumber,
+            "tripId", tripId,
+            "stopSequence", stopSequence,
+            "specifiedField", specifiedField),
+        SeverityLevel.WARNING);
   }
 }

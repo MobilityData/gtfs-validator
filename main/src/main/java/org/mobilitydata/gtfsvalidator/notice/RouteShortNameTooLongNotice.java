@@ -33,9 +33,4 @@ public class RouteShortNameTooLongNotice extends ValidationNotice {
             "routeShortName", routeShortName),
         SeverityLevel.WARNING);
   }
-
-  @Override
-  public String getCode() {
-    return "route_short_name_too_long";
-  }
 }
