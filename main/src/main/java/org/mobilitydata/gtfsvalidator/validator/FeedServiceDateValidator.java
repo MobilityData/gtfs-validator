@@ -19,16 +19,14 @@ package org.mobilitydata.gtfsvalidator.validator;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.MissingFeedInfoDateNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.StartAndEndDateOutOfOrderNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableLoader;
 
 /**
- * Validates 3 rules: 1) start_date &lt;= end_date 2) feed_info.start_date is provided if
- * feed_info.end_date is provided 3) feed_info.end_date is provided if feed_info.start_date is
- * provided.
+ * Validates that if one of {@code (start_date, end_date)} fields is provided for {@code
+ * feed_info.txt}, then the second field is also provided.
  *
- * <p>Generated notice: {@link StartAndEndDateOutOfOrderNotice}.
+ * <p>Generated notice: {@link MissingFeedInfoDateNotice}.
  */
 @GtfsValidator
 public class FeedServiceDateValidator extends SingleEntityValidator<GtfsFeedInfo> {
@@ -43,16 +41,6 @@ public class FeedServiceDateValidator extends SingleEntityValidator<GtfsFeedInfo
       noticeContainer.addValidationNotice(
           new MissingFeedInfoDateNotice(
               feedInfo.csvRowNumber(), GtfsFeedInfoTableLoader.FEED_START_DATE_FIELD_NAME));
-    }
-    if (feedInfo.hasFeedStartDate()
-        && feedInfo.hasFeedEndDate()
-        && feedInfo.feedStartDate().isAfter(feedInfo.feedEndDate())) {
-      noticeContainer.addValidationNotice(
-          new StartAndEndDateOutOfOrderNotice(
-              GtfsFeedInfoTableLoader.FILENAME,
-              feedInfo.csvRowNumber(),
-              feedInfo.feedStartDate(),
-              feedInfo.feedEndDate()));
     }
   }
 }

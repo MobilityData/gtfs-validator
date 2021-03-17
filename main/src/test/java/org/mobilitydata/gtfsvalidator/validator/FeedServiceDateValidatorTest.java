@@ -34,43 +34,6 @@ public class FeedServiceDateValidatorTest {
   }
 
   @Test
-  public void startDateBeforeEndDateShouldNotGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    FeedServiceDateValidator underTest = new FeedServiceDateValidator();
-
-    underTest.validate(
-        createFeedInfo(
-            1,
-            "name value",
-            "url value",
-            Locale.CANADA,
-            GtfsDate.fromEpochDay(340),
-            GtfsDate.fromEpochDay(450)),
-        noticeContainer);
-    assertThat(noticeContainer.getValidationNotices().isEmpty());
-  }
-
-  @Test
-  public void startDateAfterEndDateShouldGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    FeedServiceDateValidator underTest = new FeedServiceDateValidator();
-
-    underTest.validate(
-        createFeedInfo(
-            1,
-            "name value",
-            "url value",
-            Locale.CANADA,
-            GtfsDate.fromEpochDay(450),
-            GtfsDate.fromEpochDay(340)),
-        noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(
-            new StartAndEndDateOutOfOrderNotice(
-                "feed_info.txt", 1L, GtfsDate.fromEpochDay(450), GtfsDate.fromEpochDay(340)));
-  }
-
-  @Test
   public void noStartDateShouldGenerateNotice() {
     NoticeContainer noticeContainer = new NoticeContainer();
     FeedServiceDateValidator underTest = new FeedServiceDateValidator();
