@@ -24,18 +24,24 @@ import java.util.List;
 import java.util.Locale;
 import javax.annotation.Nullable;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyLangNotice;
 import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyTimezoneNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 
+@RunWith(JUnit4.class)
 public class AgencyConsistencyValidatorTest {
 
-  private static GtfsAgencyTableContainer createAgencyTable(
-      NoticeContainer noticeContainer, List<GtfsAgency> entities) {
-    return GtfsAgencyTableContainer.forEntities(entities, noticeContainer);
+  private static List<ValidationNotice> generateNotices(List<GtfsAgency> agencies) {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    new AgencyConsistencyValidator(GtfsAgencyTableContainer.forEntities(agencies, noticeContainer))
+        .validate(noticeContainer);
+    return noticeContainer.getValidationNotices();
   }
 
   public static GtfsAgency createAgency(
@@ -57,174 +63,141 @@ public class AgencyConsistencyValidatorTest {
 
   @Test
   public void multipleAgenciesPresentButNoAgencyIdSetShouldGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    AgencyConsistencyValidator underTest = new AgencyConsistencyValidator();
-    underTest.agencyTable =
-        createAgencyTable(
-            noticeContainer,
-            ImmutableList.of(
-                createAgency(
-                    0,
-                    "first agency",
-                    "agency name",
-                    "www.mobilitydata.org",
-                    ZoneId.of("America/Montreal"),
-                    Locale.CANADA),
-                createAgency(
-                    1,
-                    null,
-                    "agency name",
-                    "www.mobilitydata.org",
-                    ZoneId.of("America/Montreal"),
-                    Locale.CANADA)));
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createAgency(
+                        0,
+                        "first agency",
+                        "agency name",
+                        "www.mobilitydata.org",
+                        ZoneId.of("America/Montreal"),
+                        Locale.CANADA),
+                    createAgency(
+                        1,
+                        null,
+                        "agency name",
+                        "www.mobilitydata.org",
+                        ZoneId.of("America/Montreal"),
+                        Locale.CANADA))))
         .containsExactly(new MissingRequiredFieldError("agency.txt", 1, "agency_id"));
   }
 
   @Test
   public void agenciesWithDifferentTimezoneShouldGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    AgencyConsistencyValidator underTest = new AgencyConsistencyValidator();
-    underTest.agencyTable =
-        createAgencyTable(
-            noticeContainer,
-            ImmutableList.of(
-                createAgency(
-                    0,
-                    "first agency",
-                    "first agency name",
-                    "www.mobilitydata.org",
-                    ZoneId.of("America/Bogota"),
-                    Locale.CANADA),
-                createAgency(
-                    1,
-                    "second agency",
-                    "second agency name",
-                    "www.mobilitydata.org",
-                    ZoneId.of("America/Montreal"),
-                    Locale.CANADA)));
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createAgency(
+                        0,
+                        "first agency",
+                        "first agency name",
+                        "www.mobilitydata.org",
+                        ZoneId.of("America/Bogota"),
+                        Locale.CANADA),
+                    createAgency(
+                        1,
+                        "second agency",
+                        "second agency name",
+                        "www.mobilitydata.org",
+                        ZoneId.of("America/Montreal"),
+                        Locale.CANADA))))
         .containsExactly(
             new InconsistentAgencyTimezoneNotice(1, "America/Bogota", "America/Montreal"));
   }
 
   @Test
   public void agenciesWithSameTimezoneShouldNotGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    AgencyConsistencyValidator underTest = new AgencyConsistencyValidator();
-    underTest.agencyTable =
-        createAgencyTable(
-            noticeContainer,
-            ImmutableList.of(
-                createAgency(
-                    0,
-                    "first agency",
-                    "first agency name",
-                    "www.mobilitydata.org",
-                    ZoneId.of("America/Montreal"),
-                    Locale.CANADA),
-                createAgency(
-                    1,
-                    "second agency",
-                    "second agency name",
-                    "www.mobilitydata.org",
-                    ZoneId.of("America/Montreal"),
-                    Locale.CANADA)));
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createAgency(
+                        0,
+                        "first agency",
+                        "first agency name",
+                        "www.mobilitydata.org",
+                        ZoneId.of("America/Montreal"),
+                        Locale.CANADA),
+                    createAgency(
+                        1,
+                        "second agency",
+                        "second agency name",
+                        "www.mobilitydata.org",
+                        ZoneId.of("America/Montreal"),
+                        Locale.CANADA))))
+        .isEmpty();
   }
 
   @Test
   public void agenciesWithDifferentLanguagesShouldGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    AgencyConsistencyValidator underTest = new AgencyConsistencyValidator();
-    underTest.agencyTable =
-        createAgencyTable(
-            noticeContainer,
-            ImmutableList.of(
-                createAgency(
-                    0,
-                    "first agency",
-                    "first agency name",
-                    "www.mobilitydata.org",
-                    ZoneId.of("America/Montreal"),
-                    Locale.CANADA),
-                createAgency(
-                    1,
-                    "second agency",
-                    "second agency name",
-                    "www.mobilitydata.org",
-                    ZoneId.of("America/Montreal"),
-                    Locale.FRANCE)));
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createAgency(
+                        0,
+                        "first agency",
+                        "first agency name",
+                        "www.mobilitydata.org",
+                        ZoneId.of("America/Montreal"),
+                        Locale.CANADA),
+                    createAgency(
+                        1,
+                        "second agency",
+                        "second agency name",
+                        "www.mobilitydata.org",
+                        ZoneId.of("America/Montreal"),
+                        Locale.FRANCE))))
         .containsExactly(new InconsistentAgencyLangNotice(1, "en", "fr"));
   }
 
   @Test
   public void agenciesWithSameLanguagesShouldNotGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    AgencyConsistencyValidator underTest = new AgencyConsistencyValidator();
-    underTest.agencyTable =
-        createAgencyTable(
-            noticeContainer,
-            ImmutableList.of(
-                createAgency(
-                    0,
-                    "first agency",
-                    "first agency name",
-                    "www.mobilitydata.org",
-                    ZoneId.of("America/Montreal"),
-                    Locale.CANADA),
-                createAgency(
-                    1,
-                    "second agency",
-                    "second agency name",
-                    "www.mobilitydata.org",
-                    ZoneId.of("America/Montreal"),
-                    Locale.CANADA)));
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createAgency(
+                        0,
+                        "first agency",
+                        "first agency name",
+                        "www.mobilitydata.org",
+                        ZoneId.of("America/Montreal"),
+                        Locale.CANADA),
+                    createAgency(
+                        1,
+                        "second agency",
+                        "second agency name",
+                        "www.mobilitydata.org",
+                        ZoneId.of("America/Montreal"),
+                        Locale.CANADA))))
+        .isEmpty();
   }
 
   @Test
   public void agenciesWithOmittedLanguageShouldNotGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    AgencyConsistencyValidator underTest = new AgencyConsistencyValidator();
-    underTest.agencyTable =
-        createAgencyTable(
-            noticeContainer,
-            ImmutableList.of(
-                createAgency(
-                    1,
-                    "first agency",
-                    "first agency name",
-                    "www.mobilitydata.org",
-                    ZoneId.of("America/Montreal"),
-                    null),
-                createAgency(
-                    2,
-                    "second agency",
-                    "second agency name",
-                    "www.mobilitydata.org",
-                    ZoneId.of("America/Montreal"),
-                    Locale.CANADA_FRENCH),
-                createAgency(
-                    3,
-                    "third agency",
-                    "third agency name",
-                    "www.mobilitydata.org",
-                    ZoneId.of("America/Montreal"),
-                    Locale.CANADA_FRENCH)));
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createAgency(
+                        1,
+                        "first agency",
+                        "first agency name",
+                        "www.mobilitydata.org",
+                        ZoneId.of("America/Montreal"),
+                        null),
+                    createAgency(
+                        2,
+                        "second agency",
+                        "second agency name",
+                        "www.mobilitydata.org",
+                        ZoneId.of("America/Montreal"),
+                        Locale.CANADA_FRENCH),
+                    createAgency(
+                        3,
+                        "third agency",
+                        "third agency name",
+                        "www.mobilitydata.org",
+                        ZoneId.of("America/Montreal"),
+                        Locale.CANADA_FRENCH))))
+        .isEmpty();
   }
 }

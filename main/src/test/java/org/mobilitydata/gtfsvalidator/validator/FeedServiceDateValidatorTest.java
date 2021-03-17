@@ -2,16 +2,27 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import com.google.common.collect.ImmutableList;
+import java.util.List;
 import java.util.Locale;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.MissingFeedInfoDateNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
 public class FeedServiceDateValidatorTest {
 
-  private static GtfsFeedInfo createFeedInfo(
+  private static List<ValidationNotice> generateNotices(List<GtfsFeedInfo> feedInfos) {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    new FeedServiceDateValidator(GtfsFeedInfoTableContainer.forEntities(feedInfos, noticeContainer))
+        .validate(noticeContainer);
+    return noticeContainer.getValidationNotices();
+  }
+
+  public static GtfsFeedInfo createFeedInfo(
       long csvRowNumber,
       String feedPublisherName,
       String feedPublisherUrl,
@@ -34,55 +45,61 @@ public class FeedServiceDateValidatorTest {
 
   @Test
   public void noStartDateShouldGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    FeedServiceDateValidator underTest = new FeedServiceDateValidator();
-
-    underTest.validate(
-        createFeedInfo(
-            1, "name value", "url value", Locale.CANADA, null, GtfsDate.fromEpochDay(450)),
-        noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createFeedInfo(
+                        1,
+                        "name value",
+                        "url value",
+                        Locale.CANADA,
+                        null,
+                        GtfsDate.fromEpochDay(450)))))
         .containsExactly(new MissingFeedInfoDateNotice(1, "feed_start_date"));
   }
 
   @Test
   public void noEndDateShouldGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    FeedServiceDateValidator underTest = new FeedServiceDateValidator();
-
-    underTest.validate(
-        createFeedInfo(
-            1, "name value", "url value", Locale.CANADA, GtfsDate.fromEpochDay(450), null),
-        noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createFeedInfo(
+                        1,
+                        "name value",
+                        "url value",
+                        Locale.CANADA,
+                        GtfsDate.fromEpochDay(450),
+                        null))))
         .containsExactly(new MissingFeedInfoDateNotice(1, "feed_end_date"));
   }
 
   @Test
   public void bothDatesCanBeBlank() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    FeedServiceDateValidator underTest = new FeedServiceDateValidator();
-
-    underTest.validate(
-        createFeedInfo(1, "name value", "https://www.mobilitydata.org", Locale.CANADA, null, null),
-        noticeContainer);
-    assertThat(noticeContainer.getValidationNotices().isEmpty());
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createFeedInfo(
+                        1,
+                        "name value",
+                        "https://www.mobilitydata.org",
+                        Locale.CANADA,
+                        null,
+                        null))))
+        .isEmpty();
   }
 
   @Test
   public void bothDatesCanBeProvided() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    FeedServiceDateValidator underTest = new FeedServiceDateValidator();
-
-    underTest.validate(
-        createFeedInfo(
-            1,
-            "name value",
-            "https://www.mobilitydata.org",
-            Locale.CANADA,
-            GtfsDate.fromEpochDay(450),
-            GtfsDate.fromEpochDay(555)),
-        noticeContainer);
-    assertThat(noticeContainer.getValidationNotices().isEmpty());
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createFeedInfo(
+                        1,
+                        "name value",
+                        "https://www.mobilitydata.org",
+                        Locale.CANADA,
+                        GtfsDate.fromEpochDay(450),
+                        GtfsDate.fromEpochDay(555)))))
+        .isEmpty();
   }
 }

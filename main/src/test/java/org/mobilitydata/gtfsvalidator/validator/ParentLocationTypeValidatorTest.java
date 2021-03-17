@@ -36,41 +36,39 @@ public class ParentLocationTypeValidatorTest {
   private List<ValidationNotice> validateChildAndParent(
       GtfsLocationType childType, GtfsLocationType parentType) {
     NoticeContainer noticeContainer = new NoticeContainer();
-    ParentLocationTypeValidator validator = new ParentLocationTypeValidator();
-    validator.stopTable =
-        GtfsStopTableContainer.forEntities(
-            ImmutableList.of(
-                new GtfsStop.Builder()
-                    .setCsvRowNumber(1)
-                    .setStopId("child")
-                    .setStopName("Child location")
-                    .setLocationType(childType.getNumber())
-                    .setParentStation("parent")
-                    .build(),
-                new GtfsStop.Builder()
-                    .setCsvRowNumber(2)
-                    .setStopId("parent")
-                    .setStopName("Parent location")
-                    .setLocationType(parentType.getNumber())
-                    .build()),
-            noticeContainer);
-    validator.validate(noticeContainer);
+    new ParentLocationTypeValidator(
+            GtfsStopTableContainer.forEntities(
+                ImmutableList.of(
+                    new GtfsStop.Builder()
+                        .setCsvRowNumber(1)
+                        .setStopId("child")
+                        .setStopName("Child location")
+                        .setLocationType(childType.getNumber())
+                        .setParentStation("parent")
+                        .build(),
+                    new GtfsStop.Builder()
+                        .setCsvRowNumber(2)
+                        .setStopId("parent")
+                        .setStopName("Parent location")
+                        .setLocationType(parentType.getNumber())
+                        .build()),
+                noticeContainer))
+        .validate(noticeContainer);
     return noticeContainer.getValidationNotices();
   }
 
   private List<ValidationNotice> validateNoParent(GtfsLocationType locationType) {
     NoticeContainer noticeContainer = new NoticeContainer();
-    ParentLocationTypeValidator validator = new ParentLocationTypeValidator();
-    validator.stopTable =
-        GtfsStopTableContainer.forEntities(
-            ImmutableList.of(
-                new GtfsStop.Builder()
-                    .setCsvRowNumber(1)
-                    .setStopId("child")
-                    .setLocationType(locationType.getNumber())
-                    .build()),
-            noticeContainer);
-    validator.validate(noticeContainer);
+    new ParentLocationTypeValidator(
+            GtfsStopTableContainer.forEntities(
+                ImmutableList.of(
+                    new GtfsStop.Builder()
+                        .setCsvRowNumber(1)
+                        .setStopId("child")
+                        .setLocationType(locationType.getNumber())
+                        .build()),
+                noticeContainer))
+        .validate(noticeContainer);
     return noticeContainer.getValidationNotices();
   }
 

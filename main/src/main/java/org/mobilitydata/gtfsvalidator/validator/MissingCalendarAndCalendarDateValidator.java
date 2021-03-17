@@ -35,8 +35,16 @@ import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
  */
 @GtfsValidator
 public class MissingCalendarAndCalendarDateValidator extends FileValidator {
-  @Inject GtfsCalendarTableContainer calendarTable;
-  @Inject GtfsCalendarDateTableContainer calendarDateTable;
+  private final GtfsCalendarTableContainer calendarTable;
+
+  private final GtfsCalendarDateTableContainer calendarDateTable;
+
+  @Inject
+  MissingCalendarAndCalendarDateValidator(
+      GtfsCalendarTableContainer calendarTable, GtfsCalendarDateTableContainer calendarDateTable) {
+    this.calendarTable = calendarTable;
+    this.calendarDateTable = calendarDateTable;
+  }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {

@@ -37,8 +37,12 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
  */
 @GtfsValidator
 public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedInfo> {
+  private final ValidationContext context;
 
-  @Inject ValidationContext context;
+  @Inject
+  FeedExpirationDateValidator(ValidationContext context) {
+    this.context = context;
+  }
 
   @Override
   public void validate(GtfsFeedInfo entity, NoticeContainer noticeContainer) {

@@ -49,8 +49,15 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
 @GtfsValidator
 public class MatchingFeedAndAgencyLangValidator extends FileValidator {
 
-  @Inject GtfsFeedInfoTableContainer feedInfoTable;
-  @Inject GtfsAgencyTableContainer agencyTable;
+  private final GtfsFeedInfoTableContainer feedInfoTable;
+  private final GtfsAgencyTableContainer agencyTable;
+
+  @Inject
+  MatchingFeedAndAgencyLangValidator(
+      GtfsAgencyTableContainer agencyTable, GtfsFeedInfoTableContainer feedInfoTable) {
+    this.feedInfoTable = feedInfoTable;
+    this.agencyTable = agencyTable;
+  }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
