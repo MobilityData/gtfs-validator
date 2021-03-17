@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.table;
 
 import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
+import org.mobilitydata.gtfsvalidator.annotation.EndRange;
 import org.mobilitydata.gtfsvalidator.annotation.FieldType;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
@@ -54,6 +55,7 @@ public interface GtfsCalendarSchema extends GtfsEntity {
   GtfsCalendarService sunday();
 
   @Required
+  @EndRange(field = "end_date", allowEqual = true)
   GtfsDate startDate();
 
   @Required
