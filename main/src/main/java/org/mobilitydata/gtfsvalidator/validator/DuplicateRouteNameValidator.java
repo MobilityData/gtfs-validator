@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateRouteNameNotice;
@@ -30,8 +31,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
  *
  * <p>When a {@code GtfsRoute} short and/or long names are found to be duplicate a {@code
  * DuplicateRouteNameNotice} is generated and added to the {@code NoticeContainer} except if routes
- * are from the same agency (values for `route.agency_id` are case-sensitive) or routes have
- * different `routes.route_type`.
+ * are from the same agency (values for "route.agency_id" are case-sensitive) or routes have
+ * different "routes.route_type".
  *
  * <p>Generated notice:
  *
@@ -50,50 +51,31 @@ public class DuplicateRouteNameValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    final Map<String, GtfsRoute> routeByLongName = new HashMap<>(routeTable.entityCount());
-    final Map<String, GtfsRoute> routeByShortName = new HashMap<>(routeTable.entityCount());
-    final Map<String, GtfsRoute> routeByShortAndLongName = new HashMap<>(routeTable.entityCount());
+    final Map<Integer, GtfsRoute> routeByLongName = new HashMap<>(routeTable.entityCount());
+    final Map<Integer, GtfsRoute> routeByShortName = new HashMap<>(routeTable.entityCount());
     routeTable
         .getEntities()
         .forEach(
             route -> {
-              if (route.hasRouteShortName() && route.hasRouteLongName()) {
-                if (routeByShortAndLongName.containsKey(getShortAndLongNameKey(route))) {
-                  noticeContainer.addValidationNotice(
-                      new DuplicateRouteNameNotice(
-                          "route_short_name and route_long_name",
-                          route.csvRowNumber(),
-                          route.routeId()));
-                  return;
-                } else {
-                  routeByShortAndLongName.put(getShortAndLongNameKey(route), route);
-                }
-              }
+              GtfsRoute otherRoute;
               if (route.hasRouteLongName()) {
-                if (routeByLongName.containsKey(getRouteLongNameKey(route))) {
-                  if (areRoutesFromSameAgency(
-                      route.agencyId(),
-                      routeByLongName.get(getRouteLongNameKey(route)).agencyId())) {
+                otherRoute = routeByLongName.putIfAbsent(getLongNameAndTypeHash(route), route);
+                if (otherRoute != null) {
+                  if (areRoutesFromSameAgency(route, otherRoute)) {
                     noticeContainer.addValidationNotice(
                         new DuplicateRouteNameNotice(
                             "route_long_name", route.csvRowNumber(), route.routeId()));
                   }
-                  return;
-                } else {
-                  routeByLongName.put(getRouteLongNameKey(route), route);
                 }
               }
               if (route.hasRouteShortName()) {
-                if (routeByShortName.containsKey(getRouteShortNameKey(route))) {
-                  if (areRoutesFromSameAgency(
-                      route.agencyId(),
-                      routeByShortName.get(getRouteShortNameKey(route)).agencyId())) {
+                otherRoute = routeByShortName.putIfAbsent(getShortNameAndTypeHash(route), route);
+                if (otherRoute != null) {
+                  if (areRoutesFromSameAgency(route, otherRoute)) {
                     noticeContainer.addValidationNotice(
                         new DuplicateRouteNameNotice(
                             "route_short_name", route.csvRowNumber(), route.routeId()));
                   }
-                } else {
-                  routeByShortName.put(getRouteShortNameKey(route), route);
                 }
               }
             });
@@ -102,43 +84,35 @@ public class DuplicateRouteNameValidator extends FileValidator {
   /**
    * Determines if two routes are from the same agency: ids are case-sensitive.
    *
-   * @param routeAgencyId first agency_id
-   * @param otherRouteAgencyId second agency_id
+   * @param route first {@code GtfsRoute}
+   * @param otherRoute second {@code GtfsRoute}
    * @return true if both agency ids are equals returns false otherwise.
    */
-  private boolean areRoutesFromSameAgency(
-      final String routeAgencyId, final String otherRouteAgencyId) {
-    return routeAgencyId.equals(otherRouteAgencyId);
+  private boolean areRoutesFromSameAgency(final GtfsRoute route, final GtfsRoute otherRoute) {
+    return route.agencyId().equals(otherRoute.agencyId());
   }
 
   /**
-   * Generate a key used to store {@code GtfsRoute} by `routes.route_long_name`.
+   * Generate an hash associated to "routes.route_long_name" and "routes.route_type". This hash is
+   * used to interact with routeByLongName (variable defined in this class' validate method) to
+   * store and retrieve routes by short name.
    *
-   * @param route the {@code GtfsRoute} to generate the key from
-   * @return `routes.route_long_name`+`route.routeType`
+   * @param route the {@code GtfsRoute} to generate the hash from
+   * @return the hash associated to "routes.route_long_name" and "routes.route_type".
    */
-  private String getRouteLongNameKey(GtfsRoute route) {
-    return route.routeLongName() + route.routeType();
+  private int getLongNameAndTypeHash(GtfsRoute route) {
+    return Objects.hash(route.routeLongName(), route.routeType());
   }
 
   /**
-   * Generate a key used to store {@code GtfsRoute} by `routes.route_short_name`.
+   * Generate an hash associated to "routes.route_short_name" and "routes.route_type". This hash is
+   * used to interact with routeByShortName (variable defined in this class' validate method) to
+   * store and retrieve routes by short name.
    *
-   * @param route the {@code GtfsRoute} to generate the key from
-   * @return `routes.route_short_name`+`route.routeType`
+   * @param route the {@code GtfsRoute} to generate the hash from
+   * @return the hash associated to "routes.route_short_name" and "routes.route_type".
    */
-  private String getRouteShortNameKey(GtfsRoute route) {
-    return route.routeShortName() + route.routeType();
-  }
-
-  /**
-   * Generate a key used to store {@code GtfsRoute} by both `routes.route_short_name` and
-   * `routes.route_long_name`.
-   *
-   * @param route the {@code GtfsRoute} to generate the key from
-   * @return `routes.route_short_name`+`routes.route_long_name`+`route.routeType`
-   */
-  private String getShortAndLongNameKey(GtfsRoute route) {
-    return route.routeShortName() + route.routeLongName() + route.routeType();
+  private int getShortNameAndTypeHash(GtfsRoute route) {
+    return Objects.hash(route.routeShortName(), route.routeType());
   }
 }

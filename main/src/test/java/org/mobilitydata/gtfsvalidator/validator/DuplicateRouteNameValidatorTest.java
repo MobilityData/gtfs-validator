@@ -184,7 +184,7 @@ public class DuplicateRouteNameValidatorTest {
                         "other long name",
                         3))))
         .containsExactly(
-            new DuplicateRouteNameNotice(
-                "route_short_name and route_long_name", 4, "2nd route id value"));
+            new DuplicateRouteNameNotice("route_short_name", 4, "2nd route id value"),
+            new DuplicateRouteNameNotice("route_long_name", 4, "2nd route id value"));
   }
 }
