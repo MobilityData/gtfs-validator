@@ -30,9 +30,4 @@ public class MissingFeedInfoDateNotice extends ValidationNotice {
         ImmutableMap.of("csvRowNumber", csvRowNumber, "fieldName", fieldName),
         SeverityLevel.WARNING);
   }
-
-  @Override
-  public String getCode() {
-    return "missing_feed_info_start_date_or_end_date";
-  }
 }

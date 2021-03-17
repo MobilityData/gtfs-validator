@@ -52,9 +52,4 @@ public class InvalidUrlNotice extends ValidationNotice {
             fieldValue),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "invalid_url";
-  }
 }

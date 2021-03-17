@@ -53,6 +53,8 @@ public abstract class GtfsFieldDescriptor {
 
   public abstract Optional<String> defaultValue();
 
+  public abstract Optional<EndRangeDescriptor> endRange();
+
   @AutoValue.Builder
   public abstract static class Builder {
     public abstract Builder setName(String value);
@@ -84,6 +86,10 @@ public abstract class GtfsFieldDescriptor {
     public abstract Builder setDefaultValue(Optional<String> value);
 
     public abstract Builder setDefaultValue(String value);
+
+    public abstract Builder setEndRange(Optional<EndRangeDescriptor> value);
+
+    public abstract Builder setEndRange(EndRangeDescriptor value);
 
     public abstract GtfsFieldDescriptor build();
   }

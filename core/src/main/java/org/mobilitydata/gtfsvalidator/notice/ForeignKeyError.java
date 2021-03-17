@@ -46,9 +46,4 @@ public class ForeignKeyError extends ValidationNotice {
             .build(),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "foreign_key_error";
-  }
 }

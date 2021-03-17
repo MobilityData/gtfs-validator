@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.table;
 
 import java.util.Locale;
+import org.mobilitydata.gtfsvalidator.annotation.EndRange;
 import org.mobilitydata.gtfsvalidator.annotation.FieldType;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
@@ -37,6 +38,7 @@ public interface GtfsFeedInfoSchema extends GtfsEntity {
 
   Locale defaultLang();
 
+  @EndRange(field = "feed_end_date", allowEqual = true)
   GtfsDate feedStartDate();
 
   GtfsDate feedEndDate();

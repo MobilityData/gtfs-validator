@@ -35,9 +35,4 @@ public class DuplicatedColumnNotice extends ValidationNotice {
             "secondIndex", secondIndex),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "duplicated_column";
-  }
 }

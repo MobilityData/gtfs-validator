@@ -89,6 +89,11 @@ public class GtfsTime implements Comparable<GtfsTime> {
   }
 
   @Override
+  public String toString() {
+    return toHHMMSS();
+  }
+
+  @Override
   public int compareTo(GtfsTime other) {
     return Integer.compare(secondsSinceMidnight, other.secondsSinceMidnight);
   }

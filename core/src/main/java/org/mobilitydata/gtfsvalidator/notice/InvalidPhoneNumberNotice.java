@@ -45,9 +45,4 @@ public class InvalidPhoneNumberNotice extends ValidationNotice {
             fieldValue),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "invalid_phone_number";
-  }
 }

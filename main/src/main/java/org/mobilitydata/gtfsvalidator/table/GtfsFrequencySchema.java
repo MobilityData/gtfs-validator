@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import org.mobilitydata.gtfsvalidator.annotation.EndRange;
 import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.Index;
@@ -31,6 +32,7 @@ public interface GtfsFrequencySchema extends GtfsEntity {
   String tripId();
 
   @Required
+  @EndRange(field = "end_time", allowEqual = false)
   GtfsTime startTime();
 
   @Required

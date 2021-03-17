@@ -100,9 +100,12 @@ public class GtfsAnnotationProcessor extends AbstractProcessor {
       writeJavaFile(new TableLoaderGenerator(fileDescriptor).generateGtfsTableLoaderJavaFile());
       writeJavaFile(new TableContainerGenerator(fileDescriptor).generateGtfsContainerJavaFile());
     }
-    ForeignKeyValidatorGenerator foreignKeyValidatorGenerator =
-        new ForeignKeyValidatorGenerator(fileDescriptors);
-    for (JavaFile javaFile : foreignKeyValidatorGenerator.generateValidatorFiles()) {
+    for (JavaFile javaFile :
+        new ForeignKeyValidatorGenerator(fileDescriptors).generateValidatorFiles()) {
+      writeJavaFile(javaFile);
+    }
+    for (JavaFile javaFile :
+        new EndRangeValidatorGenerator(fileDescriptors).generateValidatorFiles()) {
       writeJavaFile(javaFile);
     }
     return false;

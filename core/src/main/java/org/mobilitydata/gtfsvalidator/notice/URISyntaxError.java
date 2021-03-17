@@ -28,9 +28,4 @@ public class URISyntaxError extends SystemError {
   public URISyntaxError(String message) {
     super(ImmutableMap.of("message", message));
   }
-
-  @Override
-  public String getCode() {
-    return "uri_syntax_error";
-  }
 }

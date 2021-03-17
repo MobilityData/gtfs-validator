@@ -44,9 +44,4 @@ public class InvalidLanguageCodeNotice extends ValidationNotice {
             fieldValue),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "invalid_language_code";
-  }
 }

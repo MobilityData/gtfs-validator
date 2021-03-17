@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2021 MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,28 +17,24 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 /**
- * Two {@code GtfsTime} are out of order
+ * Timepoint without time
  *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>Severity: {@code SeverityLevel.WARNING}
  */
-public class StartAndEndTimeOutOfOrderNotice extends ValidationNotice {
-  public StartAndEndTimeOutOfOrderNotice(
-      String filename, String entityId, long csvRowNumber, GtfsTime startTime, GtfsTime endTime) {
+public class StopTimeTimepointWithoutTimesNotice extends ValidationNotice {
+  public StopTimeTimepointWithoutTimesNotice(
+      final long csvRowNumber,
+      final String tripId,
+      final long stopSequence,
+      final String specifiedField) {
     super(
         ImmutableMap.of(
-            "filename", filename,
             "csvRowNumber", csvRowNumber,
-            "entityId", entityId,
-            "startTime", startTime.toHHMMSS(),
-            "endTime", endTime.toHHMMSS()),
-        SeverityLevel.ERROR);
-  }
-
-  @Override
-  public String getCode() {
-    return "start_and_end_time_out_of_order";
+            "tripId", tripId,
+            "stopSequence", stopSequence,
+            "specifiedField", specifiedField),
+        SeverityLevel.WARNING);
   }
 }

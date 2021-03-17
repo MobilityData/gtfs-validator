@@ -16,11 +16,12 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.MissingFeedInfoDateNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
-import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableLoader;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
 
 /**
  * Validates that if one of {@code (start_date, end_date)} fields is provided for {@code
@@ -29,18 +30,20 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableLoader;
  * <p>Generated notice: {@link MissingFeedInfoDateNotice}.
  */
 @GtfsValidator
-public class FeedServiceDateValidator extends SingleEntityValidator<GtfsFeedInfo> {
+public class FeedServiceDateValidator extends FileValidator {
+
+  @Inject GtfsFeedInfoTableContainer feedInfoTable;
 
   @Override
-  public void validate(GtfsFeedInfo feedInfo, NoticeContainer noticeContainer) {
-    if (feedInfo.hasFeedStartDate() && !feedInfo.hasFeedEndDate()) {
-      noticeContainer.addValidationNotice(
-          new MissingFeedInfoDateNotice(
-              feedInfo.csvRowNumber(), GtfsFeedInfoTableLoader.FEED_END_DATE_FIELD_NAME));
-    } else if (!feedInfo.hasFeedStartDate() && feedInfo.hasFeedEndDate()) {
-      noticeContainer.addValidationNotice(
-          new MissingFeedInfoDateNotice(
-              feedInfo.csvRowNumber(), GtfsFeedInfoTableLoader.FEED_START_DATE_FIELD_NAME));
+  public void validate(NoticeContainer noticeContainer) {
+    for (GtfsFeedInfo feedInfo : feedInfoTable.getEntities()) {
+      if (feedInfo.hasFeedStartDate() && !feedInfo.hasFeedEndDate()) {
+        noticeContainer.addValidationNotice(
+            new MissingFeedInfoDateNotice(feedInfo.csvRowNumber(), "feed_end_date"));
+      } else if (!feedInfo.hasFeedStartDate() && feedInfo.hasFeedEndDate()) {
+        noticeContainer.addValidationNotice(
+            new MissingFeedInfoDateNotice(feedInfo.csvRowNumber(), "feed_start_date"));
+      }
     }
   }
 }

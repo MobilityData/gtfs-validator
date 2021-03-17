@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateFareRuleZoneIdFieldsNotice;
@@ -26,8 +27,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFareRule;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareRuleTableContainer;
 
 /**
- * Validates: unique combination of `fare_rules.route_id`, `fare_rules.origin_id`,
- * `fare_rules.contains_id` and `fare_rules.destination_id` fields in GTFS file `fare_rules.txt`
+ * Validates: unique combination of "fare_rules.route_id", "fare_rules.origin_id",
+ * "fare_rules.contains_id" and "fare_rules.destination_id" fields in GTFS file "fare_rules.txt"
  *
  * <p>Generated notice:
  *
@@ -41,27 +42,34 @@ public class DuplicateFareRuleZoneIdFieldsValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    final Map<String, GtfsFareRule> fareRuleByZoneIdFieldsCombination =
+    final Map<Integer, GtfsFareRule> fareRuleByZoneIdFieldsCombination =
         new HashMap<>(fareRuleTable.entityCount());
     fareRuleTable
         .getEntities()
         .forEach(
             fareRule -> {
-              String fieldsCombination =
-                  fareRule.routeId()
-                      + fareRule.originId()
-                      + fareRule.containsId()
-                      + fareRule.destinationId();
-              if (fareRuleByZoneIdFieldsCombination.containsKey(fieldsCombination)) {
+              GtfsFareRule otherFareRule =
+                  fareRuleByZoneIdFieldsCombination.putIfAbsent(getHash(fareRule), fareRule);
+              if (otherFareRule != null) {
                 noticeContainer.addValidationNotice(
                     new DuplicateFareRuleZoneIdFieldsNotice(
                         fareRule.csvRowNumber(),
                         fareRule.fareId(),
-                        fareRuleByZoneIdFieldsCombination.get(fieldsCombination).csvRowNumber(),
-                        fareRuleByZoneIdFieldsCombination.get(fieldsCombination).fareId()));
-              } else {
-                fareRuleByZoneIdFieldsCombination.put(fieldsCombination, fareRule);
+                        otherFareRule.csvRowNumber(),
+                        otherFareRule.fareId()));
               }
             });
+  }
+
+  /**
+   * Returns the hashcode associated to the combination of "fare_rules.origin_id",
+   * "fare_rules.contains_id" and "fare_rules.destination_id".
+   *
+   * @param fareRule the {@code GtfsFareRule} to generate the hash from
+   * @return the hashcode associated to the combination of this {@code GtfsFareRule} "origin_id",
+   *     "contains_id" and "destination_id".
+   */
+  private int getHash(GtfsFareRule fareRule) {
+    return Objects.hash(fareRule.originId(), fareRule.containsId(), fareRule.destinationId());
   }
 }

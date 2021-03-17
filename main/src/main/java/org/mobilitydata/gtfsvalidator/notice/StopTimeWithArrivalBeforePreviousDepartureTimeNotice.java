@@ -40,9 +40,4 @@ public class StopTimeWithArrivalBeforePreviousDepartureTimeNotice extends Valida
             "arrivalTime", arrivalTime.toHHMMSS()),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "stop_time_with_arrival_before_previous_departure_time";
-  }
 }

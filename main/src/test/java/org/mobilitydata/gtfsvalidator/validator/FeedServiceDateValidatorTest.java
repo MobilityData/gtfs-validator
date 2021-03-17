@@ -6,7 +6,6 @@ import java.util.Locale;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.MissingFeedInfoDateNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.StartAndEndDateOutOfOrderNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 

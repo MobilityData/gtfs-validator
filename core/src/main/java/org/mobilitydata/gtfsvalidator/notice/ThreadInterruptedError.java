@@ -14,9 +14,4 @@ public class ThreadInterruptedError extends SystemError {
   public ThreadInterruptedError(String message) {
     super(ImmutableMap.of("message", message));
   }
-
-  @Override
-  public String getCode() {
-    return "thread_interrupted";
-  }
 }

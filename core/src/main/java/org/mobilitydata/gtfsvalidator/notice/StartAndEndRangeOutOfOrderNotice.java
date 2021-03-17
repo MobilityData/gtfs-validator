@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 MobilityData IO
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,31 +17,41 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 /**
- * Equal `frequencies.start_time` and `frequencies.end_time` from same row of GTFS file
- * `frequencies.txt`.
+ * Start and end range fields are out of order for a certain GTFS entity.
  *
- * <p>The GTFS spec is currently unclear how this case should be handled (e.g., is it a trip that
- * circulates once?). It is recommended to use a trip not defined via frequencies.txt for this case.
+ * <p>Example: {@code start_date &gt; end_date} for {@code calendar.txt}.
  *
- * <p>Severity: {@code SeverityLevel.WARNING}
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class StartAndEndTimeEqualNotice extends ValidationNotice {
-  public StartAndEndTimeEqualNotice(
-      String filename, String entityId, long csvRowNumber, GtfsTime time) {
+public class StartAndEndRangeOutOfOrderNotice extends ValidationNotice {
+
+  public StartAndEndRangeOutOfOrderNotice(
+      String filename, long csvRowNumber, String entityId, String start, String end) {
     super(
         ImmutableMap.of(
             "filename", filename,
             "csvRowNumber", csvRowNumber,
             "entityId", entityId,
-            "time", time.toHHMMSS()),
-        SeverityLevel.WARNING);
+            "start", start,
+            "end", end),
+        SeverityLevel.ERROR);
+  }
+
+  public StartAndEndRangeOutOfOrderNotice(
+      String filename, long csvRowNumber, String start, String end) {
+    super(
+        ImmutableMap.of(
+            "filename", filename,
+            "csvRowNumber", csvRowNumber,
+            "start", start,
+            "end", end),
+        SeverityLevel.ERROR);
   }
 
   @Override
   public String getCode() {
-    return "start_and_end_time_out_of_order";
+    return "start_and_end_range_out_of_order";
   }
 }

@@ -31,9 +31,4 @@ public class BlockTripsWithOverlappingStopTimesNotice extends ValidationNotice {
             .build(),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "block_trips_with_overlapping_stop_times";
-  }
 }

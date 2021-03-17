@@ -31,9 +31,4 @@ public class AttributionWithoutRoleNotice extends ValidationNotice {
         ImmutableMap.of("csvRowNumber", csvRowNumber, "attributionId", attributionId),
         SeverityLevel.WARNING);
   }
-
-  @Override
-  public String getCode() {
-    return "attribution_without_role";
-  }
 }

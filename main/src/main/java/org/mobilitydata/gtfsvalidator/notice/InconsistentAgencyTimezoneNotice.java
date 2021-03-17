@@ -32,9 +32,4 @@ public class InconsistentAgencyTimezoneNotice extends ValidationNotice {
             "actual", actual),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "inconsistent_agency_timezone";
-  }
 }
