@@ -27,6 +27,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.FeedInfoLangAndAgencyLangMismatchNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
@@ -36,9 +37,21 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
 @RunWith(JUnit4.class)
 public class MatchingFeedAndAgencyLangValidatorTest {
 
-  private static GtfsAgencyTableContainer createAgencyTable(
-      NoticeContainer noticeContainer, List<GtfsAgency> entities) {
-    return GtfsAgencyTableContainer.forEntities(entities, noticeContainer);
+  private static List<ValidationNotice> generateNotices(
+      GtfsAgencyTableContainer agencies, GtfsFeedInfoTableContainer feedInfos) {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    new MatchingFeedAndAgencyLangValidator(agencies, feedInfos).validate(noticeContainer);
+    return noticeContainer.getValidationNotices();
+  }
+
+  private static List<ValidationNotice> generateNotices(
+      List<GtfsAgency> agencies, List<GtfsFeedInfo> feedInfos) {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    new MatchingFeedAndAgencyLangValidator(
+            GtfsAgencyTableContainer.forEntities(agencies, noticeContainer),
+            GtfsFeedInfoTableContainer.forEntities(feedInfos, noticeContainer))
+        .validate(noticeContainer);
+    return noticeContainer.getValidationNotices();
   }
 
   public static GtfsAgency createAgency(
@@ -49,11 +62,6 @@ public class MatchingFeedAndAgencyLangValidatorTest {
         .setAgencyLang(agencyLang)
         .setAgencyName(agencyId + " name")
         .build();
-  }
-
-  private static GtfsFeedInfoTableContainer createFeedInfoTable(
-      NoticeContainer noticeContainer, List<GtfsFeedInfo> entities) {
-    return GtfsFeedInfoTableContainer.forEntities(entities, noticeContainer);
   }
 
   public static GtfsFeedInfo createFeedInfo(long csvRowNumber, @Nullable Locale feedLang) {
@@ -67,49 +75,34 @@ public class MatchingFeedAndAgencyLangValidatorTest {
 
   @Test
   public void noFeedInfoShouldNotGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    MatchingFeedAndAgencyLangValidator validator = new MatchingFeedAndAgencyLangValidator();
-    validator.agencyTable = new GtfsAgencyTableContainer(TableStatus.EMPTY_FILE);
-    validator.feedInfoTable = new GtfsFeedInfoTableContainer(TableStatus.EMPTY_FILE);
-    validator.validate(noticeContainer);
-
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(
+            generateNotices(
+                new GtfsAgencyTableContainer(TableStatus.EMPTY_FILE),
+                new GtfsFeedInfoTableContainer(TableStatus.EMPTY_FILE)))
+        .isEmpty();
   }
 
   @Test
   public void noFeedLangShouldNotGenerateNotice() {
     // If feed_lang is not set, then it is not compared to agency_lang.
-    NoticeContainer noticeContainer = new NoticeContainer();
-    MatchingFeedAndAgencyLangValidator validator = new MatchingFeedAndAgencyLangValidator();
-    validator.agencyTable =
-        createAgencyTable(
-            noticeContainer,
-            ImmutableList.of(
-                createAgency(2, "agencyEn", Locale.ENGLISH),
-                createAgency(3, "agencyFr", Locale.FRANCE)));
-    validator.feedInfoTable =
-        createFeedInfoTable(noticeContainer, ImmutableList.of(createFeedInfo(1, null)));
-    validator.validate(noticeContainer);
-
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createAgency(2, "agencyEn", Locale.ENGLISH),
+                    createAgency(3, "agencyFr", Locale.FRANCE)),
+                ImmutableList.of(createFeedInfo(1, null))))
+        .isEmpty();
   }
 
   @Test
   public void languageMismatch() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    MatchingFeedAndAgencyLangValidator validator = new MatchingFeedAndAgencyLangValidator();
-    validator.agencyTable =
-        createAgencyTable(
-            noticeContainer,
-            ImmutableList.of(
-                createAgency(2, "agencyCa", Locale.CANADA_FRENCH),
-                createAgency(3, "agencyFr", Locale.FRANCE),
-                createAgency(4, "agencyEmpty", null)));
-    validator.feedInfoTable =
-        createFeedInfoTable(noticeContainer, ImmutableList.of(createFeedInfo(1, Locale.FRANCE)));
-    validator.validate(noticeContainer);
-
-    assertThat(noticeContainer.getValidationNotices())
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createAgency(2, "agencyCa", Locale.CANADA_FRENCH),
+                    createAgency(3, "agencyFr", Locale.FRANCE),
+                    createAgency(4, "agencyEmpty", null)),
+                ImmutableList.of(createFeedInfo(1, Locale.FRANCE))))
         .containsExactly(
             new FeedInfoLangAndAgencyLangMismatchNotice(
                 2, "agencyCa", "agencyCa name", "fr-CA", "fr-FR"));
@@ -117,34 +110,21 @@ public class MatchingFeedAndAgencyLangValidatorTest {
 
   @Test
   public void multilanguageFeedDifferentAgencies() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    MatchingFeedAndAgencyLangValidator validator = new MatchingFeedAndAgencyLangValidator();
-    validator.agencyTable =
-        createAgencyTable(
-            noticeContainer,
-            ImmutableList.of(
-                createAgency(2, "agencyEn", Locale.ENGLISH),
-                createAgency(3, "agencyFr", Locale.FRANCE)));
-    validator.feedInfoTable =
-        createFeedInfoTable(
-            noticeContainer, ImmutableList.of(createFeedInfo(1, Locale.forLanguageTag("mul"))));
-    validator.validate(noticeContainer);
-
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createAgency(2, "agencyEn", Locale.ENGLISH),
+                    createAgency(3, "agencyFr", Locale.FRANCE)),
+                ImmutableList.of(createFeedInfo(1, Locale.forLanguageTag("mul")))))
+        .isEmpty();
   }
 
   @Test
   public void multilanguageFeedSingleAgency() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    MatchingFeedAndAgencyLangValidator validator = new MatchingFeedAndAgencyLangValidator();
-    validator.agencyTable =
-        createAgencyTable(
-            noticeContainer, ImmutableList.of(createAgency(2, "agencyEn", Locale.ENGLISH)));
-    validator.feedInfoTable =
-        createFeedInfoTable(
-            noticeContainer, ImmutableList.of(createFeedInfo(1, Locale.forLanguageTag("mul"))));
-    validator.validate(noticeContainer);
-
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(
+            generateNotices(
+                ImmutableList.of(createAgency(2, "agencyEn", Locale.ENGLISH)),
+                ImmutableList.of(createFeedInfo(1, Locale.forLanguageTag("mul")))))
+        .isEmpty();
   }
 }

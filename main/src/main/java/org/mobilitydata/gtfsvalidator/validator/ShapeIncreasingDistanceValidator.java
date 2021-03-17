@@ -32,7 +32,12 @@ import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
  */
 @GtfsValidator
 public class ShapeIncreasingDistanceValidator extends FileValidator {
-  @Inject GtfsShapeTableContainer table;
+  private final GtfsShapeTableContainer table;
+
+  @Inject
+  ShapeIncreasingDistanceValidator(GtfsShapeTableContainer table) {
+    this.table = table;
+  }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {

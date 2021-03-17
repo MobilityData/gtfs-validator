@@ -23,10 +23,10 @@ import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.MissingTripEdgeNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
-import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 public class MissingTripEdgeValidatorTest {
@@ -55,134 +55,104 @@ public class MissingTripEdgeValidatorTest {
         .build();
   }
 
-  private static GtfsTripTableContainer createTripTable(
-      NoticeContainer noticeContainer, List<GtfsTrip> entities) {
-    return GtfsTripTableContainer.forEntities(entities, noticeContainer);
-  }
-
-  private static GtfsStopTimeTableContainer createStopTimeTable(
-      NoticeContainer noticeContainer, List<GtfsStopTime> entities) {
-    return GtfsStopTimeTableContainer.forEntities(entities, noticeContainer);
+  private static List<ValidationNotice> generateNotices(List<GtfsStopTime> stopTimes) {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    new MissingTripEdgeValidator(GtfsStopTimeTableContainer.forEntities(stopTimes, noticeContainer))
+        .validate(noticeContainer);
+    return noticeContainer.getValidationNotices();
   }
 
   @Test
   public void tripWithFirstStopMissingArrivalTimeShouldGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    MissingTripEdgeValidator underTest = new MissingTripEdgeValidator();
-    underTest.stopTimeTable =
-        createStopTimeTable(
-            noticeContainer,
-            ImmutableList.of(
-                createStopTime(2, "trip id value", null, GtfsTime.fromSecondsSinceMidnight(23), 1),
-                createStopTime(4, "trip id value", null, null, 2),
-                createStopTime(5, "trip id value", null, null, 3),
-                createStopTime(
-                    3,
-                    "trip id value",
-                    GtfsTime.fromSecondsSinceMidnight(28),
-                    GtfsTime.fromSecondsSinceMidnight(35),
-                    4)));
-    underTest.validate(noticeContainer);
-
-    assertThat(noticeContainer.getValidationNotices())
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createStopTime(
+                        2, "trip id value", null, GtfsTime.fromSecondsSinceMidnight(23), 1),
+                    createStopTime(4, "trip id value", null, null, 2),
+                    createStopTime(5, "trip id value", null, null, 3),
+                    createStopTime(
+                        3,
+                        "trip id value",
+                        GtfsTime.fromSecondsSinceMidnight(28),
+                        GtfsTime.fromSecondsSinceMidnight(35),
+                        4))))
         .containsExactly(new MissingTripEdgeNotice(2, 1, "trip id value", "arrival_time"));
   }
 
   @Test
   public void tripWithFirstStopMissingDepartureTimeShouldGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    MissingTripEdgeValidator underTest = new MissingTripEdgeValidator();
-    underTest.stopTimeTable =
-        createStopTimeTable(
-            noticeContainer,
-            ImmutableList.of(
-                createStopTime(2, "trip id value", GtfsTime.fromSecondsSinceMidnight(23), null, 1),
-                createStopTime(4, "trip id value", null, null, 2),
-                createStopTime(5, "trip id value", null, null, 3),
-                createStopTime(
-                    3,
-                    "trip id value",
-                    GtfsTime.fromSecondsSinceMidnight(28),
-                    GtfsTime.fromSecondsSinceMidnight(35),
-                    5)));
-    underTest.validate(noticeContainer);
-
-    assertThat(noticeContainer.getValidationNotices())
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createStopTime(
+                        2, "trip id value", GtfsTime.fromSecondsSinceMidnight(23), null, 1),
+                    createStopTime(4, "trip id value", null, null, 2),
+                    createStopTime(5, "trip id value", null, null, 3),
+                    createStopTime(
+                        3,
+                        "trip id value",
+                        GtfsTime.fromSecondsSinceMidnight(28),
+                        GtfsTime.fromSecondsSinceMidnight(35),
+                        5))))
         .containsExactly(new MissingTripEdgeNotice(2, 1, "trip id value", "departure_time"));
   }
 
   @Test
   public void tripWithLastStopMissingArrivalTimeShouldGenerateNotices() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    MissingTripEdgeValidator underTest = new MissingTripEdgeValidator();
-    underTest.stopTimeTable =
-        createStopTimeTable(
-            noticeContainer,
-            ImmutableList.of(
-                createStopTime(
-                    2,
-                    "trip id value",
-                    GtfsTime.fromSecondsSinceMidnight(23),
-                    GtfsTime.fromSecondsSinceMidnight(46),
-                    1),
-                createStopTime(4, "trip id value", null, null, 2),
-                createStopTime(5, "trip id value", null, null, 3),
-                createStopTime(
-                    10, "trip id value", null, GtfsTime.fromSecondsSinceMidnight(456), 5)));
-    underTest.validate(noticeContainer);
-
-    assertThat(noticeContainer.getValidationNotices())
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createStopTime(
+                        2,
+                        "trip id value",
+                        GtfsTime.fromSecondsSinceMidnight(23),
+                        GtfsTime.fromSecondsSinceMidnight(46),
+                        1),
+                    createStopTime(4, "trip id value", null, null, 2),
+                    createStopTime(5, "trip id value", null, null, 3),
+                    createStopTime(
+                        10, "trip id value", null, GtfsTime.fromSecondsSinceMidnight(456), 5))))
         .containsExactly(new MissingTripEdgeNotice(10, 5, "trip id value", "arrival_time"));
   }
 
   @Test
   public void tripWithLastStopMissingDepartureTimeShouldGenerateNotices() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    MissingTripEdgeValidator underTest = new MissingTripEdgeValidator();
-    underTest.stopTimeTable =
-        createStopTimeTable(
-            noticeContainer,
-            ImmutableList.of(
-                createStopTime(
-                    2,
-                    "trip id value",
-                    GtfsTime.fromSecondsSinceMidnight(23),
-                    GtfsTime.fromSecondsSinceMidnight(46),
-                    1),
-                createStopTime(4, "trip id value", null, null, 2),
-                createStopTime(5, "trip id value", null, null, 3),
-                createStopTime(
-                    10, "trip id value", GtfsTime.fromSecondsSinceMidnight(456), null, 5)));
-    underTest.validate(noticeContainer);
-
-    assertThat(noticeContainer.getValidationNotices())
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createStopTime(
+                        2,
+                        "trip id value",
+                        GtfsTime.fromSecondsSinceMidnight(23),
+                        GtfsTime.fromSecondsSinceMidnight(46),
+                        1),
+                    createStopTime(4, "trip id value", null, null, 2),
+                    createStopTime(5, "trip id value", null, null, 3),
+                    createStopTime(
+                        10, "trip id value", GtfsTime.fromSecondsSinceMidnight(456), null, 5))))
         .containsExactly(new MissingTripEdgeNotice(10, 5, "trip id value", "departure_time"));
   }
 
   @Test
   public void tripWithValidEdgesShouldNotGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    MissingTripEdgeValidator underTest = new MissingTripEdgeValidator();
-    underTest.stopTimeTable =
-        createStopTimeTable(
-            noticeContainer,
-            ImmutableList.of(
-                createStopTime(
-                    2,
-                    "trip id value",
-                    GtfsTime.fromSecondsSinceMidnight(23),
-                    GtfsTime.fromSecondsSinceMidnight(46),
-                    1),
-                createStopTime(4, "trip id value", null, null, 2),
-                createStopTime(5, "trip id value", null, null, 3),
-                createStopTime(
-                    10,
-                    "trip id value",
-                    GtfsTime.fromSecondsSinceMidnight(456),
-                    GtfsTime.fromSecondsSinceMidnight(3556467),
-                    4)));
-    underTest.validate(noticeContainer);
-
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createStopTime(
+                        2,
+                        "trip id value",
+                        GtfsTime.fromSecondsSinceMidnight(23),
+                        GtfsTime.fromSecondsSinceMidnight(46),
+                        1),
+                    createStopTime(4, "trip id value", null, null, 2),
+                    createStopTime(5, "trip id value", null, null, 3),
+                    createStopTime(
+                        10,
+                        "trip id value",
+                        GtfsTime.fromSecondsSinceMidnight(456),
+                        GtfsTime.fromSecondsSinceMidnight(3556467),
+                        4))))
+        .isEmpty();
   }
 }

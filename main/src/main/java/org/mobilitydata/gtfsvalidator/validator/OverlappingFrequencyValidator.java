@@ -25,7 +25,12 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFrequencyTableContainer;
  */
 @GtfsValidator
 public class OverlappingFrequencyValidator extends FileValidator {
-  @Inject GtfsFrequencyTableContainer table;
+  private final GtfsFrequencyTableContainer table;
+
+  @Inject
+  OverlappingFrequencyValidator(GtfsFrequencyTableContainer table) {
+    this.table = table;
+  }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {

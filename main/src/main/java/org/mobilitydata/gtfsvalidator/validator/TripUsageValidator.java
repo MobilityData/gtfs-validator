@@ -34,8 +34,14 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
  */
 @GtfsValidator
 public class TripUsageValidator extends FileValidator {
-  @Inject GtfsTripTableContainer tripTable;
-  @Inject GtfsStopTimeTableContainer stopTimeTable;
+  private final GtfsTripTableContainer tripTable;
+  private final GtfsStopTimeTableContainer stopTimeTable;
+
+  @Inject
+  TripUsageValidator(GtfsTripTableContainer tripTable, GtfsStopTimeTableContainer stopTimeTable) {
+    this.tripTable = tripTable;
+    this.stopTimeTable = stopTimeTable;
+  }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {

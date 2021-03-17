@@ -32,7 +32,12 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
 @GtfsValidator
 public class FeedServiceDateValidator extends FileValidator {
 
-  @Inject GtfsFeedInfoTableContainer feedInfoTable;
+  private final GtfsFeedInfoTableContainer feedInfoTable;
+
+  @Inject
+  FeedServiceDateValidator(GtfsFeedInfoTableContainer feedInfoTable) {
+    this.feedInfoTable = feedInfoTable;
+  }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {

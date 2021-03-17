@@ -41,7 +41,12 @@ import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
  */
 @GtfsValidator
 public class DuplicateRouteNameValidator extends FileValidator {
-  @Inject GtfsRouteTableContainer routeTable;
+  private final GtfsRouteTableContainer routeTable;
+
+  @Inject
+  DuplicateRouteNameValidator(GtfsRouteTableContainer routeTable) {
+    this.routeTable = routeTable;
+  }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {

@@ -27,19 +27,18 @@ public class OverlappingFrequencyValidatorTest {
         .build();
   }
 
-  private List<ValidationNotice> validateFrequencies(GtfsFrequency... frequencies) {
+  private List<ValidationNotice> generateNotices(GtfsFrequency... frequencies) {
     NoticeContainer noticeContainer = new NoticeContainer();
-    OverlappingFrequencyValidator validator = new OverlappingFrequencyValidator();
-    validator.table =
-        GtfsFrequencyTableContainer.forEntities(Arrays.asList(frequencies), noticeContainer);
-    validator.validate(noticeContainer);
+    new OverlappingFrequencyValidator(
+            GtfsFrequencyTableContainer.forEntities(Arrays.asList(frequencies), noticeContainer))
+        .validate(noticeContainer);
     return noticeContainer.getValidationNotices();
   }
 
   @Test
   public void validSequentialInOrder() {
     assertThat(
-            validateFrequencies(
+            generateNotices(
                 createFrequency(2, "t0", "05:00:00", "07:00:00", 600),
                 createFrequency(3, "t0", "07:00:00", "10:00:00", 300)))
         .isEmpty();
@@ -48,7 +47,7 @@ public class OverlappingFrequencyValidatorTest {
   @Test
   public void validSequentialReversed() {
     assertThat(
-            validateFrequencies(
+            generateNotices(
                 createFrequency(2, "t0", "07:00:00", "10:00:00", 300),
                 createFrequency(3, "t0", "05:00:00", "07:00:00", 600)))
         .isEmpty();
@@ -57,7 +56,7 @@ public class OverlappingFrequencyValidatorTest {
   @Test
   public void validWithGap() {
     assertThat(
-            validateFrequencies(
+            generateNotices(
                 createFrequency(2, "t0", "05:00:00", "07:00:00", 600),
                 createFrequency(3, "t0", "08:00:00", "10:00:00", 300)))
         .isEmpty();
@@ -66,7 +65,7 @@ public class OverlappingFrequencyValidatorTest {
   @Test
   public void validDifferentTrips() {
     assertThat(
-            validateFrequencies(
+            generateNotices(
                 createFrequency(2, "t0", "05:00:00", "07:00:00", 600),
                 createFrequency(3, "t1", "06:00:00", "10:00:00", 300)))
         .isEmpty();
@@ -75,7 +74,7 @@ public class OverlappingFrequencyValidatorTest {
   @Test
   public void overlappingPartially() {
     assertThat(
-            validateFrequencies(
+            generateNotices(
                 createFrequency(2, "t0", "05:00:00", "07:00:00", 600),
                 createFrequency(3, "t0", "06:00:00", "10:00:00", 300)))
         .containsExactly(
@@ -86,7 +85,7 @@ public class OverlappingFrequencyValidatorTest {
   @Test
   public void overlappingIncludedSameStart() {
     assertThat(
-            validateFrequencies(
+            generateNotices(
                 createFrequency(2, "t0", "05:00:00", "07:00:00", 600),
                 createFrequency(3, "t0", "05:00:00", "06:30:00", 300)))
         .containsExactly(
@@ -97,7 +96,7 @@ public class OverlappingFrequencyValidatorTest {
   @Test
   public void overlappingIncludedSameEnd() {
     assertThat(
-            validateFrequencies(
+            generateNotices(
                 createFrequency(2, "t0", "05:00:00", "07:00:00", 600),
                 createFrequency(3, "t0", "06:30:00", "07:00:00", 300)))
         .containsExactly(
@@ -108,7 +107,7 @@ public class OverlappingFrequencyValidatorTest {
   @Test
   public void overlappingIncluded() {
     assertThat(
-            validateFrequencies(
+            generateNotices(
                 createFrequency(2, "t0", "07:00:00", "12:00:00", 600),
                 createFrequency(3, "t0", "08:00:00", "11:00:00", 300)))
         .containsExactly(
@@ -119,7 +118,7 @@ public class OverlappingFrequencyValidatorTest {
   @Test
   public void overlappingThreeIntervals() {
     assertThat(
-            validateFrequencies(
+            generateNotices(
                 createFrequency(2, "t0", "05:00:00", "05:25:00", 600),
                 createFrequency(3, "t0", "05:00:00", "05:15:00", 300),
                 createFrequency(4, "t0", "05:20:00", "05:40:00", 300)))

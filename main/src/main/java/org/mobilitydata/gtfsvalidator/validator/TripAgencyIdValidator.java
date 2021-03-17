@@ -33,9 +33,14 @@ import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableLoader;
  */
 @GtfsValidator
 public class TripAgencyIdValidator extends FileValidator {
-  @Inject GtfsAgencyTableContainer agencyTable;
+  private final GtfsAgencyTableContainer agencyTable;
+  private final GtfsRouteTableContainer routeTable;
 
-  @Inject GtfsRouteTableContainer routeTable;
+  @Inject
+  TripAgencyIdValidator(GtfsAgencyTableContainer agencyTable, GtfsRouteTableContainer routeTable) {
+    this.agencyTable = agencyTable;
+    this.routeTable = routeTable;
+  }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
