@@ -76,8 +76,7 @@ public class DuplicateFareRuleZoneIdFieldsValidatorTest {
                     createFareRule(
                         99, "other fare id value", "route id", "other from id", "by id", "to id"),
                     createFareRule(
-                        101, "other fare id value", null, "other from id", "by id", "to id")
-                    )))
+                        101, "other fare id value", null, "other from id", "by id", "to id"))))
         .isEmpty();
   }
 
