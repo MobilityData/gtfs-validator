@@ -8,11 +8,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.OverlappingFrequencyNotice;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFrequency;
 import org.mobilitydata.gtfsvalidator.table.GtfsFrequencyTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
+import org.mobilitydata.gtfsvalidator.validator.OverlappingFrequencyValidator.OverlappingFrequencyNotice;
 
 @RunWith(JUnit4.class)
 public class OverlappingFrequencyValidatorTest {

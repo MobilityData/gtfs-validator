@@ -16,10 +16,12 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.collect.ImmutableMap;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.MissingCalendarAndCalendarDateFilesNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
 
@@ -50,6 +52,17 @@ public class MissingCalendarAndCalendarDateValidator extends FileValidator {
   public void validate(NoticeContainer noticeContainer) {
     if (calendarTable.isMissingFile() && calendarDateTable.isMissingFile()) {
       noticeContainer.addValidationNotice(new MissingCalendarAndCalendarDateFilesNotice());
+    }
+  }
+
+  /**
+   * GTFS files `calendar.txt` and `calendar_dates.txt` cannot be missing from the GTFS archive.
+   *
+   * <p>Severity: {@code SeverityLevel.ERROR}
+   */
+  static class MissingCalendarAndCalendarDateFilesNotice extends ValidationNotice {
+    MissingCalendarAndCalendarDateFilesNotice() {
+      super(ImmutableMap.of(), SeverityLevel.ERROR);
     }
   }
 }

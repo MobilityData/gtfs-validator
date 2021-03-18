@@ -16,15 +16,17 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimaps;
 import java.util.List;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.DecreasingOrEqualShapeDistanceNotice;
-import org.mobilitydata.gtfsvalidator.notice.DecreasingOrEqualStopTimeDistanceNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
+import org.mobilitydata.gtfsvalidator.validator.ShapeIncreasingDistanceValidator.DecreasingOrEqualShapeDistanceNotice;
 
 /**
  * Validates: stop times of a trip have increasing distance (stops.shape_dist_traveled)
@@ -62,6 +64,38 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
                   prev.stopSequence()));
         }
       }
+    }
+  }
+
+  /**
+   * When sorted on `stops.stop_sequence` key, stop times should have strictly increasing values for
+   * `stops.shape_dist_traveled`
+   *
+   * <p>"Values used for shape_dist_traveled must increase along with stop_sequence"
+   * (http://gtfs.org/reference/static/#stoptimestxt)
+   *
+   * <p>Severity: {@code SeverityLevel.ERROR}
+   */
+  static class DecreasingOrEqualStopTimeDistanceNotice extends ValidationNotice {
+    DecreasingOrEqualStopTimeDistanceNotice(
+        String tripId,
+        long csvRowNumber,
+        double shapeDistTraveled,
+        int stopSequence,
+        long prevCsvRowNumber,
+        double prevStopTimeDistTraveled,
+        int prevStopSequence) {
+      super(
+          new ImmutableMap.Builder<String, Object>()
+              .put("tripId", tripId)
+              .put("csvRowNumber", csvRowNumber)
+              .put("shapeDistTraveled", shapeDistTraveled)
+              .put("stopSequence", stopSequence)
+              .put("prevCsvRowNumber", prevCsvRowNumber)
+              .put("prevStopTimeDistTraveled", prevStopTimeDistTraveled)
+              .put("prevStopSequence", prevStopSequence)
+              .build(),
+          SeverityLevel.ERROR);
     }
   }
 }

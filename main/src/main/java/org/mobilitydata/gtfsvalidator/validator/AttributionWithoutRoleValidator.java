@@ -16,9 +16,11 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.AttributionWithoutRoleNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsAttribution;
 import org.mobilitydata.gtfsvalidator.table.GtfsAttributionRole;
 
@@ -42,6 +44,21 @@ public class AttributionWithoutRoleValidator extends SingleEntityValidator<GtfsA
       noticeContainer.addValidationNotice(
           new AttributionWithoutRoleNotice(
               attribution.csvRowNumber(), attribution.attributionId()));
+    }
+  }
+
+  /**
+   * A row from GTFS file `attributions.txt` has fields `attributions.is_producer`,
+   * `attributions.is_operator`, and `attributions.is_authority` not defined or set at 0.
+   *
+   * <p>Severity: {@code SeverityLevel.WARNING}
+   */
+  static class AttributionWithoutRoleNotice extends ValidationNotice {
+
+    AttributionWithoutRoleNotice(long csvRowNumber, String attributionId) {
+      super(
+          ImmutableMap.of("csvRowNumber", csvRowNumber, "attributionId", attributionId),
+          SeverityLevel.WARNING);
     }
   }
 }

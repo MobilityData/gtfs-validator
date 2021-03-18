@@ -21,11 +21,11 @@ import static com.google.common.truth.Truth.assertThat;
 import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.StopTimeTimepointWithoutTimesNotice;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
+import org.mobilitydata.gtfsvalidator.validator.TimepointTimeValidator.StopTimeTimepointWithoutTimesNotice;
 
 public class TimepointTimeValidatorTest {
 

@@ -19,13 +19,15 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME;
 import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimaps;
 import java.util.List;
 import java.util.Map.Entry;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.MissingTripEdgeNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 
@@ -85,6 +87,29 @@ public class MissingTripEdgeValidator extends FileValidator {
                 tripId,
                 DEPARTURE_TIME_FIELD_NAME));
       }
+    }
+  }
+
+  /**
+   * "First and last stop of a trip must define both `arrival_time` and `departure_time` fields."
+   *
+   * <p>"If there are not separate times for arrival and departure at a stop, enter the same value
+   * for arrival_time and departure_time."
+   *
+   * <p>(http://gtfs.org/reference/static/#stop_timestxt)
+   *
+   * <p>Severity: {@code SeverityLevel.ERROR}
+   */
+  static class MissingTripEdgeNotice extends ValidationNotice {
+    MissingTripEdgeNotice(
+        long csvRowNumber, int stopSequence, String tripId, String specifiedField) {
+      super(
+          ImmutableMap.of(
+              "csvRowNumber", csvRowNumber,
+              "stopSequence", stopSequence,
+              "tripId", tripId,
+              "specifiedField", specifiedField),
+          SeverityLevel.ERROR);
     }
   }
 }

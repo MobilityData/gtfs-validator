@@ -16,16 +16,18 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimaps;
 import java.util.List;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.StopTimeWithArrivalBeforePreviousDepartureTimeNotice;
-import org.mobilitydata.gtfsvalidator.notice.StopTimeWithOnlyArrivalOrDepartureTimeNotice;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader;
+import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 /**
  * Validates departure_time and arrival_time fields in "stop_times.txt".
@@ -83,6 +85,47 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
           previousDepartureRow = i;
         }
       }
+    }
+  }
+
+  /**
+   * Two {@code GtfsTime} are out of order
+   *
+   * <p>Severity: {@code SeverityLevel.ERROR}
+   */
+  static class StopTimeWithArrivalBeforePreviousDepartureTimeNotice extends ValidationNotice {
+    StopTimeWithArrivalBeforePreviousDepartureTimeNotice(
+        long csvRowNumber,
+        long prevCsvRowNumber,
+        String tripId,
+        GtfsTime arrivalTime,
+        GtfsTime departureTime) {
+      super(
+          ImmutableMap.of(
+              "csvRowNumber", csvRowNumber,
+              "prevCsvRowNumber", prevCsvRowNumber,
+              "tripId", tripId,
+              "departureTime", departureTime.toHHMMSS(),
+              "arrivalTime", arrivalTime.toHHMMSS()),
+          SeverityLevel.ERROR);
+    }
+  }
+
+  /**
+   * Missing `stop_times.arrival_time` or `stop_times.departure_time`
+   *
+   * <p>Severity: {@code SeverityLevel.ERROR}
+   */
+  static class StopTimeWithOnlyArrivalOrDepartureTimeNotice extends ValidationNotice {
+    StopTimeWithOnlyArrivalOrDepartureTimeNotice(
+        long csvRowNumber, String tripId, int stopSequence, String specifiedField) {
+      super(
+          ImmutableMap.of(
+              "csvRowNumber", csvRowNumber,
+              "tripId", tripId,
+              "stopSequence", stopSequence,
+              "specifiedField", specifiedField),
+          SeverityLevel.ERROR);
     }
   }
 }

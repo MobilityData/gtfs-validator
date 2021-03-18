@@ -16,12 +16,14 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.UnusedShapeNotice;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
@@ -51,6 +53,22 @@ public class ShapeUsageValidator extends FileValidator {
       if (reportedShapes.add(shapeId) && tripTable.byShapeId(shapeId).isEmpty()) {
         noticeContainer.addValidationNotice(new UnusedShapeNotice(shapeId, shape.csvRowNumber()));
       }
+    }
+  }
+
+  /**
+   * A {@code GtfsShape} should be referred to at least once in {@code GtfsTripTableContainer}
+   * station).
+   *
+   * <p>Severity: {@code SeverityLevel.WARNING}
+   */
+  static class UnusedShapeNotice extends ValidationNotice {
+    UnusedShapeNotice(String shapeId, long csvRowNumber) {
+      super(
+          ImmutableMap.of(
+              "shapeId", shapeId,
+              "csvRowNumber", csvRowNumber),
+          SeverityLevel.WARNING);
     }
   }
 }
