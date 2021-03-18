@@ -25,7 +25,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.notice.MissingCalendarAndCalendarDateFilesNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
@@ -35,6 +34,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.util.CalendarUtilTest;
+import org.mobilitydata.gtfsvalidator.validator.MissingCalendarAndCalendarDateValidator.MissingCalendarAndCalendarDateFilesNotice;
 
 public class MissingCalendarAndCalendarDateValidatorTest {
   static final Set<DayOfWeek> weekDays =

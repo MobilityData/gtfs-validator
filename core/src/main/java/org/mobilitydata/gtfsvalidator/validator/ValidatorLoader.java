@@ -22,7 +22,6 @@ import com.google.common.flogger.FluentLogger;
 import com.google.common.reflect.ClassPath;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -124,13 +123,6 @@ public class ValidatorLoader {
         return;
       }
       injectedTables.add((Class<? extends GtfsTableContainer<?>>) parameterType);
-    }
-
-    for (Field field : validatorClass.getDeclaredFields()) {
-      if (field.isAnnotationPresent(Inject.class)
-          && GtfsTableContainer.class.isAssignableFrom(field.getType())) {
-        injectedTables.add((Class<? extends GtfsTableContainer<?>>) field.getType());
-      }
     }
 
     if (injectedTables.size() == 1) {
@@ -240,16 +232,7 @@ public class ValidatorLoader {
       parameters[i] = provider.apply(chosenConstructor.getParameters()[i].getType());
     }
     chosenConstructor.setAccessible(true);
-    T validator = chosenConstructor.newInstance(parameters);
-
-    // Inject fields.
-    for (Field field : clazz.getDeclaredFields()) {
-      if (field.isAnnotationPresent(Inject.class)) {
-        field.setAccessible(true);
-        field.set(validator, provider.apply(field.getType()));
-      }
-    }
-    return validator;
+    return chosenConstructor.newInstance(parameters);
   }
 
   private FileValidator createSingleFileValidator(

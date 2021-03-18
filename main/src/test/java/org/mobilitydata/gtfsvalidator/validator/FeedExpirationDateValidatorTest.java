@@ -24,11 +24,11 @@ import java.util.List;
 import java.util.Locale;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
-import org.mobilitydata.gtfsvalidator.notice.FeedExpirationDateNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
+import org.mobilitydata.gtfsvalidator.validator.FeedExpirationDateValidator.FeedExpirationDateNotice;
 
 public class FeedExpirationDateValidatorTest {
   private static final GtfsFeedName TEST_FEED_NAME = GtfsFeedName.parseString("au-sydney-buses");

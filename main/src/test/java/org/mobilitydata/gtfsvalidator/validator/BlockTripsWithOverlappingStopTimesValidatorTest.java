@@ -13,7 +13,6 @@ import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.notice.BlockTripsWithOverlappingStopTimesNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
@@ -27,6 +26,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 import org.mobilitydata.gtfsvalidator.util.CalendarUtilTest;
+import org.mobilitydata.gtfsvalidator.validator.BlockTripsWithOverlappingStopTimesValidator.BlockTripsWithOverlappingStopTimesNotice;
 
 @RunWith(JUnit4.class)
 public class BlockTripsWithOverlappingStopTimesValidatorTest {
@@ -151,12 +151,14 @@ public class BlockTripsWithOverlappingStopTimesValidatorTest {
 
   @Test
   public void overlapWithSameServiceId() {
+    List<GtfsTrip> trips =
+        createTripTable(
+            new String[] {"t0", "t1", "t2"}, new String[] {"WEEK", "WEEK", "WEEK"}, "b1");
     assertThat(
             generateNotices(
                 createCalendarTable(),
                 ImmutableList.of(),
-                createTripTable(
-                    new String[] {"t0", "t1", "t2"}, new String[] {"WEEK", "WEEK", "WEEK"}, "b1"),
+                trips,
                 createStopTimeTable(
                     new String[] {"t0", "t1", "t2"},
                     new String[] {"s0", "s1"},
@@ -167,16 +169,18 @@ public class BlockTripsWithOverlappingStopTimesValidatorTest {
                     })))
         .containsExactly(
             new BlockTripsWithOverlappingStopTimesNotice(
-                1, "t0", "WEEK", 2, "t1", "WEEK", "b1", GtfsDate.fromString("20210104")));
+                trips.get(0), trips.get(1), GtfsDate.fromString("20210104")));
   }
 
   @Test
   public void overlapWithDifferentServiceId() {
+    List<GtfsTrip> trips =
+        createTripTable(new String[] {"t0", "t1"}, new String[] {"WEEK", "WEEK-ALT"}, "b1");
     assertThat(
             generateNotices(
                 createCalendarTable(),
                 ImmutableList.of(),
-                createTripTable(new String[] {"t0", "t1"}, new String[] {"WEEK", "WEEK-ALT"}, "b1"),
+                trips,
                 createStopTimeTable(
                     new String[] {"t0", "t1"},
                     new String[] {"s0", "s1"},
@@ -186,7 +190,7 @@ public class BlockTripsWithOverlappingStopTimesValidatorTest {
                     })))
         .containsExactly(
             new BlockTripsWithOverlappingStopTimesNotice(
-                1, "t0", "WEEK", 2, "t1", "WEEK-ALT", "b1", GtfsDate.fromString("20210104")));
+                trips.get(0), trips.get(1), GtfsDate.fromString("20210104")));
   }
 
   @Test

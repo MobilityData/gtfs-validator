@@ -16,9 +16,11 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.StopTimeTimepointWithoutTimesNotice;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTimepoint;
@@ -61,5 +63,26 @@ public class TimepointTimeValidator extends SingleEntityValidator<GtfsStopTime> 
 
   private boolean isTimepoint(GtfsStopTime stopTime) {
     return stopTime.timepoint().equals(GtfsStopTimeTimepoint.EXACT);
+  }
+
+  /**
+   * Timepoint without time
+   *
+   * <p>Severity: {@code SeverityLevel.WARNING}
+   */
+  static class StopTimeTimepointWithoutTimesNotice extends ValidationNotice {
+    StopTimeTimepointWithoutTimesNotice(
+        final long csvRowNumber,
+        final String tripId,
+        final long stopSequence,
+        final String specifiedField) {
+      super(
+          ImmutableMap.of(
+              "csvRowNumber", csvRowNumber,
+              "tripId", tripId,
+              "stopSequence", stopSequence,
+              "specifiedField", specifiedField),
+          SeverityLevel.WARNING);
+    }
   }
 }

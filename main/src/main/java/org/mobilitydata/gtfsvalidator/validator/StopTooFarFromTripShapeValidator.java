@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimaps;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,7 +31,8 @@ import org.locationtech.spatial4j.shape.ShapeFactory;
 import org.locationtech.spatial4j.shape.SpatialRelation;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.StopTooFarFromTripShapeNotice;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
@@ -199,5 +201,29 @@ public class StopTooFarFromTripShapeValidator extends FileValidator {
     }
 
     return notices;
+  }
+
+  /**
+   * "Route alignments (in shapes.txt) should be within 100 meters of stop locations which a trip
+   * serves." (http://gtfs.org/best-practices/#shapestxt)
+   *
+   * <p>Severity: {@code SeverityLevel.WARNING}
+   */
+  static class StopTooFarFromTripShapeNotice extends ValidationNotice {
+    StopTooFarFromTripShapeNotice(
+        final String stopId,
+        final int stopSequence,
+        final String tripId,
+        final String shapeId,
+        final double stopShapeThresholdMeters) {
+      super(
+          ImmutableMap.of(
+              "stopId", stopId,
+              "stopSequence", stopSequence,
+              "tripId", tripId,
+              "shapeId", shapeId,
+              "stopShapeThresholdMeters", stopShapeThresholdMeters),
+          SeverityLevel.WARNING);
+    }
   }
 }

@@ -26,13 +26,13 @@ import javax.annotation.Nullable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyLangNotice;
-import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyTimezoneNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
+import org.mobilitydata.gtfsvalidator.validator.AgencyConsistencyValidator.InconsistentAgencyLangNotice;
+import org.mobilitydata.gtfsvalidator.validator.AgencyConsistencyValidator.InconsistentAgencyTimezoneNotice;
 
 @RunWith(JUnit4.class)
 public class AgencyConsistencyValidatorTest {
