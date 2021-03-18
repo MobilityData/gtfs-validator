@@ -27,12 +27,11 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
-import org.mobilitydata.gtfsvalidator.validator.ShapeUsageValidator.UnusedShapeNotice;
 
 /**
  * Validates that every trip in "trips.txt" is used by some stop from "stop_times.txt"
  *
- * <p>Generated notice: {@link UnusedShapeNotice}.
+ * <p>Generated notice: {@link UnusedTripNotice}.
  */
 @GtfsValidator
 public class TripUsageValidator extends FileValidator {
