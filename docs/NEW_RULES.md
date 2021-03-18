@@ -67,12 +67,26 @@ Here are the currently implemented `*Validator.java` classes (all defined in the
 This exact process will differ for each rule, but first let's cover some of the basics that are the same across any rule implementation in the `*Validator.validate()` method.
 ⚠ Note that javadocs should be included in all new files, or updated if modifying existing files.
 
+<!--suppress ALL -->
+
+<a name="examples"/>
+
 ### [`SingleEntityValidator`](../core/src/main/java/org/mobilitydata/gtfsvalidator/validator/SingleEntityValidator.java)
 ```
+@GtfsValidator
+public class FeedServiceDateValidator extends SingleEntityValidator<GtfsFeedInfo> {
+
   @Override
-  public void validate(GtfsFeedInfo entity, NoticeContainer noticeContainer) {
-  // execute some code
+  public void validate(GtfsFeedInfo feedInfo, NoticeContainer noticeContainer) {
+    if (feedInfo.hasFeedStartDate() && !feedInfo.hasFeedEndDate()) {
+      noticeContainer.addValidationNotice(
+          new MissingFeedInfoDateNotice(feedInfo.csvRowNumber(), "feed_end_date"));
+    } else if (!feedInfo.hasFeedStartDate() && feedInfo.hasFeedEndDate()) {
+      noticeContainer.addValidationNotice(
+          new MissingFeedInfoDateNotice(feedInfo.csvRowNumber(), "feed_start_date"));
+    }
   }
+}
 ```
 The `*Validator.validate()` takes two parameters: 
 * the `GtfsEntity` to validate
@@ -82,8 +96,15 @@ The `*Validator.validate()` takes two parameters:
 ```
 @GtfsValidator
 public class TripUsabilityValidator extends FileValidator {
-  @Inject GtfsTripTableContainer tripTable;
-  @Inject GtfsStopTimeTableContainer stopTimeTable;
+  private final GtfsTripTableContainer tripTable;
+  private final GtfsStopTimeTableContainer stopTimeTable;
+
+  @Inject
+  TripUsabilityValidator(
+      GtfsTripTableContainer tripTable, GtfsStopTimeTableContainer stopTimeTable) {
+    this.tripTable = tripTable;
+    this.stopTimeTable = stopTimeTable;
+  }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
@@ -100,6 +121,15 @@ The `*Validator.validate()` takes only one parameter:
 * the `NoticeContainer` that will store notices generated during the validation process
 
 All tables used during the validation process should be injected using `@Inject` annotation.
+
+### d. Annotations
+Annotations are commonly used in the validators. As showed by [these examples](#examples), two annotations should be paid attention to when implementing a new rule:
+
+#### `@GtfsValidator`
+[`@GtfsValidator`](../core/src/main/java/org/mobilitydata/gtfsvalidator/annotation/GtfsValidator.java) annotates both custom and automatically generated validators to make them discoverable on the fly.
+
+#### `@Inject`
+[`@Inject`](https://docs.oracle.com/javaee/7/api/javax/inject/package-summary.html) identifies injectable constructors.
 
 ## 2. Document the new rule in [`RULES.md`](../RULES.md)
 Add the rule [`RULES.md`](../RULES.md) keeping the alphabetical order of the table: 
