@@ -30,8 +30,8 @@ import org.mobilitydata.gtfsvalidator.annotation.Required;
 @Required
 public interface GtfsStopSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
-  @Required
   @PrimaryKey
+  @Required
   String stopId();
 
   String stopCode();
@@ -62,8 +62,9 @@ public interface GtfsStopSchema extends GtfsEntity {
   GtfsLocationType locationType();
 
   @FieldType(FieldTypeEnum.ID)
-  @ForeignKey(table = "stops.txt", field = "stop_id")
+  @Index
   @ConditionallyRequired
+  @ForeignKey(table = "stops.txt", field = "stop_id")
   String parentStation();
 
   @FieldType(FieldTypeEnum.TIMEZONE)
