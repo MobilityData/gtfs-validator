@@ -23,12 +23,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.RouteBothShortAndLongNameMissingNotice;
-import org.mobilitydata.gtfsvalidator.notice.RouteShortAndLongNameEqualNotice;
-import org.mobilitydata.gtfsvalidator.notice.RouteShortNameTooLongNotice;
-import org.mobilitydata.gtfsvalidator.notice.SameNameAndDescriptionForRouteNotice;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
+import org.mobilitydata.gtfsvalidator.validator.RouteNameValidator.RouteBothShortAndLongNameMissingNotice;
+import org.mobilitydata.gtfsvalidator.validator.RouteNameValidator.RouteShortAndLongNameEqualNotice;
+import org.mobilitydata.gtfsvalidator.validator.RouteNameValidator.RouteShortNameTooLongNotice;
+import org.mobilitydata.gtfsvalidator.validator.RouteNameValidator.SameNameAndDescriptionForRouteNotice;
 
 @RunWith(JUnit4.class)
 public class RouteNameValidatorTest {

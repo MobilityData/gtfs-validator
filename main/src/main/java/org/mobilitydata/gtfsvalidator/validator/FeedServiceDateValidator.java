@@ -16,9 +16,11 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.MissingFeedInfoDateNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 
 /**
@@ -38,6 +40,20 @@ public class FeedServiceDateValidator extends SingleEntityValidator<GtfsFeedInfo
     } else if (!feedInfo.hasFeedStartDate() && feedInfo.hasFeedEndDate()) {
       noticeContainer.addValidationNotice(
           new MissingFeedInfoDateNotice(feedInfo.csvRowNumber(), "feed_start_date"));
+    }
+  }
+
+  /**
+   * Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one field is
+   * provided the second one should also be provided.
+   *
+   * <p>Severity: {@code SeverityLevel.WARNING}
+   */
+  static class MissingFeedInfoDateNotice extends ValidationNotice {
+    MissingFeedInfoDateNotice(long csvRowNumber, String fieldName) {
+      super(
+          ImmutableMap.of("csvRowNumber", csvRowNumber, "fieldName", fieldName),
+          SeverityLevel.WARNING);
     }
   }
 }

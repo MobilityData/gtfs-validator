@@ -22,11 +22,11 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.notice.AttributionWithoutRoleNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsAttribution;
 import org.mobilitydata.gtfsvalidator.table.GtfsAttributionRole;
+import org.mobilitydata.gtfsvalidator.validator.AttributionWithoutRoleValidator.AttributionWithoutRoleNotice;
 
 @RunWith(JUnit4.class)
 public class AttributionWithoutRoleValidatorTest {

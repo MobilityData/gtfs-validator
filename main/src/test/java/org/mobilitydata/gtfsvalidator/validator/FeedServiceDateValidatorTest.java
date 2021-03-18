@@ -5,11 +5,11 @@ import static com.google.common.truth.Truth.assertThat;
 import java.util.List;
 import java.util.Locale;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.notice.MissingFeedInfoDateNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
+import org.mobilitydata.gtfsvalidator.validator.FeedServiceDateValidator.MissingFeedInfoDateNotice;
 
 public class FeedServiceDateValidatorTest {
 

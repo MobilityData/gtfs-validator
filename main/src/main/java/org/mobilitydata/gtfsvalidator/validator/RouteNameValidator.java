@@ -16,12 +16,13 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.table.GtfsRouteTableLoader.FILENAME;
+
+import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.RouteBothShortAndLongNameMissingNotice;
-import org.mobilitydata.gtfsvalidator.notice.RouteShortAndLongNameEqualNotice;
-import org.mobilitydata.gtfsvalidator.notice.RouteShortNameTooLongNotice;
-import org.mobilitydata.gtfsvalidator.notice.SameNameAndDescriptionForRouteNotice;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 
 /**
@@ -84,5 +85,79 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
   private boolean isValidRouteDesc(String routeDesc, String routeShortOrLongName) {
     // ignore lower case and upper case difference
     return !routeDesc.equalsIgnoreCase(routeShortOrLongName);
+  }
+
+  /**
+   * Both `routes.route_short_name` and `routes.route_long_name` are missing for a route.
+   *
+   * <p>Severity: {@code SeverityLevel.ERROR}
+   */
+  static class RouteBothShortAndLongNameMissingNotice extends ValidationNotice {
+    RouteBothShortAndLongNameMissingNotice(String routeId, long csvRowNumber) {
+      super(
+          ImmutableMap.of(
+              "routeId", routeId,
+              "csvRowNumber", csvRowNumber),
+          SeverityLevel.ERROR);
+    }
+  }
+
+  /**
+   * Short and long name are equal for a route.
+   *
+   * <p>Severity: {@code SeverityLevel.WARNING}
+   */
+  static class RouteShortAndLongNameEqualNotice extends ValidationNotice {
+    RouteShortAndLongNameEqualNotice(
+        String routeId, long csvRowNumber, String routeShortName, String routeLongName) {
+      super(
+          ImmutableMap.of(
+              "routeId", routeId,
+              "csvRowNumber", csvRowNumber,
+              "routeShortName", routeShortName,
+              "routeLongName", routeLongName),
+          SeverityLevel.WARNING);
+    }
+  }
+
+  /**
+   * Short name of a route is too long (more than 12 characters,
+   * https://gtfs.org/best-practices/#routestxt).
+   *
+   * <p>Severity: {@code SeverityLevel.WARNING}
+   */
+  static class RouteShortNameTooLongNotice extends ValidationNotice {
+    RouteShortNameTooLongNotice(String routeId, long csvRowNumber, String routeShortName) {
+      super(
+          ImmutableMap.of(
+              "routeId", routeId,
+              "csvRowNumber", csvRowNumber,
+              "routeShortName", routeShortName),
+          SeverityLevel.WARNING);
+    }
+  }
+
+  /**
+   * A {@code GtfsRoute} has identical value for `routes.route_desc` and
+   * `routes.route_long_name`{@code /}`routes`{@code /}route_short_name.
+   *
+   * <p>"Do not simply duplicate the name of the location."
+   * (http://gtfs.org/reference/static#routestxt)
+   *
+   * <p>Severity: {@code SeverityLevel.ERROR}
+   */
+  static class SameNameAndDescriptionForRouteNotice extends ValidationNotice {
+    SameNameAndDescriptionForRouteNotice(
+        long csvRowNumber, String routeId, String routeDesc, String routeShortOrLongName) {
+      super(
+          new ImmutableMap.Builder<String, Object>()
+              .put("filename", FILENAME)
+              .put("routeId", routeId)
+              .put("csvRowNumber", csvRowNumber)
+              .put("routeDesc", routeDesc)
+              .put("specifiedField", routeShortOrLongName)
+              .build(),
+          SeverityLevel.ERROR);
+    }
   }
 }

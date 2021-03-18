@@ -16,13 +16,15 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.DuplicateRouteNameNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
 
@@ -114,5 +116,20 @@ public class DuplicateRouteNameValidator extends FileValidator {
    */
   private int getShortNameAndTypeHash(GtfsRoute route) {
     return Objects.hash(route.routeShortName(), route.routeType());
+  }
+
+  /**
+   * All routes should have different `routes.route_long_name`. All routes should have different
+   * `routes.route_short_name`.
+   *
+   * <p>Severity: {@code SeverityLevel.WARNING}
+   */
+  static class DuplicateRouteNameNotice extends ValidationNotice {
+    DuplicateRouteNameNotice(String duplicatedField, long csvRowNumber, String routeId) {
+      super(
+          ImmutableMap.of(
+              "duplicatedField", duplicatedField, "csvRowNumber", csvRowNumber, "routeId", routeId),
+          SeverityLevel.WARNING);
+    }
   }
 }

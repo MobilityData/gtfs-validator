@@ -16,10 +16,12 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.collect.ImmutableMap;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.WrongParentLocationTypeNotice;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
@@ -72,6 +74,39 @@ public class ParentLocationTypeValidator extends FileValidator {
                 parentLocation.locationTypeValue(),
                 expected.getNumber()));
       }
+    }
+  }
+
+  /**
+   * Incorrect type of the parent location (e.g., a parent for a stop or an entrance must be a
+   * station).
+   *
+   * <p>Severity: {@code SeverityLevel.ERROR}
+   */
+  static class WrongParentLocationTypeNotice extends ValidationNotice {
+    WrongParentLocationTypeNotice(
+        long csvRowNumber,
+        String stopId,
+        String stopName,
+        int locationType,
+        long parentCsvRowNumber,
+        String parentStation,
+        String parentStopName,
+        int parentLocationType,
+        int expectedLocationType) {
+      super(
+          new ImmutableMap.Builder<String, Object>()
+              .put("csvRowNumber", csvRowNumber)
+              .put("stopId", stopId)
+              .put("stopName", stopName)
+              .put("locationType", locationType)
+              .put("parentCsvRowNumber", parentCsvRowNumber)
+              .put("parentStation", parentStation)
+              .put("parentStopName", parentStopName)
+              .put("parentLocationType", parentLocationType)
+              .put("expectedLocationType", expectedLocationType)
+              .build(),
+          SeverityLevel.ERROR);
     }
   }
 }

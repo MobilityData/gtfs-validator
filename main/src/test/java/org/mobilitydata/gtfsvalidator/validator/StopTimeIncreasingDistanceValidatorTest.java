@@ -21,11 +21,11 @@ import static com.google.common.truth.Truth.assertThat;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.notice.DecreasingOrEqualStopTimeDistanceNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
+import org.mobilitydata.gtfsvalidator.validator.StopTimeIncreasingDistanceValidator.DecreasingOrEqualStopTimeDistanceNotice;
 
 public class StopTimeIncreasingDistanceValidatorTest {
   public static GtfsStopTime createStopTime(

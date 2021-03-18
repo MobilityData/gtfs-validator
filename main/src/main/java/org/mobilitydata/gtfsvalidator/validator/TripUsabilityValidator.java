@@ -16,10 +16,12 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.collect.ImmutableMap;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.UnusableTripNotice;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
@@ -48,6 +50,21 @@ public class TripUsabilityValidator extends FileValidator {
       if (stopTimeTable.byTripId(tripId).size() <= 1) {
         noticeContainer.addValidationNotice(new UnusableTripNotice(trip.csvRowNumber(), tripId));
       }
+    }
+  }
+
+  /**
+   * A {@code GtfsTrip} should be referred to by at least two {@code GtfsStopTime}
+   *
+   * <p>Severity: {@code SeverityLevel.WARNING}
+   */
+  static class UnusableTripNotice extends ValidationNotice {
+    UnusableTripNotice(long csvRowNumber, String tripId) {
+      super(
+          ImmutableMap.of(
+              "csvRowNumber", csvRowNumber,
+              "tripId", tripId),
+          SeverityLevel.WARNING);
     }
   }
 }
