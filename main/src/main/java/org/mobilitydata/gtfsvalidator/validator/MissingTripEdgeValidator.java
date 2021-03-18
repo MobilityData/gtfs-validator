@@ -37,7 +37,13 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
  */
 @GtfsValidator
 public class MissingTripEdgeValidator extends FileValidator {
-  @Inject GtfsStopTimeTableContainer stopTimeTable;
+
+  private final GtfsStopTimeTableContainer stopTimeTable;
+
+  @Inject
+  MissingTripEdgeValidator(GtfsStopTimeTableContainer stopTimeTable) {
+    this.stopTimeTable = stopTimeTable;
+  }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {

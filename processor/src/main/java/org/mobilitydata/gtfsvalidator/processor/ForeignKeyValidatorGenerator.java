@@ -16,7 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.processor;
 
-import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
@@ -39,6 +38,7 @@ import org.mobilitydata.gtfsvalidator.validator.FileValidator;
  * <p>A foreign key constraint is added with {@code @ForeignKey} annotation in GTFS schema.
  */
 public class ForeignKeyValidatorGenerator {
+
   private static final String VALIDATOR_PACKAGE_NAME = "org.mobilitydata.gtfsvalidator.validator";
 
   private final Map<String, GtfsFileDescriptor> fileDescriptors = new HashMap<>();
@@ -92,12 +92,21 @@ public class ForeignKeyValidatorGenerator {
             .superclass(FileValidator.class);
 
     typeSpec.addField(
-        FieldSpec.builder(parentClasses.tableContainerTypeName(), "parentContainer")
-            .addAnnotation(Inject.class)
-            .build());
+        parentClasses.tableContainerTypeName(),
+        "parentContainer",
+        Modifier.PRIVATE,
+        Modifier.FINAL);
     typeSpec.addField(
-        FieldSpec.builder(childClasses.tableContainerTypeName(), "childContainer")
+        childClasses.tableContainerTypeName(), "childContainer", Modifier.PRIVATE, Modifier.FINAL);
+
+    typeSpec.addMethod(
+        MethodSpec.constructorBuilder()
+            .addModifiers(Modifier.PUBLIC)
             .addAnnotation(Inject.class)
+            .addParameter(parentClasses.tableContainerTypeName(), "parentContainer")
+            .addParameter(childClasses.tableContainerTypeName(), "childContainer")
+            .addStatement("this.parentContainer = parentContainer")
+            .addStatement("this.childContainer = childContainer")
             .build());
 
     MethodSpec.Builder validateMethod =

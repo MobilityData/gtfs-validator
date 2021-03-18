@@ -74,4 +74,10 @@ public class GtfsDateTest {
     assertThat(underTest.isBefore(underTest)).isFalse();
     assertThat(underTest.isAfter(underTest)).isFalse();
   }
+
+  @Test
+  public void toYYYYMMDD() {
+    assertThat(GtfsDate.fromString("20210301").toYYYYMMDD()).isEqualTo("20210301");
+    assertThat(GtfsDate.fromString("20210301").toString()).isEqualTo("20210301");
+  }
 }
