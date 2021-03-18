@@ -806,6 +806,6 @@ An [ExecutionException](https://docs.oracle.com/javase/8/docs/api/java/util/conc
 
 An [InterruptedException](https://docs.oracle.com/javase/8/docs/api/java/lang/InterruptedException.html) during multithreaded validation.
 
-### URISyntaxError
+#### URISyntaxError
 
 A string could not be parsed as a URI reference.
