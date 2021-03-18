@@ -10,6 +10,7 @@ Note that the notice ID naming conventions changed in `v2` to make contributions
 Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 
 * `ERROR` notices are for items that the [GTFS reference specification](https://github.com/google/transit/tree/master/gtfs/spec/en) explicitly requires or prohibits (e.g., using the language "must"). The validator uses [RFC2119](https://tools.ietf.org/html/rfc2119) to interpret the language in the GTFS spec.
+  * ⚠️ for this particular level of severity, [`ValidationNotices`](core/src/main/java/org/mobilitydata/gtfsvalidator/notice/ValidationNotice.java) should be distinguished from [`SystemErrors`](core/src/main/java/org/mobilitydata/gtfsvalidator/notice/SystemError.java): while `ValidationNotices` give information about the data quality, `SystemErrors` are not semantic errors, they give information about things that may have gone wrong during the validation process such as an impossibility to unzip a GTFS archive. 
 * `WARNING` notices are for items that will affect the quality of GTFS datasets but the GTFS spec does expressly require or prohibit. For example, these might be items recommended using the language "should" or "should not" in the GTFS spec, or items recommended in the MobilityData [GTFS Best Practices](https://gtfs.org/best-practices/).
 * `INFO` notices are for items that do not affect the feed's quality, such as unknown files or unknown fields.
 
@@ -29,7 +30,6 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 | [`DuplicateKeyError`](#DuplicateKeyError)                                                                       	| Duplicated entity.                                                                                                                                          	|
 | [`EmptyFileNotice`](#EmptyFileNotice)                                                                           	| A CSV file is empty.                                                                                                                                        	|
 | [`ForeignKeyError`](#ForeignKeyError)                                                                           	| Wrong foreign key.                                                                                                                                          	|
-| [`IOError`](#IOError)                                                                                           	| Error in IO operation.                                                                                                                                      	|
 | [`InconsistentAgencyTimezoneNotice`](#InconsistentAgencyTimezoneNotice)                                         	| Inconsistent Timezone among agencies.                                                                                                                       	|
 | [`InvalidColorNotice`](#InvalidColorNotice)                                                                     	| A field contains an invalid color value.                                                                                                                    	|
 | [`InvalidCurrencyNotice`](#InvalidCurrencyNotice)                                                               	| A field contains a wrong currency code.                                                                                                                     	|
@@ -55,13 +55,11 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 | [`OverlappingFrequencyNotice`](#OverlappingFrequencyNotice)                                                     	| Trip frequencies overlap.                                                                                                                                   	|
 | [`RouteBothShortAndLongNameMissingNotice`](#RouteBothShortAndLongNameMissingNotice)                             	| Missing route short name and long name.                                                                                                                     	|
 | [`SameNameAndDescriptionForRouteNotice`](#SameNameAndDescriptionForRouteNotice)                                 	| Same name and description for route.                                                                                                                        	|
-| [`StartAndEndDateOutOfOrderNotice`](#StartAndEndDateOutOfOrderNotice)                                           	| Two date fields are out of order.                                                                                                                           	|
-| [`StartAndEndTimeOutOfOrderNotice`](#StartAndEndTimeOutOfOrderNotice)                                           	| Two time fields are out of order.                                                                                                                           	|
+| [`StartAndEndRangeEqualNotice`](#StartAndEndRangeEqualNotice)                                                   	| Two date or time fields are equal.                                                                                                                          	|
+| [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         	| Two date or time fields are out of order.                                                                                                                   	|
 | [`StationWithParentStationNotice`](#StationWithParentStationNotice)                                             	| A station has `parent_station` field set.                                                                                                                   	|
 | [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](#StopTimeWithArrivalBeforePreviousDepartureTimeNotice) 	| Backwards time travel between stops in `stop_times.txt`                                                                                                     	|
-| [`StopTimeWithDepartureBeforeArrivalTimeNotice`](#StopTimeWithDepartureBeforeArrivalTimeNotice)                 	| Two time fields are out of order.                                                                                                                           	|
 | [`StopTimeWithOnlyArrivalOrDepartureTimeNotice`](#StopTimeWithOnlyArrivalOrDepartureTimeNotice)                 	| Missing `stop_times.arrival_time` or `stop_times.departure_time`.                                                                                           	|
-| [`URISyntaxError`](#URISyntaxError)                                                                             	| A string could not be parsed as a URI reference.                                                                                                            	|
 | [`WrongParentLocationTypeNotice`](#WrongParentLocationTypeNotice)                                               	| Incorrect type of the parent location.                                                                                                                      	|
 
 <a name="WARNINGS"/>
@@ -102,312 +100,319 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 | [`UnknownColumnNotice`](#UnknownColumnNotice) 	| A column name is unknown. 	|
 | [`UnknownFileNotice`](#UnknownFileNotice)     	| A file is unknown.        	|
 
+<a name="SYSTEM_ERRORS"/>
+
+## Table of system errors
+
+| Name                                                                    	| Description                                            	|
+|-------------------------------------------------------------------------	|--------------------------------------------------------	|
+| [`IOError`](#IOError)                                                   	| Error in IO operation.                                 	|
+| [`RuntimeExceptionInLoaderError`](#RuntimeExceptionInLoaderError)       	| RuntimeException while loading GTFS dataset in memory. 	|
+| [`RuntimeExceptionInValidatorError`](#RuntimeExceptionInValidatorError) 	| RuntimeException while validating GTFS archive.        	|
+| [`ThreadExecutionError`](#ThreadExecutionError)                         	| ExecutionException during multithreaded validation     	|
+| [`ThreadInterruptedError`](#ThreadInterruptedError)                     	| InterruptedExecution during multithreaded validation   	|
+| [`URISyntaxError`](#URISyntaxError)                                     	| A string could not be parsed as a URI reference.       	|
+
 ## Notices
 
 ### Errors
 
-### BlockTripsWithOverlappingStopTimesNotice
+#### BlockTripsWithOverlappingStopTimesNotice
 
 Trips with the same block id have overlapping stop times.
 
-#### References:
+##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="DecreasingOrEqualShapeDistanceNotice"/>
 
-### DecreasingOrEqualShapeDistanceNotice
+#### DecreasingOrEqualShapeDistanceNotice
 
 When sorted by `shape.shape_pt_sequence`, two consecutive shape points should have increasing values for `shape_dist_traveled`. If the values are equal, this is considered as an error.  
 
-#### References:
+##### References:
 * [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)
 
 <a name="DecreasingOrEqualStopTimeDistanceNotice"/>
 
-### DecreasingOrEqualStopTimeDistanceNotice
+#### DecreasingOrEqualStopTimeDistanceNotice
 
 When sorted by `stop_times.stop_pt_sequence`, two consecutive stop times in a trip should have increasing distance. If the values are equal, this is considered as an error.  
 
-#### References:
+##### References:
 * [stops.txt specification](https://gtfs.org/reference/static#stopstxt)
 
 <a name="DuplicatedColumnNotice"/>
 
-### DuplicatedColumnNotice
+#### DuplicatedColumnNotice
 
 The input file CSV header has the same column name repeated.
 
-#### References:
+##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="DuplicateFareRuleZoneIdFieldsNotice"/>
 
-### DuplicateFareRuleZoneIdFieldsNotice
+#### DuplicateFareRuleZoneIdFieldsNotice
 
 The combination of `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.contains_id` and `fare_rules.destination_id` fields should be unique in GTFS file `fare_rules.txt`.
 
-#### References:
+##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="DuplicateKeyError"/>
 
-### DuplicateKeyError
+#### DuplicateKeyError
 
 The values of the given key and rows are duplicates.
 
-#### References:
+##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="EmptyFileNotice"/>
 
-### EmptyFileNotice
+#### EmptyFileNotice
 
 Empty csv file found in the archive: file does not have any headers, or is a required file and does not have any data. The GTFS specification requires the first line of each file to contain field names and required files must have data.
 
-#### References:
+##### References:
 * [GTFS files requirements](https://gtfs.org/reference/static#file-requirements)
 
 <a name="ForeignKeyError"/>
 
-### ForeignKeyError
+#### ForeignKeyError
 
 The values of the given key and rows of one table cannot be found a values of the given key in another table.
 
-#### References:
+##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="InconsistentAgencyTimezoneNotice"/>
 
-### InconsistentAgencyTimezoneNotice
+#### InconsistentAgencyTimezoneNotice
 
 Agencies from GTFS `agency.txt` have been found to have different timezones.
 
-#### References:
+##### References:
 * [GTFS agency.txt specification](https://gtfs.org/reference/static/#agencytxt)
-
-<a name="IOError"/>
-
-### IOError
-
-Error in IO operation.
 
 <a name="InvalidColorNotice"/>
 
-### InvalidColorNotice
+#### InvalidColorNotice
 
 Value of field with type `color` is not valid. A color must be encoded as a six-digit hexadecimal number. The leading "#" is not included.
 
-#### References:
+##### References:
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 
 <a name="InvalidCurrencyNotice"/>
 
-### InvalidCurrencyNotice
+#### InvalidCurrencyNotice
 
 Value of field with type `currency` is not valid. Currency code must follow <a href="https://en.wikipedia.org/wiki/ISO_4217#Active_codes">ISO 4217</a>
 
-#### References:
+##### References:
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 
 <a name="InvalidDateNotice"/>
 
-### InvalidDateNotice
+#### InvalidDateNotice
 
 Value of field with type `date` is not valid. Dates must have the YYYYMMDD format.
 
-#### References:
+##### References:
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 
 <a name="InvalidEmailNotice"/>
 
-### InvalidEmailNotice
+#### InvalidEmailNotice
 
-Value of field with type `email` is not valid. 
+Value of field with type `email` is not valid. Definitions for valid emails are quite vague. We perform strict validation in the upstream using the Apache Commons EmailValidator.
 
-#### References:
+##### References:
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 * [Apache Commons EmailValidator](https://commons.apache.org/proper/commons-validator/apidocs/org/apache/commons/validator/routines/EmailValidator.html)
  
 <a name="InvalidFloatNotice"/>
 
-### InvalidFloatNotice
+#### InvalidFloatNotice
 
 Value of field with type `float` is not valid. 
 
-#### References:
+##### References:
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
  
 <a name="InvalidIntegerNotice"/>
 
-### InvalidIntegerNotice
+#### InvalidIntegerNotice
 
 Value of field with type `integer` is not valid. 
 
-#### References:
+##### References:
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 
 <a name="InvalidLanguageCodeNotice"/>
 
-### InvalidLanguageCodeNotice
+#### InvalidLanguageCodeNotice
 
 Value of field with type `language` is not valid. Language codes must follow <a href="http://www.rfc-editor.org/rfc/bcp/bcp47.txt">IETF BCP 47</a>.
 
-#### References:
+##### References:
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 
 <a name="InvalidPhoneNumberNotice"/>
 
-### InvalidPhoneNumberNotice
+#### InvalidPhoneNumberNotice
 
 Value of field with type `phone number` is not valid.
 
-#### References:
+##### References:
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 
 <a name="InvalidRowLengthError"/>
 
-### InvalidRowLengthError
+#### InvalidRowLengthError
 
 A row in the input file has a different number of values than specified by the CSV header.
 
-#### References:
+##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="InvalidTimeNotice"/>
 
-### InvalidTimeNotice
+#### InvalidTimeNotice
 
 Value of field with type `time` is not valid. Time must be in the `H:MM:SS`, `HH:MM:SS` or `HHH:MM:SS` format.
 
-#### References:
+##### References:
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 
 <a name="InvalidTimezoneNotice"/>
 
-### InvalidTimezoneNotice
+#### InvalidTimezoneNotice
 
 Value of field with type `timezone` is not valid.Timezones are defined at <a href="https://www.iana.org/time-zones">www.iana.org</a>. Timezone names never contain the space character but may contain an underscore. Refer to <a href="http://en.wikipedia.org/wiki/List_of_tz_zones">Wikipedia</a> for a list of valid values.
 
-#### References:
+##### References:
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 
 <a name="InvalidUrlNotice"/>
 
-### InvalidUrlNotice
+#### InvalidUrlNotice
 
-Value of field with type `url` is not valid.
+Value of field with type `url` is not valid. Definitions for valid URLs are quite vague. We perform strict validation in the upstream using the Apache Commons UrlValidator.
 
-#### References:
+##### References:
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 * [Apache Commons UrlValidator](https://commons.apache.org/proper/commons-validator/apidocs/org/apache/commons/validator/routines/UrlValidator.html)
 
 <a name="LeadingOrTrailingWhitespacesNotice"/>
 
-### LeadingOrTrailingWhitespacesNotice
+#### LeadingOrTrailingWhitespacesNotice
 
 The value in CSV file has leading or trailing whitespaces.
 
-#### References:
+##### References:
 * [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
 
 <a name="LocationWithoutParentStationNotice"/>
 
-### LocationWithoutParentStationNotice
+#### LocationWithoutParentStationNotice
 
 A location that must have `parent_station` field does not have it. The following location types must have `parent_station`: entrance, generic node, boarding_area.
 
-#### References:
+##### References:
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 
 <a name="MissingCalendarAndCalendarDateFilesNotice"/>
 
-### MissingCalendarAndCalendarDateFilesNotice
+#### MissingCalendarAndCalendarDateFilesNotice
 
 Both files calendar_dates.txt and calendar.txt are missing from the GTFS archive. At least one of the files must be provided.
 
-#### References:
+##### References:
 * [calendar.txt specification](http://gtfs.org/reference/static/#calendartxt)
 * [calendar_dates.txt specification](http://gtfs.org/reference/static/#calendar_datestxt)
 
 <a name="MissingRequiredColumnError"/>
 
-### MissingRequiredColumnError
+#### MissingRequiredColumnError
 
 A required column is missing in the input file.
 
-#### References:
+##### References:
 * [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
 
 <a name="MissingRequiredFieldError"/>
 
-### MissingRequiredFieldError
+#### MissingRequiredFieldError
 
 The given field has no value in some input row, even though values are required.
 
-#### References:
+##### References:
 * [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
 
 <a name="MissingRequiredFileError"/>
 
-### MissingRequiredFileError
+#### MissingRequiredFileError
 
 A required file is missing.
 
-#### References:
+##### References:
 * [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
 
 <a name="MissingTripEdgeNotice"/>
 
-### MissingTripEdgeNotice
+#### MissingTripEdgeNotice
 
 First and last stop of a trip must define both `arrival_time` and `departure_time` fields.
 
-#### References:
+##### References:
 * [stop_times.txt specification](https://gtfs.org/reference/static/#stop_timestxt)
 
 <a name="NewLineInValueNotice"/>
 
-### NewLineInValueNotice
+#### NewLineInValueNotice
 
 A value in CSV file has a new line or carriage return.
 
-#### References:
+##### References:
 * [GTFS file requirements](https://gtfs.org/reference/static/#file-requirements)
 
 <a name="NumberOutOfRangeError"/>
 
-### NumberOutOfRangeError
+#### NumberOutOfRangeError
 
 The values in the given column of the input rows are out of range.
 
-#### References:
+##### References:
 * [GTFS file requirements](https://gtfs.org/reference/static/#file-requirements)
 
-#### References:
+##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 * [GTFS field types](http://gtfs.org/reference/static/#field-types)
 
 <a name="OverlappingFrequencyNotice"/>
 
-### OverlappingFrequencyNotice
+#### OverlappingFrequencyNotice
 
 Trip frequencies must not overlap in time
 
-#### References:
+##### References:
 * [frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
 
 <a name="RouteBothShortAndLongNameMissingNotice"/>
 
-### RouteBothShortAndLongNameMissingNotice
+#### RouteBothShortAndLongNameMissingNotice
 
 Both short_name and long_name are missing for a route.
 
-#### References:
+##### References:
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 
 <a name="SameNameAndDescriptionForRouteNotice"/>
 
-### SameNameAndDescriptionForRouteNotice
+#### SameNameAndDescriptionForRouteNotice
 
 The GTFS spec defines `routes.txt` [route_description](https://gtfs.org/reference/static/#routestxt) as:
 
@@ -415,76 +420,67 @@ The GTFS spec defines `routes.txt` [route_description](https://gtfs.org/referenc
 
 See the GTFS and GTFS Best Practices links below for more examples of how to populate the `route_short_name`, `route_long_name`, and `route_description` fields.
 
-#### References:
+##### References:
 [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 [routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
 
-<a name="StartAndEndDateOutOfOrderNotice"/>
+<a name="StartAndEndRangeEqualNotice"/>
 
-### StartAndEndDateOutOfOrderNotice
+#### StartAndEndRangeEqualNotice
 
-Start and end dates are out-of-order in GTFS files `feed_info.txt` or `calendar.txt`.
+Date or time fields have been found equal.
 
-#### References:
+##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 
-<a name="StartAndEndTimeOutOfOrderNotice"/>
+<a name="StartAndEndRangeOutOfOrderNotice"/>
 
-### StartAndEndTimeOutOfOrderNotice
+#### StartAndEndRangeOutOfOrderNotice
 
-Start and end times are out-of-order in GTFS file `frequencies.txt`.
+Date or time fields have been found out of order.
 
-#### References:
+##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="StationWithParentStationNotice"/>
 
-### StationWithParentStationNotice
+#### StationWithParentStationNotice
 
 Field `parent_station` must be empty when `location_type` is 2.
 
-#### References:
+##### References:
 [stop_times.txt](http://gtfs.org/reference/static/#stop_timestxt)
 
 <a name="StopTimeWithArrivalBeforePreviousDepartureTimeNotice"/>
 
-### StopTimeWithArrivalBeforePreviousDepartureTimeNotice
+#### StopTimeWithArrivalBeforePreviousDepartureTimeNotice
 
 For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must not precede the `departure_time` of n-th stoptime in sequence.
 
-#### References:
+##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="StopTimeWithDepartureBeforeArrivalTimeNotice"/>
 
-### StopTimeWithDepartureBeforeArrivalTimeNotice
+#### StopTimeWithDepartureBeforeArrivalTimeNotice
 
 The `departure_time` must not precede the `arrival_time` in `stop_times.txt` if both are given. 
 
-#### References:
+##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="StopTimeWithOnlyArrivalOrDepartureTimeNotice"/>
 
-### StopTimeWithOnlyArrivalOrDepartureTimeNotice
+#### StopTimeWithOnlyArrivalOrDepartureTimeNotice
 
 Missing `stop_time.arrival_time` or `stop_time.departure_time`
 
-#### References:
+##### References:
 * [stop_times.txt specification](http://gtfs.org/reference/static/#stop_timestxt)
-
-<a name="URISyntaxError"/>
-
-### URISyntaxError
-
-A string could not be parsed as a URI reference.
-
-#### References:
-* [GTFS field types](http://gtfs.org/reference/static/#field_types)
 
 <a name="WrongParentLocationTypeNotice"/>
 
-### WrongParentLocationTypeNotice
+#### WrongParentLocationTypeNotice
 
 Value of field `location_type` of parent found in field `parent_station` is invalid.
 
@@ -496,7 +492,7 @@ According to spec
 
 Any other combination raise this error.
 
-#### References:
+##### References:
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 
 ### Warnings
@@ -610,7 +606,7 @@ A value of filed with type `id` contains non ASCII or non printable characters. 
 
 A platform has no `parent_station` field set.
 
-#### References:
+##### References:
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 
 <a name="RouteColorContrastNotice"/>
@@ -619,7 +615,7 @@ A platform has no `parent_station` field set.
 
 A route's color and `route_text_color` should be contrasting.
 
-#### References:
+##### References:
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 
@@ -647,7 +643,7 @@ Short name of a route is too long (more than 12 characters).
 
 Start and end times are equal in GTFS file `frequencies.txt`. The GTFS spec is currently unclear how this case should be handled (e.g., is it a trip that circulates once?). It is recommended to use a trip not defined via frequencies.txt for this case.
 
-#### References:
+##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="StopTimeTimepointWithoutTimeNotice"/>
@@ -656,7 +652,7 @@ Start and end times are equal in GTFS file `frequencies.txt`. The GTFS spec is c
 
 Any record with `stop_times.timepoint` set to 1 should define a value for `stop_times.arrival_time` and `stop_times.departure_time` fields. 
 
-#### References:
+##### References:
 * [GTFS stop_times.txt specification](https://gtfs.org/reference/static#stoptimestxt)
 
 <a name="StopTooFarFromTripShapeNotice"/>
@@ -674,7 +670,7 @@ Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100
 
 As implemented in the original [Google Python GTFS validator](https://github.com/google/transitfeed/wiki/FeedValidator), the calculated speed between stops should not be greater than 150 km/h (42 m/s SI or 93 mph). 
 
-#### References:
+##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="UnexpectedEnumValueNotice"/>
@@ -683,7 +679,7 @@ As implemented in the original [Google Python GTFS validator](https://github.com
 
 An enum has an unexpected value.
 
-#### References:
+##### References:
 * [GTFs field definitions](http://gtfs.org/reference/static/#field-definitions)
 
 <a name="UnusableTripNotice"/>
@@ -692,7 +688,7 @@ An enum has an unexpected value.
 
 A trip must visit more than one stop in stop_times.txt to be usable by passengers for boarding and alighting.
 
-#### References:
+##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="UnusedShapeNotice"/>
@@ -701,7 +697,7 @@ A trip must visit more than one stop in stop_times.txt to be usable by passenger
 
 All records defined by GTFS `shapes.txt` should be used in `trips.txt`.
 
-#### References:
+##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="UnusedTripNotice"/>
@@ -710,7 +706,7 @@ All records defined by GTFS `shapes.txt` should be used in `trips.txt`.
 
 Trips must be referred to at least once in `stop_times.txt`.
 
-#### References:
+##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 
 ### Info
@@ -721,7 +717,7 @@ Trips must be referred to at least once in `stop_times.txt`.
 
 A column is unknown.
 
-#### References:
+##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="UnknownFileNotice"/>
@@ -730,6 +726,43 @@ A column is unknown.
 
 A file is unknown.
 
-#### References:
+##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 
+### System errors
+
+<a name="IOError"/>
+
+#### IOError
+
+Error in IO operation.
+
+<a name="RuntimeExceptionInLoaderError"/>
+
+#### RuntimeExceptionInLoaderError
+
+A [RuntimeException](https://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html) occurred while loading a table. This normally indicates a bug in validator.
+
+<a name="RuntimeExceptionInValidatorError"/>
+
+#### RuntimeExceptionInValidatorError
+
+A [RuntimeException](https://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html) occurred during validation. This normally indicates a bug in validator code, e.g., in a custom validator class.
+
+<a name="ThreadExecutionError"/>
+
+#### ThreadExecutionError
+
+An [ExecutionException](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutionException.html) occurred during multithreaded validation.
+
+<a name="ThreadInterruptedError"/>
+
+#### ThreadInterruptedError
+
+<a name="URISyntaxError"/>
+
+An [InterruptedException](https://docs.oracle.com/javase/8/docs/api/java/lang/InterruptedException.html) during multithreaded validation.
+
+### URISyntaxError
+
+A string could not be parsed as a URI reference.
