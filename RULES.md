@@ -1,8 +1,51 @@
 # Implemented rules
+- Notices related to file parsing and data types are defined in the [core](/core/src/main/java/org/mobilitydata/gtfsvalidator/notice) 
+- Notices related to GTFS semantics/business logic are encapsulated within the related validation rule class see the following example in [`TripUsageValidator`](/main/src/main/java/org/mobilitydata/gtfsvalidator/validator/TripUsageValidator.java):
+```java
+/**
+ * Validates that every trip in "trips.txt" is used by some stop from "stop_times.txt"
+ *
+ * <p>Generated notice: {@link UnusedTripNotice}.
+ */
+@GtfsValidator
+public class TripUsageValidator extends FileValidator {
+  private final GtfsTripTableContainer tripTable;
+  private final GtfsStopTimeTableContainer stopTimeTable;
 
-Rules are declared in the `Notice` modules: 
-- [Notices related to file parsing and data types](https://github.com/MobilityData/gtfs-validator/tree/master/core/src/java/org/mobilitydata/gtfsvalidator/notice) 
-- [Notices related to GTFS semantics/business logic](https://github.com/MobilityData/gtfs-validator/tree/master/domain/src/main/java/org/mobilitydata/gtfsvalidator/notice). 
+  @Inject
+  TripUsageValidator(GtfsTripTableContainer tripTable, GtfsStopTimeTableContainer stopTimeTable) {
+    this.tripTable = tripTable;
+    this.stopTimeTable = stopTimeTable;
+  }
+
+  @Override
+  public void validate(NoticeContainer noticeContainer) {
+    // Do not report the same trip_id multiple times.
+    Set<String> reportedTrips = new HashSet<>();
+    for (GtfsTrip trip : tripTable.getEntities()) {
+      String tripId = trip.tripId();
+      if (reportedTrips.add(tripId) && stopTimeTable.byTripId(tripId).isEmpty()) {
+        noticeContainer.addValidationNotice(new UnusedTripNotice(tripId, trip.csvRowNumber()));
+      }
+    }
+  }
+  /**
+   * A {@code GtfsTrip} should be referred to at least once in {@code GtfsStopTimeTableContainer}
+   * station).
+   *
+   * <p>Severity: {@code SeverityLevel.WARNING}
+   */
+  static class UnusedTripNotice extends ValidationNotice {
+    UnusedTripNotice(String tripId, long csvRowNumber) {
+      super(
+          ImmutableMap.of(
+              "tripId", tripId,
+              "csvRowNumber", csvRowNumber),
+          SeverityLevel.WARNING);
+    }
+  }
+}
+```  
  
 Note that the notice ID naming conventions changed in `v2` to make contributions of new rules easier by reducing the likelihood of conflicting IDs during parallel development. Please refer to [MIGRATION_V1_V2.md](/docs/MIGRATION_V1_V2.md) for a mapping between v1 and v2 rules.
 
