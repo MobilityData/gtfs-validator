@@ -35,9 +35,4 @@ public class DuplicateFareRuleZoneIdFieldsNotice extends ValidationNotice {
             "previousFareId", previousFareId),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "duplicate_fare_rule_zone_id_fields";
-  }
 }

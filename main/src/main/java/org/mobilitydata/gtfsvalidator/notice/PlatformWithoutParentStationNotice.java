@@ -31,9 +31,4 @@ public class PlatformWithoutParentStationNotice extends ValidationNotice {
         ImmutableMap.of("csvRowNumber", csvRowNumber, "stopId", stopId, "stopName", stopName),
         SeverityLevel.WARNING);
   }
-
-  @Override
-  public String getCode() {
-    return "platform_without_parent_station";
-  }
 }

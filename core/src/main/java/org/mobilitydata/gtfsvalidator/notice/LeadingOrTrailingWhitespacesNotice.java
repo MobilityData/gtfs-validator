@@ -51,9 +51,4 @@ public class LeadingOrTrailingWhitespacesNotice extends ValidationNotice {
             fieldValue),
         SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "leading_or_trailing_whitespace";
-  }
 }

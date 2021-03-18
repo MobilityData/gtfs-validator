@@ -31,7 +31,12 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
  */
 @GtfsValidator
 public class ParentLocationTypeValidator extends FileValidator {
-  @Inject GtfsStopTableContainer stopTable;
+  private final GtfsStopTableContainer stopTable;
+
+  @Inject
+  ParentLocationTypeValidator(GtfsStopTableContainer stopTable) {
+    this.stopTable = stopTable;
+  }
 
   private GtfsLocationType expectedParentLocationType(GtfsLocationType locationType) {
     switch (locationType) {

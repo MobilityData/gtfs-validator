@@ -16,13 +16,16 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
+import com.google.common.base.CaseFormat;
 import com.google.common.base.Joiner;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
+import org.apache.commons.lang3.StringUtils;
 
 /** Base class for all notices produced by GTFS validator. */
 public abstract class Notice {
+  private static final String NOTICE_SUFFIX = "_notice";
   private Map<String, Object> context;
   private SeverityLevel severityLevel;
 
@@ -40,11 +43,16 @@ public abstract class Notice {
   }
 
   /**
-   * Returns a descriptive type-specific name for this notice.
+   * Returns a descriptive type-specific name for this notice based on the class simple name.
    *
    * @return notice code, e.g., "foreign_key_error".
    */
-  public abstract String getCode();
+  public String getCode() {
+
+    return StringUtils.removeEnd(
+        CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, getClass().getSimpleName()),
+        NOTICE_SUFFIX);
+  }
 
   @Override
   public boolean equals(Object other) {
@@ -54,7 +62,7 @@ public abstract class Notice {
     if (other instanceof Notice) {
       Notice otherNotice = (Notice) other;
       return context.equals(otherNotice.context)
-          && getCode().equals(otherNotice.getCode())
+          && getClass().equals(otherNotice.getClass())
           && severityLevel.equals(otherNotice.severityLevel);
     }
     return false;
@@ -71,6 +79,6 @@ public abstract class Notice {
 
   @Override
   public int hashCode() {
-    return Objects.hash(getCode(), getContext(), getSeverityLevel());
+    return Objects.hash(getClass(), getContext(), getSeverityLevel());
   }
 }

@@ -27,6 +27,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.ForeignKeyError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDate;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
@@ -81,57 +82,46 @@ public class GtfsTripServiceIdForeignKeyValidatorTest {
     return GtfsCalendarDateTableContainer.forEntities(entities, noticeContainer);
   }
 
+  private static List<ValidationNotice> generateNotices(
+      List<GtfsCalendar> calendars, List<GtfsTrip> trips, List<GtfsCalendarDate> calendarDates) {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    new GtfsTripServiceIdForeignKeyValidator(
+            GtfsTripTableContainer.forEntities(trips, noticeContainer),
+            GtfsCalendarTableContainer.forEntities(calendars, noticeContainer),
+            GtfsCalendarDateTableContainer.forEntities(calendarDates, noticeContainer))
+        .validate(noticeContainer);
+    return noticeContainer.getValidationNotices();
+  }
+
   @Test
   public void tripServiceIdInCalendarTableShouldNotGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    GtfsTripServiceIdForeignKeyValidator underTest = new GtfsTripServiceIdForeignKeyValidator();
-    underTest.calendarContainer =
-        createCalendarTable(
-            noticeContainer,
-            ImmutableList.of(
-                CalendarUtilTest.createGtfsCalendar(
-                    "WEEK", LocalDate.of(2021, 1, 14), LocalDate.of(2021, 1, 24), weekDays)));
-    underTest.tripContainer =
-        createTripTable(
-            noticeContainer,
-            ImmutableList.of(createTrip(1, "route id", "WEEK", "trip id", "shape id")));
-    underTest.calendarDateContainer = createCalendarDateTable(noticeContainer, ImmutableList.of());
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    CalendarUtilTest.createGtfsCalendar(
+                        "WEEK", LocalDate.of(2021, 1, 14), LocalDate.of(2021, 1, 24), weekDays)),
+                ImmutableList.of(createTrip(1, "route id", "WEEK", "trip id", "shape id")),
+                ImmutableList.of()))
+        .isEmpty();
   }
 
   @Test
   public void tripServiceIdInCalendarDateTableShouldNotGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    GtfsTripServiceIdForeignKeyValidator underTest = new GtfsTripServiceIdForeignKeyValidator();
-    underTest.calendarContainer = createCalendarTable(noticeContainer, ImmutableList.of());
-    underTest.tripContainer =
-        createTripTable(
-            noticeContainer,
-            ImmutableList.of(createTrip(1, "route id", "WEEK", "trip id", "shape id")));
-    underTest.calendarDateContainer =
-        createCalendarDateTable(
-            noticeContainer,
-            ImmutableList.of(createCalendarDate(2, "WEEK", GtfsDate.fromEpochDay(24354), 2)));
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(
+            generateNotices(
+                ImmutableList.of(),
+                ImmutableList.of(createTrip(1, "route id", "WEEK", "trip id", "shape id")),
+                ImmutableList.of(createCalendarDate(2, "WEEK", GtfsDate.fromEpochDay(24354), 2))))
+        .isEmpty();
   }
 
   @Test
   public void tripServiceIdNotInDataShouldGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    GtfsTripServiceIdForeignKeyValidator underTest = new GtfsTripServiceIdForeignKeyValidator();
-    underTest.calendarContainer = createCalendarTable(noticeContainer, ImmutableList.of());
-    underTest.tripContainer =
-        createTripTable(
-            noticeContainer,
-            ImmutableList.of(createTrip(1, "route id", "WEEK", "trip id", "shape id")));
-    underTest.calendarDateContainer = createCalendarDateTable(noticeContainer, ImmutableList.of());
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
+    assertThat(
+            generateNotices(
+                ImmutableList.of(),
+                ImmutableList.of(createTrip(1, "route id", "WEEK", "trip id", "shape id")),
+                ImmutableList.of()))
         .containsExactly(
             new ForeignKeyError(
                 "trips.txt",

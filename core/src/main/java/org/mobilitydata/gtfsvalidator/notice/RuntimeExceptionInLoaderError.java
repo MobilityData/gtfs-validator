@@ -22,9 +22,4 @@ public class RuntimeExceptionInLoaderError extends SystemError {
             "message",
             message == null ? "" : message));
   }
-
-  @Override
-  public String getCode() {
-    return "runtime_exception_in_loader";
-  }
 }

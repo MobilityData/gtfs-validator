@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,32 +17,40 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 /**
- * Two {@code GtfsTime} are out of order
+ * Start and end range fields are equal for a certain GTFS entity.
+ *
+ * <p>Example: {@code start_time == end_time} for {@code frequencies.txt}.
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class StopTimeWithDepartureBeforeArrivalTimeNotice extends ValidationNotice {
-  public StopTimeWithDepartureBeforeArrivalTimeNotice(
-      long csvRowNumber,
-      String tripId,
-      int stopSequence,
-      GtfsTime departureTime,
-      GtfsTime arrivalTime) {
+public class StartAndEndRangeEqualNotice extends ValidationNotice {
+
+  public StartAndEndRangeEqualNotice(
+      String filename, long csvRowNumber, String entityId, String start, String end) {
     super(
         ImmutableMap.of(
+            "filename", filename,
             "csvRowNumber", csvRowNumber,
-            "tripId", tripId,
-            "stopSequence", stopSequence,
-            "departureTime", departureTime.toHHMMSS(),
-            "arrivalTime", arrivalTime.toHHMMSS()),
+            "entityId", entityId,
+            "start", start,
+            "end", end),
+        SeverityLevel.ERROR);
+  }
+
+  public StartAndEndRangeEqualNotice(String filename, long csvRowNumber, String start, String end) {
+    super(
+        ImmutableMap.of(
+            "filename", filename,
+            "csvRowNumber", csvRowNumber,
+            "start", start,
+            "end", end),
         SeverityLevel.ERROR);
   }
 
   @Override
   public String getCode() {
-    return "stop_time_with_departure_before_arrival_time";
+    return "start_and_end_range_equal";
   }
 }

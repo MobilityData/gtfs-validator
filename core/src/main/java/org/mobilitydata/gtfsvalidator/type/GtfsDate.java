@@ -74,6 +74,11 @@ public class GtfsDate implements Comparable<GtfsDate> {
   }
 
   @Override
+  public String toString() {
+    return toYYYYMMDD();
+  }
+
+  @Override
   public int compareTo(GtfsDate other) {
     return localDate.compareTo(other.localDate);
   }

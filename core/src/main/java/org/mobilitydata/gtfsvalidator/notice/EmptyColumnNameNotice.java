@@ -31,9 +31,4 @@ public class EmptyColumnNameNotice extends ValidationNotice {
             "index", index),
         SeverityLevel.WARNING);
   }
-
-  @Override
-  public String getCode() {
-    return "empty_column_name";
-  }
 }

@@ -22,7 +22,6 @@ import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.StopTimeWithArrivalBeforePreviousDepartureTimeNotice;
-import org.mobilitydata.gtfsvalidator.notice.StopTimeWithDepartureBeforeArrivalTimeNotice;
 import org.mobilitydata.gtfsvalidator.notice.StopTimeWithOnlyArrivalOrDepartureTimeNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
@@ -36,14 +35,18 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader;
  * <ul>
  *   <li>{@link StopTimeWithOnlyArrivalOrDepartureTimeNotice} - a single departure_time or
  *       arrival_time is defined for a row (both or none are expected)
- *   <li>{@link StopTimeWithDepartureBeforeArrivalTimeNotice} - departure_time &lt; arrival_time
  *   <li>{@link StopTimeWithArrivalBeforePreviousDepartureTimeNotice} - prev(arrival_time) &lt;
  *       curr(departure_time)
  * </ul>
  */
 @GtfsValidator
 public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
-  @Inject GtfsStopTimeTableContainer table;
+  private final GtfsStopTimeTableContainer table;
+
+  @Inject
+  StopTimeArrivalAndDepartureTimeValidator(GtfsStopTimeTableContainer table) {
+    this.table = table;
+  }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
@@ -62,17 +65,6 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
                   hasArrival
                       ? GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME
                       : GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME));
-        }
-        if (hasDeparture && hasArrival) {
-          if (stopTime.departureTime().isBefore(stopTime.arrivalTime())) {
-            noticeContainer.addValidationNotice(
-                new StopTimeWithDepartureBeforeArrivalTimeNotice(
-                    stopTime.csvRowNumber(),
-                    stopTime.tripId(),
-                    stopTime.stopSequence(),
-                    stopTime.departureTime(),
-                    stopTime.arrivalTime()));
-          }
         }
         if (hasArrival
             && previousDepartureRow != -1

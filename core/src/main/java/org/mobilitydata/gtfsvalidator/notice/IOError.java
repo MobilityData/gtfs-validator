@@ -28,9 +28,4 @@ public class IOError extends SystemError {
   public IOError(String message) {
     super(ImmutableMap.of("message", message));
   }
-
-  @Override
-  public String getCode() {
-    return "io_error";
-  }
 }

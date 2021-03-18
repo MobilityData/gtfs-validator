@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.table;
 import org.mobilitydata.gtfsvalidator.annotation.CachedField;
 import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
 import org.mobilitydata.gtfsvalidator.annotation.DefaultValue;
+import org.mobilitydata.gtfsvalidator.annotation.EndRange;
 import org.mobilitydata.gtfsvalidator.annotation.FieldType;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.FirstKey;
@@ -39,6 +40,7 @@ public interface GtfsStopTimeSchema extends GtfsEntity {
   String tripId();
 
   @ConditionallyRequired
+  @EndRange(field = "departure_time", allowEqual = true)
   GtfsTime arrivalTime();
 
   @ConditionallyRequired

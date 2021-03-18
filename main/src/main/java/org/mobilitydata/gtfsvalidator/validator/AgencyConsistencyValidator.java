@@ -42,8 +42,12 @@ import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableLoader;
  */
 @GtfsValidator
 public class AgencyConsistencyValidator extends FileValidator {
+  private final GtfsAgencyTableContainer agencyTable;
 
-  @Inject GtfsAgencyTableContainer agencyTable;
+  @Inject
+  AgencyConsistencyValidator(GtfsAgencyTableContainer agencyTable) {
+    this.agencyTable = agencyTable;
+  }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {

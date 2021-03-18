@@ -47,9 +47,20 @@ public class TooFastTravelValidator extends FileValidator {
 
   private static final double METER_PER_SECOND_TO_KMH_CONVERSION_FACTOR = 3.6d;
   private static final int MAX_SPEED_METERS_PER_HOUR = 42; // 150 km/h or 93.2 mph
-  @Inject GtfsTripTableContainer tripTable;
-  @Inject GtfsStopTimeTableContainer stopTimeTable;
-  @Inject GtfsStopTableContainer stopTable;
+
+  private final GtfsTripTableContainer tripTable;
+  private final GtfsStopTimeTableContainer stopTimeTable;
+  private final GtfsStopTableContainer stopTable;
+
+  @Inject
+  TooFastTravelValidator(
+      GtfsTripTableContainer tripTable,
+      GtfsStopTimeTableContainer stopTimeTable,
+      GtfsStopTableContainer stopTable) {
+    this.tripTable = tripTable;
+    this.stopTimeTable = stopTimeTable;
+    this.stopTable = stopTable;
+  }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {

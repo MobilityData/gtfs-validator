@@ -40,9 +40,7 @@ public class FeedExpirationDateValidatorTest {
 
   private List<ValidationNotice> validateFeedInfo(GtfsFeedInfo feedInfo) {
     NoticeContainer container = new NoticeContainer();
-    FeedExpirationDateValidator validator = new FeedExpirationDateValidator();
-    validator.context = VALIDATION_CONTEXT;
-    validator.validate(feedInfo, container);
+    new FeedExpirationDateValidator(VALIDATION_CONTEXT).validate(feedInfo, container);
     return container.getValidationNotices();
   }
 

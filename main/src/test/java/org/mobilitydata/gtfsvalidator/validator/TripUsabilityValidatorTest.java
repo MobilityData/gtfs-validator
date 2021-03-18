@@ -23,17 +23,13 @@ import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.UnusableTripNotice;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 
 public class TripUsabilityValidatorTest {
-  private static GtfsTripTableContainer createTripTable(
-      NoticeContainer noticeContainer, List<GtfsTrip> entities) {
-    return GtfsTripTableContainer.forEntities(entities, noticeContainer);
-  }
-
   public static GtfsTrip createTrip(
       long csvRowNumber, String routeId, String serviceId, String tripId) {
     return new GtfsTrip.Builder()
@@ -54,56 +50,42 @@ public class TripUsabilityValidatorTest {
         .build();
   }
 
-  private static GtfsStopTimeTableContainer createStopTimeTable(
-      NoticeContainer noticeContainer, List<GtfsStopTime> entities) {
-    return GtfsStopTimeTableContainer.forEntities(entities, noticeContainer);
+  private static List<ValidationNotice> generateNotices(
+      List<GtfsTrip> trips, List<GtfsStopTime> stopTimes) {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    new TripUsabilityValidator(
+            GtfsTripTableContainer.forEntities(trips, noticeContainer),
+            GtfsStopTimeTableContainer.forEntities(stopTimes, noticeContainer))
+        .validate(noticeContainer);
+    return noticeContainer.getValidationNotices();
   }
 
   @Test
   public void tripServingMoreThanOneStopShouldNotGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    TripUsabilityValidator underTest = new TripUsabilityValidator();
-
-    underTest.tripTable =
-        createTripTable(
-            noticeContainer,
-            ImmutableList.of(
-                createTrip(1, "route id value", "service id value", "t0"),
-                createTrip(3, "route id value", "service id value", "t1")));
-    underTest.stopTimeTable =
-        createStopTimeTable(
-            noticeContainer,
-            ImmutableList.of(
-                createStopTime(0, "t0", "s0", 2),
-                createStopTime(2, "t0", "s1", 3),
-                createStopTime(0, "t1", "s3", 5),
-                createStopTime(2, "t1", "s4", 9)));
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createTrip(1, "route id value", "service id value", "t0"),
+                    createTrip(3, "route id value", "service id value", "t1")),
+                ImmutableList.of(
+                    createStopTime(0, "t0", "s0", 2),
+                    createStopTime(2, "t0", "s1", 3),
+                    createStopTime(0, "t1", "s3", 5),
+                    createStopTime(2, "t1", "s4", 9))))
+        .isEmpty();
   }
 
   @Test
   public void tripServingOneStopShouldGenerateNotice() {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    TripUsabilityValidator underTest = new TripUsabilityValidator();
-
-    underTest.tripTable =
-        createTripTable(
-            noticeContainer,
-            ImmutableList.of(
-                createTrip(1, "route id value", "service id value", "t0"),
-                createTrip(3, "route id value", "service id value", "t1")));
-    underTest.stopTimeTable =
-        createStopTimeTable(
-            noticeContainer,
-            ImmutableList.of(
-                createStopTime(0, "t0", "s0", 2),
-                createStopTime(0, "t1", "s3", 5),
-                createStopTime(2, "t1", "s4", 9)));
-
-    underTest.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createTrip(1, "route id value", "service id value", "t0"),
+                    createTrip(3, "route id value", "service id value", "t1")),
+                ImmutableList.of(
+                    createStopTime(0, "t0", "s0", 2),
+                    createStopTime(0, "t1", "s3", 5),
+                    createStopTime(2, "t1", "s4", 9))))
         .containsExactly(new UnusableTripNotice(1, "t0"));
   }
 }

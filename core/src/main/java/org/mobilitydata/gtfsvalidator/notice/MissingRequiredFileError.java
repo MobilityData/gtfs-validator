@@ -27,9 +27,4 @@ public class MissingRequiredFileError extends ValidationNotice {
   public MissingRequiredFileError(String filename) {
     super(ImmutableMap.of("filename", filename), SeverityLevel.ERROR);
   }
-
-  @Override
-  public String getCode() {
-    return "missing_required_file";
-  }
 }

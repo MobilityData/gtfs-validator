@@ -32,10 +32,22 @@ import org.mobilitydata.gtfsvalidator.util.ServiceIdIntersectionCache;
  */
 @GtfsValidator
 public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
-  @Inject GtfsTripTableContainer tripTable;
-  @Inject GtfsStopTimeTableContainer stopTimeTable;
-  @Inject GtfsCalendarTableContainer calendarTable;
-  @Inject GtfsCalendarDateTableContainer calendarDateTable;
+  private final GtfsTripTableContainer tripTable;
+  private final GtfsStopTimeTableContainer stopTimeTable;
+  private final GtfsCalendarTableContainer calendarTable;
+  private final GtfsCalendarDateTableContainer calendarDateTable;
+
+  @Inject
+  BlockTripsWithOverlappingStopTimesValidator(
+      GtfsTripTableContainer tripTable,
+      GtfsStopTimeTableContainer stopTimeTable,
+      GtfsCalendarTableContainer calendarTable,
+      GtfsCalendarDateTableContainer calendarDateTable) {
+    this.tripTable = tripTable;
+    this.stopTimeTable = stopTimeTable;
+    this.calendarTable = calendarTable;
+    this.calendarDateTable = calendarDateTable;
+  }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {

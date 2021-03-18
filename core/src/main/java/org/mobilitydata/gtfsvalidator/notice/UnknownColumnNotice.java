@@ -32,9 +32,4 @@ public class UnknownColumnNotice extends ValidationNotice {
             "index", index),
         SeverityLevel.INFO);
   }
-
-  @Override
-  public String getCode() {
-    return "unknown_column";
-  }
 }

@@ -40,9 +40,4 @@ public class StopTooFarFromTripShapeNotice extends ValidationNotice {
             "stopShapeThresholdMeters", stopShapeThresholdMeters),
         SeverityLevel.WARNING);
   }
-
-  @Override
-  public String getCode() {
-    return "stop_too_far_from_trip_shape";
-  }
 }

@@ -32,6 +32,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleTypeVisitor8;
 import org.mobilitydata.gtfsvalidator.annotation.CachedField;
 import org.mobilitydata.gtfsvalidator.annotation.DefaultValue;
+import org.mobilitydata.gtfsvalidator.annotation.EndRange;
 import org.mobilitydata.gtfsvalidator.annotation.FieldType;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.FirstKey;
@@ -61,6 +62,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
  * tables.
  */
 public class Analyser {
+
   public GtfsFileDescriptor analyzeGtfsFileType(TypeElement type) {
     GtfsFileDescriptor.Builder fileBuilder = GtfsFileDescriptor.builder();
     GtfsTable gtfsFileAnnotation = type.getAnnotation(GtfsTable.class);
@@ -103,6 +105,13 @@ public class Analyser {
       DefaultValue defaultValue = method.getAnnotation(DefaultValue.class);
       if (defaultValue != null && defaultValue.value() != null) {
         fieldBuilder.setDefaultValue(defaultValue.value());
+      }
+
+      EndRange endRange = method.getAnnotation(EndRange.class);
+      if (endRange != null) {
+        fieldBuilder.setEndRange(
+            EndRangeDescriptor.create(
+                FieldNameConverter.javaFieldName(endRange.field()), endRange.allowEqual()));
       }
 
       fileBuilder.fieldsBuilder().add(fieldBuilder.build());
