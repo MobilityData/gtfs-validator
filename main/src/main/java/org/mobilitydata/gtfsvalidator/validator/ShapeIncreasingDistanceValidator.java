@@ -16,12 +16,14 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimaps;
 import java.util.List;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.DecreasingOrEqualShapeDistanceNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 
@@ -60,6 +62,38 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
                   prev.shapePtSequence()));
         }
       }
+    }
+  }
+
+  /**
+   * When sorted on `shapes.shape_pt_sequence` key, shape points should have strictly increasing
+   * values for `shapes.shape_dist_traveled`
+   *
+   * <p>"Values must increase along with shape_pt_sequence."
+   * (http://gtfs.org/reference/static/#shapestxt)
+   *
+   * <p>Severity: {@code SeverityLevel.ERROR}
+   */
+  static class DecreasingOrEqualShapeDistanceNotice extends ValidationNotice {
+    DecreasingOrEqualShapeDistanceNotice(
+        String shapeId,
+        long csvRowNumber,
+        double shapeDistTraveled,
+        int shapePtSequence,
+        long prevCsvRowNumber,
+        double prevShapeDistTraveled,
+        int prevShapePtSequence) {
+      super(
+          new ImmutableMap.Builder<String, Object>()
+              .put("shapeId", shapeId)
+              .put("csvRowNumber", csvRowNumber)
+              .put("shapeDistTraveled", shapeDistTraveled)
+              .put("shapePtSequence", shapePtSequence)
+              .put("prevCsvRowNumber", prevCsvRowNumber)
+              .put("prevShapeDistTraveled", prevShapeDistTraveled)
+              .put("prevShapePtSequence", prevShapePtSequence)
+              .build(),
+          SeverityLevel.ERROR);
     }
   }
 }

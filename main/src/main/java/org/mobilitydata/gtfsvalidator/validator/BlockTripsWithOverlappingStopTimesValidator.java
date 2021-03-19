@@ -1,5 +1,6 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimaps;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -9,8 +10,9 @@ import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.BlockTripsWithOverlappingStopTimesNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
@@ -32,6 +34,7 @@ import org.mobilitydata.gtfsvalidator.util.ServiceIdIntersectionCache;
  */
 @GtfsValidator
 public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
+
   private final GtfsTripTableContainer tripTable;
   private final GtfsStopTimeTableContainer stopTimeTable;
   private final GtfsCalendarTableContainer calendarTable;
@@ -84,14 +87,7 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
         final GtfsTrip tripB = overlap.getTripB();
         noticeContainer.addValidationNotice(
             new BlockTripsWithOverlappingStopTimesNotice(
-                tripA.csvRowNumber(),
-                tripA.tripId(),
-                tripA.serviceId(),
-                tripB.csvRowNumber(),
-                tripB.tripId(),
-                tripB.serviceId(),
-                tripA.blockId(),
-                GtfsDate.fromLocalDate(overlap.intersection)));
+                tripA, tripB, GtfsDate.fromLocalDate(overlap.intersection)));
       }
     }
   }
@@ -183,6 +179,7 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
    * Captures the time interval spanned by the first and last stop time of a particular GTFS trip.
    */
   private static class GtfsTripInterval {
+
     private final GtfsTrip trip;
     private final GtfsTime firstArrival;
     private final GtfsTime firstDeparture;
@@ -228,6 +225,7 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
    * first intersection.
    */
   private static class GtfsTripOverlap {
+
     private final GtfsTrip tripA;
     private final GtfsTrip tripB;
     private final LocalDate intersection;
@@ -248,6 +246,30 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
 
     public LocalDate getIntersection() {
       return intersection;
+    }
+  }
+
+  /**
+   * Describes two trips with the same block id that have overlapping stop times.
+   *
+   * <p>Severity: {@code SeverityLevel.ERROR}
+   */
+  static class BlockTripsWithOverlappingStopTimesNotice extends ValidationNotice {
+
+    BlockTripsWithOverlappingStopTimesNotice(
+        GtfsTrip tripA, GtfsTrip tripB, GtfsDate intersection) {
+      super(
+          new ImmutableMap.Builder<String, Object>()
+              .put("csvRowNumberA", tripA.csvRowNumber())
+              .put("tripIdA", tripA.tripId())
+              .put("serviceIdA", tripA.serviceId())
+              .put("csvRowNumberB", tripB.csvRowNumber())
+              .put("tripIdB", tripB.tripId())
+              .put("serviceIdB", tripB.serviceId())
+              .put("blockId", tripA.blockId())
+              .put("intersection", intersection.toYYYYMMDD())
+              .build(),
+          SeverityLevel.ERROR);
     }
   }
 }

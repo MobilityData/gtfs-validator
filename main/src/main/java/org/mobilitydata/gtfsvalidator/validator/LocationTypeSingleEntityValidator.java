@@ -16,11 +16,11 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.LocationWithoutParentStationNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.PlatformWithoutParentStationNotice;
-import org.mobilitydata.gtfsvalidator.notice.StationWithParentStationNotice;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 
@@ -65,6 +65,68 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
           new LocationWithoutParentStationNotice(
               location.csvRowNumber(), location.stopId(),
               location.stopName(), location.locationTypeValue()));
+    }
+  }
+
+  /**
+   * A station has `parent_station` field set.
+   *
+   * <p>Severity: {@code SeverityLevel.ERROR}
+   */
+  static class StationWithParentStationNotice extends ValidationNotice {
+    StationWithParentStationNotice(
+        long csvRowNumber, String stopId, String stopName, String parentStation) {
+      super(
+          ImmutableMap.of(
+              "stopId",
+              stopId,
+              "stopName",
+              stopName,
+              "csvRowNumber",
+              csvRowNumber,
+              "parentStation",
+              parentStation),
+          SeverityLevel.ERROR);
+    }
+  }
+
+  /**
+   * A location that must have `parent_station` field does not have it.
+   *
+   * <p>The following location types must have `parent_station`: entrance, generic node, boarding
+   * area.
+   *
+   * <p>Severity: {@code SeverityLevel.ERROR}
+   */
+  static class LocationWithoutParentStationNotice extends ValidationNotice {
+    LocationWithoutParentStationNotice(
+        long csvRowNumber, String stopId, String stopName, int locationType) {
+      super(
+          ImmutableMap.of(
+              "csvRowNumber",
+              csvRowNumber,
+              "stopId",
+              stopId,
+              "stopName",
+              stopName,
+              "locationType",
+              locationType),
+          SeverityLevel.ERROR);
+    }
+  }
+
+  /**
+   * A platform has no `parent_station` field set.
+   *
+   * <p>This is different from {@code LocationWithoutParentStationNotice} since it is less severe.
+   *
+   * <p>Severity: {@code SeverityLevel.WARNING}
+   */
+  static class PlatformWithoutParentStationNotice extends ValidationNotice {
+    PlatformWithoutParentStationNotice(long csvRowNumber, String stopId, String stopName) {
+      super(
+          ImmutableMap.of("csvRowNumber", csvRowNumber, "stopId", stopId, "stopName", stopName),
+          SeverityLevel.WARNING);
     }
   }
 }

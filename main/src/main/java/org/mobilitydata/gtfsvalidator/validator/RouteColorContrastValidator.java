@@ -16,10 +16,13 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.RouteColorContrastNotice;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
+import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 
 /**
  * Validates that there is enough contrast between route_color and route_text_color in "routes.txt".
@@ -50,6 +53,29 @@ public class RouteColorContrastValidator extends SingleEntityValidator<GtfsRoute
               entity.csvRowNumber(),
               entity.routeColor(),
               entity.routeTextColor()));
+    }
+  }
+
+  /**
+   * "The color difference between route_color and route_text_color should provide sufficient
+   * contrast when viewed on a black and white screen." (http://gtfs.org/best-practices/#routestxt)
+   *
+   * <p>Severity: {@code SeverityLevel.WARNING}
+   */
+  static class RouteColorContrastNotice extends ValidationNotice {
+    RouteColorContrastNotice(
+        String routeId, long csvRowNumber, GtfsColor routeColor, GtfsColor routeTextColor) {
+      super(
+          ImmutableMap.of(
+              "routeId",
+              routeId,
+              "csvRowNumber",
+              csvRowNumber,
+              "routeColor",
+              routeColor.toHtmlColor(),
+              "routeTextColor",
+              routeTextColor.toHtmlColor()),
+          SeverityLevel.WARNING);
     }
   }
 }

@@ -16,13 +16,15 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.DuplicateFareRuleZoneIdFieldsNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareRule;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareRuleTableContainer;
 
@@ -38,6 +40,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFareRuleTableContainer;
  */
 @GtfsValidator
 public class DuplicateFareRuleZoneIdFieldsValidator extends FileValidator {
+
   private final GtfsFareRuleTableContainer fareRuleTable;
 
   @Inject
@@ -77,5 +80,25 @@ public class DuplicateFareRuleZoneIdFieldsValidator extends FileValidator {
   private int getHash(GtfsFareRule fareRule) {
     return Objects.hash(
         fareRule.routeId(), fareRule.originId(), fareRule.containsId(), fareRule.destinationId());
+  }
+
+  /**
+   * Rows from "fare_rules.txt" must be unique based on "fare_rules.route_id",
+   * "fare_rules.origin_id", "fare_rules.contains_id" and "fare_rules.destination_id".
+   *
+   * <p>Severity: {@code SeverityLevel.ERROR}
+   */
+  static class DuplicateFareRuleZoneIdFieldsNotice extends ValidationNotice {
+
+    DuplicateFareRuleZoneIdFieldsNotice(
+        long csvRowNumber, String fareId, long previousCsvRowNumber, String previousFareId) {
+      super(
+          ImmutableMap.of(
+              "csvRowNumber", csvRowNumber,
+              "fareId", fareId,
+              "previousCsvRowNumber", previousCsvRowNumber,
+              "previousFareId", previousFareId),
+          SeverityLevel.ERROR);
+    }
   }
 }

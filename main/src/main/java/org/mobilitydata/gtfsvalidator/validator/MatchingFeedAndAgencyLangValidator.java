@@ -16,11 +16,13 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Locale;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.FeedInfoLangAndAgencyLangMismatchNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
@@ -81,6 +83,25 @@ public class MatchingFeedAndAgencyLangValidator extends FileValidator {
                 agency.agencyLang().toLanguageTag(),
                 feedLang.toLanguageTag()));
       }
+    }
+  }
+
+  /**
+   * {@code agency.agency_lang} and {@code feed_info.feed_lang} do not match
+   *
+   * <p>Severity: {@code SeverityLevel.WARNING}
+   */
+  static class FeedInfoLangAndAgencyLangMismatchNotice extends ValidationNotice {
+    FeedInfoLangAndAgencyLangMismatchNotice(
+        long csvRowNumber, String agencyId, String agencyName, String agencyLang, String feedLang) {
+      super(
+          ImmutableMap.of(
+              "csvRowNumber", csvRowNumber,
+              "agencyId", agencyId,
+              "agencyName", agencyName,
+              "agencyLang", agencyLang,
+              "feedLang", feedLang),
+          SeverityLevel.WARNING);
     }
   }
 }

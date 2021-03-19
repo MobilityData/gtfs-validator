@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimaps;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,8 @@ import java.util.Map.Entry;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.TooFastTravelNotice;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
@@ -143,5 +145,24 @@ public class TooFastTravelValidator extends FileValidator {
       prevStopLon = currentStop.stopLon();
     }
     return notices;
+  }
+
+  /**
+   * Trip is too fast
+   *
+   * <p>SeverityLevel: {@code SeverityLevel.WARNING}
+   */
+  static class TooFastTravelNotice extends ValidationNotice {
+    TooFastTravelNotice(
+        String tripId, double speedkmh, int firstStopSequence, int lastStopSequence) {
+      super(
+          new ImmutableMap.Builder<String, Object>()
+              .put("tripId", tripId)
+              .put("speedkmh", speedkmh)
+              .put("firstStopSequence", firstStopSequence)
+              .put("lastStopSequence", lastStopSequence)
+              .build(),
+          SeverityLevel.WARNING);
+    }
   }
 }
