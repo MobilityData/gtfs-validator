@@ -105,12 +105,3 @@ public class FeedExpirationDateValidatorTest {
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(30)),
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(30))));
   }
-
-  @Test
-  public void feedExpiringInMoreThan30DaysFromNowShouldNotGenerateNotice() {
-    assertThat(
-        validateFeedInfo(
-            createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(45)))))
-        .isEmpty();
-  }
-}
