@@ -25,7 +25,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.notice.ForeignKeyError;
+import org.mobilitydata.gtfsvalidator.notice.ForeignKeyViolationNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
@@ -123,7 +123,7 @@ public class GtfsTripServiceIdForeignKeyValidatorTest {
                 ImmutableList.of(createTrip(1, "route id", "WEEK", "trip id", "shape id")),
                 ImmutableList.of()))
         .containsExactly(
-            new ForeignKeyError(
+            new ForeignKeyViolationNotice(
                 "trips.txt",
                 "service_id",
                 "calendar.txt or calendar_dates.txt",

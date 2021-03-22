@@ -23,8 +23,8 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class DuplicateKeyError extends ValidationNotice {
-  public DuplicateKeyError(
+public class DuplicateKeyNotice extends ValidationNotice {
+  public DuplicateKeyNotice(
       String filename,
       long oldCsvRowNumber,
       long newCsvRowNumber,
@@ -43,7 +43,7 @@ public class DuplicateKeyError extends ValidationNotice {
         SeverityLevel.ERROR);
   }
 
-  public DuplicateKeyError(
+  public DuplicateKeyNotice(
       String filename,
       long oldCsvRowNumber,
       long newCsvRowNumber,

@@ -19,12 +19,25 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * A required file is missing.
+ * The values in the given column of the input rows are out of range.
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class MissingRequiredFileError extends ValidationNotice {
-  public MissingRequiredFileError(String filename) {
-    super(ImmutableMap.of("filename", filename), SeverityLevel.ERROR);
+public class NumberOutOfRangeNotice extends ValidationNotice {
+  public NumberOutOfRangeNotice(
+      String filename, long csvRowNumber, String fieldName, String fieldType, Object fieldValue) {
+    super(
+        ImmutableMap.of(
+            "filename",
+            filename,
+            "csvRowNumber",
+            csvRowNumber,
+            "fieldName",
+            fieldName,
+            "fieldType",
+            fieldType,
+            "fieldValue",
+            fieldValue),
+        SeverityLevel.ERROR);
   }
 }

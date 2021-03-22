@@ -27,8 +27,8 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class ForeignKeyError extends ValidationNotice {
-  public ForeignKeyError(
+public class ForeignKeyViolationNotice extends ValidationNotice {
+  public ForeignKeyViolationNotice(
       String childFilename,
       String childFieldName,
       String parentFilename,
