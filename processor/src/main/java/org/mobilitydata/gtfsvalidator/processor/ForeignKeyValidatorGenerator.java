@@ -28,7 +28,7 @@ import javax.lang.model.element.Modifier;
 import org.apache.commons.lang3.StringUtils;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.ForeignKeyError;
+import org.mobilitydata.gtfsvalidator.notice.ForeignKeyViolationNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.validator.FileValidator;
 
@@ -127,7 +127,7 @@ public class ForeignKeyValidatorGenerator {
             .addStatement(
                 "noticeContainer.addValidationNotice(new $T($S, $S, $S, $S, childKey,"
                     + " childEntity.csvRowNumber()))",
-                ForeignKeyError.class,
+                ForeignKeyViolationNotice.class,
                 childFile.filename(),
                 FieldNameConverter.gtfsColumnName(childField.name()),
                 parentFile.filename(),

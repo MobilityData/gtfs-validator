@@ -31,15 +31,15 @@ public class NoticeContainerTest {
   @Test
   public void exportJson() {
     NoticeContainer container = new NoticeContainer();
-    container.addValidationNotice(new MissingRequiredFileError("stops.txt"));
-    container.addValidationNotice(new MissingRequiredFileError("agency.txt"));
+    container.addValidationNotice(new MissingRequiredFileNotice("stops.txt"));
+    container.addValidationNotice(new MissingRequiredFileNotice("agency.txt"));
     container.addSystemError(
         new RuntimeExceptionInValidatorError(
             "FaultyValidator", "java.lang.IndexOutOfBoundsException", "Index 0 out of bounds"));
     assertThat(container.exportValidationNotices())
         .isEqualTo(
             "{\"notices\":["
-                + "{\"code\":\"missing_required_file_error\",\"severity\":\"ERROR\","
+                + "{\"code\":\"missing_required_file\",\"severity\":\"ERROR\","
                 + "\"totalNotices\":2,\"notices\":"
                 + "[{\"filename\":\"stops.txt\"},{\"filename\":\"agency.txt\"}]}]}");
     assertThat(container.exportSystemErrors())
@@ -86,7 +86,7 @@ public class NoticeContainerTest {
 
   @Test
   public void addAll() {
-    ValidationNotice n1 = new MissingRequiredFileError("stops.txt");
+    ValidationNotice n1 = new MissingRequiredFileNotice("stops.txt");
     ValidationNotice n2 = new UnknownFileNotice("unknown.txt");
     SystemError e1 =
         new RuntimeExceptionInValidatorError(

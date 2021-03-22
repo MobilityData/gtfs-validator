@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.ForeignKeyError;
+import org.mobilitydata.gtfsvalidator.notice.ForeignKeyViolationNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableLoader;
@@ -32,7 +32,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTripTableLoader;
  * Validates that service_id field in "trips.txt" references a valid service_id in "calendar.txt" or
  * "calendar_date.txt".
  *
- * <p>Generated notice: {@link ForeignKeyError}.
+ * <p>Generated notice: {@link ForeignKeyViolationNotice}.
  */
 @GtfsValidator
 public class GtfsTripServiceIdForeignKeyValidator extends FileValidator {
@@ -56,7 +56,7 @@ public class GtfsTripServiceIdForeignKeyValidator extends FileValidator {
       String childKey = trip.serviceId();
       if (!hasReferencedKey(childKey, calendarContainer, calendarDateContainer)) {
         noticeContainer.addValidationNotice(
-            new ForeignKeyError(
+            new ForeignKeyViolationNotice(
                 GtfsTripTableLoader.FILENAME,
                 GtfsTripTableLoader.SERVICE_ID_FIELD_NAME,
                 GtfsCalendarTableLoader.FILENAME + " or " + GtfsCalendarDateTableLoader.FILENAME,

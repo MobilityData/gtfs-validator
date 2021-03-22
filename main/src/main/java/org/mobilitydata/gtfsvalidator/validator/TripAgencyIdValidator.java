@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
+import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
@@ -29,7 +29,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableLoader;
  * Checks that agency_id field in "routes.txt" is defined for every row if there is more than 1
  * agency in the feed.
  *
- * <p>Generated notice: {@link MissingRequiredFieldError}.
+ * <p>Generated notice: {@link MissingRequiredFieldNotice}.
  */
 @GtfsValidator
 public class TripAgencyIdValidator extends FileValidator {
@@ -51,7 +51,7 @@ public class TripAgencyIdValidator extends FileValidator {
     for (GtfsRoute route : routeTable.getEntities()) {
       if (!route.hasAgencyId()) {
         noticeContainer.addValidationNotice(
-            new MissingRequiredFieldError(
+            new MissingRequiredFieldNotice(
                 routeTable.gtfsFilename(),
                 route.csvRowNumber(),
                 GtfsRouteTableLoader.AGENCY_ID_FIELD_NAME));

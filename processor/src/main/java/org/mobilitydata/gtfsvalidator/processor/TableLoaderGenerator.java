@@ -42,7 +42,7 @@ import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsLoader;
 import org.mobilitydata.gtfsvalidator.notice.EmptyFileNotice;
-import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileError;
+import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvFile;
 import org.mobilitydata.gtfsvalidator.parsing.CsvRow;
@@ -397,7 +397,7 @@ public class TableLoaderGenerator {
             .beginControlFlow("if (isRequired())")
             .addStatement(
                 "noticeContainer.addValidationNotice(new $T(gtfsFilename()))",
-                MissingRequiredFileError.class)
+                MissingRequiredFileNotice.class)
             .endControlFlow()
             .addStatement(
                 "validatorLoader.invokeSingleFileValidators(table, validationContext,"

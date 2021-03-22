@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
+import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
@@ -80,7 +80,7 @@ public class AgencyConsistencyValidatorTest {
                         "www.mobilitydata.org",
                         ZoneId.of("America/Montreal"),
                         Locale.CANADA))))
-        .containsExactly(new MissingRequiredFieldError("agency.txt", 1, "agency_id"));
+        .containsExactly(new MissingRequiredFieldNotice("agency.txt", 1, "agency_id"));
   }
 
   @Test

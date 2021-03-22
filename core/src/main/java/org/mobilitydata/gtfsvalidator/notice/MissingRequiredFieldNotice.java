@@ -23,8 +23,8 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class MissingRequiredFieldError extends ValidationNotice {
-  public MissingRequiredFieldError(String filename, long csvRowNumber, String fieldName) {
+public class MissingRequiredFieldNotice extends ValidationNotice {
+  public MissingRequiredFieldNotice(String filename, long csvRowNumber, String fieldName) {
     super(
         ImmutableMap.of("filename", filename, "csvRowNumber", csvRowNumber, "fieldName", fieldName),
         SeverityLevel.ERROR);

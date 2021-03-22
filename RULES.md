@@ -70,9 +70,9 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 | [`DecreasingOrEqualStopTimeDistanceNotice`](#DecreasingOrEqualStopTimeDistanceNotice)                           	| Decreasing or equal `shape_dist_traveled` in `stop_times.txt`.                                                                                              	|
 | [`DuplicatedColumnNotice`](#DuplicatedColumnNotice)                                                             	| Duplicated column in CSV.                                                                                                                                   	|
 | [`DuplicateFareRuleZoneIdFieldsNotice`](#DuplicateFareRuleZoneIdFieldsNotice)                                   	| Duplicate rows rows from `fare_rules.txt` based on `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.contains_id` and `fare_rules.destination_id`. 	|
-| [`DuplicateKeyError`](#DuplicateKeyError)                                                                       	| Duplicated entity.                                                                                                                                          	|
+| [`DuplicateKeyNotice`](#DuplicateKeyNotice)                                                                       	| Duplicated entity.                                                                                                                                          	|
 | [`EmptyFileNotice`](#EmptyFileNotice)                                                                           	| A CSV file is empty.                                                                                                                                        	|
-| [`ForeignKeyError`](#ForeignKeyError)                                                                           	| Wrong foreign key.                                                                                                                                          	|
+| [`ForeignKeyViolationNotice`](#ForeignKeyViolationNotice)                                                                           	| Wrong foreign key.                                                                                                                                          	|
 | [`InconsistentAgencyTimezoneNotice`](#InconsistentAgencyTimezoneNotice)                                         	| Inconsistent Timezone among agencies.                                                                                                                       	|
 | [`InvalidColorNotice`](#InvalidColorNotice)                                                                     	| A field contains an invalid color value.                                                                                                                    	|
 | [`InvalidCurrencyNotice`](#InvalidCurrencyNotice)                                                               	| A field contains a wrong currency code.                                                                                                                     	|
@@ -82,19 +82,19 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 | [`InvalidIntegerNotice`](#InvalidIntegerNotice)                                                                 	| A field cannot be parsed as an integer.                                                                                                                     	|
 | [`InvalidLanguageCodeNotice`](#InvalidLanguageCodeNotice)                                                       	| A field contains a wrong language code.                                                                                                                     	|
 | [`InvalidPhoneNumberNotice`](#InvalidPhoneNumberNotice)                                                         	| A field contains a malformed phone number.                                                                                                                  	|
-| [`InvalidRowLengthError`](#InvalidRowLengthError)                                                               	| Invalid csv row length.                                                                                                                                     	|
+| [`InvalidRowLengthNotice`](#InvalidRowLengthNotice)                                                               	| Invalid csv row length.                                                                                                                                     	|
 | [`InvalidTimeNotice`](#InvalidTimeNotice)                                                                       	| A field cannot be parsed as time.                                                                                                                           	|
 | [`InvalidTimezoneNotice`](#InvalidTimezoneNotice)                                                               	| A field cannot be parsed as a timezone.                                                                                                                     	|
 | [`InvalidUrlNotice`](#InvalidUrlNotice)                                                                         	| A field contains a malformed URL.                                                                                                                           	|
 | [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)                                     	| The value in CSV file has leading or trailing whitespaces.                                                                                                  	|
 | [`LocationWithoutParentStationNotice`](#LocationWithoutParentStationNotice)                                     	| A location that must have `parent_station` field does not have it.                                                                                          	|
 | [`MissingCalendarAndCalendarDateFilesNotice`](#MissingCalendarAndCalendarDateFilesNotice)                       	| Missing GTFS files `calendar.txt` and `calendar_dates.txt`.                                                                                                 	|
-| [`MissingRequiredColumnError`](#MissingRequiredColumnError)                                                     	| A required column is missing in the input file.                                                                                                             	|
-| [`MissingRequiredFieldError`](#MissingRequiredFieldError)                                                       	| A required field is missing.                                                                                                                                	|
-| [`MissingRequiredFileError`](#MissingRequiredFileError)                                                         	| A required file is missing.                                                                                                                                 	|
+| [`MissingRequiredColumnNotice`](#MissingRequiredColumnNotice)                                                     	| A required column is missing in the input file.                                                                                                             	|
+| [`MissingRequiredFieldNotice`](#MissingRequiredFieldNotice)                                                       	| A required field is missing.                                                                                                                                	|
+| [`MissingRequiredFileNotice`](#MissingRequiredFileNotice)                                                         	| A required file is missing.                                                                                                                                 	|
 | [`MissingTripEdgeNotice`](#MissingTripEdgeNotice)                                                               	| Missing trip edge `arrival_time` or `departure_time`.                                                                                                       	|
 | [`NewLineInValueNotice`](#NewLineInValueNotice)                                                                 	| New line or carriage return in a value in CSV file.                                                                                                         	|
-| [`NumberOutOfRangeError`](#NumberOutOfRangeError)                                                               	| Out of range value.                                                                                                                                         	|
+| [`NumberOutOfRangeNotice`](#NumberOutOfRangeNotice)                                                               	| Out of range value.                                                                                                                                         	|
 | [`OverlappingFrequencyNotice`](#OverlappingFrequencyNotice)                                                     	| Trip frequencies overlap.                                                                                                                                   	|
 | [`RouteBothShortAndLongNameMissingNotice`](#RouteBothShortAndLongNameMissingNotice)                             	| Missing route short name and long name.                                                                                                                     	|
 | [`SameNameAndDescriptionForRouteNotice`](#SameNameAndDescriptionForRouteNotice)                                 	| Same name and description for route.                                                                                                                        	|
@@ -203,9 +203,9 @@ The combination of `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.co
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 
-<a name="DuplicateKeyError"/>
+<a name="DuplicateKeyNotice"/>
 
-#### DuplicateKeyError
+#### DuplicateKeyNotice
 
 The values of the given key and rows are duplicates.
 
@@ -221,9 +221,9 @@ Empty csv file found in the archive: file does not have any headers, or is a req
 ##### References:
 * [GTFS files requirements](https://gtfs.org/reference/static#file-requirements)
 
-<a name="ForeignKeyError"/>
+<a name="ForeignKeyViolationNotice"/>
 
-#### ForeignKeyError
+#### ForeignKeyViolationNotice
 
 The values of the given key and rows of one table cannot be found a values of the given key in another table.
 
@@ -312,9 +312,9 @@ Value of field with type `phone number` is not valid.
 ##### References:
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 
-<a name="InvalidRowLengthError"/>
+<a name="InvalidRowLengthNotice"/>
 
-#### InvalidRowLengthError
+#### InvalidRowLengthNotice
 
 A row in the input file has a different number of values than specified by the CSV header.
 
@@ -377,27 +377,27 @@ Both files calendar_dates.txt and calendar.txt are missing from the GTFS archive
 * [calendar.txt specification](http://gtfs.org/reference/static/#calendartxt)
 * [calendar_dates.txt specification](http://gtfs.org/reference/static/#calendar_datestxt)
 
-<a name="MissingRequiredColumnError"/>
+<a name="MissingRequiredColumnNotice"/>
 
-#### MissingRequiredColumnError
+#### MissingRequiredColumnNotice
 
 A required column is missing in the input file.
 
 ##### References:
 * [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
 
-<a name="MissingRequiredFieldError"/>
+<a name="MissingRequiredFieldNotice"/>
 
-#### MissingRequiredFieldError
+#### MissingRequiredFieldNotice
 
 The given field has no value in some input row, even though values are required.
 
 ##### References:
 * [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
 
-<a name="MissingRequiredFileError"/>
+<a name="MissingRequiredFileNotice"/>
 
-#### MissingRequiredFileError
+#### MissingRequiredFileNotice
 
 A required file is missing.
 
@@ -422,9 +422,9 @@ A value in CSV file has a new line or carriage return.
 ##### References:
 * [GTFS file requirements](https://gtfs.org/reference/static/#file-requirements)
 
-<a name="NumberOutOfRangeError"/>
+<a name="NumberOutOfRangeNotice"/>
 
-#### NumberOutOfRangeError
+#### NumberOutOfRangeNotice
 
 The values in the given column of the input rows are out of range.
 

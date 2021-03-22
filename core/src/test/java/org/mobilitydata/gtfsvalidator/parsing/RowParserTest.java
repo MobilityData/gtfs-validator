@@ -32,7 +32,7 @@ import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.notice.EmptyRowNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidEmailNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidPhoneNumberNotice;
-import org.mobilitydata.gtfsvalidator.notice.InvalidRowLengthError;
+import org.mobilitydata.gtfsvalidator.notice.InvalidRowLengthNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidUrlNotice;
 import org.mobilitydata.gtfsvalidator.notice.LeadingOrTrailingWhitespacesNotice;
 import org.mobilitydata.gtfsvalidator.notice.NewLineInValueNotice;
@@ -356,7 +356,7 @@ public class RowParserTest {
     assertThat(parser.checkRowLength()).isFalse();
     assertThat(parser.hasParseErrorsInRow()).isTrue();
     assertThat(parser.getNoticeContainer().getValidationNotices())
-        .containsExactly(new InvalidRowLengthError(TEST_FILENAME, 2, 1, 2));
+        .containsExactly(new InvalidRowLengthNotice(TEST_FILENAME, 2, 1, 2));
 
     inputStream.close();
   }

@@ -21,7 +21,7 @@ import java.time.ZoneId;
 import java.util.Locale;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
+import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -36,7 +36,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableLoader;
  * <p>Generated notices:
  *
  * <ul>
- *   <li>{@link MissingRequiredFieldError} - multiple agencies present but no agency_id set
+ *   <li>{@link MissingRequiredFieldNotice} - multiple agencies present but no agency_id set
  *   <li>{@link InconsistentAgencyTimezoneNotice} - inconsistent timezone among the agencies
  *   <li>{@link InconsistentAgencyLangNotice} - inconsistent language among the agencies
  * </ul>
@@ -61,7 +61,7 @@ public class AgencyConsistencyValidator extends FileValidator {
       // agency_id is required when there are 2 or more agencies.
       if (!agency.hasAgencyId()) {
         noticeContainer.addValidationNotice(
-            new MissingRequiredFieldError(
+            new MissingRequiredFieldNotice(
                 agencyTable.gtfsFilename(),
                 agency.csvRowNumber(),
                 GtfsAgencyTableLoader.AGENCY_ID_FIELD_NAME));

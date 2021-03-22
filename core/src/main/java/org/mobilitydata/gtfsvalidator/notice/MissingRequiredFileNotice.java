@@ -19,23 +19,12 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * An enum has an unexpected value.
+ * A required file is missing.
  *
- * <p>Severity: {@code SeverityLevel.WARNING}
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class UnexpectedEnumValueError extends ValidationNotice {
-  public UnexpectedEnumValueError(
-      String filename, long csvRowNumber, String fieldName, int fieldValue) {
-    super(
-        ImmutableMap.of(
-            "filename",
-            filename,
-            "csvRowNumber",
-            csvRowNumber,
-            "fieldName",
-            fieldName,
-            "fieldValue",
-            fieldValue),
-        SeverityLevel.WARNING);
+public class MissingRequiredFileNotice extends ValidationNotice {
+  public MissingRequiredFileNotice(String filename) {
+    super(ImmutableMap.of("filename", filename), SeverityLevel.ERROR);
   }
 }

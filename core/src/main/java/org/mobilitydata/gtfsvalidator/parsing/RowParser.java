@@ -37,18 +37,18 @@ import org.mobilitydata.gtfsvalidator.notice.InvalidFloatNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidIntegerNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidLanguageCodeNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidPhoneNumberNotice;
-import org.mobilitydata.gtfsvalidator.notice.InvalidRowLengthError;
+import org.mobilitydata.gtfsvalidator.notice.InvalidRowLengthNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidTimeNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidTimezoneNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidUrlNotice;
 import org.mobilitydata.gtfsvalidator.notice.LeadingOrTrailingWhitespacesNotice;
-import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
+import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NewLineInValueNotice;
 import org.mobilitydata.gtfsvalidator.notice.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.NumberOutOfRangeError;
+import org.mobilitydata.gtfsvalidator.notice.NumberOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
-import org.mobilitydata.gtfsvalidator.notice.UnexpectedEnumValueError;
+import org.mobilitydata.gtfsvalidator.notice.UnexpectedEnumValueNotice;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
@@ -112,7 +112,7 @@ public class RowParser {
 
     if (row.getColumnCount() != csvFile.getColumnCount()) {
       addNoticeInRow(
-          new InvalidRowLengthError(
+          new InvalidRowLengthNotice(
               csvFile.getFileName(),
               row.getRowNumber(),
               row.getColumnCount(),
@@ -127,7 +127,7 @@ public class RowParser {
     String s = row.asString(columnIndex);
     if (required && s == null) {
       addNoticeInRow(
-          new MissingRequiredFieldError(
+          new MissingRequiredFieldNotice(
               row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex)));
     }
     if (s != null) {
@@ -225,7 +225,7 @@ public class RowParser {
     Double value = asFloat(columnIndex, required);
     if (value != null && !(-90 <= value && value <= 90)) {
       addNoticeInRow(
-          new NumberOutOfRangeError(
+          new NumberOutOfRangeNotice(
               row.getFileName(),
               row.getRowNumber(),
               row.getColumnName(columnIndex),
@@ -241,7 +241,7 @@ public class RowParser {
     Double value = asFloat(columnIndex, required);
     if (value != null && !(-180 <= value && value <= 180)) {
       addNoticeInRow(
-          new NumberOutOfRangeError(
+          new NumberOutOfRangeNotice(
               row.getFileName(),
               row.getRowNumber(),
               row.getColumnName(columnIndex),
@@ -294,7 +294,7 @@ public class RowParser {
       case POSITIVE:
         if (compareToZero <= 0) {
           addNoticeInRow(
-              new NumberOutOfRangeError(
+              new NumberOutOfRangeNotice(
                   row.getFileName(),
                   row.getRowNumber(),
                   row.getColumnName(columnIndex),
@@ -305,7 +305,7 @@ public class RowParser {
       case NON_NEGATIVE:
         if (compareToZero < 0) {
           addNoticeInRow(
-              new NumberOutOfRangeError(
+              new NumberOutOfRangeNotice(
                   row.getFileName(),
                   row.getRowNumber(),
                   row.getColumnName(columnIndex),
@@ -316,7 +316,7 @@ public class RowParser {
       case NON_ZERO:
         if (compareToZero == 0) {
           addNoticeInRow(
-              new NumberOutOfRangeError(
+              new NumberOutOfRangeNotice(
                   row.getFileName(),
                   row.getRowNumber(),
                   row.getColumnName(columnIndex),
@@ -341,7 +341,7 @@ public class RowParser {
     }
     if (enumCreator.convert(i) == null) {
       addNoticeInRow(
-          new UnexpectedEnumValueError(
+          new UnexpectedEnumValueNotice(
               row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), i));
     }
     return i;

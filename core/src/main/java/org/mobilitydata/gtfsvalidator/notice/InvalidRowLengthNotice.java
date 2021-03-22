@@ -19,25 +19,19 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * The values in the given column of the input rows are out of range.
+ * A row in the input file has a different number of values than specified by the CSV header.
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class NumberOutOfRangeError extends ValidationNotice {
-  public NumberOutOfRangeError(
-      String filename, long csvRowNumber, String fieldName, String fieldType, Object fieldValue) {
+public class InvalidRowLengthNotice extends ValidationNotice {
+  public InvalidRowLengthNotice(
+      String filename, long csvRowNumber, int rowLength, int headerCount) {
     super(
         ImmutableMap.of(
-            "filename",
-            filename,
-            "csvRowNumber",
-            csvRowNumber,
-            "fieldName",
-            fieldName,
-            "fieldType",
-            fieldType,
-            "fieldValue",
-            fieldValue),
+            "filename", filename,
+            "csvRowNumber", csvRowNumber,
+            "rowLength", rowLength,
+            "headerCount", headerCount),
         SeverityLevel.ERROR);
   }
 }

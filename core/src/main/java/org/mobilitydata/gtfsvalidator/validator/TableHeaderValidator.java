@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import org.mobilitydata.gtfsvalidator.notice.DuplicatedColumnNotice;
 import org.mobilitydata.gtfsvalidator.notice.EmptyColumnNameNotice;
-import org.mobilitydata.gtfsvalidator.notice.MissingRequiredColumnError;
+import org.mobilitydata.gtfsvalidator.notice.MissingRequiredColumnNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.UnknownColumnNotice;
 
@@ -64,7 +64,7 @@ public class TableHeaderValidator {
     if (!missingColumns.isEmpty()) {
       isValid = false;
       for (String column : missingColumns) {
-        noticeContainer.addValidationNotice(new MissingRequiredColumnError(filename, column));
+        noticeContainer.addValidationNotice(new MissingRequiredColumnNotice(filename, column));
       }
     }
     return isValid;
