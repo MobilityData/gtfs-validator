@@ -1,8 +1,6 @@
 name: Docker image
 
 on:
-  push:
-    branches: [ master, docker ]
   release:
     types: [ prereleased, released ]
 
