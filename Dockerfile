@@ -1,4 +1,3 @@
 FROM java:8
+COPY main/build/libs/*.jar /
 WORKDIR /
-COPY main/build/libs/gtfs-validator*.jar /
-EXPOSE 8080
