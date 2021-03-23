@@ -9,12 +9,12 @@
 
 | Short name 	| Long name             	| required? 	| Description                                                                                                               	|
 |------------	|-----------------------	|-----------	|---------------------------------------------------------------------------------------------------------------------------	|
-| `-i`       	| `--input`             	| `false`   	| Location of the input GTFS ZIP or unarchived directory.                                                                   	|
-| `-f`       	| `--feed_name`         	| `true`    	| Name of the feed, e.g., `nl-openov`. It must start from two-letter country code (ISO 3166-1 alpha-2).                     	|
-| `-o`       	| `--output`            	| `false`   	| Base directory to store the outputs.                                                                                      	|
-| `-s`       	| `--storage_directory` 	| `false`   	| Target path where to store the GTFS archive. Downloaded from network (if not provided, the ZIP will be stored in memory). 	|
-| `-t`       	| `--threads`           	| `false`   	| Number of threads to use.                                                                                                 	|
-| `-u`       	| `--url`               	| `false`   	| Fully qualified URL to download GTFS archive.                                                                             	|
+| `-i`       	| `--input`             	| Optional   	| Location of the input GTFS ZIP or unarchived directory.                                                                   	|
+| `-f`       	| `--feed_name`         	| Required    	| Name of the feed, e.g., `nl-openov`. It must start from two-letter country code (ISO 3166-1 alpha-2).                     	|
+| `-o`       	| `--output`            	| Optional   	| Base directory to store the outputs.                                                                                      	|
+| `-s`       	| `--storage_directory` 	| Optional   	| Target path where to store the GTFS archive. Downloaded from network (if not provided, the ZIP will be stored in memory). 	|
+| `-t`       	| `--threads`           	| Optional   	| Number of threads to use.                                                                                                 	|
+| `-u`       	| `--url`               	| Optional   	| Fully qualified URL to download GTFS archive.                                                                             	|
 
 ⚠️ Note that exactly one of the following options must be provided: `--url` or `--input`.
 
