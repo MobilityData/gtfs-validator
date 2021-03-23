@@ -49,6 +49,8 @@ public class TripUsageValidator extends FileValidator {
  
 Note that the notice ID naming conventions changed in `v2` to make contributions of new rules easier by reducing the likelihood of conflicting IDs during parallel development. Please refer to [MIGRATION_V1_V2.md](/docs/MIGRATION_V1_V2.md) for a mapping between v1 and v2 rules.
 
+<a name="definitions"/>
+
 ## Definitions
 Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 
