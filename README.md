@@ -22,10 +22,11 @@ Instructions to build the project from the command-line using [Gradle](https://g
 
 From IntelliJ set up a [run configuration](https://www.jetbrains.com/help/idea/run-debug-configuration.html) with the following program arguments: 
 
-`-i /myDirectory/gtfs.zip -o output -f ca-myFeedName`
+`-i /myDirectory/gtfs.zip -o output -f ca-myFeedName` or `-u urlToDataset -o output -f ca-myFeedName`
 
 where:
 * `--input` or `-i`: the path to the GTFS archive (e.g., `/myDirectory/gtfs.zip`)
+* `--url` or `-u`: the fully qualified URL to a distant GTFS dataset (e.g., `http://www.stm.info/sites/default/files/gtfs/gtfs_stm.zip`)
 * `--output` or `-o`: the path to the validation report (e.g., `output`)
 * `--feed_name` or `-f`: the name of the feed as a valid [ISO two letter country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), followed by `-`, followed by a user-defined name for the feed. (e.g., `ca-myFeedName`, `us-myFeedName`)
 * *(Optional)* `--thread` or `-t`: the number of Java threads to use
