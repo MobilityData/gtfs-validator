@@ -21,6 +21,7 @@ import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +99,6 @@ public class EndRangeValidatorGenerator {
         continue;
       }
       hasEndRange = true;
-      CodeBlock noticeContext = generateNoticeContext(fileDescriptor, startField, endField);
       validateMethod.beginControlFlow(
           "if (entity.$L() && entity.$L())",
           FieldNameConverter.hasMethodName(startField.name()),
@@ -110,7 +110,8 @@ public class EndRangeValidatorGenerator {
           .addStatement(
               "noticeContainer.addValidationNotice(new $T($L))",
               StartAndEndRangeOutOfOrderNotice.class,
-              noticeContext);
+              generateNoticeContext(
+                  fileDescriptor, startField, endField, StartEndRangeNoticeType.OUT_OF_ORDER));
 
       if (!endRange.allowEqual()) {
         validateMethod
@@ -119,7 +120,8 @@ public class EndRangeValidatorGenerator {
             .addStatement(
                 "noticeContainer.addValidationNotice(new $T($L))",
                 StartAndEndRangeEqualNotice.class,
-                noticeContext);
+                generateNoticeContext(
+                    fileDescriptor, startField, endField, StartEndRangeNoticeType.EQUAL));
       }
 
       validateMethod.endControlFlow().endControlFlow();
@@ -132,19 +134,31 @@ public class EndRangeValidatorGenerator {
         : Optional.empty();
   }
 
+  enum StartEndRangeNoticeType {
+    OUT_OF_ORDER,
+    EQUAL;
+  }
+
   private static CodeBlock generateNoticeContext(
       GtfsFileDescriptor fileDescriptor,
       GtfsFieldDescriptor startField,
-      GtfsFieldDescriptor endField) {
+      GtfsFieldDescriptor endField,
+      StartEndRangeNoticeType noticeType) {
+    TypeName tableLoaderTypeName = new GtfsEntityClasses(fileDescriptor).tableLoaderTypeName();
     CodeBlock.Builder block =
-        CodeBlock.builder()
-            .add(
-                "$T.FILENAME, entity.csvRowNumber(), ",
-                new GtfsEntityClasses(fileDescriptor).tableLoaderTypeName());
+        CodeBlock.builder().add("$T.FILENAME, entity.csvRowNumber(), ", tableLoaderTypeName);
     if (fileDescriptor.primaryKey().isPresent()) {
       block.add("entity.$L(), ", fileDescriptor.primaryKey().get().name());
     }
-    block.add("entity.$L().toString(), entity.$L().toString()", startField.name(), endField.name());
+    block.add("$T.$L, ", tableLoaderTypeName, FieldNameConverter.fieldNameField(startField.name()));
+    if (noticeType.equals(StartEndRangeNoticeType.OUT_OF_ORDER)) {
+      block.add("entity.$L().toString(), ", startField.name());
+    }
+    block.add(
+        "$T.$L, entity.$L().toString()",
+        tableLoaderTypeName,
+        FieldNameConverter.fieldNameField(endField.name()),
+        endField.name());
     return block.build();
   }
 

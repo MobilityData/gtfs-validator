@@ -28,24 +28,38 @@ import com.google.common.collect.ImmutableMap;
 public class StartAndEndRangeEqualNotice extends ValidationNotice {
 
   public StartAndEndRangeEqualNotice(
-      String filename, long csvRowNumber, String entityId, String start, String end) {
+      String filename,
+      long csvRowNumber,
+      String entityId,
+      String startFieldName,
+      String endFieldName,
+      String value) {
     super(
-        ImmutableMap.of(
-            "filename", filename,
-            "csvRowNumber", csvRowNumber,
-            "entityId", entityId,
-            "start", start,
-            "end", end),
+        new ImmutableMap.Builder<String, Object>()
+            .put("filename", filename)
+            .put("csvRowNumber", csvRowNumber)
+            .put("entityId", entityId)
+            .put("startFieldName", startFieldName)
+            .put("endFieldName", endFieldName)
+            .put("value", value)
+            .build(),
         SeverityLevel.ERROR);
   }
 
-  public StartAndEndRangeEqualNotice(String filename, long csvRowNumber, String start, String end) {
+  public StartAndEndRangeEqualNotice(
+      String filename,
+      long csvRowNumber,
+      String startFieldName,
+      String endFieldName,
+      String value) {
     super(
-        ImmutableMap.of(
-            "filename", filename,
-            "csvRowNumber", csvRowNumber,
-            "start", start,
-            "end", end),
+        new ImmutableMap.Builder<String, Object>()
+            .put("filename", filename)
+            .put("csvRowNumber", csvRowNumber)
+            .put("startFieldName", startFieldName)
+            .put("endFieldName", endFieldName)
+            .put("value", value)
+            .build(),
         SeverityLevel.ERROR);
   }
 

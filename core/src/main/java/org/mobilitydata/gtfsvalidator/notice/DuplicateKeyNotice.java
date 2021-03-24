@@ -28,8 +28,8 @@ public class DuplicateKeyNotice extends ValidationNotice {
       String filename,
       long oldCsvRowNumber,
       long newCsvRowNumber,
-      String fieldName,
-      Object fieldValue) {
+      String fieldName1,
+      Object fieldValue1) {
     super(
         ImmutableMap.of(
             "filename",
@@ -38,8 +38,10 @@ public class DuplicateKeyNotice extends ValidationNotice {
             oldCsvRowNumber,
             "newCsvRowNumber",
             newCsvRowNumber,
-            fieldName,
-            fieldValue),
+            "fieldName1",
+            fieldName1,
+            "fieldValue1",
+            fieldValue1),
         SeverityLevel.ERROR);
   }
 
@@ -52,17 +54,15 @@ public class DuplicateKeyNotice extends ValidationNotice {
       String fieldName2,
       Object fieldValue2) {
     super(
-        ImmutableMap.of(
-            "filename",
-            filename,
-            "oldCsvRowNumber",
-            oldCsvRowNumber,
-            "newCsvRowNumber",
-            newCsvRowNumber,
-            fieldName1,
-            fieldValue1,
-            fieldName2,
-            fieldValue2),
+        new ImmutableMap.Builder<String, Object>()
+            .put("filename", filename)
+            .put("oldCsvRowNumber", oldCsvRowNumber)
+            .put("newCsvRowNumber", newCsvRowNumber)
+            .put("fieldName1", fieldName1)
+            .put("fieldValue1", fieldValue1)
+            .put("fieldName2", fieldName2)
+            .put("fieldValue2", fieldValue2)
+            .build(),
         SeverityLevel.ERROR);
   }
 }
