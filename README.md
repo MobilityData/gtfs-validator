@@ -7,31 +7,44 @@ A GTFS Schedule (static) [General Transit Feed Specification (GTFS)](https://gtf
 This command-line tool written in Java that performs the following steps:
 1. Loads input GTFS zip file from a URL or disk
 1. Checks file integrity, numeric type parsing and ranges as well as string format according to the [GTFS Schedule specification](https://gtfs.mobilitydata.org/spec/gtfs-schedule#h.hc443y62gb8c)
-1. Performs GTFS business rule validation *(work-in-progress)*
+1. Performs GTFS [business rule validation](/RULES.md)
+
+# Run the app
+
+## Setup
+1. Install [Java 8 or higher](https://www.oracle.com/java/technologies/javase-downloads.html)
+1. Download [gtfs-validator-v2.0.0_cli.jar](https://github.com/MobilityData/gtfs-validator/releases/download/v2.0.0/gtfs-validator-v2.0.0_cli.jar)
+
+## Run it
+
+To validate a GTFS dataset on your computer:
+
+`java -jar gtfs-validator-v2.0.0_cli.jar -i /myDirectory/gtfs.zip -o output -f ca-myFeedName` 
+
+To download and validate a GTFS dataset from a URL:
+
+`java -jar gtfs-validator-v2.0.0_cli.jar -u https://www.abc.com/gtfs.zip -o output -f ca-myFeedName`
+
+where:
+* `--input` or `-i`: the path to the GTFS file (e.g., `/myDirectory/gtfs.zip`)
+* `--url` or `-u`: the fully qualified URL to the GTFS file (e.g., `https://www.abc.com/gtfs.zip`)
+* `--output` or `-o`: the path where the validation report will be stored (e.g., `output`)
+* `--feed_name` or `-f`: the name of the feed as a valid [ISO two letter country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), followed by `-`, followed by a user-defined name for the feed. (e.g., `ca-myFeedName`, `us-myFeedName`)
+* *(Optional)* `--thread` or `-t`: the number of Java threads to use
+
+More detailed instructions are on our ["Usage"](/docs/USAGE.md) page.
+
+# Validation rules
+
+* [Implemented rules](/RULES.md)
+* [Possible future rules](https://github.com/MobilityData/gtfs-validator/issues?q=is%3Aopen+is%3Aissue+label%3A%22new+rule%22)
+
+Have a suggestion for a new rule? Open [an issue](https://github.com/MobilityData/gtfs-validator/issues/new/choose). You can see the complete process for adding new rules on the ["Adding new rules"](/docs/NEW_RULES.md) page.
 
 # Build the code
 We suggest using [IntelliJ](https://www.jetbrains.com/idea/download/) to [import](https://www.jetbrains.com/help/idea/import-project-or-module-wizard.html), build, and run this project.
 
 Instructions to build the project from the command-line using [Gradle](https://gradle.org/) are available in our [Build documentation](/docs/BUILD.md).
-
-# Run the app
-
-*If you're running a [`v1.x` release JAR file](https://github.com/MobilityData/gtfs-validator/releases) you'll need Java 11, and can follow [these instructions](https://github.com/MobilityData/gtfs-validator/tree/v1.4.0#via-java-on-your-local-computer). The below instructions are for the master branch, which will be v2.0.*
-
-*(Instructions to run a pre-built JAR file are coming soon)*
-
-From IntelliJ set up a [run configuration](https://www.jetbrains.com/help/idea/run-debug-configuration.html) with the following program arguments: 
-
-`-i /myDirectory/gtfs.zip -o output -f ca-myFeedName` or `-u urlToDataset -o output -f ca-myFeedName`
-
-where:
-* `--input` or `-i`: the path to the GTFS archive (e.g., `/myDirectory/gtfs.zip`)
-* `--url` or `-u`: the fully qualified URL to a distant GTFS dataset (e.g., `http://www.stm.info/sites/default/files/gtfs/gtfs_stm.zip`)
-* `--output` or `-o`: the path to the validation report (e.g., `output`)
-* `--feed_name` or `-f`: the name of the feed as a valid [ISO two letter country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), followed by `-`, followed by a user-defined name for the feed. (e.g., `ca-myFeedName`, `us-myFeedName`)
-* *(Optional)* `--thread` or `-t`: the number of Java threads to use
-
-More detailed instructions to run the application locally (for example validating a dataset using an URL) are available in our [Usage page](/docs/USAGE.md).
 
 # Architecture
 The architecture of the `gtfs-validator` is described on our [Architecture page](/docs/ARCHITECTURE.md).
