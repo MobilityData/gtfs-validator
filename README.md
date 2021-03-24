@@ -11,11 +11,11 @@ This command-line tool written in Java that performs the following steps:
 
 # Run the app
 
-## Setup
+### Setup
 1. Install [Java 8 or higher](https://www.oracle.com/java/technologies/javase-downloads.html)
 1. Download [gtfs-validator-v2.0.0_cli.jar](https://github.com/MobilityData/gtfs-validator/releases/download/v2.0.0/gtfs-validator-v2.0.0_cli.jar)
 
-## Run it
+### Run it
 
 To validate a GTFS dataset on your computer:
 
