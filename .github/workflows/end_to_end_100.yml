@@ -77,7 +77,7 @@ jobs:
       - name: Validate dataset from -- MKV (Miskolc, Hungary)
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/mvk-zrt/839/latest/download --output_base output --feed_name hu-mkv --storage_directory mkv.zip
       - name: Validate dataset from -- PTV (Melbourne, Australia)
-        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ptv/497/latest/download --output_base output --feed_name au-ptv --storage_directory ptv.zip
+        run: java -jar main/build/libs/*.jar --url https://openmobilitydata.org/p/ptv/497/20210315/download --output_base output --feed_name au-ptv --storage_directory ptv.zip
       - name: Validate dataset from -- Pays de la Loire (France)
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/region-des-pays-de-la-loire/1071/latest/download --output_base output --feed_name fr-loire --storage_directory loire.zip
       - name: Validate dataset from -- RATP (Paris, France)
