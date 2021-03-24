@@ -28,25 +28,42 @@ import com.google.common.collect.ImmutableMap;
 public class StartAndEndRangeOutOfOrderNotice extends ValidationNotice {
 
   public StartAndEndRangeOutOfOrderNotice(
-      String filename, long csvRowNumber, String entityId, String start, String end) {
+      String filename,
+      long csvRowNumber,
+      String entityId,
+      String startFieldName,
+      String startValue,
+      String endFieldName,
+      String endValue) {
     super(
-        ImmutableMap.of(
-            "filename", filename,
-            "csvRowNumber", csvRowNumber,
-            "entityId", entityId,
-            "start", start,
-            "end", end),
+        new ImmutableMap.Builder<String, Object>()
+            .put("filename", filename)
+            .put("csvRowNumber", csvRowNumber)
+            .put("entityId", entityId)
+            .put("startFieldName", startFieldName)
+            .put("startValue", startValue)
+            .put("endFieldName", endFieldName)
+            .put("endValue", endValue)
+            .build(),
         SeverityLevel.ERROR);
   }
 
   public StartAndEndRangeOutOfOrderNotice(
-      String filename, long csvRowNumber, String start, String end) {
+      String filename,
+      long csvRowNumber,
+      String startFieldName,
+      String startValue,
+      String endFieldName,
+      String endValue) {
     super(
-        ImmutableMap.of(
-            "filename", filename,
-            "csvRowNumber", csvRowNumber,
-            "start", start,
-            "end", end),
+        new ImmutableMap.Builder<String, Object>()
+            .put("filename", filename)
+            .put("csvRowNumber", csvRowNumber)
+            .put("startFieldName", startFieldName)
+            .put("startValue", startValue)
+            .put("endFieldName", endFieldName)
+            .put("endValue", endValue)
+            .build(),
         SeverityLevel.ERROR);
   }
 
