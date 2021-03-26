@@ -217,7 +217,7 @@ Note that we don't need to define the GTFS tables as local variables and we can 
 
 ## 2. Document the new rule in [`RULES.md`](../RULES.md)
 
-Add the rule [`RULES.md`](../RULES.md) keeping the alphabetical order of the table: 
+Add the rule to [`RULES.md`](../RULES.md) keeping the alphabetical order of the table: 
 ```markdown
 | [NewRuleRelatedToStops](#NewRuleRelatedToStops) | new rule short description | 
 ```
