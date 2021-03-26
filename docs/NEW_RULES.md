@@ -239,7 +239,7 @@ Users will be directed here when looking at error reports (e.g., from a web inte
 ## 3. Test the newly added to rule
 `gtfs-validator` tests use [`JUnit 4`](https://junit.org/junit4/) and [`Google Truth`](https://github.com/google/truth).
 
-Generally, you'll want to add test cases to make sure a notice isn't being generated for good data (check for false positive) and that a notice is being genereated for bad data (check for false negative)).
+Generally, you'll want to add test cases to make sure a notice isn't being generated for good data (check for false positive) and that a notice is being genereated for bad data (check for false negative).
 
 The following sections describe implementing tests for validators that extend both `FileValidator` and `SingleEntityValidator`. 
 
