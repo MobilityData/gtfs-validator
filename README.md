@@ -9,7 +9,7 @@ This command-line tool written in Java that performs the following steps:
 1. Checks file integrity, numeric type parsing and ranges as well as string format according to the [GTFS Schedule specification](https://gtfs.mobilitydata.org/spec/gtfs-schedule#h.hc443y62gb8c)
 1. Performs GTFS [business rule validation](/RULES.md)
 
-# Run the app
+# Run the app via command line
 
 ### Setup
 1. Install [Java 8 or higher](https://www.oracle.com/java/technologies/javase-downloads.html)
@@ -33,6 +33,22 @@ where:
 * *(Optional)* `--thread` or `-t`: the number of Java threads to use
 
 More detailed instructions are on our ["Usage"](/docs/USAGE.md) page.
+
+# Run the app using Docker
+### Setup
+1. Download and install [Docker](https://docs.docker.com/get-started/)
+1. Pull the [latest Docker image for this project](https://github.com/orgs/MobilityData/packages/container/package/gtfs-validator)
+
+### Run it
+
+To run the Docker image in a new container:
+`docker run -v /myDirectory:/theContainerDirectory -it ghcr.io/mobilitydata/gtfs-validator:v2.0.0`
+
+where:
+* `-v /myDirectory:/theContainerDirectory`: syntax to share directories and data between the containr and the host
+With the above command, any files that you place in `/myDirectory` on the host will show up in `/theContainerDirectory` inside the container and visa versa.
+
+The validator can then be executed via bash commands. See [preceeding instructions for command line usage](#run-the-app-via-command-line).
 
 # Validation rules
 
