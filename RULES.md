@@ -557,7 +557,7 @@ At least one of the fields `is_producer`, `is_operator`, or `is_authority` shoul
 
 All routes of the same `route_type` with the same `agency_id` should have unique combinations of `route_short_name` and `route_long_name`.
 
-Note that there may be valid cases where routes have the same short and long name, e.g., if they serve difference areas. However, different directions must be modeled as the same route.
+Note that there may be valid cases where routes have the same short and long name, e.g., if they serve different areas. However, different directions must be modeled as the same route.
 
 ##### References:
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
