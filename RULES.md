@@ -555,15 +555,9 @@ At least one of the fields `is_producer`, `is_operator`, or `is_authority` shoul
 
 #### DuplicateRouteNameNotice
 
-All routes should have different `routes.route_long_name` - if two `routes.route_long_name` are the same, and the two routes belong to the same agency, a notice is generated.
+All routes of the same `route_type` with the same `agency_id` should have unique combinations of `route_short_name` and `route_long_name`.
 
-Note that there may be valid cases where routes may have the same `routes.route_long_name` and this notice can be ignored. For example, routes may have the same `routes.route_long_name` if they serve difference areas. However, they must not be different trips of the same route or different directions of the same route - these cases should always have unique `routes.route_long_name`.
-
-All routes should have different `routes.route_short_name` - if two `routes.route_short_name` are the same, and the two routes belong to the same agency, a notice is generated.
-
-Note that there may be valid cases where routes may have the same `routes.route_short_name` and this notice can be ignored. For example, routes may have the same routes.route_short_name if they serve difference areas. However, they must not be different trips of the same route or different directions of the same route - these cases should always have unique `routes.route_short_name`.
-
-The same combination of `route_short_name` and `route_long_name` should not be used for more than one route.
+Note that there may be valid cases where routes have the same short and long name, e.g., if they serve difference areas. However, different directions must be modeled as the same route.
 
 ##### References:
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
