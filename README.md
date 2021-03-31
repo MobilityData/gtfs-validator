@@ -44,7 +44,7 @@ where:
 * `-v /myDirectory:/theContainerDirectory`: syntax to share directories and data between the container and the host
 With the above command, any files that you place in `/myDirectory` on the host will show up in `/theContainerDirectory` inside the container and visa versa.
 
-The validator can then be executed via bash commands. See [preceeding instructions for command line usage](#run-the-app-via-command-line).
+The validator can then be executed via bash commands. See the [preceeding instructions for command line usage](#run-the-app-via-command-line).
 
 # Validation rules
 * [Implemented rules](/RULES.md)
