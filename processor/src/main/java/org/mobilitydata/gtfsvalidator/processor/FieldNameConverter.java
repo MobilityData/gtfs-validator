@@ -36,6 +36,10 @@ public final class FieldNameConverter {
     return "set" + StringUtils.capitalize(field);
   }
 
+  public static String clearMethodName(String field) {
+    return "clear" + StringUtils.capitalize(field);
+  }
+
   public static String hasMethodName(String field) {
     return "has" + StringUtils.capitalize(field);
   }

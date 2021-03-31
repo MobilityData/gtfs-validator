@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.processor;
 
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.clearMethodName;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldDefaultName;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.getValueMethodName;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.getterMethodName;
@@ -49,6 +50,10 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
  * <p>E.g., GtfsStop class is generated for "stops.txt".
  */
 public class EntityImplementationGenerator {
+  private enum ClassContext {
+    ENTITY,
+    BUILDER
+  };
 
   private static final String CSV_ROW_NUMBER = "csvRowNumber";
   private final GtfsFileDescriptor fileDescriptor;
@@ -225,7 +230,7 @@ public class EntityImplementationGenerator {
             .addStatement("return $L", CSV_ROW_NUMBER)
             .build());
     for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
-      typeSpec.addMethod(generateGetterMethod(field));
+      typeSpec.addMethod(generateGetterMethod(field, ClassContext.ENTITY));
       maybeAddEnumValueGetter(field, typeSpec);
       typeSpec.addMethod(generateHasMethod(field, fieldNumber));
       ++fieldNumber;
@@ -236,14 +241,16 @@ public class EntityImplementationGenerator {
     return typeSpec.build();
   }
 
-  private MethodSpec generateGetterMethod(GtfsFieldDescriptor field) {
+  private MethodSpec generateGetterMethod(GtfsFieldDescriptor field, ClassContext classContext) {
     MethodSpec.Builder method =
         MethodSpec.methodBuilder(getterMethodName(field.name()))
             .addModifiers(Modifier.PUBLIC)
             .returns(TypeName.get(field.javaType()))
-            .addAnnotation(Override.class)
             .addAnnotation(nullabilityAnnotation(field));
-    if (field.type() == FieldTypeEnum.ENUM) {
+    if (classContext.equals(ClassContext.ENTITY)) {
+      method.addAnnotation(Override.class);
+    }
+    if (field.type().equals(FieldTypeEnum.ENUM)) {
       method
           .addStatement(
               "$T result = $T.forNumber($L)", field.javaType(), field.javaType(), field.name())
@@ -255,7 +262,7 @@ public class EntityImplementationGenerator {
   }
 
   private void maybeAddEnumValueGetter(GtfsFieldDescriptor field, TypeSpec.Builder typeSpec) {
-    if (field.type() != FieldTypeEnum.ENUM) {
+    if (!field.type().equals(FieldTypeEnum.ENUM)) {
       return;
     }
     typeSpec.addMethod(
@@ -264,6 +271,57 @@ public class EntityImplementationGenerator {
             .returns(int.class)
             .addStatement("return $L", field.name())
             .build());
+  }
+
+  private MethodSpec generateSetterMethod(GtfsFieldDescriptor field, int fieldNumber) {
+    return MethodSpec.methodBuilder(setterMethodName(field.name()))
+        .addModifiers(Modifier.PUBLIC)
+        .returns(classNames.entityBuilderTypeName())
+        .addAnnotation(Nonnull.class)
+        .addParameter(
+            ParameterSpec.builder(getClassFieldType(field).box(), "value")
+                .addAnnotation(Nullable.class)
+                .build())
+        .beginControlFlow("if (value == null)")
+        .addStatement("return $L()", clearMethodName(field.name()))
+        .endControlFlow()
+        .addStatement("$L = value", field.name())
+        .addStatement(
+            "$L |= $L", bitFieldForFieldNumber(fieldNumber), maskForFieldNumber(fieldNumber))
+        .addStatement("return this")
+        .build();
+  }
+
+  private void maybeAddEnumValueSetter(GtfsFieldDescriptor field, TypeSpec.Builder typeSpec) {
+    if (!field.type().equals(FieldTypeEnum.ENUM)) {
+      return;
+    }
+    typeSpec.addMethod(
+        MethodSpec.methodBuilder(setterMethodName(field.name()))
+            .addModifiers(Modifier.PUBLIC)
+            .returns(classNames.entityBuilderTypeName())
+            .addAnnotation(Nonnull.class)
+            .addParameter(
+                ParameterSpec.builder(TypeName.get(field.javaType()), "value")
+                    .addAnnotation(Nullable.class)
+                    .build())
+            .addStatement(
+                "return value == null ? $L() : $L(value.getNumber())",
+                clearMethodName(field.name()),
+                setterMethodName(field.name()))
+            .build());
+  }
+
+  private MethodSpec generateClearMethod(GtfsFieldDescriptor field, int fieldNumber) {
+    return MethodSpec.methodBuilder(clearMethodName(field.name()))
+        .addModifiers(Modifier.PUBLIC)
+        .returns(classNames.entityBuilderTypeName())
+        .addAnnotation(Nonnull.class)
+        .addStatement("$L = $L", field.name(), fieldDefaultName(field.name()))
+        .addStatement(
+            "$L &= ~$L", bitFieldForFieldNumber(fieldNumber), maskForFieldNumber(fieldNumber))
+        .addStatement("return this")
+        .build();
   }
 
   private MethodSpec generateHasMethod(GtfsFieldDescriptor field, int fieldNumber) {
@@ -308,32 +366,11 @@ public class EntityImplementationGenerator {
 
     int fieldNumber = 0;
     for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
-      typeSpec.addMethod(
-          MethodSpec.methodBuilder(getterMethodName(field.name()))
-              .addModifiers(Modifier.PUBLIC)
-              .addAnnotation(nullabilityAnnotation(field))
-              .returns(getClassFieldType(field))
-              .addStatement("return $L", field.name())
-              .build());
-      typeSpec.addMethod(
-          MethodSpec.methodBuilder(setterMethodName(field.name()))
-              .addModifiers(Modifier.PUBLIC)
-              .returns(classNames.entityBuilderTypeName())
-              .addParameter(
-                  ParameterSpec.builder(getClassFieldType(field).box(), "value")
-                      .addAnnotation(Nullable.class)
-                      .build())
-              .beginControlFlow("if (value == null)")
-              .addStatement("$L = $L", field.name(), fieldDefaultName(field.name()))
-              .addStatement(
-                  "$L &= ~$L", bitFieldForFieldNumber(fieldNumber), maskForFieldNumber(fieldNumber))
-              .addStatement("return this")
-              .endControlFlow()
-              .addStatement("$L = value", field.name())
-              .addStatement(
-                  "$L |= $L", bitFieldForFieldNumber(fieldNumber), maskForFieldNumber(fieldNumber))
-              .addStatement("return this")
-              .build());
+      typeSpec.addMethod(generateGetterMethod(field, ClassContext.BUILDER));
+      maybeAddEnumValueGetter(field, typeSpec);
+      typeSpec.addMethod(generateSetterMethod(field, fieldNumber));
+      maybeAddEnumValueSetter(field, typeSpec);
+      typeSpec.addMethod(generateClearMethod(field, fieldNumber));
       ++fieldNumber;
     }
 

@@ -59,7 +59,7 @@ public class CalendarUtilTest {
     return new GtfsCalendarDate.Builder()
         .setServiceId(serviceId)
         .setDate(GtfsDate.fromLocalDate(date))
-        .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_ADDED.getNumber())
+        .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_ADDED)
         .build();
   }
 
@@ -67,7 +67,7 @@ public class CalendarUtilTest {
     return new GtfsCalendarDate.Builder()
         .setServiceId(serviceId)
         .setDate(GtfsDate.fromLocalDate(date))
-        .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_REMOVED.getNumber())
+        .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_REMOVED)
         .build();
   }
 

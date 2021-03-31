@@ -46,7 +46,7 @@ public class LocationTypeSingleEntityValidatorTest {
             .setStopId("s0")
             .setCsvRowNumber(1)
             .setStopName("Stop 0")
-            .setLocationType(GtfsLocationType.STATION.getNumber());
+            .setLocationType(GtfsLocationType.STATION);
 
     assertThat(validateStop(builder.build())).isEmpty();
 
@@ -63,7 +63,7 @@ public class LocationTypeSingleEntityValidatorTest {
             .setStopId("s0")
             .setCsvRowNumber(1)
             .setStopName("Stop 0")
-            .setLocationType(GtfsLocationType.STOP.getNumber())
+            .setLocationType(GtfsLocationType.STOP)
             .setPlatformCode("1")
             .setParentStation("parent");
 
@@ -89,7 +89,7 @@ public class LocationTypeSingleEntityValidatorTest {
               .setStopId("s0")
               .setCsvRowNumber(1)
               .setStopName("Stop 0")
-              .setLocationType(locationType.getNumber())
+              .setLocationType(locationType)
               .setParentStation("parent");
 
       assertThat(validateStop(builder.build())).isEmpty();
