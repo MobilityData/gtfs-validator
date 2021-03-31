@@ -37,7 +37,6 @@ More detailed instructions are on our ["Usage"](/docs/USAGE.md) page.
 1. Pull the [latest Docker image for this project](https://github.com/orgs/MobilityData/packages/container/package/gtfs-validator)
 
 ### Run it
-
 To run the Docker image in a new container:
 `docker run -v /myDirectory:/theContainerDirectory -it ghcr.io/mobilitydata/gtfs-validator:v2.0.0`
 
