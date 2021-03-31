@@ -43,14 +43,14 @@ public class ParentLocationTypeValidatorTest {
                         .setCsvRowNumber(1)
                         .setStopId("child")
                         .setStopName("Child location")
-                        .setLocationType(childType.getNumber())
+                        .setLocationType(childType)
                         .setParentStation("parent")
                         .build(),
                     new GtfsStop.Builder()
                         .setCsvRowNumber(2)
                         .setStopId("parent")
                         .setStopName("Parent location")
-                        .setLocationType(parentType.getNumber())
+                        .setLocationType(parentType)
                         .build()),
                 noticeContainer))
         .validate(noticeContainer);
@@ -65,7 +65,7 @@ public class ParentLocationTypeValidatorTest {
                     new GtfsStop.Builder()
                         .setCsvRowNumber(1)
                         .setStopId("child")
-                        .setLocationType(locationType.getNumber())
+                        .setLocationType(locationType)
                         .build()),
                 noticeContainer))
         .validate(noticeContainer);

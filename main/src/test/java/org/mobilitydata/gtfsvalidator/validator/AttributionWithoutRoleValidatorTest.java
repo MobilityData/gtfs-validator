@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mobilitydata.gtfsvalidator.table.GtfsAttributionRole.ASSIGNED;
 
 import java.util.List;
 import org.junit.Test;
@@ -25,13 +26,10 @@ import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsAttribution;
-import org.mobilitydata.gtfsvalidator.table.GtfsAttributionRole;
 import org.mobilitydata.gtfsvalidator.validator.AttributionWithoutRoleValidator.AttributionWithoutRoleNotice;
 
 @RunWith(JUnit4.class)
 public class AttributionWithoutRoleValidatorTest {
-
-  private static final Integer ASSIGNED = GtfsAttributionRole.ASSIGNED.getNumber();
 
   private static List<ValidationNotice> generateNotices(GtfsAttribution attribution) {
     NoticeContainer noticeContainer = new NoticeContainer();

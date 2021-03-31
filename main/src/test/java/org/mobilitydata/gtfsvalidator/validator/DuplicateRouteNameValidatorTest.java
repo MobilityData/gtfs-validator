@@ -30,7 +30,7 @@ public class DuplicateRouteNameValidatorTest {
         .setAgencyId(agencyId)
         .setRouteShortName(shortName)
         .setRouteLongName(longName)
-        .setRouteType(routeType.getNumber())
+        .setRouteType(routeType)
         .build();
   }
 
