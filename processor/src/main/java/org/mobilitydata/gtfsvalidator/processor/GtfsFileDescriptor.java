@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.util.Optional;
 import javax.lang.model.type.TypeMirror;
+import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 
 /** Describes a GTFS file (CSV table), e.g., "stops.txt". */
 @AutoValue
@@ -56,6 +57,8 @@ public abstract class GtfsFileDescriptor {
 
   public abstract ImmutableList<GtfsFieldDescriptor> indices();
 
+  public abstract ImmutableList<LatLonDescriptor> latLonFields();
+
   @AutoValue.Builder
   public abstract static class Builder {
     public abstract Builder setFilename(String value);
@@ -82,6 +85,8 @@ public abstract class GtfsFileDescriptor {
 
     abstract Builder setIndices(ImmutableList<GtfsFieldDescriptor> value);
 
+    abstract Builder setLatLonFields(ImmutableList<LatLonDescriptor> value);
+
     abstract GtfsFileDescriptor autoBuild();
 
     public GtfsFileDescriptor build() {
@@ -100,8 +105,24 @@ public abstract class GtfsFileDescriptor {
           indicesBuilder.add(field);
         }
       }
-      setFieldByName(fieldsMapBuilder.build());
+      ImmutableMap<String, GtfsFieldDescriptor> fieldsMap = fieldsMapBuilder.build();
+      ImmutableList.Builder<LatLonDescriptor> latLonBuilder = ImmutableList.builder();
+      for (GtfsFieldDescriptor field : fields()) {
+        if (!field.type().equals(FieldTypeEnum.LATITUDE)) {
+          continue;
+        }
+        GtfsFieldDescriptor lonField =
+            fieldsMap.get(field.name().substring(0, field.name().length() - 3) + "Lon");
+        if (!lonField.type().equals(FieldTypeEnum.LONGITUDE)) {
+          continue;
+        }
+        latLonBuilder.add(
+            LatLonDescriptor.create(field.name(), lonField.name(), field.name() + "Lon"));
+      }
+
+      setFieldByName(fieldsMap);
       setIndices(indicesBuilder.build());
+      setLatLonFields(latLonBuilder.build());
       return autoBuild();
     }
   }

@@ -16,14 +16,10 @@
 
 package org.mobilitydata.gtfsvalidator.processor;
 
-import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.clearMethodName;
-import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldDefaultName;
-import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.getValueMethodName;
-import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.getterMethodName;
-import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.hasMethodName;
-import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.setterMethodName;
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.*;
 import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_PACKAGE_NAME;
 
+import com.google.common.geometry.S2LatLng;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
@@ -235,6 +231,10 @@ public class EntityImplementationGenerator {
       typeSpec.addMethod(generateHasMethod(field, fieldNumber));
       ++fieldNumber;
     }
+    for (LatLonDescriptor latLonDescriptor : fileDescriptor.latLonFields()) {
+      typeSpec.addMethod(generateGetLatLonMethod(latLonDescriptor));
+      typeSpec.addMethod(generateHasLatLonMethod(latLonDescriptor));
+    }
 
     typeSpec.addType(generateGtfsEntityBuilderClass());
 
@@ -271,6 +271,29 @@ public class EntityImplementationGenerator {
             .returns(int.class)
             .addStatement("return $L", field.name())
             .build());
+  }
+
+  private MethodSpec generateGetLatLonMethod(LatLonDescriptor latLonDescriptor) {
+    return MethodSpec.methodBuilder(latLonDescriptor.latLonField())
+        .addModifiers(Modifier.PUBLIC)
+        .returns(S2LatLng.class)
+        .addStatement(
+            "return $T.fromDegrees($L, $L)",
+            S2LatLng.class,
+            latLonDescriptor.latField(),
+            latLonDescriptor.lonField())
+        .build();
+  }
+
+  private MethodSpec generateHasLatLonMethod(LatLonDescriptor latLonDescriptor) {
+    return MethodSpec.methodBuilder(hasMethodName(latLonDescriptor.latLonField()))
+        .addModifiers(Modifier.PUBLIC)
+        .returns(boolean.class)
+        .addStatement(
+            "return $L() && $L()",
+            hasMethodName(latLonDescriptor.latField()),
+            hasMethodName(latLonDescriptor.lonField()))
+        .build();
   }
 
   private MethodSpec generateSetterMethod(GtfsFieldDescriptor field, int fieldNumber) {
@@ -372,6 +395,9 @@ public class EntityImplementationGenerator {
       maybeAddEnumValueSetter(field, typeSpec);
       typeSpec.addMethod(generateClearMethod(field, fieldNumber));
       ++fieldNumber;
+    }
+    for (LatLonDescriptor latLonDescriptor : fileDescriptor.latLonFields()) {
+      typeSpec.addMethod(generateGetLatLonMethod(latLonDescriptor));
     }
 
     typeSpec.addMethod(generateBuilderBuildMethod());
