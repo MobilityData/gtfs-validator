@@ -3,20 +3,17 @@
 A GTFS Schedule (static) [General Transit Feed Specification (GTFS)](https://gtfs.mobilitydata.org/spec/gtfs-schedule) feed validator
 
 # Introduction
-
 This command-line tool written in Java that performs the following steps:
 1. Loads input GTFS zip file from a URL or disk
 1. Checks file integrity, numeric type parsing and ranges as well as string format according to the [GTFS Schedule specification](https://gtfs.mobilitydata.org/spec/gtfs-schedule#h.hc443y62gb8c)
 1. Performs GTFS [business rule validation](/RULES.md)
 
 # Run the app via command line
-
 ### Setup
 1. Install [Java 8 or higher](https://www.oracle.com/java/technologies/javase-downloads.html)
 1. Download [gtfs-validator-v2.0.0_cli.jar](https://github.com/MobilityData/gtfs-validator/releases/download/v2.0.0/gtfs-validator-v2.0.0_cli.jar)
 
 ### Run it
-
 To validate a GTFS dataset on your computer:
 
 `java -jar gtfs-validator-v2.0.0_cli.jar -i /myDirectory/gtfs.zip -o output -f ca-myFeedName` 
@@ -51,7 +48,6 @@ With the above command, any files that you place in `/myDirectory` on the host w
 The validator can then be executed via bash commands. See [preceeding instructions for command line usage](#run-the-app-via-command-line).
 
 # Validation rules
-
 * [Implemented rules](/RULES.md)
 * [Possible future rules](https://github.com/MobilityData/gtfs-validator/issues?q=is%3Aopen+is%3Aissue+label%3A%22new+rule%22)
 
