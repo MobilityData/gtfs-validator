@@ -34,7 +34,7 @@ More detailed instructions are on our ["Usage"](/docs/USAGE.md) page.
 # Run the app using Docker
 ### Setup
 1. Download and install [Docker](https://docs.docker.com/get-started/)
-1. Pull the [latest Docker image for this project](https://github.com/orgs/MobilityData/packages/container/package/gtfs-validator). For example, `docker pull ghcr.io/mobilitydata/gtfs-validator:v2.0.0`
+1. Pull the [latest Docker image for this project](https://github.com/orgs/MobilityData/packages/container/package/gtfs-validator). For example, `docker pull ghcr.io/mobilitydata/gtfs-validator:v2.0.0`.
 
 ### Run it
 To run the Docker image in a new container:
