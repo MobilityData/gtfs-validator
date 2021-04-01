@@ -16,7 +16,12 @@
 
 package org.mobilitydata.gtfsvalidator.processor;
 
-import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.*;
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.clearMethodName;
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldDefaultName;
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.getValueMethodName;
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.getterMethodName;
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.hasMethodName;
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.setterMethodName;
 import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_PACKAGE_NAME;
 
 import com.google.common.geometry.S2LatLng;
