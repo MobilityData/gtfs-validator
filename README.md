@@ -37,8 +37,18 @@ More detailed instructions are on our ["Usage"](/docs/USAGE.md) page.
 1. Pull the [latest Docker image for this project](https://github.com/orgs/MobilityData/packages/container/package/gtfs-validator). For example, `docker pull ghcr.io/mobilitydata/gtfs-validator:v2.0.0`.
 
 ### Run it
+
+#### For Mac and Linux
 To run the Docker image in a new container:
 `docker run -v /myDirectory:/theContainerDirectory -it ghcr.io/mobilitydata/gtfs-validator:v2.0.0`
+
+For example `docker run -v /git-projects/gtfs-validator/output:/output -it ghcr.io/mobilitydata/gtfs-validator:v2.0.0`
+
+#### For Windows
+To run the Docker image in a new container:
+`docker run -v my-volume:/myDirectory:/theContainerDirectory -it ghcr.io/mobilitydata/gtfs-validator:v2.0.0`. 
+
+For example `docker run -v c:/git-projects/gtfs-validator/output:/output -it ghcr.io/mobilitydata/gtfs-validator:v2.0.0`
 
 where:
 * `-v /myDirectory:/theContainerDirectory`: syntax to share directories and data between the container and the host
