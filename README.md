@@ -39,20 +39,18 @@ More detailed instructions are on our ["Usage"](/docs/USAGE.md) page.
 ### Run it
 
 #### For Mac and Linux
+
 To run the Docker image in a new container:
+
 `docker run -v /myDirectory:/theContainerDirectory -it ghcr.io/mobilitydata/gtfs-validator:v2.0.0`
-
-For example `docker run -v /git-projects/gtfs-validator/output:/output -it ghcr.io/mobilitydata/gtfs-validator:v2.0.0`
-
-#### For Windows
-To run the Docker image in a new container:
-`docker run -v my-volume:/myDirectory:/theContainerDirectory -it ghcr.io/mobilitydata/gtfs-validator:v2.0.0`. 
-
-For example `docker run -v c:/git-projects/gtfs-validator/output:/output -it ghcr.io/mobilitydata/gtfs-validator:v2.0.0`
 
 where:
 * `-v /myDirectory:/theContainerDirectory`: syntax to share directories and data between the container and the host
-With the above command, any files that you place in `/myDirectory` on the host will show up in `/theContainerDirectory` inside the container and visa versa.
+With the above command, any files that you place in `/myDirectory` on the host will show up in `/theContainerDirectory` inside the container and vice versa.
+
+***NOTE:*** On Windows, you must provide the local volume (e.g., `c:`) as well:
+
+`... c:/myDirectory:/theContainerDirectory ...`
 
 The validator can then be executed via bash commands. See the [preceeding instructions for command line usage](#run-the-app-via-command-line).
 
