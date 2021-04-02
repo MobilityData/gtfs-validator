@@ -45,8 +45,7 @@ To run the Docker image in a new container:
 `docker run -v /myDirectory:/theContainerDirectory -it ghcr.io/mobilitydata/gtfs-validator:v2.0.0`
 
 where:
-* `-v /myDirectory:/theContainerDirectory`: syntax to share directories and data between the container and the host
-With the above command, any files that you place in `/myDirectory` on the host will show up in `/theContainerDirectory` inside the container and vice versa.
+* `-v /myDirectory:/theContainerDirectory`: syntax to share directories and data between the container and the host (your computer). With the above command, any files that you place in `/myDirectory` on the host will show up in `/theContainerDirectory` inside the container and vice versa.
 
 ***NOTE:*** On Windows, you must provide the local volume (e.g., `c:`) as well:
 
