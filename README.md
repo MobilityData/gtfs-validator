@@ -1,22 +1,19 @@
-# gtfs-validator [![Test Package Document](https://github.com/MobilityData/gtfs-validator/workflows/Test%20Package%20Document/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions?query=workflow%3A%22Test+Package+Document%22) ![End to end](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end/badge.svg) ![End to end big](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end%20big/badge.svg) ![End to end 100](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end%20100/badge.svg) [![Join the gtfs-validator chat](https://mobilitydata-io.herokuapp.com/badge.svg)](https://mobilitydata-io.herokuapp.com/)
+# gtfs-validator [![Test Package Document](https://github.com/MobilityData/gtfs-validator/workflows/Test%20Package%20Document/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions?query=workflow%3A%22Test+Package+Document%22) ![End to end](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end/badge.svg) ![End to end big](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end%20big/badge.svg) ![End to end 100](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end%20100/badge.svg) ![Docker image](https://github.com/MobilityData/gtfs-validator/actions/workflows/docker.yml/badge.svg) [![Join the gtfs-validator chat](https://mobilitydata-io.herokuapp.com/badge.svg)](https://mobilitydata-io.herokuapp.com/)
 
 A GTFS Schedule (static) [General Transit Feed Specification (GTFS)](https://gtfs.mobilitydata.org/spec/gtfs-schedule) feed validator
 
 # Introduction
-
-This command-line tool written in Java that performs the following steps:
+This is a command-line tool written in Java that performs the following steps:
 1. Loads input GTFS zip file from a URL or disk
 1. Checks file integrity, numeric type parsing and ranges as well as string format according to the [GTFS Schedule specification](https://gtfs.mobilitydata.org/spec/gtfs-schedule#h.hc443y62gb8c)
 1. Performs GTFS [business rule validation](/RULES.md)
 
-# Run the app
-
+# Run the app via command line
 ### Setup
 1. Install [Java 8 or higher](https://www.oracle.com/java/technologies/javase-downloads.html)
 1. Download [gtfs-validator-v2.0.0_cli.jar](https://github.com/MobilityData/gtfs-validator/releases/download/v2.0.0/gtfs-validator-v2.0.0_cli.jar)
 
 ### Run it
-
 To validate a GTFS dataset on your computer:
 
 `java -jar gtfs-validator-v2.0.0_cli.jar -i /myDirectory/gtfs.zip -o output -f ca-myFeedName` 
@@ -34,8 +31,29 @@ where:
 
 More detailed instructions are on our ["Usage"](/docs/USAGE.md) page.
 
-# Validation rules
+# Run the app using Docker
+### Setup
+1. Download and install [Docker](https://docs.docker.com/get-started/)
+1. Pull the [latest Docker image for this project](https://github.com/orgs/MobilityData/packages/container/package/gtfs-validator). For example, `docker pull ghcr.io/mobilitydata/gtfs-validator:v2.0.0`.
 
+### Run it
+
+#### For Mac and Linux
+
+To run the Docker image in a new container:
+
+`docker run -v /myDirectory:/theContainerDirectory -it ghcr.io/mobilitydata/gtfs-validator:v2.0.0`
+
+where:
+* `-v /myDirectory:/theContainerDirectory`: syntax to share directories and data between the container and the host (your computer). With the above command, any files that you place in `/myDirectory` on the host will show up in `/theContainerDirectory` inside the container and vice versa.
+
+***NOTE:*** On Windows, you must provide the local volume (e.g., `c:`) as well:
+
+`... c:/myDirectory:/theContainerDirectory ...`
+
+The validator can then be executed via bash commands. See the [preceeding instructions for command line usage](#run-the-app-via-command-line).
+
+# Validation rules
 * [Implemented rules](/RULES.md)
 * [Possible future rules](https://github.com/MobilityData/gtfs-validator/issues?q=is%3Aopen+is%3Aissue+label%3A%22new+rule%22)
 
