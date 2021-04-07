@@ -108,6 +108,10 @@ public class GtfsAnnotationProcessor extends AbstractProcessor {
         new EndRangeValidatorGenerator(fileDescriptors).generateValidatorFiles()) {
       writeJavaFile(javaFile);
     }
+    for (JavaFile javaFile :
+        new LatLonValidatorGenerator(fileDescriptors).generateValidatorFiles()) {
+      writeJavaFile(javaFile);
+    }
     return false;
   }
 
