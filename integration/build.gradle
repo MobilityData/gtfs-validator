@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+}
+
+group 'org.mobilitydata'
+version "gtfs-validator-${System.getenv("versionTag")}"
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+compileTestJava.options.encoding = "UTF-8"
+
+repositories {
+    mavenCentral()
+}
+dependencies {
+    implementation project(':main')
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
