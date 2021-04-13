@@ -5,7 +5,7 @@ on:
     branches: [ master, new-test-module ] #<-- replace extend-end-to-end by the name of the agency/publisher
 
 jobs:
-  pack latest changes:
+  pack-lastest-changes:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -45,7 +45,7 @@ jobs:
         with:
           name: gtfs-validator-snapshot_cli.jar
           path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
-  download latest gtfs validator release jar:
+  download-latest-gtfs-validator-release-jar:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
