@@ -71,7 +71,7 @@ jobs:
           sudo apt-get install jq
           URLS=$(curl https://gtfs-validator.free.beeceptor.com/urls | jq '.urls')
           echo $URLS
-          echo "::set-output name=matrix::{\"urls\": $URLS}"
+          echo "::set-output name=matrix::$URLS"
       # here, we save the result of this 1st phase to the "outputs"
   loop-check:
     needs: testing_things
