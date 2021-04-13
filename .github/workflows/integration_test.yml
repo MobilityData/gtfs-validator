@@ -23,4 +23,4 @@ jobs:
     steps:
       - name: Echo items in list (for loop using Github Action strategy)
         run: |
-          echo ${{ matrix.URLS }}
+          echo ${{ matrix.urls }}
