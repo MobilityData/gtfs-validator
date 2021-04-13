@@ -62,7 +62,7 @@ jobs:
       # Declare our output variable
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v1
+      - name: Get url list as json
         id: set-matrix
         # The below outputs a JSON array of check tasks for each subproject
         #  and uses GitHub Actions magic (::set-output) to set an output
