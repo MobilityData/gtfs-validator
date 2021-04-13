@@ -17,13 +17,11 @@ jobs:
           target: public/
   loop-check:
     runs-on: ubuntu-latest
-    env:
-      URLS: '["url1", "url2", "url3"]'
     steps:
     strategy:
       matrix:
         include:
-          - URLS: ${{ env.URLS }}
+          - URLS: ["url1", "url2", "url3"]
       - name: Echo items in list (for loop using Github Action strategy)
         run: |
           echo ${{ matrix.URLS }}
