@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
         env:
-          URLS: '["url1", "url2", "url3"]'
+          URLS: ["url1", "url2", "url3"]
       strategy:
         matrix:
           urls: ${{ env.URLS }}
