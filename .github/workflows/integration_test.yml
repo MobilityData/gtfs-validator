@@ -70,20 +70,20 @@ jobs:
         run: |
           URLS=$(curl https://testing-validor.free.beeceptor.com/urls | jq '.urls')
           echo $URLS
-          echo "::set-output name=matrix::$URLS"
-      # here, we save the result of this 1st phase to the "outputs"
-  loop-check:
-    needs: testing_things
-    strategy:
-      matrix: ${{ fromJson(needs.testing_things.outputs.matrix) }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Echo items in list (for loop using Github Action strategy)
-        run: |
-          echo ${{ matrix.urls }}
-          #TODO: execute latest validator version and store the validation reports
-          #TODO: calculate hash code for each dataset and compare to what is in the archive
-          #TODO: if hashes are different execute v2.0 on the dataset and compare the two outputs
-          #TODO: else, compare the two outputs (one from the archive, the other one from this action)
-
-
+#          echo "::set-output name=matrix::$URLS"
+#      # here, we save the result of this 1st phase to the "outputs"
+#  loop-check:
+#    needs: testing_things
+#    strategy:
+#      matrix: ${{ fromJson(needs.testing_things.outputs.matrix) }}
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Echo items in list (for loop using Github Action strategy)
+#        run: |
+#          echo ${{ matrix.urls }}
+#          #TODO: execute latest validator version and store the validation reports
+#          #TODO: calculate hash code for each dataset and compare to what is in the archive
+#          #TODO: if hashes are different execute v2.0 on the dataset and compare the two outputs
+#          #TODO: else, compare the two outputs (one from the archive, the other one from this action)
+#
+#
