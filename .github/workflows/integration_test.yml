@@ -21,7 +21,7 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle
       - name: Download last release of the validator
         uses: suisei-cn/actions-download-file@v1
-        id: gtfs-validator-v2.0.0_cli.jar
+        id: gtfs-validator
         with:
           url: "https://github.com/MobilityData/gtfs-validator/releases/download/v2.0.0/gtfs-validator-v2.0.0_cli.jar"
           target: public/
