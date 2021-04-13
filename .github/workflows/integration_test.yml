@@ -68,9 +68,9 @@ jobs:
         #  and uses GitHub Actions magic (::set-output) to set an output
         #  variable
         run: |
-          URLS=$(curl https://gtfs-validator.free.beeceptor.com/urls)
+          URLS=$(curl https://gtfs-validator.free.beeceptor.com/urls | jq '.urls')
           echo $URLS
-          echo "::set-output name=matrix::$URLS"
+          echo "::set-output name=matrix::{\"urls\":$URLS}"
       # here, we save the result of this 1st phase to the "outputs"
   loop-check:
     needs: testing_things
