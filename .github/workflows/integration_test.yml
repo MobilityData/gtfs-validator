@@ -17,9 +17,8 @@ jobs:
           target: public/
   loop-check:
     strategy:
-      matrix: actions/checkout@v1
-        include:
-          - urls: ["url1", "url2", "url3"]
+      matrix:
+        urls: ["url1", "url2", "url3"]
     runs-on: ubuntu-latest
     steps:
       - name: Echo items in list (for loop using Github Action strategy)
