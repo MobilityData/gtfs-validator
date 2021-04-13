@@ -19,10 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       URLS: '["url1", "url2", "url3"]'
-    strategy:
-      matrix:
-        urls: $env.URLS
+#    strategy:
+#      matrix:
+#        urls: env.URLS
     steps:
       - name: Echo items in list (for loop using Github Action strategy)
         run: |
-          echo ${{ matrix.urls }}
+          echo ${{ env.URLS }}
