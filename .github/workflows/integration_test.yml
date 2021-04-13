@@ -57,18 +57,20 @@ jobs:
           target: public/
   testing_things:
     runs-on: ubuntu-latest
+
     outputs:
       # Declare our output variable
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      id: set-matrix
-      # The below outputs a JSON array of check tasks for each subproject
-      #  and uses GitHub Actions magic (::set-output) to set an output
-      #  variable
-      run: |
-        URLS=$(curl https://gtfs-validator.free.beeceptor.com/urls)
-        echo $URLS
-        echo "::set-output name=matrix::$URLS"
+      - uses: actions/checkout@v1
+        id: set-matrix
+        # The below outputs a JSON array of check tasks for each subproject
+        #  and uses GitHub Actions magic (::set-output) to set an output
+        #  variable
+        run: |
+          URLS=$(curl https://gtfs-validator.free.beeceptor.com/urls)
+          echo $URLS
+          echo "::set-output name=matrix::$URLS"
 #  loop-check:
 #    strategy:
 #      matrix: ${{ fromJson(needs.find_gradle_jobs.outputs.matrix) }}
