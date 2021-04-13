@@ -64,14 +64,14 @@ jobs:
     steps:
       - name: Get url list as json
         id: set-matrix
-        # The below outputs a JSON array of check tasks for each subproject
-        #  and uses GitHub Actions magic (::set-output) to set an output
+        # The below outputs a JSON array and uses
+        # GitHub Actions magic (::set-output) to set an output
         #  variable
         run: |
           URLS=$(curl https://testing-validor.free.beeceptor.com/urls | jq '.urls')
-          echo $URLS
+#          echo $URLS
           echo "::set-output name=matrix::$URLS"
-#      # here, we save the result of this 1st phase to the "outputs"
+          echo $testing_things.matrix
 #  loop-check:
 #    needs: testing_things
 #    strategy:
