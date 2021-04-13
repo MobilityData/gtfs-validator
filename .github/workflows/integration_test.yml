@@ -20,8 +20,7 @@ jobs:
     steps:
     strategy:
       matrix:
-        include:
-          - URLS: ["url1", "url2", "url3"]
+        URLS: ["url1", "url2", "url3"]
       - name: Echo items in list (for loop using Github Action strategy)
         run: |
           echo ${{ matrix.URLS }}
