@@ -1,0 +1,37 @@
+name: Integration tests
+
+on:
+  push:
+    branches: [ master, extend-end-to-end ] #<-- replace extend-end-to-end by the name of the agency/publisher
+
+jobs:
+  run-on-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+      - name: Download last release of the validator
+        uses: suisei-cn/actions-download-file@v1
+        id: gtfs-validator-v2.0.0_cli.jar
+        with:
+          url: "https://github.com/MobilityData/gtfs-validator/releases/download/v2.0.0/gtfs-validator-v2.0.0_cli.jar"
+          target: public/
+      - name: Persist datasets
+        uses: actions/upload-artifact@v2
+        with:
+          name: dataset_all
+          path: ./*.zip
+      - name: Persist reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: validation_report_all
+          path: output
