@@ -8,7 +8,7 @@ jobs:
   download-latest-gtfs-validator-release-jar:
     runs-on: ubuntu-latest
     steps:
-      - uses: suisei-cn/actions-download-file@v1
+      - uses: actions/checkout@v1
       - name: Download last release of the validator
         id: gtfs-validator
         with:
