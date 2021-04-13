@@ -71,7 +71,6 @@ jobs:
           URLS=$(curl https://testing-validor.free.beeceptor.com/urls | jq '.urls')
           echo $URLS
           echo "::set-output name=matrix::$URLS"
-          echo $matrix
 #  loop-check:
 #    needs: testing_things
 #    strategy:
