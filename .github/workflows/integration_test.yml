@@ -5,7 +5,7 @@ on:
     branches: [ master, new-test-module ] #<-- replace extend-end-to-end by the name of the agency/publisher
 
 jobs:
-  run-on-data:
+  download-latest-gtfs-validator-release-jar:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
