@@ -23,7 +23,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - urls: ${{ env.URLS }}
+          - URLS: ${{ env.URLS }}
       - name: Echo items in list (for loop using Github Action strategy)
         run: |
           echo ${{ matrix.URLS }}
