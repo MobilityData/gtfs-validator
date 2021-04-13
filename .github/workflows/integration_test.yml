@@ -19,9 +19,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up env vars
-        uses:
         env:
           URLS: '["url1", "url2", "url3"]'
+        run: |
+          echo ${{ env.urls }}
+
 #    strategy:
 #      matrix:
 #        urls: URLS
