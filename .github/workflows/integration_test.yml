@@ -55,16 +55,31 @@ jobs:
         with:
           url: "https://github.com/MobilityData/gtfs-validator/releases/download/v2.0.0/gtfs-validator-v2.0.0_cli.jar"
           target: public/
-  loop-check:
-    strategy:
-      matrix:
-        urls: ["url1", "url2", "url3"] #TODO: use env var here
+  testing_things:
     runs-on: ubuntu-latest
+    outputs:
+      # Declare our output variable
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - name: Echo items in list (for loop using Github Action strategy)
-        run: |
-          echo ${{ matrix.urls }}
-          #TODO: execute latest validator version and store the validation reports
-          #TODO: calculate hash code for each dataset and compare to what is in the archive
-          #TODO: if hashes are different execute v2.0 on the dataset and compare the two outputs
-          #TODO: else, compare the two outputs (one from the archive, the other one from this action)
+        ...
+          - id: set-matrix
+      # The below outputs a JSON array of check tasks for each subproject
+      #  and uses GitHub Actions magic (::set-output) to set an output
+      #  variable
+          run: |
+            URLS=$(curl https://gtfs-validator.free.beeceptor.com/urls)
+            echo $URLS
+            echo "::set-output name=matrix::$URLS"
+#  loop-check:
+#    strategy:
+#      matrix: ${{ fromJson(needs.find_gradle_jobs.outputs.matrix) }}
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Echo items in list (for loop using Github Action strategy)
+#        run: |
+#          echo ${{ matrix.urls }}
+#          #TODO: execute latest validator version and store the validation reports
+#          #TODO: calculate hash code for each dataset and compare to what is in the archive
+#          #TODO: if hashes are different execute v2.0 on the dataset and compare the two outputs
+#          #TODO: else, compare the two outputs (one from the archive, the other one from this action)
+
