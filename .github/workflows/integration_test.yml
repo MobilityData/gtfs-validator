@@ -61,7 +61,7 @@ jobs:
       # Declare our output variable
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - id: set-matrix
+      id: set-matrix
       # The below outputs a JSON array of check tasks for each subproject
       #  and uses GitHub Actions magic (::set-output) to set an output
       #  variable
