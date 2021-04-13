@@ -70,7 +70,7 @@ jobs:
         run: |
           URLS=$(curl https://gtfs-validator.free.beeceptor.com/urls)
           echo $URLS
-          echo "::set-output name=matrix::{\"gradle_args\":$URLS}"
+          echo "::set-output name=matrix::{\"urls\":$URLS}"
   loop-check:
     needs: testing_things
     strategy:
