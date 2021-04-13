@@ -18,7 +18,7 @@ jobs:
   loop-check:
     runs-on: ubuntu-latest
     env:
-      URLS: ["url1", "url2", "url3"]
+      URLS: '["url1", "url2", "url3"]'
     strategy:
       matrix:
         urls: env.URLS
