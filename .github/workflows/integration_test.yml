@@ -68,7 +68,6 @@ jobs:
         #  and uses GitHub Actions magic (::set-output) to set an output
         #  variable
         run: |
-          sudo apt-get install jq
           URLS=$(curl https://gtfs-validator.free.beeceptor.com/urls | jq '.urls')
           echo $URLS
           echo "::set-output name=matrix::$URLS"
