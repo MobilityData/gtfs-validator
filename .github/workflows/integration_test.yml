@@ -16,9 +16,11 @@ jobs:
           url: "https://github.com/MobilityData/gtfs-validator/releases/download/v2.0.0/gtfs-validator-v2.0.0_cli.jar"
           target: public/
   loop-check:
+    env:
+      URLS: ["url1", "url2", "url3"]
     strategy:
       matrix:
-        urls: ["url1", "url2", "url3"]
+        urls: env.URLS
     runs-on: ubuntu-latest
     steps:
       - name: Echo items in list (for loop using Github Action strategy)
