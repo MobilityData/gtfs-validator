@@ -17,9 +17,11 @@ jobs:
           target: public/
   loop-check:
     runs-on: ubuntu-latest
+    env:
+      DAY_OF_WEEK: Mon
     strategy:
       matrix:
-        urls: ["url1", "url2", "url3"]
+        urls: DAY_OF_WEEK
     steps:
       - name: Echo items in list (for loop using Github Action strategy)
         run: |
