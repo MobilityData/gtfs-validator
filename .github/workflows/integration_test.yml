@@ -16,4 +16,5 @@ jobs:
           url: "https://github.com/MobilityData/gtfs-validator/releases/download/v2.0.0/gtfs-validator-v2.0.0_cli.jar"
           target: public/
       - name: See public/ content
-        run: "ls -a"
+        working-directory: "public"
+        run: "ls"
