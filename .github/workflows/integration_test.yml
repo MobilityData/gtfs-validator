@@ -74,7 +74,7 @@ jobs:
   loop-check:
     needs: testing_things
     strategy:
-      matrix: ${{ fromJson(needs.testing_things.outputs.matrix).urls }}
+      matrix: ${{ fromJson(needs.testing_things.outputs.matrix) }}
     runs-on: ubuntu-latest
     steps:
       - name: Echo items in list (for loop using Github Action strategy)
