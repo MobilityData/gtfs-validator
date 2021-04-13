@@ -18,9 +18,8 @@ jobs:
   loop-check:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up env vars
-        env:
-          URLS: '["url1", "url2", "url3"]'
+      env:
+        URLS: '["url1", "url2", "url3"]'
       strategy:
         matrix:
           urls: ${{ env.URLS }}
