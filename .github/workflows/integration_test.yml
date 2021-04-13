@@ -21,7 +21,7 @@ jobs:
       URLS: '["url1", "url2", "url3"]'
     strategy:
       matrix:
-        urls: ${{env.URLS}}
+        urls: $env.URLS
     steps:
       - name: Echo items in list (for loop using Github Action strategy)
         run: |
