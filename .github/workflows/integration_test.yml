@@ -23,7 +23,7 @@ jobs:
       strategy:
         matrix:
           urls: ${{ env.URLS }}
-      run: |
+      - run: |
         echo ${{ matrix.urls }}
 #    strategy:
 #      matrix:
