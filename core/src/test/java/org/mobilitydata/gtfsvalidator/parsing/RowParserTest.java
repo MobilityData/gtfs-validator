@@ -42,7 +42,6 @@ import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
-import org.mockito.Mockito;
 
 @RunWith(JUnit4.class)
 public class RowParserTest {
@@ -56,13 +55,13 @@ public class RowParserTest {
 
   private RowParser createParser(String feedName, String cellValue) {
     NoticeContainer noticeContainer = new NoticeContainer();
-    CsvRow csvRow = Mockito.mock(CsvRow.class);
-    Mockito.when(csvRow.asString(0)).thenReturn(cellValue);
-    Mockito.when(csvRow.getFileName()).thenReturn(TEST_FILENAME);
-    Mockito.when(csvRow.getRowNumber()).thenReturn(8L);
-    Mockito.when(csvRow.getColumnName(0)).thenReturn("column name");
-    RowParser parser = new RowParser(GtfsFeedName.parseString(feedName), noticeContainer);
-    parser.setRow(csvRow);
+    RowParser parser =
+        new RowParser(
+            TEST_FILENAME,
+            new CsvHeader(new String[] {"column name"}),
+            GtfsFeedName.parseString(feedName),
+            noticeContainer);
+    parser.setRow(new CsvRow(8, new String[] {cellValue}));
     return parser;
   }
 
@@ -325,11 +324,15 @@ public class RowParserTest {
     CsvFile csvFile = new CsvFile(inputStream, TEST_FILENAME);
 
     assertThat(csvFile.isEmpty()).isFalse();
-    assertThat(csvFile.getColumnCount()).isEqualTo(2);
+    assertThat(csvFile.getHeader().getColumnCount()).isEqualTo(2);
 
     CsvRow csvRow = csvFile.iterator().next();
     RowParser parser =
-        new RowParser(GtfsFeedName.parseString(TEST_FEED_NAME), new NoticeContainer());
+        new RowParser(
+            csvFile.getFileName(),
+            csvFile.getHeader(),
+            GtfsFeedName.parseString(TEST_FEED_NAME),
+            new NoticeContainer());
     parser.setRow(csvRow);
 
     assertThat(parser.checkRowLength()).isFalse();
@@ -342,22 +345,17 @@ public class RowParserTest {
 
   @Test
   public void checkRowLengthInvalidRowLength() throws IOException {
-    InputStream inputStream = toInputStream("stop_id,stop_name\n" + "s1");
-    CsvFile csvFile = new CsvFile(inputStream, TEST_FILENAME);
-
-    assertThat(csvFile.isEmpty()).isFalse();
-    assertThat(csvFile.getColumnCount()).isEqualTo(2);
-
-    CsvRow csvRow = csvFile.iterator().next();
     RowParser parser =
-        new RowParser(GtfsFeedName.parseString(TEST_FEED_NAME), new NoticeContainer());
-    parser.setRow(csvRow);
+        new RowParser(
+            TEST_FILENAME,
+            new CsvHeader(new String[] {"stop_id", "stop_name"}),
+            GtfsFeedName.parseString(TEST_FEED_NAME),
+            new NoticeContainer());
+    parser.setRow(new CsvRow(2, new String[] {"s1"}));
 
     assertThat(parser.checkRowLength()).isFalse();
     assertThat(parser.hasParseErrorsInRow()).isTrue();
     assertThat(parser.getNoticeContainer().getValidationNotices())
         .containsExactly(new InvalidRowLengthNotice(TEST_FILENAME, 2, 1, 2));
-
-    inputStream.close();
   }
 }
