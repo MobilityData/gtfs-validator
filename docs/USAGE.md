@@ -7,14 +7,16 @@
 ## via cli-app
 **Full list of command line parameters available**
 
-| Short name 	| Long name             	| required? 	| Description                                                                                                               	|
-|------------	|-----------------------	|-----------	|---------------------------------------------------------------------------------------------------------------------------	|
-| `-i`       	| `--input`             	| Optional   	| Location of the input GTFS ZIP or unarchived directory.                                                                   	|
-| `-f`       	| `--feed_name`         	| Required    	| Name of the feed, e.g., `nl-openov`. It must start from two-letter country code (ISO 3166-1 alpha-2).                     	|
-| `-o`       	| `--output`            	| Optional   	| Base directory to store the outputs.                                                                                      	|
-| `-s`       	| `--storage_directory` 	| Optional   	| Target path where to store the GTFS archive. Downloaded from network (if not provided, the ZIP will be stored in memory). 	|
-| `-t`       	| `--threads`           	| Optional   	| Number of threads to use.                                                                                                 	|
-| `-u`       	| `--url`               	| Optional   	| Fully qualified URL to download GTFS archive.                                                                             	|
+| Short name 	| Long name                     	| required? 	| Description                                                                                                               	|
+|------------	|-------------------------------	|-----------	|---------------------------------------------------------------------------------------------------------------------------	|
+| `-i`       	| `--input`                     	| Optional  	| Location of the input GTFS ZIP or unarchived directory.                                                                   	|
+| `-f`       	| `--feed_name`                 	| Required  	| Name of the feed, e.g., `nl-openov`. It must start from two-letter country code (ISO 3166-1 alpha-2).                     	|
+| `-o`       	| `--output`                    	| Optional  	| Base directory to store the outputs.                                                                                      	|
+| `-s`       	| `--storage_directory`         	| Optional  	| Target path where to store the GTFS archive. Downloaded from network (if not provided, the ZIP will be stored in memory). 	|
+| `-t`       	| `--threads`                   	| Optional  	| Number of threads to use.                                                                                                 	|
+| `-u`       	| `--url`                       	| Optional  	| Fully qualified URL to download GTFS archive.                                                                             	|
+| `-v`       	| `--validation_report_name`    	| Optional  	| Name of the validation report (including `.json` extension).                                                              	|
+| `-e`       	| `--system_errors_report_name` 	| Optional  	| Name of the system errors report (including `.json` extension).                                                             	|
 
 ⚠️ Note that exactly one of the following options must be provided: `--url` or `--input`.
 
@@ -30,7 +32,9 @@ java -jar gtfs-validator-v2.0.jar --input relative/path/to/dataset.zip --output 
 ...which will:
  1. Search for a GTFS dataset located at `relative/path/to/dataset.zip`
  1. Validate the GTFS data and output the results to the directory located at `relative/output/path`. 
- 1. Export both validation and system errors reports to JSON by default. This folder will contain the `.json` file with information related to the validation process. The validation report will be named as `report.json` and the system errors report can be found under the name of `system_errors.json`. 
+ 1. Export both validation and system errors reports to JSON by default. This folder will contain the `.json` file with information related to the validation process. The validation report will (by default) be named as `report.json` and the system errors report can be found under the name of `system_errors.json`.
+ 
+  ⚠️ Note that reports naming can be overridden by providing values to `-v` and/or `-e` CLI arguments. These **should** include `.json` extension.
 
 ### on a hosted GTFS zip file at a URL
 Sample usage:
