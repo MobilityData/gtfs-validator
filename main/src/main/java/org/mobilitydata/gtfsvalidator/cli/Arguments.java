@@ -38,11 +38,11 @@ public class Arguments {
   private int numThreads = 1;
 
   @Parameter(
-      names = {"-f", "--feed_name"},
+      names = {"-c", "--country_code"},
       description =
-          "Name of the feed, e.g., `nl-openov`. "
-              + "It must start from two-letter country code (ISO 3166-1 alpha-2)")
-  private String feedName;
+          "Country code of the feed, e.g., `nl`. "
+              + "It must be a two-letter country code (ISO 3166-1 alpha-2)")
+  private String countryCode;
 
   @Parameter(
       names = {"-u", "--url"},
@@ -68,8 +68,8 @@ public class Arguments {
     return numThreads;
   }
 
-  public String getFeedName() {
-    return feedName;
+  public String getCountryCode() {
+    return countryCode;
   }
 
   public String getUrl() {

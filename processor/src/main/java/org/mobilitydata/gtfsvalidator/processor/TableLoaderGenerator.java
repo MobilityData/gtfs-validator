@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -260,7 +260,7 @@ public class TableLoaderGenerator {
     method
         .addStatement("final $T.Builder builder = new $T.Builder()", gtfsEntityType, gtfsEntityType)
         .addStatement(
-            "final $T rowParser = new $T(validationContext.feedName(), noticeContainer)",
+            "final $T rowParser = new $T(validationContext.countryCode(), noticeContainer)",
             RowParser.class,
             RowParser.class)
         .addStatement(

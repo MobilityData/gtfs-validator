@@ -27,7 +27,7 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.UrlValidator;
-import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
+import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.notice.EmptyRowNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidColorNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidCurrencyNotice;
@@ -66,13 +66,32 @@ public class RowParser {
   public static final boolean REQUIRED = true;
   public static final boolean OPTIONAL = false;
   private final NoticeContainer noticeContainer;
-  private final GtfsFeedName feedName;
+  private final CountryCode countryCode;
   private CsvRow row;
   private boolean parseErrorsInRow;
 
-  public RowParser(GtfsFeedName feedName, NoticeContainer noticeContainer) {
-    this.feedName = feedName;
+  public RowParser(CountryCode countryCode, NoticeContainer noticeContainer) {
+    this.countryCode = countryCode;
     this.noticeContainer = noticeContainer;
+  }
+
+  static boolean hasOnlyPrintableAscii(String s) {
+    for (int i = 0, n = s.length(); i < n; ++i) {
+      if (!(s.charAt(i) >= 32 && s.charAt(i) < 127)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Tells if a given notice is an {@code ERROR}.
+   *
+   * @param notice the notice to check
+   * @return true if the notice is an error, false otherwise
+   */
+  private static boolean isError(ValidationNotice notice) {
+    return notice.getSeverityLevel().ordinal() >= SeverityLevel.ERROR.ordinal();
   }
 
   public NoticeContainer getNoticeContainer() {
@@ -152,15 +171,6 @@ public class RowParser {
     return asString(columnIndex, required);
   }
 
-  static boolean hasOnlyPrintableAscii(String s) {
-    for (int i = 0, n = s.length(); i < n; ++i) {
-      if (!(s.charAt(i) >= 32 && s.charAt(i) < 127)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   @Nullable
   public String asId(int columnIndex, boolean required) {
     return asValidatedString(
@@ -187,10 +197,15 @@ public class RowParser {
 
   @Nullable
   public String asPhoneNumber(int columnIndex, boolean required) {
+    if (!countryCode.isProvided()) {
+      return asUnvalidatedString(columnIndex, required);
+    }
     return asValidatedString(
         columnIndex,
         required,
-        s -> PhoneNumberUtil.getInstance().isPossibleNumber(s, feedName.getISOAlpha2CountryCode()),
+        s ->
+            PhoneNumberUtil.getInstance()
+                .isPossibleNumber(s, countryCode.getISOAlpha2CountryCode()),
         InvalidPhoneNumberNotice::new);
   }
 
@@ -358,16 +373,6 @@ public class RowParser {
   }
 
   /**
-   * Tells if a given notice is an {@code ERROR}.
-   *
-   * @param notice the notice to check
-   * @return true if the notice is an error, false otherwise
-   */
-  private static boolean isError(ValidationNotice notice) {
-    return notice.getSeverityLevel().ordinal() >= SeverityLevel.ERROR.ordinal();
-  }
-
-  /**
    * Adds notice to the container and updates {@link #parseErrorsInRow} if the notice is an error.
    *
    * @param notice
@@ -460,6 +465,21 @@ public class RowParser {
       if (isError(notice)) {
         return null;
       }
+    }
+    return s;
+  }
+
+  /**
+   * Intermediate method used to skip phone number validation if '-c' has not been provided.
+   *
+   * @param columnIndex index of the column to parse
+   * @param required whether the value is required according to GTFS
+   * @return the cell value at the given column or null if the value is missing or invalid
+   */
+  private String asUnvalidatedString(int columnIndex, boolean required) {
+    String s = asString(columnIndex, required);
+    if (s == null) {
+      return null;
     }
     return s;
   }

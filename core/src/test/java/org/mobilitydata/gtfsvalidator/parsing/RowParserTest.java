@@ -28,7 +28,7 @@ import java.time.ZoneId;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
+import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.notice.EmptyRowNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidEmailNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidPhoneNumberNotice;
@@ -47,27 +47,27 @@ import org.mockito.Mockito;
 @RunWith(JUnit4.class)
 public class RowParserTest {
 
-  private static String TEST_FEED_NAME = "au-sydney-buses";
+  private static String TEST_COUNTRY_CODE = "au";
   private static String TEST_FILENAME = "stops.txt";
 
   private static InputStream toInputStream(String s) {
     return new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
   }
 
-  private RowParser createParser(String feedName, String cellValue) {
+  private RowParser createParser(String countryCode, String cellValue) {
     NoticeContainer noticeContainer = new NoticeContainer();
     CsvRow csvRow = Mockito.mock(CsvRow.class);
     Mockito.when(csvRow.asString(0)).thenReturn(cellValue);
     Mockito.when(csvRow.getFileName()).thenReturn(TEST_FILENAME);
     Mockito.when(csvRow.getRowNumber()).thenReturn(8L);
     Mockito.when(csvRow.getColumnName(0)).thenReturn("column name");
-    RowParser parser = new RowParser(GtfsFeedName.parseString(feedName), noticeContainer);
+    RowParser parser = new RowParser(CountryCode.parseString(countryCode), noticeContainer);
     parser.setRow(csvRow);
     return parser;
   }
 
   private RowParser createParser(String cellValue) {
-    return createParser(TEST_FEED_NAME, cellValue);
+    return createParser(TEST_COUNTRY_CODE, cellValue);
   }
 
   @Test
@@ -190,25 +190,27 @@ public class RowParserTest {
 
   @Test
   public void asPhoneNumber() {
-    assertThat(createParser("us-feed", "(650) 253-0000").asPhoneNumber(0, true))
+    assertThat(createParser("us", "(650) 253-0000").asPhoneNumber(0, true))
         .isEqualTo("(650) 253-0000");
-    assertThat(createParser("ch-feed", "044 668 18 00").asPhoneNumber(0, true))
+    assertThat(createParser(null, "(650) 253-0000").asPhoneNumber(0, true))
+        .isEqualTo("(650) 253-0000");
+    assertThat(createParser("ch", "044 668 18 00").asPhoneNumber(0, true))
         .isEqualTo("044 668 18 00");
-    assertThat(createParser("nl-feed", "+49 341 913 540 42").asPhoneNumber(0, true))
+    assertThat(createParser("nl", "+49 341 913 540 42").asPhoneNumber(0, true))
         .isEqualTo("+49 341 913 540 42");
-    assertThat(createParser("nl-feed", "004980038762246").asPhoneNumber(0, true))
+    assertThat(createParser("nl", "004980038762246").asPhoneNumber(0, true))
         .isEqualTo("004980038762246");
   }
 
   @Test
   public void asPhoneInvalid() {
-    RowParser parser = createParser("us-feed", "invalid");
+    RowParser parser = createParser("us", "invalid");
     assertThat(parser.asPhoneNumber(0, true)).isNull();
     assertThat(parser.hasParseErrorsInRow()).isTrue();
     assertThat(parser.getNoticeContainer().getValidationNotices())
         .containsExactly(new InvalidPhoneNumberNotice(TEST_FILENAME, 8, "column name", "invalid"));
 
-    parser = createParser("nl-feed", "003280038762246");
+    parser = createParser("nl", "003280038762246");
     assertThat(parser.asPhoneNumber(0, true)).isNull();
     assertThat(parser.hasParseErrorsInRow()).isTrue();
     assertThat(parser.getNoticeContainer().getValidationNotices())
@@ -329,7 +331,7 @@ public class RowParserTest {
 
     CsvRow csvRow = csvFile.iterator().next();
     RowParser parser =
-        new RowParser(GtfsFeedName.parseString(TEST_FEED_NAME), new NoticeContainer());
+        new RowParser(CountryCode.parseString(TEST_COUNTRY_CODE), new NoticeContainer());
     parser.setRow(csvRow);
 
     assertThat(parser.checkRowLength()).isFalse();
@@ -350,7 +352,7 @@ public class RowParserTest {
 
     CsvRow csvRow = csvFile.iterator().next();
     RowParser parser =
-        new RowParser(GtfsFeedName.parseString(TEST_FEED_NAME), new NoticeContainer());
+        new RowParser(CountryCode.parseString(TEST_COUNTRY_CODE), new NoticeContainer());
     parser.setRow(csvRow);
 
     assertThat(parser.checkRowLength()).isFalse();
