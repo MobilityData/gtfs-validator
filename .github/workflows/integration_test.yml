@@ -58,9 +58,6 @@ jobs:
   testing_things:
     runs-on: ubuntu-latest
 
-    outputs:
-      # Declare our output variable
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - name: Get url list as json
         id: set-matrix
@@ -68,10 +65,12 @@ jobs:
         # GitHub Actions magic (::set-output) to set an output
         #  variable
         run: |
-          URLS=$(curl https://testing-validor.free.beeceptor.com/urls | jq '.urls')
+          URLS=$(curl https://testing-validor.free.beeceptor.com/urls)
           echo $URLS
-          echo "::set-output name=matrix::{\"urls\":$URLS}"
-          echo ${{ testing_things.outputs.matrix.urls }}
+          echo "::set-output name=matrix::$URLS"
+    outputs:
+      # Declare our output variable
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
   loop-check:
     needs: testing_things
     strategy:
