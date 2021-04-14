@@ -7,6 +7,7 @@ on:
 jobs:
   pack-latest-changes:
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
     steps:
       - uses: actions/checkout@v1
       - name: Prepare version name
@@ -47,6 +48,7 @@ jobs:
           path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
   download-latest-gtfs-validator-release-jar:
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
     steps:
       - uses: actions/checkout@v1
       - name: Download last release of the validator
@@ -57,6 +59,7 @@ jobs:
           target: public/
   fetch-urls:
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
     steps:
       - name: Get url list as json
         id: set-matrix
@@ -73,6 +76,7 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
     steps:
       - name: Echo items in list (for loop using Github Action strategy)
         run: |
