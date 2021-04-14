@@ -29,6 +29,8 @@ public class GtfsFeedNameTest {
   public void getISOAlpha2CountryCode() {
     assertThat(GtfsFeedName.parseString(null).getISOAlpha2CountryCode()).isEqualTo(null);
     assertThat(GtfsFeedName.parseString("openov-nl").getISOAlpha2CountryCode()).isEqualTo("NL");
+    assertThat(GtfsFeedName.parseString("au-sydney-buses").getISOAlpha2CountryCode())
+        .isEqualTo("AU");
     assertThat(GtfsFeedName.parseString("uk-feed").getISOAlpha2CountryCode()).isEqualTo("GB");
     assertThat(GtfsFeedName.parseString("gb-feed").getISOAlpha2CountryCode()).isEqualTo("GB");
   }
@@ -82,7 +84,6 @@ public class GtfsFeedNameTest {
         .isEqualTo(GtfsFeedName.parseString("openov-nl"));
     assertThat(GtfsFeedName.parseString("uk-feed"))
         .isNotEqualTo(GtfsFeedName.parseString("gb-feed"));
-    assertThat(GtfsFeedName.parseString(null))
-        .isEqualTo(GtfsFeedName.parseString(null));
+    assertThat(GtfsFeedName.parseString(null)).isEqualTo(GtfsFeedName.parseString(null));
   }
 }
