@@ -27,9 +27,7 @@ import org.junit.runners.JUnit4;
 public class GtfsFeedNameTest {
   @Test
   public void getISOAlpha2CountryCode() {
-    assertThat(GtfsFeedName.parseString("nl-openov").getISOAlpha2CountryCode()).isEqualTo("NL");
-    assertThat(GtfsFeedName.parseString("au-sydney-buses").getISOAlpha2CountryCode())
-        .isEqualTo("AU");
+    assertThat(GtfsFeedName.parseString(null).getISOAlpha2CountryCode()).isEqualTo(null);
     assertThat(GtfsFeedName.parseString("openov-nl").getISOAlpha2CountryCode()).isEqualTo("NL");
     assertThat(GtfsFeedName.parseString("uk-feed").getISOAlpha2CountryCode()).isEqualTo("GB");
     assertThat(GtfsFeedName.parseString("gb-feed").getISOAlpha2CountryCode()).isEqualTo("GB");
@@ -37,6 +35,7 @@ public class GtfsFeedNameTest {
 
   @Test
   public void isValidCountryFirstFeedName() {
+    assertThat(GtfsFeedName.isValidCountryFirstFeedName(null)).isTrue();
     assertThat(GtfsFeedName.isValidCountryFirstFeedName("nl-openov")).isTrue();
     assertThat(GtfsFeedName.isValidCountryFirstFeedName("au-sydney-buses")).isTrue();
     assertThat(GtfsFeedName.isValidCountryFirstFeedName("fr-nl")).isTrue();
@@ -83,5 +82,7 @@ public class GtfsFeedNameTest {
         .isEqualTo(GtfsFeedName.parseString("openov-nl"));
     assertThat(GtfsFeedName.parseString("uk-feed"))
         .isNotEqualTo(GtfsFeedName.parseString("gb-feed"));
+    assertThat(GtfsFeedName.parseString(null))
+        .isEqualTo(GtfsFeedName.parseString(null));
   }
 }

@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -45,6 +46,10 @@ public class GtfsFeedName {
     this.countryFirstName = countryFirstName;
   }
 
+  private GtfsFeedName() {
+    this.countryFirstName = null;
+  }
+
   /**
    * Checks that the given string is a valid name for a GTFS feed that starts from ISO Alpha 2
    * country code.
@@ -56,6 +61,9 @@ public class GtfsFeedName {
    * @return true if the given string is a valid name for a GTFS feed
    */
   public static boolean isValidCountryFirstFeedName(String s) {
+    if (s == null) {
+      return true;
+    }
     return FEED_NAME_PATTERN.matcher(s).matches() && isValidISOAlpha2(s.substring(0, 2));
   }
 
@@ -85,6 +93,9 @@ public class GtfsFeedName {
    * @throws IllegalArgumentException if illegal @param feedName
    */
   public static GtfsFeedName parseString(String feedName) throws IllegalArgumentException {
+    if (feedName == null) {
+      return new GtfsFeedName();
+    }
     String[] separated = feedName.split("-");
     if (separated.length < 2) {
       throw new IllegalArgumentException(INVALID_FEED_NAME_MESSAGE);
@@ -118,6 +129,9 @@ public class GtfsFeedName {
    * @return feed name in country-last format
    */
   public String getCountryLastName() {
+    if(countryFirstName == null) {
+      return null;
+    }
     List<String> reversedComponents = Arrays.asList(countryFirstName.split("-"));
     Collections.reverse(reversedComponents);
     return String.join("-", reversedComponents);
@@ -131,6 +145,9 @@ public class GtfsFeedName {
    * @return uppercase ISO Alpha country code
    */
   public String getISOAlpha2CountryCode() {
+    if (countryFirstName == null) {
+      return null;
+    }
     String countryCode = countryFirstName.substring(0, 2).toUpperCase();
     return countryCode.equals(UK) ? GB : countryCode;
   }
@@ -141,13 +158,16 @@ public class GtfsFeedName {
       return true;
     }
     if (other instanceof GtfsFeedName) {
-      return this.countryFirstName.equals(((GtfsFeedName) other).countryFirstName);
+      return Objects.equals(this.countryFirstName, ((GtfsFeedName) other).countryFirstName);
     }
     return false;
   }
 
   @Override
   public int hashCode() {
+    if (countryFirstName == null) {
+      return 0;
+    }
     return countryFirstName.hashCode();
   }
 }
