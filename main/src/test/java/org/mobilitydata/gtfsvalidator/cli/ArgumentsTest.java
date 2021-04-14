@@ -35,14 +35,14 @@ public class ArgumentsTest {
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
     assertThat(underTest.getInput()).matches("input value");
     assertThat(underTest.getOutputBase()).matches("output value");
-    assertThat(underTest.getCountryCode()).matches("AU");
+    assertThat(underTest.getCountryCode()).matches("au");
     assertThat(underTest.getNumThreads()).isEqualTo(4);
 
     // same test using -u and -s command line options
     commandLineArgumentAsStringArray =
         new String[] {
           "-o", "output value",
-          "-f", "au",
+          "-c", "au",
           "-t", "4",
           "-u", "url value",
           "-s", "storage value",
@@ -50,7 +50,7 @@ public class ArgumentsTest {
 
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
     assertThat(underTest.getOutputBase()).matches("output value");
-    assertThat(underTest.getCountryCode()).matches("AU");
+    assertThat(underTest.getCountryCode()).matches("au");
     assertThat(underTest.getNumThreads()).isEqualTo(4);
     assertThat(underTest.getUrl()).matches("url value");
     assertThat(underTest.getStorageDirectory()).matches("storage value");
@@ -68,7 +68,7 @@ public class ArgumentsTest {
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
     assertThat(underTest.getInput()).matches("input value");
     assertThat(underTest.getOutputBase()).matches("output value");
-    assertThat(underTest.getCountryCode()).matches("feed name value");
+    assertThat(underTest.getCountryCode()).matches("ca");
     assertThat(underTest.getNumThreads()).isEqualTo(4);
 
     // same test using -u and -s command line options
@@ -83,7 +83,7 @@ public class ArgumentsTest {
 
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
     assertThat(underTest.getOutputBase()).matches("output value");
-    assertThat(underTest.getCountryCode()).matches("CA");
+    assertThat(underTest.getCountryCode()).matches("ca");
     assertThat(underTest.getNumThreads()).isEqualTo(4);
     assertThat(underTest.getUrl()).matches("url value");
     assertThat(underTest.getStorageDirectory()).matches("storage value");
@@ -100,7 +100,7 @@ public class ArgumentsTest {
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
     assertThat(underTest.getInput()).matches("input value");
     assertThat(underTest.getOutputBase()).matches("output value");
-    assertThat(underTest.getCountryCode()).matches("CA");
+    assertThat(underTest.getCountryCode()).matches("ca");
     assertThat(underTest.getNumThreads()).isEqualTo(1);
   }
 }
