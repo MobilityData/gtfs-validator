@@ -25,9 +25,11 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.notice.EmptyRowNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidEmailNotice;
@@ -61,7 +63,10 @@ public class RowParserTest {
     Mockito.when(csvRow.getFileName()).thenReturn(TEST_FILENAME);
     Mockito.when(csvRow.getRowNumber()).thenReturn(8L);
     Mockito.when(csvRow.getColumnName(0)).thenReturn("column name");
-    RowParser parser = new RowParser(GtfsFeedName.parseString(feedName), noticeContainer);
+    RowParser parser =
+        new RowParser(
+            GtfsFeedName.parseString(feedName),
+            noticeContainer);
     parser.setRow(csvRow);
     return parser;
   }
@@ -329,7 +334,9 @@ public class RowParserTest {
 
     CsvRow csvRow = csvFile.iterator().next();
     RowParser parser =
-        new RowParser(GtfsFeedName.parseString(TEST_FEED_NAME), new NoticeContainer());
+        new RowParser(
+            GtfsFeedName.parseString(TEST_FEED_NAME),
+            new NoticeContainer());
     parser.setRow(csvRow);
 
     assertThat(parser.checkRowLength()).isFalse();
@@ -350,7 +357,9 @@ public class RowParserTest {
 
     CsvRow csvRow = csvFile.iterator().next();
     RowParser parser =
-        new RowParser(GtfsFeedName.parseString(TEST_FEED_NAME), new NoticeContainer());
+        new RowParser(
+            GtfsFeedName.parseString(TEST_FEED_NAME),
+            new NoticeContainer());
     parser.setRow(csvRow);
 
     assertThat(parser.checkRowLength()).isFalse();

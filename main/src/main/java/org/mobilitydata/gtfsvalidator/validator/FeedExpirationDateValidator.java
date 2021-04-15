@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
+import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -39,17 +40,17 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
  */
 @GtfsValidator
 public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedInfo> {
-  private final ValidationContext context;
+  private final CurrentDateTime currentDateTime;
 
   @Inject
-  FeedExpirationDateValidator(ValidationContext context) {
-    this.context = context;
+  FeedExpirationDateValidator(CurrentDateTime currentDateTime) {
+    this.currentDateTime = currentDateTime;
   }
 
   @Override
   public void validate(GtfsFeedInfo entity, NoticeContainer noticeContainer) {
     if (entity.hasFeedEndDate()) {
-      LocalDate now = context.now().toLocalDate();
+      LocalDate now = currentDateTime.getCurrentDateTime().toLocalDate();
       GtfsDate currentDate = GtfsDate.fromLocalDate(now);
       GtfsDate currentDatePlusSevenDays = GtfsDate.fromLocalDate(now.plusDays(7));
       GtfsDate currentDatePlusThirtyDays = GtfsDate.fromLocalDate(now.plusDays(30));

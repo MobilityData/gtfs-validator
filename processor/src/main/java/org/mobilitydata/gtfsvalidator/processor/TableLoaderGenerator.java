@@ -41,6 +41,8 @@ import javax.lang.model.element.Modifier;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsLoader;
+import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
+import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.notice.EmptyFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -53,7 +55,6 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableLoader;
 import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
 import org.mobilitydata.gtfsvalidator.validator.TableHeaderValidator;
-import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
 /**
@@ -206,7 +207,8 @@ public class TableLoaderGenerator {
         MethodSpec.methodBuilder("load")
             .addModifiers(Modifier.PUBLIC)
             .addParameter(InputStream.class, "inputStream")
-            .addParameter(ValidationContext.class, "validationContext")
+            .addParameter(GtfsFeedName.class, "feedName")
+            .addParameter(CurrentDateTime.class, "currentDateTime")
             .addParameter(ValidatorLoader.class, "validatorLoader")
             .addParameter(NoticeContainer.class, "noticeContainer")
             .returns(
@@ -222,7 +224,7 @@ public class TableLoaderGenerator {
                 tableContainerTypeName,
                 TableStatus.class)
             .addStatement(
-                "validatorLoader.invokeSingleFileValidators(table, validationContext,"
+                "validatorLoader.invokeSingleFileValidators(table, feedName, currentDateTime,"
                     + " noticeContainer)")
             .addStatement("return table")
             .endControlFlow()
@@ -260,7 +262,7 @@ public class TableLoaderGenerator {
     method
         .addStatement("final $T.Builder builder = new $T.Builder()", gtfsEntityType, gtfsEntityType)
         .addStatement(
-            "final $T rowParser = new $T(validationContext.feedName(), noticeContainer)",
+            "final $T rowParser = new $T(feedName, noticeContainer)",
             RowParser.class,
             RowParser.class)
         .addStatement(
@@ -270,7 +272,7 @@ public class TableLoaderGenerator {
         .addStatement("boolean hasUnparsableRows = false")
         .addStatement(
             "final $T singleEntityValidators = validatorLoader.createSingleEntityValidators("
-                + "$T.class, validationContext)",
+                + "$T.class, feedName, currentDateTime)",
             ParameterizedTypeName.get(
                 ClassName.get(List.class),
                 ParameterizedTypeName.get(
@@ -353,7 +355,7 @@ public class TableLoaderGenerator {
             tableContainerTypeName,
             tableContainerTypeName)
         .addStatement(
-            "validatorLoader.invokeSingleFileValidators(table, validationContext, noticeContainer)")
+            "validatorLoader.invokeSingleFileValidators(table, feedName, currentDateTime, noticeContainer)")
         .addStatement("return table")
         .endControlFlow();
 
@@ -383,7 +385,8 @@ public class TableLoaderGenerator {
     MethodSpec.Builder method =
         MethodSpec.methodBuilder("loadMissingFile")
             .addModifiers(Modifier.PUBLIC)
-            .addParameter(ValidationContext.class, "validationContext")
+            .addParameter(GtfsFeedName.class, "feedName")
+            .addParameter(CurrentDateTime.class, "currentDateTime")
             .addParameter(ValidatorLoader.class, "validatorLoader")
             .addParameter(NoticeContainer.class, "noticeContainer")
             .returns(
@@ -400,7 +403,7 @@ public class TableLoaderGenerator {
                 MissingRequiredFileNotice.class)
             .endControlFlow()
             .addStatement(
-                "validatorLoader.invokeSingleFileValidators(table, validationContext,"
+                "validatorLoader.invokeSingleFileValidators(table, feedName, currentDateTime,"
                     + " noticeContainer)")
             .addStatement("return table");
 
