@@ -56,6 +56,16 @@ public class Arguments {
               + "downloaded from network (if not provided, the ZIP will be stored in memory)")
   private String storageDirectory;
 
+  @Parameter(
+      names = {"-v", "--validation_report_name"},
+      description = "The name of the validation report including .json extension.")
+  private String validationReportName;
+
+  @Parameter(
+      names = {"-e", "--system_errors_report_name"},
+      description = "The name of the system errors report including .json extension.")
+  private String systemErrorsReportName;
+
   public String getInput() {
     return input;
   }
@@ -78,5 +88,19 @@ public class Arguments {
 
   public String getStorageDirectory() {
     return storageDirectory;
+  }
+
+  public String getValidationReportName() {
+    if (validationReportName == null) {
+      return "report.json";
+    }
+    return validationReportName;
+  }
+
+  public String getSystemErrorsReportName() {
+    if (systemErrorsReportName == null) {
+      return "system_errors.json";
+    }
+    return systemErrorsReportName;
   }
 }

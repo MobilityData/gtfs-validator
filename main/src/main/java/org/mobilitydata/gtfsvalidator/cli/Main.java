@@ -91,7 +91,7 @@ public class Main {
       noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
     }
     if (gtfsInput == null) {
-      exportReport(args.getOutputBase(), noticeContainer);
+      exportReport(noticeContainer, args);
       return;
     }
     ValidationContext validationContext =
@@ -103,7 +103,7 @@ public class Main {
         feedLoader.loadAndValidate(gtfsInput, validationContext, validatorLoader, noticeContainer);
 
     // Output
-    exportReport(args.getOutputBase(), noticeContainer);
+    exportReport(noticeContainer, args);
     final long endNanos = System.nanoTime();
     if (!feedContainer.isParsedSuccessfully()) {
       System.out.println(" ----------------------------------------- ");
@@ -117,14 +117,14 @@ public class Main {
   }
 
   /** Generates and exports reports for both validation notices and system errors reports. */
-  private static void exportReport(final String outputBase, final NoticeContainer noticeContainer) {
-    new File(outputBase).mkdirs();
+  private static void exportReport(final NoticeContainer noticeContainer, final Arguments args) {
+    new File(args.getOutputBase()).mkdirs();
     try {
       Files.write(
-          Paths.get(outputBase, "report.json"),
+          Paths.get(args.getOutputBase(), args.getValidationReportName()),
           noticeContainer.exportValidationNotices().getBytes(StandardCharsets.UTF_8));
       Files.write(
-          Paths.get(outputBase, "system_errors.json"),
+          Paths.get(args.getOutputBase(), args.getSystemErrorsReportName()),
           noticeContainer.exportSystemErrors().getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store report files");
