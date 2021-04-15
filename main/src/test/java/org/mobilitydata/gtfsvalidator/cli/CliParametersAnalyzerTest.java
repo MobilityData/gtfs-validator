@@ -23,6 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import com.beust.jcommander.JCommander;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
@@ -142,5 +143,31 @@ public class CliParametersAnalyzerTest {
     //noinspection ResultOfMethodCallIgnored because object is mocked
     verify(mockArguments, times(1)).getStorageDirectory();
     verifyNoMoreInteractions(mockArguments, mockHandler);
+  }
+
+  @Test
+  public void feedName_isNotValid() {
+    Arguments args = new Arguments();
+    CliParametersAnalyzer cliParametersAnalyzer = new CliParametersAnalyzer();
+    String[] argv = {
+      "--input", "input value",
+      "--output_base", "output value",
+      "--country_code", "ca",
+      "--threads", "4",
+      "--feed_name", "feed name"
+    };
+    new JCommander(args).parse(argv);
+    assertThat(cliParametersAnalyzer.isValid(args)).isFalse();
+
+    argv =
+        new String[] {
+          "-i", "input value",
+          "-o", "output value",
+          "-c", "au",
+          "-t", "4",
+          "-f", "feed name value",
+        };
+    new JCommander(args).parse(argv);
+    assertThat(cliParametersAnalyzer.isValid(args)).isFalse();
   }
 }

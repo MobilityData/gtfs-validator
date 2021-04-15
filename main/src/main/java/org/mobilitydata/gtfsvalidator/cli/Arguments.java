@@ -38,6 +38,11 @@ public class Arguments {
   private int numThreads = 1;
 
   @Parameter(
+      names = {"-f", "--feed_name"},
+      description = "Deprecated: please use '-c' or '-country_code' instead.")
+  private String feedName;
+
+  @Parameter(
       names = {"-c", "--country_code"},
       description =
           "Country code of the feed, e.g., `nl`. "
@@ -65,6 +70,10 @@ public class Arguments {
       names = {"-e", "--system_errors_report_name"},
       description = "The name of the system errors report including .json extension.")
   private String systemErrorsReportName;
+
+  public String getFeedName() {
+    return feedName;
+  }
 
   public String getInput() {
     return input;

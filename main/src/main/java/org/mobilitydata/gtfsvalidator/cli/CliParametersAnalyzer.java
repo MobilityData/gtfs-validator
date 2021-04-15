@@ -45,6 +45,11 @@ public class CliParametersAnalyzer {
           "CLI parameter '--storage_directory' must not be provided if '--url' is not provided");
       return false;
     }
+    if (args.getFeedName() != null) {
+      logger.atSevere().log(
+          " '-f' or '--feed_name is no longer supported. Please use '-c' or '--country_code' instead.");
+      return false;
+    }
     return true;
   }
 }
