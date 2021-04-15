@@ -28,10 +28,10 @@ public class CountryCodeTest {
 
   @Test
   public void getISOAlpha2CountryCode() {
-    assertThat(CountryCode.parseString("nl").getISOAlpha2CountryCode()).isEqualTo("NL");
-    assertThat(CountryCode.parseString("au").getISOAlpha2CountryCode()).isEqualTo("AU");
-    assertThat(CountryCode.parseString("uk").getISOAlpha2CountryCode()).isEqualTo("GB");
-    assertThat(CountryCode.parseString("gb").getISOAlpha2CountryCode()).isEqualTo("GB");
+    assertThat(CountryCode.parseString("nl").getCountryCode().get()).isEqualTo("NL");
+    assertThat(CountryCode.parseString("au").getCountryCode().get()).isEqualTo("AU");
+    assertThat(CountryCode.parseString("uk").getCountryCode().get()).isEqualTo("GB");
+    assertThat(CountryCode.parseString("gb").getCountryCode().get()).isEqualTo("GB");
   }
 
   @Test

@@ -205,7 +205,7 @@ public class RowParser {
         required,
         s ->
             PhoneNumberUtil.getInstance()
-                .isPossibleNumber(s, countryCode.getISOAlpha2CountryCode()),
+                .isPossibleNumber(s, countryCode.getCountryCode().get()),
         InvalidPhoneNumberNotice::new);
   }
 

@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
+import javax.annotation.Nullable;
 
 /** Represents the country code of a GTFS feed. */
 public class CountryCode {
@@ -29,10 +30,14 @@ public class CountryCode {
   // ISO 3166-1 Alpha 2 country code for the United Kingdom is "GB" but feed names may use "UK".
   private static final String UK = "UK";
   private static final String GB = "GB";
-  private final Optional<String> optionalCountryCode;
+  private Optional<String> countryCode;
 
-  private CountryCode(String countryCode) {
-    this.optionalCountryCode = Optional.ofNullable(countryCode);
+  private CountryCode(@Nullable String countryCode) {
+    this.countryCode = Optional.ofNullable(countryCode);
+    if (countryCode != null) {
+      this.countryCode = Optional.of(countryCode.toUpperCase().equals(UK) ? GB
+          : countryCode.toUpperCase());
+    }
   }
 
   /**
@@ -69,10 +74,6 @@ public class CountryCode {
     throw new IllegalArgumentException(INVALID_COUNTRY_CODE_MESSAGE);
   }
 
-  public Optional<String> getCountryCode() {
-    return optionalCountryCode;
-  }
-
   /**
    * Returns the uppercase ISO 3166-1 Alpha 2 country code component, e.g., "NL" or "AU".
    *
@@ -80,9 +81,8 @@ public class CountryCode {
    *
    * @return uppercase ISO Alpha country code
    */
-  public String getISOAlpha2CountryCode() {
-    String countryCode = optionalCountryCode.get().toUpperCase();
-    return countryCode.equals(UK) ? GB : countryCode;
+  public Optional<String> getCountryCode() {
+    return countryCode;
   }
 
   @Override
@@ -91,13 +91,13 @@ public class CountryCode {
       return true;
     }
     if (other instanceof CountryCode) {
-      return this.optionalCountryCode.equals(((CountryCode) other).optionalCountryCode);
+      return this.countryCode.equals(((CountryCode) other).countryCode);
     }
     return false;
   }
 
   @Override
   public int hashCode() {
-    return optionalCountryCode.hashCode();
+    return countryCode.hashCode();
   }
 }

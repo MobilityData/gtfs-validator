@@ -54,8 +54,7 @@ public class Main {
     ValidatorLoader validatorLoader = new ValidatorLoader();
     GtfsFeedLoader feedLoader = new GtfsFeedLoader();
 
-    CountryCode countryCode = CountryCode.parseString(args.getCountryCode());
-    System.out.println("Country code: " + countryCode.getISOAlpha2CountryCode());
+    System.out.println("Country code: " + args.getCountryCode());
     System.out.println("Input: " + args.getInput());
     System.out.println("URL: " + args.getUrl());
     System.out.println("Output: " + args.getOutputBase());
@@ -96,7 +95,7 @@ public class Main {
     }
     ValidationContext validationContext =
         ValidationContext.builder()
-            .setCountryCode(countryCode)
+            .setCountryCode(CountryCode.parseString(args.getCountryCode()))
             .setNow(ZonedDateTime.now(ZoneId.systemDefault()))
             .build();
     feedContainer =
