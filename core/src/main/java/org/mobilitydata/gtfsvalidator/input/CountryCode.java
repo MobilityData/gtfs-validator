@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.input;
 
 import com.google.common.collect.ImmutableSet;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Set;
 
 /** Represents the country code of a GTFS feed. */
@@ -28,10 +29,10 @@ public class CountryCode {
   // ISO 3166-1 Alpha 2 country code for the United Kingdom is "GB" but feed names may use "UK".
   private static final String UK = "UK";
   private static final String GB = "GB";
-  private final String countryCode;
+  private final Optional<String> optionalCountryCode;
 
   private CountryCode(String countryCode) {
-    this.countryCode = countryCode;
+    this.optionalCountryCode = Optional.ofNullable(countryCode);
   }
 
   /**
@@ -68,6 +69,10 @@ public class CountryCode {
     throw new IllegalArgumentException(INVALID_COUNTRY_CODE_MESSAGE);
   }
 
+  public Optional<String> getCountryCode() {
+    return optionalCountryCode;
+  }
+
   /**
    * Returns the uppercase ISO 3166-1 Alpha 2 country code component, e.g., "NL" or "AU".
    *
@@ -76,16 +81,8 @@ public class CountryCode {
    * @return uppercase ISO Alpha country code
    */
   public String getISOAlpha2CountryCode() {
-    String countryCode = this.countryCode.toUpperCase();
+    String countryCode = optionalCountryCode.get().toUpperCase();
     return countryCode.equals(UK) ? GB : countryCode;
-  }
-
-  /**
-   * Returns true is country code has been provided has a CLI arg
-   * @return true is country code has been provided has a CLI arg
-   */
-  public boolean isProvided() {
-    return countryCode != null;
   }
 
   @Override
@@ -94,13 +91,13 @@ public class CountryCode {
       return true;
     }
     if (other instanceof CountryCode) {
-      return this.countryCode.equals(((CountryCode) other).countryCode);
+      return this.optionalCountryCode.equals(((CountryCode) other).optionalCountryCode);
     }
     return false;
   }
 
   @Override
   public int hashCode() {
-    return countryCode.hashCode();
+    return optionalCountryCode.hashCode();
   }
 }

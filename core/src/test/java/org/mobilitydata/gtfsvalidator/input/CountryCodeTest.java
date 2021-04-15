@@ -53,14 +53,4 @@ public class CountryCodeTest {
     assertThrows(IllegalArgumentException.class, () -> CountryCode.parseString("abc-def"));
     assertThrows(IllegalArgumentException.class, () -> CountryCode.parseString("xx"));
   }
-
-  @Test
-  public void isProvided() {
-    assertThat(CountryCode.parseString("nl").isProvided()).isTrue();
-    assertThat(CountryCode.parseString("au").isProvided()).isTrue();
-    assertThat(CountryCode.parseString(null).isProvided()).isFalse();
-    // if country code is provided it should be correctly formatted hence throwing an exception in
-    // this case
-    assertThrows(IllegalArgumentException.class, () -> CountryCode.parseString("xx"));
-  }
 }

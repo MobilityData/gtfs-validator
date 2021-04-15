@@ -197,8 +197,8 @@ public class RowParser {
 
   @Nullable
   public String asPhoneNumber(int columnIndex, boolean required) {
-    if (!countryCode.isProvided()) {
-      return asUnvalidatedString(columnIndex, required);
+    if (!countryCode.getCountryCode().isPresent()) {
+      return asString(columnIndex, required);
     }
     return asValidatedString(
         columnIndex,
@@ -384,18 +384,6 @@ public class RowParser {
     noticeContainer.addValidationNotice(notice);
   }
 
-  public enum NumberBounds {
-    POSITIVE,
-    NON_NEGATIVE,
-    NON_ZERO,
-  }
-
-  @FunctionalInterface
-  public interface EnumCreator<E> {
-
-    E convert(int t);
-  }
-
   /**
    * Parses a string to a given type: {@link GtfsTime}, {@link GtfsColor} etc. and adds notices if
    * parsing failed.
@@ -469,19 +457,16 @@ public class RowParser {
     return s;
   }
 
-  /**
-   * Intermediate method used to skip phone number validation if '-c' has not been provided.
-   *
-   * @param columnIndex index of the column to parse
-   * @param required whether the value is required according to GTFS
-   * @return the cell value at the given column or null if the value is missing or invalid
-   */
-  private String asUnvalidatedString(int columnIndex, boolean required) {
-    String s = asString(columnIndex, required);
-    if (s == null) {
-      return null;
-    }
-    return s;
+  public enum NumberBounds {
+    POSITIVE,
+    NON_NEGATIVE,
+    NON_ZERO,
+  }
+
+  @FunctionalInterface
+  public interface EnumCreator<E> {
+
+    E convert(int t);
   }
 
   /**
