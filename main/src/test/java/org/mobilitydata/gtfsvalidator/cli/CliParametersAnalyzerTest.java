@@ -93,6 +93,7 @@ public class CliParametersAnalyzerTest {
     when(mockArguments.getUrl()).thenReturn("url to dataset");
     when(mockArguments.getInput()).thenReturn(null);
     when(mockArguments.getStorageDirectory()).thenReturn(null);
+    when(mockArguments.getFeedName()).thenReturn(null);
 
     CliParametersAnalyzer underTest = new CliParametersAnalyzer();
     assertThat(underTest.isValid(mockArguments)).isTrue();
@@ -102,6 +103,7 @@ public class CliParametersAnalyzerTest {
     verify(mockArguments, times(2)).getInput();
     //noinspection ResultOfMethodCallIgnored because object is mocked
     verify(mockArguments, times(1)).getStorageDirectory();
+    verify(mockArguments, times(1)).getFeedName();
     verifyNoMoreInteractions(mockArguments, mockHandler);
   }
 
@@ -133,6 +135,7 @@ public class CliParametersAnalyzerTest {
     when(mockArguments.getUrl()).thenReturn("url to dataset");
     when(mockArguments.getInput()).thenReturn(null);
     when(mockArguments.getStorageDirectory()).thenReturn("storage.zip");
+    when(mockArguments.getFeedName()).thenReturn(null);
 
     CliParametersAnalyzer underTest = new CliParametersAnalyzer();
     assertThat(underTest.isValid(mockArguments)).isTrue();
@@ -142,6 +145,7 @@ public class CliParametersAnalyzerTest {
     verify(mockArguments, times(2)).getInput();
     //noinspection ResultOfMethodCallIgnored because object is mocked
     verify(mockArguments, times(1)).getStorageDirectory();
+    verify(mockArguments, times(1)).getFeedName();
     verifyNoMoreInteractions(mockArguments, mockHandler);
   }
 
