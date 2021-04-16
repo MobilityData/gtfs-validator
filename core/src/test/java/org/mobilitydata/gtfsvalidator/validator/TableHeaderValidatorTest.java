@@ -27,6 +27,7 @@ import org.mobilitydata.gtfsvalidator.notice.EmptyColumnNameNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredColumnNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.UnknownColumnNotice;
+import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 
 @RunWith(JUnit4.class)
 public class TableHeaderValidatorTest {
@@ -38,7 +39,7 @@ public class TableHeaderValidatorTest {
             new TableHeaderValidator()
                 .validate(
                     "stops.txt",
-                    new String[] {"stop_id", "stop_name"},
+                    new CsvHeader(new String[] {"stop_id", "stop_name"}),
                     ImmutableSet.of("stop_id", "stop_name", "stop_lat", "stop_lon"),
                     ImmutableSet.of("stop_id"),
                     container))
@@ -54,7 +55,7 @@ public class TableHeaderValidatorTest {
             new TableHeaderValidator()
                 .validate(
                     "stops.txt",
-                    new String[] {"stop_id", "stop_name", "stop_extra"},
+                    new CsvHeader(new String[] {"stop_id", "stop_name", "stop_extra"}),
                     ImmutableSet.of("stop_id", "stop_name"),
                     ImmutableSet.of("stop_id"),
                     container))
@@ -71,7 +72,7 @@ public class TableHeaderValidatorTest {
             new TableHeaderValidator()
                 .validate(
                     "stops.txt",
-                    new String[] {"stop_name"},
+                    new CsvHeader(new String[] {"stop_name"}),
                     ImmutableSet.of("stop_id", "stop_name"),
                     ImmutableSet.of("stop_id"),
                     container))
@@ -88,7 +89,7 @@ public class TableHeaderValidatorTest {
             new TableHeaderValidator()
                 .validate(
                     "stops.txt",
-                    new String[] {"stop_id", "stop_name", "stop_id"},
+                    new CsvHeader(new String[] {"stop_id", "stop_name", "stop_id"}),
                     ImmutableSet.of("stop_id", "stop_name"),
                     ImmutableSet.of("stop_id"),
                     container))
@@ -105,7 +106,7 @@ public class TableHeaderValidatorTest {
             new TableHeaderValidator()
                 .validate(
                     "stops.txt",
-                    new String[] {},
+                    CsvHeader.EMPTY,
                     ImmutableSet.of("stop_id", "stop_name"),
                     ImmutableSet.of("stop_id"),
                     container))
@@ -121,7 +122,7 @@ public class TableHeaderValidatorTest {
             new TableHeaderValidator()
                 .validate(
                     "stops.txt",
-                    new String[] {"stop_id", null, "stop_name", ""},
+                    new CsvHeader(new String[] {"stop_id", null, "stop_name", ""}),
                     ImmutableSet.of("stop_id", "stop_name"),
                     ImmutableSet.of("stop_id"),
                     container))
