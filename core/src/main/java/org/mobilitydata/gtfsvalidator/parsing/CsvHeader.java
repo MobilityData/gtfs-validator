@@ -62,9 +62,7 @@ public class CsvHeader {
     return columnNames.length;
   }
 
-  /**
-   * Returns index of a column with the given name, or -1 if there is no such column.
-   */
+  /** Returns index of a column with the given name, or -1 if there is no such column. */
   public int getColumnIndex(String columnName) {
     return columnIndices.getOrDefault(columnName, -1);
   }
