@@ -353,7 +353,7 @@ public class RowParserTest {
   }
 
   @Test
-  public void checkRowLengthInvalidRowLength()  {
+  public void checkRowLengthInvalidRowLength() {
     RowParser parser =
         new RowParser(
             TEST_FILENAME,
