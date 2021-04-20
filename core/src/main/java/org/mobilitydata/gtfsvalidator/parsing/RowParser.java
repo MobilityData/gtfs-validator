@@ -27,7 +27,7 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.UrlValidator;
-import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
+import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.notice.EmptyRowNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidColorNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidCurrencyNotice;
@@ -67,16 +67,16 @@ public class RowParser {
   public static final boolean OPTIONAL = false;
   private final String fileName;
   private final CsvHeader header;
-  private final GtfsFeedName feedName;
+  private final CountryCode countryCode;
   private final NoticeContainer noticeContainer;
   private CsvRow row;
   private boolean parseErrorsInRow;
 
   public RowParser(
-      String fileName, CsvHeader header, GtfsFeedName feedName, NoticeContainer noticeContainer) {
+      String fileName, CsvHeader header, CountryCode countryCode, NoticeContainer noticeContainer) {
     this.fileName = fileName;
     this.header = header;
-    this.feedName = feedName;
+    this.countryCode = countryCode;
     this.noticeContainer = noticeContainer;
   }
 
@@ -186,12 +186,23 @@ public class RowParser {
         InvalidEmailNotice::new);
   }
 
+  /**
+   * Returns the string value of the phone number to be validated if a valid number according to the
+   * {@code CountryCode}, returns {@code null} otherwise. Note that if {@code CountryCode} is
+   * unknown, only phone number starting by "+" are validated.
+   *
+   * @param columnIndex the column index
+   * @param required true is the value is required, false otherwise
+   * @return the string value of the phone number to be validated if a valid number according to the
+   *     {@code CountryCode}, returns {@code null} otherwise. Note that if {@code CountryCode} is
+   *     unknown, only phone number starting by "+" are validated.
+   */
   @Nullable
   public String asPhoneNumber(int columnIndex, boolean required) {
     return asValidatedString(
         columnIndex,
         required,
-        s -> PhoneNumberUtil.getInstance().isPossibleNumber(s, feedName.getISOAlpha2CountryCode()),
+        s -> PhoneNumberUtil.getInstance().isPossibleNumber(s, countryCode.getCountryCode()),
         InvalidPhoneNumberNotice::new);
   }
 

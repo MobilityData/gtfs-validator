@@ -28,7 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
+import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -54,8 +54,7 @@ public class Main {
     ValidatorLoader validatorLoader = new ValidatorLoader();
     GtfsFeedLoader feedLoader = new GtfsFeedLoader();
 
-    GtfsFeedName feedName = GtfsFeedName.parseString(args.getFeedName());
-    System.out.println("Feed name: " + feedName.getCountryFirstName());
+    System.out.println("Country code: " + args.getCountryCode());
     System.out.println("Input: " + args.getInput());
     System.out.println("URL: " + args.getUrl());
     System.out.println("Output: " + args.getOutputBase());
@@ -96,7 +95,9 @@ public class Main {
     }
     ValidationContext validationContext =
         ValidationContext.builder()
-            .setFeedName(feedName)
+            .setCountryCode(
+                CountryCode.forStringOrUnknown(
+                    args.getCountryCode() == null ? CountryCode.ZZ : args.getCountryCode()))
             .setNow(ZonedDateTime.now(ZoneId.systemDefault()))
             .build();
     feedContainer =
