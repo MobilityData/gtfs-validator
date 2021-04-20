@@ -191,8 +191,8 @@ public class RowParserTest {
   public void asPhoneNumber() {
     assertThat(createParser("us", "(650) 253-0000").asPhoneNumber(0, true))
         .isEqualTo("(650) 253-0000");
-    assertThat(createParser(null, "(650) 253-0000").asPhoneNumber(0, true))
-        .isEqualTo("(650) 253-0000");
+    assertThat(createParser("zz", "+1 (650) 253-0000").asPhoneNumber(0, true))
+        .isEqualTo("+1 (650) 253-0000");
     assertThat(createParser("ch", "044 668 18 00").asPhoneNumber(0, true))
         .isEqualTo("044 668 18 00");
     assertThat(createParser("nl", "+49 341 913 540 42").asPhoneNumber(0, true))
@@ -210,6 +210,13 @@ public class RowParserTest {
         .containsExactly(new InvalidPhoneNumberNotice(TEST_FILENAME, 8, "column name", "invalid"));
 
     parser = createParser("nl", "003280038762246");
+    assertThat(parser.asPhoneNumber(0, true)).isNull();
+    assertThat(parser.hasParseErrorsInRow()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices())
+        .containsExactly(
+            new InvalidPhoneNumberNotice(TEST_FILENAME, 8, "column name", "003280038762246"));
+
+    parser = createParser("zz", "003280038762246");
     assertThat(parser.asPhoneNumber(0, true)).isNull();
     assertThat(parser.hasParseErrorsInRow()).isTrue();
     assertThat(parser.getNoticeContainer().getValidationNotices())
