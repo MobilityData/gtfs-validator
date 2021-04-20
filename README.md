@@ -26,7 +26,7 @@ where:
 * `--input` or `-i`: the path to the GTFS file (e.g., `/myDirectory/gtfs.zip`)
 * `--url` or `-u`: the fully qualified URL to the GTFS file (e.g., `https://www.abc.com/gtfs.zip`)
 * `--output` or `-o`: the path where the validation report will be stored (e.g., `output`)
-* *(Optional)* `--country_code` or `-c`: the country code of the feed as a valid [ISO two letter country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) (e.g., `ca`, `us`)
+* *(Optional)* `--country_code` or `-c`: the country code of the feed as a valid [ISO two letter country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) (e.g., `ca`, `us`). It can be either lower or upper case (e.g. `FR` or `GP`). If `-c` is not provided or country code is unknown, phone numbers will be validated if they start by `+`.   
 * *(Optional)* `--thread` or `-t`: the number of Java threads to use
 
 More detailed instructions are on our ["Usage"](/docs/USAGE.md) page.
