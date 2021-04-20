@@ -75,25 +75,6 @@ public class RowParser {
     this.noticeContainer = noticeContainer;
   }
 
-  static boolean hasOnlyPrintableAscii(String s) {
-    for (int i = 0, n = s.length(); i < n; ++i) {
-      if (!(s.charAt(i) >= 32 && s.charAt(i) < 127)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  /**
-   * Tells if a given notice is an {@code ERROR}.
-   *
-   * @param notice the notice to check
-   * @return true if the notice is an error, false otherwise
-   */
-  private static boolean isError(ValidationNotice notice) {
-    return notice.getSeverityLevel().ordinal() >= SeverityLevel.ERROR.ordinal();
-  }
-
   public NoticeContainer getNoticeContainer() {
     return noticeContainer;
   }
@@ -169,6 +150,15 @@ public class RowParser {
   @Nullable
   public String asText(int columnIndex, boolean required) {
     return asString(columnIndex, required);
+  }
+
+  static boolean hasOnlyPrintableAscii(String s) {
+    for (int i = 0, n = s.length(); i < n; ++i) {
+      if (!(s.charAt(i) >= 32 && s.charAt(i) < 127)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   @Nullable
@@ -373,6 +363,16 @@ public class RowParser {
   }
 
   /**
+   * Tells if a given notice is an {@code ERROR}.
+   *
+   * @param notice the notice to check
+   * @return true if the notice is an error, false otherwise
+   */
+  private static boolean isError(ValidationNotice notice) {
+    return notice.getSeverityLevel().ordinal() >= SeverityLevel.ERROR.ordinal();
+  }
+
+  /**
    * Adds notice to the container and updates {@link #parseErrorsInRow} if the notice is an error.
    *
    * @param notice
@@ -382,6 +382,18 @@ public class RowParser {
       parseErrorsInRow = true;
     }
     noticeContainer.addValidationNotice(notice);
+  }
+
+  public enum NumberBounds {
+    POSITIVE,
+    NON_NEGATIVE,
+    NON_ZERO,
+  }
+
+  @FunctionalInterface
+  public interface EnumCreator<E> {
+
+    E convert(int t);
   }
 
   /**
@@ -455,18 +467,6 @@ public class RowParser {
       }
     }
     return s;
-  }
-
-  public enum NumberBounds {
-    POSITIVE,
-    NON_NEGATIVE,
-    NON_ZERO,
-  }
-
-  @FunctionalInterface
-  public interface EnumCreator<E> {
-
-    E convert(int t);
   }
 
   /**
