@@ -40,7 +40,6 @@ jobs:
           versionTag: ${{ steps.prep.outputs.versionTag }}
         with:
           arguments: shadowJar
-
       - name: Validate dataset from -- Norway
         run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/norsk-reiseinformasjon-as/791/latest/download --output_base output --country_code no --storage_directory norway.zip
       - name: Validate dataset from -- IDFM (Paris, France)
@@ -49,7 +48,6 @@ jobs:
         run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ov/814/latest/download --output_base output --country_code nl --storage_directory ovapi.zip
       - name: Validate dataset from -- Colectivos (Buenos Aires, Argentina)
         run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/colectivos-buenos-aires/1037/latest/download --output_base output --country_code ar --storage_directory colectivos.zip
-
       - name: Persist datasets
         uses: actions/upload-artifact@v2
         with:
