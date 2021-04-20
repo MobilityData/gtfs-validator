@@ -47,7 +47,8 @@ public class CliParametersAnalyzer {
     }
     if (args.getFeedName() != null) {
       logger.atSevere().log(
-          " '-f' or '--feed_name is no longer supported. Please use '-c' or '--country_code' instead.");
+          " '-f' or '--feed_name is no longer supported. Please use '-c' or '--country_code'"
+              + " instead.");
       return false;
     }
     return true;
