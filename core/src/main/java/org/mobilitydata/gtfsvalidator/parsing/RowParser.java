@@ -186,14 +186,23 @@ public class RowParser {
         InvalidEmailNotice::new);
   }
 
+  /**
+   * Returns the string value of the phone number to be validated if a valid number according to the
+   * {@code CountryCode}, returns {@code null} otherwise. Note that if {@code CountryCode} is
+   * unknown, only phone number starting by "+" are validated.
+   *
+   * @param columnIndex the column index
+   * @param required true is the value is required, false otherwise
+   * @return the string value of the phone number to be validated if a valid number according to the
+   *     {@code CountryCode}, returns {@code null} otherwise. Note that if {@code CountryCode} is
+   *     unknown, only phone number starting by "+" are validated.
+   */
   @Nullable
   public String asPhoneNumber(int columnIndex, boolean required) {
     return asValidatedString(
         columnIndex,
         required,
-        s ->
-            PhoneNumberUtil.getInstance()
-                .isPossibleNumber(s, countryCode.getCountryCode()),
+        s -> PhoneNumberUtil.getInstance().isPossibleNumber(s, countryCode.getCountryCode()),
         InvalidPhoneNumberNotice::new);
   }
 
