@@ -82,13 +82,20 @@ public class ArgumentsTest {
     // same test using -u, -s, -v and -e command line options
     commandLineArgumentAsStringArray =
         new String[] {
-          "--output_base", "output value",
-            "--country_code", "ca",
-          "--threads", "4",
-          "--url", "url value",
-          "--storage_directory", "storage value",
-          "--validation_report_name", "validation_report.json",
-          "--system_errors_report_name", "errors.json",
+          "--output_base",
+          "output value",
+          "--country_code",
+          "ca",
+          "--threads",
+          "4",
+          "--url",
+          "url value",
+          "--storage_directory",
+          "storage value",
+          "--validation_report_name",
+          "validation_report.json",
+          "--system_errors_report_name",
+          "errors.json",
         };
 
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
