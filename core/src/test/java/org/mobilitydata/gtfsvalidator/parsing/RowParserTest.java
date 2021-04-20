@@ -59,7 +59,7 @@ public class RowParserTest {
         new RowParser(
             TEST_FILENAME,
             new CsvHeader(new String[] {"column name"}),
-            CountryCode.parseString(countryCode),
+            CountryCode.forStringOrUnknown(countryCode),
             noticeContainer);
     parser.setRow(new CsvRow(8, new String[] {cellValue}));
     return parser;
@@ -333,7 +333,7 @@ public class RowParserTest {
         new RowParser(
             csvFile.getFileName(),
             csvFile.getHeader(),
-            CountryCode.parseString(TEST_COUNTRY_CODE),
+            CountryCode.forStringOrUnknown(TEST_COUNTRY_CODE),
             new NoticeContainer());
     parser.setRow(csvRow);
 
@@ -351,7 +351,7 @@ public class RowParserTest {
         new RowParser(
             TEST_FILENAME,
             new CsvHeader(new String[] {"stop_id", "stop_name"}),
-            CountryCode.parseString(TEST_COUNTRY_CODE),
+            CountryCode.forStringOrUnknown(TEST_COUNTRY_CODE),
             new NoticeContainer());
     parser.setRow(new CsvRow(2, new String[] {"s1"}));
 

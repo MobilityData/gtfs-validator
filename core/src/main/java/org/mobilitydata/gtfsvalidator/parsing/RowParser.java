@@ -188,15 +188,12 @@ public class RowParser {
 
   @Nullable
   public String asPhoneNumber(int columnIndex, boolean required) {
-    if (!countryCode.getCountryCode().isPresent()) {
-      return asString(columnIndex, required);
-    }
     return asValidatedString(
         columnIndex,
         required,
         s ->
             PhoneNumberUtil.getInstance()
-                .isPossibleNumber(s, countryCode.getCountryCode().get()),
+                .isPossibleNumber(s, countryCode.getCountryCode()),
         InvalidPhoneNumberNotice::new);
   }
 

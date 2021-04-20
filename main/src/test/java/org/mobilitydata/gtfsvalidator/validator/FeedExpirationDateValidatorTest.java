@@ -31,7 +31,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.validator.FeedExpirationDateValidator.FeedExpirationDateNotice;
 
 public class FeedExpirationDateValidatorTest {
-  private static final CountryCode TEST_COUNTRY_CODE = CountryCode.parseString("au");
+  private static final CountryCode TEST_COUNTRY_CODE = CountryCode.forStringOrUnknown("au");
   private static final ZonedDateTime TEST_NOW =
       ZonedDateTime.of(2021, 1, 1, 14, 30, 0, 0, ZoneOffset.UTC);
 

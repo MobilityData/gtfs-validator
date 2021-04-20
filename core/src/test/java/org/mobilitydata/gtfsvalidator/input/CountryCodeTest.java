@@ -27,30 +27,38 @@ import org.junit.runners.JUnit4;
 public class CountryCodeTest {
 
   @Test
-  public void getISOAlpha2CountryCode() {
-    assertThat(CountryCode.parseString("nl").getCountryCode().get()).isEqualTo("NL");
-    assertThat(CountryCode.parseString("au").getCountryCode().get()).isEqualTo("AU");
-    assertThat(CountryCode.parseString("uk").getCountryCode().get()).isEqualTo("GB");
-    assertThat(CountryCode.parseString("gb").getCountryCode().get()).isEqualTo("GB");
+  public void forStringOrUnknown() {
+    assertThat(CountryCode.forStringOrUnknown("nl").getCountryCode()).isEqualTo("NL");
+    assertThat(CountryCode.forStringOrUnknown("au").getCountryCode()).isEqualTo("AU");
+    assertThat(CountryCode.forStringOrUnknown("uk").getCountryCode()).isEqualTo("GB");
+    assertThat(CountryCode.forStringOrUnknown("UK").getCountryCode()).isEqualTo("GB");
+    assertThat(CountryCode.forStringOrUnknown("gb").getCountryCode()).isEqualTo("GB");
+    assertThat(CountryCode.forStringOrUnknown("zz").getCountryCode()).isEqualTo("ZZ");
+    assertThat(CountryCode.forStringOrUnknown("xx").getCountryCode()).isEqualTo("ZZ");
+    assertThat(CountryCode.forStringOrUnknown("XX").getCountryCode()).isEqualTo("ZZ");
+    assertThrows(NullPointerException.class, () -> CountryCode.forStringOrUnknown(null));
   }
 
   @Test
-  public void isValidCountryCode() {
-    assertThat(CountryCode.isValidISOAlpha2("nl")).isTrue();
-    assertThat(CountryCode.isValidISOAlpha2("au")).isTrue();
-    assertThat(CountryCode.isValidISOAlpha2("fr")).isTrue();
-    assertThat(CountryCode.isValidISOAlpha2("uk")).isTrue();
-    assertThat(CountryCode.isValidISOAlpha2("gb")).isTrue();
-
-    assertThat(CountryCode.isValidISOAlpha2("openov-nl")).isFalse();
-    assertThat(CountryCode.isValidISOAlpha2("zz-zz")).isFalse();
+  public void isUnknown() {
+    assertThat(CountryCode.forStringOrUnknown("gp").isUnknown()).isFalse();
+    assertThat(CountryCode.forStringOrUnknown("GP").isUnknown()).isFalse();
+    assertThat(CountryCode.forStringOrUnknown("Gp").isUnknown()).isFalse();
+    assertThat(CountryCode.forStringOrUnknown("zz").isUnknown()).isTrue();
+    assertThat(CountryCode.forStringOrUnknown("abc").isUnknown()).isTrue();
+    assertThat(CountryCode.forStringOrUnknown("ABC").isUnknown()).isTrue();
+    assertThat(CountryCode.forStringOrUnknown("AbC").isUnknown()).isTrue();
   }
 
   @Test
-  public void parseStringInvalid() {
-    assertThrows(IllegalArgumentException.class, () -> CountryCode.parseString("openov"));
-    assertThrows(IllegalArgumentException.class, () -> CountryCode.parseString("zz-zz-zz"));
-    assertThrows(IllegalArgumentException.class, () -> CountryCode.parseString("abc-def"));
-    assertThrows(IllegalArgumentException.class, () -> CountryCode.parseString("xx"));
+  public void toStringTest() {
+    assertThat(CountryCode.forStringOrUnknown("nl").toString()).isEqualTo("NL");
+    assertThat(CountryCode.forStringOrUnknown("au").toString()).isEqualTo("AU");
+    assertThat(CountryCode.forStringOrUnknown("uk").toString()).isEqualTo("GB");
+    assertThat(CountryCode.forStringOrUnknown("UK").toString()).isEqualTo("GB");
+    assertThat(CountryCode.forStringOrUnknown("gb").toString()).isEqualTo("GB");
+    assertThat(CountryCode.forStringOrUnknown("zz").toString()).isEqualTo("ZZ");
+    assertThat(CountryCode.forStringOrUnknown("xx").toString()).isEqualTo("ZZ");
+    assertThat(CountryCode.forStringOrUnknown("XX").toString()).isEqualTo("ZZ");
   }
 }

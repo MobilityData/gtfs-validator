@@ -95,7 +95,9 @@ public class Main {
     }
     ValidationContext validationContext =
         ValidationContext.builder()
-            .setCountryCode(CountryCode.parseString(args.getCountryCode()))
+            .setCountryCode(
+                CountryCode.forStringOrUnknown(
+                    args.getCountryCode() == null ? CountryCode.ZZ : args.getCountryCode()))
             .setNow(ZonedDateTime.now(ZoneId.systemDefault()))
             .build();
     feedContainer =

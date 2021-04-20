@@ -16,62 +16,52 @@
 
 package org.mobilitydata.gtfsvalidator.input;
 
+import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableSet;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.Set;
 import javax.annotation.Nullable;
 
 /** Represents the country code of a GTFS feed. */
 public class CountryCode {
+  // for unknown and invalid territories
+  public static final String ZZ = "ZZ";
   private static final Set<String> ISO_COUNTRIES = ImmutableSet.copyOf(Locale.getISOCountries());
-  private static final String INVALID_COUNTRY_CODE_MESSAGE =
-      "Country code must follow format `cc`, where cc is an ISO Alpha 2 country code";
   // ISO 3166-1 Alpha 2 country code for the United Kingdom is "GB" but feed names may use "UK".
   private static final String UK = "UK";
   private static final String GB = "GB";
-  private Optional<String> countryCode;
+  private final String countryCode;
 
   private CountryCode(@Nullable String countryCode) {
-    this.countryCode = Optional.ofNullable(countryCode);
-    if (countryCode != null) {
-      this.countryCode = Optional.of(countryCode.toUpperCase().equals(UK) ? GB
-          : countryCode.toUpperCase());
-    }
+    this.countryCode = countryCode;
   }
 
   /**
-   * Checks that the given string is a valid ISO Alpha 2 country code (case insensitive).
+   * Returns the {@code CountryCode} associated to the cldrCode provided as parameter: special
+   * country code "ZZ" is returned if the cldrCode provided is invalid or unknown
    *
-   * <p>We support "UK" as an additional country code equivalent to the ISO 3166-1 Alpha 2 code
-   * "GB".
-   *
-   * @param s the given string
-   * @return true if the given string is a valid ISO Alpha 2 country code (case insensitive)
+   * @param cldrCode the Unicode Common Locale Data Repository code to make a {@code CountryCode}
+   *     from
+   * @return the {@code CountryCode} associated to the cldrCode provided as parameter: special
+   *     country code "ZZ" is returned if the cldrCode provided is invalid or unknown
    */
-  public static boolean isValidISOAlpha2(String s) {
-    if (s.length() != 2) {
-      return false;
+  public static CountryCode forStringOrUnknown(String cldrCode) {
+    String upperCaseCldrCode = Ascii.toUpperCase(cldrCode);
+    if (upperCaseCldrCode.equals(UK)) {
+      upperCaseCldrCode = GB;
     }
-    s = s.toUpperCase();
-    return s.equals(UK) || ISO_COUNTRIES.contains(s);
+    if (!ISO_COUNTRIES.contains(upperCaseCldrCode)) {
+      upperCaseCldrCode = ZZ;
+    }
+    return new CountryCode(upperCaseCldrCode);
   }
 
   /**
-   * Parses a string as a country code name.
-   *
-   * @param countryCode country code for a GTFS dataset
-   * @return a valid GtfsCountryCode object
-   * @throws IllegalArgumentException if illegal @param feedName
+   * Returns true if this is the unknown region ("ZZ"). This value is returned by APIs when no
+   * suitable region can be determined, which can indicate bad input or missing data.
    */
-  public static CountryCode parseString(String countryCode) throws IllegalArgumentException {
-    if (countryCode == null) {
-      return new CountryCode(null);
-    }
-    if (isValidISOAlpha2(countryCode)) {
-      return new CountryCode(countryCode);
-    }
-    throw new IllegalArgumentException(INVALID_COUNTRY_CODE_MESSAGE);
+  public boolean isUnknown() {
+    return countryCode.equals(ZZ);
   }
 
   /**
@@ -81,7 +71,7 @@ public class CountryCode {
    *
    * @return uppercase ISO Alpha country code
    */
-  public Optional<String> getCountryCode() {
+  public String getCountryCode() {
     return countryCode;
   }
 
@@ -99,5 +89,10 @@ public class CountryCode {
   @Override
   public int hashCode() {
     return countryCode.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return countryCode;
   }
 }

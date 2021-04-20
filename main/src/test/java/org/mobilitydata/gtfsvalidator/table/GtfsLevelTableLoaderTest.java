@@ -35,7 +35,7 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 /** Runs GtfsLevelTableContainer on test CSV data. */
 @RunWith(JUnit4.class)
 public class GtfsLevelTableLoaderTest {
-  private static final CountryCode TEST_COUNTRY_CODE = CountryCode.parseString("au");
+  private static final CountryCode TEST_COUNTRY_CODE = CountryCode.forStringOrUnknown("au");
   private static final ZonedDateTime TEST_NOW =
       ZonedDateTime.of(2021, 1, 1, 14, 30, 0, 0, ZoneOffset.UTC);
 
