@@ -24,7 +24,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.Iterator;
 import javax.annotation.Nullable;
 import org.apache.commons.io.ByteOrderMark;
@@ -37,9 +36,9 @@ import org.apache.commons.io.input.BOMInputStream;
 public class CsvFile implements Iterable<CsvRow> {
   private final boolean isEmpty;
   private final CsvParser parser;
-  private final HashMap<String, Integer> columnIndices = new HashMap<>();
+
+  private final CsvHeader headers;
   private final String filename;
-  private String[] columnNames;
 
   public CsvFile(InputStream inputStream, String filename) {
     this.filename = filename;
@@ -65,16 +64,18 @@ public class CsvFile implements Iterable<CsvRow> {
     parser = new CsvParser(settings);
     parser.beginParsing(reader);
 
-    columnNames = parser.getContext().headers();
+    String[] columnNames = parser.getContext().headers();
     isEmpty = columnNames == null;
-    if (isEmpty) {
-      // Do not leave them as null.
-      columnNames = new String[] {};
-      return;
-    }
-    for (int i = 0; i < columnNames.length; ++i) {
-      columnIndices.putIfAbsent(columnNames[i], i);
-    }
+    headers = new CsvHeader(columnNames);
+  }
+
+  /**
+   * Returns CSV headers descriptor.
+   *
+   * @return CSV headers
+   */
+  public CsvHeader getHeader() {
+    return headers;
   }
 
   /**
@@ -110,7 +111,7 @@ public class CsvFile implements Iterable<CsvRow> {
     if (columnValues == null) {
       return null;
     }
-    return new CsvRow(this, parser.getContext().currentLine(), columnValues);
+    return new CsvRow(parser.getContext().currentLine(), columnValues);
   }
 
   /**
@@ -120,26 +121,6 @@ public class CsvFile implements Iterable<CsvRow> {
    */
   public String getFileName() {
     return filename;
-  }
-
-  public String[] getColumnNames() {
-    return columnNames;
-  }
-
-  public int getColumnCount() {
-    return columnNames.length;
-  }
-
-  public int getColumnIndex(String columnName) {
-    return columnIndices.getOrDefault(columnName, -1);
-  }
-
-  @Nullable
-  public String getColumnName(int columnIndex) {
-    if (columnNames == null || columnIndex < 0 || columnIndex >= columnNames.length) {
-      return null;
-    }
-    return columnNames[columnIndex];
   }
 
   class CsvFileIterator implements Iterator<CsvRow> {

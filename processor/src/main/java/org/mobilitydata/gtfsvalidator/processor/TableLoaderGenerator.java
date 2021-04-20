@@ -45,6 +45,7 @@ import org.mobilitydata.gtfsvalidator.notice.EmptyFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvFile;
+import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.parsing.CsvRow;
 import org.mobilitydata.gtfsvalidator.parsing.FieldCache;
 import org.mobilitydata.gtfsvalidator.parsing.RowParser;
@@ -226,8 +227,9 @@ public class TableLoaderGenerator {
                     + " noticeContainer)")
             .addStatement("return table")
             .endControlFlow()
+            .addStatement("$T header = csvFile.getHeader()", CsvHeader.class)
             .beginControlFlow(
-                "if (!new $T().validate(FILENAME, csvFile.getColumnNames(), "
+                "if (!new $T().validate(FILENAME, header, "
                     + "getColumnNames(), getRequiredColumnNames(), noticeContainer))",
                 TableHeaderValidator.class)
             .addStatement(
@@ -236,7 +238,7 @@ public class TableLoaderGenerator {
 
     for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
       method.addStatement(
-          "final int $L = csvFile.getColumnIndex($L)",
+          "final int $L = header.getColumnIndex($L)",
           fieldColumnIndex(field.name()),
           fieldNameField(field.name()));
     }
@@ -260,7 +262,8 @@ public class TableLoaderGenerator {
     method
         .addStatement("final $T.Builder builder = new $T.Builder()", gtfsEntityType, gtfsEntityType)
         .addStatement(
-            "final $T rowParser = new $T(validationContext.countryCode(), noticeContainer)",
+            "final $T rowParser = new $T(FILENAME, header, validationContext.countryCode(),"
+                + " noticeContainer)",
             RowParser.class,
             RowParser.class)
         .addStatement(
@@ -349,7 +352,7 @@ public class TableLoaderGenerator {
             "return new $T($T.UNPARSABLE_ROWS)", tableContainerTypeName, TableStatus.class)
         .nextControlFlow("else")
         .addStatement(
-            "$T table = $T.forEntities(entities, noticeContainer)",
+            "$T table = $T.forHeaderAndEntities(header, entities, noticeContainer)",
             tableContainerTypeName,
             tableContainerTypeName)
         .addStatement(
