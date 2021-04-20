@@ -346,12 +346,12 @@ public class RowParserTest {
   }
 
   @Test
-  public void checkRowLengthInvalidRowLength() throws IOException {
+  public void checkRowLengthInvalidRowLength()  {
     RowParser parser =
         new RowParser(
             TEST_FILENAME,
             new CsvHeader(new String[] {"stop_id", "stop_name"}),
-            CountryCode.parseString(TEST_FEED_NAME),
+            CountryCode.parseString(TEST_COUNTRY_CODE),
             new NoticeContainer());
     parser.setRow(new CsvRow(2, new String[] {"s1"}));
 
