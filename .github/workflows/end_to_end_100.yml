@@ -90,7 +90,6 @@ jobs:
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/societe-de-transport-de-loutaouais/828/latest/download --output_base output --country_code ca --storage_directory sto.zip
       - name: Validate dataset from -- TrafikLab (Sweden)
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/trafiklab/50/latest/download --output_base output --country_code se --storage_directory trafiklab.zip
-
       - name: Validate dataset from -- Amtrak (USA)
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/amtrak/1136/latest/download --output_base output --country_code us --storage_directory amtrak.zip
       - name: Validate dataset from -- ATOC (United Kingdom)
@@ -141,7 +140,6 @@ jobs:
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/taiwan/958/latest/download --output_base output --country_code tw --storage_directory nantou.zip
       - name: Validate dataset from -- Miaoli (Miaoli County, Taiwan, Republic of China)
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/taiwan/954/latest/download --output_base output --country_code tw --storage_directory miaoli.zip
-
       - name: Validate dataset from -- BART (San Francisco, CA, USA)
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/bart/58/latest/download --output_base output --country_code us --storage_directory bart.zip
       - name: Validate dataset from -- BC Ferries (Canada)
@@ -192,7 +190,6 @@ jobs:
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/praha/801/latest/download --output_base output --country_code cz --storage_directory praha.zip
       - name: Validate dataset from -- Komunikacja Miejska (Plock, Poland)
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/przyjazdy-pl-plock/1211/latest/download --output_base output --country_code pl --storage_directory plock.zip
-
       - name: Validate dataset from -- ZTZ Rybnik (Rybnik, Poland)
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ztz-rybnik/1114/latest/download --output_base output --country_code pl --storage_directory ztz.zip
       - name: Validate dataset from -- ZTM Poznań (Poznań, Poland)
@@ -243,8 +240,6 @@ jobs:
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/semitan/592/latest/download --output_base output --country_code fr --storage_directory semitan.zip
       - name: Validate dataset from -- STS (Sherbrooke, Canada)
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/societe-de-transport-de-sherbrooke/827/latest/download --output_base output --country_code ca --storage_directory sts.zip
-
-
       - name: Persist datasets
         uses: actions/upload-artifact@v2
         with:
