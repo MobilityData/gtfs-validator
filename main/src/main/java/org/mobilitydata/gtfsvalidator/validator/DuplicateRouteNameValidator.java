@@ -17,9 +17,10 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -31,6 +32,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
 /** Validates that combinations of route type, short and long name are unique within an agency. */
 @GtfsValidator
 public class DuplicateRouteNameValidator extends FileValidator {
+  private static final HashFunction HASH_FUNCTION = Hashing.farmHashFingerprint64();
   private final GtfsRouteTableContainer routeTable;
 
   @Inject
@@ -40,7 +42,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    final Map<Integer, GtfsRoute> routeByKey = new HashMap<>(routeTable.entityCount());
+    final Map<Long, GtfsRoute> routeByKey = new HashMap<>(routeTable.entityCount());
     for (GtfsRoute route : routeTable.getEntities()) {
       GtfsRoute prevRoute = routeByKey.putIfAbsent(getRouteKey(route), route);
       if (prevRoute != null) {
@@ -50,9 +52,17 @@ public class DuplicateRouteNameValidator extends FileValidator {
   }
 
   /** Generates a hash based on route names, type and agency. */
-  private static int getRouteKey(GtfsRoute route) {
-    return Objects.hash(
-        route.routeLongName(), route.routeShortName(), route.routeType(), route.agencyId());
+  private static long getRouteKey(GtfsRoute route) {
+    return HASH_FUNCTION
+        .newHasher()
+        .putUnencodedChars(route.routeLongName())
+        .putChar('\0')
+        .putUnencodedChars(route.routeShortName())
+        .putChar('\0')
+        .putInt(route.routeType().getNumber())
+        .putUnencodedChars(route.agencyId())
+        .hash()
+        .asLong();
   }
 
   /**

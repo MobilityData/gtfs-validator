@@ -27,7 +27,7 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.UrlValidator;
-import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
+import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.notice.EmptyRowNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidColorNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidCurrencyNotice;
@@ -65,13 +65,18 @@ public class RowParser {
 
   public static final boolean REQUIRED = true;
   public static final boolean OPTIONAL = false;
+  private final String fileName;
+  private final CsvHeader header;
+  private final CountryCode countryCode;
   private final NoticeContainer noticeContainer;
-  private final GtfsFeedName feedName;
   private CsvRow row;
   private boolean parseErrorsInRow;
 
-  public RowParser(GtfsFeedName feedName, NoticeContainer noticeContainer) {
-    this.feedName = feedName;
+  public RowParser(
+      String fileName, CsvHeader header, CountryCode countryCode, NoticeContainer noticeContainer) {
+    this.fileName = fileName;
+    this.header = header;
+    this.countryCode = countryCode;
     this.noticeContainer = noticeContainer;
   }
 
@@ -101,22 +106,18 @@ public class RowParser {
       return false;
     }
 
-    CsvFile csvFile = row.getCsvFile();
     if (row.getColumnCount() == 1 && row.asString(0) == null) {
       // If the last row has only spaces and does not end with a newline, then Univocity parser
       // interprets it as a non-empty row that has a single column which is empty (sic!). We are
       // unsure if this is a bug or feature in Univocity, so we show a warning.
-      addNoticeInRow(new EmptyRowNotice(csvFile.getFileName(), row.getRowNumber()));
+      addNoticeInRow(new EmptyRowNotice(fileName, row.getRowNumber()));
       return false;
     }
 
-    if (row.getColumnCount() != csvFile.getColumnCount()) {
+    if (row.getColumnCount() != header.getColumnCount()) {
       addNoticeInRow(
           new InvalidRowLengthNotice(
-              csvFile.getFileName(),
-              row.getRowNumber(),
-              row.getColumnCount(),
-              csvFile.getColumnCount()));
+              fileName, row.getRowNumber(), row.getColumnCount(), header.getColumnCount()));
       return false;
     }
     return true;
@@ -128,19 +129,19 @@ public class RowParser {
     if (required && s == null) {
       addNoticeInRow(
           new MissingRequiredFieldNotice(
-              row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex)));
+              fileName, row.getRowNumber(), header.getColumnName(columnIndex)));
     }
     if (s != null) {
       if (s.indexOf('\n') != -1 || s.indexOf('\r') != -1) {
         addNoticeInRow(
             new NewLineInValueNotice(
-                row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), s));
+                fileName, row.getRowNumber(), header.getColumnName(columnIndex), s));
       }
       final String trimmed = s.trim();
       if (trimmed.length() < s.length()) {
         addNoticeInRow(
             new LeadingOrTrailingWhitespacesNotice(
-                row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), s));
+                fileName, row.getRowNumber(), header.getColumnName(columnIndex), s));
         s = trimmed;
       }
     }
@@ -185,12 +186,23 @@ public class RowParser {
         InvalidEmailNotice::new);
   }
 
+  /**
+   * Returns the string value of the phone number to be validated if a valid number according to the
+   * {@code CountryCode}, returns {@code null} otherwise. Note that if {@code CountryCode} is
+   * unknown, only phone number starting by "+" are validated.
+   *
+   * @param columnIndex the column index
+   * @param required true is the value is required, false otherwise
+   * @return the string value of the phone number to be validated if a valid number according to the
+   *     {@code CountryCode}, returns {@code null} otherwise. Note that if {@code CountryCode} is
+   *     unknown, only phone number starting by "+" are validated.
+   */
   @Nullable
   public String asPhoneNumber(int columnIndex, boolean required) {
     return asValidatedString(
         columnIndex,
         required,
-        s -> PhoneNumberUtil.getInstance().isPossibleNumber(s, feedName.getISOAlpha2CountryCode()),
+        s -> PhoneNumberUtil.getInstance().isPossibleNumber(s, countryCode.getCountryCode()),
         InvalidPhoneNumberNotice::new);
   }
 
@@ -226,9 +238,9 @@ public class RowParser {
     if (value != null && !(-90 <= value && value <= 90)) {
       addNoticeInRow(
           new NumberOutOfRangeNotice(
-              row.getFileName(),
+              fileName,
               row.getRowNumber(),
-              row.getColumnName(columnIndex),
+              header.getColumnName(columnIndex),
               "latitude within [-90, 90]",
               value));
       return null;
@@ -242,9 +254,9 @@ public class RowParser {
     if (value != null && !(-180 <= value && value <= 180)) {
       addNoticeInRow(
           new NumberOutOfRangeNotice(
-              row.getFileName(),
+              fileName,
               row.getRowNumber(),
-              row.getColumnName(columnIndex),
+              header.getColumnName(columnIndex),
               "longitude within [-180, 180]",
               value));
       return null;
@@ -295,9 +307,9 @@ public class RowParser {
         if (compareToZero <= 0) {
           addNoticeInRow(
               new NumberOutOfRangeNotice(
-                  row.getFileName(),
+                  fileName,
                   row.getRowNumber(),
-                  row.getColumnName(columnIndex),
+                  header.getColumnName(columnIndex),
                   "positive " + typeName,
                   value));
         }
@@ -306,9 +318,9 @@ public class RowParser {
         if (compareToZero < 0) {
           addNoticeInRow(
               new NumberOutOfRangeNotice(
-                  row.getFileName(),
+                  fileName,
                   row.getRowNumber(),
-                  row.getColumnName(columnIndex),
+                  header.getColumnName(columnIndex),
                   "non-negative " + typeName,
                   value));
         }
@@ -317,9 +329,9 @@ public class RowParser {
         if (compareToZero == 0) {
           addNoticeInRow(
               new NumberOutOfRangeNotice(
-                  row.getFileName(),
+                  fileName,
                   row.getRowNumber(),
-                  row.getColumnName(columnIndex),
+                  header.getColumnName(columnIndex),
                   "non-zero " + typeName,
                   value));
         }
@@ -342,7 +354,7 @@ public class RowParser {
     if (enumCreator.convert(i) == null) {
       addNoticeInRow(
           new UnexpectedEnumValueNotice(
-              row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), i));
+              fileName, row.getRowNumber(), header.getColumnName(columnIndex), i));
     }
     return i;
   }
@@ -419,7 +431,7 @@ public class RowParser {
       // a ZoneRulesException.
       addNoticeInRow(
           noticingFunction.apply(
-              row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), s));
+              fileName, row.getRowNumber(), header.getColumnName(columnIndex), s));
       return null;
     }
   }
@@ -455,7 +467,7 @@ public class RowParser {
     if (!validatingFunction.test(s)) {
       ValidationNotice notice =
           noticingFunction.apply(
-              row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex), s);
+              fileName, row.getRowNumber(), header.getColumnName(columnIndex), s);
       addNoticeInRow(notice);
       if (isError(notice)) {
         return null;

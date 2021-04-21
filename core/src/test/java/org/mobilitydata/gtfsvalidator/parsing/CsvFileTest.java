@@ -40,9 +40,10 @@ public class CsvFileTest {
   public void emptyFile() throws IOException {
     InputStream inputStream = toInputStream("");
     CsvFile csvFile = new CsvFile(inputStream, "stops.txt");
+    CsvHeader header = csvFile.getHeader();
 
     assertThat(csvFile.isEmpty()).isEqualTo(true);
-    assertThat(csvFile.getColumnCount()).isEqualTo(0);
+    assertThat(header.getColumnCount()).isEqualTo(0);
     assertThat(csvFile.getFileName()).isEqualTo("stops.txt");
     assertThat(csvFile.iterator().hasNext()).isEqualTo(false);
 
@@ -53,11 +54,12 @@ public class CsvFileTest {
   public void headersOnlyFile() throws IOException {
     InputStream inputStream = toInputStream("stop_id,stop_name");
     CsvFile csvFile = new CsvFile(inputStream, "stops.txt");
+    CsvHeader header = csvFile.getHeader();
 
     assertThat(csvFile.isEmpty()).isEqualTo(false);
-    assertThat(csvFile.getColumnCount()).isEqualTo(2);
-    assertThat(csvFile.getColumnName(0)).isEqualTo("stop_id");
-    assertThat(csvFile.getColumnIndex("stop_name")).isEqualTo(1);
+    assertThat(header.getColumnCount()).isEqualTo(2);
+    assertThat(header.getColumnName(0)).isEqualTo("stop_id");
+    assertThat(header.getColumnIndex("stop_name")).isEqualTo(1);
     assertThat(csvFile.getFileName()).isEqualTo("stops.txt");
     assertThat(csvFile.iterator().hasNext()).isEqualTo(false);
 
@@ -70,17 +72,17 @@ public class CsvFileTest {
         toInputStream(
             "stop_id,stop_name,stop_lat\n" + "s1,First stop,3.21\n" + "s2,Second stop,1.31\n");
     CsvFile csvFile = new CsvFile(inputStream, "stops.txt");
+    CsvHeader header = csvFile.getHeader();
 
     assertThat(csvFile.isEmpty()).isEqualTo(false);
-    assertThat(csvFile.getColumnCount()).isEqualTo(3);
-    assertThat(csvFile.getColumnName(0)).isEqualTo("stop_id");
-    assertThat(csvFile.getColumnIndex("stop_name")).isEqualTo(1);
+    assertThat(header.getColumnCount()).isEqualTo(3);
+    assertThat(header.getColumnName(0)).isEqualTo("stop_id");
+    assertThat(header.getColumnIndex("stop_name")).isEqualTo(1);
     assertThat(csvFile.getFileName()).isEqualTo("stops.txt");
 
     Iterator<CsvRow> iterator = csvFile.iterator();
     assertThat(iterator.hasNext()).isEqualTo(true);
     CsvRow row = iterator.next();
-    assertThat(row.getFileName()).isEqualTo("stops.txt");
     assertThat(row.asString(0)).isEqualTo("s1");
     assertThat(row.asString(2)).isEqualTo("3.21");
     assertThat(row.asString(200)).isNull();
@@ -104,17 +106,17 @@ public class CsvFileTest {
                 + "s1,First stop,3.21\r\n"
                 + "s2,Second stop,1.31\r\n");
     CsvFile csvFile = new CsvFile(inputStream, "stops.txt");
+    CsvHeader header = csvFile.getHeader();
 
     assertThat(csvFile.isEmpty()).isEqualTo(false);
-    assertThat(csvFile.getColumnCount()).isEqualTo(3);
-    assertThat(csvFile.getColumnName(0)).isEqualTo("stop_id");
-    assertThat(csvFile.getColumnIndex("stop_name")).isEqualTo(1);
+    assertThat(header.getColumnCount()).isEqualTo(3);
+    assertThat(header.getColumnName(0)).isEqualTo("stop_id");
+    assertThat(header.getColumnIndex("stop_name")).isEqualTo(1);
     assertThat(csvFile.getFileName()).isEqualTo("stops.txt");
 
     Iterator<CsvRow> iterator = csvFile.iterator();
     assertThat(iterator.hasNext()).isEqualTo(true);
     CsvRow row = iterator.next();
-    assertThat(row.getFileName()).isEqualTo("stops.txt");
     assertThat(row.asString(0)).isEqualTo("s1");
     assertThat(row.asString(2)).isEqualTo("3.21");
     assertThat(row.asString(200)).isNull();
@@ -164,8 +166,9 @@ public class CsvFileTest {
                 ByteOrderMark.UTF_8.getBytes(),
                 ("stop_id,stop_name\n" + "s1,First stop\n").getBytes(StandardCharsets.UTF_8)));
     CsvFile csvFile = new CsvFile(inputStream, "stops.txt");
+    CsvHeader header = csvFile.getHeader();
 
-    assertThat(csvFile.getColumnNames()).asList().containsExactly("stop_id", "stop_name");
+    assertThat(header.getColumnNames()).asList().containsExactly("stop_id", "stop_name");
 
     Iterator<CsvRow> iterator = csvFile.iterator();
     assertThat(iterator.hasNext()).isEqualTo(true);

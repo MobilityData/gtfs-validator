@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.table;
 
 import java.util.List;
+import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 
 /**
  * Container for {@code GtfsEntity} instances for the whole GTFS table, e.g., stops.txt.
@@ -31,12 +32,19 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
 
   private final TableStatus tableStatus;
 
-  public GtfsTableContainer(TableStatus tableStatus) {
+  private final CsvHeader header;
+
+  public GtfsTableContainer(TableStatus tableStatus, CsvHeader header) {
     this.tableStatus = tableStatus;
+    this.header = header;
   }
 
   public TableStatus getTableStatus() {
     return tableStatus;
+  }
+
+  public CsvHeader getHeader() {
+    return header;
   }
 
   public abstract Class<T> getEntityClass();

@@ -26,25 +26,26 @@ import org.mobilitydata.gtfsvalidator.notice.EmptyColumnNameNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredColumnNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.UnknownColumnNotice;
+import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 
 /** A validator that checks table headers for required columns etc. */
 public class TableHeaderValidator {
   public boolean validate(
       String filename,
-      String[] actualColumns,
+      CsvHeader actualHeader,
       Set<String> supportedColumns,
       Set<String> requiredColumns,
       NoticeContainer noticeContainer) {
     boolean isValid = true;
-    if (actualColumns.length == 0) {
+    if (actualHeader.getColumnCount() == 0) {
       // This is an empty file.
       return isValid;
     }
     Map<String, Integer> columnIndices = new HashMap<>();
     // Sorted tree set for stable order of notices.
     TreeSet<String> missingColumns = new TreeSet<>(requiredColumns);
-    for (int i = 0; i < actualColumns.length; ++i) {
-      String column = actualColumns[i];
+    for (int i = 0; i < actualHeader.getColumnCount(); ++i) {
+      String column = actualHeader.getColumnName(i);
       // Column indices are zero-based. We add 1 to make them 1-based.
       if (Strings.isNullOrEmpty(column)) {
         noticeContainer.addValidationNotice(new EmptyColumnNameNotice(filename, i + 1));
