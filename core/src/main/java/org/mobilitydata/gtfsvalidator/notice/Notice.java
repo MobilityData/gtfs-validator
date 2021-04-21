@@ -81,4 +81,16 @@ public abstract class Notice {
   public int hashCode() {
     return Objects.hash(getClass(), getContext(), getSeverityLevel());
   }
+
+  /**
+   * Tells if this notice is an {@code ERROR}.
+   *
+   * <p>This method is preferred to checking {@code severityLevel} directly since more levels may be
+   * added in the future.
+   *
+   * @return true if this notice is an error, false otherwise
+   */
+  public boolean isError() {
+    return getSeverityLevel().ordinal() >= SeverityLevel.ERROR.ordinal();
+  }
 }

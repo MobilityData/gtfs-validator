@@ -42,31 +42,27 @@ import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
+import org.mobilitydata.gtfsvalidator.validator.DefaultFieldValidator;
+import org.mobilitydata.gtfsvalidator.validator.GtfsFieldValidator;
 
 @RunWith(JUnit4.class)
 public class RowParserTest {
 
-  private static String TEST_COUNTRY_CODE = "au";
+  private static CountryCode TEST_COUNTRY_CODE = CountryCode.forStringOrUnknown("AU");
   private static String TEST_FILENAME = "stops.txt";
 
   private static InputStream toInputStream(String s) {
     return new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
   }
 
-  private RowParser createParser(String countryCode, String cellValue) {
-    NoticeContainer noticeContainer = new NoticeContainer();
-    RowParser parser =
-        new RowParser(
-            TEST_FILENAME,
-            new CsvHeader(new String[] {"column name"}),
-            CountryCode.forStringOrUnknown(countryCode),
-            noticeContainer);
-    parser.setRow(new CsvRow(8, new String[] {cellValue}));
-    return parser;
-  }
+  private static GtfsFieldValidator FIELD_VALIDATOR = new DefaultFieldValidator(TEST_COUNTRY_CODE);
 
   private RowParser createParser(String cellValue) {
-    return createParser(TEST_COUNTRY_CODE, cellValue);
+    NoticeContainer noticeContainer = new NoticeContainer();
+    RowParser parser =
+        new RowParser(TEST_FILENAME, new CsvHeader(new String[] {"column name"}), FIELD_VALIDATOR);
+    parser.setRow(new CsvRow(8, new String[] {cellValue}), noticeContainer);
+    return parser;
   }
 
   @Test
@@ -78,7 +74,6 @@ public class RowParserTest {
   public void asUrlInvalid() {
     RowParser parser = createParser("invalid");
     assertThat(parser.asUrl(0, true)).isNull();
-    assertThat(parser.hasParseErrorsInRow()).isTrue();
     assertThat(parser.getNoticeContainer().getValidationNotices())
         .containsExactly(new InvalidUrlNotice(TEST_FILENAME, 8, "column name", "invalid"));
   }
@@ -153,7 +148,6 @@ public class RowParserTest {
   public void asEmailInvalid() {
     RowParser parser = createParser("invalid");
     assertThat(parser.asEmail(0, true)).isNull();
-    assertThat(parser.hasParseErrorsInRow()).isTrue();
     assertThat(parser.getNoticeContainer().getValidationNotices())
         .containsExactly(new InvalidEmailNotice(TEST_FILENAME, 8, "column name", "invalid"));
   }
@@ -189,39 +183,15 @@ public class RowParserTest {
 
   @Test
   public void asPhoneNumber() {
-    assertThat(createParser("us", "(650) 253-0000").asPhoneNumber(0, true))
-        .isEqualTo("(650) 253-0000");
-    assertThat(createParser("zz", "+1 (650) 253-0000").asPhoneNumber(0, true))
-        .isEqualTo("+1 (650) 253-0000");
-    assertThat(createParser("ch", "044 668 18 00").asPhoneNumber(0, true))
-        .isEqualTo("044 668 18 00");
-    assertThat(createParser("nl", "+49 341 913 540 42").asPhoneNumber(0, true))
-        .isEqualTo("+49 341 913 540 42");
-    assertThat(createParser("nl", "004980038762246").asPhoneNumber(0, true))
-        .isEqualTo("004980038762246");
+    assertThat(createParser("(650) 253-0000").asPhoneNumber(0, true)).isEqualTo("(650) 253-0000");
   }
 
   @Test
   public void asPhoneInvalid() {
-    RowParser parser = createParser("us", "invalid");
+    RowParser parser = createParser("invalid");
     assertThat(parser.asPhoneNumber(0, true)).isNull();
-    assertThat(parser.hasParseErrorsInRow()).isTrue();
     assertThat(parser.getNoticeContainer().getValidationNotices())
         .containsExactly(new InvalidPhoneNumberNotice(TEST_FILENAME, 8, "column name", "invalid"));
-
-    parser = createParser("nl", "003280038762246");
-    assertThat(parser.asPhoneNumber(0, true)).isNull();
-    assertThat(parser.hasParseErrorsInRow()).isTrue();
-    assertThat(parser.getNoticeContainer().getValidationNotices())
-        .containsExactly(
-            new InvalidPhoneNumberNotice(TEST_FILENAME, 8, "column name", "003280038762246"));
-
-    parser = createParser("zz", "003280038762246");
-    assertThat(parser.asPhoneNumber(0, true)).isNull();
-    assertThat(parser.hasParseErrorsInRow()).isTrue();
-    assertThat(parser.getNoticeContainer().getValidationNotices())
-        .containsExactly(
-            new InvalidPhoneNumberNotice(TEST_FILENAME, 8, "column name", "003280038762246"));
   }
 
   @Test
@@ -260,18 +230,7 @@ public class RowParserTest {
         .containsExactly(
             new NonAsciiOrNonPrintableCharNotice(TEST_FILENAME, 8L, "column name", "קום"));
     // Non-ASCII characters in ID are not an error. Validation may continue.
-    assertThat(parser.hasParseErrorsInRow()).isFalse();
-  }
-
-  @Test
-  public void hasOnlyPrintableAscii() {
-    assertThat(RowParser.hasOnlyPrintableAscii("abc")).isTrue();
-    assertThat(RowParser.hasOnlyPrintableAscii("a bc")).isTrue();
-    assertThat(RowParser.hasOnlyPrintableAscii("@<>&*()!")).isTrue();
-    // Cyrillic - not ASCII.
-    assertThat(RowParser.hasOnlyPrintableAscii("Привет!")).isFalse();
-    // Non-printable.
-    assertThat(RowParser.hasOnlyPrintableAscii("\01\23")).isFalse();
+    assertThat(parser.getNoticeContainer().hasValidationErrors()).isFalse();
   }
 
   @Test
@@ -302,7 +261,7 @@ public class RowParserTest {
     assertThat(parser.asInteger(0, true)).isEqualTo(1);
     LeadingOrTrailingWhitespacesNotice notice =
         new LeadingOrTrailingWhitespacesNotice(TEST_FILENAME, 8, "column name", " 1\t");
-    assertThat(parser.hasParseErrorsInRow())
+    assertThat(parser.getNoticeContainer().hasValidationErrors())
         .isEqualTo(notice.getSeverityLevel() == SeverityLevel.ERROR);
     assertThat(parser.getNoticeContainer().getValidationNotices()).containsExactly(notice);
   }
@@ -311,7 +270,7 @@ public class RowParserTest {
   public void newLineInValue() {
     RowParser parser = createParser("a\nb");
     assertThat(parser.asText(0, true)).isEqualTo("a\nb");
-    assertThat(parser.hasParseErrorsInRow()).isTrue();
+    assertThat(parser.getNoticeContainer().hasValidationErrors()).isTrue();
     assertThat(parser.getNoticeContainer().getValidationNotices())
         .containsExactly(new NewLineInValueNotice(TEST_FILENAME, 8, "column name", "a\nb"));
   }
@@ -320,7 +279,7 @@ public class RowParserTest {
   public void carriageReturnInValue() {
     RowParser parser = createParser("a\rb");
     assertThat(parser.asText(0, true)).isEqualTo("a\rb");
-    assertThat(parser.hasParseErrorsInRow()).isTrue();
+    assertThat(parser.getNoticeContainer().hasValidationErrors()).isTrue();
     assertThat(parser.getNoticeContainer().getValidationNotices())
         .containsExactly(new NewLineInValueNotice(TEST_FILENAME, 8, "column name", "a\rb"));
   }
@@ -336,16 +295,11 @@ public class RowParserTest {
     assertThat(csvFile.getHeader().getColumnCount()).isEqualTo(2);
 
     CsvRow csvRow = csvFile.iterator().next();
-    RowParser parser =
-        new RowParser(
-            csvFile.getFileName(),
-            csvFile.getHeader(),
-            CountryCode.forStringOrUnknown(TEST_COUNTRY_CODE),
-            new NoticeContainer());
-    parser.setRow(csvRow);
+    RowParser parser = new RowParser(csvFile.getFileName(), csvFile.getHeader(), FIELD_VALIDATOR);
+    parser.setRow(csvRow, new NoticeContainer());
 
     assertThat(parser.checkRowLength()).isFalse();
-    assertThat(parser.hasParseErrorsInRow()).isFalse();
+    assertThat(parser.getNoticeContainer().hasValidationErrors()).isFalse();
     assertThat(parser.getNoticeContainer().getValidationNotices())
         .containsExactly(new EmptyRowNotice(TEST_FILENAME, 2));
 
@@ -356,14 +310,11 @@ public class RowParserTest {
   public void checkRowLengthInvalidRowLength() {
     RowParser parser =
         new RowParser(
-            TEST_FILENAME,
-            new CsvHeader(new String[] {"stop_id", "stop_name"}),
-            CountryCode.forStringOrUnknown(TEST_COUNTRY_CODE),
-            new NoticeContainer());
-    parser.setRow(new CsvRow(2, new String[] {"s1"}));
+            TEST_FILENAME, new CsvHeader(new String[] {"stop_id", "stop_name"}), FIELD_VALIDATOR);
+    parser.setRow(new CsvRow(2, new String[] {"s1"}), new NoticeContainer());
 
     assertThat(parser.checkRowLength()).isFalse();
-    assertThat(parser.hasParseErrorsInRow()).isTrue();
+    assertThat(parser.getNoticeContainer().hasValidationErrors()).isTrue();
     assertThat(parser.getNoticeContainer().getValidationNotices())
         .containsExactly(new InvalidRowLengthNotice(TEST_FILENAME, 2, 1, 2));
   }

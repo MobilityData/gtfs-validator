@@ -32,13 +32,12 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsLoader;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.RuntimeExceptionInLoaderError;
-import org.mobilitydata.gtfsvalidator.notice.RuntimeExceptionInValidatorError;
 import org.mobilitydata.gtfsvalidator.notice.ThreadExecutionError;
 import org.mobilitydata.gtfsvalidator.notice.ThreadInterruptedError;
 import org.mobilitydata.gtfsvalidator.notice.UnknownFileNotice;
 import org.mobilitydata.gtfsvalidator.validator.FileValidator;
-import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
-import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
+import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
+import org.mobilitydata.gtfsvalidator.validator.ValidatorUtil;
 
 /**
  * Loader for a whole GTFS feed with all its CSV files.
@@ -88,10 +87,7 @@ public class GtfsFeedLoader {
   }
 
   public GtfsFeedContainer loadAndValidate(
-      GtfsInput gtfsInput,
-      ValidationContext validationContext,
-      ValidatorLoader validatorLoader,
-      NoticeContainer noticeContainer) {
+      GtfsInput gtfsInput, ValidatorProvider validatorProvider, NoticeContainer noticeContainer) {
     logger.atInfo().log("Loading in %d threads", numThreads);
     ExecutorService exec = Executors.newFixedThreadPool(numThreads);
 
@@ -109,8 +105,7 @@ public class GtfsFeedLoader {
               NoticeContainer loaderNotices = new NoticeContainer();
               GtfsTableContainer tableContainer;
               try {
-                tableContainer =
-                    loader.load(inputStream, validationContext, validatorLoader, loaderNotices);
+                tableContainer = loader.load(inputStream, validatorProvider, loaderNotices);
               } catch (RuntimeException e) {
                 // This handler should prevent ExecutionException for
                 // this thread. We catch an exception here for storing
@@ -121,8 +116,7 @@ public class GtfsFeedLoader {
                         filename, e.getClass().getCanonicalName(), e.getMessage()));
                 // Since the file was not loaded successfully, we treat
                 // it as missing for continuing validation.
-                tableContainer =
-                    loader.loadMissingFile(validationContext, validatorLoader, loaderNotices);
+                tableContainer = loader.loadMissingFile(validatorProvider, loaderNotices);
               } finally {
                 inputStream.close();
               }
@@ -133,8 +127,7 @@ public class GtfsFeedLoader {
     ArrayList<GtfsTableContainer<?>> tableContainers = new ArrayList<>();
     tableContainers.ensureCapacity(tableLoaders.size());
     for (GtfsTableLoader loader : remainingLoaders.values()) {
-      tableContainers.add(
-          loader.loadMissingFile(validationContext, validatorLoader, noticeContainer));
+      tableContainers.add(loader.loadMissingFile(validatorProvider, noticeContainer));
     }
     try {
       try {
@@ -173,25 +166,12 @@ public class GtfsFeedLoader {
         return feed;
       }
       List<Callable<NoticeContainer>> validatorCallables = new ArrayList<>();
-      for (FileValidator validator :
-          validatorLoader.createMultiFileValidators(feed, validationContext)) {
+      for (FileValidator validator : validatorProvider.createMultiFileValidators(feed)) {
         validatorCallables.add(
             () -> {
               NoticeContainer validatorNotices = new NoticeContainer();
-              try {
-                validator.validate(validatorNotices);
-              } catch (RuntimeException e) {
-                // This handler should prevent ExecutionException for
-                // this thread. We catch an exception here for storing
-                // the context since we know validator class name here.
-                logger.atSevere().withCause(e).log(
-                    "Runtime exception in validator %s", validator.getClass().getCanonicalName());
-                validatorNotices.addSystemError(
-                    new RuntimeExceptionInValidatorError(
-                        validator.getClass().getCanonicalName(),
-                        e.getClass().getCanonicalName(),
-                        e.getMessage()));
-              }
+              ValidatorUtil.safeValidate(
+                  validator::validate, validator.getClass(), validatorNotices);
               return validatorNotices;
             });
       }

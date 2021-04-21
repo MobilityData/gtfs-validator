@@ -29,6 +29,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.validator.DefaultValidatorProvider;
 import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
@@ -46,16 +47,23 @@ public class GtfsLevelTableLoaderTest {
     return new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
   }
 
+  private static GtfsLevelTableContainer load(
+      InputStream inputStream, NoticeContainer noticeContainer) {
+    ValidatorLoader validatorLoader = new ValidatorLoader();
+    GtfsLevelTableLoader loader = new GtfsLevelTableLoader();
+    return (GtfsLevelTableContainer)
+        loader.load(
+            inputStream,
+            new DefaultValidatorProvider(VALIDATION_CONTEXT, validatorLoader),
+            noticeContainer);
+  }
+
   @Test
   public void validFile() throws IOException {
-    ValidatorLoader validatorLoader = new ValidatorLoader();
     InputStream inputStream =
         toInputStream("level_id,level_name,level_index\n" + "level1,Ground,1\n");
-    GtfsLevelTableLoader loader = new GtfsLevelTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
-    GtfsLevelTableContainer tableContainer =
-        (GtfsLevelTableContainer)
-            loader.load(inputStream, VALIDATION_CONTEXT, validatorLoader, noticeContainer);
+    GtfsLevelTableContainer tableContainer = load(inputStream, noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices()).isEmpty();
     assertThat(tableContainer.entityCount()).isEqualTo(1);
@@ -70,13 +78,9 @@ public class GtfsLevelTableLoaderTest {
 
   @Test
   public void missingRequiredField() throws IOException {
-    ValidatorLoader validatorLoader = new ValidatorLoader();
     InputStream inputStream = toInputStream("level_id,level_name,level_index\n" + ",Ground,1\n");
-    GtfsLevelTableLoader loader = new GtfsLevelTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
-    GtfsLevelTableContainer tableContainer =
-        (GtfsLevelTableContainer)
-            loader.load(inputStream, VALIDATION_CONTEXT, validatorLoader, noticeContainer);
+    GtfsLevelTableContainer tableContainer = load(inputStream, noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices()).isNotEmpty();
     assertThat(tableContainer.entityCount()).isEqualTo(0);
@@ -85,13 +89,9 @@ public class GtfsLevelTableLoaderTest {
 
   @Test
   public void emptyFile() throws IOException {
-    ValidatorLoader validatorLoader = new ValidatorLoader();
     InputStream inputStream = toInputStream("");
-    GtfsLevelTableLoader loader = new GtfsLevelTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
-    GtfsLevelTableContainer tableContainer =
-        (GtfsLevelTableContainer)
-            loader.load(inputStream, VALIDATION_CONTEXT, validatorLoader, noticeContainer);
+    load(inputStream, noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices()).isNotEmpty();
     assertThat(noticeContainer.getValidationNotices().get(0).getClass().getSimpleName())
