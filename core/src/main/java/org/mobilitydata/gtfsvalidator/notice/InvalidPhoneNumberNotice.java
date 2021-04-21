@@ -26,13 +26,15 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p><a href="https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md">GTFS
  * reference</a> does not provide any special requirements or standards.
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class InvalidPhoneNumberNotice extends ValidationNotice {
 
   public InvalidPhoneNumberNotice(
-      String filename, long csvRowNumber, String fieldName, String fieldValue) {
+      String filename,
+      long csvRowNumber,
+      String fieldName,
+      String fieldValue,
+      SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "filename",
@@ -43,6 +45,11 @@ public class InvalidPhoneNumberNotice extends ValidationNotice {
             fieldName,
             "fieldValue",
             fieldValue),
-        SeverityLevel.ERROR);
+        severityLevel);
+  }
+
+  public InvalidPhoneNumberNotice(
+      String filename, long csvRowNumber, String fieldName, String fieldValue) {
+    this(filename, csvRowNumber, fieldName, fieldValue, SeverityLevel.ERROR);
   }
 }
