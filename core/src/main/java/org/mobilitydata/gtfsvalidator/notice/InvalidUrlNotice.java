@@ -34,12 +34,19 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p>However, some production feeds may use certain characters without escaping and those URL may
  * be still openable in modern browsers.
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class InvalidUrlNotice extends ValidationNotice {
 
-  public InvalidUrlNotice(String filename, long csvRowNumber, String fieldName, String fieldValue) {
+  /**
+   * Constructs a notice with given severity. This constructor may be used by users that want to
+   * lower the priority to {@code WARNING}.
+   */
+  public InvalidUrlNotice(
+      String filename,
+      long csvRowNumber,
+      String fieldName,
+      String fieldValue,
+      SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "filename",
@@ -50,6 +57,11 @@ public class InvalidUrlNotice extends ValidationNotice {
             fieldName,
             "fieldValue",
             fieldValue),
-        SeverityLevel.ERROR);
+        severityLevel);
+  }
+
+  /** Constructs a notice with the default severity {@code ERROR}. */
+  public InvalidUrlNotice(String filename, long csvRowNumber, String fieldName, String fieldValue) {
+    this(filename, csvRowNumber, fieldName, fieldValue, SeverityLevel.ERROR);
   }
 }
