@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -37,31 +38,29 @@ public class GtfsZipFileInputTest {
   @Test
   public void skipFilesInDirectories() throws IOException {
     File zipFile = tmpDir.newFile("archived.zip");
-    ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFile));
+    try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFile))) {
+      out.putNextEntry(new ZipEntry("stops.txt"));
+      out.closeEntry();
 
-    out.putNextEntry(new ZipEntry("stops.txt"));
-    out.closeEntry();
+      out.putNextEntry(new ZipEntry("nested/file.txt"));
+      out.closeEntry();
+    }
 
-    out.putNextEntry(new ZipEntry("nested/file.txt"));
-    out.closeEntry();
-
-    out.close();
-
-    GtfsInput gtfsInput = GtfsInput.createFromPath(zipFile.toPath());
-    assertThat(gtfsInput.getFilenames()).containsExactly("stops.txt");
+    try (GtfsZipFileInput gtfsInput = new GtfsZipFileInput(new ZipFile(zipFile))) {
+      assertThat(gtfsInput.getFilenames()).containsExactly("stops.txt");
+    }
   }
 
   @Test
   public void noFileExtension() throws IOException {
     File zipFile = tmpDir.newFile("archived.zip");
-    ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFile));
+    try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFile))) {
+      out.putNextEntry(new ZipEntry("noext"));
+      out.closeEntry();
+    }
 
-    out.putNextEntry(new ZipEntry("noext"));
-    out.closeEntry();
-
-    out.close();
-
-    GtfsInput gtfsInput = GtfsInput.createFromPath(zipFile.toPath());
-    assertThat(gtfsInput.getFilenames()).containsExactly("noext");
+    try (GtfsZipFileInput gtfsInput = new GtfsZipFileInput(new ZipFile(zipFile))) {
+      assertThat(gtfsInput.getFilenames()).containsExactly("noext");
+    }
   }
 }

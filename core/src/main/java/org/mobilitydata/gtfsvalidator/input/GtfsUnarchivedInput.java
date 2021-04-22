@@ -50,4 +50,9 @@ public class GtfsUnarchivedInput extends GtfsInput {
   public InputStream getFile(String filename) throws IOException {
     return Files.newInputStream(directory.resolve(filename));
   }
+
+  @Override
+  public void close() throws IOException {
+    // Do nothing.
+  }
 }

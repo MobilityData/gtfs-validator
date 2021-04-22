@@ -102,6 +102,12 @@ public class Main {
             .build();
     feedContainer =
         feedLoader.loadAndValidate(gtfsInput, validationContext, validatorLoader, noticeContainer);
+    try {
+      gtfsInput.close();
+    } catch (IOException e) {
+      logger.atSevere().withCause(e).log("Cannot close GTFS input");
+      noticeContainer.addSystemError(new IOError(e.getMessage()));
+    }
 
     // Output
     exportReport(noticeContainer, args);
