@@ -37,6 +37,7 @@ public class CurrentDateTimeTest {
   @Test
   public void testEquals() {
     assertThat(new CurrentDateTime(TEST_NOW).equals(new CurrentDateTime(TEST_NOW))).isTrue();
-    assertThat(new CurrentDateTime(TEST_NOW).equals(new CurrentDateTime(OTHER_DATE_TIME))).isFalse();
+    assertThat(new CurrentDateTime(TEST_NOW).equals(new CurrentDateTime(OTHER_DATE_TIME)))
+        .isFalse();
   }
 }
