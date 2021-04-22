@@ -23,7 +23,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Locale;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.input.CountryCode;
+import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
@@ -31,16 +31,12 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.validator.FeedExpirationDateValidator.FeedExpirationDateNotice;
 
 public class FeedExpirationDateValidatorTest {
-  private static final CountryCode TEST_COUNTRY_CODE = CountryCode.forStringOrUnknown("au");
   private static final ZonedDateTime TEST_NOW =
       ZonedDateTime.of(2021, 1, 1, 14, 30, 0, 0, ZoneOffset.UTC);
 
-  private static final ValidationContext VALIDATION_CONTEXT =
-      ValidationContext.builder().setCountryCode(TEST_COUNTRY_CODE).setNow(TEST_NOW).build();
-
   private List<ValidationNotice> validateFeedInfo(GtfsFeedInfo feedInfo) {
     NoticeContainer container = new NoticeContainer();
-    new FeedExpirationDateValidator(VALIDATION_CONTEXT).validate(feedInfo, container);
+    new FeedExpirationDateValidator(new CurrentDateTime(TEST_NOW)).validate(feedInfo, container);
     return container.getValidationNotices();
   }
 

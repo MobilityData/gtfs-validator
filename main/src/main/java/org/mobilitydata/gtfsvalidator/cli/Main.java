@@ -29,6 +29,7 @@ import java.nio.file.Paths;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
+import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -39,6 +40,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
 import org.mobilitydata.gtfsvalidator.validator.DefaultValidatorProvider;
 import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
+import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 
 /** The main entry point for GTFS Validator CLI. */
 public class Main {
@@ -52,7 +54,13 @@ public class Main {
       System.exit(1);
     }
 
-    ValidatorLoader validatorLoader = new ValidatorLoader();
+    ValidatorLoader validatorLoader = null;
+    try {
+      validatorLoader = new ValidatorLoader();
+    } catch (ValidatorLoaderException e) {
+      logger.atSevere().withCause(e).log("Cannot load validator classes");
+      System.exit(1);
+    }
     GtfsFeedLoader feedLoader = new GtfsFeedLoader();
 
     System.out.println("Country code: " + args.getCountryCode());
@@ -99,7 +107,7 @@ public class Main {
             .setCountryCode(
                 CountryCode.forStringOrUnknown(
                     args.getCountryCode() == null ? CountryCode.ZZ : args.getCountryCode()))
-            .setNow(ZonedDateTime.now(ZoneId.systemDefault()))
+            .setCurrentDateTime(new CurrentDateTime(ZonedDateTime.now(ZoneId.systemDefault())))
             .build();
     feedContainer =
         feedLoader.loadAndValidate(
