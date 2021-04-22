@@ -16,11 +16,12 @@
 
 package org.mobilitydata.gtfsvalidator.input;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSet.Builder;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Set;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
@@ -31,18 +32,20 @@ import org.apache.commons.compress.archivers.zip.ZipFile;
  * <p>The underlying Apache Commons ZipFile supports reading local files as well as bytes in memory.
  */
 public class GtfsZipFileInput extends GtfsInput {
-  private final Set<String> filenames = new HashSet<>();
+  private final ImmutableSet<String> filenames;
   private final ZipFile zipFile;
 
   public GtfsZipFileInput(ZipFile zipFile) {
     this.zipFile = zipFile;
 
+    ImmutableSet.Builder<String> filenamesBuilder = new Builder<>();
     for (Enumeration<ZipArchiveEntry> entries = zipFile.getEntries(); entries.hasMoreElements(); ) {
       ZipArchiveEntry entry = entries.nextElement();
       if (!isInsideZipDirectory(entry)) {
-        filenames.add(entry.getName());
+        filenamesBuilder.add(entry.getName());
       }
     }
+    filenames = filenamesBuilder.build();
   }
 
   static boolean isInsideZipDirectory(ZipArchiveEntry entry) {
