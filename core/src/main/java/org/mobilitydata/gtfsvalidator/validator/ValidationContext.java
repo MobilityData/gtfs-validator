@@ -17,7 +17,9 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import com.google.auto.value.AutoValue;
+import com.google.auto.value.AutoValue.CopyAnnotations;
 import java.time.ZonedDateTime;
+import javax.annotation.Nullable;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 
@@ -51,6 +53,7 @@ public abstract class ValidationContext {
    *
    * @return The time when validation started as {@code CurrentDateTime}
    */
+  @Nullable
   public abstract CurrentDateTime currentDateTime();
 
   /**
@@ -83,7 +86,7 @@ public abstract class ValidationContext {
   public abstract static class Builder {
     public abstract Builder setCountryCode(CountryCode countryCode);
 
-    public abstract Builder setCurrentDateTime(CurrentDateTime currentDateTime);
+    public abstract Builder setCurrentDateTime(@Nullable CurrentDateTime currentDateTime);
 
     public abstract Builder setNow(ZonedDateTime now);
 
