@@ -29,6 +29,10 @@ import com.google.common.collect.ImmutableMap;
  */
 public class InvalidEmailNotice extends ValidationNotice {
 
+  /**
+   * Constructs a notice with given severity. This constructor may be used by users that want to
+   * lower the priority to {@code WARNING}.
+   */
   public InvalidEmailNotice(
       String filename,
       long csvRowNumber,
@@ -48,6 +52,7 @@ public class InvalidEmailNotice extends ValidationNotice {
         severityLevel);
   }
 
+  /** Constructs a notice with the default severity {@code ERROR}. */
   public InvalidEmailNotice(
       String filename, long csvRowNumber, String fieldName, String fieldValue) {
     this(filename, csvRowNumber, fieldName, fieldValue, SeverityLevel.ERROR);

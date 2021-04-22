@@ -37,6 +37,10 @@ import com.google.common.collect.ImmutableMap;
  */
 public class InvalidUrlNotice extends ValidationNotice {
 
+  /**
+   * Constructs a notice with given severity. This constructor may be used by users that want to
+   * lower the priority to {@code WARNING}.
+   */
   public InvalidUrlNotice(
       String filename,
       long csvRowNumber,
@@ -56,6 +60,7 @@ public class InvalidUrlNotice extends ValidationNotice {
         severityLevel);
   }
 
+  /** Constructs a notice with the default severity {@code ERROR}. */
   public InvalidUrlNotice(String filename, long csvRowNumber, String fieldName, String fieldValue) {
     this(filename, csvRowNumber, fieldName, fieldValue, SeverityLevel.ERROR);
   }
