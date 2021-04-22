@@ -48,7 +48,7 @@ public abstract class ValidationContext {
    *   <li>unit tests may need to override the current time.
    * </ul>
    *
-   * @return The time when validation started as @{code CurrentDateTime}
+   * @return The time when validation started as {@code CurrentDateTime}
    */
   public abstract CurrentDateTime currentDateTime();
 
