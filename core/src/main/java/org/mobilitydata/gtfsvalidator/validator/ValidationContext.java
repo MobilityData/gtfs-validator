@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import com.google.auto.value.AutoValue;
+import java.time.ZonedDateTime;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 
@@ -52,6 +53,21 @@ public abstract class ValidationContext {
    */
   public abstract CurrentDateTime currentDateTime();
 
+  /**
+   * The time when validation started.
+   *
+   * <p>Validator code should use this property instead of calling LocalDate.now() etc. for the
+   * following reasons:
+   *
+   * <ul>
+   *   <li>current date and time is changing but it should not randomly affect validation notices;
+   *   <li>unit tests may need to override the current time.
+   * </ul>
+   *
+   * @return The time when validation started as {@code ZonedDateTime}
+   */
+  public abstract ZonedDateTime now();
+
   public <T> T get(Class clazz) {
     if (CountryCode.class.isAssignableFrom(clazz)) {
       return (T) countryCode();
@@ -68,6 +84,8 @@ public abstract class ValidationContext {
     public abstract Builder setCountryCode(CountryCode countryCode);
 
     public abstract Builder setCurrentDateTime(CurrentDateTime currentDateTime);
+
+    public abstract Builder setNow(ZonedDateTime now);
 
     public abstract ValidationContext build();
   }

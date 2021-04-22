@@ -28,7 +28,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
-import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.validator.DefaultValidatorProvider;
 import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
@@ -38,14 +37,11 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 @RunWith(JUnit4.class)
 public class GtfsLevelTableLoaderTest {
   private static final CountryCode TEST_COUNTRY_CODE = CountryCode.forStringOrUnknown("au");
-  private static final CurrentDateTime TEST_CURRENT_DATE_TIME =
-      new CurrentDateTime(ZonedDateTime.of(2021, 1, 1, 14, 30, 0, 0, ZoneOffset.UTC));
+  private static final ZonedDateTime TEST_NOW =
+      ZonedDateTime.of(2021, 1, 1, 14, 30, 0, 0, ZoneOffset.UTC);
 
   private static final ValidationContext VALIDATION_CONTEXT =
-      ValidationContext.builder()
-          .setCountryCode(TEST_COUNTRY_CODE)
-          .setCurrentDateTime(TEST_CURRENT_DATE_TIME)
-          .build();
+      ValidationContext.builder().setCountryCode(TEST_COUNTRY_CODE).setNow(TEST_NOW).build();
 
   private static InputStream toInputStream(String s) {
     return new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));

@@ -100,7 +100,7 @@ public class Main {
             .setCountryCode(
                 CountryCode.forStringOrUnknown(
                     args.getCountryCode() == null ? CountryCode.ZZ : args.getCountryCode()))
-            .setCurrentDateTime(new CurrentDateTime(ZonedDateTime.now(ZoneId.systemDefault())))
+            .setNow(ZonedDateTime.now(ZoneId.systemDefault()))
             .build();
     feedContainer =
         feedLoader.loadAndValidate(
