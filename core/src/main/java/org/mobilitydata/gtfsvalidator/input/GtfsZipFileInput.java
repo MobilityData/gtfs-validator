@@ -22,7 +22,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
-import java.util.Set;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 
@@ -59,7 +58,7 @@ public class GtfsZipFileInput extends GtfsInput {
   }
 
   @Override
-  public Set<String> getFilenames() {
+  public ImmutableSet<String> getFilenames() {
     return filenames;
   }
 
