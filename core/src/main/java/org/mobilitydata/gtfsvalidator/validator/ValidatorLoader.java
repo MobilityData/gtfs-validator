@@ -72,23 +72,6 @@ public class ValidatorLoader {
     }
   }
 
-  /**
-   * Invokes all single-entity validators in the list.
-   *
-   * <p>Use {@code createSingleEntityValidators()} to create validators that can be passed here.
-   *
-   * @param entity GTFS entity to validate
-   * @param validators list of single-entity validators
-   * @param noticeContainer container for accumulating notices
-   * @param <T> type of the GTFS entity
-   */
-  public static <T extends GtfsEntity> void invokeSingleEntityValidators(
-      T entity, List<SingleEntityValidator<T>> validators, NoticeContainer noticeContainer) {
-    for (SingleEntityValidator<T> validator : validators) {
-      validator.validate(entity, noticeContainer);
-    }
-  }
-
   @SuppressWarnings("unchecked")
   private void addSingleEntityValidator(Class<? extends SingleEntityValidator<?>> validatorClass) {
     for (Method method : validatorClass.getMethods()) {
@@ -178,6 +161,23 @@ public class ValidatorLoader {
       }
     }
     return validators;
+  }
+
+  /**
+   * Invokes all single-entity validators in the list.
+   *
+   * <p>Use {@code createSingleEntityValidators()} to create validators that can be passed here.
+   *
+   * @param entity GTFS entity to validate
+   * @param validators list of single-entity validators
+   * @param noticeContainer container for accumulating notices
+   * @param <T> type of the GTFS entity
+   */
+  public static <T extends GtfsEntity> void invokeSingleEntityValidators(
+      T entity, List<SingleEntityValidator<T>> validators, NoticeContainer noticeContainer) {
+    for (SingleEntityValidator<T> validator : validators) {
+      validator.validate(entity, noticeContainer);
+    }
   }
 
   /**
