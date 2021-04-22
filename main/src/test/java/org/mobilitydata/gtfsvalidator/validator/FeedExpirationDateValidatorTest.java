@@ -37,15 +37,9 @@ public class FeedExpirationDateValidatorTest {
       new CurrentDateTime(ZonedDateTime.of(2021, 1, 1, 14, 30, 0, 0, ZoneOffset.UTC));
   private static final ZonedDateTime TEST_NOW = TEST_CURRENT_DATE_TIME.getNow();
 
-  private static final ValidationContext VALIDATION_CONTEXT =
-      ValidationContext.builder()
-          .setCountryCode(TEST_COUNTRY_CODE)
-          .setCurrentDateTime(TEST_CURRENT_DATE_TIME)
-          .build();
-
   private List<ValidationNotice> validateFeedInfo(GtfsFeedInfo feedInfo) {
     NoticeContainer container = new NoticeContainer();
-    new FeedExpirationDateValidator(VALIDATION_CONTEXT).validate(feedInfo, container);
+    new FeedExpirationDateValidator(TEST_CURRENT_DATE_TIME).validate(feedInfo, container);
     return container.getValidationNotices();
   }
 

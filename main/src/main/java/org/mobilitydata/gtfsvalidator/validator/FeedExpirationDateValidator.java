@@ -43,8 +43,8 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
   private final CurrentDateTime currentDateTime;
 
   @Inject
-  FeedExpirationDateValidator(ValidationContext validationContext) {
-    this.currentDateTime = validationContext.currentDateTime();
+  FeedExpirationDateValidator(CurrentDateTime currentDateTime) {
+    this.currentDateTime = currentDateTime;
   }
 
   @Override
