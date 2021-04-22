@@ -21,43 +21,21 @@ import javax.annotation.Nullable;
 
 /** Read access to a data row in a CSV file. */
 public class CsvRow {
-  private final CsvFile csvFile;
   private final long rowNumber;
   private final String[] columnValues;
 
-  public CsvRow(CsvFile csvFile, long rowNumber, String[] columnValues) {
-    this.csvFile = csvFile;
+  public CsvRow(long rowNumber, String[] columnValues) {
     this.rowNumber = rowNumber;
     this.columnValues = columnValues;
-  }
-
-  public CsvFile getCsvFile() {
-    return csvFile;
   }
 
   public long getRowNumber() {
     return rowNumber;
   }
 
-  public int getColumnIndex(String columnName) {
-    return csvFile.getColumnIndex(columnName);
-  }
-
+  /** Returns amount of columns in this row. */
   public int getColumnCount() {
     return columnValues.length;
-  }
-
-  public String getColumnName(int columnIndex) {
-    return csvFile.getColumnName(columnIndex);
-  }
-
-  /**
-   * Returns base name of the file that contains this row, e.g., "stops.txt".
-   *
-   * @return file name
-   */
-  public String getFileName() {
-    return csvFile.getFileName();
   }
 
   /**

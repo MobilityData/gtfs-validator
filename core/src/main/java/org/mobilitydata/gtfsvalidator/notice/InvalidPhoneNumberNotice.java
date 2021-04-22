@@ -26,13 +26,19 @@ import com.google.common.collect.ImmutableMap;
  *
  * <p><a href="https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md">GTFS
  * reference</a> does not provide any special requirements or standards.
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class InvalidPhoneNumberNotice extends ValidationNotice {
 
+  /**
+   * Constructs a notice with given severity. This constructor may be used by users that want to
+   * lower the priority to {@code WARNING}.
+   */
   public InvalidPhoneNumberNotice(
-      String filename, long csvRowNumber, String fieldName, String fieldValue) {
+      String filename,
+      long csvRowNumber,
+      String fieldName,
+      String fieldValue,
+      SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "filename",
@@ -43,6 +49,12 @@ public class InvalidPhoneNumberNotice extends ValidationNotice {
             fieldName,
             "fieldValue",
             fieldValue),
-        SeverityLevel.ERROR);
+        severityLevel);
+  }
+
+  /** Constructs a notice with the default severity {@code ERROR}. */
+  public InvalidPhoneNumberNotice(
+      String filename, long csvRowNumber, String fieldName, String fieldValue) {
+    this(filename, csvRowNumber, fieldName, fieldValue, SeverityLevel.ERROR);
   }
 }

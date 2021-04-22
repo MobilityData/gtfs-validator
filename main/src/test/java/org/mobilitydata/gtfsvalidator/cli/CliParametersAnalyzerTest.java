@@ -23,6 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import com.beust.jcommander.JCommander;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
@@ -92,6 +93,7 @@ public class CliParametersAnalyzerTest {
     when(mockArguments.getUrl()).thenReturn("url to dataset");
     when(mockArguments.getInput()).thenReturn(null);
     when(mockArguments.getStorageDirectory()).thenReturn(null);
+    when(mockArguments.getFeedName()).thenReturn(null);
 
     CliParametersAnalyzer underTest = new CliParametersAnalyzer();
     assertThat(underTest.isValid(mockArguments)).isTrue();
@@ -101,6 +103,7 @@ public class CliParametersAnalyzerTest {
     verify(mockArguments, times(2)).getInput();
     //noinspection ResultOfMethodCallIgnored because object is mocked
     verify(mockArguments, times(1)).getStorageDirectory();
+    verify(mockArguments, times(1)).getFeedName();
     verifyNoMoreInteractions(mockArguments, mockHandler);
   }
 
@@ -132,6 +135,7 @@ public class CliParametersAnalyzerTest {
     when(mockArguments.getUrl()).thenReturn("url to dataset");
     when(mockArguments.getInput()).thenReturn(null);
     when(mockArguments.getStorageDirectory()).thenReturn("storage.zip");
+    when(mockArguments.getFeedName()).thenReturn(null);
 
     CliParametersAnalyzer underTest = new CliParametersAnalyzer();
     assertThat(underTest.isValid(mockArguments)).isTrue();
@@ -141,6 +145,33 @@ public class CliParametersAnalyzerTest {
     verify(mockArguments, times(2)).getInput();
     //noinspection ResultOfMethodCallIgnored because object is mocked
     verify(mockArguments, times(1)).getStorageDirectory();
+    verify(mockArguments, times(1)).getFeedName();
     verifyNoMoreInteractions(mockArguments, mockHandler);
+  }
+
+  @Test
+  public void feedName_isNotValid() {
+    Arguments args = new Arguments();
+    CliParametersAnalyzer cliParametersAnalyzer = new CliParametersAnalyzer();
+    String[] argv = {
+      "--input", "input value",
+      "--output_base", "output value",
+      "--country_code", "ca",
+      "--threads", "4",
+      "--feed_name", "feed name"
+    };
+    new JCommander(args).parse(argv);
+    assertThat(cliParametersAnalyzer.isValid(args)).isFalse();
+
+    argv =
+        new String[] {
+          "-i", "input value",
+          "-o", "output value",
+          "-c", "au",
+          "-t", "4",
+          "-f", "feed name value",
+        };
+    new JCommander(args).parse(argv);
+    assertThat(cliParametersAnalyzer.isValid(args)).isFalse();
   }
 }

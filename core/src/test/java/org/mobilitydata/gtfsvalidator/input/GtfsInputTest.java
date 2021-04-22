@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -50,8 +51,9 @@ public class GtfsInputTest {
     File rootDir = tmpDir.newFolder("unarchived");
     tmpDir.newFile("unarchived/stops.txt");
 
-    GtfsInput gtfsInput = GtfsInput.createFromPath(rootDir.toPath());
-    assertThat(gtfsInput.getFilenames()).containsExactly("stops.txt");
+    try (GtfsInput gtfsInput = GtfsInput.createFromPath(rootDir.toPath())) {
+      assertThat(gtfsInput.getFilenames()).containsExactly("stops.txt");
+    }
   }
 
   @Test
@@ -63,46 +65,45 @@ public class GtfsInputTest {
     out.closeEntry();
     out.close();
 
-    GtfsInput gtfsInput = GtfsInput.createFromPath(zipFile.toPath());
-    assertThat(gtfsInput.getFilenames()).containsExactly("stops.txt");
+    try (GtfsInput gtfsInput = GtfsInput.createFromPath(zipFile.toPath())) {
+      assertThat(gtfsInput.getFilenames()).containsExactly("stops.txt");
+    }
   }
 
   @Test
   public void createFromValidUrlShouldNotThrowException()
       throws IOException, URISyntaxException, InterruptedException {
-    GtfsInput underTest =
+    final Path storage = tmpDir.getRoot().toPath().resolve("storage");
+    try (GtfsInput underTest =
         GtfsInput.createFromUrl(
             new URL(
                 "https://github.com/MobilityData/gtfs-validator/raw/v1.4.0/usecase/src/test/resources/"
                     + "valid_zip_sample.zip"),
-            "storage");
-    assertThat(underTest instanceof GtfsZipFileInput);
-    // remove created file
-    File toDelete = new File("storage");
-    toDelete.delete();
+            storage.toString())) {
+      assertThat(underTest instanceof GtfsZipFileInput);
+    }
   }
 
   @Test
   public void createFromRedirectedUrlShouldNotThrowException()
       throws IOException, URISyntaxException, InterruptedException {
-    GtfsInput underTest =
+    final Path storage1 = tmpDir.getRoot().toPath().resolve("storage1");
+    try (GtfsInput underTest =
         GtfsInput.createFromUrl(
             new URL(
                 "http://github.com/MobilityData/gtfs-validator/raw/v1.4.0/usecase/src/test/resources/"
                     + "valid_zip_sample.zip"),
-            "storage");
-    assertThat(underTest instanceof GtfsZipFileInput);
-    // remove created file
-    File toDelete = new File("storage");
-    toDelete.delete();
+            storage1.toString())) {
+      assertThat(underTest instanceof GtfsZipFileInput);
+    }
 
     // URL from #398
-    underTest =
-        GtfsInput.createFromUrl(new URL("https://octa.net/current/google_transit.zip"), "storage2");
-    assertThat(underTest instanceof GtfsZipFileInput);
-    // remove created file
-    toDelete = new File("storage2");
-    toDelete.delete();
+    final Path storage2 = tmpDir.getRoot().toPath().resolve("storage2");
+    try (GtfsInput underTest =
+        GtfsInput.createFromUrl(
+            new URL("https://octa.net/current/google_transit.zip"), storage2.toString())) {
+      assertThat(underTest instanceof GtfsZipFileInput);
+    }
   }
 
   @Test
@@ -113,33 +114,36 @@ public class GtfsInputTest {
             GtfsInput.createFromUrl(
                 new URL(
                     "https://openmobilitydata.org/p/mobilitydata-invalid-dataset/197/latest/download"),
-                "storage"));
+                tmpDir.getRoot().toPath().resolve("storage").toString()));
   }
 
   @Test
   public void createFromValidUrlInMemoryShouldNotThrowException()
       throws IOException, URISyntaxException {
-    GtfsInput underTest =
+    try (GtfsInput underTest =
         GtfsInput.createFromUrlInMemory(
             new URL(
                 "https://github.com/MobilityData/gtfs-validator/raw/v1.4.0/usecase/src/test/resources/"
-                    + "valid_zip_sample.zip"));
-    assertThat(underTest instanceof GtfsZipInMemoryInput);
+                    + "valid_zip_sample.zip"))) {
+      assertThat(underTest instanceof GtfsZipFileInput);
+    }
   }
 
   @Test
   public void createFromRedirectedUrlInMemoryShouldNotThrowException()
       throws IOException, URISyntaxException {
-    GtfsInput underTest =
+    try (GtfsInput underTest =
         GtfsInput.createFromUrlInMemory(
             new URL(
                 "http://github.com/MobilityData/gtfs-validator/raw/v1.4.0/usecase/src/test/resources/"
-                    + "valid_zip_sample.zip"));
-    assertThat(underTest instanceof GtfsZipInMemoryInput);
+                    + "valid_zip_sample.zip"))) {
+      assertThat(underTest instanceof GtfsZipFileInput);
+    }
 
     // URL from #398
-    underTest =
-        GtfsInput.createFromUrlInMemory(new URL("https://octa.net/current/google_transit.zip"));
-    assertThat(underTest instanceof GtfsZipInMemoryInput);
+    try (GtfsInput underTest =
+        GtfsInput.createFromUrlInMemory(new URL("https://octa.net/current/google_transit.zip"))) {
+      assertThat(underTest instanceof GtfsZipFileInput);
+    }
   }
 }

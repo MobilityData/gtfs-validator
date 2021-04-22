@@ -42,6 +42,7 @@ import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyNotice;
 import org.mobilitydata.gtfsvalidator.notice.MoreThanOneEntityNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 
 /**
@@ -198,6 +199,7 @@ public class TableContainerGenerator {
     typeSpec.addMethod(generateConstructorWithEntities());
     typeSpec.addMethod(generateConstructorWithStatus());
     typeSpec.addMethod(generateSetupIndicesMethod());
+    typeSpec.addMethod(generateForHeaderAndEntitiesMethod());
     typeSpec.addMethod(generateForEntitiesMethod());
 
     return typeSpec.build();
@@ -206,11 +208,12 @@ public class TableContainerGenerator {
   private MethodSpec generateConstructorWithEntities() {
     return MethodSpec.constructorBuilder()
         .addModifiers(Modifier.PRIVATE)
+        .addParameter(CsvHeader.class, "header")
         .addParameter(
             ParameterizedTypeName.get(
                 ClassName.get(List.class), classNames.entityImplementationTypeName()),
             "entities")
-        .addStatement("super(TableStatus.PARSABLE_HEADERS_AND_ROWS)")
+        .addStatement("super(TableStatus.PARSABLE_HEADERS_AND_ROWS, header)")
         .addStatement("this.entities = entities")
         .build();
   }
@@ -219,8 +222,27 @@ public class TableContainerGenerator {
     return MethodSpec.constructorBuilder()
         .addModifiers(Modifier.PUBLIC)
         .addParameter(GtfsTableContainer.TableStatus.class, "tableStatus")
-        .addStatement("super(tableStatus)")
+        .addStatement("super(tableStatus, $T.EMPTY)", CsvHeader.class)
         .addStatement("this.entities = new $T<>()", ArrayList.class)
+        .build();
+  }
+
+  private MethodSpec generateForHeaderAndEntitiesMethod() {
+    TypeName tableContainerTypeName = classNames.tableContainerTypeName();
+    return MethodSpec.methodBuilder("forHeaderAndEntities")
+        .returns(tableContainerTypeName)
+        .addJavadoc("Creates a table with given header and entities")
+        .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+        .addParameter(CsvHeader.class, "header")
+        .addParameter(
+            ParameterizedTypeName.get(
+                ClassName.get(List.class), classNames.entityImplementationTypeName()),
+            "entities")
+        .addParameter(NoticeContainer.class, "noticeContainer")
+        .addStatement(
+            "$T table = new $T(header, entities)", tableContainerTypeName, tableContainerTypeName)
+        .addStatement("table.setupIndices(noticeContainer)")
+        .addStatement("return table")
         .build();
   }
 
@@ -228,15 +250,17 @@ public class TableContainerGenerator {
     TypeName tableContainerTypeName = classNames.tableContainerTypeName();
     return MethodSpec.methodBuilder("forEntities")
         .returns(tableContainerTypeName)
+        .addJavadoc(
+            "Creates a table with given entities and empty header. This method is intended to be"
+                + " used in tests.")
         .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         .addParameter(
             ParameterizedTypeName.get(
                 ClassName.get(List.class), classNames.entityImplementationTypeName()),
             "entities")
         .addParameter(NoticeContainer.class, "noticeContainer")
-        .addStatement("$T table = new $T(entities)", tableContainerTypeName, tableContainerTypeName)
-        .addStatement("table.setupIndices(noticeContainer)")
-        .addStatement("return table")
+        .addStatement(
+            "return forHeaderAndEntities($T.EMPTY, entities, noticeContainer)", CsvHeader.class)
         .build();
   }
 

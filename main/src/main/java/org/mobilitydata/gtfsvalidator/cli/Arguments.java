@@ -39,10 +39,15 @@ public class Arguments {
 
   @Parameter(
       names = {"-f", "--feed_name"},
-      description =
-          "Name of the feed, e.g., `nl-openov`. "
-              + "It must start from two-letter country code (ISO 3166-1 alpha-2)")
+      description = "Deprecated: please use '-c' or '-country_code' instead.")
   private String feedName;
+
+  @Parameter(
+      names = {"-c", "--country_code"},
+      description =
+          "Country code of the feed, e.g., `nl`. "
+              + "It must be a two-letter country code (ISO 3166-1 alpha-2)")
+  private String countryCode;
 
   @Parameter(
       names = {"-u", "--url"},
@@ -66,6 +71,10 @@ public class Arguments {
       description = "The name of the system errors report including .json extension.")
   private String systemErrorsReportName;
 
+  public String getFeedName() {
+    return feedName;
+  }
+
   public String getInput() {
     return input;
   }
@@ -78,8 +87,8 @@ public class Arguments {
     return numThreads;
   }
 
-  public String getFeedName() {
-    return feedName;
+  public String getCountryCode() {
+    return countryCode;
   }
 
   public String getUrl() {
