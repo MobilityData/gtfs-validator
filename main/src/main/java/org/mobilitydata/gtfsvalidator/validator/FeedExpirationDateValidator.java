@@ -43,14 +43,14 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
   private final CurrentDateTime currentDateTime;
 
   @Inject
-  FeedExpirationDateValidator(CurrentDateTime currentDateTime) {
-    this.currentDateTime = currentDateTime;
+  FeedExpirationDateValidator(ValidationContext validationContext) {
+    this.currentDateTime = validationContext.currentDateTime();
   }
 
   @Override
   public void validate(GtfsFeedInfo entity, NoticeContainer noticeContainer) {
     if (entity.hasFeedEndDate()) {
-      LocalDate now = currentDateTime.getCurrentDateTime().toLocalDate();
+      LocalDate now = currentDateTime.getNow().toLocalDate();
       GtfsDate currentDate = GtfsDate.fromLocalDate(now);
       GtfsDate currentDatePlusSevenDays = GtfsDate.fromLocalDate(now.plusDays(7));
       GtfsDate currentDatePlusThirtyDays = GtfsDate.fromLocalDate(now.plusDays(30));

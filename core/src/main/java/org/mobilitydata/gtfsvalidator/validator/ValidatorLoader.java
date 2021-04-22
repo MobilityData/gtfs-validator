@@ -32,8 +32,6 @@ import java.util.Map.Entry;
 import java.util.function.Function;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
-import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
@@ -71,6 +69,23 @@ public class ValidatorLoader {
           addFileValidator((Class<? extends FileValidator>) clazz);
         }
       }
+    }
+  }
+
+  /**
+   * Invokes all single-entity validators in the list.
+   *
+   * <p>Use {@code createSingleEntityValidators()} to create validators that can be passed here.
+   *
+   * @param entity GTFS entity to validate
+   * @param validators list of single-entity validators
+   * @param noticeContainer container for accumulating notices
+   * @param <T> type of the GTFS entity
+   */
+  public static <T extends GtfsEntity> void invokeSingleEntityValidators(
+      T entity, List<SingleEntityValidator<T>> validators, NoticeContainer noticeContainer) {
+    for (SingleEntityValidator<T> validator : validators) {
+      validator.validate(entity, noticeContainer);
     }
   }
 
@@ -115,7 +130,7 @@ public class ValidatorLoader {
     // Find out which GTFS tables need to be injected.
     List<Class<? extends GtfsTableContainer<?>>> injectedTables = new ArrayList<>();
     for (Class<?> parameterType : chosenConstructor.getParameterTypes()) {
-      if (parameterType.isAssignableFrom(GtfsFeedName.class) || parameterType.isAssignableFrom(CurrentDateTime.class)) {
+      if (parameterType.isAssignableFrom(ValidationContext.class)) {
         continue;
       }
       if (!GtfsTableContainer.class.isAssignableFrom(parameterType)) {
@@ -142,13 +157,13 @@ public class ValidatorLoader {
    * entity.
    *
    * @param clazz class of the GTFS entity
-//   * @param validationContext context to pass to all validators
+   * @param validationContext context to pass to all validators
    * @param <T> type of the GTFS entity
    * @return a list of validators
    */
   @SuppressWarnings("unchecked")
   public <T extends GtfsEntity> List<SingleEntityValidator<T>> createSingleEntityValidators(
-      Class<T> clazz, GtfsFeedName feedName, CurrentDateTime currentDateTime) {
+      Class<T> clazz, ValidationContext validationContext) {
     List<SingleEntityValidator<T>> validators = new ArrayList<>();
     for (Class<? extends SingleEntityValidator<?>> validatorClass :
         singleEntityValidators.get(clazz)) {
@@ -156,8 +171,7 @@ public class ValidatorLoader {
         validators.add(
             createValidator(
                 ((Class<? extends SingleEntityValidator<T>>) validatorClass),
-                parameterType -> feedName,
-                otherParameterType -> currentDateTime));
+                parameterType -> validationContext));
       } catch (ReflectiveOperationException e) {
         logger.atSevere().withCause(e).log(
             "Cannot instantiate validator %s", validatorClass.getCanonicalName());
@@ -167,40 +181,22 @@ public class ValidatorLoader {
   }
 
   /**
-   * Invokes all single-entity validators in the list.
-   *
-   * <p>Use {@code createSingleEntityValidators()} to create validators that can be passed here.
-   *
-   * @param entity GTFS entity to validate
-   * @param validators list of single-entity validators
-   * @param noticeContainer container for accumulating notices
-   * @param <T> type of the GTFS entity
-   */
-  public static <T extends GtfsEntity> void invokeSingleEntityValidators(
-      T entity, List<SingleEntityValidator<T>> validators, NoticeContainer noticeContainer) {
-    for (SingleEntityValidator<T> validator : validators) {
-      validator.validate(entity, noticeContainer);
-    }
-  }
-
-  /**
    * Invokes single-file validators on a given table.
    *
    * @param table GTFS table to validate
-//   * @param validationContext context to pass to all validators
+   * @param validationContext context to pass to all validators
    * @param noticeContainer container for accumulating notices
    * @param <T> type of the GTFS entity
    */
   public <T extends GtfsEntity> void invokeSingleFileValidators(
       GtfsTableContainer<T> table,
-      GtfsFeedName feedName,
-      CurrentDateTime currentDateTime,
+      ValidationContext validationContext,
       NoticeContainer noticeContainer) {
     for (Class<? extends FileValidator> validatorClass :
         singleFileValidators.get(table.getClass())) {
       FileValidator validator;
       try {
-        validator = createSingleFileValidator(validatorClass, table, feedName, currentDateTime);
+        validator = createSingleFileValidator(validatorClass, table, validationContext);
       } catch (ReflectiveOperationException e) {
         logger.atSevere().withCause(e).log(
             "Cannot instantiate validator %s", validatorClass.getCanonicalName());
@@ -219,7 +215,7 @@ public class ValidatorLoader {
    * @return a new validator
    */
   @SuppressWarnings("unchecked")
-  private <T> T createValidator(Class<T> clazz, Function<Class<?>, Object> provider, Function<Class<?>, Object> otherProvider)
+  private <T> T createValidator(Class<T> clazz, Function<Class<?>, Object> provider)
       throws IllegalAccessException, InvocationTargetException, InstantiationException {
     // Choose the default or injectable constructor.
     Constructor<T> chosenConstructor = null;
@@ -234,7 +230,6 @@ public class ValidatorLoader {
     Object[] parameters = new Object[chosenConstructor.getParameterCount()];
     for (int i = 0; i < parameters.length; ++i) {
       parameters[i] = provider.apply(chosenConstructor.getParameters()[i].getType());
-      parameters[i] = otherProvider.apply(chosenConstructor.getParameters()[i].getType());
     }
     chosenConstructor.setAccessible(true);
     return chosenConstructor.newInstance(parameters);
@@ -243,45 +238,35 @@ public class ValidatorLoader {
   private FileValidator createSingleFileValidator(
       Class<? extends FileValidator> clazz,
       GtfsTableContainer<?> table,
-      GtfsFeedName feedName,
-      CurrentDateTime currentDateTime)
+      ValidationContext validationContext)
       throws ReflectiveOperationException {
     return createValidator(
         clazz,
         parameterClass ->
-            parameterClass.isAssignableFrom(GtfsFeedName.class) ? feedName : table,
-        otherParameterClass ->
-            otherParameterClass.isAssignableFrom(CurrentDateTime.class) ? currentDateTime : table
-        );
+            parameterClass.isAssignableFrom(ValidationContext.class) ? validationContext : table);
   }
 
   @SuppressWarnings("unchecked")
   private FileValidator createMultiFileValidator(
       Class<? extends FileValidator> clazz,
       GtfsFeedContainer feed,
-      GtfsFeedName feedName,
-      CurrentDateTime currentDateTime)
+      ValidationContext validationContext)
       throws ReflectiveOperationException {
     return createValidator(
         clazz,
         parameterClass ->
-            parameterClass.isAssignableFrom(GtfsFeedName.class)
-                ? feedName
-                : feed.getTable((Class<? extends GtfsTableContainer<?>>) parameterClass),
-        otherParameterClass ->
-            otherParameterClass.isAssignableFrom(CurrentDateTime.class)
-                ? currentDateTime
-                : feed.getTable((Class<? extends GtfsTableContainer<?>>) otherParameterClass)
-        );
+            parameterClass.isAssignableFrom(ValidationContext.class)
+                ? validationContext
+                : feed.getTable((Class<? extends GtfsTableContainer<?>>) parameterClass));
   }
 
   public List<FileValidator> createMultiFileValidators(
-      GtfsFeedContainer feed, GtfsFeedName feedName, CurrentDateTime currentDateTime) {
+      GtfsFeedContainer feed, ValidationContext validationContext) {
     ArrayList<FileValidator> validators = new ArrayList<>();
     validators.ensureCapacity(multiFileValidators.size());
     for (Class<? extends FileValidator> validatorClass : multiFileValidators) {
       try {
-        validators.add(createMultiFileValidator(validatorClass, feed, feedName, currentDateTime));
+        validators.add(createMultiFileValidator(validatorClass, feed, validationContext));
       } catch (ReflectiveOperationException e) {
         logger.atSevere().withCause(e).log(
             "Cannot instantiate validator %s", validatorClass.getCanonicalName());

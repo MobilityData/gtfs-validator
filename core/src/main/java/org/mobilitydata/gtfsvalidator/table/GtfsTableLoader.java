@@ -18,9 +18,8 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import java.io.InputStream;
 import java.util.Set;
-import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
-import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
 /**
@@ -42,14 +41,12 @@ public abstract class GtfsTableLoader<T extends GtfsEntity> {
 
   public abstract GtfsTableContainer<T> load(
       InputStream inputStream,
-      GtfsFeedName feedName,
-      CurrentDateTime currentDateTime,
+      ValidationContext validationContext,
       ValidatorLoader validatorLoader,
       NoticeContainer noticeContainer);
 
   public abstract GtfsTableContainer<T> loadMissingFile(
-      GtfsFeedName feedName,
-      CurrentDateTime currentDateTime,
+      ValidationContext validationContext,
       ValidatorLoader validatorLoader,
       NoticeContainer noticeContainer);
 }

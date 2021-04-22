@@ -18,20 +18,16 @@ package org.mobilitydata.gtfsvalidator.input;
 
 import java.time.ZonedDateTime;
 
-/** Represents a name of a GTFS feed, such as "nl-openov". */
+/** Represents the current date and time */
 public class CurrentDateTime {
 
   private final ZonedDateTime now;
 
-  private CurrentDateTime(ZonedDateTime now) {
+  public CurrentDateTime(ZonedDateTime now) {
     this.now = now;
   }
 
-  public static CurrentDateTime setNow(ZonedDateTime now) {
-    return new CurrentDateTime(now);
-  }
-
-  public ZonedDateTime getCurrentDateTime() {
+  public ZonedDateTime getNow() {
     return now;
   }
 
