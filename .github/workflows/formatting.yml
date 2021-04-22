@@ -2,7 +2,7 @@ name: Format code
 
 on:
   push:
-    branches: [ master, dependency-injection ]
+    branches: [ master ]
     paths-ignore:
       - '**.md'
 
