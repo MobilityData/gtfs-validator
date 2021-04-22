@@ -102,10 +102,10 @@ public class Main {
             .setNow(ZonedDateTime.now(ZoneId.systemDefault()))
             .build();
     feedContainer =
-    feedLoader.loadAndValidate(
-        gtfsInput,
-        new DefaultValidatorProvider(validationContext, validatorLoader),
-        noticeContainer);
+        feedLoader.loadAndValidate(
+            gtfsInput,
+            new DefaultValidatorProvider(validationContext, validatorLoader),
+            noticeContainer);
     try {
       gtfsInput.close();
     } catch (IOException e) {
