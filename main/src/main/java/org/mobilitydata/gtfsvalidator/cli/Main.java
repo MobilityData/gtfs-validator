@@ -37,6 +37,7 @@ import org.mobilitydata.gtfsvalidator.notice.ThreadInterruptedError;
 import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
+import org.mobilitydata.gtfsvalidator.validator.DefaultValidatorProvider;
 import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
@@ -102,7 +103,10 @@ public class Main {
             .setCurrentDateTime(new CurrentDateTime(ZonedDateTime.now(ZoneId.systemDefault())))
             .build();
     feedContainer =
-        feedLoader.loadAndValidate(gtfsInput, validationContext, validatorLoader, noticeContainer);
+        feedLoader.loadAndValidate(
+            gtfsInput,
+            new DefaultValidatorProvider(validationContext, validatorLoader),
+            noticeContainer);
     try {
       gtfsInput.close();
     } catch (IOException e) {

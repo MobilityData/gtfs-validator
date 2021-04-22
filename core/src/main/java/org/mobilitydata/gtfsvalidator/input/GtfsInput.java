@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.input;
 
+import com.google.common.collect.ImmutableSet;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
@@ -32,7 +33,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Set;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 import org.apache.commons.io.FileUtils;
@@ -162,7 +162,7 @@ public abstract class GtfsInput implements Closeable {
    *
    * @return base names of all available files
    */
-  public abstract Set<String> getFilenames();
+  public abstract ImmutableSet<String> getFilenames();
 
   /**
    * Returns a stream to read data from a given file.
