@@ -67,7 +67,9 @@ public final class ValidatorUtil {
    * @param noticeContainer the container for storing notices
    */
   public static void safeValidate(
-      Consumer<NoticeContainer> validate, Class validatorClass, NoticeContainer noticeContainer) {
+      Consumer<NoticeContainer> validate,
+      Class<?> validatorClass,
+      NoticeContainer noticeContainer) {
     try {
       validate.accept(noticeContainer);
     } catch (RuntimeException e) {

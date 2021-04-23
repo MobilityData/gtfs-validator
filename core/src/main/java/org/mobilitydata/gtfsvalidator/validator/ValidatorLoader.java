@@ -52,7 +52,7 @@ public class ValidatorLoader {
 
   private final ListMultimap<Class<? extends GtfsEntity>, Class<? extends SingleEntityValidator<?>>>
       singleEntityValidators = ArrayListMultimap.create();
-  private final ListMultimap<Class<? extends GtfsTableContainer>, Class<? extends FileValidator>>
+  private final ListMultimap<Class<? extends GtfsTableContainer<?>>, Class<? extends FileValidator>>
       singleFileValidators = ArrayListMultimap.create();
   private final List<Class<? extends FileValidator>> multiFileValidators = new ArrayList<>();
 
@@ -68,7 +68,6 @@ public class ValidatorLoader {
    */
   @SuppressWarnings("unchecked")
   public ValidatorLoader(ImmutableList<String> validatorPackages) {
-
     ClassPath classPath;
     try {
       classPath = ClassPath.from(ClassLoader.getSystemClassLoader());
@@ -96,7 +95,7 @@ public class ValidatorLoader {
   }
 
   /** Loaded single-file validator classes keyed by table container class. */
-  public ListMultimap<Class<? extends GtfsTableContainer>, Class<? extends FileValidator>>
+  public ListMultimap<Class<? extends GtfsTableContainer<?>>, Class<? extends FileValidator>>
       getSingleFileValidators() {
     return singleFileValidators;
   }
@@ -251,7 +250,7 @@ public class ValidatorLoader {
     if (!singleFileValidators.isEmpty()) {
       builder.append("Single-file validators\n");
       for (Map.Entry<
-              Class<? extends GtfsTableContainer>, Collection<Class<? extends FileValidator>>>
+              Class<? extends GtfsTableContainer<?>>, Collection<Class<? extends FileValidator>>>
           entry : singleFileValidators.asMap().entrySet()) {
         builder.append("\t").append(entry.getKey().getSimpleName()).append(": ");
         for (Class<? extends FileValidator> validatorClass : entry.getValue()) {
