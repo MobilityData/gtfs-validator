@@ -1,5 +1,6 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 
 /**
@@ -9,10 +10,15 @@ import com.google.common.collect.ImmutableMap;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class RuntimeExceptionInValidatorError extends SystemError {
-  public RuntimeExceptionInValidatorError(
-      String validatorClassName, String exceptionClassName, String message) {
+  public RuntimeExceptionInValidatorError(String validatorClassName, RuntimeException exception) {
+    // Throwable.getMessage() may return null, so we need to support it gracefully.
     super(
         ImmutableMap.of(
-            "validator", validatorClassName, "exception", exceptionClassName, "message", message));
+            "validator",
+            validatorClassName,
+            "exception",
+            exception.getClass().getCanonicalName(),
+            "message",
+            Strings.nullToEmpty(exception.getMessage())));
   }
 }

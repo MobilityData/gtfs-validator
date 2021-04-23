@@ -16,7 +16,9 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
+import java.net.URISyntaxException;
 
 /**
  * Indicates that a string could not be parsed as a URI reference.
@@ -25,7 +27,10 @@ import com.google.common.collect.ImmutableMap;
  */
 public class URISyntaxError extends SystemError {
 
-  public URISyntaxError(String message) {
-    super(ImmutableMap.of("message", message));
+  public URISyntaxError(URISyntaxException exception) {
+    super(
+        ImmutableMap.of(
+            "exception", exception.getClass().getCanonicalName(),
+            "message", Strings.nullToEmpty(exception.getMessage())));
   }
 }
