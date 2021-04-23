@@ -34,9 +34,10 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 @RunWith(JUnit4.class)
 public class DefaultFieldValidatorTest {
 
-  private DefaultFieldValidator DEFAULT_FIELD_VALIDATOR =
+  private static final DefaultFieldValidator DEFAULT_FIELD_VALIDATOR =
       new DefaultFieldValidator(CountryCode.forStringOrUnknown("AU"));
-  private GtfsCellContext CELL_CONTEXT = GtfsCellContext.create("stops.txt", 2, "stop_id");
+  private static final GtfsCellContext CELL_CONTEXT =
+      GtfsCellContext.create("stops.txt", 2, "stop_id");
 
   @Test
   public void hasOnlyPrintableAscii() {

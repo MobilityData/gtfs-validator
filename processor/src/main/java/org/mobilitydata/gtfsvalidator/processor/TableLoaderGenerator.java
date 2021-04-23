@@ -204,6 +204,7 @@ public class TableLoaderGenerator {
     TypeName tableContainerTypeName = classNames.tableContainerTypeName();
     MethodSpec.Builder method =
         MethodSpec.methodBuilder("load")
+            .addAnnotation(Override.class)
             .addModifiers(Modifier.PUBLIC)
             .addParameter(InputStream.class, "inputStream")
             .addParameter(ValidatorProvider.class, "validatorProvider")
