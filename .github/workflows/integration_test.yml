@@ -44,7 +44,7 @@ jobs:
       - name: Persist cli app jar
         uses: actions/upload-artifact@v2
         with:
-          name: gtfs-validator-snapshot_cli.jar
+          name: gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
           path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
     outputs:
       versionTag: ${{ steps.prep.outputs.versionTag }}
