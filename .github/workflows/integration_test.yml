@@ -72,7 +72,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   loop-check:
-    needs: pack-latest-changes
+    needs: [ fetch-urls, pack-latest-changes ]
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     runs-on: ubuntu-latest
