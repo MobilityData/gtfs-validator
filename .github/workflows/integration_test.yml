@@ -83,7 +83,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: gtfs-validator-${{ needs.pack-latest-changes.outputs.versionTag }}_cli
-          path: main/build/libs/
+          path: main/build/libs/gtfs-validator-${{ needs.pack-latest-changes.outputs.versionTag }}_cli.jar
       - name: Set up JDK 1.8
         uses: actions/setup-java@v1
         with:
@@ -94,15 +94,15 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
-      - name: Echo items in list (for loop using Github Action strategy)
+      - name: Execute jar
         run: |
-          pwd
-          ls main/build/libs/
-          unzip main/build/libs/gtfs-validator-${{ needs.pack-latest-changes.outputs.versionTag }}_cli
-          ls main/build/libs/
+          java -jar main/build/libs/*.jar -u ${{ matrix.urls }} -o output
+#          pwd
+#          ls main/build/libs/
+#          unzip main/build/libs/gtfs-validator-${{ needs.pack-latest-changes.outputs.versionTag }}_cli
+#          ls main/build/libs/
 #          pwd
 #          echo ls main/build/libs/
-#          java -jar main/build/libs/*.jar -u ${{ matrix.urls }} -o output
 #          #TODO: execute latest validator version and store the validation reports
 #          #TODO: calculate hash code for each dataset and compare to what is in the archive
 #          #TODO: if hashes are different execute v2.0 on the dataset and compare the two outputs
