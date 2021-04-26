@@ -88,4 +88,4 @@ jobs:
         id: prep-sha
         run: echo "::set-output name=sha1::$(echo -n ${{ matrix.urls }} | openssl sha1)"
       - name: Execute jar
-        run: java -jar gtfs-validator*.jar -u ${{ matrix.urls }} -o output/${{ step.prep-sha-outputs.sha1 }} -v latest_changes.json
+        run: java -jar gtfs-validator*.jar -u ${{ matrix.urls }} -o output/${{ step.prep-sha.outputs.sha1 }} -v latest_changes.json
