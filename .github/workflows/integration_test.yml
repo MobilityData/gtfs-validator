@@ -96,9 +96,11 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle
       - name: Echo items in list (for loop using Github Action strategy)
         run: |
-          ls main/build/libs/
-          unzip gtfs-validator-${{ needs.pack-latest-changes.outputs.versionTag }}_cli
           pwd
+          ls -a
+#          ls main/build/libs/
+#          unzip gtfs-validator-${{ needs.pack-latest-changes.outputs.versionTag }}_cli
+#          pwd
 #          echo ls main/build/libs/
 #          java -jar main/build/libs/*.jar -u ${{ matrix.urls }} -o output
 #          #TODO: execute latest validator version and store the validation reports
