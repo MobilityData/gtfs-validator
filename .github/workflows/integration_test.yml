@@ -97,7 +97,7 @@ jobs:
       - name: Echo items in list (for loop using Github Action strategy)
         run: |
           echo ${{ matrix.urls }}
-          java -jar gtfs-validator-${{ needs.pack-latest-changes.outputs.versionTag }}_cli.jar -u ${{ matrix.urls }} -o output
+          java -jar main/build/libs/*.jar -u ${{ matrix.urls }} -o output
 #          #TODO: execute latest validator version and store the validation reports
 #          #TODO: calculate hash code for each dataset and compare to what is in the archive
 #          #TODO: if hashes are different execute v2.0 on the dataset and compare the two outputs
