@@ -80,7 +80,7 @@ jobs:
         with:
           name: gtfs-validator_cli
       - name: Execute jar
-        run: java -jar main/build/libs/gtfs-validator*.jar -u http://webapps.thebus.org/transitdata/Production/google_transit.zip -o output
+        run: java -jar gtfs-validator*.jar -u http://webapps.thebus.org/transitdata/Production/google_transit.zip -o output
 #  loop-check:
 #    needs: [ fetch-urls, pack-latest-changes ]
 #    runs-on: ubuntu-latest
