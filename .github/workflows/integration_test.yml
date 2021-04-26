@@ -25,9 +25,9 @@ jobs:
         # The below outputs a JSON array and uses GitHub Actions magic (::set-output) to set
         # an output variable
         run: |
-          DATASETS=$(curl https://gtfs-validator.free.beeceptor.com/datasets)
-          echo $DATASETS
-          echo "::set-output name=matrix::$DATASETS"
+          URLS=$(curl https://gtfs-validator.free.beeceptor.com/urls)
+          echo $URLS
+          echo "::set-output name=matrix::$URLS"
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   pack-latest-changes:
@@ -71,7 +71,7 @@ jobs:
         with:
           name: gtfs-validator_cli
           path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
-  latest-changes-reports:
+  get-report-latest-changes:
     needs: [ pack-latest-changes, fetch-urls ]
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
@@ -82,10 +82,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: gtfs-validator_cli
-      - name: Get validation report for latest changes
-        run: java -jar gtfs-validator*.jar -u ${{ matrix.url }} -o output/${{ matrix.output }} -v latest_changes.json
-
-#  #          #TODO: execute latest validator version and store the validation reports
-#  #          #TODO: calculate hash code for each dataset and compare to what is in the archive
-#  #          #TODO: if hashes are different execute v2.0 on the dataset and compare the two outputs
-#  #          #TODO: else, compare the two outputs (one from the archive, the other one from this action)
+      - name: Prep SHA for this URL (to be changed to the datasets' SHA1)
+        id: prep-sha
+        outputs:
+          sha1: ${{ steps.step1.outputs.sha1 }}
+        run: echo "::set-output name=sha1::$(echo -n ${{ matrix.urls }} | openssl sha1)"
+      - name: Execute jar
+        run: java -jar gtfs-validator*.jar -u ${{ matrix.urls }} -o output/${{ step.prep-sha-outputs.sha1 }} -v latest_changes.json
