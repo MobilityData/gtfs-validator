@@ -72,7 +72,7 @@ jobs:
           name: gtfs-validator_cli
           path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
   download-artifact-check:
-    needs: pack-latest-changes
+    needs: [ pack-latest-changes, fetch-urls ]
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
     strategy:
