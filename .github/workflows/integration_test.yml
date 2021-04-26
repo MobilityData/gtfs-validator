@@ -70,7 +70,7 @@ jobs:
         with:
           arguments: shadowJar
       - name: Execute jar
-        run: java -jar -u ${{ matrix.urls }} -o output
+        run: java -jar main/build/libs/gtfs-validator*.jar -u ${{ matrix.urls }} -o output
 #
 #  #    steps:
 #      - name: Echo items in list (for loop using Github Action strategy)
