@@ -71,6 +71,9 @@ jobs:
           URLS=$(curl https://hello-gtfs-validator.free.beeceptor.com/urls)
           echo $URLS
           echo "::set-output name=matrix::$URLS"
+          OUTPUT=$(curl https://hello-gtfs-validator.free.beeceptor.com/outputs)
+          echo $OUTPUT
+          echo "::set-output name=matrix::OUTPUT"
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   get-latest-changes-validation-reports:
@@ -96,8 +99,8 @@ jobs:
       - name: Echo items in list (for loop using Github Action strategy)
         run: |
           echo ${{ matrix.urls }}
-          echo ${{ matrix.outputFolders }}
-          java -jar gtfs-validator-snapshot_cli.jar -u ${{ matrix.outputFolders }} -o output
+          echo ${{ matrix.outputs }}
+          java -jar gtfs-validator-snapshot_cli.jar -u ${{ matrix.urls }} -o ${{ matrix.outputs }}
 #          #TODO: execute latest validator version and store the validation reports
 #          #TODO: calculate hash code for each dataset and compare to what is in the archive
 #          #TODO: if hashes are different execute v2.0 on the dataset and compare the two outputs
