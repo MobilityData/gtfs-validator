@@ -1,6 +1,8 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Describes an ExecutionException during multithreaded validation.
@@ -11,7 +13,10 @@ import com.google.common.collect.ImmutableMap;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class ThreadExecutionError extends SystemError {
-  public ThreadExecutionError(String exceptionClassName, String message) {
-    super(ImmutableMap.of("exception", exceptionClassName, "message", message));
+  public ThreadExecutionError(ExecutionException exception) {
+    super(
+        ImmutableMap.of(
+            "exception", exception.getCause().getClass().getCanonicalName(),
+            "message", Strings.nullToEmpty(exception.getCause().getMessage())));
   }
 }

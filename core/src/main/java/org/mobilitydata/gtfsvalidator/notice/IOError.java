@@ -16,7 +16,9 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
+import java.io.IOException;
 
 /**
  * This is related to Input and Output operations in the code.
@@ -25,7 +27,10 @@ import com.google.common.collect.ImmutableMap;
  */
 public class IOError extends SystemError {
 
-  public IOError(String message) {
-    super(ImmutableMap.of("message", message));
+  public IOError(IOException exception) {
+    super(
+        ImmutableMap.of(
+            "exception", exception.getClass().getCanonicalName(),
+            "message", Strings.nullToEmpty(exception.getMessage())));
   }
 }

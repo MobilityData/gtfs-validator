@@ -76,8 +76,7 @@ public final class ValidatorUtil {
       logger.atSevere().withCause(e).log(
           "Runtime exception in validator %s", validatorClass.getCanonicalName());
       noticeContainer.addSystemError(
-          new RuntimeExceptionInValidatorError(
-              validatorClass.getCanonicalName(), e.getClass().getCanonicalName(), e.getMessage()));
+          new RuntimeExceptionInValidatorError(validatorClass.getCanonicalName(), e));
     }
   }
 
