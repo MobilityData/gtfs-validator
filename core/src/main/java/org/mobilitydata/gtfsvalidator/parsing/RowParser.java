@@ -16,43 +16,33 @@
 
 package org.mobilitydata.gtfsvalidator.parsing;
 
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import java.math.BigDecimal;
 import java.time.ZoneId;
 import java.time.zone.ZoneRulesException;
 import java.util.Currency;
 import java.util.Locale;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import javax.annotation.Nullable;
-import org.apache.commons.validator.routines.EmailValidator;
-import org.apache.commons.validator.routines.UrlValidator;
-import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.notice.EmptyRowNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidColorNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidCurrencyNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidDateNotice;
-import org.mobilitydata.gtfsvalidator.notice.InvalidEmailNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidFloatNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidIntegerNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidLanguageCodeNotice;
-import org.mobilitydata.gtfsvalidator.notice.InvalidPhoneNumberNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidRowLengthNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidTimeNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidTimezoneNotice;
-import org.mobilitydata.gtfsvalidator.notice.InvalidUrlNotice;
-import org.mobilitydata.gtfsvalidator.notice.LeadingOrTrailingWhitespacesNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
-import org.mobilitydata.gtfsvalidator.notice.NewLineInValueNotice;
-import org.mobilitydata.gtfsvalidator.notice.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.NumberOutOfRangeNotice;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.UnexpectedEnumValueNotice;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
+import org.mobilitydata.gtfsvalidator.validator.GtfsCellContext;
+import org.mobilitydata.gtfsvalidator.validator.GtfsFieldValidator;
 
 /**
  * Parses cells of a CSV row as values of requested data types.
@@ -67,30 +57,24 @@ public class RowParser {
   public static final boolean OPTIONAL = false;
   private final String fileName;
   private final CsvHeader header;
-  private final CountryCode countryCode;
-  private final NoticeContainer noticeContainer;
+  private final GtfsFieldValidator fieldValidator;
   private CsvRow row;
-  private boolean parseErrorsInRow;
 
-  public RowParser(
-      String fileName, CsvHeader header, CountryCode countryCode, NoticeContainer noticeContainer) {
+  private NoticeContainer noticeContainer;
+
+  public RowParser(String fileName, CsvHeader header, GtfsFieldValidator fieldValidator) {
     this.fileName = fileName;
     this.header = header;
-    this.countryCode = countryCode;
+    this.fieldValidator = fieldValidator;
+  }
+
+  public void setRow(CsvRow row, NoticeContainer noticeContainer) {
+    this.row = row;
     this.noticeContainer = noticeContainer;
   }
 
   public NoticeContainer getNoticeContainer() {
     return noticeContainer;
-  }
-
-  public void setRow(CsvRow row) {
-    this.row = row;
-    this.parseErrorsInRow = false;
-  }
-
-  public boolean hasParseErrorsInRow() {
-    return parseErrorsInRow;
   }
 
   /**
@@ -110,12 +94,12 @@ public class RowParser {
       // If the last row has only spaces and does not end with a newline, then Univocity parser
       // interprets it as a non-empty row that has a single column which is empty (sic!). We are
       // unsure if this is a bug or feature in Univocity, so we show a warning.
-      addNoticeInRow(new EmptyRowNotice(fileName, row.getRowNumber()));
+      noticeContainer.addValidationNotice(new EmptyRowNotice(fileName, row.getRowNumber()));
       return false;
     }
 
     if (row.getColumnCount() != header.getColumnCount()) {
-      addNoticeInRow(
+      noticeContainer.addValidationNotice(
           new InvalidRowLengthNotice(
               fileName, row.getRowNumber(), row.getColumnCount(), header.getColumnCount()));
       return false;
@@ -127,23 +111,17 @@ public class RowParser {
   public String asString(int columnIndex, boolean required) {
     String s = row.asString(columnIndex);
     if (required && s == null) {
-      addNoticeInRow(
+      noticeContainer.addValidationNotice(
           new MissingRequiredFieldNotice(
               fileName, row.getRowNumber(), header.getColumnName(columnIndex)));
     }
     if (s != null) {
-      if (s.indexOf('\n') != -1 || s.indexOf('\r') != -1) {
-        addNoticeInRow(
-            new NewLineInValueNotice(
-                fileName, row.getRowNumber(), header.getColumnName(columnIndex), s));
-      }
-      final String trimmed = s.trim();
-      if (trimmed.length() < s.length()) {
-        addNoticeInRow(
-            new LeadingOrTrailingWhitespacesNotice(
-                fileName, row.getRowNumber(), header.getColumnName(columnIndex), s));
-        s = trimmed;
-      }
+      s =
+          fieldValidator.validateField(
+              s,
+              GtfsCellContext.create(
+                  fileName, row.getRowNumber(), header.getColumnName(columnIndex)),
+              noticeContainer);
     }
     return s;
   }
@@ -153,37 +131,19 @@ public class RowParser {
     return asString(columnIndex, required);
   }
 
-  static boolean hasOnlyPrintableAscii(String s) {
-    for (int i = 0, n = s.length(); i < n; ++i) {
-      if (!(s.charAt(i) >= 32 && s.charAt(i) < 127)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   @Nullable
   public String asId(int columnIndex, boolean required) {
-    return asValidatedString(
-        columnIndex,
-        required,
-        RowParser::hasOnlyPrintableAscii,
-        NonAsciiOrNonPrintableCharNotice::new);
+    return asValidatedString(columnIndex, required, fieldValidator::validateId);
   }
 
   @Nullable
   public String asUrl(int columnIndex, boolean required) {
-    return asValidatedString(
-        columnIndex, required, s -> UrlValidator.getInstance().isValid(s), InvalidUrlNotice::new);
+    return asValidatedString(columnIndex, required, fieldValidator::validateUrl);
   }
 
   @Nullable
   public String asEmail(int columnIndex, boolean required) {
-    return asValidatedString(
-        columnIndex,
-        required,
-        s -> EmailValidator.getInstance().isValid(s),
-        InvalidEmailNotice::new);
+    return asValidatedString(columnIndex, required, fieldValidator::validateEmail);
   }
 
   /**
@@ -199,11 +159,7 @@ public class RowParser {
    */
   @Nullable
   public String asPhoneNumber(int columnIndex, boolean required) {
-    return asValidatedString(
-        columnIndex,
-        required,
-        s -> PhoneNumberUtil.getInstance().isPossibleNumber(s, countryCode.getCountryCode()),
-        InvalidPhoneNumberNotice::new);
+    return asValidatedString(columnIndex, required, fieldValidator::validatePhoneNumber);
   }
 
   @Nullable
@@ -236,7 +192,7 @@ public class RowParser {
   public Double asLatitude(int columnIndex, boolean required) {
     Double value = asFloat(columnIndex, required);
     if (value != null && !(-90 <= value && value <= 90)) {
-      addNoticeInRow(
+      noticeContainer.addValidationNotice(
           new NumberOutOfRangeNotice(
               fileName,
               row.getRowNumber(),
@@ -252,7 +208,7 @@ public class RowParser {
   public Double asLongitude(int columnIndex, boolean required) {
     Double value = asFloat(columnIndex, required);
     if (value != null && !(-180 <= value && value <= 180)) {
-      addNoticeInRow(
+      noticeContainer.addValidationNotice(
           new NumberOutOfRangeNotice(
               fileName,
               row.getRowNumber(),
@@ -305,7 +261,7 @@ public class RowParser {
     switch (bounds) {
       case POSITIVE:
         if (compareToZero <= 0) {
-          addNoticeInRow(
+          noticeContainer.addValidationNotice(
               new NumberOutOfRangeNotice(
                   fileName,
                   row.getRowNumber(),
@@ -316,7 +272,7 @@ public class RowParser {
         break;
       case NON_NEGATIVE:
         if (compareToZero < 0) {
-          addNoticeInRow(
+          noticeContainer.addValidationNotice(
               new NumberOutOfRangeNotice(
                   fileName,
                   row.getRowNumber(),
@@ -327,7 +283,7 @@ public class RowParser {
         break;
       case NON_ZERO:
         if (compareToZero == 0) {
-          addNoticeInRow(
+          noticeContainer.addValidationNotice(
               new NumberOutOfRangeNotice(
                   fileName,
                   row.getRowNumber(),
@@ -352,7 +308,7 @@ public class RowParser {
       return null;
     }
     if (enumCreator.convert(i) == null) {
-      addNoticeInRow(
+      noticeContainer.addValidationNotice(
           new UnexpectedEnumValueNotice(
               fileName, row.getRowNumber(), header.getColumnName(columnIndex), i));
     }
@@ -367,28 +323,6 @@ public class RowParser {
   @Nullable
   public GtfsDate asDate(int columnIndex, boolean required) {
     return parseAsType(columnIndex, required, GtfsDate::fromString, InvalidDateNotice::new);
-  }
-
-  /**
-   * Tells if a given notice is an {@code ERROR}.
-   *
-   * @param notice the notice to check
-   * @return true if the notice is an error, false otherwise
-   */
-  private static boolean isError(ValidationNotice notice) {
-    return notice.getSeverityLevel().ordinal() >= SeverityLevel.ERROR.ordinal();
-  }
-
-  /**
-   * Adds notice to the container and updates {@link #parseErrorsInRow} if the notice is an error.
-   *
-   * @param notice
-   */
-  private void addNoticeInRow(ValidationNotice notice) {
-    if (isError(notice)) {
-      parseErrorsInRow = true;
-    }
-    noticeContainer.addValidationNotice(notice);
   }
 
   public enum NumberBounds {
@@ -429,7 +363,7 @@ public class RowParser {
     } catch (IllegalArgumentException | ZoneRulesException e) {
       // Most parsing functions throw an IllegalArgumentException but ZoneId.of() throws
       // a ZoneRulesException.
-      addNoticeInRow(
+      noticeContainer.addValidationNotice(
           noticingFunction.apply(
               fileName, row.getRowNumber(), header.getColumnName(columnIndex), s));
       return null;
@@ -442,36 +376,29 @@ public class RowParser {
    * <ul>
    *   <li>If {@code validatingFunction} returns true, then the value is considered valid and {@code
    *       asValidatedString} returns it.
-   *   <li>If {@code noticingFunction} returns an error, then the value is considered invalid and
+   *   <li>If {@code validatingFunction} returns false, then the value is considered invalid and
    *       {@code asValidatedString} returns null.
-   *   <li>If {@code noticingFunction} returns a warning or notice, then the value is considered
-   *       valid and {@code asValidatedString} returns it.
    * </ul>
+   *
+   * {@code validatingFunction} can emit errors or warnings to {@code noticeContainer}.
    *
    * @param columnIndex index of the column to parse
    * @param required whether the value is required according to GTFS
    * @param validatingFunction the predicate to validate a given string
-   * @param noticingFunction function to create a notice about parse errors
    * @return the cell value at the given column or null if the value is missing or invalid
    */
   @Nullable
   private String asValidatedString(
-      int columnIndex,
-      boolean required,
-      Predicate<String> validatingFunction,
-      NoticingFunction noticingFunction) {
+      int columnIndex, boolean required, FieldValidatingFunction validatingFunction) {
     String s = asString(columnIndex, required);
     if (s == null) {
       return null;
     }
-    if (!validatingFunction.test(s)) {
-      ValidationNotice notice =
-          noticingFunction.apply(
-              fileName, row.getRowNumber(), header.getColumnName(columnIndex), s);
-      addNoticeInRow(notice);
-      if (isError(notice)) {
-        return null;
-      }
+    if (!validatingFunction.apply(
+        s,
+        GtfsCellContext.create(fileName, row.getRowNumber(), header.getColumnName(columnIndex)),
+        noticeContainer)) {
+      return null;
     }
     return s;
   }
@@ -485,5 +412,12 @@ public class RowParser {
   private interface NoticingFunction<T extends ValidationNotice> {
 
     T apply(String filename, long csvRowNumber, String fieldName, String fieldValue);
+  }
+
+  /** Returns true iff the given field is valid and adds appropriate notices to the container. */
+  @FunctionalInterface
+  private interface FieldValidatingFunction {
+
+    boolean apply(String fieldValue, GtfsCellContext cellContext, NoticeContainer noticeContainer);
   }
 }

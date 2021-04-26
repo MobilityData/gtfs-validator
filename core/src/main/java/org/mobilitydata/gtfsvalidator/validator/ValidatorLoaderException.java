@@ -16,21 +16,13 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import java.util.Set;
-import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
+/** Exception related to dynamic loading of validator classes. */
+public class ValidatorLoaderException extends Exception {
+  public ValidatorLoaderException(String message) {
+    super(message);
+  }
 
-/** A validator that checks table headers for required columns etc. */
-public interface TableHeaderValidator {
-  /**
-   * Validates header of a single GTFS CSV table.
-   *
-   * @return true is the header is valid, false otherwise
-   */
-  boolean validate(
-      String filename,
-      CsvHeader actualHeader,
-      Set<String> supportedColumns,
-      Set<String> requiredColumns,
-      NoticeContainer noticeContainer);
+  public ValidatorLoaderException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }

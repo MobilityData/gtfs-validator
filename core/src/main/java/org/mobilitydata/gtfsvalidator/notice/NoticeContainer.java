@@ -112,4 +112,18 @@ public class NoticeContainer {
     validationNotices.addAll(otherContainer.validationNotices);
     systemErrors.addAll(otherContainer.systemErrors);
   }
+
+  /**
+   * Tells if this container has any {@code ValidationNotice} that is an error.
+   *
+   * <p>Note that this method is O(n) since it iterates over all validation notices.
+   */
+  public boolean hasValidationErrors() {
+    for (ValidationNotice notice : validationNotices) {
+      if (notice.isError()) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

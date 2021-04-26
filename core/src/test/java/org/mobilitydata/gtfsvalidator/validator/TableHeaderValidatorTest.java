@@ -36,7 +36,7 @@ public class TableHeaderValidatorTest {
     NoticeContainer container = new NoticeContainer();
 
     assertThat(
-            new TableHeaderValidator()
+            new DefaultTableHeaderValidator()
                 .validate(
                     "stops.txt",
                     new CsvHeader(new String[] {"stop_id", "stop_name"}),
@@ -52,7 +52,7 @@ public class TableHeaderValidatorTest {
     NoticeContainer container = new NoticeContainer();
 
     assertThat(
-            new TableHeaderValidator()
+            new DefaultTableHeaderValidator()
                 .validate(
                     "stops.txt",
                     new CsvHeader(new String[] {"stop_id", "stop_name", "stop_extra"}),
@@ -69,7 +69,7 @@ public class TableHeaderValidatorTest {
     NoticeContainer container = new NoticeContainer();
 
     assertThat(
-            new TableHeaderValidator()
+            new DefaultTableHeaderValidator()
                 .validate(
                     "stops.txt",
                     new CsvHeader(new String[] {"stop_name"}),
@@ -86,7 +86,7 @@ public class TableHeaderValidatorTest {
     NoticeContainer container = new NoticeContainer();
 
     assertThat(
-            new TableHeaderValidator()
+            new DefaultTableHeaderValidator()
                 .validate(
                     "stops.txt",
                     new CsvHeader(new String[] {"stop_id", "stop_name", "stop_id"}),
@@ -103,7 +103,7 @@ public class TableHeaderValidatorTest {
     NoticeContainer container = new NoticeContainer();
 
     assertThat(
-            new TableHeaderValidator()
+            new DefaultTableHeaderValidator()
                 .validate(
                     "stops.txt",
                     CsvHeader.EMPTY,
@@ -119,7 +119,7 @@ public class TableHeaderValidatorTest {
     NoticeContainer container = new NoticeContainer();
 
     assertThat(
-            new TableHeaderValidator()
+            new DefaultTableHeaderValidator()
                 .validate(
                     "stops.txt",
                     new CsvHeader(new String[] {"stop_id", null, "stop_name", ""}),

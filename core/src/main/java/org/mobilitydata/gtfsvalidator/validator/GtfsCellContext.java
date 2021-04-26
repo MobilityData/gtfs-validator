@@ -16,21 +16,22 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import java.util.Set;
-import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
+import com.google.auto.value.AutoValue;
 
-/** A validator that checks table headers for required columns etc. */
-public interface TableHeaderValidator {
-  /**
-   * Validates header of a single GTFS CSV table.
-   *
-   * @return true is the header is valid, false otherwise
-   */
-  boolean validate(
-      String filename,
-      CsvHeader actualHeader,
-      Set<String> supportedColumns,
-      Set<String> requiredColumns,
-      NoticeContainer noticeContainer);
+/** Context describing a cell in a GTFS file. */
+@AutoValue
+public abstract class GtfsCellContext {
+  /** Name of a GTFS file. */
+  public abstract String filename();
+
+  /** Number of a row in the GTFS file. */
+  public abstract long csvRowNumber();
+
+  /** Name of a field in the GTFS file. */
+  public abstract String fieldName();
+
+  /** Creates a context that describes a cell in a GTFS file. */
+  public static GtfsCellContext create(String filename, long csvRowNumber, String fieldName) {
+    return new AutoValue_GtfsCellContext(filename, csvRowNumber, fieldName);
+  }
 }
