@@ -98,7 +98,7 @@ jobs:
         run: |
           echo ${{ matrix.urls }}
           ls main/build/libs/
-          unzip gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli
+          unzip gtfs-validator-${{ needs.pack-latest-changes.outputs.versionTag }}_cli
           java -jar main/build/libs/*.jar -u ${{ matrix.urls }} -o output
 #          #TODO: execute latest validator version and store the validation reports
 #          #TODO: calculate hash code for each dataset and compare to what is in the archive
