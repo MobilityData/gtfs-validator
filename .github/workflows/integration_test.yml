@@ -82,10 +82,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: gtfs-validator_cli
-      - name: Get SHA-1 value for this dataset (matrix.urls)
-        id: sha-prep
-      run: |
-        echo "##[set-output name=sha;]$(sha1sum )"
       - name: Get validation report for latest changes
         run: java -jar gtfs-validator*.jar -u ${{ matrix.urls }} -o output/${{ matrix.outputs }} -v latest_changes.json
 
