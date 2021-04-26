@@ -109,11 +109,17 @@ public class Main {
                     args.getCountryCode() == null ? CountryCode.ZZ : args.getCountryCode()))
             .setCurrentDateTime(new CurrentDateTime(ZonedDateTime.now(ZoneId.systemDefault())))
             .build();
-    feedContainer =
-        feedLoader.loadAndValidate(
-            gtfsInput,
-            new DefaultValidatorProvider(validationContext, validatorLoader),
-            noticeContainer);
+    try {
+      feedContainer =
+          feedLoader.loadAndValidate(
+              gtfsInput,
+              new DefaultValidatorProvider(validationContext, validatorLoader),
+              noticeContainer);
+    } catch (InterruptedException e) {
+      logger.atSevere().withCause(e).log("Validation was interrupted");
+      System.exit(1);
+      return;
+    }
     try {
       gtfsInput.close();
     } catch (IOException e) {
