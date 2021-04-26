@@ -16,8 +16,10 @@
 
 package org.mobilitydata.gtfsvalidator.input;
 
+import com.google.common.collect.ImmutableSet;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -31,7 +33,8 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Set;
+import org.apache.commons.compress.archivers.zip.ZipFile;
+import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -42,7 +45,7 @@ import org.apache.http.impl.client.HttpClients;
  * GtfsInput provides a common interface for reading GTFS data, either from a ZIP archive or from a
  * directory.
  */
-public abstract class GtfsInput {
+public abstract class GtfsInput implements Closeable {
   /**
    * Creates a specific GtfsInput to read data from the given path.
    *
@@ -58,9 +61,12 @@ public abstract class GtfsInput {
       return new GtfsUnarchivedInput(path);
     }
     if (path.getFileSystem().equals(FileSystems.getDefault())) {
-      return new GtfsZipFileInput(path.toFile());
+      // Read from a local ZIP file.
+      return new GtfsZipFileInput(new ZipFile(path.toFile()));
     }
-    return new GtfsZipInMemoryInput(path.toString(), Files.readAllBytes(path));
+    // Load a remote ZIP file to memory.
+    return new GtfsZipFileInput(
+        new ZipFile(new SeekableInMemoryByteChannel(Files.readAllBytes(path))));
   }
 
   /**
@@ -96,7 +102,8 @@ public abstract class GtfsInput {
       throws IOException, URISyntaxException {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     loadFromUrl(sourceUrl, outputStream);
-    return new GtfsZipInMemoryInput(sourceUrl.toString(), outputStream.toByteArray());
+    return new GtfsZipFileInput(
+        new ZipFile(new SeekableInMemoryByteChannel(outputStream.toByteArray())));
   }
 
   /**
@@ -155,7 +162,7 @@ public abstract class GtfsInput {
    *
    * @return base names of all available files
    */
-  public abstract Set<String> getFilenames();
+  public abstract ImmutableSet<String> getFilenames();
 
   /**
    * Returns a stream to read data from a given file.

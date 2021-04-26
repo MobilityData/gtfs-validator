@@ -16,34 +16,38 @@
 
 package org.mobilitydata.gtfsvalidator.input;
 
-import java.io.File;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSet.Builder;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipFile;
 
-/** Implements support for GTFS ZIP archives. */
+/**
+ * Implements support for GTFS ZIP archives.
+ *
+ * <p>The underlying Apache Commons ZipFile supports reading local files as well as bytes in memory.
+ */
 public class GtfsZipFileInput extends GtfsInput {
-  private final Set<String> filenames = new HashSet();
+  private final ImmutableSet<String> filenames;
   private final ZipFile zipFile;
 
-  public GtfsZipFileInput(File file) throws IOException {
-    zipFile = new ZipFile(file);
-    for (Enumeration<? extends ZipEntry> i = zipFile.entries(); i.hasMoreElements(); ) {
-      ZipEntry entry = i.nextElement();
+  public GtfsZipFileInput(ZipFile zipFile) {
+    this.zipFile = zipFile;
+
+    ImmutableSet.Builder<String> filenamesBuilder = new Builder<>();
+    for (Enumeration<ZipArchiveEntry> entries = zipFile.getEntries(); entries.hasMoreElements(); ) {
+      ZipArchiveEntry entry = entries.nextElement();
       if (!isInsideZipDirectory(entry)) {
-        filenames.add(entry.getName());
+        filenamesBuilder.add(entry.getName());
       }
     }
+    filenames = filenamesBuilder.build();
   }
 
-  static boolean isInsideZipDirectory(ZipEntry entry) {
+  static boolean isInsideZipDirectory(ZipArchiveEntry entry) {
     // We do not use File.separator because the .zip file specification states:
     // All slashes MUST be forward slashes '/' as opposed to backwards slashes '\' for compatibility
     // with Amiga and
@@ -54,16 +58,25 @@ public class GtfsZipFileInput extends GtfsInput {
   }
 
   @Override
-  public Set<String> getFilenames() {
-    return Collections.unmodifiableSet(filenames);
+  public ImmutableSet<String> getFilenames() {
+    return filenames;
   }
 
   @Override
   public InputStream getFile(String filename) throws IOException {
-    ZipEntry entry = zipFile.getEntry(filename);
-    if (entry == null) {
-      throw new FileNotFoundException(Paths.get(zipFile.getName(), filename).toString());
+    if (!filenames.contains(filename)) {
+      throw new FileNotFoundException(filename);
     }
-    return zipFile.getInputStream(entry);
+    return zipFile.getInputStream(zipFile.getEntry(filename));
+  }
+
+  /**
+   * Closes the archive.
+   *
+   * @throws IOException if an error occurs closing the archive.
+   */
+  @Override
+  public void close() throws IOException {
+    zipFile.close();
   }
 }

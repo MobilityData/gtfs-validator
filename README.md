@@ -16,17 +16,17 @@ This is a command-line tool written in Java that performs the following steps:
 ### Run it
 To validate a GTFS dataset on your computer:
 
-`java -jar gtfs-validator-v2.0.0_cli.jar -i /myDirectory/gtfs.zip -o output -f ca-myFeedName` 
+`java -jar gtfs-validator-v2.0.0_cli.jar -i /myDirectory/gtfs.zip -o output -c ca` 
 
 To download and validate a GTFS dataset from a URL:
 
-`java -jar gtfs-validator-v2.0.0_cli.jar -u https://www.abc.com/gtfs.zip -o output -f ca-myFeedName`
+`java -jar gtfs-validator-v2.0.0_cli.jar -u https://www.abc.com/gtfs.zip -o output -c ca`
 
 where:
 * `--input` or `-i`: the path to the GTFS file (e.g., `/myDirectory/gtfs.zip`)
 * `--url` or `-u`: the fully qualified URL to the GTFS file (e.g., `https://www.abc.com/gtfs.zip`)
 * `--output` or `-o`: the path where the validation report will be stored (e.g., `output`)
-* `--feed_name` or `-f`: the name of the feed as a valid [ISO two letter country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), followed by `-`, followed by a user-defined name for the feed. (e.g., `ca-myFeedName`, `us-myFeedName`)
+* *(Optional)* `--country_code` or `-c`: the country code of the feed as a valid [ISO two letter country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) (e.g., `ca`, `us`). It can be either lower or upper case (e.g. `FR` or `GP`). If `-c` is not provided or country code is unknown, phone numbers will be validated if they start by `+`.   
 * *(Optional)* `--thread` or `-t`: the number of Java threads to use
 
 More detailed instructions are on our ["Usage"](/docs/USAGE.md) page.

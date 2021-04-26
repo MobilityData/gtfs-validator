@@ -18,7 +18,10 @@ package org.mobilitydata.gtfsvalidator.cli;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import com.beust.jcommander.JCommander;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -135,5 +138,31 @@ public class CliParametersAnalyzerTest {
         };
     new JCommander(args).parse(argv);
     assertThat(cliParametersAnalyzer.isValid(args)).isTrue();
+  }
+
+  @Test
+  public void feedName_isNotValid() {
+    Arguments args = new Arguments();
+    CliParametersAnalyzer cliParametersAnalyzer = new CliParametersAnalyzer();
+    String[] argv = {
+      "--input", "input value",
+      "--output_base", "output value",
+      "--country_code", "ca",
+      "--threads", "4",
+      "--feed_name", "feed name"
+    };
+    new JCommander(args).parse(argv);
+    assertThat(cliParametersAnalyzer.isValid(args)).isFalse();
+
+    argv =
+        new String[] {
+          "-i", "input value",
+          "-o", "output value",
+          "-c", "au",
+          "-t", "4",
+          "-f", "feed name value",
+        };
+    new JCommander(args).parse(argv);
+    assertThat(cliParametersAnalyzer.isValid(args)).isFalse();
   }
 }

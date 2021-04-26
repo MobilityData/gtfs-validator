@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,35 +27,43 @@ import java.time.ZonedDateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
+import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.validator.DefaultValidatorProvider;
 import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
 /** Runs GtfsLevelTableContainer on test CSV data. */
 @RunWith(JUnit4.class)
 public class GtfsLevelTableLoaderTest {
-  private static final GtfsFeedName TEST_FEED_NAME = GtfsFeedName.parseString("au-sydney-buses");
+  private static final CountryCode TEST_COUNTRY_CODE = CountryCode.forStringOrUnknown("au");
   private static final ZonedDateTime TEST_NOW =
       ZonedDateTime.of(2021, 1, 1, 14, 30, 0, 0, ZoneOffset.UTC);
 
   private static final ValidationContext VALIDATION_CONTEXT =
-      ValidationContext.builder().setFeedName(TEST_FEED_NAME).setNow(TEST_NOW).build();
+      ValidationContext.builder().setCountryCode(TEST_COUNTRY_CODE).setNow(TEST_NOW).build();
 
   private static InputStream toInputStream(String s) {
     return new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
   }
 
+  private static GtfsLevelTableContainer load(
+      InputStream inputStream, NoticeContainer noticeContainer) {
+    ValidatorLoader validatorLoader = new ValidatorLoader();
+    GtfsLevelTableLoader loader = new GtfsLevelTableLoader();
+    return (GtfsLevelTableContainer)
+        loader.load(
+            inputStream,
+            new DefaultValidatorProvider(VALIDATION_CONTEXT, validatorLoader),
+            noticeContainer);
+  }
+
   @Test
   public void validFile() throws IOException {
-    ValidatorLoader validatorLoader = new ValidatorLoader();
     InputStream inputStream =
         toInputStream("level_id,level_name,level_index\n" + "level1,Ground,1\n");
-    GtfsLevelTableLoader loader = new GtfsLevelTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
-    GtfsLevelTableContainer tableContainer =
-        (GtfsLevelTableContainer)
-            loader.load(inputStream, VALIDATION_CONTEXT, validatorLoader, noticeContainer);
+    GtfsLevelTableContainer tableContainer = load(inputStream, noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices()).isEmpty();
     assertThat(tableContainer.entityCount()).isEqualTo(1);
@@ -70,13 +78,9 @@ public class GtfsLevelTableLoaderTest {
 
   @Test
   public void missingRequiredField() throws IOException {
-    ValidatorLoader validatorLoader = new ValidatorLoader();
     InputStream inputStream = toInputStream("level_id,level_name,level_index\n" + ",Ground,1\n");
-    GtfsLevelTableLoader loader = new GtfsLevelTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
-    GtfsLevelTableContainer tableContainer =
-        (GtfsLevelTableContainer)
-            loader.load(inputStream, VALIDATION_CONTEXT, validatorLoader, noticeContainer);
+    GtfsLevelTableContainer tableContainer = load(inputStream, noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices()).isNotEmpty();
     assertThat(tableContainer.entityCount()).isEqualTo(0);
@@ -85,13 +89,9 @@ public class GtfsLevelTableLoaderTest {
 
   @Test
   public void emptyFile() throws IOException {
-    ValidatorLoader validatorLoader = new ValidatorLoader();
     InputStream inputStream = toInputStream("");
-    GtfsLevelTableLoader loader = new GtfsLevelTableLoader();
     NoticeContainer noticeContainer = new NoticeContainer();
-    GtfsLevelTableContainer tableContainer =
-        (GtfsLevelTableContainer)
-            loader.load(inputStream, VALIDATION_CONTEXT, validatorLoader, noticeContainer);
+    load(inputStream, noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices()).isNotEmpty();
     assertThat(noticeContainer.getValidationNotices().get(0).getClass().getSimpleName())

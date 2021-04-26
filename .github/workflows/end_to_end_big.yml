@@ -40,16 +40,14 @@ jobs:
           versionTag: ${{ steps.prep.outputs.versionTag }}
         with:
           arguments: shadowJar
-          
       - name: Validate dataset from -- Norway
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/norsk-reiseinformasjon-as/791/latest/download --output_base output --feed_name no-norway --storage_directory norway.zip
+        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/norsk-reiseinformasjon-as/791/latest/download --output_base output --country_code no --storage_directory norway.zip
       - name: Validate dataset from -- IDFM (Paris, France)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ile-de-france-mobilite/1214/latest/download --output_base output --feed_name fr-idfm --storage_directory idfm.zip
+        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ile-de-france-mobilite/1214/latest/download --output_base output --country_code fr --storage_directory idfm.zip
       - name: Validate dataset from -- OVapi (Netherland)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ov/814/latest/download --output_base output --feed_name nl-ovapi --storage_directory ovapi.zip
+        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ov/814/latest/download --output_base output --country_code nl --storage_directory ovapi.zip
       - name: Validate dataset from -- Colectivos (Buenos Aires, Argentina)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/colectivos-buenos-aires/1037/latest/download --output_base output --feed_name ar-colectivos --storage_directory colectivos.zip
-   
+        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/colectivos-buenos-aires/1037/latest/download --output_base output --country_code ar --storage_directory colectivos.zip
       - name: Persist datasets
         uses: actions/upload-artifact@v2
         with:

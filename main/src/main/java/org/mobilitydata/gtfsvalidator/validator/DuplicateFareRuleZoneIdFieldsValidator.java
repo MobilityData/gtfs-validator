@@ -17,9 +17,10 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -40,7 +41,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFareRuleTableContainer;
  */
 @GtfsValidator
 public class DuplicateFareRuleZoneIdFieldsValidator extends FileValidator {
-
+  private static final HashFunction HASH_FUNCTION = Hashing.farmHashFingerprint64();
   private final GtfsFareRuleTableContainer fareRuleTable;
 
   @Inject
@@ -50,7 +51,7 @@ public class DuplicateFareRuleZoneIdFieldsValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    final Map<Integer, GtfsFareRule> fareRuleByZoneIdFieldsCombination =
+    final Map<Long, GtfsFareRule> fareRuleByZoneIdFieldsCombination =
         new HashMap<>(fareRuleTable.entityCount());
     fareRuleTable
         .getEntities()
@@ -77,9 +78,18 @@ public class DuplicateFareRuleZoneIdFieldsValidator extends FileValidator {
    * @return the hashcode associated to the combination of this {@code GtfsFareRule} "route_id",
    *     "origin_id", "contains_id" and "destination_id".
    */
-  private int getHash(GtfsFareRule fareRule) {
-    return Objects.hash(
-        fareRule.routeId(), fareRule.originId(), fareRule.containsId(), fareRule.destinationId());
+  private static long getHash(GtfsFareRule fareRule) {
+    return HASH_FUNCTION
+        .newHasher()
+        .putUnencodedChars(fareRule.routeId())
+        .putChar('\0')
+        .putUnencodedChars(fareRule.originId())
+        .putChar('\0')
+        .putUnencodedChars(fareRule.containsId())
+        .putChar('\0')
+        .putUnencodedChars(fareRule.destinationId())
+        .hash()
+        .asLong();
   }
 
   /**

@@ -16,18 +16,16 @@
 
 package org.mobilitydata.gtfsvalidator.input;
 
+import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /** Implements support for unarchived GTFS directories. */
 public class GtfsUnarchivedInput extends GtfsInput {
-  private final Set<String> filenames;
+  private final ImmutableSet<String> filenames;
   private final Path directory;
 
   public GtfsUnarchivedInput(Path directory) throws IOException {
@@ -37,17 +35,22 @@ public class GtfsUnarchivedInput extends GtfsInput {
           stream
               .filter(Files::isRegularFile)
               .map(x -> x.getFileName().toString())
-              .collect(Collectors.toSet());
+              .collect(ImmutableSet.toImmutableSet());
     }
   }
 
   @Override
-  public Set<String> getFilenames() {
-    return Collections.unmodifiableSet(filenames);
+  public ImmutableSet<String> getFilenames() {
+    return filenames;
   }
 
   @Override
   public InputStream getFile(String filename) throws IOException {
     return Files.newInputStream(directory.resolve(filename));
+  }
+
+  @Override
+  public void close() throws IOException {
+    // Do nothing.
   }
 }
