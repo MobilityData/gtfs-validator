@@ -5,7 +5,33 @@ on:
     branches: [ master, new-test-module ]
 
 jobs:
-  pack-latest-changes:
+  download-latest-gtfs-validator-release-jar:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+    steps:
+      - uses: actions/checkout@v1
+      - name: Download last release of the validator
+        uses: suisei-cn/actions-download-file@v1
+        id: gtfs-validator
+        with:
+          url: "https://github.com/MobilityData/gtfs-validator/releases/download/v2.0.0/gtfs-validator-v2.0.0_cli.jar"
+          target: public/
+  fetch-urls:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+    steps:
+      - name: Get url list as json
+        id: set-matrix
+        # The below outputs a JSON array and uses GitHub Actions magic (::set-output) to set
+        # an output variable
+        run: |
+          URLS=$(curl https://hello-gtfs-validator.free.beeceptor.com/urls)
+          echo $URLS
+          echo "::set-output name=matrix::$URLS"
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+  loop-check:
+    needs: fetch-urls
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
     steps:
@@ -41,43 +67,9 @@ jobs:
           versionTag: ${{ steps.prep.outputs.versionTag }}
         with:
           arguments: shadowJar
-      - name: Persist cli app jar
-        uses: actions/upload-artifact@v2
-        with:
-          name: gtfs-validator-snapshot_cli.jar
-          path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
-  download-latest-gtfs-validator-release-jar:
-    runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[ci skip]')"
-    steps:
-      - uses: actions/checkout@v1
-      - name: Download last release of the validator
-        uses: suisei-cn/actions-download-file@v1
-        id: gtfs-validator
-        with:
-          url: "https://github.com/MobilityData/gtfs-validator/releases/download/v2.0.0/gtfs-validator-v2.0.0_cli.jar"
-          target: public/
-  fetch-urls:
-    runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[ci skip]')"
-    steps:
-      - name: Get url list as json
-        id: set-matrix
-        # The below outputs a JSON array and uses GitHub Actions magic (::set-output) to set
-        # an output variable
-        run: |
-          URLS=$(curl https://hello-gtfs-validator.free.beeceptor.com/urls)
-          echo $URLS
-          echo "::set-output name=matrix::$URLS"
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-  loop-check:
-    needs: fetch-urls
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
-    runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[ci skip]')"
-    steps:
+#    steps:
       - name: Echo items in list (for loop using Github Action strategy)
         run: |
           echo ${{ matrix.urls }}
