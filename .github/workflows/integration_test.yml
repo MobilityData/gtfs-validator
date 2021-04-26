@@ -34,7 +34,9 @@ jobs:
     needs: fetch-urls
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
-#    steps:
+    strategy:
+      matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
+    steps:
     - uses: actions/checkout@v1
     - name: Prepare version name
       id: prep
@@ -67,12 +69,11 @@ jobs:
         versionTag: ${{ steps.prep.outputs.versionTag }}
       with:
         arguments: shadowJar
-    strategy:
-      matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
-    steps:
-      - name: Echo items in list (for loop using Github Action strategy)
-        run: |
-          echo ${{ matrix.urls }}
+
+#    steps:
+    - name: Echo items in list (for loop using Github Action strategy)
+      run: |
+        echo ${{ matrix.urls }}
 #          #TODO: execute latest validator version and store the validation reports
 #          #TODO: calculate hash code for each dataset and compare to what is in the archive
 #          #TODO: if hashes are different execute v2.0 on the dataset and compare the two outputs
