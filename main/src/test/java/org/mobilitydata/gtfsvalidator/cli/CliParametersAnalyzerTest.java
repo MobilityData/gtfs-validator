@@ -18,49 +18,52 @@ package org.mobilitydata.gtfsvalidator.cli;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-import org.junit.Before;
+import com.beust.jcommander.JCommander;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class CliParametersAnalyzerTest {
-  @Test
-  public void isValid_false() {
+
+  private static boolean isScenarioValid(String[] cliArguments) {
     Arguments args = new Arguments();
-    // --url and --input not provided
     CliParametersAnalyzer cliParametersAnalyzer = new CliParametersAnalyzer();
+    new JCommander(args).parse(cliArguments);
+    return cliParametersAnalyzer.isValid(args);
+  }
+
+  @Test
+  public void noUrlNoInput_isNotValid() {
+    // Nor --url or --input is provided
     String[] argv = {
       "--output_base", "output value",
       "--threads", "4"
     };
-    new JCommander(args).parse(argv);
-    assertThat(cliParametersAnalyzer.isValid(args)).isFalse();
+    assertThat(isScenarioValid(argv)).isFalse();
 
-    // --u and -i not provided
+    // Nor -u or -i is provided
     argv =
         new String[] {
           "-o", "output value",
           "-t", "4"
         };
-    new JCommander(args).parse(argv);
-    assertThat(cliParametersAnalyzer.isValid(args)).isFalse();
+    assertThat(isScenarioValid(argv)).isFalse();
+  }
 
-    // --u and -i are provided
-    argv =
+  @Test
+  public void urlAndInput_isNotValid() {
+    // both --u and -i are provided
+    String[] argv =
         new String[] {
           "-u", "url value",
           "-i", "input value",
           "-o", "output value",
           "-t", "4"
         };
-    new JCommander(args).parse(argv);
-    assertThat(cliParametersAnalyzer.isValid(args)).isFalse();
+    assertThat(isScenarioValid(argv)).isFalse();
 
-    // --url and --input are provided
+    // both --url and --input are provided
     argv =
         new String[] {
           "--url", "url value",
@@ -68,19 +71,20 @@ public class CliParametersAnalyzerTest {
           "--output_base", "output value",
           "--threads", "4"
         };
-    new JCommander(args).parse(argv);
-    assertThat(cliParametersAnalyzer.isValid(args)).isFalse();
+    assertThat(isScenarioValid(argv)).isFalse();
+  }
 
+  @Test
+  public void storageDirectoryNoUrl_isNotValid() {
     // --storage_directory is provided and --url is not provided
-    argv =
+    String[] argv =
         new String[] {
           "--storage_directory", "storage directory value",
           "--input", "input value",
           "--output_base", "output value",
           "--threads", "4"
         };
-    new JCommander(args).parse(argv);
-    assertThat(cliParametersAnalyzer.isValid(args)).isFalse();
+    assertThat(isScenarioValid(argv)).isFalse();
 
     // -s is provided and -u is not provided
     argv =
@@ -90,32 +94,40 @@ public class CliParametersAnalyzerTest {
           "-o", "output value",
           "-t", "4"
         };
-    new JCommander(args).parse(argv);
-    assertThat(cliParametersAnalyzer.isValid(args)).isFalse();
+    assertThat(isScenarioValid(argv)).isFalse();
   }
 
   @Test
-  public void isValid_true() {
-    Arguments args = new Arguments();
+  public void urlNoStorageDirectory_isValid() {
     // --url is provided and --storage_directory is not provided
-    CliParametersAnalyzer cliParametersAnalyzer = new CliParametersAnalyzer();
     String[] argv = {
       "--url", "url value",
       "--output_base", "output value",
       "--threads", "4"
     };
-    new JCommander(args).parse(argv);
-    assertThat(cliParametersAnalyzer.isValid(args)).isTrue();
+    assertThat(isScenarioValid(argv)).isTrue();
 
-    // --u is provided and --s is not provided
+    // -u is provided and -s is not provided
     argv =
         new String[] {
           "-u", "url value",
           "-o", "output value",
           "-t", "4"
         };
-    new JCommander(args).parse(argv);
-    assertThat(cliParametersAnalyzer.isValid(args)).isTrue();
+    assertThat(isScenarioValid(argv)).isTrue();
+  }
+
+  @Test
+  public void storageDirectoryNoInput_isValid() {
+    // --storage_directory is provided and --input is not provided
+    String[] argv =
+        new String[] {
+          "--url", "url value",
+          "--storage_directory", "storage directory value",
+          "--output_base", "output value",
+          "--threads", "4"
+        };
+    assertThat(isScenarioValid(argv)).isTrue();
 
     // -s is provided and -i is not provided
     argv =
@@ -125,25 +137,11 @@ public class CliParametersAnalyzerTest {
           "-o", "output value",
           "-t", "4"
         };
-    new JCommander(args).parse(argv);
-    assertThat(cliParametersAnalyzer.isValid(args)).isTrue();
-
-    // --storage_directory is provided and --input is not provided
-    argv =
-        new String[] {
-          "--url", "url value",
-          "--storage_directory", "storage directory value",
-          "--output_base", "output value",
-          "--threads", "4"
-        };
-    new JCommander(args).parse(argv);
-    assertThat(cliParametersAnalyzer.isValid(args)).isTrue();
+    assertThat(isScenarioValid(argv)).isTrue();
   }
 
   @Test
   public void feedName_isNotValid() {
-    Arguments args = new Arguments();
-    CliParametersAnalyzer cliParametersAnalyzer = new CliParametersAnalyzer();
     String[] argv = {
       "--input", "input value",
       "--output_base", "output value",
@@ -151,8 +149,7 @@ public class CliParametersAnalyzerTest {
       "--threads", "4",
       "--feed_name", "feed name"
     };
-    new JCommander(args).parse(argv);
-    assertThat(cliParametersAnalyzer.isValid(args)).isFalse();
+    assertThat(isScenarioValid(argv)).isFalse();
 
     argv =
         new String[] {
@@ -162,7 +159,6 @@ public class CliParametersAnalyzerTest {
           "-t", "4",
           "-f", "feed name value",
         };
-    new JCommander(args).parse(argv);
-    assertThat(cliParametersAnalyzer.isValid(args)).isFalse();
+    assertThat(isScenarioValid(argv)).isFalse();
   }
 }
