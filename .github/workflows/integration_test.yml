@@ -47,6 +47,7 @@ jobs:
           name: gtfs-validator-snapshot_cli.jar
           path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
   download-latest-gtfs-validator-release-jar:
+    needs: pack-latest-changes
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
     steps:
@@ -58,6 +59,7 @@ jobs:
           url: "https://github.com/MobilityData/gtfs-validator/releases/download/v2.0.0/gtfs-validator-v2.0.0_cli.jar"
           target: public/
   fetch-urls:
+    needs: download-latest-gtfs-validator-release-jar
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
     steps:
@@ -66,21 +68,36 @@ jobs:
         # The below outputs a JSON array and uses GitHub Actions magic (::set-output) to set
         # an output variable
         run: |
-          URLS=$(curl https://testing-validor.free.beeceptor.com/urls)
+          URLS=$(curl https://hello-gtfs-validor.free.beeceptor.com/urls)
           echo $URLS
           echo "::set-output name=matrix::$URLS"
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
-  loop-check:
+  get-latest-changes-validation-reports:
     needs: fetch-urls
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
     steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: gtfs-validator-snapshot_cli.jar
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
       - name: Echo items in list (for loop using Github Action strategy)
         run: |
           echo ${{ matrix.urls }}
+          echo ${{ matrix.outputFolders }}
+          java -jar gtfs-validator-snapshot_cli.jar -u ${{ matrix.outputFolders }} -o output
 #          #TODO: execute latest validator version and store the validation reports
 #          #TODO: calculate hash code for each dataset and compare to what is in the archive
 #          #TODO: if hashes are different execute v2.0 on the dataset and compare the two outputs
