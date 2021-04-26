@@ -104,7 +104,7 @@ public class DefaultFieldValidator implements GtfsFieldValidator {
     }
   }
 
-  public static boolean hasOnlyPrintableAscii(String s) {
+  static boolean hasOnlyPrintableAscii(String s) {
     for (int i = 0, n = s.length(); i < n; ++i) {
       if (!(s.charAt(i) >= 32 && s.charAt(i) < 127)) {
         return false;
