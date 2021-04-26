@@ -66,7 +66,7 @@ jobs:
         # The below outputs a JSON array and uses GitHub Actions magic (::set-output) to set
         # an output variable
         run: |
-          URLS=$(curl https://testing-validor.free.beeceptor.com/urls)
+          URLS=$(curl https://hello-gtfs-validor.free.beeceptor.com/urls)
           echo $URLS
           echo "::set-output name=matrix::$URLS"
     outputs:
@@ -81,6 +81,7 @@ jobs:
       - name: Echo items in list (for loop using Github Action strategy)
         run: |
           echo ${{ matrix.urls }}
+          java -jar gtfs-validator-snapshot_cli.jar -u ${{ matrix.urls }} -o output
 #          #TODO: execute latest validator version and store the validation reports
 #          #TODO: calculate hash code for each dataset and compare to what is in the archive
 #          #TODO: if hashes are different execute v2.0 on the dataset and compare the two outputs
