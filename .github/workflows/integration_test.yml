@@ -96,12 +96,11 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle
       - name: Echo items in list (for loop using Github Action strategy)
         run: |
-          echo ${{ matrix.urls }}
-          echo ls main/build/libs/
+          ls main/build/libs/
           unzip gtfs-validator-${{ needs.pack-latest-changes.outputs.versionTag }}_cli
-          echo pwd
-          echo ls main/build/libs/
-          java -jar main/build/libs/*.jar -u ${{ matrix.urls }} -o output
+          pwd
+#          echo ls main/build/libs/
+#          java -jar main/build/libs/*.jar -u ${{ matrix.urls }} -o output
 #          #TODO: execute latest validator version and store the validation reports
 #          #TODO: calculate hash code for each dataset and compare to what is in the archive
 #          #TODO: if hashes are different execute v2.0 on the dataset and compare the two outputs
