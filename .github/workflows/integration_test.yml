@@ -37,44 +37,46 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:
-    - uses: actions/checkout@v1
-    - name: Prepare version name
-      id: prep
-      run: |
-        VERSION_TAG=edge
-        if [[ $GITHUB_REF == refs/tags/* ]]; then
-          VERSION_TAG=${GITHUB_REF#refs/tags/}
-        elif [[ $GITHUB_REF == refs/heads/* ]]; then
-          VERSION_TAG=-$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
-        elif [[ $GITHUB_REF == refs/pull/* ]]; then
-          VERSION_TAG=-pr-${{ github.event.number }}
-        fi
-        if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
-          VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
-        fi
-        echo ::set-output name=versionTag::${VERSION_TAG}
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-    - name: Cache Gradle packages
-      uses: actions/cache@v2
-      with:
-        path: ~/.gradle/caches
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-        restore-keys: ${{ runner.os }}-gradle
-    - name: Package cli app jar with Gradle
-      uses: eskatos/gradle-command-action@v1
-      env:
-        versionTag: ${{ steps.prep.outputs.versionTag }}
-      with:
-        arguments: shadowJar
-
-#    steps:
-    - name: Echo items in list (for loop using Github Action strategy)
-      run: |
-        echo ${{ matrix.urls }}
-#          #TODO: execute latest validator version and store the validation reports
-#          #TODO: calculate hash code for each dataset and compare to what is in the archive
-#          #TODO: if hashes are different execute v2.0 on the dataset and compare the two outputs
-#          #TODO: else, compare the two outputs (one from the archive, the other one from this action)
+      - uses: actions/checkout@v1
+      - name: Prepare version name
+        id: prep
+        run: |
+          VERSION_TAG=edge
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION_TAG=${GITHUB_REF#refs/tags/}
+          elif [[ $GITHUB_REF == refs/heads/* ]]; then
+            VERSION_TAG=-$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+          elif [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION_TAG=-pr-${{ github.event.number }}
+          fi
+          if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
+            VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
+          fi
+          echo ::set-output name=versionTag::${VERSION_TAG}
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+      - name: Package cli app jar with Gradle
+        uses: eskatos/gradle-command-action@v1
+        env:
+          versionTag: ${{ steps.prep.outputs.versionTag }}
+        with:
+          arguments: shadowJar
+      - name: Execute jar
+        run: java -jar -u ${{ matrix.urls }} -o output
+#
+#  #    steps:
+#      - name: Echo items in list (for loop using Github Action strategy)
+#        run: |
+#          echo ${{ matrix.urls }}
+#  #          #TODO: execute latest validator version and store the validation reports
+#  #          #TODO: calculate hash code for each dataset and compare to what is in the archive
+#  #          #TODO: if hashes are different execute v2.0 on the dataset and compare the two outputs
+#  #          #TODO: else, compare the two outputs (one from the archive, the other one from this action)
