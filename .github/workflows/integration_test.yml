@@ -77,15 +77,15 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
+    outputs:
+      sha1: ${{ steps.prep-id.outputs.sha1 }}
     steps:
       - name: Download latest changes .jar file from previous job
         uses: actions/download-artifact@v2
         with:
           name: gtfs-validator_cli
-      - name: Prep SHA for this URL (to be changed to the datasets' SHA1)
+      - name: Compute SHA for this URL (to be changed to the datasets' SHA1)
         id: prep-sha
-        outputs:
-          sha1: ${{ steps.step1.outputs.sha1 }}
         run: echo "::set-output name=sha1::$(echo -n ${{ matrix.urls }} | openssl sha1)"
       - name: Execute jar
         run: java -jar gtfs-validator*.jar -u ${{ matrix.urls }} -o output/${{ step.prep-sha-outputs.sha1 }} -v latest_changes.json
