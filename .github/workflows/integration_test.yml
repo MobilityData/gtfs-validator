@@ -74,13 +74,16 @@ jobs:
   download-artifact-check:
     needs: pack-latest-changes
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+    strategy:
+      matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:
       - name: Download latest changes .jar file from previous job
         uses: actions/download-artifact@v2
         with:
           name: gtfs-validator_cli
       - name: Execute jar
-        run: java -jar gtfs-validator*.jar -u http://webapps.thebus.org/transitdata/Production/google_transit.zip -o output
+        run: java -jar gtfs-validator*.jar -u ${{ matrix.urls }} -o output
 #  loop-check:
 #    needs: [ fetch-urls, pack-latest-changes ]
 #    runs-on: ubuntu-latest
