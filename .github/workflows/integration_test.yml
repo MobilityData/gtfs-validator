@@ -112,3 +112,14 @@ jobs:
         with:
           name: reports_all
           path: output
+  compare-outputs:
+    needs: [get-reference-report, get-latest-changes-report]
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+    steps:
+      - name: Download all validation reports
+        uses: actions/download-artifact@v2
+        with:
+          name: reports_all
+      - name: Explore folder
+        uses: ls -a
