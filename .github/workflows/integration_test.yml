@@ -94,7 +94,7 @@ jobs:
           name: reports_all
           path: output
   get-reference-report:
-    needs: [ download-latest-gtfs-validator-release-jar, fest-urls ]
+    needs: [ download-latest-gtfs-validator-release-jar, fetch-urls ]
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
     strategy:
