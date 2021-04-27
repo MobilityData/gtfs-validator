@@ -191,6 +191,7 @@ public class ValidatorLoader {
    * @param <T> type of the validator to instantiate
    * @return a new validator
    */
+  @SuppressWarnings("unchecked")
   private static <T> T createValidator(Class<T> clazz, Function<Class<?>, Object> provider)
       throws ReflectiveOperationException {
     Constructor<T> chosenConstructor;
@@ -217,6 +218,7 @@ public class ValidatorLoader {
    * @param <T> type of the validator to instantiate
    * @return a new validator
    */
+  @SuppressWarnings("unchecked")
   public static <T> T createValidatorWithContext(
       Class<T> clazz, ValidationContext validationContext) throws ReflectiveOperationException {
     return createValidator(clazz, validationContext::get);
