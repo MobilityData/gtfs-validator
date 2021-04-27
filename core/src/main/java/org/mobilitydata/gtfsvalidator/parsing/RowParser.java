@@ -373,14 +373,8 @@ public class RowParser {
   /**
    * Validates a string as URL, phone number etc. and adds notices for invalid values.
    *
-   * <ul>
-   *   <li>If {@code validatingFunction} returns true, then the value is considered valid and {@code
-   *       asValidatedString} returns it.
-   *   <li>If {@code validatingFunction} returns false, then the value is considered invalid and
-   *       {@code asValidatedString} returns null.
-   * </ul>
-   *
-   * {@code validatingFunction} can emit errors or warnings to {@code noticeContainer}.
+   * <p>{@code validatingFunction} can emit errors or warnings to {@code noticeContainer}. If an
+   * error is emitted, the value is considered invalid.
    *
    * @param columnIndex index of the column to parse
    * @param required whether the value is required according to GTFS
@@ -394,10 +388,13 @@ public class RowParser {
     if (s == null) {
       return null;
     }
-    if (!validatingFunction.apply(
+    NoticeContainer fieldNotices = new NoticeContainer();
+    validatingFunction.apply(
         s,
         GtfsCellContext.create(fileName, row.getRowNumber(), header.getColumnName(columnIndex)),
-        noticeContainer)) {
+        fieldNotices);
+    noticeContainer.addAll(fieldNotices);
+    if (fieldNotices.hasValidationErrors()) {
       return null;
     }
     return s;
@@ -414,10 +411,10 @@ public class RowParser {
     T apply(String filename, long csvRowNumber, String fieldName, String fieldValue);
   }
 
-  /** Returns true iff the given field is valid and adds appropriate notices to the container. */
+  /** Validates the given field and adds appropriate notices to the container. */
   @FunctionalInterface
   private interface FieldValidatingFunction {
 
-    boolean apply(String fieldValue, GtfsCellContext cellContext, NoticeContainer noticeContainer);
+    void apply(String fieldValue, GtfsCellContext cellContext, NoticeContainer noticeContainer);
   }
 }

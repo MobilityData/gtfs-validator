@@ -113,9 +113,7 @@ public class GtfsFeedLoader {
                   // this thread. We catch an exception here for storing
                   // the context since we know the filename here.
                   logger.atSevere().withCause(e).log("Runtime exception when loading %s", filename);
-                  loaderNotices.addSystemError(
-                      new RuntimeExceptionInLoaderError(
-                          filename, e.getClass().getCanonicalName(), e.getMessage()));
+                  loaderNotices.addSystemError(new RuntimeExceptionInLoaderError(filename, e));
                   // Since the file was not loaded successfully, we treat
                   // it as missing for continuing validation.
                   tableContainer = loader.loadMissingFile(validatorProvider, loaderNotices);
@@ -181,9 +179,7 @@ public class GtfsFeedLoader {
   private static void addThreadExecutionError(
       ExecutionException e, NoticeContainer noticeContainer) {
     logger.atSevere().withCause(e).log("Execution exception");
-    Throwable cause = e.getCause();
-    noticeContainer.addSystemError(
-        new ThreadExecutionError(cause.getClass().getCanonicalName(), cause.getMessage()));
+    noticeContainer.addSystemError(new ThreadExecutionError(e));
   }
 
   static class TableAndNoticeContainers {

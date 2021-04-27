@@ -62,43 +62,36 @@ public class DefaultFieldValidator implements GtfsFieldValidator {
   }
 
   @Override
-  public boolean validateId(
-      String id, GtfsCellContext cellContext, NoticeContainer noticeContainer) {
+  public void validateId(String id, GtfsCellContext cellContext, NoticeContainer noticeContainer) {
     if (!hasOnlyPrintableAscii(id)) {
       noticeContainer.addValidationNotice(
           new NonAsciiOrNonPrintableCharNotice(
               cellContext.filename(), cellContext.csvRowNumber(), cellContext.fieldName(), id));
-      return false;
     }
-    return true;
   }
 
   @Override
-  public boolean validateUrl(
+  public void validateUrl(
       String url, GtfsCellContext cellContext, NoticeContainer noticeContainer) {
     if (!UrlValidator.getInstance().isValid(url)) {
       noticeContainer.addValidationNotice(
           new InvalidUrlNotice(
               cellContext.filename(), cellContext.csvRowNumber(), cellContext.fieldName(), url));
-      return false;
     }
-    return true;
   }
 
   @Override
-  public boolean validateEmail(
+  public void validateEmail(
       String email, GtfsCellContext cellContext, NoticeContainer noticeContainer) {
     if (!EmailValidator.getInstance().isValid(email)) {
       noticeContainer.addValidationNotice(
           new InvalidEmailNotice(
               cellContext.filename(), cellContext.csvRowNumber(), cellContext.fieldName(), email));
-      return false;
     }
-    return true;
   }
 
   @Override
-  public boolean validatePhoneNumber(
+  public void validatePhoneNumber(
       String phoneNumber, GtfsCellContext cellContext, NoticeContainer noticeContainer) {
     if (!PhoneNumberUtil.getInstance()
         .isPossibleNumber(phoneNumber, countryCode.getCountryCode())) {
@@ -108,9 +101,7 @@ public class DefaultFieldValidator implements GtfsFieldValidator {
               cellContext.csvRowNumber(),
               cellContext.fieldName(),
               phoneNumber));
-      return false;
     }
-    return true;
   }
 
   static boolean hasOnlyPrintableAscii(String s) {

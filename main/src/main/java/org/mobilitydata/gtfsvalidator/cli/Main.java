@@ -90,10 +90,10 @@ public class Main {
       }
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot load GTFS feed");
-      noticeContainer.addSystemError(new IOError(e.getMessage()));
+      noticeContainer.addSystemError(new IOError(e));
     } catch (URISyntaxException e) {
       logger.atSevere().withCause(e).log("Syntax error in URI");
-      noticeContainer.addSystemError(new URISyntaxError(e.getMessage()));
+      noticeContainer.addSystemError(new URISyntaxError(e));
     } catch (InterruptedException e) {
       logger.atSevere().withCause(e).log("Interrupted thread");
       noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
@@ -124,7 +124,7 @@ public class Main {
       gtfsInput.close();
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot close GTFS input");
-      noticeContainer.addSystemError(new IOError(e.getMessage()));
+      noticeContainer.addSystemError(new IOError(e));
     }
 
     // Output
