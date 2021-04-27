@@ -17,6 +17,11 @@ jobs:
           target: public/
       - name: explore folder
         run: ls public/ -a
+      - name: Persist reference jar
+        uses: actions/upload-artifact@v2
+        with:
+          name: reference
+          path: public/gtfs-validator*.jar
   fetch-urls:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
