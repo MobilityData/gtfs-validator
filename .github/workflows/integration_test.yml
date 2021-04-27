@@ -25,9 +25,9 @@ jobs:
         # The below outputs a JSON array and uses GitHub Actions magic (::set-output) to set
         # an output variable
         run: |
-          URLS=$(curl https://gtfs-validator.free.beeceptor.com/urls)
-          echo $URLS
-          echo "::set-output name=matrix::$URLS"
+          DATASETS=$(curl https://gtfs-validator.free.beeceptor.com/datasets)
+          echo $DATASETS
+          echo "::set-output name=matrix::$DATASETS"
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   pack-latest-changes:
@@ -77,15 +77,12 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
-    outputs:
-      sha1: ${{ steps.prep-id.outputs.sha1 }}
     steps:
       - name: Download latest changes .jar file from previous job
         uses: actions/download-artifact@v2
         with:
           name: gtfs-validator_cli
-      - name: Compute SHA for this URL (to be changed to the datasets' SHA1)
-        id: prep-sha
-        run: echo "::set-output name=sha1::$(echo -n ${{ matrix.urls }} | openssl sha1)"
-      - name: Execute jar
-        run: java -jar gtfs-validator*.jar -u ${{ matrix.urls }} -o output/${{ steps.prep-sha.outputs.sha1 }} -v latest_changes.json
+      - name: Display url
+        run: echo ${{ matrix.url }}
+     - name: Execute jar
+        run: java -jar gtfs-validator*.jar -u ${{ matrix.url }} -o output/${{ matrix.output }} -v latest_changes.json
