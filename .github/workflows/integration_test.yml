@@ -83,6 +83,6 @@ jobs:
         with:
           name: gtfs-validator_cli
       - name: Display url
-        run: echo ${{ matrix.url }}
+        run: echo ${{ matrix }}
       - name: Execute jar
         run: java -jar gtfs-validator*.jar -u ${{ matrix.url }} -o output/${{ matrix.output }} -v latest_changes.json
