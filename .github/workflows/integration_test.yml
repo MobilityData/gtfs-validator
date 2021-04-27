@@ -93,17 +93,21 @@ jobs:
         with:
           name: reports_all
           path: output
-#  get-reference-report:
-#    needs: [ fetch-urls ]
-#    runs-on: ubuntu-latest
-#    if: "!contains(github.event.head_commit.message, '[ci skip]')"
-#    strategy:
-#      matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
-#    steps:
-#      - uses: actions/checkout@v1
-#      - name: Download latest release of the validator
-#        uses: suisei-cn/actions-download-file@v1
-#        id: reference
-#        with:
-#          url: "https://github.com/MobilityData/gtfs-validator/releases/download/v2.0.0/gtfs-validator-v2.0.0_cli.jar"
-#          target: reference/
+  get-reference-report:
+    needs: [ download-latest-gtfs-validator-release-jar, fest-urls ]
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+    strategy:
+      matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
+    steps:
+      - name: Download latest changes .jar file from previous job
+        uses: actions/download-artifact@v2
+        with:
+          name: reference
+      - name: Execute jar
+        run: java -jar gtfs-validator*.jar -u ${{ matrix.url }} -o output/${{ matrix.output }} -f ca-test
+      - name: Persist reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: reports_all
+          path: output
