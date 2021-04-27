@@ -122,4 +122,4 @@ jobs:
         with:
           name: reports_all
       - name: Explore folder
-        uses: ls -a
+        run: ls -a
