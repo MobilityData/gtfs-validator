@@ -82,7 +82,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: gtfs-validator_cli
-      - name: Display url
-        run: echo ${{ matrix }}
       - name: Execute jar
         run: java -jar gtfs-validator*.jar -u ${{ matrix.url }} -o output/${{ matrix.output }} -v latest_changes.json
+      - name: Persist reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: validation_report_all
+          path: output
