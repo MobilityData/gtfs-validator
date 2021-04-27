@@ -16,7 +16,7 @@ jobs:
           url: "https://github.com/MobilityData/gtfs-validator/releases/download/v2.0.0/gtfs-validator-v2.0.0_cli.jar"
           target: public/
       - name: explore folder
-        run: ls -a
+        run: ls public/ -a
   fetch-urls:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
@@ -73,7 +73,7 @@ jobs:
           name: gtfs-validator_cli
           path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
   get-latest-changes-report:
-    needs: [ download-latest-gtfs-validator-release-jar, fetch-urls ]
+    needs: [ pack-latest-changes, fetch-urls ]
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
     strategy:
