@@ -113,9 +113,11 @@ jobs:
           name: reports_all
           path: output
   compare-outputs:
-    needs: [get-reference-report, get-latest-changes-report]
+    needs: [get-reference-report, get-latest-changes-report, fetch-urls]
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
+    strategy:
+      matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:
       - name: Download all validation reports
         uses: actions/download-artifact@v2
@@ -123,7 +125,5 @@ jobs:
           name: reports_all
       - name: Explore folder
         run: |
-          for d in */ ; do
-              echo "$d"
-              ls "$d"
-          done
+              echo ${{ matrix.output }}
+              ls ${{ matrix.output }} -a
