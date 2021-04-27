@@ -122,4 +122,4 @@ jobs:
         with:
           name: reports_all
       - name: Explore folder
-        run: ls -a
+        run: ls octa/ -a
