@@ -15,8 +15,6 @@ jobs:
         with:
           url: "https://github.com/MobilityData/gtfs-validator/releases/download/v2.0.0/gtfs-validator-v2.0.0_cli.jar"
           target: public/
-      - name: explore folder
-        run: ls public/ -a
       - name: Persist reference jar
         uses: actions/upload-artifact@v2
         with:
