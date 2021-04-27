@@ -10,12 +10,16 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
     steps:
       - name: Download last release of the validator
-        run: curl https://github.com/MobilityData/gtfs-validator/releases/download/v2.0.0/gtfs-validator-v2.0.0_cli.jar -o public/reference.jar
+        uses: suisei-cn/actions-download-file@v1
+        id: gtfs-validator
+        with:
+          url: "https://github.com/MobilityData/gtfs-validator/releases/download/v2.0.0/gtfs-validator-v2.0.0_cli.jar"
+          target: public/
       - name: Persist cli app jar
         uses: actions/upload-artifact@v2
         with:
-          name: reference
-          path: public/reference.jar
+          name: public
+          path: public/.*jar
   fetch-urls:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
