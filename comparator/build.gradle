@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+}
+
+group 'org.mobilitydata'
+version "${System.getenv("versionTag")}"
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.google.api-client:google-api-client:1.31.2'
+
+    implementation project(':core')
+    implementation 'com.google.guava:guava:29.0-jre'
+    implementation 'com.google.flogger:flogger:0.5.1'
+    implementation 'com.google.flogger:flogger-system-backend:0.5.1'
+    implementation 'com.beust:jcommander:1.48'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
