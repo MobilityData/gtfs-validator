@@ -18,7 +18,7 @@ jobs:
       - name: Persist reference jar
         uses: actions/upload-artifact@v2
         with:
-          name: reference
+          name: reference_jar
           path: public/gtfs-validator*.jar
   fetch-urls:
     runs-on: ubuntu-latest
@@ -73,7 +73,7 @@ jobs:
       - name: Persist cli app jar
         uses: actions/upload-artifact@v2
         with:
-          name: gtfs-validator_cli
+          name: latest_changes_cli
           path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
   get-latest-changes-report:
     needs: [ pack-latest-changes, fetch-urls ]
@@ -85,7 +85,7 @@ jobs:
       - name: Download latest changes .jar file from previous job
         uses: actions/download-artifact@v2
         with:
-          name: gtfs-validator_cli
+          name: latest_changes_cli
       - name: Execute jar
         run: java -jar gtfs-validator*.jar -u ${{ matrix.url }} -o output/${{ matrix.output }} -v latest_changes.json
       - name: Persist reports
@@ -103,8 +103,9 @@ jobs:
       - name: Download latest changes .jar file from previous job
         uses: actions/download-artifact@v2
         with:
-          name: reference
+          name: reference_jar
       - name: Execute jar
+        # the following line will be changed after v3.0 is published without -f CLI parameter
         run: java -jar gtfs-validator*.jar -u ${{ matrix.url }} -o output/${{ matrix.output }} -f ca-test
       - name: Persist reports
         uses: actions/upload-artifact@v2
