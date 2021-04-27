@@ -122,4 +122,8 @@ jobs:
         with:
           name: reports_all
       - name: Explore folder
-        run: ls octa/ -a
+        run: |
+          for d in */ ; do
+              echo "$d"
+              ls "$d"
+          done
