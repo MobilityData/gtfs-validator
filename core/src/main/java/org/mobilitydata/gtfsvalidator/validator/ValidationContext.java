@@ -53,11 +53,12 @@ public abstract class ValidationContext {
   public abstract CurrentDateTime currentDateTime();
 
   /** Returns a member of the context with requested class. */
+  @SuppressWarnings("unchecked")
   public <T> T get(Class<T> clazz) {
-    if (CountryCode.class.isAssignableFrom(clazz)) {
+    if (clazz.isAssignableFrom(CountryCode.class)) {
       return (T) countryCode();
     }
-    if (CurrentDateTime.class.isAssignableFrom(clazz)) {
+    if (clazz.isAssignableFrom(CurrentDateTime.class)) {
       return (T) currentDateTime();
     }
     throw new IllegalArgumentException(
