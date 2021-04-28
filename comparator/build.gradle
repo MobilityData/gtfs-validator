@@ -20,5 +20,6 @@ dependencies {
     implementation 'com.google.flogger:flogger-system-backend:0.5.1'
     implementation 'com.beust:jcommander:1.48'
     implementation 'com.google.code.gson:gson:2.8.6'
+    testImplementation "com.google.truth:truth:1.0.1"
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
