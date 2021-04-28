@@ -58,45 +58,12 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
   public abstract String gtfsFilename();
 
   /**
-   * Tells if the file is completely empty, i.e. it has no rows and even no headers.
-   *
-   * @return true if the file is empty, false otherwise
-   */
-  public boolean isEmptyFile() {
-    return tableStatus == TableStatus.EMPTY_FILE;
-  }
-
-  /**
    * Tells if the file is missing.
    *
    * @return true if the file is missing, false otherwise
    */
   public boolean isMissingFile() {
     return tableStatus == TableStatus.MISSING_FILE;
-  }
-
-  /**
-   * Tells if the file is invalid headers, e.g., some required headers are missing.
-   *
-   * <p>Note that unknown headers are not considered invalid.
-   *
-   * @return true if the file has invalid headers, false otherwise
-   */
-  public boolean hasInvalidHeaders() {
-    return tableStatus == TableStatus.INVALID_HEADERS;
-  }
-
-  /**
-   * Tells if some of the rows failed to parse, e.g., have missing required fields or invalid field
-   * values.
-   *
-   * <p>This does not include cross-file or cross-row validation. This also does not include
-   * single-entity validation.
-   *
-   * @return true if some of the rows failed to parse, false otherwise
-   */
-  public boolean hasUnparsableRows() {
-    return tableStatus == TableStatus.UNPARSABLE_ROWS;
   }
 
   /**
@@ -116,6 +83,7 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
    * <p>A successfully parsed file must meet the following conditions:
    *
    * <ul>
+   *   <li>the file was successfully parsed as CSV;
    *   <li>all headers are valid, required headers are present;
    *   <li>all rows are successfully parsed;
    *   <li>if the file is required, it is present in the feed.
@@ -124,14 +92,48 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
    * @return true if file was successfully parsed, false otherwise
    */
   public boolean isParsedSuccessfully() {
-    return !hasInvalidHeaders() && !hasUnparsableRows() && !(isRequired() && isMissingFile());
+    switch (tableStatus) {
+      case EMPTY_FILE:
+      case PARSABLE_HEADERS_AND_ROWS:
+        return true;
+      case MISSING_FILE:
+        return !isRequired();
+      default:
+        return false;
+    }
   }
 
+  /**
+   * Status of loading this table. This is includes parsing of the CSV file and validation of the
+   * single file, but does not include any cross-file validations.
+   */
   public enum TableStatus {
+    /** The file is completely empty, i.e. it has no rows and even no headers. */
     EMPTY_FILE,
+
+    /** The file is missing in the GTFS feed. */
     MISSING_FILE,
+
+    /** The file was parsed successfully. It has headers and 0, 1 or many rows. */
     PARSABLE_HEADERS_AND_ROWS,
+
+    /**
+     * The file has invalid headers, e.g., they failed to parse or some required headers are
+     * missing. The other rows were not scanned.
+     *
+     * <p>Note that unknown headers are not considered invalid.
+     */
     INVALID_HEADERS,
+
+    /**
+     * Some of the rows failed to parse, e.g., they have missing required fields or invalid field
+     * values.
+     *
+     * <p>However, the headers are valid.
+     *
+     * <p>This does not include cross-file or cross-row validation. This also does not include
+     * single-entity validation.
+     */
     UNPARSABLE_ROWS,
   }
 }
