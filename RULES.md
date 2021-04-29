@@ -68,6 +68,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 | Name                                                                                                            	| Description                                                                                                                                                 	|
 |-----------------------------------------------------------------------------------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------	|
 | [`BlockTripsWithOverlappingStopTimesNotice`](#BlockTripsWithOverlappingStopTimesNotice)                         	| Block trips with overlapping stop times.                                                                                                                    	|
+| [`CsvParsingFailedNotice`](#CsvParsingFailedNotice)                                                             	| Parsing of a CSV file failed.                                                                                                                             	|
 | [`DecreasingOrEqualShapeDistanceNotice`](#DecreasingOrEqualShapeDistanceNotice)                                 	| Decreasing or equal `shape_dist_traveled` in `shapes.txt`.                                                                                                  	|
 | [`DecreasingOrEqualStopTimeDistanceNotice`](#DecreasingOrEqualStopTimeDistanceNotice)                           	| Decreasing or equal `shape_dist_traveled` in `stop_times.txt`.                                                                                              	|
 | [`DuplicatedColumnNotice`](#DuplicatedColumnNotice)                                                             	| Duplicated column in CSV.                                                                                                                                   	|
@@ -167,6 +168,12 @@ Trips with the same block id have overlapping stop times.
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
+
+<a name="CsvParsingFailedNotice"/>
+
+#### CsvParsingFailedNotice
+
+Parsing of a CSV file failed. One common case of the problem is when a cell value contains more than 4096 characters.
 
 <a name="DecreasingOrEqualShapeDistanceNotice"/>
 
