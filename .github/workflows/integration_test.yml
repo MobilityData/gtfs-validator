@@ -94,7 +94,9 @@ jobs:
           path: comparator/build/libs/comparator*.jar
       - name: Explore folder # to be replaced by the execution of a comparator jar
         run: |
-          ls -a comparator/build/libs
+          pwd
+          cd comparator
+          ls -a
   download-latest-gtfs-validator-release-jar:
     needs: [ pack-comparator, test-comparator ]
     runs-on: ubuntu-latest
