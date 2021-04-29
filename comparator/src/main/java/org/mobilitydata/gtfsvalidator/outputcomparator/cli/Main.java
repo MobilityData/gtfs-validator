@@ -32,7 +32,7 @@ import org.mobilitydata.gtfsvalidator.outputcomparator.util.ValidationReport;
 
 public class Main {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-  private static final String REFERENCE_JSON = "reference.json";
+  private static final String REFERENCE_JSON = "report.json";
   private static final String LATEST_JSON = "latest.json";
   private static final String INTEGRATION_REPORT_JSON = "integration_report.json";
   private static final Gson GSON = new Gson();
