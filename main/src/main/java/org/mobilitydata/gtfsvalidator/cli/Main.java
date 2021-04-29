@@ -33,7 +33,6 @@ import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.ThreadInterruptedError;
 import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
@@ -45,6 +44,7 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 /** The main entry point for GTFS Validator CLI. */
 public class Main {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  private static final String GTFS_ZIP_FILENAME = "gtfs.zip";
 
   public static void main(String[] argv) {
     Arguments args = new Arguments();
@@ -83,7 +83,9 @@ public class Main {
         if (Strings.isNullOrEmpty(args.getStorageDirectory())) {
           gtfsInput = GtfsInput.createFromUrlInMemory(new URL(args.getUrl()));
         } else {
-          gtfsInput = GtfsInput.createFromUrl(new URL(args.getUrl()), args.getStorageDirectory());
+          gtfsInput =
+              GtfsInput.createFromUrl(
+                  new URL(args.getUrl()), Paths.get(args.getStorageDirectory(), GTFS_ZIP_FILENAME));
         }
       } else {
         gtfsInput = GtfsInput.createFromPath(Paths.get(args.getInput()));
@@ -94,9 +96,6 @@ public class Main {
     } catch (URISyntaxException e) {
       logger.atSevere().withCause(e).log("Syntax error in URI");
       noticeContainer.addSystemError(new URISyntaxError(e));
-    } catch (InterruptedException e) {
-      logger.atSevere().withCause(e).log("Interrupted thread");
-      noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
     }
     if (gtfsInput == null) {
       exportReport(noticeContainer, args);

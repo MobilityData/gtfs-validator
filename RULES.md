@@ -155,7 +155,6 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 | [`RuntimeExceptionInLoaderError`](#RuntimeExceptionInLoaderError)       	| RuntimeException while loading GTFS dataset in memory. 	|
 | [`RuntimeExceptionInValidatorError`](#RuntimeExceptionInValidatorError) 	| RuntimeException while validating GTFS archive.        	|
 | [`ThreadExecutionError`](#ThreadExecutionError)                         	| ExecutionException during multithreaded validation     	|
-| [`ThreadInterruptedError`](#ThreadInterruptedError)                     	| InterruptedExecution during multithreaded validation   	|
 | [`URISyntaxError`](#URISyntaxError)                                     	| A string could not be parsed as a URI reference.       	|
 
 ## Notices
@@ -794,13 +793,7 @@ A [RuntimeException](https://docs.oracle.com/javase/8/docs/api/java/lang/Runtime
 
 An [ExecutionException](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutionException.html) occurred during multithreaded validation.
 
-<a name="ThreadInterruptedError"/>
-
-#### ThreadInterruptedError
-
 <a name="URISyntaxError"/>
-
-An [InterruptedException](https://docs.oracle.com/javase/8/docs/api/java/lang/InterruptedException.html) during multithreaded validation.
 
 #### URISyntaxError
 
