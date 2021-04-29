@@ -176,4 +176,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: integration test report
-          path: ./integration_test.json
+          path: ./integration_report.json
