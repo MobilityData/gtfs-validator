@@ -168,7 +168,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: output-comparator-cli
-      - name: Explore folder
-        run: ls -a
       - name: Execute comparator
         run: java -jar comparator*.jar -v 1 -o .
+      - name: Persist integration test report
+        uses: actions/upload-artifact@v2
+      - name: Explore folder
+        run: ls -a
+        with:
+          name: integration test report
+          path: ./integration_test.json
