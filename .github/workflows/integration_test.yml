@@ -39,7 +39,7 @@ jobs:
       - name: Persist cli app jar
         uses: actions/upload-artifact@v2
         with:
-          name: output-comparator-cli-jar
+          name: output-comparator-cli
           path: comparator/build/libs/comparator*.jar
   download-latest-gtfs-validator-release-jar:
     needs: [ pack-comparator ]
@@ -162,7 +162,9 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: reports_all
-      - name: Explore folder # to be replaced by the execution of a comparator jar
-        run: |
-              echo ${{ matrix.output }}
-              ls ${{ matrix.output }} -a
+      - name: Download comparator jar
+        uses: actions/download-artifact@v2
+        with:
+          name: output-comparator-cli
+      - name: Execute comparator
+        run: java -jar output-comparator-cli.jar -v 1 -o reports_all/
