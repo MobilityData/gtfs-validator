@@ -82,11 +82,7 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
       - name: Package comparator cli app jar with Gradle
-        uses: eskatos/gradle-command-action@v1
-        env:
-          versionTag: ${{ steps.prep.outputs.versionTag }}
-        with:
-          arguments: shadowJar
+        run: ./gradlew clean build
       - name: Persist cli app jar
         uses: actions/upload-artifact@v2
         with:
