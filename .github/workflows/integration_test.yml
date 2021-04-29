@@ -91,7 +91,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: output-comparator-cli-jar -- ${{ steps.prep.outputs.versionTag }}
-          path: comparator/build/libs/comparator.jar
+          path: comparator/build/libs/comparator*.jar
   download-latest-gtfs-validator-release-jar:
     needs: [ pack-comparator ]
     runs-on: ubuntu-latest
