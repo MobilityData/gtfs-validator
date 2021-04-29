@@ -62,6 +62,7 @@ repositories {
 dependencies {
     annotationProcessor project(':processor')
     compileOnly project(':processor')
+    compileOnly project(':comparator')
     implementation project(':core')
     implementation 'org.apache.httpcomponents.client5:httpclient5:5.0.3'
     implementation 'com.beust:jcommander:1.48'
