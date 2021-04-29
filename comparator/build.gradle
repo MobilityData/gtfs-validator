@@ -1,4 +1,5 @@
 plugins {
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'java'
     id 'application'
 }
@@ -13,16 +14,15 @@ repositories {
 }
 
 dependencies {
-    compile 'com.google.api-client:google-api-client:1.31.2'
-
     implementation project(':core')
+    implementation 'com.google.api-client:google-api-client:1.31.2'
     implementation 'com.google.guava:guava:29.0-jre'
     implementation 'com.google.flogger:flogger:0.5.1'
     implementation 'com.google.flogger:flogger-system-backend:0.5.1'
     implementation 'com.beust:jcommander:1.48'
     implementation 'com.google.code.gson:gson:2.8.6'
     testImplementation "com.google.truth:truth:1.0.1"
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
 
 jar {
@@ -34,3 +34,16 @@ jar {
                 'Multi-Release': 'true')
     }
 }
+
+
+shadowJar {
+    // Change the JAR name from cli-app to gtfs-validator
+    archiveBaseName = 'comparator'
+    // Remove "-all" from the end of the JAR file name
+    archiveClassifier = null
+    // Add "v" to version to match previous releases
+    archiveVersion = project.version
+}
+
+mainClassName = 'org.mobilitydata.gtfsvalidator.outputcomparator.cli.Main'
+
