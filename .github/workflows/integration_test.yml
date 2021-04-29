@@ -170,8 +170,6 @@ jobs:
           name: output-comparator-cli
       - name: Execute comparator
         run: java -jar comparator*.jar -v 1 -o .
-      - name: Explore folder
-        run: ls -a
       - name: Persist integration test report
         uses: actions/upload-artifact@v2
         with:
