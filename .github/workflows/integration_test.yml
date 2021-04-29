@@ -171,4 +171,4 @@ jobs:
       - name: Explore folder
         run: ls -a
       - name: Execute comparator
-        run: java -jar comparator*.jar -v 1 -o reports_all
+        run: java -jar comparator*.jar -v 1 -o .
