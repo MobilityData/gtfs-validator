@@ -93,7 +93,7 @@ jobs:
           name: output-comparator-cli-jar -- ${{ steps.prep.outputs.versionTag }}
           path: comparator/build/libs/comparator*.jar
   download-latest-gtfs-validator-release-jar:
-    needs: [ pack-comparator ]
+    needs: [ pack-comparator, test-comparator ]
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
     steps:
@@ -109,7 +109,7 @@ jobs:
           name: reference_jar
           path: public/gtfs-validator*.jar
   fetch-urls:
-    needs: [ pack-comparator ]
+    needs: [ pack-comparator, test-comparator ]
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
     steps:
@@ -124,7 +124,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   pack-latest-changes:
-    needs: [ pack-comparator ]
+    needs: [ pack-comparator, test-comparator ]
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
     steps:
