@@ -25,11 +25,11 @@ dependencies {
 }
 
 jar {
-    // Add the manifest within the JAR, using gtfs-validator as the title
+    // Add the manifest within the JAR, using comparator as the title
     manifest {
         attributes('Implementation-Title': 'comparator',
                 'Implementation-Version': project.version,
-                'Main-Class': 'org.mobilitydata.gtfsvalidator.outputcomparator.Main',
+                'Main-Class': 'org.mobilitydata.gtfsvalidator.outputcomparator.cli.Main',
                 'Multi-Release': 'true')
     }
 }
