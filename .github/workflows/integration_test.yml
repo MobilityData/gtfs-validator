@@ -165,4 +165,4 @@ jobs:
         with:
           name: output-comparator-cli
       - name: Execute comparator
-        run: java -jar output-comparator-cli.jar -v 1 -o reports_all/
+        run: java -jar comparator*.jar -v 1 -o reports_all
