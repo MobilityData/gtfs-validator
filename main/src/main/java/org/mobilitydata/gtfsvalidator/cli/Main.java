@@ -44,6 +44,7 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 /** The main entry point for GTFS Validator CLI. */
 public class Main {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  private static final String GTFS_ZIP_FILENAME = "gtfs.zip";
 
   public static void main(String[] argv) {
     Arguments args = new Arguments();
@@ -84,7 +85,7 @@ public class Main {
         } else {
           gtfsInput =
               GtfsInput.createFromUrl(
-                  new URL(args.getUrl()), Paths.get(args.getStorageDirectory(), "gtfs.zip"));
+                  new URL(args.getUrl()), Paths.get(args.getStorageDirectory(), GTFS_ZIP_FILENAME));
         }
       } else {
         gtfsInput = GtfsInput.createFromPath(Paths.get(args.getInput()));
