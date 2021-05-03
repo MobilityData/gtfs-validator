@@ -68,6 +68,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 | Name                                                                                                            	| Description                                                                                                                                                 	|
 |-----------------------------------------------------------------------------------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------	|
 | [`BlockTripsWithOverlappingStopTimesNotice`](#BlockTripsWithOverlappingStopTimesNotice)                         	| Block trips with overlapping stop times.                                                                                                                    	|
+| [`CsvParsingFailedNotice`](#CsvParsingFailedNotice)                                                             	| Parsing of a CSV file failed.                                                                                                                             	|
 | [`DecreasingOrEqualShapeDistanceNotice`](#DecreasingOrEqualShapeDistanceNotice)                                 	| Decreasing or equal `shape_dist_traveled` in `shapes.txt`.                                                                                                  	|
 | [`DecreasingOrEqualStopTimeDistanceNotice`](#DecreasingOrEqualStopTimeDistanceNotice)                           	| Decreasing or equal `shape_dist_traveled` in `stop_times.txt`.                                                                                              	|
 | [`DuplicatedColumnNotice`](#DuplicatedColumnNotice)                                                             	| Duplicated column in CSV.                                                                                                                                   	|
@@ -155,7 +156,6 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 | [`RuntimeExceptionInLoaderError`](#RuntimeExceptionInLoaderError)       	| RuntimeException while loading GTFS dataset in memory. 	|
 | [`RuntimeExceptionInValidatorError`](#RuntimeExceptionInValidatorError) 	| RuntimeException while validating GTFS archive.        	|
 | [`ThreadExecutionError`](#ThreadExecutionError)                         	| ExecutionException during multithreaded validation     	|
-| [`ThreadInterruptedError`](#ThreadInterruptedError)                     	| InterruptedExecution during multithreaded validation   	|
 | [`URISyntaxError`](#URISyntaxError)                                     	| A string could not be parsed as a URI reference.       	|
 
 ## Notices
@@ -168,6 +168,12 @@ Trips with the same block id have overlapping stop times.
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
+
+<a name="CsvParsingFailedNotice"/>
+
+#### CsvParsingFailedNotice
+
+Parsing of a CSV file failed. One common case of the problem is when a cell value contains more than 4096 characters.
 
 <a name="DecreasingOrEqualShapeDistanceNotice"/>
 
@@ -794,13 +800,7 @@ A [RuntimeException](https://docs.oracle.com/javase/8/docs/api/java/lang/Runtime
 
 An [ExecutionException](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutionException.html) occurred during multithreaded validation.
 
-<a name="ThreadInterruptedError"/>
-
-#### ThreadInterruptedError
-
 <a name="URISyntaxError"/>
-
-An [InterruptedException](https://docs.oracle.com/javase/8/docs/api/java/lang/InterruptedException.html) during multithreaded validation.
 
 #### URISyntaxError
 
