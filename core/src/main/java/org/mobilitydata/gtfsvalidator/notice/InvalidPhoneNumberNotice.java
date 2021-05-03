@@ -55,6 +55,6 @@ public class InvalidPhoneNumberNotice extends ValidationNotice {
   /** Constructs a notice with the default severity {@code ERROR}. */
   public InvalidPhoneNumberNotice(
       String filename, long csvRowNumber, String fieldName, String fieldValue) {
-    this(filename, csvRowNumber, fieldName, fieldValue, SeverityLevel.WARNING);
+    this(filename, csvRowNumber, fieldName, fieldValue, SeverityLevel.ERROR);
   }
 }
