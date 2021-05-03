@@ -32,13 +32,19 @@ import com.google.common.collect.ImmutableMap;
  * some values and omit them for the others. This is causing the largest problem when a primary key
  * and a foreign key differ just by a whitespace: it is clear that they are intended to be the same,
  * that is why we always strip whitespaces.
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class LeadingOrTrailingWhitespacesNotice extends ValidationNotice {
 
+  /**
+   * Constructs a notice with given severity. This constructor may be used by users that want to
+   * lower the priority to {@code WARNING}.
+   */
   public LeadingOrTrailingWhitespacesNotice(
-      String filename, long csvRowNumber, String fieldName, String fieldValue) {
+      String filename,
+      long csvRowNumber,
+      String fieldName,
+      String fieldValue,
+      SeverityLevel severityLevel) {
     super(
         ImmutableMap.of(
             "filename",
@@ -49,6 +55,12 @@ public class LeadingOrTrailingWhitespacesNotice extends ValidationNotice {
             fieldName,
             "fieldValue",
             fieldValue),
-        SeverityLevel.ERROR);
+        severityLevel);
+  }
+
+  /** Constructs a notice with the default severity {@code ERROR}. */
+  public LeadingOrTrailingWhitespacesNotice(
+      String filename, long csvRowNumber, String fieldName, String fieldValue) {
+    this(filename, csvRowNumber, fieldName, fieldValue, SeverityLevel.ERROR);
   }
 }

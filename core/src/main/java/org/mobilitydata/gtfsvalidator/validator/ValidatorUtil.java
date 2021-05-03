@@ -67,15 +67,16 @@ public final class ValidatorUtil {
    * @param noticeContainer the container for storing notices
    */
   public static void safeValidate(
-      Consumer<NoticeContainer> validate, Class validatorClass, NoticeContainer noticeContainer) {
+      Consumer<NoticeContainer> validate,
+      Class<?> validatorClass,
+      NoticeContainer noticeContainer) {
     try {
       validate.accept(noticeContainer);
     } catch (RuntimeException e) {
       logger.atSevere().withCause(e).log(
           "Runtime exception in validator %s", validatorClass.getCanonicalName());
       noticeContainer.addSystemError(
-          new RuntimeExceptionInValidatorError(
-              validatorClass.getCanonicalName(), e.getClass().getCanonicalName(), e.getMessage()));
+          new RuntimeExceptionInValidatorError(validatorClass.getCanonicalName(), e));
     }
   }
 

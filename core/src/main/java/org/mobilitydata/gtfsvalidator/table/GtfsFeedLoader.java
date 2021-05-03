@@ -28,12 +28,12 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsLoader;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.RuntimeExceptionInLoaderError;
 import org.mobilitydata.gtfsvalidator.notice.ThreadExecutionError;
-import org.mobilitydata.gtfsvalidator.notice.ThreadInterruptedError;
 import org.mobilitydata.gtfsvalidator.notice.UnknownFileNotice;
 import org.mobilitydata.gtfsvalidator.validator.FileValidator;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
@@ -86,8 +86,10 @@ public class GtfsFeedLoader {
     this.numThreads = numThreads;
   }
 
+  @SuppressWarnings("unchecked")
   public GtfsFeedContainer loadAndValidate(
-      GtfsInput gtfsInput, ValidatorProvider validatorProvider, NoticeContainer noticeContainer) {
+      GtfsInput gtfsInput, ValidatorProvider validatorProvider, NoticeContainer noticeContainer)
+      throws InterruptedException {
     logger.atInfo().log("Loading in %d threads", numThreads);
     ExecutorService exec = Executors.newFixedThreadPool(numThreads);
 
@@ -95,30 +97,27 @@ public class GtfsFeedLoader {
     Map<String, GtfsTableLoader<?>> remainingLoaders =
         (Map<String, GtfsTableLoader<?>>) tableLoaders.clone();
     for (String filename : gtfsInput.getFilenames()) {
-      GtfsTableLoader loader = remainingLoaders.remove(filename.toLowerCase());
+      GtfsTableLoader<?> loader = remainingLoaders.remove(filename.toLowerCase());
       if (loader == null) {
         noticeContainer.addValidationNotice(new UnknownFileNotice(filename));
       } else {
         loaderCallables.add(
             () -> {
-              InputStream inputStream = gtfsInput.getFile(filename);
               NoticeContainer loaderNotices = new NoticeContainer();
-              GtfsTableContainer tableContainer;
-              try {
-                tableContainer = loader.load(inputStream, validatorProvider, loaderNotices);
-              } catch (RuntimeException e) {
-                // This handler should prevent ExecutionException for
-                // this thread. We catch an exception here for storing
-                // the context since we know the filename here.
-                logger.atSevere().withCause(e).log("Runtime exception when loading %s", filename);
-                loaderNotices.addSystemError(
-                    new RuntimeExceptionInLoaderError(
-                        filename, e.getClass().getCanonicalName(), e.getMessage()));
-                // Since the file was not loaded successfully, we treat
-                // it as missing for continuing validation.
-                tableContainer = loader.loadMissingFile(validatorProvider, loaderNotices);
-              } finally {
-                inputStream.close();
+              GtfsTableContainer<?> tableContainer;
+              try (InputStream inputStream = gtfsInput.getFile(filename)) {
+                try {
+                  tableContainer = loader.load(inputStream, validatorProvider, loaderNotices);
+                } catch (RuntimeException e) {
+                  // This handler should prevent ExecutionException for
+                  // this thread. We catch an exception here for storing
+                  // the context since we know the filename here.
+                  logger.atSevere().withCause(e).log("Runtime exception when loading %s", filename);
+                  loaderNotices.addSystemError(new RuntimeExceptionInLoaderError(filename, e));
+                  // Since the file was not loaded successfully, we treat
+                  // it as missing for continuing validation.
+                  tableContainer = loader.loadMissingFile(validatorProvider, loaderNotices);
+                }
               }
               return new TableAndNoticeContainers(tableContainer, loaderNotices);
             });
@@ -126,34 +125,20 @@ public class GtfsFeedLoader {
     }
     ArrayList<GtfsTableContainer<?>> tableContainers = new ArrayList<>();
     tableContainers.ensureCapacity(tableLoaders.size());
-    for (GtfsTableLoader loader : remainingLoaders.values()) {
+    for (GtfsTableLoader<?> loader : remainingLoaders.values()) {
       tableContainers.add(loader.loadMissingFile(validatorProvider, noticeContainer));
     }
     try {
-      try {
-        exec.invokeAll(loaderCallables)
-            .forEach(
-                f -> {
-                  try {
-                    TableAndNoticeContainers containers = f.get();
-                    tableContainers.add(containers.tableContainer);
-                    noticeContainer.addAll(containers.noticeContainer);
-                  } catch (ExecutionException e) {
-                    // All runtime exceptions should be caught above.
-                    // ExecutionException is not expected to happen.
-                    logger.atSevere().withCause(e).log("Execution exception in loader");
-                    final Throwable cause = e.getCause();
-                    noticeContainer.addSystemError(
-                        new ThreadExecutionError(
-                            cause.getClass().getCanonicalName(), cause.getMessage()));
-                  } catch (InterruptedException e) {
-                    logger.atSevere().withCause(e).log("Interrupted during loading a GTFS tables");
-                    noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
-                  }
-                });
-      } catch (InterruptedException e) {
-        logger.atSevere().withCause(e).log("Interrupted during loading GTFS tables");
-        noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
+      for (Future<TableAndNoticeContainers> futureContainer : exec.invokeAll(loaderCallables)) {
+        try {
+          TableAndNoticeContainers containers = futureContainer.get();
+          tableContainers.add(containers.tableContainer);
+          noticeContainer.addAll(containers.noticeContainer);
+        } catch (ExecutionException e) {
+          // All runtime exceptions should be caught above.
+          // ExecutionException is not expected to happen.
+          addThreadExecutionError(e, noticeContainer);
+        }
       }
       GtfsFeedContainer feed = new GtfsFeedContainer(tableContainers);
       if (!feed.isParsedSuccessfully()) {
@@ -175,34 +160,26 @@ public class GtfsFeedLoader {
               return validatorNotices;
             });
       }
-      try {
-        exec.invokeAll(validatorCallables)
-            .forEach(
-                container -> {
-                  try {
-                    noticeContainer.addAll(container.get());
-                  } catch (ExecutionException e) {
-                    // All runtime exceptions should be caught above.
-                    // ExecutionException is not expected to happen.
-                    logger.atSevere().withCause(e).log("Execution exception in validator");
-                    final Throwable cause = e.getCause();
-                    noticeContainer.addSystemError(
-                        new ThreadExecutionError(
-                            cause.getClass().getCanonicalName(), cause.getMessage()));
-                  } catch (InterruptedException e) {
-                    logger.atSevere().withCause(e).log(
-                        "Interrupted during validation of GTFS tables");
-                    noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
-                  }
-                });
-      } catch (InterruptedException e) {
-        logger.atSevere().withCause(e).log("Interrupted during validation of GTFS tables");
-        noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
+      for (Future<NoticeContainer> futureContainer : exec.invokeAll(validatorCallables)) {
+        try {
+          noticeContainer.addAll(futureContainer.get());
+        } catch (ExecutionException e) {
+          // All runtime exceptions should be caught above.
+          // ExecutionException is not expected to happen.
+          addThreadExecutionError(e, noticeContainer);
+        }
       }
       return feed;
     } finally {
       exec.shutdown();
     }
+  }
+
+  /** Adds a ThreadExecutionError to the notice container. */
+  private static void addThreadExecutionError(
+      ExecutionException e, NoticeContainer noticeContainer) {
+    logger.atSevere().withCause(e).log("Execution exception");
+    noticeContainer.addSystemError(new ThreadExecutionError(e));
   }
 
   static class TableAndNoticeContainers {

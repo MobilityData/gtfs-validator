@@ -33,7 +33,7 @@ public class DefaultValidatorProvider implements ValidatorProvider {
   private final TableHeaderValidator tableHeaderValidator;
   private final ListMultimap<Class<? extends GtfsEntity>, Class<? extends SingleEntityValidator<?>>>
       singleEntityValidators;
-  private final ListMultimap<Class<? extends GtfsTableContainer>, Class<? extends FileValidator>>
+  private final ListMultimap<Class<? extends GtfsTableContainer<?>>, Class<? extends FileValidator>>
       singleFileValidators;
   private final List<Class<? extends FileValidator>> multiFileValidators;
 
@@ -91,18 +91,18 @@ public class DefaultValidatorProvider implements ValidatorProvider {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public <T extends GtfsEntity> List<FileValidator> createSingleFileValidators(
       GtfsTableContainer<T> table) {
     List<FileValidator> validators = new ArrayList<>();
     for (Class<? extends FileValidator> validatorClass :
-        singleFileValidators.get(table.getClass())) {
+        singleFileValidators.get((Class<? extends GtfsTableContainer<?>>) table.getClass())) {
       try {
         validators.add(
             ValidatorLoader.createSingleFileValidator(validatorClass, table, validationContext));
       } catch (ReflectiveOperationException e) {
         logger.atSevere().withCause(e).log(
             "Cannot instantiate validator %s", validatorClass.getCanonicalName());
-        continue;
       }
     }
     return validators;

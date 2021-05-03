@@ -17,8 +17,8 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import com.google.auto.value.AutoValue;
-import java.time.ZonedDateTime;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
+import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 
 /**
  * A read-only context passed to particular validator objects. It gives information relevant for
@@ -50,13 +50,26 @@ public abstract class ValidationContext {
    *
    * @return The time when validation started as @code{ZonedDateTime}
    */
-  public abstract ZonedDateTime now();
+  public abstract CurrentDateTime currentDateTime();
+
+  /** Returns a member of the context with requested class. */
+  @SuppressWarnings("unchecked")
+  public <T> T get(Class<T> clazz) {
+    if (clazz.isAssignableFrom(CountryCode.class)) {
+      return (T) countryCode();
+    }
+    if (clazz.isAssignableFrom(CurrentDateTime.class)) {
+      return (T) currentDateTime();
+    }
+    throw new IllegalArgumentException(
+        "Cannot find " + clazz.getCanonicalName() + " in validation context");
+  }
 
   @AutoValue.Builder
   public abstract static class Builder {
     public abstract Builder setCountryCode(CountryCode countryCode);
 
-    public abstract Builder setNow(ZonedDateTime now);
+    public abstract Builder setCurrentDateTime(CurrentDateTime currentDateTime);
 
     public abstract ValidationContext build();
   }

@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.input;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSet.Builder;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +36,7 @@ public class GtfsZipFileInput extends GtfsInput {
   public GtfsZipFileInput(ZipFile zipFile) {
     this.zipFile = zipFile;
 
-    ImmutableSet.Builder<String> filenamesBuilder = new Builder<>();
+    ImmutableSet.Builder<String> filenamesBuilder = new ImmutableSet.Builder<>();
     for (Enumeration<ZipArchiveEntry> entries = zipFile.getEntries(); entries.hasMoreElements(); ) {
       ZipArchiveEntry entry = entries.nextElement();
       if (!isInsideZipDirectory(entry)) {

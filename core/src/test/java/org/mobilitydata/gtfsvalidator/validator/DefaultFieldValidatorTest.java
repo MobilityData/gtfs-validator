@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import java.util.function.Predicate;
+import java.util.function.Consumer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -34,9 +34,10 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 @RunWith(JUnit4.class)
 public class DefaultFieldValidatorTest {
 
-  private DefaultFieldValidator DEFAULT_FIELD_VALIDATOR =
+  private static final DefaultFieldValidator DEFAULT_FIELD_VALIDATOR =
       new DefaultFieldValidator(CountryCode.forStringOrUnknown("AU"));
-  private GtfsCellContext CELL_CONTEXT = GtfsCellContext.create("stops.txt", 2, "stop_id");
+  private static final GtfsCellContext CELL_CONTEXT =
+      GtfsCellContext.create("stops.txt", 2, "stop_id");
 
   @Test
   public void hasOnlyPrintableAscii() {
@@ -49,16 +50,16 @@ public class DefaultFieldValidatorTest {
     assertThat(DefaultFieldValidator.hasOnlyPrintableAscii("\01\23")).isFalse();
   }
 
-  private static void assertValid(Predicate<NoticeContainer> validate) {
+  private static void assertValid(Consumer<NoticeContainer> validate) {
     NoticeContainer noticeContainer = new NoticeContainer();
-    assertThat(validate.test(noticeContainer)).isTrue();
+    validate.accept(noticeContainer);
     assertThat(noticeContainer.getValidationNotices()).isEmpty();
   }
 
   private static void assertInvalid(
-      Predicate<NoticeContainer> validate, ValidationNotice... validationNotices) {
+      Consumer<NoticeContainer> validate, ValidationNotice... validationNotices) {
     NoticeContainer noticeContainer = new NoticeContainer();
-    assertThat(validate.test(noticeContainer)).isFalse();
+    validate.accept(noticeContainer);
     assertThat(noticeContainer.getValidationNotices()).containsExactlyElementsIn(validationNotices);
   }
 
