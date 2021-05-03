@@ -127,4 +127,34 @@ public class FrequencyBasedTripValidatorTest {
                 ImmutableList.of(createStopTime(0, "t0", 0, 0), createStopTime(2, "t0", 1, 0))))
         .isEmpty();
   }
+
+  @Test
+  public void timepoint_empty_exactTimes_zero_generatesNotice() {
+    assertThat(
+        generateNotices(
+            ImmutableList.of(createFrequency(1, "t0", 0)),
+            ImmutableList.of(
+                createStopTime(0, "t0", 0, null))))
+        .containsExactly(new InvalidFrequencyBasedTripNotice("t0", 1));
+  }
+
+  @Test
+  public void timepoint_empty_exactTimes_one_noNotice() {
+    assertThat(
+        generateNotices(
+            ImmutableList.of(createFrequency(1, "t0", 1)),
+            ImmutableList.of(
+                createStopTime(0, "t0", 0, null))))
+        .isEmpty();
+  }
+
+  @Test
+  public void timepoint_empty_exactTimes_empty_generatesNotice() {
+    assertThat(
+        generateNotices(
+            ImmutableList.of(createFrequency(1, "t0", null)),
+            ImmutableList.of(
+                createStopTime(0, "t0", 0, null))))
+        .containsExactly(new InvalidFrequencyBasedTripNotice("t0", 1));
+  }
 }
