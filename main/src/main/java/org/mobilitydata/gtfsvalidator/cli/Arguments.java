@@ -71,6 +71,12 @@ public class Arguments {
       description = "The name of the system errors report including .json extension.")
   private String systemErrorsReportName;
 
+  @Parameter(
+      names = {"-h", "--help"},
+      description = "Print help",
+      help = true)
+  private Boolean help = false;
+
   public String getFeedName() {
     return feedName;
   }
@@ -111,5 +117,9 @@ public class Arguments {
       return "system_errors.json";
     }
     return systemErrorsReportName;
+  }
+
+  public boolean getHelp() {
+    return help;
   }
 }
