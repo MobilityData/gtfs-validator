@@ -53,6 +53,8 @@ public class Main {
     jCommander.parse(argv);
     if (args.getHelp()) {
       printHelp(jCommander);
+      System.out.println(
+          "⚠️ Note that parameters marked with an asterisk (*) in the help menu are mandatory.");
       return;
     }
     if (!cliParametersAnalyzer.isValid(args)) {
