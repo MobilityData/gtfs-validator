@@ -17,161 +17,102 @@
 package org.mobilitydata.gtfsvalidator.cli;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertThrows;
 
 import com.beust.jcommander.JCommander;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-import org.junit.Before;
+import com.beust.jcommander.ParameterException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 
 @RunWith(JUnit4.class)
 public class CliParametersAnalyzerTest {
-  private Handler mockHandler = null;
-  private ArgumentCaptor<LogRecord> logRecordCaptor = null;
 
-  @Before
-  public void installLogRecordCaptor() {
-    mockHandler = Mockito.mock(Handler.class);
-    logRecordCaptor = ArgumentCaptor.forClass(LogRecord.class);
-    Logger.getLogger(CliParametersAnalyzer.class.getName()).addHandler(mockHandler);
-  }
-
-  // FIXME(lionel-nj): Please fix this test (see issue #591)
-  //  @Test
-  //  public void provideUrlAndInputCliParametersShouldReturnFalse() {
-  //    Arguments mockArguments = mock(Arguments.class);
-  //    when(mockArguments.getUrl()).thenReturn("url to dataset");
-  //    when(mockArguments.getInput()).thenReturn("path to dataset");
-  //
-  //    CliParametersAnalyzer underTest = new CliParametersAnalyzer();
-  //    assertThat(underTest.isValid(mockArguments)).isFalse();
-  //    verify(mockHandler).publish(logRecordCaptor.capture());
-  //    assertThat(logRecordCaptor.getValue().getMessage())
-  //        .contains(
-  //            "The two following CLI parameters cannot be "
-  //                + "provided at the same time: '--input' and '--url'");
-  //
-  //    //noinspection ResultOfMethodCallIgnored because object is mocked
-  //    verify(mockArguments, times(1)).getUrl();
-  //    //noinspection ResultOfMethodCallIgnored because object is mocked
-  //    verify(mockArguments, times(2)).getInput();
-  //    verifyNoMoreInteractions(mockArguments, mockHandler);
-  //  }
-
-  @Test
-  public void bothUrlAndInputCliParametersNotProvidedShouldReturnFalse() {
-    Arguments mockArguments = mock(Arguments.class);
-    when(mockArguments.getUrl()).thenReturn(null);
-    when(mockArguments.getInput()).thenReturn(null);
-
-    CliParametersAnalyzer underTest = new CliParametersAnalyzer();
-    assertThat(underTest.isValid(mockArguments)).isFalse();
-    verify(mockHandler).publish(logRecordCaptor.capture());
-    assertThat(logRecordCaptor.getValue().getMessage())
-        .contains(
-            "One of the two following CLI parameter must be" + " provided: '--input' and '--url'");
-    //noinspection ResultOfMethodCallIgnored because object is mocked
-    verify(mockArguments, times(1)).getUrl();
-    //noinspection ResultOfMethodCallIgnored because object is mocked
-    verify(mockArguments, times(1)).getInput();
-    verifyNoMoreInteractions(mockArguments, mockHandler);
-  }
-
-  @Test
-  public void provideUrlWithoutSpecifyingStorageDirectoryCliParameterShouldReturnTrue() {
-    Arguments mockArguments = mock(Arguments.class);
-    when(mockArguments.getUrl()).thenReturn("url to dataset");
-    when(mockArguments.getInput()).thenReturn(null);
-    when(mockArguments.getStorageDirectory()).thenReturn(null);
-    when(mockArguments.getFeedName()).thenReturn(null);
-
-    CliParametersAnalyzer underTest = new CliParametersAnalyzer();
-    assertThat(underTest.isValid(mockArguments)).isTrue();
-    //noinspection ResultOfMethodCallIgnored because object is mocked
-    verify(mockArguments, times(1)).getUrl();
-    //noinspection ResultOfMethodCallIgnored because object is mocked
-    verify(mockArguments, times(2)).getInput();
-    //noinspection ResultOfMethodCallIgnored because object is mocked
-    verify(mockArguments, times(1)).getStorageDirectory();
-    verify(mockArguments, times(1)).getFeedName();
-    verifyNoMoreInteractions(mockArguments, mockHandler);
-  }
-
-  // FIXME(lionel-nj): Please fix this test (see issue #591)
-  //  @Test
-  //  public void provideStorageDirectoryCliParameterWithoutSpecifyingUrlShouldReturnFalse() {
-  //    Arguments mockArguments = mock(Arguments.class);
-  //    when(mockArguments.getUrl()).thenReturn(null);
-  //    when(mockArguments.getInput()).thenReturn(null);
-  //    when(mockArguments.getStorageDirectory()).thenReturn("storage.zip");
-  //
-  //    CliParametersAnalyzer underTest = new CliParametersAnalyzer();
-  //    assertThat(underTest.isValid(mockArguments)).isFalse();
-  //    verify(mockHandler).publish(logRecordCaptor.capture());
-  //    assertThat(logRecordCaptor.getValue().getMessage())
-  //        .contains(
-  //            "One of the two following CLI parameter must be" + " provided: '--input' and
-  // '--url'");
-  //    //noinspection ResultOfMethodCallIgnored because object is mocked
-  //    verify(mockArguments, times(1)).getUrl();
-  //    //noinspection ResultOfMethodCallIgnored because object is mocked
-  //    verify(mockArguments, times(1)).getInput();
-  //    verifyNoMoreInteractions(mockArguments, mockHandler);
-  //  }
-
-  @Test
-  public void provideUrlStorageDirectoryAndNoInputCliParameterShouldReturnTrue() {
-    Arguments mockArguments = mock(Arguments.class);
-    when(mockArguments.getUrl()).thenReturn("url to dataset");
-    when(mockArguments.getInput()).thenReturn(null);
-    when(mockArguments.getStorageDirectory()).thenReturn("storage.zip");
-    when(mockArguments.getFeedName()).thenReturn(null);
-
-    CliParametersAnalyzer underTest = new CliParametersAnalyzer();
-    assertThat(underTest.isValid(mockArguments)).isTrue();
-    //noinspection ResultOfMethodCallIgnored because object is mocked
-    verify(mockArguments, times(2)).getUrl();
-    //noinspection ResultOfMethodCallIgnored because object is mocked
-    verify(mockArguments, times(2)).getInput();
-    //noinspection ResultOfMethodCallIgnored because object is mocked
-    verify(mockArguments, times(1)).getStorageDirectory();
-    verify(mockArguments, times(1)).getFeedName();
-    verifyNoMoreInteractions(mockArguments, mockHandler);
-  }
-
-  @Test
-  public void feedName_isNotValid() {
+  private static boolean validateArguments(String[] cliArguments) {
     Arguments args = new Arguments();
     CliParametersAnalyzer cliParametersAnalyzer = new CliParametersAnalyzer();
-    String[] argv = {
-      "--input", "input value",
-      "--output_base", "output value",
-      "--country_code", "ca",
-      "--threads", "4",
-      "--feed_name", "feed name"
-    };
-    new JCommander(args).parse(argv);
-    assertThat(cliParametersAnalyzer.isValid(args)).isFalse();
+    new JCommander(args).parse(cliArguments);
+    return cliParametersAnalyzer.isValid(args);
+  }
 
-    argv =
-        new String[] {
-          "-i", "input value",
-          "-o", "output value",
-          "-c", "au",
-          "-t", "4",
-          "-f", "feed name value",
-        };
-    new JCommander(args).parse(argv);
-    assertThat(cliParametersAnalyzer.isValid(args)).isFalse();
+  @Test
+  public void noUrlNoInput_long_isNotValid() {
+    assertThat(
+            validateArguments(
+                new String[] {
+                  "--output_base", "output value",
+                  "--threads", "4"
+                }))
+        .isFalse();
+  }
+
+  @Test
+  public void noArguments_isNotValid() {
+    assertThrows(ParameterException.class, () -> validateArguments(new String[] {}));
+  }
+
+  @Test
+  public void urlAndInput_long_isNotValid() {
+    assertThat(
+            validateArguments(
+                new String[] {
+                  "--url", "url value",
+                  "--input", "input value",
+                  "--output_base", "output value",
+                  "--threads", "4"
+                }))
+        .isFalse();
+  }
+
+  @Test
+  public void storageDirectoryNoUrl_long_isNotValid() {
+    assertThat(
+            validateArguments(
+                new String[] {
+                  "--storage_directory", "storage directory value",
+                  "--input", "input value",
+                  "--output_base", "output value",
+                  "--threads", "4"
+                }))
+        .isFalse();
+  }
+
+  @Test
+  public void urlNoStorageDirectory_long_isValid() {
+    assertThat(
+            validateArguments(
+                new String[] {
+                  "--url", "url value",
+                  "--output_base", "output value",
+                  "--threads", "4"
+                }))
+        .isTrue();
+  }
+
+  @Test
+  public void storageDirectoryNoInput_long_isValid() {
+    assertThat(
+            validateArguments(
+                new String[] {
+                  "--url", "url value",
+                  "--storage_directory", "storage directory value",
+                  "--output_base", "output value",
+                  "--threads", "4"
+                }))
+        .isTrue();
+  }
+
+  @Test
+  public void feedName_long_isNotValid() {
+    assertThat(
+            validateArguments(
+                new String[] {
+                  "--input", "input value",
+                  "--output_base", "output value",
+                  "--country_code", "ca",
+                  "--threads", "4",
+                  "--feed_name", "feed name"
+                }))
+        .isFalse();
   }
 }
