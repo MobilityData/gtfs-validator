@@ -34,7 +34,8 @@ import java.util.List;
  */
 public class NoticeContainer {
   private static final int MAX_EXPORTS_PER_NOTICE_TYPE = 100000;
-  private static final Gson DEFAULT_GSON = new GsonBuilder().serializeNulls().create();
+  private static final Gson DEFAULT_GSON =
+      new GsonBuilder().serializeNulls().serializeSpecialFloatingPointValues().create();
 
   private final List<ValidationNotice> validationNotices = new ArrayList<>();
   private final List<SystemError> systemErrors = new ArrayList<>();
