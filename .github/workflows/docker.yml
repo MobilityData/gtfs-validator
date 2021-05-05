@@ -1,8 +1,8 @@
 name: Docker image
 
 on:
-  push:
-    branches: [ fix/debian-version-used-in-docker-image ]
+  release:
+    types: [ prereleased, released ]
 
 jobs:
   test:
