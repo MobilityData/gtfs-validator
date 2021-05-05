@@ -1,3 +1,3 @@
-FROM java:8
-COPY main/build/libs/*.jar /
+FROM java:11
 WORKDIR /
+COPY main/build/libs/*.jar /
