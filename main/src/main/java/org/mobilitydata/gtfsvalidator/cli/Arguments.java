@@ -75,7 +75,7 @@ public class Arguments {
       names = {"-h", "--help"},
       description = "Print help",
       help = true)
-  private Boolean help = false;
+  private boolean help = false;
 
   public String getFeedName() {
     return feedName;

@@ -48,15 +48,15 @@ public class Main {
 
   public static void main(String[] argv) {
     Arguments args = new Arguments();
-    CliParametersAnalyzer cliParametersAnalyzer = new CliParametersAnalyzer();
     JCommander jCommander = new JCommander(args);
     jCommander.parse(argv);
     if (args.getHelp()) {
-      printHelp(jCommander);
+      jCommander.usage();
       System.out.println(
           "⚠️ Note that parameters marked with an asterisk (*) in the help menu are mandatory.");
       return;
     }
+    CliParametersAnalyzer cliParametersAnalyzer = new CliParametersAnalyzer();
     if (!cliParametersAnalyzer.isValid(args)) {
       System.exit(1);
     }
@@ -160,14 +160,5 @@ public class Main {
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store report files");
     }
-  }
-
-  /**
-   * Prints help menu
-   *
-   * @param jCommander the {@code JCommander} used to parse CLI arguments
-   */
-  private static void printHelp(JCommander jCommander) {
-    jCommander.usage();
   }
 }
