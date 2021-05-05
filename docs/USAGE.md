@@ -11,6 +11,7 @@
 |------------	|-------------------------------	|-----------	|---------------------------------------------------------------------------------------------------------------------------	|
 | `-i`       	| `--input`                     	| Optional  	| Location of the input GTFS ZIP or unarchived directory.                                                                   	|
 | `-c`       	| `--country_code`                 	| Optional  	| Country code of the feed, e.g., `nl`. It must be a two-letter country code (ISO 3166-1 alpha-2).                           	|
+| `-h`       	| `--help`                 	        | Optional  	| Print help menu.                                                                                                              |
 | `-o`       	| `--output`                    	| Optional  	| Base directory to store the outputs.                                                                                      	|
 | `-s`       	| `--storage_directory`         	| Optional  	| Target path where to store the GTFS archive. Downloaded from network (if not provided, the ZIP will be stored in memory). 	|
 | `-t`       	| `--threads`                   	| Optional  	| Number of threads to use.                                                                                                 	|
@@ -21,6 +22,8 @@
 ⚠️ Note that exactly one of the following options must be provided: `--url` or `--input`.
 
 ⚠️ Note that `--storage_directory` must not be provided if `--url` is not provided.
+
+⚠️ Note that parameters marked with an asterisk (*) in the help menu are mandatory.
 
 ### on a local GTFS zip file
 Sample usage:

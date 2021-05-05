@@ -65,6 +65,20 @@ public class NoticeContainerTest {
   }
 
   @Test
+  public void exportInfinityInContext() {
+    NoticeContainer container = new NoticeContainer();
+    container.addValidationNotice(
+        new TestValidationNotice(
+            "test_notice",
+            ImmutableMap.of("infinityField", Double.POSITIVE_INFINITY),
+            SeverityLevel.ERROR));
+    assertThat(container.exportValidationNotices())
+        .isEqualTo(
+            "{\"notices\":[{\"code\":\"test_notice\",\"severity\":\"ERROR\","
+                + "\"totalNotices\":1,\"notices\":[{\"infinityField\":Infinity}]}]}");
+  }
+
+  @Test
   public void exportSeverities() {
     NoticeContainer container = new NoticeContainer();
     container.addValidationNotice(

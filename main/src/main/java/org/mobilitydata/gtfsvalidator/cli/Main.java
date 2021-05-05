@@ -48,7 +48,14 @@ public class Main {
 
   public static void main(String[] argv) {
     Arguments args = new Arguments();
-    new JCommander(args).parse(argv);
+    JCommander jCommander = new JCommander(args);
+    jCommander.parse(argv);
+    if (args.getHelp()) {
+      jCommander.usage();
+      System.out.println(
+          "⚠️ Note that parameters marked with an asterisk (*) in the help menu are mandatory.");
+      return;
+    }
     if (!CliParametersAnalyzer.isValid(args)) {
       System.exit(1);
     }
