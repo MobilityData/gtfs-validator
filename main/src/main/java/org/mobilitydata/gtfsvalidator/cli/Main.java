@@ -48,9 +48,8 @@ public class Main {
 
   public static void main(String[] argv) {
     Arguments args = new Arguments();
-    CliParametersAnalyzer cliParametersAnalyzer = new CliParametersAnalyzer();
     new JCommander(args).parse(argv);
-    if (!cliParametersAnalyzer.isValid(args)) {
+    if (!CliParametersAnalyzer.isValid(args)) {
       System.exit(1);
     }
 

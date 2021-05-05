@@ -22,13 +22,15 @@ import com.google.common.flogger.FluentLogger;
 public class CliParametersAnalyzer {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
+  private CliParametersAnalyzer() {}
+
   /**
    * Check validity of CLI parameter combination
    *
    * @param args CLI arguments
    * @return true if CLI parameter combination is legal, otherwise return false
    */
-  public boolean isValid(Arguments args) {
+  public static boolean isValid(Arguments args) {
     if (args.getInput() == null && args.getUrl() == null) {
       logger.atSevere().log(
           "One of the two following CLI parameter must be provided: '--input' and '--url'");
