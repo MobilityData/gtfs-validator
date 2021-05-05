@@ -30,9 +30,8 @@ public class CliParametersAnalyzerTest {
 
   private static boolean validateArguments(String[] cliArguments) {
     Arguments args = new Arguments();
-    CliParametersAnalyzer cliParametersAnalyzer = new CliParametersAnalyzer();
     new JCommander(args).parse(cliArguments);
-    return cliParametersAnalyzer.isValid(args);
+    return CliParametersAnalyzer.isValid(args);
   }
 
   @Test

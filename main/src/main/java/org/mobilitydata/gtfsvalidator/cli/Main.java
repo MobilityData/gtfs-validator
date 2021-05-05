@@ -56,8 +56,7 @@ public class Main {
           "⚠️ Note that parameters marked with an asterisk (*) in the help menu are mandatory.");
       return;
     }
-    CliParametersAnalyzer cliParametersAnalyzer = new CliParametersAnalyzer();
-    if (!cliParametersAnalyzer.isValid(args)) {
+    if (!CliParametersAnalyzer.isValid(args)) {
       System.exit(1);
     }
 
