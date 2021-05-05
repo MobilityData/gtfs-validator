@@ -1,3 +1,3 @@
-FROM java:11
+FROM openjdk:11
 COPY main/build/libs/*.jar /
 WORKDIR /
