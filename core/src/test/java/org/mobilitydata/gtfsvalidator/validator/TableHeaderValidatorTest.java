@@ -34,101 +34,95 @@ public class TableHeaderValidatorTest {
   @Test
   public void expectedColumns() {
     NoticeContainer container = new NoticeContainer();
+    new DefaultTableHeaderValidator()
+        .validate(
+            "stops.txt",
+            new CsvHeader(new String[] {"stop_id", "stop_name"}),
+            ImmutableSet.of("stop_id", "stop_name", "stop_lat", "stop_lon"),
+            ImmutableSet.of("stop_id"),
+            container);
 
-    assertThat(
-            new DefaultTableHeaderValidator()
-                .validate(
-                    "stops.txt",
-                    new CsvHeader(new String[] {"stop_id", "stop_name"}),
-                    ImmutableSet.of("stop_id", "stop_name", "stop_lat", "stop_lon"),
-                    ImmutableSet.of("stop_id"),
-                    container))
-        .isTrue();
-    assertThat(container.getValidationNotices().isEmpty()).isTrue();
+    assertThat(container.getValidationNotices()).isEmpty();
+    assertThat(container.hasValidationErrors()).isFalse();
   }
 
   @Test
   public void unknownColumnShouldGenerateNotice() {
     NoticeContainer container = new NoticeContainer();
+    new DefaultTableHeaderValidator()
+        .validate(
+            "stops.txt",
+            new CsvHeader(new String[] {"stop_id", "stop_name", "stop_extra"}),
+            ImmutableSet.of("stop_id", "stop_name"),
+            ImmutableSet.of("stop_id"),
+            container);
 
-    assertThat(
-            new DefaultTableHeaderValidator()
-                .validate(
-                    "stops.txt",
-                    new CsvHeader(new String[] {"stop_id", "stop_name", "stop_extra"}),
-                    ImmutableSet.of("stop_id", "stop_name"),
-                    ImmutableSet.of("stop_id"),
-                    container))
-        .isTrue();
     assertThat(container.getValidationNotices())
         .containsExactly(new UnknownColumnNotice("stops.txt", "stop_extra", 3));
+    assertThat(container.hasValidationErrors()).isFalse();
   }
 
   @Test
   public void missingRequiredColumnShouldGenerateNotice() {
     NoticeContainer container = new NoticeContainer();
+    new DefaultTableHeaderValidator()
+        .validate(
+            "stops.txt",
+            new CsvHeader(new String[] {"stop_name"}),
+            ImmutableSet.of("stop_id", "stop_name"),
+            ImmutableSet.of("stop_id"),
+            container);
 
-    assertThat(
-            new DefaultTableHeaderValidator()
-                .validate(
-                    "stops.txt",
-                    new CsvHeader(new String[] {"stop_name"}),
-                    ImmutableSet.of("stop_id", "stop_name"),
-                    ImmutableSet.of("stop_id"),
-                    container))
-        .isFalse();
     assertThat(container.getValidationNotices())
         .containsExactly(new MissingRequiredColumnNotice("stops.txt", "stop_id"));
+    assertThat(container.hasValidationErrors()).isTrue();
   }
 
   @Test
   public void duplicatedColumnShouldGenerateNotice() {
     NoticeContainer container = new NoticeContainer();
+    new DefaultTableHeaderValidator()
+        .validate(
+            "stops.txt",
+            new CsvHeader(new String[] {"stop_id", "stop_name", "stop_id"}),
+            ImmutableSet.of("stop_id", "stop_name"),
+            ImmutableSet.of("stop_id"),
+            container);
 
-    assertThat(
-            new DefaultTableHeaderValidator()
-                .validate(
-                    "stops.txt",
-                    new CsvHeader(new String[] {"stop_id", "stop_name", "stop_id"}),
-                    ImmutableSet.of("stop_id", "stop_name"),
-                    ImmutableSet.of("stop_id"),
-                    container))
-        .isFalse();
     assertThat(container.getValidationNotices())
         .containsExactly(new DuplicatedColumnNotice("stops.txt", "stop_id", 1, 3));
+    assertThat(container.hasValidationErrors()).isTrue();
   }
 
   @Test
   public void emptyFileShouldNotGenerateNotice() {
     NoticeContainer container = new NoticeContainer();
+    new DefaultTableHeaderValidator()
+        .validate(
+            "stops.txt",
+            CsvHeader.EMPTY,
+            ImmutableSet.of("stop_id", "stop_name"),
+            ImmutableSet.of("stop_id"),
+            container);
 
-    assertThat(
-            new DefaultTableHeaderValidator()
-                .validate(
-                    "stops.txt",
-                    CsvHeader.EMPTY,
-                    ImmutableSet.of("stop_id", "stop_name"),
-                    ImmutableSet.of("stop_id"),
-                    container))
-        .isTrue();
-    assertThat(container.getValidationNotices().isEmpty()).isTrue();
+    assertThat(container.getValidationNotices()).isEmpty();
+    assertThat(container.hasValidationErrors()).isFalse();
   }
 
   @Test
   public void emptyColumnNameShouldGenerateNotice() {
     NoticeContainer container = new NoticeContainer();
+    new DefaultTableHeaderValidator()
+        .validate(
+            "stops.txt",
+            new CsvHeader(new String[] {"stop_id", null, "stop_name", ""}),
+            ImmutableSet.of("stop_id", "stop_name"),
+            ImmutableSet.of("stop_id"),
+            container);
 
-    assertThat(
-            new DefaultTableHeaderValidator()
-                .validate(
-                    "stops.txt",
-                    new CsvHeader(new String[] {"stop_id", null, "stop_name", ""}),
-                    ImmutableSet.of("stop_id", "stop_name"),
-                    ImmutableSet.of("stop_id"),
-                    container))
-        .isTrue();
     assertThat(container.getValidationNotices())
         .containsExactly(
             new EmptyColumnNameNotice("stops.txt", 2), new EmptyColumnNameNotice("stops.txt", 4));
+    assertThat(container.hasValidationErrors()).isFalse();
   }
 }
