@@ -25,12 +25,14 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.function.Function;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.notice.EmptyRowNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidEmailNotice;
+import org.mobilitydata.gtfsvalidator.notice.InvalidFloatNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidPhoneNumberNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidRowLengthNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidUrlNotice;
@@ -38,7 +40,9 @@ import org.mobilitydata.gtfsvalidator.notice.LeadingOrTrailingWhitespacesNotice;
 import org.mobilitydata.gtfsvalidator.notice.NewLineInValueNotice;
 import org.mobilitydata.gtfsvalidator.notice.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.NumberOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
@@ -57,7 +61,7 @@ public class RowParserTest {
 
   private static GtfsFieldValidator FIELD_VALIDATOR = new DefaultFieldValidator(TEST_COUNTRY_CODE);
 
-  private RowParser createParser(String cellValue) {
+  private static RowParser createParser(String cellValue) {
     NoticeContainer noticeContainer = new NoticeContainer();
     RowParser parser =
         new RowParser(TEST_FILENAME, new CsvHeader(new String[] {"column name"}), FIELD_VALIDATOR);
@@ -65,17 +69,37 @@ public class RowParserTest {
     return parser;
   }
 
-  @Test
-  public void asUrlValid() {
-    assertThat(createParser("http://google.com").asUrl(0, true)).isEqualTo("http://google.com");
+  private static <T> void assertValid(String cellValue, Function<RowParser, T> parse, T expected) {
+    RowParser parser = createParser(cellValue);
+    assertThat(parse.apply(parser)).isEqualTo(expected);
+    assertThat(parser.getNoticeContainer().getValidationNotices()).isEmpty();
+    assertThat(parser.getNoticeContainer().hasValidationErrors()).isFalse();
+  }
+
+  private static <T> void assertInvalid(
+      String cellValue,
+      Function<RowParser, T> parse,
+      T expected,
+      ValidationNotice... validationNotices) {
+    RowParser parser = createParser(cellValue);
+    assertThat(parse.apply(parser)).isEqualTo(expected);
+    assertThat(parser.getNoticeContainer().getValidationNotices())
+        .containsExactlyElementsIn(validationNotices);
+    assertThat(parser.getNoticeContainer().hasValidationErrors()).isTrue();
   }
 
   @Test
-  public void asUrlInvalid() {
-    RowParser parser = createParser("invalid");
-    assertThat(parser.asUrl(0, true)).isNull();
-    assertThat(parser.getNoticeContainer().getValidationNotices())
-        .containsExactly(new InvalidUrlNotice(TEST_FILENAME, 8, "column name", "invalid"));
+  public void asUrl_valid() {
+    assertValid("http://google.com", p -> p.asUrl(0, true), "http://google.com");
+  }
+
+  @Test
+  public void asUrl_invalid() {
+    assertInvalid(
+        "invalid",
+        p -> p.asUrl(0, true),
+        "invalid",
+        new InvalidUrlNotice("stops.txt", 8, "column name", "invalid"));
   }
 
   @Test
@@ -139,17 +163,17 @@ public class RowParserTest {
   }
 
   @Test
-  public void asEmailValid() {
-    assertThat(createParser("no-reply@google.com").asEmail(0, true))
-        .isEqualTo("no-reply@google.com");
+  public void asEmail_valid() {
+    assertValid("no-reply@google.com", p -> p.asEmail(0, true), "no-reply@google.com");
   }
 
   @Test
-  public void asEmailInvalid() {
-    RowParser parser = createParser("invalid");
-    assertThat(parser.asEmail(0, true)).isNull();
-    assertThat(parser.getNoticeContainer().getValidationNotices())
-        .containsExactly(new InvalidEmailNotice(TEST_FILENAME, 8, "column name", "invalid"));
+  public void asEmail_invalid() {
+    assertInvalid(
+        "invalid",
+        p -> p.asEmail(0, true),
+        "invalid",
+        new InvalidEmailNotice("stops.txt", 8, "column name", "invalid"));
   }
 
   @Test
@@ -182,16 +206,17 @@ public class RowParserTest {
   }
 
   @Test
-  public void asPhoneNumber() {
-    assertThat(createParser("(650) 253-0000").asPhoneNumber(0, true)).isEqualTo("(650) 253-0000");
+  public void asPhoneNumber_valid() {
+    assertValid("(650) 253-0000", p -> p.asPhoneNumber(0, true), "(650) 253-0000");
   }
 
   @Test
-  public void asPhoneInvalid() {
-    RowParser parser = createParser("invalid");
-    assertThat(parser.asPhoneNumber(0, true)).isNull();
-    assertThat(parser.getNoticeContainer().getValidationNotices())
-        .containsExactly(new InvalidPhoneNumberNotice(TEST_FILENAME, 8, "column name", "invalid"));
+  public void asPhoneNumber_invalid() {
+    assertInvalid(
+        "invalid",
+        p -> p.asPhoneNumber(0, true),
+        "invalid",
+        new InvalidPhoneNumberNotice("stops.txt", 8, "column name", "invalid"));
   }
 
   @Test
@@ -234,23 +259,65 @@ public class RowParserTest {
   }
 
   @Test
-  public void asLatitude() {
-    assertThat(createParser("32.5").asLatitude(0, true)).isEqualTo(32.5);
-
-    assertThat(createParser("-91").asLatitude(0, true)).isNull();
-    assertThat(createParser("91").asLatitude(0, true)).isNull();
-    assertThat(createParser("invalid").asLatitude(0, true)).isNull();
+  public void asLatitude_valid() {
+    assertValid("32.5", p -> p.asLatitude(0, true), 32.5);
   }
 
   @Test
-  public void asLongitude() {
-    assertThat(createParser("-32.5").asLongitude(0, true)).isEqualTo(-32.5);
-    assertThat(createParser("-91").asLongitude(0, true)).isEqualTo(-91);
-    assertThat(createParser("91").asLongitude(0, true)).isEqualTo(91);
+  public void asLatitude_outOfRange() {
+    assertInvalid(
+        "-91",
+        p -> p.asLatitude(0, true),
+        -91.0,
+        new NumberOutOfRangeNotice(
+            "stops.txt", 8, "column name", "latitude within [-90, 90]", -91.0));
+    assertInvalid(
+        "91",
+        p -> p.asLatitude(0, true),
+        91.0,
+        new NumberOutOfRangeNotice(
+            "stops.txt", 8, "column name", "latitude within [-90, 90]", 91.0));
+  }
 
-    assertThat(createParser("-181").asLongitude(0, true)).isNull();
-    assertThat(createParser("181").asLongitude(0, true)).isNull();
-    assertThat(createParser("invalid").asLongitude(0, true)).isNull();
+  @Test
+  public void asLatitude_nonParsable() {
+    assertInvalid(
+        "invalid",
+        p -> p.asLatitude(0, true),
+        null,
+        new InvalidFloatNotice("stops.txt", 8, "column name", "invalid"));
+  }
+
+  @Test
+  public void asLongitude_valid() {
+    assertValid("-32.5", p -> p.asLongitude(0, true), -32.5);
+    assertValid("-91", p -> p.asLongitude(0, true), -91);
+    assertValid("91", p -> p.asLongitude(0, true), 91);
+  }
+
+  @Test
+  public void asLongitude_outOfRange() {
+    assertInvalid(
+        "-181",
+        p -> p.asLongitude(0, true),
+        -181.0,
+        new NumberOutOfRangeNotice(
+            "stops.txt", 8, "column name", "longitude within [-180, 180]", -181.0));
+    assertInvalid(
+        "181",
+        p -> p.asLongitude(0, true),
+        181.0,
+        new NumberOutOfRangeNotice(
+            "stops.txt", 8, "column name", "longitude within [-180, 180]", 181.0));
+  }
+
+  @Test
+  public void asLongitude_nonParsable() {
+    assertInvalid(
+        "invalid",
+        p -> p.asLongitude(0, true),
+        null,
+        new InvalidFloatNotice("stops.txt", 8, "column name", "invalid"));
   }
 
   @Test

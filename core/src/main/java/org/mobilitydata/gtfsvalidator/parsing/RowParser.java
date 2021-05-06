@@ -199,7 +199,7 @@ public class RowParser {
               header.getColumnName(columnIndex),
               "latitude within [-90, 90]",
               value));
-      return null;
+      return value;
     }
     return value;
   }
@@ -215,7 +215,7 @@ public class RowParser {
               header.getColumnName(columnIndex),
               "longitude within [-180, 180]",
               value));
-      return null;
+      return value;
     }
     return value;
   }
@@ -379,7 +379,7 @@ public class RowParser {
    * @param columnIndex index of the column to parse
    * @param required whether the value is required according to GTFS
    * @param validatingFunction the predicate to validate a given string
-   * @return the cell value at the given column or null if the value is missing or invalid
+   * @return the cell value at the given column or null if the value is missing
    */
   @Nullable
   private String asValidatedString(
@@ -388,15 +388,10 @@ public class RowParser {
     if (s == null) {
       return null;
     }
-    NoticeContainer fieldNotices = new NoticeContainer();
     validatingFunction.apply(
         s,
         GtfsCellContext.create(fileName, row.getRowNumber(), header.getColumnName(columnIndex)),
-        fieldNotices);
-    noticeContainer.addAll(fieldNotices);
-    if (fieldNotices.hasValidationErrors()) {
-      return null;
-    }
+        noticeContainer);
     return s;
   }
 
