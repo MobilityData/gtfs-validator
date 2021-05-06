@@ -47,7 +47,7 @@ public class NoticeContainer {
    * stop_times.txt or shapes.txt) produces a notice. Since this case is rare, we just introduce a
    * total limit on the amount of notices instead of counting amount of notices of each type.
    *
-   * Note that system errors are not limited since we don't expect to have a lot of them.
+   * <p>Note that system errors are not limited since we don't expect to have a lot of them.
    */
   private static final int MAX_VALIDATION_NOTICES = 10000000;
 
@@ -112,7 +112,7 @@ public class NoticeContainer {
   /**
    * Exports notices as JSON.
    *
-   * Up to {@link #MAX_EXPORTS_PER_NOTICE_TYPE} is exported per each type+severity.
+   * <p>Up to {@link #MAX_EXPORTS_PER_NOTICE_TYPE} is exported per each type+severity.
    */
   public static <T extends Notice> String exportJson(List<T> notices) {
     JsonObject root = new JsonObject();
