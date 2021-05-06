@@ -226,16 +226,7 @@ public class TableLoaderGenerator {
             .beginControlFlow("if (csvFile.isEmpty())")
             .addStatement(
                 "noticeContainer.addValidationNotice(new $T(FILENAME))", EmptyFileNotice.class)
-            .addStatement(
-                "$T table = new $T($T.EMPTY_FILE)",
-                tableContainerTypeName,
-                tableContainerTypeName,
-                TableStatus.class)
-            .addStatement(
-                "$T.invokeSingleFileValidators(validatorProvider.createSingleFileValidators(table),"
-                    + " noticeContainer)",
-                ValidatorUtil.class)
-            .addStatement("return table")
+            .addStatement("return new $T($T.EMPTY_FILE)", tableContainerTypeName, TableStatus.class)
             .endControlFlow()
             .addStatement("$T header = csvFile.getHeader()", CsvHeader.class)
             .beginControlFlow(
