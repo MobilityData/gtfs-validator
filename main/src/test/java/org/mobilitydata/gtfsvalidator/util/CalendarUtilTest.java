@@ -72,7 +72,7 @@ public class CalendarUtilTest {
   }
 
   @Test
-  public void createServicePeriod() {
+  public void createServicePeriod_valid() {
     ServicePeriod servicePeriod =
         CalendarUtil.createServicePeriod(
             createGtfsCalendar(
@@ -92,13 +92,28 @@ public class CalendarUtilTest {
   }
 
   @Test
-  public void CreateServicePeriodEmpty() {
+  public void createServicePeriod_empty() {
     ServicePeriod servicePeriod = CalendarUtil.createServicePeriod(null, ImmutableList.of());
     assertThat(servicePeriod.getServiceStart()).isEqualTo(ServicePeriod.EPOCH);
     assertThat(servicePeriod.getServiceEnd()).isEqualTo(ServicePeriod.EPOCH);
     assertThat(servicePeriod.getWeeklyPattern()).isEqualTo(0);
     assertThat(servicePeriod.getAddedDays()).isEmpty();
     assertThat(servicePeriod.getRemovedDays()).isEmpty();
+  }
+
+  @Test
+  public void createServicePeriod_startAfterEnd() {
+    ServicePeriod servicePeriod =
+        CalendarUtil.createServicePeriod(
+            createGtfsCalendar(
+                "s1",
+                LocalDate.of(2021, 1, 5),
+                LocalDate.of(2021, 1, 4),
+                ImmutableSet.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY)),
+            ImmutableList.of());
+    assertThat(servicePeriod.getServiceStart()).isEqualTo(LocalDate.of(2021, 1, 5));
+    assertThat(servicePeriod.getServiceEnd()).isEqualTo(LocalDate.of(2021, 1, 5));
+    assertThat(servicePeriod.toDates()).containsExactly(LocalDate.of(2021, 1, 5));
   }
 
   @Test

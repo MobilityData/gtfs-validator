@@ -42,6 +42,10 @@ public final class CalendarUtil {
     if (calendar != null) {
       serviceStart = calendar.startDate().getLocalDate();
       serviceEnd = calendar.endDate().getLocalDate();
+      if (serviceStart.isAfter(serviceEnd)) {
+        // Protection against invalid data. An error is reported by a dedicated validator.
+        serviceEnd = serviceStart;
+      }
       weeklyPattern =
           ServicePeriod.weeklyPatternFromMTWTFSS(
               calendar.mondayValue(),
