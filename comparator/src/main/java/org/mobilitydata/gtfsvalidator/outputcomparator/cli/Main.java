@@ -21,11 +21,11 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import org.mobilitydata.gtfsvalidator.outputcomparator.util.ValidationReport;
@@ -35,58 +35,54 @@ public class Main {
   private static final String REFERENCE_JSON = "report.json";
   private static final String LATEST_JSON = "latest.json";
   private static final String INTEGRATION_REPORT_JSON = "integration_report.json";
-  private static final Gson GSON = new Gson();
 
-  public static void main(String[] argv) {
+  public static void main(String[] argv) throws IOException {
     ComparatorArguments args = new ComparatorArguments();
     new JCommander(args).parse(argv);
     File[] outputDirectory = new File(args.getOutputBase()).listFiles();
     if (outputDirectory == null) {
-      logger.atSevere().log("Empty output directory");
+      logger.atSevere().log("Specified output is not a directory");
+      return;
+    }
+    if (outputDirectory.length == 0) {
+      logger.atSevere().log(
+          "Specified directory is empty, cannot generate integration tests report.");
       return;
     }
     ImmutableMap.Builder<String, Object> mapBuilder = new Builder<>();
-    float badDatasetCount = 0;
-    float totalDatasetCount = Arrays.stream(outputDirectory).filter(File::isDirectory).count();
+    int badDatasetCount = 0;
+    double totalDatasetCount = Arrays.stream(outputDirectory).filter(File::isDirectory).count();
 
     for (File file : outputDirectory) {
-      if (file.isDirectory()) {
-        try {
-          ValidationReport referenceReport =
-              GSON.fromJson(
-                  new JsonReader(
-                      new FileReader(Paths.get(file.getPath()).resolve(REFERENCE_JSON).toString())),
-                  ValidationReport.class);
-          ValidationReport latestReport =
-              GSON.fromJson(
-                  new JsonReader(
-                      new FileReader(Paths.get(file.getPath()).resolve(LATEST_JSON).toString())),
-                  ValidationReport.class);
-          if (referenceReport.equals(latestReport)) {
-            continue;
-          }
-          if (referenceReport.hasSameErrorCodes(latestReport)) {
-            continue;
-          }
-          int newErrorCount = referenceReport.getNewErrorCount(latestReport);
-          mapBuilder.put(file.getName(), newErrorCount);
-          if (newErrorCount >= args.getValidityThreshold()) {
-            badDatasetCount += 1;
-          }
-        } catch (FileNotFoundException e) {
-          totalDatasetCount -= 1;
-          logger.atSevere().withCause(e).log(e.getMessage());
+      if (!file.isDirectory()) {
+        continue;
+      }
+      try (BufferedReader referenceReportReader =
+              Files.newBufferedReader(Paths.get(file.getPath()).resolve(REFERENCE_JSON));
+          BufferedReader latestReportReader =
+              Files.newBufferedReader(Paths.get(file.getPath()).resolve(LATEST_JSON))) {
+        ValidationReport referenceReport = ValidationReport.fromReader(referenceReportReader);
+        ValidationReport latestReport = ValidationReport.fromReader(latestReportReader);
+        if (referenceReport.equals(latestReport)) {
+          continue;
         }
+        if (referenceReport.hasSameErrorCodes(latestReport)) {
+          continue;
+        }
+        int newErrorCount = referenceReport.getNewErrorCount(latestReport);
+        mapBuilder.put(file.getName(), newErrorCount);
+        if (newErrorCount >= args.getValidityThreshold()) {
+          badDatasetCount += 1;
+        }
+      } catch (FileNotFoundException e) {
+        logger.atSevere().withCause(e).log(String.format("No file found at %s.", file.getPath()));
+        System.exit(1);
       }
     }
-    try {
-      ValidationReport.exportIntegrationReportAsJson(
-          mapBuilder.build(), args.getOutputBase(), INTEGRATION_REPORT_JSON);
-      System.out.printf(
-          "%.2f %% of datasets are invalid due to new implementation%n",
-          100 * badDatasetCount / totalDatasetCount);
-    } catch (IOException ioException) {
-      logger.atSevere().withCause(ioException).log("Could not write integration test report");
-    }
+    ValidationReport.exportIntegrationReportAsJson(
+        mapBuilder.build(), args.getOutputBase(), INTEGRATION_REPORT_JSON);
+    System.out.printf(
+        "%.2f %% of datasets are invalid due to new implementation%n",
+        100 * badDatasetCount / totalDatasetCount);
   }
 }

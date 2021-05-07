@@ -19,29 +19,40 @@ package org.mobilitydata.gtfsvalidator.outputcomparator.util;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
-/** Used to deserialize a validation report */
+/**
+ * Used to deserialize a validation report. This represents a validation report as a list of {@code
+ * NoticeAggregate} which provides information about each notice generated during a GTFS dataset
+ * validation.
+ */
 public class ValidationReport {
+  private static final Gson GSON = new Gson();
   private final List<NoticeAggregate> notices;
 
   private ValidationReport(List<NoticeAggregate> notices) {
     this.notices = notices;
   }
 
+  public static ValidationReport fromReader(BufferedReader reader) {
+    return GSON.fromJson(reader, ValidationReport.class);
+  }
+
   /**
    * Exports the integration test report (map of String, Object) as json.
    *
-   * @param integrationReportData integration report content
-   * @param outputBase base path to output
-   * @param integrationReportName integration report name
-   * @throws IOException if an I/O error occurs writing to or creating the file
+   * @param integrationReportData integration report content.
+   * @param outputBase base path to output.
+   * @param integrationReportName integration report name.
+   * @throws IOException if an I/O error occurs writing to or creating the file.
    */
   public static void exportIntegrationReportAsJson(
       ImmutableMap<String, Object> integrationReportData,
@@ -55,16 +66,16 @@ public class ValidationReport {
   }
 
   public List<NoticeAggregate> getNotices() {
-    return notices;
+    return Collections.unmodifiableList(notices);
   }
 
   /**
-   * Return the set of error codes in a validation report
+   * Return the sorted set of error codes in a validation report.
    *
-   * @return the set of error codes in a validation report
+   * @return the sorted set of error codes in a validation report.
    */
   public Set<String> getErrorCodes() {
-    Set<String> errorCodes = new HashSet<>();
+    Set<String> errorCodes = new TreeSet<>();
     for (NoticeAggregate noticeAggregate : getNotices()) {
       if (noticeAggregate.isError()) {
         errorCodes.add(noticeAggregate.getCode());
@@ -74,11 +85,11 @@ public class ValidationReport {
   }
 
   /**
-   * Compares two validation reports: returns true if they contain the same set of error codes
+   * Compares two validation reports: returns true if they contain the same set of error codes.
    *
-   * @param otherValidationReport the other {@code ValidationReport}
-   * @return returns true if thw two {@code ValidationReport} contain the same set of error codes,
-   *     false otherwise
+   * @param otherValidationReport the other {@code ValidationReport}.
+   * @return true if thw two {@code ValidationReport} contain the same set of error codes, false
+   *     otherwise.
    */
   public boolean hasSameErrorCodes(ValidationReport otherValidationReport) {
     return getErrorCodes().equals(otherValidationReport.getErrorCodes());
@@ -88,8 +99,8 @@ public class ValidationReport {
    * Compares two validation reports: returns the number of new error codes introduces in the
    * validation report provided as parameter.
    *
-   * @param otherValidationReport the other {@code ValidationReport}
-   * @return returns the number of new error codes introduces in the * validation report provided as
+   * @param otherValidationReport the other {@code ValidationReport}.
+   * @return the number of new error codes introduces in the * validation report provided as
    *     parameter.
    */
   public int getNewErrorCount(ValidationReport otherValidationReport) {
@@ -103,7 +114,7 @@ public class ValidationReport {
    * Determines if two validation reports are equal regardless of the order of the fields in the
    * list of {@code NoticeAggregate}.
    *
-   * @param other the other {@code ValidationReport}
+   * @param other the other {@code ValidationReport}.
    * @return true if both validation reports are equal regardless of the order of the fields in the
    *     list of {@code NoticeAggregate}.
    */

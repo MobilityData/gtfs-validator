@@ -20,7 +20,12 @@ import java.util.List;
 import java.util.Map;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 
-/** Used to deserialize a validation report */
+/**
+ * Used to deserialize a validation report. It is used to store information about one type of notice
+ * encountered in a validation report: error code, severity level, the total number of notices
+ * related to the error code and a list of notice contexts (which provides additional information
+ * about each notice.
+ */
 public class NoticeAggregate {
   private final String code;
   private final SeverityLevel severity;
@@ -47,6 +52,10 @@ public class NoticeAggregate {
     return code;
   }
 
+  public List<Map<String, Object>> getNotices() {
+    return notices;
+  }
+
   public boolean isError() {
     return getSeverity().ordinal() >= SeverityLevel.ERROR.ordinal();
   }
@@ -63,9 +72,5 @@ public class NoticeAggregate {
           && getNotices().equals(((NoticeAggregate) other).getNotices());
     }
     return false;
-  }
-
-  public List<Map<String, Object>> getNotices() {
-    return notices;
   }
 }
