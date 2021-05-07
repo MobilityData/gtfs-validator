@@ -31,16 +31,15 @@ import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 /** Default implementation of {@code TableHeaderValidator}. */
 public class DefaultTableHeaderValidator implements TableHeaderValidator {
   @Override
-  public boolean validate(
+  public void validate(
       String filename,
       CsvHeader actualHeader,
       Set<String> supportedColumns,
       Set<String> requiredColumns,
       NoticeContainer noticeContainer) {
-    boolean isValid = true;
     if (actualHeader.getColumnCount() == 0) {
       // This is an empty file.
-      return isValid;
+      return;
     }
     Map<String, Integer> columnIndices = new HashMap<>();
     // Sorted tree set for stable order of notices.
@@ -56,7 +55,6 @@ public class DefaultTableHeaderValidator implements TableHeaderValidator {
       if (prev != null) {
         noticeContainer.addValidationNotice(
             new DuplicatedColumnNotice(filename, column, prev + 1, i + 1));
-        isValid = false;
       }
       if (!supportedColumns.contains(column)) {
         noticeContainer.addValidationNotice(new UnknownColumnNotice(filename, column, i + 1));
@@ -64,11 +62,9 @@ public class DefaultTableHeaderValidator implements TableHeaderValidator {
       missingColumns.remove(column);
     }
     if (!missingColumns.isEmpty()) {
-      isValid = false;
       for (String column : missingColumns) {
         noticeContainer.addValidationNotice(new MissingRequiredColumnNotice(filename, column));
       }
     }
-    return isValid;
   }
 }

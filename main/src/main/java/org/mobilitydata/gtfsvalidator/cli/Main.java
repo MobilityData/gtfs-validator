@@ -33,7 +33,6 @@ import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.ThreadInterruptedError;
 import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
@@ -45,12 +44,19 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 /** The main entry point for GTFS Validator CLI. */
 public class Main {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  private static final String GTFS_ZIP_FILENAME = "gtfs.zip";
 
   public static void main(String[] argv) {
     Arguments args = new Arguments();
-    CliParametersAnalyzer cliParametersAnalyzer = new CliParametersAnalyzer();
-    new JCommander(args).parse(argv);
-    if (!cliParametersAnalyzer.isValid(args)) {
+    JCommander jCommander = new JCommander(args);
+    jCommander.parse(argv);
+    if (args.getHelp()) {
+      jCommander.usage();
+      System.out.println(
+          "⚠️ Note that parameters marked with an asterisk (*) in the help menu are mandatory.");
+      return;
+    }
+    if (!CliParametersAnalyzer.isValid(args)) {
       System.exit(1);
     }
 
@@ -83,7 +89,9 @@ public class Main {
         if (Strings.isNullOrEmpty(args.getStorageDirectory())) {
           gtfsInput = GtfsInput.createFromUrlInMemory(new URL(args.getUrl()));
         } else {
-          gtfsInput = GtfsInput.createFromUrl(new URL(args.getUrl()), args.getStorageDirectory());
+          gtfsInput =
+              GtfsInput.createFromUrl(
+                  new URL(args.getUrl()), Paths.get(args.getStorageDirectory(), GTFS_ZIP_FILENAME));
         }
       } else {
         gtfsInput = GtfsInput.createFromPath(Paths.get(args.getInput()));
@@ -94,9 +102,6 @@ public class Main {
     } catch (URISyntaxException e) {
       logger.atSevere().withCause(e).log("Syntax error in URI");
       noticeContainer.addSystemError(new URISyntaxError(e));
-    } catch (InterruptedException e) {
-      logger.atSevere().withCause(e).log("Interrupted thread");
-      noticeContainer.addSystemError(new ThreadInterruptedError(e.getMessage()));
     }
     if (gtfsInput == null) {
       exportReport(noticeContainer, args);

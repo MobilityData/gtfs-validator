@@ -22,12 +22,8 @@ import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 
 /** A validator that checks table headers for required columns etc. */
 public interface TableHeaderValidator {
-  /**
-   * Validates header of a single GTFS CSV table.
-   *
-   * @return true is the header is valid, false otherwise
-   */
-  boolean validate(
+  /** Validates header of a single GTFS CSV table and adds errors and warnings to the container. */
+  void validate(
       String filename,
       CsvHeader actualHeader,
       Set<String> supportedColumns,

@@ -93,7 +93,6 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
    */
   public boolean isParsedSuccessfully() {
     switch (tableStatus) {
-      case EMPTY_FILE:
       case PARSABLE_HEADERS_AND_ROWS:
         return true;
       case MISSING_FILE:

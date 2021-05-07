@@ -32,6 +32,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+import com.univocity.parsers.common.TextParsingException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -41,6 +42,7 @@ import javax.lang.model.element.Modifier;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsLoader;
+import org.mobilitydata.gtfsvalidator.notice.CsvParsingFailedNotice;
 import org.mobilitydata.gtfsvalidator.notice.EmptyFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -211,26 +213,29 @@ public class TableLoaderGenerator {
             .addParameter(NoticeContainer.class, "noticeContainer")
             .returns(
                 ParameterizedTypeName.get(ClassName.get(GtfsTableContainer.class), gtfsEntityType))
+            .addStatement("$T csvFile", CsvFile.class)
+            .beginControlFlow("try")
+            .addStatement("csvFile = new $T(inputStream, FILENAME)", CsvFile.class)
+            .nextControlFlow("catch ($T e)", TextParsingException.class)
             .addStatement(
-                "$T csvFile = new $T(inputStream, FILENAME)", CsvFile.class, CsvFile.class)
+                "noticeContainer.addValidationNotice(new $T(FILENAME, e))",
+                CsvParsingFailedNotice.class)
+            .addStatement(
+                "return new $T($T.INVALID_HEADERS)", tableContainerTypeName, TableStatus.class)
+            .endControlFlow()
             .beginControlFlow("if (csvFile.isEmpty())")
             .addStatement(
                 "noticeContainer.addValidationNotice(new $T(FILENAME))", EmptyFileNotice.class)
-            .addStatement(
-                "$T table = new $T($T.EMPTY_FILE)",
-                tableContainerTypeName,
-                tableContainerTypeName,
-                TableStatus.class)
-            .addStatement(
-                "$T.invokeSingleFileValidators(validatorProvider.createSingleFileValidators(table),"
-                    + " noticeContainer)",
-                ValidatorUtil.class)
-            .addStatement("return table")
+            .addStatement("return new $T($T.EMPTY_FILE)", tableContainerTypeName, TableStatus.class)
             .endControlFlow()
             .addStatement("$T header = csvFile.getHeader()", CsvHeader.class)
-            .beginControlFlow(
-                "if (!validatorProvider.getTableHeaderValidator().validate(FILENAME, header, "
-                    + "getColumnNames(), getRequiredColumnNames(), noticeContainer))")
+            .addStatement(
+                "$T headerNotices = new $T()", NoticeContainer.class, NoticeContainer.class)
+            .addStatement(
+                "validatorProvider.getTableHeaderValidator().validate(FILENAME, header, "
+                    + "getColumnNames(), getRequiredColumnNames(), headerNotices)")
+            .addStatement("noticeContainer.addAll(headerNotices)")
+            .beginControlFlow("if (headerNotices.hasValidationErrors())")
             .addStatement(
                 "return new $T($T.INVALID_HEADERS)", tableContainerTypeName, TableStatus.class)
             .endControlFlow();
@@ -279,6 +284,7 @@ public class TableLoaderGenerator {
             gtfsEntityType);
 
     method
+        .beginControlFlow("try")
         .beginControlFlow("for ($T row : csvFile)", CsvRow.class)
         .beginControlFlow("if (row.getRowNumber() % $L == 0)", LOG_EVERY_N_ROWS)
         .addStatement("logger.atInfo().log($S, FILENAME, row.getRowNumber())", "Reading %s, row %d")
@@ -324,7 +330,15 @@ public class TableLoaderGenerator {
         .endControlFlow()
         .addStatement("noticeContainer.addAll(rowNotices)");
 
-    method.endControlFlow(); // end for (row)
+    method
+        .endControlFlow() // end for (row)
+        .nextControlFlow("catch ($T e)", TextParsingException.class)
+        .addStatement(
+            "noticeContainer.addValidationNotice(new $T(FILENAME, e))",
+            CsvParsingFailedNotice.class)
+        .addStatement(
+            "return new $T($T.UNPARSABLE_ROWS)", tableContainerTypeName, TableStatus.class)
+        .nextControlFlow("finally");
 
     // Print statistics for cache efficiency.
     for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
@@ -342,6 +356,8 @@ public class TableLoaderGenerator {
             cacheName);
       }
     }
+
+    method.endControlFlow(); // end try-catch-finally
 
     method
         .beginControlFlow("if (hasUnparsableRows)")

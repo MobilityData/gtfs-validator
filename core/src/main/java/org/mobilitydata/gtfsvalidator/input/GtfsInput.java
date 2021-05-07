@@ -17,25 +17,19 @@
 package org.mobilitydata.gtfsvalidator.input;
 
 import com.google.common.collect.ImmutableSet;
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.AccessDeniedException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
-import org.apache.commons.io.FileUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -70,22 +64,26 @@ public abstract class GtfsInput implements Closeable {
   }
 
   /**
-   * Creates a specific GtfsInput to read data from the given URL.
+   * Creates a specific GtfsInput to read a GTFS ZIP archive from the given URL.
+   *
+   * <p>Necessary parent directories will be created.
    *
    * @param sourceUrl the fully qualified URL to download of the resource to download
-   * @param targetPathAsString the path to where the downloaded resource will be stored
+   * @param targetPath the path to store the downloaded GTFS archive
    * @return the {@code GtfsInput} created after download of the GTFS archive
-   * @throws IOException if no file could not be found at the specified location
+   * @throws IOException if GTFS archive cannot be stored at the specified location
    * @throws URISyntaxException if URL is malformed
-   * @throws InterruptedException when a thread is waiting, sleeping, or otherwise occupied, and the
-   *     thread is interrupted, either before or during the activity
    */
-  public static GtfsInput createFromUrl(URL sourceUrl, String targetPathAsString)
-      throws IOException, URISyntaxException, InterruptedException {
-    Path targetPath = createPath(targetPathAsString);
-    BufferedOutputStream outputStream =
-        new BufferedOutputStream(new FileOutputStream(targetPath.toString()));
-    loadFromUrl(sourceUrl, outputStream);
+  public static GtfsInput createFromUrl(URL sourceUrl, Path targetPath)
+      throws IOException, URISyntaxException {
+    // getParent() may return null if there is no parent, so call toAbsolutePath() first.
+    Path targetDirectory = targetPath.toAbsolutePath().getParent();
+    if (!Files.isDirectory(targetDirectory)) {
+      Files.createDirectories(targetDirectory);
+    }
+    try (OutputStream outputStream = Files.newOutputStream(targetPath)) {
+      loadFromUrl(sourceUrl, outputStream);
+    }
     return createFromPath(targetPath);
   }
 
@@ -100,10 +98,11 @@ public abstract class GtfsInput implements Closeable {
    */
   public static GtfsInput createFromUrlInMemory(URL sourceUrl)
       throws IOException, URISyntaxException {
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    loadFromUrl(sourceUrl, outputStream);
-    return new GtfsZipFileInput(
-        new ZipFile(new SeekableInMemoryByteChannel(outputStream.toByteArray())));
+    try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+      loadFromUrl(sourceUrl, outputStream);
+      return new GtfsZipFileInput(
+          new ZipFile(new SeekableInMemoryByteChannel(outputStream.toByteArray())));
+    }
   }
 
   /**
@@ -116,42 +115,12 @@ public abstract class GtfsInput implements Closeable {
    */
   private static void loadFromUrl(URL sourceUrl, OutputStream outputStream)
       throws IOException, URISyntaxException {
-    CloseableHttpClient httpClient = HttpClients.createDefault();
-    HttpGet httpGet = new HttpGet(sourceUrl.toURI());
-    CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
-    httpResponse.getEntity().writeTo(outputStream);
-    outputStream.close();
-    httpResponse.close();
-    httpClient.close();
-  }
-
-  /**
-   * Creates a path from a given string or cleans it if the path already exists.
-   *
-   * @param toCleanOrCreate the path to clean or create as string
-   * @return the created @code{Path}
-   */
-  private static Path createPath(final String toCleanOrCreate)
-      throws IOException, InterruptedException {
-    // to empty any already existing directory
-    Path pathToCleanOrCreate = Paths.get(toCleanOrCreate);
-    if (Files.exists(pathToCleanOrCreate)) {
-      FileUtils.deleteQuietly(new File(toCleanOrCreate));
-      Files.createFile(pathToCleanOrCreate);
-      return pathToCleanOrCreate;
+    try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+      HttpGet httpGet = new HttpGet(sourceUrl.toURI());
+      try (CloseableHttpResponse httpResponse = httpClient.execute(httpGet)) {
+        httpResponse.getEntity().writeTo(outputStream);
+      }
     }
-
-    // Create the directory
-    try {
-      Files.createFile(pathToCleanOrCreate);
-    } catch (AccessDeniedException e) {
-      // Wait and try again - Windows can initially block creating a directory immediately after a
-      // delete when a
-      // file lock exists (#112)
-      Thread.sleep(500);
-      Files.createFile(pathToCleanOrCreate);
-    }
-    return pathToCleanOrCreate;
   }
 
   /**
