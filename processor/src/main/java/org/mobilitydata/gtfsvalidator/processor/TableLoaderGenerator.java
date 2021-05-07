@@ -238,9 +238,13 @@ public class TableLoaderGenerator {
             .addStatement("return table")
             .endControlFlow()
             .addStatement("$T header = csvFile.getHeader()", CsvHeader.class)
-            .beginControlFlow(
-                "if (!validatorProvider.getTableHeaderValidator().validate(FILENAME, header, "
-                    + "getColumnNames(), getRequiredColumnNames(), noticeContainer))")
+            .addStatement(
+                "$T headerNotices = new $T()", NoticeContainer.class, NoticeContainer.class)
+            .addStatement(
+                "validatorProvider.getTableHeaderValidator().validate(FILENAME, header, "
+                    + "getColumnNames(), getRequiredColumnNames(), headerNotices)")
+            .addStatement("noticeContainer.addAll(headerNotices)")
+            .beginControlFlow("if (headerNotices.hasValidationErrors())")
             .addStatement(
                 "return new $T($T.INVALID_HEADERS)", tableContainerTypeName, TableStatus.class)
             .endControlFlow();
