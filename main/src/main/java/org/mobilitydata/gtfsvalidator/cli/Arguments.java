@@ -77,6 +77,11 @@ public class Arguments {
       help = true)
   private boolean help = false;
 
+  @Parameter(
+      names = {"-p", "--pretty"},
+      description = "Pretty json output")
+  private Boolean pretty = false;
+
   public String getFeedName() {
     return feedName;
   }
@@ -121,5 +126,9 @@ public class Arguments {
 
   public boolean getHelp() {
     return help;
+  }
+
+  public boolean getPretty() {
+    return pretty;
   }
 }

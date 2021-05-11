@@ -36,6 +36,8 @@ import java.util.List;
 public class NoticeContainer {
   private static final Gson DEFAULT_GSON =
       new GsonBuilder().serializeNulls().serializeSpecialFloatingPointValues().create();
+  private static final Gson PRETTY_GSON =
+      new GsonBuilder().setPrettyPrinting().serializeNulls().serializeSpecialFloatingPointValues().create();
 
   /** Limit on the amount of exported notices of the same type and severity. */
   private static final int MAX_EXPORTS_PER_NOTICE_TYPE = 100000;
@@ -100,13 +102,13 @@ public class NoticeContainer {
   }
 
   /** Exports all validation notices as JSON. */
-  public String exportValidationNotices() {
-    return exportJson(validationNotices);
+  public String exportValidationNotices(boolean isPretty) {
+    return exportJson(validationNotices, isPretty);
   }
 
   /** Exports all system errors as JSON. */
-  public String exportSystemErrors() {
-    return exportJson(systemErrors);
+  public String exportSystemErrors(boolean isPretty) {
+    return exportJson(systemErrors, isPretty);
   }
 
   /**
@@ -114,10 +116,11 @@ public class NoticeContainer {
    *
    * <p>Up to {@link #MAX_EXPORTS_PER_NOTICE_TYPE} is exported per each type+severity.
    */
-  public static <T extends Notice> String exportJson(List<T> notices) {
+  public static <T extends Notice> String exportJson(List<T> notices, boolean isPretty) {
     JsonObject root = new JsonObject();
     JsonArray jsonNotices = new JsonArray();
     root.add("notices", jsonNotices);
+    Gson GSON = isPretty ? PRETTY_GSON : DEFAULT_GSON;
 
     for (Collection<T> noticesOfType : groupNoticesByTypeAndSeverity(notices).asMap().values()) {
       JsonObject noticesOfTypeJson = new JsonObject();
@@ -135,11 +138,11 @@ public class NoticeContainer {
           // Do not export too many notices for this type.
           break;
         }
-        noticesArrayJson.add(DEFAULT_GSON.toJsonTree(notice.getContext()));
+        noticesArrayJson.add(GSON.toJsonTree(notice.getContext()));
       }
     }
 
-    return DEFAULT_GSON.toJson(root);
+    return GSON.toJson(root);
   }
 
   private static <T extends Notice> ListMultimap<String, T> groupNoticesByTypeAndSeverity(
