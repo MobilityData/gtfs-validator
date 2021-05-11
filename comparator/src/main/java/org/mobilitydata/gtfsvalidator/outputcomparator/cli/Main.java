@@ -20,15 +20,12 @@ import com.beust.jcommander.JCommander;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.flogger.FluentLogger;
-import com.google.gson.Gson;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import org.mobilitydata.gtfsvalidator.outputcomparator.util.ValidationReport;
+import org.mobilitydata.gtfsvalidator.outputcomparator.util.ValidationReportContainer;
 
 public class Main {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
@@ -51,25 +48,25 @@ public class Main {
     }
     ImmutableMap.Builder<String, Object> mapBuilder = new Builder<>();
     int badDatasetCount = 0;
-    double totalDatasetCount = Arrays.stream(outputDirectory).filter(File::isDirectory).count();
+    int totalDatasetCount = (int) Arrays.stream(outputDirectory).filter(File::isDirectory).count();
 
     for (File file : outputDirectory) {
       if (!file.isDirectory()) {
         continue;
       }
-      try (BufferedReader referenceReportReader =
-              Files.newBufferedReader(Paths.get(file.getPath()).resolve(REFERENCE_JSON));
-          BufferedReader latestReportReader =
-              Files.newBufferedReader(Paths.get(file.getPath()).resolve(LATEST_JSON))) {
-        ValidationReport referenceReport = ValidationReport.fromReader(referenceReportReader);
-        ValidationReport latestReport = ValidationReport.fromReader(latestReportReader);
-        if (referenceReport.equals(latestReport)) {
+      try (ValidationReportContainer referenceReportContainer =
+              ValidationReportContainer.fromPath(file.toPath().resolve(REFERENCE_JSON));
+          ValidationReportContainer latestReportContainer =
+              ValidationReportContainer.fromPath(file.toPath().resolve(LATEST_JSON))) {
+        if (referenceReportContainer
+            .getValidationReport()
+            .equals(latestReportContainer.getValidationReport())) {
           continue;
         }
-        if (referenceReport.hasSameErrorCodes(latestReport)) {
+        if (referenceReportContainer.hasSameErrorCodes(latestReportContainer)) {
           continue;
         }
-        int newErrorCount = referenceReport.getNewErrorCount(latestReport);
+        int newErrorCount = referenceReportContainer.getNewErrorCount(latestReportContainer);
         mapBuilder.put(file.getName(), newErrorCount);
         if (newErrorCount >= args.getValidityThreshold()) {
           badDatasetCount += 1;
@@ -83,6 +80,6 @@ public class Main {
         mapBuilder.build(), args.getOutputBase(), INTEGRATION_REPORT_JSON);
     System.out.printf(
         "%.2f %% of datasets are invalid due to new implementation%n",
-        100 * badDatasetCount / totalDatasetCount);
+        (double) 100 * badDatasetCount / totalDatasetCount);
   }
 }

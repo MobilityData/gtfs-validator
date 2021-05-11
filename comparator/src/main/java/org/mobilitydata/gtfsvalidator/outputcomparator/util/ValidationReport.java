@@ -19,31 +19,24 @@ package org.mobilitydata.gtfsvalidator.outputcomparator.util;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * Used to deserialize a validation report. This represents a validation report as a list of {@code
  * NoticeAggregate} which provides information about each notice generated during a GTFS dataset
  * validation.
  */
-public class ValidationReport {
-  private static final Gson GSON = new Gson();
+public class ValidationReport implements Serializable {
   private final List<NoticeAggregate> notices;
 
   private ValidationReport(List<NoticeAggregate> notices) {
     this.notices = notices;
-  }
-
-  public static ValidationReport fromReader(BufferedReader reader) {
-    return GSON.fromJson(reader, ValidationReport.class);
   }
 
   /**
@@ -67,47 +60,6 @@ public class ValidationReport {
 
   public List<NoticeAggregate> getNotices() {
     return Collections.unmodifiableList(notices);
-  }
-
-  /**
-   * Return the sorted set of error codes in a validation report.
-   *
-   * @return the sorted set of error codes in a validation report.
-   */
-  public Set<String> getErrorCodes() {
-    Set<String> errorCodes = new TreeSet<>();
-    for (NoticeAggregate noticeAggregate : getNotices()) {
-      if (noticeAggregate.isError()) {
-        errorCodes.add(noticeAggregate.getCode());
-      }
-    }
-    return errorCodes;
-  }
-
-  /**
-   * Compares two validation reports: returns true if they contain the same set of error codes.
-   *
-   * @param otherValidationReport the other {@code ValidationReport}.
-   * @return true if thw two {@code ValidationReport} contain the same set of error codes, false
-   *     otherwise.
-   */
-  public boolean hasSameErrorCodes(ValidationReport otherValidationReport) {
-    return getErrorCodes().equals(otherValidationReport.getErrorCodes());
-  }
-
-  /**
-   * Compares two validation reports: returns the number of new error codes introduces in the
-   * validation report provided as parameter.
-   *
-   * @param otherValidationReport the other {@code ValidationReport}.
-   * @return the number of new error codes introduces in the * validation report provided as
-   *     parameter.
-   */
-  public int getNewErrorCount(ValidationReport otherValidationReport) {
-    return (int)
-        otherValidationReport.getErrorCodes().stream()
-            .filter(errorCode -> !getErrorCodes().contains(errorCode))
-            .count();
   }
 
   /**
