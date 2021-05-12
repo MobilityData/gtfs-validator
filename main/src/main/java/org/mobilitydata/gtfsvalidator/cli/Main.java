@@ -152,7 +152,9 @@ public class Main {
     try {
       Files.write(
           Paths.get(args.getOutputBase(), args.getValidationReportName()),
-          noticeContainer.exportValidationNotices(args.getPretty()).getBytes(StandardCharsets.UTF_8));
+          noticeContainer
+              .exportValidationNotices(args.getPretty())
+              .getBytes(StandardCharsets.UTF_8));
       Files.write(
           Paths.get(args.getOutputBase(), args.getSystemErrorsReportName()),
           noticeContainer.exportSystemErrors(args.getPretty()).getBytes(StandardCharsets.UTF_8));
