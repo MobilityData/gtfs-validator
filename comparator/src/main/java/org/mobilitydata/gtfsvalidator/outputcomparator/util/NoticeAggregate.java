@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.outputcomparator.util;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
@@ -53,7 +54,7 @@ public class NoticeAggregate {
   }
 
   public List<Map<String, Object>> getNotices() {
-    return notices;
+    return Collections.unmodifiableList(notices);
   }
 
   public boolean isError() {

@@ -15,6 +15,7 @@ repositories {
 
 dependencies {
     implementation project(':core')
+    implementation 'commons-io:commons-io:2.8.0'
     implementation 'com.google.api-client:google-api-client:1.31.2'
     implementation 'com.google.guava:guava:29.0-jre'
     implementation 'com.google.flogger:flogger:0.5.1'

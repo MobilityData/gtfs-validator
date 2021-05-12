@@ -20,12 +20,16 @@ import com.beust.jcommander.JCommander;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.flogger.FluentLogger;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import org.mobilitydata.gtfsvalidator.outputcomparator.util.ValidationReport;
-import org.mobilitydata.gtfsvalidator.outputcomparator.util.ValidationReportContainer;
 
 public class Main {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
@@ -54,19 +58,20 @@ public class Main {
       if (!file.isDirectory()) {
         continue;
       }
-      try (ValidationReportContainer referenceReportContainer =
-              ValidationReportContainer.fromPath(file.toPath().resolve(REFERENCE_JSON));
-          ValidationReportContainer latestReportContainer =
-              ValidationReportContainer.fromPath(file.toPath().resolve(LATEST_JSON))) {
-        if (referenceReportContainer
-            .getValidationReport()
-            .equals(latestReportContainer.getValidationReport())) {
+
+      try {
+        ValidationReport referenceReport =
+            ValidationReport.fromPath(file.toPath().resolve(REFERENCE_JSON));
+        ValidationReport latestReport =
+            ValidationReport.fromPath(file.toPath().resolve(LATEST_JSON));
+
+        if (referenceReport.equals(latestReport)) {
           continue;
         }
-        if (referenceReportContainer.hasSameErrorCodes(latestReportContainer)) {
+        if (referenceReport.hasSameErrorCodes(latestReport)) {
           continue;
         }
-        int newErrorCount = referenceReportContainer.getNewErrorCount(latestReportContainer);
+        int newErrorCount = referenceReport.getNewErrorCount(latestReport);
         mapBuilder.put(file.getName(), newErrorCount);
         if (newErrorCount >= args.getValidityThreshold()) {
           badDatasetCount += 1;
@@ -76,10 +81,24 @@ public class Main {
         System.exit(1);
       }
     }
-    ValidationReport.exportIntegrationReportAsJson(
-        mapBuilder.build(), args.getOutputBase(), INTEGRATION_REPORT_JSON);
+    exportIntegrationReport(mapBuilder.build(), args.getOutputBase());
     System.out.printf(
         "%.2f %% of datasets are invalid due to new implementation%n",
-        (double) 100 * badDatasetCount / totalDatasetCount);
+        100.0 * badDatasetCount / totalDatasetCount);
+  }
+
+  /**
+   * Exports the integration test report (map of String, Object) as json.
+   *
+   * @param integrationReportData integration report content.
+   * @param outputBase base path to output.
+   * @throws IOException if an I/O error occurs writing to or creating the file.
+   */
+  private static void exportIntegrationReport(
+      ImmutableMap<String, Object> integrationReportData, String outputBase) throws IOException {
+    Gson gson = new GsonBuilder().serializeNulls().create();
+    Files.write(
+        Paths.get(outputBase, INTEGRATION_REPORT_JSON),
+        gson.toJson(integrationReportData).getBytes(StandardCharsets.UTF_8));
   }
 }

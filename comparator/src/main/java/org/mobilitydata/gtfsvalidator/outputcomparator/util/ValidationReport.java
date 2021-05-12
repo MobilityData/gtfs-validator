@@ -16,50 +16,118 @@
 
 package org.mobilitydata.gtfsvalidator.outputcomparator.util;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
- * Used to deserialize a validation report. This represents a validation report as a list of {@code
+ * Used to deserialize validation report. This represents a validation report as a list of {@code
  * NoticeAggregate} which provides information about each notice generated during a GTFS dataset
  * validation.
  */
-public class ValidationReport implements Serializable {
+public class ValidationReport {
+  private static final Gson GSON =
+      new GsonBuilder()
+          .registerTypeAdapter(ValidationReport.class, new ValidationReportDeserializer())
+          .serializeNulls()
+          .serializeSpecialFloatingPointValues()
+          .create();
   private final List<NoticeAggregate> notices;
+  private final Set<String> errorCodes;
 
-  private ValidationReport(List<NoticeAggregate> notices) {
+  ValidationReport(List<NoticeAggregate> notices, Set<String> errorCodes) {
     this.notices = notices;
+    this.errorCodes = errorCodes;
   }
 
   /**
-   * Exports the integration test report (map of String, Object) as json.
+   * Creates a {@code ValidationReport} from a {@code Path}
    *
-   * @param integrationReportData integration report content.
-   * @param outputBase base path to output.
-   * @param integrationReportName integration report name.
-   * @throws IOException if an I/O error occurs writing to or creating the file.
+   * @param path the path to the json file
+   * @return the {@code ValidationReport} that contains the {@code ValidationReport} related to the
+   *     json file whose path was passed as parameter.
    */
-  public static void exportIntegrationReportAsJson(
-      ImmutableMap<String, Object> integrationReportData,
-      String outputBase,
-      String integrationReportName)
-      throws IOException {
-    Gson gson = new GsonBuilder().serializeNulls().create();
-    Files.write(
-        Paths.get(outputBase, integrationReportName),
-        gson.toJson(integrationReportData).getBytes(StandardCharsets.UTF_8));
+  public static ValidationReport fromPath(Path path) throws IOException {
+    BufferedReader reader = Files.newBufferedReader(path);
+    ValidationReport validationReport = GSON.fromJson(reader, ValidationReport.class);
+    reader.close();
+    return validationReport;
   }
 
+  /**
+   * Creates a {@code ValidationReport} from a json string.
+   *
+   * @param jsonString the json string
+   * @return the {@code ValidationReport} that contains the {@code ValidationReport} related to the
+   *     json string passed as parameter.
+   */
+  public static ValidationReport fromJsonString(String jsonString) {
+    return GSON.fromJson(jsonString, ValidationReport.class);
+  }
+
+  /**
+   * Returns the list of {@code NoticeAggregate} of this {@code ValidationReport}.
+   *
+   * @return the list of {@code NoticeAggregate} of this {@code ValidationReport}.
+   */
   public List<NoticeAggregate> getNotices() {
     return Collections.unmodifiableList(notices);
+  }
+
+  /**
+   * Returns the immutable and ordered set of error codes contained in this {@code ValidationReport}
+   *
+   * @return the immutable and ordered set of error codes contained in this {@code ValidationReport}
+   */
+  public Set<String> getErrorCodes() {
+    return Collections.unmodifiableSet(errorCodes);
+  }
+
+  /**
+   * Compares two validation reports: returns true if they contain the same set of error codes.
+   *
+   * @param otherValidationReport the other {@code ValidationReport}.
+   * @return true if the two {@code ValidationReport} contain the same set of error codes, false
+   *     otherwise.
+   */
+  public boolean hasSameErrorCodes(ValidationReport otherValidationReport) {
+    return getErrorCodes().equals(otherValidationReport.getErrorCodes());
+  }
+
+  /**
+   * Returns the number of new error codes introduced by the other {@code ValidationReport} passed
+   * as parameter, e.g. if this {@code ValidationReport} has the following error codes:
+   *
+   * <ul>
+   *   <li>invalid_phone_number;
+   *   <li>number_out_of_range;
+   * </ul>
+   *
+   * and the other {@code ValidationReport} has the following error codes:
+   *
+   * <ul>
+   *   <li>invalid_phone_number;
+   *   <li>number_out_of_range;
+   *   <li>invalid_email_address;
+   *   <li>invalid_url;
+   * </ul>
+   *
+   * <p>then this methods returns 2 as it contains two new errors codes (invalid_email_address,
+   * invalid_url) not present in this {@code ValidationReport}
+   *
+   * @param other the other {@code ValidationReport}
+   * @return the number of new error codes introduced by the other {@code ValidationReport} passed
+   *     as parameter.
+   */
+  public int getNewErrorCount(ValidationReport other) {
+    return Sets.difference(other.getErrorCodes(), getErrorCodes()).size();
   }
 
   /**
