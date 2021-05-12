@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.outputcomparator.util;
 
+import com.google.gson.annotations.SerializedName;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -31,14 +32,16 @@ public class NoticeAggregate {
   private final String code;
   private final SeverityLevel severity;
   private final int totalNotices;
-  private final List<Map<String, Object>> notices;
+
+  @SerializedName("notices")
+  private final List<Map<String, Object>> contexts;
 
   public NoticeAggregate(
-      String code, SeverityLevel severity, int totalNotices, List<Map<String, Object>> notices) {
+      String code, SeverityLevel severity, int totalNotices, List<Map<String, Object>> contexts) {
     this.code = code;
     this.severity = severity;
     this.totalNotices = totalNotices;
-    this.notices = notices;
+    this.contexts = contexts;
   }
 
   public int getTotalNotices() {
@@ -53,8 +56,8 @@ public class NoticeAggregate {
     return code;
   }
 
-  public List<Map<String, Object>> getNotices() {
-    return Collections.unmodifiableList(notices);
+  public List<Map<String, Object>> getContexts() {
+    return Collections.unmodifiableList(contexts);
   }
 
   public boolean isError() {
@@ -70,7 +73,7 @@ public class NoticeAggregate {
       return this.getCode().equals(((NoticeAggregate) other).getCode())
           && this.getSeverity().equals(((NoticeAggregate) other).getSeverity())
           && this.getTotalNotices() == (((NoticeAggregate) other).getTotalNotices())
-          && getNotices().equals(((NoticeAggregate) other).getNotices());
+          && getContexts().equals(((NoticeAggregate) other).getContexts());
     }
     return false;
   }
