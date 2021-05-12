@@ -56,49 +56,6 @@ public class NoticeContainer {
   private final List<SystemError> systemErrors = new ArrayList<>();
   private boolean hasValidationErrors = false;
 
-  /**
-   * Exports notices as JSON.
-   *
-   * <p>Up to {@link #MAX_EXPORTS_PER_NOTICE_TYPE} is exported per each type+severity.
-   */
-  public static <T extends Notice> String exportJson(List<T> notices, boolean isPretty) {
-    JsonObject root = new JsonObject();
-    JsonArray jsonNotices = new JsonArray();
-    root.add("notices", jsonNotices);
-    Gson gson = isPretty ? PRETTY_GSON : DEFAULT_GSON;
-
-    for (Collection<T> noticesOfType : groupNoticesByTypeAndSeverity(notices).asMap().values()) {
-      JsonObject noticesOfTypeJson = new JsonObject();
-      jsonNotices.add(noticesOfTypeJson);
-      T firstNotice = noticesOfType.iterator().next();
-      noticesOfTypeJson.addProperty("code", firstNotice.getCode());
-      noticesOfTypeJson.addProperty("severity", firstNotice.getSeverityLevel().toString());
-      noticesOfTypeJson.addProperty("totalNotices", noticesOfType.size());
-      JsonArray noticesArrayJson = new JsonArray();
-      noticesOfTypeJson.add("notices", noticesArrayJson);
-      int i = 0;
-      for (T notice : noticesOfType) {
-        ++i;
-        if (i > MAX_EXPORTS_PER_NOTICE_TYPE) {
-          // Do not export too many notices for this type.
-          break;
-        }
-        noticesArrayJson.add(gson.toJsonTree(notice.getContext()));
-      }
-    }
-
-    return gson.toJson(root);
-  }
-
-  private static <T extends Notice> ListMultimap<String, T> groupNoticesByTypeAndSeverity(
-      List<T> notices) {
-    ListMultimap<String, T> noticesByType = MultimapBuilder.treeKeys().arrayListValues().build();
-    for (T notice : notices) {
-      noticesByType.put(notice.getCode() + notice.getSeverityLevel().ordinal(), notice);
-    }
-    return noticesByType;
-  }
-
   /** Adds a new validation notice to the container (if there is capacity). */
   public void addValidationNotice(ValidationNotice notice) {
     if (notice.isError()) {
@@ -151,5 +108,48 @@ public class NoticeContainer {
   /** Exports all system errors as JSON. */
   public String exportSystemErrors(boolean isPretty) {
     return exportJson(systemErrors, isPretty);
+  }
+
+  /**
+   * Exports notices as JSON.
+   *
+   * <p>Up to {@link #MAX_EXPORTS_PER_NOTICE_TYPE} is exported per each type+severity.
+   */
+  public static <T extends Notice> String exportJson(List<T> notices, boolean isPretty) {
+    JsonObject root = new JsonObject();
+    JsonArray jsonNotices = new JsonArray();
+    root.add("notices", jsonNotices);
+    Gson gson = isPretty ? PRETTY_GSON : DEFAULT_GSON;
+
+    for (Collection<T> noticesOfType : groupNoticesByTypeAndSeverity(notices).asMap().values()) {
+      JsonObject noticesOfTypeJson = new JsonObject();
+      jsonNotices.add(noticesOfTypeJson);
+      T firstNotice = noticesOfType.iterator().next();
+      noticesOfTypeJson.addProperty("code", firstNotice.getCode());
+      noticesOfTypeJson.addProperty("severity", firstNotice.getSeverityLevel().toString());
+      noticesOfTypeJson.addProperty("totalNotices", noticesOfType.size());
+      JsonArray noticesArrayJson = new JsonArray();
+      noticesOfTypeJson.add("notices", noticesArrayJson);
+      int i = 0;
+      for (T notice : noticesOfType) {
+        ++i;
+        if (i > MAX_EXPORTS_PER_NOTICE_TYPE) {
+          // Do not export too many notices for this type.
+          break;
+        }
+        noticesArrayJson.add(gson.toJsonTree(notice.getContext()));
+      }
+    }
+
+    return gson.toJson(root);
+  }
+
+  private static <T extends Notice> ListMultimap<String, T> groupNoticesByTypeAndSeverity(
+      List<T> notices) {
+    ListMultimap<String, T> noticesByType = MultimapBuilder.treeKeys().arrayListValues().build();
+    for (T notice : notices) {
+      noticesByType.put(notice.getCode() + notice.getSeverityLevel().ordinal(), notice);
+    }
+    return noticesByType;
   }
 }
