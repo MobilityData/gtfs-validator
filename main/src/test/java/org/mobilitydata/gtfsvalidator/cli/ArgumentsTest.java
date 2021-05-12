@@ -17,10 +17,8 @@
 package org.mobilitydata.gtfsvalidator.cli;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.junit.Assert.assertThrows;
 
 import com.beust.jcommander.JCommander;
-import com.beust.jcommander.ParameterException;
 import org.junit.Test;
 
 public class ArgumentsTest {
@@ -123,42 +121,5 @@ public class ArgumentsTest {
     assertThat(underTest.getOutputBase()).matches("output value");
     assertThat(underTest.getCountryCode()).matches("ca");
     assertThat(underTest.getNumThreads()).isEqualTo(1);
-  }
-
-  @Test
-  public void pretty_takesNoValue() {
-    String[] commandLineArgumentAsStringArray = {
-      "--input", "input value",
-      "--output_base", "output value",
-      "--pretty", "true"
-    };
-    Arguments underTest = new Arguments();
-    ;
-    assertThrows(
-        ParameterException.class,
-        () -> new JCommander(underTest).parse(commandLineArgumentAsStringArray));
-  }
-
-  @Test
-  public void pretty_provided_isTrue() {
-    String[] commandLineArgumentAsStringArray = {
-      "--input", "input value",
-      "--output_base", "output value",
-      "--pretty", ""
-    };
-    Arguments underTest = new Arguments();
-    new JCommander(underTest).parse(commandLineArgumentAsStringArray);
-    assertThat(underTest.getPretty()).isTrue();
-  }
-
-  @Test
-  public void pretty_notProvided_isFalse() {
-    String[] commandLineArgumentAsStringArray = {
-      "--input", "input value",
-      "--output_base", "output value",
-    };
-    Arguments underTest = new Arguments();
-    new JCommander(underTest).parse(commandLineArgumentAsStringArray);
-    assertThat(underTest.getPretty()).isFalse();
   }
 }

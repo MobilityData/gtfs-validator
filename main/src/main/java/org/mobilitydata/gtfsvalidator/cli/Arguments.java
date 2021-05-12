@@ -80,7 +80,7 @@ public class Arguments {
   @Parameter(
       names = {"-p", "--pretty"},
       description = "Pretty json output")
-  private Boolean pretty = false;
+  private boolean pretty = false;
 
   public String getFeedName() {
     return feedName;
