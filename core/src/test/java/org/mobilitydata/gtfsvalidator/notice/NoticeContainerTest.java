@@ -29,24 +29,71 @@ import org.junit.runners.JUnit4;
 public class NoticeContainerTest {
 
   @Test
-  public void exportJson() {
+  public void exportJson_defaultPrint() {
     NoticeContainer container = new NoticeContainer();
     container.addValidationNotice(new MissingRequiredFileNotice("stops.txt"));
     container.addValidationNotice(new MissingRequiredFileNotice("agency.txt"));
     container.addSystemError(
         new RuntimeExceptionInValidatorError(
             "FaultyValidator", new IndexOutOfBoundsException("Index 0 out of bounds")));
-    assertThat(container.exportValidationNotices())
+    assertThat(container.exportValidationNotices(false))
         .isEqualTo(
             "{\"notices\":["
                 + "{\"code\":\"missing_required_file\",\"severity\":\"ERROR\","
                 + "\"totalNotices\":2,\"notices\":"
                 + "[{\"filename\":\"stops.txt\"},{\"filename\":\"agency.txt\"}]}]}");
-    assertThat(container.exportSystemErrors())
+    assertThat(container.exportSystemErrors(false))
         .isEqualTo(
             "{\"notices\":[{\"code\":\"runtime_exception_in_validator_error\",\"severity\":\"ERROR\","
                 + "\"totalNotices\":1,\"notices\":[{\"validator\":\"FaultyValidator\",\"exception\":\"java.lang.IndexOutOfBoundsException\",\"message\":\"Index"
                 + " 0 out of bounds\"}]}]}");
+  }
+
+  @Test
+  public void exportJson_prettyPrint() {
+    NoticeContainer container = new NoticeContainer();
+    container.addValidationNotice(new MissingRequiredFileNotice("stops.txt"));
+    container.addValidationNotice(new MissingRequiredFileNotice("agency.txt"));
+    container.addSystemError(
+        new RuntimeExceptionInValidatorError(
+            "FaultyValidator", new IndexOutOfBoundsException("Index 0 out of bounds")));
+    assertThat(container.exportValidationNotices(true))
+        .isEqualTo(
+            "{\n"
+                + "  \"notices\": [\n"
+                + "    {\n"
+                + "      \"code\": \"missing_required_file\",\n"
+                + "      \"severity\": \"ERROR\",\n"
+                + "      \"totalNotices\": 2,\n"
+                + "      \"notices\": [\n"
+                + "        {\n"
+                + "          \"filename\": \"stops.txt\"\n"
+                + "        },\n"
+                + "        {\n"
+                + "          \"filename\": \"agency.txt\"\n"
+                + "        }\n"
+                + "      ]\n"
+                + "    }\n"
+                + "  ]\n"
+                + "}");
+    assertThat(container.exportSystemErrors(true))
+        .isEqualTo(
+            "{\n"
+                + "  \"notices\": [\n"
+                + "    {\n"
+                + "      \"code\": \"runtime_exception_in_validator_error\",\n"
+                + "      \"severity\": \"ERROR\",\n"
+                + "      \"totalNotices\": 1,\n"
+                + "      \"notices\": [\n"
+                + "        {\n"
+                + "          \"validator\": \"FaultyValidator\",\n"
+                + "          \"exception\": \"java.lang.IndexOutOfBoundsException\",\n"
+                + "          \"message\": \"Index 0 out of bounds\"\n"
+                + "        }\n"
+                + "      ]\n"
+                + "    }\n"
+                + "  ]\n"
+                + "}");
   }
 
   @Test
@@ -58,7 +105,7 @@ public class NoticeContainerTest {
     context.put("nullField", null);
     container.addValidationNotice(
         new TestValidationNotice("test_notice", context, SeverityLevel.ERROR));
-    assertThat(container.exportValidationNotices())
+    assertThat(container.exportValidationNotices(false))
         .isEqualTo(
             "{\"notices\":[{\"code\":\"test_notice\",\"severity\":\"ERROR\","
                 + "\"totalNotices\":1,\"notices\":[{\"nullField\":null}]}]}");
@@ -72,7 +119,7 @@ public class NoticeContainerTest {
             "test_notice",
             ImmutableMap.of("infinityField", Double.POSITIVE_INFINITY),
             SeverityLevel.ERROR));
-    assertThat(container.exportValidationNotices())
+    assertThat(container.exportValidationNotices(false))
         .isEqualTo(
             "{\"notices\":[{\"code\":\"test_notice\",\"severity\":\"ERROR\","
                 + "\"totalNotices\":1,\"notices\":[{\"infinityField\":Infinity}]}]}");
@@ -87,7 +134,7 @@ public class NoticeContainerTest {
         new TestValidationNotice("notice_b", ImmutableMap.of("keyB", 2), SeverityLevel.ERROR));
     container.addValidationNotice(
         new TestValidationNotice("notice_a", ImmutableMap.of("keyC", 3), SeverityLevel.INFO));
-    assertThat(container.exportValidationNotices())
+    assertThat(container.exportValidationNotices(false))
         .isEqualTo(
             "{\"notices\":["
                 + "{\"code\":\"notice_a\",\"severity\":\"INFO\",\"totalNotices\":1,"
