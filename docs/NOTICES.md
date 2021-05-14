@@ -854,3 +854,24 @@
 ##### Affected files
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
+
+### Info
+#### [UnknownColumnNotice](/RULES.md#UnknownColumnNotice)
+##### Fields description
+
+| Field name 	| Description                     	| Type    	|
+|------------	|---------------------------------	|---------	|
+| `filename`   	| The name of the faulty file.    	| String 	|
+| `fieldName`  	| The name of the unknown column. 	| String  	|
+| `index`      	| The index of the faulty column. 	| Integer 	|
+
+##### Affected files
+[All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
+
+#### [UnknownFileNotice](/RULES.md#UnknownFileNotice)
+##### Fields description
+
+| Field name 	| Description                     	| Type    	|
+|------------	|---------------------------------	|---------	|
+| `filename`   	| The name of the unknown file.    	| String 	|
+
