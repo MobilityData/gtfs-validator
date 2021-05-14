@@ -1,6 +1,7 @@
 # Notices field description
 ## Validation notices
 ### Errors
+
 #### [`BlockTripsWithOverlappingStopTimesNotice`](/RULES.md#BlockTripsWithOverlappingStopTimesNotice)
 ##### Fields description
 
@@ -571,4 +572,285 @@
 | `expectedLocationType`| The expected location type of the faulty record. 	| Integer 	|
 
 ##### Affected files
+* [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
+
+### Warnings
+
+#### [AttributionWithoutRoleNotice](/RULES.md#AttributionWithoutRoleNotice)
+##### Fields description
+
+| Field name    	| Description                          	| Type   	|
+|---------------	|--------------------------------------	|--------	|
+| `csvRowNumber`  	| The row number of the faulty record. 	| Long   	|
+| `attributionId` 	| The id of the faulty record.         	| String 	|
+
+##### Affected files
+* [`attributions.txt`](http://gtfs.org/reference/static#attributionstxt)
+
+#### [DuplicateRouteNameNotice](/RULES.md#DuplicateRouteNameNotice)
+##### Fields description
+
+| Field name     	| Description                             	| Type   	|
+|----------------	|-----------------------------------------	|--------	|
+| csvRowNumber1  	| The row number of the first occurrence. 	| Long   	|
+| routeId1       	| The id of the the first occurrence.     	| String 	|
+| csvRowNumber2  	| The row number of the other occurrence. 	| Long   	|
+| routeId2       	| The id of the the other occurrence.     	| String 	|
+| routeShortName 	| Common `routes.route_short_name`.       	| String 	|
+| routeLongName  	| Common `routes.route_long_name`.        	| String 	|
+| routeType      	| Common `routes.route_type`.             	| String 	|
+| agencyId       	| Common `routes.agency_id`.              	| String 	|
+
+##### Affected files
+* [`routes.txt`](http://gtfs.org/reference/static#routestxt)
+
+#### [EmptyColumnNameNotice](/RULES.md#EmptyColumnNameNotice)
+##### Fields description
+
+| Field name 	| Description                    	| Type    	|
+|------------	|--------------------------------	|---------	|
+| `filename`   	| The name of the faulty file.   	| String   	|
+| `index`      	| The index of the empty column. 	| Integer 	|
+
+##### Affected files
+[All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
+
+#### [EmptyRowNotice](/RULES.md#EmptyRowNotice)
+##### Fields description
+
+| Field name   	| Description                          	| Type    	|
+|--------------	|--------------------------------------	|---------	|
+| `filename`   	| The name of the faulty file.         	| String  	|
+| `csvRowNumber`| The row number of the faulty record. 	| Long 	    |
+
+##### Affected files
+[All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
+
+#### [FeedExpirationDateNotice](/RULES.md#FeedExpirationDateNotice)
+##### Fields description
+
+| Field name              	| Description                                  	| Type   	|
+|-------------------------	|----------------------------------------------	|--------	|
+| `csvRowNumber`           	| The row number of the faulty record.         	| Long   	|
+| `currentDate`            	| Current date (YYYYMMDD format).              	| String 	|
+| `feedEndDate`            	| Feed end date (YYYYMMDD format).             	| String 	|
+| `suggestedExpirationDate`	| Suggested expiration date (YYYYMMDD format). 	| String 	|
+
+##### Affected files
+* [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
+
+#### [FeedInfoLangAndAgencyLangMismatchNotice](/RULES.md#FeedInfoLangAndAgencyLangMismatchNotice)
+##### Fields description
+
+| Field name   	| Description                               	| Type   	|
+|--------------	|-------------------------------------------	|--------	|
+| `csvRowNumber`| The row number of the faulty record.      	| Long   	|
+| `agencyId`   	| The agency id of the faulty record.       	| String 	|
+| `agencyName` 	| The agency name of the faulty record.     	| String 	|
+| `agencyLang` 	| The agency language of the faulty record. 	| String 	|
+| `feedLang`   	| The feed language of the faulty record.   	| String 	|
+
+##### Affected files
+* [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
+* [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
+
+#### [InconsistentAgencyLangNotice](/RULES.md#InconsistentAgencyLangNotice)
+##### Fields description
+
+| Field name     	| Description                   	| Type   	|
+|----------------	|-------------------------------	|--------	|
+| `csvRowNumber` 	| The row of the faulty record. 	| Long   	|
+| `expected`     	| Expected language.            	| String 	|
+| `actual`       	| Faulty record's language.     	| String 	|
+
+##### Affected files
+* [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
+
+#### [MissingFeedInfoDateNotice](/RULES.md#MissingFeedInfoDateNotice)
+##### Fields description
+
+| Field name     	| Description                                 	| Type   	|
+|----------------	|---------------------------------------------	|--------	|
+| `fieldName`    	| Either `feed_end_date` or `feed_start_date` 	| String 	|
+| `csvRowNumber` 	| The row number of the faulty record.        	| Long   	|
+
+##### Affected files
+* [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
+
+#### [MoreThanOneEntityNotice](/RULES.md#MoreThanOneEntityNotice)
+##### Fields description
+
+| Field name    	| Description              	| Type   	|
+|---------------	|--------------------------	|--------	|
+| `filename`    	| Name of the faulty file. 	| String 	|
+| `entityCount` 	| Number of occurrences.   	| Long   	|
+
+##### Affected files
+[All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
+
+#### [NonAsciiOrNonPrintableCharNotice](/RULES.md#NonAsciiOrNonPrintableCharNotice)
+##### Fields description
+
+| Field name   	| Description                                  	| Type   	|
+|--------------	|----------------------------------------------	|--------	|
+| `filename`   	| Name of the faulty file.                     	| String 	|
+| `csvRowNumber`| Row number of the faulty record.             	| Long   	|
+| `columnName` 	| Name of the column where the error occurred. 	| String 	|
+| `fieldValue` 	| Faulty value.                                	| String 	|
+
+##### Affected files
+[All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
+
+#### [PlatformWithoutParentStationNotice](/RULES.md#PlatformWithoutParentStationNotice)
+##### Fields description
+
+| Field name   	| Description                             	| Type    	|
+|--------------	|-----------------------------------------	|---------	|
+| `csvRowNumber`| Row number of the faulty record.        	| Long    	|
+| `stopId`     	| The id of the faulty record.             	| String  	|
+| `stopName`   	| The stop name of the faulty record.     	| String  	|
+| `locationType`| The location type of the faulty record. 	| Integer 	|
+
+##### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+
+#### [RouteColorContrastNotice](/RULES.md#RouteColorContrastNotice)
+##### Fields description
+
+| Field name     	| Description                                	| Type   	|
+|----------------	|--------------------------------------------	|--------	|
+| `routeId`        	| The id of the faulty record.               	| Long   	|
+| `csvRowNumber`   	| The row number of the faulty record.       	| String 	|
+| `routeColor`     	| The faulty record's HTML route color.      	| String 	|
+| `routeTextColor` 	| The faulty record's HTML route text color. 	| String 	|
+
+##### Affected files
+* [`routes.txt`](http://gtfs.org/reference/static#routestxt)
+
+#### [RouteShortAndLongNameEqualNotice](/RULES.md#RouteShortAndLongNameEqualNotice)
+##### Fields description
+
+| Field name     	| Description                             	| Type   	|
+|----------------	|-----------------------------------------	|--------	|
+| `routeId`        	| The id of the faulty record.            	| Long   	|
+| `csvRowNumber`   	| The row number of the faulty record.    	| String 	|
+| `routeShortName` 	| The faulty record's `route_short_name`. 	| String 	|
+| `routeLongName`  	| The faulty record's `route_long_name`.  	| String 	|
+
+##### Affected files
+* [`routes.txt`](http://gtfs.org/reference/static#routestxt)
+
+#### [RouteShortNameTooLongNotice](/RULES.md#RouteShortNameTooLongNotice)
+##### Fields description
+
+| Field name     	| Description                             	| Type   	|
+|----------------	|-----------------------------------------	|--------	|
+| `routeId`        	| The id of the faulty record.            	| Long   	|
+| `csvRowNumber`   	| The row number of the faulty record.    	| String 	|
+| `routeShortName` 	| The faulty record's `route_short_name`. 	| String 	|
+
+##### Affected files
+* [`routes.txt`](http://gtfs.org/reference/static#routestxt)
+
+#### [StopTimeTimepointWithoutTimesNotice](/RULES.md#StopTimeTimepointWithoutTimesNotice)
+##### Fields description
+
+| Field name     	| Description                                	| Type   	|
+|----------------	|--------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row number of the faulty record.       	| Long   	|
+| `tripId`         	| The faulty record's id.                    	| String 	|
+| `stopSequence`   	| The faulty record's `stops.stop_sequence`. 	| String 	|
+| `specifiedField` 	| Either `departure_time` or `arrival_time`. 	| String 	|
+
+##### Affected files
+* [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
+
+#### [StopTooFarFromTripShapeNotice](/RULES.md#StopTooFarFromTripShapeNotice)
+##### Fields description
+
+| Field name               	| Description                                	| Type   	|
+|--------------------------	|--------------------------------------------	|--------	|
+| `stopId`                 	| The faulty record's id.                    	| String 	|
+| `stopSequence`           	| The faulty record's `stops.stop_sequence`. 	| String 	|
+| `tripId`                 	| The faulty record's `tripId`.              	| String 	|
+| `shapeId`                	| The faulty record's `shapeId`.             	| String 	|
+| `stopShapeThresholdMeters`| Distance margin.                           	| Double 	|
+
+##### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+* [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
+
+#### [TooFastTravelNotice](/RULES.md#TooFastTravelNotice)
+##### Fields description
+
+| Field name        	| Description                   	| Type   	|
+|-------------------	|-------------------------------	|--------	|
+| `tripId`           	| The faulty record's `tripId`. 	| String 	|
+| `speedkmh`         	| Travel speed (km/h).          	| String 	|
+| `firstStopSequence`	| The first sequence in trip.   	| String 	|
+| `lastStopSequence` 	| The stop sequence in trip.    	| String 	|
+
+##### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+* [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
+* [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
+
+#### [UnexpectedEnumValueNotice](/RULES.md#UnexpectedEnumValueNotice)
+##### Fields description
+
+| Field name   	| Description                                     	| Type    	|
+|--------------	|-------------------------------------------------	|---------	|
+| `filename`   	| The name of the faulty file.                    	| String  	|
+| `csvRowNumber`| The row number of the faulty record.            	| Long    	|
+| `fieldName`  	| The name of the field where the error occurred. 	| String  	|
+| `fieldValue` 	| Faulty value.                                   	| Integer 	|
+
+##### Affected files
+* [`attributions.txt`](http://gtfs.org/reference/static#attributionstxt)
+* [`calendar.txt`](http://gtfs.org/reference/static#calendartxt)
+* [`calendar_dates.txt`](http://gtfs.org/reference/static#calendar_datestxt)
+* [`fare_attributes.txt`](http://gtfs.org/reference/static#fare_attributestxt)
+* [`frequencies.txt`](http://gtfs.org/reference/static#frequenciestxt)
+* [`levels.txt`](http://gtfs.org/reference/static#levelstxt)
+* [`routes.txt`](http://gtfs.org/reference/static#routestxt)
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+* [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
+* [`transfers.txt`](http://gtfs.org/reference/static#transferstxt)
+* [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
+* [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
+
+#### [UnusableTripNotice](/RULES.md#UnusableTripNotice)
+##### Fields description
+
+| Field name   	| Description                          	| Type   	|
+|--------------	|--------------------------------------	|--------	|
+| `csvRowNumber`| The row number of the faulty record. 	| Long   	|
+| `tripId`     	| The faulty record's id.              	| String 	|
+
+##### Affected files
+* [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
+* [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
+
+#### [UnusedShapeNotice](/RULES.md#UnusedShapeNotice)
+##### Fields description
+
+| Field name   	| Description                          	| Type   	|
+|--------------	|--------------------------------------	|--------	|
+| `csvRowNumber`| The row number of the faulty record. 	| Long   	|
+| `shapeId     	| The faulty record's id.              	| String 	|
+
+##### Affected files
+* [`shapes.txt`](http://gtfs.org/reference/static#shapestxt)
+* [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
+
+#### [UnusedTripNotice](/RULES.md#UnusedTripNotice)
+##### Fields description
+
+| Field name   	| Description                          	| Type   	|
+|--------------	|--------------------------------------	|--------	|
+| `csvRowNumber`| The row number of the faulty record. 	| Long   	|
+| `tripId`     	| The faulty record's id.              	| String 	|
+
+##### Affected files
+* [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
