@@ -875,18 +875,18 @@
 |------------	|---------------------------------	|---------	|
 | `filename`   	| The name of the unknown file.    	| String 	|
 
-### System Errors
+## System Errors
 
-#### [IOError](/RULES.md#IOError)
-##### Fields description
+### [IOError](/RULES.md#IOError)
+#### Fields description
 
 | Field name 	| Description                                                   	| Type    	|
 |------------	|---------------------------------------------------------------	|---------	|
 | `exception`  	| The name of the exception.                                    	| String 	|
 | `message`    	| The error message that explains the reason for the exception. 	| String  	|
 
-#### [RuntimeExceptionInLoaderError](/RULES.md#RuntimeExceptionInLoaderError)
-##### Fields description
+### [RuntimeExceptionInLoaderError](/RULES.md#RuntimeExceptionInLoaderError)
+#### Fields description
 
 | Field name 	| Description                                                   	| Type    	|
 |------------	|---------------------------------------------------------------	|---------	|
@@ -897,8 +897,8 @@
 ##### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-#### [RuntimeExceptionInValidatorError](/RULES.md#RuntimeExceptionInValidatorError)
-##### Fields description
+### [RuntimeExceptionInValidatorError](/RULES.md#RuntimeExceptionInValidatorError)
+#### Fields description
 
 | Field name 	| Description                                                   	| Type    	|
 |------------	|---------------------------------------------------------------	|---------	|
@@ -906,16 +906,16 @@
 | `exception`  	| The name of the exception.                                    	| String 	|
 | `message`    	| The error message that explains the reason for the exception. 	| String  	|
 
-#### [ThreadExecutionError](/RULES.md#ThreadExecutionError)
-##### Fields description
+### [ThreadExecutionError](/RULES.md#ThreadExecutionError)
+#### Fields description
 
 | Field name 	| Description                                                   	| Type    	|
 |------------	|---------------------------------------------------------------	|---------	|
 | `exception`  	| The name of the exception.                                    	| String 	|
 | `message`    	| The error message that explains the reason for the exception. 	| String  	|
 
-#### [URISyntaxError](/RULES.md#URISyntaxError)
-##### Fields description
+### [URISyntaxError](/RULES.md#URISyntaxError)
+#### Fields description
 
 | Field name 	| Description                                                   	| Type    	|
 |------------	|---------------------------------------------------------------	|---------	|
