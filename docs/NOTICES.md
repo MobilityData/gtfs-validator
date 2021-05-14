@@ -1,6 +1,52 @@
 # Notices field description
+
 ## Validation notices
 ### Errors
+
+**Notice code table**
+
+| Notice code                                             	| Notice                                                                                                          	|
+|--------------------------------------------------------	|-----------------------------------------------------------------------------------------------------------------	|
+| `block_trips_with_overlapping_stopTimes`               	| [`BlockTripsWithOverlappingStopTimesNotice`](#BlockTripsWithOverlappingStopTimesNotice)                         	|
+| `csv_parsing_failed`                                   	| [`CsvParsingFailedNotice`](#CsvParsingFailedNotice)                                                             	|
+| `decreasing_or_equal_shape_distance`                   	| [`DecreasingOrEqualShapeDistanceNotice`](#DecreasingOrEqualShapeDistanceNotice)                                 	|
+| `decreasing_or_equal_stopTime_distance`                	| [`DecreasingOrEqualStopTimeDistanceNotice`](#DecreasingOrEqualStopTimeDistanceNotice)                           	|
+| `duplicated_column`                                    	| [`DuplicatedColumnNotice`](#DuplicatedColumnNotice)                                                             	|
+| `duplicate_fare_rule_zone_id_fields`                   	| [`DuplicateFareRuleZoneIdFieldsNotice`](#DuplicateFareRuleZoneIdFieldsNotice)                                   	|
+| `duplicate_key`                                        	| [`DuplicateKeyNotice`](#DuplicateKeyNotice)                                                                     	|
+| `empty_file`                                           	| [`EmptyFileNotice`](#EmptyFileNotice)                                                                           	|
+| `foreign_key_violation`                                	| [`ForeignKeyViolationNotice`](#ForeignKeyViolationNotice)                                                       	|
+| `inconsistent_agency_timezone`                         	| [`InconsistentAgencyTimezoneNotice`](#InconsistentAgencyTimezoneNotice)                                         	|
+| `invalid_color`                                        	| [`InvalidColorNotice`](#InvalidColorNotice)                                                                     	|
+| `invalid_currency`                                     	| [`InvalidCurrencyNotice`](#InvalidCurrencyNotice)                                                               	|
+| `invalid_date`                                         	| [`InvalidDateNotice`](#InvalidDateNotice)                                                                       	|
+| `invalid_email`                                        	| [`InvalidEmailNotice`](#InvalidEmailNotice)                                                                     	|
+| `invalid_float`                                        	| [`InvalidFloatNotice`](#InvalidFloatNotice)                                                                     	|
+| `invalid_integer`                                      	| [`InvalidIntegerNotice`](#InvalidIntegerNotice)                                                                 	|
+| `invalid_language_code`                                	| [`InvalidLanguageCodeNotice`](#InvalidLanguageCodeNotice)                                                       	|
+| `invalid_phone_number`                                 	| [`InvalidPhoneNumberNotice`](#InvalidPhoneNumberNotice)                                                         	|
+| `invalid_row_length`                                   	| [`InvalidRowLengthNotice`](#InvalidRowLengthNotice)                                                             	|
+| `invalid_time`                                         	| [`InvalidTimeNotice`](#InvalidTimeNotice)                                                                       	|
+| `invalid_timezone`                                     	| [`InvalidTimezoneNotice`](#InvalidTimezoneNotice)                                                               	|
+| `invalid_url`                                          	| [`InvalidUrlNotice`](#InvalidUrlNotice)                                                                         	|
+| `leading_or_trailing_whitespaces`                      	| [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)                                     	|
+| `location_without_parent_station`                      	| [`LocationWithoutParentStationNotice`](#LocationWithoutParentStationNotice)                                     	|
+| `missing_calendar_and_calendar_date_files`             	| [`MissingCalendarAndCalendarDateFilesNotice`](#MissingCalendarAndCalendarDateFilesNotice)                       	|
+| `missing_required_column`                              	| [`MissingRequiredColumnNotice`](#MissingRequiredColumnNotice)                                                   	|
+| `missing_required_field`                               	| [`MissingRequiredFieldNotice`](#MissingRequiredFieldNotice)                                                     	|
+| `missing_required_file`                                	| [`MissingRequiredFileNotice`](#MissingRequiredFileNotice)                                                       	|
+| `missing_trip_edge`                                    	| [`MissingTripEdgeNotice`](#MissingTripEdgeNotice)                                                               	|
+| `new_line_in_value`                                    	| [`NewLineInValueNotice`](#NewLineInValueNotice)                                                                 	|
+| `number_out_of_range`                                  	| [`NumberOutOfRangeNotice`](#NumberOutOfRangeNotice)                                                             	|
+| `overlapping_frequency`                                	| [`OverlappingFrequencyNotice`](#OverlappingFrequencyNotice)                                                     	|
+| `route_both_short_and_long_name_missing`               	| [`RouteBothShortAndLongNameMissingNotice`](#RouteBothShortAndLongNameMissingNotice)                             	|
+| `same_name_and_description_for_route`                  	| [`SameNameAndDescriptionForRouteNotice`](#SameNameAndDescriptionForRouteNotice)                                 	|
+| `start_and_end_range_equal`                            	| [`StartAndEndRangeEqualNotice`](#StartAndEndRangeEqualNotice)                                                   	|
+| `start_and_end_range_out_of_order`                     	| [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         	|
+| `station_with_parent_station`                          	| [`StationWithParentStationNotice`](#StationWithParentStationNotice)                                             	|
+| `stop_time_wit_arrival_before_previous_departure_time` 	| [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](#StopTimeWithArrivalBeforePreviousDepartureTimeNotice) 	|
+| `stop_time_with_only_arrival_or_departure_time`        	| [`StopTimeWithOnlyArrivalOrDepartureTimeNotice`](#StopTimeWithOnlyArrivalOrDepartureTimeNotice)                 	|
+| `wrong_parent_location_type`                           	| [`WrongParentLocationTypeNotice`](#WrongParentLocationTypeNotice)                                               	|
 
 #### [`BlockTripsWithOverlappingStopTimesNotice`](/RULES.md#BlockTripsWithOverlappingStopTimesNotice)
 ##### Fields description
