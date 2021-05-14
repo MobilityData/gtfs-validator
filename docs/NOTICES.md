@@ -875,3 +875,49 @@
 |------------	|---------------------------------	|---------	|
 | `filename`   	| The name of the unknown file.    	| String 	|
 
+### System Errors
+
+### [IOError](/RULES.md#IOError)
+#### Fields description
+
+| Field name 	| Description                                                   	| Type    	|
+|------------	|---------------------------------------------------------------	|---------	|
+| `exception`  	| The name of the exception.                                    	| String 	|
+| `message`    	| The error message that explains the reason for the exception. 	| String  	|
+
+### [RuntimeExceptionInLoaderError](/RULES.md#RuntimeExceptionInLoaderError)
+#### Fields description
+
+| Field name 	| Description                                                   	| Type    	|
+|------------	|---------------------------------------------------------------	|---------	|
+| `filename`  	| The name of the file that caused the exception.            	    | String 	|
+| `exception`  	| The name of the exception.                                    	| String 	|
+| `message`    	| The error message that explains the reason for the exception. 	| String  	|
+
+##### Affected files
+[All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
+
+### [RuntimeExceptionInValidatorError](/RULES.md#RuntimeExceptionInValidatorError)
+#### Fields description
+
+| Field name 	| Description                                                   	| Type    	|
+|------------	|---------------------------------------------------------------	|---------	|
+| `validator`  	| The name of the validator that caused the exception.            	| String 	|
+| `exception`  	| The name of the exception.                                    	| String 	|
+| `message`    	| The error message that explains the reason for the exception. 	| String  	|
+
+### [ThreadExecutionError](/RULES.md#ThreadExecutionError)
+#### Fields description
+
+| Field name 	| Description                                                   	| Type    	|
+|------------	|---------------------------------------------------------------	|---------	|
+| `exception`  	| The name of the exception.                                    	| String 	|
+| `message`    	| The error message that explains the reason for the exception. 	| String  	|
+
+### [URISyntaxError](/RULES.md#URISyntaxError)
+#### Fields description
+
+| Field name 	| Description                                                   	| Type    	|
+|------------	|---------------------------------------------------------------	|---------	|
+| `exception`  	| The name of the exception.                                    	| String 	|
+| `message`    	| The error message that explains the reason for the exception. 	| String  	|
