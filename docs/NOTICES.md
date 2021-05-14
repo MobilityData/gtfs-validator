@@ -5,16 +5,16 @@
 #### [`BlockTripsWithOverlappingStopTimesNotice`](/RULES.md#BlockTripsWithOverlappingStopTimesNotice)
 ##### Fields description
 
-| Field name      	| Description                              	| Type   	|
-|-----------------	|------------------------------------------	|--------	|
-| `csvRowNumberA` 	| row number from `trips.txt`              	| Long   	|
-| `tripIdA`       	| id of first faulty trip                  	| String 	|
-| `serviceIdA`    	| service id of the first faulty trip      	| String 	|
-| `csvRowNumberB` 	| row number from `trips.txt`              	| Long   	|
-| `tripIdB`       	| id of the other faulty trip              	| String 	|
-| `serviceIdB`    	| service id of the other faulty trip      	| String 	|
-| `blockId`       	| `trips.block_id` of the overlapping trip 	| String 	|
-| `intersection`  	| overlapping period                       	| Date   	|
+| Field name      	| Description                               	            | Type   	|
+|-----------------	|--------------------------------------------------------	|--------	|
+| `csvRowNumberA` 	| The row number from `trips.txt` of the first faulty trip. | Long   	|
+| `tripIdA`       	| The id of first faulty trip.                           	| String 	|
+| `serviceIdA`    	| The service id of the first faulty trip.                 	| String 	|
+| `csvRowNumberB` 	| The row number from `trips.txt` of the second faulty trip.| Long   	|
+| `tripIdB`       	| The id of the other faulty trip.             	            | String 	|
+| `serviceIdB`    	| The service id of the other faulty trip.     	            | String 	|
+| `blockId`       	| The `trips.block_id` of the overlapping trip.	            | String 	|
+| `intersection`  	| The overlapping period.                      	            | Date   	|
 
 ##### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
