@@ -622,6 +622,33 @@
 
 ### Warnings
 
+**Notice code table**
+
+| Notice code                                	| Notice                                                                            	|
+|--------------------------------------------	|-----------------------------------------------------------------------------------	|
+| `attribution_without_roleNotice`           	| [`AttributionWithoutRoleNotice`](#AttributionWithoutRoleNotice)                   	|
+| `duplicate_route_nameNotice`               	| [`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)                           	|
+| `empty_column_nameNotice`                  	| [`EmptyColumnNameNotice`](#EmptyColumnNameNotice)                                 	|
+| `empty_rowNotice`                          	| [`EmptyRowNotice`](#EmptyRowNotice)                                               	|
+| `feed_expiration_dateNotice`               	| [`FeedExpirationDateNotice`](#FeedExpirationDateNotice)                           	|
+| `feed_info_lang_and_agency_mismatchNotice` 	| [`FeedInfoLangAndAgencyMismatchNotice`](#FeedInfoLangAndAgencyLangMismatchNotice) 	|
+| `inconsistent_agency_langNotice`           	| [`InconsistentAgencyLangNotice`](#InconsistentAgencyLangNotice)                   	|
+| `missing_feed_info_dateNotice`             	| [`MissingFeedInfoDateNotice`](#MissingFeedInfoDateNotice)                         	|
+| `more_than_one_entityNotice`               	| [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	|
+| `non_ascii_or_non_printable_charNotice`    	| [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	|
+| `platform_without_parent_stationNotice`    	| [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)       	|
+| `route_color_contrastNotice`               	| [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	|
+| `route_short_and_long_name_equalNotice`    	| [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	|
+| `route_short_name_too_longNotice`          	| [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	|
+| `start_and_end_time_equalNotice`           	| [`StartAndEndTimeEqualNotice`](#StartAndEndTimeEqualNotice)                       	|
+| `stop_time_timepoint_without_timesNotice`  	| [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	|
+| `stop_too_far_from_trip_shapeNotice`       	| [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	|
+| `too_fast_travelNotice`                    	| [`TooFastTravelNotice`](#TooFastTravelNotice)                                     	|
+| `unexpected_enum_valueNotice`              	| [`UnexpectedEnumValueNotice`](#UnexpectedEnumValueNotice)                         	|
+| `unusable_tripNotice`                      	| [`UnusableTripNotice`](#UnusableTripNotice)                                       	|
+| `unused_shapeNotice`                       	| [`UnusedShapeNotice`](#UnusedShapeNotice)                                         	|
+| `unused_tripNotice`                        	| [`UnusedTripNotice`](#UnusedTripNotice)                                           	|
+
 #### [AttributionWithoutRoleNotice](/RULES.md#AttributionWithoutRoleNotice)
 ##### Fields description
 
@@ -902,6 +929,14 @@
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
 ### Info
+
+**Notice code table**
+
+| Notice code             	| Notice                                        	|
+|-------------------------	|-----------------------------------------------	|
+| `unknown_column_notice` 	| [`UnknownColumnNotice`](#UnknownColumnNotice) 	|
+| `unknown_file_notice`   	| [`UnknownFileNotice`](#UnknownFileNotice)     	|
+
 #### [UnknownColumnNotice](/RULES.md#UnknownColumnNotice)
 ##### Fields description
 
@@ -922,6 +957,16 @@
 | `filename`   	| The name of the unknown file.    	| String 	|
 
 ## System Errors
+
+**Notice code table**
+
+| Notice code                            	| Notice                                                                  	|
+|----------------------------------------	|-------------------------------------------------------------------------	|
+| `i_o_error`                            	| [`IOError`](#IOError)                                                   	|
+| `runtime_exception_in_loader_error`    	| [`RuntimeExceptionInLoaderError`](#RuntimeExceptionInLoaderError)       	|
+| `runtime_exception_in_validator_error` 	| [`RuntimeExceptionInValidatorError`](#RuntimeExceptionInValidatorError) 	|
+| `thread_excecution_error`              	| [`ThreadExecutionError`](#ThreadExecutionError)                         	|
+| `u_r_i_syntax_error`                   	| [`URISyntaxError`](#URISyntaxError)                                     	|
 
 ### [IOError](/RULES.md#IOError)
 #### Fields description
