@@ -215,13 +215,15 @@ The `validate()` now takes an additional parameters now:
 
 Note that we don't need to define the GTFS tables as local variables and we can also omit the constructor. The notice subclass is declared the same as before.
 
-## 2. Document the new rule in [`RULES.md`](../RULES.md)
+## 2. Document the new rule in [`RULES.md`](../RULES.md) and [`NOTICES.md](/docs/NOTICES.md).
 
 Add the rule to [`RULES.md`](../RULES.md) keeping the alphabetical order of the table: 
 ```markdown
 | [NewRuleRelatedToStops](#NewRuleRelatedToStops) | new rule short description | 
 ```
-...and add a definition of that rule in the errors or warnings section (still keeping the alphabetical order):
+...and add a definition of that rule in the errors or warnings section (still keeping the alphabetical order).
+
+Repeat the same process in [`NOTICES.md`](/docs/NOTICES.md) to provide more details about the new notices' fields description.
 
 ```markdown
 <a name="NewRuleRelatedToStops"/>
