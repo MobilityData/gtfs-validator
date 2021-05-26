@@ -67,6 +67,13 @@ Instructions to build the project from the command-line using [Gradle](https://g
 # Architecture
 The architecture of the `gtfs-validator` is described on our [Architecture page](/docs/ARCHITECTURE.md).
 
+# Tests
+## JUnit
+This project leverages JUnit4 for unit tests.
+
+## Integration tests
+In order to avoid sudden disruption of GTFS datasets, each new rule implementation is tested against all GTFS datasets MobilityData has access to. The integration test process is described in [INTEGRATION_TESTS.md](docs/INTEGRATION_TESTS.md).
+
 # License
 Code licensed under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0).
 
