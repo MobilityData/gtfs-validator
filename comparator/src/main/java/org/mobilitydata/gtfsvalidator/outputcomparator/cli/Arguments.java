@@ -22,10 +22,10 @@ import com.beust.jcommander.Parameter;
 public class Arguments {
 
   @Parameter(
-      names = {"-o", "--output_base"},
-      description = "Base directory to store the outputs",
+      names = {"-d", "--report_directory"},
+      description = "Directory where reports are stored.",
       required = true)
-  private String outputBase;
+  private String reportDirectory;
 
   @Parameter(
       names = {"-t", "--threshold"},
@@ -45,8 +45,8 @@ public class Arguments {
       required = true)
   private String latestValidationReportName;
 
-  public String getOutputBase() {
-    return outputBase;
+  public String getReportDirectory() {
+    return reportDirectory;
   }
 
   public int getThreshold() {
