@@ -36,7 +36,7 @@ public class Main {
   private static final String INTEGRATION_REPORT_JSON = "integration_report.json";
 
   public static void main(String[] argv) throws IOException {
-    ComparatorArguments args = new ComparatorArguments();
+    Arguments args = new Arguments();
     new JCommander(args).parse(argv);
     File[] outputDirectory = new File(args.getOutputBase()).listFiles();
     if (outputDirectory == null) {
