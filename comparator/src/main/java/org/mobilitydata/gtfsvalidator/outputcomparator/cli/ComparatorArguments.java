@@ -40,7 +40,7 @@ public class ComparatorArguments {
   private String referenceValidationReportName;
 
   @Parameter(
-      names = {"-r", "--latest_report_name"},
+      names = {"-l", "--latest_report_name"},
       description = "Name of the latest validation report",
       required = true)
   private String latestValidationReportName;
