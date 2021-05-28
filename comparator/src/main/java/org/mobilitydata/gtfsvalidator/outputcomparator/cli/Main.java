@@ -82,11 +82,6 @@ public class Main {
       }
     }
     exportIntegrationReport(mapBuilder.build(), args.getReportDirectory());
-    System.out.printf(
-        "%d out of %d datasets (~%.2f %%)  are invalid due to new implementation.%n",
-        badDatasetCount,
-        totalDatasetCount,
-        100.0 * badDatasetCount / totalDatasetCount);
     isNewRuleValid(badDatasetCount, totalDatasetCount, args.getAcceptanceCriteria());
   }
 
@@ -105,9 +100,19 @@ public class Main {
         gson.toJson(integrationReportData).getBytes(StandardCharsets.UTF_8));
   }
 
-  private static void isNewRuleValid(int badDatasetCount, int totalDatasetCount, double threshold){
+  private static void isNewRuleValid(int badDatasetCount, int totalDatasetCount, double threshold) {
+    System.out.printf(
+        "%d out of %d datasets (~%.2f %%)  are invalid due to new implementation.%n",
+        badDatasetCount, totalDatasetCount, 100.0 * badDatasetCount / totalDatasetCount);
     if (100.0 * badDatasetCount / totalDatasetCount >= threshold) {
+      System.out.printf(
+          "The percentage of new invalid datasets exceeds the defined threshold (%.2f %% > %.2f %%).%n",
+          100.0 * badDatasetCount / totalDatasetCount, threshold);
       System.exit(2);
+    } else {
+      System.out.printf(
+          "Percentage of new invalid datasets is inferior to the defined threshold (%.2f %% < %.2f %%)",
+          100.0 * badDatasetCount / totalDatasetCount, threshold);
     }
   }
 }
