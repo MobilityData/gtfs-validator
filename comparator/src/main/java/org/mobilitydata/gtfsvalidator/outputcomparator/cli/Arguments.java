@@ -29,13 +29,13 @@ public class Arguments {
 
   @Parameter(
       names = {"-t", "--threshold"},
-      description = "Number of new errors threshold",
+      description = "Number of new errors per datasets",
       required = true)
   private int threshold;
 
   @Parameter(
       names = {"-r", "--reference_report_name"},
-      description = "Name of the reference valdation report",
+      description = "Name of the reference validation report",
       required = true)
   private String referenceValidationReportName;
 
