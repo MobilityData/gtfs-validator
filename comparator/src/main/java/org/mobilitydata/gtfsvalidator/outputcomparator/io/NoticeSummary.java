@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.outputcomparator.util;
+package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.Collections;

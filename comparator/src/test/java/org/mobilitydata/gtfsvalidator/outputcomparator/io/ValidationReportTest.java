@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.outputcomparator.util;
+package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
 import static com.google.common.truth.Truth.assertThat;
 
