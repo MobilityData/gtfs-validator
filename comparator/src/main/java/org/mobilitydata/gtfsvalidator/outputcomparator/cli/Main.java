@@ -31,13 +31,13 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.mobilitydata.gtfsvalidator.outputcomparator.util.ValidationReport;
+import org.mobilitydata.gtfsvalidator.outputcomparator.io.ValidationReport;
 
 public class Main {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private static final String INTEGRATION_REPORT_JSON = "integration_report.json";
 
-  public static void main(String[] argv) throws IOException {
+  public static void main(String[] argv) {
     Arguments args = new Arguments();
     new JCommander(args).parse(argv);
     File[] reportDirectory = new File(args.getReportDirectory()).listFiles();
@@ -65,10 +65,10 @@ public class Main {
         ValidationReport latestReport =
             ValidationReport.fromPath(file.toPath().resolve(args.getLatestValidationReportName()));
 
-        if (referenceReport.equals(latestReport)) {
+        if (referenceReport.hasSameErrorCodes(latestReport)) {
           continue;
         }
-        if (referenceReport.hasSameErrorCodes(latestReport)) {
+        if (referenceReport.equals(latestReport)) {
           continue;
         }
         int newErrorCount = referenceReport.getNewErrorCount(latestReport);
@@ -79,9 +79,18 @@ public class Main {
       } catch (FileNotFoundException e) {
         logger.atSevere().withCause(e).log(String.format("No file found at %s.", file.getPath()));
         System.exit(1);
+      } catch (IOException e) {
+        logger.atSevere().withCause(e);
+        System.exit(1);
       }
     }
-    exportIntegrationReport(mapBuilder.build(), args.getReportDirectory());
+    try {
+      exportIntegrationReport(mapBuilder.build(), args.getReportDirectory());
+    } catch (IOException ioException) {
+      logger.atSevere().withCause(ioException).log(
+          String.format("Error while writing file at: %s", args.getReportDirectory()));
+      System.exit(1);
+    }
     isNewRuleValid(badDatasetCount, totalDatasetCount, args.getAcceptanceCriteria());
   }
 
