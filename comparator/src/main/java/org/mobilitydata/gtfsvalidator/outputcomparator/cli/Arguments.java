@@ -28,10 +28,10 @@ public class Arguments {
   private String outputBase;
 
   @Parameter(
-      names = {"-v", "--validity_threshold"},
+      names = {"-t", "--threshold"},
       description = "Number of new errors threshold",
       required = true)
-  private int validityThreshold;
+  private int threshold;
 
   @Parameter(
       names = {"-r", "--reference_report_name"},
@@ -49,8 +49,8 @@ public class Arguments {
     return outputBase;
   }
 
-  public int getValidityThreshold() {
-    return validityThreshold;
+  public int getThreshold() {
+    return threshold;
   }
 
   public String getReferenceValidationReportName() {

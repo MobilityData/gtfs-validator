@@ -71,7 +71,7 @@ public class Main {
         }
         int newErrorCount = referenceReport.getNewErrorCount(latestReport);
         mapBuilder.put(file.getName(), newErrorCount);
-        if (newErrorCount >= args.getValidityThreshold()) {
+        if (newErrorCount >= args.getThreshold()) {
           badDatasetCount += 1;
         }
       } catch (FileNotFoundException e) {
