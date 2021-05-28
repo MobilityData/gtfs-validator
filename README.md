@@ -72,7 +72,7 @@ The architecture of the `gtfs-validator` is described on our [Architecture page]
 This project leverages JUnit4 for unit tests.
 
 ## Integration tests
-In order to avoid sudden disruption of GTFS datasets, each new rule implementation is tested against all GTFS datasets MobilityData has access to. The integration test process is described in [INTEGRATION_TESTS.md](docs/INTEGRATION_TESTS.md).
+In order to avoid sudden changes in the validation output that might declare previously valid datasets invalid, each new rule implementation is tested against GTFS datasets in the MobilityData MobilityDatabase. The integration test process is described in [INTEGRATION_TESTS.md](docs/INTEGRATION_TESTS.md).
 
 # License
 Code licensed under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0).
