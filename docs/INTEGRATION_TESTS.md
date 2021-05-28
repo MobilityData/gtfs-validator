@@ -11,7 +11,7 @@ For the latest version of all GTFS dataset from the MobilityArchives, the valida
 ![steps](https://user-images.githubusercontent.com/35747326/119565069-7c5a9080-bd77-11eb-86c9-3b02b0acc264.png)
 
 ## Github Actions
-The pipeline for this process is defined in [`integration_test.yaml`](../.github/workflows/integration_test.yml).
+The pipeline for this process is defined in [`integration_test.yaml`](IdeaProjects/gtfs-validator/.github/workflows/acceptance_test.yml).
 This workflow:
 1. packages the `comparator` module;
 1. downloads the latest release of the validator;
