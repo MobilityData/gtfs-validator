@@ -38,21 +38,21 @@ public class Main {
   public static void main(String[] argv) throws IOException {
     Arguments args = new Arguments();
     new JCommander(args).parse(argv);
-    File[] outputDirectory = new File(args.getOutputBase()).listFiles();
-    if (outputDirectory == null) {
+    File[] reportDirectory = new File(args.getReportDirectory()).listFiles();
+    if (reportDirectory == null) {
       logger.atSevere().log("Specified output is not a directory, or an I/O error occurred");
       return;
     }
-    if (outputDirectory.length == 0) {
+    if (reportDirectory.length == 0) {
       logger.atSevere().log(
           "Specified directory is empty, cannot generate integration tests report.");
       return;
     }
-    ImmutableMap.Builder<String, Object> mapBuilder = new Builder<>();
+    ImmutableMap.Builder<String, Integer> mapBuilder = new Builder<>();
     int badDatasetCount = 0;
-    int totalDatasetCount = (int) Arrays.stream(outputDirectory).filter(File::isDirectory).count();
+    int totalDatasetCount = (int) Arrays.stream(reportDirectory).filter(File::isDirectory).count();
 
-    for (File file : outputDirectory) {
+    for (File file : reportDirectory) {
       if (!file.isDirectory()) {
         continue;
       }
@@ -79,7 +79,7 @@ public class Main {
         System.exit(1);
       }
     }
-    exportIntegrationReport(mapBuilder.build(), args.getOutputBase());
+    exportIntegrationReport(mapBuilder.build(), args.getReportDirectory());
     System.out.printf(
         "%.2f %% of datasets are invalid due to new implementation%n",
         100.0 * badDatasetCount / totalDatasetCount);
@@ -93,7 +93,7 @@ public class Main {
    * @throws IOException if an I/O error occurs writing to or creating the file.
    */
   private static void exportIntegrationReport(
-      ImmutableMap<String, Object> integrationReportData, String outputBase) throws IOException {
+      ImmutableMap<String, Integer> integrationReportData, String outputBase) throws IOException {
     Gson gson = new GsonBuilder().serializeNulls().create();
     Files.write(
         Paths.get(outputBase, INTEGRATION_REPORT_JSON),
