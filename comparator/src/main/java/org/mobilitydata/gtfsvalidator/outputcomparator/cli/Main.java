@@ -40,7 +40,7 @@ public class Main {
     new JCommander(args).parse(argv);
     File[] outputDirectory = new File(args.getOutputBase()).listFiles();
     if (outputDirectory == null) {
-      logger.atSevere().log("Specified output is not a directory");
+      logger.atSevere().log("Specified output is not a directory, or an I/O error occurred");
       return;
     }
     if (outputDirectory.length == 0) {
