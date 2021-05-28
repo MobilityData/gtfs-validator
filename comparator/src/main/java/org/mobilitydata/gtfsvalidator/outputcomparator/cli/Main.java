@@ -33,8 +33,6 @@ import org.mobilitydata.gtfsvalidator.outputcomparator.util.ValidationReport;
 
 public class Main {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-  private static final String REFERENCE_JSON = "report.json";
-  private static final String LATEST_JSON = "latest.json";
   private static final String INTEGRATION_REPORT_JSON = "integration_report.json";
 
   public static void main(String[] argv) throws IOException {
@@ -61,9 +59,9 @@ public class Main {
 
       try {
         ValidationReport referenceReport =
-            ValidationReport.fromPath(file.toPath().resolve(REFERENCE_JSON));
+            ValidationReport.fromPath(file.toPath().resolve(args.getReferenceValidationReportName()));
         ValidationReport latestReport =
-            ValidationReport.fromPath(file.toPath().resolve(LATEST_JSON));
+            ValidationReport.fromPath(file.toPath().resolve(args.getLatestValidationReportName()));
 
         if (referenceReport.equals(latestReport)) {
           continue;

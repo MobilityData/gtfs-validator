@@ -33,11 +33,31 @@ public class ComparatorArguments {
       required = true)
   private int validityThreshold;
 
+  @Parameter(
+      names = {"-r", "--reference_report_name"},
+      description = "Name of the reference valdation report",
+      required = true)
+  private String referenceValidationReportName;
+
+  @Parameter(
+      names = {"-r", "--latest_report_name"},
+      description = "Name of the latest validation report",
+      required = true)
+  private String latestValidationReportName;
+
   public String getOutputBase() {
     return outputBase;
   }
 
   public int getValidityThreshold() {
     return validityThreshold;
+  }
+
+  public String getReferenceValidationReportName() {
+    return referenceValidationReportName;
+  }
+
+  public String getLatestValidationReportName() {
+    return latestValidationReportName;
   }
 }
