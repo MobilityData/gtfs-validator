@@ -131,7 +131,7 @@ jobs:
         with:
           name: latest_changes_cli
       - name: Execute jar
-        run: java -jar gtfs-validator*.jar --url ${{ matrix.url }} --output output/${{ matrix.output }} --validation_report latest.json
+        run: java -jar gtfs-validator*.jar --url ${{ matrix.url }} --output_base output/${{ matrix.output }} --validation_report latest.json
       - name: Persist reports
         uses: actions/upload-artifact@v2
         with:
@@ -150,7 +150,7 @@ jobs:
           name: reference_jar
       - name: Execute jar
         # the following line will be changed after v3.0 is published without -f CLI parameter
-        run: java -jar gtfs-validator*.jar --url ${{ matrix.url }} --output output/${{ matrix.output }} --feed_name ca-test
+        run: java -jar gtfs-validator*.jar --url ${{ matrix.url }} --output_base output/${{ matrix.output }} --feed_name ca-test
       - name: Persist reports
         uses: actions/upload-artifact@v2
         with:
@@ -170,7 +170,7 @@ jobs:
         with:
           name: output-comparator-cli
       - name: Execute comparator
-        run: java -jar comparator*.jar -v ${THRESHOLD} -o .
+        run: java -jar comparator*.jar --validity_threshold ${THRESHOLD} --output_base .
         env:
           - THRESHOLD: 1
       - name: Persist integration test report
