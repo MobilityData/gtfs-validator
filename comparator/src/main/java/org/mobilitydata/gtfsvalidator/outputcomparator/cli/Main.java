@@ -100,6 +100,14 @@ public class Main {
         gson.toJson(integrationReportData).getBytes(StandardCharsets.UTF_8));
   }
 
+  /**
+   * Exits on non-zero code 2 if the ratio badDatasetCount/totalDatasetCount exceeds the threshold
+   * defined as acceptance criteria.
+   *
+   * @param badDatasetCount the number of nw invalid datasets
+   * @param totalDatasetCount the number of datasets to be tested
+   * @param threshold the acceptance criteria
+   */
   private static void isNewRuleValid(int badDatasetCount, int totalDatasetCount, double threshold) {
     System.out.printf(
         "%d out of %d datasets (~%.2f %%)  are invalid due to new implementation.%n",
@@ -109,10 +117,9 @@ public class Main {
           "The percentage of new invalid datasets exceeds the defined threshold (%.2f %% > %.2f %%).%n",
           100.0 * badDatasetCount / totalDatasetCount, threshold);
       System.exit(2);
-    } else {
-      System.out.printf(
-          "Percentage of new invalid datasets is inferior to the defined threshold (%.2f %% < %.2f %%)",
-          100.0 * badDatasetCount / totalDatasetCount, threshold);
     }
+    System.out.printf(
+        "Percentage of new invalid datasets is inferior to the defined threshold (%.2f %% < %.2f %%)",
+        100.0 * badDatasetCount / totalDatasetCount, threshold);
   }
 }
