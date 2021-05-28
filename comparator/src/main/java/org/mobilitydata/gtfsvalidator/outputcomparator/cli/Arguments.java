@@ -45,6 +45,12 @@ public class Arguments {
       required = true)
   private String latestValidationReportName;
 
+  @Parameter(
+      names = {"-a", "--acceptance_criteria"},
+      description = "Maximum percentage of new invalid datasets.",
+      required = true)
+  private double acceptanceCriteria;
+
   public String getReportDirectory() {
     return reportDirectory;
   }
@@ -59,5 +65,9 @@ public class Arguments {
 
   public String getLatestValidationReportName() {
     return latestValidationReportName;
+  }
+
+  public double getAcceptanceCriteria() {
+    return acceptanceCriteria;
   }
 }

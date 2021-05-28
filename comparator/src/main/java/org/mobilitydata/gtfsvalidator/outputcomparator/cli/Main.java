@@ -29,6 +29,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.outputcomparator.util.ValidationReport;
 
 public class Main {
@@ -50,16 +52,16 @@ public class Main {
     }
     ImmutableMap.Builder<String, Integer> mapBuilder = new Builder<>();
     int badDatasetCount = 0;
-    int totalDatasetCount = (int) Arrays.stream(reportDirectory).filter(File::isDirectory).count();
+    List<File> reportDirs =
+        Arrays.stream(reportDirectory).filter(File::isDirectory).collect(Collectors.toList());
 
-    for (File file : reportDirectory) {
-      if (!file.isDirectory()) {
-        continue;
-      }
+    int totalDatasetCount = reportDirs.size();
 
+    for (File file : reportDirs) {
       try {
         ValidationReport referenceReport =
-            ValidationReport.fromPath(file.toPath().resolve(args.getReferenceValidationReportName()));
+            ValidationReport.fromPath(
+                file.toPath().resolve(args.getReferenceValidationReportName()));
         ValidationReport latestReport =
             ValidationReport.fromPath(file.toPath().resolve(args.getLatestValidationReportName()));
 
@@ -81,8 +83,11 @@ public class Main {
     }
     exportIntegrationReport(mapBuilder.build(), args.getReportDirectory());
     System.out.printf(
-        "%.2f %% of datasets are invalid due to new implementation%n",
+        "%d out of %d datasets (~%.2f %%)  are invalid due to new implementation.%n",
+        badDatasetCount,
+        totalDatasetCount,
         100.0 * badDatasetCount / totalDatasetCount);
+    isNewRuleValid(badDatasetCount, totalDatasetCount, args.getAcceptanceCriteria());
   }
 
   /**
@@ -98,5 +103,11 @@ public class Main {
     Files.write(
         Paths.get(outputBase, INTEGRATION_REPORT_JSON),
         gson.toJson(integrationReportData).getBytes(StandardCharsets.UTF_8));
+  }
+
+  private static void isNewRuleValid(int badDatasetCount, int totalDatasetCount, double threshold){
+    if (100.0 * badDatasetCount / totalDatasetCount >= threshold) {
+      System.exit(2);
+    }
   }
 }
