@@ -39,10 +39,10 @@ public class ValidationReport {
           .serializeNulls()
           .serializeSpecialFloatingPointValues()
           .create();
-  private final List<NoticeAggregate> notices;
+  private final List<NoticeSummary> notices;
   private final Set<String> errorCodes;
 
-  ValidationReport(List<NoticeAggregate> notices, Set<String> errorCodes) {
+  ValidationReport(List<NoticeSummary> notices, Set<String> errorCodes) {
     this.notices = notices;
     this.errorCodes = errorCodes;
   }
@@ -77,7 +77,7 @@ public class ValidationReport {
    *
    * @return the list of {@code NoticeAggregate} of this {@code ValidationReport}.
    */
-  public List<NoticeAggregate> getNotices() {
+  public List<NoticeSummary> getNotices() {
     return Collections.unmodifiableList(notices);
   }
 

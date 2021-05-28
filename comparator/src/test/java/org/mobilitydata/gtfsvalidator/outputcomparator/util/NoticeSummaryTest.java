@@ -28,19 +28,19 @@ import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 
 @RunWith(JUnit4.class)
-public class NoticeAggregateTest {
+public class NoticeSummaryTest {
 
-  private static NoticeAggregate createNoticeAggregate(
+  private static NoticeSummary createNoticeAggregate(
       String code,
       SeverityLevel severityLevel,
       int totalNotices,
       List<Map<String, Object>> notices) {
-    return new NoticeAggregate(code, severityLevel, totalNotices, notices);
+    return new NoticeSummary(code, severityLevel, totalNotices, notices);
   }
 
   private static boolean testEquality(
-      NoticeAggregate firstNoticeAggregate, NoticeAggregate otherNoticeAggregate) {
-    return firstNoticeAggregate.equals(otherNoticeAggregate);
+      NoticeSummary firstNoticeSummary, NoticeSummary otherNoticeSummary) {
+    return firstNoticeSummary.equals(otherNoticeSummary);
   }
 
   @Test

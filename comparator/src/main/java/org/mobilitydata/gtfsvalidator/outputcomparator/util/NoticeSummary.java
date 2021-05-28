@@ -28,24 +28,26 @@ import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
  * related to the error code and a list of notice contexts (which provides additional information
  * about each notice.
  */
-public class NoticeAggregate {
+public class NoticeSummary {
   private final String code;
   private final SeverityLevel severity;
-  private final int totalNotices;
+
+  @SerializedName("totalNotices")
+  private final int count;
 
   @SerializedName("notices")
   private final List<Map<String, Object>> contexts;
 
-  public NoticeAggregate(
-      String code, SeverityLevel severity, int totalNotices, List<Map<String, Object>> contexts) {
+  public NoticeSummary(
+      String code, SeverityLevel severity, int count, List<Map<String, Object>> contexts) {
     this.code = code;
     this.severity = severity;
-    this.totalNotices = totalNotices;
+    this.count = count;
     this.contexts = contexts;
   }
 
-  public int getTotalNotices() {
-    return totalNotices;
+  public int getCount() {
+    return count;
   }
 
   public SeverityLevel getSeverity() {
@@ -69,11 +71,11 @@ public class NoticeAggregate {
     if (this == other) {
       return true;
     }
-    if (other instanceof NoticeAggregate) {
-      return this.getCode().equals(((NoticeAggregate) other).getCode())
-          && this.getSeverity().equals(((NoticeAggregate) other).getSeverity())
-          && this.getTotalNotices() == (((NoticeAggregate) other).getTotalNotices())
-          && getContexts().equals(((NoticeAggregate) other).getContexts());
+    if (other instanceof NoticeSummary) {
+      return this.getCode().equals(((NoticeSummary) other).getCode())
+          && this.getSeverity().equals(((NoticeSummary) other).getSeverity())
+          && this.getCount() == (((NoticeSummary) other).getCount())
+          && getContexts().equals(((NoticeSummary) other).getContexts());
     }
     return false;
   }

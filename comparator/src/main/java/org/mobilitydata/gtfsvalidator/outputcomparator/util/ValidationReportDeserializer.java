@@ -45,11 +45,11 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
    *
    * @return the sorted set of error codes from a list of {@code NoticeAggregate}.
    */
-  private static Set<String> extractErrorCodes(List<NoticeAggregate> notices) {
+  private static Set<String> extractErrorCodes(List<NoticeSummary> notices) {
     Set<String> errorCodes = new TreeSet<>();
-    for (NoticeAggregate noticeAggregate : notices) {
-      if (noticeAggregate.isError()) {
-        errorCodes.add(noticeAggregate.getCode());
+    for (NoticeSummary noticeSummary : notices) {
+      if (noticeSummary.isError()) {
+        errorCodes.add(noticeSummary.getCode());
       }
     }
     return Collections.unmodifiableSet(errorCodes);
@@ -58,11 +58,11 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
   @Override
   public ValidationReport deserialize(
       JsonElement json, Type typoOfT, JsonDeserializationContext context) {
-    List<NoticeAggregate> notices = new ArrayList<>();
+    List<NoticeSummary> notices = new ArrayList<>();
     JsonObject rootObject = json.getAsJsonObject();
     JsonArray noticesArray = rootObject.getAsJsonArray(NOTICES_MEMBER_NAME);
     noticesArray.forEach(
-        childObject -> notices.add(GSON.fromJson(childObject, NoticeAggregate.class)));
+        childObject -> notices.add(GSON.fromJson(childObject, NoticeSummary.class)));
 
     return new ValidationReport(notices, extractErrorCodes(notices));
   }
