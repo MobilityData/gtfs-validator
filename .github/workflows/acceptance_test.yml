@@ -56,13 +56,15 @@ jobs:
       - name: Get Latest Tag
         id: previoustag
         uses: WyriHaximus/github-action-get-previous-tag@v1
+      - name: Set env
+        run: echo ::set-env name=TAG::${{ steps.previoustag.outputs.tag }}
+      - name: Test
+        run: echo $TAG
       - name: Download last release of the validator
-        env:
-          TAG: ${{ steps.previoustag.outputs.tag }}
         uses: suisei-cn/actions-download-file@v1
         id: gtfs-validator
         with:
-          url: "https://github.com/MobilityData/gtfs-validator/releases/download/${{TAG}}/gtfs-validator-${{TAG}}_cli.jar"
+          url: "https://github.com/MobilityData/gtfs-validator/releases/download/$TAG/gtfs-validator-$TAG_cli.jar"
           target: public/
       - name: Persist reference jar
         uses: actions/upload-artifact@v2
