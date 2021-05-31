@@ -58,7 +58,7 @@ jobs:
         uses: WyriHaximus/github-action-get-previous-tag@v1
       - name: Generate download url
         id: set-url
-        run: echo ::set-output name=URL::"https://github.com/MobilityData/gtfs-validator/releases/download/"${{ steps.previoustag.outputs.tag }}/gtfs-validator-${{ steps.previoustag.outputs.tag }}_cli.jar"
+        run: echo ::set-output name=URL::https://github.com/MobilityData/gtfs-validator/releases/download/${{ steps.previoustag.outputs.tag }}/gtfs-validator-${{ steps.previoustag.outputs.tag }}_cli.jar
 #      - name: Test
 #        id: geturl
 #        run: echo ${{steps.set-env.outputs.TAG}}
