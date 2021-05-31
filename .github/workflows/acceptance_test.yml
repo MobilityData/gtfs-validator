@@ -83,7 +83,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   get-latest-changes-report:
-    needs: [ fetch-urls, download-latest-gtfs-validator-release-jar ]
+    needs: [ pack, fetch-urls, download-latest-gtfs-validator-release-jar ]
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
