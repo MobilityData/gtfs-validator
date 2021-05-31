@@ -53,6 +53,7 @@ jobs:
     needs: [ pack ]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2.2.0
       - name: Get Latest Tag
         id: previoustag
         uses: WyriHaximus/github-action-get-previous-tag@v1
