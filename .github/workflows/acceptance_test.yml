@@ -56,6 +56,8 @@ jobs:
       - name: Get Latest Tag
         id: previoustag
         uses: WyriHaximus/github-action-get-previous-tag@v1
+        with:
+          fallback: 2.0.0
       - name: Download last release of the validator
         env:
           TAG: ${{ steps.previoustag.outputs.tag }}
