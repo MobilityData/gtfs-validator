@@ -60,10 +60,8 @@ jobs:
         uses: suisei-cn/actions-download-file@v1
         id: gtfs-validator
         with:
-          url: "https://github.com/MobilityData/gtfs-validator/releases/download/${{TAG}}/gtfs-validator-${{TAG}}_cli.jar"
+          url: https://github.com/MobilityData/gtfs-validator/releases/download/${{TAG}}/gtfs-validator-${{TAG}}_cli.jar
           target: public/
-          env:
-            TAG: ${{ steps.previoustag.outputs.tag }}
       - name: Persist reference jar
         uses: actions/upload-artifact@v2
         with:
