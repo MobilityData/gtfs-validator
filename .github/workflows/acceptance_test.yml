@@ -3,10 +3,10 @@ name: Acceptance tests
 on:
   push:
     branches: [ master, new-test-module ]
+    paths: '../../main/src/main/java/org/mobilitydata/gtfsvalidator/validator'
 
 jobs:
   pack-comparator:
-    if: "contains(github.event.head_commit.message, '[integration tests]')"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -49,7 +49,6 @@ jobs:
   download-latest-gtfs-validator-release-jar:
     needs: [ pack-comparator ]
     runs-on: ubuntu-latest
-    if: "contains(github.event.head_commit.message, '[integration tests]')"
     steps:
       - name: Download last release of the validator
         uses: suisei-cn/actions-download-file@v1
@@ -65,7 +64,6 @@ jobs:
   fetch-urls:
     needs: [ pack-comparator ]
     runs-on: ubuntu-latest
-    if: "contains(github.event.head_commit.message, '[integration tests]')"
     steps:
       - name: Get url list as json
         id: set-matrix
@@ -80,7 +78,6 @@ jobs:
   pack-latest-changes:
     needs: [ pack-comparator ]
     runs-on: ubuntu-latest
-    if: "contains(github.event.head_commit.message, '[integration tests]')"
     steps:
       - uses: actions/checkout@v1
       - name: Prepare version name
@@ -122,7 +119,6 @@ jobs:
   get-latest-changes-report:
     needs: [ pack-latest-changes, fetch-urls ]
     runs-on: ubuntu-latest
-    if: "contains(github.event.head_commit.message, '[integration tests]')"
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:
@@ -140,7 +136,6 @@ jobs:
   get-reference-report:
     needs: [ download-latest-gtfs-validator-release-jar, fetch-urls ]
     runs-on: ubuntu-latest
-    if: "contains(github.event.head_commit.message, '[integration tests]')"
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:
@@ -159,7 +154,6 @@ jobs:
   compare-outputs:
     needs: [get-reference-report, get-latest-changes-report, fetch-urls ]
     runs-on: ubuntu-latest
-    if: "contains(github.event.head_commit.message, '[integration tests]')"
     steps:
       - name: Download all validation reports
         uses: actions/download-artifact@v2
