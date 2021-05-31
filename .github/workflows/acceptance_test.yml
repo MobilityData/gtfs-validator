@@ -66,7 +66,7 @@ jobs:
         id: gtfs-validator
         with:
 #          url: "https://github.com/MobilityData/gtfs-validator/releases/download/$TAG/gtfs-validator-$TAG_cli.jar"
-          url: ${{ steps.geturl.outputs.URL }}
+          url: ${{ steps.set-url.outputs.URL }}
           target: public/
       - name: Persist reference jar
         uses: actions/upload-artifact@v2
