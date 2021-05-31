@@ -146,7 +146,8 @@ public class ValidationReport {
       return true;
     }
     if (other instanceof ValidationReport) {
-      return getNotices().equals(((ValidationReport) other).getNotices());
+       return getNotices().size() == ((ValidationReport) other).getNotices().size() &&
+      getNotices().containsAll(((ValidationReport) other).getNotices());
     }
     return false;
   }
