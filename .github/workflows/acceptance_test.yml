@@ -163,9 +163,10 @@ jobs:
         with:
           name: output-comparator-cli
       - name: Execute comparator
-        run: java -jar comparator*.jar --threshold ${THRESHOLD} --report_directory . --reference_report_name report.json --latest_report_name latest.json
+        run: java -jar comparator*.jar --acceptance_criteria ${ACCEPTANCE_CRITERIA} --threshold ${THRESHOLD} --report_directory . --reference_report_name report.json --latest_report_name latest.json
         env:
           THRESHOLD: 1
+          ACCEPTANCE_CRITERIA: 35
       - name: Persist integration test report
         uses: actions/upload-artifact@v2
         with:
