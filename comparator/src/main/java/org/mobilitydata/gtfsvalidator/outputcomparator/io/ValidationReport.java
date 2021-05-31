@@ -29,8 +29,10 @@ import java.util.List;
 
 /**
  * Used to deserialize validation report. This represents a validation report as a list of {@code
- * NoticeAggregate} which provides information about each notice generated during a GTFS dataset
- * validation.
+ * NoticeSummary} which provides information about each notice generated during a GTFS dataset
+ * validation. This objects stores both notices and error codes from a list of {@code
+ * NoticeSummary}. Error codes are cached at construction in this object in order to facilitate
+ * quick comparison between reports.
  */
 public class ValidationReport {
   private static final Gson GSON =
@@ -73,9 +75,9 @@ public class ValidationReport {
   }
 
   /**
-   * Returns the list of {@code NoticeAggregate} of this {@code ValidationReport}.
+   * Returns the list of {@code NoticeSummary} of this {@code ValidationReport}.
    *
-   * @return the list of {@code NoticeAggregate} of this {@code ValidationReport}.
+   * @return the list of {@code NoticeSummary} of this {@code ValidationReport}.
    */
   public List<NoticeSummary> getNotices() {
     return notices;
@@ -132,11 +134,11 @@ public class ValidationReport {
 
   /**
    * Determines if two validation reports are equal regardless of the order of the fields in the
-   * list of {@code NoticeAggregate}.
+   * list of {@code NoticeSummary}.
    *
    * @param other the other {@code ValidationReport}.
    * @return true if both validation reports are equal regardless of the order of the fields in the
-   *     list of {@code NoticeAggregate}.
+   *     list of {@code NoticeSummary}.
    */
   @Override
   public boolean equals(Object other) {
