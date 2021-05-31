@@ -71,8 +71,8 @@ The architecture of the `gtfs-validator` is described on our [Architecture page]
 ## JUnit
 This project leverages JUnit4 for unit tests.
 
-## Integration tests
-In order to avoid sudden changes in the validation output that might declare previously valid datasets invalid, each new rule implementation is tested against GTFS datasets in the MobilityData MobilityDatabase. The integration test process is described in [INTEGRATION_TESTS.md](docs/INTEGRATION_TESTS.md).
+## Acceptance tests
+In order to avoid sudden changes in the validation output that might declare previously valid datasets invalid, each new rule implementation is tested against GTFS datasets in the MobilityData MobilityDatabase. The acceptance test process is described in [ACCEPTANCE_TESTS.md](IdeaProjects/gtfs-validator/docs/ACCEPTANCE_TESTS.md).
 
 # License
 Code licensed under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0).
