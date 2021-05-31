@@ -57,8 +57,9 @@ public class Main {
 
     int totalDatasetCount = reportDirs.size();
 
-    for (File file : reportDirs) {
-      try {
+    try {
+      for (File file : reportDirs) {
+        int newErrorCount = 0;
         ValidationReport referenceReport =
             ValidationReport.fromPath(
                 file.toPath().resolve(args.getReferenceValidationReportName()));
@@ -66,32 +67,25 @@ public class Main {
             ValidationReport.fromPath(file.toPath().resolve(args.getLatestValidationReportName()));
 
         if (referenceReport.hasSameErrorCodes(latestReport)) {
+          mapBuilder.put(file.getName(), newErrorCount);
           continue;
         }
         if (referenceReport.equals(latestReport)) {
+          mapBuilder.put(file.getName(), newErrorCount);
           continue;
         }
-        int newErrorCount = referenceReport.getNewErrorCount(latestReport);
+        newErrorCount = referenceReport.getNewErrorCount(latestReport);
         mapBuilder.put(file.getName(), newErrorCount);
         if (newErrorCount >= args.getThreshold()) {
           badDatasetCount += 1;
         }
-      } catch (FileNotFoundException e) {
-        logger.atSevere().withCause(e).log(String.format("No file found at %s.", file.getPath()));
-        System.exit(1);
-      } catch (IOException e) {
-        logger.atSevere().withCause(e);
-        System.exit(1);
       }
-    }
-    try {
       exportAcceptanceReport(mapBuilder.build(), args.getReportDirectory());
-    } catch (IOException ioException) {
-      logger.atSevere().withCause(ioException).log(
-          String.format("Error while writing file at: %s", args.getReportDirectory()));
+      isNewRuleValid(badDatasetCount, totalDatasetCount, args.getAcceptanceCriteria());
+    } catch (IOException e) {
+      logger.atSevere().withCause(e);
       System.exit(1);
     }
-    isNewRuleValid(badDatasetCount, totalDatasetCount, args.getAcceptanceCriteria());
   }
 
   /**
