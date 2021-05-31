@@ -59,9 +59,8 @@ jobs:
       - name: Generate download url
         id: set-url
         run: echo ::set-output name=URL::https://github.com/MobilityData/gtfs-validator/releases/download/${{ steps.previoustag.outputs.tag }}/gtfs-validator-${{ steps.previoustag.outputs.tag }}_cli.jar
-#      - name: Test
-#        id: geturl
-#        run: echo ${{steps.set-env.outputs.TAG}}
+      - name: Test
+        run: echo ${{steps.set-url.outputs.URL}}
       - name: Download last release of the validator
         uses: suisei-cn/actions-download-file@v1
         id: gtfs-validator
