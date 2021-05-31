@@ -167,8 +167,8 @@ jobs:
         env:
           THRESHOLD: 1
           ACCEPTANCE_CRITERIA: 35
-      - name: Persist integration test report
+      - name: Persist acceptance test report
         uses: actions/upload-artifact@v2
         with:
-          name: integration test report
-          path: ./integration_report.json
+          name: acceptance test report
+          path: ./acceptance_report.json

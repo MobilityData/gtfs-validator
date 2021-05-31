@@ -35,7 +35,7 @@ import org.mobilitydata.gtfsvalidator.outputcomparator.io.ValidationReport;
 
 public class Main {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-  private static final String INTEGRATION_REPORT_JSON = "integration_report.json";
+  private static final String ACCEPTANCE_REPORT_JSON = "acceptance_report.json";
 
   public static void main(String[] argv) {
     Arguments args = new Arguments();
@@ -47,7 +47,7 @@ public class Main {
     }
     if (reportDirectory.length == 0) {
       logger.atSevere().log(
-          "Specified directory is empty, cannot generate integration tests report.");
+          "Specified directory is empty, cannot generate acceptance tests report.");
       return;
     }
     ImmutableMap.Builder<String, Integer> mapBuilder = new Builder<>();
@@ -85,7 +85,7 @@ public class Main {
       }
     }
     try {
-      exportIntegrationReport(mapBuilder.build(), args.getReportDirectory());
+      exportAcceptanceReport(mapBuilder.build(), args.getReportDirectory());
     } catch (IOException ioException) {
       logger.atSevere().withCause(ioException).log(
           String.format("Error while writing file at: %s", args.getReportDirectory()));
@@ -95,18 +95,18 @@ public class Main {
   }
 
   /**
-   * Exports the integration test report (map of String, Object) as json.
+   * Exports the acceptance test report (map of String, Object) as json.
    *
-   * @param integrationReportData integration report content.
+   * @param acceptanceReportData acceptance report content.
    * @param outputBase base path to output.
    * @throws IOException if an I/O error occurs writing to or creating the file.
    */
-  private static void exportIntegrationReport(
-      ImmutableMap<String, Integer> integrationReportData, String outputBase) throws IOException {
+  private static void exportAcceptanceReport(
+      ImmutableMap<String, Integer> acceptanceReportData, String outputBase) throws IOException {
     Gson gson = new GsonBuilder().serializeNulls().create();
     Files.write(
-        Paths.get(outputBase, INTEGRATION_REPORT_JSON),
-        gson.toJson(integrationReportData).getBytes(StandardCharsets.UTF_8));
+        Paths.get(outputBase, ACCEPTANCE_REPORT_JSON),
+        gson.toJson(acceptanceReportData).getBytes(StandardCharsets.UTF_8));
   }
 
   /**
