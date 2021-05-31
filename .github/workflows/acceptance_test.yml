@@ -3,7 +3,6 @@ name: Acceptance tests
 on:
   push:
     branches: [ master, new-test-module ]
-    paths: '../../main/src/main/java/org/mobilitydata/gtfsvalidator/validator'
 
 jobs:
   pack-comparator:
