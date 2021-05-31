@@ -57,9 +57,10 @@ jobs:
         id: previoustag
         uses: WyriHaximus/github-action-get-previous-tag@v1
       - name: Set env
-        run: echo ::set-env name=TAG::${{ steps.previoustag.outputs.tag }}
+        id: set-env
+        run: echo ::set-output name=TAG::${{ steps.previoustag.outputs.tag }}
       - name: Test
-        run: echo $TAG
+        run: echo ${{steps.set-env.output.TAG}}
       - name: Download last release of the validator
         uses: suisei-cn/actions-download-file@v1
         id: gtfs-validator
