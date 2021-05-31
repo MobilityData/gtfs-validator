@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -24,9 +25,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Used to deserialize validation report. This represents a validation report as a list of {@code
@@ -41,9 +40,9 @@ public class ValidationReport {
           .serializeSpecialFloatingPointValues()
           .create();
   private final ImmutableList<NoticeSummary> notices;
-  private final Set<String> errorCodes;
+  private final ImmutableSet<String> errorCodes;
 
-  ValidationReport(ImmutableList<NoticeSummary> notices, Set<String> errorCodes) {
+  ValidationReport(ImmutableList<NoticeSummary> notices, ImmutableSet<String> errorCodes) {
     this.notices = notices;
     this.errorCodes = errorCodes;
   }
@@ -87,8 +86,8 @@ public class ValidationReport {
    *
    * @return the immutable and ordered set of error codes contained in this {@code ValidationReport}
    */
-  public Set<String> getErrorCodes() {
-    return Collections.unmodifiableSet(errorCodes);
+  public ImmutableSet<String> getErrorCodes() {
+    return errorCodes;
   }
 
   /**

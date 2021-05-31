@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -25,10 +26,6 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.lang.reflect.Type;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * Used to deserialize a validation report. This represents a validation report as a list of {@code
@@ -45,14 +42,14 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
    *
    * @return the sorted set of error codes from a list of {@code NoticeAggregate}.
    */
-  private static Set<String> extractErrorCodes(List<NoticeSummary> notices) {
-    Set<String> errorCodes = new TreeSet<>();
+  private static ImmutableSet<String> extractErrorCodes(ImmutableList<NoticeSummary> notices) {
+    ImmutableSet.Builder<String> errorCodesSetBuilder = new ImmutableSet.Builder<>();
     for (NoticeSummary noticeSummary : notices) {
       if (noticeSummary.isError()) {
-        errorCodes.add(noticeSummary.getCode());
+        errorCodesSetBuilder.add(noticeSummary.getCode());
       }
     }
-    return Collections.unmodifiableSet(errorCodes);
+    return errorCodesSetBuilder.build();
   }
 
   @Override
