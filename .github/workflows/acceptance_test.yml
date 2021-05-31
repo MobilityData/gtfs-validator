@@ -57,10 +57,12 @@ jobs:
         id: previoustag
         uses: WyriHaximus/github-action-get-previous-tag@v1
       - name: Download last release of the validator
+        env:
+          TAG: ${{ steps.previoustag.outputs.tag }}
         uses: suisei-cn/actions-download-file@v1
         id: gtfs-validator
         with:
-          url: https://github.com/MobilityData/gtfs-validator/releases/download/${{steps.previoustag.outputs.tag}}/gtfs-validator-${{steps.previoustag.outputs.tag}}_cli.jar
+          url: "https://github.com/MobilityData/gtfs-validator/releases/download/$TAG/gtfs-validator-$TAG_cli.jar"
           target: public/
       - name: Persist reference jar
         uses: actions/upload-artifact@v2
@@ -68,7 +70,6 @@ jobs:
           name: reference_jar
           path: public/gtfs-validator*.jar
   fetch-urls:
-    needs: [ pack ]
     runs-on: ubuntu-latest
     steps:
       - name: Get url list as json
@@ -82,7 +83,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   get-latest-changes-report:
-    needs: [ pack, fetch-urls ]
+    needs: [ fetch-urls, download-latest-gtfs-validator-release-kar ]
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
