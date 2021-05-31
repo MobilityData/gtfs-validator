@@ -56,12 +56,17 @@ jobs:
     needs: [ pack ]
     runs-on: ubuntu-latest
     steps:
+      - name: Get Latest Tag
+        id: previoustag
+        uses: WyriHaximus/github-action-get-previous-tag@v1
       - name: Download last release of the validator
         uses: suisei-cn/actions-download-file@v1
         id: gtfs-validator
         with:
-          url: "https://github.com/MobilityData/gtfs-validator/releases/download/v2.0.0/gtfs-validator-v2.0.0_cli.jar"
+          url: "https://github.com/MobilityData/gtfs-validator/releases/download/$TAG/gtfs-validator-$TAG_cli.jar"
           target: public/
+          env:
+            TAG: ${{ steps.previoustag.outputs.tag }}
       - name: Persist reference jar
         uses: actions/upload-artifact@v2
         with:
