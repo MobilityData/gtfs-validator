@@ -34,7 +34,6 @@ import org.mobilitydata.gtfsvalidator.util.ServiceIdIntersectionCache;
  */
 @GtfsValidator
 public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
-
   private final GtfsTripTableContainer tripTable;
   private final GtfsStopTimeTableContainer stopTimeTable;
   private final GtfsCalendarTableContainer calendarTable;
