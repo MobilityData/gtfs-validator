@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -39,10 +40,10 @@ public class ValidationReport {
           .serializeNulls()
           .serializeSpecialFloatingPointValues()
           .create();
-  private final List<NoticeSummary> notices;
+  private final ImmutableList<NoticeSummary> notices;
   private final Set<String> errorCodes;
 
-  ValidationReport(List<NoticeSummary> notices, Set<String> errorCodes) {
+  ValidationReport(ImmutableList<NoticeSummary> notices, Set<String> errorCodes) {
     this.notices = notices;
     this.errorCodes = errorCodes;
   }
@@ -78,7 +79,7 @@ public class ValidationReport {
    * @return the list of {@code NoticeAggregate} of this {@code ValidationReport}.
    */
   public List<NoticeSummary> getNotices() {
-    return Collections.unmodifiableList(notices);
+    return notices;
   }
 
   /**

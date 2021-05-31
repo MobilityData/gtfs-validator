@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -24,7 +25,6 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -58,11 +58,12 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
   @Override
   public ValidationReport deserialize(
       JsonElement json, Type typoOfT, JsonDeserializationContext context) {
-    List<NoticeSummary> notices = new ArrayList<>();
+    ImmutableList.Builder<NoticeSummary> noticeListBuilder = new ImmutableList.Builder<>();
     JsonObject rootObject = json.getAsJsonObject();
     JsonArray noticesArray = rootObject.getAsJsonArray(NOTICES_MEMBER_NAME);
     noticesArray.forEach(
-        childObject -> notices.add(GSON.fromJson(childObject, NoticeSummary.class)));
+        childObject -> noticeListBuilder.add(GSON.fromJson(childObject, NoticeSummary.class)));
+    ImmutableList<NoticeSummary> notices = noticeListBuilder.build();
 
     return new ValidationReport(notices, extractErrorCodes(notices));
   }
