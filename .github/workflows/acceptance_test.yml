@@ -126,7 +126,7 @@ jobs:
         with:
           name: latest_changes_cli
       - name: Execute jar
-        run: java -jar gtfs-validator*.jar --url ${{ matrix.url }} --output_base output/${{ matrix.output }} --validation_report latest.json
+        run: java -jar gtfs-validator*.jar --url ${{ matrix.url }} --output_base output/${{ matrix.output }} --validation_report_name latest.json
       - name: Persist reports
         uses: actions/upload-artifact@v2
         with:
