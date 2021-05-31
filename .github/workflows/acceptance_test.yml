@@ -118,7 +118,7 @@ jobs:
           name: reports_all
           path: output
   compare-outputs:
-    needs: [get-reference-report, get-latest-changes-report, fetch-urls ]
+    needs: [ get-reference-report, get-latest-changes-report ]
     runs-on: ubuntu-latest
     steps:
       - name: Download all validation reports
