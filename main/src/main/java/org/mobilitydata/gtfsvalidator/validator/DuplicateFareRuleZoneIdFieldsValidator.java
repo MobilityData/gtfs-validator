@@ -44,7 +44,6 @@ public class DuplicateFareRuleZoneIdFieldsValidator extends FileValidator {
   private static final HashFunction HASH_FUNCTION = Hashing.farmHashFingerprint64();
   private final GtfsFareRuleTableContainer fareRuleTable;
 
-
   @Inject
   DuplicateFareRuleZoneIdFieldsValidator(GtfsFareRuleTableContainer fareRuleTable) {
     this.fareRuleTable = fareRuleTable;
