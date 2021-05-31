@@ -60,7 +60,7 @@ jobs:
         id: set-env
         run: echo ::set-output name=TAG::${{ steps.previoustag.outputs.tag }}
       - name: Test
-        run: echo ${{steps.set-env.output.TAG}}
+        run: echo ${{steps.set-env.outputs.TAG}}
       - name: Download last release of the validator
         uses: suisei-cn/actions-download-file@v1
         id: gtfs-validator
