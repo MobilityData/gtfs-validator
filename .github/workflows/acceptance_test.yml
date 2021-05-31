@@ -42,18 +42,18 @@ jobs:
           versionTag: ${{ steps.prep.outputs.versionTag }}
         with:
           arguments: shadowJar
-      - name: Persist comparator jar
+      - name: Persist output-comparator jar
         uses: actions/upload-artifact@v2
         with:
           name: output-comparator-cli
-          path: comparator/build/libs/comparator*.jar
+          path: output-comparator/build/libs/output-comparator*.jar
       - name: Persist gtfs-validator snapshot jar
         uses: actions/upload-artifact@v2
         with:
           name: gtfs-validator-snapshot
           path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
   download-latest-gtfs-validator-release-jar:
-    needs: [ pack-comparator ]
+    needs: [ pack ]
     runs-on: ubuntu-latest
     steps:
       - name: Download last release of the validator
@@ -68,7 +68,7 @@ jobs:
           name: reference_jar
           path: public/gtfs-validator*.jar
   fetch-urls:
-    needs: [ pack-comparator ]
+    needs: [ pack ]
     runs-on: ubuntu-latest
     steps:
       - name: Get url list as json
@@ -124,12 +124,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: reports_all
-      - name: Download comparator jar
+      - name: Download output-comparator jar
         uses: actions/download-artifact@v2
         with:
           name: output-comparator-cli
-      - name: Execute comparator
-        run: java -jar comparator*.jar --acceptance_criteria ${ACCEPTANCE_CRITERIA} --threshold ${THRESHOLD} --report_directory . --reference_report_name report.json --latest_report_name latest.json
+      - name: Execute output-comparator
+        run: java -jar output-comparator*.jar --acceptance_criteria ${ACCEPTANCE_CRITERIA} --threshold ${THRESHOLD} --report_directory . --reference_report_name report.json --latest_report_name latest.json
         env:
           THRESHOLD: 1
           ACCEPTANCE_CRITERIA: 35
