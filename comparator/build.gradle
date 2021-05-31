@@ -38,7 +38,7 @@ jar {
 
 
 shadowJar {
-    // Change the JAR name from cli-app to gtfs-validator
+    // Change the JAR name from cli-app to comparator
     archiveBaseName = 'comparator'
     // Remove "-all" from the end of the JAR file name
     archiveClassifier = null

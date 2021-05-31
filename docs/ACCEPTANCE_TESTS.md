@@ -23,6 +23,15 @@ On each of these urls:
 
 GitHub uses the defined matrix to execute these two steps in parallel for each url in the matrix. 
 At the end of execution of the two aforementioned steps for all urls in the matrix, all validation reports are gathered in a single folder (`reports_all`) and compared - the percentage of newly invalid datasets is output to the console.
-The final acceptance test report is saved by the workflow artifact as `acceptance_report.json`. This file keeps the count of new invalid datasets. 
+The final acceptance test report is saved by the workflow artifact as `acceptance_report.json`. This file keeps the count of new errors introduced by the snapshot version for each agency.
+
+Sample example of said acceptance report:
+```json
+{
+  "transperth": 1,
+  "octa": 0,
+  "thb": 0
+}
+```
 
 ⚠️ Note that this workflow is executed only if package `org.mobilitydata.gtfsvalidator.validator` has changed.
