@@ -35,14 +35,12 @@ public class Arguments {
 
   @Parameter(
       names = {"-r", "--reference_report_name"},
-      description = "Name of the reference validation report",
-      required = true)
+      description = "Name of the reference validation report")
   private String referenceValidationReportName;
 
   @Parameter(
       names = {"-l", "--latest_report_name"},
-      description = "Name of the latest validation report",
-      required = true)
+      description = "Name of the latest validation report")
   private String latestValidationReportName;
 
   @Parameter(
