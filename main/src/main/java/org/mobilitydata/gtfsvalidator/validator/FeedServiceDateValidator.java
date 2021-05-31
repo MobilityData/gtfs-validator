@@ -32,7 +32,6 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 @GtfsValidator
 public class FeedServiceDateValidator extends SingleEntityValidator<GtfsFeedInfo> {
 
-
   @Override
   public void validate(GtfsFeedInfo feedInfo, NoticeContainer noticeContainer) {
     if (feedInfo.hasFeedStartDate() && !feedInfo.hasFeedEndDate()) {
