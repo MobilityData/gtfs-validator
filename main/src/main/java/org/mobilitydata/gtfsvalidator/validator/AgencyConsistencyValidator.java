@@ -29,7 +29,6 @@ import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableLoader;
 
-
 /**
  * Validates that all agencies have the same timezone and language and that agency_id field is set
  * if there is more than 1 agency.
