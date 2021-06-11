@@ -1,4 +1,4 @@
-# Integration tests 
+# Rule acceptance tests 
 
 ## Goal
 Execute the validator against all datasets and verify that a new rule implementation does not make "a lot" of GTFS datasets suddenly invalid. 
