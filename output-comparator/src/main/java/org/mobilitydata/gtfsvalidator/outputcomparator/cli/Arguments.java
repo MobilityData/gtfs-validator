@@ -28,10 +28,10 @@ public class Arguments {
   private String reportDirectory;
 
   @Parameter(
-      names = {"-t", "--threshold"},
+      names = {"-n", "--new_error_threshold"},
       description = "Number of new errors per datasets",
       required = true)
-  private int threshold;
+  private int newErrorThreshold;
 
   @Parameter(
       names = {"-r", "--reference_report_name"},
@@ -44,17 +44,17 @@ public class Arguments {
   private String latestValidationReportName;
 
   @Parameter(
-      names = {"-a", "--acceptance_criteria"},
+      names = {"-p", "--percent_invalid_datasets_threshold"},
       description = "Maximum percentage of new invalid datasets.",
       required = true)
-  private double acceptanceCriteria;
+  private double percentInvalidDatasetsThreshold;
 
   public String getReportDirectory() {
     return reportDirectory;
   }
 
-  public int getThreshold() {
-    return threshold;
+  public int getNewErrorThreshold() {
+    return newErrorThreshold;
   }
 
   public String getReferenceValidationReportName() {
@@ -65,7 +65,7 @@ public class Arguments {
     return latestValidationReportName;
   }
 
-  public double getAcceptanceCriteria() {
-    return acceptanceCriteria;
+  public double getPercentInvalidDatasetsThreshold() {
+    return percentInvalidDatasetsThreshold;
   }
 }
