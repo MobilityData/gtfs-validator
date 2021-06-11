@@ -69,7 +69,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: reference_jar
-          path: public/gtfs-validator-${{ steps.prep.outputs.versionTag }}.jar
+          path: public/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
   fetch-urls:
     runs-on: ubuntu-latest
     steps:
