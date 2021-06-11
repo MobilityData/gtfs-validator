@@ -3,6 +3,8 @@ name: Rule acceptance tests
 on:
   push:
     branches: [ master, new-test-module ]
+    paths-ignore:
+      - '**.md'
 jobs:
   pack:
     runs-on: ubuntu-latest
