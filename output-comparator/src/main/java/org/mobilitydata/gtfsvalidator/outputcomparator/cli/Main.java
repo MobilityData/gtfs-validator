@@ -120,18 +120,20 @@ public class Main {
   private static void checkRuleValidity(int badDatasetCount, int totalDatasetCount,
       double threshold) {
     double invalidDatasetRatio = 100.0 * badDatasetCount / totalDatasetCount;
-    String logMessage =
-        String.format("%d out of %d datasets (~%.2f %%) are invalid due to code change, ",
-            badDatasetCount, totalDatasetCount, invalidDatasetRatio);
+    StringBuilder builder = new StringBuilder();
+    builder
+        .append(
+            String.format("%d out of %d datasets (~%.2f %%) are invalid due to code change, ",
+                badDatasetCount, totalDatasetCount, invalidDatasetRatio));
     if (invalidDatasetRatio >= threshold) {
-      logMessage = logMessage.concat(String.format(
+      builder.append(String.format(
           "which is greater than or equal to the provided threshold of %.2f %%.%n"
-              + "Rue acceptance tests failed.%n", threshold));
+              + "❌ Rue acceptance tests failed.%n", threshold));
       System.exit(INVALID_NEW_RULE_EXIT_CODE);
     }
-    logMessage = logMessage.concat(String.format(
+    builder.append(String.format(
         "which is less than the provided threshold of %.2f %%.%n"
-            + "Rule acceptance tests passed.", threshold));
-    System.out.println(logMessage);
+            + "✅ Rule acceptance tests passed.", threshold));
+    System.out.println(builder);
   }
 }
