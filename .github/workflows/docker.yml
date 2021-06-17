@@ -1,6 +1,8 @@
 name: Docker image
 
 on:
+  push:
+    branches: [ master, task/update-docs ]
   release:
     types: [ prereleased, released ]
 
