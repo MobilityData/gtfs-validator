@@ -77,7 +77,7 @@ jobs:
           fi
           TAGS="${DOCKER_IMAGE}:${VERSION}"
           if [ "${{ github.event_name }}" = "push" ]; then
-            TAGS="latest,$TAGS"
+            TAGS="'latest',$TAGS"
           fi
           echo ::set-output name=version::${VERSION}
           echo ::set-output name=tags::${TAGS}
