@@ -38,7 +38,7 @@ More detailed instructions are on our ["Usage"](/docs/USAGE.md) page.
 # Run the app using Docker
 ### Setup
 1. Download and install [Docker](https://docs.docker.com/get-started/)
-1. Pull the [latest Docker image for this project](https://github.com/orgs/MobilityData/packages/container/package/gtfs-validator). For example, `docker pull ghcr.io/mobilitydata/gtfs-validator:fix-debian-version-used-in-docker-image`.
+1. Pull the [latest Docker image for this project](https://github.com/orgs/MobilityData/packages/container/package/gtfs-validator). For example, `docker pull ghcr.io/mobilitydata/gtfs-validator` for the latest snapshot version of the validator.
 
 ### Run it
 
@@ -46,7 +46,7 @@ More detailed instructions are on our ["Usage"](/docs/USAGE.md) page.
 
 To run the Docker image in a new container:
 
-`docker run -v /myDirectory:/theContainerDirectory -it ghcr.io/mobilitydata/gtfs-validator:snapshot`
+`docker run -v /myDirectory:/theContainerDirectory -it ghcr.io/mobilitydata/gtfs-validator:latest`
 
 where:
 * `-v /myDirectory:/theContainerDirectory`: syntax to share directories and data between the container and the host (your computer). With the above command, any files that you place in `/myDirectory` on the host will show up in `/theContainerDirectory` inside the container and vice versa.
