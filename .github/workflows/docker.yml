@@ -1,6 +1,8 @@
 name: Docker image
 
 on:
+  push:
+    branches: [ master ]
   release:
     types: [ prereleased, released ]
 
@@ -75,7 +77,7 @@ jobs:
           fi
           TAGS="${DOCKER_IMAGE}:${VERSION}"
           if [ "${{ github.event_name }}" = "push" ]; then
-            TAGS="${DOCKER_IMAGE}:sha-${GITHUB_SHA::8},$TAGS"
+            TAGS="${DOCKER_IMAGE}:latest"
           fi
           echo ::set-output name=version::${VERSION}
           echo ::set-output name=tags::${TAGS}
