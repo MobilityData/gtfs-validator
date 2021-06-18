@@ -1,8 +1,8 @@
 # Release instructions
-###1. Update documentation
+### 1. Update documentation
 Update the [README.md](/README.md) to match the latest developments. The documentation should accurately reflect the use of the `jar` that is to be released. 
 
-### 1. Do a pre relase
+### 2. Do a pre relase
 1. Go to the release section of GitHub ![step 1](https://user-images.githubusercontent.com/35747326/99820876-567dd600-2b1f-11eb-87d2-eef132b3016a.png)
 
 1. Start a draft release ![step 2](https://user-images.githubusercontent.com/35747326/99822107-ce003500-2b20-11eb-9364-6dc8356e1276.png)
@@ -12,7 +12,7 @@ Update the [README.md](/README.md) to match the latest developments. The documen
 1. Publish the prerelease
 ![publish](https://user-images.githubusercontent.com/35747326/99821598-3ef31d00-2b20-11eb-9f5e-26f6583ad6c9.png)
 
-### 2. Do the release
+### 3. Do the release
 1. While CI is running to create the artifacts, you can work on the release description. ![edit](https://user-images.githubusercontent.com/35747326/99821184-ba080380-2b1f-11eb-8efe-57be80a0bd29.png)
 
 
