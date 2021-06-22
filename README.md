@@ -9,29 +9,56 @@ This command-line tool written in Java that performs the following steps:
 1. Checks file integrity, numeric type parsing and ranges as well as string format according to the [GTFS Schedule specification](https://gtfs.mobilitydata.org/spec/gtfs-schedule#h.hc443y62gb8c)
 1. Performs GTFS business rule validation *(work-in-progress)*
 
+# Run the app via command line
+### Setup
+1. Install [Java 8 or higher](https://www.oracle.com/java/technologies/javase-downloads.html)
+1. Download [gtfs-validator-v2.0.0_cli.jar](https://github.com/MobilityData/gtfs-validator/releases/download/v2.0.0/gtfs-validator-v2.0.0_cli.jar)
+
+### Run it
+To validate a GTFS dataset on your computer:
+
+`java -jar gtfs-validator-v2.0.0_cli.jar --input /myDirectory/gtfs.zip --output output --feed_name ca-myFeedName` 
+
+To download and validate a GTFS dataset from a URL:
+
+`java -jar gtfs-validator-v2.0.0_cli.jar --url https://www.abc.com/gtfs.zip --output output --feed_name ca`
+
+where:
+* `--input` or `-i`: the path to the GTFS file (e.g., `/myDirectory/gtfs.zip`)
+* `--url` or `-u`: the fully qualified URL to the GTFS file (e.g., `https://www.abc.com/gtfs.zip`)
+* `--output` or `-o`: the path where the validation report will be stored (e.g., `output`)
+* `--feed_name` or `-f`:  the name of the feed as a valid [ISO two letter country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), followed by `-`, followed by a user-defined name for the feed. (e.g., `ca-myFeedName`, `us-myFeedName`)   
+* *(Optional)* `--thread` or `-t`: the number of Java threads to use
+
+More detailed instructions are on our ["Usage"](/docs/USAGE.md) page.
+
+# Run the app using Docker
+### Setup
+1. Download and install [Docker](https://docs.docker.com/get-started/)
+1. Pull the [v2.0.0 Docker image of this project](https://github.com/orgs/MobilityData/packages/container/gtfs-validator/1804682?tag=v2.0.0). For example, `docker pull ghcr.io/mobilitydata/gtfs-validator:v2.0.0`.
+
+### Run it
+
+#### For Mac and Linux
+
+To run the Docker image in a new container:
+
+`docker run -v /myDirectory:/theContainerDirectory -it ghcr.io/mobilitydata/gtfs-validator:v2.0.0`
+
+where:
+* `-v /myDirectory:/theContainerDirectory`: syntax to share directories and data between the container and the host (your computer). With the above command, any files that you place in `/myDirectory` on the host will show up in `/theContainerDirectory` inside the container and vice versa.
+
+***NOTE:*** On Windows, you must provide the local volume (e.g., `c:`) as well:
+
+`... c:/myDirectory:/theContainerDirectory ...`
+
+The validator can then be executed via bash commands. See the [preceeding instructions for command line usage](#run-the-app-via-command-line).
+
+
 # Build the code
 We suggest using [IntelliJ](https://www.jetbrains.com/idea/download/) to [import](https://www.jetbrains.com/help/idea/import-project-or-module-wizard.html), build, and run this project.
 
 Instructions to build the project from the command-line using [Gradle](https://gradle.org/) are available in our [Build documentation](/docs/BUILD.md).
-
-# Run the app
-
-*If you're running a [`v1.x` release JAR file](https://github.com/MobilityData/gtfs-validator/releases) you'll need Java 11, and can follow [these instructions](https://github.com/MobilityData/gtfs-validator/tree/v1.4.0#via-java-on-your-local-computer). The below instructions are for the master branch, which will be v2.0.*
-
-*(Instructions to run a pre-built JAR file are coming soon)*
-
-From IntelliJ set up a [run configuration](https://www.jetbrains.com/help/idea/run-debug-configuration.html) with the following program arguments: 
-
-`-i /myDirectory/gtfs.zip -o output -f ca-myFeedName` or `-u urlToDataset -o output -f ca-myFeedName`
-
-where:
-* `--input` or `-i`: the path to the GTFS archive (e.g., `/myDirectory/gtfs.zip`)
-* `--url` or `-u`: the fully qualified URL to a distant GTFS dataset (e.g., `http://www.stm.info/sites/default/files/gtfs/gtfs_stm.zip`)
-* `--output` or `-o`: the path to the validation report (e.g., `output`)
-* `--feed_name` or `-f`: the name of the feed as a valid [ISO two letter country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), followed by `-`, followed by a user-defined name for the feed. (e.g., `ca-myFeedName`, `us-myFeedName`)
-* *(Optional)* `--thread` or `-t`: the number of Java threads to use
-
-More detailed instructions to run the application locally (for example validating a dataset using an URL) are available in our [Usage page](/docs/USAGE.md).
 
 # Architecture
 The architecture of the `gtfs-validator` is described on our [Architecture page](/docs/ARCHITECTURE.md).
