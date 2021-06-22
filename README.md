@@ -89,7 +89,7 @@ It can be used to run the validator in an automated way *via Java on your local 
 # Prerequisites
 
 1. Install [Java 11 or higher](https://www.oracle.com/java/technologies/javase-downloads.html)
-1. Download the latest gtfs-validator JAR (cli or web) file from our [Releases page](https://github.com/MobilityData/gtfs-validator/releases) or snapshot artifact from [GitHub Actions](https://github.com/MobilityData/gtfs-validator/actions?query=branch%3Amaster) or [Circle-CI Pipelines](https://app.circleci.com/pipelines/github/MobilityData/gtfs-validator?branch=master)
+1. Download the `v1.4.0` version gtfs-validator JAR (cli or web) file from our [Releases page](https://github.com/MobilityData/gtfs-validator/releases) or snapshot artifact from [GitHub Actions](https://github.com/MobilityData/gtfs-validator/releases/tag/v1.4.0).
 
 ## cli-app usage
 
@@ -98,7 +98,7 @@ It can be used to run the validator in an automated way *via Java on your local 
 Sample usage:
 
 ``` 
-java -jar gtfs-validator-v1.3.0_cli.jar -i relative/path/to/zipped_dataset -o relative/output/path -e relative/extraction/path -x enumeration_of_files_to_exclude_from_validation_process
+java -jar gtfs-validator-v1.4.0_cli.jar -i relative/path/to/zipped_dataset -o relative/output/path -e relative/extraction/path -x enumeration_of_files_to_exclude_from_validation_process
 ```
 
 ...which will:
@@ -124,7 +124,7 @@ In the case where GTFS file`feed_info.txt`  is not provided, the validation repo
 #### Example: Validate GTFS dataset while specifying extraction, input, and output directories
 
 ``` 
-java -jar gtfs-validator-v1.3.0_cli.jar -i gtfs-dataset.zip -o output_folder -e extraction_folder
+java -jar gtfs-validator-v1.4.0_cli.jar -i gtfs-dataset.zip -o output_folder -e extraction_folder
 ```
 
 In order, this command line will:
@@ -138,7 +138,7 @@ In order, this command line will:
 #### Example: Validate a subset of a GTFS dataset.
 
 ``` 
-java -jar gtfs-validator-v1.3.0_cli.jar -i gtfs-dataset.zip  -x fare_attributes.txt,attributions.txt
+java -jar gtfs-validator-v1.4.0_cli.jar -i gtfs-dataset.zip  -x fare_attributes.txt,attributions.txt
 ```
 
 In order, this command line will:
@@ -154,7 +154,7 @@ In order, this command line will:
 Sample usage:
 
 ``` 
-java -jar gtfs-validator-v1.3.0_cli.jar -u url/to/dataset -o relative/output/path -e relative/extraction/path -i input.zip
+java -jar gtfs-validator-v1.4.0_cli.jar -u url/to/dataset -o relative/output/path -e relative/extraction/path -i input.zip
 ```
 
 ...which will:
@@ -165,7 +165,7 @@ java -jar gtfs-validator-v1.3.0_cli.jar -u url/to/dataset -o relative/output/pat
 #### Example: Validate a GTFS dataset and export the validation result as proto files
 
 ``` 
-java -jar gtfs-validator-v1.3.0_cli.jar -u url/to/dataset -o output_folder -e extraction_folder -i local-dataset.zip -p
+java -jar gtfs-validator-v1.4.0_cli.jar -u url/to/dataset -o output_folder -e extraction_folder -i local-dataset.zip -p
 ```
 
 In order, this command line will:
@@ -176,7 +176,7 @@ In order, this command line will:
 #### Example: Validate a GTFS dataset without specifying command arguments or providing configuration file
 
 ``` 
-java -jar gtfs-validator-v1.3.0_cli.jar
+java -jar gtfs-validator-v1.4.0_cli.jar
 ```
 
 In order, this command line will:
@@ -188,7 +188,7 @@ In order, this command line will:
 For a list of all available commands, use `--help`:
 
 ``` 
-java -jar gtfs-validator-v1.3.0_cli.jar --help
+java -jar gtfs-validator-v1.4.0_cli.jar --help
 ```
 
 ### Software configuration
@@ -204,7 +204,7 @@ Sample usage:
 The two following sample usages are equivalent, provided that `execution-parameters.json` file is located in the working directory:
 
 ``` 
-java -jar gtfs-validator-v1.3.0_cli.jar -e relative/extraction/path -o relative/output/path -i relative/path/to/zipped_dataset -x agency.txt,routes.txt
+java -jar gtfs-validator-v1.4.0_cli.jar -e relative/extraction/path -o relative/output/path -i relative/path/to/zipped_dataset -x agency.txt,routes.txt
 ```
 ```
 {
@@ -224,7 +224,7 @@ A second implementation of `gtfs-validator` uses [`SpringBoot`](https://spring.i
 ### Run the application via Java on your local computer
 
 ```
-java -jar gtfs-validator-v1.3.0_web.war 
+java -jar gtfs-validator-v1.4.0_web.war 
 ```
 
 Which will:
