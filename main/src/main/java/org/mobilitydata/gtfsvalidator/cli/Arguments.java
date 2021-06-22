@@ -18,7 +18,9 @@ package org.mobilitydata.gtfsvalidator.cli;
 
 import com.beust.jcommander.Parameter;
 
-/** Command-line arguments for GTFS Validator CLI. */
+/**
+ * Command-line arguments for GTFS Validator CLI.
+ */
 public class Arguments {
 
   @Parameter(
@@ -82,6 +84,11 @@ public class Arguments {
       description = "Pretty json output")
   private boolean pretty = false;
 
+  @Parameter(
+      names = {"-d", "--dump_notices_schema"},
+      description = "Dump notices schema")
+  private boolean dumpNoticesSchema = false;
+
   public String getFeedName() {
     return feedName;
   }
@@ -131,4 +138,6 @@ public class Arguments {
   public boolean getPretty() {
     return pretty;
   }
+
+  public boolean getDumpNoticesSchema() { return dumpNoticesSchema; }
 }
