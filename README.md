@@ -89,7 +89,7 @@ It can be used to run the validator in an automated way *via Java on your local 
 # Prerequisites
 
 1. Install [Java 11 or higher](https://www.oracle.com/java/technologies/javase-downloads.html)
-1. Download the `v1.4.0` version gtfs-validator JAR (cli or web) file from our [Releases page](https://github.com/MobilityData/gtfs-validator/releases) or snapshot artifact from [GitHub Actions](https://github.com/MobilityData/gtfs-validator/releases/tag/v1.4.0).
+1. Download the `v1.4.0` version of the gtfs-validator JAR (cli or web) file from our [Releases page](https://github.com/MobilityData/gtfs-validator/releases) or snapshot artifact from [GitHub Actions](https://github.com/MobilityData/gtfs-validator/releases/tag/v1.4.0).
 
 ## cli-app usage
 
