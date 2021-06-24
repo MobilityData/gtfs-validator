@@ -463,11 +463,11 @@ Both short_name and long_name are missing for a route.
 
 #### SameNameAndDescriptionForRouteNotice
 
-The GTFS spec defines `routes.txt` [route_description](https://gtfs.org/reference/static/#routestxt) as:
+The GTFS spec defines `routes.txt` [route_desc](https://gtfs.org/reference/static/#routestxt) as:
 
 > Description of a route that provides useful, quality information. Do not simply duplicate the name of the route.
 
-See the GTFS and GTFS Best Practices links below for more examples of how to populate the `route_short_name`, `route_long_name`, and `route_description` fields.
+See the GTFS and GTFS Best Practices links below for more examples of how to populate the `route_short_name`, `route_long_name`, and `route_desc` fields.
 
 ##### References:
 [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
