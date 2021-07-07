@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -74,6 +75,7 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class StationWithParentStationNotice extends ValidationNotice {
+    @NoticeExport
     StationWithParentStationNotice(
         long csvRowNumber, String stopId, String stopName, String parentStation) {
       super(
@@ -99,6 +101,7 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class LocationWithoutParentStationNotice extends ValidationNotice {
+    @NoticeExport
     LocationWithoutParentStationNotice(
         long csvRowNumber, String stopId, String stopName, int locationType) {
       super(
@@ -123,6 +126,7 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class PlatformWithoutParentStationNotice extends ValidationNotice {
+    @NoticeExport
     PlatformWithoutParentStationNotice(long csvRowNumber, String stopId, String stopName) {
       super(
           ImmutableMap.of("csvRowNumber", csvRowNumber, "stopId", stopId, "stopName", stopName),

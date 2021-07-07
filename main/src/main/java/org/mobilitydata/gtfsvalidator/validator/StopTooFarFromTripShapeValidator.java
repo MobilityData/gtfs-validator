@@ -30,6 +30,7 @@ import org.locationtech.spatial4j.shape.Shape;
 import org.locationtech.spatial4j.shape.ShapeFactory;
 import org.locationtech.spatial4j.shape.SpatialRelation;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -210,6 +211,7 @@ public class StopTooFarFromTripShapeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class StopTooFarFromTripShapeNotice extends ValidationNotice {
+    @NoticeExport
     StopTooFarFromTripShapeNotice(
         final String stopId,
         final int stopSequence,

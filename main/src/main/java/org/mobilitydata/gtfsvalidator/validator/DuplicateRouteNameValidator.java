@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -72,6 +73,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class DuplicateRouteNameNotice extends ValidationNotice {
+    @NoticeExport
     DuplicateRouteNameNotice(GtfsRoute route1, GtfsRoute route2) {
       super(
           new ImmutableMap.Builder<String, Object>()

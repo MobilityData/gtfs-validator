@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 
 /**
  * A column name is empty. Such columns are skipped by the validator.
@@ -24,6 +25,7 @@ import com.google.common.collect.ImmutableMap;
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class EmptyColumnNameNotice extends ValidationNotice {
+  @NoticeExport
   public EmptyColumnNameNotice(String filename, int index) {
     super(
         ImmutableMap.of(
