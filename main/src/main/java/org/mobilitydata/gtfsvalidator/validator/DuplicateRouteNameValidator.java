@@ -74,7 +74,7 @@ public class DuplicateRouteNameValidator extends FileValidator {
   static class DuplicateRouteNameNotice extends ValidationNotice {
 
     /**
-     * Constructor used for extracting information to be used in yaml dump.
+     * Constructor used while extracting notice information.
      *
      * @param csvRowNumber1 the first route's csv row number
      * @param routeId1 the first route's id

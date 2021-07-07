@@ -30,7 +30,7 @@ import com.univocity.parsers.common.TextParsingException;
 public class CsvParsingFailedNotice extends ValidationNotice {
 
   /**
-   * Constructor used for extracting information to be used in yaml dump.
+   * Constructor used while extracting notice information.
    *
    * @param filename the name of the file
    * @param exception the exception thrown

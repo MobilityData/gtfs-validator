@@ -257,7 +257,7 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
   static class BlockTripsWithOverlappingStopTimesNotice extends ValidationNotice {
 
     /**
-     * Constructor used for extracting information to be used in yaml dump.
+     * Constructor used while extracting notice information.
      *
      * @param csvRowNumberA first trip csv row number
      * @param tripIdA first trip id
