@@ -268,8 +268,14 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
      * @param blockId trip block it
      * @param intersection date intersection on which the two trips overlap
      */
-    BlockTripsWithOverlappingStopTimesNotice(long csvRowNumberA, String tripIdA, String serviceIdA,
-        long csvRowNumberB, String tripIdB, String serviceIdB, String blockId,
+    BlockTripsWithOverlappingStopTimesNotice(
+        long csvRowNumberA,
+        String tripIdA,
+        String serviceIdA,
+        long csvRowNumberB,
+        String tripIdB,
+        String serviceIdB,
+        String blockId,
         String intersection) {
       super(
           new ImmutableMap.Builder<String, Object>()
@@ -287,14 +293,22 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
 
     /**
      * Default constructor for notice.
+     *
      * @param tripA first overlapping trip
      * @param tripB other overlapping trip
      * @param intersection date intersection on which the two trips overlap
      */
     BlockTripsWithOverlappingStopTimesNotice(
         GtfsTrip tripA, GtfsTrip tripB, GtfsDate intersection) {
-      this(tripA.csvRowNumber(), tripA.tripId(), tripA.serviceId(), tripB.csvRowNumber(),
-          tripB.tripId(), tripB.serviceId(), tripA.blockId(), intersection.toYYYYMMDD());
+      this(
+          tripA.csvRowNumber(),
+          tripA.tripId(),
+          tripA.serviceId(),
+          tripB.csvRowNumber(),
+          tripB.tripId(),
+          tripB.serviceId(),
+          tripA.blockId(),
+          intersection.toYYYYMMDD());
     }
   }
 }

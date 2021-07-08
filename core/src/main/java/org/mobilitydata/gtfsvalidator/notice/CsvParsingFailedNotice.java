@@ -36,8 +36,13 @@ public class CsvParsingFailedNotice extends ValidationNotice {
    * @param exception the exception thrown
    */
   public CsvParsingFailedNotice(String filename, TextParsingException exception) {
-    this(filename, exception.getCharIndex(), exception.getColumnIndex(), exception.getLineIndex(),
-        exception.getMessage(), exception.getParsedContent());
+    this(
+        filename,
+        exception.getCharIndex(),
+        exception.getColumnIndex(),
+        exception.getLineIndex(),
+        exception.getMessage(),
+        exception.getParsedContent());
   }
 
   /**
@@ -50,8 +55,13 @@ public class CsvParsingFailedNotice extends ValidationNotice {
    * @param message the exception message
    * @param parsedContent the parsed content of the exception
    */
-  public CsvParsingFailedNotice(String filename, long charIndex, long columnIndex, long lineIndex,
-      String message, String parsedContent) {
+  public CsvParsingFailedNotice(
+      String filename,
+      long charIndex,
+      long columnIndex,
+      long lineIndex,
+      String message,
+      String parsedContent) {
     super(
         new ImmutableMap.Builder<String, Object>()
             .put("filename", filename)

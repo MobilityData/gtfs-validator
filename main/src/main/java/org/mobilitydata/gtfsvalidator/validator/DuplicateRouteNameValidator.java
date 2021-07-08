@@ -85,8 +85,14 @@ public class DuplicateRouteNameValidator extends FileValidator {
      * @param routeTypeValue the route type value
      * @param agencyId the agency id
      */
-    DuplicateRouteNameNotice(long csvRowNumber1, String routeId1, long csvRowNumber2,
-        String routeId2, String routeShortName, String routeLongName, int routeTypeValue,
+    DuplicateRouteNameNotice(
+        long csvRowNumber1,
+        String routeId1,
+        long csvRowNumber2,
+        String routeId2,
+        String routeShortName,
+        String routeLongName,
+        int routeTypeValue,
         String agencyId) {
       super(
           new ImmutableMap.Builder<String, Object>()
@@ -110,8 +116,13 @@ public class DuplicateRouteNameValidator extends FileValidator {
      */
     DuplicateRouteNameNotice(GtfsRoute route1, GtfsRoute route2) {
       this(
-          route1.csvRowNumber(), route1.routeId(), route2.csvRowNumber(), route2.routeId(),
-          route1.routeShortName(), route1.routeLongName(), route1.routeTypeValue(),
+          route1.csvRowNumber(),
+          route1.routeId(),
+          route2.csvRowNumber(),
+          route2.routeId(),
+          route1.routeShortName(),
+          route1.routeLongName(),
+          route1.routeTypeValue(),
           route1.agencyId());
     }
   }
