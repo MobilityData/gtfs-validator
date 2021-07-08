@@ -21,6 +21,7 @@ import java.time.ZoneId;
 import java.util.Locale;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
@@ -106,6 +107,7 @@ public class AgencyConsistencyValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class InconsistentAgencyLangNotice extends ValidationNotice {
+    @NoticeExport
     InconsistentAgencyLangNotice(long csvRowNumber, String expected, String actual) {
       super(
           ImmutableMap.of(
@@ -122,6 +124,7 @@ public class AgencyConsistencyValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class InconsistentAgencyTimezoneNotice extends ValidationNotice {
+    @NoticeExport
     InconsistentAgencyTimezoneNotice(long csvRowNumber, String expected, String actual) {
       super(
           ImmutableMap.of(

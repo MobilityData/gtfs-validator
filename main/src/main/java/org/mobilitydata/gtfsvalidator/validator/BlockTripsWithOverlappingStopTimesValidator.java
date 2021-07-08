@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -268,6 +269,7 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
      * @param blockId trip block it
      * @param intersection date intersection on which the two trips overlap
      */
+    @NoticeExport
     BlockTripsWithOverlappingStopTimesNotice(
         long csvRowNumberA,
         String tripIdA,

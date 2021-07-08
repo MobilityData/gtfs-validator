@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 
 /**
  * A required file is missing.
@@ -24,6 +25,7 @@ import com.google.common.collect.ImmutableMap;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class MissingRequiredFileNotice extends ValidationNotice {
+  @NoticeExport
   public MissingRequiredFileNotice(String filename) {
     super(ImmutableMap.of("filename", filename), SeverityLevel.ERROR);
   }

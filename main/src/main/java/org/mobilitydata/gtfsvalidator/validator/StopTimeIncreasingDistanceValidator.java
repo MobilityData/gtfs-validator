@@ -21,6 +21,7 @@ import com.google.common.collect.Multimaps;
 import java.util.List;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -77,6 +78,7 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class DecreasingOrEqualStopTimeDistanceNotice extends ValidationNotice {
+    @NoticeExport
     DecreasingOrEqualStopTimeDistanceNotice(
         String tripId,
         long csvRowNumber,

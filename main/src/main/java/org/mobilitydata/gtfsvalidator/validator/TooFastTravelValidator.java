@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -153,6 +154,7 @@ public class TooFastTravelValidator extends FileValidator {
    * <p>SeverityLevel: {@code SeverityLevel.WARNING}
    */
   static class TooFastTravelNotice extends ValidationNotice {
+    @NoticeExport
     TooFastTravelNotice(
         String tripId, double speedkmh, int firstStopSequence, int lastStopSequence) {
       super(

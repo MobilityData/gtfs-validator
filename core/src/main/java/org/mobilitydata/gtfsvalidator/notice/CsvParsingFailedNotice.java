@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.univocity.parsers.common.TextParsingException;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 
 /**
  * Parsing of a CSV file failed.
@@ -35,6 +36,7 @@ public class CsvParsingFailedNotice extends ValidationNotice {
    * @param filename the name of the file
    * @param exception the exception thrown
    */
+  @NoticeExport
   public CsvParsingFailedNotice(String filename, TextParsingException exception) {
     this(
         filename,

@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -70,6 +71,7 @@ public class OverlappingFrequencyValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class OverlappingFrequencyNotice extends ValidationNotice {
+    @NoticeExport
     OverlappingFrequencyNotice(
         long prevCsvRowNumber,
         GtfsTime prevEndTime,

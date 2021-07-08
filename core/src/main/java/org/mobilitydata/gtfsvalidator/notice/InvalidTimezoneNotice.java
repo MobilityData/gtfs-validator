@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 
 /**
  * A field cannot be parsed as a timezone.
@@ -31,6 +32,7 @@ import com.google.common.collect.ImmutableMap;
  */
 public class InvalidTimezoneNotice extends ValidationNotice {
 
+  @NoticeExport
   public InvalidTimezoneNotice(
       String filename, long csvRowNumber, String fieldName, String fieldValue) {
     super(

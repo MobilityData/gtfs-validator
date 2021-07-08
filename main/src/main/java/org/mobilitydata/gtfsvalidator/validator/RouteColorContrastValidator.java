@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -63,6 +64,7 @@ public class RouteColorContrastValidator extends SingleEntityValidator<GtfsRoute
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class RouteColorContrastNotice extends ValidationNotice {
+    @NoticeExport
     RouteColorContrastNotice(
         String routeId, long csvRowNumber, GtfsColor routeColor, GtfsColor routeTextColor) {
       super(

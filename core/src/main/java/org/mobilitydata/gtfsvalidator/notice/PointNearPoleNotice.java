@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 
 /**
  * A point is too close to the North or South Pole.
@@ -25,6 +26,7 @@ import com.google.common.collect.ImmutableMap;
  */
 public class PointNearPoleNotice extends ValidationNotice {
 
+  @NoticeExport
   public PointNearPoleNotice(
       String filename,
       long csvRowNumber,

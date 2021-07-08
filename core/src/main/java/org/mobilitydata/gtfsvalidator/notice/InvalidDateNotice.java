@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 
 /**
  * A field cannot be parsed as date.
@@ -29,6 +30,7 @@ import com.google.common.collect.ImmutableMap;
  */
 public class InvalidDateNotice extends ValidationNotice {
 
+  @NoticeExport
   public InvalidDateNotice(
       String filename, long csvRowNumber, String fieldName, String fieldValue) {
     super(
