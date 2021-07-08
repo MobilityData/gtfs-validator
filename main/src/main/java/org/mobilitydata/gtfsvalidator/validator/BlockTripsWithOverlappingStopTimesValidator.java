@@ -256,20 +256,45 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
    */
   static class BlockTripsWithOverlappingStopTimesNotice extends ValidationNotice {
 
-    BlockTripsWithOverlappingStopTimesNotice(
-        GtfsTrip tripA, GtfsTrip tripB, GtfsDate intersection) {
+    /**
+     * Constructor used while extracting notice information.
+     *
+     * @param csvRowNumberA first trip csv row number
+     * @param tripIdA first trip id
+     * @param serviceIdA first trip service id
+     * @param csvRowNumberB other trip csv row number
+     * @param tripIdB other trip id
+     * @param serviceIdB other trip service id
+     * @param blockId trip block it
+     * @param intersection date intersection on which the two trips overlap
+     */
+    BlockTripsWithOverlappingStopTimesNotice(long csvRowNumberA, String tripIdA, String serviceIdA,
+        long csvRowNumberB, String tripIdB, String serviceIdB, String blockId,
+        String intersection) {
       super(
           new ImmutableMap.Builder<String, Object>()
-              .put("csvRowNumberA", tripA.csvRowNumber())
-              .put("tripIdA", tripA.tripId())
-              .put("serviceIdA", tripA.serviceId())
-              .put("csvRowNumberB", tripB.csvRowNumber())
-              .put("tripIdB", tripB.tripId())
-              .put("serviceIdB", tripB.serviceId())
-              .put("blockId", tripA.blockId())
-              .put("intersection", intersection.toYYYYMMDD())
+              .put("csvRowNumberA", csvRowNumberA)
+              .put("tripIdA", tripIdA)
+              .put("serviceIdA", serviceIdA)
+              .put("csvRowNumberB", csvRowNumberB)
+              .put("tripIdB", tripIdB)
+              .put("serviceIdB", serviceIdB)
+              .put("blockId", blockId)
+              .put("intersection", intersection)
               .build(),
           SeverityLevel.ERROR);
+    }
+
+    /**
+     * Default constructor for notice.
+     * @param tripA first overlapping trip
+     * @param tripB other overlapping trip
+     * @param intersection date intersection on which the two trips overlap
+     */
+    BlockTripsWithOverlappingStopTimesNotice(
+        GtfsTrip tripA, GtfsTrip tripB, GtfsDate intersection) {
+      this(tripA.csvRowNumber(), tripA.tripId(), tripA.serviceId(), tripB.csvRowNumber(),
+          tripB.tripId(), tripB.serviceId(), tripA.blockId(), intersection.toYYYYMMDD());
     }
   }
 }
