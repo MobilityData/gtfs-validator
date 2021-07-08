@@ -257,7 +257,6 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
    */
   static class BlockTripsWithOverlappingStopTimesNotice extends ValidationNotice {
 
-    @NoticeExport
     /**
      * Constructor used while extracting notice information.
      *
@@ -270,6 +269,7 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
      * @param blockId trip block it
      * @param intersection date intersection on which the two trips overlap
      */
+    @NoticeExport
     BlockTripsWithOverlappingStopTimesNotice(
         long csvRowNumberA,
         String tripIdA,
