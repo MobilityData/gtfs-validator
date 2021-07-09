@@ -136,19 +136,8 @@ public class Main {
 
     // Output
     exportReport(noticeContainer, args);
+    exportNoticeSchema(args);
     final long endNanos = System.nanoTime();
-    if (args.getExportNoticeSchema()) {
-      try {
-        NoticeContainer.exportNoticesSchema(
-            args.getPretty(),
-            NOTICE_PACKAGE_NAME,
-            VALIDATOR_PACKAGE_NAME);
-      } catch (IOException ioException) {
-        logger.atSevere().withCause(ioException).log("the attempt to read class path resources "
-            + "(jar files or directories) failed.");
-        noticeContainer.addSystemError(new IOError(ioException));
-      }
-    }
     if (!feedContainer.isParsedSuccessfully()) {
       System.out.println(" ----------------------------------------- ");
       System.out.println("|       !!!    PARSING FAILED    !!!      |");
@@ -174,6 +163,19 @@ public class Main {
           noticeContainer.exportSystemErrors(args.getPretty()).getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store report files");
+    }
+  }
+
+  private static void exportNoticeSchema(final Arguments args) {
+    new File(args.getOutputBase()).mkdirs();
+    try {
+      Files.write(
+          Paths.get(args.getOutputBase(), "notice_schema.json"),
+          NoticeContainer
+              .exportNoticesSchema(args.getPretty(), NOTICE_PACKAGE_NAME, VALIDATOR_PACKAGE_NAME)
+              .getBytes(StandardCharsets.UTF_8));
+    } catch (IOException e) {
+      logger.atSevere().withCause(e).log("Cannot store notice schema files");
     }
   }
 }
