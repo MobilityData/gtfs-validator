@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
+import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 
 /**
  * ID value contains something different from printable ASCII characters.
@@ -28,7 +28,7 @@ import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
-  @NoticeExport
+  @SchemaExport
   public NonAsciiOrNonPrintableCharNotice(
       String filename, long csvRowNumber, String columnName, String fieldValue) {
     super(

@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
+import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 
 /**
  * The value in CSV file has leading or trailing whitespaces.
@@ -40,7 +40,7 @@ public class LeadingOrTrailingWhitespacesNotice extends ValidationNotice {
    * Constructs a notice with given severity. This constructor may be used by users that want to
    * lower the priority to {@code WARNING}.
    */
-  @NoticeExport
+  @SchemaExport
   public LeadingOrTrailingWhitespacesNotice(
       String filename,
       long csvRowNumber,

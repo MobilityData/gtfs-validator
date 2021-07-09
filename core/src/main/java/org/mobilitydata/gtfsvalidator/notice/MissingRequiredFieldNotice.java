@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
+import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 
 /**
  * The given field has no value in some input row, even though values are required.
@@ -25,7 +25,7 @@ import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class MissingRequiredFieldNotice extends ValidationNotice {
-  @NoticeExport
+  @SchemaExport
   public MissingRequiredFieldNotice(String filename, long csvRowNumber, String fieldName) {
     super(
         ImmutableMap.of("filename", filename, "csvRowNumber", csvRowNumber, "fieldName", fieldName),

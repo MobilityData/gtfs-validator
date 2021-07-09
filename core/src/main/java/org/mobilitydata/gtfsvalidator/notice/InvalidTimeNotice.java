@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
+import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 
 /**
  * A field cannot be parsed as time.
@@ -29,7 +29,7 @@ import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class InvalidTimeNotice extends ValidationNotice {
-  @NoticeExport
+  @SchemaExport
   public InvalidTimeNotice(
       String filename, long csvRowNumber, String fieldName, String fieldValue) {
     super(

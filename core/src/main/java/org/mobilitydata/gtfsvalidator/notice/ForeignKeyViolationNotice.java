@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
+import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 
 /**
  * The values of the given key and rows of one table cannot be found a values of the given key in
@@ -29,7 +29,7 @@ import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class ForeignKeyViolationNotice extends ValidationNotice {
-  @NoticeExport
+  @SchemaExport
   public ForeignKeyViolationNotice(
       String childFilename,
       String childFieldName,

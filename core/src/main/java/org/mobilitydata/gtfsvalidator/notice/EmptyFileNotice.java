@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
+import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 
 /**
  * A CSV file is empty.
@@ -26,7 +26,7 @@ import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
  */
 public class EmptyFileNotice extends ValidationNotice {
 
-  @NoticeExport
+  @SchemaExport
   public EmptyFileNotice(String filename) {
     super(ImmutableMap.of("filename", filename), SeverityLevel.ERROR);
   }

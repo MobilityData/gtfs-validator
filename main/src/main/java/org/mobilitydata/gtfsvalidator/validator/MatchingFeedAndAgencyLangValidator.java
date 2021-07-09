@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Locale;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
+import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -93,7 +93,7 @@ public class MatchingFeedAndAgencyLangValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class FeedInfoLangAndAgencyLangMismatchNotice extends ValidationNotice {
-    @NoticeExport
+    @SchemaExport
     FeedInfoLangAndAgencyLangMismatchNotice(
         long csvRowNumber, String agencyId, String agencyName, String agencyLang, String feedLang) {
       super(
