@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 
 /**
  * An enum has an unexpected value.
@@ -24,6 +25,7 @@ import com.google.common.collect.ImmutableMap;
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class UnexpectedEnumValueNotice extends ValidationNotice {
+  @NoticeExport
   public UnexpectedEnumValueNotice(
       String filename, long csvRowNumber, String fieldName, int fieldValue) {
     super(

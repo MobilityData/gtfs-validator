@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 
 /**
  * The values in the given column of the input rows are out of range.
@@ -24,6 +25,7 @@ import com.google.common.collect.ImmutableMap;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class NumberOutOfRangeNotice extends ValidationNotice {
+  @NoticeExport
   public NumberOutOfRangeNotice(
       String filename, long csvRowNumber, String fieldName, String fieldType, Object fieldValue) {
     super(

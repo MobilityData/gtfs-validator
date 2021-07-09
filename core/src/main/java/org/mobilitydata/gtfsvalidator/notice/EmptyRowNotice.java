@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 
 /**
  * A row in the input file has only spaces.
@@ -28,6 +29,7 @@ import com.google.common.collect.ImmutableMap;
  */
 public class EmptyRowNotice extends ValidationNotice {
 
+  @NoticeExport
   public EmptyRowNotice(String filename, long csvRowNumber) {
     super(
         ImmutableMap.of(
