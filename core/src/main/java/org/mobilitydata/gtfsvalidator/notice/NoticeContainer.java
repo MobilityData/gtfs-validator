@@ -16,16 +16,29 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
+import com.google.common.reflect.ClassPath;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import java.io.IOException;
+import java.lang.annotation.AnnotationFormatError;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Parameter;
+import java.sql.JDBCType;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
+import org.mobilitydata.gtfsvalidator.type.GtfsColor;
+import org.mobilitydata.gtfsvalidator.type.GtfsDate;
+import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 /**
  * Container for validation notices (errors and warnings).
@@ -51,6 +64,15 @@ public class NoticeContainer {
    * <p>Note that system errors are not limited since we don't expect to have a lot of them.
    */
   private static final int MAX_VALIDATION_NOTICES = 10000000;
+  private static final String NAME = "name";
+  private static final String TYPE = "type";
+  private static final String BLOB = "BLOB";
+  private static final String VARCHAR = "VARCHAR";
+  private static final String BIGINT = "BIGINT";
+  private static final String NOTICE_CONTAINER_CLASS_SIMPLE_NAME = "NoticeContainer";
+  private static final String VALIDATION_NOTICE_CLASS_SIMPLE_NAME = "ValidationNotice";
+  private static final String SEVERITY_LEVEL_CLASS_SIMPLE_NAME = "SeverityLevel";
+  private static final String INTEGER_CLASS_SIMPLE_NAME = "INTEGER";
 
   private final List<ValidationNotice> validationNotices = new ArrayList<>();
   private final List<SystemError> systemErrors = new ArrayList<>();
@@ -151,5 +173,196 @@ public class NoticeContainer {
       noticesByType.put(notice.getCode() + notice.getSeverityLevel().ordinal(), notice);
     }
     return noticesByType;
+  }
+
+  /**
+   * Exports notices information as a json file.
+   *
+   * @param isPretty will beautify the output if set to true
+   * @param noticePackageName the name of the package that contains the notices
+   * @param validatorPackageName the name of the package that contains the {@code GtfsValidator}s
+   * @return the stringified json file that contains information about all {@code ValidationNotice}s
+   * @throws IOException if the attempt to read class path resources (jar files or directories)
+   * failed.
+   * */
+  public static String exportNoticesSchema(boolean isPretty, String noticePackageName,
+      String validatorPackageName)
+      throws IOException {
+    Gson gson = isPretty ? PRETTY_GSON : DEFAULT_GSON;
+    JsonObject coreNoticeProperties = extractCoreNoticesProperties(noticePackageName);
+    JsonObject mainNoticesProperties = extractMainNoticesProperties(validatorPackageName);
+    JsonObject root =
+        mergeGsonObjects(ImmutableList.of(coreNoticeProperties, mainNoticesProperties));
+    return gson.toJson(root);
+  }
+
+  /**
+   * Merge multiple {@code com.google.gson.JsonObject} into one.
+   *
+   * @param gsonObjects {@code com.google.gson.JsonObject}s to merge
+   * @return the merged {@code com.google.gson.JsonObject}
+   */
+  private static JsonObject mergeGsonObjects(ImmutableList<JsonObject> gsonObjects) {
+    JsonObject toReturn = new JsonObject();
+    gsonObjects.forEach(gsonObject -> {
+      gsonObject.entrySet().forEach(entry -> {
+        toReturn.add(entry.getKey(), entry.getValue());
+      });
+    });
+    return toReturn;
+  }
+
+  /**
+   * Extract information from notices defined in the core module.
+   *
+   * @param noticePackageName the name of the package that contains the notices
+   * @return the {@code com.google.gson.JsonObject} that contains the {@code ValidationNotice} class
+   * simple name, and the type of each parameter
+   * @throws IOException if the attempt to read class path resources (jar files or directories)
+   * failed.
+   */
+  private static JsonObject extractCoreNoticesProperties(String noticePackageName)
+      throws IOException {
+    Class<?> clazz;
+    JsonObject toReturn = new JsonObject();
+    for (ClassPath.ClassInfo noticeClass :
+        ClassPath.from(ClassLoader.getSystemClassLoader()).getTopLevelClasses(noticePackageName)) {
+      clazz = noticeClass.load();
+      if (!ValidationNotice.class.isAssignableFrom(clazz)) {
+        continue;
+      }
+      if (clazz.isEnum()) {
+        continue;
+      }
+      if (clazz.getSimpleName().equals(NOTICE_CONTAINER_CLASS_SIMPLE_NAME)) {
+        continue;
+      }
+      if (clazz.getSimpleName().equals(VALIDATION_NOTICE_CLASS_SIMPLE_NAME)) {
+        continue;
+      }
+      toReturn.add(
+          noticeClass.getSimpleName(),
+          extractNoticeProperties(clazz)
+      );
+    }
+    return toReturn;
+  }
+
+  /**
+   * Extract information from notices defined in the main module.
+   *
+   * @param validatorPackageName the name of the package that contains the {@code GtfsValidator}s
+   * @return the {@code com.google.gson.JsonObject} that contains the {@code ValidationNotice} class
+   * simple name, and the type of each parameter
+   * @throws IOException if the attempt to read class path resources (jar files or directories)
+   * failed.
+   */
+  private static JsonObject extractMainNoticesProperties(String validatorPackageName)
+      throws IOException {
+    JsonObject toReturn = new JsonObject();
+    for (ClassPath.ClassInfo validatorClass : ClassPath.from(ClassLoader.getSystemClassLoader())
+            .getTopLevelClasses(validatorPackageName)) {
+      for (Class<?> innerNoticeClass : validatorClass.load().getDeclaredClasses()) {
+        if (ValidationNotice.class.isAssignableFrom(innerNoticeClass))
+        toReturn.add(
+            innerNoticeClass.getSimpleName(),
+            extractNoticeProperties(innerNoticeClass)
+        );
+      }
+    }
+    return toReturn;
+  }
+
+  /**
+   * Return a {@code JsonArray} that contains information about the type of each parameter of
+   * a {@code ValidationNotice} using the constructor of the class that is annotated by
+   * {@code  NoticeExport}.
+   *
+   * @param validationNoticeSubClass the {@code ValidationNotice} sub class to extract information
+   *                                from
+   * @return a {@code JsonArray} that contains information about the type of each parameter of
+   * said {@code ValidationNotice} using the constructor of the class that is annotated by
+   * {@code NoticeExport}.
+   */
+  private static JsonArray extractNoticeProperties(Class<?> validationNoticeSubClass) {
+    Constructor<?> constructor = getAnnotatedConstructor(validationNoticeSubClass);
+    JsonArray parametersAsJsonArray = new JsonArray();
+    Arrays.stream(constructor.getParameters()).forEach(parameter -> {
+      JsonObject parameterDetails = new JsonObject();
+      parameterDetails.addProperty(NAME, parameter.getName());
+        parameterDetails.addProperty(TYPE, mapDataType(parameter));
+      parametersAsJsonArray.add(parameterDetails);
+    });
+    if (!noticeConstructorHasSeverityLevelParameter(constructor)) {
+      JsonObject severityDetails = new JsonObject();
+      parametersAsJsonArray.add(severityDetails);
+      severityDetails.addProperty(SEVERITY_LEVEL_CLASS_SIMPLE_NAME, BLOB);
+    }
+    return parametersAsJsonArray;
+  }
+
+  /**
+   * Return true if a notice constructor includes a parameter of type {@code SeverityLevel},
+   * otherwise returns false.
+   *
+   * @param constructor the constructor to analyze
+   * @return true if a notice constructor includes a parameter of type {@code SeverityLevel},
+   * otherwise returns false.
+   */
+  private static boolean noticeConstructorHasSeverityLevelParameter(Constructor<?> constructor) {
+    for (Parameter parameter : constructor.getParameters()) {
+      if (parameter.getName().equals(SEVERITY_LEVEL_CLASS_SIMPLE_NAME)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Maps Java data type to Oracle's JDBC data types. Said types definitions can be found at the
+   * following url: https://docs.oracle.com/cd/E19830-01/819-4721/beajw/index.html.
+   *
+   * @param parameter the parameter whose JDBC data type has to be inferred
+   * @return the JDBC data type that is used in mapping Java data fields to SQL types
+   */
+  private static String mapDataType(Parameter parameter) {
+    ImmutableMap.Builder<Class<?>, String> builder = ImmutableMap.builder();
+    builder.put(int.class, INTEGER_CLASS_SIMPLE_NAME);
+    builder.put(GtfsColor.class, VARCHAR);
+    builder.put(String.class, VARCHAR);
+    builder.put(long.class, BIGINT);
+    builder.put(SeverityLevel.class, BLOB);
+    builder.put(GtfsDate.class, BLOB);
+    builder.put(GtfsTime.class, BLOB);
+    builder.put(Object.class, BLOB);
+    ImmutableMap<Class<?>, String> typeMap = builder.build();
+    return JDBCType.valueOf(
+        typeMap.getOrDefault(
+            parameter.getType(),
+            parameter.getType().getSimpleName().toUpperCase()))
+        .getName();
+  }
+
+  /**
+   * Returns the annotated constructor of a {@code ValidationNotice} subclass.
+   * Throws {@code AnnotationFormatError} if the {@code ValidationNotice} subclass does not define a
+   * constructor for schema export i.e. no constructor for the given class ses {@code NoticeExport}
+   * annotation.
+   *
+   * @param clazz the class to extract the annotated constructor from
+   * @return the annotated constructor of a {@code ValidationNotice} subclass.
+   * Throws {@code AnnotationFormatError} if the {@code ValidationNotice} subclass does not define a
+   * constructor for schema export i.e. no constructor for the given class uses {@code NoticeExport}
+   * annotation.
+   */
+  private static Constructor<?> getAnnotatedConstructor(Class<?> clazz) {
+    for (Constructor<?> constructor : clazz.getDeclaredConstructors()) {
+      if (constructor.isAnnotationPresent(NoticeExport.class)) {
+        return constructor;
+      }
+    }
+    throw new AnnotationFormatError(
+        String.format(
+            "Validation Notice %s does not define constructor for schema export", clazz.getSimpleName()));
   }
 }

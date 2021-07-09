@@ -45,6 +45,8 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 public class Main {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private static final String GTFS_ZIP_FILENAME = "gtfs.zip";
+  private static final String NOTICE_PACKAGE_NAME = "org.mobilitydata.gtfsvalidator.notice";
+  private static final String VALIDATOR_PACKAGE_NAME = "org.mobilitydata.gtfsvalidator.validator";
 
   public static void main(String[] argv) {
     Arguments args = new Arguments();
@@ -135,6 +137,18 @@ public class Main {
     // Output
     exportReport(noticeContainer, args);
     final long endNanos = System.nanoTime();
+    if (args.getExportNoticeSchema()) {
+      try {
+        NoticeContainer.exportNoticesSchema(
+            args.getPretty(),
+            NOTICE_PACKAGE_NAME,
+            VALIDATOR_PACKAGE_NAME);
+      } catch (IOException ioException) {
+        logger.atSevere().withCause(ioException).log("the attempt to read class path resources "
+            + "(jar files or directories) failed.");
+        noticeContainer.addSystemError(new IOError(ioException));
+      }
+    }
     if (!feedContainer.isParsedSuccessfully()) {
       System.out.println(" ----------------------------------------- ");
       System.out.println("|       !!!    PARSING FAILED    !!!      |");
