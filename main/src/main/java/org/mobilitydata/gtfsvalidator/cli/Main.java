@@ -47,6 +47,7 @@ public class Main {
   private static final String GTFS_ZIP_FILENAME = "gtfs.zip";
   private static final String NOTICE_PACKAGE_NAME = "org.mobilitydata.gtfsvalidator.notice";
   private static final String VALIDATOR_PACKAGE_NAME = "org.mobilitydata.gtfsvalidator.validator";
+  private static final String NOTICE_SCHEMA_JSON = "notice_schema.json";
 
   public static void main(String[] argv) {
     Arguments args = new Arguments();
@@ -167,15 +168,17 @@ public class Main {
   }
 
   private static void exportNoticeSchema(final Arguments args) {
-    new File(args.getOutputBase()).mkdirs();
-    try {
-      Files.write(
-          Paths.get(args.getOutputBase(), "notice_schema.json"),
-          NoticeContainer
-              .exportNoticesSchema(args.getPretty(), NOTICE_PACKAGE_NAME, VALIDATOR_PACKAGE_NAME)
-              .getBytes(StandardCharsets.UTF_8));
-    } catch (IOException e) {
-      logger.atSevere().withCause(e).log("Cannot store notice schema files");
+    if (args.getExportNoticeSchema()) {
+      new File(args.getOutputBase()).mkdirs();
+      try {
+        Files.write(
+            Paths.get(args.getOutputBase(), NOTICE_SCHEMA_JSON),
+            NoticeContainer
+                .exportNoticesSchema(args.getPretty(), NOTICE_PACKAGE_NAME, VALIDATOR_PACKAGE_NAME)
+                .getBytes(StandardCharsets.UTF_8));
+      } catch (IOException e) {
+        logger.atSevere().withCause(e).log("Cannot store notice schema files");
+      }
     }
   }
 }
