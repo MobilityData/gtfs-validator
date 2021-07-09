@@ -177,7 +177,7 @@ public class Main {
                 .exportNoticesSchema(args.getPretty(), NOTICE_PACKAGE_NAME, VALIDATOR_PACKAGE_NAME)
                 .getBytes(StandardCharsets.UTF_8));
       } catch (IOException e) {
-        logger.atSevere().withCause(e).log("Cannot store notice schema files");
+        logger.atSevere().withCause(e).log("Cannot store notice schema file");
       }
     }
   }
