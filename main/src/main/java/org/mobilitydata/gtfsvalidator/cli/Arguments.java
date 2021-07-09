@@ -85,9 +85,9 @@ public class Arguments {
   private boolean pretty = false;
 
   @Parameter(
-      names = {"-d", "--dump_notices_schema"},
-      description = "Dump notices schema")
-  private boolean dumpNoticesSchema = false;
+      names = {"-n", "--export_notices_schema"},
+      description = "Export notices schema")
+  private boolean exportNoticeSchema = false;
 
   public String getFeedName() {
     return feedName;
@@ -139,5 +139,5 @@ public class Arguments {
     return pretty;
   }
 
-  public boolean getDumpNoticesSchema() { return dumpNoticesSchema; }
+  public boolean getExportNoticeSchema() { return exportNoticeSchema; }
 }
