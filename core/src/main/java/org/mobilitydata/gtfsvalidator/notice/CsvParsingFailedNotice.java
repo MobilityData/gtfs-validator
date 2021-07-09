@@ -36,7 +36,6 @@ public class CsvParsingFailedNotice extends ValidationNotice {
    * @param filename the name of the file
    * @param exception the exception thrown
    */
-  @NoticeExport
   public CsvParsingFailedNotice(String filename, TextParsingException exception) {
     this(
         filename,
@@ -57,6 +56,7 @@ public class CsvParsingFailedNotice extends ValidationNotice {
    * @param message the exception message
    * @param parsedContent the parsed content of the exception
    */
+  @NoticeExport
   public CsvParsingFailedNotice(
       String filename,
       long charIndex,
