@@ -10,7 +10,19 @@ from google.cloud import storage
 ###############################################################################
 # This script harvests the latest versions of the sources listed in a catalog.
 # Made for Python 3.9. Requires the modules listed in requirements.txt.
-# Copyright 2021 MobilityData IO.
+# Copyright 2021 MobilityData IO
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 ###############################################################################
 
 # API constants
@@ -95,9 +107,11 @@ def harvest_archives_ids(catalog_data):
     return harvesting_date, archives_ids
 
 
-def harvest_latest_versions(archives_ids):
-    client = storage.Client()
+def harvest_latest_versions(archives_ids, credentials):
+    credentials_json = json.loads(credentials)
+    client = storage.Client.from_service_account_info(info=credentials_json)
     latest_versions = {}
+
     for archives_id in archives_ids:
         bucket_id = client.lookup_bucket(
             LATEST_BUCKET_PATH.format(source_archives_id=archives_id)
@@ -113,6 +127,7 @@ def harvest_latest_versions(archives_ids):
                     blob_name=blob.name
                 )
                 latest_versions[archives_id] = archives_url
+    
     return latest_versions
 
 
@@ -139,24 +154,16 @@ if __name__ == '__main__':
     )
     parser.add_argument(
         "-c",
-        "--catalog",
+        "--credentials",
         action="store",
-        choices=["GTFS", "GBFS"],
-        help="Catalog to use for the harvesting. Choices: 'GTFS', 'GBFS'",
+        help="Grant access to google storage solutions."
     )
     args = parser.parse_args()
 
     archives_ids_file = args.archives_ids_file
     latest_versions_file = args.latest_versions_file
     data_path = args.data_path
-    catalog = args.catalog
-
-    if catalog == "GTFS":
-        catalog_id = GTFS_CATALOG_ID
-    elif catalog == "GBFS":
-        raise NotImplementedError("The GBFS Catalog is not implemented yet.")
-    else:
-        raise ValueError("Catalog value must be in: ['GTFS', 'GBFS'].")
+    credentials = args.credentials
 
     if not path.isdir(data_path) and path.exists(data_path):
         raise Exception("Data path must be a directory if existing.")
@@ -165,11 +172,12 @@ if __name__ == '__main__':
 
     harvesting_date, archives_ids = parse_archives_ids_file(data_path, archives_ids_file)
 
+    catalog_id = GTFS_CATALOG_ID
     catalog_data = get_entity_data(catalog_id)
 
     if has_been_modified_since(catalog_data, harvesting_date):
         harvesting_date, archives_ids = harvest_archives_ids(catalog_data)
         save_archives_ids_file(harvesting_date, archives_ids, data_path, archives_ids_file)
 
-    latest_versions = harvest_latest_versions(archives_ids)
+    latest_versions = harvest_latest_versions(archives_ids, credentials)
     save_content_to_file(latest_versions, data_path, latest_versions_file)
