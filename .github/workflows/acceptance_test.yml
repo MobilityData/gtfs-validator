@@ -76,15 +76,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get url list as json
-        id: set-matrix
-        # The below outputs a JSON array and uses GitHub Actions magic (::set-output) to set
-        # an output variable
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+        id: harvest
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         run: |
-          DATASETS=$(curl https://gtfs-validator.free.beeceptor.com/datasets)
-          echo $DATASETS
-          echo "::set-output name=matrix::$DATASETS"
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+          pip3 install scripts/mobility-database-harvester/requirements.txt
+          python3 scripts/mobility-database-harvester/harvest_latest_version.py -d datasets -a gtfs_archives_ids.json -l latest_versions.json -c ${{ GOOGLE_AUTHENTICATION_CREDENTIALS }}
+      - name: Persist datasets metadata
+        uses: actions/upload-artifact@v2
+        with:
+          name: datasets_metadata
+          path: datasets
   get-latest-changes-report:
     needs: [ pack, fetch-urls ]
     runs-on: ubuntu-latest
