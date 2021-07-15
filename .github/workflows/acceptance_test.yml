@@ -101,27 +101,29 @@ jobs:
         with:
           name: datasets_metadata
           path: datasets_metadata
-#  get-latest-changes-report:
-#    needs: [ pack, fetch-urls ]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Retrieve urls file from metadata
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: datasets_metadata
-#      - name: Download latest changes .jar file from previous job
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: gtfs-validator-snapshot
-#      - name: Execute jar
-#        run: |
-#          export KEYS=$(jq '. | keys[]' scripts/mobility-database-harvester/latest_versions.json -r)
-#          for source in $KEYS;
-#          do
-#            export SOURCE=$source;
-#            export URL=$(jq '.[$SOURCE_NAME]' scripts/mobility-database-harvester/latest_versions.json --arg SOURCE_NAME $SOURCE -r);
-#            java -jar gtfs-validator*.jar --url $URL --output_base output/$SOURCE --validation_report_name latest.json;
-#          done
+  get-latest-changes-report:
+    needs: [ pack, fetch-urls ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Retrieve metadata from previous job
+        uses: actions/download-artifact@v2
+        with:
+          name: datasets_metadata
+      - name: Download latest changes .jar file from previous job
+        uses: actions/download-artifact@v2
+        with:
+          name: gtfs-validator-snapshot
+      - name: Execute jar on each URL from metadata
+        run: |
+          pwd
+          ls -a
+          export KEYS=$(jq '. | keys[]' scripts/mobility-database-harvester/latest_versions.json -r)
+          for source in $KEYS;
+          do
+            export SOURCE=$source;
+            export URL=$(jq '.[$SOURCE_NAME]' scripts/mobility-database-harvester/latest_versions.json --arg SOURCE_NAME $SOURCE -r);
+            java -jar gtfs-validator*.jar --url $URL --output_base output/$SOURCE --validation_report_name latest.json;
+          done
 #  get-reference-report:
 #    needs: [ download-latest-gtfs-validator-release-jar, fetch-urls ]
 #    runs-on: ubuntu-latest
