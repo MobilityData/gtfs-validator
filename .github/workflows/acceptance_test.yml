@@ -80,33 +80,46 @@ jobs:
         with:
           python-version: 3.9
         id: harvest
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         run: |
           pip3 install scripts/mobility-database-harvester/requirements.txt
-          python3 scripts/mobility-database-harvester/harvest_latest_version.py -d datasets -a gtfs_archives_ids.json -l latest_versions.json -c ${{ GOOGLE_AUTHENTICATION_CREDENTIALS }}
+          python3 scripts/mobility-database-harvester/harvest_latest_version.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
+        env:
+          TYPE_KEY: ${{ secrets.TYPE_KEY }}
+          PROJECT_ID_KEY: ${{ secrets.PROJECT_ID_KEY }}
+          PRIVATE_KEY_ID_KEY: ${{ secrets.PRIVATE_KEY_ID_KEY }}
+          PRIVATE_KEY_KEY: ${{ secrets.PRIVATE_KEY_KEY }}
+          CLIENT_EMAIL_KEY: ${{ secrets.CLIENT_EMAIL_KEY }}
+          CLIENT_ID_KEY: ${{ secrets.CLIENT_ID_KEY }}
+          AUTH_URI_KEY: ${{ secrets.AUTH_URI_KEY }}
+          TOKEN_URI_KEY: ${{ secrets.TOKEN_URI_KEY }}
+          AUTH_PROVIDER_X509_CERT_URL_KEY: ${{ secrets.AUTH_PROVIDER_X509_CERT_URL_KEY }}
+          CLIENT_X509_CERT_URL_KEY: ${{ secrets.CLIENT_X509_CERT_URL_KEY }}
       - name: Persist datasets metadata
         uses: actions/upload-artifact@v2
         with:
           name: datasets_metadata
-          path: datasets
+          path: datasets_metadata
   get-latest-changes-report:
     needs: [ pack, fetch-urls ]
     runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:
+      - name: Retrieve urls file from metadata
+        uses: actions/download-artifact@v2
+        with:
+          name: datasets_metadata
       - name: Download latest changes .jar file from previous job
         uses: actions/download-artifact@v2
         with:
           name: gtfs-validator-snapshot
       - name: Execute jar
-        run: java -jar gtfs-validator*.jar --url ${{ matrix.url }} --output_base output/${{ matrix.output }} --validation_report_name latest.json
-      - name: Persist reports
-        uses: actions/upload-artifact@v2
-        with:
-          name: reports_all
-          path: output
+        run: |
+          export KEYS=$(jq '. | keys[]' scripts/mobility-database-harvester/latest_versions.json -r)
+          for source in $KEYS;
+          do
+            export SOURCE=$source;
+            export URL=$(jq '.[$SOURCE_NAME]' scripts/mobility-database-harvester/latest_versions.json --arg SOURCE_NAME $SOURCE -r);
+            java -jar gtfs-validator*.jar --url $URL --output_base output/$SOURCE --validation_report_name latest.json;
+          done
   get-reference-report:
     needs: [ download-latest-gtfs-validator-release-jar, fetch-urls ]
     runs-on: ubuntu-latest
@@ -118,7 +131,7 @@ jobs:
         with:
           name: reference_jar
       - name: Execute jar
-        # the following line will be changed after v3.0 is published without -f CLI parameter
+        # the following line will be changed after v3.0 is published without --feed_name CLI parameter
         run: java -jar gtfs-validator*.jar --url ${{ matrix.url }} --output_base output/${{ matrix.output }} --feed_name ca-test
       - name: Persist reports
         uses: actions/upload-artifact@v2
