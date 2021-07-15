@@ -86,8 +86,7 @@ jobs:
           pwd
           echo listing
           ls -a
-          pip3 install /scripts/mobility-database-harvester/requirements.py
-#          python3 /scripts/mobility-database-harvester/harvest_latest_versions.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
+          python3 ./scripts/mobility-database-harvester/harvest_latest_versions.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
         env:
           TYPE_KEY: ${{ secrets.TYPE_KEY }}
           PROJECT_ID_KEY: ${{ secrets.PROJECT_ID_KEY }}
