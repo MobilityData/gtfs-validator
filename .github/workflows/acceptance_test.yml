@@ -81,7 +81,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Install dependencies
-        run: pip3 -r install scripts/mobility-database-harvester/requirements.txt
+        run: pip -r install scripts/mobility-database-harvester/requirements.txt
       - name: Fetch urls
         id: harvest
         run: python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
