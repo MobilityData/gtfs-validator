@@ -80,3 +80,7 @@ build/
 # Inputs and outputs
 /input/
 /output/
+
+# Mac
+*/.DS_Store
+.DS_Store
