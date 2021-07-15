@@ -40,6 +40,16 @@ MAINSNAK = "mainsnak"
 DATAVALUE = "datavalue"
 VALUE = "value"
 ID = "id"
+TYPE = "TYPE"
+PROJECT_ID = "PROJECT_ID"
+PRIVATE_KEY_ID = "PRIVATE_KEY_ID"
+PRIVATE_KEY = "PRIVATE_KEY"
+CLIENT_EMAIL = "CLIENT_EMAIL"
+CLIENT_ID = "CLIENT_ID"
+AUTH_URI = "AUTH_URI"
+TOKEN_URI = "TOKEN_URI"
+AUTH_PROVIDER_X509_CERT_URL = "AUTH_PROVIDER_X509_CERT_URL"
+CLIENT_X509_CERT_URL = "CLIENT_X509_CERT_URL"
 
 # Catalog constants
 GTFS_CATALOG_ID = "Q6"
@@ -53,6 +63,20 @@ EPOCH_DATE = "1970-01-01T00:00:00Z"
 LATEST_BUCKET_PATH = "{source_archives_id}_latest"
 LATEST_URL = "https://storage.googleapis.com/storage/v1/b/{source_archives_id}_latest/o/{blob_name}?alt=media"
 
+def get_credentials():
+    credentials = {
+        "type": os.getenv(TYPE).replace('\\n', '\n'),
+        "project_id": os.getenv(PROJECT_ID).replace('\\n', '\n'),
+        "private_key_id": os.getenv(PRIVATE_KEY_ID).replace('\\n', '\n'),
+        "private_key": os.getenv(PRIVATE_KEY).replace('\\n', '\n'),
+        "client_email": os.getenv(CLIENT_EMAIL).replace('\\n', '\n'),
+        "client_id": os.getenv(CLIENT_ID).replace('\\n', '\n'),
+        "auth_uri": os.getenv(AUTH_URI).replace('\\n', '\n'),
+        "token_uri": os.getenv(TOKEN_URI).replace('\\n', '\n'),
+        "auth_provider_x509_cert_url": os.getenv(AUTH_PROVIDER_X509_CERT_URL).replace('\\n', '\n'),
+        "client_x509_cert_url": os.getenv(CLIENT_X509_CERT_URL).replace('\\n', '\n')
+    }
+    return str(credentials).replace("\'", "\"")
 
 def parse_archives_ids_file(data_path, filename):
     file_path = path.join(data_path, filename)
@@ -106,9 +130,8 @@ def harvest_archives_ids(catalog_data):
     return harvesting_date, archives_ids
 
 
-def harvest_latest_versions(archives_ids, credentials):
-    credentials_json = json.loads(credentials)
-    client = storage.Client.from_service_account_info(info=credentials_json)
+def harvest_latest_versions(archives_ids):
+    client = storage.Client.from_service_account_info(info=json.loads(get_credentials()))
     latest_versions = {}
 
     for archives_id in archives_ids:
@@ -151,32 +174,29 @@ if __name__ == '__main__':
         default="./data/",
         help="Data path.",
     )
-    parser.add_argument(
-        "-c",
-        "--credentials",
-        action="store",
-        help="Grant access to google storage solutions."
-    )
     args = parser.parse_args()
 
     archives_ids_file = args.archives_ids_file
     latest_versions_file = args.latest_versions_file
     data_path = args.data_path
-    credentials = args.credentials
 
     if not path.isdir(data_path) and path.exists(data_path):
         raise Exception("Data path must be a directory if existing.")
     elif not path.isdir(data_path):
         os.mkdir(data_path)
 
-    harvesting_date, archives_ids = parse_archives_ids_file(data_path, archives_ids_file)
+    harvesting_date, archives_ids = parse_archives_ids_file(data_path,
+                                                            archives_ids_file)
 
     catalog_id = GTFS_CATALOG_ID
     catalog_data = get_entity_data(catalog_id)
 
     if has_been_modified_since(catalog_data, harvesting_date):
         harvesting_date, archives_ids = harvest_archives_ids(catalog_data)
-        save_archives_ids_file(harvesting_date, archives_ids, data_path, archives_ids_file)
+        save_archives_ids_file(harvesting_date,
+                               archives_ids,
+                               data_path,
+                               archives_ids_file)
 
-    latest_versions = harvest_latest_versions(archives_ids, credentials)
+    latest_versions = harvest_latest_versions(archives_ids)
     save_content_to_file(latest_versions, data_path, latest_versions_file)
