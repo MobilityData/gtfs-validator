@@ -75,8 +75,7 @@ jobs:
   fetch-urls:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v1
+      - uses: actions/checkout@v1
       - name: Set up python 3.9
         uses: actions/setup-python@v2
         with:
