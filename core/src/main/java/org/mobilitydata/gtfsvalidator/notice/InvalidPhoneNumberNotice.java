@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
+import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 
 /**
  * A field contains a malformed phone number.
@@ -34,7 +34,7 @@ public class InvalidPhoneNumberNotice extends ValidationNotice {
    * Constructs a notice with given severity. This constructor may be used by users that want to
    * lower the priority to {@code WARNING}.
    */
-  @NoticeExport
+  @SchemaExport
   public InvalidPhoneNumberNotice(
       String filename,
       long csvRowNumber,

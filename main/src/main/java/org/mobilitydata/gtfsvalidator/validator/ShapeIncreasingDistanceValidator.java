@@ -21,7 +21,7 @@ import com.google.common.collect.Multimaps;
 import java.util.List;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
+import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -76,7 +76,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class DecreasingOrEqualShapeDistanceNotice extends ValidationNotice {
-    @NoticeExport
+    @SchemaExport
     DecreasingOrEqualShapeDistanceNotice(
         String shapeId,
         long csvRowNumber,

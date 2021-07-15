@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
+import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 
 /**
  * A field contains a wrong language code.
@@ -31,7 +31,7 @@ import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
  */
 public class InvalidLanguageCodeNotice extends ValidationNotice {
 
-  @NoticeExport
+  @SchemaExport
   public InvalidLanguageCodeNotice(
       String filename, long csvRowNumber, String fieldName, String fieldValue) {
     super(
