@@ -63,20 +63,24 @@ EPOCH_DATE = "1970-01-01T00:00:00Z"
 LATEST_BUCKET_PATH = "{source_archives_id}_latest"
 LATEST_URL = "https://storage.googleapis.com/storage/v1/b/{source_archives_id}_latest/o/{blob_name}?alt=media"
 
+
 def get_credentials():
     credentials = {
-        "type": os.getenv(TYPE).replace('\\n', '\n'),
-        "project_id": os.getenv(PROJECT_ID).replace('\\n', '\n'),
-        "private_key_id": os.getenv(PRIVATE_KEY_ID).replace('\\n', '\n'),
-        "private_key": os.getenv(PRIVATE_KEY).replace('\\n', '\n'),
-        "client_email": os.getenv(CLIENT_EMAIL).replace('\\n', '\n'),
-        "client_id": os.getenv(CLIENT_ID).replace('\\n', '\n'),
-        "auth_uri": os.getenv(AUTH_URI).replace('\\n', '\n'),
-        "token_uri": os.getenv(TOKEN_URI).replace('\\n', '\n'),
-        "auth_provider_x509_cert_url": os.getenv(AUTH_PROVIDER_X509_CERT_URL).replace('\\n', '\n'),
-        "client_x509_cert_url": os.getenv(CLIENT_X509_CERT_URL).replace('\\n', '\n')
+        "type": os.getenv(TYPE).replace("\\n", "\n"),
+        "project_id": os.getenv(PROJECT_ID).replace("\\n", "\n"),
+        "private_key_id": os.getenv(PRIVATE_KEY_ID).replace("\\n", "\n"),
+        "private_key": os.getenv(PRIVATE_KEY).replace("\\n", "\n"),
+        "client_email": os.getenv(CLIENT_EMAIL).replace("\\n", "\n"),
+        "client_id": os.getenv(CLIENT_ID).replace("\\n", "\n"),
+        "auth_uri": os.getenv(AUTH_URI).replace("\\n", "\n"),
+        "token_uri": os.getenv(TOKEN_URI).replace("\\n", "\n"),
+        "auth_provider_x509_cert_url": os.getenv(AUTH_PROVIDER_X509_CERT_URL).replace(
+            "\\n", "\n"
+        ),
+        "client_x509_cert_url": os.getenv(CLIENT_X509_CERT_URL).replace("\\n", "\n"),
     }
-    return str(credentials).replace("\'", "\"")
+    return str(credentials).replace("'", '"')
+
 
 def parse_archives_ids_file(data_path, filename):
     file_path = path.join(data_path, filename)
@@ -124,14 +128,18 @@ def harvest_archives_ids(catalog_data):
     for source in sources:
         source_id = source[MAINSNAK][DATAVALUE][VALUE][ID]
         source_data = get_entity_data(source_id)
-        source_archives_id = source_data[CLAIMS][ARCHIVES_ID_PROPERTY][0][MAINSNAK][DATAVALUE][VALUE]
+        source_archives_id = source_data[CLAIMS][ARCHIVES_ID_PROPERTY][0][MAINSNAK][
+            DATAVALUE
+        ][VALUE]
         archives_ids.append(source_archives_id)
 
     return harvesting_date, archives_ids
 
 
 def harvest_latest_versions(archives_ids):
-    client = storage.Client.from_service_account_info(info=json.loads(get_credentials()))
+    client = storage.Client.from_service_account_info(
+        info=json.loads(get_credentials())
+    )
     latest_versions = {}
 
     for archives_id in archives_ids:
@@ -145,16 +153,17 @@ def harvest_latest_versions(archives_ids):
             blobs = client.list_blobs(bucket.name)
             for blob in blobs:
                 archives_url = LATEST_URL.format(
-                    source_archives_id=archives_id,
-                    blob_name=blob.name
+                    source_archives_id=archives_id, blob_name=blob.name
                 )
                 latest_versions[archives_id] = archives_url
 
     return latest_versions
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Harvesting script for the latest versions. Python 3.9.")
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Harvesting script for the latest versions. Python 3.9."
+    )
     parser.add_argument(
         "-a",
         "--archives-ids-file",
@@ -185,18 +194,18 @@ if __name__ == '__main__':
     elif not path.isdir(data_path):
         os.mkdir(data_path)
 
-    harvesting_date, archives_ids = parse_archives_ids_file(data_path,
-                                                            archives_ids_file)
+    harvesting_date, archives_ids = parse_archives_ids_file(
+        data_path, archives_ids_file
+    )
 
     catalog_id = GTFS_CATALOG_ID
     catalog_data = get_entity_data(catalog_id)
 
     if has_been_modified_since(catalog_data, harvesting_date):
         harvesting_date, archives_ids = harvest_archives_ids(catalog_data)
-        save_archives_ids_file(harvesting_date,
-                               archives_ids,
-                               data_path,
-                               archives_ids_file)
+        save_archives_ids_file(
+            harvesting_date, archives_ids, data_path, archives_ids_file
+        )
 
     latest_versions = harvest_latest_versions(archives_ids)
     save_content_to_file(latest_versions, data_path, latest_versions_file)
