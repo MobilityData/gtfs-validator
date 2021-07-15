@@ -83,6 +83,8 @@ jobs:
         id: harvest
         run: |
           pip3 install scripts/mobility-database-harvester/requirements.txt
+          pwd
+          ls
           python3 scripts/mobility-database-harvester/harvest_latest_version.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
         env:
           TYPE_KEY: ${{ secrets.TYPE_KEY }}
