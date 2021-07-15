@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 
 /**
  * The values of the given key and rows are duplicates.
@@ -45,6 +46,7 @@ public class DuplicateKeyNotice extends ValidationNotice {
         SeverityLevel.ERROR);
   }
 
+  @NoticeExport
   public DuplicateKeyNotice(
       String filename,
       long oldCsvRowNumber,

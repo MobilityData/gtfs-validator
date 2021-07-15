@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 
 /**
  * A field contains a wrong currency code.
@@ -31,6 +32,7 @@ import com.google.common.collect.ImmutableMap;
  */
 public class InvalidCurrencyNotice extends ValidationNotice {
 
+  @NoticeExport
   public InvalidCurrencyNotice(
       String filename, long csvRowNumber, String fieldName, String fieldValue) {
     super(

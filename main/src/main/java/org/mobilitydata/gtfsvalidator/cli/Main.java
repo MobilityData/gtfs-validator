@@ -152,10 +152,12 @@ public class Main {
     try {
       Files.write(
           Paths.get(args.getOutputBase(), args.getValidationReportName()),
-          noticeContainer.exportValidationNotices().getBytes(StandardCharsets.UTF_8));
+          noticeContainer
+              .exportValidationNotices(args.getPretty())
+              .getBytes(StandardCharsets.UTF_8));
       Files.write(
           Paths.get(args.getOutputBase(), args.getSystemErrorsReportName()),
-          noticeContainer.exportSystemErrors().getBytes(StandardCharsets.UTF_8));
+          noticeContainer.exportSystemErrors(args.getPretty()).getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store report files");
     }

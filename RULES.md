@@ -59,6 +59,8 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 * `WARNING` notices are for items that will affect the quality of GTFS datasets but the GTFS spec does expressly require or prohibit. For example, these might be items recommended using the language "should" or "should not" in the GTFS spec, or items recommended in the MobilityData [GTFS Best Practices](https://gtfs.org/best-practices/).
 * `INFO` notices are for items that do not affect the feed's quality, such as unknown files or unknown fields.
 
+Additional details regarding the notices' context is provided in [`NOTICES.md`](/docs/NOTICES.md).
+
 <!--suppress ALL -->
 
 <a name="ERRORS"/>
@@ -72,7 +74,7 @@ Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
 | [`DecreasingOrEqualShapeDistanceNotice`](#DecreasingOrEqualShapeDistanceNotice)                                 	| Decreasing or equal `shape_dist_traveled` in `shapes.txt`.                                                                                                  	|
 | [`DecreasingOrEqualStopTimeDistanceNotice`](#DecreasingOrEqualStopTimeDistanceNotice)                           	| Decreasing or equal `shape_dist_traveled` in `stop_times.txt`.                                                                                              	|
 | [`DuplicatedColumnNotice`](#DuplicatedColumnNotice)                                                             	| Duplicated column in CSV.                                                                                                                                   	|
-| [`DuplicateFareRuleZoneIdFieldsNotice`](#DuplicateFareRuleZoneIdFieldsNotice)                                   	| Duplicate rows rows from `fare_rules.txt` based on `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.contains_id` and `fare_rules.destination_id`. 	|
+| [`DuplicateFareRuleZoneIdFieldsNotice`](#DuplicateFareRuleZoneIdFieldsNotice)                                   	| Duplicate rows from `fare_rules.txt` based on `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.contains_id` and `fare_rules.destination_id`. 	|
 | [`DuplicateKeyNotice`](#DuplicateKeyNotice)                                                                       	| Duplicated entity.                                                                                                                                          	|
 | [`EmptyFileNotice`](#EmptyFileNotice)                                                                           	| A CSV file is empty.                                                                                                                                        	|
 | [`ForeignKeyViolationNotice`](#ForeignKeyViolationNotice)                                                                           	| Wrong foreign key.                                                                                                                                          	|

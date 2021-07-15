@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 
 /**
  * Start and end range fields are out of order for a certain GTFS entity.
@@ -27,6 +28,7 @@ import com.google.common.collect.ImmutableMap;
  */
 public class StartAndEndRangeOutOfOrderNotice extends ValidationNotice {
 
+  @NoticeExport
   public StartAndEndRangeOutOfOrderNotice(
       String filename,
       long csvRowNumber,

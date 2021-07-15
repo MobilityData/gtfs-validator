@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 
 /**
  * A row in the input file has a different number of values than specified by the CSV header.
@@ -24,6 +25,7 @@ import com.google.common.collect.ImmutableMap;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class InvalidRowLengthNotice extends ValidationNotice {
+  @NoticeExport
   public InvalidRowLengthNotice(
       String filename, long csvRowNumber, int rowLength, int headerCount) {
     super(

@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 
 /**
  * A point is too close to origin (0, 0).
@@ -25,6 +26,7 @@ import com.google.common.collect.ImmutableMap;
  */
 public class PointNearOriginNotice extends ValidationNotice {
 
+  @NoticeExport
   public PointNearOriginNotice(
       String filename,
       long csvRowNumber,

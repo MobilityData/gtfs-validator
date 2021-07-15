@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
+import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
 
 /**
  * A notice that the file is expected to have a single entity but has more (e.g., "feed_info.txt").
@@ -24,6 +25,7 @@ import com.google.common.collect.ImmutableMap;
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class MoreThanOneEntityNotice extends ValidationNotice {
+  @NoticeExport
   public MoreThanOneEntityNotice(String filename, long entityCount) {
     super(ImmutableMap.of("filename", filename, "entityCount", entityCount), SeverityLevel.WARNING);
   }
