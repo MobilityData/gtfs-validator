@@ -81,14 +81,14 @@ jobs:
           python-version: 3.9
       - name: Fetch urls
         id: harvest
-        run: |
+        run: python3 ./scripts/mobility-database-harvester/harvest_latest_versions.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
 #          echo current directory
 #          pwd
 #          echo changing directory
 #          cd .
 #          echo listing
 #          ls -a
-          python3 ./scripts/mobility-database-harvester/harvest_latest_versions.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
+
         env:
           TYPE_KEY: ${{ secrets.TYPE_KEY }}
           PROJECT_ID_KEY: ${{ secrets.PROJECT_ID_KEY }}
