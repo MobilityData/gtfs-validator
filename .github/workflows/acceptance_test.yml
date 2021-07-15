@@ -117,11 +117,11 @@ jobs:
         run: |
           pwd
           ls -a
-          export KEYS=$(jq '. | keys[]' scripts/mobility-database-harvester/latest_versions.json -r)
+          export KEYS=$(jq '. | keys[]' latest_versions.json -r)
           for source in $KEYS;
           do
             export SOURCE=$source;
-            export URL=$(jq '.[$SOURCE_NAME]' scripts/mobility-database-harvester/latest_versions.json --arg SOURCE_NAME $SOURCE -r);
+            export URL=$(jq '.[$SOURCE_NAME]' latest_versions.json --arg SOURCE_NAME $SOURCE -r);
             java -jar gtfs-validator*.jar --url $URL --output_base output/$SOURCE --validation_report_name latest.json;
           done
 #  get-reference-report:
