@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2021 MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package org.mobilitydata.gtfsvalidator.notice;
-
-import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
+package org.mobilitydata.gtfsvalidator.annotation;
 
 /**
- * A CSV file is empty.
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * Annotation to be used on notice constructor. This specifies the constructor to be used to
+ * identify notice field names and data types when exporting the notice schema.
  */
-public class EmptyFileNotice extends ValidationNotice {
-
-  @SchemaExport
-  public EmptyFileNotice(String filename) {
-    super(ImmutableMap.of("filename", filename), SeverityLevel.ERROR);
-  }
-}
+public @interface SchemaExport {}

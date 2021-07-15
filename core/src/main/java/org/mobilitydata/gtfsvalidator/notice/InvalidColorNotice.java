@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
+import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 
 /**
  * A field contains an invalid color value.
@@ -31,7 +31,7 @@ import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
  */
 public class InvalidColorNotice extends ValidationNotice {
 
-  @NoticeExport
+  @SchemaExport
   public InvalidColorNotice(
       String filename, long csvRowNumber, String fieldName, String fieldValue) {
     super(

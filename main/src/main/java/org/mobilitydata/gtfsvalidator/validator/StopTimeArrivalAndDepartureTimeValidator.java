@@ -21,7 +21,7 @@ import com.google.common.collect.Multimaps;
 import java.util.List;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
+import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -95,7 +95,7 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class StopTimeWithArrivalBeforePreviousDepartureTimeNotice extends ValidationNotice {
-    @NoticeExport
+    @SchemaExport
     StopTimeWithArrivalBeforePreviousDepartureTimeNotice(
         long csvRowNumber,
         long prevCsvRowNumber,
@@ -119,7 +119,7 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class StopTimeWithOnlyArrivalOrDepartureTimeNotice extends ValidationNotice {
-    @NoticeExport
+    @SchemaExport
     StopTimeWithOnlyArrivalOrDepartureTimeNotice(
         long csvRowNumber, String tripId, int stopSequence, String specifiedField) {
       super(

@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
+import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 
 /**
  * A required column is missing in the input file.
@@ -25,7 +25,7 @@ import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class MissingRequiredColumnNotice extends ValidationNotice {
-  @NoticeExport
+  @SchemaExport
   public MissingRequiredColumnNotice(String filename, String fieldName) {
     super(ImmutableMap.of("filename", filename, "fieldName", fieldName), SeverityLevel.ERROR);
   }
