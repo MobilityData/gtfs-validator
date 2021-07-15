@@ -82,7 +82,7 @@ jobs:
       - name: Fetch urls
         id: harvest
         run: pwd
-#          pip3 install scripts/mobility-database-harvester/requirements.txt
+          pip3 install /scripts/mobility-database-harvester/harvest_latest_versions.py
 #          python3 ~/scripts/mobility-database-harvester/harvest_latest_version.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
         env:
           TYPE_KEY: ${{ secrets.TYPE_KEY }}
