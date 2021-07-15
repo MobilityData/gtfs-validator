@@ -86,16 +86,16 @@ jobs:
         id: harvest
         run: python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
         env:
-          TYPE_KEY: ${{ secrets.TYPE_KEY }}
-          PROJECT_ID_KEY: ${{ secrets.PROJECT_ID_KEY }}
-          PRIVATE_KEY_ID_KEY: ${{ secrets.PRIVATE_KEY_ID_KEY }}
-          PRIVATE_KEY_KEY: ${{ secrets.PRIVATE_KEY_KEY }}
-          CLIENT_EMAIL_KEY: ${{ secrets.CLIENT_EMAIL_KEY }}
-          CLIENT_ID_KEY: ${{ secrets.CLIENT_ID_KEY }}
-          AUTH_URI_KEY: ${{ secrets.AUTH_URI_KEY }}
-          TOKEN_URI_KEY: ${{ secrets.TOKEN_URI_KEY }}
-          AUTH_PROVIDER_X509_CERT_URL_KEY: ${{ secrets.AUTH_PROVIDER_X509_CERT_URL_KEY }}
-          CLIENT_X509_CERT_URL_KEY: ${{ secrets.CLIENT_X509_CERT_URL_KEY }}
+          TYPE_KEY: ${{ secrets.TYPE }}
+          PROJECT_ID_KEY: ${{ secrets.PROJECT_ID }}
+          PRIVATE_KEY_ID_KEY: ${{ secrets.PRIVATE_KEY_ID }}
+          PRIVATE_KEY_KEY: ${{ secrets.PRIVATE_KEY }}
+          CLIENT_EMAIL_KEY: ${{ secrets.CLIENT_EMAIL }}
+          CLIENT_ID_KEY: ${{ secrets.CLIENT_ID }}
+          AUTH_URI_KEY: ${{ secrets.AUTH_URI }}
+          TOKEN_URI_KEY: ${{ secrets.TOKEN_URI }}
+          AUTH_PROVIDER_X509_CERT_URL_KEY: ${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}
+          CLIENT_X509_CERT_URL_KEY: ${{ secrets.CLIENT_X509_CERT_URL }}
       - name: Persist datasets metadata
         uses: actions/upload-artifact@v2
         with:
