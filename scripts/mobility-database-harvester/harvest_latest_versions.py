@@ -51,6 +51,18 @@ TOKEN_URI = "TOKEN_URI"
 AUTH_PROVIDER_X509_CERT_URL = "AUTH_PROVIDER_X509_CERT_URL"
 CLIENT_X509_CERT_URL = "CLIENT_X509_CERT_URL"
 
+# Credentials keys
+TYPE_KEY = "type"
+PROJECT_ID_KEY = "project_id"
+PRIVATE_KEY_ID_KEY = "private_key_id"
+PRIVATE_KEY_KEY = "private_key"
+CLIENT_EMAIL_KEY = "client_email"
+CLIENT_ID_KEY = "client_id"
+AUTH_URI_KEY = "auth_uri"
+TOKEN_URI_KEY = "token_uri"
+AUTH_PROVIDER_X509_CERT_URL_KEY = "auth_provider_x509_cert_url"
+CLIENT_X509_CERT_URL_KEY = "client_x509_cert_url"
+
 # Catalog constants
 GTFS_CATALOG_ID = "Q6"
 
@@ -66,18 +78,18 @@ LATEST_URL = "https://storage.googleapis.com/storage/v1/b/{source_archives_id}_l
 
 def get_credentials():
     credentials = {
-        "type": os.getenv(TYPE).replace("\\n", "\n"),
-        "project_id": os.getenv(PROJECT_ID).replace("\\n", "\n"),
-        "private_key_id": os.getenv(PRIVATE_KEY_ID).replace("\\n", "\n"),
-        "private_key": os.getenv(PRIVATE_KEY).replace("\\n", "\n"),
-        "client_email": os.getenv(CLIENT_EMAIL).replace("\\n", "\n"),
-        "client_id": os.getenv(CLIENT_ID).replace("\\n", "\n"),
-        "auth_uri": os.getenv(AUTH_URI).replace("\\n", "\n"),
-        "token_uri": os.getenv(TOKEN_URI).replace("\\n", "\n"),
-        "auth_provider_x509_cert_url": os.getenv(AUTH_PROVIDER_X509_CERT_URL).replace(
-            "\\n", "\n"
-        ),
-        "client_x509_cert_url": os.getenv(CLIENT_X509_CERT_URL).replace("\\n", "\n"),
+        TYPE_KEY: os.getenv(TYPE).replace("\\n", "\n"),
+        PROJECT_ID_KEY: os.getenv(PROJECT_ID).replace("\\n", "\n"),
+        PRIVATE_KEY_ID_KEY: os.getenv(PRIVATE_KEY_ID).replace("\\n", "\n"),
+        PRIVATE_KEY_KEY: os.getenv(PRIVATE_KEY).replace("\\n", "\n"),
+        CLIENT_EMAIL_KEY: os.getenv(CLIENT_EMAIL).replace("\\n", "\n"),
+        CLIENT_ID_KEY: os.getenv(CLIENT_ID).replace("\\n", "\n"),
+        AUTH_URI_KEY: os.getenv(AUTH_URI).replace("\\n", "\n"),
+        TOKEN_URI_KEY: os.getenv(TOKEN_URI).replace("\\n", "\n"),
+        AUTH_PROVIDER_X509_CERT_URL_KEY:
+            os.getenv(AUTH_PROVIDER_X509_CERT_URL).replace("\\n", "\n"),
+        CLIENT_X509_CERT_URL_KEY:
+            os.getenv(CLIENT_X509_CERT_URL).replace("\\n", "\n"),
     }
     return str(credentials).replace("'", '"')
 
@@ -102,7 +114,8 @@ def save_content_to_file(content, data_path, filename):
 
 
 def save_archives_ids_file(harvesting_date, archives_ids, data_path, filename):
-    archives_ids_json = {HARVESTING_DATE: harvesting_date, ARCHIVES_IDS: archives_ids}
+    archives_ids_json =\
+        {HARVESTING_DATE: harvesting_date, ARCHIVES_IDS: archives_ids}
     save_content_to_file(archives_ids_json, data_path, filename)
 
 
