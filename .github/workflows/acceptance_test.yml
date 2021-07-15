@@ -75,10 +75,11 @@ jobs:
   fetch-urls:
     runs-on: ubuntu-latest
     steps:
-      - name: Get url list as json
-      - uses: actions/setup-python@v2
+      - name: Set up python 3.9
+        uses: actions/setup-python@v2
         with:
           python-version: 3.9
+      - name: Fetch urls
         id: harvest
         run: |
           pip3 install scripts/mobility-database-harvester/requirements.txt
