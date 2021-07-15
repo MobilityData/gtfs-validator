@@ -124,43 +124,60 @@ jobs:
             export URL=$(jq '.[$SOURCE_NAME]' latest_versions.json --arg SOURCE_NAME $SOURCE -r);
             java -jar gtfs-validator*.jar --url $URL --output_base output/$SOURCE --validation_report_name latest.json;
           done
-#  get-reference-report:
-#    needs: [ download-latest-gtfs-validator-release-jar, fetch-urls ]
-#    runs-on: ubuntu-latest
-#    strategy:
-#      matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
-#    steps:
-#      - name: Download latest changes .jar file from previous job
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: reference_jar
-#      - name: Execute jar
-#        # the following line will be changed after v3.0 is published without --feed_name CLI parameter
-#        run: java -jar gtfs-validator*.jar --url ${{ matrix.url }} --output_base output/${{ matrix.output }} --feed_name ca-test
-#      - name: Persist reports
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: reports_all
-#          path: output
-#  compare-outputs:
-#    needs: [ get-reference-report, get-latest-changes-report ]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Download all validation reports
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: reports_all
-#      - name: Download output-comparator jar
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: output-comparator-cli
-#      - name: Execute output-comparator
-#        run: java -jar output-comparator*.jar --percent_invalid_datasets_threshold ${PERCENT_INVALID_DATASETS_THRESHOLD} --new_error_threshold ${NEW_ERROR_THRESHOLD} --report_directory . --reference_report_name report.json --latest_report_name latest.json
-#        env:
-#          NEW_ERROR_THRESHOLD: 1
-#          PERCENT_INVALID_DATASETS_THRESHOLD: 35
-#      - name: Persist acceptance test report
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: acceptance test report
-#          path: ./acceptance_report.json
+      - name: Persist reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: reports_all
+          path: output
+  get-reference-report:
+    needs: [ download-latest-gtfs-validator-release-jar, fetch-urls ]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
+    steps:
+      - name: Retrieve metadata from previous job
+        uses: actions/download-artifact@v2
+        with:
+          name: datasets_metadata
+      - name: Download reference .jar file from previous job
+        uses: actions/download-artifact@v2
+        with:
+          name: reference_jar
+      - name: Execute jar on each URL from metadata
+        run: |
+          pwd
+          ls -a
+          export KEYS=$(jq '. | keys[]' latest_versions.json -r)
+          for source in $KEYS;
+          do
+            export SOURCE=$source;
+            export URL=$(jq '.[$SOURCE_NAME]' latest_versions.json --arg SOURCE_NAME $SOURCE -r);
+            java -jar gtfs-validator*.jar --url $URL --output_base output/$SOURCE --validation_report_name latest.json --feed_name ca-test;
+          done
+      - name: Persist reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: reports_all
+          path: output
+  compare-outputs:
+    needs: [ get-reference-report, get-latest-changes-report ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all validation reports
+        uses: actions/download-artifact@v2
+        with:
+          name: reports_all
+      - name: Download output-comparator jar
+        uses: actions/download-artifact@v2
+        with:
+          name: output-comparator-cli
+      - name: Execute output-comparator
+        run: java -jar output-comparator*.jar --percent_invalid_datasets_threshold ${PERCENT_INVALID_DATASETS_THRESHOLD} --new_error_threshold ${NEW_ERROR_THRESHOLD} --report_directory . --reference_report_name report.json --latest_report_name latest.json
+        env:
+          NEW_ERROR_THRESHOLD: 1
+          PERCENT_INVALID_DATASETS_THRESHOLD: 35
+      - name: Persist acceptance test report
+        uses: actions/upload-artifact@v2
+        with:
+          name: acceptance test report
+          path: ./acceptance_report.json
