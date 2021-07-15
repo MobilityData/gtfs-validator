@@ -85,13 +85,6 @@ jobs:
       - name: Get datasets' metadata
         id: harvest
         run: python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
-#          echo current directory
-#          pwd
-#          echo changing directory
-#          cd .
-#          echo listing
-#          ls -a
-
         env:
           TYPE_KEY: ${{ secrets.TYPE_KEY }}
           PROJECT_ID_KEY: ${{ secrets.PROJECT_ID_KEY }}
@@ -103,11 +96,11 @@ jobs:
           TOKEN_URI_KEY: ${{ secrets.TOKEN_URI_KEY }}
           AUTH_PROVIDER_X509_CERT_URL_KEY: ${{ secrets.AUTH_PROVIDER_X509_CERT_URL_KEY }}
           CLIENT_X509_CERT_URL_KEY: ${{ secrets.CLIENT_X509_CERT_URL_KEY }}
-#      - name: Persist datasets metadata
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: datasets_metadata
-#          path: datasets_metadata
+      - name: Persist datasets metadata
+        uses: actions/upload-artifact@v2
+        with:
+          name: datasets_metadata
+          path: datasets_metadata
 #  get-latest-changes-report:
 #    needs: [ pack, fetch-urls ]
 #    runs-on: ubuntu-latest
