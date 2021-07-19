@@ -2,7 +2,7 @@ name: Docker image
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, task/add-spring-boot-interface ]
   release:
     types: [ prereleased, released ]
 
