@@ -60,6 +60,7 @@ dependencies {
     annotationProcessor project(':processor')
     compileOnly project(':processor')
     implementation project(':core')
+    implementation project(':main:cli')
     implementation 'org.apache.httpcomponents.client5:httpclient5:5.0.3'
     implementation 'com.beust:jcommander:1.48'
     implementation 'javax.inject:javax.inject:1'
