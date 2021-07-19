@@ -119,11 +119,22 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.PAT }}
-      - name: Build and push
+      - name: Build and push cli app Docker image
         uses: docker/build-push-action@v2
         with:
           context: .
           file: ./main/cli/Dockerfile
+          push: true
+          tags: ${{ steps.prep.outputs.tags }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/mobilitydata/gtfs-validator.git
+            org.opencontainers.image.created=${{ steps.prep.outputs.created }}
+            org.opencontainers.image.revision=${{ github.sha }}
+      - name: Build and push Spring Boot app Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./main/springboot/Dockerfile
           push: true
           tags: ${{ steps.prep.outputs.tags }}
           labels: |
