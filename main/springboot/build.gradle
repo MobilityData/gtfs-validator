@@ -1,0 +1,90 @@
+/*
+ * Copyright 2020 Google LLC, MobilityData IO
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+plugins {
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
+    id 'application'
+    id 'java'
+    id 'org.springframework.boot' version '2.5.2'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+applicationDefaultJvmArgs = [ "-Xmx8G" ]
+
+group 'org.mobilitydata'
+version "${System.getenv("versionTag")}"
+
+group 'org.mobilitydata'
+version "${System.getenv("versionTag")}_springboot"
+
+jar {
+    // Add the manifest within the JAR, using gtfs-validator as the title
+    manifest {
+        attributes('Implementation-Title': rootProject.name,
+                'Implementation-Version': project.version,
+                'Main-Class': 'org.mobilitydata.gtfsvalidator.springboot.Main',
+                'Multi-Release': 'true')
+    }
+}
+
+shadowJar {
+    // Change the JAR name from cli-app to gtfs-validator
+    archiveBaseName = rootProject.name
+    // Remove "-all" from the end of the JAR file name
+    archiveClassifier = null
+    // Add "v" to version to match previous releases
+    archiveVersion = project.version
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+mainClassName = 'org.mobilitydata.gtfsvalidator.springboot.Main'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor project(':processor')
+    compileOnly project(':processor')
+    implementation project(':core')
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.0.3'
+    implementation 'com.beust:jcommander:1.48'
+    implementation 'javax.inject:javax.inject:1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
+    implementation 'com.google.guava:guava:29.0-jre'
+    implementation 'com.google.flogger:flogger:0.5.1'
+    implementation 'com.google.flogger:flogger-system-backend:0.5.1'
+    implementation 'com.univocity:univocity-parsers:2.9.0'
+    implementation 'io.sgr:s2-geometry-library-java:1.0.1'
+    implementation 'org.locationtech.spatial4j:spatial4j:0.7'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation group: 'junit', name: 'junit', version: '4.13'
+    testImplementation "com.google.truth:truth:1.0.1"
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
+}
+
+test {
+    // Always run tests, even when nothing changed.
+    dependsOn 'cleanTest'
+
+    // Show test results.
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
