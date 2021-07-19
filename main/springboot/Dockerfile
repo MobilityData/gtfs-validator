@@ -1,5 +1,5 @@
 FROM openjdk:11
-COPY main/springboot/build/libs/gtfs-validator*.jar /
+COPY build/libs/gtfs-validator*.jar /
 WORKDIR /
 EXPOSE 8080
-ENTRYPOINT [ "java", "-jar", "gtfs-validator*.jar"]
+ENTRYPOINT [ "/bin/sh", "-c", "java -jar *.jar"]
