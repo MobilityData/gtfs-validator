@@ -136,7 +136,7 @@ jobs:
           context: .
           file: ./main/springboot/Dockerfile
           push: true
-          tags: ${{ steps.prep.outputs.tags }}
+          tags: ${{ steps.prep.outputs.tags }} - springboot
           labels: |
             org.opencontainers.image.source=https://github.com/mobilitydata/gtfs-validator.git
             org.opencontainers.image.created=${{ steps.prep.outputs.created }}
