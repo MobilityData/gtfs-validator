@@ -45,6 +45,9 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 public class Main {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private static final String GTFS_ZIP_FILENAME = "gtfs.zip";
+  private static final String NOTICE_PACKAGE_NAME = "org.mobilitydata.gtfsvalidator.notice";
+  private static final String VALIDATOR_PACKAGE_NAME = "org.mobilitydata.gtfsvalidator.validator";
+  private static final String NOTICE_SCHEMA_JSON = "notice_schema.json";
 
   public static void main(String[] argv) {
     Arguments args = new Arguments();
@@ -134,6 +137,7 @@ public class Main {
 
     // Output
     exportReport(noticeContainer, args);
+    exportNoticeSchema(args);
     final long endNanos = System.nanoTime();
     if (!feedContainer.isParsedSuccessfully()) {
       System.out.println(" ----------------------------------------- ");
@@ -160,6 +164,21 @@ public class Main {
           noticeContainer.exportSystemErrors(args.getPretty()).getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store report files");
+    }
+  }
+
+  private static void exportNoticeSchema(final Arguments args) {
+    if (args.getExportNoticeSchema()) {
+      new File(args.getOutputBase()).mkdirs();
+      try {
+        Files.write(
+            Paths.get(args.getOutputBase(), NOTICE_SCHEMA_JSON),
+            NoticeContainer
+                .exportNoticesSchema(args.getPretty(), NOTICE_PACKAGE_NAME, VALIDATOR_PACKAGE_NAME)
+                .getBytes(StandardCharsets.UTF_8));
+      } catch (IOException e) {
+        logger.atSevere().withCause(e).log("Cannot store notice schema file");
+      }
     }
   }
 }
