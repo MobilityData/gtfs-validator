@@ -295,8 +295,8 @@ public class NoticeContainer {
     });
     if (!noticeConstructorHasSeverityLevelParameter(constructor)) {
       JsonObject severityDetails = new JsonObject();
-      parametersAsJsonArray.add(severityDetails);
       severityDetails.addProperty(SEVERITY_LEVEL_CLASS_SIMPLE_NAME, BLOB);
+      parametersAsJsonArray.add(severityDetails);
     }
     return parametersAsJsonArray;
   }
