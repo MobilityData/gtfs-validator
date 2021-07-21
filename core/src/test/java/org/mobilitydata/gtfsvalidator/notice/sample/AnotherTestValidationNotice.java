@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice.sample;
 
 import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
+import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
@@ -29,7 +29,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
  */
 public class AnotherTestValidationNotice extends ValidationNotice {
 
-  @NoticeExport
+  @SchemaExport
   public AnotherTestValidationNotice(String filename, long csvRowNumber, String fieldName,
       Object fieldValue, double otherFieldValue, GtfsDate sampleDate, GtfsTime sampleTime,
       GtfsColor sampleColor) {

@@ -16,7 +16,7 @@
 package org.mobilitydata.gtfsvalidator.notice.sample;
 
 import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
+import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 
@@ -25,7 +25,7 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
  */
 public class SomeTestValidationNotice extends ValidationNotice {
 
-  @NoticeExport
+  @SchemaExport
   public SomeTestValidationNotice(String filename, long csvRowNumber, String fieldName,
       Object fieldValue, SeverityLevel severityLevel) {
     super(

@@ -35,7 +35,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
+import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
@@ -358,7 +358,7 @@ public class NoticeContainer {
    */
   private static Constructor<?> getAnnotatedConstructor(Class<?> clazz) {
     for (Constructor<?> constructor : clazz.getDeclaredConstructors()) {
-      if (constructor.isAnnotationPresent(NoticeExport.class)) {
+      if (constructor.isAnnotationPresent(SchemaExport.class)) {
         return constructor;
       }
     }
