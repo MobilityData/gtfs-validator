@@ -295,7 +295,8 @@ public class NoticeContainer {
     });
     if (!noticeConstructorHasSeverityLevelParameter(constructor)) {
       JsonObject severityDetails = new JsonObject();
-      severityDetails.addProperty(SEVERITY_LEVEL_CLASS_SIMPLE_NAME, BLOB);
+      severityDetails.addProperty(NAME, SEVERITY_LEVEL_CLASS_SIMPLE_NAME);
+      severityDetails.addProperty(TYPE, BLOB);
       parametersAsJsonArray.add(severityDetails);
     }
     return parametersAsJsonArray;
@@ -311,7 +312,7 @@ public class NoticeContainer {
    */
   private static boolean noticeConstructorHasSeverityLevelParameter(Constructor<?> constructor) {
     for (Parameter parameter : constructor.getParameters()) {
-      if (parameter.getName().equals(SEVERITY_LEVEL_CLASS_SIMPLE_NAME)) {
+      if (parameter.getType().getSimpleName().equals(SEVERITY_LEVEL_CLASS_SIMPLE_NAME)) {
         return true;
       }
     }
