@@ -10,16 +10,14 @@ public class GtfsValidatorController {
 
   @GetMapping("/")
   public void run(
-      @RequestParam() String output_base,
-      @RequestParam() String threads,
-      @RequestParam() String country_code,
+      @RequestParam(required = false, defaultValue = "output") String output_base,
+      @RequestParam(required = false, defaultValue = "4") String threads,
       @RequestParam() String url,
-      @RequestParam() String validation_report_name,
-      @RequestParam() String system_error_report_name) {
+      @RequestParam(required = false, defaultValue = "report.json") String validation_report_name,
+      @RequestParam(required = false, defaultValue = "errors.json") String system_error_report_name) {
     String[] argv = {
         "-o", output_base,
         "-t", threads,
-        "-c", country_code,
         "-u", url,
         "-v", validation_report_name,
         "-e", system_error_report_name
