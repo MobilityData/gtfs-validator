@@ -640,6 +640,7 @@
 | `route_color_contrastNotice`               	| [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	|
 | `route_short_and_long_name_equalNotice`    	| [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	|
 | `route_short_name_too_longNotice`          	| [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	|
+| `same_route_url_and_agency_url`           	| [`SameRouteUrlAndAgencyUrlNotice`](#SameRouteUrlAndAgencyUrlNotice)                   |
 | `start_and_end_time_equalNotice`           	| [`StartAndEndTimeEqualNotice`](#StartAndEndTimeEqualNotice)                       	|
 | `stop_time_timepoint_without_timesNotice`  	| [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	|
 | `stop_too_far_from_trip_shapeNotice`       	| [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	|
@@ -823,6 +824,20 @@
 | `routeShortName` 	| The faulty record's `route_short_name`. 	| String 	|
 
 ##### Affected files
+* [`routes.txt`](http://gtfs.org/reference/static#routestxt)
+
+#### [SameRouteUrlAndAgencyUrlNotice](/RULES.md#SameRouteUrlAndAgencyUrlNotice)
+##### Fields description
+
+| Field name     	| Description                                	| Type   	|
+|----------------	|--------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row number of the faulty record.       	| Long   	|
+| `routeId`       	| The faulty record's id.                    	| String 	|
+| `agencyId`    	| The faulty record's `routes.agency_id`.    	| String 	|
+| `routeUrl`     	| The duplicate URL value                    	| String 	|
+
+##### Affected files
+* [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
 #### [StopTimeTimepointWithoutTimesNotice](/RULES.md#StopTimeTimepointWithoutTimesNotice)

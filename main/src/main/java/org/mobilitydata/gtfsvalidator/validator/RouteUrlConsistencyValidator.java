@@ -36,7 +36,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
  * <p>Generated notice:
  *
  * <ul>
- *   <li>{@link RouteUrlConsistencyValidator} - a {@code GtfsRoute} has the same value for
+ *   <li>{@link SameRouteUrlAndAgencyUrlNotice} - a {@code GtfsRoute} has the same value for
  *   {@code routes.route_url} as the {@code GtfsAgency} it is related to.
  * </ul>
  */
