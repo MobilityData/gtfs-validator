@@ -12,6 +12,7 @@ repositories {
 }
 
 dependencies {
+    implementation project(':main:cli')
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 }
