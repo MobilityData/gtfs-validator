@@ -130,6 +130,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	| Insufficient route color contrast.                                                                                                                          	|
 | [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	| Short and long name are equal for a route.                                                                                                                  	|
 | [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	| Short name of a route is too long (more than 12 characters).                                                                                                	|
+| [`SameRouteUrlAndAgencyUrlNotice`](#SameRouteUrlAndAgencyUrlNotice)                  	| Same `routes.route_url` and `agency.agency_url`.                                                                                                  	        |
 | [`StartAndEndTimeEqualNotice`](#StartAndEndTimeEqualNotice)                       	| Equal `frequencies.start_time` and `frequencies.end_time`.                                                                                                  	|
 | [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	| `arrival_time` or `departure_time` not specified for timepoint.                                                                                             	|
 | [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	| Stop too far from trip shape.                                                                                                                               	|
@@ -683,6 +684,15 @@ Short name of a route is too long (more than 12 characters).
 
 ##### References:
 * [routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
+
+<a name="SameRouteUrlAndAgencyUrlNotice"/>
+
+#### SameRouteUrlAndAgencyUrlNotice
+
+A route should not have the same url as the agency it is related to.
+
+##### References:
+* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 
 <a name="StartAndEndTimeEqualNotice"/>
 
