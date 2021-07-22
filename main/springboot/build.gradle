@@ -1,13 +1,17 @@
 plugins {
     id 'java'
+    id 'org.springframework.boot' version '2.5.0'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
-version 'unspecified'
+group 'org.mobilitydata'
+version "gtfs-validator-${System.getenv("versionTag")}_springboot"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 }
