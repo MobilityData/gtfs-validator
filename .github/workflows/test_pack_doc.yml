@@ -60,7 +60,8 @@ jobs:
           name: Test report - Java -- ${{ steps.prep.outputs.versionTag }}
           path: |
             core/build/reports/tests/
-            main/build/reports/tests/
+            main/cli/build/reports/tests/
+            main/springboot/build/reports/tests
             processor/build/reports/tests/
 
   pack:
@@ -103,7 +104,13 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Application - cli executable .jar -- ${{ steps.prep.outputs.versionTag }}
-          path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
+          path: main/cli/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
+      - name: Persist Spring Boot app jar
+        uses: actions/upload-artifact@v2
+        with:
+          name: Application - spring boot executable .jar -- ${{ steps.prep.outputs.versionTag }}
+          path: main/springboot/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_springboot.jar
+
   doc:
     needs: [test]
     runs-on: ubuntu-latest
