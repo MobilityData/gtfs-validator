@@ -25,12 +25,11 @@ import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mobilitydata.gtfsvalidator.notice.sample.AnotherTestValidationNotice;
+import org.mobilitydata.gtfsvalidator.validator.sample.SampleTestValidator;
 
 @RunWith(JUnit4.class)
 public class NoticeContainerTest {
-
-  private static final String NOTICE_PACKAGE_NAME = "org.mobilitydata.gtfsvalidator.notice.sample";
-  private static final String VALIDATOR_PACKAGE_NAME = "org.mobilitydata.gtfsvalidator.validator.sample";
 
   @Test
   public void exportJson_defaultPrint() {
@@ -174,8 +173,8 @@ public class NoticeContainerTest {
   public void exportNoticesSchema() throws IOException {
         assertThat(NoticeContainer.exportNoticesSchema(
             true,
-            NOTICE_PACKAGE_NAME,
-            VALIDATOR_PACKAGE_NAME)).isEqualTo("{\n"
+            AnotherTestValidationNotice.class.getPackage().getName(),
+            SampleTestValidator.class.getPackage().getName())).isEqualTo("{\n"
             + "  \"AnotherTestValidationNotice\": [\n"
             + "    {\n"
             + "      \"name\": \"filename\",\n"

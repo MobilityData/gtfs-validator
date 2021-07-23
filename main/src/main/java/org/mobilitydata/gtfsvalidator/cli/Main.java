@@ -34,9 +34,11 @@ import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
 import org.mobilitydata.gtfsvalidator.validator.DefaultValidatorProvider;
+import org.mobilitydata.gtfsvalidator.validator.GtfsFieldValidator;
 import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
@@ -45,8 +47,6 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 public class Main {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private static final String GTFS_ZIP_FILENAME = "gtfs.zip";
-  private static final String NOTICE_PACKAGE_NAME = "org.mobilitydata.gtfsvalidator.notice";
-  private static final String VALIDATOR_PACKAGE_NAME = "org.mobilitydata.gtfsvalidator.validator";
   private static final String NOTICE_SCHEMA_JSON = "notice_schema.json";
 
   public static void main(String[] argv) {
@@ -176,7 +176,10 @@ public class Main {
         Files.write(
             Paths.get(args.getOutputBase(), NOTICE_SCHEMA_JSON),
             NoticeContainer
-                .exportNoticesSchema(args.getPretty(), NOTICE_PACKAGE_NAME, VALIDATOR_PACKAGE_NAME)
+                .exportNoticesSchema(
+                    args.getPretty(),
+                    ValidationNotice.class.getPackage().getName(),
+                    GtfsFieldValidator.class.getPackage().getName())
                 .getBytes(StandardCharsets.UTF_8));
       } catch (IOException e) {
         logger.atSevere().withCause(e).log("Cannot store notice schema file");
