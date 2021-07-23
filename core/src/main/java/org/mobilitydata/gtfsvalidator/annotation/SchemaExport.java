@@ -20,7 +20,17 @@ import java.lang.annotation.RetentionPolicy;
 
 /**
  * Annotation to be used on notice constructor. This specifies the constructor to be used to
- * identify notice field names and data types when exporting the notice schema.
+ * identify notice field names and data types when exporting the notice schema. This annotation
+ * defines new variables to be used when export the notice schema as a json file.
  */
 @Retention(RetentionPolicy.RUNTIME)
-public @interface SchemaExport {}
+public @interface SchemaExport {
+  String JSON_KEY_NAME = "name";
+  String JSON_KEY_TYPE = "type";
+  String BLOB_DATA_TYPE = "BLOB";
+  String VARCHAR_DATA_TYPE = "VARCHAR";
+  String BIGINT_DATA_TYPE = "BIGINT";
+  String INTEGER_DATA_TYPE = "INTEGER";
+  String CLASS_SIMPLE_NAME_SEVERITY_LEVEL = "SeverityLevel";
+}
+

@@ -16,6 +16,14 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.annotation.SchemaExport.BIGINT_DATA_TYPE;
+import static org.mobilitydata.gtfsvalidator.annotation.SchemaExport.BLOB_DATA_TYPE;
+import static org.mobilitydata.gtfsvalidator.annotation.SchemaExport.CLASS_SIMPLE_NAME_SEVERITY_LEVEL;
+import static org.mobilitydata.gtfsvalidator.annotation.SchemaExport.INTEGER_DATA_TYPE;
+import static org.mobilitydata.gtfsvalidator.annotation.SchemaExport.JSON_KEY_NAME;
+import static org.mobilitydata.gtfsvalidator.annotation.SchemaExport.VARCHAR_DATA_TYPE;
+import static org.mobilitydata.gtfsvalidator.annotation.SchemaExport.JSON_KEY_TYPE;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ListMultimap;
@@ -64,15 +72,6 @@ public class NoticeContainer {
    * <p>Note that system errors are not limited since we don't expect to have a lot of them.
    */
   private static final int MAX_VALIDATION_NOTICES = 10000000;
-  private static final String NAME = "name";
-  private static final String TYPE = "type";
-  private static final String BLOB = "BLOB";
-  private static final String VARCHAR = "VARCHAR";
-  private static final String BIGINT = "BIGINT";
-  private static final String NOTICE_CONTAINER_CLASS_SIMPLE_NAME = "NoticeContainer";
-  private static final String VALIDATION_NOTICE_CLASS_SIMPLE_NAME = "ValidationNotice";
-  private static final String SEVERITY_LEVEL_CLASS_SIMPLE_NAME = "SeverityLevel";
-  private static final String INTEGER_CLASS_SIMPLE_NAME = "INTEGER";
 
   private final List<ValidationNotice> validationNotices = new ArrayList<>();
   private final List<SystemError> systemErrors = new ArrayList<>();
@@ -234,10 +233,10 @@ public class NoticeContainer {
       if (clazz.isEnum()) {
         continue;
       }
-      if (clazz.getSimpleName().equals(NOTICE_CONTAINER_CLASS_SIMPLE_NAME)) {
+      if (clazz.getSimpleName().equals(NoticeContainer.class.getSimpleName())) {
         continue;
       }
-      if (clazz.getSimpleName().equals(VALIDATION_NOTICE_CLASS_SIMPLE_NAME)) {
+      if (clazz.getSimpleName().equals(ValidationNotice.class.getSimpleName())) {
         continue;
       }
       toReturn.add(
@@ -289,14 +288,14 @@ public class NoticeContainer {
     JsonArray parametersAsJsonArray = new JsonArray();
     Arrays.stream(constructor.getParameters()).forEach(parameter -> {
       JsonObject parameterDetails = new JsonObject();
-      parameterDetails.addProperty(NAME, parameter.getName());
-        parameterDetails.addProperty(TYPE, mapDataType(parameter));
+      parameterDetails.addProperty(JSON_KEY_NAME, parameter.getName());
+        parameterDetails.addProperty(JSON_KEY_TYPE, mapDataType(parameter));
       parametersAsJsonArray.add(parameterDetails);
     });
     if (!noticeConstructorHasSeverityLevelParameter(constructor)) {
       JsonObject severityDetails = new JsonObject();
-      severityDetails.addProperty(NAME, SEVERITY_LEVEL_CLASS_SIMPLE_NAME);
-      severityDetails.addProperty(TYPE, BLOB);
+      severityDetails.addProperty(JSON_KEY_NAME, CLASS_SIMPLE_NAME_SEVERITY_LEVEL);
+      severityDetails.addProperty(JSON_KEY_TYPE, BLOB_DATA_TYPE);
       parametersAsJsonArray.add(severityDetails);
     }
     return parametersAsJsonArray;
@@ -312,7 +311,7 @@ public class NoticeContainer {
    */
   private static boolean noticeConstructorHasSeverityLevelParameter(Constructor<?> constructor) {
     for (Parameter parameter : constructor.getParameters()) {
-      if (parameter.getType().getSimpleName().equals(SEVERITY_LEVEL_CLASS_SIMPLE_NAME)) {
+      if (parameter.getType().getSimpleName().equals(CLASS_SIMPLE_NAME_SEVERITY_LEVEL)) {
         return true;
       }
     }
@@ -328,14 +327,14 @@ public class NoticeContainer {
    */
   private static String mapDataType(Parameter parameter) {
     ImmutableMap.Builder<Class<?>, String> builder = ImmutableMap.builder();
-    builder.put(int.class, INTEGER_CLASS_SIMPLE_NAME);
-    builder.put(GtfsColor.class, VARCHAR);
-    builder.put(String.class, VARCHAR);
-    builder.put(long.class, BIGINT);
-    builder.put(SeverityLevel.class, BLOB);
-    builder.put(GtfsDate.class, BLOB);
-    builder.put(GtfsTime.class, BLOB);
-    builder.put(Object.class, BLOB);
+    builder.put(int.class, INTEGER_DATA_TYPE);
+    builder.put(GtfsColor.class, VARCHAR_DATA_TYPE);
+    builder.put(String.class, VARCHAR_DATA_TYPE);
+    builder.put(long.class, BIGINT_DATA_TYPE);
+    builder.put(SeverityLevel.class, BLOB_DATA_TYPE);
+    builder.put(GtfsDate.class, BLOB_DATA_TYPE);
+    builder.put(GtfsTime.class, BLOB_DATA_TYPE);
+    builder.put(Object.class, BLOB_DATA_TYPE);
     ImmutableMap<Class<?>, String> typeMap = builder.build();
     return JDBCType.valueOf(
         typeMap.getOrDefault(
