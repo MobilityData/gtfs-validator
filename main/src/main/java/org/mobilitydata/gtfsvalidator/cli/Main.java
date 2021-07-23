@@ -59,6 +59,10 @@ public class Main {
           "⚠️ Note that parameters marked with an asterisk (*) in the help menu are mandatory.");
       return;
     }
+    if (args.getExportNoticeSchema()) {
+      exportNoticeSchema(args);
+      return;
+    }
     if (!CliParametersAnalyzer.isValid(args)) {
       System.exit(1);
     }
@@ -137,7 +141,6 @@ public class Main {
 
     // Output
     exportReport(noticeContainer, args);
-    exportNoticeSchema(args);
     final long endNanos = System.nanoTime();
     if (!feedContainer.isParsedSuccessfully()) {
       System.out.println(" ----------------------------------------- ");
@@ -168,7 +171,6 @@ public class Main {
   }
 
   private static void exportNoticeSchema(final Arguments args) {
-    if (args.getExportNoticeSchema()) {
       new File(args.getOutputBase()).mkdirs();
       try {
         Files.write(
@@ -180,5 +182,4 @@ public class Main {
         logger.atSevere().withCause(e).log("Cannot store notice schema file");
       }
     }
-  }
 }
