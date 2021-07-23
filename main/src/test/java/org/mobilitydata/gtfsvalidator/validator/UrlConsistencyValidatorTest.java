@@ -32,27 +32,26 @@ import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteType;
-import org.mobilitydata.gtfsvalidator.validator.RouteUrlConsistencyValidator.SameRouteUrlAndAgencyUrlNotice;
+import org.mobilitydata.gtfsvalidator.validator.UrlConsistencyValidator.SameRouteAndAgencyUrlNotice;
 
 @RunWith(JUnit4.class)
-public class RouteUrlConsistencyValidatorTest {
+public class UrlConsistencyValidatorTest {
 
   private static List<ValidationNotice> generateNotices(List<GtfsAgency> agencies,
       List<GtfsRoute> routes) {
     NoticeContainer noticeContainer = new NoticeContainer();
-    new RouteUrlConsistencyValidator(
+    new UrlConsistencyValidator(
         GtfsAgencyTableContainer.forEntities(agencies, noticeContainer),
         GtfsRouteTableContainer.forEntities(routes, noticeContainer))
         .validate(noticeContainer);
     return noticeContainer.getValidationNotices();
   }
 
-  private static GtfsAgency createAgency(long csvRowNumber, String agencyId) {
+  private static GtfsAgency createAgency(long csvRowNumber, String agencyName, String agencyUrl) {
     return new GtfsAgency.Builder()
         .setCsvRowNumber(csvRowNumber)
-        .setAgencyId(agencyId)
-        .setAgencyName("agency name value")
-        .setAgencyUrl("www.mobilitydata.org")
+        .setAgencyName(agencyName)
+        .setAgencyUrl(agencyUrl)
         .setAgencyTimezone(ZoneId.of("America/Toronto"))
         .setAgencyLang(Locale.ENGLISH)
         .build();
@@ -71,38 +70,28 @@ public class RouteUrlConsistencyValidatorTest {
   }
 
   @Test
+  public void agenciesSameUrl_generateNotice() {
+  }
+
+  @Test
   public void differentRouteUrlAndAgencyUrl_noNotice() {
     assertThat(
         generateNotices(
             ImmutableList.of(
                 createAgency(
                     0,
-                    "first agency id value"
+                    "first agency id value",
+                    "www.mobilitydata.org"
                 ),
                 createAgency(
                     2,
-                    "other agency id value"
+                    "other agency id value",
+                    "www.someotherurl"
                 )),
             ImmutableList.of(
                 createRoute(
                     "first agency id value",
                     "www.atotallydifferenturl.com"))
-        )).isEmpty();
-  }
-
-  @Test
-  public void differentRouteUrlAndAgencyUrlNoAgencyId_noNotice() {
-    assertThat(
-        generateNotices(
-            ImmutableList.of(
-                createAgency(
-                    0,
-                    null
-                )),
-            ImmutableList.of(
-                createRoute(
-                    null,
-                    "www.atotaldifferenturl.com"))
         )).isEmpty();
   }
 
@@ -113,77 +102,22 @@ public class RouteUrlConsistencyValidatorTest {
             ImmutableList.of(
                 createAgency(
                     0,
-                    "first agency id value"
+                    "first agency name value",
+                    "www.mobilitydata.org"
                 ),
                 createAgency(
                     2,
-                    "other agency id value"
+                    "other agency name value",
+                    "www.anotherurl.com"
                 )),
             ImmutableList.of(
                 createRoute(
-                    "first agency id value",
+                    "route id value",
                     "www.mobilitydata.org"))
         ))
         .containsExactly(
-            new SameRouteUrlAndAgencyUrlNotice(3, "route id value", "first agency id value",
-                "www.mobilitydata.org"));
+            new SameRouteAndAgencyUrlNotice(3, "route id value", "first agency name value",
+                "www.mobilitydata.org", 0));
 
-  }
-
-  @Test
-  public void sameRouteUrlAndAgencyUrlNoAgencyId_generatesNotice() {
-    assertThat(
-        generateNotices(
-            ImmutableList.of(
-                createAgency(
-                    0,
-                    null
-                )),
-            ImmutableList.of(
-                createRoute(
-                    null,
-                    "www.mobilitydata.org"))
-        ))
-        .containsExactly(
-            new SameRouteUrlAndAgencyUrlNotice(3, "route id value", "",
-                "www.mobilitydata.org"));
-  }
-
-  @Test
-  public void sameRouteUrlAndAgencyUrlForeignKeyError_multipleAgencies_noNotice() {
-    assertThat(
-        generateNotices(
-            ImmutableList.of(
-                createAgency(
-                    0,
-                    "first agency id value"
-                ),
-                createAgency(
-                    2,
-                    "other agency id value"
-                )),
-            ImmutableList.of(
-                createRoute(
-                    "wrong foreign key",
-                    "www.mobilitydata.org"))
-        ))
-        .isEmpty();
-  }
-
-  @Test
-  public void sameRouteUrlAndAgencyUrlForeignKeyError_singleAgency_noNotice() {
-    assertThat(
-        generateNotices(
-            ImmutableList.of(
-                createAgency(
-                    0,
-                    "first agency id value"
-                )),
-            ImmutableList.of(
-                createRoute(
-                    "wrong foreign key",
-                    "www.mobilitydata.org"))
-        ))
-        .isEmpty();
   }
 }
