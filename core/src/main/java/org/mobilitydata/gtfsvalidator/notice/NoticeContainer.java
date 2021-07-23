@@ -287,7 +287,7 @@ public class NoticeContainer {
         parameterDetails.addProperty(JSON_KEY_TYPE, mapDataType(parameter));
       parametersAsJsonArray.add(parameterDetails);
     });
-    if (!noticeConstructorHasSeverityLevelParameter(constructor)) {
+    if (!hasSeverityLevelParameter(constructor)) {
       JsonObject severityDetails = new JsonObject();
       severityDetails.addProperty(JSON_KEY_NAME, CLASS_SIMPLE_NAME_SEVERITY_LEVEL);
       severityDetails.addProperty(JSON_KEY_TYPE, BLOB_DATA_TYPE);
@@ -304,7 +304,7 @@ public class NoticeContainer {
    * @return true if a notice constructor includes a parameter of type {@code SeverityLevel},
    * otherwise returns false.
    */
-  private static boolean noticeConstructorHasSeverityLevelParameter(Constructor<?> constructor) {
+  private static boolean hasSeverityLevelParameter(Constructor<?> constructor) {
     for (Parameter parameter : constructor.getParameters()) {
       if (parameter.getType().getSimpleName().equals(CLASS_SIMPLE_NAME_SEVERITY_LEVEL)) {
         return true;
