@@ -227,22 +227,17 @@ public class NoticeContainer {
     for (ClassPath.ClassInfo noticeClass :
         ClassPath.from(ClassLoader.getSystemClassLoader()).getTopLevelClasses(noticePackageName)) {
       clazz = noticeClass.load();
-      if (!ValidationNotice.class.isAssignableFrom(clazz)) {
-        continue;
+      if (ValidationNotice.class.isAssignableFrom(clazz)) {
+        // do not iterate over ValidationNotice.java which is the base class for all validation
+        // notices
+        if (clazz.equals(ValidationNotice.class)){
+          continue;
+        }
+        toReturn.add(
+            noticeClass.getSimpleName(),
+            extractNoticeProperties(clazz)
+        );
       }
-      if (clazz.isEnum()) {
-        continue;
-      }
-      if (clazz.getSimpleName().equals(NoticeContainer.class.getSimpleName())) {
-        continue;
-      }
-      if (clazz.getSimpleName().equals(ValidationNotice.class.getSimpleName())) {
-        continue;
-      }
-      toReturn.add(
-          noticeClass.getSimpleName(),
-          extractNoticeProperties(clazz)
-      );
     }
     return toReturn;
   }
