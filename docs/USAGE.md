@@ -18,6 +18,7 @@
 | `-u`       	| `--url`                       	| Optional  	| Fully qualified URL to download GTFS archive.                                                                             	|
 | `-v`       	| `--validation_report_name`    	| Optional  	| Name of the validation report (including `.json` extension).                                                              	|
 | `-e`       	| `--system_errors_report_name` 	| Optional  	| Name of the system errors report (including `.json` extension).                                                             	|
+| `-n`       	| `--export_notice_schema`       	| Optional  	| Export notice schema as a json file.                                                                                           |
 
 ⚠️ Note that exactly one of the following options must be provided: `--url` or `--input`.
 
@@ -61,3 +62,13 @@ Please note that since downloading will take time, we recommend validating repea
 You should now see the workflow `End to end / run-on-data` start automatically in your PR checks, running the validator on the dataset you just added. The validation report is collected as a run artifact in the Actions tab of your fork repository on GitHub.
 
 If the workflow run crashes or something doesn't look right in the validation report json file, **please see the [guide to reproduce](/docs/REPRODUCE_ERRORS.md) section.**
+
+## Export notice schema
+Sample usage:
+
+``` 
+java -jar gtfs-validator-SNAPSHOT.jar --export_notice_schema 
+```
+
+...which will:
+ 1. Generate and export all validation notices as a json file. 
