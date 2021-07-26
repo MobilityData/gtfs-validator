@@ -59,14 +59,14 @@ public class StopZoneIdValidator extends FileValidator {
       if (stop.hasZoneId()) {
         return;
       }
-      noticeContainer
-          .addValidationNotice(new StopWithoutZoneIdNotice(stop.stopId(), stop.csvRowNumber()));
+      noticeContainer.addValidationNotice(
+          new StopWithoutZoneIdNotice(stop.stopId(), stop.csvRowNumber()));
     }
   }
 
   private boolean isStationOrEntrance(GtfsStop stop) {
-    return stop.locationType().equals(GtfsLocationType.STATION) || stop.locationType()
-        .equals(GtfsLocationType.STOP);
+    return stop.locationType().equals(GtfsLocationType.STATION)
+        || stop.locationType().equals(GtfsLocationType.STOP);
   }
 
   /**
