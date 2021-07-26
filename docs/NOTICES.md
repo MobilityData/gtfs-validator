@@ -739,6 +739,9 @@
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
 
+##### Affected files
+[All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
+
 #### [MissingFeedInfoDateNotice](/RULES.md#MissingFeedInfoDateNotice)
 ##### Fields description
 
