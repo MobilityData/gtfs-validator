@@ -140,6 +140,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`UnusableTripNotice`](#UnusableTripNotice)                                       	| Trips must have more than one stop to be usable.                                                                                                            	|
 | [`UnusedShapeNotice`](#UnusedShapeNotice)                                         	| Shape is not used in GTFS file `trips.txt`.                                                                                                                 	|
 | [`UnusedTripNotice`](#UnusedTripNotice)                                           	| Trip is not be used in `stop_times.txt`                                                                                                                     	|
+| [`WrongStopTimeStopLocationTypeNotice`](#WrongStopTimeStopLocationTypeNotice)         | Stop with the wrong `stops.location_type` are referenced from `stop_times.stop_id`.                                                                           |
 
 <a name="INFOS"/>
 
@@ -777,6 +778,13 @@ Trips must be referred to at least once in `stop_times.txt`.
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
+
+#### WrongStopTimeStopLocationTypeNotice
+
+Referenced locations (using `stop_times.stop_id`) must be stops/platforms, i.e. their `stops.location_type` value must be 0 or empty.
+
+##### References:
+* [stop_times.txt GTFS specification](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stoptimestxt)
 
 ### Info
 
