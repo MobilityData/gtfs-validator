@@ -130,6 +130,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	| Insufficient route color contrast.                                                                                                                          	|
 | [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	| Short and long name are equal for a route.                                                                                                                  	|
 | [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	| Short name of a route is too long (more than 12 characters).                                                                                                	|
+| [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)         | Same name and description for route.                                                                                                                      	|
 | [`StartAndEndTimeEqualNotice`](#StartAndEndTimeEqualNotice)                       	| Equal `frequencies.start_time` and `frequencies.end_time`.                                                                                                  	|
 | [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	| `arrival_time` or `departure_time` not specified for timepoint.                                                                                             	|
 | [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	| Stop too far from trip shape.                                                                                                                               	|
@@ -683,6 +684,17 @@ Short name of a route is too long (more than 12 characters).
 
 ##### References:
 * [routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
+
+<a name="SameNameAndDescriptionForStopNotice"/>
+
+#### SameNameAndDescriptionForStopNotice
+
+The GTFS spec defines `stops.txt` [stop_description](https://gtfs.org/reference/static/#stopstxt) as:
+
+> Description of the location that provides useful, quality information. Do not simply duplicate the name of the location.
+
+##### References:
+[stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 
 <a name="StartAndEndTimeEqualNotice"/>
 
