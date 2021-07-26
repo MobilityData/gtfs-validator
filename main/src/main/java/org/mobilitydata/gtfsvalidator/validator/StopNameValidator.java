@@ -54,8 +54,7 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
   }
 
   /**
-   * A {@code GtfsStop} has identical value for {@code stops.route_desc} and {@code
-   * stops.stop_name}
+   * A {@code GtfsStop} has identical value for {@code stops.route_desc} and {@code stops.stop_name}
    *
    * <p>"Do not simply duplicate the name of the location."
    * (http://gtfs.org/reference/static#stopstxt)
@@ -65,8 +64,7 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
   static class SameNameAndDescriptionForStopNotice extends ValidationNotice {
 
     @SchemaExport
-    SameNameAndDescriptionForStopNotice(
-        long csvRowNumber, String stopId, String routeDesc) {
+    SameNameAndDescriptionForStopNotice(long csvRowNumber, String stopId, String routeDesc) {
       super(
           new ImmutableMap.Builder<String, Object>()
               .put("stopId", stopId)

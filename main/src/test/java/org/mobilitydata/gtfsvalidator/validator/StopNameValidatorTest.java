@@ -32,10 +32,7 @@ import org.mobilitydata.gtfsvalidator.validator.StopNameValidator.SameNameAndDes
 public class StopNameValidatorTest {
 
   private static GtfsStop createStop(
-      int csvRowNumber,
-      String stopId,
-      @Nullable String stopName,
-      @Nullable String stopDesc) {
+      int csvRowNumber, String stopId, @Nullable String stopName, @Nullable String stopDesc) {
     return new GtfsStop.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setStopId(stopId)
@@ -53,30 +50,25 @@ public class StopNameValidatorTest {
   @Test
   public void sameStopNameAndDesc_generatesNotice() {
     assertThat(
-        generateNotices(createStop(4, "stop id value", "duplicate value", "duplicate value")))
+            generateNotices(createStop(4, "stop id value", "duplicate value", "duplicate value")))
         .containsExactly(
-            new SameNameAndDescriptionForStopNotice(4, "stop id value", "duplicate value")
-        );
+            new SameNameAndDescriptionForStopNotice(4, "stop id value", "duplicate value"));
   }
 
   @Test
   public void differentStopNameAndDesc_noNotice() {
     assertThat(
-        generateNotices(createStop(4, "stop id value", "stop name value", "stop desc value")))
+            generateNotices(createStop(4, "stop id value", "stop name value", "stop desc value")))
         .isEmpty();
   }
 
   @Test
   public void missingStopName_noNotice() {
-    assertThat(
-        generateNotices(createStop(4, "stop id value", null, "stop desc value")))
-        .isEmpty();
+    assertThat(generateNotices(createStop(4, "stop id value", null, "stop desc value"))).isEmpty();
   }
 
   @Test
   public void missingStopDesc_noNotice() {
-    assertThat(
-        generateNotices(createStop(4, "stop id value", "stop name value", null)))
-        .isEmpty();
+    assertThat(generateNotices(createStop(4, "stop id value", "stop name value", null))).isEmpty();
   }
 }
