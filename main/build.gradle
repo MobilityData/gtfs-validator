@@ -54,6 +54,7 @@ shadowJar {
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 mainClassName = 'org.mobilitydata.gtfsvalidator.cli.Main'
+compileJava.options.encoding = "UTF-8"
 
 repositories {
     mavenCentral()
