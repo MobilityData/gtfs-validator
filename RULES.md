@@ -130,12 +130,14 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	| Insufficient route color contrast.                                                                                                                          	|
 | [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	| Short and long name are equal for a route.                                                                                                                  	|
 | [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	| Short name of a route is too long (more than 12 characters).                                                                                                	|
+| [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)         | Same name and description for route.                                                                                                                      	|
 | [`SameRouteAndAgencyUrlNotice`](#SameRouteAndAgencyUrlNotice)                       	| Same `routes.route_url` and `agency.agency_url`.                                                                                                  	        |
 | [`SameStopAndAgencyUrlNotice`](#SameStopAndAgencyUrlNotice)                          	| Same `stops.stop_url` and `agency.agency_url`.                                                                                                  	            |
 | [`SameStopAndRouteUrlNotice`](#SameStopAndRouteUrlNotice)                          	| Same `stops.stop_url` and `routes.route_url`.                                                                                                  	            |
 | [`StartAndEndTimeEqualNotice`](#StartAndEndTimeEqualNotice)                       	| Equal `frequencies.start_time` and `frequencies.end_time`.                                                                                                  	|
 | [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	| `arrival_time` or `departure_time` not specified for timepoint.                                                                                             	|
 | [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	| Stop too far from trip shape.                                                                                                                               	|
+| [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                              	| Stop without value for `stops.zone_id`.                                                                                                                     	|
 | [`TooFastTravelNotice`](#TooFastTravelNotice)                                     	| Fast travel between stops in `stop_times.txt`.                                                                                                              	|
 | [`UnexpectedEnumValueNotice`](#UnexpectedEnumValueNotice)                         	| An enum has an unexpected value.                                                                                                                            	|
 | [`UnusableTripNotice`](#UnusableTripNotice)                                       	| Trips must have more than one stop to be usable.                                                                                                            	|
@@ -687,6 +689,17 @@ Short name of a route is too long (more than 12 characters).
 ##### References:
 * [routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
 
+<a name="SameNameAndDescriptionForStopNotice"/>
+
+#### SameNameAndDescriptionForStopNotice
+
+The GTFS spec defines `stops.txt` [stop_description](https://gtfs.org/reference/static/#stopstxt) as:
+
+> Description of the location that provides useful, quality information. Do not simply duplicate the name of the location.
+
+##### References:
+[stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+
 <a name="SameRouteAndAgencyUrlNotice"/>
 
 #### SameRouteAndAgencyUrlNotice
@@ -740,6 +753,15 @@ Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100
 
 ##### References:
 * [GTFS Best Practices shapes.txt](https://gtfs.org/best-practices/#shapestxt)
+
+<a name="StopWithoutZoneIdNotice"/>
+
+#### StopWithoutZoneIdNotice
+
+Per GTFS specification, `stops.zone_id` should be provided if fare information is provided using `fare_rules.txt`. This rule does not apply to records from `stops.txt` that represent a stop or en entrance (i.e. `stops.location_type = 1 or 2`).
+
+##### References:
+* [GTFS stops.txt specification](https://gtfs.org/reference/static#stopstxt)
 
 <a name="TooFastTravelNotice"/>
 

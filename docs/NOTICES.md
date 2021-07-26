@@ -640,12 +640,14 @@
 | `route_color_contrastNotice`               	| [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	|
 | `route_short_and_long_name_equalNotice`    	| [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	|
 | `route_short_name_too_longNotice`          	| [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	|
+| `same_name_and_description_for_stop`        	| [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)       	|
 | `same_route_and_agency_url`                	| [`SameRouteAndAgencyUrlNotice`](#SameRouteAndAgencyUrlNotice)                         |
 | `same_stop_and_agency_url`                  	| [`SameStopAndAgencyUrlNotice`](#SameStopAndAgencyUrlNotice)                           |
 | `same_stop_and_route_url`                  	| [`SameStopAndRouteUrlNotice`](#SameStopAndRouteUrlNotice)                           |
 | `start_and_end_time_equalNotice`           	| [`StartAndEndTimeEqualNotice`](#StartAndEndTimeEqualNotice)                       	|
 | `stop_time_timepoint_without_timesNotice`  	| [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	|
 | `stop_too_far_from_trip_shapeNotice`       	| [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	|
+| `stop_without_zone_id`                       	| [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                 	            |
 | `too_fast_travelNotice`                    	| [`TooFastTravelNotice`](#TooFastTravelNotice)                                     	|
 | `unexpected_enum_valueNotice`              	| [`UnexpectedEnumValueNotice`](#UnexpectedEnumValueNotice)                         	|
 | `unusable_tripNotice`                      	| [`UnusableTripNotice`](#UnusableTripNotice)                                       	|
@@ -828,6 +830,18 @@
 ##### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
+#### [SameNameAndDescriptionForStopNotice](/RULES.md#SameNameAndDescriptionForStopNotice)
+##### Fields description
+
+| Field name     	| Description                             	| Type   	|
+|----------------	|-----------------------------------------	|--------	|
+| `csvRowNumber`   	| The row number of the faulty record.    	| String 	|
+| `stopId`        	| The id of the faulty record.            	| Long   	|
+| `routeDesc`    	| The faulty record's `stop_desc`.       	| String 	|
+
+##### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+
 #### [SameRouteAndAgencyUrlNotice](/RULES.md#SameRouteAndAgencyUrlNotice)
 ##### Fields description
 
@@ -899,6 +913,18 @@
 ##### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
+
+#### [StopWithoutZoneIdNotice](/RULES.md#StopWithoutZoneIdNotice)
+##### Fields description
+
+| Field name               	| Description                                	| Type   	|
+|--------------------------	|--------------------------------------------	|--------	|
+| `stopId`                 	| The faulty record's id.                    	| String 	|
+| `csvRowNumber`        	| The row number of the faulty record.       	| Long   	|
+
+##### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+* [`fare_rules.txt`](http://gtfs.org/reference/static#farerulestxt)
 
 #### [TooFastTravelNotice](/RULES.md#TooFastTravelNotice)
 ##### Fields description
