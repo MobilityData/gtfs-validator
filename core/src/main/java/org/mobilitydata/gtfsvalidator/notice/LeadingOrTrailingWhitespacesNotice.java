@@ -35,7 +35,6 @@ import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
  */
 public class LeadingOrTrailingWhitespacesNotice extends ValidationNotice {
 
-
   /** Constructs a notice with the default severity {@code WARNING}. */
   @SchemaExport
   public LeadingOrTrailingWhitespacesNotice(

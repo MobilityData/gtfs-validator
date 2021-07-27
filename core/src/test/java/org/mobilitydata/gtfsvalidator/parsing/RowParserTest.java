@@ -41,7 +41,6 @@ import org.mobilitydata.gtfsvalidator.notice.NewLineInValueNotice;
 import org.mobilitydata.gtfsvalidator.notice.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.NumberOutOfRangeNotice;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
