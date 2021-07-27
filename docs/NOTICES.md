@@ -476,7 +476,7 @@
 | `fieldValue` 	| Faulty value.                 	| Object  	|
 
 ##### Affected files
-* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+* [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
 #### [`OverlappingFrequencyNotice`](/RULES.md#OverlappingFrequencyNotice)
 ##### Fields description
@@ -630,7 +630,6 @@
 | `route_short_and_long_name_equalNotice`    	| [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	|
 | `route_short_name_too_longNotice`          	| [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	|
 | `same_name_and_description_for_stop`        	| [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)       	|
-| `start_and_end_time_equalNotice`           	| [`StartAndEndTimeEqualNotice`](#StartAndEndTimeEqualNotice)                       	|
 | `stop_time_timepoint_without_timesNotice`  	| [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	|
 | `stop_too_far_from_trip_shapeNotice`       	| [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	|
 | `stop_without_zone_id`                       	| [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                 	            |
@@ -919,6 +918,7 @@
 * [`transfers.txt`](http://gtfs.org/reference/static#transferstxt)
 * [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
+* [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
 
 #### [UnusableTripNotice](/RULES.md#UnusableTripNotice)
 ##### Fields description
