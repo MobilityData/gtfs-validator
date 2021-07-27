@@ -91,7 +91,6 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`InvalidTimeNotice`](#InvalidTimeNotice)                                                                       	| A field cannot be parsed as time.                                                                                                                           	|
 | [`InvalidTimezoneNotice`](#InvalidTimezoneNotice)                                                               	| A field cannot be parsed as a timezone.                                                                                                                     	|
 | [`InvalidUrlNotice`](#InvalidUrlNotice)                                                                         	| A field contains a malformed URL.                                                                                                                           	|
-| [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)                                     	| The value in CSV file has leading or trailing whitespaces.                                                                                                  	|
 | [`LocationWithoutParentStationNotice`](#LocationWithoutParentStationNotice)                                     	| A location that must have `parent_station` field does not have it.                                                                                          	|
 | [`MissingCalendarAndCalendarDateFilesNotice`](#MissingCalendarAndCalendarDateFilesNotice)                       	| Missing GTFS files `calendar.txt` and `calendar_dates.txt`.                                                                                                 	|
 | [`MissingRequiredColumnNotice`](#MissingRequiredColumnNotice)                                                     	| A required column is missing in the input file.                                                                                                             	|
@@ -123,6 +122,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`FeedExpirationDateNotice`](#FeedExpirationDateNotice)                           	| Dataset should be valid for at least the next 7 days. Dataset should cover at least the next 30 days of service.                                            	|
 | [`FeedInfoLangAndAgencyMismatchNotice`](#FeedInfoLangAndAgencyLangMismatchNotice) 	| Mismatching feed and agency language fields.                                                                                                                	|
 | [`InconsistentAgencyLangNotice`](#InconsistentAgencyLangNotice)                   	| Inconsistent language among agencies.                                                                                                                       	|
+| [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)           | The value in CSV file has leading or trailing whitespaces.                                                                                                  	|
 | [`MissingFeedInfoDateNotice`](#MissingFeedInfoDateNotice)                         	| `feed_end_date` should be provided if `feed_start_date` is provided. `feed_start_date` should be provided if `feed_end_date` is provided.                   	|
 | [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	| More than one row in CSV.                                                                                                                                   	|
 | [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	| Non ascii or non printable char in  `id`.                                                                                                                   	|
@@ -360,15 +360,6 @@ Value of field with type `url` is not valid. Definitions for valid URLs are quit
 ##### References:
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 * [Apache Commons UrlValidator](https://commons.apache.org/proper/commons-validator/apidocs/org/apache/commons/validator/routines/UrlValidator.html)
-
-<a name="LeadingOrTrailingWhitespacesNotice"/>
-
-#### LeadingOrTrailingWhitespacesNotice
-
-The value in CSV file has leading or trailing whitespaces.
-
-##### References:
-* [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
 
 <a name="LocationWithoutParentStationNotice"/>
 
@@ -621,6 +612,15 @@ Agencies from GTFS `agency.txt` have been found to have different languages.
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
+
+<a name="LeadingOrTrailingWhitespacesNotice"/>
+
+#### LeadingOrTrailingWhitespacesNotice
+
+The value in CSV file has leading or trailing whitespaces.
+
+##### References:
+* [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
 
 <a name="MissingFeedInfoDateNotice"/>
 

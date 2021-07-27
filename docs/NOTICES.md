@@ -29,7 +29,6 @@
 | `invalid_time`                                         	| [`InvalidTimeNotice`](#InvalidTimeNotice)                                                                       	|
 | `invalid_timezone`                                     	| [`InvalidTimezoneNotice`](#InvalidTimezoneNotice)                                                               	|
 | `invalid_url`                                          	| [`InvalidUrlNotice`](#InvalidUrlNotice)                                                                         	|
-| `leading_or_trailing_whitespaces`                      	| [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)                                     	|
 | `location_without_parent_station`                      	| [`LocationWithoutParentStationNotice`](#LocationWithoutParentStationNotice)                                     	|
 | `missing_calendar_and_calendar_date_files`             	| [`MissingCalendarAndCalendarDateFilesNotice`](#MissingCalendarAndCalendarDateFilesNotice)                       	|
 | `missing_required_column`                              	| [`MissingRequiredColumnNotice`](#MissingRequiredColumnNotice)                                                   	|
@@ -382,19 +381,6 @@
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 
-#### [`LeadingOrTrailingWhitespacesNotice`](/RULES.md#LeadingOrTrailingWhitespacesNotice)
-##### Fields description
-
-| Field name   	| Description                   	| Type   	|
-|--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
-| `csvRowNumber`| The row of the faulty record. 	| Long   	|
-| `fieldName`  	| Faulty record's field name.   	| String 	|
-| `fieldValue` 	| Faulty value.                 	| String 	|
-
-##### Affected files
-[All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
-
 #### [`LocationWithoutParentStationNotice`](/RULES.md#LocationWithoutParentStationNotice)
 ##### Fields description
 
@@ -633,6 +619,7 @@
 | `feed_expiration_dateNotice`               	| [`FeedExpirationDateNotice`](#FeedExpirationDateNotice)                           	|
 | `feed_info_lang_and_agency_mismatchNotice` 	| [`FeedInfoLangAndAgencyMismatchNotice`](#FeedInfoLangAndAgencyLangMismatchNotice) 	|
 | `inconsistent_agency_langNotice`           	| [`InconsistentAgencyLangNotice`](#InconsistentAgencyLangNotice)                   	|
+| `leading_or_trailing_whitespaces`             | [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)           |
 | `missing_feed_info_dateNotice`             	| [`MissingFeedInfoDateNotice`](#MissingFeedInfoDateNotice)                         	|
 | `more_than_one_entityNotice`               	| [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	|
 | `non_ascii_or_non_printable_charNotice`    	| [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	|
@@ -740,6 +727,19 @@
 
 ##### Affected files
 * [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
+
+#### [LeadingOrTrailingWhitespacesNotice](/RULES.md#LeadingOrTrailingWhitespacesNotice)
+##### Fields description
+
+| Field name   	| Description                   	| Type   	|
+|--------------	|-------------------------------	|--------	|
+| `filename`   	| The row of the faulty record. 	| String 	|
+| `csvRowNumber`| The row of the faulty record. 	| Long   	|
+| `fieldName`  	| Faulty record's field name.   	| String 	|
+| `fieldValue` 	| Faulty value.                 	| String 	|
+
+##### Affected files
+[All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
 #### [MissingFeedInfoDateNotice](/RULES.md#MissingFeedInfoDateNotice)
 ##### Fields description
