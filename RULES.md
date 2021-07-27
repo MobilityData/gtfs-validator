@@ -131,7 +131,6 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	| Short and long name are equal for a route.                                                                                                                  	|
 | [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	| Short name of a route is too long (more than 12 characters).                                                                                                	|
 | [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)         | Same name and description for route.                                                                                                                      	|
-| [`StartAndEndTimeEqualNotice`](#StartAndEndTimeEqualNotice)                       	| Equal `frequencies.start_time` and `frequencies.end_time`.                                                                                                  	|
 | [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	| `arrival_time` or `departure_time` not specified for timepoint.                                                                                             	|
 | [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	| Stop too far from trip shape.                                                                                                                               	|
 | [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                              	| Stop without value for `stops.zone_id`.                                                                                                                     	|
@@ -474,7 +473,7 @@ See the GTFS and GTFS Best Practices links below for more examples of how to pop
 
 #### StartAndEndRangeEqualNotice
 
-The fields `frequencies.start_date` and `frequencies.end_date` have been found equal in `frequencies.txt`.
+The fields `frequencies.start_date` and `frequencies.end_date` have been found equal in `frequencies.txt`. The GTFS spec is currently unclear how this case should be handled (e.g., is it a trip that circulates once?). It is recommended to use a trip not defined via frequencies.txt for this case.
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
@@ -696,15 +695,6 @@ The GTFS spec defines `stops.txt` [stop_description](https://gtfs.org/reference/
 
 ##### References:
 [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
-
-<a name="StartAndEndTimeEqualNotice"/>
-
-#### StartAndEndTimeEqualNotice
-
-Start and end times are equal in GTFS file `frequencies.txt`. The GTFS spec is currently unclear how this case should be handled (e.g., is it a trip that circulates once?). It is recommended to use a trip not defined via frequencies.txt for this case.
-
-##### References:
-* [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="StopTimeTimepointWithoutTimeNotice"/>
 
