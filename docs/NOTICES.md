@@ -628,6 +628,9 @@
 | `route_short_and_long_name_equalNotice`    	| [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	|
 | `route_short_name_too_longNotice`          	| [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	|
 | `same_name_and_description_for_stop`        	| [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)       	|
+| `same_route_and_agency_url`                	| [`SameRouteAndAgencyUrlNotice`](#SameRouteAndAgencyUrlNotice)                         |
+| `same_stop_and_agency_url`                  	| [`SameStopAndAgencyUrlNotice`](#SameStopAndAgencyUrlNotice)                           |
+| `same_stop_and_route_url`                  	| [`SameStopAndRouteUrlNotice`](#SameStopAndRouteUrlNotice)                           |
 | `start_and_end_time_equalNotice`           	| [`StartAndEndTimeEqualNotice`](#StartAndEndTimeEqualNotice)                       	|
 | `stop_time_timepoint_without_timesNotice`  	| [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	|
 | `stop_too_far_from_trip_shapeNotice`       	| [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	|
@@ -837,6 +840,50 @@
 | `routeDesc`    	| The faulty record's `stop_desc`.       	| String 	|
 
 ##### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+
+#### [SameRouteAndAgencyUrlNotice](/RULES.md#SameRouteAndAgencyUrlNotice)
+##### Fields description
+
+| Field name     	| Description                                	| Type   	|
+|----------------	|--------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row number of the faulty record.       	| Long   	|
+| `routeId`       	| The faulty record's id.                    	| String 	|
+| `agencyId`    	| The faulty record's `routes.agency_id`.    	| String 	|
+| `routeUrl`     	| The duplicate URL value                    	| String 	|
+
+##### Affected files
+* [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
+* [`routes.txt`](http://gtfs.org/reference/static#routestxt)
+
+#### [SameStopAndAgencyUrlNotice](/RULES.md#SameStopAndAgencyUrlNotice)
+##### Fields description
+
+| Field name     	| Description                                            	| Type   	|
+|----------------	|--------------------------------------------------------	|--------	|
+| `csvRowNumber` 	| The row number of the faulty record.                   	| Long   	|
+| `stopId`       	| The faulty record's id.                                	| String 	|
+| `agencyName`   	| The faulty record's `agency.agency_name`.              	| String 	|
+| `stopUrl`      	| The duplicate URL value.                                	| String 	|
+| `csvRowNumber` 	| The row number of the faulty record from `agency.txt`. 	| Long   	|
+
+##### Affected files
+* [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+
+#### [SameStopAndRouteUrlNotice](/RULES.md#SameStopAndRouteUrlNotice)
+##### Fields description
+
+| Field name          	| Description                                            	| Type   	|
+|---------------------	|--------------------------------------------------------	|--------	|
+| `csvRowNumber`      	| The row number of the faulty record.                   	| Long   	|
+| `stopId`            	| The faulty record's id.                                	| String 	|
+| `stopUrl`           	| The duplicate URL value.                                	| String 	|
+| `routeId`           	| The faulty record's id from `routes.txt.               	| String 	|
+| `routeCsvRowNumber` 	| The row number of the faulty record from `routes.txt`. 	| Long   	|
+
+##### Affected files
+* [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
 #### [StopTimeTimepointWithoutTimesNotice](/RULES.md#StopTimeTimepointWithoutTimesNotice)

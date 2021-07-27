@@ -131,6 +131,9 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	| Short and long name are equal for a route.                                                                                                                  	|
 | [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	| Short name of a route is too long (more than 12 characters).                                                                                                	|
 | [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)         | Same name and description for route.                                                                                                                      	|
+| [`SameRouteAndAgencyUrlNotice`](#SameRouteAndAgencyUrlNotice)                       	| Same `routes.route_url` and `agency.agency_url`.                                                                                                  	        |
+| [`SameStopAndAgencyUrlNotice`](#SameStopAndAgencyUrlNotice)                          	| Same `stops.stop_url` and `agency.agency_url`.                                                                                                  	            |
+| [`SameStopAndRouteUrlNotice`](#SameStopAndRouteUrlNotice)                          	| Same `stops.stop_url` and `routes.route_url`.                                                                                                  	            |
 | [`StartAndEndTimeEqualNotice`](#StartAndEndTimeEqualNotice)                       	| Equal `frequencies.start_time` and `frequencies.end_time`.                                                                                                  	|
 | [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	| `arrival_time` or `departure_time` not specified for timepoint.                                                                                             	|
 | [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	| Stop too far from trip shape.                                                                                                                               	|
@@ -696,6 +699,33 @@ The GTFS spec defines `stops.txt` [stop_description](https://gtfs.org/reference/
 
 ##### References:
 [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+
+<a name="SameRouteAndAgencyUrlNotice"/>
+
+#### SameRouteAndAgencyUrlNotice
+
+A route should not have the same `routes.route_url` as a record from `agency.txt`.
+
+##### References:
+* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
+
+<a name="SameStopAndAgencyUrlNotice"/>
+
+#### SameStopAndAgencyUrlNotice
+
+A stop should not have the same `stops.stop_url` as a record from `agency.txt`.
+
+##### References:
+* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+
+<a name="SameStopAndRouteUrlNotice"/>
+
+#### SameStopAndRouteUrlNotice
+
+A stop should not have the same `stop.stop_url` as a record from `routes.txt`.
+
+##### References:
+* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 
 <a name="StartAndEndTimeEqualNotice"/>
 
