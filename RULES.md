@@ -118,7 +118,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`AttributionWithoutRoleNotice`](#AttributionWithoutRoleNotice)                   	| Attribution with no role.                                                                                                                                   	|
 | [`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)                           	| Duplicate  `routes.route_long_name`. Duplicate `routes.route_short_name`. Duplicate combination of fields `route_long_name`  and `routes.route_short_name`. 	|
 | [`EmptyColumnNameNotice`](#EmptyColumnNameNotice)                                 	| A column name is empty.                                                                                                                                     	|
-| [`EmptyRowNotice`](#EmptyRowNotice)                                               	| A file is unknown.                                                                                                                                          	|
+| [`EmptyRowNotice`](#EmptyRowNotice)                                               	| A row in the input file has only spaces.                                                                                                                                          	|
 | [`FeedExpirationDateNotice`](#FeedExpirationDateNotice)                           	| Dataset should be valid for at least the next 7 days. Dataset should cover at least the next 30 days of service.                                            	|
 | [`FeedInfoLangAndAgencyMismatchNotice`](#FeedInfoLangAndAgencyLangMismatchNotice) 	| Mismatching feed and agency language fields.                                                                                                                	|
 | [`InconsistentAgencyLangNotice`](#InconsistentAgencyLangNotice)                   	| Inconsistent language among agencies.                                                                                                                       	|
@@ -474,7 +474,7 @@ See the GTFS and GTFS Best Practices links below for more examples of how to pop
 
 #### StartAndEndRangeEqualNotice
 
-Date or time fields have been found equal.
+The fields `frequencies.start_date` and `frequencies.end_date` have been found equal in `frequencies.txt`.
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
@@ -483,7 +483,7 @@ Date or time fields have been found equal.
 
 #### StartAndEndRangeOutOfOrderNotice
 
-Date or time fields have been found out of order. This impacts calendar.txt, calendar_dates.txt, feed_info.txt, stop_times.txt.
+Date or time fields have been found out of order in `calendar.txt`, `feed_info.txt` and `stop_times.txt`.
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
@@ -501,7 +501,7 @@ Field `parent_station` must be empty when `location_type` is 1.
 
 #### StopTimeWithArrivalBeforePreviousDepartureTimeNotice
 
-For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must not precede the `departure_time` of n-th stoptime in sequence.
+For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must not precede the `departure_time` of n-th stoptime in sequence in `stop_times.txt`.
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
@@ -562,7 +562,7 @@ Note that there may be valid cases where routes have the same short and long nam
 
 ##### References:
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
-
+* [routes.txt best practices](http://gtfs.org/best-practices/#routestxt)
 <a name="EmptyColumnNameNotice"/>
 
 #### EmptyColumnNameNotice
@@ -594,7 +594,7 @@ If possible, the GTFS dataset should cover at least the next 30 days of service.
 <a name="FeedInfoLangAndAgencyLangMismatchNotice"/>
 
 #### FeedInfoLangAndAgencyLangMismatchNotice
-1. Files `agency.txt` and `feed_info.txt` must define matching `agency.agency_lang` and `feed_info.feed_lang`.
+1. Files `agency.txt` and `feed_info.txt` should define matching `agency.agency_lang` and `feed_info.feed_lang`.
   The default language may be multilingual for datasets with the original text in multiple languages. In such cases, the feed_lang field should contain the language code mul defined by the norm ISO 639-2.
   * If `feed_lang` is not `mul` and does not match with `agency_lang`, that's an error
   * If there is more than one `agency_lang` and `feed_lang` isn't `mul`, that's an error
@@ -644,7 +644,7 @@ The file is expected to have a single entity but has more (e.g., "feed_info.txt"
 
 #### NonAsciiOrNonPrintableCharNotice
 
-A value of filed with type `id` contains non ASCII or non printable characters. This is not recommended.
+A value of a field with type `id` contains non ASCII or non printable characters. This is not recommended.
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
@@ -773,7 +773,7 @@ All records defined by GTFS `shapes.txt` should be used in `trips.txt`.
 
 #### UnusedTripNotice
 
-Trips must be referred to at least once in `stop_times.txt`.
+Trips should be referred to at least once in `stop_times.txt`.
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
