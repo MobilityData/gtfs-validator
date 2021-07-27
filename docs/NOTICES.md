@@ -547,6 +547,8 @@
 ##### Affected files
 * [`calendar.txt`](http://gtfs.org/reference/static#calendartxt)
 * [`calendar_dates.txt`](http://gtfs.org/reference/static#calendar_datestxt)
+* [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
+* [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
 #### [`StationWithParentStationNotice`](/RULES.md#StationWithParentStationNotice)
 ##### Fields description
