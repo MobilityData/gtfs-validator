@@ -614,30 +614,30 @@
 
 | Notice code                                	| Notice                                                                            	|
 |--------------------------------------------	|-----------------------------------------------------------------------------------	|
-| `attribution_without_roleNotice`           	| [`AttributionWithoutRoleNotice`](#AttributionWithoutRoleNotice)                   	|
-| `duplicate_route_nameNotice`               	| [`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)                           	|
-| `empty_column_nameNotice`                  	| [`EmptyColumnNameNotice`](#EmptyColumnNameNotice)                                 	|
-| `empty_rowNotice`                          	| [`EmptyRowNotice`](#EmptyRowNotice)                                               	|
-| `feed_expiration_dateNotice`               	| [`FeedExpirationDateNotice`](#FeedExpirationDateNotice)                           	|
-| `feed_info_lang_and_agency_mismatchNotice` 	| [`FeedInfoLangAndAgencyMismatchNotice`](#FeedInfoLangAndAgencyLangMismatchNotice) 	|
-| `inconsistent_agency_langNotice`           	| [`InconsistentAgencyLangNotice`](#InconsistentAgencyLangNotice)                   	|
+| `attribution_without_role`           	| [`AttributionWithoutRoleNotice`](#AttributionWithoutRoleNotice)                   	|
+| `duplicate_route_name`               	| [`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)                           	|
+| `empty_column_name`                  	| [`EmptyColumnNameNotice`](#EmptyColumnNameNotice)                                 	|
+| `empty_row`                          	| [`EmptyRowNotice`](#EmptyRowNotice)                                               	|
+| `feed_expiration_date`               	| [`FeedExpirationDateNotice`](#FeedExpirationDateNotice)                           	|
+| `feed_info_lang_and_agency_mismatche` 	| [`FeedInfoLangAndAgencyMismatchNotice`](#FeedInfoLangAndAgencyLangMismatchNotice) 	|
+| `inconsistent_agency_lang`           	| [`InconsistentAgencyLangNotice`](#InconsistentAgencyLangNotice)                   	|
 | `leading_or_trailing_whitespaces`             | [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)           |
-| `missing_feed_info_dateNotice`             	| [`MissingFeedInfoDateNotice`](#MissingFeedInfoDateNotice)                         	|
-| `more_than_one_entityNotice`               	| [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	|
-| `non_ascii_or_non_printable_charNotice`    	| [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	|
-| `platform_without_parent_stationNotice`    	| [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)       	|
-| `route_color_contrastNotice`               	| [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	|
-| `route_short_and_long_name_equalNotice`    	| [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	|
-| `route_short_name_too_longNotice`          	| [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	|
+| `missing_feed_info_date`             	| [`MissingFeedInfoDateNotice`](#MissingFeedInfoDateNotice)                         	|
+| `more_than_one_entity`               	| [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	|
+| `non_ascii_or_non_printable_char`    	| [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	|
+| `platform_without_parent_station`    	| [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)       	|
+| `route_color_contrast`               	| [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	|
+| `route_short_and_long_name_equal`    	| [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	|
+| `route_short_name_too_long`          	| [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	|
 | `same_name_and_description_for_stop`        	| [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)       	|
-| `stop_time_timepoint_without_timesNotice`  	| [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	|
-| `stop_too_far_from_trip_shapeNotice`       	| [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	|
+| `stop_time_timepoint_without_times`  	| [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	|
+| `stop_too_far_from_trip_shape`       	| [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	|
 | `stop_without_zone_id`                       	| [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                 	            |
-| `too_fast_travelNotice`                    	| [`TooFastTravelNotice`](#TooFastTravelNotice)                                     	|
-| `unexpected_enum_valueNotice`              	| [`UnexpectedEnumValueNotice`](#UnexpectedEnumValueNotice)                         	|
-| `unusable_tripNotice`                      	| [`UnusableTripNotice`](#UnusableTripNotice)                                       	|
-| `unused_shapeNotice`                       	| [`UnusedShapeNotice`](#UnusedShapeNotice)                                         	|
-| `unused_tripNotice`                        	| [`UnusedTripNotice`](#UnusedTripNotice)                                           	|
+| `too_fast_travel`                    	| [`TooFastTravelNotice`](#TooFastTravelNotice)                                     	|
+| `unexpected_enum_value`              	| [`UnexpectedEnumValueNotice`](#UnexpectedEnumValueNotice)                         	|
+| `unusable_trip`                      	| [`UnusableTripNotice`](#UnusableTripNotice)                                       	|
+| `unused_shape`                       	| [`UnusedShapeNotice`](#UnusedShapeNotice)                                         	|
+| `unused_trip`                        	| [`UnusedTripNotice`](#UnusedTripNotice)                                           	|
 
 #### [AttributionWithoutRoleNotice](/RULES.md#AttributionWithoutRoleNotice)
 ##### Fields description
