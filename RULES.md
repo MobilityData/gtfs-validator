@@ -483,7 +483,7 @@ Date or time fields have been found equal.
 
 #### StartAndEndRangeOutOfOrderNotice
 
-Date or time fields have been found out of order.
+Date or time fields have been found out of order. This impacts calendar.txt, calendar_dates.txt, feed_info.txt, stop_times.txt.
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
@@ -492,10 +492,10 @@ Date or time fields have been found out of order.
 
 #### StationWithParentStationNotice
 
-Field `parent_station` must be empty when `location_type` is 2.
+Field `parent_station` must be empty when `location_type` is 1.
 
 ##### References:
-[stop_times.txt](http://gtfs.org/reference/static/#stop_timestxt)
+[stop.txt](http://gtfs.org/reference/static/#stopstxt)
 
 <a name="StopTimeWithArrivalBeforePreviousDepartureTimeNotice"/>
 
