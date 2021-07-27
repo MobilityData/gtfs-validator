@@ -34,7 +34,12 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 
 /**
- * Validates that all {@code GtfsRoute} have {@code routes.route_url != agency.agency_url}.
+ * Validates that:
+ * <ul>
+ *  <li>all {@code GtfsRoute} have: {@code routes.route_url != agency.agency_url}.</li>
+ *  <li>all {@code GtfsStop} have: {@code stops.route_url != agency.agency_url}.</li>
+ *  <li>all {@code GtfsStop} have: {@code stops.route_url != routes.route_url}.</li>
+ * </ul>
  *
  * <p>Generated notice:
  *
