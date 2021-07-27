@@ -41,13 +41,13 @@ import org.mobilitydata.gtfsvalidator.validator.UrlConsistencyValidator.SameStop
 @RunWith(JUnit4.class)
 public class UrlConsistencyValidatorTest {
 
-  private static List<ValidationNotice> generateNotices(List<GtfsAgency> agencies,
-      List<GtfsRoute> routes, List<GtfsStop> stops) {
+  private static List<ValidationNotice> generateNotices(
+      List<GtfsAgency> agencies, List<GtfsRoute> routes, List<GtfsStop> stops) {
     NoticeContainer noticeContainer = new NoticeContainer();
     new UrlConsistencyValidator(
-        GtfsAgencyTableContainer.forEntities(agencies, noticeContainer),
-        GtfsRouteTableContainer.forEntities(routes, noticeContainer),
-        GtfsStopTableContainer.forEntities(stops, noticeContainer))
+            GtfsAgencyTableContainer.forEntities(agencies, noticeContainer),
+            GtfsRouteTableContainer.forEntities(routes, noticeContainer),
+            GtfsStopTableContainer.forEntities(stops, noticeContainer))
         .validate(noticeContainer);
     return noticeContainer.getValidationNotices();
   }
@@ -85,132 +85,75 @@ public class UrlConsistencyValidatorTest {
   @Test
   public void differentRouteAndAgencyUrl_noNotice() {
     assertThat(
-        generateNotices(
-            ImmutableList.of(
-                createAgency(
-                    0,
-                    "first agency id value",
-                    "www.mobilitydata.org"
-                ),
-                createAgency(
-                    2,
-                    "other agency id value",
-                    "www.someotherurl"
-                )),
-            ImmutableList.of(
-                createRoute(
-                    "first agency id value",
-                    "www.atotallydifferenturl.com")),
-            ImmutableList.of()
-        )).isEmpty();
+            generateNotices(
+                ImmutableList.of(
+                    createAgency(0, "first agency id value", "www.mobilitydata.org"),
+                    createAgency(2, "other agency id value", "www.someotherurl")),
+                ImmutableList.of(
+                    createRoute("first agency id value", "www.atotallydifferenturl.com")),
+                ImmutableList.of()))
+        .isEmpty();
   }
 
   @Test
   public void sameRouteAndAgencyUrl_generatesNotice() {
     assertThat(
-        generateNotices(
-            ImmutableList.of(
-                createAgency(
-                    0,
-                    "first agency name value",
-                    "www.mobilitydata.org"
-                ),
-                createAgency(
-                    2,
-                    "other agency name value",
-                    "www.anotherurl.com"
-                )),
-            ImmutableList.of(
-                createRoute(
-                    "route id value",
-                    "www.mobilitydata.org")),
-            ImmutableList.of()
-        ))
+            generateNotices(
+                ImmutableList.of(
+                    createAgency(0, "first agency name value", "www.mobilitydata.org"),
+                    createAgency(2, "other agency name value", "www.anotherurl.com")),
+                ImmutableList.of(createRoute("route id value", "www.mobilitydata.org")),
+                ImmutableList.of()))
         .containsExactly(
-            new SameRouteAndAgencyUrlNotice(3, "route id value", "first agency name value",
-                "www.mobilitydata.org", 0));
-
+            new SameRouteAndAgencyUrlNotice(
+                3, "route id value", "first agency name value", "www.mobilitydata.org", 0));
   }
 
   @Test
   public void differentStopAndAgencyUrl_noNotice() {
     assertThat(
-        generateNotices(
-            ImmutableList.of(
-                createAgency(
-                    0,
-                    "first agency id value",
-                    "www.mobilitydata.org"
-                ),
-                createAgency(
-                    2,
-                    "other agency id value",
-                    "www.someotherurl"
-                )),
-            ImmutableList.of(),
-            ImmutableList.of(
-                createStop(44, "stop id value", "stop url value")
-            )
-        )).isEmpty();
+            generateNotices(
+                ImmutableList.of(
+                    createAgency(0, "first agency id value", "www.mobilitydata.org"),
+                    createAgency(2, "other agency id value", "www.someotherurl")),
+                ImmutableList.of(),
+                ImmutableList.of(createStop(44, "stop id value", "stop url value"))))
+        .isEmpty();
   }
 
   @Test
   public void sameStopAndAgencyUrl_generatesNotice() {
     assertThat(
-        generateNotices(
-            ImmutableList.of(
-                createAgency(
-                    0,
-                    "first agency name value",
-                    "www.mobilitydata.org"
-                ),
-                createAgency(
-                    2,
-                    "other agency name value",
-                    "www.anotherurl.com"
-                )),
-            ImmutableList.of(),
-            ImmutableList.of(
-                createStop(456, "stop id value", "www.mobilitydata.org")
-            )
-        ))
+            generateNotices(
+                ImmutableList.of(
+                    createAgency(0, "first agency name value", "www.mobilitydata.org"),
+                    createAgency(2, "other agency name value", "www.anotherurl.com")),
+                ImmutableList.of(),
+                ImmutableList.of(createStop(456, "stop id value", "www.mobilitydata.org"))))
         .containsExactly(
-            new SameStopAndAgencyUrlNotice(456, "stop id value", "first agency name value",
-                "www.mobilitydata.org", 0));
-
+            new SameStopAndAgencyUrlNotice(
+                456, "stop id value", "first agency name value", "www.mobilitydata.org", 0));
   }
 
   @Test
   public void differentStopAndRouteUrl_noNotice() {
     assertThat(
-        generateNotices(
-            ImmutableList.of(),
-            ImmutableList.of(
-                createRoute(
-                    "first agency id value",
-                    "www.mobilitydata.org")),
-            ImmutableList.of(
-                createStop(44, "stop id value", "stop url value")
-            )
-        )).isEmpty();
+            generateNotices(
+                ImmutableList.of(),
+                ImmutableList.of(createRoute("first agency id value", "www.mobilitydata.org")),
+                ImmutableList.of(createStop(44, "stop id value", "stop url value"))))
+        .isEmpty();
   }
 
   @Test
   public void sameStopAndRouteUrl_generatesNotice() {
     assertThat(
-        generateNotices(
-            ImmutableList.of(),
-            ImmutableList.of(
-                createRoute(
-                    "first agency id value",
-                    "www.mobilitydata.org")),
-            ImmutableList.of(
-                createStop(456, "stop id value", "www.mobilitydata.org")
-            )
-        ))
+            generateNotices(
+                ImmutableList.of(),
+                ImmutableList.of(createRoute("first agency id value", "www.mobilitydata.org")),
+                ImmutableList.of(createStop(456, "stop id value", "www.mobilitydata.org"))))
         .containsExactly(
-            new SameStopAndRouteUrlNotice(456, "stop id value", "www.mobilitydata.org",
-                "route id value", 3));
-
+            new SameStopAndRouteUrlNotice(
+                456, "stop id value", "www.mobilitydata.org", "route id value", 3));
   }
 }

@@ -35,21 +35,22 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 
 /**
  * Validates that:
+ *
  * <ul>
- *  <li>all {@code GtfsRoute} have: {@code routes.route_url != agency.agency_url}.</li>
- *  <li>all {@code GtfsStop} have: {@code stops.route_url != agency.agency_url}.</li>
- *  <li>all {@code GtfsStop} have: {@code stops.route_url != routes.route_url}.</li>
+ *   <li>all {@code GtfsRoute} have: {@code routes.route_url != agency.agency_url}.
+ *   <li>all {@code GtfsStop} have: {@code stops.route_url != agency.agency_url}.
+ *   <li>all {@code GtfsStop} have: {@code stops.route_url != routes.route_url}.
  * </ul>
  *
  * <p>Generated notice:
  *
  * <ul>
- *   <li>{@link SameRouteAndAgencyUrlNotice} - for a record from "routes.txt", the value of
- *   {@code routes.route_url} is shared by a record from "agency.txt".
- *   <li>{@link SameStopAndAgencyUrlNotice} - for a record from "stops.txt", the value of
- *   {@code stops.route_url} is shared by a record from "agency.txt".
- *   *   <li>{@link SameStopAndRouteUrlNotice} - for a record from "stops.txt", the value of
- *   {@code stops.route_url} is shared by a record from "routes.txt".
+ *   <li>{@link SameRouteAndAgencyUrlNotice} - for a record from "routes.txt", the value of {@code
+ *       routes.route_url} is shared by a record from "agency.txt".
+ *   <li>{@link SameStopAndAgencyUrlNotice} - for a record from "stops.txt", the value of {@code
+ *       stops.route_url} is shared by a record from "agency.txt". *
+ *   <li>{@link SameStopAndRouteUrlNotice} - for a record from "stops.txt", the value of {@code
+ *       stops.route_url} is shared by a record from "routes.txt".
  * </ul>
  */
 @GtfsValidator
@@ -60,8 +61,10 @@ public class UrlConsistencyValidator extends FileValidator {
   private final GtfsStopTableContainer stopTable;
 
   @Inject
-  UrlConsistencyValidator(GtfsAgencyTableContainer agencyTable,
-      GtfsRouteTableContainer routeTable, GtfsStopTableContainer stopTable) {
+  UrlConsistencyValidator(
+      GtfsAgencyTableContainer agencyTable,
+      GtfsRouteTableContainer routeTable,
+      GtfsStopTableContainer stopTable) {
     this.agencyTable = agencyTable;
     this.routeTable = routeTable;
     this.stopTable = stopTable;
@@ -82,8 +85,7 @@ public class UrlConsistencyValidator extends FileValidator {
                 route.routeId(),
                 agency.agencyName(),
                 route.routeUrl(),
-                agency.csvRowNumber()
-            ));
+                agency.csvRowNumber()));
       }
     }
     for (GtfsStop stop : stopTable.getEntities()) {
@@ -98,25 +100,25 @@ public class UrlConsistencyValidator extends FileValidator {
                 stop.stopId(),
                 agency.agencyName(),
                 stop.stopUrl(),
-                agency.csvRowNumber()
-            ));
+                agency.csvRowNumber()));
       }
     }
     Map<String, GtfsRoute> routesByUrlMap = routesByUrlMap(routeTable);
     Map<String, GtfsStop> stopsByUrlMap = stopsByUrlMap(stopTable);
 
-    Maps.filterEntries(stopsByUrlMap,
-        entry -> routesByUrlMap.get(entry.getValue().stopUrl()) != null)
-        .values().forEach(stopWithDuplicateUrl -> {
-      noticeContainer.addValidationNotice(
-          new SameStopAndRouteUrlNotice(
-              stopWithDuplicateUrl.csvRowNumber(),
-              stopWithDuplicateUrl.stopId(),
-              stopWithDuplicateUrl.stopUrl(),
-              routesByUrlMap.get(stopWithDuplicateUrl.stopUrl()).routeId(),
-              routesByUrlMap.get(stopWithDuplicateUrl.stopUrl()).csvRowNumber()
-          ));
-    });
+    Maps.filterEntries(
+            stopsByUrlMap, entry -> routesByUrlMap.get(entry.getValue().stopUrl()) != null)
+        .values()
+        .forEach(
+            stopWithDuplicateUrl -> {
+              noticeContainer.addValidationNotice(
+                  new SameStopAndRouteUrlNotice(
+                      stopWithDuplicateUrl.csvRowNumber(),
+                      stopWithDuplicateUrl.stopId(),
+                      stopWithDuplicateUrl.stopUrl(),
+                      routesByUrlMap.get(stopWithDuplicateUrl.stopUrl()).routeId(),
+                      routesByUrlMap.get(stopWithDuplicateUrl.stopUrl()).csvRowNumber()));
+            });
   }
 
   /**
@@ -124,17 +126,20 @@ public class UrlConsistencyValidator extends FileValidator {
    *
    * @param stopTable the {@code GtfsStopTableContainer} to extract {@code GtfsStop} from
    * @return routes from {@code GtfsStopTableContainer}s mapped by there {@code routes.route_url}
-   * (in lower case) if provided.
+   *     (in lower case) if provided.
    */
   private Map<String, GtfsStop> stopsByUrlMap(GtfsStopTableContainer stopTable) {
     Map<String, GtfsStop> stopsByUrl = new HashMap<>();
-    stopTable.getEntities().forEach(stop -> {
-      if (stop.hasStopUrl()) {
-        if (stopsByUrl.get(stop.stopUrl()) == null) {
-          stopsByUrl.put(stop.stopUrl().toLowerCase(), stop);
-        }
-      }
-    });
+    stopTable
+        .getEntities()
+        .forEach(
+            stop -> {
+              if (stop.hasStopUrl()) {
+                if (stopsByUrl.get(stop.stopUrl()) == null) {
+                  stopsByUrl.put(stop.stopUrl().toLowerCase(), stop);
+                }
+              }
+            });
     return stopsByUrl;
   }
 
@@ -143,17 +148,20 @@ public class UrlConsistencyValidator extends FileValidator {
    *
    * @param routeTable the {@code GtfsRouteTableContainer} to extract {@code GtfsRoute} from
    * @return routes from {@code GtfsRouteTableContainer}s mapped by there {@code routes.route_url}
-   * (in lower case) if provided.
+   *     (in lower case) if provided.
    */
   private Map<String, GtfsRoute> routesByUrlMap(GtfsRouteTableContainer routeTable) {
     Map<String, GtfsRoute> routesByUrl = new HashMap<>();
-    routeTable.getEntities().forEach(route -> {
-      if (route.hasRouteUrl()) {
-        if (routesByUrl.get(route.routeUrl()) == null) {
-          routesByUrl.put(route.routeUrl().toLowerCase(), route);
-        }
-      }
-    });
+    routeTable
+        .getEntities()
+        .forEach(
+            route -> {
+              if (route.hasRouteUrl()) {
+                if (routesByUrl.get(route.routeUrl()) == null) {
+                  routesByUrl.put(route.routeUrl().toLowerCase(), route);
+                }
+              }
+            });
     return routesByUrl;
   }
 
@@ -162,31 +170,33 @@ public class UrlConsistencyValidator extends FileValidator {
    *
    * @param agencyTable the {@code GtfsAgencyTableContainer} to extract {@code GtfsAgency} from
    * @return agencies from {@code GtfsAgencyTableContainer}s mapped by there URLs (in lower case) if
-   * provided.
+   *     provided.
    */
   private Map<String, GtfsAgency> agenciesByUrlMap(GtfsAgencyTableContainer agencyTable) {
     Map<String, GtfsAgency> agenciesByUrl = new HashMap<>();
-    agencyTable.getEntities().forEach(agency -> {
-      if (agency.hasAgencyUrl()) {
-        if (agenciesByUrl.get(agency.agencyUrl()) == null) {
-          agenciesByUrl.put(agency.agencyUrl().toLowerCase(), agency);
-        }
-      }
-    });
+    agencyTable
+        .getEntities()
+        .forEach(
+            agency -> {
+              if (agency.hasAgencyUrl()) {
+                if (agenciesByUrl.get(agency.agencyUrl()) == null) {
+                  agenciesByUrl.put(agency.agencyUrl().toLowerCase(), agency);
+                }
+              }
+            });
     return agenciesByUrl;
   }
 
   /**
-   * A {@code GtfsStop} has the same value for {@code stops.stop_url} as a record from
-   * "routes.txt".
-   * <p>
-   * {@code SeverityLevel.WARNING}
+   * A {@code GtfsStop} has the same value for {@code stops.stop_url} as a record from "routes.txt".
+   *
+   * <p>{@code SeverityLevel.WARNING}
    */
   static class SameStopAndRouteUrlNotice extends ValidationNotice {
 
     @SchemaExport
-    SameStopAndRouteUrlNotice(long csvRowNumber, String stopId, String stopUrl,
-        String routeId, long routeCsvRowNumber) {
+    SameStopAndRouteUrlNotice(
+        long csvRowNumber, String stopId, String stopUrl, String routeId, long routeCsvRowNumber) {
       super(
           ImmutableMap.of(
               "csvRowNumber", csvRowNumber,
@@ -201,14 +211,18 @@ public class UrlConsistencyValidator extends FileValidator {
   /**
    * A {@code GtfsRoute} has the same value for {@code routes.route_url} as a record from
    * "agency.txt".
-   * <p>
-   * {@code SeverityLevel.WARNING}
+   *
+   * <p>{@code SeverityLevel.WARNING}
    */
   static class SameRouteAndAgencyUrlNotice extends ValidationNotice {
 
     @SchemaExport
-    SameRouteAndAgencyUrlNotice(long csvRowNumber, String routeId, String agencyName,
-        String routeUrl, long agencyCsvRowNumber) {
+    SameRouteAndAgencyUrlNotice(
+        long csvRowNumber,
+        String routeId,
+        String agencyName,
+        String routeUrl,
+        long agencyCsvRowNumber) {
       super(
           ImmutableMap.of(
               "csvRowNumber", csvRowNumber,
@@ -221,16 +235,19 @@ public class UrlConsistencyValidator extends FileValidator {
   }
 
   /**
-   * A {@code GtfsStop} has the same value for {@code stops.stop_url} as a record from
-   * "agency.txt".
-   * <p>
-   * {@code SeverityLevel.WARNING}
+   * A {@code GtfsStop} has the same value for {@code stops.stop_url} as a record from "agency.txt".
+   *
+   * <p>{@code SeverityLevel.WARNING}
    */
   static class SameStopAndAgencyUrlNotice extends ValidationNotice {
 
     @SchemaExport
-    SameStopAndAgencyUrlNotice(long csvRowNumber, String stopId, String agencyName,
-        String stopUrl, long agencyCsvRowNumber) {
+    SameStopAndAgencyUrlNotice(
+        long csvRowNumber,
+        String stopId,
+        String agencyName,
+        String stopUrl,
+        long agencyCsvRowNumber) {
       super(
           ImmutableMap.of(
               "csvRowNumber", csvRowNumber,
