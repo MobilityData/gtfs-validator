@@ -34,7 +34,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 
 /**
  * Validates that each {@code stop_times.stop_id} refers to a stop/platform, i.e. its stops.location_type value must be 0 or empty.
- * value must be 0 or empty.
+ *
  *
  * <p>Generated notices:
  *
