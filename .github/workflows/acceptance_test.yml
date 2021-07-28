@@ -84,7 +84,11 @@ jobs:
         run: pip3 install -r scripts/mobility-database-harvester/requirements.txt
       - name: Get datasets' metadata
         id: harvest
-        run: python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
+        run: |
+          python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
+          DATASETS=$(jq .data latest_versions.json)
+          echo $DATASETS
+          echo "::set-output name=matrix::$DATASETS"
         env:
           TYPE: ${{ secrets.TYPE }}
           PROJECT_ID: ${{ secrets.PROJECT_ID }}
@@ -96,9 +100,6 @@ jobs:
           TOKEN_URI: ${{ secrets.TOKEN_URI }}
           AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}
           CLIENT_X509_CERT_URL: ${{ secrets.CLIENT_X509_CERT_URL }}
-          DATASETS=$(jq .data latest_versions.json)
-          echo $DATASETS
-          echo "::set-output name=matrix::$DATASETS"
       - name: Persist datasets metadata
         uses: actions/upload-artifact@v2
         with:
