@@ -44,10 +44,10 @@ public class SampleTestValidator extends FileValidator {
 
     @SchemaExport
     NestedTestValidatorNotice(String tripId, long csvRowNumber) {
-      super(
-          ImmutableMap.of(
-              "tripId", tripId,
-              "csvRowNumber", csvRowNumber),
+      super(new ImmutableMap.Builder<String, Object>()
+              .put("tripId", tripId)
+              .put("csvRowNumber", csvRowNumber)
+              .build(),
           SeverityLevel.WARNING);
     }
   }

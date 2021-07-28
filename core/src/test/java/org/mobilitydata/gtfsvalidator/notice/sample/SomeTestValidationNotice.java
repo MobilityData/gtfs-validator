@@ -28,16 +28,12 @@ public class SomeTestValidationNotice extends ValidationNotice {
   @SchemaExport
   public SomeTestValidationNotice(String filename, long csvRowNumber, String fieldName,
       Object fieldValue, SeverityLevel severityLevel) {
-    super(
-        ImmutableMap.of(
-            "filename",
-            filename,
-            "csvRowNumber",
-            csvRowNumber,
-            "fieldName",
-            fieldName,
-            "fieldValue",
-            fieldValue),
+    super(new ImmutableMap.Builder<String, Object>()
+            .put("filename", filename)
+            .put("csvRowNumber", csvRowNumber)
+            .put("fieldName", fieldName)
+            .put("fieldValue", fieldValue)
+            .build(),
         severityLevel);
   }
 }
