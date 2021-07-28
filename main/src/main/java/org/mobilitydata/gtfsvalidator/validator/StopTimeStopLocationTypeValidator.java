@@ -33,14 +33,14 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 
 /**
- * Validates that each {@code stop_times.stop_id} refers to a stop/platform, i.e. its stops.location_type value must be 0 or empty.
- *
+ * Validates that each {@code stop_times.stop_id} refers to a stop/platform, i.e. its
+ * stops.location_type value must be 0 or empty.
  *
  * <p>Generated notices:
  *
  * <ul>
- *   <li>{@link WrongStopTimeStopLocationTypeNotice} - a single departure_time or
- *       arrival_time is defined for a row (both or none are expected)
+ *   <li>{@link WrongStopTimeStopLocationTypeNotice} - a single departure_time or arrival_time is
+ *       defined for a row (both or none are expected)
  * </ul>
  */
 @GtfsValidator
@@ -50,8 +50,8 @@ public class StopTimeStopLocationTypeValidator extends FileValidator {
   private final GtfsStopTableContainer stopTable;
 
   @Inject
-  StopTimeStopLocationTypeValidator(GtfsStopTimeTableContainer stopTimeTable,
-      GtfsStopTableContainer stopTable) {
+  StopTimeStopLocationTypeValidator(
+      GtfsStopTimeTableContainer stopTimeTable, GtfsStopTableContainer stopTable) {
     this.stopTimeTable = stopTimeTable;
     this.stopTable = stopTable;
   }
@@ -61,16 +61,18 @@ public class StopTimeStopLocationTypeValidator extends FileValidator {
     for (List<GtfsStopTime> stopTimeList : Multimaps.asMap(stopTimeTable.byTripIdMap()).values()) {
       for (GtfsStopTime stopTime : stopTimeList) {
         Optional<GtfsStop> stop = Optional.ofNullable(stopTable.byStopId(stopTime.stopId()));
-        stop.ifPresent(gtfsStop -> {
-          if (!gtfsStop.locationType().equals(GtfsLocationType.STOP)) {
-            noticeContainer.addValidationNotice(
-                new WrongStopTimeStopLocationTypeNotice(stopTime.csvRowNumber(),
-                    stopTime.tripId(),
-                    stopTime.stopSequence(),
-                    stopTime.stopId(),
-                    gtfsStop.locationType().name()));
-          }
-        });
+        stop.ifPresent(
+            gtfsStop -> {
+              if (!gtfsStop.locationType().equals(GtfsLocationType.STOP)) {
+                noticeContainer.addValidationNotice(
+                    new WrongStopTimeStopLocationTypeNotice(
+                        stopTime.csvRowNumber(),
+                        stopTime.tripId(),
+                        stopTime.stopSequence(),
+                        stopTime.stopId(),
+                        gtfsStop.locationType().name()));
+              }
+            });
       }
     }
   }
