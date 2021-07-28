@@ -43,10 +43,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
+import org.mobilitydata.gtfsvalidator.validator.FileValidator;
 
 /**
  * Container for validation notices (errors and warnings).
@@ -178,18 +180,22 @@ public class NoticeContainer {
    * Exports notices information as a json file.
    *
    * @param isPretty will beautify the output if set to true
-   * @param noticePackageName the name of the package that contains the notices
-   * @param validatorPackageName the name of the package that contains the {@code GtfsValidator}s
-   * @return the stringified json file that contains information about all {@code ValidationNotice}s
+   * @param validationNoticeClazz the {@code Class} from which the package name for validation
+   *                             notices will be extracted from
+   * @param validatorClazz the {@code Class} from which the package name for validators will be
+   *                      extracted from
+   * @return the json string file that contains information about all {@code ValidationNotice}s
    * @throws IOException if the attempt to read class path resources (jar files or directories)
    * failed.
    * */
-  public static String exportNoticesSchema(boolean isPretty, String noticePackageName,
-      String validatorPackageName)
+  public static String exportNoticesSchema(boolean isPretty, Class validationNoticeClazz,
+      Class validatorClazz)
       throws IOException {
     Gson gson = isPretty ? PRETTY_GSON : DEFAULT_GSON;
-    JsonObject coreNoticeProperties = extractCoreNoticesProperties(noticePackageName);
-    JsonObject mainNoticesProperties = extractMainNoticesProperties(validatorPackageName);
+    JsonObject coreNoticeProperties =
+        extractCoreNoticesProperties(validationNoticeClazz.getPackage().getName());
+    JsonObject mainNoticesProperties =
+        extractMainNoticesProperties(validatorClazz.getPackage().getName());
     JsonObject root =
         mergeGsonObjects(ImmutableList.of(coreNoticeProperties, mainNoticesProperties));
     return gson.toJson(root);

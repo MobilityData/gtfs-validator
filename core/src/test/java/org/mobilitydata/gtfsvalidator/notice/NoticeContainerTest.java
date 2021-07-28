@@ -173,8 +173,8 @@ public class NoticeContainerTest {
   public void exportNoticesSchema() throws IOException {
         assertThat(NoticeContainer.exportNoticesSchema(
             true,
-            AnotherTestValidationNotice.class.getPackage().getName(),
-            SampleTestValidator.class.getPackage().getName())).isEqualTo("{\n"
+            AnotherTestValidationNotice.class,
+            SampleTestValidator.class)).isEqualTo("{\n"
             + "  \"AnotherTestValidationNotice\": [\n"
             + "    {\n"
             + "      \"name\": \"filename\",\n"

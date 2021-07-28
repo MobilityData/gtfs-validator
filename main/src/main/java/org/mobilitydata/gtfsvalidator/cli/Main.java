@@ -173,18 +173,18 @@ public class Main {
   }
 
   private static void exportNoticeSchema(final Arguments args) {
-      new File(args.getOutputBase()).mkdirs();
-      try {
-        Files.write(
-            Paths.get(args.getOutputBase(), NOTICE_SCHEMA_JSON),
-            NoticeContainer
-                .exportNoticesSchema(
-                    args.getPretty(),
-                    ValidationNotice.class.getPackage().getName(),
-                    GtfsFieldValidator.class.getPackage().getName())
-                .getBytes(StandardCharsets.UTF_8));
-      } catch (IOException e) {
-        logger.atSevere().withCause(e).log("Cannot store notice schema file");
-      }
+    new File(args.getOutputBase()).mkdirs();
+    try {
+      Files.write(
+          Paths.get(args.getOutputBase(), NOTICE_SCHEMA_JSON),
+          NoticeContainer
+              .exportNoticesSchema(
+                  args.getPretty(),
+                  ValidationNotice.class,
+                  GtfsFieldValidator.class)
+              .getBytes(StandardCharsets.UTF_8));
+    } catch (IOException e) {
+      logger.atSevere().withCause(e).log("Cannot store notice schema file");
     }
+  }
 }
