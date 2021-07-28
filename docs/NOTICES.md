@@ -626,6 +626,7 @@
 | `unusable_tripNotice`                      	| [`UnusableTripNotice`](#UnusableTripNotice)                                       	|
 | `unused_shapeNotice`                       	| [`UnusedShapeNotice`](#UnusedShapeNotice)                                         	|
 | `unused_tripNotice`                        	| [`UnusedTripNotice`](#UnusedTripNotice)                                           	|
+| `wrong_stop_time_stop_location_type`          | [`WrongStopTimeStopLocationTypeNotice`](#WrongStopTimeStopLocationTypeNotice)	        |
 
 #### [AttributionWithoutRoleNotice](/RULES.md#AttributionWithoutRoleNotice)
 ##### Fields description
@@ -999,6 +1000,21 @@
 
 ##### Affected files
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
+* [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
+
+#### [WrongStopTimeStopLocationTypeNotice](/RULES.md#WrongStopTimeStopLocationTypeNotice)
+##### Fields description
+
+| Field name     	| Description                                            	| Type   	|
+|----------------	|--------------------------------------------------------	|--------	|
+| `csvRowNumber` 	| The row number of the faulty record.                   	| Long   	|
+| `tripId`       	| `stop_times.trip_id` value for the faulty record.      	| String 	|
+| `stopSequence` 	| The faulty record's `stops.stop_sequence`.             	| String 	|
+| `stopId`       	| `stop_times.stop_id` value for the faulty record.      	| String 	|
+| `locationType` 	| The `stops.location_type` the faulty record refers to. 	| String 	|
+
+##### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
 ### Info
