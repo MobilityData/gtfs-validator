@@ -39,7 +39,6 @@
 | `number_out_of_range`                                  	| [`NumberOutOfRangeNotice`](#NumberOutOfRangeNotice)                                                             	|
 | `overlapping_frequency`                                	| [`OverlappingFrequencyNotice`](#OverlappingFrequencyNotice)                                                     	|
 | `route_both_short_and_long_name_missing`               	| [`RouteBothShortAndLongNameMissingNotice`](#RouteBothShortAndLongNameMissingNotice)                             	|
-| `same_name_and_description_for_route`                  	| [`SameNameAndDescriptionForRouteNotice`](#SameNameAndDescriptionForRouteNotice)                                 	|
 | `start_and_end_range_equal`                            	| [`StartAndEndRangeEqualNotice`](#StartAndEndRangeEqualNotice)                                                   	|
 | `start_and_end_range_out_of_order`                     	| [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         	|
 | `station_with_parent_station`                          	| [`StationWithParentStationNotice`](#StationWithParentStationNotice)                                             	|
@@ -503,20 +502,6 @@
 ##### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-#### [`SameNameAndDescriptionForRouteNotice`](/RULES.md#SameNameAndDescriptionForRouteNotice)
-##### Fields description
-
-| Field name     	| Description                                    	| Type   	|
-|----------------	|------------------------------------------------	|--------	|
-| `filename`       	| The name of the faulty file.                   	| String 	|
-| `routeId`        	| The id of the faulty record.                   	| String 	|
-| `csvRowNumber`   	| The row number of the faulty record.           	| Long   	|
-| `routeDesc`      	| The `routes.routes_desc` of the faulty record. 	| String 	|
-| `specifiedField` 	| Either `route_short_name` or `route_long_name`. 	| String 	|
-
-##### Affected files
-* [`routes.txt`](http://gtfs.org/reference/static#routestxt)
-
 #### [`StartAndEndRangeEqualNotice`](/RULES.md#StartAndEndRangeEqualNotice)
 ##### Fields description
 
@@ -627,6 +612,7 @@
 | `route_color_contrastNotice`               	| [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	|
 | `route_short_and_long_name_equalNotice`    	| [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	|
 | `route_short_name_too_longNotice`          	| [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	|
+| `same_name_and_description_for_route`         | [`SameNameAndDescriptionForRouteNotice`](#SameNameAndDescriptionForRouteNotice)       |
 | `same_name_and_description_for_stop`        	| [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)       	|
 | `same_route_and_agency_url`                	| [`SameRouteAndAgencyUrlNotice`](#SameRouteAndAgencyUrlNotice)                         |
 | `same_stop_and_agency_url`                  	| [`SameStopAndAgencyUrlNotice`](#SameStopAndAgencyUrlNotice)                           |
@@ -826,6 +812,20 @@
 | `routeId`        	| The id of the faulty record.            	| Long   	|
 | `csvRowNumber`   	| The row number of the faulty record.    	| String 	|
 | `routeShortName` 	| The faulty record's `route_short_name`. 	| String 	|
+
+##### Affected files
+* [`routes.txt`](http://gtfs.org/reference/static#routestxt)
+
+#### [`SameNameAndDescriptionForRouteNotice`](/RULES.md#SameNameAndDescriptionForRouteNotice)
+##### Fields description
+
+| Field name     	| Description                                    	| Type   	|
+|----------------	|------------------------------------------------	|--------	|
+| `filename`       	| The name of the faulty file.                   	| String 	|
+| `routeId`        	| The id of the faulty record.                   	| String 	|
+| `csvRowNumber`   	| The row number of the faulty record.           	| Long   	|
+| `routeDesc`      	| The `routes.routes_desc` of the faulty record. 	| String 	|
+| `specifiedField` 	| Either `route_short_name` or `route_long_name`. 	| String 	|
 
 ##### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
