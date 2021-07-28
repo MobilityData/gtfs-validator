@@ -61,7 +61,9 @@ public class Main {
     }
     if (args.getExportNoticeSchema()) {
       exportNoticeSchema(args);
-      return;
+      if (args.getAbortAfterSchemaExtraction()) {
+        return;
+      }
     }
     if (!CliParametersAnalyzer.isValid(args)) {
       System.exit(1);

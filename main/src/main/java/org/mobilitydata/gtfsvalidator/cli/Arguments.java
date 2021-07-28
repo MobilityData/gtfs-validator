@@ -89,6 +89,11 @@ public class Arguments {
       description = "Export notices schema")
   private boolean exportNoticeSchema = false;
 
+  @Parameter(
+      names = {"-a", "--abort_after_schema_extraction"},
+      description = "Abort after extracting schema for notices")
+  private boolean abortAfterSchemaExtraction = true;
+
   public String getFeedName() {
     return feedName;
   }
@@ -140,4 +145,6 @@ public class Arguments {
   }
 
   public boolean getExportNoticeSchema() { return exportNoticeSchema; }
+
+  public boolean getAbortAfterSchemaExtraction() { return abortAfterSchemaExtraction; }
 }
