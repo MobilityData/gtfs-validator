@@ -68,7 +68,7 @@ public class StopTimeStopLocationTypeValidatorTest {
     assertThat(generateNotices(
         ImmutableList.of(
             createStopTime(1, "trip id value", "stop id value", 5),
-            createStopTime(5, "other  id value", "other id value", 8)
+            createStopTime(5, "other trip id value", "other stop id value", 8)
         ),
         ImmutableList.of(
             createStop(88, "stop id value", 0),
@@ -82,7 +82,7 @@ public class StopTimeStopLocationTypeValidatorTest {
     assertThat(generateNotices(
         ImmutableList.of(
             createStopTime(1, "trip id value", "stop id value", 5),
-            createStopTime(5, "other  id value", "wrong foreign key", 8)
+            createStopTime(5, "other trip id value", "wrong foreign key", 8)
         ),
         ImmutableList.of(
             createStop(88, "stop id value", 0),
