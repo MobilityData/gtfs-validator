@@ -83,7 +83,7 @@ jobs:
       - name: Install dependencies
         run: pip3 install -r scripts/mobility-database-harvester/requirements.txt
       - name: Get datasets' metadata
-        id: harvest
+        id: set-matrix
         run: |
           python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
           jq '.[] | tostring' datasets_metadata/latest_versions.json -r
