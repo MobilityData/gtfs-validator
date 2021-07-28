@@ -72,7 +72,7 @@ public class StopTimeStopLocationTypeValidatorTest {
         ),
         ImmutableList.of(
             createStop(88, "stop id value", 0),
-            createStop(103, "other id value", 0)
+            createStop(103, "other stop id value", 0)
         )
     )).isEmpty();
   }
@@ -86,7 +86,7 @@ public class StopTimeStopLocationTypeValidatorTest {
         ),
         ImmutableList.of(
             createStop(88, "stop id value", 0),
-            createStop(103, "other id value", 0)
+            createStop(103, "other stop id value", 0)
         )
     )).isEmpty();
   }
