@@ -91,7 +91,6 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`InvalidTimeNotice`](#InvalidTimeNotice)                                                                       	| A field cannot be parsed as time.                                                                                                                           	|
 | [`InvalidTimezoneNotice`](#InvalidTimezoneNotice)                                                               	| A field cannot be parsed as a timezone.                                                                                                                     	|
 | [`InvalidUrlNotice`](#InvalidUrlNotice)                                                                         	| A field contains a malformed URL.                                                                                                                           	|
-| [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)                                     	| The value in CSV file has leading or trailing whitespaces.                                                                                                  	|
 | [`LocationWithoutParentStationNotice`](#LocationWithoutParentStationNotice)                                     	| A location that must have `parent_station` field does not have it.                                                                                          	|
 | [`MissingCalendarAndCalendarDateFilesNotice`](#MissingCalendarAndCalendarDateFilesNotice)                       	| Missing GTFS files `calendar.txt` and `calendar_dates.txt`.                                                                                                 	|
 | [`MissingRequiredColumnNotice`](#MissingRequiredColumnNotice)                                                     	| A required column is missing in the input file.                                                                                                             	|
@@ -102,7 +101,6 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`NumberOutOfRangeNotice`](#NumberOutOfRangeNotice)                                                               	| Out of range value.                                                                                                                                         	|
 | [`OverlappingFrequencyNotice`](#OverlappingFrequencyNotice)                                                     	| Trip frequencies overlap.                                                                                                                                   	|
 | [`RouteBothShortAndLongNameMissingNotice`](#RouteBothShortAndLongNameMissingNotice)                             	| Missing route short name and long name.                                                                                                                     	|
-| [`SameNameAndDescriptionForRouteNotice`](#SameNameAndDescriptionForRouteNotice)                                 	| Same name and description for route.                                                                                                                        	|
 | [`StartAndEndRangeEqualNotice`](#StartAndEndRangeEqualNotice)                                                   	| Two date or time fields are equal.                                                                                                                          	|
 | [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         	| Two date or time fields are out of order.                                                                                                                   	|
 | [`StationWithParentStationNotice`](#StationWithParentStationNotice)                                             	| A station has `parent_station` field set.                                                                                                                   	|
@@ -123,6 +121,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`FeedExpirationDateNotice`](#FeedExpirationDateNotice)                           	| Dataset should be valid for at least the next 7 days. Dataset should cover at least the next 30 days of service.                                            	|
 | [`FeedInfoLangAndAgencyMismatchNotice`](#FeedInfoLangAndAgencyLangMismatchNotice) 	| Mismatching feed and agency language fields.                                                                                                                	|
 | [`InconsistentAgencyLangNotice`](#InconsistentAgencyLangNotice)                   	| Inconsistent language among agencies.                                                                                                                       	|
+| [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)           | The value in CSV file has leading or trailing whitespaces.                                                                                                  	|
 | [`MissingFeedInfoDateNotice`](#MissingFeedInfoDateNotice)                         	| `feed_end_date` should be provided if `feed_start_date` is provided. `feed_start_date` should be provided if `feed_end_date` is provided.                   	|
 | [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	| More than one row in CSV.                                                                                                                                   	|
 | [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	| Non ascii or non printable char in  `id`.                                                                                                                   	|
@@ -130,7 +129,11 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	| Insufficient route color contrast.                                                                                                                          	|
 | [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	| Short and long name are equal for a route.                                                                                                                  	|
 | [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	| Short name of a route is too long (more than 12 characters).                                                                                                	|
-| [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)         | Same name and description for route.                                                                                                                      	|
+| [`SameNameAndDescriptionForRouteNotice`](#SameNameAndDescriptionForRouteNotice)       | Same name and description for route.                                                                                                                        	|
+| [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)         | Same name and description for stop.                                                                                                                      	    |
+| [`SameRouteAndAgencyUrlNotice`](#SameRouteAndAgencyUrlNotice)                       	| Same `routes.route_url` and `agency.agency_url`.                                                                                                  	        |
+| [`SameStopAndAgencyUrlNotice`](#SameStopAndAgencyUrlNotice)                          	| Same `stops.stop_url` and `agency.agency_url`.                                                                                                  	            |
+| [`SameStopAndRouteUrlNotice`](#SameStopAndRouteUrlNotice)                          	| Same `stops.stop_url` and `routes.route_url`.                                                                                                  	            |
 | [`StartAndEndTimeEqualNotice`](#StartAndEndTimeEqualNotice)                       	| Equal `frequencies.start_time` and `frequencies.end_time`.                                                                                                  	|
 | [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	| `arrival_time` or `departure_time` not specified for timepoint.                                                                                             	|
 | [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	| Stop too far from trip shape.                                                                                                                               	|
@@ -362,15 +365,6 @@ Value of field with type `url` is not valid. Definitions for valid URLs are quit
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 * [Apache Commons UrlValidator](https://commons.apache.org/proper/commons-validator/apidocs/org/apache/commons/validator/routines/UrlValidator.html)
 
-<a name="LeadingOrTrailingWhitespacesNotice"/>
-
-#### LeadingOrTrailingWhitespacesNotice
-
-The value in CSV file has leading or trailing whitespaces.
-
-##### References:
-* [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
-
 <a name="LocationWithoutParentStationNotice"/>
 
 #### LocationWithoutParentStationNotice
@@ -470,11 +464,11 @@ Both short_name and long_name are missing for a route.
 
 #### SameNameAndDescriptionForRouteNotice
 
-The GTFS spec defines `routes.txt` [route_description](https://gtfs.org/reference/static/#routestxt) as:
+The GTFS spec defines `routes.txt` [route_desc](https://gtfs.org/reference/static/#routestxt) as:
 
 > Description of a route that provides useful, quality information. Do not simply duplicate the name of the route.
 
-See the GTFS and GTFS Best Practices links below for more examples of how to populate the `route_short_name`, `route_long_name`, and `route_description` fields.
+See the GTFS and GTFS Best Practices links below for more examples of how to populate the `route_short_name`, `route_long_name`, and `route_desc` fields.
 
 ##### References:
 [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
@@ -623,6 +617,15 @@ Agencies from GTFS `agency.txt` have been found to have different languages.
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 
+<a name="LeadingOrTrailingWhitespacesNotice"/>
+
+#### LeadingOrTrailingWhitespacesNotice
+
+The value in CSV file has leading or trailing whitespaces.
+
+##### References:
+* [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
+
 <a name="MissingFeedInfoDateNotice"/>
 
 #### MissingFeedInfoDateNotice
@@ -697,6 +700,33 @@ The GTFS spec defines `stops.txt` [stop_description](https://gtfs.org/reference/
 
 ##### References:
 [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+
+<a name="SameRouteAndAgencyUrlNotice"/>
+
+#### SameRouteAndAgencyUrlNotice
+
+A route should not have the same `routes.route_url` as a record from `agency.txt`.
+
+##### References:
+* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
+
+<a name="SameStopAndAgencyUrlNotice"/>
+
+#### SameStopAndAgencyUrlNotice
+
+A stop should not have the same `stops.stop_url` as a record from `agency.txt`.
+
+##### References:
+* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+
+<a name="SameStopAndRouteUrlNotice"/>
+
+#### SameStopAndRouteUrlNotice
+
+A stop should not have the same `stop.stop_url` as a record from `routes.txt`.
+
+##### References:
+* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 
 <a name="StartAndEndTimeEqualNotice"/>
 
