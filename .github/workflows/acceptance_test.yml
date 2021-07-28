@@ -106,7 +106,7 @@ jobs:
         with:
           name: datasets_metadata
           path: datasets_metadata
-      outputs:
+    outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 #  get-latest-changes-report:
 #    needs: [ pack, fetch-urls ]
