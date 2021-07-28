@@ -92,7 +92,7 @@ public class Arguments {
   @Parameter(
       names = {"-a", "--abort_after_schema_extraction"},
       description = "Abort after extracting schema for notices")
-  private boolean abortAfterSchemaExtraction = true;
+  private boolean abortAfterSchemaExtraction = false;
 
   public String getFeedName() {
     return feedName;
