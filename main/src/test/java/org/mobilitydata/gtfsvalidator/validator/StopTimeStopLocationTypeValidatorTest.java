@@ -45,11 +45,11 @@ public class StopTimeStopLocationTypeValidatorTest {
         .build();
   }
 
-  private static GtfsStop createStop(long csvRowNumber, String stopId, Integer locationTypeValue) {
+  private static GtfsStop createStop(long csvRowNumber, String stopId, GtfsLocationType locationType) {
     return new GtfsStop.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setStopId(stopId)
-        .setLocationType(GtfsLocationType.forNumber(locationTypeValue))
+        .setLocationType(locationType)
         .build();
   }
 
@@ -71,8 +71,8 @@ public class StopTimeStopLocationTypeValidatorTest {
             createStopTime(5, "other trip id value", "other stop id value", 8)
         ),
         ImmutableList.of(
-            createStop(88, "stop id value", 0),
-            createStop(103, "other stop id value", 0)
+            createStop(88, "stop id value", GtfsLocationType.STOP),
+            createStop(103, "other stop id value", GtfsLocationType.STOP)
         )
     )).isEmpty();
   }
@@ -85,8 +85,8 @@ public class StopTimeStopLocationTypeValidatorTest {
             createStopTime(5, "other trip id value", "wrong foreign key", 8)
         ),
         ImmutableList.of(
-            createStop(88, "stop id value", 0),
-            createStop(103, "other stop id value", 0)
+            createStop(88, "stop id value", GtfsLocationType.STOP),
+            createStop(103, "other stop id value", GtfsLocationType.STOP)
         )
     )).isEmpty();
   }
@@ -112,11 +112,11 @@ public class StopTimeStopLocationTypeValidatorTest {
             createStopTime(55, "another trip id value", "boarding area id value", 18)
         ),
         ImmutableList.of(
-            createStop(88, "stop id value", 0),
-            createStop(77, "station id value", 1),
-            createStop(66, "entrance id value", 2),
-            createStop(147, "generic node id value", 3),
-            createStop(103, "boarding area id value", 4)
+            createStop(88, "stop id value", GtfsLocationType.STOP),
+            createStop(77, "station id value", GtfsLocationType.STATION),
+            createStop(66, "entrance id value", GtfsLocationType.ENTRANCE),
+            createStop(147, "generic node id value", GtfsLocationType.GENERIC_NODE),
+            createStop(103, "boarding area id value", GtfsLocationType.BOARDING_AREA)
         )
     )).containsExactlyElementsIn(validationNotices);
   }
