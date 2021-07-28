@@ -20,7 +20,7 @@ import static org.mobilitydata.gtfsvalidator.table.GtfsRouteTableLoader.FILENAME
 
 import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
+import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -94,7 +94,7 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class RouteBothShortAndLongNameMissingNotice extends ValidationNotice {
-    @NoticeExport
+    @SchemaExport
     RouteBothShortAndLongNameMissingNotice(String routeId, long csvRowNumber) {
       super(
           ImmutableMap.of(
@@ -110,7 +110,7 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class RouteShortAndLongNameEqualNotice extends ValidationNotice {
-    @NoticeExport
+    @SchemaExport
     RouteShortAndLongNameEqualNotice(
         String routeId, long csvRowNumber, String routeShortName, String routeLongName) {
       super(
@@ -130,7 +130,7 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class RouteShortNameTooLongNotice extends ValidationNotice {
-    @NoticeExport
+    @SchemaExport
     RouteShortNameTooLongNotice(String routeId, long csvRowNumber, String routeShortName) {
       super(
           ImmutableMap.of(
@@ -142,16 +142,13 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
   }
 
   /**
-   * A {@code GtfsRoute} has identical value for `routes.route_desc` and
-   * `routes.route_long_name`{@code /}`routes`{@code /}route_short_name.
+   * A route has identical values for {@code routes.route_desc} and {@code route_long_name} or
+   * {@code route_short_name}.
    *
-   * <p>"Do not simply duplicate the name of the location."
-   * (http://gtfs.org/reference/static#routestxt)
-   *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class SameNameAndDescriptionForRouteNotice extends ValidationNotice {
-    @NoticeExport
+    @SchemaExport
     SameNameAndDescriptionForRouteNotice(
         long csvRowNumber, String routeId, String routeDesc, String routeShortOrLongName) {
       super(
@@ -162,7 +159,7 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
               .put("routeDesc", routeDesc)
               .put("specifiedField", routeShortOrLongName)
               .build(),
-          SeverityLevel.ERROR);
+          SeverityLevel.WARNING);
     }
   }
 }

@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
+import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
@@ -76,7 +76,7 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
   }
 
   static class FeedExpirationDateNotice extends ValidationNotice {
-    @NoticeExport
+    @SchemaExport
     FeedExpirationDateNotice(
         long csvRowNumber,
         GtfsDate currentDate,

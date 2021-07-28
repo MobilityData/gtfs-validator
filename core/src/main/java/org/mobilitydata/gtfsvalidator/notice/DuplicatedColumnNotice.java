@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
+import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 
 /**
  * The input file CSV header has the same column name repeated.
@@ -26,7 +26,7 @@ import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
  */
 public class DuplicatedColumnNotice extends ValidationNotice {
   // Indices should start from 1.
-  @NoticeExport
+  @SchemaExport
   public DuplicatedColumnNotice(
       String filename, String fieldName, int firstIndex, int secondIndex) {
     super(

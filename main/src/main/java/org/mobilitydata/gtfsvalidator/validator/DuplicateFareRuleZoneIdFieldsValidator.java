@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.NoticeExport;
+import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -101,7 +101,7 @@ public class DuplicateFareRuleZoneIdFieldsValidator extends FileValidator {
    */
   static class DuplicateFareRuleZoneIdFieldsNotice extends ValidationNotice {
 
-    @NoticeExport
+    @SchemaExport
     DuplicateFareRuleZoneIdFieldsNotice(
         long csvRowNumber, String fareId, long previousCsvRowNumber, String previousFareId) {
       super(
