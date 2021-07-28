@@ -86,6 +86,7 @@ jobs:
         id: harvest
         run: |
           python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
+          jq '.[] | tostring' datasets_metadata/latest_versions.json -r
           DATASETS=$(jq '.[] | tostring' datasets_metadata/latest_versions.json -r)
           echo $DATASETS
           echo "::set-output name=matrix::$DATASETS"
