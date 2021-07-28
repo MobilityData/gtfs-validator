@@ -86,7 +86,7 @@ jobs:
         id: harvest
         run: |
           python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
-          DATASETS=$(jq '.[] | tostring' datasets_metadata/latest_versions.json -r)
+          DATASETS=$(jq '. | tostring' datasets_metadata/latest_versions.json -r)
           echo $DATASETS
           echo "::set-output name=matrix::$DATASETS"
         env:
@@ -139,7 +139,7 @@ jobs:
     needs: [ download-latest-gtfs-validator-release-jar, fetch-urls ]
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix).root }}
     steps:
       - name: Retrieve metadata from previous job
         uses: actions/download-artifact@v2
