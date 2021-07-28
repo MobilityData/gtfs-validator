@@ -9,7 +9,7 @@
 
 | Short name 	| Long name                     	| required? 	| Description                                                                                                               	|
 |------------	|-------------------------------	|-----------	|---------------------------------------------------------------------------------------------------------------------------	|
-| `-a`       	| `--abort_after_schema_export`    	| Optional  	| Aborts the application process.                                                                   	|
+| `-a`       	| `--abort_after_schema_export`    	| Optional  	| Abort the application process.                                                                   	|
 | `-i`       	| `--input`                     	| Optional  	| Location of the input GTFS ZIP or unarchived directory.                                                                   	|
 | `-c`       	| `--country_code`                 	| Optional  	| Country code of the feed, e.g., `nl`. It must be a two-letter country code (ISO 3166-1 alpha-2).                           	|
 | `-h`       	| `--help`                 	        | Optional  	| Print help menu.                                                                                                              |
