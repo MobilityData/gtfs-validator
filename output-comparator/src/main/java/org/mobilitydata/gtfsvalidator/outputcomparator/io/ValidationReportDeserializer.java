@@ -16,7 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -36,6 +35,7 @@ import java.util.Set;
  * validation.
  */
 public class ValidationReportDeserializer implements JsonDeserializer<ValidationReport> {
+
   private static final Gson GSON =
       new GsonBuilder().serializeNulls().serializeSpecialFloatingPointValues().create();
   private static final String NOTICES_MEMBER_NAME = "notices";
@@ -58,15 +58,12 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
   @Override
   public ValidationReport deserialize(
       JsonElement json, Type typoOfT, JsonDeserializationContext context) {
-//    ImmutableSet.Builder<NoticeSummary> noticeSetBuilder = new ImmutableSet.Builder<>();
     Set<NoticeSummary> notices = new HashSet<>();
     JsonObject rootObject = json.getAsJsonObject();
     JsonArray noticesArray = rootObject.getAsJsonArray(NOTICES_MEMBER_NAME);
     for (JsonElement childObject : noticesArray) {
-        notices.add(GSON.fromJson(childObject, NoticeSummary.class));
+      notices.add(GSON.fromJson(childObject, NoticeSummary.class));
     }
-//    ImmutableSet<NoticeSummary> notices = noticeSetBuilder.build();
-
     return new ValidationReport(Collections.unmodifiableSet(notices), extractErrorCodes(notices));
   }
 }

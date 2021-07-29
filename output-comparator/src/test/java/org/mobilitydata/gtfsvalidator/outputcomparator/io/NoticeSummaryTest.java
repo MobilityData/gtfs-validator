@@ -18,10 +18,8 @@ package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.junit.Test;

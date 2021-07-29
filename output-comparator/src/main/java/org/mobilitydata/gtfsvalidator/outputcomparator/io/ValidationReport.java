@@ -134,8 +134,8 @@ public class ValidationReport {
   }
 
   /**
-   * Determines if two validation reports are equal regardless of the order of the fields in the
-   * set of {@code NoticeSummary}.
+   * Determines if two validation reports are equal regardless of the order of the fields in the set
+   * of {@code NoticeSummary}.
    *
    * @param other the other {@code ValidationReport}.
    * @return true if both validation reports are equal regardless of the order of the fields in the
@@ -148,12 +148,7 @@ public class ValidationReport {
     }
     if (other instanceof ValidationReport) {
       ValidationReport otherReport = (ValidationReport) other;
-//      return Sets.intersection(getNotices(), ((ValidationReport) other).getNotices()).isEmpty();
-      return getNotices().equals(otherReport.getNotices());//getNotices().size() == otherReport.getNotices().size() &&
-//          Sets.difference(getNotices(), otherReport.getNotices()).isEmpty();
-//          Sets.intersection(getNotices(), ((ValidationReport) other).getNotices())
-//              .isEmpty();//getNotices().
-//      getNotices().containsAll(((ValidationReport) other).getNotices());
+      return getNotices().equals(otherReport.getNotices());
     }
     return false;
   }
