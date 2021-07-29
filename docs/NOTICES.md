@@ -1,4 +1,3 @@
-test
 # Notices field description
 
 ## Validation notices
