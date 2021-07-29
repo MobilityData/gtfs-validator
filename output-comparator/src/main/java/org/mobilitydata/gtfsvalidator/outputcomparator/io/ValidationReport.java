@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 MobilityData IO
+ * Copyright 2021 MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
@@ -25,7 +24,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Used to deserialize validation report. This represents a validation report as a list of {@code
@@ -35,16 +34,17 @@ import java.util.List;
  * quick comparison between reports.
  */
 public class ValidationReport {
+
   private static final Gson GSON =
       new GsonBuilder()
           .registerTypeAdapter(ValidationReport.class, new ValidationReportDeserializer())
           .serializeNulls()
           .serializeSpecialFloatingPointValues()
           .create();
-  private final ImmutableList<NoticeSummary> notices;
+  private final Set<NoticeSummary> notices;
   private final ImmutableSet<String> errorCodes;
 
-  ValidationReport(ImmutableList<NoticeSummary> notices, ImmutableSet<String> errorCodes) {
+  ValidationReport(Set<NoticeSummary> notices, ImmutableSet<String> errorCodes) {
     this.notices = notices;
     this.errorCodes = errorCodes;
   }
@@ -54,13 +54,13 @@ public class ValidationReport {
    *
    * @param path the path to the json file
    * @return the {@code ValidationReport} that contains the {@code ValidationReport} related to the
-   *     json file whose path was passed as parameter.
+   * json file whose path was passed as parameter.
    */
   public static ValidationReport fromPath(Path path) throws IOException {
-    BufferedReader reader = Files.newBufferedReader(path);
-    ValidationReport validationReport = GSON.fromJson(reader, ValidationReport.class);
-    reader.close();
-    return validationReport;
+    try (BufferedReader reader = Files.newBufferedReader(path)) {
+      ValidationReport validationReport = GSON.fromJson(reader, ValidationReport.class);
+      return validationReport;
+    }
   }
 
   /**
@@ -68,7 +68,7 @@ public class ValidationReport {
    *
    * @param jsonString the json string
    * @return the {@code ValidationReport} that contains the {@code ValidationReport} related to the
-   *     json string passed as parameter.
+   * json string passed as parameter.
    */
   public static ValidationReport fromJsonString(String jsonString) {
     return GSON.fromJson(jsonString, ValidationReport.class);
@@ -79,12 +79,13 @@ public class ValidationReport {
    *
    * @return the list of {@code NoticeSummary} of this {@code ValidationReport}.
    */
-  public List<NoticeSummary> getNotices() {
+  public Set<NoticeSummary> getNotices() {
     return notices;
   }
 
   /**
-   * Returns the immutable and ordered set of error codes contained in this {@code ValidationReport}
+   * Returns the immutable and ordered set of error codes contained in this {@code
+   * ValidationReport}
    *
    * @return the immutable and ordered set of error codes contained in this {@code ValidationReport}
    */
@@ -97,7 +98,7 @@ public class ValidationReport {
    *
    * @param otherValidationReport the other {@code ValidationReport}.
    * @return true if the two {@code ValidationReport} contain the same set of error codes, false
-   *     otherwise.
+   * otherwise.
    */
   public boolean hasSameErrorCodes(ValidationReport otherValidationReport) {
     return getErrorCodes().equals(otherValidationReport.getErrorCodes());
@@ -111,7 +112,7 @@ public class ValidationReport {
    *   <li>invalid_phone_number;
    *   <li>number_out_of_range;
    * </ul>
-   *
+   * <p>
    * and the other {@code ValidationReport} has the following error codes:
    *
    * <ul>
@@ -126,7 +127,7 @@ public class ValidationReport {
    *
    * @param other the other {@code ValidationReport}
    * @return the number of new error codes introduced by the other {@code ValidationReport} passed
-   *     as parameter.
+   * as parameter.
    */
   public int getNewErrorCount(ValidationReport other) {
     return Sets.difference(other.getErrorCodes(), getErrorCodes()).size();
@@ -134,11 +135,11 @@ public class ValidationReport {
 
   /**
    * Determines if two validation reports are equal regardless of the order of the fields in the
-   * list of {@code NoticeSummary}.
+   * set of {@code NoticeSummary}.
    *
    * @param other the other {@code ValidationReport}.
    * @return true if both validation reports are equal regardless of the order of the fields in the
-   *     list of {@code NoticeSummary}.
+   * set of {@code NoticeSummary}.
    */
   @Override
   public boolean equals(Object other) {
@@ -146,8 +147,13 @@ public class ValidationReport {
       return true;
     }
     if (other instanceof ValidationReport) {
-       return getNotices().size() == ((ValidationReport) other).getNotices().size() &&
-      getNotices().containsAll(((ValidationReport) other).getNotices());
+      ValidationReport otherReport = (ValidationReport) other;
+//      return Sets.intersection(getNotices(), ((ValidationReport) other).getNotices()).isEmpty();
+      return getNotices().equals(otherReport.getNotices());//getNotices().size() == otherReport.getNotices().size() &&
+//          Sets.difference(getNotices(), otherReport.getNotices()).isEmpty();
+//          Sets.intersection(getNotices(), ((ValidationReport) other).getNotices())
+//              .isEmpty();//getNotices().
+//      getNotices().containsAll(((ValidationReport) other).getNotices());
     }
     return false;
   }

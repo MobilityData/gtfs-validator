@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 MobilityData IO
+ * Copyright 2021 MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,9 @@ package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 
 /**
@@ -29,6 +30,7 @@ import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
  * about each notice.
  */
 public class NoticeSummary {
+
   private final String code;
   private final SeverityLevel severity;
 
@@ -36,10 +38,10 @@ public class NoticeSummary {
   private final int count;
 
   @SerializedName("notices")
-  private final List<Map<String, Object>> contexts;
+  private final Set<Map<String, Object>> contexts;
 
   public NoticeSummary(
-      String code, SeverityLevel severity, int count, List<Map<String, Object>> contexts) {
+      String code, SeverityLevel severity, int count, Set<Map<String, Object>> contexts) {
     this.code = code;
     this.severity = severity;
     this.count = count;
@@ -58,8 +60,8 @@ public class NoticeSummary {
     return code;
   }
 
-  public List<Map<String, Object>> getContexts() {
-    return Collections.unmodifiableList(contexts);
+  public Set<Map<String, Object>> getContexts() {
+    return Collections.unmodifiableSet(contexts);
   }
 
   public boolean isError() {
@@ -72,11 +74,17 @@ public class NoticeSummary {
       return true;
     }
     if (other instanceof NoticeSummary) {
-      return this.getCode().equals(((NoticeSummary) other).getCode())
-          && this.getSeverity().equals(((NoticeSummary) other).getSeverity())
-          && this.getCount() == (((NoticeSummary) other).getCount())
-          && getContexts().equals(((NoticeSummary) other).getContexts());
+      NoticeSummary otherNoticeSummary = (NoticeSummary) other;
+      return this.getCode().equals(otherNoticeSummary.getCode())
+          && this.getSeverity().equals(otherNoticeSummary.getSeverity())
+          && this.getCount() == (otherNoticeSummary.getCount())
+          && getContexts().equals(otherNoticeSummary.getContexts());
     }
     return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(code, severity);
   }
 }

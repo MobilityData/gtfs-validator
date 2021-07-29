@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 MobilityData IO
+ * Copyright 2021 MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,12 @@ package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -34,147 +36,132 @@ public class NoticeSummaryTest {
       String code,
       SeverityLevel severityLevel,
       int totalNotices,
-      List<Map<String, Object>> notices) {
+      Set<Map<String, Object>> notices) {
     return new NoticeSummary(code, severityLevel, totalNotices, notices);
-  }
-
-  private static boolean testEquality(
-      NoticeSummary firstNoticeSummary, NoticeSummary otherNoticeSummary) {
-    return firstNoticeSummary.equals(otherNoticeSummary);
   }
 
   @Test
   public void equals_sameNotices_true() {
     assertThat(
-            testEquality(
-                createNoticeAggregate(
-                    "invalid_url",
-                    SeverityLevel.ERROR,
-                    1,
-                    ImmutableList.of(
-                        new ImmutableMap.Builder()
-                            .put("filename", "stops.txt")
-                            .put("csvRowNumber", 163)
-                            .put("fieldName", "stop_url")
-                            .put("fieldValue", "erroneous url")
-                            .build())),
-                createNoticeAggregate(
-                    "invalid_url",
-                    SeverityLevel.ERROR,
-                    1,
-                    ImmutableList.of(
-                        new ImmutableMap.Builder()
-                            .put("filename", "stops.txt")
-                            .put("csvRowNumber", 163)
-                            .put("fieldName", "stop_url")
-                            .put("fieldValue", "erroneous url")
-                            .build()))))
-        .isTrue();
+        createNoticeAggregate(
+            "invalid_url",
+            SeverityLevel.ERROR,
+            1,
+            ImmutableSet.of(
+                new ImmutableMap.Builder()
+                    .put("filename", "stops.txt")
+                    .put("csvRowNumber", 163)
+                    .put("fieldName", "stop_url")
+                    .put("fieldValue", "erroneous url")
+                    .build()))).isEqualTo(
+        createNoticeAggregate(
+            "invalid_url",
+            SeverityLevel.ERROR,
+            1,
+            ImmutableSet.of(
+                new ImmutableMap.Builder()
+                    .put("filename", "stops.txt")
+                    .put("csvRowNumber", 163)
+                    .put("fieldName", "stop_url")
+                    .put("fieldValue", "erroneous url")
+                    .build())));
   }
 
   @Test
   public void equals_sameNotices_differentOrder_true() {
     assertThat(
-            testEquality(
-                createNoticeAggregate(
-                    "invalid_url",
-                    SeverityLevel.ERROR,
-                    1,
-                    ImmutableList.of(
-                        new ImmutableMap.Builder()
-                            .put("filename", "stops.txt")
-                            .put("csvRowNumber", 163)
-                            .put("fieldName", "stop_url")
-                            .put("fieldValue", "erroneous url")
-                            .build())),
-                createNoticeAggregate(
-                    "invalid_url",
-                    SeverityLevel.ERROR,
-                    1,
-                    ImmutableList.of(
-                        new ImmutableMap.Builder()
-                            .put("csvRowNumber", 163)
-                            .put("filename", "stops.txt")
-                            .put("fieldValue", "erroneous url")
-                            .put("fieldName", "stop_url")
-                            .build()))))
-        .isTrue();
+        createNoticeAggregate(
+            "invalid_url",
+            SeverityLevel.ERROR,
+            1,
+            ImmutableSet.of(
+                new ImmutableMap.Builder()
+                    .put("filename", "stops.txt")
+                    .put("csvRowNumber", 163)
+                    .put("fieldName", "stop_url")
+                    .put("fieldValue", "erroneous url")
+                    .build()))).isEqualTo(
+        createNoticeAggregate(
+            "invalid_url",
+            SeverityLevel.ERROR,
+            1,
+            ImmutableSet.of(
+                new ImmutableMap.Builder()
+                    .put("csvRowNumber", 163)
+                    .put("filename", "stops.txt")
+                    .put("fieldValue", "erroneous url")
+                    .put("fieldName", "stop_url")
+                    .build())));
   }
 
   @Test
   public void equals_differentNotices_false() {
     assertThat(
-            testEquality(
-                createNoticeAggregate(
-                    "invalid_url",
-                    SeverityLevel.ERROR,
-                    1,
-                    ImmutableList.of(
-                        new ImmutableMap.Builder()
-                            .put("filename", "routes.txt")
-                            .put("csvRowNumber", 163)
-                            .put("fieldName", "stop_url")
-                            .put("fieldValue", "erroneous url")
-                            .build())),
-                createNoticeAggregate(
-                    "invalid_url",
-                    SeverityLevel.ERROR,
-                    1,
-                    ImmutableList.of(
-                        new ImmutableMap.Builder()
-                            .put("csvRowNumber", 163)
-                            .put("filename", "stops.txt")
-                            .put("fieldValue", "erroneous url")
-                            .put("fieldName", "other_url_field")
-                            .build()))))
-        .isFalse();
+        createNoticeAggregate(
+            "invalid_url",
+            SeverityLevel.ERROR,
+            1,
+            ImmutableSet.of(
+                new ImmutableMap.Builder()
+                    .put("filename", "routes.txt")
+                    .put("csvRowNumber", 163)
+                    .put("fieldName", "stop_url")
+                    .put("fieldValue", "erroneous url")
+                    .build()))).isNotEqualTo(
+        createNoticeAggregate(
+            "invalid_url",
+            SeverityLevel.ERROR,
+            1,
+            ImmutableSet.of(
+                new ImmutableMap.Builder()
+                    .put("csvRowNumber", 163)
+                    .put("filename", "stops.txt")
+                    .put("fieldValue", "erroneous url")
+                    .put("fieldName", "other_url_field")
+                    .build())));
   }
 
   @Test
   public void equals_differentCode_false() {
     assertThat(
-            testEquality(
-                createNoticeAggregate("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of()),
-                createNoticeAggregate(
-                    "invalid_phone_number", SeverityLevel.ERROR, 2, ImmutableList.of())))
-        .isFalse();
+        createNoticeAggregate("invalid_url", SeverityLevel.ERROR, 1, ImmutableSet.of()))
+        .isNotEqualTo(
+            createNoticeAggregate(
+                "invalid_phone_number", SeverityLevel.ERROR, 2, ImmutableSet.of()));
   }
 
   @Test
   public void equals_differentSeverity_false() {
     assertThat(
-            testEquality(
-                createNoticeAggregate(
-                    "invalid_url",
-                    SeverityLevel.INFO,
-                    2,
-                    ImmutableList.of(
-                        new ImmutableMap.Builder()
-                            .put("filename", "stops.txt")
-                            .put("csvRowNumber", 163)
-                            .put("fieldName", "stop_url")
-                            .put("fieldValue", "erroneous url")
-                            .build())),
-                createNoticeAggregate(
-                    "invalid_url",
-                    SeverityLevel.ERROR,
-                    2,
-                    ImmutableList.of(
-                        new ImmutableMap.Builder()
-                            .put("filename", "stops.txt")
-                            .put("csvRowNumber", 163)
-                            .put("fieldName", "stop_url")
-                            .put("fieldValue", "erroneous url")
-                            .build()))))
-        .isFalse();
+        createNoticeAggregate(
+            "invalid_url",
+            SeverityLevel.INFO,
+            2,
+            ImmutableSet.of(
+                new ImmutableMap.Builder()
+                    .put("filename", "stops.txt")
+                    .put("csvRowNumber", 163)
+                    .put("fieldName", "stop_url")
+                    .put("fieldValue", "erroneous url")
+                    .build()))).isNotEqualTo(
+        createNoticeAggregate(
+            "invalid_url",
+            SeverityLevel.ERROR,
+            2,
+            ImmutableSet.of(
+                new ImmutableMap.Builder()
+                    .put("filename", "stops.txt")
+                    .put("csvRowNumber", 163)
+                    .put("fieldName", "stop_url")
+                    .put("fieldValue", "erroneous url")
+                    .build())));
   }
 
   @Test
   public void equals_differentTotalNotices_false() {
     assertThat(
-            testEquality(
-                createNoticeAggregate("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of()),
-                createNoticeAggregate("invalid_url", SeverityLevel.ERROR, 2, ImmutableList.of())))
-        .isFalse();
+        createNoticeAggregate("invalid_url", SeverityLevel.ERROR, 1, ImmutableSet.of()))
+        .isNotEqualTo(
+            createNoticeAggregate("invalid_url", SeverityLevel.ERROR, 2, ImmutableSet.of()));
   }
 }

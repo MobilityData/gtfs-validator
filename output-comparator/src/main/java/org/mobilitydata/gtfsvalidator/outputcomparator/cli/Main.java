@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 MobilityData IO
+ * Copyright 2021 MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,7 +82,7 @@ public class Main {
         newErrorCount = referenceReport.getNewErrorCount(latestReport);
         mapBuilder.put(file.getName(), newErrorCount);
         if (newErrorCount >= args.getNewErrorThreshold()) {
-          badDatasetCount += 1;
+          ++badDatasetCount;
         }
       }
       exportAcceptanceReport(mapBuilder.build(), args.getReportDirectory());
@@ -128,7 +128,8 @@ public class Main {
     if (invalidDatasetRatio >= threshold) {
       builder.append(String.format(
           "which is greater than or equal to the provided threshold of %.2f %%.%n"
-              + "❌ Rue acceptance tests failed.%n", threshold));
+              + "❌ Rule acceptance tests failed.%n", threshold));
+      System.out.println(builder);
       System.exit(INVALID_NEW_RULE_EXIT_CODE);
     }
     builder.append(String.format(

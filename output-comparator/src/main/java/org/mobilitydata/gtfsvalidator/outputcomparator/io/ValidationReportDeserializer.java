@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 MobilityData IO
+ * Copyright 2021 MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,9 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Used to deserialize a validation report. This represents a validation report as a list of {@code
@@ -42,7 +45,7 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
    *
    * @return the sorted set of error codes from a list of {@code NoticeAggregate}.
    */
-  private static ImmutableSet<String> extractErrorCodes(ImmutableList<NoticeSummary> notices) {
+  private static ImmutableSet<String> extractErrorCodes(Set<NoticeSummary> notices) {
     ImmutableSet.Builder<String> errorCodesSetBuilder = new ImmutableSet.Builder<>();
     for (NoticeSummary noticeSummary : notices) {
       if (noticeSummary.isError()) {
@@ -55,13 +58,15 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
   @Override
   public ValidationReport deserialize(
       JsonElement json, Type typoOfT, JsonDeserializationContext context) {
-    ImmutableList.Builder<NoticeSummary> noticeListBuilder = new ImmutableList.Builder<>();
+//    ImmutableSet.Builder<NoticeSummary> noticeSetBuilder = new ImmutableSet.Builder<>();
+    Set<NoticeSummary> notices = new HashSet<>();
     JsonObject rootObject = json.getAsJsonObject();
     JsonArray noticesArray = rootObject.getAsJsonArray(NOTICES_MEMBER_NAME);
-    noticesArray.forEach(
-        childObject -> noticeListBuilder.add(GSON.fromJson(childObject, NoticeSummary.class)));
-    ImmutableList<NoticeSummary> notices = noticeListBuilder.build();
+    for (JsonElement childObject : noticesArray) {
+        notices.add(GSON.fromJson(childObject, NoticeSummary.class));
+    }
+//    ImmutableSet<NoticeSummary> notices = noticeSetBuilder.build();
 
-    return new ValidationReport(notices, extractErrorCodes(notices));
+    return new ValidationReport(Collections.unmodifiableSet(notices), extractErrorCodes(notices));
   }
 }
