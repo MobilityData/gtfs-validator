@@ -58,8 +58,7 @@ public class ValidationReport {
    */
   public static ValidationReport fromPath(Path path) throws IOException {
     try (BufferedReader reader = Files.newBufferedReader(path)) {
-      ValidationReport validationReport = GSON.fromJson(reader, ValidationReport.class);
-      return validationReport;
+      return GSON.fromJson(reader, ValidationReport.class);
     }
   }
 
