@@ -25,12 +25,4 @@ import java.lang.annotation.RetentionPolicy;
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SchemaExport {
-  String JSON_KEY_NAME = "name";
-  String JSON_KEY_TYPE = "type";
-  String BLOB_DATA_TYPE = "BLOB";
-  String VARCHAR_DATA_TYPE = "VARCHAR";
-  String BIGINT_DATA_TYPE = "BIGINT";
-  String INTEGER_DATA_TYPE = "INTEGER";
-  String CLASS_SIMPLE_NAME_SEVERITY_LEVEL = "SeverityLevel";
 }
-

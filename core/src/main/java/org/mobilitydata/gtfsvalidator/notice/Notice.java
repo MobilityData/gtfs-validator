@@ -48,9 +48,17 @@ public abstract class Notice {
    * @return notice code, e.g., "foreign_key_error".
    */
   public String getCode() {
+    return getCode(getClass().getSimpleName());
+  }
 
+  /**
+   * Returns a descriptive type-specific name for a notice based on its class simple name.
+   *
+   * @return notice code, e.g., "foreign_key_error".
+   */
+  static String getCode(String classSimpleName) {
     return StringUtils.removeEnd(
-        CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, getClass().getSimpleName()),
+        CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, classSimpleName),
         NOTICE_SUFFIX);
   }
 

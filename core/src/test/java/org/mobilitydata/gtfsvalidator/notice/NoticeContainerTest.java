@@ -19,14 +19,11 @@ package org.mobilitydata.gtfsvalidator.notice;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.collect.ImmutableMap;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.notice.sample.AnotherTestValidationNotice;
-import org.mobilitydata.gtfsvalidator.validator.sample.SampleTestValidator;
 
 @RunWith(JUnit4.class)
 public class NoticeContainerTest {
@@ -168,87 +165,4 @@ public class NoticeContainerTest {
     assertThat(c1.getValidationNotices()).containsExactly(n1, n2);
     assertThat(c1.getSystemErrors()).containsExactly(e1, e2);
   }
-
-  @Test
-  public void exportNoticesSchema() throws IOException {
-        assertThat(NoticeContainer.exportNoticesSchema(
-            true,
-            AnotherTestValidationNotice.class,
-            SampleTestValidator.class)).isEqualTo("{\n"
-            + "  \"AnotherTestValidationNotice\": [\n"
-            + "    {\n"
-            + "      \"name\": \"filename\",\n"
-            + "      \"type\": \"VARCHAR\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"csvRowNumber\",\n"
-            + "      \"type\": \"BIGINT\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"fieldName\",\n"
-            + "      \"type\": \"VARCHAR\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"fieldValue\",\n"
-            + "      \"type\": \"BLOB\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"otherFieldValue\",\n"
-            + "      \"type\": \"DOUBLE\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"sampleDate\",\n"
-            + "      \"type\": \"BLOB\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"sampleTime\",\n"
-            + "      \"type\": \"BLOB\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"sampleColor\",\n"
-            + "      \"type\": \"VARCHAR\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"SeverityLevel\",\n"
-            + "      \"type\": \"BLOB\"\n"
-            + "    }\n"
-            + "  ],\n"
-            + "  \"SomeTestValidationNotice\": [\n"
-            + "    {\n"
-            + "      \"name\": \"filename\",\n"
-            + "      \"type\": \"VARCHAR\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"csvRowNumber\",\n"
-            + "      \"type\": \"BIGINT\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"fieldName\",\n"
-            + "      \"type\": \"VARCHAR\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"fieldValue\",\n"
-            + "      \"type\": \"BLOB\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"severityLevel\",\n"
-            + "      \"type\": \"BLOB\"\n"
-            + "    }\n"
-            + "  ],\n"
-            + "  \"NestedTestValidatorNotice\": [\n"
-            + "    {\n"
-            + "      \"name\": \"tripId\",\n"
-            + "      \"type\": \"VARCHAR\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"csvRowNumber\",\n"
-            + "      \"type\": \"BIGINT\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"SeverityLevel\",\n"
-            + "      \"type\": \"BLOB\"\n"
-            + "    }\n"
-            + "  ]\n"
-            + "}");
-    }
 }

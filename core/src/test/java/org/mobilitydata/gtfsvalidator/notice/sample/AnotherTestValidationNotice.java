@@ -45,4 +45,19 @@ public class AnotherTestValidationNotice extends ValidationNotice {
             .build(),
         SeverityLevel.WARNING);
   }
+
+  @SchemaExport
+  public AnotherTestValidationNotice(String filename, long csvRowNumber, String fieldName,
+      Object fieldValue, GtfsTime sampleTime,
+      GtfsColor sampleColor) {
+    super(new ImmutableMap.Builder<String, Object>()
+            .put("filename", filename)
+            .put("csvRowNumber", csvRowNumber)
+            .put("fieldName", fieldName)
+            .put("fieldValue", fieldValue)
+            .put("sampleTime", sampleTime)
+            .put("sampleColor", sampleColor)
+            .build(),
+        SeverityLevel.WARNING);
+  }
 }

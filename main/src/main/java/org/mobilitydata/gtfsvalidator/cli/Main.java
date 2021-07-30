@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.cli;
 
 import com.beust.jcommander.JCommander;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import com.google.common.flogger.FluentLogger;
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +34,7 @@ import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.NoticeSchemaGenerator;
 import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
@@ -177,11 +179,11 @@ public class Main {
     try {
       Files.write(
           Paths.get(args.getOutputBase(), NOTICE_SCHEMA_JSON),
-          NoticeContainer
-              .exportNoticesSchema(
+          NoticeSchemaGenerator
+              .export(
                   args.getPretty(),
-                  ValidationNotice.class,
-                  GtfsFieldValidator.class)
+                  ImmutableList.of(ValidationNotice.class),
+                  ImmutableList.of(GtfsFieldValidator.class))
               .getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store notice schema file");
