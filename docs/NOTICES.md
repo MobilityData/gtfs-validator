@@ -603,6 +603,8 @@
 | `duplicate_route_name`                      | [`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)                           	|
 | `empty_column_name`                        	| [`EmptyColumnNameNotice`](#EmptyColumnNameNotice)                                 	|
 | `empty_row`                                	| [`EmptyRowNotice`](#EmptyRowNotice)                                               	|
+| `fast_travel_between_consecutive_stops`      	| [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsecutiveStopsNotice) |
+| `fast_travel_between_far_stops`               | [`FastTravelBetweenFarStopsNotice`](#FastTravelBetweenFarStopsNotice)                 |
 | `feed_expiration_date`                     	| [`FeedExpirationDateNotice`](#FeedExpirationDateNotice)                           	|
 | `feed_info_lang_and_agency_mismatch` 	      | [`FeedInfoLangAndAgencyMismatchNotice`](#FeedInfoLangAndAgencyLangMismatchNotice) 	|
 | `inconsistent_agency_lang`                 	| [`InconsistentAgencyLangNotice`](#InconsistentAgencyLangNotice)                   	|
@@ -928,17 +930,56 @@
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`fare_rules.txt`](http://gtfs.org/reference/static#farerulestxt)
 
-#### [TooFastTravelNotice](/RULES.md#TooFastTravelNotice)
+#### [FastTravelBetweenConsecutiveStopsNotice](/RULES.md#FastTravelBetweenConsecutiveStopsNotice)
 ##### Fields description
 
-| Field name        	| Description                   	| Type   	|
-|-------------------	|-------------------------------	|--------	|
-| `tripId`           	| The faulty record's `tripId`. 	| String 	|
-| `speedkmh`         	| Travel speed (km/h).          	| String 	|
-| `firstStopSequence`	| The first sequence in trip.   	| String 	|
-| `lastStopSequence` 	| The stop sequence in trip.    	| String 	|
+| Field name        	| Description                             | Type   	|
+|-----------------------|---------------------------------------- |--------	|
+| `tripCsvRowNumber`    | The row number of the problematic trip. | Long 	|
+| `tripId`           	| `trip_id` of the problematic trip.      | String 	|
+| `routeId`             | `route_id` of the problematic trip.     | String 	|
+| `speedKph`         	| Travel speed (km/h).                    | Double 	|
+| `distanceKm`       	| Distance between stops (km).            | Double 	|
+| `csvRowNumber1`       | The row number of the first stop time.  | Long  	|
+| `stopSequence1`       | `stop_sequence` of the first stop.      | Integer	|
+| `stopId1`             | `stop_id` of the first stop.            | String 	|
+| `stopName1`           | `stop_name` of the first stop.          | String 	|
+| `departureTime1`      | `departure_time` of the first stop.     | Time 	|
+| `csvRowNumber2`       | The row number of the second stop time. | Long 	|
+| `stopSequence2`       | `stop_sequence` of the second stop.     | Integer	|
+| `stopId2`             | `stop_id` of the second stop.           | String 	|
+| `stopName2`           | `stop_name` of the second stop.         | String 	|
+| `arrivalTime2`        | `arrival_time` of the second stop.      | Time 	|
 
 ##### Affected files
+* [`routes.txt`](http://gtfs.org/reference/static#routestxt)
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+* [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
+* [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
+
+#### [FastTravelBetweenFarStopsNotice](/RULES.md#FastTravelBetweenFarStopsNotice)
+##### Fields description
+
+| Field name        	| Description                             | Type   	|
+|-----------------------|---------------------------------------- |--------	|
+| `tripCsvRowNumber`    | The row number of the problematic trip. | Long 	|
+| `tripId`           	| `trip_id` of the problematic trip.      | String 	|
+| `routeId`             | `route_id` of the problematic trip.     | String 	|
+| `speedKph`         	| Travel speed (km/h).                    | Double 	|
+| `distanceKm`       	| Distance between stops (km).            | Double 	|
+| `csvRowNumber1`       | The row number of the first stop time.  | Long  	|
+| `stopSequence1`       | `stop_sequence` of the first stop.      | Integer	|
+| `stopId1`             | `stop_id` of the first stop.            | String 	|
+| `stopName1`           | `stop_name` of the first stop.          | String 	|
+| `departureTime1`      | `departure_time` of the first stop.     | Time 	|
+| `csvRowNumber2`       | The row number of the second stop time. | Long 	|
+| `stopSequence2`       | `stop_sequence` of the second stop.     | Integer	|
+| `stopId2`             | `stop_id` of the second stop.           | String 	|
+| `stopName2`           | `stop_name` of the second stop.         | String 	|
+| `arrivalTime2`        | `arrival_time` of the second stop.      | Time 	|
+
+##### Affected files
+* [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
