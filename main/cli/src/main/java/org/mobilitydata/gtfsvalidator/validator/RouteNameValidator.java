@@ -142,13 +142,10 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
   }
 
   /**
-   * A {@code GtfsRoute} has identical value for `routes.route_desc` and
-   * `routes.route_long_name`{@code /}`routes`{@code /}route_short_name.
+   * A route has identical values for {@code routes.route_desc} and {@code route_long_name} or
+   * {@code route_short_name}.
    *
-   * <p>"Do not simply duplicate the name of the location."
-   * (http://gtfs.org/reference/static#routestxt)
-   *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class SameNameAndDescriptionForRouteNotice extends ValidationNotice {
     @SchemaExport
@@ -162,7 +159,7 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
               .put("routeDesc", routeDesc)
               .put("specifiedField", routeShortOrLongName)
               .build(),
-          SeverityLevel.ERROR);
+          SeverityLevel.WARNING);
     }
   }
 }

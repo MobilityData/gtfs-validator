@@ -41,7 +41,6 @@ import org.mobilitydata.gtfsvalidator.notice.NewLineInValueNotice;
 import org.mobilitydata.gtfsvalidator.notice.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.NumberOutOfRangeNotice;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
@@ -322,14 +321,12 @@ public class RowParserTest {
 
   @Test
   public void whitespaceInValue() {
-    // Protected whitespaces are stripped. This is an error but GTFS consumers may patch it to be a
-    // warning.
+    // Protected whitespaces are stripped.
     RowParser parser = createParser(" 1\t");
     assertThat(parser.asInteger(0, true)).isEqualTo(1);
     LeadingOrTrailingWhitespacesNotice notice =
         new LeadingOrTrailingWhitespacesNotice(TEST_FILENAME, 8, "column name", " 1\t");
-    assertThat(parser.getNoticeContainer().hasValidationErrors())
-        .isEqualTo(notice.getSeverityLevel() == SeverityLevel.ERROR);
+    assertThat(parser.getNoticeContainer().hasValidationErrors()).isFalse();
     assertThat(parser.getNoticeContainer().getValidationNotices()).containsExactly(notice);
   }
 
