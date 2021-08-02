@@ -1,9 +1,6 @@
 rootProject.name = 'gtfs-validator'
 include 'core'
 include 'processor'
-include 'main'
 include 'main:cli'
-findProject(':main:cli')?.name = 'cli'
 include 'main:springboot'
-findProject(':main:springboot')?.name = 'springboot'
 
