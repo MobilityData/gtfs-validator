@@ -105,6 +105,7 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
       - name: Package cli app jar with Gradle
+        working-directory: main/cli
         uses: eskatos/gradle-command-action@v1
         env:
           versionTag: ${{ steps.prep.outputs.gradleVersionTag }}
