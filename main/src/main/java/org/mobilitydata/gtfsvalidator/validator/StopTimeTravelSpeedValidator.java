@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ListMultimap;
@@ -199,6 +200,7 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
     }
   }
 
+  @VisibleForTesting
   static double getSpeedKphBetweenStops(
       double distanceKm, GtfsStopTime stopTime1, GtfsStopTime stopTime2) {
     return distanceKm
