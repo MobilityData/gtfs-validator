@@ -25,8 +25,7 @@ import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
  * <p>This notice is emitted for values protected with double quotes since whitespaces for
  * non-protected values are trimmed automatically by CSV parser.
  *
- * <p>This is an error in the upstream validator but GTFS consumers can patch it to be a warning if
- * they have feeds that give leading or trailing whitespaces.
+ * <p>This is a warning in the upstream validator.
  *
  * <p>GTFS Validator strips whitespaces from protected values. We do not see any use case when such
  * a whitespace may be needed. On the other hand, some real-world feeds use trailing whitespaces for
@@ -36,17 +35,10 @@ import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
  */
 public class LeadingOrTrailingWhitespacesNotice extends ValidationNotice {
 
-  /**
-   * Constructs a notice with given severity. This constructor may be used by users that want to
-   * lower the priority to {@code WARNING}.
-   */
+  /** Constructs a notice with the default severity {@code WARNING}. */
   @SchemaExport
   public LeadingOrTrailingWhitespacesNotice(
-      String filename,
-      long csvRowNumber,
-      String fieldName,
-      String fieldValue,
-      SeverityLevel severityLevel) {
+      String filename, long csvRowNumber, String fieldName, String fieldValue) {
     super(
         ImmutableMap.of(
             "filename",
@@ -57,12 +49,6 @@ public class LeadingOrTrailingWhitespacesNotice extends ValidationNotice {
             fieldName,
             "fieldValue",
             fieldValue),
-        severityLevel);
-  }
-
-  /** Constructs a notice with the default severity {@code ERROR}. */
-  public LeadingOrTrailingWhitespacesNotice(
-      String filename, long csvRowNumber, String fieldName, String fieldValue) {
-    this(filename, csvRowNumber, fieldName, fieldValue, SeverityLevel.ERROR);
+        SeverityLevel.WARNING);
   }
 }
