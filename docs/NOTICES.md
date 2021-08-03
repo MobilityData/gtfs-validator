@@ -7,10 +7,10 @@
 
 | Notice code                                             	| Notice                                                                                                          	|
 |--------------------------------------------------------	|-----------------------------------------------------------------------------------------------------------------	|
-| `block_trips_with_overlapping_stopTimes`               	| [`BlockTripsWithOverlappingStopTimesNotice`](#BlockTripsWithOverlappingStopTimesNotice)                         	|
+| `block_trips_with_overlapping_stop_times`               	| [`BlockTripsWithOverlappingStopTimesNotice`](#BlockTripsWithOverlappingStopTimesNotice)                         	|
 | `csv_parsing_failed`                                   	| [`CsvParsingFailedNotice`](#CsvParsingFailedNotice)                                                             	|
 | `decreasing_or_equal_shape_distance`                   	| [`DecreasingOrEqualShapeDistanceNotice`](#DecreasingOrEqualShapeDistanceNotice)                                 	|
-| `decreasing_or_equal_stopTime_distance`                	| [`DecreasingOrEqualStopTimeDistanceNotice`](#DecreasingOrEqualStopTimeDistanceNotice)                           	|
+| `decreasing_or_equal_stop_time_distance`                	| [`DecreasingOrEqualStopTimeDistanceNotice`](#DecreasingOrEqualStopTimeDistanceNotice)                           	|
 | `duplicated_column`                                    	| [`DuplicatedColumnNotice`](#DuplicatedColumnNotice)                                                             	|
 | `duplicate_fare_rule_zone_id_fields`                   	| [`DuplicateFareRuleZoneIdFieldsNotice`](#DuplicateFareRuleZoneIdFieldsNotice)                                   	|
 | `duplicate_key`                                        	| [`DuplicateKeyNotice`](#DuplicateKeyNotice)                                                                     	|
@@ -556,8 +556,8 @@
 | Field name    	| Description                               	| Type   	|
 |---------------	|-------------------------------------------	|--------	|
 | `stopId`        	| The id of the faulty record.              	| String 	|
-| `stopName`      	| The stops.stop_name of the faulty record. 	| Long   	|
-| `csvRowNumber`  	| The row number of the faulty record.      	| String 	|
+| `stopName`      	| The stops.stop_name of the faulty record. 	| String   	|
+| `csvRowNumber`  	| The row number of the faulty record.      	| Long  	|
 | `parentStation` 	| Parent station's id.                         	| String 	|
 
 ##### Affected files
@@ -637,7 +637,7 @@
 | `unexpected_enum_value`               | [`UnexpectedEnumValueNotice`](#UnexpectedEnumValueNotice)                         |
 | `unusable_trip`                       | [`UnusableTripNotice`](#UnusableTripNotice)                                       |
 | `unused_shape`                        | [`UnusedShapeNotice`](#UnusedShapeNotice)                                         |
-| `unused_trip`                         | [`UnusedTripNotice`](#UnusedTripNotice)                                           |
+| `unused_trip`                         | [`UnusedTripNotice`](#UnusedTripNotice)                                           |                                      |
 
 #### [AttributionWithoutRoleNotice](/RULES.md#AttributionWithoutRoleNotice)
 ##### Fields description
@@ -795,8 +795,8 @@
 
 | Field name     	| Description                                	| Type   	|
 |----------------	|--------------------------------------------	|--------	|
-| `routeId`        	| The id of the faulty record.               	| Long   	|
-| `csvRowNumber`   	| The row number of the faulty record.       	| String 	|
+| `routeId`        	| The id of the faulty record.               	| String   	|
+| `csvRowNumber`   	| The row number of the faulty record.       	| Long 	|
 | `routeColor`     	| The faulty record's HTML route color.      	| String 	|
 | `routeTextColor` 	| The faulty record's HTML route text color. 	| String 	|
 
@@ -808,8 +808,8 @@
 
 | Field name     	| Description                             	| Type   	|
 |----------------	|-----------------------------------------	|--------	|
-| `routeId`        	| The id of the faulty record.            	| Long   	|
-| `csvRowNumber`   	| The row number of the faulty record.    	| String 	|
+| `routeId`        	| The id of the faulty record.            	| String   	|
+| `csvRowNumber`   	| The row number of the faulty record.    	| Long 	    |
 | `routeShortName` 	| The faulty record's `route_short_name`. 	| String 	|
 | `routeLongName`  	| The faulty record's `route_long_name`.  	| String 	|
 
@@ -821,8 +821,8 @@
 
 | Field name     	| Description                             	| Type   	|
 |----------------	|-----------------------------------------	|--------	|
-| `routeId`        	| The id of the faulty record.            	| Long   	|
-| `csvRowNumber`   	| The row number of the faulty record.    	| String 	|
+| `routeId`        	| The id of the faulty record.            	| String   	|
+| `csvRowNumber`   	| The row number of the faulty record.    	| Long 	    |
 | `routeShortName` 	| The faulty record's `route_short_name`. 	| String 	|
 
 ##### Affected files
@@ -833,8 +833,8 @@
 
 | Field name     	| Description                             	| Type   	|
 |----------------	|-----------------------------------------	|--------	|
-| `csvRowNumber`   	| The row number of the faulty record.    	| String 	|
-| `stopId`        	| The id of the faulty record.            	| Long   	|
+| `csvRowNumber`   	| The row number of the faulty record.    	| Long 	    |
+| `stopId`        	| The id of the faulty record.            	| String   	|
 | `routeDesc`    	| The faulty record's `stop_desc`.       	| String 	|
 
 ##### Affected files
