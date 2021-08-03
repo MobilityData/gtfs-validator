@@ -24,7 +24,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.sun.jdi.InvalidTypeException;
 import java.io.IOException;
 import java.lang.annotation.AnnotationFormatError;
 import java.lang.reflect.Constructor;
@@ -36,6 +35,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
+import org.mobilitydata.gtfsvalidator.exception.ConstructorParametersInconsistencyException;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
@@ -79,12 +79,12 @@ public class NoticeSchemaGenerator {
    * @return the json string file that contains information about all {@code ValidationNotice}s
    * @throws IOException if the attempt to read class path resources (jar files or directories)
    *                     failed.
-   * @throws InvalidTypeException if two notice constructors defines the same parameter with
+   * @throws ConstructorParametersInconsistencyException if two notice constructors defines the same parameter with
    * different types.
    */
   public static String export(boolean isPretty, List<String> validationNoticePackageNames,
       List<String> validatorPackageNames)
-      throws IOException, InvalidTypeException {
+      throws IOException, ConstructorParametersInconsistencyException {
     Gson gson = isPretty ? PRETTY_GSON : DEFAULT_GSON;
     JsonObject coreNoticeProperties = new JsonObject();
     JsonObject mainNoticesProperties = new JsonObject();
@@ -127,7 +127,7 @@ public class NoticeSchemaGenerator {
    * notice whose {@code ClassInfo} was passed as parameter
    */
   private static JsonObject processNoticeClass(ClassInfo noticeClassInfo)
-      throws InvalidTypeException {
+      throws ConstructorParametersInconsistencyException {
     return processNoticeClass(noticeClassInfo.load());
   }
 
@@ -139,7 +139,7 @@ public class NoticeSchemaGenerator {
    * @return a {@code JsonObject} that contains information about the type of each parameter of said
    * notice whose {@code Class} was passed as parameter
    */
-  private static JsonObject processNoticeClass(Class<?> noticeClass) throws InvalidTypeException {
+  private static JsonObject processNoticeClass(Class<?> noticeClass) throws ConstructorParametersInconsistencyException {
     JsonObject toReturn = new JsonObject();
     toReturn.add(Notice.getCode(noticeClass.getSimpleName()), extractNoticeProperties(noticeClass));
     return toReturn;
@@ -153,11 +153,11 @@ public class NoticeSchemaGenerator {
    * simple name, and the type of each parameter
    * @throws IOException if the attempt to read class path resources (jar files or directories)
    *                     failed.
-   * @throws InvalidTypeException if two notice constructors defines the same parameter with
+   * @throws ConstructorParametersInconsistencyException if two notice constructors defines the same parameter with
    * different types.
    */
   private static JsonObject extractCoreNoticesProperties(String noticePackageName)
-      throws IOException, InvalidTypeException {
+      throws IOException, ConstructorParametersInconsistencyException {
     Class<?> clazz;
     JsonObject toReturn = new JsonObject();
     for (ClassPath.ClassInfo noticeClass :
@@ -183,11 +183,11 @@ public class NoticeSchemaGenerator {
    * simple name, and the type of each parameter
    * @throws IOException if the attempt to read class path resources (jar files or directories)
    *                     failed.
-   * @throws InvalidTypeException if two notice constructors defines the same parameter with
+   * @throws ConstructorParametersInconsistencyException if two notice constructors defines the same parameter with
    * different types.
    */
   private static JsonObject extractMainNoticesProperties(String validatorPackageName)
-      throws IOException, InvalidTypeException {
+      throws IOException, ConstructorParametersInconsistencyException {
     JsonObject toReturn = new JsonObject();
     for (ClassPath.ClassInfo validatorClass : ClassPath.from(ClassLoader.getSystemClassLoader())
         .getTopLevelClasses(validatorPackageName)) {
@@ -211,11 +211,11 @@ public class NoticeSchemaGenerator {
    * @return a {@code JsonArray} that contains information about the type of each parameter of said
    * {@code ValidationNotice} using the constructors of the class that are annotated by {@code
    * SchemaExport}.
-   * @throws InvalidTypeException if two notice constructors defines the same parameter with
+   * @throws ConstructorParametersInconsistencyException if two notice constructors defines the same parameter with
    * different types.
    */
   private static JsonArray extractNoticeProperties(Class<?> validationNoticeSubClass)
-      throws InvalidTypeException {
+      throws ConstructorParametersInconsistencyException {
     List<Constructor<?>> constructors = getAnnotatedConstructors(validationNoticeSubClass);
     JsonArray parametersAsJsonArray = new JsonArray();
     Map<String, Parameter> parameterMap = new TreeMap<>();
@@ -224,7 +224,7 @@ public class NoticeSchemaGenerator {
         Parameter existingParameter = parameterMap.get(parameter.getName());
         if (existingParameter != null) {
           if (!(existingParameter.getType().equals(parameter.getType()))) {
-            throw new InvalidTypeException(
+            throw new ConstructorParametersInconsistencyException(
                 String.format(
                     "Validation notice %s defines parameter %s with different types "
                         + "in its constructors.",

@@ -20,7 +20,6 @@ import com.beust.jcommander.JCommander;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.flogger.FluentLogger;
-import com.sun.jdi.InvalidTypeException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -30,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import org.mobilitydata.gtfsvalidator.exception.ConstructorParametersInconsistencyException;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
@@ -46,8 +46,11 @@ import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 
-/** The main entry point for GTFS Validator CLI. */
+/**
+ * The main entry point for GTFS Validator CLI.
+ */
 public class Main {
+
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private static final String GTFS_ZIP_FILENAME = "gtfs.zip";
   private static final String NOTICE_SCHEMA_JSON = "notice_schema.json";
@@ -158,7 +161,9 @@ public class Main {
     System.out.println(feedContainer.tableTotals());
   }
 
-  /** Generates and exports reports for both validation notices and system errors reports. */
+  /**
+   * Generates and exports reports for both validation notices and system errors reports.
+   */
   private static void exportReport(final NoticeContainer noticeContainer, final Arguments args) {
     new File(args.getOutputBase()).mkdirs();
     try {
@@ -186,7 +191,7 @@ public class Main {
                   ImmutableList.of(ValidationNotice.class.getPackage().getName()),
                   ImmutableList.of(GtfsFieldValidator.class.getPackage().getName()))
               .getBytes(StandardCharsets.UTF_8));
-    } catch (IOException | InvalidTypeException e) {
+    } catch (IOException | ConstructorParametersInconsistencyException e) {
       logger.atSevere().withCause(e).log("Cannot store notice schema file");
     }
   }

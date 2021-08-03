@@ -8,6 +8,7 @@ import com.sun.jdi.InvalidTypeException;
 import java.io.IOException;
 import java.lang.annotation.AnnotationFormatError;
 import org.junit.Test;
+import org.mobilitydata.gtfsvalidator.exception.ConstructorParametersInconsistencyException;
 import org.mobilitydata.gtfsvalidator.notice.sample.AnotherTestValidationNotice;
 import org.mobilitydata.gtfsvalidator.notice.sample.mismatching_types.MismatchingTypesNotice;
 import org.mobilitydata.gtfsvalidator.notice.sample.no_annotation.NoAnnotationNotice;
@@ -16,7 +17,8 @@ import org.mobilitydata.gtfsvalidator.validator.sample.SampleTestValidator;
 public class NoticeSchemaGeneratorTest {
 
   @Test
-  public void exportNoticesSchema() throws IOException, InvalidTypeException {
+  public void exportNoticesSchema()
+      throws IOException, ConstructorParametersInconsistencyException {
     assertThat(NoticeSchemaGenerator.export(
         true,
         ImmutableList.of(AnotherTestValidationNotice.class.getPackage().getName()),
@@ -118,7 +120,7 @@ public class NoticeSchemaGeneratorTest {
 
   @Test
   public void mismatchingTypesInNoticeConstructor_throwsException() {
-    InvalidTypeException exception = assertThrows(InvalidTypeException.class,
+    ConstructorParametersInconsistencyException exception = assertThrows(ConstructorParametersInconsistencyException.class,
         () -> NoticeSchemaGenerator.export(
             true,
             ImmutableList.of(MismatchingTypesNotice.class.getPackage().getName()),
