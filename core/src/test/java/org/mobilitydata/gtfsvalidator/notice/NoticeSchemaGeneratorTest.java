@@ -17,11 +17,6 @@ public class NoticeSchemaGeneratorTest {
 
   @Test
   public void exportNoticesSchema() throws IOException, InvalidTypeException {
-    String schema = NoticeSchemaGenerator.export(
-        true,
-        ImmutableList.of(AnotherTestValidationNotice.class.getPackage().getName()),
-        ImmutableList.of(SampleTestValidator.class.getPackage().getName()));
-
     assertThat(NoticeSchemaGenerator.export(
         true,
         ImmutableList.of(AnotherTestValidationNotice.class.getPackage().getName()),
