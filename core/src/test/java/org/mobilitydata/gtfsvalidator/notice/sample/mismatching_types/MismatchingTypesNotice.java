@@ -14,49 +14,36 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.notice.sample;
+package org.mobilitydata.gtfsvalidator.notice.sample.mismatching_types;
 
 import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
-import org.mobilitydata.gtfsvalidator.type.GtfsColor;
-import org.mobilitydata.gtfsvalidator.type.GtfsDate;
-import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 /**
- * {@code ValidationNotice} defined for tests purpose.
+ * {@code ValidationNotice} defined for tests purpose: two constructors that define the same
+ * parameter with different types.
  */
-public class AnotherTestValidationNotice extends ValidationNotice {
+public class MismatchingTypesNotice extends ValidationNotice {
 
   @SchemaExport
-  public AnotherTestValidationNotice(String filename, long csvRowNumber, String fieldName,
-      Object fieldValue, double otherFieldValue, GtfsDate sampleDate, GtfsTime sampleTime,
-      GtfsColor sampleColor) {
+  public MismatchingTypesNotice(String filename, long csvRowNumber,
+      Integer parameterWithWrongType) {
     super(new ImmutableMap.Builder<String, Object>()
             .put("filename", filename)
             .put("csvRowNumber", csvRowNumber)
-            .put("fieldName", fieldName)
-            .put("otherFieldValue", otherFieldValue)
-            .put("fieldValue", fieldValue)
-            .put("sampleDate", sampleDate)
-            .put("sampleTime", sampleTime)
-            .put("sampleColor", sampleColor)
+            .put("parameterWithWrongType", parameterWithWrongType)
             .build(),
         SeverityLevel.WARNING);
   }
 
   @SchemaExport
-  public AnotherTestValidationNotice(String filename, long csvRowNumber, String fieldName,
-      Object fieldValue, GtfsTime sampleTime, GtfsColor sampleColor, int integerValue) {
+  public MismatchingTypesNotice(String filename, long csvRowNumber, String parameterWithWrongType) {
     super(new ImmutableMap.Builder<String, Object>()
             .put("filename", filename)
             .put("csvRowNumber", csvRowNumber)
-            .put("fieldName", fieldName)
-            .put("fieldValue", fieldValue)
-            .put("sampleTime", sampleTime)
-            .put("sampleColor", sampleColor)
-            .put("integerValue", integerValue)
+            .put("parameterWithWrongType", parameterWithWrongType)
             .build(),
         SeverityLevel.WARNING);
   }

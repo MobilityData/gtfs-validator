@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.notice.sample;
+package org.mobilitydata.gtfsvalidator.notice.sample.no_annotation;
 
 import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
@@ -25,12 +24,11 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 /**
- * {@code ValidationNotice} defined for tests purpose.
+ * {@code ValidationNotice} defined for tests purpose: no constructor is annotated.
  */
-public class AnotherTestValidationNotice extends ValidationNotice {
+public class NoAnnotationNotice extends ValidationNotice {
 
-  @SchemaExport
-  public AnotherTestValidationNotice(String filename, long csvRowNumber, String fieldName,
+  public NoAnnotationNotice(String filename, long csvRowNumber, String fieldName,
       Object fieldValue, double otherFieldValue, GtfsDate sampleDate, GtfsTime sampleTime,
       GtfsColor sampleColor) {
     super(new ImmutableMap.Builder<String, Object>()
@@ -42,21 +40,6 @@ public class AnotherTestValidationNotice extends ValidationNotice {
             .put("sampleDate", sampleDate)
             .put("sampleTime", sampleTime)
             .put("sampleColor", sampleColor)
-            .build(),
-        SeverityLevel.WARNING);
-  }
-
-  @SchemaExport
-  public AnotherTestValidationNotice(String filename, long csvRowNumber, String fieldName,
-      Object fieldValue, GtfsTime sampleTime, GtfsColor sampleColor, int integerValue) {
-    super(new ImmutableMap.Builder<String, Object>()
-            .put("filename", filename)
-            .put("csvRowNumber", csvRowNumber)
-            .put("fieldName", fieldName)
-            .put("fieldValue", fieldValue)
-            .put("sampleTime", sampleTime)
-            .put("sampleColor", sampleColor)
-            .put("integerValue", integerValue)
             .build(),
         SeverityLevel.WARNING);
   }

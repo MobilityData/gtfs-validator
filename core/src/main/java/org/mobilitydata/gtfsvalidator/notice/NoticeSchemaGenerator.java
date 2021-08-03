@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.sun.jdi.InvalidTypeException;
 import java.io.IOException;
 import java.lang.annotation.AnnotationFormatError;
 import java.lang.reflect.Constructor;
@@ -31,6 +32,9 @@ import java.lang.reflect.Parameter;
 import java.sql.JDBCType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
@@ -75,10 +79,12 @@ public class NoticeSchemaGenerator {
    * @return the json string file that contains information about all {@code ValidationNotice}s
    * @throws IOException if the attempt to read class path resources (jar files or directories)
    *                     failed.
+   * @throws InvalidTypeException if two notice constructors defines the same parameter with
+   * different types.
    */
   public static String export(boolean isPretty, List<String> validationNoticePackageNames,
       List<String> validatorPackageNames)
-      throws IOException {
+      throws IOException, InvalidTypeException {
     Gson gson = isPretty ? PRETTY_GSON : DEFAULT_GSON;
     JsonObject coreNoticeProperties = new JsonObject();
     JsonObject mainNoticesProperties = new JsonObject();
@@ -120,7 +126,8 @@ public class NoticeSchemaGenerator {
    * @return a {@code JsonObject} that contains information about the type of each parameter of said
    * notice whose {@code ClassInfo} was passed as parameter
    */
-  private static JsonObject processNoticeClass(ClassInfo noticeClassInfo) {
+  private static JsonObject processNoticeClass(ClassInfo noticeClassInfo)
+      throws InvalidTypeException {
     return processNoticeClass(noticeClassInfo.load());
   }
 
@@ -132,7 +139,7 @@ public class NoticeSchemaGenerator {
    * @return a {@code JsonObject} that contains information about the type of each parameter of said
    * notice whose {@code Class} was passed as parameter
    */
-  private static JsonObject processNoticeClass(Class<?> noticeClass) {
+  private static JsonObject processNoticeClass(Class<?> noticeClass) throws InvalidTypeException {
     JsonObject toReturn = new JsonObject();
     toReturn.add(Notice.getCode(noticeClass.getSimpleName()), extractNoticeProperties(noticeClass));
     return toReturn;
@@ -146,9 +153,11 @@ public class NoticeSchemaGenerator {
    * simple name, and the type of each parameter
    * @throws IOException if the attempt to read class path resources (jar files or directories)
    *                     failed.
+   * @throws InvalidTypeException if two notice constructors defines the same parameter with
+   * different types.
    */
   private static JsonObject extractCoreNoticesProperties(String noticePackageName)
-      throws IOException {
+      throws IOException, InvalidTypeException {
     Class<?> clazz;
     JsonObject toReturn = new JsonObject();
     for (ClassPath.ClassInfo noticeClass :
@@ -174,9 +183,11 @@ public class NoticeSchemaGenerator {
    * simple name, and the type of each parameter
    * @throws IOException if the attempt to read class path resources (jar files or directories)
    *                     failed.
+   * @throws InvalidTypeException if two notice constructors defines the same parameter with
+   * different types.
    */
   private static JsonObject extractMainNoticesProperties(String validatorPackageName)
-      throws IOException {
+      throws IOException, InvalidTypeException {
     JsonObject toReturn = new JsonObject();
     for (ClassPath.ClassInfo validatorClass : ClassPath.from(ClassLoader.getSystemClassLoader())
         .getTopLevelClasses(validatorPackageName)) {
@@ -200,42 +211,44 @@ public class NoticeSchemaGenerator {
    * @return a {@code JsonArray} that contains information about the type of each parameter of said
    * {@code ValidationNotice} using the constructors of the class that are annotated by {@code
    * SchemaExport}.
+   * @throws InvalidTypeException if two notice constructors defines the same parameter with
+   * different types.
    */
-  private static JsonArray extractNoticeProperties(Class<?> validationNoticeSubClass) {
+  private static JsonArray extractNoticeProperties(Class<?> validationNoticeSubClass)
+      throws InvalidTypeException {
     List<Constructor<?>> constructors = getAnnotatedConstructors(validationNoticeSubClass);
     JsonArray parametersAsJsonArray = new JsonArray();
+    Map<String, Parameter> parameterMap = new TreeMap<>();
     for (Constructor<?> constructor : constructors) {
       for (Parameter parameter : constructor.getParameters()) {
-        JsonObject parameterDetails = new JsonObject();
-        parameterDetails.addProperty(JSON_KEY_NAME, parameter.getName());
-        parameterDetails.addProperty(JSON_KEY_TYPE, mapDataType(parameter));
-        parametersAsJsonArray.add(parameterDetails);
+        Parameter existingParameter = parameterMap.get(parameter.getName());
+        if (existingParameter != null) {
+          if (!(existingParameter.getType().equals(parameter.getType()))) {
+            throw new InvalidTypeException(
+                String.format(
+                    "Validation notice %s defines parameter %s with different types "
+                        + "in its constructors.",
+                    validationNoticeSubClass.getSimpleName(),
+                    existingParameter.getName()
+                ));
+          }
+        }
+        parameterMap.put(parameter.getName(), parameter);
       }
-      if (!hasSeverityLevelParameter(constructor)) {
-        JsonObject severityDetails = new JsonObject();
-        severityDetails.addProperty(JSON_KEY_NAME, SEVERITY_LEVEL_PARAMETER_NAME);
-        severityDetails.addProperty(JSON_KEY_TYPE, VARCHAR_DATA_TYPE);
-        parametersAsJsonArray.add(severityDetails);
-      }
+    }
+    for (Entry<String, Parameter> entry : parameterMap.entrySet()) {
+      JsonObject parameterDetails = new JsonObject();
+      parameterDetails.addProperty(JSON_KEY_NAME, entry.getKey());
+      parameterDetails.addProperty(JSON_KEY_TYPE, mapDataType(entry.getValue()));
+      parametersAsJsonArray.add(parameterDetails);
+    }
+    if (parameterMap.get(SEVERITY_LEVEL_PARAMETER_NAME) != null) {
+      JsonObject severityDetails = new JsonObject();
+      severityDetails.addProperty(JSON_KEY_NAME, SEVERITY_LEVEL_PARAMETER_NAME);
+      severityDetails.addProperty(JSON_KEY_TYPE, VARCHAR_DATA_TYPE);
+      parametersAsJsonArray.add(severityDetails);
     }
     return parametersAsJsonArray;
-  }
-
-  /**
-   * Return true if a notice constructor includes a parameter of type {@code SeverityLevel},
-   * otherwise returns false.
-   *
-   * @param constructor the constructor to analyze
-   * @return true if a notice constructor includes a parameter of type {@code SeverityLevel},
-   * otherwise returns false.
-   */
-  private static boolean hasSeverityLevelParameter(Constructor<?> constructor) {
-    for (Parameter parameter : constructor.getParameters()) {
-      if (parameter.getType().equals(SeverityLevel.class)) {
-        return true;
-      }
-    }
-    return false;
   }
 
   /**

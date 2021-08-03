@@ -20,6 +20,7 @@ import com.beust.jcommander.JCommander;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.flogger.FluentLogger;
+import com.sun.jdi.InvalidTypeException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -182,10 +183,10 @@ public class Main {
           NoticeSchemaGenerator
               .export(
                   args.getPretty(),
-                  ImmutableList.of(ValidationNotice.class),
-                  ImmutableList.of(GtfsFieldValidator.class))
+                  ImmutableList.of(ValidationNotice.class.getPackage().getName()),
+                  ImmutableList.of(GtfsFieldValidator.class.getPackage().getName()))
               .getBytes(StandardCharsets.UTF_8));
-    } catch (IOException e) {
+    } catch (IOException | InvalidTypeException e) {
       logger.atSevere().withCause(e).log("Cannot store notice schema file");
     }
   }
