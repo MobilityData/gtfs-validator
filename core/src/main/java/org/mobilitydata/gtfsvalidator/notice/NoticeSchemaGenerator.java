@@ -77,10 +77,10 @@ public class NoticeSchemaGenerator {
    * @param validationNoticePackageNames the list of validation notices package names
    * @param validatorPackageNames        the list of validation package names
    * @return the json string file that contains information about all {@code ValidationNotice}s
-   * @throws IOException if the attempt to read class path resources (jar files or directories)
-   *                     failed.
-   * @throws ConstructorParametersInconsistencyException if two notice constructors defines the same parameter with
-   * different types.
+   * @throws IOException                                 if the attempt to read class path resources
+   *                                                     (jar files or directories) failed.
+   * @throws ConstructorParametersInconsistencyException if two notice constructors defines the same
+   *                                                     parameter with different types.
    */
   public static String export(boolean isPretty, List<String> validationNoticePackageNames,
       List<String> validatorPackageNames)
@@ -139,7 +139,8 @@ public class NoticeSchemaGenerator {
    * @return a {@code JsonObject} that contains information about the type of each parameter of said
    * notice whose {@code Class} was passed as parameter
    */
-  private static JsonObject processNoticeClass(Class<?> noticeClass) throws ConstructorParametersInconsistencyException {
+  private static JsonObject processNoticeClass(Class<?> noticeClass)
+      throws ConstructorParametersInconsistencyException {
     JsonObject toReturn = new JsonObject();
     toReturn.add(Notice.getCode(noticeClass.getSimpleName()), extractNoticeProperties(noticeClass));
     return toReturn;
@@ -151,10 +152,10 @@ public class NoticeSchemaGenerator {
    * @param noticePackageName the name of the package that contains the notices
    * @return the {@code com.google.gson.JsonObject} that contains the {@code ValidationNotice} class
    * simple name, and the type of each parameter
-   * @throws IOException if the attempt to read class path resources (jar files or directories)
-   *                     failed.
-   * @throws ConstructorParametersInconsistencyException if two notice constructors defines the same parameter with
-   * different types.
+   * @throws IOException                                 if the attempt to read class path resources
+   *                                                     (jar files or directories) failed.
+   * @throws ConstructorParametersInconsistencyException if two notice constructors defines the same
+   *                                                     parameter with different types.
    */
   private static JsonObject extractCoreNoticesProperties(String noticePackageName)
       throws IOException, ConstructorParametersInconsistencyException {
@@ -181,10 +182,10 @@ public class NoticeSchemaGenerator {
    * @param validatorPackageName the name of the package that contains the {@code GtfsValidator}s
    * @return the {@code com.google.gson.JsonObject} that contains the {@code ValidationNotice} class
    * simple name, and the type of each parameter
-   * @throws IOException if the attempt to read class path resources (jar files or directories)
-   *                     failed.
-   * @throws ConstructorParametersInconsistencyException if two notice constructors defines the same parameter with
-   * different types.
+   * @throws IOException                                 if the attempt to read class path resources
+   *                                                     (jar files or directories) failed.
+   * @throws ConstructorParametersInconsistencyException if two notice constructors defines the same
+   *                                                     parameter with different types.
    */
   private static JsonObject extractMainNoticesProperties(String validatorPackageName)
       throws IOException, ConstructorParametersInconsistencyException {
@@ -211,8 +212,8 @@ public class NoticeSchemaGenerator {
    * @return a {@code JsonArray} that contains information about the type of each parameter of said
    * {@code ValidationNotice} using the constructors of the class that are annotated by {@code
    * SchemaExport}.
-   * @throws ConstructorParametersInconsistencyException if two notice constructors defines the same parameter with
-   * different types.
+   * @throws ConstructorParametersInconsistencyException if two notice constructors defines the same
+   *                                                     parameter with different types.
    */
   private static JsonArray extractNoticeProperties(Class<?> validationNoticeSubClass)
       throws ConstructorParametersInconsistencyException {
