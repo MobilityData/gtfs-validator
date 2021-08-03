@@ -242,7 +242,7 @@ public class NoticeSchemaGenerator {
       parameterDetails.addProperty(JSON_KEY_TYPE, mapDataType(entry.getValue()));
       parametersAsJsonArray.add(parameterDetails);
     }
-    if (parameterMap.get(SEVERITY_LEVEL_PARAMETER_NAME) != null) {
+    if (parameterMap.get(SEVERITY_LEVEL_PARAMETER_NAME) == null) {
       JsonObject severityDetails = new JsonObject();
       severityDetails.addProperty(JSON_KEY_NAME, SEVERITY_LEVEL_PARAMETER_NAME);
       severityDetails.addProperty(JSON_KEY_TYPE, VARCHAR_DATA_TYPE);
