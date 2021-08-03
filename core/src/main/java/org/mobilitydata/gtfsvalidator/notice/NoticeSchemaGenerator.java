@@ -23,6 +23,7 @@ import com.google.common.reflect.ClassPath.ClassInfo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.lang.annotation.AnnotationFormatError;
@@ -30,10 +31,14 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
 import java.sql.JDBCType;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.exception.ConstructorParametersInconsistencyException;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
@@ -98,7 +103,13 @@ public class NoticeSchemaGenerator {
     }
     JsonObject root =
         mergeGsonObjects(ImmutableList.of(coreNoticeProperties, mainNoticesProperties));
-    return gson.toJson(root);
+    JsonObject sortedRoot = new JsonObject();
+    Set<String> sortedKeys = root.keySet().stream().sorted().collect(
+        Collectors.toCollection(TreeSet::new));
+    for (String key : sortedKeys) {
+      sortedRoot.add(key, root.get(key));
+    }
+    return gson.toJson(sortedRoot);
   }
 
   /**
