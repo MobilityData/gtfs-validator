@@ -11,10 +11,10 @@ spec:
   template:
     metadata:
       labels:
-        app: latest
+        app: gtfs-validator
     spec:
       containers:
-        - name: gtfs-validator
+        - name: gtfs-validator-repo
           image: us-east1-docker.pkg.dev/gtfs-validator-320318/gtfs-validator-repo/gtfs-validator-gke:latest
           # This app listens on port 8080 for web traffic by default.
           ports:
