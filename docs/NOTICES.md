@@ -5,12 +5,12 @@
 
 **Notice code table**
 
-| Notice code                                             	| Notice                                                                                                          	|
+| Notice code                                             | Notice                                                                                                          	|
 |--------------------------------------------------------	|-----------------------------------------------------------------------------------------------------------------	|
-| `block_trips_with_overlapping_stopTimes`               	| [`BlockTripsWithOverlappingStopTimesNotice`](#BlockTripsWithOverlappingStopTimesNotice)                         	|
+| `block_trips_with_overlapping_stop_times`               | [`BlockTripsWithOverlappingStopTimesNotice`](#BlockTripsWithOverlappingStopTimesNotice)                         	|
 | `csv_parsing_failed`                                   	| [`CsvParsingFailedNotice`](#CsvParsingFailedNotice)                                                             	|
 | `decreasing_or_equal_shape_distance`                   	| [`DecreasingOrEqualShapeDistanceNotice`](#DecreasingOrEqualShapeDistanceNotice)                                 	|
-| `decreasing_or_equal_stopTime_distance`                	| [`DecreasingOrEqualStopTimeDistanceNotice`](#DecreasingOrEqualStopTimeDistanceNotice)                           	|
+| `decreasing_or_equal_stop_time_distance`                | [`DecreasingOrEqualStopTimeDistanceNotice`](#DecreasingOrEqualStopTimeDistanceNotice)                           	|
 | `duplicated_column`                                    	| [`DuplicatedColumnNotice`](#DuplicatedColumnNotice)                                                             	|
 | `duplicate_fare_rule_zone_id_fields`                   	| [`DuplicateFareRuleZoneIdFieldsNotice`](#DuplicateFareRuleZoneIdFieldsNotice)                                   	|
 | `duplicate_key`                                        	| [`DuplicateKeyNotice`](#DuplicateKeyNotice)                                                                     	|
@@ -49,10 +49,10 @@
 #### [`BlockTripsWithOverlappingStopTimesNotice`](/RULES.md#BlockTripsWithOverlappingStopTimesNotice)
 ##### Fields description
 
-| Field name      	| Description                               	            | Type   	|
-|-----------------	|--------------------------------------------------------	|--------	|
+| Field name      	| Description                               	              | Type   	|
+|-----------------	|---------------------------------------------------------	|--------	|
 | `csvRowNumberA` 	| The row number from `trips.txt` of the first faulty trip. | Long   	|
-| `tripIdA`       	| The id of first faulty trip.                           	| String 	|
+| `tripIdA`       	| The id of first faulty trip.                           	  | String 	|
 | `serviceIdA`    	| The service id of the first faulty trip.                 	| String 	|
 | `csvRowNumberB` 	| The row number from `trips.txt` of the second faulty trip.| Long   	|
 | `tripIdB`       	| The id of the other faulty trip.             	            | String 	|
@@ -82,8 +82,8 @@
 #### [`DecreasingOrEqualShapeDistanceNotice`](/RULES.md#DecreasingOrEqualShapeDistanceNotice)
 ##### Fields description
 
-| Field name            	| Description                                                                                      	| Type    	|
-|-----------------------	|--------------------------------------------------------------------------------------------------	|---------	|
+| Field name            	  | Description                                                                                    	  | Type    	|
+|-----------------------	  |-------------------------------------------------------------------------------------------------	|---------	|
 | `shapeId`               	| The id of the faulty shape.                                                                      	| String  	|
 | `csvRowNumber`          	| The row number from `shapes.txt`.                                                                	| Long    	|
 | `shapeDistTraveled`     	| Actual distance traveled along the shape from the first shape point to the faulty record.        	| Double  	|
@@ -129,9 +129,9 @@
 
 | Field name           	| Description                     	| Type    	|
 |----------------------	|---------------------------------	|---------	|
-| `csvRowNumber`       	| The row of the first occurrence. 	| Long  	|
+| `csvRowNumber`       	| The row of the first occurrence. 	| Long  	  |
 | `fareId`             	| The id of the first occurrence.  	| String  	|
-| `previousCsvRowNumber`| The row of the other occurrence. 	| Long   	|
+| `previousCsvRowNumber`| The row of the other occurrence. 	| Long   	  |
 | `previousFareId`     	| The id of the other occurrence.  	| Integer 	|
 
 ##### Affected files
@@ -143,8 +143,8 @@
 | Field name      	| Description                        	| Type   	|
 |-----------------	|------------------------------------	|--------	|
 | `filename`       	| The name of the faulty file        	| String 	|
-| `oldCsvRowNumber`	| The row of the first occurrence.    	| Long   	|
-| `newCsvRowNumber`	| The row of the other occurrence.    	| Long   	|
+| `oldCsvRowNumber`	| The row of the first occurrence.    | Long   	|
+| `newCsvRowNumber`	| The row of the other occurrence.   	| Long   	|
 | `fieldName1`     	| Composite key's first field name.  	| String 	|
 | `fieldValue1`    	| Composite key's first value.       	| Object 	|
 | `fieldName2`     	| Composite key's second field name. 	| String 	|
@@ -158,7 +158,7 @@
 
 | Field name 	| Description                 	| Type   	|
 |------------	|-----------------------------	|--------	|
-| `filename`   	| The name of the faulty file 	| String 	|
+| `filename`  | The name of the faulty file   | String 	|
 
 ##### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
@@ -329,7 +329,7 @@
 |--------------	|------------------------------------------	|--------	|
 | `filename`   	| The row of the faulty record.            	| String 	|
 | `csvRowNumber`| The row of the faulty record.            	| Long   	|
-| `rowLength`  	| The length of the faulty record.         	| Integer 	|
+| `rowLength`  	| The length of the faulty record.         	| Integer |
 | `headerCount`	| The number of column in the faulty file. 	| Intege 	|
 
 ##### Affected files
@@ -406,10 +406,10 @@
 #### [`MissingRequiredColumnNotice`](/RULES.md#MissingRequiredColumnNotice)
 ##### Fields description
 
-| Field name 	| Description                     	| Type   	|
-|------------	|---------------------------------	|--------	|
-| `filename`   	| The name of the faulty file.    	| String 	|
-| `fieldName`  	| The name of the missing column. 	| String 	|
+| Field name 	  | Description                     | Type   	|
+|-------------	|-------------------------------- |--------	|
+| `filename`   	| The name of the faulty file.    | String 	|
+| `fieldName`  	| The name of the missing column. | String 	|
 
 ##### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
@@ -441,12 +441,12 @@
 #### [`MissingTripEdgeNotice`](/RULES.md#MissingTripEdgeNotice)
 ##### Fields description
 
-| Field name     	| Description                                 	| Type    	|
-|----------------	|---------------------------------------------	|---------	|
-| `csvRowNumber`  	| The row of the faulty record.               	| Long    	|
-| `stopSequence`  	| `stops.stop_sequence` of the faulty record. 	| Integer 	|
-| `tripId`        	| The `trips.trip_id` of the faulty record.   	| String  	|
-| `specifiedField` | Name of the missing field.                  	| String  	|
+| Field name     	  | Description                                 | Type    	|
+|-----------------  |-------------------------------------------- |---------	|
+| `csvRowNumber`  	| The row of the faulty record.               | Long    	|
+| `stopSequence`  	| `stops.stop_sequence` of the faulty record. | Integer 	|
+| `tripId`        	| The `trips.trip_id` of the faulty record.   | String  	|
+| `specifiedField`  | Name of the missing field.                 	| String  	|
 
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 
@@ -475,7 +475,7 @@
 | `fieldValue` 	| Faulty value.                 	| Object  	|
 
 ##### Affected files
-* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+* [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
 #### [`OverlappingFrequencyNotice`](/RULES.md#OverlappingFrequencyNotice)
 ##### Fields description
@@ -505,8 +505,8 @@
 #### [`StartAndEndRangeEqualNotice`](/RULES.md#StartAndEndRangeEqualNotice)
 ##### Fields description
 
-| Field name     	| Description                          	| Type   	|
-|----------------	|--------------------------------------	|--------	|
+| Field name     	  | Description                          	| Type   	|
+|-----------------	|-------------------------------------- |--------	|
 | `filename`       	| The name of the faulty file.         	| String 	|
 | `csvRowNumber`   	| The row number of the faulty record. 	| Long   	|
 | `startFieldName` 	| The start value's field name.        	| String 	|
@@ -519,8 +519,8 @@
 #### [`StartAndEndRangeOutOfOrderNotice`](/RULES.md#StartAndEndRangeOutOfOrderNotice)
 ##### Fields description
 
-| Field name     	| Description                          	| Type   	|
-|----------------	|--------------------------------------	|--------	|
+| Field name     	  | Description                          	| Type   	|
+|-----------------	|-------------------------------------  |--------	|
 | `filename`       	| The name of the faulty file.         	| String 	|
 | `csvRowNumber`   	| The row number of the faulty record. 	| Long   	|
 | `entityId`       	| The faulty service id.               	| String 	|
@@ -532,16 +532,18 @@
 ##### Affected files
 * [`calendar.txt`](http://gtfs.org/reference/static#calendartxt)
 * [`calendar_dates.txt`](http://gtfs.org/reference/static#calendar_datestxt)
+* [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
+* [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
 #### [`StationWithParentStationNotice`](/RULES.md#StationWithParentStationNotice)
 ##### Fields description
 
-| Field name    	| Description                               	| Type   	|
-|---------------	|-------------------------------------------	|--------	|
+| Field name    	| Description                               	  | Type   	|
+|---------------	|---------------------------------------------	|--------	|
 | `stopId`        	| The id of the faulty record.              	| String 	|
-| `stopName`      	| The stops.stop_name of the faulty record. 	| Long   	|
-| `csvRowNumber`  	| The row number of the faulty record.      	| String 	|
-| `parentStation` 	| Parent station's id.                         	| String 	|
+| `stopName`      	| The stops.stop_name of the faulty record. 	| String  |
+| `csvRowNumber`  	| The row number of the faulty record.      	| Long  	|
+| `parentStation` 	| Parent station's id.                        | String 	|
 
 ##### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
@@ -563,8 +565,8 @@
 #### [`StopTimeWithOnlyArrivalOrDepartureTimeNotice`](/RULES.md#StopTimeWithOnlyArrivalOrDepartureTimeNotice)
 ##### Fields description
 
-| Field name     	| Description                                  	| Type    	|
-|----------------	|----------------------------------------------	|---------	|
+| Field name      	| Description                                  	| Type    	|
+|-----------------	|-----------------------------------------------|---------	|
 | `csvRowNumber`   	| The row number of the faulty record.         	| Long    	|
 | `tripId`         	| The trip_id associated to the faulty record. 	| String  	|
 | `stopSequence`   	| The sequence of the faulty stop.             	| Integer 	|
@@ -597,42 +599,41 @@
 
 | Notice code                                	| Notice                                                                            	|
 |--------------------------------------------	|-----------------------------------------------------------------------------------	|
-| `attribution_without_roleNotice`           	| [`AttributionWithoutRoleNotice`](#AttributionWithoutRoleNotice)                   	|
-| `duplicate_route_nameNotice`               	| [`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)                           	|
-| `empty_column_nameNotice`                  	| [`EmptyColumnNameNotice`](#EmptyColumnNameNotice)                                 	|
-| `empty_rowNotice`                          	| [`EmptyRowNotice`](#EmptyRowNotice)                                               	|
-| `feed_expiration_dateNotice`               	| [`FeedExpirationDateNotice`](#FeedExpirationDateNotice)                           	|
-| `feed_info_lang_and_agency_mismatchNotice` 	| [`FeedInfoLangAndAgencyMismatchNotice`](#FeedInfoLangAndAgencyLangMismatchNotice) 	|
-| `inconsistent_agency_langNotice`           	| [`InconsistentAgencyLangNotice`](#InconsistentAgencyLangNotice)                   	|
-| `leading_or_trailing_whitespaces`             | [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)           |
-| `missing_feed_info_dateNotice`             	| [`MissingFeedInfoDateNotice`](#MissingFeedInfoDateNotice)                         	|
-| `more_than_one_entityNotice`               	| [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	|
-| `non_ascii_or_non_printable_charNotice`    	| [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	|
-| `platform_without_parent_stationNotice`    	| [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)       	|
-| `route_color_contrastNotice`               	| [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	|
-| `route_short_and_long_name_equalNotice`    	| [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	|
-| `route_short_name_too_longNotice`          	| [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	|
-| `same_name_and_description_for_route`         | [`SameNameAndDescriptionForRouteNotice`](#SameNameAndDescriptionForRouteNotice)       |
-| `same_name_and_description_for_stop`        	| [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)       	|
-| `same_route_and_agency_url`                	| [`SameRouteAndAgencyUrlNotice`](#SameRouteAndAgencyUrlNotice)                         |
-| `same_stop_and_agency_url`                  	| [`SameStopAndAgencyUrlNotice`](#SameStopAndAgencyUrlNotice)                           |
+| `attribution_without_role`           	      | [`AttributionWithoutRoleNotice`](#AttributionWithoutRoleNotice)                   	|
+| `duplicate_route_name`                      | [`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)                           	|
+| `empty_column_name`                        	| [`EmptyColumnNameNotice`](#EmptyColumnNameNotice)                                 	|
+| `empty_row`                                	| [`EmptyRowNotice`](#EmptyRowNotice)                                               	|
+| `feed_expiration_date`                     	| [`FeedExpirationDateNotice`](#FeedExpirationDateNotice)                           	|
+| `feed_info_lang_and_agency_mismatch` 	      | [`FeedInfoLangAndAgencyMismatchNotice`](#FeedInfoLangAndAgencyLangMismatchNotice) 	|
+| `inconsistent_agency_lang`                 	| [`InconsistentAgencyLangNotice`](#InconsistentAgencyLangNotice)                   	|
+| `leading_or_trailing_whitespaces`           | [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)         |
+| `missing_feed_info_date`                   	| [`MissingFeedInfoDateNotice`](#MissingFeedInfoDateNotice)                         	|
+| `more_than_one_entity`                     	| [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	|
+| `non_ascii_or_non_printable_char`          	| [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	|
+| `platform_without_parent_station`          	| [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)       	|
+| `route_color_contrast`                     	| [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	|
+| `route_short_and_long_name_equal`          	| [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	|
+| `route_short_name_too_long`                	| [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	|
+| `same_name_and_description_for_route`       | [`SameNameAndDescriptionForRouteNotice`](#SameNameAndDescriptionForRouteNotice)     |
+| `same_name_and_description_for_stop`       	| [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)     	|
+| `same_route_and_agency_url`                	| [`SameRouteAndAgencyUrlNotice`](#SameRouteAndAgencyUrlNotice)                       |
+| `same_stop_and_agency_url`                 	| [`SameStopAndAgencyUrlNotice`](#SameStopAndAgencyUrlNotice)                         |
 | `same_stop_and_route_url`                  	| [`SameStopAndRouteUrlNotice`](#SameStopAndRouteUrlNotice)                           |
-| `start_and_end_time_equalNotice`           	| [`StartAndEndTimeEqualNotice`](#StartAndEndTimeEqualNotice)                       	|
-| `stop_time_timepoint_without_timesNotice`  	| [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	|
-| `stop_too_far_from_trip_shapeNotice`       	| [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	|
-| `stop_without_zone_id`                       	| [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                 	            |
-| `too_fast_travelNotice`                    	| [`TooFastTravelNotice`](#TooFastTravelNotice)                                     	|
-| `unexpected_enum_valueNotice`              	| [`UnexpectedEnumValueNotice`](#UnexpectedEnumValueNotice)                         	|
-| `unusable_tripNotice`                      	| [`UnusableTripNotice`](#UnusableTripNotice)                                       	|
-| `unused_shapeNotice`                       	| [`UnusedShapeNotice`](#UnusedShapeNotice)                                         	|
-| `unused_tripNotice`                        	| [`UnusedTripNotice`](#UnusedTripNotice)                                           	|
-| `wrong_stop_time_stop_location_type`          | [`WrongStopTimeStopLocationTypeNotice`](#WrongStopTimeStopLocationTypeNotice)	        |
+| `stop_time_timepoint_without_times`        	| [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	|
+| `stop_too_far_from_trip_shape`            	| [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	|
+| `stop_without_zone_id`                     	| [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                 	            |
+| `too_fast_travel`                          	| [`TooFastTravelNotice`](#TooFastTravelNotice)                                     	|
+| `unexpected_enum_value`                    	| [`UnexpectedEnumValueNotice`](#UnexpectedEnumValueNotice)                         	|
+| `unusable_trip`                            	| [`UnusableTripNotice`](#UnusableTripNotice)                                       	|
+| `unused_shape`                             	| [`UnusedShapeNotice`](#UnusedShapeNotice)                                         	|
+| `unused_trip`                              	| [`UnusedTripNotice`](#UnusedTripNotice)                                           	|
+| `wrong_stop_time_stop_location_type`        | [`WrongStopTimeStopLocationTypeNotice`](#WrongStopTimeStopLocationTypeNotice)	      |
 
 #### [AttributionWithoutRoleNotice](/RULES.md#AttributionWithoutRoleNotice)
 ##### Fields description
 
-| Field name    	| Description                          	| Type   	|
-|---------------	|--------------------------------------	|--------	|
+| Field name    	| Description                          	  | Type   	|
+|---------------	|---------------------------------------	|--------	|
 | `csvRowNumber`  	| The row number of the faulty record. 	| Long   	|
 | `attributionId` 	| The id of the faulty record.         	| String 	|
 
@@ -659,8 +660,8 @@
 #### [EmptyColumnNameNotice](/RULES.md#EmptyColumnNameNotice)
 ##### Fields description
 
-| Field name 	| Description                    	| Type    	|
-|------------	|--------------------------------	|---------	|
+| Field name 	| Description                    	  | Type    	|
+|------------	|---------------------------------	|---------	|
 | `filename`   	| The name of the faulty file.   	| String   	|
 | `index`      	| The index of the empty column. 	| Integer 	|
 
@@ -782,10 +783,10 @@
 #### [RouteColorContrastNotice](/RULES.md#RouteColorContrastNotice)
 ##### Fields description
 
-| Field name     	| Description                                	| Type   	|
-|----------------	|--------------------------------------------	|--------	|
-| `routeId`        	| The id of the faulty record.               	| Long   	|
-| `csvRowNumber`   	| The row number of the faulty record.       	| String 	|
+| Field name     	| Description                                	  | Type   	|
+|----------------	|---------------------------------------------	|--------	|
+| `routeId`        	| The id of the faulty record.               	| String 	|
+| `csvRowNumber`   	| The row number of the faulty record.       	| Long 	  |
 | `routeColor`     	| The faulty record's HTML route color.      	| String 	|
 | `routeTextColor` 	| The faulty record's HTML route text color. 	| String 	|
 
@@ -795,10 +796,10 @@
 #### [RouteShortAndLongNameEqualNotice](/RULES.md#RouteShortAndLongNameEqualNotice)
 ##### Fields description
 
-| Field name     	| Description                             	| Type   	|
-|----------------	|-----------------------------------------	|--------	|
-| `routeId`        	| The id of the faulty record.            	| Long   	|
-| `csvRowNumber`   	| The row number of the faulty record.    	| String 	|
+| Field name     	| Description                             	  | Type   	|
+|----------------	|-------------------------------------------	|--------	|
+| `routeId`        	| The id of the faulty record.            	| String  |
+| `csvRowNumber`   	| The row number of the faulty record.    	| Long 	  |
 | `routeShortName` 	| The faulty record's `route_short_name`. 	| String 	|
 | `routeLongName`  	| The faulty record's `route_long_name`.  	| String 	|
 
@@ -808,10 +809,10 @@
 #### [RouteShortNameTooLongNotice](/RULES.md#RouteShortNameTooLongNotice)
 ##### Fields description
 
-| Field name     	| Description                             	| Type   	|
-|----------------	|-----------------------------------------	|--------	|
-| `routeId`        	| The id of the faulty record.            	| Long   	|
-| `csvRowNumber`   	| The row number of the faulty record.    	| String 	|
+| Field name     	| Description                             	  | Type   	|
+|----------------	|-------------------------------------------	|--------	|
+| `routeId`        	| The id of the faulty record.            	| String  |
+| `csvRowNumber`   	| The row number of the faulty record.    	| Long 	  |
 | `routeShortName` 	| The faulty record's `route_short_name`. 	| String 	|
 
 ##### Affected files
@@ -822,11 +823,11 @@
 
 | Field name     	| Description                                    	| Type   	|
 |----------------	|------------------------------------------------	|--------	|
-| `filename`       	| The name of the faulty file.                   	| String 	|
-| `routeId`        	| The id of the faulty record.                   	| String 	|
-| `csvRowNumber`   	| The row number of the faulty record.           	| Long   	|
-| `routeDesc`      	| The `routes.routes_desc` of the faulty record. 	| String 	|
-| `specifiedField` 	| Either `route_short_name` or `route_long_name`. 	| String 	|
+| `filename`      | The name of the faulty file.                   	| String 	|
+| `routeId`       | The id of the faulty record.                   	| String 	|
+| `csvRowNumber`  | The row number of the faulty record.           	| Long   	|
+| `routeDesc`     | The `routes.routes_desc` of the faulty record. 	| String 	|
+| `specifiedField`| Either `route_short_name` or `route_long_name`. | String 	|
 
 ##### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
@@ -836,9 +837,9 @@
 
 | Field name     	| Description                             	| Type   	|
 |----------------	|-----------------------------------------	|--------	|
-| `csvRowNumber`   	| The row number of the faulty record.    	| String 	|
-| `stopId`        	| The id of the faulty record.            	| Long   	|
-| `routeDesc`    	| The faulty record's `stop_desc`.       	| String 	|
+| `csvRowNumber`  | The row number of the faulty record.      | Long 	  |
+| `stopId`        | The id of the faulty record.              | String  |
+| `routeDesc`    	| The faulty record's `stop_desc`.         	| String 	|
 
 ##### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
@@ -848,8 +849,8 @@
 
 | Field name     	| Description                                	| Type   	|
 |----------------	|--------------------------------------------	|--------	|
-| `csvRowNumber`   	| The row number of the faulty record.       	| Long   	|
-| `routeId`       	| The faulty record's id.                    	| String 	|
+| `csvRowNumber`  | The row number of the faulty record.       	| Long   	|
+| `routeId`       | The faulty record's id.                    	| String 	|
 | `agencyId`    	| The faulty record's `routes.agency_id`.    	| String 	|
 | `routeUrl`     	| The duplicate URL value                    	| String 	|
 
@@ -865,7 +866,7 @@
 | `csvRowNumber` 	| The row number of the faulty record.                   	| Long   	|
 | `stopId`       	| The faulty record's id.                                	| String 	|
 | `agencyName`   	| The faulty record's `agency.agency_name`.              	| String 	|
-| `stopUrl`      	| The duplicate URL value.                                	| String 	|
+| `stopUrl`      	| The duplicate URL value.                                | String 	|
 | `csvRowNumber` 	| The row number of the faulty record from `agency.txt`. 	| Long   	|
 
 ##### Affected files
@@ -879,7 +880,7 @@
 |---------------------	|--------------------------------------------------------	|--------	|
 | `csvRowNumber`      	| The row number of the faulty record.                   	| Long   	|
 | `stopId`            	| The faulty record's id.                                	| String 	|
-| `stopUrl`           	| The duplicate URL value.                                	| String 	|
+| `stopUrl`           	| The duplicate URL value.                                | String 	|
 | `routeId`           	| The faulty record's id from `routes.txt.               	| String 	|
 | `routeCsvRowNumber` 	| The row number of the faulty record from `routes.txt`. 	| Long   	|
 
@@ -890,8 +891,8 @@
 #### [StopTimeTimepointWithoutTimesNotice](/RULES.md#StopTimeTimepointWithoutTimesNotice)
 ##### Fields description
 
-| Field name     	| Description                                	| Type   	|
-|----------------	|--------------------------------------------	|--------	|
+| Field name     	  | Description                                	| Type   	|
+|-----------------	|--------------------------------------------	|--------	|
 | `csvRowNumber`   	| The row number of the faulty record.       	| Long   	|
 | `tripId`         	| The faulty record's id.                    	| String 	|
 | `stopSequence`   	| The faulty record's `stops.stop_sequence`. 	| String 	|
@@ -921,7 +922,7 @@
 | Field name               	| Description                                	| Type   	|
 |--------------------------	|--------------------------------------------	|--------	|
 | `stopId`                 	| The faulty record's id.                    	| String 	|
-| `csvRowNumber`        	| The row number of the faulty record.       	| Long   	|
+| `csvRowNumber`        	  | The row number of the faulty record.       	| Long   	|
 
 ##### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
@@ -965,6 +966,7 @@
 * [`transfers.txt`](http://gtfs.org/reference/static#transferstxt)
 * [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
+* [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
 
 #### [UnusableTripNotice](/RULES.md#UnusableTripNotice)
 ##### Fields description
@@ -1029,8 +1031,8 @@
 #### [UnknownColumnNotice](/RULES.md#UnknownColumnNotice)
 ##### Fields description
 
-| Field name 	| Description                     	| Type    	|
-|------------	|---------------------------------	|---------	|
+| Field name 	  | Description                     	| Type    	|
+|-------------	|---------------------------------	|---------	|
 | `filename`   	| The name of the faulty file.    	| String 	|
 | `fieldName`  	| The name of the unknown column. 	| String  	|
 | `index`      	| The index of the faulty column. 	| Integer 	|
@@ -1041,8 +1043,8 @@
 #### [UnknownFileNotice](/RULES.md#UnknownFileNotice)
 ##### Fields description
 
-| Field name 	| Description                     	| Type    	|
-|------------	|---------------------------------	|---------	|
+| Field name 	  | Description                     	| Type    |
+|-------------	|---------------------------------	|---------|
 | `filename`   	| The name of the unknown file.    	| String 	|
 
 ## System Errors
@@ -1060,19 +1062,19 @@
 ### [IOError](/RULES.md#IOError)
 #### Fields description
 
-| Field name 	| Description                                                   	| Type    	|
-|------------	|---------------------------------------------------------------	|---------	|
+| Field name 	  | Description                                                   	| Type    |
+|-------------	|---------------------------------------------------------------	|---------|
 | `exception`  	| The name of the exception.                                    	| String 	|
-| `message`    	| The error message that explains the reason for the exception. 	| String  	|
+| `message`    	| The error message that explains the reason for the exception. 	| String  |
 
 ### [RuntimeExceptionInLoaderError](/RULES.md#RuntimeExceptionInLoaderError)
 #### Fields description
 
-| Field name 	| Description                                                   	| Type    	|
-|------------	|---------------------------------------------------------------	|---------	|
+| Field name 	  | Description                                                   	| Type    |
+|-------------	|---------------------------------------------------------------	|---------|
 | `filename`  	| The name of the file that caused the exception.            	    | String 	|
 | `exception`  	| The name of the exception.                                    	| String 	|
-| `message`    	| The error message that explains the reason for the exception. 	| String  	|
+| `message`    	| The error message that explains the reason for the exception. 	| String  |
 
 ##### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
@@ -1080,24 +1082,24 @@
 ### [RuntimeExceptionInValidatorError](/RULES.md#RuntimeExceptionInValidatorError)
 #### Fields description
 
-| Field name 	| Description                                                   	| Type    	|
-|------------	|---------------------------------------------------------------	|---------	|
-| `validator`  	| The name of the validator that caused the exception.            	| String 	|
-| `exception`  	| The name of the exception.                                    	| String 	|
-| `message`    	| The error message that explains the reason for the exception. 	| String  	|
+| Field name 	| Description                                                   	| Type    |
+|------------	|---------------------------------------------------------------	|---------|
+| `validator` | The name of the validator that caused the exception.            | String 	|
+| `exception` | The name of the exception.                                    	| String 	|
+| `message`   | The error message that explains the reason for the exception. 	| String  |
 
 ### [ThreadExecutionError](/RULES.md#ThreadExecutionError)
 #### Fields description
 
-| Field name 	| Description                                                   	| Type    	|
-|------------	|---------------------------------------------------------------	|---------	|
+| Field name 	  | Description                                                   	| Type    |
+|-------------	|---------------------------------------------------------------	|---------|
 | `exception`  	| The name of the exception.                                    	| String 	|
-| `message`    	| The error message that explains the reason for the exception. 	| String  	|
+| `message`    	| The error message that explains the reason for the exception. 	| String  |
 
 ### [URISyntaxError](/RULES.md#URISyntaxError)
 #### Fields description
 
-| Field name 	| Description                                                   	| Type    	|
-|------------	|---------------------------------------------------------------	|---------	|
+| Field name 	  | Description                                                   	| Type    |
+|-------------	|---------------------------------------------------------------	|---------|
 | `exception`  	| The name of the exception.                                    	| String 	|
-| `message`    	| The error message that explains the reason for the exception. 	| String  	|
+| `message`    	| The error message that explains the reason for the exception. 	| String  |
