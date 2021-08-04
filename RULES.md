@@ -101,13 +101,12 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`NumberOutOfRangeNotice`](#NumberOutOfRangeNotice)                                                             | Out of range value.                                                                                                                                    |
 | [`OverlappingFrequencyNotice`](#OverlappingFrequencyNotice)                                                     | Trip frequencies overlap.                                                                                                                              |
 | [`RouteBothShortAndLongNameMissingNotice`](#RouteBothShortAndLongNameMissingNotice)                             | Missing route short name and long name.                                                                                                                |
-| [`SameNameAndDescriptionForRouteNotice`](#SameNameAndDescriptionForRouteNotice)                                 | Same name and description for route.                                                                                                                   |
 | [`StartAndEndRangeEqualNotice`](#StartAndEndRangeEqualNotice)                                                   | Two date or time fields are equal.                                                                                                                     |
 | [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         | Two date or time fields are out of order.                                                                                                              |
 | [`StationWithParentStationNotice`](#StationWithParentStationNotice)                                             | A station has `parent_station` field set.                                                                                                              |
 | [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](#StopTimeWithArrivalBeforePreviousDepartureTimeNotice) | Backwards time travel between stops in `stop_times.txt`                                                                                                |
 | [`StopTimeWithOnlyArrivalOrDepartureTimeNotice`](#StopTimeWithOnlyArrivalOrDepartureTimeNotice)                 | Missing `stop_times.arrival_time` or `stop_times.departure_time`.                                                                                      |
-| [`WrongParentLocationTypeNotice`](#WrongParentLocationTypeNotice)                                               | Incorrect type of the parent location.
+| [`WrongParentLocationTypeNotice`](#WrongParentLocationTypeNotice)                                               | Incorrect type of the parent location.                                                                                                                 |
 
 <a name="WARNINGS"/>
 
@@ -122,7 +121,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`FeedExpirationDateNotice`](#FeedExpirationDateNotice)                           	| Dataset should be valid for at least the next 7 days. Dataset should cover at least the next 30 days of service.                                            	|
 | [`FeedInfoLangAndAgencyMismatchNotice`](#FeedInfoLangAndAgencyLangMismatchNotice) 	| Mismatching feed and agency language fields.                                                                                                                	|
 | [`InconsistentAgencyLangNotice`](#InconsistentAgencyLangNotice)                   	| Inconsistent language among agencies.                                                                                                                       	|
-| [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)           | The value in CSV file has leading or trailing whitespaces.                                                                                                  	|
+| [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)         | The value in CSV file has leading or trailing whitespaces.                                                                                                  	|
 | [`MissingFeedInfoDateNotice`](#MissingFeedInfoDateNotice)                         	| `feed_end_date` should be provided if `feed_start_date` is provided. `feed_start_date` should be provided if `feed_end_date` is provided.                   	|
 | [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	| More than one row in CSV.                                                                                                                                   	|
 | [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	| Non ascii or non printable char in  `id`.                                                                                                                   	|
@@ -130,7 +129,12 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	| Insufficient route color contrast.                                                                                                                          	|
 | [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	| Short and long name are equal for a route.                                                                                                                  	|
 | [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	| Short name of a route is too long (more than 12 characters).                                                                                                	|
-| [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)         | Same name and description for route.                                                                                                                      	|
+| [`SameNameAndDescriptionForRouteNotice`](#SameNameAndDescriptionForRouteNotice)     | Same name and description for route.                                                                                                                        	|
+| [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)       | Same name and description for stop.                                                                                                                      	    |
+| [`SameRouteAndAgencyUrlNotice`](#SameRouteAndAgencyUrlNotice)                       | Same `routes.route_url` and `agency.agency_url`.                                                                                                  	        |
+| [`SameStopAndAgencyUrlNotice`](#SameStopAndAgencyUrlNotice)                         | Same `stops.stop_url` and `agency.agency_url`.                                                                                                  	            |
+| [`SameStopAndRouteUrlNotice`](#SameStopAndRouteUrlNotice)                          	| Same `stops.stop_url` and `routes.route_url`.                                                                                                  	            |
+| [`StartAndEndTimeEqualNotice`](#StartAndEndTimeEqualNotice)                       	| Equal `frequencies.start_time` and `frequencies.end_time`.                                                                                                  	|
 | [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	| `arrival_time` or `departure_time` not specified for timepoint.                                                                                             	|
 | [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	| Stop too far from trip shape.                                                                                                                               	|
 | [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                              	| Stop without value for `stops.zone_id`.                                                                                                                     	|
@@ -139,6 +143,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`UnusableTripNotice`](#UnusableTripNotice)                                       	| Trips must have more than one stop to be usable.                                                                                                            	|
 | [`UnusedShapeNotice`](#UnusedShapeNotice)                                         	| Shape is not used in GTFS file `trips.txt`.                                                                                                                 	|
 | [`UnusedTripNotice`](#UnusedTripNotice)                                           	| Trip is not be used in `stop_times.txt`                                                                                                                     	|
+| [`WrongStopTimeStopLocationTypeNotice`](#WrongStopTimeStopLocationTypeNotice)       | Stop with the wrong `stops.location_type` are referenced from `stop_times.stop_id`.                                                                           |
 
 <a name="INFOS"/>
 
@@ -455,20 +460,6 @@ Both short_name and long_name are missing for a route.
 ##### References:
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 
-<a name="SameNameAndDescriptionForRouteNotice"/>
-
-#### SameNameAndDescriptionForRouteNotice
-
-The GTFS spec defines `routes.txt` [route_description](https://gtfs.org/reference/static/#routestxt) as:
-
-> Description of a route that provides useful, quality information. Do not simply duplicate the name of the route.
-
-See the GTFS and GTFS Best Practices links below for more examples of how to populate the `route_short_name`, `route_long_name`, and `route_description` fields.
-
-##### References:
-[routes.txt specification](http://gtfs.org/reference/static/#routestxt)
-[routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
-
 <a name="StartAndEndRangeEqualNotice"/>
 
 #### StartAndEndRangeEqualNotice
@@ -685,6 +676,20 @@ Short name of a route is too long (more than 12 characters).
 ##### References:
 * [routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
 
+<a name="SameNameAndDescriptionForRouteNotice"/>
+
+#### SameNameAndDescriptionForRouteNotice
+
+The GTFS spec defines `routes.txt` [route_desc](https://gtfs.org/reference/static/#routestxt) as:
+
+> Description of a route that provides useful, quality information. Do not simply duplicate the name of the route.
+
+See the GTFS and GTFS Best Practices links below for more examples of how to populate the `route_short_name`, `route_long_name`, and `route_desc` fields.
+
+##### References:
+[routes.txt specification](http://gtfs.org/reference/static/#routestxt)
+[routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
+
 <a name="SameNameAndDescriptionForStopNotice"/>
 
 #### SameNameAndDescriptionForStopNotice
@@ -695,6 +700,42 @@ The GTFS spec defines `stops.txt` [stop_description](https://gtfs.org/reference/
 
 ##### References:
 [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+
+<a name="SameRouteAndAgencyUrlNotice"/>
+
+#### SameRouteAndAgencyUrlNotice
+
+A route should not have the same `routes.route_url` as a record from `agency.txt`.
+
+##### References:
+* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
+
+<a name="SameStopAndAgencyUrlNotice"/>
+
+#### SameStopAndAgencyUrlNotice
+
+A stop should not have the same `stops.stop_url` as a record from `agency.txt`.
+
+##### References:
+* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+
+<a name="SameStopAndRouteUrlNotice"/>
+
+#### SameStopAndRouteUrlNotice
+
+A stop should not have the same `stop.stop_url` as a record from `routes.txt`.
+
+##### References:
+* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+
+<a name="StartAndEndTimeEqualNotice"/>
+
+#### StartAndEndTimeEqualNotice
+
+Start and end times are equal in GTFS file `frequencies.txt`. The GTFS spec is currently unclear how this case should be handled (e.g., is it a trip that circulates once?). It is recommended to use a trip not defined via frequencies.txt for this case.
+
+##### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="StopTimeTimepointWithoutTimeNotice"/>
 
@@ -767,6 +808,13 @@ Trips should be referred to at least once in `stop_times.txt`.
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
+
+#### WrongStopTimeStopLocationTypeNotice
+
+Referenced locations (using `stop_times.stop_id`) must be stops/platforms, i.e. their `stops.location_type` value must be 0 or empty.
+
+##### References:
+* [stop_times.txt GTFS specification](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stoptimestxt)
 
 ### Info
 
