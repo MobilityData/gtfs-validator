@@ -24,4 +24,9 @@ public class GtfsValidatorController {
     };
     Main.main(argv);
   }
+
+  @GetMapping("hello")
+  public String run() {
+    return "hello world";
+  }
 }
