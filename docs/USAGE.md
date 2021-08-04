@@ -9,7 +9,6 @@
 
 | Short name 	| Long name                     	| required? 	| Description                                                                                                               	|
 |------------	|-------------------------------	|-----------	|---------------------------------------------------------------------------------------------------------------------------	|
-| `-a`       	| `--abort_after_schema_export`    	| Optional  	| Abort the application process.                                                                   	|
 | `-i`       	| `--input`                     	| Optional  	| Location of the input GTFS ZIP or unarchived directory.                                                                   	|
 | `-c`       	| `--country_code`                 	| Optional  	| Country code of the feed, e.g., `nl`. It must be a two-letter country code (ISO 3166-1 alpha-2).                           	|
 | `-h`       	| `--help`                 	        | Optional  	| Print help menu.                                                                                                              |
@@ -65,16 +64,16 @@ You should now see the workflow `End to end / run-on-data` start automatically i
 If the workflow run crashes or something doesn't look right in the validation report json file, **please see the [guide to reproduce](/docs/REPRODUCE_ERRORS.md) section.**
 
 ## Export notice schema
+
 Sample usage:
 
 ### Without file validation
 ``` 
-java -jar gtfs-validator-SNAPSHOT.jar --export_notice_schema --abort_after_schema_export
+java -jar gtfs-validator-SNAPSHOT.jar --export_notice_schema
 ```
 
 ...which will:
  1. Generate and export all validation notices as a json file. 
- 1. Abort the application process after the schema export. 
  
 ### With file validation
 ``` 
