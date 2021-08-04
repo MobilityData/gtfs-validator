@@ -10,8 +10,8 @@ spec:
       app: gtfs-validator
   template:
     metadata:
-      labels: latest
-        app: gtfs-validator
+      labels:
+        app: latest
     spec:
       containers:
         - name: gtfs-validator
