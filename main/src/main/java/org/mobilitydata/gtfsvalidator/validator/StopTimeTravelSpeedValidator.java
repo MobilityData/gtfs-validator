@@ -81,11 +81,11 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
       // All trips belong to the same route.
       final GtfsRoute route =
           routeTable.byRouteId(tripTable.byTripId(stopTimes.get(0).tripId()).routeId());
-      final double maxSpeedInKph = getMaxVehicleSpeed(route.routeType());
+      final double maxSpeedKph = getMaxVehicleSpeedKph(route.routeType());
       final double[] distancesKm = findDistancesKmBetweenStops(stopTimes);
 
-      validateConsecutiveStops(trips, distancesKm, maxSpeedInKph, noticeContainer);
-      validateFarStops(trips, distancesKm, maxSpeedInKph, noticeContainer);
+      validateConsecutiveStops(trips, distancesKm, maxSpeedKph, noticeContainer);
+      validateFarStops(trips, distancesKm, maxSpeedKph, noticeContainer);
     }
   }
 
@@ -107,14 +107,15 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
   }
 
   /**
-   * Validates travel speed between far stops for all trips in a given line variant.
+   * Validates travel speed between far stops for all trips that belong to the same route and visit
+   * the same stops at the same times.
    *
    * <p>If there is a fast travel detected, then exactly one notice is issued for each trip.
    */
   private void validateFarStops(
       List<List<GtfsStopTime>> trips,
       double[] distancesKm,
-      double maxSpeedInKph,
+      double maxSpeedKph,
       NoticeContainer noticeContainer) {
     final List<GtfsStopTime> stopTimes = trips.get(0);
 
@@ -135,7 +136,7 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
         }
         final double speedKph =
             getSpeedKphBetweenStops(distanceToEndIdx, startStopTime, endStopTime);
-        if (speedKph <= maxSpeedInKph) {
+        if (speedKph <= maxSpeedKph) {
           continue;
         }
         GtfsStop startStop = stopTable.byStopId(startStopTime.stopId());
@@ -161,14 +162,15 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
   }
 
   /**
-   * Validates travel speed between consecutive stops for all trips in a given line variant.
+   * Validates travel speed between consecutive stops for all trips that belong to the same route
+   * and visit the same stops at the same times.
    *
    * <p>If there is a fast travel detected, then a separate notice is issued for each trip.
    */
   private void validateConsecutiveStops(
       List<List<GtfsStopTime>> trips,
       double[] distancesKm,
-      double maxSpeedInKph,
+      double maxSpeedKph,
       NoticeContainer noticeContainer) {
     final List<GtfsStopTime> stopTimes = trips.get(0);
 
@@ -180,7 +182,7 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
       }
       final double distanceKm = distancesKm[i];
       final double speedKph = getSpeedKphBetweenStops(distanceKm, stopTime1, stopTime2);
-      if (speedKph <= maxSpeedInKph) {
+      if (speedKph <= maxSpeedKph) {
         continue;
       }
       final GtfsStop stop1 = stopTable.byStopId(stopTime1.stopId());
@@ -234,6 +236,10 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
   private static final int NUM_SECONDS_PER_MINUTE = 60;
   private static final int NUM_SECONDS_PER_HOUR = 3600;
 
+  /**
+   * Returns a fingerprint of all trip data that is relevant for validation of far stops: route id,
+   * stop ids and arrival and departure times.
+   */
   private static long tripFprint(GtfsTrip trip, List<GtfsStopTime> stopTimes) {
     Hasher hasher =
         HASH_FUNCTION
@@ -271,7 +277,8 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
     }
   }
 
-  private static double getMaxVehicleSpeed(GtfsRouteType routeType) {
+  /** Returns a speed threshold (km/h) for a given vehicle type. */
+  private static double getMaxVehicleSpeedKph(GtfsRouteType routeType) {
     switch (routeType) {
       case LIGHT_RAIL:
         // The Houston METRORail can reach speeds of 100 km/h.

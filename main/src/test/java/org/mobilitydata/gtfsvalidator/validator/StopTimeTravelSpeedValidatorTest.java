@@ -23,6 +23,7 @@ import static org.mobilitydata.gtfsvalidator.validator.StopTimeTravelSpeedValida
 import com.google.common.collect.ImmutableList;
 import com.google.common.geometry.S2LatLng;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -267,6 +268,37 @@ public final class StopTimeTravelSpeedValidatorTest {
                 trip, stopTimes.get(0), stops.get(0), stopTimes.get(1), stops.get(1)),
             createFastTravelBetweenConsecutiveStopsNotice(
                 trip, stopTimes.get(1), stops.get(1), stopTimes.get(2), stops.get(2)),
+            createFastTravelBetweenFarStopsNotice(
+                trip,
+                stopTimes.get(0),
+                stops.get(0),
+                stopTimes.get(2),
+                stops.get(2),
+                S2Earth.getDistanceKm(stops.get(0).stopLatLon(), stops.get(1).stopLatLon())
+                    + S2Earth.getDistanceKm(stops.get(1).stopLatLon(), stops.get(2).stopLatLon())));
+  }
+
+  @Test
+  public void farStopsMissingTimeInBetween_yieldsNotice() {
+    // Two stops with ~10.5km between them, and another one roughly in the middle.
+    // Times are provided for the first and last stops but for the middle one.
+    List<GtfsStop> stops =
+        createStops(
+            ImmutableList.of(
+                S2LatLng.fromDegrees(47.457962, 8.555991),
+                S2LatLng.fromDegrees(47.414149, 8.540938),
+                S2LatLng.fromDegrees(47.365122, 8.524940)));
+    GtfsRoute route = createRoute(GtfsRouteType.BUS);
+    GtfsTrip trip = createTrip();
+    // 10.5km in 150 seconds = 180 kph = over our limit of 150 kph for buses.
+    List<GtfsStopTime> stopTimes =
+        createStopTimesSameDepartureArrival(
+            Arrays.asList( // ImmutableList does not support null items.
+                GtfsTime.fromString("08:00:00"),
+                null, // No time for the middle stop.
+                GtfsTime.fromString("08:02:30")));
+    assertThat(generateNotices(ImmutableList.of(route), ImmutableList.of(trip), stopTimes, stops))
+        .containsExactly(
             createFastTravelBetweenFarStopsNotice(
                 trip,
                 stopTimes.get(0),

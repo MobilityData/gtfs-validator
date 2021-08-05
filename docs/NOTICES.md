@@ -951,6 +951,21 @@
 | `stopName2`           | `stop_name` of the second stop.         | String 	|
 | `arrivalTime2`        | `arrival_time` of the second stop.      | Time 	|
 
+##### Speed thresholds
+
+| Route type | Description | Threshold, km/h |
+|------------|-------------|-----------------|
+| 0          | Light rail  | 100             |
+| 1          | Subway      | 150             |
+| 2          | Rail        | 500             |
+| 3          | Bus         | 150             |
+| 4          | Ferry       |  80             |
+| 5          | Cable tram  | 100             |
+| 6          | Aerial lift |  50             |
+| 7          | Funicular   |  50             |
+| 11         | Trolleybus  | 150             |
+| 12         | Monorail    | 150             |
+
 ##### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
@@ -977,6 +992,10 @@
 | `stopId2`             | `stop_id` of the second stop.           | String 	|
 | `stopName2`           | `stop_name` of the second stop.         | String 	|
 | `arrivalTime2`        | `arrival_time` of the second stop.      | Time 	|
+
+##### Speed thresholds
+
+Same as for [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsecutiveStopsNotice).
 
 ##### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
