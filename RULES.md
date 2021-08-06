@@ -578,6 +578,21 @@ A row in the input file has only spaces.
 
 A transit vehicle moves too fast between two consecutive stops. The speed threshold depends on route type.
 
+##### Speed thresholds
+
+| Route type | Description | Threshold, km/h |
+|------------|-------------|-----------------|
+| 0          | Light rail  | 100             |
+| 1          | Subway      | 150             |
+| 2          | Rail        | 500             |
+| 3          | Bus         | 150             |
+| 4          | Ferry       |  80             |
+| 5          | Cable tram  | 100             |
+| 6          | Aerial lift |  50             |
+| 7          | Funicular   |  50             |
+| 11         | Trolleybus  | 150             |
+| 12         | Monorail    | 150             |
+
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 
@@ -586,6 +601,10 @@ A transit vehicle moves too fast between two consecutive stops. The speed thresh
 A transit vehicle moves too fast between far consecutive stops (more than in 10 km apart). 
 This normally indicates a more serious problem than too fast travel between consecutive stops.
 The speed threshold depends on route type.
+
+##### Speed thresholds
+
+Same as for [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsecutiveStopsNotice).
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
