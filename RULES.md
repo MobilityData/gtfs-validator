@@ -118,6 +118,8 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)                           	| Duplicate  `routes.route_long_name`. Duplicate `routes.route_short_name`. Duplicate combination of fields `route_long_name`  and `routes.route_short_name`. 	|
 | [`EmptyColumnNameNotice`](#EmptyColumnNameNotice)                                 	| A column name is empty.                                                                                                                                     	|
 | [`EmptyRowNotice`](#EmptyRowNotice)                                               	| A row in the input file has only spaces.                                                                                                                      |
+| [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsecutiveStopsNotice) | A transit vehicle moves too fast between two consecutive stops.                                                                            	                |
+| [`FastTravelBetweenFarStopsNotice`](#FastTravelBetweenFarStopsNotice)                 | A transit vehicle moves too fast between two far stops.                                                                            	                        |
 | [`FeedExpirationDateNotice`](#FeedExpirationDateNotice)                           	| Dataset should be valid for at least the next 7 days. Dataset should cover at least the next 30 days of service.                                            	|
 | [`FeedInfoLangAndAgencyMismatchNotice`](#FeedInfoLangAndAgencyLangMismatchNotice) 	| Mismatching feed and agency language fields.                                                                                                                	|
 | [`InconsistentAgencyLangNotice`](#InconsistentAgencyLangNotice)                   	| Inconsistent language among agencies.                                                                                                                       	|
@@ -138,7 +140,6 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	| `arrival_time` or `departure_time` not specified for timepoint.                                                                                             	|
 | [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	| Stop too far from trip shape.                                                                                                                               	|
 | [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                              	| Stop without value for `stops.zone_id`.                                                                                                                     	|
-| [`TooFastTravelNotice`](#TooFastTravelNotice)                                     	| Fast travel between stops in `stop_times.txt`.                                                                                                              	|
 | [`UnexpectedEnumValueNotice`](#UnexpectedEnumValueNotice)                         	| An enum has an unexpected value.                                                                                                                            	|
 | [`UnusableTripNotice`](#UnusableTripNotice)                                       	| Trips must have more than one stop to be usable.                                                                                                            	|
 | [`UnusedShapeNotice`](#UnusedShapeNotice)                                         	| Shape is not used in GTFS file `trips.txt`.                                                                                                                 	|
@@ -571,6 +572,43 @@ A row in the input file has only spaces.
 ##### References:
 * [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
 
+<a name="FastTravelBetweenConsecutiveStopsNotice"/>
+
+#### FastTravelBetweenConsecutiveStopsNotice
+
+A transit vehicle moves too fast between two consecutive stops. The speed threshold depends on route type.
+
+##### Speed thresholds
+
+| Route type | Description | Threshold, km/h |
+|------------|-------------|-----------------|
+| 0          | Light rail  | 100             |
+| 1          | Subway      | 150             |
+| 2          | Rail        | 500             |
+| 3          | Bus         | 150             |
+| 4          | Ferry       |  80             |
+| 5          | Cable tram  | 100             |
+| 6          | Aerial lift |  50             |
+| 7          | Funicular   |  50             |
+| 11         | Trolleybus  | 150             |
+| 12         | Monorail    | 150             |
+
+##### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+
+#### FastTravelBetweenFarStopsNotice
+
+A transit vehicle moves too fast between far consecutive stops (more than in 10 km apart). 
+This normally indicates a more serious problem than too fast travel between consecutive stops.
+The speed threshold depends on route type.
+
+##### Speed thresholds
+
+Same as for [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsecutiveStopsNotice).
+
+##### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+
 <a name="FeedExpirationDateNotice"/>
 
 #### FeedExpirationDateNotice
@@ -763,15 +801,6 @@ Per GTFS specification, `stops.zone_id` should be provided if fare information i
 
 ##### References:
 * [GTFS stops.txt specification](https://gtfs.org/reference/static#stopstxt)
-
-<a name="TooFastTravelNotice"/>
-
-#### TooFastTravelNotice
-
-As implemented in the original [Google Python GTFS validator](https://github.com/google/transitfeed/wiki/FeedValidator), the calculated speed between stops should not be greater than 150 km/h (42 m/s SI or 93 mph). 
-
-##### References:
-* [Original Python validator implementation](https://github.com/google/transitfeed)
 
 <a name="UnexpectedEnumValueNotice"/>
 
