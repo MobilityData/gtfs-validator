@@ -73,10 +73,10 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class StationWithParentStationNotice extends ValidationNotice {
-    private long csvRowNumber;
-    private String stopId;
-    private String stopName;
-    private String parentStation;
+    private final long csvRowNumber;
+    private final String stopId;
+    private final String stopName;
+    private final String parentStation;
 
     StationWithParentStationNotice(
         long csvRowNumber, String stopId, String stopName, String parentStation) {
@@ -97,10 +97,10 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class LocationWithoutParentStationNotice extends ValidationNotice {
-    private long csvRowNumber;
-    private String stopId;
-    private String stopName;
-    private int locationType;
+    private final long csvRowNumber;
+    private final String stopId;
+    private final String stopName;
+    private final int locationType;
 
     LocationWithoutParentStationNotice(
         long csvRowNumber, String stopId, String stopName, int locationType) {
@@ -120,9 +120,9 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class PlatformWithoutParentStationNotice extends ValidationNotice {
-    private long csvRowNumber;
-    private String stopId;
-    private String stopName;
+    private final long csvRowNumber;
+    private final String stopId;
+    private final String stopName;
 
     PlatformWithoutParentStationNotice(long csvRowNumber, String stopId, String stopName) {
       super(SeverityLevel.WARNING);

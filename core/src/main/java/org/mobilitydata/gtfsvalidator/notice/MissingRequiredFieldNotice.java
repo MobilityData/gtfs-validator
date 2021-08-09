@@ -22,9 +22,9 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class MissingRequiredFieldNotice extends ValidationNotice {
-  private String filename;
-  private long csvRowNumber;
-  private String fieldName;
+  private final String filename;
+  private final long csvRowNumber;
+  private final String fieldName;
 
   public MissingRequiredFieldNotice(String filename, long csvRowNumber, String fieldName) {
     super(SeverityLevel.ERROR);

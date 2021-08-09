@@ -22,8 +22,8 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class MoreThanOneEntityNotice extends ValidationNotice {
-  private String filename;
-  private long entityCount;
+  private final String filename;
+  private final long entityCount;
 
   public MoreThanOneEntityNotice(String filename, long entityCount) {
     super(SeverityLevel.WARNING);

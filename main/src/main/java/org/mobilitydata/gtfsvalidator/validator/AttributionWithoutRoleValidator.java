@@ -53,8 +53,8 @@ public class AttributionWithoutRoleValidator extends SingleEntityValidator<GtfsA
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class AttributionWithoutRoleNotice extends ValidationNotice {
-    private long csvRowNumber;
-    private String attributionId;
+    private final long csvRowNumber;
+    private final String attributionId;
 
     AttributionWithoutRoleNotice(long csvRowNumber, String attributionId) {
       super(SeverityLevel.WARNING);

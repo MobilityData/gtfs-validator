@@ -12,8 +12,8 @@ import java.util.concurrent.ExecutionException;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class ThreadExecutionError extends SystemError {
-  private String exception;
-  private String message;
+  private final String exception;
+  private final String message;
 
   public ThreadExecutionError(ExecutionException exception) {
     this.exception = exception.getCause().getClass().getCanonicalName();

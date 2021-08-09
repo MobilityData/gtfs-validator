@@ -71,14 +71,14 @@ public class DuplicateRouteNameValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class DuplicateRouteNameNotice extends ValidationNotice {
-    private long csvRowNumber1;
-    private String routeId1;
-    private long csvRowNumber2;
-    private String routeId2;
-    private String routeShortName;
-    private String routeLongName;
-    private int routeTypeValue;
-    private String agencyId;
+    private final long csvRowNumber1;
+    private final String routeId1;
+    private final long csvRowNumber2;
+    private final String routeId2;
+    private final String routeShortName;
+    private final String routeLongName;
+    private final int routeTypeValue;
+    private final String agencyId;
 
     DuplicateRouteNameNotice(GtfsRoute route1, GtfsRoute route2) {
       super(SeverityLevel.WARNING);

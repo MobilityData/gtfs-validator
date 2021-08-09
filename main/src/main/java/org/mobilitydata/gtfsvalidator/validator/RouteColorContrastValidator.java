@@ -62,10 +62,10 @@ public class RouteColorContrastValidator extends SingleEntityValidator<GtfsRoute
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class RouteColorContrastNotice extends ValidationNotice {
-    private String routeId;
-    private long csvRowNumber;
-    private GtfsColor routeColor;
-    private GtfsColor routeTextColor;
+    private final String routeId;
+    private final long csvRowNumber;
+    private final GtfsColor routeColor;
+    private final GtfsColor routeTextColor;
 
     RouteColorContrastNotice(
         String routeId, long csvRowNumber, GtfsColor routeColor, GtfsColor routeTextColor) {

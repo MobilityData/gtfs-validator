@@ -105,9 +105,9 @@ public class AgencyConsistencyValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class InconsistentAgencyLangNotice extends ValidationNotice {
-    private long csvRowNumber;
-    private String expected;
-    private String actual;
+    private final long csvRowNumber;
+    private final String expected;
+    private final String actual;
 
     InconsistentAgencyLangNotice(long csvRowNumber, String expected, String actual) {
       super(SeverityLevel.WARNING);
@@ -123,9 +123,9 @@ public class AgencyConsistencyValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class InconsistentAgencyTimezoneNotice extends ValidationNotice {
-    private long csvRowNumber;
-    private String expected;
-    private String actual;
+    private final long csvRowNumber;
+    private final String expected;
+    private final String actual;
 
     InconsistentAgencyTimezoneNotice(long csvRowNumber, String expected, String actual) {
       super(SeverityLevel.ERROR);

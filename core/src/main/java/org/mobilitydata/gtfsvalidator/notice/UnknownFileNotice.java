@@ -22,7 +22,7 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>Severity: {@code SeverityLevel.INFO}
  */
 public class UnknownFileNotice extends ValidationNotice {
-  private String filename;
+  private final String filename;
 
   public UnknownFileNotice(String filename) {
     super(SeverityLevel.INFO);

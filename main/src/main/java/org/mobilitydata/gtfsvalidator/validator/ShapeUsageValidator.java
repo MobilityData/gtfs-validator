@@ -62,8 +62,8 @@ public class ShapeUsageValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class UnusedShapeNotice extends ValidationNotice {
-    private String shapeId;
-    private long csvRowNumber;
+    private final String shapeId;
+    private final long csvRowNumber;
 
     UnusedShapeNotice(String shapeId, long csvRowNumber) {
       super(SeverityLevel.WARNING);

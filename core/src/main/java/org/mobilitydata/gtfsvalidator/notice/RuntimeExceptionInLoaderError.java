@@ -10,9 +10,9 @@ import com.google.common.base.Strings;
  */
 public class RuntimeExceptionInLoaderError extends SystemError {
 
-  private String filename;
-  private String exception;
-  private String message;
+  private final String filename;
+  private final String exception;
+  private final String message;
 
   public RuntimeExceptionInLoaderError(String filename, RuntimeException exception) {
     this.filename = filename;

@@ -22,9 +22,9 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>Severity: {@code SeverityLevel.INFO}
  */
 public class UnknownColumnNotice extends ValidationNotice {
-  private String filename;
-  private String fieldName;
-  private int index;
+  private final String filename;
+  private final String fieldName;
+  private final int index;
 
   public UnknownColumnNotice(String filename, String fieldName, int index) {
     super(SeverityLevel.INFO);

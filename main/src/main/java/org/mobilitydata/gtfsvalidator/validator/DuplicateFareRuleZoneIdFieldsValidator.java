@@ -98,10 +98,10 @@ public class DuplicateFareRuleZoneIdFieldsValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class DuplicateFareRuleZoneIdFieldsNotice extends ValidationNotice {
-    private long csvRowNumber;
-    private String fareId;
-    private long previousCsvRowNumber;
-    private String previousFareId;
+    private final long csvRowNumber;
+    private final String fareId;
+    private final long previousCsvRowNumber;
+    private final String previousFareId;
 
     DuplicateFareRuleZoneIdFieldsNotice(
         long csvRowNumber, String fareId, long previousCsvRowNumber, String previousFareId) {

@@ -90,8 +90,8 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class RouteBothShortAndLongNameMissingNotice extends ValidationNotice {
-    private String routeId;
-    private long csvRowNumber;
+    private final String routeId;
+    private final long csvRowNumber;
 
     RouteBothShortAndLongNameMissingNotice(String routeId, long csvRowNumber) {
       super(SeverityLevel.ERROR);
@@ -106,10 +106,10 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class RouteShortAndLongNameEqualNotice extends ValidationNotice {
-    private String routeId;
-    private long csvRowNumber;
-    private String routeShortName;
-    private String routeLongName;
+    private final String routeId;
+    private final long csvRowNumber;
+    private final String routeShortName;
+    private final String routeLongName;
 
     RouteShortAndLongNameEqualNotice(
         String routeId, long csvRowNumber, String routeShortName, String routeLongName) {
@@ -128,9 +128,9 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class RouteShortNameTooLongNotice extends ValidationNotice {
-    private String routeId;
-    private long csvRowNumber;
-    private String routeShortName;
+    private final String routeId;
+    private final long csvRowNumber;
+    private final String routeShortName;
 
     RouteShortNameTooLongNotice(String routeId, long csvRowNumber, String routeShortName) {
       super(SeverityLevel.WARNING);
@@ -147,10 +147,10 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class SameNameAndDescriptionForRouteNotice extends ValidationNotice {
-    private long csvRowNumber;
-    private String routeId;
-    private String routeDesc;
-    private String specifiedField;
+    private final long csvRowNumber;
+    private final String routeId;
+    private final String routeDesc;
+    private final String specifiedField;
 
     SameNameAndDescriptionForRouteNotice(
         long csvRowNumber, String routeId, String routeDesc, String routeShortOrLongName) {

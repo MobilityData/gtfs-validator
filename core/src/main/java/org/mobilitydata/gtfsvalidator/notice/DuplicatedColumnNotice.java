@@ -22,10 +22,10 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class DuplicatedColumnNotice extends ValidationNotice {
-  private String filename;
-  private String fieldName; // Indices should start from 1.
-  private int firstIndex;
-  private int secondIndex;
+  private final String filename;
+  private final String fieldName; // Indices should start from 1.
+  private final int firstIndex;
+  private final int secondIndex;
 
   public DuplicatedColumnNotice(
       String filename, String fieldName, int firstIndex, int secondIndex) {

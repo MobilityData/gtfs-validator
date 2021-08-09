@@ -74,8 +74,8 @@ public class StopZoneIdValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING} - Will be upgraded to {@code SeverityLevel.ERROR}
    */
   static class StopWithoutZoneIdNotice extends ValidationNotice {
-    private String stopId;
-    private long csvRowNumber;
+    private final String stopId;
+    private final long csvRowNumber;
 
     StopWithoutZoneIdNotice(String stopId, long csvRowNumber) {
       super(SeverityLevel.WARNING);

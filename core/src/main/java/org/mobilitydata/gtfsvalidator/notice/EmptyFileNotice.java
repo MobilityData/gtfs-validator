@@ -23,7 +23,7 @@ package org.mobilitydata.gtfsvalidator.notice;
  */
 public class EmptyFileNotice extends ValidationNotice {
 
-  private String filename;
+  private final String filename;
 
   public EmptyFileNotice(String filename) {
     super(SeverityLevel.ERROR);

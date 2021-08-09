@@ -22,10 +22,10 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class UnexpectedEnumValueNotice extends ValidationNotice {
-  private String filename;
-  private long csvRowNumber;
-  private String fieldName;
-  private int fieldValue;
+  private final String filename;
+  private final long csvRowNumber;
+  private final String fieldName;
+  private final int fieldValue;
 
   public UnexpectedEnumValueNotice(
       String filename, long csvRowNumber, String fieldName, int fieldValue) {

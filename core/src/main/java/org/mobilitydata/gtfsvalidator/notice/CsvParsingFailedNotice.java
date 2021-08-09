@@ -27,12 +27,12 @@ import com.univocity.parsers.common.TextParsingException;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class CsvParsingFailedNotice extends ValidationNotice {
-  private String filename;
-  private long charIndex;
-  private long columnIndex;
-  private long lineIndex;
-  private String message;
-  private String parsedContent;
+  private final String filename;
+  private final long charIndex;
+  private final long columnIndex;
+  private final long lineIndex;
+  private final String message;
+  private final String parsedContent;
 
   /**
    * Constructor used while extracting notice information.

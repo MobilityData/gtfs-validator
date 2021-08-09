@@ -74,13 +74,13 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class DecreasingOrEqualShapeDistanceNotice extends ValidationNotice {
-    private String shapeId;
-    private long csvRowNumber;
-    private double shapeDistTraveled;
-    private int shapePtSequence;
-    private long prevCsvRowNumber;
-    private double prevShapeDistTraveled;
-    private int prevShapePtSequence;
+    private final String shapeId;
+    private final long csvRowNumber;
+    private final double shapeDistTraveled;
+    private final int shapePtSequence;
+    private final long prevCsvRowNumber;
+    private final double prevShapeDistTraveled;
+    private final int prevShapePtSequence;
 
     DecreasingOrEqualShapeDistanceNotice(
         String shapeId,

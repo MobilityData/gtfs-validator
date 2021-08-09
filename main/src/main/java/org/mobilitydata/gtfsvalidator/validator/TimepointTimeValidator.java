@@ -70,10 +70,10 @@ public class TimepointTimeValidator extends SingleEntityValidator<GtfsStopTime> 
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class StopTimeTimepointWithoutTimesNotice extends ValidationNotice {
-    private long csvRowNumber;
-    private String tripId;
-    private long stopSequence;
-    private String specifiedField;
+    private final long csvRowNumber;
+    private final String tripId;
+    private final long stopSequence;
+    private final String specifiedField;
 
     StopTimeTimepointWithoutTimesNotice(
         long csvRowNumber, String tripId, long stopSequence, String specifiedField) {

@@ -91,11 +91,11 @@ public class MatchingFeedAndAgencyLangValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class FeedInfoLangAndAgencyLangMismatchNotice extends ValidationNotice {
-    private long csvRowNumber;
-    private String agencyId;
-    private String agencyName;
-    private String agencyLang;
-    private String feedLang;
+    private final long csvRowNumber;
+    private final String agencyId;
+    private final String agencyName;
+    private final String agencyLang;
+    private final String feedLang;
 
     FeedInfoLangAndAgencyLangMismatchNotice(
         long csvRowNumber, String agencyId, String agencyName, String agencyLang, String feedLang) {

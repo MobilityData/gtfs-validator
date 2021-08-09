@@ -82,11 +82,11 @@ public class StopTimeStopLocationTypeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING} - To be upgraded to {@code SeverityLevel.ERROR}.
    */
   static class WrongStopTimeStopLocationTypeNotice extends ValidationNotice {
-    private long csvRowNumber;
-    private String tripId;
-    private int stopSequence;
-    private String stopId;
-    private String locationType;
+    private final long csvRowNumber;
+    private final String tripId;
+    private final int stopSequence;
+    private final String stopId;
+    private final String locationType;
 
     WrongStopTimeStopLocationTypeNotice(
         long csvRowNumber, String tripId, int stopSequence, String stopId, String locationType) {

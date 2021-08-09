@@ -24,13 +24,13 @@ import javax.annotation.Nullable;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class DuplicateKeyNotice extends ValidationNotice {
-  private String filename;
-  private long oldCsvRowNumber;
-  private long newCsvRowNumber;
-  private String fieldName1;
-  private Object fieldValue1;
-  @Nullable private String fieldName2;
-  @Nullable private Object fieldValue2;
+  private final String filename;
+  private final long oldCsvRowNumber;
+  private final long newCsvRowNumber;
+  private final String fieldName1;
+  private final Object fieldValue1;
+  @Nullable private final String fieldName2;
+  @Nullable private final Object fieldValue2;
 
   public DuplicateKeyNotice(
       String filename,

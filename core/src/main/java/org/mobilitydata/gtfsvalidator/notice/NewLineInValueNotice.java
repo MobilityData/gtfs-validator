@@ -34,10 +34,10 @@ package org.mobilitydata.gtfsvalidator.notice;
  */
 public class NewLineInValueNotice extends ValidationNotice {
 
-  private String filename;
-  private long csvRowNumber;
-  private String fieldName;
-  private String fieldValue;
+  private final String filename;
+  private final long csvRowNumber;
+  private final String fieldName;
+  private final String fieldValue;
 
   public NewLineInValueNotice(
       String filename, long csvRowNumber, String fieldName, String fieldValue) {

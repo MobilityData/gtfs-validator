@@ -100,10 +100,10 @@ public class MissingTripEdgeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class MissingTripEdgeNotice extends ValidationNotice {
-    private long csvRowNumber;
-    private int stopSequence;
-    private String tripId;
-    private String specifiedField;
+    private final long csvRowNumber;
+    private final int stopSequence;
+    private final String tripId;
+    private final String specifiedField;
 
     MissingTripEdgeNotice(
         long csvRowNumber, int stopSequence, String tripId, String specifiedField) {

@@ -25,8 +25,8 @@ import java.net.URISyntaxException;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class URISyntaxError extends SystemError {
-  private String exception;
-  private String message;
+  private final String exception;
+  private final String message;
 
   public URISyntaxError(URISyntaxException exception) {
     this.exception = exception.getClass().getCanonicalName();

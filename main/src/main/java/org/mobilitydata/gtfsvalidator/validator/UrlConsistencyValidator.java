@@ -191,11 +191,11 @@ public class UrlConsistencyValidator extends FileValidator {
    * <p>{@code SeverityLevel.WARNING}
    */
   static class SameStopAndRouteUrlNotice extends ValidationNotice {
-    private long csvRowNumber;
-    private String stopId;
-    private String stopUrl;
-    private String routeId;
-    private long routeCsvRowNumber;
+    private final long csvRowNumber;
+    private final String stopId;
+    private final String stopUrl;
+    private final String routeId;
+    private final long routeCsvRowNumber;
 
     SameStopAndRouteUrlNotice(
         long csvRowNumber, String stopId, String stopUrl, String routeId, long routeCsvRowNumber) {
@@ -215,11 +215,11 @@ public class UrlConsistencyValidator extends FileValidator {
    * <p>{@code SeverityLevel.WARNING}
    */
   static class SameRouteAndAgencyUrlNotice extends ValidationNotice {
-    private long csvRowNumber;
-    private String routeId;
-    private String agencyName;
-    private String routeUrl;
-    private long agencyCsvRowNumber;
+    private final long csvRowNumber;
+    private final String routeId;
+    private final String agencyName;
+    private final String routeUrl;
+    private final long agencyCsvRowNumber;
 
     SameRouteAndAgencyUrlNotice(
         long csvRowNumber,
@@ -242,11 +242,11 @@ public class UrlConsistencyValidator extends FileValidator {
    * <p>{@code SeverityLevel.WARNING}
    */
   static class SameStopAndAgencyUrlNotice extends ValidationNotice {
-    private long csvRowNumber;
-    private String stopId;
-    private String agencyName;
-    private String stopUrl;
-    private long agencyCsvRowNumber;
+    private final long csvRowNumber;
+    private final String stopId;
+    private final String agencyName;
+    private final String stopUrl;
+    private final long agencyCsvRowNumber;
 
     SameStopAndAgencyUrlNotice(
         long csvRowNumber,

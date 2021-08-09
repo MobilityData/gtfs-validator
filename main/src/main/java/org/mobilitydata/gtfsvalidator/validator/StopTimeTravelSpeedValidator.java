@@ -300,21 +300,21 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
 
   /** Describes a trip where the transit vehicle moves too fast between two consecutive stops. */
   static class FastTravelBetweenConsecutiveStopsNotice extends ValidationNotice {
-    private long tripCsvRowNumber;
-    private String tripId;
-    private String routeId;
-    private double speedKph;
-    private double distanceKm;
-    private long csvRowNumber1;
-    private int stopSequence1;
-    private String stopId1;
-    private String stopName1;
-    private GtfsTime departureTime1;
-    private long csvRowNumber2;
-    private int stopSequence2;
-    private String stopId2;
-    private String stopName2;
-    private GtfsTime arrivalTime2;
+    private final long tripCsvRowNumber;
+    private final String tripId;
+    private final String routeId;
+    private final double speedKph;
+    private final double distanceKm;
+    private final long csvRowNumber1;
+    private final int stopSequence1;
+    private final String stopId1;
+    private final String stopName1;
+    private final GtfsTime departureTime1;
+    private final long csvRowNumber2;
+    private final int stopSequence2;
+    private final String stopId2;
+    private final String stopName2;
+    private final GtfsTime arrivalTime2;
 
     FastTravelBetweenConsecutiveStopsNotice(
         GtfsTrip trip,
@@ -350,21 +350,21 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
    * stops.
    */
   static class FastTravelBetweenFarStopsNotice extends ValidationNotice {
-    private long tripCsvRowNumber;
-    private String tripId;
-    private String routeId;
-    private double speedKph;
-    private double distanceKm;
-    private long csvRowNumber1;
-    private int stopSequence1;
-    private String stopId1;
-    private String stopName1;
-    private GtfsTime departureTime1;
-    private long csvRowNumber2;
-    private int stopSequence2;
-    private String stopId2;
-    private String stopName2;
-    private GtfsTime arrivalTime2;
+    private final long tripCsvRowNumber;
+    private final String tripId;
+    private final String routeId;
+    private final double speedKph;
+    private final double distanceKm;
+    private final long csvRowNumber1;
+    private final int stopSequence1;
+    private final String stopId1;
+    private final String stopName1;
+    private final GtfsTime departureTime1;
+    private final long csvRowNumber2;
+    private final int stopSequence2;
+    private final String stopId2;
+    private final String stopName2;
+    private final GtfsTime arrivalTime2;
 
     FastTravelBetweenFarStopsNotice(
         GtfsTrip trip,

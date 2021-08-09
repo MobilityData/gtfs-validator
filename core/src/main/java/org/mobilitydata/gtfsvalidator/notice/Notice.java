@@ -45,7 +45,7 @@ public abstract class Notice {
 
   private static final String NOTICE_SUFFIX = "_notice";
 
-  private SeverityLevel severityLevel;
+  private final SeverityLevel severityLevel;
 
   public Notice(SeverityLevel severityLevel) {
     this.severityLevel = severityLevel;

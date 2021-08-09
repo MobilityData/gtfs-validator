@@ -93,11 +93,11 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class StopTimeWithArrivalBeforePreviousDepartureTimeNotice extends ValidationNotice {
-    private long csvRowNumber;
-    private long prevCsvRowNumber;
-    private String tripId;
-    private GtfsTime arrivalTime;
-    private GtfsTime departureTime;
+    private final long csvRowNumber;
+    private final long prevCsvRowNumber;
+    private final String tripId;
+    private final GtfsTime arrivalTime;
+    private final GtfsTime departureTime;
 
     StopTimeWithArrivalBeforePreviousDepartureTimeNotice(
         long csvRowNumber,
@@ -120,10 +120,10 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class StopTimeWithOnlyArrivalOrDepartureTimeNotice extends ValidationNotice {
-    private long csvRowNumber;
-    private String tripId;
-    private int stopSequence;
-    private String specifiedField;
+    private final long csvRowNumber;
+    private final String tripId;
+    private final int stopSequence;
+    private final String specifiedField;
 
     StopTimeWithOnlyArrivalOrDepartureTimeNotice(
         long csvRowNumber, String tripId, int stopSequence, String specifiedField) {

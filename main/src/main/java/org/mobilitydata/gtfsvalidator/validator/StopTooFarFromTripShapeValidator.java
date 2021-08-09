@@ -209,11 +209,11 @@ public class StopTooFarFromTripShapeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class StopTooFarFromTripShapeNotice extends ValidationNotice {
-    private String stopId;
-    private int stopSequence;
-    private String tripId;
-    private String shapeId;
-    private double stopShapeThresholdMeters;
+    private final String stopId;
+    private final int stopSequence;
+    private final String tripId;
+    private final String shapeId;
+    private final double stopShapeThresholdMeters;
 
     StopTooFarFromTripShapeNotice(
         String stopId,

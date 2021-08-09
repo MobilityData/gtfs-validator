@@ -26,12 +26,12 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class ForeignKeyViolationNotice extends ValidationNotice {
-  private String childFilename;
-  private String childFieldName;
-  private String parentFilename;
-  private String parentFieldName;
-  private String fieldValue;
-  private long csvRowNumber;
+  private final String childFilename;
+  private final String childFieldName;
+  private final String parentFilename;
+  private final String parentFieldName;
+  private final String fieldValue;
+  private final long csvRowNumber;
 
   public ForeignKeyViolationNotice(
       String childFilename,

@@ -25,8 +25,8 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class EmptyRowNotice extends ValidationNotice {
-  private String filename;
-  private long csvRowNumber;
+  private final String filename;
+  private final long csvRowNumber;
 
   public EmptyRowNotice(String filename, long csvRowNumber) {
     super(SeverityLevel.WARNING);

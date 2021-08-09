@@ -22,7 +22,7 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class MissingRequiredFileNotice extends ValidationNotice {
-  private String filename;
+  private final String filename;
 
   public MissingRequiredFileNotice(String filename) {
     super(SeverityLevel.ERROR);

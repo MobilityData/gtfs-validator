@@ -22,10 +22,10 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class InvalidRowLengthNotice extends ValidationNotice {
-  private String filename;
-  private long csvRowNumber;
-  private int rowLength;
-  private int headerCount;
+  private final String filename;
+  private final long csvRowNumber;
+  private final int rowLength;
+  private final int headerCount;
 
   public InvalidRowLengthNotice(
       String filename, long csvRowNumber, int rowLength, int headerCount) {

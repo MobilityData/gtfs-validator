@@ -22,11 +22,11 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class NumberOutOfRangeNotice extends ValidationNotice {
-  private String filename;
-  private long csvRowNumber;
-  private String fieldName;
-  private String fieldType;
-  private Object fieldValue;
+  private final String filename;
+  private final long csvRowNumber;
+  private final String fieldName;
+  private final String fieldType;
+  private final Object fieldValue;
 
   public NumberOutOfRangeNotice(
       String filename, long csvRowNumber, String fieldName, String fieldType, Object fieldValue) {

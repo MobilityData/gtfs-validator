@@ -22,8 +22,8 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class EmptyColumnNameNotice extends ValidationNotice {
-  private String filename;
-  private int index;
+  private final String filename;
+  private final int index;
 
   public EmptyColumnNameNotice(String filename, int index) {
     super(SeverityLevel.WARNING);

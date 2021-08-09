@@ -74,10 +74,10 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
   }
 
   static class FeedExpirationDateNotice extends ValidationNotice {
-    private long csvRowNumber;
-    private GtfsDate currentDate;
-    private GtfsDate feedEndDate;
-    private GtfsDate suggestedExpirationDate;
+    private final long csvRowNumber;
+    private final GtfsDate currentDate;
+    private final GtfsDate feedEndDate;
+    private final GtfsDate suggestedExpirationDate;
 
     FeedExpirationDateNotice(
         long csvRowNumber,

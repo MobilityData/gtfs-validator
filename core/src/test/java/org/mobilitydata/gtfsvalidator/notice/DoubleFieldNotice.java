@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 class DoubleFieldNotice extends ValidationNotice {
 
-  private double doubleField;
+  private final double doubleField;
 
   public DoubleFieldNotice(double doubleField, SeverityLevel severityLevel) {
     super(severityLevel);

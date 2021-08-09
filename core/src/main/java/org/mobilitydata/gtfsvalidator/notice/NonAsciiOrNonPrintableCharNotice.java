@@ -25,10 +25,10 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
-  private String filename;
-  private long csvRowNumber;
-  private String columnName;
-  private String fieldValue;
+  private final String filename;
+  private final long csvRowNumber;
+  private final String columnName;
+  private final String fieldValue;
 
   public NonAsciiOrNonPrintableCharNotice(
       String filename, long csvRowNumber, String columnName, String fieldValue) {

@@ -27,13 +27,13 @@ import javax.annotation.Nullable;
  */
 public class StartAndEndRangeOutOfOrderNotice extends ValidationNotice {
 
-  private String filename;
-  private long csvRowNumber;
-  @Nullable private String entityId;
-  private String startFieldName;
-  private String startValue;
-  private String endFieldName;
-  private String endValue;
+  private final String filename;
+  private final long csvRowNumber;
+  @Nullable private final String entityId;
+  private final String startFieldName;
+  private final String startValue;
+  private final String endFieldName;
+  private final String endValue;
 
   public StartAndEndRangeOutOfOrderNotice(
       String filename,

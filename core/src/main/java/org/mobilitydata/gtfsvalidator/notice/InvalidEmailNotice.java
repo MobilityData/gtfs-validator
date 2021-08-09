@@ -26,10 +26,10 @@ package org.mobilitydata.gtfsvalidator.notice;
  * reference</a> does not provide any special requirements or standards.
  */
 public class InvalidEmailNotice extends ValidationNotice {
-  private String filename;
-  private long csvRowNumber;
-  private String fieldName;
-  private String fieldValue;
+  private final String filename;
+  private final long csvRowNumber;
+  private final String fieldName;
+  private final String fieldValue;
 
   /**
    * Constructs a notice with given severity. This constructor may be used by users that want to

@@ -24,13 +24,13 @@ import javax.annotation.Nullable;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class PointNearPoleNotice extends ValidationNotice {
-  private String filename;
-  private long csvRowNumber;
-  @Nullable private String entityId;
-  private String latFieldName;
-  private double latFieldValue;
-  private String lonFieldName;
-  private double lonFieldValue;
+  private final String filename;
+  private final long csvRowNumber;
+  @Nullable private final String entityId;
+  private final String latFieldName;
+  private final double latFieldValue;
+  private final String lonFieldName;
+  private final double lonFieldValue;
 
   public PointNearPoleNotice(
       String filename,

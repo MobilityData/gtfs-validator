@@ -9,9 +9,9 @@ import com.google.common.base.Strings;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class RuntimeExceptionInValidatorError extends SystemError {
-  private String validator;
-  private String exception;
-  private String message;
+  private final String validator;
+  private final String exception;
+  private final String message;
 
   public RuntimeExceptionInValidatorError(String validatorClassName, RuntimeException exception) {
     this.validator = validatorClassName;

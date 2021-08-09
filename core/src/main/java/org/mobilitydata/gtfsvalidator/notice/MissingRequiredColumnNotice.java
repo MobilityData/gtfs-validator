@@ -22,8 +22,8 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class MissingRequiredColumnNotice extends ValidationNotice {
-  private String filename;
-  private String fieldName;
+  private final String filename;
+  private final String fieldName;
 
   public MissingRequiredColumnNotice(String filename, String fieldName) {
     super(SeverityLevel.ERROR);

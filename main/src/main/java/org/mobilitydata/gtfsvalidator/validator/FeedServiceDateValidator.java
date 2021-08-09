@@ -49,8 +49,8 @@ public class FeedServiceDateValidator extends SingleEntityValidator<GtfsFeedInfo
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class MissingFeedInfoDateNotice extends ValidationNotice {
-    private long csvRowNumber;
-    private String fieldName;
+    private final long csvRowNumber;
+    private final String fieldName;
 
     MissingFeedInfoDateNotice(long csvRowNumber, String fieldName) {
       super(SeverityLevel.WARNING);

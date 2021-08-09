@@ -25,8 +25,8 @@ import java.io.IOException;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class IOError extends SystemError {
-  private String exception;
-  private String message;
+  private final String exception;
+  private final String message;
 
   public IOError(IOException exception) {
     this.exception = exception.getClass().getCanonicalName();

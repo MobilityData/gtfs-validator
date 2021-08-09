@@ -76,13 +76,13 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class DecreasingOrEqualStopTimeDistanceNotice extends ValidationNotice {
-    private String tripId;
-    private long csvRowNumber;
-    private double shapeDistTraveled;
-    private int stopSequence;
-    private long prevCsvRowNumber;
-    private double prevStopTimeDistTraveled;
-    private int prevStopSequence;
+    private final String tripId;
+    private final long csvRowNumber;
+    private final double shapeDistTraveled;
+    private final int stopSequence;
+    private final long prevCsvRowNumber;
+    private final double prevStopTimeDistTraveled;
+    private final int prevStopSequence;
 
     DecreasingOrEqualStopTimeDistanceNotice(
         String tripId,

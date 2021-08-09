@@ -69,11 +69,11 @@ public class OverlappingFrequencyValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class OverlappingFrequencyNotice extends ValidationNotice {
-    private long prevCsvRowNumber;
-    private GtfsTime prevEndTime;
-    private long currCsvRowNumber;
-    private GtfsTime currStartTime;
-    private String tripId;
+    private final long prevCsvRowNumber;
+    private final GtfsTime prevEndTime;
+    private final long currCsvRowNumber;
+    private final GtfsTime currStartTime;
+    private final String tripId;
 
     OverlappingFrequencyNotice(
         long prevCsvRowNumber,
