@@ -16,12 +16,10 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimaps;
 import java.util.List;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -78,7 +76,14 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class DecreasingOrEqualStopTimeDistanceNotice extends ValidationNotice {
-    @SchemaExport
+    private final String tripId;
+    private final long csvRowNumber;
+    private final double shapeDistTraveled;
+    private final int stopSequence;
+    private final long prevCsvRowNumber;
+    private final double prevStopTimeDistTraveled;
+    private final int prevStopSequence;
+
     DecreasingOrEqualStopTimeDistanceNotice(
         String tripId,
         long csvRowNumber,
@@ -87,17 +92,14 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
         long prevCsvRowNumber,
         double prevStopTimeDistTraveled,
         int prevStopSequence) {
-      super(
-          new ImmutableMap.Builder<String, Object>()
-              .put("tripId", tripId)
-              .put("csvRowNumber", csvRowNumber)
-              .put("shapeDistTraveled", shapeDistTraveled)
-              .put("stopSequence", stopSequence)
-              .put("prevCsvRowNumber", prevCsvRowNumber)
-              .put("prevStopTimeDistTraveled", prevStopTimeDistTraveled)
-              .put("prevStopSequence", prevStopSequence)
-              .build(),
-          SeverityLevel.ERROR);
+      super(SeverityLevel.ERROR);
+      this.tripId = tripId;
+      this.csvRowNumber = csvRowNumber;
+      this.shapeDistTraveled = shapeDistTraveled;
+      this.stopSequence = stopSequence;
+      this.prevCsvRowNumber = prevCsvRowNumber;
+      this.prevStopTimeDistTraveled = prevStopTimeDistTraveled;
+      this.prevStopSequence = prevStopSequence;
     }
   }
 }

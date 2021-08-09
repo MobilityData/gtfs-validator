@@ -17,25 +17,42 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.base.CaseFormat;
-import com.google.common.base.Joiner;
-import java.util.Collections;
-import java.util.Map;
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import java.lang.reflect.Type;
 import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
+import org.mobilitydata.gtfsvalidator.type.GtfsColor;
+import org.mobilitydata.gtfsvalidator.type.GtfsDate;
+import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 /** Base class for all notices produced by GTFS validator. */
 public abstract class Notice {
-  private static final String NOTICE_SUFFIX = "_notice";
-  private Map<String, Object> context;
-  private SeverityLevel severityLevel;
+  public static final Gson GSON =
+      new GsonBuilder()
+          .setExclusionStrategies(new NoticeExclusionStrategy())
+          .registerTypeAdapter(GtfsColor.class, new GtfsColorSerializer())
+          .registerTypeAdapter(GtfsDate.class, new GtfsDateSerializer())
+          .registerTypeAdapter(GtfsTime.class, new GtfsTimeSerializer())
+          .serializeSpecialFloatingPointValues()
+          .create();
 
-  public Notice(Map<String, Object> context, SeverityLevel severityLevel) {
-    this.context = context;
+  private static final String NOTICE_SUFFIX = "_notice";
+
+  private final SeverityLevel severityLevel;
+
+  public Notice(SeverityLevel severityLevel) {
     this.severityLevel = severityLevel;
   }
 
-  public Map<String, Object> getContext() {
-    return Collections.unmodifiableMap(context);
+  public JsonElement getContext() {
+    return GSON.toJsonTree(this);
   }
 
   public SeverityLevel getSeverityLevel() {
@@ -45,10 +62,9 @@ public abstract class Notice {
   /**
    * Returns a descriptive type-specific name for this notice based on the class simple name.
    *
-   * @return notice code, e.g., "foreign_key_error".
+   * @return notice code, e.g., "foreign_key_violation".
    */
   public String getCode() {
-
     return StringUtils.removeEnd(
         CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, getClass().getSimpleName()),
         NOTICE_SUFFIX);
@@ -61,20 +77,16 @@ public abstract class Notice {
     }
     if (other instanceof Notice) {
       Notice otherNotice = (Notice) other;
-      return context.equals(otherNotice.context)
-          && getClass().equals(otherNotice.getClass())
-          && severityLevel.equals(otherNotice.severityLevel);
+      return getClass().equals(otherNotice.getClass())
+          && severityLevel.equals(otherNotice.severityLevel)
+          && getContext().equals(otherNotice.getContext());
     }
     return false;
   }
 
   @Override
   public String toString() {
-    return getCode()
-        + " "
-        + Joiner.on(",").withKeyValueSeparator("=").join(context)
-        + " "
-        + getSeverityLevel().toString();
+    return String.format("%s %s %s", getCode(), getSeverityLevel(), getContext());
   }
 
   @Override
@@ -92,5 +104,37 @@ public abstract class Notice {
    */
   public boolean isError() {
     return getSeverityLevel().ordinal() >= SeverityLevel.ERROR.ordinal();
+  }
+
+  /** JSON exclusion strategy for notice context. It skips {@link Notice#severityLevel}. */
+  private static class NoticeExclusionStrategy implements ExclusionStrategy {
+    public boolean shouldSkipClass(Class<?> clazz) {
+      return false;
+    }
+
+    public boolean shouldSkipField(FieldAttributes f) {
+      return f.getName().equals("severityLevel");
+    }
+  }
+
+  private static class GtfsColorSerializer implements JsonSerializer<GtfsColor> {
+    @Override
+    public JsonElement serialize(GtfsColor src, Type typeOfSrc, JsonSerializationContext context) {
+      return new JsonPrimitive(src.toHtmlColor());
+    }
+  }
+
+  private static class GtfsDateSerializer implements JsonSerializer<GtfsDate> {
+    @Override
+    public JsonElement serialize(GtfsDate src, Type typeOfSrc, JsonSerializationContext context) {
+      return new JsonPrimitive(src.toYYYYMMDD());
+    }
+  }
+
+  private static class GtfsTimeSerializer implements JsonSerializer<GtfsTime> {
+    @Override
+    public JsonElement serialize(GtfsTime src, Type typeOfSrc, JsonSerializationContext context) {
+      return new JsonPrimitive(src.toHHMMSS());
+    }
   }
 }
