@@ -2,7 +2,7 @@ name: End to end 100
 
 on:
   push:
-    branches: [ master, extent-end-to-end ] #<-- replace extend-end-to-end by the name of the agency/publisher
+    branches: [ master, extend-end-to-end ] #<-- replace extend-end-to-end by the name of the agency/publisher
 
 jobs:
   run-on-data:
