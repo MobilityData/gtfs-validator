@@ -298,7 +298,7 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
         return 30;
       case AERIAL_LIFT:
       case FUNICULAR:
-        // Fast aerial tramways operate at 43 km/h.
+        // Fast aerial tramways operate at 43 km/h. Add some safety gap.
         return 50;
       default:
         // High speed threshold for unknown/unsupported vehicle types.
