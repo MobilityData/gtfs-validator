@@ -16,29 +16,23 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
-
 /**
  * A field cannot be parsed as an integer.
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class InvalidIntegerNotice extends ValidationNotice {
+  private String filename;
+  private long csvRowNumber;
+  private String fieldName;
+  private String fieldValue;
 
-  @SchemaExport
   public InvalidIntegerNotice(
       String filename, long csvRowNumber, String fieldName, String fieldValue) {
-    super(
-        ImmutableMap.of(
-            "filename",
-            filename,
-            "csvRowNumber",
-            csvRowNumber,
-            "fieldName",
-            fieldName,
-            "fieldValue",
-            fieldValue),
-        SeverityLevel.ERROR);
+    super(SeverityLevel.ERROR);
+    this.filename = filename;
+    this.csvRowNumber = csvRowNumber;
+    this.fieldName = fieldName;
+    this.fieldValue = fieldValue;
   }
 }

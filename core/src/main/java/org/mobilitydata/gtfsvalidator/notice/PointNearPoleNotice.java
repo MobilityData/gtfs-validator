@@ -16,8 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
+import javax.annotation.Nullable;
 
 /**
  * A point is too close to the North or South Pole.
@@ -25,8 +24,14 @@ import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class PointNearPoleNotice extends ValidationNotice {
+  private String filename;
+  private long csvRowNumber;
+  @Nullable private String entityId;
+  private String latFieldName;
+  private double latFieldValue;
+  private String lonFieldName;
+  private double lonFieldValue;
 
-  @SchemaExport
   public PointNearPoleNotice(
       String filename,
       long csvRowNumber,
@@ -35,17 +40,14 @@ public class PointNearPoleNotice extends ValidationNotice {
       double latFieldValue,
       String lonFieldName,
       double lonFieldValue) {
-    super(
-        new ImmutableMap.Builder<String, Object>()
-            .put("filename", filename)
-            .put("csvRowNumber", csvRowNumber)
-            .put("entityId", entityId)
-            .put("latFieldName", latFieldName)
-            .put("latFieldValue", latFieldValue)
-            .put("lonFieldName", lonFieldName)
-            .put("lonFieldValue", lonFieldValue)
-            .build(),
-        SeverityLevel.ERROR);
+    super(SeverityLevel.ERROR);
+    this.filename = filename;
+    this.csvRowNumber = csvRowNumber;
+    this.entityId = entityId;
+    this.latFieldName = latFieldName;
+    this.latFieldValue = latFieldValue;
+    this.lonFieldName = lonFieldName;
+    this.lonFieldValue = lonFieldValue;
   }
 
   public PointNearPoleNotice(
@@ -55,15 +57,13 @@ public class PointNearPoleNotice extends ValidationNotice {
       double latFieldValue,
       String lonFieldName,
       double lonFieldValue) {
-    super(
-        new ImmutableMap.Builder<String, Object>()
-            .put("filename", filename)
-            .put("csvRowNumber", csvRowNumber)
-            .put("latFieldName", latFieldName)
-            .put("latFieldValue", latFieldValue)
-            .put("lonFieldName", lonFieldName)
-            .put("lonFieldValue", lonFieldValue)
-            .build(),
-        SeverityLevel.ERROR);
+    super(SeverityLevel.ERROR);
+    this.filename = filename;
+    this.csvRowNumber = csvRowNumber;
+    this.entityId = null;
+    this.latFieldName = latFieldName;
+    this.latFieldValue = latFieldValue;
+    this.lonFieldName = lonFieldName;
+    this.lonFieldValue = lonFieldValue;
   }
 }

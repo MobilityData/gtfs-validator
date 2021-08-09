@@ -16,9 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
-
 /**
  * A field contains a malformed URL.
  *
@@ -37,29 +34,26 @@ import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
  * be still openable in modern browsers.
  */
 public class InvalidUrlNotice extends ValidationNotice {
+  private String filename;
+  private long csvRowNumber;
+  private String fieldName;
+  private String fieldValue;
 
   /**
    * Constructs a notice with given severity. This constructor may be used by users that want to
    * lower the priority to {@code WARNING}.
    */
-  @SchemaExport
   public InvalidUrlNotice(
       String filename,
       long csvRowNumber,
       String fieldName,
       String fieldValue,
       SeverityLevel severityLevel) {
-    super(
-        ImmutableMap.of(
-            "filename",
-            filename,
-            "csvRowNumber",
-            csvRowNumber,
-            "fieldName",
-            fieldName,
-            "fieldValue",
-            fieldValue),
-        severityLevel);
+    super(severityLevel);
+    this.filename = filename;
+    this.csvRowNumber = csvRowNumber;
+    this.fieldName = fieldName;
+    this.fieldValue = fieldValue;
   }
 
   /** Constructs a notice with the default severity {@code ERROR}. */

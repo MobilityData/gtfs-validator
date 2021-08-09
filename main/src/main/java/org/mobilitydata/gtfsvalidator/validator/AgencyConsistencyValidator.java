@@ -16,12 +16,10 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import com.google.common.collect.ImmutableMap;
 import java.time.ZoneId;
 import java.util.Locale;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
@@ -107,14 +105,15 @@ public class AgencyConsistencyValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class InconsistentAgencyLangNotice extends ValidationNotice {
-    @SchemaExport
+    private long csvRowNumber;
+    private String expected;
+    private String actual;
+
     InconsistentAgencyLangNotice(long csvRowNumber, String expected, String actual) {
-      super(
-          ImmutableMap.of(
-              "csvRowNumber", csvRowNumber,
-              "expected", expected,
-              "actual", actual),
-          SeverityLevel.WARNING);
+      super(SeverityLevel.WARNING);
+      this.csvRowNumber = csvRowNumber;
+      this.expected = expected;
+      this.actual = actual;
     }
   }
 
@@ -124,14 +123,15 @@ public class AgencyConsistencyValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class InconsistentAgencyTimezoneNotice extends ValidationNotice {
-    @SchemaExport
+    private long csvRowNumber;
+    private String expected;
+    private String actual;
+
     InconsistentAgencyTimezoneNotice(long csvRowNumber, String expected, String actual) {
-      super(
-          ImmutableMap.of(
-              "csvRowNumber", csvRowNumber,
-              "expected", expected,
-              "actual", actual),
-          SeverityLevel.ERROR);
+      super(SeverityLevel.ERROR);
+      this.csvRowNumber = csvRowNumber;
+      this.expected = expected;
+      this.actual = actual;
     }
   }
 }

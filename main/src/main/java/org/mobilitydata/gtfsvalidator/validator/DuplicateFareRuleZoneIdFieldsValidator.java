@@ -16,14 +16,12 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -100,17 +98,18 @@ public class DuplicateFareRuleZoneIdFieldsValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class DuplicateFareRuleZoneIdFieldsNotice extends ValidationNotice {
+    private long csvRowNumber;
+    private String fareId;
+    private long previousCsvRowNumber;
+    private String previousFareId;
 
-    @SchemaExport
     DuplicateFareRuleZoneIdFieldsNotice(
         long csvRowNumber, String fareId, long previousCsvRowNumber, String previousFareId) {
-      super(
-          ImmutableMap.of(
-              "csvRowNumber", csvRowNumber,
-              "fareId", fareId,
-              "previousCsvRowNumber", previousCsvRowNumber,
-              "previousFareId", previousFareId),
-          SeverityLevel.ERROR);
+      super(SeverityLevel.ERROR);
+      this.csvRowNumber = csvRowNumber;
+      this.fareId = fareId;
+      this.previousCsvRowNumber = previousCsvRowNumber;
+      this.previousFareId = previousFareId;
     }
   }
 }

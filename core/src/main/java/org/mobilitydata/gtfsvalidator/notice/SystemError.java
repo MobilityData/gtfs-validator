@@ -16,8 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import java.util.Map;
-
 /**
  * SystemError is the base class for all notices related to retrieving and processing a GTFS feed.
  * The system errors are not related to the content of the feed itself.
@@ -32,8 +30,9 @@ import java.util.Map;
  * because that may leak internal information. Only validation notices should be shared.
  */
 public abstract class SystemError extends Notice {
-  public SystemError(Map<String, Object> context) {
+
+  public SystemError() {
     // by default SystemError.severity is set to SeverityLevel.ERROR
-    super(context, SeverityLevel.ERROR);
+    super(SeverityLevel.ERROR);
   }
 }

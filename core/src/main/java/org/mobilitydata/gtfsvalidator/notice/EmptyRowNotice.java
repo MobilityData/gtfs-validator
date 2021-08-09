@@ -16,9 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
-
 /**
  * A row in the input file has only spaces.
  *
@@ -28,13 +25,12 @@ import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class EmptyRowNotice extends ValidationNotice {
+  private String filename;
+  private long csvRowNumber;
 
-  @SchemaExport
   public EmptyRowNotice(String filename, long csvRowNumber) {
-    super(
-        ImmutableMap.of(
-            "filename", filename,
-            "csvRowNumber", csvRowNumber),
-        SeverityLevel.WARNING);
+    super(SeverityLevel.WARNING);
+    this.filename = filename;
+    this.csvRowNumber = csvRowNumber;
   }
 }

@@ -16,9 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -55,12 +53,13 @@ public class AttributionWithoutRoleValidator extends SingleEntityValidator<GtfsA
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class AttributionWithoutRoleNotice extends ValidationNotice {
+    private long csvRowNumber;
+    private String attributionId;
 
-    @SchemaExport
     AttributionWithoutRoleNotice(long csvRowNumber, String attributionId) {
-      super(
-          ImmutableMap.of("csvRowNumber", csvRowNumber, "attributionId", attributionId),
-          SeverityLevel.WARNING);
+      super(SeverityLevel.WARNING);
+      this.csvRowNumber = csvRowNumber;
+      this.attributionId = attributionId;
     }
   }
 }

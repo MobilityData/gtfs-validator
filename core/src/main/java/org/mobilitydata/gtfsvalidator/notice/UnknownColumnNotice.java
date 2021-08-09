@@ -16,22 +16,20 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
-
 /**
  * A column name is unknown.
  *
  * <p>Severity: {@code SeverityLevel.INFO}
  */
 public class UnknownColumnNotice extends ValidationNotice {
-  @SchemaExport
+  private String filename;
+  private String fieldName;
+  private int index;
+
   public UnknownColumnNotice(String filename, String fieldName, int index) {
-    super(
-        ImmutableMap.of(
-            "filename", filename,
-            "fieldName", fieldName,
-            "index", index),
-        SeverityLevel.INFO);
+    super(SeverityLevel.INFO);
+    this.filename = filename;
+    this.fieldName = fieldName;
+    this.index = index;
   }
 }

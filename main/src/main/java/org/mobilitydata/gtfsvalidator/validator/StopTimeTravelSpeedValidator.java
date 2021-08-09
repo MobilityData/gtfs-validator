@@ -18,7 +18,6 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
 import com.google.common.geometry.S2LatLng;
@@ -40,6 +39,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
+import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 import org.mobilitydata.gtfsvalidator.util.S2Earth;
 
 /**
@@ -300,6 +300,22 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
 
   /** Describes a trip where the transit vehicle moves too fast between two consecutive stops. */
   static class FastTravelBetweenConsecutiveStopsNotice extends ValidationNotice {
+    private long tripCsvRowNumber;
+    private String tripId;
+    private String routeId;
+    private double speedKph;
+    private double distanceKm;
+    private long csvRowNumber1;
+    private int stopSequence1;
+    private String stopId1;
+    private String stopName1;
+    private GtfsTime departureTime1;
+    private long csvRowNumber2;
+    private int stopSequence2;
+    private String stopId2;
+    private String stopName2;
+    private GtfsTime arrivalTime2;
+
     FastTravelBetweenConsecutiveStopsNotice(
         GtfsTrip trip,
         GtfsStopTime stopTime1,
@@ -308,25 +324,22 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
         GtfsStop stop2,
         double speedKph,
         double distanceKm) {
-      super(
-          new ImmutableMap.Builder<String, Object>()
-              .put("tripCsvRowNumber", trip.csvRowNumber())
-              .put("tripId", trip.tripId())
-              .put("routeId", trip.routeId())
-              .put("speedKph", speedKph)
-              .put("distanceKm", distanceKm)
-              .put("csvRowNumber1", stopTime1.csvRowNumber())
-              .put("stopSequence1", stopTime1.stopSequence())
-              .put("stopId1", stopTime1.stopId())
-              .put("stopName1", stop1.stopName())
-              .put("departureTime1", stopTime1.departureTime().toHHMMSS())
-              .put("csvRowNumber2", stopTime2.csvRowNumber())
-              .put("stopSequence2", stopTime2.stopSequence())
-              .put("stopId2", stopTime2.stopId())
-              .put("stopName2", stop2.stopName())
-              .put("arrivalTime2", stopTime2.arrivalTime().toHHMMSS())
-              .build(),
-          SeverityLevel.WARNING);
+      super(SeverityLevel.WARNING);
+      this.tripCsvRowNumber = trip.csvRowNumber();
+      this.tripId = trip.tripId();
+      this.routeId = trip.routeId();
+      this.speedKph = speedKph;
+      this.distanceKm = distanceKm;
+      this.csvRowNumber1 = stopTime1.csvRowNumber();
+      this.stopSequence1 = stopTime1.stopSequence();
+      this.stopId1 = stopTime1.stopId();
+      this.stopName1 = stop1.stopName();
+      this.departureTime1 = stopTime1.departureTime();
+      this.csvRowNumber2 = stopTime2.csvRowNumber();
+      this.stopSequence2 = stopTime2.stopSequence();
+      this.stopId2 = stopTime2.stopId();
+      this.stopName2 = stop2.stopName();
+      this.arrivalTime2 = stopTime2.arrivalTime();
     }
   }
 
@@ -337,6 +350,22 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
    * stops.
    */
   static class FastTravelBetweenFarStopsNotice extends ValidationNotice {
+    private long tripCsvRowNumber;
+    private String tripId;
+    private String routeId;
+    private double speedKph;
+    private double distanceKm;
+    private long csvRowNumber1;
+    private int stopSequence1;
+    private String stopId1;
+    private String stopName1;
+    private GtfsTime departureTime1;
+    private long csvRowNumber2;
+    private int stopSequence2;
+    private String stopId2;
+    private String stopName2;
+    private GtfsTime arrivalTime2;
+
     FastTravelBetweenFarStopsNotice(
         GtfsTrip trip,
         GtfsStopTime stopTime1,
@@ -345,25 +374,22 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
         GtfsStop stop2,
         double speedKph,
         double distanceKm) {
-      super(
-          new ImmutableMap.Builder<String, Object>()
-              .put("tripCsvRowNumber", trip.csvRowNumber())
-              .put("tripId", trip.tripId())
-              .put("routeId", trip.routeId())
-              .put("speedKph", speedKph)
-              .put("distanceKm", distanceKm)
-              .put("csvRowNumber1", stopTime1.csvRowNumber())
-              .put("stopSequence1", stopTime1.stopSequence())
-              .put("stopId1", stopTime1.stopId())
-              .put("stopName1", stop1.stopName())
-              .put("departureTime1", stopTime1.departureTime().toHHMMSS())
-              .put("csvRowNumber2", stopTime2.csvRowNumber())
-              .put("stopSequence2", stopTime2.stopSequence())
-              .put("stopId2", stopTime2.stopId())
-              .put("stopName2", stop2.stopName())
-              .put("arrivalTime2", stopTime2.arrivalTime().toHHMMSS())
-              .build(),
-          SeverityLevel.WARNING);
+      super(SeverityLevel.WARNING);
+      this.tripCsvRowNumber = trip.csvRowNumber();
+      this.tripId = trip.tripId();
+      this.routeId = trip.routeId();
+      this.speedKph = speedKph;
+      this.distanceKm = distanceKm;
+      this.csvRowNumber1 = stopTime1.csvRowNumber();
+      this.stopSequence1 = stopTime1.stopSequence();
+      this.stopId1 = stopTime1.stopId();
+      this.stopName1 = stop1.stopName();
+      this.departureTime1 = stopTime1.departureTime();
+      this.csvRowNumber2 = stopTime2.csvRowNumber();
+      this.stopSequence2 = stopTime2.stopSequence();
+      this.stopId2 = stopTime2.stopId();
+      this.stopName2 = stop2.stopName();
+      this.arrivalTime2 = stopTime2.arrivalTime();
     }
   }
 }

@@ -19,13 +19,11 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME;
 import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimaps;
 import java.util.List;
 import java.util.Map.Entry;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -102,16 +100,18 @@ public class MissingTripEdgeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class MissingTripEdgeNotice extends ValidationNotice {
-    @SchemaExport
+    private long csvRowNumber;
+    private int stopSequence;
+    private String tripId;
+    private String specifiedField;
+
     MissingTripEdgeNotice(
         long csvRowNumber, int stopSequence, String tripId, String specifiedField) {
-      super(
-          ImmutableMap.of(
-              "csvRowNumber", csvRowNumber,
-              "stopSequence", stopSequence,
-              "tripId", tripId,
-              "specifiedField", specifiedField),
-          SeverityLevel.ERROR);
+      super(SeverityLevel.ERROR);
+      this.csvRowNumber = csvRowNumber;
+      this.stopSequence = stopSequence;
+      this.tripId = tripId;
+      this.specifiedField = specifiedField;
     }
   }
 }

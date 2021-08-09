@@ -16,8 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
+import javax.annotation.Nullable;
 
 /**
  * The values of the given key and rows are duplicates.
@@ -25,28 +24,30 @@ import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class DuplicateKeyNotice extends ValidationNotice {
+  private String filename;
+  private long oldCsvRowNumber;
+  private long newCsvRowNumber;
+  private String fieldName1;
+  private Object fieldValue1;
+  @Nullable private String fieldName2;
+  @Nullable private Object fieldValue2;
+
   public DuplicateKeyNotice(
       String filename,
       long oldCsvRowNumber,
       long newCsvRowNumber,
       String fieldName1,
       Object fieldValue1) {
-    super(
-        ImmutableMap.of(
-            "filename",
-            filename,
-            "oldCsvRowNumber",
-            oldCsvRowNumber,
-            "newCsvRowNumber",
-            newCsvRowNumber,
-            "fieldName1",
-            fieldName1,
-            "fieldValue1",
-            fieldValue1),
-        SeverityLevel.ERROR);
+    super(SeverityLevel.ERROR);
+    this.filename = filename;
+    this.oldCsvRowNumber = oldCsvRowNumber;
+    this.newCsvRowNumber = newCsvRowNumber;
+    this.fieldName1 = fieldName1;
+    this.fieldValue1 = fieldValue1;
+    this.fieldName2 = null;
+    this.fieldValue2 = null;
   }
 
-  @SchemaExport
   public DuplicateKeyNotice(
       String filename,
       long oldCsvRowNumber,
@@ -55,16 +56,13 @@ public class DuplicateKeyNotice extends ValidationNotice {
       Object fieldValue1,
       String fieldName2,
       Object fieldValue2) {
-    super(
-        new ImmutableMap.Builder<String, Object>()
-            .put("filename", filename)
-            .put("oldCsvRowNumber", oldCsvRowNumber)
-            .put("newCsvRowNumber", newCsvRowNumber)
-            .put("fieldName1", fieldName1)
-            .put("fieldValue1", fieldValue1)
-            .put("fieldName2", fieldName2)
-            .put("fieldValue2", fieldValue2)
-            .build(),
-        SeverityLevel.ERROR);
+    super(SeverityLevel.ERROR);
+    this.filename = filename;
+    this.oldCsvRowNumber = oldCsvRowNumber;
+    this.newCsvRowNumber = newCsvRowNumber;
+    this.fieldName1 = fieldName1;
+    this.fieldValue1 = fieldValue1;
+    this.fieldName2 = fieldName2;
+    this.fieldValue2 = fieldValue2;
   }
 }

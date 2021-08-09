@@ -16,17 +16,16 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
-
 /**
  * A required file is missing.
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class MissingRequiredFileNotice extends ValidationNotice {
-  @SchemaExport
+  private String filename;
+
   public MissingRequiredFileNotice(String filename) {
-    super(ImmutableMap.of("filename", filename), SeverityLevel.ERROR);
+    super(SeverityLevel.ERROR);
+    this.filename = filename;
   }
 }

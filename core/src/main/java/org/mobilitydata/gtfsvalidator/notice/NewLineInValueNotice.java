@@ -16,9 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
-
 /**
  * A value in CSV file has a new line or carriage return.
  *
@@ -37,19 +34,17 @@ import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
  */
 public class NewLineInValueNotice extends ValidationNotice {
 
-  @SchemaExport
+  private String filename;
+  private long csvRowNumber;
+  private String fieldName;
+  private String fieldValue;
+
   public NewLineInValueNotice(
       String filename, long csvRowNumber, String fieldName, String fieldValue) {
-    super(
-        ImmutableMap.of(
-            "filename",
-            filename,
-            "csvRowNumber",
-            csvRowNumber,
-            "fieldName",
-            fieldName,
-            "fieldValue",
-            fieldValue),
-        SeverityLevel.ERROR);
+    super(SeverityLevel.ERROR);
+    this.filename = filename;
+    this.csvRowNumber = csvRowNumber;
+    this.fieldName = fieldName;
+    this.fieldValue = fieldValue;
   }
 }

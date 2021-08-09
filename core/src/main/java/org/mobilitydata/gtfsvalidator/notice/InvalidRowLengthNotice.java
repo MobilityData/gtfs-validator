@@ -16,24 +16,23 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
-
 /**
  * A row in the input file has a different number of values than specified by the CSV header.
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class InvalidRowLengthNotice extends ValidationNotice {
-  @SchemaExport
+  private String filename;
+  private long csvRowNumber;
+  private int rowLength;
+  private int headerCount;
+
   public InvalidRowLengthNotice(
       String filename, long csvRowNumber, int rowLength, int headerCount) {
-    super(
-        ImmutableMap.of(
-            "filename", filename,
-            "csvRowNumber", csvRowNumber,
-            "rowLength", rowLength,
-            "headerCount", headerCount),
-        SeverityLevel.ERROR);
+    super(SeverityLevel.ERROR);
+    this.filename = filename;
+    this.csvRowNumber = csvRowNumber;
+    this.rowLength = rowLength;
+    this.headerCount = headerCount;
   }
 }

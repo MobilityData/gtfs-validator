@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
 import java.net.URISyntaxException;
 
 /**
@@ -26,11 +25,12 @@ import java.net.URISyntaxException;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class URISyntaxError extends SystemError {
+  private String exception;
+  private String message;
 
   public URISyntaxError(URISyntaxException exception) {
-    super(
-        ImmutableMap.of(
-            "exception", exception.getClass().getCanonicalName(),
-            "message", Strings.nullToEmpty(exception.getMessage())));
+    this.exception = exception.getClass().getCanonicalName();
+    // Throwable.getMessage() may return null.
+    this.message = Strings.nullToEmpty(exception.getMessage());
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,12 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-/**
- * A column name is empty. Such columns are skipped by the validator.
- *
- * <p>Severity: {@code SeverityLevel.WARNING}
- */
-public class EmptyColumnNameNotice extends ValidationNotice {
-  private String filename;
-  private int index;
+class StringFieldNotice extends ValidationNotice {
 
-  public EmptyColumnNameNotice(String filename, int index) {
-    super(SeverityLevel.WARNING);
-    this.filename = filename;
-    this.index = index;
+  private final String someField;
+
+  public StringFieldNotice(String someField, SeverityLevel severityLevel) {
+    super(severityLevel);
+    this.someField = someField;
   }
 }

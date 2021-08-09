@@ -16,9 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
-
 /**
  * The values of the given key and rows of one table cannot be found a values of the given key in
  * another table.
@@ -29,7 +26,13 @@ import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class ForeignKeyViolationNotice extends ValidationNotice {
-  @SchemaExport
+  private String childFilename;
+  private String childFieldName;
+  private String parentFilename;
+  private String parentFieldName;
+  private String fieldValue;
+  private long csvRowNumber;
+
   public ForeignKeyViolationNotice(
       String childFilename,
       String childFieldName,
@@ -37,15 +40,12 @@ public class ForeignKeyViolationNotice extends ValidationNotice {
       String parentFieldName,
       String fieldValue,
       long csvRowNumber) {
-    super(
-        new ImmutableMap.Builder<String, Object>()
-            .put("childFilename", childFilename)
-            .put("childFieldName", childFieldName)
-            .put("parentFilename", parentFilename)
-            .put("parentFieldName", parentFieldName)
-            .put("fieldValue", fieldValue)
-            .put("csvRowNumber", csvRowNumber)
-            .build(),
-        SeverityLevel.ERROR);
+    super(SeverityLevel.ERROR);
+    this.childFilename = childFilename;
+    this.childFieldName = childFieldName;
+    this.parentFilename = parentFilename;
+    this.parentFieldName = parentFieldName;
+    this.fieldValue = fieldValue;
+    this.csvRowNumber = csvRowNumber;
   }
 }

@@ -16,12 +16,10 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimaps;
 import java.util.List;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -95,21 +93,24 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class StopTimeWithArrivalBeforePreviousDepartureTimeNotice extends ValidationNotice {
-    @SchemaExport
+    private long csvRowNumber;
+    private long prevCsvRowNumber;
+    private String tripId;
+    private GtfsTime arrivalTime;
+    private GtfsTime departureTime;
+
     StopTimeWithArrivalBeforePreviousDepartureTimeNotice(
         long csvRowNumber,
         long prevCsvRowNumber,
         String tripId,
         GtfsTime arrivalTime,
         GtfsTime departureTime) {
-      super(
-          ImmutableMap.of(
-              "csvRowNumber", csvRowNumber,
-              "prevCsvRowNumber", prevCsvRowNumber,
-              "tripId", tripId,
-              "departureTime", departureTime.toHHMMSS(),
-              "arrivalTime", arrivalTime.toHHMMSS()),
-          SeverityLevel.ERROR);
+      super(SeverityLevel.ERROR);
+      this.csvRowNumber = csvRowNumber;
+      this.prevCsvRowNumber = prevCsvRowNumber;
+      this.tripId = tripId;
+      this.departureTime = departureTime;
+      this.arrivalTime = arrivalTime;
     }
   }
 
@@ -119,16 +120,18 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class StopTimeWithOnlyArrivalOrDepartureTimeNotice extends ValidationNotice {
-    @SchemaExport
+    private long csvRowNumber;
+    private String tripId;
+    private int stopSequence;
+    private String specifiedField;
+
     StopTimeWithOnlyArrivalOrDepartureTimeNotice(
         long csvRowNumber, String tripId, int stopSequence, String specifiedField) {
-      super(
-          ImmutableMap.of(
-              "csvRowNumber", csvRowNumber,
-              "tripId", tripId,
-              "stopSequence", stopSequence,
-              "specifiedField", specifiedField),
-          SeverityLevel.ERROR);
+      super(SeverityLevel.ERROR);
+      this.csvRowNumber = csvRowNumber;
+      this.tripId = tripId;
+      this.stopSequence = stopSequence;
+      this.specifiedField = specifiedField;
     }
   }
 }

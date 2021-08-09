@@ -1,7 +1,6 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -13,10 +12,12 @@ import java.util.concurrent.ExecutionException;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class ThreadExecutionError extends SystemError {
+  private String exception;
+  private String message;
+
   public ThreadExecutionError(ExecutionException exception) {
-    super(
-        ImmutableMap.of(
-            "exception", exception.getCause().getClass().getCanonicalName(),
-            "message", Strings.nullToEmpty(exception.getCause().getMessage())));
+    this.exception = exception.getCause().getClass().getCanonicalName();
+    // Throwable.getMessage() may return null.
+    this.message = Strings.nullToEmpty(exception.getCause().getMessage());
   }
 }
