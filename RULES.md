@@ -587,11 +587,12 @@ A transit vehicle moves too fast between two consecutive stops. The speed thresh
 | 2          | Rail        | 500             |
 | 3          | Bus         | 150             |
 | 4          | Ferry       |  80             |
-| 5          | Cable tram  | 100             |
+| 5          | Cable tram  |  30             |
 | 6          | Aerial lift |  50             |
 | 7          | Funicular   |  50             |
 | 11         | Trolleybus  | 150             |
 | 12         | Monorail    | 150             |
+| -          | Unknown     | 200             |
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)

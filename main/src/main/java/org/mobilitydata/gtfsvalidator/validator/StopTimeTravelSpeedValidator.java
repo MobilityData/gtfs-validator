@@ -293,8 +293,16 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
         return 150;
       case FERRY:
         return 80;
-      default:
+      case CABLE_TRAM:
+        // The average speed of a cable car is 15 km/h. Add some safety gap.
+        return 30;
+      case AERIAL_LIFT:
+      case FUNICULAR:
+        // Fast aerial tramways operate at 43 km/h.
         return 50;
+      default:
+        // High speed threshold for unknown/unsupported vehicle types.
+        return 200;
     }
   }
 
