@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 MobilityData IO
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mobilitydata.gtfsvalidator.annotation;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+package org.mobilitydata.gtfsvalidator.notice;
 
-/**
- * Annotation to be used on notice constructor. This specifies the constructor to be used to
- * identify notice field names and data types when exporting the notice schema. This annotation
- * defines new variables to be used when export the notice schema as a json file.
- */
-@Retention(RetentionPolicy.RUNTIME)
-public @interface SchemaExport {
+class StringFieldNotice extends ValidationNotice {
+
+  private final String someField;
+
+  public StringFieldNotice(String someField, SeverityLevel severityLevel) {
+    super(severityLevel);
+    this.someField = someField;
+  }
 }

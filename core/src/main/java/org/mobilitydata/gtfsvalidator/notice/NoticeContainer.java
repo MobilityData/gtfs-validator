@@ -16,10 +16,11 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.notice.Notice.GSON;
+
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
@@ -34,9 +35,7 @@ import java.util.List;
  * own NoticeContainer, and after execution is complete the results are merged.
  */
 public class NoticeContainer {
-  private static final Gson DEFAULT_GSON =
-      new GsonBuilder().serializeNulls().serializeSpecialFloatingPointValues().create();
-  private static final Gson PRETTY_GSON = DEFAULT_GSON.newBuilder().setPrettyPrinting().create();
+  private static final Gson PRETTY_GSON = GSON.newBuilder().setPrettyPrinting().create();
 
   /** Limit on the amount of exported notices of the same type and severity. */
   private static final int MAX_EXPORTS_PER_NOTICE_TYPE = 100000;
@@ -119,7 +118,6 @@ public class NoticeContainer {
     JsonObject root = new JsonObject();
     JsonArray jsonNotices = new JsonArray();
     root.add("notices", jsonNotices);
-    Gson gson = isPretty ? PRETTY_GSON : DEFAULT_GSON;
 
     for (Collection<T> noticesOfType : groupNoticesByTypeAndSeverity(notices).asMap().values()) {
       JsonObject noticesOfTypeJson = new JsonObject();
@@ -137,11 +135,11 @@ public class NoticeContainer {
           // Do not export too many notices for this type.
           break;
         }
-        noticesArrayJson.add(gson.toJsonTree(notice.getContext()));
+        noticesArrayJson.add(notice.getContext());
       }
     }
 
-    return gson.toJson(root);
+    return (isPretty ? PRETTY_GSON : GSON).toJson(root);
   }
 
   private static <T extends Notice> ListMultimap<String, T> groupNoticesByTypeAndSeverity(

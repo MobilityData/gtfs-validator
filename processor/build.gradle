@@ -23,7 +23,7 @@ dependencies {
     implementation 'com.google.guava:guava:29.0-jre'
     implementation 'com.google.flogger:flogger:0.5.1'
     implementation 'com.univocity:univocity-parsers:2.9.0'
-    implementation 'io.sgr:s2-geometry-library-java:1.0.1'
+    implementation 'com.google.geometry:s2-geometry:2.0.0'
     testImplementation group: 'junit', name: 'junit', version: '4.13'
 }
 

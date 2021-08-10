@@ -18,9 +18,6 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import com.google.common.collect.ImmutableMap;
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -36,6 +33,7 @@ public class NoticeContainerTest {
     container.addSystemError(
         new RuntimeExceptionInValidatorError(
             "FaultyValidator", new IndexOutOfBoundsException("Index 0 out of bounds")));
+
     assertThat(container.exportValidationNotices(false))
         .isEqualTo(
             "{\"notices\":["
@@ -57,6 +55,7 @@ public class NoticeContainerTest {
     container.addSystemError(
         new RuntimeExceptionInValidatorError(
             "FaultyValidator", new IndexOutOfBoundsException("Index 0 out of bounds")));
+
     assertThat(container.exportValidationNotices(true))
         .isEqualTo(
             "{\n"
@@ -97,52 +96,29 @@ public class NoticeContainerTest {
   }
 
   @Test
-  public void exportNullInContext() {
-    // Test that `null` value in the context is serialized properly.
-    NoticeContainer container = new NoticeContainer();
-    // Use HashMap because ImmutableMap does not support nulls.
-    Map<String, Object> context = new HashMap<>();
-    context.put("nullField", null);
-    container.addValidationNotice(
-        new TestValidationNotice("test_notice", context, SeverityLevel.ERROR));
-    assertThat(container.exportValidationNotices(false))
-        .isEqualTo(
-            "{\"notices\":[{\"code\":\"test_notice\",\"severity\":\"ERROR\","
-                + "\"totalNotices\":1,\"notices\":[{\"nullField\":null}]}]}");
-  }
-
-  @Test
   public void exportInfinityInContext() {
     NoticeContainer container = new NoticeContainer();
     container.addValidationNotice(
-        new TestValidationNotice(
-            "test_notice",
-            ImmutableMap.of("infinityField", Double.POSITIVE_INFINITY),
-            SeverityLevel.ERROR));
+        new DoubleFieldNotice(Double.POSITIVE_INFINITY, SeverityLevel.ERROR));
     assertThat(container.exportValidationNotices(false))
         .isEqualTo(
-            "{\"notices\":[{\"code\":\"test_notice\",\"severity\":\"ERROR\","
-                + "\"totalNotices\":1,\"notices\":[{\"infinityField\":Infinity}]}]}");
+            "{\"notices\":[{\"code\":\"double_field\",\"severity\":\"ERROR\","
+                + "\"totalNotices\":1,\"notices\":[{\"doubleField\":Infinity}]}]}");
   }
 
   @Test
   public void exportSeverities() {
     NoticeContainer container = new NoticeContainer();
-    container.addValidationNotice(
-        new TestValidationNotice("notice_a", ImmutableMap.of("keyA", 1), SeverityLevel.ERROR));
-    container.addValidationNotice(
-        new TestValidationNotice("notice_b", ImmutableMap.of("keyB", 2), SeverityLevel.ERROR));
-    container.addValidationNotice(
-        new TestValidationNotice("notice_a", ImmutableMap.of("keyC", 3), SeverityLevel.INFO));
+    container.addValidationNotice(new StringFieldNotice("1", SeverityLevel.ERROR));
+    container.addValidationNotice(new DoubleFieldNotice(2.0, SeverityLevel.ERROR));
+    container.addValidationNotice(new StringFieldNotice("3", SeverityLevel.INFO));
+
     assertThat(container.exportValidationNotices(false))
         .isEqualTo(
             "{\"notices\":["
-                + "{\"code\":\"notice_a\",\"severity\":\"INFO\",\"totalNotices\":1,"
-                + "\"notices\":[{\"keyC\":3}]},"
-                + "{\"code\":\"notice_a\",\"severity\":\"ERROR\",\"totalNotices\":1,"
-                + "\"notices\":[{\"keyA\":1}]},"
-                + "{\"code\":\"notice_b\",\"severity\":\"ERROR\",\"totalNotices\":1,"
-                + "\"notices\":[{\"keyB\":2}]}]}");
+                + "{\"code\":\"double_field\",\"severity\":\"ERROR\",\"totalNotices\":1,\"notices\":[{\"doubleField\":2.0}]},"
+                + "{\"code\":\"string_field\",\"severity\":\"INFO\",\"totalNotices\":1,\"notices\":[{\"someField\":\"3\"}]},"
+                + "{\"code\":\"string_field\",\"severity\":\"ERROR\",\"totalNotices\":1,\"notices\":[{\"someField\":\"1\"}]}]}");
   }
 
   @Test
@@ -162,6 +138,7 @@ public class NoticeContainerTest {
     c2.addValidationNotice(n2);
     c2.addSystemError(e2);
     c1.addAll(c2);
+
     assertThat(c1.getValidationNotices()).containsExactly(n1, n2);
     assertThat(c1.getSystemErrors()).containsExactly(e1, e2);
   }

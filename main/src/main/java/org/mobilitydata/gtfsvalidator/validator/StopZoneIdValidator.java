@@ -16,10 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import com.google.common.collect.ImmutableMap;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -76,14 +74,13 @@ public class StopZoneIdValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING} - Will be upgraded to {@code SeverityLevel.ERROR}
    */
   static class StopWithoutZoneIdNotice extends ValidationNotice {
+    private final String stopId;
+    private final long csvRowNumber;
 
-    @SchemaExport
     StopWithoutZoneIdNotice(String stopId, long csvRowNumber) {
-      super(
-          ImmutableMap.of(
-              "stopId", stopId,
-              "csvRowNumber", csvRowNumber),
-          SeverityLevel.WARNING);
+      super(SeverityLevel.WARNING);
+      this.stopId = stopId;
+      this.csvRowNumber = csvRowNumber;
     }
   }
 }
