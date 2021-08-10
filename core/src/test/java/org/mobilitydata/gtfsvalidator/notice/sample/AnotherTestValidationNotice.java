@@ -16,8 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.notice.sample;
 
-import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
@@ -29,35 +27,42 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
  */
 public class AnotherTestValidationNotice extends ValidationNotice {
 
-  @SchemaExport
+  private final String filename;
+  private final Long csvRowNumber;
+  private final String fieldName;
+  private final Double otherFieldValue;
+  private final Object fieldValue;
+  private final GtfsDate sampleDate;
+  private final GtfsTime sampleTime;
+  private final GtfsColor sampleColor;
+  private final Integer integerValue;
+
   public AnotherTestValidationNotice(String filename, long csvRowNumber, String fieldName,
       Object fieldValue, double otherFieldValue, GtfsDate sampleDate, GtfsTime sampleTime,
       GtfsColor sampleColor) {
-    super(new ImmutableMap.Builder<String, Object>()
-            .put("filename", filename)
-            .put("csvRowNumber", csvRowNumber)
-            .put("fieldName", fieldName)
-            .put("otherFieldValue", otherFieldValue)
-            .put("fieldValue", fieldValue)
-            .put("sampleDate", sampleDate)
-            .put("sampleTime", sampleTime)
-            .put("sampleColor", sampleColor)
-            .build(),
-        SeverityLevel.WARNING);
+    super(SeverityLevel.WARNING);
+    this.filename = filename;
+    this.csvRowNumber = csvRowNumber;
+    this.fieldName = fieldName;
+    this.otherFieldValue = otherFieldValue;
+    this.fieldValue = fieldValue;
+    this.sampleDate = sampleDate;
+    this.sampleTime = sampleTime;
+    this.sampleColor = sampleColor;
+    this.integerValue = null;
   }
 
-  @SchemaExport
   public AnotherTestValidationNotice(String filename, long csvRowNumber, String fieldName,
       Object fieldValue, GtfsTime sampleTime, GtfsColor sampleColor, int integerValue) {
-    super(new ImmutableMap.Builder<String, Object>()
-            .put("filename", filename)
-            .put("csvRowNumber", csvRowNumber)
-            .put("fieldName", fieldName)
-            .put("fieldValue", fieldValue)
-            .put("sampleTime", sampleTime)
-            .put("sampleColor", sampleColor)
-            .put("integerValue", integerValue)
-            .build(),
-        SeverityLevel.WARNING);
+    super(SeverityLevel.WARNING);
+    this.filename = filename;
+    this.csvRowNumber = csvRowNumber;
+    this.fieldValue = fieldValue;
+    this.fieldName = fieldName;
+    this.sampleTime = sampleTime;
+    this.sampleColor = sampleColor;
+    this.integerValue = integerValue;
+    this.sampleDate = null;
+    this.otherFieldValue = null;
   }
 }

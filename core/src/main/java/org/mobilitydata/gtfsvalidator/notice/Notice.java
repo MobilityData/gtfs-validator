@@ -64,10 +64,19 @@ public abstract class Notice {
    *
    * @return notice code, e.g., "foreign_key_violation".
    */
-  public String getCode() {
+  public static String getCode(String classSimpleName) {
     return StringUtils.removeEnd(
         CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, classSimpleName),
         NOTICE_SUFFIX);
+  }
+
+  /**
+   * Returns a descriptive type-specific name for this notice based on the class simple name.
+   *
+   * @return notice code, e.g., "foreign_key_violation".
+   */
+  public String getCode() {
+    return getCode(getClass().getSimpleName());
   }
 
   @Override

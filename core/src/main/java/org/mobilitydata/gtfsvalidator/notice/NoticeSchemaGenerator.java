@@ -23,15 +23,11 @@ import com.google.common.reflect.ClassPath.ClassInfo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.io.IOException;
-import java.lang.annotation.AnnotationFormatError;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
 import java.sql.JDBCType;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -39,7 +35,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.exception.ConstructorParametersInconsistencyException;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
@@ -215,20 +210,18 @@ public class NoticeSchemaGenerator {
 
   /**
    * Return a {@code JsonArray} that contains information about the type of each parameter of a
-   * {@code ValidationNotice} using the constructors of the class that are annotated by {@code
-   * SchemaExport}.
+   * {@code ValidationNotice} using the constructors of the class.
    *
    * @param validationNoticeSubClass the {@code ValidationNotice} sub class to extract information
    *                                 from
    * @return a {@code JsonArray} that contains information about the type of each parameter of said
-   * {@code ValidationNotice} using the constructors of the class that are annotated by {@code
-   * SchemaExport}.
+   * {@code ValidationNotice} using the constructors of the class.
    * @throws ConstructorParametersInconsistencyException if two notice constructors defines the same
    *                                                     parameter with different types.
    */
   private static JsonArray extractNoticeProperties(Class<?> validationNoticeSubClass)
       throws ConstructorParametersInconsistencyException {
-    List<Constructor<?>> constructors = getAnnotatedConstructors(validationNoticeSubClass);
+    Constructor<?>[] constructors = validationNoticeSubClass.getDeclaredConstructors();
     JsonArray parametersAsJsonArray = new JsonArray();
     Map<String, Parameter> parameterMap = new TreeMap<>();
     for (Constructor<?> constructor : constructors) {
@@ -276,33 +269,5 @@ public class NoticeSchemaGenerator {
             parameter.getType(),
             parameter.getType().getSimpleName().toUpperCase()))
         .getName();
-  }
-
-  /**
-   * Returns the annotated constructors of a {@code ValidationNotice} subclass. Throws {@code
-   * AnnotationFormatError} if the {@code ValidationNotice} subclass does not define a constructor
-   * for schema export i.e. no constructor for the given class uses {@code SchemaExport}
-   * annotation.
-   *
-   * @param clazz the class to extract the annotated constructor from
-   * @return the annotated constructors of a {@code ValidationNotice} subclass. Throws {@code
-   * AnnotationFormatError} if the {@code ValidationNotice} subclass does not define a constructor
-   * for schema export i.e. no constructor for the given class uses {@code SchemaExport}
-   * annotation.
-   */
-  private static List<Constructor<?>> getAnnotatedConstructors(Class<?> clazz) {
-    List<Constructor<?>> constructors = new ArrayList<>();
-    for (Constructor<?> constructor : clazz.getDeclaredConstructors()) {
-      if (constructor.isAnnotationPresent(SchemaExport.class)) {
-        constructors.add(constructor);
-      }
-    }
-    if (constructors.size() == 0) {
-      throw new AnnotationFormatError(
-          String.format(
-              "Validation notice %s does not define constructor for schema export",
-              clazz.getSimpleName()));
-    }
-    return constructors;
   }
 }

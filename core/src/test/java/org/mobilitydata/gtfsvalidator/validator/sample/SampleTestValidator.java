@@ -16,10 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.validator.sample;
 
-import com.google.common.collect.ImmutableMap;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -41,14 +39,13 @@ public class SampleTestValidator extends FileValidator {
   }
 
   static class NestedTestValidatorNotice extends ValidationNotice {
+    private final String tripId;
+    private final Long csvRowNumber;
 
-    @SchemaExport
     NestedTestValidatorNotice(String tripId, long csvRowNumber) {
-      super(new ImmutableMap.Builder<String, Object>()
-              .put("tripId", tripId)
-              .put("csvRowNumber", csvRowNumber)
-              .build(),
-          SeverityLevel.WARNING);
+      super(SeverityLevel.WARNING);
+      this.tripId = tripId;
+      this.csvRowNumber = csvRowNumber;
     }
   }
 }

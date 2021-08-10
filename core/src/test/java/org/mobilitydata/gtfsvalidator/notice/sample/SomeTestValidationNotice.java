@@ -15,8 +15,6 @@
  */
 package org.mobilitydata.gtfsvalidator.notice.sample;
 
-import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 
@@ -24,16 +22,17 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
  * {@code ValidationNotice} defined for tests purpose.
  */
 public class SomeTestValidationNotice extends ValidationNotice {
+  private final String filename;
+  private final long csvRowNumber;
+  private final String fieldName;
+  private final Object fieldValue;
 
-  @SchemaExport
   public SomeTestValidationNotice(String filename, long csvRowNumber, String fieldName,
       Object fieldValue, SeverityLevel severityLevel) {
-    super(new ImmutableMap.Builder<String, Object>()
-            .put("filename", filename)
-            .put("csvRowNumber", csvRowNumber)
-            .put("fieldName", fieldName)
-            .put("fieldValue", fieldValue)
-            .build(),
-        severityLevel);
+    super(severityLevel);
+    this.filename = filename;
+    this.csvRowNumber = csvRowNumber;
+    this.fieldName = fieldName;
+    this.fieldValue = fieldValue;
   }
 }
