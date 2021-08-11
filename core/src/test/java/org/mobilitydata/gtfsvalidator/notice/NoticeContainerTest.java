@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import com.google.gson.Gson;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -26,7 +27,7 @@ import org.junit.runners.JUnit4;
 public class NoticeContainerTest {
 
   @Test
-  public void exportJson_defaultPrint() {
+  public void exportNotices() {
     NoticeContainer container = new NoticeContainer();
     container.addValidationNotice(new MissingRequiredFileNotice("stops.txt"));
     container.addValidationNotice(new MissingRequiredFileNotice("agency.txt"));
@@ -34,13 +35,13 @@ public class NoticeContainerTest {
         new RuntimeExceptionInValidatorError(
             "FaultyValidator", new IndexOutOfBoundsException("Index 0 out of bounds")));
 
-    assertThat(container.exportValidationNotices(false))
+    assertThat(new Gson().toJson(container.exportValidationNotices()))
         .isEqualTo(
             "{\"notices\":["
                 + "{\"code\":\"missing_required_file\",\"severity\":\"ERROR\","
                 + "\"totalNotices\":2,\"notices\":"
                 + "[{\"filename\":\"stops.txt\"},{\"filename\":\"agency.txt\"}]}]}");
-    assertThat(container.exportSystemErrors(false))
+    assertThat(new Gson().toJson(container.exportSystemErrors()))
         .isEqualTo(
             "{\"notices\":[{\"code\":\"runtime_exception_in_validator_error\",\"severity\":\"ERROR\","
                 + "\"totalNotices\":1,\"notices\":[{\"validator\":\"FaultyValidator\",\"exception\":\"java.lang.IndexOutOfBoundsException\",\"message\":\"Index"
@@ -48,59 +49,11 @@ public class NoticeContainerTest {
   }
 
   @Test
-  public void exportJson_prettyPrint() {
-    NoticeContainer container = new NoticeContainer();
-    container.addValidationNotice(new MissingRequiredFileNotice("stops.txt"));
-    container.addValidationNotice(new MissingRequiredFileNotice("agency.txt"));
-    container.addSystemError(
-        new RuntimeExceptionInValidatorError(
-            "FaultyValidator", new IndexOutOfBoundsException("Index 0 out of bounds")));
-
-    assertThat(container.exportValidationNotices(true))
-        .isEqualTo(
-            "{\n"
-                + "  \"notices\": [\n"
-                + "    {\n"
-                + "      \"code\": \"missing_required_file\",\n"
-                + "      \"severity\": \"ERROR\",\n"
-                + "      \"totalNotices\": 2,\n"
-                + "      \"notices\": [\n"
-                + "        {\n"
-                + "          \"filename\": \"stops.txt\"\n"
-                + "        },\n"
-                + "        {\n"
-                + "          \"filename\": \"agency.txt\"\n"
-                + "        }\n"
-                + "      ]\n"
-                + "    }\n"
-                + "  ]\n"
-                + "}");
-    assertThat(container.exportSystemErrors(true))
-        .isEqualTo(
-            "{\n"
-                + "  \"notices\": [\n"
-                + "    {\n"
-                + "      \"code\": \"runtime_exception_in_validator_error\",\n"
-                + "      \"severity\": \"ERROR\",\n"
-                + "      \"totalNotices\": 1,\n"
-                + "      \"notices\": [\n"
-                + "        {\n"
-                + "          \"validator\": \"FaultyValidator\",\n"
-                + "          \"exception\": \"java.lang.IndexOutOfBoundsException\",\n"
-                + "          \"message\": \"Index 0 out of bounds\"\n"
-                + "        }\n"
-                + "      ]\n"
-                + "    }\n"
-                + "  ]\n"
-                + "}");
-  }
-
-  @Test
   public void exportInfinityInContext() {
     NoticeContainer container = new NoticeContainer();
     container.addValidationNotice(
         new DoubleFieldNotice(Double.POSITIVE_INFINITY, SeverityLevel.ERROR));
-    assertThat(container.exportValidationNotices(false))
+    assertThat(new Gson().toJson(container.exportValidationNotices()))
         .isEqualTo(
             "{\"notices\":[{\"code\":\"double_field\",\"severity\":\"ERROR\","
                 + "\"totalNotices\":1,\"notices\":[{\"doubleField\":Infinity}]}]}");
@@ -113,7 +66,7 @@ public class NoticeContainerTest {
     container.addValidationNotice(new DoubleFieldNotice(2.0, SeverityLevel.ERROR));
     container.addValidationNotice(new StringFieldNotice("3", SeverityLevel.INFO));
 
-    assertThat(container.exportValidationNotices(false))
+    assertThat(new Gson().toJson(container.exportValidationNotices()))
         .isEqualTo(
             "{\"notices\":["
                 + "{\"code\":\"double_field\",\"severity\":\"ERROR\",\"totalNotices\":1,\"notices\":[{\"doubleField\":2.0}]},"

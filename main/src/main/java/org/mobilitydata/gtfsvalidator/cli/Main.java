@@ -19,6 +19,8 @@ package org.mobilitydata.gtfsvalidator.cli;
 import com.beust.jcommander.JCommander;
 import com.google.common.base.Strings;
 import com.google.common.flogger.FluentLogger;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -146,18 +148,25 @@ public class Main {
     System.out.println(feedContainer.tableTotals());
   }
 
+  private static Gson createGson(boolean pretty) {
+    GsonBuilder builder = new GsonBuilder();
+    if (pretty) {
+      builder.setPrettyPrinting();
+    }
+    return builder.create();
+  }
+
   /** Generates and exports reports for both validation notices and system errors reports. */
   private static void exportReport(final NoticeContainer noticeContainer, final Arguments args) {
     new File(args.getOutputBase()).mkdirs();
+    Gson gson = createGson(args.getPretty());
     try {
       Files.write(
           Paths.get(args.getOutputBase(), args.getValidationReportName()),
-          noticeContainer
-              .exportValidationNotices(args.getPretty())
-              .getBytes(StandardCharsets.UTF_8));
+          gson.toJson(noticeContainer.exportValidationNotices()).getBytes(StandardCharsets.UTF_8));
       Files.write(
           Paths.get(args.getOutputBase(), args.getSystemErrorsReportName()),
-          noticeContainer.exportSystemErrors(args.getPretty()).getBytes(StandardCharsets.UTF_8));
+          gson.toJson(noticeContainer.exportSystemErrors()).getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store report files");
     }
