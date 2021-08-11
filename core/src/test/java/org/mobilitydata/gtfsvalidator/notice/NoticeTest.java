@@ -6,6 +6,9 @@ import com.google.gson.JsonObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mobilitydata.gtfsvalidator.notice.testnotices.DoubleFieldNotice;
+import org.mobilitydata.gtfsvalidator.notice.testnotices.GtfsTypesValidationNotice;
+import org.mobilitydata.gtfsvalidator.notice.testnotices.StringFieldNotice;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
@@ -97,19 +100,6 @@ public class NoticeTest {
     public OtherStringFieldNotice(String someField, SeverityLevel severityLevel) {
       super(severityLevel);
       this.someField = someField;
-    }
-  }
-
-  private static class GtfsTypesValidationNotice extends Notice {
-    private final GtfsColor color;
-    private final GtfsDate date;
-    private final GtfsTime time;
-
-    public GtfsTypesValidationNotice(GtfsColor color, GtfsDate date, GtfsTime time) {
-      super(SeverityLevel.ERROR);
-      this.color = color;
-      this.date = date;
-      this.time = time;
     }
   }
 }
