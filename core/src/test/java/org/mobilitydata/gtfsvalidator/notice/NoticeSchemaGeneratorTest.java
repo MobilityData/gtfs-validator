@@ -91,7 +91,7 @@ public class NoticeSchemaGeneratorTest {
   }
 
   @Test
-  public void jsonSchemaForNotice_foreignKeyViolationNotice() {
+  public void jsonSchemaForNotice_duplicateKeyNotice() {
     JsonElement expected =
         new Gson()
             .toJsonTree(
