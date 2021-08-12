@@ -27,3 +27,12 @@ jobs:
           versionTag: ${{ steps.prep.outputs.versionTag }}
         with:
           arguments: verGJF
+  comment-on-failure:
+    if: ${{ always() && (needs.formatting.result=='failure') }}
+    needs: [ formatting ]
+    steps:
+      - name: github-action-comment-pull-request
+        uses: mb2dev/github-action-comment-pull-request@1.0.0
+        with:
+        message: |
+        "This PR code does not follow the standard defined by the Google Java style guide (see https://google.github.io/styleguide/javaguide.html). Please download the formatter at https://github.com/google/google-java-format/releases and run it with ``` -i $(find . -name '*.java')```."
