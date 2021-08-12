@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 MobilityData IO
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,258 +16,248 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.reflect.ClassPath;
-import com.google.common.reflect.ClassPath.ClassInfo;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Parameter;
-import java.sql.JDBCType;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
-import org.mobilitydata.gtfsvalidator.exception.ConstructorParametersInconsistencyException;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
+import org.mobilitydata.gtfsvalidator.validator.FileValidator;
+import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
 
-/**
- * RTTI machine for schema generation.
- */
+/** Exports schema describing all possible notices and their contexts. */
 public class NoticeSchemaGenerator {
-
-  private static final Gson DEFAULT_GSON =
-      new GsonBuilder().serializeNulls().serializeSpecialFloatingPointValues().create();
-  private static final Gson PRETTY_GSON = DEFAULT_GSON.newBuilder().setPrettyPrinting().create();
-  private static final String SEVERITY_LEVEL_PARAMETER_NAME = "severityLevel";
-  private static final String JSON_KEY_NAME = "name";
-  private static final String JSON_KEY_TYPE = "type";
-  private static final String BLOB_DATA_TYPE = "BLOB";
-  private static final String VARCHAR_DATA_TYPE = "VARCHAR";
-  private static final String BIGINT_DATA_TYPE = "BIGINT";
-  private static final String INTEGER_DATA_TYPE = "INTEGER";
-  /**
-   * Map of data type to Oracle's JDBC data types.
-   */
-  private static final ImmutableMap<Class<?>, String> typeMap =
-      new ImmutableMap.Builder<Class<?>, String>()
-          .put(int.class, INTEGER_DATA_TYPE)
-          .put(GtfsColor.class, VARCHAR_DATA_TYPE)
-          .put(String.class, VARCHAR_DATA_TYPE)
-          .put(long.class, BIGINT_DATA_TYPE)
-          .put(SeverityLevel.class, VARCHAR_DATA_TYPE)
-          .put(GtfsDate.class, BLOB_DATA_TYPE)
-          .put(GtfsTime.class, BLOB_DATA_TYPE)
-          .put(Object.class, BLOB_DATA_TYPE)
-          .build();
+  /** Default packages to find notices in open-source validator. */
+  public static final ImmutableList<String> DEFAULT_NOTICE_PACKAGES =
+      ImmutableList.of(
+          "org.mobilitydata.gtfsvalidator.notice", "org.mobilitydata.gtfsvalidator.validator");
 
   /**
-   * Exports notices information as a json file.
+   * Exports JSON schema for all notices in given packages. This includes notices that are declared
+   * inside validators.
    *
-   * @param isPretty                     will beautify the output if set to true
-   * @param validationNoticePackageNames the list of validation notices package names
-   * @param validatorPackageNames        the list of validation package names
-   * @return the json string file that contains information about all {@code ValidationNotice}s
-   * @throws IOException                                 if the attempt to read class path resources
-   *                                                     (jar files or directories) failed.
-   * @throws ConstructorParametersInconsistencyException if two notice constructors defines the same
-   *                                                     parameter with different types.
+   * <p>See https://json-schema.org/ for more information on JSON schema.
+   *
+   * <p>The returned object looks like that:
+   *
+   * <pre>{@code
+   * {
+   *   "attribution_without_role": {
+   *     "type": "object",
+   *     "properties": {
+   *       "attributionId": {
+   *         "type": "string"
+   *       },
+   *       "csvRowNumber": {
+   *         "type": "integer"
+   *       }
+   *     }
+   *   },
+   *   "duplicate_fare_rule_zone_id_fields": {
+   *     "type": "object",
+   *     "properties": {
+   *       "csvRowNumber": {
+   *         "type": "integer"
+   *       },
+   *       "fareId": {
+   *         "type": "string"
+   *       },
+   *       "previousCsvRowNumber": {
+   *         "type": "integer"
+   *       },
+   *       "previousFareId": {
+   *         "type": "string"
+   *       }
+   *     }
+   *   },
+   *   ...
+   * }
+   * }</pre>
+   *
+   * @param packages List of packages where notices are declared. Use {@link
+   *     #DEFAULT_NOTICE_PACKAGES} and add your custom Java packages here, if any
+   * @return a {@link JsonObject} describing all notices in given packages (see above)
+   * @throws IOException
    */
-  public static String export(boolean isPretty, List<String> validationNoticePackageNames,
-      List<String> validatorPackageNames)
-      throws IOException, ConstructorParametersInconsistencyException {
-    Gson gson = isPretty ? PRETTY_GSON : DEFAULT_GSON;
-    JsonObject coreNoticeProperties = new JsonObject();
-    JsonObject mainNoticesProperties = new JsonObject();
-    for (String validationNoticePackageName : validationNoticePackageNames) {
-      coreNoticeProperties = mergeGsonObjects(ImmutableList
-          .of(extractCoreNoticesProperties(validationNoticePackageName), coreNoticeProperties));
+  public static JsonObject jsonSchemaForPackages(List<String> packages) throws IOException {
+    JsonObject schema = new JsonObject();
+    for (Map.Entry<String, Map<String, Class<?>>> entry :
+        contextFieldsInPackages(packages).entrySet()) {
+      schema.add(
+          Notice.getCode(entry.getKey()), jsonSchemaForNotice(entry.getKey(), entry.getValue()));
     }
-    for (String validatorPackageName : validatorPackageNames) {
-      mainNoticesProperties = mergeGsonObjects(ImmutableList
-          .of(extractMainNoticesProperties(validatorPackageName), mainNoticesProperties));
+    return schema;
+  }
+
+  /**
+   * Convenient function to find all notices in given packages and describe their fields.
+   *
+   * <p>The returned map has looks this way:
+   *
+   * <pre>{@code
+   * {
+   *   "AttributionWithoutRoleNotice": {
+   *     "attributionId": String.class,
+   *     "csvRowNumber": Long.class,
+   *   }
+   * }
+   * }</pre>
+   *
+   * @param packages List of packages where notices are declared
+   * @return a map describing all notices in given packages (see above)
+   * @throws IOException
+   */
+  @VisibleForTesting
+  static Map<String, Map<String, Class<?>>> contextFieldsInPackages(List<String> packages)
+      throws IOException {
+    // Return a sorted TreeMap for stable results.
+    Map<String, Map<String, Class<?>>> contextFieldsByNotice = new TreeMap<>();
+    for (Class<Notice> noticeClass : findNoticeSubclasses(packages)) {
+      contextFieldsByNotice.put(noticeClass.getSimpleName(), contextFieldsForNotice(noticeClass));
     }
-    JsonObject root =
-        mergeGsonObjects(ImmutableList.of(coreNoticeProperties, mainNoticesProperties));
-    JsonObject sortedRoot = new JsonObject();
-    Set<String> sortedKeys = root.keySet().stream().sorted().collect(
-        Collectors.toCollection(TreeSet::new));
-    for (String key : sortedKeys) {
-      sortedRoot.add(key, root.get(key));
+
+    return contextFieldsByNotice;
+  }
+
+  @VisibleForTesting
+  static Map<String, Class<?>> contextFieldsForNotice(Class<? extends Notice> noticeClass) {
+    // Return a sorted TreeMap for stable results.
+    Map<String, Class<?>> fields = new TreeMap<>();
+    for (Field field : noticeClass.getDeclaredFields()) {
+      fields.put(field.getName(), field.getType());
     }
-    return gson.toJson(sortedRoot);
+    return fields;
   }
 
-  /**
-   * Merge multiple {@code com.google.gson.JsonObject} into one.
-   *
-   * @param gsonObjects {@code com.google.gson.JsonObject}s to merge
-   * @return the merged {@code com.google.gson.JsonObject}
-   */
-  private static JsonObject mergeGsonObjects(ImmutableList<JsonObject> gsonObjects) {
-    JsonObject toReturn = new JsonObject();
-    gsonObjects.forEach(gsonObject -> {
-      gsonObject.entrySet().forEach(entry -> {
-        toReturn.add(entry.getKey(), entry.getValue());
-      });
-    });
-    return toReturn;
+  private static boolean isSubclassOf(Class<?> parent, Class<?> child) {
+    return !child.equals(parent) && parent.isAssignableFrom(child);
   }
 
-  /**
-   * Processes a notice {@code ClassInfo}. Returns a {@code JsonObject} that contains information
-   * about the type of each parameter of said notice whose {@code ClassInfo} was passed as
-   * parameter
-   *
-   * @param noticeClassInfo the {@code ClassInfo} to extract information from
-   * @return a {@code JsonObject} that contains information about the type of each parameter of said
-   * notice whose {@code ClassInfo} was passed as parameter
-   */
-  private static JsonObject processNoticeClass(ClassInfo noticeClassInfo)
-      throws ConstructorParametersInconsistencyException {
-    return processNoticeClass(noticeClassInfo.load());
+  @SuppressWarnings("unchecked")
+  private static void maybeAddNoticeClass(Class<?> clazz, List<Class<Notice>> notices) {
+    if (isSubclassOf(Notice.class, clazz)) {
+      notices.add((Class<Notice>) clazz);
+    }
   }
 
-  /**
-   * Processes a notice {@code Class}. Returns a {@code JsonObject} that contains information about
-   * the type of each parameter of said notice whose {@code Class} was passed as parameter
-   *
-   * @param noticeClass the {@code Class} to extract information from
-   * @return a {@code JsonObject} that contains information about the type of each parameter of said
-   * notice whose {@code Class} was passed as parameter
-   */
-  private static JsonObject processNoticeClass(Class<?> noticeClass)
-      throws ConstructorParametersInconsistencyException {
-    JsonObject toReturn = new JsonObject();
-    toReturn.add(Notice.getCode(noticeClass.getSimpleName()), extractNoticeProperties(noticeClass));
-    return toReturn;
-  }
-
-  /**
-   * Extract information from notices defined in the core module.
-   *
-   * @param noticePackageName the name of the package that contains the notices
-   * @return the {@code com.google.gson.JsonObject} that contains the {@code ValidationNotice} class
-   * simple name, and the type of each parameter
-   * @throws IOException                                 if the attempt to read class path resources
-   *                                                     (jar files or directories) failed.
-   * @throws ConstructorParametersInconsistencyException if two notice constructors defines the same
-   *                                                     parameter with different types.
-   */
-  private static JsonObject extractCoreNoticesProperties(String noticePackageName)
-      throws IOException, ConstructorParametersInconsistencyException {
-    Class<?> clazz;
-    JsonObject toReturn = new JsonObject();
-    for (ClassPath.ClassInfo noticeClass :
-        ClassPath.from(ClassLoader.getSystemClassLoader()).getTopLevelClasses(noticePackageName)) {
-      clazz = noticeClass.load();
-      if (ValidationNotice.class.isAssignableFrom(clazz)) {
-        // do not iterate over ValidationNotice.java which is the base class for all validation
-        // notices
-        if (clazz.equals(ValidationNotice.class)) {
-          continue;
-        }
-        toReturn = mergeGsonObjects(ImmutableList.of(processNoticeClass(noticeClass), toReturn));
+  private static boolean belongsToAnyPackage(ClassPath.ClassInfo classInfo, List<String> packages) {
+    for (String packageName : packages) {
+      if (classInfo.getName().startsWith(packageName)) {
+        return true;
       }
     }
-    return toReturn;
+    return false;
+  }
+
+  private static boolean isValidatorClass(Class<?> clazz) {
+    return isSubclassOf(FileValidator.class, clazz)
+        || isSubclassOf(SingleEntityValidator.class, clazz);
   }
 
   /**
-   * Extract information from notices defined in the main module.
+   * Finds all subclasses of {@link Notice} that belong to the given packages.
    *
-   * @param validatorPackageName the name of the package that contains the {@code GtfsValidator}s
-   * @return the {@code com.google.gson.JsonObject} that contains the {@code ValidationNotice} class
-   * simple name, and the type of each parameter
-   * @throws IOException                                 if the attempt to read class path resources
-   *                                                     (jar files or directories) failed.
-   * @throws ConstructorParametersInconsistencyException if two notice constructors defines the same
-   *                                                     parameter with different types.
+   * <p>This function also dives into validator classes that may contain inner notice classes.
    */
-  private static JsonObject extractMainNoticesProperties(String validatorPackageName)
-      throws IOException, ConstructorParametersInconsistencyException {
-    JsonObject toReturn = new JsonObject();
-    for (ClassPath.ClassInfo validatorClass : ClassPath.from(ClassLoader.getSystemClassLoader())
-        .getTopLevelClasses(validatorPackageName)) {
-      for (Class<?> innerNoticeClass : validatorClass.load().getDeclaredClasses()) {
-        if (ValidationNotice.class.isAssignableFrom(innerNoticeClass)) {
-          toReturn = mergeGsonObjects(
-              ImmutableList.of(processNoticeClass(innerNoticeClass), toReturn));
+  @VisibleForTesting
+  static List<Class<Notice>> findNoticeSubclasses(List<String> packages) throws IOException {
+    List<Class<Notice>> notices = new ArrayList<>();
+    for (ClassPath.ClassInfo classInfo :
+        ClassPath.from(ClassLoader.getSystemClassLoader()).getTopLevelClasses()) {
+      if (!belongsToAnyPackage(classInfo, packages)) {
+        continue;
+      }
+      Class<?> clazz = classInfo.load();
+      maybeAddNoticeClass(clazz, notices);
+      if (isValidatorClass(clazz)) {
+        // Validator classes often have notice classes inside.
+        for (Class<?> innerClass : clazz.getDeclaredClasses()) {
+          maybeAddNoticeClass(innerClass, notices);
         }
       }
     }
-    return toReturn;
+    return notices;
   }
 
-  /**
-   * Return a {@code JsonArray} that contains information about the type of each parameter of a
-   * {@code ValidationNotice} using the constructors of the class.
-   *
-   * @param validationNoticeSubClass the {@code ValidationNotice} sub class to extract information
-   *                                 from
-   * @return a {@code JsonArray} that contains information about the type of each parameter of said
-   * {@code ValidationNotice} using the constructors of the class.
-   * @throws ConstructorParametersInconsistencyException if two notice constructors defines the same
-   *                                                     parameter with different types.
-   */
-  private static JsonArray extractNoticeProperties(Class<?> validationNoticeSubClass)
-      throws ConstructorParametersInconsistencyException {
-    Constructor<?>[] constructors = validationNoticeSubClass.getDeclaredConstructors();
-    JsonArray parametersAsJsonArray = new JsonArray();
-    Map<String, Parameter> parameterMap = new TreeMap<>();
-    for (Constructor<?> constructor : constructors) {
-      for (Parameter parameter : constructor.getParameters()) {
-        Parameter existingParameter = parameterMap.get(parameter.getName());
-        if (existingParameter != null) {
-          if (!(existingParameter.getType().equals(parameter.getType()))) {
-            throw new ConstructorParametersInconsistencyException(
-                String.format(
-                    "Validation notice %s defines parameter %s with different types "
-                        + "in its constructors.",
-                    validationNoticeSubClass.getSimpleName(),
-                    existingParameter.getName()
-                ));
-          }
-        }
-        parameterMap.put(parameter.getName(), parameter);
+  private static final class JsonTypes {
+
+    private static final String NUMBER = "number";
+    private static final String INTEGER = "integer";
+    private static final String STRING = "string";
+    private static final String BOOLEAN = "boolean";
+  }
+
+  static JsonArray objectToJsonType() {
+    JsonArray array = new JsonArray();
+    array.add(JsonTypes.STRING);
+    array.add(JsonTypes.INTEGER);
+    array.add(JsonTypes.NUMBER);
+    return array;
+  }
+
+  static JsonElement javaTypeToJson(Class<?> type) {
+    if (type == int.class
+        || type == long.class
+        || type == short.class
+        || type == byte.class
+        || type == Integer.class
+        || type == Long.class
+        || type == Short.class
+        || type == Byte.class) {
+      return new JsonPrimitive(JsonTypes.INTEGER);
+    }
+    if (type == double.class
+        || type == float.class
+        || type == Double.class
+        || type == Float.class) {
+      return new JsonPrimitive(JsonTypes.NUMBER);
+    }
+    if (type == boolean.class || type == Boolean.class) {
+      return new JsonPrimitive(JsonTypes.BOOLEAN);
+    }
+    if (type == String.class
+        || type == GtfsColor.class
+        || type == GtfsDate.class
+        || type == GtfsTime.class) {
+      return new JsonPrimitive(JsonTypes.STRING);
+    }
+    if (type == Object.class) {
+      return objectToJsonType();
+    }
+    throw new IllegalArgumentException(String.format("Unsupported Java type for JSON: %s", type));
+  }
+
+  static JsonObject fieldTypeSchema(Class<?> fieldType) {
+    JsonObject schema = new JsonObject();
+    schema.add("type", javaTypeToJson(fieldType));
+    return schema;
+  }
+
+  @VisibleForTesting
+  static JsonObject jsonSchemaForNotice(String noticeClass, Map<String, Class<?>> fields) {
+    JsonObject properties = new JsonObject();
+
+    for (Map.Entry<String, Class<?>> field : fields.entrySet()) {
+      try {
+        properties.add(field.getKey(), fieldTypeSchema(field.getValue()));
+      } catch (IllegalArgumentException e) {
+        throw new IllegalStateException(
+            String.format("Cannot generate schema for %s.%s", noticeClass, field.getKey()), e);
       }
     }
-    for (Entry<String, Parameter> entry : parameterMap.entrySet()) {
-      JsonObject parameterDetails = new JsonObject();
-      parameterDetails.addProperty(JSON_KEY_NAME, entry.getKey());
-      parameterDetails.addProperty(JSON_KEY_TYPE, mapDataType(entry.getValue()));
-      parametersAsJsonArray.add(parameterDetails);
-    }
-    if (parameterMap.get(SEVERITY_LEVEL_PARAMETER_NAME) == null) {
-      JsonObject severityDetails = new JsonObject();
-      severityDetails.addProperty(JSON_KEY_NAME, SEVERITY_LEVEL_PARAMETER_NAME);
-      severityDetails.addProperty(JSON_KEY_TYPE, VARCHAR_DATA_TYPE);
-      parametersAsJsonArray.add(severityDetails);
-    }
-    return parametersAsJsonArray;
-  }
-
-  /**
-   * Maps Java data type to Oracle's JDBC data types. Said types definitions can be found at the
-   * following url: https://docs.oracle.com/cd/E19830-01/819-4721/beajw/index.html.
-   *
-   * @param parameter the parameter whose JDBC data type has to be inferred
-   * @return the JDBC data type that is used in mapping Java data fields to SQL types
-   */
-  private static String mapDataType(Parameter parameter) {
-    return JDBCType.valueOf(
-        typeMap.getOrDefault(
-            parameter.getType(),
-            parameter.getType().getSimpleName().toUpperCase()))
-        .getName();
+    JsonObject schema = new JsonObject();
+    schema.addProperty("type", "object");
+    schema.add("properties", properties);
+    return schema;
   }
 }

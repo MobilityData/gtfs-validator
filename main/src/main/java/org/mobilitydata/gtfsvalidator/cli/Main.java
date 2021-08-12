@@ -18,8 +18,9 @@ package org.mobilitydata.gtfsvalidator.cli;
 
 import com.beust.jcommander.JCommander;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
 import com.google.common.flogger.FluentLogger;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -29,31 +30,23 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import org.mobilitydata.gtfsvalidator.exception.ConstructorParametersInconsistencyException;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.NoticeSchemaGenerator;
 import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
-import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
 import org.mobilitydata.gtfsvalidator.validator.DefaultValidatorProvider;
-import org.mobilitydata.gtfsvalidator.validator.GtfsFieldValidator;
 import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 
-/**
- * The main entry point for GTFS Validator CLI.
- */
+/** The main entry point for GTFS Validator CLI. */
 public class Main {
-
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private static final String GTFS_ZIP_FILENAME = "gtfs.zip";
-  private static final String NOTICE_SCHEMA_JSON = "notice_schema.json";
 
   public static void main(String[] argv) {
     Arguments args = new Arguments();
@@ -161,20 +154,25 @@ public class Main {
     System.out.println(feedContainer.tableTotals());
   }
 
-  /**
-   * Generates and exports reports for both validation notices and system errors reports.
-   */
+  private static Gson createGson(boolean pretty) {
+    GsonBuilder builder = new GsonBuilder();
+    if (pretty) {
+      builder.setPrettyPrinting();
+    }
+    return builder.create();
+  }
+
+  /** Generates and exports reports for both validation notices and system errors reports. */
   private static void exportReport(final NoticeContainer noticeContainer, final Arguments args) {
     new File(args.getOutputBase()).mkdirs();
+    Gson gson = createGson(args.getPretty());
     try {
       Files.write(
           Paths.get(args.getOutputBase(), args.getValidationReportName()),
-          noticeContainer
-              .exportValidationNotices(args.getPretty())
-              .getBytes(StandardCharsets.UTF_8));
+          gson.toJson(noticeContainer.exportValidationNotices()).getBytes(StandardCharsets.UTF_8));
       Files.write(
           Paths.get(args.getOutputBase(), args.getSystemErrorsReportName()),
-          noticeContainer.exportSystemErrors(args.getPretty()).getBytes(StandardCharsets.UTF_8));
+          gson.toJson(noticeContainer.exportSystemErrors()).getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store report files");
     }

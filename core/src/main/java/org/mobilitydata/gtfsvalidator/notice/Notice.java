@@ -43,7 +43,7 @@ public abstract class Notice {
           .serializeSpecialFloatingPointValues()
           .create();
 
-  private static final String NOTICE_SUFFIX = "_notice";
+  private static final String NOTICE_SUFFIX = "Notice";
 
   private final SeverityLevel severityLevel;
 
@@ -64,19 +64,18 @@ public abstract class Notice {
    *
    * @return notice code, e.g., "foreign_key_violation".
    */
-  public static String getCode(String classSimpleName) {
-    return StringUtils.removeEnd(
-        CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, classSimpleName),
-        NOTICE_SUFFIX);
+  public String getCode() {
+    return getCode(getClass().getSimpleName());
   }
 
   /**
-   * Returns a descriptive type-specific name for this notice based on the class simple name.
+   * Returns a descriptive type-specific name for this notice class simple name.
    *
    * @return notice code, e.g., "foreign_key_violation".
    */
-  public String getCode() {
-    return getCode(getClass().getSimpleName());
+  static String getCode(String className) {
+    return CaseFormat.UPPER_CAMEL.to(
+        CaseFormat.LOWER_UNDERSCORE, StringUtils.removeEnd(className, NOTICE_SUFFIX));
   }
 
   @Override

@@ -1,103 +1,124 @@
+/*
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.mobilitydata.gtfsvalidator.notice;
 
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import java.io.IOException;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.exception.ConstructorParametersInconsistencyException;
-import org.mobilitydata.gtfsvalidator.notice.sample.AnotherTestValidationNotice;
-import org.mobilitydata.gtfsvalidator.validator.sample.SampleTestValidator;
+import org.mobilitydata.gtfsvalidator.notice.testnotices.DoubleFieldNotice;
+import org.mobilitydata.gtfsvalidator.notice.testnotices.GtfsTypesValidationNotice;
+import org.mobilitydata.gtfsvalidator.notice.testnotices.StringFieldNotice;
+import org.mobilitydata.gtfsvalidator.notice.testnotices.TestValidator.TestInnerNotice;
+import org.mobilitydata.gtfsvalidator.type.GtfsColor;
+import org.mobilitydata.gtfsvalidator.type.GtfsDate;
+import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 public class NoticeSchemaGeneratorTest {
+  private static final String OPEN_SOURCE_NOTICES_PACKAGE = "org.mobilitydata.gtfsvalidator";
+  private static final String TEST_NOTICES_PACKAGE =
+      "org.mobilitydata.gtfsvalidator.notice.testnotices";
 
   @Test
-  public void exportNoticesSchema()
-      throws IOException, ConstructorParametersInconsistencyException {
-    assertThat(NoticeSchemaGenerator.export(
-        true,
-        ImmutableList.of(AnotherTestValidationNotice.class.getPackage().getName()),
-        ImmutableList.of(SampleTestValidator.class.getPackage().getName()))).isEqualTo(
-        "{\n"
-            + "  \"another_test_validation\": [\n"
-            + "    {\n"
-            + "      \"name\": \"csvRowNumber\",\n"
-            + "      \"type\": \"BIGINT\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"fieldName\",\n"
-            + "      \"type\": \"VARCHAR\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"fieldValue\",\n"
-            + "      \"type\": \"BLOB\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"filename\",\n"
-            + "      \"type\": \"VARCHAR\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"integerValue\",\n"
-            + "      \"type\": \"INTEGER\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"otherFieldValue\",\n"
-            + "      \"type\": \"DOUBLE\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"sampleColor\",\n"
-            + "      \"type\": \"VARCHAR\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"sampleDate\",\n"
-            + "      \"type\": \"BLOB\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"sampleTime\",\n"
-            + "      \"type\": \"BLOB\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"severityLevel\",\n"
-            + "      \"type\": \"VARCHAR\"\n"
-            + "    }\n"
-            + "  ],\n"
-            + "  \"nested_test_validator\": [\n"
-            + "    {\n"
-            + "      \"name\": \"csvRowNumber\",\n"
-            + "      \"type\": \"BIGINT\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"tripId\",\n"
-            + "      \"type\": \"VARCHAR\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"severityLevel\",\n"
-            + "      \"type\": \"VARCHAR\"\n"
-            + "    }\n"
-            + "  ],\n"
-            + "  \"some_test_validation\": [\n"
-            + "    {\n"
-            + "      \"name\": \"csvRowNumber\",\n"
-            + "      \"type\": \"BIGINT\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"fieldName\",\n"
-            + "      \"type\": \"VARCHAR\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"fieldValue\",\n"
-            + "      \"type\": \"BLOB\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"filename\",\n"
-            + "      \"type\": \"VARCHAR\"\n"
-            + "    },\n"
-            + "    {\n"
-            + "      \"name\": \"severityLevel\",\n"
-            + "      \"type\": \"VARCHAR\"\n"
-            + "    }\n"
-            + "  ]\n"
-            + "}"
-    );
+  public void findNoticeSubclasses() throws IOException {
+    assertThat(NoticeSchemaGenerator.findNoticeSubclasses(ImmutableList.of(TEST_NOTICES_PACKAGE)))
+        .containsExactly(
+            DoubleFieldNotice.class,
+            TestInnerNotice.class,
+            GtfsTypesValidationNotice.class,
+            StringFieldNotice.class);
+  }
+
+  @Test
+  public void jsonSchemaForPackages_succeeds() throws IOException {
+    assertThat(
+            NoticeSchemaGenerator.jsonSchemaForPackages(
+                ImmutableList.of(OPEN_SOURCE_NOTICES_PACKAGE)))
+        .isNotNull();
+  }
+
+  @Test
+  public void contextFieldsInPackages_testNotices() throws IOException {
+    assertThat(
+            NoticeSchemaGenerator.contextFieldsInPackages(ImmutableList.of(TEST_NOTICES_PACKAGE)))
+        .isEqualTo(
+            ImmutableMap.of(
+                "DoubleFieldNotice",
+                ImmutableMap.of("doubleField", double.class),
+                "TestInnerNotice",
+                ImmutableMap.of("intField", int.class),
+                "GtfsTypesValidationNotice",
+                ImmutableMap.of(
+                    "color", GtfsColor.class, "date", GtfsDate.class, "time", GtfsTime.class),
+                "StringFieldNotice",
+                ImmutableMap.of("someField", String.class)));
+  }
+
+  @Test
+  public void contextFieldsForNotice_foreignKeyViolationNotice() {
+    assertThat(NoticeSchemaGenerator.contextFieldsForNotice(ForeignKeyViolationNotice.class))
+        .containsExactly(
+            "childFieldName",
+            String.class,
+            "childFilename",
+            String.class,
+            "csvRowNumber",
+            long.class,
+            "fieldValue",
+            String.class,
+            "parentFieldName",
+            String.class,
+            "parentFilename",
+            String.class);
+  }
+
+  @Test
+  public void jsonSchemaForNotice_duplicateKeyNotice() {
+    JsonElement expected =
+        new Gson()
+            .toJsonTree(
+                ImmutableMap.of(
+                    "type",
+                    "object",
+                    "properties",
+                    new ImmutableMap.Builder<String, Object>()
+                        .put("fieldName1", ImmutableMap.of("type", "string"))
+                        .put("fieldName2", ImmutableMap.of("type", "string"))
+                        .put(
+                            "fieldValue1",
+                            ImmutableMap.of(
+                                "type", ImmutableList.of("string", "integer", "number")))
+                        .put(
+                            "fieldValue2",
+                            ImmutableMap.of(
+                                "type", ImmutableList.of("string", "integer", "number")))
+                        .put("filename", ImmutableMap.of("type", "string"))
+                        .put("newCsvRowNumber", ImmutableMap.of("type", "integer"))
+                        .put("oldCsvRowNumber", ImmutableMap.of("type", "integer"))
+                        .build()));
+
+    assertThat(
+            NoticeSchemaGenerator.jsonSchemaForNotice(
+                "DuplicateKeyNotice",
+                NoticeSchemaGenerator.contextFieldsForNotice(DuplicateKeyNotice.class)))
+        .isEqualTo(expected);
   }
 }

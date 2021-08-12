@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.notice;
+package org.mobilitydata.gtfsvalidator.notice.testnotices;
 
-class StringFieldNotice extends ValidationNotice {
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 
-  private final String someField;
+public class DoubleFieldNotice extends ValidationNotice {
 
-  public StringFieldNotice(String someField, SeverityLevel severityLevel) {
+  private final double doubleField;
+
+  public DoubleFieldNotice(double doubleField, SeverityLevel severityLevel) {
     super(severityLevel);
-    this.someField = someField;
+    this.doubleField = doubleField;
   }
 }
