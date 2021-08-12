@@ -37,5 +37,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "This contribution does not follow the conventions set by the [Google Java style guide](https://google.github.io/styleguide/javaguide.html). Please [download the formatter](https://github.com/google/google-java-format/releases) and run it with ```java -jar /path/to/google-java-format-1.11.0-all-deps.jar -i $(find . -name '*.java')``` to fix formatting errors."
+              body: "This contribution does not follow the conventions set by the [Google Java style guide](https://google.github.io/styleguide/javaguide.html). Please  run the following command line at the root of the project to fix formatting errors: ```./gradlew verGJF```."
             })
