@@ -51,7 +51,7 @@ public class Main {
   public static void main(String[] argv) {
     Arguments args = new Arguments();
     JCommander jCommander = new JCommander(args);
-          jCommander.parse(argv);
+    jCommander.parse(argv);
     if (args.getHelp()) {
       jCommander.usage();
       System.out.println(
