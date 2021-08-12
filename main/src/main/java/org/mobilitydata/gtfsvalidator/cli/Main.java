@@ -183,7 +183,7 @@ public class Main {
 
   private static void exportNoticeSchema(final Arguments args) {
     new File(args.getOutputBase()).mkdirs();
-    Gson gson = createGson(args.getPretty());
+          Gson gson = createGson(args.getPretty());
     try {
       Files.write(
           Paths.get(args.getOutputBase(), NOTICE_SCHEMA_JSON),
