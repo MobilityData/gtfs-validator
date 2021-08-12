@@ -28,7 +28,7 @@ jobs:
         with:
           arguments: verGJF
   comment-on-failure:
-    if: always() && (needs.formatting.result=='failure')
+    if: ${{ failure() }}
     needs: [ formatting ]
     steps:
       - name: github-action-comment-pull-request
