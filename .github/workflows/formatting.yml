@@ -28,7 +28,8 @@ jobs:
         with:
           arguments: verGJF
   comment-on-failure:
-    if: failure()
+    runs-on: ubuntu-latest
+    if: ${{ (needs.formatting.result=='failure') }}
     needs: [ formatting ]
     steps:
       - name: github-action-comment-pull-request
