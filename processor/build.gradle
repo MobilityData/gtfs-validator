@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id 'com.github.sherter.google-java-format' version '0.9'
 }
 
 group 'org.mobilitydata'
