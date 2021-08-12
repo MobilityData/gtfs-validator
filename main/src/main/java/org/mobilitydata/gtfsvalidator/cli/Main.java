@@ -44,9 +44,7 @@ import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 
-/**
- * The main entry point for GTFS Validator CLI.
- */
+/** The main entry point for GTFS Validator CLI. */
 public class Main {
 
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
@@ -167,9 +165,7 @@ public class Main {
     return builder.create();
   }
 
-  /**
-   * Generates and exports reports for both validation notices and system errors reports.
-   */
+  /** Generates and exports reports for both validation notices and system errors reports. */
   private static void exportReport(final NoticeContainer noticeContainer, final Arguments args) {
     new File(args.getOutputBase()).mkdirs();
     Gson gson = createGson(args.getPretty());
@@ -191,8 +187,9 @@ public class Main {
     try {
       Files.write(
           Paths.get(args.getOutputBase(), NOTICE_SCHEMA_JSON),
-          gson.toJson(NoticeSchemaGenerator.jsonSchemaForPackages(
-              NoticeSchemaGenerator.DEFAULT_NOTICE_PACKAGES))
+          gson.toJson(
+                  NoticeSchemaGenerator.jsonSchemaForPackages(
+                      NoticeSchemaGenerator.DEFAULT_NOTICE_PACKAGES))
               .getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store notice schema file");

@@ -18,9 +18,7 @@ package org.mobilitydata.gtfsvalidator.cli;
 
 import com.beust.jcommander.Parameter;
 
-/**
- * Command-line arguments for GTFS Validator CLI.
- */
+/** Command-line arguments for GTFS Validator CLI. */
 public class Arguments {
 
   @Parameter(
@@ -139,10 +137,16 @@ public class Arguments {
     return pretty;
   }
 
-  public boolean getExportNoticeSchema() { return exportNoticeSchema; }
+  public boolean getExportNoticeSchema() {
+    return exportNoticeSchema;
+  }
 
   public boolean abortAfterNoticeSchemaExport() {
-    return input == null && countryCode == null && url == null && storageDirectory == null &&
-        validationReportName == null && systemErrorsReportName == null;
+    return input == null
+        && countryCode == null
+        && url == null
+        && storageDirectory == null
+        && validationReportName == null
+        && systemErrorsReportName == null;
   }
 }
