@@ -27,10 +27,9 @@ jobs:
           versionTag: ${{ steps.prep.outputs.versionTag }}
         with:
           arguments: verGJF
-  comment-on-failure:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/github-script@v4
+      - name: Comment PR if code does not comply to Google Java style guide
+        if: ${{ failure() }}
+        uses: actions/github-script@v4
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
