@@ -38,5 +38,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "The code from does not follow the conventions set by the [Google Java style guide](https://google.github.io/styleguide/javaguide.html). Please [download the formatter](https://github.com/google/google-java-format/releases) and run it with ```-i $(find . -name '*.java')``` to fix formatting errors."
+              body: "This contribution does not follow the conventions set by the [Google Java style guide](https://google.github.io/styleguide/javaguide.html). Please [download the formatter](https://github.com/google/google-java-format/releases) and run it with ```-i $(find . -name '*.java')``` to fix formatting errors."
             })
