@@ -28,14 +28,18 @@ jobs:
         with:
           arguments: verGJF
   comment-on-failure:
-    build:
-      name: Comment a pull_request
-      runs-on: ubuntu-latest
-#      if: ${{ (needs.formatting.result=='failure') }}
-#      needs: [ formatting ]
-      steps:
-        - name: github-action-comment-pull-request
-          uses: mb2dev/github-action-comment-pull-request@1.0.0
-          with:
-          message: "This PR code does not follow the standard defined by the Google Java style guide (see https://google.github.io/styleguide/javaguide.html). Please download the formatter at https://github.com/google/google-java-format/releases and run it with ``` -i $(find . -name '*.java')```."
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add comment to PR
+        if: (needs.job1.result=='failure')
+        needs: [formatting]
+        env:
+          URL: ${{ github.event.issue.comments_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl \
+            -X POST \
+            $URL \
+            -H "Content-Type: application/json" \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            --data '{ "body": "Check format." }'
