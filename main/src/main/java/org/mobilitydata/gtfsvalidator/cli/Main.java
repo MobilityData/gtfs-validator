@@ -35,6 +35,7 @@ import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.NoticeSchemaGenerator;
 import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
@@ -43,10 +44,14 @@ import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 
-/** The main entry point for GTFS Validator CLI. */
+/**
+ * The main entry point for GTFS Validator CLI.
+ */
 public class Main {
+
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private static final String GTFS_ZIP_FILENAME = "gtfs.zip";
+  private static final String NOTICE_SCHEMA_JSON = "notice_schema.json";
 
   public static void main(String[] argv) {
     Arguments args = new Arguments();
@@ -162,7 +167,9 @@ public class Main {
     return builder.create();
   }
 
-  /** Generates and exports reports for both validation notices and system errors reports. */
+  /**
+   * Generates and exports reports for both validation notices and system errors reports.
+   */
   private static void exportReport(final NoticeContainer noticeContainer, final Arguments args) {
     new File(args.getOutputBase()).mkdirs();
     Gson gson = createGson(args.getPretty());
@@ -180,16 +187,14 @@ public class Main {
 
   private static void exportNoticeSchema(final Arguments args) {
     new File(args.getOutputBase()).mkdirs();
+    Gson gson = createGson(args.getPretty());
     try {
       Files.write(
           Paths.get(args.getOutputBase(), NOTICE_SCHEMA_JSON),
-          NoticeSchemaGenerator
-              .export(
-                  args.getPretty(),
-                  ImmutableList.of(ValidationNotice.class.getPackage().getName()),
-                  ImmutableList.of(GtfsFieldValidator.class.getPackage().getName()))
+          gson.toJson(NoticeSchemaGenerator.jsonSchemaForPackages(
+              NoticeSchemaGenerator.DEFAULT_NOTICE_PACKAGES))
               .getBytes(StandardCharsets.UTF_8));
-    } catch (IOException | ConstructorParametersInconsistencyException e) {
+    } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store notice schema file");
     }
   }
