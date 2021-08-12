@@ -10,8 +10,20 @@ jobs:
   formatting:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2 # v2 minimum required
-      - uses: axel-op/googlejavaformat-action@v3
+      - uses: actions/checkout@v2
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
         with:
-          commitMessage: "chore: Google Java Format"
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          java-version: 1.8
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+      - name: Check code compliance to google java format standards
+        uses: eskatos/gradle-command-action@v1
+        env:
+          versionTag: ${{ steps.prep.outputs.versionTag }}
+        with:
+          arguments: verGJF

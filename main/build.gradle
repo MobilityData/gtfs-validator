@@ -18,6 +18,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'application'
     id 'java'
+    id 'com.github.sherter.google-java-format' version '0.9'
 }
 
 applicationDefaultJvmArgs = [ "-Xmx8G" ]
