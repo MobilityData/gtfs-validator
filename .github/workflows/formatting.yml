@@ -28,8 +28,10 @@ jobs:
         with:
           arguments: verGJF
   comment-on-failure:
+    needs: [ formatting ]
     runs-on: ubuntu-latest
     steps:
+      if: ${{ failure() }}
       - uses: actions/github-script@v4
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
