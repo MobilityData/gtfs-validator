@@ -41,7 +41,6 @@ jar {
 shadowJar {
     minimize {
         exclude(dependency('org.apache.logging.log4j:log4j-core'))
-        exclude(dependency('com.fasterxml.jackson.core:jackson-databind'))
         exclude(dependency('org.apache.httpcomponents:httpclient'))
     }
     // Change the JAR name from cli-app to gtfs-validator
@@ -67,7 +66,6 @@ dependencies {
     implementation 'org.apache.httpcomponents.client5:httpclient5:5.0.3'
     implementation 'com.beust:jcommander:1.48'
     implementation 'javax.inject:javax.inject:1'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.google.guava:guava:29.0-jre'
     implementation 'com.google.flogger:flogger:0.5.1'
@@ -77,7 +75,6 @@ dependencies {
     implementation 'org.locationtech.spatial4j:spatial4j:0.7'
     testImplementation group: 'junit', name: 'junit', version: '4.13'
     testImplementation "com.google.truth:truth:1.0.1"
-    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
 }
 
 test {
