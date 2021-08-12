@@ -31,8 +31,8 @@ jobs:
     build:
       name: Comment a pull_request
       runs-on: ubuntu-latest
-      if: ${{ (needs.formatting.result=='failure') }}
-      needs: [ formatting ]
+#      if: ${{ (needs.formatting.result=='failure') }}
+#      needs: [ formatting ]
       steps:
         - name: github-action-comment-pull-request
           uses: mb2dev/github-action-comment-pull-request@1.0.0
