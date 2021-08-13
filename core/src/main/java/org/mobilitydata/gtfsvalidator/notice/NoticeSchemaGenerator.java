@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
+import com.google.common.geometry.S2LatLng;
 import com.google.common.reflect.ClassPath;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -195,6 +196,19 @@ public class NoticeSchemaGenerator {
     private static final String INTEGER = "integer";
     private static final String STRING = "string";
     private static final String BOOLEAN = "boolean";
+    private static final String ARRAY = "array";
+  }
+
+  static JsonObject s2LatLngToJsonType() {
+    JsonObject contains = new JsonObject();
+    contains.addProperty("type", JsonTypes.NUMBER);
+
+    JsonObject typeDef = new JsonObject();
+    typeDef.addProperty("type", JsonTypes.ARRAY);
+    typeDef.add("contains", contains);
+    typeDef.addProperty("minItems", 2);
+    typeDef.addProperty("maxItems", 2);
+    return typeDef;
   }
 
   static JsonArray objectToJsonType() {
@@ -238,6 +252,9 @@ public class NoticeSchemaGenerator {
   }
 
   static JsonObject fieldTypeSchema(Class<?> fieldType) {
+    if (fieldType == S2LatLng.class) {
+      return s2LatLngToJsonType();
+    }
     JsonObject schema = new JsonObject();
     schema.add("type", javaTypeToJson(fieldType));
     return schema;
