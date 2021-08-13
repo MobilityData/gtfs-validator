@@ -16,6 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.util.StopUtil.getStopOrParentLatLng;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
@@ -97,9 +99,9 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
    */
   private double[] findDistancesKmBetweenStops(List<GtfsStopTime> stopTimes) {
     double[] distancesKm = new double[stopTimes.size() - 1];
-    S2LatLng currLatLng = getStopLatLng(stopTable, stopTimes.get(0).stopId());
+    S2LatLng currLatLng = getStopOrParentLatLng(stopTable, stopTimes.get(0).stopId());
     for (int i = 0; i < distancesKm.length; ++i) {
-      S2LatLng nextLatLng = getStopLatLng(stopTable, stopTimes.get(i + 1).stopId());
+      S2LatLng nextLatLng = getStopOrParentLatLng(stopTable, stopTimes.get(i + 1).stopId());
       distancesKm[i] = S2Earth.getDistanceKm(currLatLng, nextLatLng);
       currLatLng = nextLatLng;
     }
@@ -255,26 +257,6 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
           .putInt(stopTime.departureTime().getSecondsSinceMidnight());
     }
     return hasher.hash().asLong();
-  }
-
-  /**
-   * Returns coordinates of the stop. If they are missing, coordinates of the parent are used.
-   *
-   * <p>Returns (0, 0) if no coordinates are found in parent chain. That case is reported in another
-   * validator.
-   */
-  static S2LatLng getStopLatLng(GtfsStopTableContainer stopTable, String stopId) {
-    for (; ; ) {
-      GtfsStop stop = stopTable.byStopId(stopId);
-      if (stop.hasStopLatLon()) {
-        return stop.stopLatLon();
-      }
-      if (stop.hasParentStation()) {
-        stopId = stop.parentStation();
-      } else {
-        return S2LatLng.CENTER;
-      }
-    }
   }
 
   /** Returns a speed threshold (km/h) for a given vehicle type. */

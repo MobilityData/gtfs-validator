@@ -18,7 +18,6 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mobilitydata.gtfsvalidator.validator.StopTimeTravelSpeedValidator.getSpeedKphBetweenStops;
-import static org.mobilitydata.gtfsvalidator.validator.StopTimeTravelSpeedValidator.getStopLatLng;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.geometry.S2LatLng;
@@ -326,22 +325,5 @@ public final class StopTimeTravelSpeedValidatorTest {
     List<GtfsStopTime> stopTimes =
         createStopTimesSameDepartureArrival(ImmutableList.of(GtfsTime.fromString("08:00:00")));
     assertThat(getSpeedKphBetweenStops(2, stopTimes.get(0), stopTimes.get(0))).isEqualTo(120);
-  }
-
-  @Test
-  public void getStopLatLng_chain() {
-    List<GtfsStop> stops =
-        ImmutableList.of(
-            new GtfsStop.Builder().setStopId("boardingArea1").setParentStation("platform1").build(),
-            new GtfsStop.Builder().setStopId("platform1").setParentStation("station1").build(),
-            new GtfsStop.Builder().setStopId("station1").setStopLat(40.0).setStopLon(30.0).build(),
-            new GtfsStop.Builder().setStopId("stop1").setStopLat(50.0).setStopLon(60.0).build());
-    GtfsStopTableContainer stopTable =
-        GtfsStopTableContainer.forEntities(stops, new NoticeContainer());
-    assertThat(getStopLatLng(stopTable, "boardingArea1")).isEqualTo(stops.get(2).stopLatLon());
-    assertThat(getStopLatLng(stopTable, "platform1")).isEqualTo(stops.get(2).stopLatLon());
-    assertThat(getStopLatLng(stopTable, "station1")).isEqualTo(stops.get(2).stopLatLon());
-
-    assertThat(getStopLatLng(stopTable, "stop1")).isEqualTo(stops.get(3).stopLatLon());
   }
 }
