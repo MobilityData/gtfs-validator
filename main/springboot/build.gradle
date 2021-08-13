@@ -57,7 +57,10 @@ repositories {
 }
 
 dependencies {
+    compile 'com.google.cloud:google-cloud-storage'
     implementation project(':main:cli')
+    implementation platform('com.google.cloud:libraries-bom:20.9.0')
+    implementation 'com.beust:jcommander:1.48'
     implementation 'com.google.flogger:flogger:0.5.1'
     implementation 'com.google.flogger:flogger-system-backend:0.5.1'
     implementation 'org.locationtech.spatial4j:spatial4j:0.7'
