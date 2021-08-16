@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 MobilityData IO
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mobilitydata.gtfsvalidator.annotation;
 
-/**
- * Annotation to be used on notice constructor. This specifies the constructor to be used to
- * identify notice field names and data types when exporting the notice schema.
- */
-public @interface SchemaExport {}
+package org.mobilitydata.gtfsvalidator.notice.testnotices;
+
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+
+public class DoubleFieldNotice extends ValidationNotice {
+
+  private final double doubleField;
+
+  public DoubleFieldNotice(double doubleField, SeverityLevel severityLevel) {
+    super(severityLevel);
+    this.doubleField = doubleField;
+  }
+}

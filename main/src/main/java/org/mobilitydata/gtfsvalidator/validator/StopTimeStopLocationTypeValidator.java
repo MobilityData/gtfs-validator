@@ -16,13 +16,11 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimaps;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -84,18 +82,20 @@ public class StopTimeStopLocationTypeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING} - To be upgraded to {@code SeverityLevel.ERROR}.
    */
   static class WrongStopTimeStopLocationTypeNotice extends ValidationNotice {
+    private final long csvRowNumber;
+    private final String tripId;
+    private final int stopSequence;
+    private final String stopId;
+    private final String locationType;
 
-    @SchemaExport
     WrongStopTimeStopLocationTypeNotice(
         long csvRowNumber, String tripId, int stopSequence, String stopId, String locationType) {
-      super(
-          ImmutableMap.of(
-              "csvRowNumber", csvRowNumber,
-              "tripId", tripId,
-              "stopSequence", stopSequence,
-              "stopId", stopId,
-              "locationType", locationType),
-          SeverityLevel.WARNING);
+      super(SeverityLevel.WARNING);
+      this.csvRowNumber = csvRowNumber;
+      this.tripId = tripId;
+      this.stopSequence = stopSequence;
+      this.stopId = stopId;
+      this.locationType = locationType;
     }
   }
 }

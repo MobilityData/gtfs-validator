@@ -16,8 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
+import javax.annotation.Nullable;
 
 /**
  * Start and end range fields are out of order for a certain GTFS entity.
@@ -28,7 +27,14 @@ import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
  */
 public class StartAndEndRangeOutOfOrderNotice extends ValidationNotice {
 
-  @SchemaExport
+  private final String filename;
+  private final long csvRowNumber;
+  @Nullable private final String entityId;
+  private final String startFieldName;
+  private final String startValue;
+  private final String endFieldName;
+  private final String endValue;
+
   public StartAndEndRangeOutOfOrderNotice(
       String filename,
       long csvRowNumber,
@@ -37,17 +43,14 @@ public class StartAndEndRangeOutOfOrderNotice extends ValidationNotice {
       String startValue,
       String endFieldName,
       String endValue) {
-    super(
-        new ImmutableMap.Builder<String, Object>()
-            .put("filename", filename)
-            .put("csvRowNumber", csvRowNumber)
-            .put("entityId", entityId)
-            .put("startFieldName", startFieldName)
-            .put("startValue", startValue)
-            .put("endFieldName", endFieldName)
-            .put("endValue", endValue)
-            .build(),
-        SeverityLevel.ERROR);
+    super(SeverityLevel.ERROR);
+    this.filename = filename;
+    this.csvRowNumber = csvRowNumber;
+    this.entityId = entityId;
+    this.startFieldName = startFieldName;
+    this.startValue = startValue;
+    this.endFieldName = endFieldName;
+    this.endValue = endValue;
   }
 
   public StartAndEndRangeOutOfOrderNotice(
@@ -57,20 +60,13 @@ public class StartAndEndRangeOutOfOrderNotice extends ValidationNotice {
       String startValue,
       String endFieldName,
       String endValue) {
-    super(
-        new ImmutableMap.Builder<String, Object>()
-            .put("filename", filename)
-            .put("csvRowNumber", csvRowNumber)
-            .put("startFieldName", startFieldName)
-            .put("startValue", startValue)
-            .put("endFieldName", endFieldName)
-            .put("endValue", endValue)
-            .build(),
-        SeverityLevel.ERROR);
-  }
-
-  @Override
-  public String getCode() {
-    return "start_and_end_range_out_of_order";
+    super(SeverityLevel.ERROR);
+    this.filename = filename;
+    this.csvRowNumber = csvRowNumber;
+    this.entityId = null;
+    this.startFieldName = startFieldName;
+    this.startValue = startValue;
+    this.endFieldName = endFieldName;
+    this.endValue = endValue;
   }
 }

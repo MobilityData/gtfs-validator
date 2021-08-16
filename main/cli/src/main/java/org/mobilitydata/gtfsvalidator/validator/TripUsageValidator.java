@@ -16,12 +16,10 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import com.google.common.collect.ImmutableMap;
 import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -63,13 +61,13 @@ public class TripUsageValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class UnusedTripNotice extends ValidationNotice {
-    @SchemaExport
+    private final String tripId;
+    private final long csvRowNumber;
+
     UnusedTripNotice(String tripId, long csvRowNumber) {
-      super(
-          ImmutableMap.of(
-              "tripId", tripId,
-              "csvRowNumber", csvRowNumber),
-          SeverityLevel.WARNING);
+      super(SeverityLevel.WARNING);
+      this.tripId = tripId;
+      this.csvRowNumber = csvRowNumber;
     }
   }
 }

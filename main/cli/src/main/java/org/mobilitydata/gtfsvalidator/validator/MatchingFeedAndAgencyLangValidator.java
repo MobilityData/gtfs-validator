@@ -16,11 +16,9 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import com.google.common.collect.ImmutableMap;
 import java.util.Locale;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -93,17 +91,20 @@ public class MatchingFeedAndAgencyLangValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class FeedInfoLangAndAgencyLangMismatchNotice extends ValidationNotice {
-    @SchemaExport
+    private final long csvRowNumber;
+    private final String agencyId;
+    private final String agencyName;
+    private final String agencyLang;
+    private final String feedLang;
+
     FeedInfoLangAndAgencyLangMismatchNotice(
         long csvRowNumber, String agencyId, String agencyName, String agencyLang, String feedLang) {
-      super(
-          ImmutableMap.of(
-              "csvRowNumber", csvRowNumber,
-              "agencyId", agencyId,
-              "agencyName", agencyName,
-              "agencyLang", agencyLang,
-              "feedLang", feedLang),
-          SeverityLevel.WARNING);
+      super(SeverityLevel.WARNING);
+      this.csvRowNumber = csvRowNumber;
+      this.agencyId = agencyId;
+      this.agencyName = agencyName;
+      this.agencyLang = agencyLang;
+      this.feedLang = feedLang;
     }
   }
 }

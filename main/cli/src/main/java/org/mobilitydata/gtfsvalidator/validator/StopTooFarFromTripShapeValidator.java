@@ -16,7 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimaps;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,7 +29,6 @@ import org.locationtech.spatial4j.shape.Shape;
 import org.locationtech.spatial4j.shape.ShapeFactory;
 import org.locationtech.spatial4j.shape.SpatialRelation;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -211,21 +209,24 @@ public class StopTooFarFromTripShapeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class StopTooFarFromTripShapeNotice extends ValidationNotice {
-    @SchemaExport
+    private final String stopId;
+    private final int stopSequence;
+    private final String tripId;
+    private final String shapeId;
+    private final double stopShapeThresholdMeters;
+
     StopTooFarFromTripShapeNotice(
-        final String stopId,
-        final int stopSequence,
-        final String tripId,
-        final String shapeId,
-        final double stopShapeThresholdMeters) {
-      super(
-          ImmutableMap.of(
-              "stopId", stopId,
-              "stopSequence", stopSequence,
-              "tripId", tripId,
-              "shapeId", shapeId,
-              "stopShapeThresholdMeters", stopShapeThresholdMeters),
-          SeverityLevel.WARNING);
+        String stopId,
+        int stopSequence,
+        String tripId,
+        String shapeId,
+        double stopShapeThresholdMeters) {
+      super(SeverityLevel.WARNING);
+      this.stopId = stopId;
+      this.stopSequence = stopSequence;
+      this.tripId = tripId;
+      this.shapeId = shapeId;
+      this.stopShapeThresholdMeters = stopShapeThresholdMeters;
     }
   }
 }

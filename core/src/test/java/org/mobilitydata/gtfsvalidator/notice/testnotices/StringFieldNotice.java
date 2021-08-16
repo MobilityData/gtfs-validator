@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.notice;
+package org.mobilitydata.gtfsvalidator.notice.testnotices;
 
-/**
- * A notice that the file is expected to have a single entity but has more (e.g., "feed_info.txt").
- *
- * <p>Severity: {@code SeverityLevel.WARNING}
- */
-public class MoreThanOneEntityNotice extends ValidationNotice {
-  private final String filename;
-  private final long entityCount;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 
-  public MoreThanOneEntityNotice(String filename, long entityCount) {
-    super(SeverityLevel.WARNING);
-    this.filename = filename;
-    this.entityCount = entityCount;
+public class StringFieldNotice extends ValidationNotice {
+
+  private final String someField;
+
+  public StringFieldNotice(String someField, SeverityLevel severityLevel) {
+    super(severityLevel);
+    this.someField = someField;
   }
 }

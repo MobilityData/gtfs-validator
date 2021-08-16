@@ -16,13 +16,11 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -193,18 +191,20 @@ public class UrlConsistencyValidator extends FileValidator {
    * <p>{@code SeverityLevel.WARNING}
    */
   static class SameStopAndRouteUrlNotice extends ValidationNotice {
+    private final long csvRowNumber;
+    private final String stopId;
+    private final String stopUrl;
+    private final String routeId;
+    private final long routeCsvRowNumber;
 
-    @SchemaExport
     SameStopAndRouteUrlNotice(
         long csvRowNumber, String stopId, String stopUrl, String routeId, long routeCsvRowNumber) {
-      super(
-          ImmutableMap.of(
-              "csvRowNumber", csvRowNumber,
-              "stopId", stopId,
-              "stopUrl", stopUrl,
-              "routeId", routeId,
-              "routeCsvRowNumber", routeCsvRowNumber),
-          SeverityLevel.WARNING);
+      super(SeverityLevel.WARNING);
+      this.csvRowNumber = csvRowNumber;
+      this.stopId = stopId;
+      this.stopUrl = stopUrl;
+      this.routeId = routeId;
+      this.routeCsvRowNumber = routeCsvRowNumber;
     }
   }
 
@@ -215,22 +215,24 @@ public class UrlConsistencyValidator extends FileValidator {
    * <p>{@code SeverityLevel.WARNING}
    */
   static class SameRouteAndAgencyUrlNotice extends ValidationNotice {
+    private final long csvRowNumber;
+    private final String routeId;
+    private final String agencyName;
+    private final String routeUrl;
+    private final long agencyCsvRowNumber;
 
-    @SchemaExport
     SameRouteAndAgencyUrlNotice(
         long csvRowNumber,
         String routeId,
         String agencyName,
         String routeUrl,
         long agencyCsvRowNumber) {
-      super(
-          ImmutableMap.of(
-              "csvRowNumber", csvRowNumber,
-              "routeId", routeId,
-              "agencyName", agencyName,
-              "routeUrl", routeUrl,
-              "agencyCsvRowNumber", agencyCsvRowNumber),
-          SeverityLevel.WARNING);
+      super(SeverityLevel.WARNING);
+      this.csvRowNumber = csvRowNumber;
+      this.routeId = routeId;
+      this.agencyName = agencyName;
+      this.routeUrl = routeUrl;
+      this.agencyCsvRowNumber = agencyCsvRowNumber;
     }
   }
 
@@ -240,22 +242,24 @@ public class UrlConsistencyValidator extends FileValidator {
    * <p>{@code SeverityLevel.WARNING}
    */
   static class SameStopAndAgencyUrlNotice extends ValidationNotice {
+    private final long csvRowNumber;
+    private final String stopId;
+    private final String agencyName;
+    private final String stopUrl;
+    private final long agencyCsvRowNumber;
 
-    @SchemaExport
     SameStopAndAgencyUrlNotice(
         long csvRowNumber,
         String stopId,
         String agencyName,
         String stopUrl,
         long agencyCsvRowNumber) {
-      super(
-          ImmutableMap.of(
-              "csvRowNumber", csvRowNumber,
-              "stopId", stopId,
-              "agencyName", agencyName,
-              "stopUrl", stopUrl,
-              "agencyCsvRowNumber", agencyCsvRowNumber),
-          SeverityLevel.WARNING);
+      super(SeverityLevel.WARNING);
+      this.csvRowNumber = csvRowNumber;
+      this.stopId = stopId;
+      this.agencyName = agencyName;
+      this.stopUrl = stopUrl;
+      this.agencyCsvRowNumber = agencyCsvRowNumber;
     }
   }
 }

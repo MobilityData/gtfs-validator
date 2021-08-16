@@ -16,11 +16,9 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
@@ -76,23 +74,21 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
   }
 
   static class FeedExpirationDateNotice extends ValidationNotice {
-    @SchemaExport
+    private final long csvRowNumber;
+    private final GtfsDate currentDate;
+    private final GtfsDate feedEndDate;
+    private final GtfsDate suggestedExpirationDate;
+
     FeedExpirationDateNotice(
         long csvRowNumber,
         GtfsDate currentDate,
         GtfsDate feedEndDate,
         GtfsDate suggestedExpirationDate) {
-      super(
-          ImmutableMap.of(
-              "csvRowNumber",
-              csvRowNumber,
-              "currentDate",
-              currentDate.toYYYYMMDD(),
-              "feedEndDate",
-              feedEndDate.toYYYYMMDD(),
-              "suggestedExpirationDate",
-              suggestedExpirationDate),
-          SeverityLevel.WARNING);
+      super(SeverityLevel.WARNING);
+      this.csvRowNumber = csvRowNumber;
+      this.currentDate = currentDate;
+      this.feedEndDate = feedEndDate;
+      this.suggestedExpirationDate = suggestedExpirationDate;
     }
   }
 }
