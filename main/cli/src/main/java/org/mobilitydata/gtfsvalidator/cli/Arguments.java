@@ -23,6 +23,7 @@ public class Arguments {
 
   public static final String VALIDATION_REPORT_DEFAULT_NAME_JSON = "report.json";
   public static final String SYSTEM_ERRORS_REPORT_DEFAULT_NAME = "system_errors.json";
+
   @Parameter(
       names = {"-i", "--input"},
       description = "Location of the input GTFS ZIP or unarchived directory")
