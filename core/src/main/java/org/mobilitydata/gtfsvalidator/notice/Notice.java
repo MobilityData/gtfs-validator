@@ -17,10 +17,12 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.base.CaseFormat;
+import com.google.common.geometry.S2LatLng;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
@@ -40,6 +42,7 @@ public abstract class Notice {
           .registerTypeAdapter(GtfsColor.class, new GtfsColorSerializer())
           .registerTypeAdapter(GtfsDate.class, new GtfsDateSerializer())
           .registerTypeAdapter(GtfsTime.class, new GtfsTimeSerializer())
+          .registerTypeAdapter(S2LatLng.class, new S2LatLngSerializer())
           .serializeSpecialFloatingPointValues()
           .create();
 
@@ -143,6 +146,17 @@ public abstract class Notice {
     @Override
     public JsonElement serialize(GtfsTime src, Type typeOfSrc, JsonSerializationContext context) {
       return new JsonPrimitive(src.toHHMMSS());
+    }
+  }
+
+  /** Serializes {@link S2LatLng} as {@code [latDegrees, lngDegrees]} array. */
+  private static class S2LatLngSerializer implements JsonSerializer<S2LatLng> {
+    @Override
+    public JsonElement serialize(S2LatLng src, Type typeOfSrc, JsonSerializationContext context) {
+      JsonArray latLng = new JsonArray(2);
+      latLng.add(src.latDegrees());
+      latLng.add(src.lngDegrees());
+      return latLng;
     }
   }
 }
