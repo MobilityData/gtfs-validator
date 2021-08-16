@@ -2,12 +2,15 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import com.google.common.geometry.S2LatLng;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.testnotices.DoubleFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.testnotices.GtfsTypesValidationNotice;
+import org.mobilitydata.gtfsvalidator.notice.testnotices.S2LatLngNotice;
 import org.mobilitydata.gtfsvalidator.notice.testnotices.StringFieldNotice;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
@@ -75,6 +78,18 @@ public class NoticeTest {
                     GtfsTime.fromString("12:20:34"))
                 .getContext())
         .isEqualTo(expected);
+  }
+
+  @Test
+  public void getContext_s2LatLng() {
+    S2LatLng latLng = S2LatLng.fromDegrees(45, 48);
+    JsonObject expected = new JsonObject();
+    JsonArray point = new JsonArray();
+    point.add(latLng.latDegrees());
+    point.add(latLng.lngDegrees());
+    expected.add("point", point);
+
+    assertThat(new S2LatLngNotice(latLng).getContext()).isEqualTo(expected);
   }
 
   @Test

@@ -20,12 +20,14 @@ import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.geometry.S2LatLng;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import java.io.IOException;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.testnotices.DoubleFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.testnotices.GtfsTypesValidationNotice;
+import org.mobilitydata.gtfsvalidator.notice.testnotices.S2LatLngNotice;
 import org.mobilitydata.gtfsvalidator.notice.testnotices.StringFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.testnotices.TestValidator.TestInnerNotice;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
@@ -44,6 +46,7 @@ public class NoticeSchemaGeneratorTest {
             DoubleFieldNotice.class,
             TestInnerNotice.class,
             GtfsTypesValidationNotice.class,
+            S2LatLngNotice.class,
             StringFieldNotice.class);
   }
 
@@ -68,6 +71,8 @@ public class NoticeSchemaGeneratorTest {
                 "GtfsTypesValidationNotice",
                 ImmutableMap.of(
                     "color", GtfsColor.class, "date", GtfsDate.class, "time", GtfsTime.class),
+                "S2LatLngNotice",
+                ImmutableMap.of("point", S2LatLng.class),
                 "StringFieldNotice",
                 ImmutableMap.of("someField", String.class)));
   }
@@ -119,6 +124,34 @@ public class NoticeSchemaGeneratorTest {
             NoticeSchemaGenerator.jsonSchemaForNotice(
                 "DuplicateKeyNotice",
                 NoticeSchemaGenerator.contextFieldsForNotice(DuplicateKeyNotice.class)))
+        .isEqualTo(expected);
+  }
+
+  @Test
+  public void jsonSchemaForNotice_s2LatLngNotice() {
+    JsonElement expected =
+        new Gson()
+            .toJsonTree(
+                ImmutableMap.of(
+                    "type",
+                    "object",
+                    "properties",
+                    ImmutableMap.of(
+                        "point",
+                        ImmutableMap.of(
+                            "type",
+                            "array",
+                            "contains",
+                            ImmutableMap.of("type", "number"),
+                            "minItems",
+                            2,
+                            "maxItems",
+                            2))));
+
+    assertThat(
+            NoticeSchemaGenerator.jsonSchemaForNotice(
+                "S2LatLngNotice",
+                NoticeSchemaGenerator.contextFieldsForNotice(S2LatLngNotice.class)))
         .isEqualTo(expected);
   }
 }

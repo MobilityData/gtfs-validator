@@ -56,3 +56,11 @@ test {
         events "passed", "skipped", "failed"
     }
 }
+
+compileJava {
+    options.compilerArgs << '-parameters'
+}
+
+compileTestJava {
+    options.compilerArgs << '-parameters'
+}

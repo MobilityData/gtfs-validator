@@ -35,6 +35,7 @@ import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.NoticeSchemaGenerator;
 import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
@@ -45,8 +46,10 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 
 /** The main entry point for GTFS Validator CLI. */
 public class Main {
+
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private static final String GTFS_ZIP_FILENAME = "gtfs.zip";
+  private static final String NOTICE_SCHEMA_JSON = "notice_schema.json";
 
   public static void main(String[] argv) {
     Arguments args = new Arguments();
@@ -56,6 +59,12 @@ public class Main {
       jCommander.usage();
       System.out.println(
           "⚠️ Note that parameters marked with an asterisk (*) in the help menu are mandatory.");
+      return;
+    }
+    if (args.getExportNoticeSchema()) {
+      exportNoticeSchema(args);
+    }
+    if (args.abortAfterNoticeSchemaExport()) {
       return;
     }
     if (!CliParametersAnalyzer.isValid(args)) {
@@ -169,6 +178,21 @@ public class Main {
           gson.toJson(noticeContainer.exportSystemErrors()).getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store report files");
+    }
+  }
+
+  private static void exportNoticeSchema(final Arguments args) {
+    new File(args.getOutputBase()).mkdirs();
+    Gson gson = createGson(args.getPretty());
+    try {
+      Files.write(
+          Paths.get(args.getOutputBase(), NOTICE_SCHEMA_JSON),
+          gson.toJson(
+                  NoticeSchemaGenerator.jsonSchemaForPackages(
+                      NoticeSchemaGenerator.DEFAULT_NOTICE_PACKAGES))
+              .getBytes(StandardCharsets.UTF_8));
+    } catch (IOException e) {
+      logger.atSevere().withCause(e).log("Cannot store notice schema file");
     }
   }
 }

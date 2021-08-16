@@ -18,6 +18,7 @@
 | `-u`       	| `--url`                       	| Optional  	| Fully qualified URL to download GTFS archive.                                                                             	|
 | `-v`       	| `--validation_report_name`    	| Optional  	| Name of the validation report (including `.json` extension).                                                              	|
 | `-e`       	| `--system_errors_report_name` 	| Optional  	| Name of the system errors report (including `.json` extension).                                                             	|
+| `-n`       	| `--export_notice_schema`       	| Optional  	| Export notice schema as a json file.                                                                                           |
 
 ⚠️ Note that exactly one of the following options must be provided: `--url` or `--input`.
 
@@ -61,3 +62,26 @@ Please note that since downloading will take time, we recommend validating repea
 You should now see the workflow `End to end / run-on-data` start automatically in your PR checks, running the validator on the dataset you just added. The validation report is collected as a run artifact in the Actions tab of your fork repository on GitHub.
 
 If the workflow run crashes or something doesn't look right in the validation report json file, **please see the [guide to reproduce](/docs/REPRODUCE_ERRORS.md) section.**
+
+## Export notice schema
+
+Sample usage:
+
+### Without file validation
+``` 
+java -jar gtfs-validator-SNAPSHOT.jar --export_notice_schema
+```
+
+...which will:
+ 1. Generate and export all validation notices as a json file. 
+ 
+### With file validation
+``` 
+java -jar gtfs-validator-SNAPSHOT.jar --export_notice_schema --url https://url/to/dataset.zip --output relative/output/path --country_code <country_code> --threads <number_of_threads_to_use> --storage_directory input.zip 
+```
+
+...which will:
+ 1. Generate and export all validation notices as a json file. 
+ 1. Download the GTFS feed at the URL `https://url/to/dataset.zip` and name it `input.zip`  
+ 1. Validate the GTFS data and output the results to the directory located at `relative/output/path`. Validation results are exported to JSON by default.
+Please note that since downloading will take time, we recommend validating repeatedly on a local file.
