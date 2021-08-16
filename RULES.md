@@ -100,6 +100,8 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`NewLineInValueNotice`](#NewLineInValueNotice)                                                                 | New line or carriage return in a value in CSV file.                                                                                                    |
 | [`NumberOutOfRangeNotice`](#NumberOutOfRangeNotice)                                                             | Out of range value.                                                                                                                                    |
 | [`OverlappingFrequencyNotice`](#OverlappingFrequencyNotice)                                                     | Trip frequencies overlap.                                                                                                                              |
+| [`PathwayToPlatformWithBoardingAreasNotice`](#PathwayToPlatformWithBoardingAreasNotice)                         | A pathway has an endpoint that is a platform which has boarding areas.                                                                                 |
+| [`PathwayWrongEndpointTypeNotice`](#PathwayWrongEndpointTypeNotice)                                             | A pathway has an endpoint that is a station.                                                                                                           |
 | [`RouteBothShortAndLongNameMissingNotice`](#RouteBothShortAndLongNameMissingNotice)                             | Missing route short name and long name.                                                                                                                |
 | [`StartAndEndRangeEqualNotice`](#StartAndEndRangeEqualNotice)                                                   | Two date or time fields are equal.                                                                                                                     |
 | [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         | Two date or time fields are out of order.                                                                                                              |
@@ -451,7 +453,28 @@ Trip frequencies must not overlap in time
 ##### References:
 * [frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
 
+<a name="PathwayToPlatformWithBoardingAreasNotice"/>
+
+#### PathwayToPlatformWithBoardingAreasNotice
+
+A pathway has an endpoint that is a platform which has boarding areas. A platform that has boarding
+areas is treated as a parent object, not a point. In such cases, the platform must not have pathways
+assigned - instead, pathways must be assigned to its boarding areas.
+
+##### References:
+* [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
+
 <a name="RouteBothShortAndLongNameMissingNotice"/>
+
+<a name="PathwayWrongEndpointTypeNotice"/>
+
+#### PathwayWrongEndpointTypeNotice
+
+A pathway has an endpoint that is a station. Pathways endpoints must be platforms (stops),
+entrances/exits, generic nodes or boarding areas.
+
+##### References:
+* [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
 
 #### RouteBothShortAndLongNameMissingNotice
 
