@@ -24,6 +24,15 @@ buildscript {
     }
 }
 
+plugins {
+    id 'java'
+    id 'com.github.sherter.google-java-format' version '0.9'
+}
+
+repositories {
+    mavenCentral()
+}
+
 apply plugin: 'nebula-aggregate-javadocs'
 
 // a task to run all tests and combine them in one report
