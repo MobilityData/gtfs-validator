@@ -35,11 +35,27 @@ repositories {
 
 apply plugin: 'nebula-aggregate-javadocs'
 
-// a task to run all tests and combine them in one report
-task testReport(type: TestReport) {
-    print("System.getenv(\"CI\"): " + System.getenv("CI"))
-    print(" - System.getenv(\"versionTag\"): " + System.getenv("versionTag"))
+// A resolvable configuration to collect test reports data
+configurations {
+    testReportData {
+        canBeResolved = true
+        canBeConsumed = false
+        attributes {
+            attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category, Category.DOCUMENTATION))
+            attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named(DocsType, 'test-report-data'))
+        }
+    }
+}
+
+dependencies {
+    testReportData project('main:cli')
+    testReportData project('main:springboot')
+    testReportData project(':processor')
+    testReportData project(':core')
+}
+
+tasks.register('testReport', TestReport) {
     destinationDir = file("$buildDir/reports/allTests")
-    // Combine all 'test' task results into a single HTML report
-    reportOn subprojects.collect { it.tasks.withType(Test) }
+    // Use test results from testReportData configuration
+    testResultDirs.from(configurations.testReportData)
 }
