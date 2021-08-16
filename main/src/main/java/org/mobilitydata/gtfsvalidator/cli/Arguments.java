@@ -82,6 +82,11 @@ public class Arguments {
       description = "Pretty json output")
   private boolean pretty = false;
 
+  @Parameter(
+      names = {"-n", "--export_notices_schema"},
+      description = "Export notices schema")
+  private boolean exportNoticeSchema = false;
+
   public String getFeedName() {
     return feedName;
   }
@@ -130,5 +135,18 @@ public class Arguments {
 
   public boolean getPretty() {
     return pretty;
+  }
+
+  public boolean getExportNoticeSchema() {
+    return exportNoticeSchema;
+  }
+
+  public boolean abortAfterNoticeSchemaExport() {
+    return input == null
+        && countryCode == null
+        && url == null
+        && storageDirectory == null
+        && validationReportName == null
+        && systemErrorsReportName == null;
   }
 }
