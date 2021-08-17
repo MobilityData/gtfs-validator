@@ -85,3 +85,41 @@ java -jar gtfs-validator-SNAPSHOT.jar --export_notice_schema --url https://url/t
  1. Download the GTFS feed at the URL `https://url/to/dataset.zip` and name it `input.zip`  
  1. Validate the GTFS data and output the results to the directory located at `relative/output/path`. Validation results are exported to JSON by default.
 Please note that since downloading will take time, we recommend validating repeatedly on a local file.
+
+## via spring boot app
+
+### Launch the service
+1. Install [Java 8 or higher](https://www.oracle.com/java/technologies/javase-downloads.html).
+1. Download the latest gtfs-validator_springboot JAR file from our [Releases page](https://github.com/MobilityData/gtfs-validator/releases) or snapshot artifact from [GitHub Actions](https://github.com/MobilityData/gtfs-validator/actions?query=branch%3Amaster).
+1. Authenticate to Google Storage 
+Run the following command line: 
+```
+java -jar gtfs-validator-v2.1.0_springboot.jar
+```
+
+After launching the jar of the springboot application, the validator will be available as a service on port 8080. 
+
+**Full list of query parameters available**
+
+| Query parameter             	| required? 	| Description                                                                                      	| Default value        	|
+|-----------------------------	|-----------	|--------------------------------------------------------------------------------------------------	|----------------------	|
+| `output_base`               	| Optional  	| Base directory to store the outputs.                                                             	| "output"             	|
+| `threads`                   	| Optional  	| Number of threads to use.                                                                        	| 8                    	|
+| `country_code`              	| Optional  	| Country code of the feed, e.g., `nl`. It must be a two-letter country code (ISO 3166-1 alpha-2). 	| null                 	|
+| `url`                       	| Required  	| Fully qualified URL to download GTFS archive.                                                    	|                      	|
+| `validation_report_name`    	| Optional  	| Name of the validation report (including `.json` extension).                                     	| "report.json"        	|
+| `system_errors_report_name` 	| Optional  	| Name of the system errors report (including `.json` extension).                                  	| "system_errors.json" 	|
+| `dataset_id`                	| Optional  	| The id of the dataset.                                                                           	| "dataset id value"  	|
+| `commit_sha`                	| Optional  	| The SHA of the commit from Github.                                                               	| "commit sha value"  	|
+
+Sample query:
+
+```
+http://localhost:8080/?url=http://webapps.thebus.org/transitdata/Production/google_transit.zip&dataset_id=id_value&commit_sha=sha_value
+```
+
+which will:
+1. execute the validator on the dataset available at: http://webapps.thebus.org/transitdata/Production/google_transit.zip
+1. store the validation report as report.json in the gtfs-validator-reports bucket owned by MobilityData in the folder sha_value/id_value
+
+⚠️ You must be an authenticated user to push data to gtfs-validator-reports, see docs.
