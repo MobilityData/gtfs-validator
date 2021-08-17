@@ -5,7 +5,13 @@ on:
     branches: [ master, extend-end-to-end ] #<-- replace transport-agency-name by the name of the agency/publisher
 
 jobs:
+  validate_gradle_wrapper:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: gradle/wrapper-validation-action@v1
   run-on-data:
+    needs: [ validate_gradle_wrapper ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1

@@ -13,7 +13,13 @@ on:
     types: [ prereleased, released ]
 
 jobs:
+  validate_gradle_wrapper:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: gradle/wrapper-validation-action@v1
   test:
+    needs: [ validate_gradle_wrapper ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
