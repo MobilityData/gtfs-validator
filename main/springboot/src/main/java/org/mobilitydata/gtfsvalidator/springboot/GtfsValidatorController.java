@@ -58,8 +58,8 @@ public class GtfsValidatorController {
           String validation_report_name,
       @RequestParam(required = false, defaultValue = Arguments.SYSTEM_ERRORS_REPORT_DEFAULT_NAME)
           String system_error_report_name,
-      @RequestParam() String dataset_id,
-      @RequestParam() String commit_sha) {
+      @RequestParam(required = false, defaultValue = "dataset id value") String dataset_id,
+      @RequestParam(required = false, defaultValue = "commit sha value") String commit_sha) {
 
     final String[] argv = {
       "-o", output_base,
