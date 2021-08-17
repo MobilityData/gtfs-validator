@@ -43,203 +43,203 @@ jobs:
 
    #see https://github.com/MobilityData/gtfs-validator/pull/712#issuecomment-776110813
       - name: Validate dataset from -- Ruter (Oslo, Norway)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ruter/240/latest/download --output_base output --country_code no --storage_directory ruter.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/ruter/240/latest/download --output_base output --country_code no --storage_directory ruter.zip
       - name: Validate dataset from -- TAG (Grenoble, France)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/tag/594/latest/download --output_base output --country_code fr --storage_directory tag.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/tag/594/latest/download --output_base output --country_code fr --storage_directory tag.zip
       - name: Validate dataset from -- Translink (Vancouver, Canada)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/translink-vancouver/29/latest/download --output_base output --country_code ca --storage_directory transkink.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/translink-vancouver/29/latest/download --output_base output --country_code ca --storage_directory transkink.zip
       - name: Validate dataset from -- VAG (Freiburg, Germany)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/freiburger-verkehrs-ag/1228/latest/download --output_base output --country_code de --storage_directory vag.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/freiburger-verkehrs-ag/1228/latest/download --output_base output --country_code de --storage_directory vag.zip
       - name: Validate dataset from -- AC Transit (Oakland, CA, USA)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ac-transit/1269/latest/download --output_base output --country_code us --storage_directory actransit.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/ac-transit/1269/latest/download --output_base output --country_code us --storage_directory actransit.zip
       - name: Validate dataset from -- AMT (Montreal, QC, Canada)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/agence-metropolitaine-de-transport/128/latest/download --output_base output --country_code ca --storage_directory amtmtl.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/agence-metropolitaine-de-transport/128/latest/download --output_base output --country_code ca --storage_directory amtmtl.zip
       - name: Validate dataset from -- Bay of Plenty Regional Council (Tauranga, New Zealand)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/bay-of-plenty-regional-council/1162/latest/download --output_base output --country_code nz --storage_directory bayplenty.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/bay-of-plenty-regional-council/1162/latest/download --output_base output --country_code nz --storage_directory bayplenty.zip
       - name: Validate dataset from -- BHTRANS (Belo Horizonte, Brazil)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/bhtrans/640/latest/download --output_base output --country_code br --storage_directory bhtrans.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/bhtrans/640/latest/download --output_base output --country_code br --storage_directory bhtrans.zip
       - name: Validate dataset from -- LYNX (Orlando, FL, USA)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/central-florida-regional-transportation-authority/373/latest/download --output_base output --country_code us --storage_directory lynx.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/central-florida-regional-transportation-authority/373/latest/download --output_base output --country_code us --storage_directory lynx.zip
       - name: Validate dataset from -- dBus (San Sebastián , Spain)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/compania-del-tranvia-de-san-sebastian/702/latest/download --output_base output --country_code es --storage_directory dbus.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/compania-del-tranvia-de-san-sebastian/702/latest/download --output_base output --country_code es --storage_directory dbus.zip
       - name: Validate dataset from -- Collegamenti marittimi Moby (Sardinia, Italy)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/collegamenti-marittimi-moby/1135/latest/download --output_base output --country_code it --storage_directory moby.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/collegamenti-marittimi-moby/1135/latest/download --output_base output --country_code it --storage_directory moby.zip
       - name: Validate dataset from -- Comboios de Portugal (Lisbon, Portugal)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/comboios-de-portugal/1004/latest/download --output_base output --country_code pt --storage_directory comboios.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/comboios-de-portugal/1004/latest/download --output_base output --country_code pt --storage_directory comboios.zip
       - name: Validate dataset from -- Ferries (Finland)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ferries/734/latest/download --output_base output --country_code fi --storage_directory ferries.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/ferries/734/latest/download --output_base output --country_code fi --storage_directory ferries.zip
       - name: Validate dataset from -- Maanteeamet (Estonia)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/maanteeamet/510/latest/download --output_base output --country_code ee --storage_directory maanteeamet.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/maanteeamet/510/latest/download --output_base output --country_code ee --storage_directory maanteeamet.zip
       - name: Validate dataset from -- Nagaibus (Gunma, Japan)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/nagaibus/1212/latest/download --output_base output --country_code jp --storage_directory nagaibus.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/nagaibus/1212/latest/download --output_base output --country_code jp --storage_directory nagaibus.zip
       - name: Validate dataset from -- MZDiK Radom (Radom, Poland)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/mzdik-radom/1008/latest/download --output_base output --country_code pl --storage_directory mzdik.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/mzdik-radom/1008/latest/download --output_base output --country_code pl --storage_directory mzdik.zip
       - name: Validate dataset from -- MKV (Miskolc, Hungary)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/mvk-zrt/839/latest/download --output_base output --country_code hu --storage_directory mkv.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/mvk-zrt/839/latest/download --output_base output --country_code hu --storage_directory mkv.zip
       - name: Validate dataset from -- PTV (Melbourne, Australia)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url https://transitfeeds.com/p/ptv/497/20210315/download --output_base output --country_code au --storage_directory ptv.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url https://transitfeeds.com/p/ptv/497/20210315/download --output_base output --country_code au --storage_directory ptv.zip
       - name: Validate dataset from -- Pays de la Loire (France)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/region-des-pays-de-la-loire/1071/latest/download --output_base output --country_code fr --storage_directory loire.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/region-des-pays-de-la-loire/1071/latest/download --output_base output --country_code fr --storage_directory loire.zip
       - name: Validate dataset from -- RATP (Paris, France)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/regie-autonome-des-transports-parisiens/413/latest/download --output_base output --country_code fr --storage_directory ratp.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/regie-autonome-des-transports-parisiens/413/latest/download --output_base output --country_code fr --storage_directory ratp.zip
       - name: Validate dataset from -- Semitan (Nantes, France)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/semitan/592/latest/download --output_base output --country_code fr --storage_directory semitan.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/semitan/592/latest/download --output_base output --country_code fr --storage_directory semitan.zip
       - name: Validate dataset from -- STIB-MIVB (Brussels, Belgium)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/societe-des-transports-intercommunaux-de-bruxelles/527/latest/download --output_base output --country_code be --storage_directory stibmivb.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/societe-des-transports-intercommunaux-de-bruxelles/527/latest/download --output_base output --country_code be --storage_directory stibmivb.zip
       - name: Validate dataset from -- STO (Gatineau, QC, Canada)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/societe-de-transport-de-loutaouais/828/latest/download --output_base output --country_code ca --storage_directory sto.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/societe-de-transport-de-loutaouais/828/latest/download --output_base output --country_code ca --storage_directory sto.zip
       - name: Validate dataset from -- TrafikLab (Sweden)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/trafiklab/50/latest/download --output_base output --country_code se --storage_directory trafiklab.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/trafiklab/50/latest/download --output_base output --country_code se --storage_directory trafiklab.zip
       - name: Validate dataset from -- Amtrak (USA)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/amtrak/1136/latest/download --output_base output --country_code us --storage_directory amtrak.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/amtrak/1136/latest/download --output_base output --country_code us --storage_directory amtrak.zip
       - name: Validate dataset from -- ATOC (United Kingdom)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/association-of-train-operating-companies/284/latest/download --output_base output --country_code uk --storage_directory atoc.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/association-of-train-operating-companies/284/latest/download --output_base output --country_code uk --storage_directory atoc.zip
       - name: Validate dataset from -- ART (Arlington, VA, USA)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/arlington-transit/149/latest/download --output_base output --country_code us --storage_directory art.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/arlington-transit/149/latest/download --output_base output --country_code us --storage_directory art.zip
       - name: Validate dataset from -- Bustang (Denver, CO, USA)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/bustang/770/latest/download --output_base output --country_code us --storage_directory bustang.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/bustang/770/latest/download --output_base output --country_code us --storage_directory bustang.zip
       - name: Validate dataset from -- Capital Metro (Austin, TX, USA)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/capital-metro/24/latest/download --output_base output --country_code us --storage_directory capitalmetro.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/capital-metro/24/latest/download --output_base output --country_code us --storage_directory capitalmetro.zip
       - name: Validate dataset from -- Bus It Waikato (Waikato District, New Zealand)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/bus-it-waikato/1226/latest/download --output_base output --country_code nz --storage_directory busit.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/bus-it-waikato/1226/latest/download --output_base output --country_code nz --storage_directory busit.zip
       - name: Validate dataset from -- City of Kuopio (Kuopio, Finland)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/city-of-kuopio/731/latest/download --output_base output --country_code fi --storage_directory kuopio.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/city-of-kuopio/731/latest/download --output_base output --country_code fi --storage_directory kuopio.zip
       - name: Validate dataset from -- Transit Windsor (Windsor, Canada)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/city-of-windsor/778/latest/download --output_base output --country_code ca --storage_directory windsor.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/city-of-windsor/778/latest/download --output_base output --country_code ca --storage_directory windsor.zip
       - name: Validate dataset from -- Santiago DPTM (Santiago, Chile)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/dtpm-santiago-santiago/972/latest/download --output_base output --country_code cl --storage_directory dptm.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/dtpm-santiago-santiago/972/latest/download --output_base output --country_code cl --storage_directory dptm.zip
       - name: Validate dataset from -- EMT Madrid (Madrid , Spain)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/emt-madrid/212/latest/download --output_base output --country_code es --storage_directory emtmd.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/emt-madrid/212/latest/download --output_base output --country_code es --storage_directory emtmd.zip
       - name: Validate dataset from -- EMT Valencia (Valencia, Spain)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/emt-valencia/719/latest/download --output_base output --country_code es --storage_directory emtva.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/emt-valencia/719/latest/download --output_base output --country_code es --storage_directory emtva.zip
       - name: Validate dataset from -- Entur (Entur, Norway)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/entur/970/latest/download --output_base output --country_code no --storage_directory entur.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/entur/970/latest/download --output_base output --country_code no --storage_directory entur.zip
       - name: Validate dataset from -- CityBus (Lafayette, IN, USA)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/greater-lafayette-public-transportation-corporation-citybus/1131/latest/download --output_base output --country_code us --storage_directory citybus.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/greater-lafayette-public-transportation-corporation-citybus/1131/latest/download --output_base output --country_code us --storage_directory citybus.zip
       - name: Validate dataset from -- Gruppo Torinese Trasporti (Turin, Italy)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/gruppo-torinese-trasporti/51/latest/download --output_base output --country_code it --storage_directory gtt.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/gruppo-torinese-trasporti/51/latest/download --output_base output --country_code it --storage_directory gtt.zip
       - name: Validate dataset from -- HSL (Helsinki, Finland)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/helsinki-regional-transport/735/latest/download --output_base output --country_code fi --storage_directory hsl.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/helsinki-regional-transport/735/latest/download --output_base output --country_code fi --storage_directory hsl.zip
       - name: Validate dataset from -- MVTA (Minneapolis, MN, USA)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/minnesota-valley-transit-authority/177/latest/download --output_base output --country_code us --storage_directory mvta.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/minnesota-valley-transit-authority/177/latest/download --output_base output --country_code us --storage_directory mvta.zip
       - name: Validate dataset from -- Praha (Prague, Czech Republic)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/praha/801/latest/download --output_base output --country_code cz --storage_directory praha.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/praha/801/latest/download --output_base output --country_code cz --storage_directory praha.zip
       - name: Validate dataset from -- PID (Prague, Czech Republic)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/prazska-integrovana-doprava/1106/latest/download --output_base output --country_code cz --storage_directory pid.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/prazska-integrovana-doprava/1106/latest/download --output_base output --country_code cz --storage_directory pid.zip
       - name: Validate dataset from -- Saint Petersburg (Saint Petersburg, Russina federation)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/saint-petersburg/826/latest/download --output_base output --country_code ru --storage_directory stpetersburg.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/saint-petersburg/826/latest/download --output_base output --country_code ru --storage_directory stpetersburg.zip
       - name: Validate dataset from -- RCT (Vermont, USA)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/rural-community-transportation/563/latest/download --output_base output --country_code us --storage_directory rct.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/rural-community-transportation/563/latest/download --output_base output --country_code us --storage_directory rct.zip
       - name: Validate dataset from -- STIF (Paris, France)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/stif/822/latest/download --output_base output --country_code fr --storage_directory stif.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/stif/822/latest/download --output_base output --country_code fr --storage_directory stif.zip
       - name: Validate dataset from -- SulFertagus (Lisbon, Portugal)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/sulfertagus/1005/latest/download --output_base output --country_code pt --storage_directory fertagus.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/sulfertagus/1005/latest/download --output_base output --country_code pt --storage_directory fertagus.zip
       - name: Validate dataset from -- Changhua (Changhua County, Taiwan, Republic of China)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/taiwan/956/latest/download --output_base output --country_code tw --storage_directory changhua.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/taiwan/956/latest/download --output_base output --country_code tw --storage_directory changhua.zip
       - name: Validate dataset from -- Nantou (Nantou County, Taiwan, Republic of China)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/taiwan/958/latest/download --output_base output --country_code tw --storage_directory nantou.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/taiwan/958/latest/download --output_base output --country_code tw --storage_directory nantou.zip
       - name: Validate dataset from -- Miaoli (Miaoli County, Taiwan, Republic of China)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/taiwan/954/latest/download --output_base output --country_code tw --storage_directory miaoli.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/taiwan/954/latest/download --output_base output --country_code tw --storage_directory miaoli.zip
       - name: Validate dataset from -- BART (San Francisco, CA, USA)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/bart/58/latest/download --output_base output --country_code us --storage_directory bart.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/bart/58/latest/download --output_base output --country_code us --storage_directory bart.zip
       - name: Validate dataset from -- BC Ferries (Canada)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/bc-ferries/916/latest/download --output_base output --country_code ca --storage_directory bcferries.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/bc-ferries/916/latest/download --output_base output --country_code ca --storage_directory bcferries.zip
       - name: Validate dataset from -- Carris (Lisbon, Portugal)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/carris/1000/latest/download --output_base output --country_code pt --storage_directory carris.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/carris/1000/latest/download --output_base output --country_code pt --storage_directory carris.zip
       - name: Validate dataset from -- Cedar Rapids Transit (Cedar Rapids, IA, USA)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/cedar-rapids-transit/906/latest/download --output_base output --country_code us --storage_directory crt.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/cedar-rapids-transit/906/latest/download --output_base output --country_code us --storage_directory crt.zip
       - name: Validate dataset from -- Champaign-Urbana MTD (Champaign, IL, USA)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/champaign-urbana-mass-transit-district/162/latest/download --output_base output --country_code us --storage_directory cumtd.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/champaign-urbana-mass-transit-district/162/latest/download --output_base output --country_code us --storage_directory cumtd.zip
       - name: Validate dataset from -- Cherriots (Salem, OR, USA)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/cherriots/279/latest/download --output_base output --country_code us --storage_directory cherriots.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/cherriots/279/latest/download --output_base output --country_code us --storage_directory cherriots.zip
       - name: Validate dataset from -- City of Jyväskylä (Finland)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/city-of-jyvaskyla/728/latest/download --output_base output --country_code fi --storage_directory jyvaskyla.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/city-of-jyvaskyla/728/latest/download --output_base output --country_code fi --storage_directory jyvaskyla.zip
       - name: Validate dataset from -- Kingston Transit (Kingston, Canada)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/city-of-kingston/779/latest/download --output_base output --country_code ca --storage_directory kingston.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/city-of-kingston/779/latest/download --output_base output --country_code ca --storage_directory kingston.zip
       - name: Validate dataset from -- DAKK (Szeged, Hungary)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/dakk/625/latest/download --output_base output --country_code hu --storage_directory dakk.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/dakk/625/latest/download --output_base output --country_code hu --storage_directory dakk.zip
       - name: Validate dataset from -- DTC (Delhi, India)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/delhi-transport-corporation/1047/latest/download --output_base output --country_code in --storage_directory dtc.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/delhi-transport-corporation/1047/latest/download --output_base output --country_code in --storage_directory dtc.zip
       - name: Validate dataset from -- De Waterbus (Antwerp, Belgium)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/de-waterbus/1067/latest/download --output_base output --country_code be --storage_directory waterbus.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/de-waterbus/1067/latest/download --output_base output --country_code be --storage_directory waterbus.zip
       - name: Validate dataset from -- VAG (Freiburg im Breisgau, Germany)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/freiburger-verkehrs-ag/1228/latest/download --output_base output --country_code de --storage_directory vag.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/freiburger-verkehrs-ag/1228/latest/download --output_base output --country_code de --storage_directory vag.zip
       - name: Validate dataset from -- GO Transit (Torronto, Canada)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/go-transit/32/latest/download --output_base output --country_code ca --storage_directory go.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/go-transit/32/latest/download --output_base output --country_code ca --storage_directory go.zip
       - name: Validate dataset from -- Navarra Regional Trasporti (Navarra, Spain)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/government-of-navarra/1257/latest/download --output_base output --country_code es --storage_directory navarra.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/government-of-navarra/1257/latest/download --output_base output --country_code es --storage_directory navarra.zip
       - name: Validate dataset from -- KVT (Kaunas, Lithuania)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/kauno-viesasis-transportas-kvt/636/latest/download --output_base output --country_code lt --storage_directory kvt.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/kauno-viesasis-transportas-kvt/636/latest/download --output_base output --country_code lt --storage_directory kvt.zip
       - name: Validate dataset from -- Klaipėda Transport (Klaipėda, Lithuania)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/klaip-da-transport/637/latest/download --output_base output --country_code lt --storage_directory klaipeda.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/klaip-da-transport/637/latest/download --output_base output --country_code lt --storage_directory klaipeda.zip
       - name: Validate dataset from -- Lake Champlain Ferries (Burlington, VT, USA)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/lake-champlain-ferries/1247/latest/download --output_base output --country_code ca --storage_directory lcf.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/lake-champlain-ferries/1247/latest/download --output_base output --country_code ca --storage_directory lcf.zip
       - name: Validate dataset from -- Metz (Metz, France)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/metz-metropole/850/latest/download --output_base output --country_code fr --storage_directory metz.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/metz-metropole/850/latest/download --output_base output --country_code fr --storage_directory metz.zip
       - name: Validate dataset from -- NYC Ferry (New York City, NY, USA)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/nyc-ferry/944/latest/download --output_base output --country_code us --storage_directory nycferry.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/nyc-ferry/944/latest/download --output_base output --country_code us --storage_directory nycferry.zip
       - name: Validate dataset from -- OpenOV (Luxembourg)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/openov/621/latest/download --output_base output --country_code lu --storage_directory openov.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/openov/621/latest/download --output_base output --country_code lu --storage_directory openov.zip
       - name: Validate dataset from -- Pasadena Transit (Pasadena, CA, USA)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/pasadena-transit/1053/latest/download --output_base output --country_code us --storage_directory pasadena.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/pasadena-transit/1053/latest/download --output_base output --country_code us --storage_directory pasadena.zip
       - name: Validate dataset from -- Panevezio Autobusu Parkas (Panevėžys , Lithuania)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/sulfertagus/1005/latest/download --output_base output --country_code lt --storage_directory panevezio.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/sulfertagus/1005/latest/download --output_base output --country_code lt --storage_directory panevezio.zip
       - name: Validate dataset from -- SKM (Tricity, Poland)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/pkp-szybka-kolej-miejska-w-trojmie-cie/1116/latest/download --output_base output --country_code pl --storage_directory skm.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/pkp-szybka-kolej-miejska-w-trojmie-cie/1116/latest/download --output_base output --country_code pl --storage_directory skm.zip
       - name: Validate dataset from -- Praha (Prague, Czech Republic)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/praha/801/latest/download --output_base output --country_code cz --storage_directory praha.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/praha/801/latest/download --output_base output --country_code cz --storage_directory praha.zip
       - name: Validate dataset from -- Komunikacja Miejska (Plock, Poland)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/przyjazdy-pl-plock/1211/latest/download --output_base output --country_code pl --storage_directory plock.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/przyjazdy-pl-plock/1211/latest/download --output_base output --country_code pl --storage_directory plock.zip
       - name: Validate dataset from -- ZTZ Rybnik (Rybnik, Poland)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ztz-rybnik/1114/latest/download --output_base output --country_code pl --storage_directory ztz.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/ztz-rybnik/1114/latest/download --output_base output --country_code pl --storage_directory ztz.zip
       - name: Validate dataset from -- ZTM Poznań (Poznań, Poland)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/ztm-pozna/992/latest/download --output_base output --country_code pl --storage_directory ztm.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/ztm-pozna/992/latest/download --output_base output --country_code pl --storage_directory ztm.zip
       - name: Validate dataset from -- Yamanashi (Yamanashi, Japan)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/yamanashi/813/latest/download --output_base output --country_code jp --storage_directory yamanashi.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/yamanashi/813/latest/download --output_base output --country_code jp --storage_directory yamanashi.zip
       - name: Validate dataset from -- Weekendbus (Pest County, Hungary)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/weekendbus/887/latest/download --output_base output --country_code hu --storage_directory weekendbus.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/weekendbus/887/latest/download --output_base output --country_code hu --storage_directory weekendbus.zip
       - name: Validate dataset from -- Washington State Ferries (Seattle, WA, USA)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/washington-state-ferries/586/latest/download --output_base output --country_code us --storage_directory wst.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/washington-state-ferries/586/latest/download --output_base output --country_code us --storage_directory wst.zip
       - name: Validate dataset from -- De Lijn (Flanders, Belgium)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/vlaamse-vervoersmaatschappij-de-lijn/530/latest/download --output_base output --country_code be --storage_directory delijn.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/vlaamse-vervoersmaatschappij-de-lijn/530/latest/download --output_base output --country_code be --storage_directory delijn.zip
       - name: Validate dataset from -- Vilnius Transport (Vilnius, Lithuania)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/vilnius-transport/635/latest/download --output_base output --country_code lt --storage_directory vilnius.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/vilnius-transport/635/latest/download --output_base output --country_code lt --storage_directory vilnius.zip
       - name: Validate dataset from -- Via Rail Canada (Canada)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/via-rail-canada/971/latest/download --output_base output --country_code ca --storage_directory via.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/via-rail-canada/971/latest/download --output_base output --country_code ca --storage_directory via.zip
       - name: Validate dataset from -- Tuvisa EuskoTran (Vitoria-Gasteiz, Spain)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/tuvisa-euskotran/239/latest/download --output_base output --country_code es --storage_directory tet.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/tuvisa-euskotran/239/latest/download --output_base output --country_code es --storage_directory tet.zip
       - name: Validate dataset from -- ATD (Rīga, Latvia)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/valsts-sia-autotransporta-direkcija/1227/latest/download --output_base output --country_code lv --storage_directory atd.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/valsts-sia-autotransporta-direkcija/1227/latest/download --output_base output --country_code lv --storage_directory atd.zip
       - name: Validate dataset from -- VBB (Berlin, Germany)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/verkehrsverbund-berlin-brandenburg/213/latest/download --output_base output --country_code de --storage_directory vbb.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/verkehrsverbund-berlin-brandenburg/213/latest/download --output_base output --country_code de --storage_directory vbb.zip
       - name: Validate dataset from -- TransLink SEQ (Brisbane, Australia)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/translink/21/latest/download --output_base output --country_code au --storage_directory seq.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/translink/21/latest/download --output_base output --country_code au --storage_directory seq.zip
       - name: Validate dataset from -- Transperth (Perth, Australia)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/transperth/2/latest/download --output_base output --country_code au --storage_directory transperth.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/transperth/2/latest/download --output_base output --country_code au --storage_directory transperth.zip
       - name: Validate dataset from -- Transport for Greater Manchester (Manchester, United Kingdom)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/transport-for-greater-manchester/224/latest/download --output_base output --country_code uk --storage_directory tgm.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/transport-for-greater-manchester/224/latest/download --output_base output --country_code uk --storage_directory tgm.zip
       - name: Validate dataset from -- Dublin Bus (Dublin, Ireland)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/transport-for-ireland/782/latest/download --output_base output --country_code ie --storage_directory dublinbus.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/transport-for-ireland/782/latest/download --output_base output --country_code ie --storage_directory dublinbus.zip
       - name: Validate dataset from -- Trenord (Trenord, Italy)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/trenord/724/latest/download --output_base output --country_code it --storage_directory trenord.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/trenord/724/latest/download --output_base output --country_code it --storage_directory trenord.zip
       - name: Validate dataset from -- Transcollines (La Pêche, QC, CA)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/transcollines/1275/latest/download --output_base output --country_code ca --storage_directory transcollines.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/transcollines/1275/latest/download --output_base output --country_code ca --storage_directory transcollines.zip
       - name: Validate dataset from -- Tisséo (Toulouse, France)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/tisseo/595/latest/download --output_base output --country_code fr --storage_directory tisseo.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/tisseo/595/latest/download --output_base output --country_code fr --storage_directory tisseo.zip
       - name: Validate dataset from -- SWU (Ulm, Germany)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/swu-verkehr-gmbh/512/latest/download --output_base output --country_code de --storage_directory swu.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/swu-verkehr-gmbh/512/latest/download --output_base output --country_code de --storage_directory swu.zip
       - name: Validate dataset from -- Miaoli (Miaoli County, Taiwan, Republic of China)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/taiwan/954/latest/download --output_base output --country_code tw --storage_directory miaoli.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/taiwan/954/latest/download --output_base output --country_code tw --storage_directory miaoli.zip
       - name: Validate dataset from -- SMTD (Springfield, IL, USA)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/springfield-mass-transit-district/534/latest/download --output_base output --country_code us --storage_directory smtd.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/springfield-mass-transit-district/534/latest/download --output_base output --country_code us --storage_directory smtd.zip
       - name: Validate dataset from -- SPTrans (São Paulo, Brazil)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/sulfertagus/1005/latest/download --output_base output --country_code br --storage_directory sptrans.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/sulfertagus/1005/latest/download --output_base output --country_code br --storage_directory sptrans.zip
       - name: Validate dataset from -- SMS (Stanford, CA, USA)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/stanford-marguerite-shuttle/736/latest/download --output_base output --country_code us --storage_directory sms.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/stanford-marguerite-shuttle/736/latest/download --output_base output --country_code us --storage_directory sms.zip
       - name: Validate dataset from -- Semitan (Nantes, France)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/semitan/592/latest/download --output_base output --country_code fr --storage_directory semitan.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/semitan/592/latest/download --output_base output --country_code fr --storage_directory semitan.zip
       - name: Validate dataset from -- STS (Sherbrooke, Canada)
-        run: java -Xmx6G -Xms6G -jar main/build/libs/*.jar --url http://transitfeeds.com/p/societe-de-transport-de-sherbrooke/827/latest/download --output_base output --country_code ca --storage_directory sts.zip
+        run: java -Xmx6G -Xms6G -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/societe-de-transport-de-sherbrooke/827/latest/download --output_base output --country_code ca --storage_directory sts.zip
       - name: Persist datasets
         uses: actions/upload-artifact@v2
         with:
