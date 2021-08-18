@@ -60,8 +60,7 @@ public class LevelPresenceValidator extends FileValidator {
     }
     GtfsPathway pathway = byPathwayModeMap.get(GtfsPathwayMode.ELEVATOR).get(0);
     noticeContainer.addValidationNotice(
-        new MissingLevelNotice(pathway.csvRowNumber(), pathway.pathwayId())
-    );
+        new MissingLevelNotice(pathway.csvRowNumber(), pathway.pathwayId()));
   }
 
   /**

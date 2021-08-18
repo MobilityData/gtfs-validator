@@ -16,6 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static com.google.common.truth.Truth.assertThat;
+
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import org.junit.Test;
@@ -30,28 +32,25 @@ import org.mobilitydata.gtfsvalidator.table.GtfsPathwayMode;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathwayTableContainer;
 import org.mobilitydata.gtfsvalidator.validator.LevelPresenceValidator.MissingLevelNotice;
 
-import static com.google.common.truth.Truth.assertThat;
-
 @RunWith(JUnit4.class)
 public class LevelPresenceValidatorTest {
 
-  private static List<ValidationNotice> generateNotices(List<GtfsLevel> levels,
-      List<GtfsPathway> pathways) {
+  private static List<ValidationNotice> generateNotices(
+      List<GtfsLevel> levels, List<GtfsPathway> pathways) {
     NoticeContainer noticeContainer = new NoticeContainer();
-    new LevelPresenceValidator(GtfsLevelTableContainer.forEntities(levels, noticeContainer),
-        GtfsPathwayTableContainer.forEntities(pathways, noticeContainer)).validate(noticeContainer);
+    new LevelPresenceValidator(
+            GtfsLevelTableContainer.forEntities(levels, noticeContainer),
+            GtfsPathwayTableContainer.forEntities(pathways, noticeContainer))
+        .validate(noticeContainer);
     return noticeContainer.getValidationNotices();
   }
 
   private static GtfsLevel createLevel(String levelId, long csvRowNumber) {
-    return new GtfsLevel.Builder()
-        .setLevelId(levelId)
-        .setCsvRowNumber(csvRowNumber)
-        .build();
+    return new GtfsLevel.Builder().setLevelId(levelId).setCsvRowNumber(csvRowNumber).build();
   }
 
-  private static GtfsPathway createPathway(String pathwayId, long csvRowNumber,
-      GtfsPathwayMode pathwayMode) {
+  private static GtfsPathway createPathway(
+      String pathwayId, long csvRowNumber, GtfsPathwayMode pathwayMode) {
     return new GtfsPathway.Builder()
         .setPathwayId(pathwayId)
         .setCsvRowNumber(csvRowNumber)
@@ -63,32 +62,29 @@ public class LevelPresenceValidatorTest {
 
   @Test
   public void nonEmptyLevelWithPathwayModeFive_yieldsZeroNotice() {
-    assertThat(generateNotices(
-        ImmutableList.of(
-            createLevel("level id value", 44),
-            createLevel("other level id value", 55),
-            createLevel("some level id value", 66)
-        ),
-        ImmutableList.of(
-            createPathway("elevator id value", 77, GtfsPathwayMode.ELEVATOR),
-            createPathway("exit gate id value", 1, GtfsPathwayMode.EXIT_GATE),
-            createPathway("stairs id value", 189, GtfsPathwayMode.STAIRS)
-        )
-    )).isEmpty();
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createLevel("level id value", 44),
+                    createLevel("other level id value", 55),
+                    createLevel("some level id value", 66)),
+                ImmutableList.of(
+                    createPathway("elevator id value", 77, GtfsPathwayMode.ELEVATOR),
+                    createPathway("exit gate id value", 1, GtfsPathwayMode.EXIT_GATE),
+                    createPathway("stairs id value", 189, GtfsPathwayMode.STAIRS))))
+        .isEmpty();
   }
 
   @Test
   public void emptyLevelWithPathwayModeFive_yieldsNotice() {
-    assertThat(generateNotices(
-        ImmutableList.of(),
-        ImmutableList.of(
-            createPathway("elevator id value", 77, GtfsPathwayMode.ELEVATOR),
-            createPathway("other elevator id value", 1, GtfsPathwayMode.ELEVATOR),
-            createPathway("exit gate id value", 144, GtfsPathwayMode.EXIT_GATE),
-            createPathway("stairs id value", 277, GtfsPathwayMode.STAIRS)
-        )
-    )).containsExactly(
-        new MissingLevelNotice(77, "elevator id value")
-    );
+    assertThat(
+            generateNotices(
+                ImmutableList.of(),
+                ImmutableList.of(
+                    createPathway("elevator id value", 77, GtfsPathwayMode.ELEVATOR),
+                    createPathway("other elevator id value", 1, GtfsPathwayMode.ELEVATOR),
+                    createPathway("exit gate id value", 144, GtfsPathwayMode.EXIT_GATE),
+                    createPathway("stairs id value", 277, GtfsPathwayMode.STAIRS))))
+        .containsExactly(new MissingLevelNotice(77, "elevator id value"));
   }
 }
