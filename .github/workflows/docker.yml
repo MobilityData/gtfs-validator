@@ -2,7 +2,7 @@ name: Docker image
 
 on:
   push:
-    branches: [ master, task/springboot-module ]
+    branches: [ master ]
   release:
     types: [ prereleased, released ]
 
