@@ -610,6 +610,7 @@
 | `inconsistent_agency_lang`                 	| [`InconsistentAgencyLangNotice`](#InconsistentAgencyLangNotice)                   	|
 | `leading_or_trailing_whitespaces`           | [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)         |
 | `missing_feed_info_date`                   	| [`MissingFeedInfoDateNotice`](#MissingFeedInfoDateNotice)                         	|
+| `missing_level`                              	| [`MissingLevelNotice`](#MissingLevelNotice)                                       	|
 | `more_than_one_entity`                     	| [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	|
 | `non_ascii_or_non_printable_char`          	| [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	|
 | `platform_without_parent_station`          	| [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)       	|
@@ -744,6 +745,17 @@
 
 ##### Affected files
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
+
+#### [MissingLevelNotice](/RULES.md#MissingLevelNotice)
+##### Fields description
+
+| Field name    	| Description                         	| Type   	|
+|---------------	|-----------------------------------	|--------	|
+| `csvRowNumber`  	| The row number of the faulty record. 	| Long   	|
+| `pathwayId` 	    | The id of the faulty record.         	| String   	|
+
+##### Affected files
+* [`levels.txt`](http://gtfs.org/reference/static#levelstxt)
 
 #### [MoreThanOneEntityNotice](/RULES.md#MoreThanOneEntityNotice)
 ##### Fields description
