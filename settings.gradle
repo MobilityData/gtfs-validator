@@ -1,7 +1,6 @@
 rootProject.name = 'gtfs-validator'
 include 'core'
 include 'processor'
-include 'main'
 include 'main:cli'
 include 'main:springboot'
 
