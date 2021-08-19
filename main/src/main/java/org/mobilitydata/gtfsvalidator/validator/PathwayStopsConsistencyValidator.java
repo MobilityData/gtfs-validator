@@ -64,7 +64,10 @@ public class PathwayStopsConsistencyValidator extends FileValidator {
         if (pathwayStop.locationType() == GtfsLocationType.STATION) {
           noticeContainer.addValidationNotice(
               new LocationTypeStationForStopOnPathwayNotice(
-                  pathway.pathwayId(), pathway.csvRowNumber(), pathwayStop.stopId(), pathwayStop.csvRowNumber()));
+                  pathway.pathwayId(),
+                  pathway.csvRowNumber(),
+                  pathwayStop.stopId(),
+                  pathwayStop.csvRowNumber()));
         }
       }
     }
@@ -83,7 +86,8 @@ public class PathwayStopsConsistencyValidator extends FileValidator {
     private final String stopId;
     private final long stopCsvRowNumber;
 
-    public LocationTypeStationForStopOnPathwayNotice(String pathwayId, long pathwayCsvRowNumber, String stopId, long stopCsvRowNumber) {
+    public LocationTypeStationForStopOnPathwayNotice(
+        String pathwayId, long pathwayCsvRowNumber, String stopId, long stopCsvRowNumber) {
       super(SeverityLevel.WARNING);
       this.pathwayId = pathwayId;
       this.pathwayCsvRowNumber = pathwayCsvRowNumber;

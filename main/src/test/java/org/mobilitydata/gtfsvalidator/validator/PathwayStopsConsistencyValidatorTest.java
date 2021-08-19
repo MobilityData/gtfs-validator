@@ -39,8 +39,8 @@ public class PathwayStopsConsistencyValidatorTest {
       ImmutableList<GtfsStop> stops, ImmutableList<GtfsPathway> pathways) {
     NoticeContainer noticeContainer = new NoticeContainer();
     new PathwayStopsConsistencyValidator(
-        GtfsStopTableContainer.forEntities(stops, noticeContainer),
-        GtfsPathwayTableContainer.forEntities(pathways, noticeContainer))
+            GtfsStopTableContainer.forEntities(stops, noticeContainer),
+            GtfsPathwayTableContainer.forEntities(pathways, noticeContainer))
         .validate(noticeContainer);
     return noticeContainer.getValidationNotices();
   }
@@ -68,31 +68,31 @@ public class PathwayStopsConsistencyValidatorTest {
   @Test
   public void validLocationType_yieldsZeroNotices() {
     assertThat(
-        generateNotices(
-            ImmutableList.of(
-                createStop("stop id", "level 0", 4, GtfsLocationType.STOP),
-                createStop("entrance id", "level 1", 5, GtfsLocationType.ENTRANCE),
-                createStop("generic node id", "level 2", 6, GtfsLocationType.GENERIC_NODE),
-                createStop("boarding area id", "level 3", 7, GtfsLocationType.BOARDING_AREA)),
-            ImmutableList.of(
-                createPathway("first pathway id value", "stop id", "entrance id", 33),
-                createPathway(
-                    "second pathway id value", "generic node id", "boarding area id", 66))))
+            generateNotices(
+                ImmutableList.of(
+                    createStop("stop id", "level 0", 4, GtfsLocationType.STOP),
+                    createStop("entrance id", "level 1", 5, GtfsLocationType.ENTRANCE),
+                    createStop("generic node id", "level 2", 6, GtfsLocationType.GENERIC_NODE),
+                    createStop("boarding area id", "level 3", 7, GtfsLocationType.BOARDING_AREA)),
+                ImmutableList.of(
+                    createPathway("first pathway id value", "stop id", "entrance id", 33),
+                    createPathway(
+                        "second pathway id value", "generic node id", "boarding area id", 66))))
         .isEmpty();
   }
 
   @Test
   public void locationTypeStation_yieldsNotice() {
     assertThat(
-        generateNotices(
-            ImmutableList.of(
-                createStop("from stop id", "level 0", 3, GtfsLocationType.STATION),
-                createStop("to stop id", "level 1", 4, GtfsLocationType.STATION)),
-            ImmutableList.of(
-                createPathway("pathway id value", "from stop id", "to stop id", 33))))
+            generateNotices(
+                ImmutableList.of(
+                    createStop("from stop id", "level 0", 3, GtfsLocationType.STATION),
+                    createStop("to stop id", "level 1", 4, GtfsLocationType.STATION)),
+                ImmutableList.of(
+                    createPathway("pathway id value", "from stop id", "to stop id", 33))))
         .containsExactly(
-            new LocationTypeStationForStopOnPathwayNotice("pathway id value", 33, "from stop id",
-                3),
+            new LocationTypeStationForStopOnPathwayNotice(
+                "pathway id value", 33, "from stop id", 3),
             new LocationTypeStationForStopOnPathwayNotice("pathway id value", 33, "to stop id", 4));
   }
 }
