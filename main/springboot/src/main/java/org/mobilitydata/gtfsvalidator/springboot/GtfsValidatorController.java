@@ -36,7 +36,7 @@ public class GtfsValidatorController {
           .setPrettyPrinting()
           .serializeSpecialFloatingPointValues()
           .create();
-  private static final String BUCKET_NAME = "gtfs-validator-reports";
+  private static final String VALIDATION_REPORT_BUCKET = "VALIDATION_REPORT_BUCKET";
   private static final String DEFAULT_OUTPUT_BASE = "output";
   private static final String DEFAULT_NUM_THREADS = "8";
   private static final String DEFAULT_COUNTRY_CODE = "null";
@@ -62,12 +62,12 @@ public class GtfsValidatorController {
       @RequestParam(required = false, defaultValue = "commit sha value") String commit_sha) {
 
     final String[] argv = {
-      "-o", output_base,
-      "-t", threads,
-      "-c", country_code,
-      "-u", url,
-      "-v", validation_report_name,
-      "-e", system_error_report_name
+        "-o", output_base,
+        "-t", threads,
+        "-c", country_code,
+        "-u", url,
+        "-v", validation_report_name,
+        "-e", system_error_report_name
     };
     Arguments args = new Arguments();
     JCommander jCommander = new JCommander(args);
@@ -79,11 +79,11 @@ public class GtfsValidatorController {
   /**
    * Pushes validation report to google cloud storage. Returns the status of the validation and
    * validation report storage. Requires authentification to be set prior execution i.e. environment
-   * variable GOOGLE_APPLICATION_CREDENTIALS has to be defined.
+   * variables GOOGLE_APPLICATION_CREDENTIALS and VALIDATION_REPORT_BUCKET have to be defined.
    *
    * @param commitSha the commit SHA
    * @param datasetId the id of the dataset
-   * @param args the {@code Argument} generated from the query parameters
+   * @param args      the {@code Argument} generated from the query parameters
    * @return the status of the validation and validation report storage
    */
   private String pushValidationReportToCloudStorage(
@@ -95,7 +95,8 @@ public class GtfsValidatorController {
     JsonObject properties = new JsonObject();
     root.add("properties", properties);
 
-    Bucket commitBucket = storage.get(BUCKET_NAME, Storage.BucketGetOption.fields());
+    Bucket commitBucket = storage
+        .get(System.getenv(VALIDATION_REPORT_BUCKET), Storage.BucketGetOption.fields());
     if (commitBucket == null) {
       commitBucket =
           storage.create(

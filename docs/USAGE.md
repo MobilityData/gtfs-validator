@@ -120,6 +120,6 @@ http://localhost:8080/?url=http://webapps.thebus.org/transitdata/Production/goog
 
 which will:
 1. execute the validator on the dataset available at: http://webapps.thebus.org/transitdata/Production/google_transit.zip
-1. store the validation report as report.json in the gtfs-validator-reports bucket owned by MobilityData in the folder sha_value/id_value
+1. store the validation report as report.json in the bucket specified by environment variable `VALIDATION_REPORT_BUCKET` sha_value/id_value.
 
 ⚠️ You must be an authenticated user to push data to gtfs-validator-reports, see docs.
