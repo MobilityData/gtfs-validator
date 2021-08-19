@@ -57,7 +57,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.google.cloud:google-cloud-storage'
+    implementation 'com.google.cloud:google-cloud-storage'
     implementation project(':main:cli')
     implementation platform('com.google.cloud:libraries-bom:20.9.0')
     implementation 'com.beust:jcommander:1.48'
