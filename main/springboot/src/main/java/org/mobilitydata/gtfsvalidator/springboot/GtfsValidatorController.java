@@ -62,12 +62,12 @@ public class GtfsValidatorController {
       @RequestParam(required = false, defaultValue = "commit sha value") String commit_sha) {
 
     final String[] argv = {
-        "-o", output_base,
-        "-t", threads,
-        "-c", country_code,
-        "-u", url,
-        "-v", validation_report_name,
-        "-e", system_error_report_name
+      "-o", output_base,
+      "-t", threads,
+      "-c", country_code,
+      "-u", url,
+      "-v", validation_report_name,
+      "-e", system_error_report_name
     };
     Arguments args = new Arguments();
     JCommander jCommander = new JCommander(args);
@@ -83,7 +83,7 @@ public class GtfsValidatorController {
    *
    * @param commitSha the commit SHA
    * @param datasetId the id of the dataset
-   * @param args      the {@code Argument} generated from the query parameters
+   * @param args the {@code Argument} generated from the query parameters
    * @return the status of the validation and validation report storage
    */
   private String pushValidationReportToCloudStorage(
@@ -95,8 +95,8 @@ public class GtfsValidatorController {
     JsonObject properties = new JsonObject();
     root.add("properties", properties);
 
-    Bucket commitBucket = storage
-        .get(System.getenv(VALIDATION_REPORT_BUCKET), Storage.BucketGetOption.fields());
+    Bucket commitBucket =
+        storage.get(System.getenv(VALIDATION_REPORT_BUCKET), Storage.BucketGetOption.fields());
     if (commitBucket == null) {
       commitBucket =
           storage.create(
