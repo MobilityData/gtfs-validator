@@ -92,7 +92,8 @@ public class PathwayStopsConsistencyValidatorTest {
                     createPathway("pathway id value", "from stop id", "to stop id", 33))))
         .containsExactly(
             new LocationTypeStationForStopOnPathwayNotice(
-                "pathway id value", 33, "from stop id", 3),
-            new LocationTypeStationForStopOnPathwayNotice("pathway id value", 33, "to stop id", 4));
+                "pathway id value", 33, "from stop id", 3, "from_stop_id"),
+            new LocationTypeStationForStopOnPathwayNotice(
+                "pathway id value", 33, "to stop id", 4, "to_stop_id"));
   }
 }

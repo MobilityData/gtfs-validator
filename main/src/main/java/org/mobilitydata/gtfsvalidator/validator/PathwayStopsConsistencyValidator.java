@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.collect.ImmutableMap;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -41,6 +42,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 @GtfsValidator
 public class PathwayStopsConsistencyValidator extends FileValidator {
 
+  private static final String FROM_STOP_ID_FIELD_NAME = "from_stop_id";
+  private static final String TO_STOP_ID_FIELD_NAME = "to_stop_id";
   private final GtfsStopTableContainer stops;
   private final GtfsPathwayTableContainer pathways;
 
@@ -54,10 +57,12 @@ public class PathwayStopsConsistencyValidator extends FileValidator {
   @Override
   public void validate(NoticeContainer noticeContainer) {
     for (GtfsPathway pathway : pathways.getEntities()) {
-      GtfsStop[] pathwayStops = {
-        stops.byStopId(pathway.fromStopId()), stops.byStopId(pathway.toStopId())
-      };
-      for (GtfsStop pathwayStop : pathwayStops) {
+      ImmutableMap<String, GtfsStop> pathwayStops =
+          ImmutableMap.of(
+              FROM_STOP_ID_FIELD_NAME, stops.byStopId(pathway.fromStopId()),
+              TO_STOP_ID_FIELD_NAME, stops.byStopId(pathway.toStopId()));
+      for (String fieldName : pathwayStops.keySet()) {
+        GtfsStop pathwayStop = pathwayStops.get(fieldName);
         if (pathwayStop == null) {
           continue;
         }
@@ -67,7 +72,8 @@ public class PathwayStopsConsistencyValidator extends FileValidator {
                   pathway.pathwayId(),
                   pathway.csvRowNumber(),
                   pathwayStop.stopId(),
-                  pathwayStop.csvRowNumber()));
+                  pathwayStop.csvRowNumber(),
+                  fieldName));
         }
       }
     }
@@ -85,14 +91,20 @@ public class PathwayStopsConsistencyValidator extends FileValidator {
     private final long pathwayCsvRowNumber;
     private final String stopId;
     private final long stopCsvRowNumber;
+    private final String fieldName;
 
     public LocationTypeStationForStopOnPathwayNotice(
-        String pathwayId, long pathwayCsvRowNumber, String stopId, long stopCsvRowNumber) {
+        String pathwayId,
+        long pathwayCsvRowNumber,
+        String stopId,
+        long stopCsvRowNumber,
+        String fieldName) {
       super(SeverityLevel.WARNING);
       this.pathwayId = pathwayId;
       this.pathwayCsvRowNumber = pathwayCsvRowNumber;
       this.stopId = stopId;
       this.stopCsvRowNumber = stopCsvRowNumber;
+      this.fieldName = fieldName;
     }
   }
 }
