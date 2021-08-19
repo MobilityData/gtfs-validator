@@ -80,8 +80,7 @@ public class PathwayStopsConsistencyValidator extends FileValidator {
   }
 
   /**
-   * A stop referenced by a row from {@code pathways.txt} has {@code location_type =
-   * 1} (station).
+   * A stop referenced by a row from {@code pathways.txt} has {@code location_type = 1} (station).
    *
    * <p>Severity: {@code SeverityLevel.WARNING} to be upgraded to {@code SeverityLevel.ERROR}.
    */
