@@ -91,7 +91,7 @@ Please note that since downloading will take time, we recommend validating repea
 ### Launch the service
 1. Install [Java 8 or higher](https://www.oracle.com/java/technologies/javase-downloads.html).
 1. Download the latest gtfs-validator_springboot JAR file from our [Releases page](https://github.com/MobilityData/gtfs-validator/releases) or snapshot artifact from [GitHub Actions](https://github.com/MobilityData/gtfs-validator/actions?query=branch%3Amaster).
-1. Authenticate to Google Storage 
+1. Authenticate to Google Storage, see [docs](https://cloud.google.com/docs/authentication/getting-started#setting_the_environment_variable).
 Run the following command line: 
 ```
 java -jar gtfs-validator-v2.1.0_springboot.jar
