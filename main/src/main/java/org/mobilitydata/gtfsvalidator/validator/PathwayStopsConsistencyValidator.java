@@ -44,8 +44,8 @@ public class PathwayStopsConsistencyValidator extends FileValidator {
   public void validate(NoticeContainer noticeContainer) {
     for (GtfsPathway pathway : pathways.getEntities()) {
       GtfsStop[] pathwayStops = {
-          stops.byStopId(pathway.fromStopId()),
-          stops.byStopId(pathway.toStopId())};
+        stops.byStopId(pathway.fromStopId()), stops.byStopId(pathway.toStopId())
+      };
       for (GtfsStop pathwayStop : pathwayStops) {
         if (pathwayStop == null) {
           continue;
