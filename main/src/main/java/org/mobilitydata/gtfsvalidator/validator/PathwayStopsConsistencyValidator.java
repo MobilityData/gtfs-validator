@@ -27,6 +27,20 @@ import org.mobilitydata.gtfsvalidator.table.GtfsPathwayTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 
+/**
+ * Validates:
+ * <p>{@code level_id} is present in the two stops referenced in {@code pathways.from_stop_id} and
+ * {@code pathways.to_stop_id} fields.
+ * <p>{@code location_type} of the two aforementioned stops referenced do not have the value 1
+ * (station)
+ *
+ * <p>Generated notice:
+ *
+ * <ul>
+ *   <li>{@link MissingLevelIdNotice}
+ *   <li>{@link WrongLocationTypeForStopOnPathwayNotice}
+ * </ul>
+ */
 @GtfsValidator
 public class PathwayStopsConsistencyValidator extends FileValidator {
 
@@ -44,7 +58,7 @@ public class PathwayStopsConsistencyValidator extends FileValidator {
   public void validate(NoticeContainer noticeContainer) {
     for (GtfsPathway pathway : pathways.getEntities()) {
       GtfsStop[] pathwayStops = {
-        stops.byStopId(pathway.fromStopId()), stops.byStopId(pathway.toStopId())
+          stops.byStopId(pathway.fromStopId()), stops.byStopId(pathway.toStopId())
       };
       for (GtfsStop pathwayStop : pathwayStops) {
         if (pathwayStop == null) {
@@ -63,6 +77,10 @@ public class PathwayStopsConsistencyValidator extends FileValidator {
     }
   }
 
+  /**
+   * {@code level_id} is missing in one of the two stops referenced in {@code pathways.from_stop_id}
+   * and {@code pathways.to_stop_id} fields.
+   */
   static class MissingLevelIdNotice extends ValidationNotice {
 
     private final String pathwayId;
@@ -75,6 +93,10 @@ public class PathwayStopsConsistencyValidator extends FileValidator {
     }
   }
 
+  /**
+   * One of the two stops referenced by a row from {@code pathways.txt} has the {@code location_type
+   * = 1} (station).
+   */
   static class WrongLocationTypeForStopOnPathwayNotice extends ValidationNotice {
 
     private final String pathwayId;
