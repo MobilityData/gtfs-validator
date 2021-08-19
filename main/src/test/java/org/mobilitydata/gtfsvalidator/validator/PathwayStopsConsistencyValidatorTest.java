@@ -30,8 +30,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsPathway;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathwayTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
-import org.mobilitydata.gtfsvalidator.validator.PathwayStopsConsistencyValidator.MissingLevelIdNotice;
-import org.mobilitydata.gtfsvalidator.validator.PathwayStopsConsistencyValidator.WrongLocationTypeForStopOnPathwayNotice;
+import org.mobilitydata.gtfsvalidator.validator.PathwayStopsConsistencyValidator.LocationTypeStationForStopOnPathwayNotice;
 
 @RunWith(JUnit4.class)
 public class PathwayStopsConsistencyValidatorTest {
@@ -67,59 +66,7 @@ public class PathwayStopsConsistencyValidatorTest {
   }
 
   @Test
-  public void levelIdAbsentFromOriginStop_yieldsNotice() {
-    assertThat(
-            generateNotices(
-                ImmutableList.of(createStop("from stop id", null, 3, GtfsLocationType.STATION)),
-                ImmutableList.of(
-                    createPathway("pathway id value", "from stop id", "to stop id", 33))))
-        .containsExactly(new MissingLevelIdNotice("pathway id value", "from stop id"));
-  }
-
-  @Test
-  public void levelIdAbsentFromDestinationStop_yieldsNotice() {
-    assertThat(
-            generateNotices(
-                ImmutableList.of(createStop("to stop id", null, 3, GtfsLocationType.STATION)),
-                ImmutableList.of(
-                    createPathway("pathway id value", "from stop id", "to stop id", 33))))
-        .containsExactly(new MissingLevelIdNotice("pathway id value", "to stop id"));
-  }
-
-  @Test
-  public void levelIdPresentInOriginStop_yieldZeroNotice() {
-    assertThat(
-            generateNotices(
-                ImmutableList.of(
-                    createStop("from stop id", "level 0", 3, GtfsLocationType.STATION)),
-                ImmutableList.of(
-                    createPathway("pathway id value", "from stop id", "to stop id", 33))))
-        .isEmpty();
-  }
-
-  @Test
-  public void levelIdPresentInDestinationStop_yieldZeroNotice() {
-    assertThat(
-            generateNotices(
-                ImmutableList.of(createStop("to stop id", "level 1", 4, GtfsLocationType.STATION)),
-                ImmutableList.of(
-                    createPathway("pathway id value", "from stop id", "to stop id", 33))))
-        .isEmpty();
-  }
-
-  @Test
-  public void wrongLocationTypeForStopInPathway_yieldsNotices() {
-    WrongLocationTypeForStopOnPathwayNotice[] notices = {
-      new WrongLocationTypeForStopOnPathwayNotice(
-          "first pathway id value", "stop id", GtfsLocationType.STOP),
-      new WrongLocationTypeForStopOnPathwayNotice(
-          "first pathway id value", "entrance id", GtfsLocationType.ENTRANCE),
-      new WrongLocationTypeForStopOnPathwayNotice(
-          "second pathway id value", "generic node id", GtfsLocationType.GENERIC_NODE),
-      new WrongLocationTypeForStopOnPathwayNotice(
-          "second pathway id value", "boarding area id", GtfsLocationType.BOARDING_AREA)
-    };
-
+  public void validLocationType_yieldsZeroNotices() {
     assertThat(
             generateNotices(
                 ImmutableList.of(
@@ -131,11 +78,11 @@ public class PathwayStopsConsistencyValidatorTest {
                     createPathway("first pathway id value", "stop id", "entrance id", 33),
                     createPathway(
                         "second pathway id value", "generic node id", "boarding area id", 66))))
-        .containsExactlyElementsIn(notices);
+        .isEmpty();
   }
 
   @Test
-  public void locationTypeStation_yieldsZeroNotice() {
+  public void locationTypeStation_yieldsNotice() {
     assertThat(
             generateNotices(
                 ImmutableList.of(
@@ -143,6 +90,8 @@ public class PathwayStopsConsistencyValidatorTest {
                     createStop("to stop id", "level 1", 4, GtfsLocationType.STATION)),
                 ImmutableList.of(
                     createPathway("pathway id value", "from stop id", "to stop id", 33))))
-        .isEmpty();
+        .containsExactly(
+            new LocationTypeStationForStopOnPathwayNotice("pathway id value", "from stop id"),
+            new LocationTypeStationForStopOnPathwayNotice("pathway id value", "to stop id"));
   }
 }

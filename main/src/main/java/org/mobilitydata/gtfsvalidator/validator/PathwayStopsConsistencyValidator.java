@@ -29,16 +29,13 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 
 /**
  * Validates:
- * <p>{@code level_id} is present in the two stops referenced in {@code pathways.from_stop_id} and
- * {@code pathways.to_stop_id} fields.
- * <p>{@code location_type} of the two aforementioned stops referenced do not have the value 1
- * (station)
+ *
+ * <p>No stop referenced from {@code pathways.txt} has {@code location_type} value 1 (station).
  *
  * <p>Generated notice:
  *
  * <ul>
- *   <li>{@link MissingLevelIdNotice}
- *   <li>{@link WrongLocationTypeForStopOnPathwayNotice}
+ *   <li>{@link LocationTypeStationForStopOnPathwayNotice}
  * </ul>
  */
 @GtfsValidator
@@ -58,57 +55,36 @@ public class PathwayStopsConsistencyValidator extends FileValidator {
   public void validate(NoticeContainer noticeContainer) {
     for (GtfsPathway pathway : pathways.getEntities()) {
       GtfsStop[] pathwayStops = {
-          stops.byStopId(pathway.fromStopId()), stops.byStopId(pathway.toStopId())
+        stops.byStopId(pathway.fromStopId()), stops.byStopId(pathway.toStopId())
       };
       for (GtfsStop pathwayStop : pathwayStops) {
         if (pathwayStop == null) {
           continue;
         }
-        if (!pathwayStop.hasLevelId()) {
+        if (pathwayStop.locationType() == GtfsLocationType.STATION) {
           noticeContainer.addValidationNotice(
-              new MissingLevelIdNotice(pathway.pathwayId(), pathwayStop.stopId()));
-        }
-        if (pathwayStop.locationType() != GtfsLocationType.STATION) {
-          noticeContainer.addValidationNotice(
-              new WrongLocationTypeForStopOnPathwayNotice(
-                  pathway.pathwayId(), pathwayStop.stopId(), pathwayStop.locationType()));
+              new LocationTypeStationForStopOnPathwayNotice(
+                  pathway.pathwayId(), pathwayStop.stopId()));
         }
       }
     }
   }
 
   /**
-   * {@code level_id} is missing in one of the two stops referenced in {@code pathways.from_stop_id}
-   * and {@code pathways.to_stop_id} fields.
+   * One of the two stops referenced by a row from {@code pathways.txt} has {@code location_type =
+   * 1} (station).
+   *
+   * <p>Severity: {@code SeverityLevel.WARNING} to be upgraded to {@code SeverityLevel.ERROR}.
    */
-  static class MissingLevelIdNotice extends ValidationNotice {
+  static class LocationTypeStationForStopOnPathwayNotice extends ValidationNotice {
 
     private final String pathwayId;
     private final String stopId;
 
-    public MissingLevelIdNotice(String pathwayId, String stopId) {
+    public LocationTypeStationForStopOnPathwayNotice(String pathwayId, String stopId) {
       super(SeverityLevel.WARNING);
       this.pathwayId = pathwayId;
       this.stopId = stopId;
-    }
-  }
-
-  /**
-   * One of the two stops referenced by a row from {@code pathways.txt} has the {@code location_type
-   * = 1} (station).
-   */
-  static class WrongLocationTypeForStopOnPathwayNotice extends ValidationNotice {
-
-    private final String pathwayId;
-    private final String stopId;
-    private final GtfsLocationType locationType;
-
-    public WrongLocationTypeForStopOnPathwayNotice(
-        String pathwayId, String stopId, GtfsLocationType locationType) {
-      super(SeverityLevel.WARNING);
-      this.pathwayId = pathwayId;
-      this.stopId = stopId;
-      this.locationType = locationType;
     }
   }
 }
