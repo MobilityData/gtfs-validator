@@ -30,7 +30,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsPathwayTableContainer;
 
 /**
  * Checks that levels.txt is provided if at least a row from pathways.txt has {@code
- * pathway.pathway_mode=5}.
+ * pathway.pathway_mode=5}. Only one notice is generated here assuming that the content of {@code
+ * pathways.txt} is correct.
  *
  * <p>Generated notice: {@link MissingLevelNotice}.
  */

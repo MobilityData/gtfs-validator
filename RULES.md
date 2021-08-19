@@ -664,7 +664,7 @@ Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one
 
 #### MissingLevelNotice
 
-GTFS file `levels.txt` is required for elevator (`pathway_mode=5`).
+GTFS file `levels.txt` is required for elevator (`pathway_mode=5`). Here, the values passed to `pathways.pathway_mode` are assumed to be correct.
 
 ##### References:
 * [levels.txt specification](http://gtfs.org/reference/static/#levelstxt)
