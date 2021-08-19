@@ -370,7 +370,7 @@ Value of field with type `url` is not valid. Definitions for valid URLs are quit
 
 #### LocationTypeStationForStopOnPathwayNotice
 
-One of the two stops referenced by a row from `pathways.txt` has `location_type=1` (station).
+A stop referenced by a row from `pathways.txt` has `location_type=1` (station).
 
 ##### References:
 * [pathways.txt](http://gtfs.org/reference/static#pathwaystxt)
