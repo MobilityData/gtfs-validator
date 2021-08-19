@@ -749,10 +749,10 @@
 #### [MissingLevelNotice](/RULES.md#MissingLevelNotice)
 ##### Fields description
 
-| Field name    	| Description                         	| Type   	|
-|---------------	|-----------------------------------	|--------	|
-| `csvRowNumber`  	| The row number of the faulty record. 	| Long   	|
-| `pathwayId` 	    | The id of the faulty record.         	| String   	|
+| Field name    	| Description                                                      	 | Type   	|
+|---------------	|------------------------------------------------------------------- |--------	|
+| `csvRowNumber`  | The row number of the faulty record. 	                             | Long   	|
+| `pathwayId` 	  | The id of the record from pathways.txt that refers to `levels.txt`.| String   |
 
 ##### Affected files
 * [`levels.txt`](http://gtfs.org/reference/static#levelstxt)
