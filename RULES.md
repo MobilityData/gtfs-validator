@@ -91,6 +91,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`InvalidTimeNotice`](#InvalidTimeNotice)                                                                       | A field cannot be parsed as time.                                                                                                                      |
 | [`InvalidTimezoneNotice`](#InvalidTimezoneNotice)                                                               | A field cannot be parsed as a timezone.                                                                                                                |
 | [`InvalidUrlNotice`](#InvalidUrlNotice)                                                                         | A field contains a malformed URL.                                                                                                                      |
+| [`LocationTypeStationForStopOnPathwayNotice`](#LocationTypeStationForStopOnPathwayNotice)                       | A stop used in `pathways.txt` must not have `location_type=1`.                                                                                          |
 | [`LocationWithoutParentStationNotice`](#LocationWithoutParentStationNotice)                                     | A location that must have `parent_station` field does not have it.                                                                                     |
 | [`MissingCalendarAndCalendarDateFilesNotice`](#MissingCalendarAndCalendarDateFilesNotice)                       | Missing GTFS files `calendar.txt` and `calendar_dates.txt`.                                                                                            |
 | [`MissingRequiredColumnNotice`](#MissingRequiredColumnNotice)                                                   | A required column is missing in the input file.                                                                                                        |
@@ -364,6 +365,15 @@ Value of field with type `url` is not valid. Definitions for valid URLs are quit
 ##### References:
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 * [Apache Commons UrlValidator](https://commons.apache.org/proper/commons-validator/apidocs/org/apache/commons/validator/routines/UrlValidator.html)
+
+<a name="LocationTypeStationForStopOnPathwayNotice"/>
+
+#### LocationTypeStationForStopOnPathwayNotice
+
+One of the two stops referenced by a row from `pathways.txt` has `location_type=1` (station).
+
+##### References:
+* [pathways.txt](http://gtfs.org/reference/static#pathwaystxt)
 
 <a name="LocationWithoutParentStationNotice"/>
 
