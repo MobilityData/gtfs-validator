@@ -36,7 +36,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsPathwayTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 import org.mobilitydata.gtfsvalidator.validator.PathwayEndpointTypeValidator.PathwayToPlatformWithBoardingAreasNotice;
-import org.mobilitydata.gtfsvalidator.validator.PathwayEndpointTypeValidator.PathwayWrongEndpointTypeNotice;
+import org.mobilitydata.gtfsvalidator.validator.PathwayEndpointTypeValidator.PathwayToWrongLocationTypeNotice;
 
 @RunWith(JUnit4.class)
 public class PathwayEndpointTypeValidatorTest {
@@ -129,8 +129,8 @@ public class PathwayEndpointTypeValidatorTest {
                 ImmutableList.of(pathway),
                 ImmutableList.of(createStop(2, STATION), createStop(3, STATION))))
         .containsExactly(
-            new PathwayWrongEndpointTypeNotice(pathway, "from_stop_id", pathway.fromStopId()),
-            new PathwayWrongEndpointTypeNotice(pathway, "to_stop_id", pathway.toStopId()));
+            new PathwayToWrongLocationTypeNotice(pathway, "from_stop_id", pathway.fromStopId()),
+            new PathwayToWrongLocationTypeNotice(pathway, "to_stop_id", pathway.toStopId()));
   }
 
   @Test

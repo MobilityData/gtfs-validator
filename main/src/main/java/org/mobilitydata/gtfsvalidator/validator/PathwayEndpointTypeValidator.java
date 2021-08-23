@@ -77,7 +77,7 @@ public class PathwayEndpointTypeValidator extends FileValidator {
         return;
       case STATION:
         noticeContainer.addValidationNotice(
-            new PathwayWrongEndpointTypeNotice(pathway, fieldName, stopId));
+            new PathwayToWrongLocationTypeNotice(pathway, fieldName, stopId));
         return;
       default:
         break;
@@ -85,13 +85,13 @@ public class PathwayEndpointTypeValidator extends FileValidator {
   }
 
   /** Describes a pathway which endpoint is a station. */
-  static class PathwayWrongEndpointTypeNotice extends ValidationNotice {
+  static class PathwayToWrongLocationTypeNotice extends ValidationNotice {
     private final long csvRowNumber;
     private final String pathwayId;
     private final String fieldName;
     private final String stopId;
 
-    PathwayWrongEndpointTypeNotice(GtfsPathway pathway, String fieldName, String stopId) {
+    PathwayToWrongLocationTypeNotice(GtfsPathway pathway, String fieldName, String stopId) {
       super(SeverityLevel.ERROR);
       this.csvRowNumber = pathway.csvRowNumber();
       this.pathwayId = pathway.pathwayId();

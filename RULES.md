@@ -101,7 +101,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`NumberOutOfRangeNotice`](#NumberOutOfRangeNotice)                                                             | Out of range value.                                                                                                                                    |
 | [`OverlappingFrequencyNotice`](#OverlappingFrequencyNotice)                                                     | Trip frequencies overlap.                                                                                                                              |
 | [`PathwayToPlatformWithBoardingAreasNotice`](#PathwayToPlatformWithBoardingAreasNotice)                         | A pathway has an endpoint that is a platform which has boarding areas.                                                                                 |
-| [`PathwayWrongEndpointTypeNotice`](#PathwayWrongEndpointTypeNotice)                                             | A pathway has an endpoint that is a station.                                                                                                           |
+| [`PathwayToWrongLocationTypeNotice`](#PathwayToWrongLocationTypeNotice)                                             | A pathway has an endpoint that is a station.                                                                                                           |
 | [`RouteBothShortAndLongNameMissingNotice`](#RouteBothShortAndLongNameMissingNotice)                             | Missing route short name and long name.                                                                                                                |
 | [`StartAndEndRangeEqualNotice`](#StartAndEndRangeEqualNotice)                                                   | Two date or time fields are equal.                                                                                                                     |
 | [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         | Two date or time fields are out of order.                                                                                                              |
@@ -466,9 +466,9 @@ assigned - instead, pathways must be assigned to its boarding areas.
 
 <a name="RouteBothShortAndLongNameMissingNotice"/>
 
-<a name="PathwayWrongEndpointTypeNotice"/>
+<a name="PathwayToWrongLocationTypeNotice"/>
 
-#### PathwayWrongEndpointTypeNotice
+#### PathwayToWrongLocationTypeNotice
 
 A pathway has an endpoint that is a station. Pathways endpoints must be platforms (stops),
 entrances/exits, generic nodes or boarding areas.
