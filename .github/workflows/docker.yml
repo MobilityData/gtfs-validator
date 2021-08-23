@@ -2,7 +2,7 @@ name: Docker image
 
 on:
   push:
-    branches: [ master, task/deploy-to-k8s ]
+    branches: [ master ]
   release:
     types: [ prereleased, released ]
 
