@@ -48,10 +48,10 @@ configurations {
 }
 
 dependencies {
-    testReportData project('main:cli')
-    testReportData project('main:springboot')
+    testReportData project(':main')
     testReportData project(':processor')
     testReportData project(':core')
+    testReportData project(':springboot')
 }
 
 tasks.register('testReport', TestReport) {

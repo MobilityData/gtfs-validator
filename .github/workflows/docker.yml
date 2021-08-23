@@ -128,7 +128,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./main/cli/Dockerfile
+          file: ./main/Dockerfile
           push: true
           tags: ${{ steps.prep.outputs.tags }}
           labels: |

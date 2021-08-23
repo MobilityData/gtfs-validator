@@ -50,27 +50,27 @@ jobs:
       #  run: java -jar application/cli-app/build/libs/*.jar --url DATASET_PUBLIC_URL --input [[[ACRONYM]]].zip --extract pathToExtractedZipContent --output validationResultDirectory #<-- uncomment this line,
       #replace ACRONYM and [[[ACRONYM]]] by the agency/publisher acronym. Also replace DATASET_PUBLIC_URL by a public link to a GTFS Schedule zip archive
       - name: Validate dataset from -- Greater Sydney
-        run: java -jar main/cli/build/libs/*.jar --url https://openmobilitydata.org/p/transport-for-nsw/237/latest/download --output_base output --country_code au --storage_directory gs.zip
+        run: java -jar main/build/libs/*.jar --url https://openmobilitydata.org/p/transport-for-nsw/237/latest/download --output_base output --country_code au --storage_directory gs.zip
       - name: Validate dataset from -- SMART
-        run: java -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/sonoma-marin-area-rail-transit/1050/20200930/download --output_base output --country_code us --storage_directory smart.zip
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/sonoma-marin-area-rail-transit/1050/20200930/download --output_base output --country_code us --storage_directory smart.zip
       - name: Validate dataset from -- STM
-        run: java -jar main/cli/build/libs/*.jar --url https://openmobilitydata.org/p/societe-de-transport-de-montreal/39/latest/download --output_base output --country_code ca --storage_directory stm.zip
+        run: java -jar main/build/libs/*.jar --url https://openmobilitydata.org/p/societe-de-transport-de-montreal/39/latest/download --output_base output --country_code ca --storage_directory stm.zip
       - name: Validate dataset from -- MBTA
-        run: java -jar main/cli/build/libs/*.jar --url https://cdn.mbta.com/MBTA_GTFS.zip --output_base output --country_code us --storage_directory mbta.zip
+        run: java -jar main/build/libs/*.jar --url https://cdn.mbta.com/MBTA_GTFS.zip --output_base output --country_code us --storage_directory mbta.zip
       - name: Validate dataset from issue 379 -- Bay Area Rapid Transit
-        run: java -jar main/cli/build/libs/*.jar --url http://www.bart.gov/dev/schedules/google_transit.zip --output_base output --country_code us --storage_directory bart.zip
+        run: java -jar main/build/libs/*.jar --url http://www.bart.gov/dev/schedules/google_transit.zip --output_base output --country_code us --storage_directory bart.zip
       - name: Validate dataset from issue 399 -- Monterey-Salinas Transit
-        run: java -jar main/cli/build/libs/*.jar --url http://www.mst.org/google/google_transit.zip --output_base output --country_code us --storage_directory mst.zip
+        run: java -jar main/build/libs/*.jar --url http://www.mst.org/google/google_transit.zip --output_base output --country_code us --storage_directory mst.zip
       - name: Validate dataset from issue 398 -- Orange County Transportation Authority
-        run: java -jar main/cli/build/libs/*.jar --url https://octa.net/current/google_transit.zip --output_base output --country_code us --storage_directory octa.zip
+        run: java -jar main/build/libs/*.jar --url https://octa.net/current/google_transit.zip --output_base output --country_code us --storage_directory octa.zip
       - name: Validate dataset from issue 400 -- Siskiyou Transit and General Express
-        run: java -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/siskiyou-transit-and-general-express/492/latest/download --output_base output --country_code us --storage_directory siskiyou.zip
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/siskiyou-transit-and-general-express/492/latest/download --output_base output --country_code us --storage_directory siskiyou.zip
       - name: Validate dataset from -- AMT (Genova, Italy)
-        run: java -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/amt-genova/1011/latest/download --output_base output --country_code it --storage_directory amtgenova.zip
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/amt-genova/1011/latest/download --output_base output --country_code it --storage_directory amtgenova.zip
       - name: Validate dataset from -- Bibus (Brest, France)
-        run: java -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/bibus/593/latest/download --output_base output --country_code fr --storage_directory bibus.zip
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/bibus/593/latest/download --output_base output --country_code fr --storage_directory bibus.zip
       - name: Validate dataset from -- Metro (Christchurch, New Zealand)
-        run: java -jar main/cli/build/libs/*.jar --url http://transitfeeds.com/p/christchurch-metro/41/latest/download --output_base output --country_code nz --storage_directory metro.zip
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/christchurch-metro/41/latest/download --output_base output --country_code nz --storage_directory metro.zip
 #see https://github.com/MobilityData/gtfs-validator/pull/712#issuecomment-776110813
       - name: Persist datasets
         uses: actions/upload-artifact@v2
