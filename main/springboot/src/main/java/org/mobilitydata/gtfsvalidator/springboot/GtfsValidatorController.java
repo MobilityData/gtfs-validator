@@ -24,8 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 /**
- * Holds the responsability to run the validation through a {@code SpringBoot} interface. Provides
- * methods to push the validation report to a google cloud storage.
+ * Runs the validation through a {@code SpringBoot} interface triggered by incoming HTTP requests. Provides
+ * ```
+ * methods to push the validation report to Google Cloud Storage.
  */
 public class GtfsValidatorController {
 
@@ -46,7 +47,7 @@ public class GtfsValidatorController {
   /**
    * Runs {@code org.mobilitydata.gtfsvalidator.cli.Main.main} with the arguments extracted via the
    * query parameters. Returns the status of the validation and validation report storage. Requires
-   * authentification to be set prior execution i.e. environment variable
+   * authentication to be setup prior to execution i.e. environment variable
    * GOOGLE_APPLICATION_CREDENTIALS has to be defined.
    */
   public String run(
