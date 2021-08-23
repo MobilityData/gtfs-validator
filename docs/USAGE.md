@@ -63,29 +63,6 @@ You should now see the workflow `End to end / run-on-data` start automatically i
 
 If the workflow run crashes or something doesn't look right in the validation report json file, **please see the [guide to reproduce](/docs/REPRODUCE_ERRORS.md) section.**
 
-## Export notice schema
-
-Sample usage:
-
-### Without file validation
-``` 
-java -jar gtfs-validator-SNAPSHOT.jar --export_notice_schema
-```
-
-...which will:
- 1. Generate and export all validation notices as a json file. 
- 
-### With file validation
-``` 
-java -jar gtfs-validator-SNAPSHOT.jar --export_notice_schema --url https://url/to/dataset.zip --output relative/output/path --country_code <country_code> --threads <number_of_threads_to_use> --storage_directory input.zip 
-```
-
-...which will:
- 1. Generate and export all validation notices as a json file. 
- 1. Download the GTFS feed at the URL `https://url/to/dataset.zip` and name it `input.zip`  
- 1. Validate the GTFS data and output the results to the directory located at `relative/output/path`. Validation results are exported to JSON by default.
-Please note that since downloading will take time, we recommend validating repeatedly on a local file.
-
 ## via spring boot app
 
 ### Launch the service
@@ -123,3 +100,26 @@ which will:
 1. store the validation report as report.json in the bucket specified by environment variable `VALIDATION_REPORT_BUCKET` sha_value/id_value.
 
 ⚠️ You must be an authenticated user to push data to the bucket that was specified, see [docs](https://cloud.google.com/docs/authentication/getting-started#setting_the_environment_variable).
+
+# Export notice schema
+
+Sample usage:
+
+## Without file validation
+``` 
+java -jar gtfs-validator-SNAPSHOT.jar --export_notice_schema
+```
+
+...which will:
+ 1. Generate and export all validation notices as a json file. 
+ 
+## With file validation
+``` 
+java -jar gtfs-validator-SNAPSHOT.jar --export_notice_schema --url https://url/to/dataset.zip --output relative/output/path --country_code <country_code> --threads <number_of_threads_to_use> --storage_directory input.zip 
+```
+
+...which will:
+ 1. Generate and export all validation notices as a json file. 
+ 1. Download the GTFS feed at the URL `https://url/to/dataset.zip` and name it `input.zip`  
+ 1. Validate the GTFS data and output the results to the directory located at `relative/output/path`. Validation results are exported to JSON by default.
+Please note that since downloading will take time, we recommend validating repeatedly on a local file.

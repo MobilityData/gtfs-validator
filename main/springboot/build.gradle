@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC, MobilityData IO
+ * Copyright 2021 MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ jar {
 }
 
 shadowJar {
-    // Change the JAR name from cli-app to gtfs-validator
+    // Change the JAR name from springboot to gtfs-validator
     archiveBaseName = rootProject.name
     // Remove "-all" from the end of the JAR file name
     archiveClassifier = null
@@ -58,7 +58,9 @@ repositories {
 
 dependencies {
     implementation 'com.google.cloud:google-cloud-storage'
+    implementation project(':core')
     implementation project(':main:cli')
+    implementation 'com.github.stefanbirkner:system-lambda:1.2.0'
     implementation platform('com.google.cloud:libraries-bom:20.9.0')
     implementation 'com.beust:jcommander:1.48'
     implementation 'com.google.flogger:flogger:0.5.1'

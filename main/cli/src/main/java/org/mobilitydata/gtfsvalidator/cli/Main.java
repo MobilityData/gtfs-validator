@@ -116,7 +116,7 @@ public class Main {
     }
     if (gtfsInput == null) {
       exportReport(noticeContainer, args);
-      return;
+      System.exit(1);
     }
     ValidationContext validationContext =
         ValidationContext.builder()
