@@ -30,7 +30,6 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsRouteType;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
@@ -43,7 +42,6 @@ import org.mobilitydata.gtfsvalidator.util.shape.Problem;
 import org.mobilitydata.gtfsvalidator.util.shape.Problem.ProblemType;
 import org.mobilitydata.gtfsvalidator.util.shape.ShapePoints;
 import org.mobilitydata.gtfsvalidator.util.shape.StopPoints;
-import org.mobilitydata.gtfsvalidator.util.shape.StopPoints.StationSize;
 import org.mobilitydata.gtfsvalidator.util.shape.StopToShapeMatcher;
 import org.mobilitydata.gtfsvalidator.util.shape.StopToShapeMatcherSettings;
 
@@ -94,7 +92,7 @@ public class ShapeToStopMatchingValidator extends FileValidator {
     this.stopToShapeMatcher = stopToShapeMatcher;
   }
 
-  private static long tripFprint(List<GtfsStopTime> stopTimes) {
+  private static long tripHash(List<GtfsStopTime> stopTimes) {
     Hasher hasher = HASH_FUNCTION.newHasher().putInt(stopTimes.size());
     for (GtfsStopTime stopTime : stopTimes) {
       hasher
@@ -122,18 +120,19 @@ public class ShapeToStopMatchingValidator extends FileValidator {
       final ShapePoints shapePoints = ShapePoints.fromGtfsShape(gtfsShapePoints);
       // Report each stop that is too far from shape only once, even if there are multiple trips
       // that visit it.
-      Set<Long> processedTripFprints = new HashSet<>();
+      Set<Long> processedtripHashes = new HashSet<>();
       Set<String> reportedStopIds = new HashSet<>();
       for (GtfsTrip trip : trips) {
         List<GtfsStopTime> stopTimes = stopTimeTable.byTripId(trip.tripId());
-        if (!processedTripFprints.add(tripFprint(stopTimes))) {
+        if (!processedtripHashes.add(tripHash(stopTimes))) {
           continue;
         }
         final StopPoints stopPoints =
             StopPoints.fromStopTimes(
                 stopTimes,
                 stopTable,
-                routeTypeToStationSize(routeTable.byRouteId(trip.routeId()).routeType()));
+                StopPoints.routeTypeToStationSize(
+                    routeTable.byRouteId(trip.routeId()).routeType()));
 
         reportProblems(
             trip,
@@ -154,10 +153,6 @@ public class ShapeToStopMatchingValidator extends FileValidator {
     }
   }
 
-  private static StationSize routeTypeToStationSize(GtfsRouteType routeType) {
-    return routeType.equals(GtfsRouteType.RAIL) ? StationSize.LARGE : StationSize.SMALL;
-  }
-
   private void reportProblems(
       GtfsTrip trip,
       List<Problem> problems,
@@ -170,11 +165,11 @@ public class ShapeToStopMatchingValidator extends FileValidator {
         // Ignore stops already reported before.
         continue;
       }
-      noticeContainer.addValidationNotice(convertProblem(trip, problem, matchingDistance));
+      noticeContainer.addValidationNotice(convertProblemToNotice(trip, problem, matchingDistance));
     }
   }
 
-  private ValidationNotice convertProblem(
+  private ValidationNotice convertProblemToNotice(
       GtfsTrip trip, Problem problem, MatchingDistance matchingDistance) {
     switch (problem.getType()) {
       case STOP_TOO_FAR_FROM_SHAPE:
@@ -215,13 +210,22 @@ public class ShapeToStopMatchingValidator extends FileValidator {
   }
 
   private enum MatchingDistance {
+    /**
+     * The distance along the shape on the earth's surface by starting at the first point, adding
+     * the straight-line (or rather, great circle) distance for each pair of points.
+     */
     GEO,
+
+    /**
+     * User distance is an arbitrary (positive and non-decreasing) parameterization passed in with
+     * each point as {@code shape_dist_traveled}.
+     */
     USER
   }
 
   /**
-   * Describes a stop entry in that has many potential matches to the trip's path of travel, as
-   * defined by the shape entry in {@code shapes.txt}.
+   * Describes a stop entry that has many potential matches to the trip's path of travel, as defined
+   * by the shape entry in {@code shapes.txt}.
    *
    * <p>This potentially indicates a problem with the location of the stop or the path of the shape.
    */
@@ -251,8 +255,8 @@ public class ShapeToStopMatchingValidator extends FileValidator {
   }
 
   /**
-   * Describes a stop time entry that is a large distance (&gt; 200 m) away from the location of the
-   * shape in {@code shapes.txt} as defined by {@code shape_dist_traveled} values.
+   * Describes a stop time entry that is a large distance away from the location of the shape in
+   * {@code shapes.txt} as defined by {@code shape_dist_traveled} values.
    *
    * <p>This potentially indicates a problem with the location of the stop or the use of {@code
    * shape_dist_traveled} values.
@@ -287,8 +291,8 @@ public class ShapeToStopMatchingValidator extends FileValidator {
   }
 
   /**
-   * Describes a stop time entry that is a large distance (&gt; 200 m) away from the trip's path of
-   * travel, as defined by the shape entry in {@code shapes.txt}.
+   * Describes a stop time entry that is a large distance away from the trip's path of travel, as
+   * defined by the shape entry in {@code shapes.txt}.
    *
    * <p>This potentially indicates a problem with the location of the stop or the path of the shape.
    */

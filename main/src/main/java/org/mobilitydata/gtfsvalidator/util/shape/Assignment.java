@@ -22,7 +22,7 @@ import com.google.common.collect.ImmutableList;
 class Assignment {
 
   /**
-   * Indices in to a {@code List<List<StopToShapeMatch>>} list, identifying the assigned
+   * Indices in a {@code List<List<StopToShapeMatch>>} list, identifying the assigned
    * StopToShapeMatch for each stop in the assignment.
    */
   private final ImmutableList<Integer> assignment;

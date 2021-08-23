@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.util.shape;
 /** Thresholds for {@code StopToShapeMatcher}. */
 public class StopToShapeMatcherSettings {
 
-  public static final double DEFAULT_MAX_DISTANCE_FROM_STOP_TO_SHAPE_IN_METERS = 200.0;
+  public static final double DEFAULT_MAX_DISTANCE_FROM_STOP_TO_SHAPE_IN_METERS = 100.0;
   public static final double DEFAULT_LARGE_STATION_DISTANCE_MULTIPLIER = 4.0;
   public static final int DEFAULT_POTENTIAL_MATCHES_FOR_STOP_PROBLEM_THRESHOLD = 20;
 

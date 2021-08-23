@@ -126,20 +126,19 @@ public class ShapePointsTest {
         .isFalse();
   }
 
-  private static ShapePoints createShapePoints() {
-    return ShapePoints.fromGtfsShape(
-        ImmutableList.of(
-            createGtfsShape(47.365399, 8.525138, 0.0),
-            createGtfsShape(47.366013, 8.524972, 1.0),
-            createGtfsShape(47.366073, 8.525384, 2.0),
-            createGtfsShape(47.364120, 8.525886, 3.0),
-            createGtfsShape(47.364046, 8.525559, 4.0),
-            createGtfsShape(47.364376, 8.525376, 5.0),
-            createGtfsShape(47.364976, 8.525258, 6.0),
-            createGtfsShape(47.365016, 8.525666, 7.0),
-            createGtfsShape(47.365103, 8.525650, 8.0),
-            createGtfsShape(47.365143, 8.526015, 9.0)));
-  }
+  private static final ShapePoints TEST_SHAPE_POINTS =
+      ShapePoints.fromGtfsShape(
+          ImmutableList.of(
+              createGtfsShape(47.365399, 8.525138, 0.0),
+              createGtfsShape(47.366013, 8.524972, 1.0),
+              createGtfsShape(47.366073, 8.525384, 2.0),
+              createGtfsShape(47.364120, 8.525886, 3.0),
+              createGtfsShape(47.364046, 8.525559, 4.0),
+              createGtfsShape(47.364376, 8.525376, 5.0),
+              createGtfsShape(47.364976, 8.525258, 6.0),
+              createGtfsShape(47.365016, 8.525666, 7.0),
+              createGtfsShape(47.365103, 8.525650, 8.0),
+              createGtfsShape(47.365143, 8.526015, 9.0)));
 
   private static S2Point toS2Point(double lat, double lng) {
     return S2LatLng.fromDegrees(lat, lng).toPoint();
@@ -154,47 +153,44 @@ public class ShapePointsTest {
 
   @Test
   public void matchFromUserDist() {
-    final ShapePoints shapePoints = createShapePoints();
 
     expectApproxEqual(
-        shapePoints.matchFromUserDist(0.5, 0, toS2Point(47.365399, 8.525138)),
+        TEST_SHAPE_POINTS.matchFromUserDist(0.5, 0, toS2Point(47.365399, 8.525138)),
         new StopToShapeMatch(0, 0.5, 34.704520, 34.704520288, toS2Point(47.365706, 8.525055)));
     expectApproxEqual(
-        shapePoints.matchFromUserDist(1.0, 0, toS2Point(47.365399, 8.525138)),
+        TEST_SHAPE_POINTS.matchFromUserDist(1.0, 0, toS2Point(47.365399, 8.525138)),
         new StopToShapeMatch(1, 1.0, 69.4090405, 69.4090405, toS2Point(47.366013, 8.524972)));
     expectApproxEqual(
-        shapePoints.matchFromUserDist(2.6, 0, toS2Point(47.365399, 8.525138)),
+        TEST_SHAPE_POINTS.matchFromUserDist(2.6, 0, toS2Point(47.365399, 8.525138)),
         new StopToShapeMatch(2, 2.6, 233.405868, 69.010379, toS2Point(47.3649012, 8.525685)));
     expectApproxEqual(
-        shapePoints.matchFromUserDist(25.0, 0, toS2Point(47.365399, 8.525138)),
+        TEST_SHAPE_POINTS.matchFromUserDist(25.0, 0, toS2Point(47.365399, 8.525138)),
         new StopToShapeMatch(9, 9.0, 522.693893, 71.924027, toS2Point(47.365143, 8.526015)));
   }
 
   @Test
   public void matchFromLocation() {
-    final ShapePoints shapePoints = createShapePoints();
 
     expectApproxEqual(
-        shapePoints.matchFromLocation(toS2Point(47.365728, 8.525080)),
+        TEST_SHAPE_POINTS.matchFromLocation(toS2Point(47.365728, 8.525080)),
         new StopToShapeMatch(0, 0, 36.771658, 2.292657, toS2Point(47.3657243, 8.5250501)));
   }
 
   @Test
   public void matchesFromLocation() {
-    final ShapePoints shapePoints = createShapePoints();
 
     expect
-        .that(shapePoints.matchesFromLocation(toS2Point(47.365728, 8.525080), 20.0))
+        .that(TEST_SHAPE_POINTS.matchesFromLocation(toS2Point(47.365728, 8.525080), 20.0))
         .comparingElementsUsing(APPROX_SAME_MATCH)
         .containsExactly(new StopToShapeMatch(0, 0, 36.8, 2.3, toS2Point(47.3657243, 8.5250501)));
     expect
-        .that(shapePoints.matchesFromLocation(toS2Point(47.365992, 8.525013), 20.0))
+        .that(TEST_SHAPE_POINTS.matchesFromLocation(toS2Point(47.365992, 8.525013), 20.0))
         .comparingElementsUsing(APPROX_SAME_MATCH)
         .containsExactly(
             new StopToShapeMatch(0, 0.0, 66.5, 2.6, toS2Point(47.3659878, 8.5249788)),
             new StopToShapeMatch(1, 0.0, 71.9, 2.9, toS2Point(47.3660178, 8.5250048)));
     expect
-        .that(shapePoints.matchesFromLocation(toS2Point(47.365007, 8.525647), 20.0))
+        .that(TEST_SHAPE_POINTS.matchesFromLocation(toS2Point(47.365007, 8.525647), 20.0))
         .comparingElementsUsing(APPROX_SAME_MATCH)
         .containsExactly(
             new StopToShapeMatch(2, 0.0, 221.3, 0.8, toS2Point(47.3650083, 8.5256577)),

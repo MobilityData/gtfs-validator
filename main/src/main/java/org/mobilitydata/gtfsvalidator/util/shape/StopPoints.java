@@ -22,6 +22,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.geometry.S2Point;
 import java.util.ArrayList;
 import java.util.List;
+import org.mobilitydata.gtfsvalidator.table.GtfsRouteType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.util.StopUtil;
@@ -53,6 +54,9 @@ public class StopPoints {
       List<GtfsStopTime> stopTimes, GtfsStopTableContainer stopTable, StationSize stationSize) {
     List<StopPoint> points = new ArrayList<>(stopTimes.size());
     for (GtfsStopTime stopTime : stopTimes) {
+      // Agency shapes often do not extend till the very end of the track, especially for train
+      // stations. Although this is a data issue that agencies should fix, we would like to be more
+      // tolerant and not drop such shapes completely.
       boolean firstOrLastStop = points.isEmpty() || points.size() == stopTimes.size() - 1;
       points.add(
           new StopPoint(
@@ -62,6 +66,10 @@ public class StopPoints {
               stationSize.equals(StationSize.LARGE) && firstOrLastStop));
     }
     return new StopPoints(points);
+  }
+
+  public static StationSize routeTypeToStationSize(GtfsRouteType routeType) {
+    return routeType.equals(GtfsRouteType.RAIL) ? StationSize.LARGE : StationSize.SMALL;
   }
 
   public List<StopPoint> getPoints() {

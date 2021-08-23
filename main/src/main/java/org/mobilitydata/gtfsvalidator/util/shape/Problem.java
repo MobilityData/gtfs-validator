@@ -44,17 +44,17 @@ public class Problem {
     this.prevMatch = prevMatch;
   }
 
-  static Problem createStopTooFarFromShape(GtfsStopTime stopTime, StopToShapeMatch match) {
+  static Problem createStopTooFarFromShapeProblem(GtfsStopTime stopTime, StopToShapeMatch match) {
     return new Problem(ProblemType.STOP_TOO_FAR_FROM_SHAPE, stopTime, match, 0, null, null);
   }
 
-  static Problem createStopHasTooManyMatches(
+  static Problem createStopHasTooManyMatchesProblem(
       GtfsStopTime stopTime, StopToShapeMatch match, int matchCount) {
     return new Problem(
         ProblemType.STOP_HAS_TOO_MANY_MATCHES, stopTime, match, matchCount, null, null);
   }
 
-  static Problem createStopMatchOutOfOrder(
+  static Problem createStopMatchOutOfOrderProblem(
       GtfsStopTime stopTime,
       StopToShapeMatch match,
       GtfsStopTime prevStopTime,

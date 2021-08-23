@@ -36,8 +36,7 @@ public class MathUtil {
       return false;
     }
     double relativeMargin = fraction * max(Math.abs(x), Math.abs(y));
-    double absDiff = x > y ? x - y : y - x;
-    return absDiff <= max(margin, relativeMargin);
+    return Math.abs(x - y) <= max(margin, relativeMargin);
   }
 
   /** Same as {@link #withinFractionOrMargin} with {@link #DOUBLE_STD_ERR} thresholds. */

@@ -191,7 +191,7 @@ public class StopToShapeMatcherTest {
         .that(matchResult.getProblems())
         .comparingElementsUsing(APPROX_SAME_PROBLEM)
         .containsExactly(
-            Problem.createStopTooFarFromShape(
+            Problem.createStopTooFarFromShapeProblem(
                 stopPoints.get(1).getStopTime(),
                 new StopToShapeMatch(2, 2.4, 189.3, 178.4, toS2Point(47.3652918, 8.5255848))));
     expect.that(matchResult.getMatches()).isEmpty();
@@ -234,7 +234,7 @@ public class StopToShapeMatcherTest {
         .that(matchResult.getProblems())
         .comparingElementsUsing(APPROX_SAME_PROBLEM)
         .containsExactly(
-            Problem.createStopHasTooManyMatches(
+            Problem.createStopHasTooManyMatchesProblem(
                 stopPoints.get(0).getStopTime(),
                 new StopToShapeMatch(2, 0.0, 218.4, 1.0, toS2Point(47.3650345, 8.5256509)),
                 3));
@@ -258,7 +258,7 @@ public class StopToShapeMatcherTest {
         .that(matchResult.getProblems())
         .comparingElementsUsing(APPROX_SAME_PROBLEM)
         .containsExactly(
-            Problem.createStopMatchOutOfOrder(
+            Problem.createStopMatchOutOfOrderProblem(
                 stopPoints.get(1).getStopTime(),
                 new StopToShapeMatch(1, 0.0, 85.7, 2.0, toS2Point(47.3660438, 8.5251834)),
                 stopPoints.get(0).getStopTime(),
@@ -282,7 +282,7 @@ public class StopToShapeMatcherTest {
         .that(matchResult.getProblems())
         .comparingElementsUsing(APPROX_SAME_PROBLEM)
         .containsExactly(
-            Problem.createStopTooFarFromShape(
+            Problem.createStopTooFarFromShapeProblem(
                 stopPoints.get(1).getStopTime(),
                 new StopToShapeMatch(1, 0.0, 101.1, 150.6, toS2Point(47.3660730, 8.5253840))));
     expect.that(matchResult.getMatches()).isEmpty();

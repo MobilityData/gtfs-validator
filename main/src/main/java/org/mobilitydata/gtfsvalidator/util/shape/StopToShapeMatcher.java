@@ -172,7 +172,7 @@ public class StopToShapeMatcher {
             .getAssignment();
     final StopToShapeMatch prevMatch =
         potentialMatches.get(index - 1).get(Iterables.getLast(prevAssignment));
-    return Problem.createStopMatchOutOfOrder(
+    return Problem.createStopMatchOutOfOrderProblem(
         stopPoints.get(index).getStopTime(),
         match,
         stopPoints.get(index - 1).getStopTime(),
@@ -228,13 +228,13 @@ public class StopToShapeMatcher {
     if (matchesForStop.isEmpty()) {
       final StopToShapeMatch match = shapePoints.matchFromLocation(stopPoint.getLocation());
       if (match.getGeoDistanceToShape() > maxDistance) {
-        problems.add(Problem.createStopTooFarFromShape(stopPoint.getStopTime(), match));
+        problems.add(Problem.createStopTooFarFromShapeProblem(stopPoint.getStopTime(), match));
       }
       return matchesForStop;
     }
     if (matchesForStop.size() > settings.getPotentialMatchesForStopProblemThreshold()) {
       problems.add(
-          Problem.createStopHasTooManyMatches(
+          Problem.createStopHasTooManyMatchesProblem(
               stopPoint.getStopTime(),
               Collections.min(
                   matchesForStop, Comparator.comparing(StopToShapeMatch::getGeoDistanceToShape)),
@@ -251,7 +251,7 @@ public class StopToShapeMatcher {
       final StopPoints.StopPoint stopPoint = stopPoints.get(i);
       final StopToShapeMatch match = matches.get(i);
       if (match.getGeoDistanceToShape() > settings.getMaxDistanceFromStopToShapeInMeters()) {
-        problems.add(Problem.createStopTooFarFromShape(stopPoint.getStopTime(), match));
+        problems.add(Problem.createStopTooFarFromShapeProblem(stopPoint.getStopTime(), match));
         valid = false;
       }
     }
