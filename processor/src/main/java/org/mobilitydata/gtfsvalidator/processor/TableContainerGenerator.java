@@ -23,6 +23,7 @@ import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.hasMet
 import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_PACKAGE_NAME;
 
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
 import com.squareup.javapoet.ClassName;
@@ -36,6 +37,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
@@ -125,6 +128,34 @@ public class TableContainerGenerator {
             .build());
   }
 
+  private static void addMapByCompositeKey(
+      TypeSpec.Builder typeSpec,
+      GtfsFieldDescriptor firstKey,
+      GtfsFieldDescriptor sequenceKey,
+      TypeName entityTypeName) {
+    String methodName = byKeyMethodName(firstKey.name(), sequenceKey.name());
+    String fieldName = byKeyMapName(firstKey.name(), sequenceKey.name());
+    TypeName keyMapType =
+        ParameterizedTypeName.get(
+            ClassName.get(Map.class), ClassName.get("", "CompositeKey"), entityTypeName);
+    typeSpec.addField(
+        FieldSpec.builder(keyMapType, fieldName, Modifier.PRIVATE)
+            .initializer("new $T<>()", ParameterizedTypeName.get(HashMap.class))
+            .build());
+    typeSpec.addMethod(
+        MethodSpec.methodBuilder(methodName)
+            .addModifiers(Modifier.PUBLIC)
+            .addParameter(TypeName.get(firstKey.javaType()), firstKey.name())
+            .addParameter(TypeName.get(sequenceKey.javaType()), sequenceKey.name())
+            .returns(entityTypeName)
+            .addStatement(
+                "return $L.get(new CompositeKey($L, $L))",
+                fieldName,
+                firstKey.name(),
+                sequenceKey.name())
+            .build());
+  }
+
   public JavaFile generateGtfsContainerJavaFile() {
     return JavaFile.builder(TABLE_PACKAGE_NAME, generateGtfsContainerClass()).build();
   }
@@ -182,8 +213,13 @@ public class TableContainerGenerator {
               .returns(classNames.entityImplementationTypeName())
               .addStatement("return entities.isEmpty() ? null : entities.get(0)")
               .build());
-    } else if (fileDescriptor.sequenceKey().isPresent()) {
+    } else if (hasCompositeKey()) {
       addListMultimapWithGetters(
+          typeSpec,
+          fileDescriptor.firstKey().get(),
+          fileDescriptor.sequenceKey().get(),
+          classNames.entityImplementationTypeName());
+      addMapByCompositeKey(
           typeSpec,
           fileDescriptor.firstKey().get(),
           fileDescriptor.sequenceKey().get(),
@@ -201,8 +237,106 @@ public class TableContainerGenerator {
     typeSpec.addMethod(generateSetupIndicesMethod());
     typeSpec.addMethod(generateForHeaderAndEntitiesMethod());
     typeSpec.addMethod(generateForEntitiesMethod());
+    typeSpec.addMethod(generateGetKeyColumnNames());
+    typeSpec.addMethod(generateByPrimaryKey());
+    if (hasCompositeKey()) {
+      typeSpec.addType(compositeKeyClass());
+    }
 
     return typeSpec.build();
+  }
+
+  private boolean hasCompositeKey() {
+    return fileDescriptor.sequenceKey().isPresent() && fileDescriptor.firstKey().isPresent();
+  }
+
+  private TypeSpec compositeKeyClass() {
+    TypeSpec.Builder keySpec = TypeSpec.classBuilder("CompositeKey").addModifiers(Modifier.STATIC);
+    TypeName firstKeyType = TypeName.get(fileDescriptor.firstKey().get().javaType());
+    TypeName sequenceKeyType = TypeName.get(fileDescriptor.sequenceKey().get().javaType());
+    keySpec.addField(firstKeyType, "firstKey", Modifier.FINAL, Modifier.PRIVATE);
+    keySpec.addField(sequenceKeyType, "sequenceKey", Modifier.FINAL, Modifier.PRIVATE);
+
+    keySpec.addMethod(
+        MethodSpec.constructorBuilder()
+            .addParameter(firstKeyType, "firstKey")
+            .addParameter(sequenceKeyType, "sequenceKey")
+            .addStatement("this.firstKey = firstKey")
+            .addStatement("this.sequenceKey = sequenceKey")
+            .build());
+
+    keySpec.addMethod(
+        MethodSpec.methodBuilder("equals")
+            .addModifiers(Modifier.PUBLIC)
+            .addAnnotation(Override.class)
+            .addParameter(Object.class, "obj")
+            .returns(boolean.class)
+            .beginControlFlow("if (obj == this)")
+            .addStatement("return true")
+            .endControlFlow()
+            .beginControlFlow("if (obj instanceof CompositeKey)")
+            .addStatement("CompositeKey other = (CompositeKey) obj")
+            .addStatement(
+                "return $T.equals(firstKey, other.firstKey) && sequenceKey == other.sequenceKey",
+                Objects.class)
+            .endControlFlow()
+            .addStatement("return false")
+            .build());
+
+    keySpec.addMethod(
+        MethodSpec.methodBuilder("hashCode")
+            .addModifiers(Modifier.PUBLIC)
+            .addAnnotation(Override.class)
+            .returns(int.class)
+            .addStatement("return $T.hash(firstKey, sequenceKey)", Objects.class)
+            .build());
+
+    return keySpec.build();
+  }
+
+  private MethodSpec generateGetKeyColumnNames() {
+    return MethodSpec.methodBuilder("getKeyColumnNames")
+        .addAnnotation(Override.class)
+        .addModifiers(Modifier.PUBLIC)
+        .returns(ParameterizedTypeName.get(ImmutableList.class, String.class))
+        .addStatement("return $T.KEY_COLUMN_NAMES", classNames.tableLoaderTypeName())
+        .build();
+  }
+
+  private MethodSpec generateByPrimaryKey() {
+    MethodSpec.Builder method =
+        MethodSpec.methodBuilder("byPrimaryKey")
+            .addAnnotation(Override.class)
+            .addModifiers(Modifier.PUBLIC)
+            .returns(
+                ParameterizedTypeName.get(
+                    ClassName.get(Optional.class), classNames.entityImplementationTypeName()))
+            .addParameter(String.class, "id")
+            .addParameter(String.class, "subId");
+    if (fileDescriptor.primaryKey().isPresent()) {
+      method.addStatement(
+          "return Optional.ofNullable($L.getOrDefault(id, null))",
+          byKeyMapName(fileDescriptor.primaryKey().get().name()));
+    } else if (hasCompositeKey()) {
+      GtfsFieldDescriptor firstKey = fileDescriptor.firstKey().get();
+      GtfsFieldDescriptor sequenceKey = fileDescriptor.sequenceKey().get();
+      method
+          .beginControlFlow("try")
+          .addStatement(
+              "return Optional.ofNullable($L.getOrDefault(new CompositeKey(id,"
+                  + " $T.parseInt(subId)), null))",
+              byKeyMapName(firstKey.name(), sequenceKey.name()),
+              TypeName.get(sequenceKey.javaType()).box())
+          .nextControlFlow("catch (NumberFormatException e)")
+          .addStatement("return Optional.empty()")
+          .endControlFlow();
+    } else if (fileDescriptor.singleRow()) {
+      method.addStatement(
+          "return entities.isEmpty() ? Optional.empty() : Optional.of(entities.get(0))");
+    } else {
+      method.addStatement("return Optional.empty()");
+    }
+    return method.build();
   }
 
   private MethodSpec generateConstructorWithEntities() {
@@ -280,34 +414,27 @@ public class TableContainerGenerator {
               "noticeContainer.addValidationNotice(new $T(gtfsFilename(), entities.size()))",
               MoreThanOneEntityNotice.class)
           .endControlFlow();
-    } else if (fileDescriptor.sequenceKey().isPresent() && fileDescriptor.firstKey().isPresent()) {
+    } else if (hasCompositeKey()) {
       GtfsFieldDescriptor firstKey = fileDescriptor.firstKey().get();
       GtfsFieldDescriptor sequenceKey = fileDescriptor.sequenceKey().get();
-      String byKeyMap = byKeyMapName(firstKey.name());
-      method.beginControlFlow("for ($T entity : entities)", gtfsEntityType);
-      method.addStatement("$L.put(entity.$L(), entity)", byKeyMap, firstKey.name());
-      method.endControlFlow();
-
+      String byCompositeKeyMap = byKeyMapName(firstKey.name(), sequenceKey.name());
       method
-          .beginControlFlow(
-              "for (List<$T> entityList: $T.asMap($L).values())",
-              gtfsEntityType,
-              Multimaps.class,
-              byKeyMap)
+          .beginControlFlow("for ($T newEntity : entities)", gtfsEntityType)
           .addStatement(
-              "entityList.sort((entity1, entity2) -> Integer.compare(entity1.$L(), entity2.$L()))",
-              sequenceKey.name(),
-              sequenceKey.name())
-          .beginControlFlow("for (int i = 1; i < entityList.size(); ++i)")
-          .addStatement("$T a = entityList.get(i - 1)", gtfsEntityType)
-          .addStatement("$T b = entityList.get(i)", gtfsEntityType)
-          .beginControlFlow("if (a.$L() == b.$L())", sequenceKey.name(), sequenceKey.name())
+              "CompositeKey key = new CompositeKey(newEntity.$L(), newEntity.$L())",
+              fileDescriptor.firstKey().get().name(),
+              fileDescriptor.sequenceKey().get().name())
+          .addStatement(
+              "$T oldEntity = $L.getOrDefault(key, null)",
+              classNames.entityImplementationTypeName(),
+              byCompositeKeyMap)
+          .beginControlFlow("if (oldEntity != null)")
           .addStatement(
               "noticeContainer.addValidationNotice(new $T("
-                  + "gtfsFilename(), a.csvRowNumber(), "
-                  + "b.csvRowNumber(), "
-                  + "$T.$L, a.$L(), "
-                  + "$T.$L, a.$L()))",
+                  + "gtfsFilename(), newEntity.csvRowNumber(), "
+                  + "oldEntity.csvRowNumber(), "
+                  + "$T.$L, oldEntity.$L(), "
+                  + "$T.$L, oldEntity.$L()))",
               DuplicateKeyNotice.class,
               loaderType,
               fieldNameField(firstKey.name()),
@@ -315,8 +442,27 @@ public class TableContainerGenerator {
               loaderType,
               fieldNameField(sequenceKey.name()),
               sequenceKey.name())
+          .nextControlFlow("else")
+          .addStatement("$L.put(key, newEntity)", byCompositeKeyMap)
           .endControlFlow()
-          .endControlFlow()
+          .endControlFlow();
+
+      String byFirstKeyMap = byKeyMapName(firstKey.name());
+      method.beginControlFlow("for ($T entity : entities)", gtfsEntityType);
+      method.addStatement("$L.put(entity.$L(), entity)", byFirstKeyMap, firstKey.name());
+      method.endControlFlow();
+
+      method
+          .beginControlFlow(
+              "for (List<$T> entityList: $T.asMap($L).values())",
+              gtfsEntityType,
+              Multimaps.class,
+              byFirstKeyMap)
+          .addStatement(
+              "entityList.sort((entity1, entity2) -> $T.compare(entity1.$L(), entity2.$L()))",
+              TypeName.get(sequenceKey.javaType()).box(),
+              sequenceKey.name(),
+              sequenceKey.name())
           .endControlFlow();
     } else if (fileDescriptor.primaryKey().isPresent()) {
       GtfsFieldDescriptor primaryKey = fileDescriptor.primaryKey().get();

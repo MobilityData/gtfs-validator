@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.testgtfs;
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;
+import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 
@@ -41,6 +42,16 @@ public class GtfsStopTableContainer extends GtfsTableContainer<GtfsStop> {
   @Override
   public String gtfsFilename() {
     return "stops.txt";
+  }
+
+  @Override
+  public ImmutableList<String> getKeyColumnNames() {
+    return ImmutableList.of();
+  }
+
+  @Override
+  public Optional<GtfsStop> byPrimaryKey(String id, String subId) {
+    return Optional.empty();
   }
 
   @Override
