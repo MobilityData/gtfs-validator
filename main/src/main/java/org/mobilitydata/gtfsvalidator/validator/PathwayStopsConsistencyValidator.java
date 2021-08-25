@@ -82,7 +82,7 @@ public class PathwayStopsConsistencyValidator extends FileValidator {
   /**
    * A stop referenced by a row from {@code pathways.txt} has {@code location_type = 1} (station).
    *
-   * <p>Severity: {@code SeverityLevel.WARNING} to be upgraded to {@code SeverityLevel.ERROR}.
+   * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class LocationTypeStationForStopOnPathwayNotice extends ValidationNotice {
 
@@ -98,7 +98,7 @@ public class PathwayStopsConsistencyValidator extends FileValidator {
         String stopId,
         long stopCsvRowNumber,
         String fieldName) {
-      super(SeverityLevel.WARNING);
+      super(SeverityLevel.ERROR);
       this.pathwayId = pathwayId;
       this.pathwayCsvRowNumber = pathwayCsvRowNumber;
       this.stopId = stopId;

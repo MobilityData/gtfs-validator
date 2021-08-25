@@ -71,14 +71,14 @@ public class StopZoneIdValidator extends FileValidator {
    * A {@code GtfsShape} should be referred to at least once in {@code GtfsTripTableContainer}
    * station).
    *
-   * <p>Severity: {@code SeverityLevel.WARNING} - Will be upgraded to {@code SeverityLevel.ERROR}
+   * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class StopWithoutZoneIdNotice extends ValidationNotice {
     private final String stopId;
     private final long csvRowNumber;
 
     StopWithoutZoneIdNotice(String stopId, long csvRowNumber) {
-      super(SeverityLevel.WARNING);
+      super(SeverityLevel.ERROR);
       this.stopId = stopId;
       this.csvRowNumber = csvRowNumber;
     }

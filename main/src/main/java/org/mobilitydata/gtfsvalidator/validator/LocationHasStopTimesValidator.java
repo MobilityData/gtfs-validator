@@ -80,6 +80,8 @@ public class LocationHasStopTimesValidator extends FileValidator {
 
   /**
    * Describes a location in {@code stops.txt} that is not a stop but has a stop time associated.
+   *
+   * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class LocationWithUnexpectedStopTimeNotice extends ValidationNotice {
     private final long csvRowNumber;
@@ -88,7 +90,7 @@ public class LocationHasStopTimesValidator extends FileValidator {
     private final long stopTimeCsvRowNumber;
 
     LocationWithUnexpectedStopTimeNotice(GtfsStop location, GtfsStopTime stopTime) {
-      super(SeverityLevel.WARNING);
+      super(SeverityLevel.ERROR);
       this.csvRowNumber = location.csvRowNumber();
       this.stopId = location.stopId();
       this.stopName = location.stopName();

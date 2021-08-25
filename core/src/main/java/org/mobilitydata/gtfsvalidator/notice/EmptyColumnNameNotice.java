@@ -19,14 +19,14 @@ package org.mobilitydata.gtfsvalidator.notice;
 /**
  * A column name is empty. Such columns are skipped by the validator.
  *
- * <p>Severity: {@code SeverityLevel.WARNING}
+ * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class EmptyColumnNameNotice extends ValidationNotice {
   private final String filename;
   private final int index;
 
   public EmptyColumnNameNotice(String filename, int index) {
-    super(SeverityLevel.WARNING);
+    super(SeverityLevel.ERROR);
     this.filename = filename;
     this.index = index;
   }

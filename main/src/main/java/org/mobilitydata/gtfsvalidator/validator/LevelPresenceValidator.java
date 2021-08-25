@@ -68,7 +68,7 @@ public class LevelPresenceValidator extends FileValidator {
    * A row from pathways.txt has {@code pathways.pathway_mode=5} but levels.txt is empty or not
    * provided.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}. To be upgraded to {@code SeverityLevel.ERROR}.
+   * <p>Severity: {@code SeverityLevel.ERROR}.
    */
   static class MissingLevelNotice extends ValidationNotice {
 
@@ -76,7 +76,7 @@ public class LevelPresenceValidator extends FileValidator {
     private final String pathwayId;
 
     MissingLevelNotice(long csvRowNumber, String pathwayId) {
-      super(SeverityLevel.WARNING);
+      super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
       this.pathwayId = pathwayId;
     }
