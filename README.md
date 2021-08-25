@@ -17,17 +17,17 @@ This command-line tool written in Java that performs the following steps:
 ### Run it
 To validate a GTFS dataset on your computer:
 
-`java -jar gtfs-validator-v2.0.0_cli.jar --input /myDirectory/gtfs.zip --output output --feed_name ca-myFeedName` 
+`java -jar gtfs-validator-v2.0.0_cli.jar --input /myDirectory/gtfs.zip --output_base output --feed_name ca-myfeedname` 
 
 To download and validate a GTFS dataset from a URL:
 
-`java -jar gtfs-validator-v2.0.0_cli.jar --url https://www.abc.com/gtfs.zip --output output --feed_name ca`
+`java -jar gtfs-validator-v2.0.0_cli.jar --url https://www.abc.com/gtfs.zip --output_base output --feed_name ca`
 
 where:
-* `--input` or `-i`: the path to the GTFS file (e.g., `/myDirectory/gtfs.zip`)
+* `--input` or `-i`: the path to the GTFS file (e.g., `/myDirectory/gtfs.zip`). Please note that if the input is a `.zip` file, it must be the result of the compression of the set of GTFS files. If you compressed the folder that contains the GTFS files no validation will be processed. 
 * `--url` or `-u`: the fully qualified URL to the GTFS file (e.g., `https://www.abc.com/gtfs.zip`)
-* `--output` or `-o`: the path where the validation report will be stored (e.g., `output`)
-* `--feed_name` or `-f`:  the name of the feed as a valid [ISO two letter country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), followed by `-`, followed by a user-defined name for the feed. (e.g., `ca-myFeedName`, `us-myFeedName`)   
+* `--output_base` or `-o`: the path where the validation report will be stored (e.g., `output`)
+* `--feed_name` or `-f`:  the name of the feed as a valid [ISO two letter country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), followed by `-`, followed by a user-defined name for the feed that cannot contain capital letters. (e.g., `ca-myfeedname`, `us-myfeedname`)   
 * *(Optional)* `--thread` or `-t`: the number of Java threads to use
 
 More detailed instructions are on our ["Usage"](/docs/USAGE.md) page.

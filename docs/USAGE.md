@@ -11,7 +11,7 @@
 |------------	|-----------------------	|-----------	|---------------------------------------------------------------------------------------------------------------------------	|
 | `-i`       	| `--input`             	| Optional   	| Location of the input GTFS ZIP or unarchived directory.                                                                   	|
 | `-f`       	| `--feed_name`         	| Required    	| Name of the feed, e.g., `nl-openov`. It must start from two-letter country code (ISO 3166-1 alpha-2).                     	|
-| `-o`       	| `--output`            	| Optional   	| Base directory to store the outputs.                                                                                      	|
+| `-o`       	| `--output_base`          	| Optional   	| Base directory to store the outputs.                                                                                      	|
 | `-s`       	| `--storage_directory` 	| Optional   	| Target path where to store the GTFS archive. Downloaded from network (if not provided, the ZIP will be stored in memory). 	|
 | `-t`       	| `--threads`           	| Optional   	| Number of threads to use.                                                                                                 	|
 | `-u`       	| `--url`               	| Optional   	| Fully qualified URL to download GTFS archive.                                                                             	|
@@ -24,7 +24,7 @@
 Sample usage:
 
 ``` 
-java -jar gtfs-validator-v2.0.jar --input relative/path/to/dataset.zip --output relative/output/path --feed_name <name_of_the_feed> --threads <number_of_threads_to_use> 
+java -jar gtfs-validator-v2.0.0.jar --input relative/path/to/dataset.zip --output_base relative/output/path --feed_name <name_of_the_feed> --threads <number_of_threads_to_use> 
 ```
 
 ...which will:
@@ -36,7 +36,7 @@ java -jar gtfs-validator-v2.0.jar --input relative/path/to/dataset.zip --output 
 Sample usage:
 
 ``` 
-java -jar gtfs-validator-v2.0.jar --url https://url/to/dataset.zip --output relative/output/path --feed_name <name_of_the_feed> --threads <number_of_threads_to_use> --storage_directory input.zip
+java -jar gtfs-validator-v2.0.jar --url https://url/to/dataset.zip --output_base relative/output/path --feed_name <name_of_the_feed> --threads <number_of_threads_to_use> --storage_directory input.zip
 ```
 
 ...which will:
