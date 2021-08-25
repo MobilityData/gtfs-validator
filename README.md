@@ -64,7 +64,7 @@ The validator can then be executed via bash commands. See the [preceeding instru
 Possible future rules for:
 * [GTFS Reference](https://github.com/MobilityData/gtfs-validator/labels/Rules%20-%20GTFS%20Reference)
 * [GTFS Best Practices](https://github.com/MobilityData/gtfs-validator/labels/Rules%20-%20GTFS%20Best%20Practices)
-* [Common cases of bad data](https://github.com/MobilityData/gtfs-validator/labels/Rules%20-%20Common%20cases%20of%20bad%20data)
+* [Community rules](https://github.com/MobilityData/gtfs-validator/labels/Rules%20-%20Community%20rules)
 
 Have a suggestion for a new rule? Open [an issue](https://github.com/MobilityData/gtfs-validator/issues/new/choose). You can see the complete process for adding new rules on the ["Adding new rules"](/docs/NEW_RULES.md) page.
 
