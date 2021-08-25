@@ -4,7 +4,7 @@ A GTFS Schedule (static) [General Transit Feed Specification (GTFS)](https://gtf
 
 This README contains information for master branch of this project, which is under active development. If you'd like to view documentation for past releases of the project, see:
 * [v1.4.0](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0-docs/README.md)
-* [v2.0.0](https://github.com/MobilityData/gtfs-validator/blob/v2.0.0-docs/RELEASE.md)
+* [v2.0.0](https://github.com/MobilityData/gtfs-validator/blob/v2.0.0-docs/README.md)
 
 # Introduction
 This is a command-line tool written in Java that performs the following steps:
