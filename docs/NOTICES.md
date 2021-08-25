@@ -35,7 +35,7 @@
 | `location_without_parent_station`                      	| [`LocationWithoutParentStationNotice`](#LocationWithoutParentStationNotice)                                     	|
 | `location_with_unexpected_stop_time`                      | [`LocationWithUnexpectedStopTimeNotice`](#LocationWithUnexpectedStopTimeNotice)	      |
 | `missing_calendar_and_calendar_date_files`             	| [`MissingCalendarAndCalendarDateFilesNotice`](#MissingCalendarAndCalendarDateFilesNotice)                       	|
-| `missing_level`                                       	| [`MissingLevelNotice`](#MissingLevelNotice)                                       	|
+| `missing_level_file`                                      | [`MissingLevelFileNotice`](#MissingLevelFileNotice)                                       	|
 | `missing_required_column`                              	| [`MissingRequiredColumnNotice`](#MissingRequiredColumnNotice)                                                   	|
 | `missing_required_field`                               	| [`MissingRequiredFieldNotice`](#MissingRequiredFieldNotice)                                                     	|
 | `missing_required_file`                                	| [`MissingRequiredFileNotice`](#MissingRequiredFileNotice)                                                       	|
@@ -462,7 +462,7 @@
 * [`calendar.txt`](http://gtfs.org/reference/static#calendartxt)
 * [`calendar_dates.txt`](http://gtfs.org/reference/static#calendar_datestxt)
 
-#### [MissingLevelNotice](/RULES.md#MissingLevelNotice)
+#### [MissingLevelFileNotice](/RULES.md#MissingLevelFileNotice)
 ##### Fields description
 
 | Field name    	| Description                                                      	 | Type   	|

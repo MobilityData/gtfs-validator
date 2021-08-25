@@ -30,7 +30,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsLevelTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathway;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathwayMode;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathwayTableContainer;
-import org.mobilitydata.gtfsvalidator.validator.LevelPresenceValidator.MissingLevelNotice;
+import org.mobilitydata.gtfsvalidator.validator.LevelPresenceValidator.MissingLevelFileNotice;
 
 @RunWith(JUnit4.class)
 public class LevelPresenceValidatorTest {
@@ -85,6 +85,6 @@ public class LevelPresenceValidatorTest {
                     createPathway("other elevator id value", 1, GtfsPathwayMode.ELEVATOR),
                     createPathway("exit gate id value", 144, GtfsPathwayMode.EXIT_GATE),
                     createPathway("stairs id value", 277, GtfsPathwayMode.STAIRS))))
-        .containsExactly(new MissingLevelNotice(77, "elevator id value"));
+        .containsExactly(new MissingLevelFileNotice(77, "elevator id value"));
   }
 }

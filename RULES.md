@@ -99,7 +99,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`MissingRequiredColumnNotice`](#MissingRequiredColumnNotice)                                                   | A required column is missing in the input file.                                                                                                        |
 | [`MissingRequiredFieldNotice`](#MissingRequiredFieldNotice)                                                     | A required field is missing.                                                                                                                           |
 | [`MissingRequiredFileNotice`](#MissingRequiredFileNotice)                                                       | A required file is missing.                                                                                                                            |
-| [`MissingLevelNotice`](#MissingLevelNotice)       	                                | `levels.txt` is conditionally required.                                                                                                                	    |
+| [`MissingLevelFileNotice`](#MissingLevelFileNotice)       	                                | `levels.txt` is conditionally required.                                                                                                                	    |
 | [`MissingTripEdgeNotice`](#MissingTripEdgeNotice)                                                               | Missing trip edge `arrival_time` or `departure_time`.                                                                                                  |
 | [`NewLineInValueNotice`](#NewLineInValueNotice)                                                                 | New line or carriage return in a value in CSV file.                                                                                                    |
 | [`NumberOutOfRangeNotice`](#NumberOutOfRangeNotice)                                                             | Out of range value.                                                                                                                                    |
@@ -443,9 +443,9 @@ A required file is missing.
 ##### References:
 * [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
 
-<a name="MissingLevelNotice"/>
+<a name="MissingLevelFileNotice"/>
 
-#### MissingLevelNotice
+#### MissingLevelFileNotice
 
 GTFS file `levels.txt` is required for elevator (`pathway_mode=5`). Here, the values passed to `pathways.pathway_mode` are assumed to be correct.
 
