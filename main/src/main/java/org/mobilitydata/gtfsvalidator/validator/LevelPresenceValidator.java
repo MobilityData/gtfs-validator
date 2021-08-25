@@ -75,7 +75,7 @@ public class LevelPresenceValidator extends FileValidator {
     private final long csvRowNumber;
     private final String pathwayId;
 
-    MissingLevelNotice(long csvRowNumber, String pathwayId) {
+    MissingLevelFileNotice(long csvRowNumber, String pathwayId) {
       super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
       this.pathwayId = pathwayId;
