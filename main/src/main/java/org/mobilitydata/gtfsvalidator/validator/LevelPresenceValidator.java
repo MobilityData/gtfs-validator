@@ -33,7 +33,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsPathwayTableContainer;
  * pathway.pathway_mode=5}. Only one notice is generated here assuming that the content of {@code
  * pathways.txt} is correct.
  *
- * <p>Generated notice: {@link MissingLevelNotice}.
+ * <p>Generated notice: {@link MissingLevelFileNotice}.
  */
 @GtfsValidator
 public class LevelPresenceValidator extends FileValidator {
@@ -61,7 +61,7 @@ public class LevelPresenceValidator extends FileValidator {
     }
     GtfsPathway pathway = byPathwayModeMap.get(GtfsPathwayMode.ELEVATOR).get(0);
     noticeContainer.addValidationNotice(
-        new MissingLevelNotice(pathway.csvRowNumber(), pathway.pathwayId()));
+        new MissingLevelFileNotice(pathway.csvRowNumber(), pathway.pathwayId()));
   }
 
   /**
@@ -70,12 +70,12 @@ public class LevelPresenceValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.WARNING}. To be upgraded to {@code SeverityLevel.ERROR}.
    */
-  static class MissingLevelNotice extends ValidationNotice {
+  static class MissingLevelFileNotice extends ValidationNotice {
 
     private final long csvRowNumber;
     private final String pathwayId;
 
-    MissingLevelNotice(long csvRowNumber, String pathwayId) {
+    MissingLevelFileNotice(long csvRowNumber, String pathwayId) {
       super(SeverityLevel.WARNING);
       this.csvRowNumber = csvRowNumber;
       this.pathwayId = pathwayId;
