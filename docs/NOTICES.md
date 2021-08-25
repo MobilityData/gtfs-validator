@@ -14,6 +14,7 @@
 | `duplicated_column`                                    	| [`DuplicatedColumnNotice`](#DuplicatedColumnNotice)                                                             	|
 | `duplicate_fare_rule_zone_id_fields`                   	| [`DuplicateFareRuleZoneIdFieldsNotice`](#DuplicateFareRuleZoneIdFieldsNotice)                                   	|
 | `duplicate_key`                                        	| [`DuplicateKeyNotice`](#DuplicateKeyNotice)                                                                     	|
+| `empty_column_name`                                   	| [`EmptyColumnNameNotice`](#EmptyColumnNameNotice)                                 	|
 | `empty_file`                                           	| [`EmptyFileNotice`](#EmptyFileNotice)                                                                           	|
 | `foreign_key_violation`                                	| [`ForeignKeyViolationNotice`](#ForeignKeyViolationNotice)                                                       	|
 | `inconsistent_agency_timezone`                         	| [`InconsistentAgencyTimezoneNotice`](#InconsistentAgencyTimezoneNotice)                                         	|
@@ -29,8 +30,12 @@
 | `invalid_time`                                         	| [`InvalidTimeNotice`](#InvalidTimeNotice)                                                                       	|
 | `invalid_timezone`                                     	| [`InvalidTimezoneNotice`](#InvalidTimezoneNotice)                                                               	|
 | `invalid_url`                                          	| [`InvalidUrlNotice`](#InvalidUrlNotice)                                                                         	|
+| `leading_or_trailing_whitespaces`                         | [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)         |
+| `location_type_station_for_stop_on_pathway`               | [`LocationTypeStationForStopOnPathwayNotice`](#LocationTypeStationForStopOnPathwayNotice)|
 | `location_without_parent_station`                      	| [`LocationWithoutParentStationNotice`](#LocationWithoutParentStationNotice)                                     	|
+| `location_with_unexpected_stop_time`                      | [`LocationWithUnexpectedStopTimeNotice`](#LocationWithUnexpectedStopTimeNotice)	      |
 | `missing_calendar_and_calendar_date_files`             	| [`MissingCalendarAndCalendarDateFilesNotice`](#MissingCalendarAndCalendarDateFilesNotice)                       	|
+| `missing_level`                                       	| [`MissingLevelNotice`](#MissingLevelNotice)                                       	|
 | `missing_required_column`                              	| [`MissingRequiredColumnNotice`](#MissingRequiredColumnNotice)                                                   	|
 | `missing_required_field`                               	| [`MissingRequiredFieldNotice`](#MissingRequiredFieldNotice)                                                     	|
 | `missing_required_file`                                	| [`MissingRequiredFileNotice`](#MissingRequiredFileNotice)                                                       	|
@@ -39,11 +44,14 @@
 | `number_out_of_range`                                  	| [`NumberOutOfRangeNotice`](#NumberOutOfRangeNotice)                                                             	|
 | `overlapping_frequency`                                	| [`OverlappingFrequencyNotice`](#OverlappingFrequencyNotice)                                                     	|
 | `route_both_short_and_long_name_missing`               	| [`RouteBothShortAndLongNameMissingNotice`](#RouteBothShortAndLongNameMissingNotice)                             	|
+| `same_name_and_description_for_stop`       	            | [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)     	|
 | `start_and_end_range_equal`                            	| [`StartAndEndRangeEqualNotice`](#StartAndEndRangeEqualNotice)                                                   	|
 | `start_and_end_range_out_of_order`                     	| [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         	|
 | `station_with_parent_station`                          	| [`StationWithParentStationNotice`](#StationWithParentStationNotice)                                             	|
-| `stop_time_wit_arrival_before_previous_departure_time` 	| [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](#StopTimeWithArrivalBeforePreviousDepartureTimeNotice) 	|
+| `stop_time_timepoint_without_times`                   	| [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	|
+| `stop_time_with_arrival_before_previous_departure_time` 	| [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](#StopTimeWithArrivalBeforePreviousDepartureTimeNotice) 	|
 | `stop_time_with_only_arrival_or_departure_time`        	| [`StopTimeWithOnlyArrivalOrDepartureTimeNotice`](#StopTimeWithOnlyArrivalOrDepartureTimeNotice)                 	|
+| `stop_without_zone_id`                                   	| [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                 	            |
 | `wrong_parent_location_type`                           	| [`WrongParentLocationTypeNotice`](#WrongParentLocationTypeNotice)                                               	|
 
 #### [`BlockTripsWithOverlappingStopTimesNotice`](/RULES.md#BlockTripsWithOverlappingStopTimesNotice)
@@ -149,6 +157,17 @@
 | `fieldValue1`    	| Composite key's first value.       	| Object 	|
 | `fieldName2`     	| Composite key's second field name. 	| String 	|
 | `fieldValue2`    	| Composite key's second value.      	| Object 	|
+
+##### Affected files
+[All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
+
+#### [EmptyColumnNameNotice](/RULES.md#EmptyColumnNameNotice)
+##### Fields description
+
+| Field name 	| Description                    	  | Type    	|
+|------------	|---------------------------------	|---------	|
+| `filename`   	| The name of the faulty file.   	| String   	|
+| `index`      	| The index of the empty column. 	| Integer 	|
 
 ##### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
@@ -380,6 +399,32 @@
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 
+#### [LeadingOrTrailingWhitespacesNotice](/RULES.md#LeadingOrTrailingWhitespacesNotice)
+##### Fields description
+
+| Field name   	| Description                   	| Type   	|
+|--------------	|-------------------------------	|--------	|
+| `filename`   	| The row of the faulty record. 	| String 	|
+| `csvRowNumber`| The row of the faulty record. 	| Long   	|
+| `fieldName`  	| Faulty record's field name.   	| String 	|
+| `fieldValue` 	| Faulty value.                 	| String 	|
+
+##### Affected files
+[All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
+
+#### [LocationTypeStationForStopOnPathwayNotice](/RULES.md#LocationTypeStationForStopOnPathwayNotice)
+##### Fields description
+
+| Field name   	| Description                   	| Type   	|
+|--------------	|-------------------------------	|--------	|
+| `pathwayId`   	| The id of the faulty row from `pathways.txt`. 	| String 	|
+| `pathwayCsvRowNumber`| The row of the faulty record. 	| Long   	|
+| `stopId`  	| The id of the faulty row from `stops.txt`.   	| String 	|
+| `stopCsvRowNumber` 	| Faulty value.                 	| String 	|
+
+##### Affected files
+[All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
+
 #### [`LocationWithoutParentStationNotice`](/RULES.md#LocationWithoutParentStationNotice)
 ##### Fields description
 
@@ -393,6 +438,20 @@
 ##### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
+#### [LocationWithUnexpectedStopTimeNotice](/RULES.md#LocationWithUnexpectedStopTimeNotice)
+##### Fields description
+
+| Field name             	| Description                                                	| Type   	|
+|------------------------	|------------------------------------------------------------	|--------	|
+| `csvRowNumber`         	| The row number of the faulty record from `stops.txt`.      	| Long   	|
+| `stopId`               	| The id of the faulty record from `stops.txt`.              	| String 	|
+| `stopName`             	| The `stops.stop_name` of the faulty record.                	| String 	|
+| `stopTimeCsvRowNumber` 	| The row number of the faulty record from `stop_times.txt`. 	| Long   	|
+
+##### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+* [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
+
 #### [`MissingCalendarAndCalendarDateFilesNotice`](/RULES.md#MissingCalendarAndCalendarDateFilesNotice)
 ##### Fields description
 | Field name 	| Description 	| Type 	|
@@ -402,6 +461,17 @@
 ##### Affected files
 * [`calendar.txt`](http://gtfs.org/reference/static#calendartxt)
 * [`calendar_dates.txt`](http://gtfs.org/reference/static#calendar_datestxt)
+
+#### [MissingLevelNotice](/RULES.md#MissingLevelNotice)
+##### Fields description
+
+| Field name    	| Description                                                      	 | Type   	|
+|---------------	|------------------------------------------------------------------- |--------	|
+| `csvRowNumber`  | The row number of the faulty record. 	                             | Long   	|
+| `pathwayId` 	  | The id of the record from pathways.txt that refers to `levels.txt`.| String   |
+
+##### Affected files
+* [`levels.txt`](http://gtfs.org/reference/static#levelstxt)
 
 #### [`MissingRequiredColumnNotice`](/RULES.md#MissingRequiredColumnNotice)
 ##### Fields description
@@ -502,6 +572,18 @@
 ##### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
+#### [SameNameAndDescriptionForStopNotice](/RULES.md#SameNameAndDescriptionForStopNotice)
+##### Fields description
+
+| Field name     	| Description                             	| Type   	|
+|----------------	|-----------------------------------------	|--------	|
+| `csvRowNumber`  | The row number of the faulty record.      | Long 	  |
+| `stopId`        | The id of the faulty record.              | String  |
+| `routeDesc`    	| The faulty record's `stop_desc`.         	| String 	|
+
+##### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+
 #### [`StartAndEndRangeEqualNotice`](/RULES.md#StartAndEndRangeEqualNotice)
 ##### Fields description
 
@@ -548,6 +630,19 @@
 ##### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
+#### [StopTimeTimepointWithoutTimesNotice](/RULES.md#StopTimeTimepointWithoutTimesNotice)
+##### Fields description
+
+| Field name     	  | Description                                	| Type   	|
+|-----------------	|--------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row number of the faulty record.       	| Long   	|
+| `tripId`         	| The faulty record's id.                    	| String 	|
+| `stopSequence`   	| The faulty record's `stops.stop_sequence`. 	| String 	|
+| `specifiedField` 	| Either `departure_time` or `arrival_time`. 	| String 	|
+
+##### Affected files
+* [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
+
 #### [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](/RULES.md#StopTimeWithArrivalBeforePreviousDepartureTimeNotice)
 ##### Fields description
 
@@ -575,6 +670,18 @@
 ##### Affected files
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
+#### [StopWithoutZoneIdNotice](/RULES.md#StopWithoutZoneIdNotice)
+##### Fields description
+
+| Field name               	| Description                                	| Type   	|
+|--------------------------	|--------------------------------------------	|--------	|
+| `stopId`                 	| The faulty record's id.                    	| String 	|
+| `csvRowNumber`        	  | The row number of the faulty record.       	| Long   	|
+
+##### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+* [`fare_rules.txt`](http://gtfs.org/reference/static#farerulestxt)
+
 #### [`WrongParentLocationTypeNotice`](/RULES.md#WrongParentLocationTypeNotice)
 ##### Fields description
 
@@ -601,17 +708,13 @@
 |--------------------------------------------	|-----------------------------------------------------------------------------------	|
 | `attribution_without_role`           	      | [`AttributionWithoutRoleNotice`](#AttributionWithoutRoleNotice)                   	|
 | `duplicate_route_name`                      | [`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)                           	|
-| `empty_column_name`                        	| [`EmptyColumnNameNotice`](#EmptyColumnNameNotice)                                 	|
 | `empty_row`                                	| [`EmptyRowNotice`](#EmptyRowNotice)                                               	|
 | `fast_travel_between_consecutive_stops`      	| [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsecutiveStopsNotice) |
 | `fast_travel_between_far_stops`               | [`FastTravelBetweenFarStopsNotice`](#FastTravelBetweenFarStopsNotice)                 |
 | `feed_expiration_date`                     	| [`FeedExpirationDateNotice`](#FeedExpirationDateNotice)                           	|
 | `feed_info_lang_and_agency_mismatch` 	      | [`FeedInfoLangAndAgencyMismatchNotice`](#FeedInfoLangAndAgencyLangMismatchNotice) 	|
 | `inconsistent_agency_lang`                 	| [`InconsistentAgencyLangNotice`](#InconsistentAgencyLangNotice)                   	|
-| `leading_or_trailing_whitespaces`           | [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)         |
-| `location_type_station_for_stop_on_pathway`   | [`LocationTypeStationForStopOnPathwayNotice`](#LocationTypeStationForStopOnPathwayNotice)|
 | `missing_feed_info_date`                   	| [`MissingFeedInfoDateNotice`](#MissingFeedInfoDateNotice)                         	|
-| `missing_level`                              	| [`MissingLevelNotice`](#MissingLevelNotice)                                       	|
 | `more_than_one_entity`                     	| [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	|
 | `non_ascii_or_non_printable_char`          	| [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	|
 | `platform_without_parent_station`          	| [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)       	|
@@ -619,19 +722,15 @@
 | `route_short_and_long_name_equal`          	| [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	|
 | `route_short_name_too_long`                	| [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	|
 | `same_name_and_description_for_route`       | [`SameNameAndDescriptionForRouteNotice`](#SameNameAndDescriptionForRouteNotice)     |
-| `same_name_and_description_for_stop`       	| [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)     	|
 | `same_route_and_agency_url`                	| [`SameRouteAndAgencyUrlNotice`](#SameRouteAndAgencyUrlNotice)                       |
 | `same_stop_and_agency_url`                 	| [`SameStopAndAgencyUrlNotice`](#SameStopAndAgencyUrlNotice)                         |
 | `same_stop_and_route_url`                  	| [`SameStopAndRouteUrlNotice`](#SameStopAndRouteUrlNotice)                           |
-| `stop_time_timepoint_without_times`        	| [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	|
 | `stop_too_far_from_trip_shape`            	| [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	|
-| `stop_without_zone_id`                     	| [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                 	            |
 | `too_fast_travel`                          	| [`TooFastTravelNotice`](#TooFastTravelNotice)                                     	|
 | `unexpected_enum_value`                    	| [`UnexpectedEnumValueNotice`](#UnexpectedEnumValueNotice)                         	|
 | `unusable_trip`                            	| [`UnusableTripNotice`](#UnusableTripNotice)                                       	|
 | `unused_shape`                             	| [`UnusedShapeNotice`](#UnusedShapeNotice)                                         	|
 | `unused_trip`                              	| [`UnusedTripNotice`](#UnusedTripNotice)                                           	|
-| `wrong_stop_time_stop_location_type`        | [`WrongStopTimeStopLocationTypeNotice`](#WrongStopTimeStopLocationTypeNotice)	      |
 
 #### [AttributionWithoutRoleNotice](/RULES.md#AttributionWithoutRoleNotice)
 ##### Fields description
@@ -660,17 +759,6 @@
 
 ##### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
-
-#### [EmptyColumnNameNotice](/RULES.md#EmptyColumnNameNotice)
-##### Fields description
-
-| Field name 	| Description                    	  | Type    	|
-|------------	|---------------------------------	|---------	|
-| `filename`   	| The name of the faulty file.   	| String   	|
-| `index`      	| The index of the empty column. 	| Integer 	|
-
-##### Affected files
-[All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
 #### [EmptyRowNotice](/RULES.md#EmptyRowNotice)
 ##### Fields description
@@ -723,32 +811,6 @@
 ##### Affected files
 * [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
 
-#### [LeadingOrTrailingWhitespacesNotice](/RULES.md#LeadingOrTrailingWhitespacesNotice)
-##### Fields description
-
-| Field name   	| Description                   	| Type   	|
-|--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
-| `csvRowNumber`| The row of the faulty record. 	| Long   	|
-| `fieldName`  	| Faulty record's field name.   	| String 	|
-| `fieldValue` 	| Faulty value.                 	| String 	|
-
-##### Affected files
-[All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
-
-#### [LocationTypeStationForStopOnPathwayNotice](/RULES.md#LocationTypeStationForStopOnPathwayNotice)
-##### Fields description
-
-| Field name   	| Description                   	| Type   	|
-|--------------	|-------------------------------	|--------	|
-| `pathwayId`   	| The id of the faulty row from `pathways.txt`. 	| String 	|
-| `pathwayCsvRowNumber`| The row of the faulty record. 	| Long   	|
-| `stopId`  	| The id of the faulty row from `stops.txt`.   	| String 	|
-| `stopCsvRowNumber` 	| Faulty value.                 	| String 	|
-
-##### Affected files
-[All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
-
 #### [MissingFeedInfoDateNotice](/RULES.md#MissingFeedInfoDateNotice)
 ##### Fields description
 
@@ -759,17 +821,6 @@
 
 ##### Affected files
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
-
-#### [MissingLevelNotice](/RULES.md#MissingLevelNotice)
-##### Fields description
-
-| Field name    	| Description                                                      	 | Type   	|
-|---------------	|------------------------------------------------------------------- |--------	|
-| `csvRowNumber`  | The row number of the faulty record. 	                             | Long   	|
-| `pathwayId` 	  | The id of the record from pathways.txt that refers to `levels.txt`.| String   |
-
-##### Affected files
-* [`levels.txt`](http://gtfs.org/reference/static#levelstxt)
 
 #### [MoreThanOneEntityNotice](/RULES.md#MoreThanOneEntityNotice)
 ##### Fields description
@@ -860,18 +911,6 @@
 ##### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-#### [SameNameAndDescriptionForStopNotice](/RULES.md#SameNameAndDescriptionForStopNotice)
-##### Fields description
-
-| Field name     	| Description                             	| Type   	|
-|----------------	|-----------------------------------------	|--------	|
-| `csvRowNumber`  | The row number of the faulty record.      | Long 	  |
-| `stopId`        | The id of the faulty record.              | String  |
-| `routeDesc`    	| The faulty record's `stop_desc`.         	| String 	|
-
-##### Affected files
-* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
-
 #### [SameRouteAndAgencyUrlNotice](/RULES.md#SameRouteAndAgencyUrlNotice)
 ##### Fields description
 
@@ -916,19 +955,6 @@
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
-#### [StopTimeTimepointWithoutTimesNotice](/RULES.md#StopTimeTimepointWithoutTimesNotice)
-##### Fields description
-
-| Field name     	  | Description                                	| Type   	|
-|-----------------	|--------------------------------------------	|--------	|
-| `csvRowNumber`   	| The row number of the faulty record.       	| Long   	|
-| `tripId`         	| The faulty record's id.                    	| String 	|
-| `stopSequence`   	| The faulty record's `stops.stop_sequence`. 	| String 	|
-| `specifiedField` 	| Either `departure_time` or `arrival_time`. 	| String 	|
-
-##### Affected files
-* [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
-
 #### [StopTooFarFromTripShapeNotice](/RULES.md#StopTooFarFromTripShapeNotice)
 ##### Fields description
 
@@ -943,18 +969,6 @@
 ##### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
-
-#### [StopWithoutZoneIdNotice](/RULES.md#StopWithoutZoneIdNotice)
-##### Fields description
-
-| Field name               	| Description                                	| Type   	|
-|--------------------------	|--------------------------------------------	|--------	|
-| `stopId`                 	| The faulty record's id.                    	| String 	|
-| `csvRowNumber`        	  | The row number of the faulty record.       	| Long   	|
-
-##### Affected files
-* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
-* [`fare_rules.txt`](http://gtfs.org/reference/static#farerulestxt)
 
 #### [FastTravelBetweenConsecutiveStopsNotice](/RULES.md#FastTravelBetweenConsecutiveStopsNotice)
 ##### Fields description
@@ -1069,21 +1083,6 @@
 
 ##### Affected files
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
-* [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
-
-#### [WrongStopTimeStopLocationTypeNotice](/RULES.md#WrongStopTimeStopLocationTypeNotice)
-##### Fields description
-
-| Field name     	| Description                                            	| Type   	|
-|----------------	|--------------------------------------------------------	|--------	|
-| `csvRowNumber` 	| The row number of the faulty record.                   	| Long   	|
-| `tripId`       	| `stop_times.trip_id` value for the faulty record.      	| String 	|
-| `stopSequence` 	| The faulty record's `stops.stop_sequence`.             	| String 	|
-| `stopId`       	| `stop_times.stop_id` value for the faulty record.      	| String 	|
-| `locationType` 	| The `stops.location_type` the faulty record refers to. 	| String 	|
-
-##### Affected files
-* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
 ### Info
