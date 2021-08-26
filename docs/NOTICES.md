@@ -616,7 +616,6 @@
 | `non_ascii_or_non_printable_char`          	| [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	|
 | `platform_without_parent_station`          	| [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)       	|
 | `route_color_contrast`                     	| [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	|
-| `route_short_and_long_name_equal`          	| [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	|
 | `route_short_name_too_long`                	| [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	|
 | `same_name_and_description_for_route`       | [`SameNameAndDescriptionForRouteNotice`](#SameNameAndDescriptionForRouteNotice)     |
 | `same_name_and_description_for_stop`       	| [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)     	|
@@ -817,19 +816,6 @@
 | `csvRowNumber`   	| The row number of the faulty record.       	| Long 	  |
 | `routeColor`     	| The faulty record's HTML route color.      	| String 	|
 | `routeTextColor` 	| The faulty record's HTML route text color. 	| String 	|
-
-##### Affected files
-* [`routes.txt`](http://gtfs.org/reference/static#routestxt)
-
-#### [RouteShortAndLongNameEqualNotice](/RULES.md#RouteShortAndLongNameEqualNotice)
-##### Fields description
-
-| Field name     	| Description                             	  | Type   	|
-|----------------	|-------------------------------------------	|--------	|
-| `routeId`        	| The id of the faulty record.            	| String  |
-| `csvRowNumber`   	| The row number of the faulty record.    	| Long 	  |
-| `routeShortName` 	| The faulty record's `route_short_name`. 	| String 	|
-| `routeLongName`  	| The faulty record's `route_long_name`.  	| String 	|
 
 ##### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)

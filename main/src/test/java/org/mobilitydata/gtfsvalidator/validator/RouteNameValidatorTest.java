@@ -26,7 +26,6 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 import org.mobilitydata.gtfsvalidator.validator.RouteNameValidator.RouteBothShortAndLongNameMissingNotice;
-import org.mobilitydata.gtfsvalidator.validator.RouteNameValidator.RouteShortAndLongNameEqualNotice;
 import org.mobilitydata.gtfsvalidator.validator.RouteNameValidator.RouteShortNameTooLongNotice;
 import org.mobilitydata.gtfsvalidator.validator.RouteNameValidator.SameNameAndDescriptionForRouteNotice;
 
@@ -55,17 +54,6 @@ public class RouteNameValidatorTest {
         .containsExactly(new RouteBothShortAndLongNameMissingNotice("r1", 1));
     assertThat(validateRoute(createRoute("S", null, null))).isEmpty();
     assertThat(validateRoute(createRoute(null, "Long", null))).isEmpty();
-    assertThat(validateRoute(createRoute("S", "Long", null))).isEmpty();
-  }
-
-  @Test
-  public void routeShortAndLongNameEqual() {
-    assertThat(validateRoute(createRoute("S", "S", null)))
-        .containsExactly(new RouteShortAndLongNameEqualNotice("r1", 1, "S", "S"));
-    // Compare case-insensitive.
-    assertThat(validateRoute(createRoute("SA", "Sa", null)))
-        .containsExactly(new RouteShortAndLongNameEqualNotice("r1", 1, "SA", "Sa"));
-
     assertThat(validateRoute(createRoute("S", "Long", null))).isEmpty();
   }
 
@@ -110,14 +98,7 @@ public class RouteNameValidatorTest {
   }
 
   @Test
-  public void allNamesProvidedAndDifferentFromRouteDescShouldNotGenerateNotice() {
-    assertThat(validateRoute(createRoute("short name", "long name", "desc"))).isEmpty();
-  }
-
-  @Test
   public void equalRouteShortNameRouteLongNameAndRouteDescShouldGenerateTwoNotices() {
-    assertThat(validateRoute(createRoute("duplicate", "duplicate", "duplicate")))
-        .contains(new RouteShortAndLongNameEqualNotice("r1", 1, "duplicate", "duplicate"));
     assertThat(validateRoute(createRoute("duplicate", "duplicate", "duplicate")))
         .contains(
             new SameNameAndDescriptionForRouteNotice(1, "r1", "duplicate", "route_short_name"));

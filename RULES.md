@@ -134,7 +134,6 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	| Non ascii or non printable char in  `id`.                                                                                                                   	|
 | [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)       	| A platform has no `parent_station` field set.                                                                                                               	|
 | [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	| Insufficient route color contrast.                                                                                                                          	|
-| [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	| Short and long name are equal for a route.                                                                                                                  	|
 | [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	| Short name of a route is too long (more than 12 characters).                                                                                                	|
 | [`SameNameAndDescriptionForRouteNotice`](#SameNameAndDescriptionForRouteNotice)     | Same name and description for route.                                                                                                                        	|
 | [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)       | Same name and description for stop.                                                                                                                      	    |
@@ -748,15 +747,6 @@ A route's color and `route_text_color` should be contrasting.
 ##### References:
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 * [Original Python validator implementation](https://github.com/google/transitfeed)
-
-<a name="RouteShortAndLongNameEqualNotice"/>
-
-#### RouteShortAndLongNameEqualNotice
-
-Short and long name are equal for a route.
-
-##### References:
-* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 
 <a name="RouteShortNameTooLongNotice"/>
 
