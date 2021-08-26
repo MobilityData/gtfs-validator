@@ -89,9 +89,9 @@ public class GtfsValidatorController {
       @RequestParam(required = false, defaultValue = DEFAULT_NUM_THREADS) String threads,
       @RequestParam(required = false, defaultValue = CountryCode.ZZ) String country_code,
       @RequestParam() String url,
-      @RequestParam(required = false, defaultValue = Arguments.VALIDATION_REPORT_DEFAULT_NAME_JSON)
+      @RequestParam(required = false, defaultValue = Arguments.VALIDATION_REPORT_NAME_JSON)
           String validation_report_name,
-      @RequestParam(required = false, defaultValue = Arguments.SYSTEM_ERRORS_REPORT_DEFAULT_NAME)
+      @RequestParam(required = false, defaultValue = Arguments.SYSTEM_ERRORS_REPORT_NAME_JSON)
           String system_error_report_name,
       @RequestParam(required = false, defaultValue = "dataset id value") String dataset_id,
       @RequestParam(required = false, defaultValue = "commit sha value") String commit_sha) {

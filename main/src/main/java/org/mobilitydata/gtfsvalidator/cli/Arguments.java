@@ -21,8 +21,8 @@ import com.beust.jcommander.Parameter;
 /** Command-line arguments for GTFS Validator CLI. */
 public class Arguments {
 
-  public static final String VALIDATION_REPORT_DEFAULT_NAME_JSON = "report.json";
-  public static final String SYSTEM_ERRORS_REPORT_DEFAULT_NAME = "system_errors.json";
+  public static final String VALIDATION_REPORT_NAME_JSON = "report.json";
+  public static final String SYSTEM_ERRORS_REPORT_NAME_JSON = "system_errors.json";
 
   @Parameter(
       names = {"-i", "--input"},
@@ -120,14 +120,14 @@ public class Arguments {
 
   public String getValidationReportName() {
     if (validationReportName == null) {
-      return VALIDATION_REPORT_DEFAULT_NAME_JSON;
+      return VALIDATION_REPORT_NAME_JSON;
     }
     return validationReportName;
   }
 
   public String getSystemErrorsReportName() {
     if (systemErrorsReportName == null) {
-      return SYSTEM_ERRORS_REPORT_DEFAULT_NAME;
+      return SYSTEM_ERRORS_REPORT_NAME_JSON;
     }
     return systemErrorsReportName;
   }
