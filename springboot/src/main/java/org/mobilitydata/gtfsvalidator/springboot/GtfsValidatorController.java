@@ -19,7 +19,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.mobilitydata.gtfsvalidator.cli.Arguments;
 import org.mobilitydata.gtfsvalidator.cli.Main;
-import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,6 +49,7 @@ public class GtfsValidatorController {
   private static final String DEFAULT_BUCKET_LOCATION = "US";
   private static final String PROPERTIES_JSON_KEY = "properties";
   private static final String MESSAGE_JSON_KEY = "message";
+  private static final String DEFAULT_COUNTRY_CODE = "ZZ";
   private static final StringBuilder messageBuilder = new StringBuilder();
 
   /**
@@ -87,7 +87,7 @@ public class GtfsValidatorController {
   public ResponseEntity<String> run(
       @RequestParam(required = false, defaultValue = DEFAULT_OUTPUT_BASE) String output_base,
       @RequestParam(required = false, defaultValue = DEFAULT_NUM_THREADS) String threads,
-      @RequestParam(required = false, defaultValue = CountryCode.ZZ) String country_code,
+      @RequestParam(required = false, defaultValue = DEFAULT_COUNTRY_CODE) String country_code,
       @RequestParam() String url,
       @RequestParam(required = false, defaultValue = Arguments.VALIDATION_REPORT_NAME_JSON)
           String validation_report_name,
