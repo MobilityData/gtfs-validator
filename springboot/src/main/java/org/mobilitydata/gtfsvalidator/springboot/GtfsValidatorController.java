@@ -118,7 +118,7 @@ public class GtfsValidatorController {
             "Internal error. Please check execution logs for more information.\n");
         root.getAsJsonObject(PROPERTIES_JSON_KEY)
             .addProperty(MESSAGE_JSON_KEY, messageBuilder.toString());
-        status = HttpStatus.INTERNAL_SERVER_ERROR;
+        status = HttpStatus.BAD_REQUEST;
         return new ResponseEntity<>(GSON.toJson(root), status);
       }
     } catch (AssertionError assertionError) {
