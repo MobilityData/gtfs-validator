@@ -18,7 +18,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'application'
     id 'java'
-    id 'org.springframework.boot' version '2.5.2'
+    id 'org.springframework.boot' version '2.5.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
@@ -57,19 +57,17 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.google.cloud:google-cloud-storage'
+    implementation 'com.google.cloud:google-cloud-storage:2.1.0'
     implementation project(':core')
     implementation project(':main')
     implementation 'com.github.stefanbirkner:system-lambda:1.2.0'
-    implementation platform('com.google.cloud:libraries-bom:20.9.0')
-    implementation 'com.beust:jcommander:1.48'
-    implementation 'com.google.flogger:flogger:0.5.1'
-    implementation 'com.google.flogger:flogger-system-backend:0.5.1'
-    implementation 'org.locationtech.spatial4j:spatial4j:0.7'
+    implementation platform('com.google.cloud:libraries-bom:21.0.0')
+    implementation 'com.beust:jcommander:1.81'
+    implementation 'com.google.flogger:flogger:0.6'
+    implementation 'com.google.flogger:flogger-system-backend:0.6'
     implementation 'org.springframework.boot:spring-boot-starter:2.5.4'
     implementation 'org.springframework.boot:spring-boot-starter-web:2.5.4'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.4'
-    testImplementation group: 'junit', name: 'junit', version: '4.13'
 }
 
 test {
