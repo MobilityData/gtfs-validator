@@ -35,10 +35,7 @@ public class GtfsValidatorController {
 
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private static final Gson GSON =
-      new GsonBuilder()
-          .serializeNulls()
-          .serializeSpecialFloatingPointValues()
-          .create();
+      new GsonBuilder().serializeNulls().serializeSpecialFloatingPointValues().create();
   private static final String VALIDATION_REPORT_BUCKET_NAME_ENV_VAR = "VALIDATION_REPORT_BUCKET";
   private static final String VALIDATION_REPORT_BUCKET_NAME =
       System.getenv(VALIDATION_REPORT_BUCKET_NAME_ENV_VAR);
@@ -69,7 +66,8 @@ public class GtfsValidatorController {
    *       documentation for authentication procedure</a>
    * </ul>
    *
-   * <a href=https://cloud.google.com/storage/docs/json_api/v1/status-codes>Possible HTTP status codes</a>
+   * <a href=https://cloud.google.com/storage/docs/json_api/v1/status-codes>Possible HTTP status
+   * codes</a>
    *
    * @param output_base Base directory to store the outputs
    * @param threads Number of threads to use
@@ -81,8 +79,8 @@ public class GtfsValidatorController {
    * @param commit_sha the commit SHA
    * @return the {@code ResponseEntity} that contains information about the response's {@code
    *     HttpStatus} and a message (as a {@code String}) that gives more information about success
-   *     or failure.
-   * <a href=https://cloud.google.com/storage/docs/json_api/v1/status-codes>Possible HTTP status codes</a>
+   *     or failure. <a href=https://cloud.google.com/storage/docs/json_api/v1/status-codes>Possible
+   *     HTTP status codes</a>
    */
   @GetMapping(value = "/", produces = "application/json; charset=UTF-8")
   @ResponseBody
