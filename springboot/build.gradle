@@ -57,14 +57,23 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.google.cloud:google-cloud-storage:2.1.0'
-    implementation project(':core')
+    // to be able to run org.mobilitydata.gtfsvalidator.main.Main
     implementation project(':main')
-    implementation 'com.github.stefanbirkner:system-lambda:1.2.0'
+
+    // to use Google Cloud Storage services
+    implementation 'com.google.cloud:google-cloud-storage:2.1.0'
     implementation platform('com.google.cloud:libraries-bom:21.0.0')
+
+    implementation 'com.github.stefanbirkner:system-lambda:1.2.0'
+
+    // to convert query parameters as CLI arguments to be used in org.mobilitydata.gtfsvalidator.main.Main
     implementation 'com.beust:jcommander:1.81'
+
+    // to log
     implementation 'com.google.flogger:flogger:0.6'
     implementation 'com.google.flogger:flogger-system-backend:0.6'
+
+    // to use the CLI application as a web application via Spring Boot framework
     implementation 'org.springframework.boot:spring-boot-starter:2.5.4'
     implementation 'org.springframework.boot:spring-boot-starter-web:2.5.4'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.4'
