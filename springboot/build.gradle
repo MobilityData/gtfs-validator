@@ -64,6 +64,7 @@ dependencies {
     implementation 'com.google.cloud:google-cloud-storage:2.1.0'
     implementation platform('com.google.cloud:libraries-bom:21.0.0')
 
+    // to check org.mobilitydata.gtfsvalidator.main.Main execution
     implementation 'com.github.stefanbirkner:system-lambda:1.2.0'
 
     // to convert query parameters as CLI arguments to be used in org.mobilitydata.gtfsvalidator.main.Main
