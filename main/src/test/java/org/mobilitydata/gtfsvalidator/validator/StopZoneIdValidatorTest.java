@@ -74,8 +74,19 @@ public class StopZoneIdValidatorTest {
     assertThat(
             generateNotices(
                 ImmutableList.of(
+                    createStop(4, GtfsLocationType.STOP, "zone id value", "stop id value"),
+                    createStop(6, GtfsLocationType.STATION, "zone id value", "station id value"),
+                    createStop(7, GtfsLocationType.ENTRANCE, "zone id value", "entrance id value"),
                     createStop(
-                        3, GtfsLocationType.BOARDING_AREA, "zone id value", "stop id value")),
+                        10,
+                        GtfsLocationType.GENERIC_NODE,
+                        "zone id value",
+                        "generic node id value"),
+                    createStop(
+                        3,
+                        GtfsLocationType.BOARDING_AREA,
+                        "zone id value",
+                        "boarding area id value")),
                 ImmutableList.of()))
         .isEmpty();
   }
@@ -111,23 +122,22 @@ public class StopZoneIdValidatorTest {
   }
 
   @Test
-  public void fareRuleProvided_stopLocationEqualsStop_noNotice() {
+  public void fareRuleProvided_stopLocationEqualsStationOrEntrance_zoneIdNotProvided_zeroNotice() {
     assertThat(
             generateNotices(
                 ImmutableList.of(
-                    createStop(3, GtfsLocationType.STOP, "zone id value", "stop id value"),
-                    createStop(
-                        5, GtfsLocationType.STOP, "other zone id value", "other stop id value")),
+                    createStop(3, GtfsLocationType.STATION, null, "stop id value"),
+                    createStop(5, GtfsLocationType.ENTRANCE, null, "other stop id value")),
                 ImmutableList.of(createFareRule(5, "fare id value"))))
         .isEmpty();
   }
 
   @Test
-  public void fareRuleProvided_stopLocationEqualsEntrance_noNotice() {
+  public void fareRuleProvided_stopLocationEqualsStationOrEntrance_zoneIdProvided_noNotice() {
     assertThat(
             generateNotices(
                 ImmutableList.of(
-                    createStop(3, GtfsLocationType.ENTRANCE, "zone id value", "stop id value"),
+                    createStop(3, GtfsLocationType.STATION, "zone id value", "stop id value"),
                     createStop(
                         5,
                         GtfsLocationType.ENTRANCE,
