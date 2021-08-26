@@ -34,10 +34,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class GtfsValidatorController {
 
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-  private static final Gson DEFAULT_GSON =
+  private static final Gson GSON =
       new GsonBuilder()
           .serializeNulls()
-          .setPrettyPrinting()
           .serializeSpecialFloatingPointValues()
           .create();
   private static final String VALIDATION_REPORT_BUCKET_NAME_ENV_VAR = "VALIDATION_REPORT_BUCKET";
@@ -120,7 +119,7 @@ public class GtfsValidatorController {
         root.getAsJsonObject(PROPERTIES_JSON_KEY)
             .addProperty(MESSAGE_JSON_KEY, messageBuilder.toString());
         status = HttpStatus.INTERNAL_SERVER_ERROR;
-        return new ResponseEntity<>(DEFAULT_GSON.toJson(root), status);
+        return new ResponseEntity<>(GSON.toJson(root), status);
       }
     } catch (AssertionError assertionError) {
       messageBuilder.append("Execution of the validator was successful.\n");
@@ -128,12 +127,13 @@ public class GtfsValidatorController {
       status = HttpStatus.INTERNAL_SERVER_ERROR;
       root.getAsJsonObject(PROPERTIES_JSON_KEY)
           .addProperty(MESSAGE_JSON_KEY, messageBuilder.append(exception.getMessage()).toString());
-      return new ResponseEntity<>(DEFAULT_GSON.toJson(root), status);
+      logger.atSevere().log(exception.getMessage());
+      return new ResponseEntity<>(GSON.toJson(root), status);
     }
     status =
         pushValidationReportToCloudStorage(
             VALIDATION_REPORT_BUCKET_NAME, commit_sha, dataset_id, args, messageBuilder, root);
-    return new ResponseEntity<>(DEFAULT_GSON.toJson(root), status);
+    return new ResponseEntity<>(GSON.toJson(root), status);
   }
 
   /**
