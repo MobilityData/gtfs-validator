@@ -69,6 +69,8 @@ public class GtfsValidatorController {
    *       documentation for authentication procedure</a>
    * </ul>
    *
+   * <a href=https://cloud.google.com/storage/docs/json_api/v1/status-codes>Possible HTTP status codes</a>
+   *
    * @param output_base Base directory to store the outputs
    * @param threads Number of threads to use
    * @param country_code Country code of the feed, e.g., `nl`. It must be a two-letter country code
@@ -80,6 +82,7 @@ public class GtfsValidatorController {
    * @return the {@code ResponseEntity} that contains information about the response's {@code
    *     HttpStatus} and a message (as a {@code String}) that gives more information about success
    *     or failure.
+   * <a href=https://cloud.google.com/storage/docs/json_api/v1/status-codes>Possible HTTP status codes</a>
    */
   @GetMapping(value = "/", produces = "application/json; charset=UTF-8")
   @ResponseBody
