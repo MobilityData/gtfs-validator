@@ -200,6 +200,7 @@ public class GtfsValidatorController {
           String.format(
               "%s - Failure to upload validation report: %s",
               storageException.getCode(), storageException.getMessage()));
+      logger.atSevere().log(storageException.getMessage());
     } catch (IOException ioException) {
       status = HttpStatus.NOT_FOUND;
       messageBuilder.append(
@@ -210,6 +211,7 @@ public class GtfsValidatorController {
               commitSha,
               datasetId,
               args.getValidationReportName()));
+      logger.atSevere().log(ioException.getMessage());
     } finally {
       root.getAsJsonObject(PROPERTIES_JSON_KEY)
           .addProperty(MESSAGE_JSON_KEY, messageBuilder.toString());
