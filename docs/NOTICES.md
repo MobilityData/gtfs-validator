@@ -609,7 +609,6 @@
 | `feed_info_lang_and_agency_mismatch` 	      | [`FeedInfoLangAndAgencyMismatchNotice`](#FeedInfoLangAndAgencyLangMismatchNotice) 	|
 | `inconsistent_agency_lang`                 	| [`InconsistentAgencyLangNotice`](#InconsistentAgencyLangNotice)                   	|
 | `leading_or_trailing_whitespaces`           | [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)         |
-| `location_type_station_for_stop_on_pathway`   | [`LocationTypeStationForStopOnPathwayNotice`](#LocationTypeStationForStopOnPathwayNotice)|
 | `missing_feed_info_date`                   	| [`MissingFeedInfoDateNotice`](#MissingFeedInfoDateNotice)                         	|
 | `missing_level_file`                         	| [`MissingLevelFileNotice`](#MissingLevelFileNotice)                                       	|
 | `more_than_one_entity`                     	| [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	|
@@ -732,19 +731,6 @@
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
-
-##### Affected files
-[All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
-
-#### [LocationTypeStationForStopOnPathwayNotice](/RULES.md#LocationTypeStationForStopOnPathwayNotice)
-##### Fields description
-
-| Field name   	| Description                   	| Type   	|
-|--------------	|-------------------------------	|--------	|
-| `pathwayId`   	| The id of the faulty row from `pathways.txt`. 	| String 	|
-| `pathwayCsvRowNumber`| The row of the faulty record. 	| Long   	|
-| `stopId`  	| The id of the faulty row from `stops.txt`.   	| String 	|
-| `stopCsvRowNumber` 	| Faulty value.                 	| String 	|
 
 ##### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
