@@ -12,4 +12,4 @@ jobs:
         with:
           project: Bug triage
           column: Requires investigation
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ secrets.TRIAGE_TOKEN }}
