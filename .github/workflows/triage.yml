@@ -22,5 +22,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Thank you for your reporting a bug. The issue has been placed in triage, the MobilityData team will follow-up on your it."
+              body: "Thank you for your reporting a bug. The issue has been placed in [triage](https://github.com/MobilityData/gtfs-validator/projects/1), the MobilityData team will follow-up on it."
             })
