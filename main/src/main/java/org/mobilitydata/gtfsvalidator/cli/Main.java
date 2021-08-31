@@ -103,7 +103,7 @@ public class Main {
             .build();
     try {
       feedContainer =
-          validate(validatorLoader, feedLoader, noticeContainer, gtfsInput, validationContext);
+          loadAndValidate(validatorLoader, feedLoader, noticeContainer, gtfsInput, validationContext);
     } catch (InterruptedException e) {
       logger.atSevere().withCause(e).log("Validation was interrupted");
       System.exit(1);
@@ -113,7 +113,7 @@ public class Main {
 
     // Output
     exportReport(noticeContainer, args);
-    printInfo(startNanos, feedContainer);
+    printSummary(startNanos, feedContainer);
   }
 
   /**
@@ -122,8 +122,7 @@ public class Main {
    * @param startNanos start time as nanoseconds
    * @param feedContainer the {@code GtfsFeedContainer}
    */
-  public static void printInfo(long startNanos, GtfsFeedContainer feedContainer) {
-
+  public static void printSummary(long startNanos, GtfsFeedContainer feedContainer) {
     final long endNanos = System.nanoTime();
     if (!feedContainer.isParsedSuccessfully()) {
       System.out.println(" ----------------------------------------- ");
@@ -165,7 +164,7 @@ public class Main {
    * @return the {@code GtfsFeedContainer} used in the validation process
    * @throws InterruptedException if validation process was interrupted
    */
-  public static GtfsFeedContainer validate(
+  public static GtfsFeedContainer loadAndValidate(
       ValidatorLoader validatorLoader,
       GtfsFeedLoader feedLoader,
       NoticeContainer noticeContainer,
@@ -185,7 +184,7 @@ public class Main {
    * Performs parsing and sanity checks on CLI arguments.
    *
    * @param argv the CLI arguments
-   * @return the {@code Argument} generated after parsing the command line
+   * @return the {@code Arguments} generated after parsing the command line
    */
   private static Arguments parseArguments(String[] argv) {
     Arguments args = new Arguments();
