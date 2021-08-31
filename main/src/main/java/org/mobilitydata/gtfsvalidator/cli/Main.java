@@ -118,6 +118,7 @@ public class Main {
 
   /**
    * Prints validation metadata.
+   *
    * @param startNanos start time as nanoseconds
    * @param feedContainer the {@code GtfsFeedContainer}
    */
@@ -136,9 +137,12 @@ public class Main {
   }
 
   /**
-   * Closes a {@code GtfsInput}. Yields {@code IOError} if the {@code GtfsInput} could not be closed.
+   * Closes a {@code GtfsInput}. Yields {@code IOError} if the {@code GtfsInput} could not be
+   * closed.
+   *
    * @param gtfsInput the {@code GtfsInput} to close
-   * @param noticeContainer the {@code NoticeContainer} that will contain the {@code IOError} if the {@code GtfsInput} could not be closed.
+   * @param noticeContainer the {@code NoticeContainer} that will contain the {@code IOError} if the
+   *     {@code GtfsInput} could not be closed.
    */
   public static void closeGtfsInput(GtfsInput gtfsInput, NoticeContainer noticeContainer) {
     try {
@@ -151,9 +155,11 @@ public class Main {
 
   /**
    * Loads and validates GTFS feeds
+   *
    * @param validatorLoader the {@code ValidatorLoader} used in the process
    * @param feedLoader the {@code GtfsFeedLoader} used in the process
-   * @param noticeContainer the {@code NoticeContainer} that will contain {@code Notice}s related to the GTFS feed
+   * @param noticeContainer the {@code NoticeContainer} that will contain {@code Notice}s related to
+   *     the GTFS feed
    * @param gtfsInput the source of data
    * @param validationContext the {@code ValidationContext} do be used during validation
    * @return the {@code GtfsFeedContainer} used in the validation process
@@ -177,6 +183,7 @@ public class Main {
 
   /**
    * Performs parsing and sanity checks on CLI arguments.
+   *
    * @param argv the CLI arguments
    * @return the {@code Argument} generated after parsing the command line
    */
@@ -243,7 +250,9 @@ public class Main {
 
   /**
    * Creates a {@code GtfsInput}
-   * @param args the {@code Argument} to be used to retrieve information needed to the creation of the {@code GtfsInput}
+   *
+   * @param args the {@code Argument} to be used to retrieve information needed to the creation of
+   *     the {@code GtfsInput}
    * @return the {@code GtfsInput} generated after
    * @throws IOException in case of error while loading a file
    * @throws URISyntaxException in case of error in the {@code URL} syntax

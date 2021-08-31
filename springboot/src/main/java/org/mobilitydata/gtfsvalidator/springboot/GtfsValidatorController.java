@@ -110,8 +110,14 @@ public class GtfsValidatorController {
       @RequestParam(required = false, defaultValue = "dataset id value") String dataset_id,
       @RequestParam(required = false, defaultValue = "commit sha value") String commit_sha) {
 
-    Arguments args = queryParametersToArguments(output_base, threads,
-        country_code, url, validation_report_name, system_error_report_name);
+    Arguments args =
+        queryParametersToArguments(
+            output_base,
+            threads,
+            country_code,
+            url,
+            validation_report_name,
+            system_error_report_name);
     JsonObject root = new JsonObject();
     root.add(PROPERTIES_JSON_KEY, new JsonObject());
     StringBuilder messageBuilder = new StringBuilder();
@@ -189,7 +195,6 @@ public class GtfsValidatorController {
     return new ResponseEntity<>(GSON.toJson(root), status);
   }
 
-
   /**
    * Converts query parameters to {@code Argument}.
    *
@@ -202,8 +207,13 @@ public class GtfsValidatorController {
    * @param system_error_report_name The name of the system error report including .json extension.
    * @return the {@code Argument} instance generated from the query parameters passed.
    */
-  private Arguments queryParametersToArguments(String output_base, String threads, String country_code,
-      String url, String validation_report_name, String system_error_report_name) {
+  private Arguments queryParametersToArguments(
+      String output_base,
+      String threads,
+      String country_code,
+      String url,
+      String validation_report_name,
+      String system_error_report_name) {
     final String[] argv = {
       "-o", output_base,
       "-t", threads,
@@ -280,7 +290,8 @@ public class GtfsValidatorController {
       status = HttpStatus.valueOf(storageException.getCode());
       messageBuilder.append(
           String.format(
-              "%s - Failure to upload validation report. %s\n", storageException.getCode(), storageException.getMessage()));
+              "%s - Failure to upload validation report. %s\n",
+              storageException.getCode(), storageException.getMessage()));
       logger.atSevere().log(storageException.getMessage());
     } catch (IOException ioException) {
       status = HttpStatus.NOT_FOUND;
