@@ -171,7 +171,7 @@ public class GtfsValidatorController {
       return new ResponseEntity<>(root, status);
     } catch (URISyntaxException uriSyntaxException) {
       logger.atSevere().withCause(uriSyntaxException);
-      status = HttpStatus.NOT_FOUND;
+      status = HttpStatus.BAD_REQUEST;
       messageBuilder.append("Internal error. Syntax error in URI.\n");
       root.put(MESSAGE_JSON_KEY, messageBuilder.append(uriSyntaxException.getMessage()).toString());
       root.put(STATUS_JSON_KEY, status.toString());
