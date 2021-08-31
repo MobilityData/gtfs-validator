@@ -302,7 +302,7 @@ public class GtfsValidatorController {
               "Failure to upload validation report. %s\n", storageException.getMessage()));
       logger.atSevere().log(storageException.getMessage());
     } catch (IOException ioException) {
-      status = HttpStatus.NOT_FOUND;
+      status = HttpStatus.BAD_REQUEST;
       messageBuilder.append(
           String.format(
               "Failure to find validation report. Could not find %s/%s",
