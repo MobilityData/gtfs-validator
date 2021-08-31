@@ -42,8 +42,8 @@ dependencies {
     implementation 'com.google.guava:guava:29.0-jre'
     implementation 'commons-validator:commons-validator:1.6'
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.13'
-    implementation 'com.google.flogger:flogger:0.5.1'
-    testImplementation 'com.google.flogger:flogger-system-backend:0.5.1'
+    implementation 'com.google.flogger:flogger:0.6'
+    testImplementation 'com.google.flogger:flogger-system-backend:0.6'
     testImplementation group: 'junit', name: 'junit', version: '4.13'
     testImplementation "com.google.truth:truth:1.0.1"
     testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'
