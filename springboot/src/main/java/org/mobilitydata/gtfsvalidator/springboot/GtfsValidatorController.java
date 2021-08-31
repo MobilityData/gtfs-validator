@@ -132,7 +132,6 @@ public class GtfsValidatorController {
             url,
             validation_report_name,
             system_error_report_name);
-    HashMap<String, String> root = new HashMap<>();
     StringBuilder messageBuilder = new StringBuilder();
     HttpStatus status;
     final long startNanos = System.nanoTime();
@@ -141,9 +140,7 @@ public class GtfsValidatorController {
       status = HttpStatus.BAD_REQUEST;
       messageBuilder.append(
           "%Bad request. Please check query parameters and execution logs for more information.\n");
-      root.put(MESSAGE_JSON_KEY, messageBuilder.toString());
-      root.put(STATUS_JSON_KEY, status.toString());
-      return new ResponseEntity<>(root, status);
+      return new ResponseEntity<>(buildResponseBody(messageBuilder.toString(), status), status);
     }
     GtfsInput gtfsInput;
     GtfsFeedContainer feedContainer;
@@ -152,31 +149,27 @@ public class GtfsValidatorController {
     try {
       validatorLoader = new ValidatorLoader();
     } catch (ValidatorLoaderException e) {
-      messageBuilder.append(e.getMessage());
-      status = HttpStatus.INTERNAL_SERVER_ERROR;
-      root.put(MESSAGE_JSON_KEY, messageBuilder.append(e.getMessage()).toString());
-      root.put(STATUS_JSON_KEY, status.toString());
-      return new ResponseEntity<>(root, status);
+      return generateResponse(
+          messageBuilder.append(e.getMessage()).toString(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
     GtfsFeedLoader feedLoader = new GtfsFeedLoader();
     try {
       gtfsInput = createGtfsInput(args);
     } catch (IOException ioException) {
       logger.atSevere().withCause(ioException);
-      messageBuilder.append(ioException.getMessage());
-      status = HttpStatus.BAD_REQUEST;
-      root.put(MESSAGE_JSON_KEY, messageBuilder.append(ioException.getMessage()).toString());
-      root.put(STATUS_JSON_KEY, status.toString());
-      exportReport(noticeContainer, args);
-      return new ResponseEntity<>(root, status);
+      return generateResponseAndExportReport(
+          messageBuilder.append(ioException.getMessage()).toString(),
+          HttpStatus.BAD_REQUEST,
+          noticeContainer,
+          args);
     } catch (URISyntaxException uriSyntaxException) {
       logger.atSevere().withCause(uriSyntaxException);
-      status = HttpStatus.BAD_REQUEST;
       messageBuilder.append("Internal error. Syntax error in URI.\n");
-      root.put(MESSAGE_JSON_KEY, messageBuilder.append(uriSyntaxException.getMessage()).toString());
-      root.put(STATUS_JSON_KEY, status.toString());
-      exportReport(noticeContainer, args);
-      return new ResponseEntity<>(root, status);
+      return generateResponseAndExportReport(
+          messageBuilder.append(uriSyntaxException.getMessage()).toString(),
+          HttpStatus.BAD_REQUEST,
+          noticeContainer,
+          args);
     }
     ValidationContext validationContext =
         ValidationContext.builder()
@@ -193,17 +186,16 @@ public class GtfsValidatorController {
     } catch (InterruptedException e) {
       logger.atSevere().withCause(e).log("Validation was interrupted");
       messageBuilder.append("Internal error. Please execution logs for more information.\n");
-      status = HttpStatus.INTERNAL_SERVER_ERROR;
-      root.put(MESSAGE_JSON_KEY, messageBuilder.append(e.getMessage()).toString());
-      root.put(STATUS_JSON_KEY, status.toString());
-      return new ResponseEntity<>(root, status);
+      return generateResponse(
+          messageBuilder.append(e.getMessage()).toString(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
     Main.closeGtfsInput(gtfsInput, noticeContainer);
+    printSummary(startNanos, feedContainer);
     messageBuilder.append("Execution of the validator was successful.\n");
     exportReport(noticeContainer, args);
-    printSummary(startNanos, feedContainer);
-    status = pushValidationReportToCloudStorage(commit_sha, dataset_id, args, messageBuilder, root);
-    return new ResponseEntity<>(root, status);
+    return generateResponse(
+        messageBuilder.toString(),
+        pushValidationReportToCloudStorage(commit_sha, dataset_id, args, messageBuilder));
   }
 
   /**
@@ -264,8 +256,7 @@ public class GtfsValidatorController {
       String commitSha,
       String datasetId,
       Arguments args,
-      StringBuilder messageBuilder,
-      HashMap<String, String> root) {
+      StringBuilder messageBuilder) {
     // Instantiates a client
     Storage storage = StorageOptions.getDefaultInstance().getService();
     HttpStatus status = HttpStatus.OK;
@@ -318,9 +309,50 @@ public class GtfsValidatorController {
               args.getOutputBase(), args.getValidationReportName()));
       logger.atSevere().log(ioException.getMessage());
     } finally {
-      root.put(MESSAGE_JSON_KEY, messageBuilder.toString());
-      root.put(STATUS_JSON_KEY, status.toString());
+      buildResponseBody(messageBuilder.toString(), status);
     }
     return status;
+  }
+
+  /**
+   * Generates response body and exports validation report
+   *
+   * @param message the message to be displayed
+   * @param status the status of the request after execution
+   * @param noticeContainer the {@code NoticeContainer} to extract {@code Notice}s from
+   * @param args the {@code Arguments} to use for report export
+   * @return the {@code ResponseEntity} that corresponds to the request
+   */
+  private static ResponseEntity<HashMap<String, String>> generateResponseAndExportReport(
+      String message,
+      HttpStatus status,
+      NoticeContainer noticeContainer,
+      Arguments args) {
+    exportReport(noticeContainer, args);
+    return new ResponseEntity<>(buildResponseBody(message, status), status);
+  }
+
+  /**
+   * Generates response body
+   *
+   * @param message the message to be displayed
+   * @param status the status of the request after execution
+   * @return the {@code ResponseEntity} that corresponds to the request
+   */
+  private static ResponseEntity<HashMap<String, String>> generateResponse(String message, HttpStatus status) {
+    return new ResponseEntity<>(buildResponseBody(message, status), status);
+  }
+
+  /**
+   * Builds the response body as a {@code HashMap<String, String>} that contains information about the request' status and additional information as a message.
+   * @param message additional information anout the request a message
+   * @param status the request's status
+   * @return the response body as a {@code HashMap<String, String>} that contains information about the request' status and additional information as a message.
+   */
+  private static HashMap<String, String>  buildResponseBody(String message, HttpStatus status) {
+    HashMap<String, String> root = new HashMap<>();
+    root.put(MESSAGE_JSON_KEY, message);
+    root.put(STATUS_JSON_KEY, status.toString());
+    return root;
   }
 }
