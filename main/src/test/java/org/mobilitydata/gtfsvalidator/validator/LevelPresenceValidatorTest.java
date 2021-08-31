@@ -19,14 +19,19 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.collect.ImmutableList;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mobilitydata.gtfsvalidator.input.CountryCode;
+import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLevel;
 import org.mobilitydata.gtfsvalidator.table.GtfsLevelTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsLevelTableLoader;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathway;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathwayMode;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathwayTableContainer;
@@ -40,6 +45,23 @@ public class LevelPresenceValidatorTest {
     NoticeContainer noticeContainer = new NoticeContainer();
     new LevelPresenceValidator(
             GtfsLevelTableContainer.forEntities(levels, noticeContainer),
+            GtfsPathwayTableContainer.forEntities(pathways, noticeContainer))
+        .validate(noticeContainer);
+    return noticeContainer.getValidationNotices();
+  }
+
+  private static ValidationContext validationContext =
+      org.mobilitydata.gtfsvalidator.validator.ValidationContext.builder()
+      .setCountryCode(
+      CountryCode.forStringOrUnknown(CountryCode.ZZ))
+      .setCurrentDateTime(new CurrentDateTime(ZonedDateTime.now(ZoneId.systemDefault())))
+      .build();
+  private static List<ValidationNotice> generateNoticesForMissingLevelFile(List<GtfsPathway> pathways)
+      throws ValidatorLoaderException {
+    NoticeContainer noticeContainer = new NoticeContainer();
+     ValidatorLoader validatorLoader = new ValidatorLoader();
+     GtfsLevelTableContainer levels = (GtfsLevelTableContainer) new GtfsLevelTableLoader().loadMissingFile(new DefaultValidatorProvider(validationContext, validatorLoader), noticeContainer);
+    new LevelPresenceValidator(levels,
             GtfsPathwayTableContainer.forEntities(pathways, noticeContainer))
         .validate(noticeContainer);
     return noticeContainer.getValidationNotices();
@@ -86,5 +108,28 @@ public class LevelPresenceValidatorTest {
                     createPathway("exit gate id value", 144, GtfsPathwayMode.EXIT_GATE),
                     createPathway("stairs id value", 277, GtfsPathwayMode.STAIRS))))
         .containsExactly(new MissingLevelFileNotice(77, "elevator id value"));
+  }
+
+  @Test
+  public void missingLevelWithPathwayModeFive_yieldsNotice() throws ValidatorLoaderException {
+    assertThat(
+            generateNoticesForMissingLevelFile(
+                ImmutableList.of(
+                    createPathway("elevator id value", 77, GtfsPathwayMode.ELEVATOR),
+                    createPathway("other elevator id value", 1, GtfsPathwayMode.ELEVATOR),
+                    createPathway("exit gate id value", 144, GtfsPathwayMode.EXIT_GATE),
+                    createPathway("stairs id value", 277, GtfsPathwayMode.STAIRS))))
+        .containsExactly(new MissingLevelFileNotice(77, "elevator id value"));
+  }
+
+  @Test
+  public void missingPathwayFile_zeroNotice() {
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createLevel("level id value", 44),
+                    createLevel("other level id value", 55)),
+                ImmutableList.of()))
+        .isEmpty();
   }
 }
