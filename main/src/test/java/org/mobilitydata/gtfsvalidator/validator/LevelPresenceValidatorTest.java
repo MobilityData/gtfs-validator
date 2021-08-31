@@ -52,17 +52,22 @@ public class LevelPresenceValidatorTest {
 
   private static ValidationContext validationContext =
       org.mobilitydata.gtfsvalidator.validator.ValidationContext.builder()
-      .setCountryCode(
-      CountryCode.forStringOrUnknown(CountryCode.ZZ))
-      .setCurrentDateTime(new CurrentDateTime(ZonedDateTime.now(ZoneId.systemDefault())))
-      .build();
-  private static List<ValidationNotice> generateNoticesForMissingLevelFile(List<GtfsPathway> pathways)
-      throws ValidatorLoaderException {
+          .setCountryCode(CountryCode.forStringOrUnknown(CountryCode.ZZ))
+          .setCurrentDateTime(new CurrentDateTime(ZonedDateTime.now(ZoneId.systemDefault())))
+          .build();
+
+  private static List<ValidationNotice> generateNoticesForMissingLevelFile(
+      List<GtfsPathway> pathways) throws ValidatorLoaderException {
     NoticeContainer noticeContainer = new NoticeContainer();
-     ValidatorLoader validatorLoader = new ValidatorLoader();
-     GtfsLevelTableContainer levels = (GtfsLevelTableContainer) new GtfsLevelTableLoader().loadMissingFile(new DefaultValidatorProvider(validationContext, validatorLoader), noticeContainer);
-    new LevelPresenceValidator(levels,
-            GtfsPathwayTableContainer.forEntities(pathways, noticeContainer))
+    ValidatorLoader validatorLoader = new ValidatorLoader();
+    GtfsLevelTableContainer levels =
+        (GtfsLevelTableContainer)
+            new GtfsLevelTableLoader()
+                .loadMissingFile(
+                    new DefaultValidatorProvider(validationContext, validatorLoader),
+                    noticeContainer);
+    new LevelPresenceValidator(
+            levels, GtfsPathwayTableContainer.forEntities(pathways, noticeContainer))
         .validate(noticeContainer);
     return noticeContainer.getValidationNotices();
   }
@@ -127,8 +132,7 @@ public class LevelPresenceValidatorTest {
     assertThat(
             generateNotices(
                 ImmutableList.of(
-                    createLevel("level id value", 44),
-                    createLevel("other level id value", 55)),
+                    createLevel("level id value", 44), createLevel("other level id value", 55)),
                 ImmutableList.of()))
         .isEmpty();
   }
