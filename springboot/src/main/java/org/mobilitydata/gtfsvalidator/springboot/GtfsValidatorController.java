@@ -21,6 +21,7 @@ import static org.mobilitydata.gtfsvalidator.cli.Main.exportReport;
 import static org.mobilitydata.gtfsvalidator.cli.Main.printSummary;
 
 import com.beust.jcommander.JCommander;
+import com.google.cloud.WriteChannel;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Bucket;
@@ -35,6 +36,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.ZoneId;
@@ -294,11 +296,14 @@ public class GtfsValidatorController {
               commitBucket.getName(),
               String.format("%s/%s/%s", commitSha, datasetId, args.getValidationReportName()));
       BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
-      storage.create(
-          blobInfo,
-          Files.readAllBytes(
-              Paths.get(
-                  String.format("%s/%s", args.getOutputBase(), args.getValidationReportName()))));
+      try (WriteChannel writer = storage.writer(blobInfo)) {
+        writer.write(
+            ByteBuffer.wrap(
+                Files.readAllBytes(
+                    Paths.get(
+                        String.format("%s/%s", args.getOutputBase(),
+                            args.getValidationReportName())))));
+      }
       status = HttpStatus.OK;
       messageBuilder.append(
           String.format(
