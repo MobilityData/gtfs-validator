@@ -49,7 +49,10 @@ public class LevelPresenceValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    if (levels.entityCount() != 0) {
+    if (pathways.isMissingFile()) {
+      return;
+    }
+    if (levels.entityCount() != 0 || !levels.isMissingFile()) {
       return;
     }
     ListMultimap<GtfsPathwayMode, GtfsPathway> byPathwayModeMap = ArrayListMultimap.create();
