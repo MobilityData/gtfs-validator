@@ -240,8 +240,8 @@ public class Main {
       Files.write(
           Paths.get(args.getOutputBase(), NOTICE_SCHEMA_JSON),
           gson.toJson(
-              NoticeSchemaGenerator.jsonSchemaForPackages(
-                  NoticeSchemaGenerator.DEFAULT_NOTICE_PACKAGES))
+                  NoticeSchemaGenerator.jsonSchemaForPackages(
+                      NoticeSchemaGenerator.DEFAULT_NOTICE_PACKAGES))
               .getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store notice schema file");
