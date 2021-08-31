@@ -100,6 +100,8 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`NewLineInValueNotice`](#NewLineInValueNotice)                                                                 | New line or carriage return in a value in CSV file.                                                                                                    |
 | [`NumberOutOfRangeNotice`](#NumberOutOfRangeNotice)                                                             | Out of range value.                                                                                                                                    |
 | [`OverlappingFrequencyNotice`](#OverlappingFrequencyNotice)                                                     | Trip frequencies overlap.                                                                                                                              |
+| [`PathwayToPlatformWithBoardingAreasNotice`](#PathwayToPlatformWithBoardingAreasNotice)                         | A pathway has an endpoint that is a platform which has boarding areas.                                                                                 |
+| [`PathwayToWrongLocationTypeNotice`](#PathwayToWrongLocationTypeNotice)                                             | A pathway has an endpoint that is a station.                                                                                                           |
 | [`RouteBothShortAndLongNameMissingNotice`](#RouteBothShortAndLongNameMissingNotice)                             | Missing route short name and long name.                                                                                                                |
 | [`StartAndEndRangeEqualNotice`](#StartAndEndRangeEqualNotice)                                                   | Two date or time fields are equal.                                                                                                                     |
 | [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         | Two date or time fields are out of order.                                                                                                              |
@@ -124,7 +126,9 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`FeedInfoLangAndAgencyMismatchNotice`](#FeedInfoLangAndAgencyLangMismatchNotice) 	| Mismatching feed and agency language fields.                                                                                                                	|
 | [`InconsistentAgencyLangNotice`](#InconsistentAgencyLangNotice)                   	| Inconsistent language among agencies.                                                                                                                       	|
 | [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)         | The value in CSV file has leading or trailing whitespaces.                                                                                                  	|
+| [`LocationWithUnexpectedStopTimeNotice`](#LocationWithUnexpectedStopTimeNotice)       | A location in `stops.txt` that is not a stop is referenced by some `stop_times.stop_id`.                                                                      |
 | [`MissingFeedInfoDateNotice`](#MissingFeedInfoDateNotice)                         	| `feed_end_date` should be provided if `feed_start_date` is provided. `feed_start_date` should be provided if `feed_end_date` is provided.                   	|
+| [`MissingLevelFileNotice`](#MissingLevelFileNotice)       	                                | `levels.txt` is conditionally required.                                                                                                                	    |
 | [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	| More than one row in CSV.                                                                                                                                   	|
 | [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	| Non ascii or non printable char in  `id`.                                                                                                                   	|
 | [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)       	| A platform has no `parent_station` field set.                                                                                                               	|
@@ -138,12 +142,12 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`SameStopAndRouteUrlNotice`](#SameStopAndRouteUrlNotice)                          	| Same `stops.stop_url` and `routes.route_url`.                                                                                                  	            |
 | [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	| `arrival_time` or `departure_time` not specified for timepoint.                                                                                             	|
 | [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	| Stop too far from trip shape.                                                                                                                               	|
+| [`StopWithoutStopTimeNotice`](#StopWithoutStopTimeNotice)                             | A stop in `stops.txt` is not referenced by any `stop_times.stop_id`.                                                                                          |
 | [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                              	| Stop without value for `stops.zone_id`.                                                                                                                     	|
 | [`UnexpectedEnumValueNotice`](#UnexpectedEnumValueNotice)                         	| An enum has an unexpected value.                                                                                                                            	|
 | [`UnusableTripNotice`](#UnusableTripNotice)                                       	| Trips must have more than one stop to be usable.                                                                                                            	|
 | [`UnusedShapeNotice`](#UnusedShapeNotice)                                         	| Shape is not used in GTFS file `trips.txt`.                                                                                                                 	|
 | [`UnusedTripNotice`](#UnusedTripNotice)                                           	| Trip is not be used in `stop_times.txt`                                                                                                                     	|
-| [`WrongStopTimeStopLocationTypeNotice`](#WrongStopTimeStopLocationTypeNotice)       | Stop with the wrong `stops.location_type` are referenced from `stop_times.stop_id`.                                                                           |
 
 <a name="INFOS"/>
 
@@ -451,7 +455,28 @@ Trip frequencies must not overlap in time
 ##### References:
 * [frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
 
+<a name="PathwayToPlatformWithBoardingAreasNotice"/>
+
+#### PathwayToPlatformWithBoardingAreasNotice
+
+A pathway has an endpoint that is a platform which has boarding areas. A platform that has boarding
+areas is treated as a parent object, not a point. In such cases, the platform must not have pathways
+assigned - instead, pathways must be assigned to its boarding areas.
+
+##### References:
+* [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
+
 <a name="RouteBothShortAndLongNameMissingNotice"/>
+
+<a name="PathwayToWrongLocationTypeNotice"/>
+
+#### PathwayToWrongLocationTypeNotice
+
+A pathway has an endpoint that is a station. Pathways endpoints must be platforms (stops),
+entrances/exits, generic nodes or boarding areas.
+
+##### References:
+* [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
 
 #### RouteBothShortAndLongNameMissingNotice
 
@@ -650,6 +675,15 @@ The value in CSV file has leading or trailing whitespaces.
 ##### References:
 * [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
 
+<a name="LocationWithUnexpectedStopTimeNotice"/>
+
+#### LocationWithUnexpectedStopTimeNotice
+
+Referenced locations (using `stop_times.stop_id`) must be stops/platforms, i.e. their `stops.location_type` value must be 0 or empty.
+
+##### References:
+* [stop_times.txt GTFS specification](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stoptimestxt)
+
 <a name="MissingFeedInfoDateNotice"/>
 
 #### MissingFeedInfoDateNotice
@@ -658,6 +692,15 @@ Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one
 
 ##### References:
 * [feed_info.txt Best practices](http://gtfs.org/best-practices/#feed_infotxt)
+
+<a name="MissingLevelFileNotice"/>
+
+#### MissingLevelFileNotice
+
+GTFS file `levels.txt` is required for elevator (`pathway_mode=5`). Here, the values passed to `pathways.pathway_mode` are assumed to be correct.
+
+##### References:
+* [levels.txt specification](http://gtfs.org/reference/static/#levelstxt)
 
 <a name="MoreThanOneEntityNotice"/>
 
@@ -784,6 +827,13 @@ Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100
 ##### References:
 * [GTFS Best Practices shapes.txt](https://gtfs.org/best-practices/#shapestxt)
 
+<a name="StopWithoutStopTimeNotice"/>
+
+#### StopWithoutStopTimeNotice
+
+A stop in `stops.txt` is not referenced by any `stop_times.stop_id`, so it is not used by any trip.
+Such stops normally do not provide user value. This notice may indicate a typo in `stop_times.txt`.
+
 <a name="StopWithoutZoneIdNotice"/>
 
 #### StopWithoutZoneIdNotice
@@ -828,13 +878,6 @@ Trips should be referred to at least once in `stop_times.txt`.
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
-
-#### WrongStopTimeStopLocationTypeNotice
-
-Referenced locations (using `stop_times.stop_id`) must be stops/platforms, i.e. their `stops.location_type` value must be 0 or empty.
-
-##### References:
-* [stop_times.txt GTFS specification](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stoptimestxt)
 
 ### Info
 

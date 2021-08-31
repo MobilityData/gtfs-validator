@@ -1,0 +1,27 @@
+name: Bug triage
+on:
+  issues:
+    types:
+      - labeled
+jobs:
+  triage:
+    if: github.event.label.name == 'bug'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create card
+        uses: alex-page/github-project-automation-plus@v0.8.1
+        with:
+          project: Bug triage
+          column: Requires investigation
+          repo-token: ${{ secrets.TRIAGE_TOKEN }}
+      - name: Comment issue
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "Thank you for your reporting a bug. The issue has been placed in [triage](https://github.com/MobilityData/gtfs-validator/projects/1), the MobilityData team will follow-up on it."
+            })
