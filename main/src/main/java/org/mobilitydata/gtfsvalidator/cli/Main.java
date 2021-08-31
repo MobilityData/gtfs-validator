@@ -103,7 +103,8 @@ public class Main {
             .build();
     try {
       feedContainer =
-          loadAndValidate(validatorLoader, feedLoader, noticeContainer, gtfsInput, validationContext);
+          loadAndValidate(
+              validatorLoader, feedLoader, noticeContainer, gtfsInput, validationContext);
     } catch (InterruptedException e) {
       logger.atSevere().withCause(e).log("Validation was interrupted");
       System.exit(1);
