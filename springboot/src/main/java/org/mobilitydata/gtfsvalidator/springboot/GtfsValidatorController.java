@@ -1,7 +1,10 @@
 package org.mobilitydata.gtfsvalidator.springboot;
 
+import static org.mobilitydata.gtfsvalidator.cli.Main.createGtfsInput;
+import static org.mobilitydata.gtfsvalidator.cli.Main.exportReport;
+import static org.mobilitydata.gtfsvalidator.cli.Main.printInfo;
+
 import com.beust.jcommander.JCommander;
-import com.github.stefanbirkner.systemlambda.SystemLambda;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Bucket;
@@ -15,10 +18,23 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import org.mobilitydata.gtfsvalidator.cli.Arguments;
+import org.mobilitydata.gtfsvalidator.cli.CliParametersAnalyzer;
 import org.mobilitydata.gtfsvalidator.cli.Main;
+import org.mobilitydata.gtfsvalidator.input.CountryCode;
+import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
+import org.mobilitydata.gtfsvalidator.input.GtfsInput;
+import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
+import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
+import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
+import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,14 +55,12 @@ public class GtfsValidatorController {
   private static final String VALIDATION_REPORT_BUCKET_NAME_ENV_VAR = "VALIDATION_REPORT_BUCKET";
   private static final String VALIDATION_REPORT_BUCKET_NAME =
       System.getenv(VALIDATION_REPORT_BUCKET_NAME_ENV_VAR);
-
   private static final String DEFAULT_OUTPUT_BASE = "output";
   private static final String DEFAULT_NUM_THREADS = "8";
   private static final String DEFAULT_BUCKET_LOCATION = "US";
   private static final String PROPERTIES_JSON_KEY = "properties";
   private static final String MESSAGE_JSON_KEY = "message";
   private static final String DEFAULT_COUNTRY_CODE = "ZZ";
-  private static final StringBuilder messageBuilder = new StringBuilder();
 
   /**
    * Runs {@code org.mobilitydata.gtfsvalidator.cli.Main.main} with the arguments extracted via the
@@ -73,7 +87,7 @@ public class GtfsValidatorController {
    * @param threads Number of threads to use
    * @param country_code Country code of the feed, e.g., `nl`. It must be a two-letter country code
    *     (ISO 3166-1 alpha-2)")
-   * @param url Fully qualified URL to download GTFS archive
+   * @param url The fully qualified URL to download GTFS archive
    * @param validation_report_name The name of the validation report including .json extension.
    * @param dataset_id the id of the dataset validated
    * @param commit_sha the commit SHA
@@ -96,6 +110,100 @@ public class GtfsValidatorController {
       @RequestParam(required = false, defaultValue = "dataset id value") String dataset_id,
       @RequestParam(required = false, defaultValue = "commit sha value") String commit_sha) {
 
+    Arguments args = queryParametersToArguments(output_base, threads,
+        country_code, url, validation_report_name, system_error_report_name);
+    JsonObject root = new JsonObject();
+    root.add(PROPERTIES_JSON_KEY, new JsonObject());
+    StringBuilder messageBuilder = new StringBuilder();
+    HttpStatus status;
+    final long startNanos = System.nanoTime();
+
+    if (!CliParametersAnalyzer.isValid(args)) {
+      status = HttpStatus.BAD_REQUEST;
+      messageBuilder.append(
+          "Bad request. Please check query parameters and execution logs for more information.\n");
+      root.getAsJsonObject(PROPERTIES_JSON_KEY)
+          .addProperty(MESSAGE_JSON_KEY, messageBuilder.toString());
+      return new ResponseEntity<>(GSON.toJson(root), status);
+    }
+    GtfsInput gtfsInput;
+    GtfsFeedContainer feedContainer;
+    ValidatorLoader validatorLoader;
+    NoticeContainer noticeContainer = new NoticeContainer();
+    try {
+      validatorLoader = new ValidatorLoader();
+    } catch (ValidatorLoaderException e) {
+      messageBuilder.append(e.getMessage());
+      status = HttpStatus.INTERNAL_SERVER_ERROR;
+      root.getAsJsonObject(PROPERTIES_JSON_KEY)
+          .addProperty(MESSAGE_JSON_KEY, messageBuilder.append(e.getMessage()).toString());
+      return new ResponseEntity<>(GSON.toJson(root), status);
+    }
+    GtfsFeedLoader feedLoader = new GtfsFeedLoader();
+    try {
+      gtfsInput = createGtfsInput(args);
+    } catch (IOException ioException) {
+      messageBuilder.append(ioException.getMessage());
+      // here
+      status = HttpStatus.BAD_REQUEST;
+      root.getAsJsonObject(PROPERTIES_JSON_KEY)
+          .addProperty(
+              MESSAGE_JSON_KEY, messageBuilder.append(ioException.getMessage()).toString());
+      exportReport(noticeContainer, args);
+      return new ResponseEntity<>(GSON.toJson(root), status);
+    } catch (URISyntaxException uriSyntaxException) {
+      messageBuilder.append("Internal error. Syntax error in URI.\n");
+      status = HttpStatus.NOT_FOUND;
+      root.getAsJsonObject(PROPERTIES_JSON_KEY)
+          .addProperty(
+              MESSAGE_JSON_KEY, messageBuilder.append(uriSyntaxException.getMessage()).toString());
+      exportReport(noticeContainer, args);
+      return new ResponseEntity<>(GSON.toJson(root), status);
+    }
+    ValidationContext validationContext =
+        ValidationContext.builder()
+            .setCountryCode(
+                CountryCode.forStringOrUnknown(
+                    args.getCountryCode() == null ? CountryCode.ZZ : args.getCountryCode()))
+            .setCurrentDateTime(new CurrentDateTime(ZonedDateTime.now(ZoneId.systemDefault())))
+            .build();
+
+    try {
+      feedContainer =
+          Main.validate(validatorLoader, feedLoader, noticeContainer, gtfsInput, validationContext);
+    } catch (InterruptedException e) {
+      logger.atSevere().withCause(e).log("Validation was interrupted");
+      messageBuilder.append("Internal error. Please execution logs for more information.\n");
+      status = HttpStatus.INTERNAL_SERVER_ERROR;
+      root.getAsJsonObject(PROPERTIES_JSON_KEY)
+          .addProperty(MESSAGE_JSON_KEY, messageBuilder.append(e.getMessage()).toString());
+      return new ResponseEntity<>(GSON.toJson(root), status);
+    }
+    Main.closeGtfsInput(gtfsInput, noticeContainer);
+    messageBuilder.append("Execution of the validator was successful.\n");
+    exportReport(noticeContainer, args);
+    printInfo(startNanos, feedContainer);
+    status =
+        pushValidationReportToCloudStorage(
+            VALIDATION_REPORT_BUCKET_NAME, commit_sha, dataset_id, args, messageBuilder, root);
+    return new ResponseEntity<>(GSON.toJson(root), status);
+  }
+
+
+  /**
+   * Converts query parameters to {@code Argument}.
+   *
+   * @param output_base Base directory to store the outputs
+   * @param threads Number of threads to use
+   * @param country_code Country code of the feed, e.g., `nl`. It must be a two-letter country code
+   *     (ISO 3166-1 alpha-2)").
+   * @param url The fully qualified URL to download GTFS archive
+   * @param validation_report_name The name of the validation report including .json extension.
+   * @param system_error_report_name The name of the system error report including .json extension.
+   * @return the {@code Argument} instance generated from the query parameters passed.
+   */
+  private Arguments queryParametersToArguments(String output_base, String threads, String country_code,
+      String url, String validation_report_name, String system_error_report_name) {
     final String[] argv = {
       "-o", output_base,
       "-t", threads,
@@ -107,34 +215,7 @@ public class GtfsValidatorController {
     Arguments args = new Arguments();
     JCommander jCommander = new JCommander(args);
     jCommander.parse(argv);
-    JsonObject root = new JsonObject();
-    JsonObject properties = new JsonObject();
-    root.add(PROPERTIES_JSON_KEY, properties);
-    messageBuilder.setLength(0);
-    HttpStatus status;
-    try {
-      int exitCode = SystemLambda.catchSystemExit(() -> Main.main(argv));
-      if (exitCode != 0) {
-        messageBuilder.append(
-            "Internal error. Please check execution logs for more information.\n");
-        root.getAsJsonObject(PROPERTIES_JSON_KEY)
-            .addProperty(MESSAGE_JSON_KEY, messageBuilder.toString());
-        status = HttpStatus.BAD_REQUEST;
-        return new ResponseEntity<>(GSON.toJson(root), status);
-      }
-    } catch (AssertionError assertionError) {
-      messageBuilder.append("Execution of the validator was successful.\n");
-    } catch (Exception exception) {
-      status = HttpStatus.INTERNAL_SERVER_ERROR;
-      root.getAsJsonObject(PROPERTIES_JSON_KEY)
-          .addProperty(MESSAGE_JSON_KEY, messageBuilder.append(exception.getMessage()).toString());
-      logger.atSevere().log(exception.getMessage());
-      return new ResponseEntity<>(GSON.toJson(root), status);
-    }
-    status =
-        pushValidationReportToCloudStorage(
-            VALIDATION_REPORT_BUCKET_NAME, commit_sha, dataset_id, args, messageBuilder, root);
-    return new ResponseEntity<>(GSON.toJson(root), status);
+    return args;
   }
 
   /**
@@ -193,25 +274,20 @@ public class GtfsValidatorController {
       status = HttpStatus.OK;
       messageBuilder.append(
           String.format(
-              "Validation report successfully uploaded to %s/%s/%s/%s\"\n",
+              "Validation report successfully uploaded to %s/%s/%s/%s.\n",
               bucketName, commitSha, datasetId, args.getValidationReportName()));
     } catch (StorageException storageException) {
       status = HttpStatus.valueOf(storageException.getCode());
       messageBuilder.append(
           String.format(
-              "%s - Failure to upload validation report: %s",
-              storageException.getCode(), storageException.getMessage()));
+              "%s - Failure to upload validation report. %s\n", storageException.getCode(), storageException.getMessage()));
       logger.atSevere().log(storageException.getMessage());
     } catch (IOException ioException) {
       status = HttpStatus.NOT_FOUND;
       messageBuilder.append(
           String.format(
-              "%s - Failure to upload validation report. Could not find %s/%s/%s/%s",
-              HttpStatus.NOT_FOUND.value(),
-              bucketName,
-              commitSha,
-              datasetId,
-              args.getValidationReportName()));
+              "%s - Failure to find validation report. Could not find %s/%s",
+              HttpStatus.NOT_FOUND.value(), args.getOutputBase(), args.getValidationReportName()));
       logger.atSevere().log(ioException.getMessage());
     } finally {
       root.getAsJsonObject(PROPERTIES_JSON_KEY)

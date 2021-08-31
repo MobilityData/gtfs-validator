@@ -58,6 +58,7 @@ repositories {
 
 dependencies {
     // to be able to run org.mobilitydata.gtfsvalidator.main.Main
+    implementation project(':core')
     implementation project(':main')
 
     // to use Google Cloud Storage services

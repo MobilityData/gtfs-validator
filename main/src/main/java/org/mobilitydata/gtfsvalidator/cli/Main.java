@@ -52,23 +52,9 @@ public class Main {
   private static final String NOTICE_SCHEMA_JSON = "notice_schema.json";
 
   public static void main(String[] argv) {
-    Arguments args = new Arguments();
-    JCommander jCommander = new JCommander(args);
-    jCommander.parse(argv);
-    if (args.getHelp()) {
-      jCommander.usage();
-      System.out.println(
-          "⚠️ Note that parameters marked with an asterisk (*) in the help menu are mandatory.");
+    Arguments args = parseArguments(argv);
+    if (args == null) {
       return;
-    }
-    if (args.getExportNoticeSchema()) {
-      exportNoticeSchema(args);
-    }
-    if (args.abortAfterNoticeSchemaExport()) {
-      return;
-    }
-    if (!CliParametersAnalyzer.isValid(args)) {
-      System.exit(1);
     }
 
     ValidatorLoader validatorLoader = null;
@@ -96,17 +82,7 @@ public class Main {
     GtfsFeedContainer feedContainer;
     GtfsInput gtfsInput = null;
     try {
-      if (args.getInput() == null) {
-        if (Strings.isNullOrEmpty(args.getStorageDirectory())) {
-          gtfsInput = GtfsInput.createFromUrlInMemory(new URL(args.getUrl()));
-        } else {
-          gtfsInput =
-              GtfsInput.createFromUrl(
-                  new URL(args.getUrl()), Paths.get(args.getStorageDirectory(), GTFS_ZIP_FILENAME));
-        }
-      } else {
-        gtfsInput = GtfsInput.createFromPath(Paths.get(args.getInput()));
-      }
+      gtfsInput = createGtfsInput(args);
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot load GTFS feed");
       noticeContainer.addSystemError(new IOError(e));
@@ -127,24 +103,26 @@ public class Main {
             .build();
     try {
       feedContainer =
-          feedLoader.loadAndValidate(
-              gtfsInput,
-              new DefaultValidatorProvider(validationContext, validatorLoader),
-              noticeContainer);
+          validate(validatorLoader, feedLoader, noticeContainer, gtfsInput, validationContext);
     } catch (InterruptedException e) {
       logger.atSevere().withCause(e).log("Validation was interrupted");
       System.exit(1);
       return;
     }
-    try {
-      gtfsInput.close();
-    } catch (IOException e) {
-      logger.atSevere().withCause(e).log("Cannot close GTFS input");
-      noticeContainer.addSystemError(new IOError(e));
-    }
+    closeGtfsInput(gtfsInput, noticeContainer);
 
     // Output
     exportReport(noticeContainer, args);
+    printInfo(startNanos, feedContainer);
+  }
+
+  /**
+   * Prints validation metadata.
+   * @param startNanos start time as nanoseconds
+   * @param feedContainer the {@code GtfsFeedContainer}
+   */
+  public static void printInfo(long startNanos, GtfsFeedContainer feedContainer) {
+
     final long endNanos = System.nanoTime();
     if (!feedContainer.isParsedSuccessfully()) {
       System.out.println(" ----------------------------------------- ");
@@ -157,6 +135,73 @@ public class Main {
     System.out.println(feedContainer.tableTotals());
   }
 
+  /**
+   * Closes a {@code GtfsInput}. Yields {@code IOError} if the {@code GtfsInput} could not be closed.
+   * @param gtfsInput the {@code GtfsInput} to close
+   * @param noticeContainer the {@code NoticeContainer} that will contain the {@code IOError} if the {@code GtfsInput} could not be closed.
+   */
+  public static void closeGtfsInput(GtfsInput gtfsInput, NoticeContainer noticeContainer) {
+    try {
+      gtfsInput.close();
+    } catch (IOException e) {
+      logger.atSevere().withCause(e).log("Cannot close GTFS input");
+      noticeContainer.addSystemError(new IOError(e));
+    }
+  }
+
+  /**
+   * Loads and validates GTFS feeds
+   * @param validatorLoader the {@code ValidatorLoader} used in the process
+   * @param feedLoader the {@code GtfsFeedLoader} used in the process
+   * @param noticeContainer the {@code NoticeContainer} that will contain {@code Notice}s related to the GTFS feed
+   * @param gtfsInput the source of data
+   * @param validationContext the {@code ValidationContext} do be used during validation
+   * @return the {@code GtfsFeedContainer} used in the validation process
+   * @throws InterruptedException if validation process was interrupted
+   */
+  public static GtfsFeedContainer validate(
+      ValidatorLoader validatorLoader,
+      GtfsFeedLoader feedLoader,
+      NoticeContainer noticeContainer,
+      GtfsInput gtfsInput,
+      ValidationContext validationContext)
+      throws InterruptedException {
+    GtfsFeedContainer feedContainer;
+    feedContainer =
+        feedLoader.loadAndValidate(
+            gtfsInput,
+            new DefaultValidatorProvider(validationContext, validatorLoader),
+            noticeContainer);
+    return feedContainer;
+  }
+
+  /**
+   * Performs parsing and sanity checks on CLI arguments.
+   * @param argv the CLI arguments
+   * @return the {@code Argument} generated after parsing the command line
+   */
+  private static Arguments parseArguments(String[] argv) {
+    Arguments args = new Arguments();
+    JCommander jCommander = new JCommander(args);
+    jCommander.parse(argv);
+    if (args.getHelp()) {
+      jCommander.usage();
+      System.out.println(
+          "⚠️ Note that parameters marked with an asterisk (*) in the help menu are mandatory.");
+      return null;
+    }
+    if (args.getExportNoticeSchema()) {
+      exportNoticeSchema(args);
+    }
+    if (args.abortAfterNoticeSchemaExport()) {
+      return null;
+    }
+    if (!CliParametersAnalyzer.isValid(args)) {
+      System.exit(1);
+    }
+    return args;
+  }
+
   private static Gson createGson(boolean pretty) {
     GsonBuilder builder = new GsonBuilder();
     if (pretty) {
@@ -166,7 +211,7 @@ public class Main {
   }
 
   /** Generates and exports reports for both validation notices and system errors reports. */
-  private static void exportReport(final NoticeContainer noticeContainer, final Arguments args) {
+  public static void exportReport(final NoticeContainer noticeContainer, final Arguments args) {
     new File(args.getOutputBase()).mkdirs();
     Gson gson = createGson(args.getPretty());
     try {
@@ -193,6 +238,26 @@ public class Main {
               .getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store notice schema file");
+    }
+  }
+
+  /**
+   * Creates a {@code GtfsInput}
+   * @param args the {@code Argument} to be used to retrieve information needed to the creation of the {@code GtfsInput}
+   * @return the {@code GtfsInput} generated after
+   * @throws IOException in case of error while loading a file
+   * @throws URISyntaxException in case of error in the {@code URL} syntax
+   */
+  public static GtfsInput createGtfsInput(Arguments args) throws IOException, URISyntaxException {
+    if (args.getInput() == null) {
+      if (Strings.isNullOrEmpty(args.getStorageDirectory())) {
+        return GtfsInput.createFromUrlInMemory(new URL(args.getUrl()));
+      } else {
+        return GtfsInput.createFromUrl(
+            new URL(args.getUrl()), Paths.get(args.getStorageDirectory(), GTFS_ZIP_FILENAME));
+      }
+    } else {
+      return GtfsInput.createFromPath(Paths.get(args.getInput()));
     }
   }
 }
