@@ -1,8 +1,24 @@
+/*
+ * Copyright 2021 MobilityData IO
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.mobilitydata.gtfsvalidator.springboot;
 
 import static org.mobilitydata.gtfsvalidator.cli.Main.createGtfsInput;
 import static org.mobilitydata.gtfsvalidator.cli.Main.exportReport;
-import static org.mobilitydata.gtfsvalidator.cli.Main.printInfo;
+import static org.mobilitydata.gtfsvalidator.cli.Main.printSummary;
 
 import com.beust.jcommander.JCommander;
 import com.google.cloud.storage.BlobId;
@@ -127,7 +143,7 @@ public class GtfsValidatorController {
     if (!CliParametersAnalyzer.isValid(args)) {
       status = HttpStatus.BAD_REQUEST;
       messageBuilder.append(
-          "Bad request. Please check query parameters and execution logs for more information.\n");
+          "%Bad request. Please check query parameters and execution logs for more information.\n");
       root.getAsJsonObject(PROPERTIES_JSON_KEY)
           .addProperty(MESSAGE_JSON_KEY, messageBuilder.toString());
       return new ResponseEntity<>(GSON.toJson(root), status);
@@ -149,8 +165,8 @@ public class GtfsValidatorController {
     try {
       gtfsInput = createGtfsInput(args);
     } catch (IOException ioException) {
+      logger.atSevere().withCause(ioException);
       messageBuilder.append(ioException.getMessage());
-      // here
       status = HttpStatus.BAD_REQUEST;
       root.getAsJsonObject(PROPERTIES_JSON_KEY)
           .addProperty(
@@ -158,8 +174,9 @@ public class GtfsValidatorController {
       exportReport(noticeContainer, args);
       return new ResponseEntity<>(GSON.toJson(root), status);
     } catch (URISyntaxException uriSyntaxException) {
-      messageBuilder.append("Internal error. Syntax error in URI.\n");
+      logger.atSevere().withCause(uriSyntaxException);
       status = HttpStatus.NOT_FOUND;
+      messageBuilder.append("Internal error. Syntax error in URI.\n");
       root.getAsJsonObject(PROPERTIES_JSON_KEY)
           .addProperty(
               MESSAGE_JSON_KEY, messageBuilder.append(uriSyntaxException.getMessage()).toString());
@@ -176,7 +193,8 @@ public class GtfsValidatorController {
 
     try {
       feedContainer =
-          Main.validate(validatorLoader, feedLoader, noticeContainer, gtfsInput, validationContext);
+          Main.loadAndValidate(
+              validatorLoader, feedLoader, noticeContainer, gtfsInput, validationContext);
     } catch (InterruptedException e) {
       logger.atSevere().withCause(e).log("Validation was interrupted");
       messageBuilder.append("Internal error. Please execution logs for more information.\n");
@@ -188,10 +206,8 @@ public class GtfsValidatorController {
     Main.closeGtfsInput(gtfsInput, noticeContainer);
     messageBuilder.append("Execution of the validator was successful.\n");
     exportReport(noticeContainer, args);
-    printInfo(startNanos, feedContainer);
-    status =
-        pushValidationReportToCloudStorage(
-            VALIDATION_REPORT_BUCKET_NAME, commit_sha, dataset_id, args, messageBuilder, root);
+    printSummary(startNanos, feedContainer);
+    status = pushValidationReportToCloudStorage(commit_sha, dataset_id, args, messageBuilder, root);
     return new ResponseEntity<>(GSON.toJson(root), status);
   }
 
@@ -250,7 +266,6 @@ public class GtfsValidatorController {
    * @return the {@code HttpStatus} of the validation report storage process
    */
   private HttpStatus pushValidationReportToCloudStorage(
-      String bucketName,
       String commitSha,
       String datasetId,
       Arguments args,
@@ -260,12 +275,15 @@ public class GtfsValidatorController {
     Storage storage = StorageOptions.getDefaultInstance().getService();
     HttpStatus status;
     try {
-      Bucket commitBucket = storage.get(bucketName, Storage.BucketGetOption.fields());
+      Bucket commitBucket =
+          storage.get(
+              GtfsValidatorController.VALIDATION_REPORT_BUCKET_NAME,
+              Storage.BucketGetOption.fields());
 
       if (commitBucket == null) {
         commitBucket =
             storage.create(
-                BucketInfo.newBuilder(bucketName)
+                BucketInfo.newBuilder(GtfsValidatorController.VALIDATION_REPORT_BUCKET_NAME)
                     .setStorageClass(StorageClass.STANDARD)
                     .setLocation(DEFAULT_BUCKET_LOCATION)
                     .build());
@@ -285,20 +303,22 @@ public class GtfsValidatorController {
       messageBuilder.append(
           String.format(
               "Validation report successfully uploaded to %s/%s/%s/%s.\n",
-              bucketName, commitSha, datasetId, args.getValidationReportName()));
+              GtfsValidatorController.VALIDATION_REPORT_BUCKET_NAME,
+              commitSha,
+              datasetId,
+              args.getValidationReportName()));
     } catch (StorageException storageException) {
       status = HttpStatus.valueOf(storageException.getCode());
       messageBuilder.append(
           String.format(
-              "%s - Failure to upload validation report. %s\n",
-              storageException.getCode(), storageException.getMessage()));
+              "Failure to upload validation report. %s\n", storageException.getMessage()));
       logger.atSevere().log(storageException.getMessage());
     } catch (IOException ioException) {
       status = HttpStatus.NOT_FOUND;
       messageBuilder.append(
           String.format(
-              "%s - Failure to find validation report. Could not find %s/%s",
-              HttpStatus.NOT_FOUND.value(), args.getOutputBase(), args.getValidationReportName()));
+              "Failure to find validation report. Could not find %s/%s",
+              args.getOutputBase(), args.getValidationReportName()));
       logger.atSevere().log(ioException.getMessage());
     } finally {
       root.getAsJsonObject(PROPERTIES_JSON_KEY)
