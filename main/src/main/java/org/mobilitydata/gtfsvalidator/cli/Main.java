@@ -54,7 +54,7 @@ public class Main {
   public static void main(String[] argv) {
     Arguments args = parseArguments(argv);
     if (args == null) {
-      return;
+      System.exit(1);
     }
 
     ValidatorLoader validatorLoader = null;
@@ -197,7 +197,7 @@ public class Main {
       return null;
     }
     if (!CliParametersAnalyzer.isValid(args)) {
-      System.exit(1);
+      return null;
     }
     return args;
   }
