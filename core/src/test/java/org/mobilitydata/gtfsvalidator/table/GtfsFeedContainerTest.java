@@ -19,10 +19,10 @@ package org.mobilitydata.gtfsvalidator.table;
 import static com.google.common.truth.Truth8.assertThat;
 
 import com.google.common.collect.ImmutableList;
-import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
+import org.mobilitydata.gtfsvalidator.testgtfs.GtfsStopTableContainer;
 
 public class GtfsFeedContainerTest {
 
@@ -35,42 +35,5 @@ public class GtfsFeedContainerTest {
     assertThat(feedContainer.getTableForFilename("stops.txt")).hasValue(stopTable);
     assertThat(feedContainer.getTableForFilename("STOPS.TXT")).hasValue(stopTable);
     assertThat(feedContainer.getTableForFilename("STOPS")).isEmpty();
-  }
-
-  /** Test class to avoid dependency on the real GtfsStop and annotation processor. */
-  static class GtfsStop implements GtfsEntity {
-
-    @Override
-    public long csvRowNumber() {
-      return 0;
-    }
-  }
-
-  /** Test class to avoid dependency on the real GtfsStopTableContainer and annotation processor. */
-  static class GtfsStopTableContainer extends GtfsTableContainer<GtfsStop> {
-
-    public GtfsStopTableContainer(TableStatus tableStatus, CsvHeader header) {
-      super(tableStatus, header);
-    }
-
-    @Override
-    public Class<GtfsStop> getEntityClass() {
-      return GtfsStop.class;
-    }
-
-    @Override
-    public List<GtfsStop> getEntities() {
-      return ImmutableList.of();
-    }
-
-    @Override
-    public String gtfsFilename() {
-      return "stops.txt";
-    }
-
-    @Override
-    public boolean isRequired() {
-      return true;
-    }
   }
 }
