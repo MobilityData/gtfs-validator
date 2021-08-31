@@ -31,9 +31,6 @@ import com.google.cloud.storage.StorageClass;
 import com.google.cloud.storage.StorageException;
 import com.google.cloud.storage.StorageOptions;
 import com.google.common.flogger.FluentLogger;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
@@ -41,6 +38,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.HashMap;
 import org.mobilitydata.gtfsvalidator.cli.Arguments;
 import org.mobilitydata.gtfsvalidator.cli.CliParametersAnalyzer;
 import org.mobilitydata.gtfsvalidator.cli.Main;
@@ -68,16 +66,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class GtfsValidatorController {
 
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-  private static final Gson GSON =
-      new GsonBuilder().serializeNulls().serializeSpecialFloatingPointValues().create();
   private static final String VALIDATION_REPORT_BUCKET_NAME_ENV_VAR = "VALIDATION_REPORT_BUCKET";
   private static final String VALIDATION_REPORT_BUCKET_NAME =
       System.getenv(VALIDATION_REPORT_BUCKET_NAME_ENV_VAR);
   private static final String DEFAULT_OUTPUT_BASE = "output";
   private static final String DEFAULT_NUM_THREADS = "8";
   private static final String DEFAULT_BUCKET_LOCATION = "US";
-  private static final String PROPERTIES_JSON_KEY = "properties";
   private static final String MESSAGE_JSON_KEY = "message";
+  private static final String STATUS_JSON_KEY = "status";
   private static final String DEFAULT_COUNTRY_CODE = "ZZ";
 
   /**
@@ -116,7 +112,7 @@ public class GtfsValidatorController {
    */
   @GetMapping(value = "/", produces = "application/json; charset=UTF-8")
   @ResponseBody
-  public ResponseEntity<String> run(
+  public ResponseEntity<HashMap<String, String>> run(
       @RequestParam(required = false, defaultValue = DEFAULT_OUTPUT_BASE) String output_base,
       @RequestParam(required = false, defaultValue = DEFAULT_NUM_THREADS) String threads,
       @RequestParam(required = false, defaultValue = DEFAULT_COUNTRY_CODE) String country_code,
@@ -136,8 +132,7 @@ public class GtfsValidatorController {
             url,
             validation_report_name,
             system_error_report_name);
-    JsonObject root = new JsonObject();
-    root.add(PROPERTIES_JSON_KEY, new JsonObject());
+    HashMap<String, String> root = new HashMap<>();
     StringBuilder messageBuilder = new StringBuilder();
     HttpStatus status;
     final long startNanos = System.nanoTime();
@@ -146,9 +141,9 @@ public class GtfsValidatorController {
       status = HttpStatus.BAD_REQUEST;
       messageBuilder.append(
           "%Bad request. Please check query parameters and execution logs for more information.\n");
-      root.getAsJsonObject(PROPERTIES_JSON_KEY)
-          .addProperty(MESSAGE_JSON_KEY, messageBuilder.toString());
-      return new ResponseEntity<>(GSON.toJson(root), status);
+      root.put(MESSAGE_JSON_KEY, messageBuilder.toString());
+      root.put(STATUS_JSON_KEY, status.toString());
+      return new ResponseEntity<>(root, status);
     }
     GtfsInput gtfsInput;
     GtfsFeedContainer feedContainer;
@@ -159,9 +154,9 @@ public class GtfsValidatorController {
     } catch (ValidatorLoaderException e) {
       messageBuilder.append(e.getMessage());
       status = HttpStatus.INTERNAL_SERVER_ERROR;
-      root.getAsJsonObject(PROPERTIES_JSON_KEY)
-          .addProperty(MESSAGE_JSON_KEY, messageBuilder.append(e.getMessage()).toString());
-      return new ResponseEntity<>(GSON.toJson(root), status);
+      root.put(MESSAGE_JSON_KEY, messageBuilder.append(e.getMessage()).toString());
+      root.put(STATUS_JSON_KEY, status.toString());
+      return new ResponseEntity<>(root, status);
     }
     GtfsFeedLoader feedLoader = new GtfsFeedLoader();
     try {
@@ -170,20 +165,18 @@ public class GtfsValidatorController {
       logger.atSevere().withCause(ioException);
       messageBuilder.append(ioException.getMessage());
       status = HttpStatus.BAD_REQUEST;
-      root.getAsJsonObject(PROPERTIES_JSON_KEY)
-          .addProperty(
-              MESSAGE_JSON_KEY, messageBuilder.append(ioException.getMessage()).toString());
+      root.put(MESSAGE_JSON_KEY, messageBuilder.append(ioException.getMessage()).toString());
+      root.put(STATUS_JSON_KEY, status.toString());
       exportReport(noticeContainer, args);
-      return new ResponseEntity<>(GSON.toJson(root), status);
+      return new ResponseEntity<>(root, status);
     } catch (URISyntaxException uriSyntaxException) {
       logger.atSevere().withCause(uriSyntaxException);
       status = HttpStatus.NOT_FOUND;
       messageBuilder.append("Internal error. Syntax error in URI.\n");
-      root.getAsJsonObject(PROPERTIES_JSON_KEY)
-          .addProperty(
-              MESSAGE_JSON_KEY, messageBuilder.append(uriSyntaxException.getMessage()).toString());
+      root.put(MESSAGE_JSON_KEY, messageBuilder.append(uriSyntaxException.getMessage()).toString());
+      root.put(STATUS_JSON_KEY, status.toString());
       exportReport(noticeContainer, args);
-      return new ResponseEntity<>(GSON.toJson(root), status);
+      return new ResponseEntity<>(root, status);
     }
     ValidationContext validationContext =
         ValidationContext.builder()
@@ -201,16 +194,16 @@ public class GtfsValidatorController {
       logger.atSevere().withCause(e).log("Validation was interrupted");
       messageBuilder.append("Internal error. Please execution logs for more information.\n");
       status = HttpStatus.INTERNAL_SERVER_ERROR;
-      root.getAsJsonObject(PROPERTIES_JSON_KEY)
-          .addProperty(MESSAGE_JSON_KEY, messageBuilder.append(e.getMessage()).toString());
-      return new ResponseEntity<>(GSON.toJson(root), status);
+      root.put(MESSAGE_JSON_KEY, messageBuilder.append(e.getMessage()).toString());
+      root.put(STATUS_JSON_KEY, status.toString());
+      return new ResponseEntity<>(root, status);
     }
     Main.closeGtfsInput(gtfsInput, noticeContainer);
     messageBuilder.append("Execution of the validator was successful.\n");
     exportReport(noticeContainer, args);
     printSummary(startNanos, feedContainer);
     status = pushValidationReportToCloudStorage(commit_sha, dataset_id, args, messageBuilder, root);
-    return new ResponseEntity<>(GSON.toJson(root), status);
+    return new ResponseEntity<>(root, status);
   }
 
   /**
@@ -272,10 +265,10 @@ public class GtfsValidatorController {
       String datasetId,
       Arguments args,
       StringBuilder messageBuilder,
-      JsonObject root) {
+      HashMap<String, String> root) {
     // Instantiates a client
     Storage storage = StorageOptions.getDefaultInstance().getService();
-    HttpStatus status;
+    HttpStatus status = HttpStatus.OK;
     try {
       Bucket commitBucket =
           storage.get(
@@ -301,10 +294,9 @@ public class GtfsValidatorController {
             ByteBuffer.wrap(
                 Files.readAllBytes(
                     Paths.get(
-                        String.format("%s/%s", args.getOutputBase(),
-                            args.getValidationReportName())))));
+                        String.format(
+                            "%s/%s", args.getOutputBase(), args.getValidationReportName())))));
       }
-      status = HttpStatus.OK;
       messageBuilder.append(
           String.format(
               "Validation report successfully uploaded to %s/%s/%s/%s.\n",
@@ -326,8 +318,8 @@ public class GtfsValidatorController {
               args.getOutputBase(), args.getValidationReportName()));
       logger.atSevere().log(ioException.getMessage());
     } finally {
-      root.getAsJsonObject(PROPERTIES_JSON_KEY)
-          .addProperty(MESSAGE_JSON_KEY, messageBuilder.toString());
+      root.put(MESSAGE_JSON_KEY, messageBuilder.toString());
+      root.put(STATUS_JSON_KEY, status.toString());
     }
     return status;
   }
