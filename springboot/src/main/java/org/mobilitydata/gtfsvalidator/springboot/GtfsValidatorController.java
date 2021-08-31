@@ -253,10 +253,7 @@ public class GtfsValidatorController {
    * @return the {@code HttpStatus} of the validation report storage process
    */
   private HttpStatus pushValidationReportToCloudStorage(
-      String commitSha,
-      String datasetId,
-      Arguments args,
-      StringBuilder messageBuilder) {
+      String commitSha, String datasetId, Arguments args, StringBuilder messageBuilder) {
     // Instantiates a client
     Storage storage = StorageOptions.getDefaultInstance().getService();
     HttpStatus status = HttpStatus.OK;
@@ -324,10 +321,7 @@ public class GtfsValidatorController {
    * @return the {@code ResponseEntity} that corresponds to the request
    */
   private static ResponseEntity<HashMap<String, String>> generateResponseAndExportReport(
-      String message,
-      HttpStatus status,
-      NoticeContainer noticeContainer,
-      Arguments args) {
+      String message, HttpStatus status, NoticeContainer noticeContainer, Arguments args) {
     exportReport(noticeContainer, args);
     return new ResponseEntity<>(buildResponseBody(message, status), status);
   }
@@ -339,17 +333,21 @@ public class GtfsValidatorController {
    * @param status the status of the request after execution
    * @return the {@code ResponseEntity} that corresponds to the request
    */
-  private static ResponseEntity<HashMap<String, String>> generateResponse(String message, HttpStatus status) {
+  private static ResponseEntity<HashMap<String, String>> generateResponse(
+      String message, HttpStatus status) {
     return new ResponseEntity<>(buildResponseBody(message, status), status);
   }
 
   /**
-   * Builds the response body as a {@code HashMap<String, String>} that contains information about the request' status and additional information as a message.
+   * Builds the response body as a {@code HashMap<String, String>} that contains information about
+   * the request' status and additional information as a message.
+   *
    * @param message additional information anout the request a message
    * @param status the request's status
-   * @return the response body as a {@code HashMap<String, String>} that contains information about the request' status and additional information as a message.
+   * @return the response body as a {@code HashMap<String, String>} that contains information about
+   *     the request' status and additional information as a message.
    */
-  private static HashMap<String, String>  buildResponseBody(String message, HttpStatus status) {
+  private static HashMap<String, String> buildResponseBody(String message, HttpStatus status) {
     HashMap<String, String> root = new HashMap<>();
     root.put(MESSAGE_JSON_KEY, message);
     root.put(STATUS_JSON_KEY, status.toString());
