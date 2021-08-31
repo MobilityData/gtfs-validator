@@ -54,7 +54,7 @@ public class Main {
   public static void main(String[] argv) {
     Arguments args = parseArguments(argv);
     if (args == null) {
-      return;
+      System.exit(1);
     }
 
     ValidatorLoader validatorLoader = null;
@@ -92,7 +92,7 @@ public class Main {
     }
     if (gtfsInput == null) {
       exportReport(noticeContainer, args);
-      return;
+      System.exit(1);
     }
     ValidationContext validationContext =
         ValidationContext.builder()
@@ -233,8 +233,8 @@ public class Main {
       Files.write(
           Paths.get(args.getOutputBase(), NOTICE_SCHEMA_JSON),
           gson.toJson(
-                  NoticeSchemaGenerator.jsonSchemaForPackages(
-                      NoticeSchemaGenerator.DEFAULT_NOTICE_PACKAGES))
+              NoticeSchemaGenerator.jsonSchemaForPackages(
+                  NoticeSchemaGenerator.DEFAULT_NOTICE_PACKAGES))
               .getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store notice schema file");
