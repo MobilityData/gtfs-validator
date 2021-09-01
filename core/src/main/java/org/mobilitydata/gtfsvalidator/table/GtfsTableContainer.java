@@ -16,7 +16,9 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import com.google.common.collect.ImmutableList;
 import java.util.List;
+import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 
 /**
@@ -56,6 +58,41 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
   public abstract List<T> getEntities();
 
   public abstract String gtfsFilename();
+
+  /**
+   * Returns names of the columns that are keys in that table.
+   *
+   * <p>A table may have one, two or no primary keys, so the returned list contains from 0 to 2
+   * items.
+   *
+   * <p>The first returned key (if present) is annotated with {@link
+   * org.mobilitydata.gtfsvalidator.annotation.PrimaryKey} or {@link
+   * org.mobilitydata.gtfsvalidator.annotation.FirstKey}.
+   *
+   * <p>The second returned key (if present) is annotated with {@link
+   * org.mobilitydata.gtfsvalidator.annotation.SequenceKey}.
+   */
+  public abstract ImmutableList<String> getKeyColumnNames();
+
+  /**
+   * Finds an entity with the given primary key.
+   *
+   * <p>Depending on table, a primary key may contain:
+   *
+   * <ul>
+   *   <li>no items, e.g., {@code feed_info.txt} has a single entity;
+   *   <li>one item, e.g., {@code stops.txt} has primary key {@code stop_id};
+   *   <li>two items, e.g., {@code stop_times.txt} has composite key {@code trip_id, stop_sequence}.
+   * </ul>
+   *
+   * Note that all keys must be passed as strings, so a key for {@code stop_times.txt} will look
+   * like {"stop1", "0"}.
+   *
+   * @param id primary key or first part of the composite key, if needed
+   * @param subId second part of the composite key, if needed
+   * @return entity with the given primary key, if any
+   */
+  public abstract Optional<T> byPrimaryKey(String id, String subId);
 
   /**
    * Tells if the file is missing.
