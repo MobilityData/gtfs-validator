@@ -131,6 +131,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`MissingLevelFileNotice`](#MissingLevelFileNotice)       	                                | `levels.txt` is conditionally required.                                                                                                                	    |
 | [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	| More than one row in CSV.                                                                                                                                   	|
 | [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	| Non ascii or non printable char in  `id`.                                                                                                                   	|
+| [`PathwayUnreachableLocationNotice`](#PathwayUnreachableLocationNotice)               | A location is not reachable at least in one direction: from the entrances or to the exits.                                                                    |
 | [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)       	| A platform has no `parent_station` field set.                                                                                                               	|
 | [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	| Insufficient route color contrast.                                                                                                                          	|
 | [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	| Short and long name are equal for a route.                                                                                                                  	|
@@ -719,6 +720,22 @@ A value of a field with type `id` contains non ASCII or non printable characters
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
+
+<a name="PathwayUnreachableLocationNotice"/>
+
+#### PathwayUnreachableLocationNotice
+
+A location belongs to a station that has pathways and is not reachable at least in one direction:
+from the entrances or to the exits.
+
+Notices are reported for platforms, boarding areas and generic nodes but not for entrances or
+stations.
+
+Notices are not reported for platforms that have boarding areas since such platforms may not
+have incident pathways. Instead, notices are reported for the boarding areas.
+
+##### References:
+* [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
 
 <a name="PlatformWithoutParentStationNotice"/>
 
