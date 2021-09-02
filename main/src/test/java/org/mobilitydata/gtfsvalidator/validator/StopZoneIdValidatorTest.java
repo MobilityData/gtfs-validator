@@ -36,17 +36,25 @@ import org.mobilitydata.gtfsvalidator.validator.StopZoneIdValidator.StopWithoutZ
 public class StopZoneIdValidatorTest {
 
   private static GtfsStop createStop(
-      long csvRowNumber, GtfsLocationType locationType, String zoneId, String stopId) {
+      long csvRowNumber, GtfsLocationType locationType, String zoneId) {
     return new GtfsStop.Builder()
         .setCsvRowNumber(csvRowNumber)
-        .setStopId(stopId)
+        .setStopId(toLocationId(locationType, csvRowNumber))
         .setLocationType(locationType)
         .setZoneId(zoneId)
         .build();
   }
 
-  private static GtfsFareRule createFareRule(long csvRowNumber, String fareId) {
-    return new GtfsFareRule.Builder().setCsvRowNumber(csvRowNumber).setFareId(fareId).build();
+  private static GtfsFareRule createFareRule(long csvRowNumber) {
+    return new GtfsFareRule.Builder().setCsvRowNumber(csvRowNumber).setFareId(toFareRuleId(csvRowNumber)).build();
+  }
+
+  private static String toLocationId(GtfsLocationType locationType, long csvRowNumber) {
+    return locationType.toString() + csvRowNumber;
+  }
+
+  private static String toFareRuleId(long csvRowNumber) {
+    return String.format("fare rule id %s", csvRowNumber);
   }
 
   private static List<ValidationNotice> generateNotices(
@@ -60,90 +68,109 @@ public class StopZoneIdValidatorTest {
   }
 
   @Test
-  public void emptyFareRuleNoZoneId_noNotice() {
+  public void stop_zoneIdNotProvided_yieldsNotice() {
+    assertThat(
+        generateNotices(
+            ImmutableList.of(
+                createStop(3, GtfsLocationType.STOP, null)),
+            ImmutableList.of(createFareRule(5))))
+        .containsExactly(new StopWithoutZoneIdNotice(toLocationId(GtfsLocationType.STOP, 3), 3));
+  }
+
+  @Test
+  public void stop_zoneIdProvided_noNotice() {
+    assertThat(
+        generateNotices(
+            ImmutableList.of(
+                createStop(3, GtfsLocationType.STOP, "zone id value")),
+            ImmutableList.of(createFareRule(5)))).isEmpty();
+  }
+
+  @Test
+  public void station_zoneIdNotProvided_noNotice() {
+    assertThat(
+        generateNotices(
+            ImmutableList.of(
+                createStop(3, GtfsLocationType.STATION, null)),
+            ImmutableList.of(createFareRule(5)))).isEmpty();
+  }
+
+  @Test
+  public void station_zoneIdProvided_noNotice() {
+    assertThat(
+        generateNotices(
+            ImmutableList.of(
+                createStop(3, GtfsLocationType.STATION, "zone id value")),
+            ImmutableList.of(createFareRule(5)))).isEmpty();
+  }
+
+  @Test
+  public void entrance_zoneIdNotProvided_noNotice() {
+    assertThat(
+        generateNotices(
+            ImmutableList.of(
+                createStop(3, GtfsLocationType.ENTRANCE, null)),
+            ImmutableList.of(createFareRule(5)))).isEmpty();
+  }
+
+  @Test
+  public void entrance_zoneIdProvided_noNotice() {
+    assertThat(
+        generateNotices(
+            ImmutableList.of(
+                createStop(3, GtfsLocationType.ENTRANCE, "zone id value")),
+            ImmutableList.of(createFareRule(5)))).isEmpty();
+  }
+
+  @Test
+  public void genericNode_zoneIdNotProvided_noNotice() {
+    assertThat(
+        generateNotices(
+            ImmutableList.of(
+                createStop(3, GtfsLocationType.GENERIC_NODE, null)),
+            ImmutableList.of(createFareRule(5)))).isEmpty();
+  }
+
+  @Test
+  public void genericNode_zoneIdProvided_noNotice() {
+    assertThat(
+        generateNotices(
+            ImmutableList.of(
+                createStop(3, GtfsLocationType.GENERIC_NODE, "zone id value")),
+            ImmutableList.of(createFareRule(5)))).isEmpty();
+  }
+
+  @Test
+  public void boardingArea_zoneIdNotProvided_yieldsNotice() {
+    assertThat(
+        generateNotices(
+            ImmutableList.of(
+                createStop(3, GtfsLocationType.BOARDING_AREA, null)),
+            ImmutableList.of(createFareRule(5))))
+        .containsExactly(new StopWithoutZoneIdNotice(toLocationId(GtfsLocationType.BOARDING_AREA, 3), 3));
+
+  }
+
+  @Test
+  public void boardingArea_zoneIdProvided_noNotice() {
+    assertThat(
+        generateNotices(
+            ImmutableList.of(
+                createStop(3, GtfsLocationType.BOARDING_AREA, "zone id value")),
+            ImmutableList.of(createFareRule(5)))).isEmpty();
+  }
+
+  @Test
+  public void emptyFareRule_allStopLocation_noZoneId_noNotice() {
     assertThat(
             generateNotices(
                 ImmutableList.of(
-                    createStop(3, GtfsLocationType.BOARDING_AREA, null, "stop id value")),
+                    createStop(4, GtfsLocationType.STOP, null),
+                    createStop(6, GtfsLocationType.STATION, null),
+                    createStop(7, GtfsLocationType.ENTRANCE, null),
+                    createStop(10, GtfsLocationType.GENERIC_NODE, null),
+                    createStop(3, GtfsLocationType.BOARDING_AREA, null)),
                 ImmutableList.of()))
-        .isEmpty();
-  }
-
-  @Test
-  public void emptyFareRuleZoneId_noNotice() {
-    assertThat(
-            generateNotices(
-                ImmutableList.of(
-                    createStop(4, GtfsLocationType.STOP, "zone id value", "stop id value"),
-                    createStop(6, GtfsLocationType.STATION, "zone id value", "station id value"),
-                    createStop(7, GtfsLocationType.ENTRANCE, "zone id value", "entrance id value"),
-                    createStop(
-                        10,
-                        GtfsLocationType.GENERIC_NODE,
-                        "zone id value",
-                        "generic node id value"),
-                    createStop(
-                        3,
-                        GtfsLocationType.BOARDING_AREA,
-                        "zone id value",
-                        "boarding area id value")),
-                ImmutableList.of()))
-        .isEmpty();
-  }
-
-  @Test
-  public void fareRuleProvidedNoZoneId_generatesNotices() {
-    StopWithoutZoneIdNotice[] validationNotices = {
-      new StopWithoutZoneIdNotice("stop id value", 3),
-      new StopWithoutZoneIdNotice("other stop id value", 5)
-    };
-    assertThat(
-            generateNotices(
-                ImmutableList.of(
-                    createStop(3, GtfsLocationType.BOARDING_AREA, null, "stop id value"),
-                    createStop(5, GtfsLocationType.GENERIC_NODE, null, "other stop id value")),
-                ImmutableList.of(createFareRule(5, "fare id value"))))
-        .containsExactlyElementsIn(validationNotices);
-  }
-
-  @Test
-  public void fareRuleProvidedZoneId_noNotice() {
-    assertThat(
-            generateNotices(
-                ImmutableList.of(
-                    createStop(3, GtfsLocationType.BOARDING_AREA, "zone id value", "stop id value"),
-                    createStop(
-                        5,
-                        GtfsLocationType.GENERIC_NODE,
-                        "other zone id value",
-                        "other stop id value")),
-                ImmutableList.of(createFareRule(5, "fare id value"))))
-        .isEmpty();
-  }
-
-  @Test
-  public void fareRuleProvided_stopLocationEqualsStationOrEntrance_zoneIdNotProvided_zeroNotice() {
-    assertThat(
-            generateNotices(
-                ImmutableList.of(
-                    createStop(3, GtfsLocationType.STATION, null, "stop id value"),
-                    createStop(5, GtfsLocationType.ENTRANCE, null, "other stop id value")),
-                ImmutableList.of(createFareRule(5, "fare id value"))))
-        .isEmpty();
-  }
-
-  @Test
-  public void fareRuleProvided_stopLocationEqualsStationOrEntrance_zoneIdProvided_noNotice() {
-    assertThat(
-            generateNotices(
-                ImmutableList.of(
-                    createStop(3, GtfsLocationType.STATION, "zone id value", "stop id value"),
-                    createStop(
-                        5,
-                        GtfsLocationType.ENTRANCE,
-                        "other zone id value",
-                        "other stop id value")),
-                ImmutableList.of(createFareRule(5, "fare id value"))))
         .isEmpty();
   }
 }

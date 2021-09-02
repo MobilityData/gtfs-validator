@@ -848,7 +848,7 @@ Such stops normally do not provide user value. This notice may indicate a typo i
 
 #### StopWithoutZoneIdNotice
 
-Per GTFS specification, `stops.zone_id` should be provided if fare information is provided using `fare_rules.txt`. This rule does not apply to records from `stops.txt` that represent a station or an entrance (i.e. `stops.location_type = 1 or 2`).
+Per GTFS specification, `stops.zone_id` should be provided if fare information is provided using `fare_rules.txt`. This rule does not apply to records from `stops.txt` that represent a station, an entrance or an generic node (i.e. `stops.location_type = 1, 2 or 3`).
 
 ##### References:
 * [GTFS stops.txt specification](https://gtfs.org/reference/static#stopstxt)
