@@ -21,8 +21,8 @@ import static org.mobilitydata.gtfsvalidator.table.GtfsLocationType.ENTRANCE;
 import static org.mobilitydata.gtfsvalidator.table.GtfsLocationType.GENERIC_NODE;
 import static org.mobilitydata.gtfsvalidator.table.GtfsLocationType.STOP;
 import static org.mobilitydata.gtfsvalidator.table.GtfsPathwayIsBidirectional.BIDIRECTIONAL;
-import static org.mobilitydata.gtfsvalidator.validator.PathwayReachableLocationValidator.Traversal.FROM_ENTRANCES;
-import static org.mobilitydata.gtfsvalidator.validator.PathwayReachableLocationValidator.Traversal.TO_EXITS;
+import static org.mobilitydata.gtfsvalidator.validator.PathwayReachableLocationValidator.SearchDirection.FROM_ENTRANCES;
+import static org.mobilitydata.gtfsvalidator.validator.PathwayReachableLocationValidator.SearchDirection.TO_EXITS;
 
 import java.util.ArrayDeque;
 import java.util.HashSet;
@@ -69,8 +69,8 @@ public class PathwayReachableLocationValidator extends FileValidator {
     final Set<String> pathwayEndpoints = new HashSet<>(pathwayTable.byFromStopIdMap().keySet());
     pathwayEndpoints.addAll(pathwayTable.byToStopIdMap().keySet());
     final Set<String> stationsWithPathways = findStationsWithPathways(pathwayEndpoints);
-    final Set<String> withEntrances = traversePathways(FROM_ENTRANCES);
-    final Set<String> withExits = traversePathways(TO_EXITS);
+    final Set<String> locationsHavingEntrances = traversePathways(FROM_ENTRANCES);
+    final Set<String> locationsHavingExits = traversePathways(TO_EXITS);
     for (GtfsStop location : stopTable.getEntities()) {
       // Skip locations that do not belong to stations with pathways.
       Optional<GtfsStop> includingStation =
@@ -87,8 +87,8 @@ public class PathwayReachableLocationValidator extends FileValidator {
               && stopTable.byParentStation(location.stopId()).isEmpty()))) {
         continue;
       }
-      boolean hasEntrance = withEntrances.contains(location.stopId());
-      boolean hasExit = withExits.contains(location.stopId());
+      boolean hasEntrance = locationsHavingEntrances.contains(location.stopId());
+      boolean hasExit = locationsHavingExits.contains(location.stopId());
       if (!(hasEntrance && hasExit)) {
         noticeContainer.addValidationNotice(
             new PathwayUnreachableLocationNotice(location, hasEntrance, hasExit));
@@ -110,14 +110,14 @@ public class PathwayReachableLocationValidator extends FileValidator {
   }
 
   /**
-   * Traverses pathway graph using BFS either from entrances (in the direction of pathways) or to
-   * entrances (opposite to the direction of pathways).
+   * Traverses pathway graph using breadth-first search (BFS) either from entrances (in the
+   * direction of pathways) or to exits (opposite to the direction of pathways).
    *
    * <p>Returns a set of {@code stop_id} of all visited locations, including the entrances.
    *
    * <p>Bidirectional pathways are handled naturally: they are traversable in both directions.
    */
-  private Set<String> traversePathways(Traversal traversal) {
+  private Set<String> traversePathways(SearchDirection traversal) {
     Set<String> visitedStopIds = new HashSet<>();
     Queue<String> queue = new ArrayDeque<>();
     for (GtfsStop stop : stopTable.getEntities()) {
@@ -130,29 +130,29 @@ public class PathwayReachableLocationValidator extends FileValidator {
       String currStopId = queue.remove();
       for (GtfsPathway pathway : pathwayTable.byFromStopId(currStopId)) {
         if (traversal.equals(FROM_ENTRANCES) || pathway.isBidirectional().equals(BIDIRECTIONAL)) {
-          maybeDiscoverAndEnqueue(pathway.toStopId(), visitedStopIds, queue);
+          maybeVisitAndEnqueue(pathway.toStopId(), visitedStopIds, queue);
         }
       }
       for (GtfsPathway pathway : pathwayTable.byToStopId(currStopId)) {
         if (traversal.equals(TO_EXITS) || pathway.isBidirectional().equals(BIDIRECTIONAL)) {
-          maybeDiscoverAndEnqueue(pathway.fromStopId(), visitedStopIds, queue);
+          maybeVisitAndEnqueue(pathway.fromStopId(), visitedStopIds, queue);
         }
       }
     }
     return visitedStopIds;
   }
 
-  private static boolean maybeDiscoverAndEnqueue(
+  /** If the stop is not visited in BFS, marks it as visited and adds to the queue. */
+  private static void maybeVisitAndEnqueue(
       String stopId, Set<String> visitedStopIds, Queue<String> queue) {
-    if (visitedStopIds.contains(stopId)) {
-      return false;
+    if (!visitedStopIds.contains(stopId)) {
+      queue.add(stopId);
+      visitedStopIds.add(stopId);
     }
-    queue.add(stopId);
-    visitedStopIds.add(stopId);
-    return true;
   }
 
-  enum Traversal {
+  /** Direction of BFS search. */
+  enum SearchDirection {
     FROM_ENTRANCES,
     TO_EXITS
   }

@@ -62,10 +62,10 @@ public final class PathwayReachableLocationValidatorTest {
 
   static GtfsPathway createPathway(
       long fromStopRow, long toStopRow, GtfsPathwayIsBidirectional isBidirectional) {
-    long row = fromStopRow * 1000 + toStopRow;
+    long pathwayRow = fromStopRow * 1000 + toStopRow;
     return new GtfsPathway.Builder()
-        .setCsvRowNumber(row)
-        .setPathwayId(rowToPathwayId(row))
+        .setCsvRowNumber(pathwayRow)
+        .setPathwayId(rowToPathwayId(pathwayRow))
         .setFromStopId(rowToStopId(fromStopRow))
         .setToStopId(rowToStopId(toStopRow))
         .setIsBidirectional(isBidirectional)
