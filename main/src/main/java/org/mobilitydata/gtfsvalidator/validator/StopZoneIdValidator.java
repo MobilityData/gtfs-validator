@@ -58,7 +58,7 @@ public class StopZoneIdValidator extends FileValidator {
         return;
       }
       noticeContainer.addValidationNotice(
-          new StopWithoutZoneIdNotice(stop.stopId(), stop.csvRowNumber()));
+          new StopWithoutZoneIdNotice(stop, stop.csvRowNumber()));
     }
   }
 
@@ -76,11 +76,13 @@ public class StopZoneIdValidator extends FileValidator {
    */
   static class StopWithoutZoneIdNotice extends ValidationNotice {
     private final String stopId;
+    private final String stopName;
     private final long csvRowNumber;
 
-    StopWithoutZoneIdNotice(String stopId, long csvRowNumber) {
+    StopWithoutZoneIdNotice(GtfsStop stop, long csvRowNumber) {
       super(SeverityLevel.WARNING);
-      this.stopId = stopId;
+      this.stopId = stop.stopId();
+      this.stopName = stop.stopName();
       this.csvRowNumber = csvRowNumber;
     }
   }
