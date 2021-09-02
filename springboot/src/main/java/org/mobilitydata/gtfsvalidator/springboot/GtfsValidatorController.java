@@ -318,7 +318,10 @@ public class GtfsValidatorController {
    * @return the {@code ResponseEntity} that corresponds to the request
    */
   private static ResponseEntity<HashMap<String, String>> generateResponseAndExportReport(
-      StringBuilder messageBuilder, HttpStatus status, NoticeContainer noticeContainer, Arguments args) {
+      StringBuilder messageBuilder,
+      HttpStatus status,
+      NoticeContainer noticeContainer,
+      Arguments args) {
     exportReport(noticeContainer, args);
     return generateResponse(messageBuilder, status);
   }
@@ -344,7 +347,8 @@ public class GtfsValidatorController {
    * @return the response body as a {@code HashMap<String, String>} that contains information about
    *     the request' status and additional information as a message.
    */
-  private static HashMap<String, String> buildResponseBody(StringBuilder messageBuilder, HttpStatus status) {
+  private static HashMap<String, String> buildResponseBody(
+      StringBuilder messageBuilder, HttpStatus status) {
     HashMap<String, String> root = new HashMap<>();
     root.put(MESSAGE_JSON_KEY, messageBuilder.toString());
     root.put(STATUS_JSON_KEY, status.toString());
