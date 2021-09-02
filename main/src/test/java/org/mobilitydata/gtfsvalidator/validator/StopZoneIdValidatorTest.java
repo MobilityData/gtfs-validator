@@ -76,7 +76,8 @@ public class StopZoneIdValidatorTest {
             generateNotices(
                 ImmutableList.of(createStop(3, GtfsLocationType.STOP, null)),
                 ImmutableList.of(createFareRule(5))))
-        .containsExactly(new StopWithoutZoneIdNotice(createStop(3, GtfsLocationType.STOP, null), 3));
+        .containsExactly(
+            new StopWithoutZoneIdNotice(createStop(3, GtfsLocationType.STOP, null), 3));
   }
 
   @Test
