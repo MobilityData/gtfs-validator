@@ -65,7 +65,7 @@ public class StopZoneIdValidator extends FileValidator {
   private boolean isStationOrEntrance(GtfsStop stop) {
     return stop.locationType().equals(GtfsLocationType.STATION)
         || stop.locationType().equals(GtfsLocationType.ENTRANCE)
-        || stop.locationType().equals(GtfsLocationType.GENERIC_NODE) ;
+        || stop.locationType().equals(GtfsLocationType.GENERIC_NODE);
   }
 
   /**
