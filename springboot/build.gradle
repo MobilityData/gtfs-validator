@@ -76,6 +76,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter:2.5.4'
     implementation 'org.springframework.boot:spring-boot-starter-web:2.5.4'
 
+    // to implement websocket
+    implementation 'org.springframework:spring-websocket:5.3.9'
+    implementation 'org.springframework:spring-messaging:5.3.9'
+
     // to test GtfsValidatorController
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.4'
     testImplementation 'org.mockito:mockito-core:3.3.0'

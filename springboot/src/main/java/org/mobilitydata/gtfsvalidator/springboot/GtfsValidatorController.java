@@ -287,7 +287,7 @@ public class GtfsValidatorController {
       status = HttpStatus.PRECONDITION_FAILED;
       messageBuilder.append(
           String.format(
-              "Environment variable not provided: VALIDATION_REPORT_BUCKET.\n%s", nullPointerException.getMessage()));
+              "Environment variable not provided: %s.\n", VALIDATION_REPORT_BUCKET_NAME_ENV_VAR));
       logger.atSevere().log(nullPointerException.getMessage());
     } catch (StorageException storageException) {
       status = HttpStatus.valueOf(storageException.getCode());
