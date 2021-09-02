@@ -66,9 +66,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GtfsValidatorController {
 
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-  private static final String VALIDATION_REPORT_BUCKET_NAME_ENV_VAR = "VALIDATION_REPORT_BUCKET";
-  private static final String VALIDATION_REPORT_BUCKET_NAME =
-      System.getenv(VALIDATION_REPORT_BUCKET_NAME_ENV_VAR);
+  static final String VALIDATION_REPORT_BUCKET_NAME_ENV_VAR = "VALIDATION_REPORT_BUCKET";
   private static final String DEFAULT_OUTPUT_BASE = "output";
   private static final String DEFAULT_NUM_THREADS = "8";
   private static final String DEFAULT_BUCKET_LOCATION = "US";
@@ -136,37 +134,30 @@ public class GtfsValidatorController {
     HttpStatus status;
     final long startNanos = System.nanoTime();
 
+    // this should not happen
     if (!CliParametersAnalyzer.isValid(args)) {
       status = HttpStatus.BAD_REQUEST;
       messageBuilder.append(
-          "%Bad request. Please check query parameters and execution logs for more information.\n");
-      return new ResponseEntity<>(buildResponseBody(messageBuilder.toString(), status), status);
+          "Bad request. Please check query parameters and execution logs for more information.\n");
+      return generateResponse(messageBuilder, status);
     }
+    ValidatorLoader validatorLoader;
     GtfsInput gtfsInput;
     GtfsFeedContainer feedContainer;
-    ValidatorLoader validatorLoader;
     NoticeContainer noticeContainer = new NoticeContainer();
     try {
       validatorLoader = new ValidatorLoader();
     } catch (ValidatorLoaderException e) {
       return generateResponse(
-          messageBuilder.append(e.getMessage()).toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+          messageBuilder.append(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
     GtfsFeedLoader feedLoader = new GtfsFeedLoader();
     try {
       gtfsInput = createGtfsInput(args);
-    } catch (IOException ioException) {
+    } catch (IOException | URISyntaxException ioException) {
       logger.atSevere().withCause(ioException);
       return generateResponseAndExportReport(
-          messageBuilder.append(ioException.getMessage()).toString(),
-          HttpStatus.BAD_REQUEST,
-          noticeContainer,
-          args);
-    } catch (URISyntaxException uriSyntaxException) {
-      logger.atSevere().withCause(uriSyntaxException);
-      messageBuilder.append("Internal error. Syntax error in URI.\n");
-      return generateResponseAndExportReport(
-          messageBuilder.append(uriSyntaxException.getMessage()).toString(),
+          messageBuilder.append(ioException.getMessage()),
           HttpStatus.BAD_REQUEST,
           noticeContainer,
           args);
@@ -187,14 +178,14 @@ public class GtfsValidatorController {
       logger.atSevere().withCause(e).log("Validation was interrupted");
       messageBuilder.append("Internal error. Please execution logs for more information.\n");
       return generateResponse(
-          messageBuilder.append(e.getMessage()).toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+          messageBuilder.append(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
     Main.closeGtfsInput(gtfsInput, noticeContainer);
     printSummary(startNanos, feedContainer);
     messageBuilder.append("Execution of the validator was successful.\n");
     exportReport(noticeContainer, args);
     return generateResponse(
-        messageBuilder.toString(),
+        messageBuilder,
         pushValidationReportToCloudStorage(commit_sha, dataset_id, args, messageBuilder));
   }
 
@@ -260,13 +251,13 @@ public class GtfsValidatorController {
     try {
       Bucket commitBucket =
           storage.get(
-              GtfsValidatorController.VALIDATION_REPORT_BUCKET_NAME,
+              System.getenv(GtfsValidatorController.VALIDATION_REPORT_BUCKET_NAME_ENV_VAR),
               Storage.BucketGetOption.fields());
 
       if (commitBucket == null) {
         commitBucket =
             storage.create(
-                BucketInfo.newBuilder(GtfsValidatorController.VALIDATION_REPORT_BUCKET_NAME)
+                BucketInfo.newBuilder(System.getenv(VALIDATION_REPORT_BUCKET_NAME_ENV_VAR))
                     .setStorageClass(StorageClass.STANDARD)
                     .setLocation(DEFAULT_BUCKET_LOCATION)
                     .build());
@@ -288,10 +279,16 @@ public class GtfsValidatorController {
       messageBuilder.append(
           String.format(
               "Validation report successfully uploaded to %s/%s/%s/%s.\n",
-              GtfsValidatorController.VALIDATION_REPORT_BUCKET_NAME,
+              System.getenv(VALIDATION_REPORT_BUCKET_NAME_ENV_VAR),
               commitSha,
               datasetId,
               args.getValidationReportName()));
+    } catch (NullPointerException nullPointerException) {
+      status = HttpStatus.PRECONDITION_FAILED;
+      messageBuilder.append(
+          String.format(
+              "Environment variable not provided: VALIDATION_REPORT_BUCKET.\n%s", nullPointerException.getMessage()));
+      logger.atSevere().log(nullPointerException.getMessage());
     } catch (StorageException storageException) {
       status = HttpStatus.valueOf(storageException.getCode());
       messageBuilder.append(
@@ -306,7 +303,7 @@ public class GtfsValidatorController {
               args.getOutputBase(), args.getValidationReportName()));
       logger.atSevere().log(ioException.getMessage());
     } finally {
-      buildResponseBody(messageBuilder.toString(), status);
+      buildResponseBody(messageBuilder, status);
     }
     return status;
   }
@@ -314,42 +311,42 @@ public class GtfsValidatorController {
   /**
    * Generates response body and exports validation report
    *
-   * @param message the message to be displayed
+   * @param messageBuilder additional information about the request' status
    * @param status the status of the request after execution
    * @param noticeContainer the {@code NoticeContainer} to extract {@code Notice}s from
    * @param args the {@code Arguments} to use for report export
    * @return the {@code ResponseEntity} that corresponds to the request
    */
   private static ResponseEntity<HashMap<String, String>> generateResponseAndExportReport(
-      String message, HttpStatus status, NoticeContainer noticeContainer, Arguments args) {
+      StringBuilder messageBuilder, HttpStatus status, NoticeContainer noticeContainer, Arguments args) {
     exportReport(noticeContainer, args);
-    return new ResponseEntity<>(buildResponseBody(message, status), status);
+    return generateResponse(messageBuilder, status);
   }
 
   /**
    * Generates response body
    *
-   * @param message the message to be displayed
+   * @param messageBuilder the message to be displayed
    * @param status the status of the request after execution
    * @return the {@code ResponseEntity} that corresponds to the request
    */
   private static ResponseEntity<HashMap<String, String>> generateResponse(
-      String message, HttpStatus status) {
-    return new ResponseEntity<>(buildResponseBody(message, status), status);
+      StringBuilder messageBuilder, HttpStatus status) {
+    return new ResponseEntity<>(buildResponseBody(messageBuilder, status), status);
   }
 
   /**
    * Builds the response body as a {@code HashMap<String, String>} that contains information about
    * the request' status and additional information as a message.
    *
-   * @param message additional information anout the request a message
+   * @param messageBuilder additional information about the request as amessage
    * @param status the request's status
    * @return the response body as a {@code HashMap<String, String>} that contains information about
    *     the request' status and additional information as a message.
    */
-  private static HashMap<String, String> buildResponseBody(String message, HttpStatus status) {
+  private static HashMap<String, String> buildResponseBody(StringBuilder messageBuilder, HttpStatus status) {
     HashMap<String, String> root = new HashMap<>();
-    root.put(MESSAGE_JSON_KEY, message);
+    root.put(MESSAGE_JSON_KEY, messageBuilder.toString());
     root.put(STATUS_JSON_KEY, status.toString());
     return root;
   }

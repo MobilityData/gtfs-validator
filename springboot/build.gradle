@@ -75,7 +75,11 @@ dependencies {
     // to use the CLI application as a web application via Spring Boot framework
     implementation 'org.springframework.boot:spring-boot-starter:2.5.4'
     implementation 'org.springframework.boot:spring-boot-starter-web:2.5.4'
+
+    // to test GtfsValidatorController
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.4'
+    testImplementation 'org.mockito:mockito-core:3.3.0'
+    testImplementation 'com.github.stefanbirkner:system-rules:1.19.0'
 }
 
 test {
