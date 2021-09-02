@@ -131,6 +131,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`MissingLevelFileNotice`](#MissingLevelFileNotice)       	                                | `levels.txt` is conditionally required.                                                                                                                	    |
 | [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	| More than one row in CSV.                                                                                                                                   	|
 | [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	| Non ascii or non printable char in  `id`.                                                                                                                   	|
+| [`PathwayDanglingGenericNodeNotice`](#PathwayDanglingGenericNodeNotice)           	| A generic node has only one incident location in a pathway graph.                                                                                             |
 | [`PathwayUnreachableLocationNotice`](#PathwayUnreachableLocationNotice)               | A location is not reachable at least in one direction: from the entrances or to the exits.                                                                    |
 | [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)       	| A platform has no `parent_station` field set.                                                                                                               	|
 | [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	| Insufficient route color contrast.                                                                                                                          	|
@@ -720,6 +721,16 @@ A value of a field with type `id` contains non ASCII or non printable characters
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
+
+<a name="PathwayDanglingGenericNodeNotice"/>
+
+#### PathwayDanglingGenericNodeNotice
+
+A generic node has only one incident location in a pathway graph. Such generic node is useless
+because there is no benefit in visiting it.
+
+##### References:
+* [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
 
 <a name="PathwayUnreachableLocationNotice"/>
 

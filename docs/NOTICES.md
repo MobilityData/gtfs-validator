@@ -613,6 +613,7 @@
 | `missing_level_file`                         	| [`MissingLevelFileNotice`](#MissingLevelFileNotice)                                       	|
 | `more_than_one_entity`                     	| [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	|
 | `non_ascii_or_non_printable_char`          	| [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	|
+| `pathway_dangling_generic_node`               | [`PathwayDanglingGenericNodeNotice`](#PathwayDanglingGenericNodeNotice)	            |
 | `pathway_unreachable_location`                | [`PathwayUnreachableLocationNotice`](#PathwayUnreachableLocationNotice)	            |
 | `platform_without_parent_station`          	| [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)       	|
 | `route_color_contrast`                     	| [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	|
@@ -781,6 +782,20 @@
 
 ##### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
+
+#### [PathwayDanglingGenericNodeNotice](/RULES.md#PathwayDanglingGenericNodeNotice)
+##### Fields description
+
+| Field name     | Description                                         | Type    	|
+|----------------|-----------------------------------------------------|---------	|
+| `csvRowNumber` | Row number of the dangling generic node.            | Long    	|
+| `stopId`       | The id of the dangling generic node.                | String  	|
+| `stopName`     | The stop name of the dangling generic node.         | String  	|
+| `parentStation`| The parent station of the dangling generic node.    | String 	|
+
+##### Affected files
+* [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
 #### [PathwayUnreachableLocationNotice](/RULES.md#PathwayUnreachableLocationNotice)
 ##### Fields description
