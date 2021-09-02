@@ -50,20 +50,10 @@ public class StopZoneIdValidator extends FileValidator {
       return;
     }
     for (GtfsStop stop : stopTable.getEntities()) {
-      if (isStationOrEntrance(stop)) {
-        return;
+      if (stop.locationType().equals(GtfsLocationType.STOP) && !stop.hasZoneId()) {
+        noticeContainer.addValidationNotice(new StopWithoutZoneIdNotice(stop, stop.csvRowNumber()));
       }
-      if (stop.hasZoneId()) {
-        return;
-      }
-      noticeContainer.addValidationNotice(new StopWithoutZoneIdNotice(stop, stop.csvRowNumber()));
     }
-  }
-
-  private boolean isStationOrEntrance(GtfsStop stop) {
-    return stop.locationType().equals(GtfsLocationType.STATION)
-        || stop.locationType().equals(GtfsLocationType.ENTRANCE)
-        || stop.locationType().equals(GtfsLocationType.GENERIC_NODE);
   }
 
   /**

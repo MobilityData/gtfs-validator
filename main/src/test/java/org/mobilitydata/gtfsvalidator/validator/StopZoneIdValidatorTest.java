@@ -144,13 +144,12 @@ public class StopZoneIdValidatorTest {
   }
 
   @Test
-  public void boardingArea_zoneIdNotProvided_yieldsNotice() {
+  public void boardingArea_zoneIdNotProvided_noNotice() {
     assertThat(
             generateNotices(
                 ImmutableList.of(createStop(3, GtfsLocationType.BOARDING_AREA, null)),
                 ImmutableList.of(createFareRule(5))))
-        .containsExactly(
-            new StopWithoutZoneIdNotice(createStop(3, GtfsLocationType.BOARDING_AREA, null), 3));
+        .isEmpty();
   }
 
   @Test
