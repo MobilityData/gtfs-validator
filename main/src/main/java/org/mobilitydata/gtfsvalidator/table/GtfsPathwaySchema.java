@@ -20,6 +20,7 @@ import org.mobilitydata.gtfsvalidator.annotation.FieldType;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
+import org.mobilitydata.gtfsvalidator.annotation.Index;
 import org.mobilitydata.gtfsvalidator.annotation.NonNegative;
 import org.mobilitydata.gtfsvalidator.annotation.NonZero;
 import org.mobilitydata.gtfsvalidator.annotation.Positive;
@@ -34,11 +35,13 @@ public interface GtfsPathwaySchema extends GtfsEntity {
   String pathwayId();
 
   @FieldType(FieldTypeEnum.ID)
+  @Index
   @Required
   @ForeignKey(table = "stops.txt", field = "stop_id")
   String fromStopId();
 
   @FieldType(FieldTypeEnum.ID)
+  @Index
   @Required
   @ForeignKey(table = "stops.txt", field = "stop_id")
   String toStopId();
@@ -47,7 +50,7 @@ public interface GtfsPathwaySchema extends GtfsEntity {
   GtfsPathwayMode pathwayMode();
 
   @Required
-  int isBidirectional();
+  GtfsPathwayIsBidirectional isBidirectional();
 
   @NonNegative
   double length();

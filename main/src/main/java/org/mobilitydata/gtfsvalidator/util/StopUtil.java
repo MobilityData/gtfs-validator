@@ -17,6 +17,8 @@
 package org.mobilitydata.gtfsvalidator.util;
 
 import com.google.common.geometry.S2LatLng;
+import java.util.Optional;
+import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 
@@ -44,6 +46,39 @@ public class StopUtil {
       }
     }
     return S2LatLng.CENTER;
+  }
+
+  /**
+   * Finds station that the given location belongs to.
+   *
+   * <p>Returns {@code Optional.empty} if the location does not belong to a station.
+   *
+   * <p>If the given location is a station, then the function returns it.
+   *
+   * <p>Supports up to 3 levels of location hierarchy: station, stop, boarding area.
+   *
+   * @param stopTable stop table container
+   * @param stopId {@code stop_id} of the location
+   * @return parent or grandparent that is a station or {@code Optional.empty} if there is no such
+   *     parent
+   */
+  public static Optional<GtfsStop> getIncludingStation(
+      GtfsStopTableContainer stopTable, String stopId) {
+    // Do not do an infinite loop since there may be a data bug and an infinite cycle of parents.
+    for (int i = 0; i < 3; ++i) {
+      GtfsStop location = stopTable.byStopId(stopId);
+      if (location == null) {
+        break;
+      }
+      if (location.locationType().equals(GtfsLocationType.STATION)) {
+        return Optional.of(location);
+      }
+      if (!location.hasParentStation()) {
+        break;
+      }
+      stopId = location.parentStation();
+    }
+    return Optional.empty();
   }
 
   private StopUtil() {}
