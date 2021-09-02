@@ -29,8 +29,7 @@ public class Main {
 
     logger.atWarning().log(
         "Before running this, the user should understand that: There isn't any authentication "
-            + "(i.e. any incoming HTTP request is processed) and this web application relies"
-            + " entirely on JCommander to parse query parameters. To be fully secure, this web"
+            + "(i.e. any incoming HTTP request is processed). To be fully secure, this web"
             + " application should run in a highly secure or sandboxed environment. Also, HTTP "
             + "communication is used and is inherently insecure. "
             + "Risks of HTTP communications are detailed at: "
