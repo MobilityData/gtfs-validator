@@ -51,7 +51,7 @@ public class StopZoneIdValidator extends FileValidator {
     }
     for (GtfsStop stop : stopTable.getEntities()) {
       if (stop.locationType().equals(GtfsLocationType.STOP) && !stop.hasZoneId()) {
-        noticeContainer.addValidationNotice(new StopWithoutZoneIdNotice(stop, stop.csvRowNumber()));
+        noticeContainer.addValidationNotice(new StopWithoutZoneIdNotice(stop));
       }
     }
   }
@@ -67,11 +67,11 @@ public class StopZoneIdValidator extends FileValidator {
     private final String stopName;
     private final long csvRowNumber;
 
-    StopWithoutZoneIdNotice(GtfsStop stop, long csvRowNumber) {
+    StopWithoutZoneIdNotice(GtfsStop stop) {
       super(SeverityLevel.WARNING);
       this.stopId = stop.stopId();
       this.stopName = stop.stopName();
-      this.csvRowNumber = csvRowNumber;
+      this.csvRowNumber = stop.csvRowNumber();
     }
   }
 }
