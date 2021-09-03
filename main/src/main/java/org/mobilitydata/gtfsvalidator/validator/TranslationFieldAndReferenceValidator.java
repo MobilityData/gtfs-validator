@@ -175,18 +175,18 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
       String fieldName,
       String fieldValue,
       NoticeContainer noticeContainer) {
-    if (expectedPresence != actualPresence) {
-      if (actualPresence) {
-        noticeContainer.addValidationNotice(
-            new TranslationUnexpectedValueNotice(translation, fieldName, fieldValue));
-      } else {
-        noticeContainer.addValidationNotice(
-            new MissingRequiredFieldNotice(
-                GtfsTranslationTableLoader.FILENAME, translation.csvRowNumber(), fieldName));
-      }
-      return true;
+    if (expectedPresence == actualPresence) {
+      return false;
     }
-    return false;
+    if (actualPresence) {
+      noticeContainer.addValidationNotice(
+          new TranslationUnexpectedValueNotice(translation, fieldName, fieldValue));
+    } else {
+      noticeContainer.addValidationNotice(
+          new MissingRequiredFieldNotice(
+              GtfsTranslationTableLoader.FILENAME, translation.csvRowNumber(), fieldName));
+    }
+    return true;
   }
 
   /** A translation references an unknown or missing GTFS table. */
