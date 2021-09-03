@@ -30,9 +30,9 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 
 /**
- * Checks that {@code stops.level_id} is provided when pathways.txt uses {@code
- * GtfsPathwayMode.ELEVATOR}. This is an implicit check that levels.txt is provided when pathways
- * uses {@code GtfsPathwayMode.ELEVATOR}. Foreign key validation of {@code pathways.level_id} is
+ * Checks that {@code stops.level_id} is provided when pathways.txt uses {@link
+ * GtfsPathwayMode#ELEVATOR}. This is an implicit check that levels.txt is provided when pathways
+ * uses {@link GtfsPathwayMode#ELEVATOR}. Foreign key validation of {@code pathways.level_id} is
  * performed in {@code GtfsStopLevelIdForeignKeyValidator}
  *
  * <p>Generated notice: {@link MissingLevelIdNotice}.
@@ -51,32 +51,19 @@ public class MissingLevelIdValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    Set<String> reported = new HashSet<>();
+    Set<String> elevatorEndpoints = new HashSet<>();
     for (GtfsPathway pathway : pathways.getEntities()) {
-      if (!pathway.pathwayMode().equals(GtfsPathwayMode.ELEVATOR)) {
-        continue;
+      if (pathway.pathwayMode().equals(GtfsPathwayMode.ELEVATOR)) {
+        elevatorEndpoints.add(pathway.fromStopId());
+        elevatorEndpoints.add(pathway.toStopId());
       }
-      GtfsStop origin = stops.byStopId(pathway.fromStopId());
-      GtfsStop destination = stops.byStopId(pathway.toStopId());
-      reportStop(noticeContainer, origin, reported);
-      reportStop(noticeContainer, destination, reported);
     }
-  }
-
-  private static void reportStop(
-      NoticeContainer noticeContainer, GtfsStop stop, Set<String> reported) {
-    if (stop == null) {
-      return;
+    for (String stopId : elevatorEndpoints) {
+      GtfsStop location = stops.byStopId(stopId);
+      if (location != null && !location.hasLevelId()) {
+        noticeContainer.addValidationNotice(new MissingLevelIdNotice(location));
+      }
     }
-    // only report a faulty stop once
-    if (!reported.add(stop.stopId())) {
-      return;
-    }
-    if (stop.hasLevelId()) {
-      return;
-    }
-    noticeContainer.addValidationNotice(
-        new MissingLevelIdNotice(stop.csvRowNumber(), stop.stopId()));
   }
 
   /**
@@ -89,11 +76,13 @@ public class MissingLevelIdValidator extends FileValidator {
 
     private final long csvRowNumber;
     private final String stopId;
+    private final String stopName;
 
-    MissingLevelIdNotice(long csvRowNumber, String stopId) {
+    MissingLevelIdNotice(GtfsStop stop) {
       super(SeverityLevel.ERROR);
-      this.csvRowNumber = csvRowNumber;
-      this.stopId = stopId;
+      this.csvRowNumber = stop.csvRowNumber();
+      this.stopId = stop.stopId();
+      this.stopName = stop.stopName();
     }
   }
 }

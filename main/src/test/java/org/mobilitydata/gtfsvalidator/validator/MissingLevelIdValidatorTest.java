@@ -73,26 +73,26 @@ public class MissingLevelIdValidatorTest {
 
   @Test
   public void elevator_noLevelId_reportStopOnlyOnce() {
+    ImmutableList<GtfsStop> stops =
+        ImmutableList.of(createStop(2, null), createStop(4, null), createStop(6, null));
     assertThat(
             generateNotices(
-                ImmutableList.of(createStop(2, null), createStop(4, null), createStop(6, null)),
+                stops,
                 ImmutableList.of(
                     createPathway(5, GtfsPathwayMode.ELEVATOR),
                     createPathway(3, GtfsPathwayMode.ELEVATOR))))
         .containsExactly(
-            new MissingLevelIdNotice(4, toStopId(4)),
-            new MissingLevelIdNotice(6, toStopId(6)),
-            new MissingLevelIdNotice(2, toStopId(2)));
+            new MissingLevelIdNotice(stops.get(0)),
+            new MissingLevelIdNotice(stops.get(1)),
+            new MissingLevelIdNotice(stops.get(2)));
   }
 
   @Test
   public void elevator_noLevelId_yieldsNotice() {
-    assertThat(
-            generateNotices(
-                ImmutableList.of(createStop(4, null), createStop(6, null)),
-                ImmutableList.of(createPathway(5, GtfsPathwayMode.ELEVATOR))))
+    ImmutableList<GtfsStop> stops = ImmutableList.of(createStop(4, null), createStop(6, null));
+    assertThat(generateNotices(stops, ImmutableList.of(createPathway(5, GtfsPathwayMode.ELEVATOR))))
         .containsExactly(
-            new MissingLevelIdNotice(4, toStopId(4)), new MissingLevelIdNotice(6, toStopId(6)));
+            new MissingLevelIdNotice(stops.get(0)), new MissingLevelIdNotice(stops.get(1)));
   }
 
   @Test
