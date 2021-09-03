@@ -189,18 +189,6 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
     return true;
   }
 
-  /** A translation references an unknown or missing GTFS table. */
-  static class TranslationUnknownTableNameNotice extends ValidationNotice {
-    private final long csvRowNumber;
-    private final String tableName;
-
-    TranslationUnknownTableNameNotice(GtfsTranslation translation) {
-      super(SeverityLevel.WARNING);
-      this.csvRowNumber = translation.csvRowNumber();
-      this.tableName = translation.tableName();
-    }
-  }
-
   /** A field in a translations row has value but must be empty. */
   static class TranslationUnexpectedValueNotice extends ValidationNotice {
     private final long csvRowNumber;
@@ -213,6 +201,18 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
       this.csvRowNumber = translation.csvRowNumber();
       this.fieldValue = fieldValue;
       this.fieldName = fieldName;
+    }
+  }
+
+  /** A translation references an unknown or missing GTFS table. */
+  static class TranslationUnknownTableNameNotice extends ValidationNotice {
+    private final long csvRowNumber;
+    private final String tableName;
+
+    TranslationUnknownTableNameNotice(GtfsTranslation translation) {
+      super(SeverityLevel.WARNING);
+      this.csvRowNumber = translation.csvRowNumber();
+      this.tableName = translation.tableName();
     }
   }
 
