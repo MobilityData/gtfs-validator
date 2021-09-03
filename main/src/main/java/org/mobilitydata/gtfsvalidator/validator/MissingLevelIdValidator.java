@@ -32,7 +32,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 /**
  * Checks that {@code stops.level_id} is provided when pathways.txt uses {@link
  * GtfsPathwayMode#ELEVATOR}. This is an implicit check that levels.txt is provided when pathways
- * uses {@link GtfsPathwayMode#ELEVATOR}. Foreign key validation of {@code pathways.level_id} is
+ * uses {@link GtfsPathwayMode#ELEVATOR}. Foreign key validation of {@code stops.level_id} is
  * performed in {@code GtfsStopLevelIdForeignKeyValidator}
  *
  * <p>Generated notice: {@link MissingLevelIdNotice}.
