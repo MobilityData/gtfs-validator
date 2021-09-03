@@ -108,6 +108,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`StationWithParentStationNotice`](#StationWithParentStationNotice)                                             | A station has `parent_station` field set.                                                                                                              |
 | [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](#StopTimeWithArrivalBeforePreviousDepartureTimeNotice) | Backwards time travel between stops in `stop_times.txt`                                                                                                |
 | [`StopTimeWithOnlyArrivalOrDepartureTimeNotice`](#StopTimeWithOnlyArrivalOrDepartureTimeNotice)                 | Missing `stop_times.arrival_time` or `stop_times.departure_time`.                                                                                      |
+| [`TranslationUnexpectedValueNotice`](#TranslationUnexpectedValueNotice)                                         | A field in a translations row has value but must be empty.                                                                                             |
 | [`WrongParentLocationTypeNotice`](#WrongParentLocationTypeNotice)                                               | Incorrect type of the parent location.                                                                                                                 |
 
 <a name="WARNINGS"/>
@@ -145,6 +146,8 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	| Stop too far from trip shape.                                                                                                                               	|
 | [`StopWithoutStopTimeNotice`](#StopWithoutStopTimeNotice)                             | A stop in `stops.txt` is not referenced by any `stop_times.stop_id`.                                                                                          |
 | [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                              	| Stop without value for `stops.zone_id`.                                                                                                                     	|
+| [`TranslationForeignKeyViolationNotice`](#TranslationForeignKeyViolationNotice)       | An entity with the given `record_id` and `record_sub_id` cannot be found in the referenced table.                                                             |
+| [`TranslationUnknownTableNameNotice`](#TranslationUnknownTableNameNotice)             | A translation references an unknown or missing GTFS table.                                                                                                    |
 | [`UnexpectedEnumValueNotice`](#UnexpectedEnumValueNotice)                         	| An enum has an unexpected value.                                                                                                                            	|
 | [`UnusableTripNotice`](#UnusableTripNotice)                                       	| Trips must have more than one stop to be usable.                                                                                                            	|
 | [`UnusedShapeNotice`](#UnusedShapeNotice)                                         	| Shape is not used in GTFS file `trips.txt`.                                                                                                                 	|
@@ -540,6 +543,15 @@ Missing `stop_time.arrival_time` or `stop_time.departure_time`
 ##### References:
 * [stop_times.txt specification](http://gtfs.org/reference/static/#stop_timestxt)
 
+<a name="TranslationUnexpectedValueNotice"/>
+
+#### TranslationUnexpectedValueNotice
+
+A field in a translations row has value but must be empty.
+
+##### References:
+* [translations.txt specification](http://gtfs.org/reference/static/#translationstxt)
+
 <a name="WrongParentLocationTypeNotice"/>
 
 #### WrongParentLocationTypeNotice
@@ -859,6 +871,24 @@ Per GTFS specification, `stops.zone_id` should be provided if fare information i
 
 ##### References:
 * [GTFS stops.txt specification](https://gtfs.org/reference/static#stopstxt)
+
+<a name="TranslationForeignKeyViolationNotice"/>
+
+#### TranslationForeignKeyViolationNotice
+
+An entity with the given `record_id` and `record_sub_id` cannot be found in the referenced table.
+
+##### References:
+* [translations.txt specification](http://gtfs.org/reference/static/#translationstxt)
+
+<a name="TranslationUnknownTableNameNotice"/>
+
+#### TranslationUnknownTableNameNotice
+
+A translation references an unknown or missing GTFS table.
+
+##### References:
+* [translations.txt specification](http://gtfs.org/reference/static/#translationstxt)
 
 <a name="UnexpectedEnumValueNotice"/>
 
