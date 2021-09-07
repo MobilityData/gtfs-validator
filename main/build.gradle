@@ -73,7 +73,8 @@ dependencies {
     implementation 'com.univocity:univocity-parsers:2.9.0'
     implementation 'com.google.geometry:s2-geometry:2.0.0'
     testImplementation group: 'junit', name: 'junit', version: '4.13'
-    testImplementation "com.google.truth:truth:1.0.1"
+    testImplementation 'com.google.truth:truth:1.0.1'
+    testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'
 }
 
 test {

@@ -44,6 +44,7 @@
 | `station_with_parent_station`                          	| [`StationWithParentStationNotice`](#StationWithParentStationNotice)                                             	|
 | `stop_time_wit_arrival_before_previous_departure_time` 	| [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](#StopTimeWithArrivalBeforePreviousDepartureTimeNotice) 	|
 | `stop_time_with_only_arrival_or_departure_time`        	| [`StopTimeWithOnlyArrivalOrDepartureTimeNotice`](#StopTimeWithOnlyArrivalOrDepartureTimeNotice)                 	|
+| `translation_unexpected_value`                           	| [`TranslationUnexpectedValueNotice`](#TranslationUnexpectedValueNotice)                                               	|
 | `wrong_parent_location_type`                           	| [`WrongParentLocationTypeNotice`](#WrongParentLocationTypeNotice)                                               	|
 
 #### [`BlockTripsWithOverlappingStopTimesNotice`](/RULES.md#BlockTripsWithOverlappingStopTimesNotice)
@@ -575,6 +576,18 @@
 ##### Affected files
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
+#### [`TranslationUnexpectedValueNotice`](/RULES.md#TranslationUnexpectedValueNotice)
+##### Fields description
+
+| Field name        | Description                                  	            | Type    	|
+|-------------------|-----------------------------------------------------------|---------	|
+| `csvRowNumber`    | The row number of the faulty record.         	            | Long    	|
+| `fieldName`       | The name of the field that was expected to be empty.      | String  	|
+| `fieldValue`      | Actual value of the field that was expected to be empty.  | String 	|
+
+##### Affected files
+* [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
+
 #### [`WrongParentLocationTypeNotice`](/RULES.md#WrongParentLocationTypeNotice)
 ##### Fields description
 
@@ -610,9 +623,11 @@
 | `inconsistent_agency_lang`                 	| [`InconsistentAgencyLangNotice`](#InconsistentAgencyLangNotice)                   	|
 | `leading_or_trailing_whitespaces`           | [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)         |
 | `missing_feed_info_date`                   	| [`MissingFeedInfoDateNotice`](#MissingFeedInfoDateNotice)                         	|
-| `missing_level_file`                         	| [`MissingLevelFileNotice`](#MissingLevelFileNotice)                                       	|
+| `missing_level_id`                         	| [`MissingLevelIdNotice`](#MissingLevelIdNotice)                                       	|
 | `more_than_one_entity`                     	| [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	|
 | `non_ascii_or_non_printable_char`          	| [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	|
+| `pathway_dangling_generic_node`               | [`PathwayDanglingGenericNodeNotice`](#PathwayDanglingGenericNodeNotice)	            |
+| `pathway_unreachable_location`                | [`PathwayUnreachableLocationNotice`](#PathwayUnreachableLocationNotice)	            |
 | `platform_without_parent_station`          	| [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)       	|
 | `route_color_contrast`                     	| [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	|
 | `route_short_and_long_name_equal`          	| [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	|
@@ -626,6 +641,8 @@
 | `stop_too_far_from_trip_shape`            	| [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	|
 | `stop_without_zone_id`                     	| [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                 	            |
 | `too_fast_travel`                          	| [`TooFastTravelNotice`](#TooFastTravelNotice)                                     	|
+| `translation_foreign_key_violation`           | [`TranslationForeignKeyViolationNotice`](#TranslationForeignKeyViolationNotice)	    |
+| `translation_unknown_table_name`              | [`TranslationUnknownTableNameNotice`](#TranslationUnknownTableNameNotice)	            |
 | `unexpected_enum_value`                    	| [`UnexpectedEnumValueNotice`](#UnexpectedEnumValueNotice)                         	|
 | `unusable_trip`                            	| [`UnusableTripNotice`](#UnusableTripNotice)                                       	|
 | `unused_shape`                             	| [`UnusedShapeNotice`](#UnusedShapeNotice)                                         	|
@@ -746,13 +763,13 @@
 ##### Affected files
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
 
-#### [MissingLevelFileNotice](/RULES.md#MissingLevelFileNotice)
+#### [MissingLevelIdNotice](/RULES.md#MissingLevelIdNotice)
 ##### Fields description
 
 | Field name    	| Description                                                      	 | Type   	|
 |---------------	|------------------------------------------------------------------- |--------	|
 | `csvRowNumber`  | The row number of the faulty record. 	                             | Long   	|
-| `pathwayId` 	  | The id of the record from pathways.txt that refers to `levels.txt`.| String   |
+| `stopId`   	  | The id of the faulty from `stops.txt`.                               | String   |
 
 ##### Affected files
 * [`levels.txt`](http://gtfs.org/reference/static#levelstxt)
@@ -780,6 +797,37 @@
 
 ##### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
+
+#### [PathwayDanglingGenericNodeNotice](/RULES.md#PathwayDanglingGenericNodeNotice)
+##### Fields description
+
+| Field name     | Description                                         | Type    	|
+|----------------|-----------------------------------------------------|---------	|
+| `csvRowNumber` | Row number of the dangling generic node.            | Long    	|
+| `stopId`       | The id of the dangling generic node.                | String  	|
+| `stopName`     | The stop name of the dangling generic node.         | String  	|
+| `parentStation`| The parent station of the dangling generic node.    | String 	|
+
+##### Affected files
+* [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+
+#### [PathwayUnreachableLocationNotice](/RULES.md#PathwayUnreachableLocationNotice)
+##### Fields description
+
+| Field name   	 | Description                                         | Type    	|
+|----------------|--------------------------------------------------|---------	|
+| `csvRowNumber` | Row number of the unreachable location.             | Long    	|
+| `stopId`     	 | The id of the unreachable location.                 | String  	|
+| `stopName`   	 | The stop name of the unreachable location.     	   | String  	|
+| `locationType` | The type of the unreachable location. 	           | Integer 	|
+| `parentStation`| The parent of the unreachable location. 	           | String 	|
+| `hasEntrance`  | Whether the location is reachable from entrances.   | String 	|
+| `hasExit`      | Whether some exit can be reached from the location. | String 	|
+
+##### Affected files
+* [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
 #### [PlatformWithoutParentStationNotice](/RULES.md#PlatformWithoutParentStationNotice)
 ##### Fields description
@@ -936,7 +984,8 @@
 | Field name               	| Description                                	| Type   	|
 |--------------------------	|--------------------------------------------	|--------	|
 | `stopId`                 	| The faulty record's id.                    	| String 	|
-| `csvRowNumber`        	  | The row number of the faulty record.       	| Long   	|
+| `stopName`                | The faulty record's `stops.stop_name`.       	| String 	|
+| `csvRowNumber`        	| The row number of the faulty record.       	| Long   	|
 
 ##### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
@@ -995,6 +1044,30 @@
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
+
+#### [`TranslationForeignKeyViolationNotice`](/RULES.md#TranslationForeignKeyViolationNotice)
+##### Fields description
+
+| Field name       | Description                            | Type    	|
+|------------------|----------------------------------------|-------	|
+| `csvRowNumber`   | The row number of the faulty record.   | Long    	|
+| `tableName`      | `table_name` of the faulty record.     | String  	|
+| `recordId`       | `record_id` of the faulty record.      | String  	|
+| `recordSubId`    | `record_sub_id` of the faulty record.  | String  	|
+
+##### Affected files
+* [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
+
+#### [`TranslationUnknownTableNameNotice`](/RULES.md#TranslationUnknownTableNameNotice)
+##### Fields description
+
+| Field name       | Description                            | Type    	|
+|------------------|----------------------------------------|-------	|
+| `csvRowNumber`   | The row number of the faulty record.   | Long    	|
+| `tableName`      | `table_name` of the faulty record.     | String  	|
+
+##### Affected files
+* [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 
 #### [UnexpectedEnumValueNotice](/RULES.md#UnexpectedEnumValueNotice)
 ##### Fields description

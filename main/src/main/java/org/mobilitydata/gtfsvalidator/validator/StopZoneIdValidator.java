@@ -27,9 +27,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 
 /**
- * Validates that all stops in "stops.txt" have a value for {@code stops.zone_id} if fare
- * information is provided using "fare_rules.txt". This rule does not apply if a record from
- * "stops.txt" represents a station or station entrance i.e {@code stops.location_type = 1 or 2}.
+ * Check that if {@code fare_rules.txt} is provided, then all stops and platforms (location_type =
+ * 0) have {@code stops.zone_id} assigned.
  *
  * <p>Generated notice: {@link StopWithoutZoneIdNotice}.
  */
@@ -51,20 +50,10 @@ public class StopZoneIdValidator extends FileValidator {
       return;
     }
     for (GtfsStop stop : stopTable.getEntities()) {
-      if (isStationOrEntrance(stop)) {
-        return;
+      if (stop.locationType().equals(GtfsLocationType.STOP) && !stop.hasZoneId()) {
+        noticeContainer.addValidationNotice(new StopWithoutZoneIdNotice(stop));
       }
-      if (stop.hasZoneId()) {
-        return;
-      }
-      noticeContainer.addValidationNotice(
-          new StopWithoutZoneIdNotice(stop.stopId(), stop.csvRowNumber()));
     }
-  }
-
-  private boolean isStationOrEntrance(GtfsStop stop) {
-    return stop.locationType().equals(GtfsLocationType.STATION)
-        || stop.locationType().equals(GtfsLocationType.STOP);
   }
 
   /**
@@ -75,12 +64,14 @@ public class StopZoneIdValidator extends FileValidator {
    */
   static class StopWithoutZoneIdNotice extends ValidationNotice {
     private final String stopId;
+    private final String stopName;
     private final long csvRowNumber;
 
-    StopWithoutZoneIdNotice(String stopId, long csvRowNumber) {
+    StopWithoutZoneIdNotice(GtfsStop stop) {
       super(SeverityLevel.WARNING);
-      this.stopId = stopId;
-      this.csvRowNumber = csvRowNumber;
+      this.stopId = stop.stopId();
+      this.stopName = stop.stopName();
+      this.csvRowNumber = stop.csvRowNumber();
     }
   }
 }

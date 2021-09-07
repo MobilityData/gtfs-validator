@@ -108,6 +108,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`StationWithParentStationNotice`](#StationWithParentStationNotice)                                             | A station has `parent_station` field set.                                                                                                              |
 | [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](#StopTimeWithArrivalBeforePreviousDepartureTimeNotice) | Backwards time travel between stops in `stop_times.txt`                                                                                                |
 | [`StopTimeWithOnlyArrivalOrDepartureTimeNotice`](#StopTimeWithOnlyArrivalOrDepartureTimeNotice)                 | Missing `stop_times.arrival_time` or `stop_times.departure_time`.                                                                                      |
+| [`TranslationUnexpectedValueNotice`](#TranslationUnexpectedValueNotice)                                         | A field in a translations row has value but must be empty.                                                                                             |
 | [`WrongParentLocationTypeNotice`](#WrongParentLocationTypeNotice)                                               | Incorrect type of the parent location.                                                                                                                 |
 
 <a name="WARNINGS"/>
@@ -131,6 +132,8 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`MissingLevelFileNotice`](#MissingLevelFileNotice)       	                                | `levels.txt` is conditionally required.                                                                                                                	    |
 | [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	| More than one row in CSV.                                                                                                                                   	|
 | [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	| Non ascii or non printable char in  `id`.                                                                                                                   	|
+| [`PathwayDanglingGenericNodeNotice`](#PathwayDanglingGenericNodeNotice)           	| A generic node has only one incident location in a pathway graph.                                                                                             |
+| [`PathwayUnreachableLocationNotice`](#PathwayUnreachableLocationNotice)               | A location is not reachable at least in one direction: from the entrances or to the exits.                                                                    |
 | [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)       	| A platform has no `parent_station` field set.                                                                                                               	|
 | [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	| Insufficient route color contrast.                                                                                                                          	|
 | [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	| Short and long name are equal for a route.                                                                                                                  	|
@@ -144,6 +147,8 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	| Stop too far from trip shape.                                                                                                                               	|
 | [`StopWithoutStopTimeNotice`](#StopWithoutStopTimeNotice)                             | A stop in `stops.txt` is not referenced by any `stop_times.stop_id`.                                                                                          |
 | [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                              	| Stop without value for `stops.zone_id`.                                                                                                                     	|
+| [`TranslationForeignKeyViolationNotice`](#TranslationForeignKeyViolationNotice)       | An entity with the given `record_id` and `record_sub_id` cannot be found in the referenced table.                                                             |
+| [`TranslationUnknownTableNameNotice`](#TranslationUnknownTableNameNotice)             | A translation references an unknown or missing GTFS table.                                                                                                    |
 | [`UnexpectedEnumValueNotice`](#UnexpectedEnumValueNotice)                         	| An enum has an unexpected value.                                                                                                                            	|
 | [`UnusableTripNotice`](#UnusableTripNotice)                                       	| Trips must have more than one stop to be usable.                                                                                                            	|
 | [`UnusedShapeNotice`](#UnusedShapeNotice)                                         	| Shape is not used in GTFS file `trips.txt`.                                                                                                                 	|
@@ -539,6 +544,15 @@ Missing `stop_time.arrival_time` or `stop_time.departure_time`
 ##### References:
 * [stop_times.txt specification](http://gtfs.org/reference/static/#stop_timestxt)
 
+<a name="TranslationUnexpectedValueNotice"/>
+
+#### TranslationUnexpectedValueNotice
+
+A field in a translations row has value but must be empty.
+
+##### References:
+* [translations.txt specification](http://gtfs.org/reference/static/#translationstxt)
+
 <a name="WrongParentLocationTypeNotice"/>
 
 #### WrongParentLocationTypeNotice
@@ -693,11 +707,11 @@ Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one
 ##### References:
 * [feed_info.txt Best practices](http://gtfs.org/best-practices/#feed_infotxt)
 
-<a name="MissingLevelFileNotice"/>
+<a name="MissingLevelIdNotice"/>
 
-#### MissingLevelFileNotice
+#### MissingLevelIdNotice
 
-GTFS file `levels.txt` is required for elevator (`pathway_mode=5`). Here, the values passed to `pathways.pathway_mode` are assumed to be correct.
+GTFS file `levels.txt` is required for elevator (`pathway_mode=5`). A row from `stops.txt` linked to an elevator pathway has no value for `stops.level_id`.
 
 ##### References:
 * [levels.txt specification](http://gtfs.org/reference/static/#levelstxt)
@@ -719,6 +733,32 @@ A value of a field with type `id` contains non ASCII or non printable characters
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
+
+<a name="PathwayDanglingGenericNodeNotice"/>
+
+#### PathwayDanglingGenericNodeNotice
+
+A generic node has only one incident location in a pathway graph. Such generic node is useless
+because there is no benefit in visiting it.
+
+##### References:
+* [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
+
+<a name="PathwayUnreachableLocationNotice"/>
+
+#### PathwayUnreachableLocationNotice
+
+A location belongs to a station that has pathways and is not reachable at least in one direction:
+from the entrances or to the exits.
+
+Notices are reported for platforms, boarding areas and generic nodes but not for entrances or
+stations.
+
+Notices are not reported for platforms that have boarding areas since such platforms may not
+have incident pathways. Instead, notices are reported for the boarding areas.
+
+##### References:
+* [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
 
 <a name="PlatformWithoutParentStationNotice"/>
 
@@ -838,10 +878,28 @@ Such stops normally do not provide user value. This notice may indicate a typo i
 
 #### StopWithoutZoneIdNotice
 
-Per GTFS specification, `stops.zone_id` should be provided if fare information is provided using `fare_rules.txt`. This rule does not apply to records from `stops.txt` that represent a stop or en entrance (i.e. `stops.location_type = 1 or 2`).
+If `fare_rules.txt` is provided, then all stops and platforms (location_type = 0) must have `stops.zone_id` assigned.
 
 ##### References:
 * [GTFS stops.txt specification](https://gtfs.org/reference/static#stopstxt)
+
+<a name="TranslationForeignKeyViolationNotice"/>
+
+#### TranslationForeignKeyViolationNotice
+
+An entity with the given `record_id` and `record_sub_id` cannot be found in the referenced table.
+
+##### References:
+* [translations.txt specification](http://gtfs.org/reference/static/#translationstxt)
+
+<a name="TranslationUnknownTableNameNotice"/>
+
+#### TranslationUnknownTableNameNotice
+
+A translation references an unknown or missing GTFS table.
+
+##### References:
+* [translations.txt specification](http://gtfs.org/reference/static/#translationstxt)
 
 <a name="UnexpectedEnumValueNotice"/>
 

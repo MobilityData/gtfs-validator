@@ -48,8 +48,18 @@ public final class FieldNameConverter {
     return "by" + StringUtils.capitalize(field);
   }
 
+  public static String byKeyMethodName(String field1, String field2) {
+    return String.format(
+        "by%sAnd%s", StringUtils.capitalize(field1), StringUtils.capitalize(field2));
+  }
+
   public static String byKeyMapName(String field) {
     return "by" + StringUtils.capitalize(field) + "Map";
+  }
+
+  public static String byKeyMapName(String field1, String field2) {
+    return String.format(
+        "by%sAnd%sMap", StringUtils.capitalize(field1), StringUtils.capitalize(field2));
   }
 
   public static String gtfsColumnName(String javaFieldName) {
