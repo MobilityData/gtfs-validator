@@ -61,8 +61,19 @@ public class GtfsValidatorControllerTest {
   }
 
   @Test
-  public void noValidationReportBucketNotSet_preconditionFailed() throws Exception {
+  public void validationReportBucketNotSet_preconditionFailed() throws Exception {
     environmentVariables.clear(VALIDATION_REPORT_BUCKET_NAME_ENV_VAR);
+    environmentVariables.set("TYPE", "service_account");
+    environmentVariables.set("PROJECT_ID", "");
+    environmentVariables.set("PRIVATE_KEY_ID", "");
+    environmentVariables.set("PRIVATE_KEY", "a private key for test");
+    environmentVariables.set("CLIENT_EMAIL", "");
+    environmentVariables.set("CLIENT_ID", "");
+    environmentVariables.set("AUTH_URI", "");
+    environmentVariables.set("TOKEN_URI", "");
+    environmentVariables.set("AUTH_PROVIDER_X509_CERT_URL", "");
+    environmentVariables.set("CLIENT_X509_CERT_URL", "");
+
     mockMvc
         .perform(
             MockMvcRequestBuilders.get(
@@ -74,7 +85,17 @@ public class GtfsValidatorControllerTest {
   @Test
   public void unauthorizedPushToGoogleCloudStorage_unauthorized() throws Exception {
     environmentVariables.set(VALIDATION_REPORT_BUCKET_NAME_ENV_VAR, "gtfs-validator-test-reports");
-    environmentVariables.set("GOOGLE_APPLICATION_CREDENTIALS", "");
+    environmentVariables.clear("TYPE");
+    environmentVariables.clear("PROJECT_ID");
+    environmentVariables.clear("PRIVATE_KEY_ID");
+    environmentVariables.clear("PRIVATE_KEY");
+    environmentVariables.clear("CLIENT_EMAIL");
+    environmentVariables.clear("CLIENT_ID");
+    environmentVariables.clear("AUTH_URI");
+    environmentVariables.clear("TOKEN_URI");
+    environmentVariables.clear("AUTH_PROVIDER_X509_CERT_URL");
+    environmentVariables.clear("CLIENT_X509_CERT_URL");
+
     mockMvc
         .perform(
             MockMvcRequestBuilders.get(

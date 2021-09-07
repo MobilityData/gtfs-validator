@@ -146,8 +146,7 @@ public class GtfsValidatorController {
       @RequestParam(required = false, defaultValue = Arguments.SYSTEM_ERRORS_REPORT_NAME_JSON)
           String system_error_report_name,
       @RequestParam(required = false, defaultValue = "dataset id value") String dataset_id,
-      @RequestParam(required = false, defaultValue = "commit sha value") String commit_sha)
-      throws IOException {
+      @RequestParam(required = false, defaultValue = "commit sha value") String commit_sha) {
 
     Arguments args =
         queryParametersToArguments(
@@ -253,6 +252,13 @@ public class GtfsValidatorController {
     HashMap<String, String> creds = new HashMap<>();
     Gson gson = new Gson();
     for (String key : keys) {
+      if (System.getenv(key) == null) {
+        throw new StorageException(
+            HttpStatus.UNAUTHORIZED.value(),
+            String.format(
+                "Environment variable %s not defined. Hence authentication cannot be provided",
+                key));
+      }
       creds.put(key.toLowerCase(), System.getenv(key));
     }
     return GoogleCredentials.fromStream(
@@ -294,24 +300,29 @@ public class GtfsValidatorController {
    * @return the {@code HttpStatus} of the validation report storage process
    */
   private HttpStatus pushValidationReportToCloudStorage(
-      String commitSha, String datasetId, Arguments args, StringBuilder messageBuilder)
-      throws IOException {
-    // Instantiates a client
-    GoogleCredentials credentials =
-        generateCredentials(
-            TYPE,
-            PROJECT_ID,
-            PRIVATE_KEY_ID,
-            PRIVATE_KEY,
-            CLIENT_EMAIL,
-            CLIENT_ID,
-            AUTH_URI,
-            TOKEN_URI,
-            AUTH_PROVIDER_X509_CERT_URL,
-            CLIENT_X509_CERT_URL);
-    Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+      String commitSha, String datasetId, Arguments args, StringBuilder messageBuilder) {
     HttpStatus status = HttpStatus.OK;
     try {
+      if (System.getenv(GtfsValidatorController.VALIDATION_REPORT_BUCKET_NAME_ENV_VAR) == null) {
+        throw new NullPointerException();
+      }
+      // Instantiates a client
+      Storage storage =
+          StorageOptions.newBuilder()
+              .setCredentials(
+                  generateCredentials(
+                      TYPE,
+                      PROJECT_ID,
+                      PRIVATE_KEY_ID,
+                      PRIVATE_KEY,
+                      CLIENT_EMAIL,
+                      CLIENT_ID,
+                      AUTH_URI,
+                      TOKEN_URI,
+                      AUTH_PROVIDER_X509_CERT_URL,
+                      CLIENT_X509_CERT_URL))
+              .build()
+              .getService();
       Bucket commitBucket =
           storage.get(
               System.getenv(GtfsValidatorController.VALIDATION_REPORT_BUCKET_NAME_ENV_VAR),
