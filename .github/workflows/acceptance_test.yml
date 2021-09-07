@@ -9,22 +9,28 @@ jobs:
   setup-cloud-sdk:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v1
+      - name: Prepare version name
+        id: prep
+        run: |
+          VERSION_TAG=edge
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION_TAG=${GITHUB_REF#refs/tags/}
+          elif [[ $GITHUB_REF == refs/heads/* ]]; then
+            VERSION_TAG=-$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+          elif [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION_TAG=-pr-${{ github.event.number }}
+          fi
+          if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
+            VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
+          fi
+          echo ::set-output name=versionTag::${VERSION_TAG}
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@master
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
-      - name: Use gcloud CLI
-        run: gcloud info
-      - name: Create repository
-        run: |
-          gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
-          gcloud artifacts repositories create gtfs-validator-repo \
-          --project=${{ secrets.GCP_PROJECT_ID }} \
-          --repository-format=docker \
-          --location=us-east1 \
-          --description="Docker repository"
       - name: Build and push snapshot image on Google Container Registry
         run: |
-          gcloud builds submit --tag us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gtfs-validator-repo/gtfs-validator-snapshot-gke .
+          gcloud builds submit --tag us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gtfs-validator-repo/gtfs-validator-${{ steps.prep.outputs.versionTag }}-gke .
