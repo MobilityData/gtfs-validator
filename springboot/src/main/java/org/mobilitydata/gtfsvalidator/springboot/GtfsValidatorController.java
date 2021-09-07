@@ -21,6 +21,7 @@ import static org.mobilitydata.gtfsvalidator.cli.Main.exportReport;
 import static org.mobilitydata.gtfsvalidator.cli.Main.printSummary;
 
 import com.beust.jcommander.JCommander;
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.WriteChannel;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
@@ -31,6 +32,8 @@ import com.google.cloud.storage.StorageClass;
 import com.google.cloud.storage.StorageException;
 import com.google.cloud.storage.StorageOptions;
 import com.google.common.flogger.FluentLogger;
+import com.google.gson.Gson;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
@@ -73,14 +76,37 @@ public class GtfsValidatorController {
   private static final String MESSAGE_JSON_KEY = "message";
   private static final String STATUS_JSON_KEY = "status";
   private static final String DEFAULT_COUNTRY_CODE = "ZZ";
+  private static final String TYPE = "TYPE";
+  private static final String PROJECT_ID = "PROJECT_ID";
+  private static final String PRIVATE_KEY_ID = "PRIVATE_KEY_ID";
+  private static final String PRIVATE_KEY = "PRIVATE_KEY";
+  private static final String CLIENT_EMAIL = "CLIENT_EMAIL";
+  private static final String CLIENT_ID = "CLIENT_ID";
+  private static final String AUTH_URI = "AUTH_URI";
+  private static final String TOKEN_URI = "TOKEN_URI";
+  private static final String AUTH_PROVIDER_X509_CERT_URL = "AUTH_PROVIDER_X509_CERT_URL";
+  private static final String CLIENT_X509_CERT_URL = "CLIENT_X509_CERT_URL";
 
   /**
    * Runs {@code org.mobilitydata.gtfsvalidator.cli.Main.main} with the arguments extracted via the
    * query parameters. Returns the the {@code ResponseEntity} that contains information about the
    * response's {@code HttpStatus} and a message (as a {@code String}) that gives more information
    * about success or failure. Please note that this method requires authentication to be setup
-   * prior to execution i.e. environment variable GOOGLE_APPLICATION_CREDENTIALS AND
-   * VALIDATION_REPORT_BUCKET have to be defined.
+   * prior to execution i.e. the following environment variables have to be defined:
+   *
+   * <ul>
+   *   <li>TYPE
+   *   <li>PROJECT_ID
+   *   <li>PRIVATE_KEY_ID
+   *   <li>PRIVATE_KEY
+   *   <li>CLIENT_EMAIL
+   *   <li>CLIENT_ID
+   *   <li>AUTH_URI
+   *   <li>TOKEN_URI
+   *   <li>AUTH_PROVIDER_X509_CERT_URL
+   *   <li>CLIENT_X509_CERT_URL
+   *   <li>VALIDATION_REPORT_BUCKET
+   * </ul>
    *
    * <p>Please check:
    *
@@ -120,7 +146,8 @@ public class GtfsValidatorController {
       @RequestParam(required = false, defaultValue = Arguments.SYSTEM_ERRORS_REPORT_NAME_JSON)
           String system_error_report_name,
       @RequestParam(required = false, defaultValue = "dataset id value") String dataset_id,
-      @RequestParam(required = false, defaultValue = "commit sha value") String commit_sha) {
+      @RequestParam(required = false, defaultValue = "commit sha value") String commit_sha)
+      throws IOException {
 
     Arguments args =
         queryParametersToArguments(
@@ -222,11 +249,34 @@ public class GtfsValidatorController {
     return args;
   }
 
+  private GoogleCredentials generateCredentials(String... keys) throws IOException {
+    HashMap<String, String> creds = new HashMap<>();
+    Gson gson = new Gson();
+    for (String key : keys) {
+      creds.put(key.toLowerCase(), System.getenv(key));
+    }
+    return GoogleCredentials.fromStream(
+        new ByteArrayInputStream(gson.toJson(creds).replace("\\n", "\n").getBytes()));
+  }
+
   /**
    * Pushes validation report to Google Cloud Storage. Returns the {@code HttpStatus} of the
-   * validation report storage process. Requires authentication to be set prior execution i.e.
-   * environment variables GOOGLE_APPLICATION_CREDENTIALS and VALIDATION_REPORT_BUCKET have to be
-   * defined.
+   * validation report storage process. Requires authentication to be set prior execution i.e. the
+   * following environment variables have to be defined:
+   *
+   * <ul>
+   *   <li>TYPE
+   *   <li>PROJECT_ID
+   *   <li>PRIVATE_KEY_ID
+   *   <li>PRIVATE_KEY
+   *   <li>CLIENT_EMAIL
+   *   <li>CLIENT_ID
+   *   <li>AUTH_URI
+   *   <li>TOKEN_URI
+   *   <li>AUTH_PROVIDER_X509_CERT_URL
+   *   <li>CLIENT_X509_CERT_URL
+   *   <li>VALIDATION_REPORT_BUCKET
+   * </ul>
    *
    * <p>Please check:
    *
@@ -244,9 +294,22 @@ public class GtfsValidatorController {
    * @return the {@code HttpStatus} of the validation report storage process
    */
   private HttpStatus pushValidationReportToCloudStorage(
-      String commitSha, String datasetId, Arguments args, StringBuilder messageBuilder) {
+      String commitSha, String datasetId, Arguments args, StringBuilder messageBuilder)
+      throws IOException {
     // Instantiates a client
-    Storage storage = StorageOptions.getDefaultInstance().getService();
+    GoogleCredentials credentials =
+        generateCredentials(
+            TYPE,
+            PROJECT_ID,
+            PRIVATE_KEY_ID,
+            PRIVATE_KEY,
+            CLIENT_EMAIL,
+            CLIENT_ID,
+            AUTH_URI,
+            TOKEN_URI,
+            AUTH_PROVIDER_X509_CERT_URL,
+            CLIENT_X509_CERT_URL);
+    Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
     HttpStatus status = HttpStatus.OK;
     try {
       Bucket commitBucket =
