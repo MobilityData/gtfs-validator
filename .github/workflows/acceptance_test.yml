@@ -76,8 +76,9 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: Application - cli executable .jar -- ${{ steps.prep.outputs.versionTag }}
+          path: main/build/libs
       - name: Build and push snapshot image on Google Container Registry
         run: |
           ls -a
-          ls main/build/libs
+          ls main/build/libs/
           gcloud builds submit --tag us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gtfs-validator-repo/gtfs-validator-snapshot .
