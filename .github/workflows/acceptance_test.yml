@@ -34,4 +34,4 @@ jobs:
       - name: Build and push snapshot image on Google Container Registry
         run: |
           ls -a
-          gcloud builds submit --tag us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gtfs-validator-repo/gtfs-validator-${{ steps.prep.outputs.versionTag }}-gke .
+          gcloud builds submit --tag us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gtfs-validator-repo/${{ steps.prep.outputs.versionTag }} .
