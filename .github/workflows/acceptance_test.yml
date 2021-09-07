@@ -17,6 +17,7 @@ jobs:
           export_default_credentials: true
       - name: Create repository
         run: |
+          gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
           gcloud artifacts repositories create gtfs-validator-repo \
           --project=${{ secrets.GCP_PROJECT_ID }} \
           --repository-format=docker \
