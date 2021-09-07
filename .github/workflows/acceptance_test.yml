@@ -46,7 +46,7 @@ jobs:
         with:
           name: Application - cli executable .jar -- ${{ steps.prep.outputs.versionTag }}
           path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
-  setup-cloud-sdk:
+  setup-cloud-environment:
     needs: [ pack ]
     runs-on: ubuntu-latest
     steps:
@@ -79,6 +79,5 @@ jobs:
           path: main/build/libs
       - name: Build and push snapshot image on Google Container Registry
         run: |
-          ls -a
           ls main/build/libs/
           gcloud builds submit --tag us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gtfs-validator-repo/gtfs-validator-snapshot .
