@@ -15,3 +15,16 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
+  push-images-to-gcr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create repository
+        run: |
+          gcloud artifacts repositories create gtfs-validator-repo \
+          --project=${{ secrets.GCP_PROJECT_ID }} \
+          --repository-format=docker \
+          --location=us-east1 \
+          --description="Docker repository"
+      - name: Build and push snapshot image on Google Container Registry
+        run: |
+          gcloud builds submit --tag us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gtfs-validator-repo/gtfs-validator-snapshot-gke .
