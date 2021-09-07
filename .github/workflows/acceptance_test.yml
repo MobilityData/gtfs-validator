@@ -77,9 +77,6 @@ jobs:
         with:
           name: Application - cli executable .jar -- ${{ steps.prep.outputs.versionTag }}
       - name: Build and push snapshot image on Google Container Registry
-        uses: actions/download-artifact@v2
-        with:
-          name: Application - cli executable .jar -- ${{ steps.prep.outputs.versionTag }}
         run: |
           ls -a
           ls main/build/libs
