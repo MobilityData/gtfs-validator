@@ -16,6 +16,7 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
   push-images-to-gcr:
+    needs: [ setup-cloud-sdk ]
     runs-on: ubuntu-latest
     steps:
       - name: Create repository
