@@ -60,4 +60,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: gtfs-validator-repo/gtfs-validator-gke:latest
+          tags: ${{ secrets.GCP_PROJECT_ID }}/gtfs-validator-repo:${{ steps.prep.outputs.versionTag }}
