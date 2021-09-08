@@ -103,6 +103,21 @@ jobs:
     needs: [ push-snapshot-to-gar ]
     runs-on: ubuntu-latest
     steps:
+      - name: Prepare version name
+        id: prep
+        run: |
+          VERSION_TAG=edge
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION_TAG=${GITHUB_REF#refs/tags/}
+          elif [[ $GITHUB_REF == refs/heads/* ]]; then
+            VERSION_TAG=-$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+          elif [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION_TAG=-pr-${{ github.event.number }}
+          fi
+          if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
+            VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-snapshot
+          fi
+          echo ::set-output name=versionTag::${VERSION_TAG}
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@master
         with:
@@ -114,7 +129,11 @@ jobs:
           gcloud container clusters create gtfs-validator-snapshot-cluster \
               --num-nodes 1 \
               --zone us-east1
-#  set-up-kubernetes-for-latest-release:
+      - name: Deploy snapshot app to GKE
+        run: |
+          IMAGE_NAME = us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gtfs-validatort-repo/gtfs-validator-gke:${{ steps.prep.outputs.versionTag }}
+          deployment=`cat "deployment.yaml" | sed "s/{{IMAGE_NAME}}/$IMAGE_NAME/g"`
+          gcloud kubectl apply -f deployment
 #  retrieve-urls:
 #  execute-snapshot-version:
 #  execute-latest-release:

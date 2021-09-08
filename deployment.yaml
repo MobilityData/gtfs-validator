@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gtfs-validator-gke
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gtfs-validator
+  template:
+    metadata:
+      labels:
+        app: gtfs-validator
+    spec:
+      containers:
+        - name: gtfs-validator-container
+          image: {{IMAGE_NAME}}
+          # This app listens on port 8080 for web traffic by default.
+          ports:
+            - containerPort: 8080
+          env:
+            - name: PORT
+              value: "8080"
+    restartPolicy: OnFailure
