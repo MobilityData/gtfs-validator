@@ -129,8 +129,8 @@ jobs:
 #          gcloud container clusters create-auto gtfs-validator-snapshot-cluster --zone us-east1
       - name: Deploy snapshot app to GKE
         run: |
-          export IMAGE_NAME=us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gtfs-validatort-repo/gtfs-validator-gke:${{ steps.prep.outputs.versionTag }}
-          sed -i -e "s/{{IMAGE_NAME}}/$IMAGE_NAME/" deployment.yaml
+          sed -i -e "s/{{PROJECT_ID}}/${{ secrets.GCP_PROJECT_ID }}/" deployment.yaml
+          sed -i -e "s/{{TAG}}/${{ steps.prep.outputs.versionTag }}/" deployment.yaml
           gcloud kubectl apply -f deployment.yaml
 #  retrieve-urls:
 #  execute-snapshot-version:
