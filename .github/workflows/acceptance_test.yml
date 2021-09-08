@@ -51,7 +51,7 @@ jobs:
 #        run: |
 #          cd main
 #          gcloud builds submit --tag us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gtfs-validator-repo/gtfs-validator-snapshot .
-      - name: Push Docker Image to GCR
+      - name: Push Docker Image to GAR
         uses: kurkop/push-docker-gcr@v1.2.2
         with:
           docker_image_name: gtfs-validator
