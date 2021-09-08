@@ -112,7 +112,7 @@ jobs:
       - name: Create GKE cluster
         run: |
           gcloud container clusters create gtfs-validator-gke \
-              --num-nodes 2000 \
+              --num-nodes 1008 \
               --zone us-east1
 #  set-up-kubernetes-for-latest-release:
 #  retrieve-urls:
