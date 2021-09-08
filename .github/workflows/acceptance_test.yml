@@ -133,7 +133,7 @@ jobs:
           ls -a
           sed -i -e "s/{{PROJECT_ID}}/${{ secrets.GCP_PROJECT_ID }}/" deployment.yaml
           sed -i -e "s/{{TAG}}/${{ steps.prep.outputs.versionTag }}/" deployment.yaml
-          gcloud kubectl apply -f deployment.yaml
+          kubectl apply -f deployment.yaml
 #  retrieve-urls:
 #  execute-snapshot-version:
 #  execute-latest-release:
