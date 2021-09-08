@@ -99,4 +99,18 @@ jobs:
           gar_project: ${{ secrets.GCP_PROJECT_ID }}
           gar_service_account: ${{ secrets.GCP_SA_KEY }}
           tag_latest_version: true
-
+  set-up-kubernetes-for-snapshot:
+    needs: [ push-snapshot-to-gar ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create GKE cluster
+        run: |
+          gcloud container clusters create gtfs-validator-gke \
+              --num-nodes 2000 \
+              --zone us-east1
+#  set-up-kubernetes-for-latest-release:
+#  retrieve-urls:
+#  execute-snapshot-version:
+#  execute-latest-release:
+#  delete-snapshot-resources:
+#  delete-latest-release-resources:
