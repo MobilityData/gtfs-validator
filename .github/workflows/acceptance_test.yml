@@ -49,4 +49,5 @@ jobs:
           arguments: shadowJar
       - name: Build and push snapshot image on Google Container Registry
         run: |
+          cd main
           gcloud builds submit --tag us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gtfs-validator-repo/gtfs-validator-snapshot .
