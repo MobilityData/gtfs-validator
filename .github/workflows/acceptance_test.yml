@@ -103,6 +103,7 @@ jobs:
     needs: [ push-snapshot-to-gar ]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v1
       - name: Prepare version name
         id: prep
         run: |
