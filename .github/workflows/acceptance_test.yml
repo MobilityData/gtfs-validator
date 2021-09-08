@@ -128,12 +128,20 @@ jobs:
 #      - name: Create GKE cluster
 #        run: |
 #          gcloud container clusters create-auto gtfs-validator-snapshot-cluster --zone us-east1
-      - name: Deploy snapshot app to GKE
+      - name: Substitute values in deployment.yaml
         run: |
-          ls -a
           sed -i -e "s/{{PROJECT_ID}}/${{ secrets.GCP_PROJECT_ID }}/" deployment.yaml
           sed -i -e "s/{{TAG}}/${{ steps.prep.outputs.versionTag }}/" deployment.yaml
-          kubectl apply -f deployment.yaml
+#          kubectl apply -f deployment.yaml
+      - name: kubectl - Google Cloud GKE cluster.
+        uses: ameydev/gke-kubectl-action@master
+        env:
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
+          CLUSTER_NAME: gtfs-validator-snapshot-cluster
+          ZONE_NAME: us-east1
+        with:
+          args: apply -f deployment.yaml
 #  retrieve-urls:
 #  execute-snapshot-version:
 #  execute-latest-release:
