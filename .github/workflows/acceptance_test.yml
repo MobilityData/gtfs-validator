@@ -50,7 +50,7 @@ jobs:
       - name: Push Docker Image to GAR
         uses: par-tec/docker-push-gar-image@v0.0.3
         with:
-          image_name: gtfs-validator-gke
+          image_name: gtfs-validator-repo
           image_tag: ${{ steps.prep.outputs.versionTag }}
           docker_context: ./
           gar_hostname: us-east1-docker.pkg.dev
