@@ -911,10 +911,11 @@
 
 | Field name     	| Description                                	| Type   	|
 |----------------	|--------------------------------------------	|--------	|
-| `csvRowNumber`  | The row number of the faulty record.       	| Long   	|
-| `routeId`       | The faulty record's id.                    	| String 	|
+| `routeCsvRowNumber`    | The row number of the faulty record from `routes.txt`.       	| Long   	|
+| `routeId`         | The faulty record's id.                    	| String 	|
 | `agencyId`    	| The faulty record's `routes.agency_id`.    	| String 	|
 | `routeUrl`     	| The duplicate URL value                    	| String 	|
+| `agencyCsvRowNumber`    | The row number of the faulty record from `agency.txt`.       	| Long   	|
 
 ##### Affected files
 * [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
@@ -925,11 +926,11 @@
 
 | Field name     	| Description                                            	| Type   	|
 |----------------	|--------------------------------------------------------	|--------	|
-| `csvRowNumber` 	| The row number of the faulty record.                   	| Long   	|
+| `stopCsvRowNumber`| The row number of the faulty record from `stops.txt`.     | Long   	|
 | `stopId`       	| The faulty record's id.                                	| String 	|
 | `agencyName`   	| The faulty record's `agency.agency_name`.              	| String 	|
-| `stopUrl`      	| The duplicate URL value.                                | String 	|
-| `csvRowNumber` 	| The row number of the faulty record from `agency.txt`. 	| Long   	|
+| `stopUrl`      	| The duplicate URL value.                                  | String 	|
+| `agencyCsvRowNumber` 	| The row number of the faulty record from `agency.txt`.|  Long   	|
 
 ##### Affected files
 * [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
@@ -940,7 +941,7 @@
 
 | Field name          	| Description                                            	| Type   	|
 |---------------------	|--------------------------------------------------------	|--------	|
-| `csvRowNumber`      	| The row number of the faulty record.                   	| Long   	|
+| `stopsvRowNumber`     | The row number of the faulty record from `stops.txt`.    	| Long   	|
 | `stopId`            	| The faulty record's id.                                	| String 	|
 | `stopUrl`           	| The duplicate URL value.                                | String 	|
 | `routeId`           	| The faulty record's id from `routes.txt.               	| String 	|

@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.base.Ascii;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import java.util.List;
@@ -65,8 +66,7 @@ public class UrlConsistencyValidator extends FileValidator {
       if (!route.hasRouteUrl()) {
         continue;
       }
-      List<GtfsAgency> agencies = agencyByUrlMap.get(route.routeUrl().toLowerCase());
-      for (GtfsAgency agency : agencies) {
+      for (GtfsAgency agency : agencyByUrlMap.get(Ascii.toLowerCase(route.routeUrl()))) {
         noticeContainer.addValidationNotice(new SameRouteAndAgencyUrlNotice(route, agency));
       }
     }
@@ -74,11 +74,10 @@ public class UrlConsistencyValidator extends FileValidator {
       if (!stop.hasStopUrl()) {
         continue;
       }
-      List<GtfsAgency> agencies = agencyByUrlMap.get(stop.stopUrl().toLowerCase());
-      for (GtfsAgency agency : agencies) {
+      for (GtfsAgency agency : agencyByUrlMap.get(Ascii.toLowerCase(stop.stopUrl()))) {
         noticeContainer.addValidationNotice(new SameStopAndAgencyUrlNotice(stop, agency));
       }
-      List<GtfsRoute> routes = routesByUrlMap.get(stop.stopUrl().toLowerCase());
+      List<GtfsRoute> routes = routesByUrlMap.get(Ascii.toLowerCase(stop.stopUrl()));
       for (GtfsRoute route : routes) {
         noticeContainer.addValidationNotice(new SameStopAndRouteUrlNotice(stop, route));
       }
@@ -86,42 +85,19 @@ public class UrlConsistencyValidator extends FileValidator {
   }
 
   /**
-   * Maps {@code GtfsAgency}s by there URLs if provided.
-   *
-   * @param stopTable the {@code GtfsStopTableContainer} to extract {@code GtfsStop} from
-   * @return routes from {@code GtfsStopTableContainer}s mapped by there {@code routes.route_url} if
-   *     provided.
-   */
-  private ListMultimap<String, GtfsStop> stopsByUrlMap(GtfsStopTableContainer stopTable) {
-    ListMultimap<String, GtfsStop> stopsByUrl = ArrayListMultimap.create();
-    stopTable
-        .getEntities()
-        .forEach(
-            stop -> {
-              if (stop.hasStopUrl()) {
-                stopsByUrl.put(stop.stopUrl().toLowerCase(), stop);
-              }
-            });
-    return stopsByUrl;
-  }
-
-  /**
    * Maps {@code GtfsRoute}s by their URLs if provided.
    *
    * @param routeTable the {@code GtfsRouteTableContainer} to extract {@code GtfsRoute} from
-   * @return routes from {@code GtfsRouteTableContainer}s mapped by there {@code routes.route_url}
+   * @return routes from {@code GtfsRouteTableContainer}s mapped by their {@code routes.route_url}
    *     (in lower case) if provided.
    */
   private ListMultimap<String, GtfsRoute> routesByUrlMap(GtfsRouteTableContainer routeTable) {
     ListMultimap<String, GtfsRoute> routesByUrl = ArrayListMultimap.create();
-    routeTable
-        .getEntities()
-        .forEach(
-            route -> {
-              if (route.hasRouteUrl()) {
-                routesByUrl.put(route.routeUrl().toLowerCase(), route);
-              }
-            });
+    for (GtfsRoute route : routeTable.getEntities()) {
+      if (route.hasRouteUrl()) {
+        routesByUrl.put(Ascii.toLowerCase(route.routeUrl()), route);
+      }
+    }
     return routesByUrl;
   }
 
@@ -129,7 +105,7 @@ public class UrlConsistencyValidator extends FileValidator {
    * Maps {@code GtfsAgency}s by their URLs if provided.
    *
    * @param agencyTable the {@code GtfsAgencyTableContainer} to extract {@code GtfsAgency} from
-   * @return agencies from {@code GtfsAgencyTableContainer}s mapped by there URLs (in lower case) if
+   * @return agencies from {@code GtfsAgencyTableContainer}s mapped by their URLs (in lower case) if
    *     provided.
    */
   private ListMultimap<String, GtfsAgency> agenciesByUrlMap(GtfsAgencyTableContainer agencyTable) {
@@ -139,7 +115,7 @@ public class UrlConsistencyValidator extends FileValidator {
         .forEach(
             agency -> {
               if (agency.hasAgencyUrl()) {
-                agenciesByUrl.put(agency.agencyUrl().toLowerCase(), agency);
+                agenciesByUrl.put(Ascii.toLowerCase(agency.agencyUrl()), agency);
               }
             });
     return agenciesByUrl;
@@ -151,7 +127,7 @@ public class UrlConsistencyValidator extends FileValidator {
    * <p>{@code SeverityLevel.WARNING}
    */
   static class SameStopAndRouteUrlNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final long stopCsvRowNumber;
     private final String stopId;
     private final String stopUrl;
     private final String routeId;
@@ -159,7 +135,7 @@ public class UrlConsistencyValidator extends FileValidator {
 
     SameStopAndRouteUrlNotice(GtfsStop stop, GtfsRoute route) {
       super(SeverityLevel.WARNING);
-      this.csvRowNumber = stop.csvRowNumber();
+      this.stopCsvRowNumber = stop.csvRowNumber();
       this.stopId = stop.stopId();
       this.stopUrl = stop.stopUrl();
       this.routeId = route.routeId();
