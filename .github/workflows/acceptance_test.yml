@@ -47,7 +47,16 @@ jobs:
           versionTag: ${{ steps.prep.outputs.versionTag }}
         with:
           arguments: shadowJar
-      - name: Build and push snapshot image on Google Container Registry
-        run: |
-          cd main
-          gcloud builds submit --tag us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gtfs-validator-repo/gtfs-validator-snapshot .
+#      - name: Build and push snapshot image on Google Container Registry
+#        run: |
+#          cd main
+#          gcloud builds submit --tag us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gtfs-validator-repo/gtfs-validator-snapshot .
+      - name: Push Docker Image to GCR
+        uses: kurkop/push-docker-gcr@v1.2.2
+        with:
+          docker_image_name: gtfs-validator
+          docker_image_tag: ${{ steps.prep.outputs.versionTag }}
+          docker_context: .
+          gcr_host: gcr.io
+          gcr_project_id: ${{ secrets.GCP_PROJECT_ID }}
+          gcr_service_key: ${{ secrets.GCP_SA_KEY }}
