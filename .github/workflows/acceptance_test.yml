@@ -47,7 +47,6 @@ jobs:
 #          name: Application - cli executable .jar -- ${{ steps.prep.outputs.versionTag }}
 #          path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
   setup-cloud-environment:
-    needs: [ pack ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
