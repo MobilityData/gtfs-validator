@@ -134,11 +134,15 @@ public class UrlConsistencyValidatorTest {
             createAgency(8, "some agency name value", null));
 
     ImmutableList<GtfsStop> stops =
-        ImmutableList.of(createStop(456, "www.mobilitydata.org"), createStop(55, null));
+        ImmutableList.of(
+            createStop(456, "www.mobilitydata.org"),
+            createStop(55, null),
+            createStop(77, "www.anotherurl.com"));
     assertThat(generateNotices(agencies, ImmutableList.of(), stops))
         .containsExactly(
             new SameStopAndAgencyUrlNotice(stops.get(0), agencies.get(0)),
-            new SameStopAndAgencyUrlNotice(stops.get(0), agencies.get(2)));
+            new SameStopAndAgencyUrlNotice(stops.get(0), agencies.get(2)),
+            new SameStopAndAgencyUrlNotice(stops.get(2), agencies.get(1)));
   }
 
   @Test
