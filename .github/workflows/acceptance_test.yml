@@ -57,12 +57,12 @@ jobs:
           registry: us-east1-docker.pkg.dev
           username: _json_key
           password: ${{ secrets.GCP_SA_KEY }}
-      - name: Build and push snapshot image to GAR
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          tags: user/app:latest
+#      - name: Build and push snapshot image to GAR
+#        uses: docker/build-push-action@v2
+#        with:
+#          context: .
+#          push: true
+#          tags: user/app:latest
 
       - name: Push Docker Image to GAR
         uses: par-tec/docker-push-gar-image@v0.0.3
