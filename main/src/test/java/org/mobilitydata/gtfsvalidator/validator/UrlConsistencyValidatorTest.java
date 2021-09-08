@@ -62,11 +62,11 @@ public class UrlConsistencyValidatorTest {
         .build();
   }
 
-  private static GtfsRoute createRoute(String agencyId, String routeUrl) {
+  private static GtfsRoute createRoute(long csvRowNumber, String agencyId, String routeUrl) {
     return new GtfsRoute.Builder()
-        .setCsvRowNumber(3)
+        .setCsvRowNumber(csvRowNumber)
         .setRouteUrl(routeUrl)
-        .setRouteId("route id value")
+        .setRouteId(String.format("route id %s", csvRowNumber))
         .setAgencyId(agencyId)
         .setRouteShortName("route short name value")
         .setRouteLongName("route long name value")
@@ -74,10 +74,10 @@ public class UrlConsistencyValidatorTest {
         .build();
   }
 
-  private static GtfsStop createStop(long csvRowNumber, String stopId, String stopUrl) {
+  private static GtfsStop createStop(long csvRowNumber, String stopUrl) {
     return new GtfsStop.Builder()
         .setCsvRowNumber(csvRowNumber)
-        .setStopId(stopId)
+        .setStopId(String.format("stop id %s", csvRowNumber))
         .setStopUrl(stopUrl)
         .build();
   }
@@ -90,23 +90,26 @@ public class UrlConsistencyValidatorTest {
                     createAgency(0, "first agency id value", "www.mobilitydata.org"),
                     createAgency(2, "other agency id value", "www.someotherurl")),
                 ImmutableList.of(
-                    createRoute("first agency id value", "www.atotallydifferenturl.com")),
+                    createRoute(4, "first agency id value", "www.atotallydifferenturl.com")),
                 ImmutableList.of()))
         .isEmpty();
   }
 
   @Test
   public void sameRouteAndAgencyUrl_generatesNotice() {
-    assertThat(
-            generateNotices(
-                ImmutableList.of(
-                    createAgency(0, "first agency name value", "www.mobilitydata.org"),
-                    createAgency(2, "other agency name value", "www.anotherurl.com")),
-                ImmutableList.of(createRoute("route id value", "www.mobilitydata.org")),
-                ImmutableList.of()))
+    ImmutableList<GtfsAgency> agencies =
+        ImmutableList.of(
+            createAgency(0, "first agency name value", "www.mobilitydata.org"),
+            createAgency(2, "other agency name value", "www.anotherurl.com"),
+            createAgency(6, "another agency name value", "www.MobilityData.org"));
+    ImmutableList<GtfsRoute> routes =
+        ImmutableList.of(
+            createRoute(3, "route id value", "www.mobilitydata.org"),
+            createRoute(4, "other route id value", null));
+    assertThat(generateNotices(agencies, routes, ImmutableList.of()))
         .containsExactly(
-            new SameRouteAndAgencyUrlNotice(
-                3, "route id value", "first agency name value", "www.mobilitydata.org", 0));
+            new SameRouteAndAgencyUrlNotice(routes.get(0), agencies.get(0)),
+            new SameRouteAndAgencyUrlNotice(routes.get(0), agencies.get(2)));
   }
 
   @Test
@@ -117,22 +120,25 @@ public class UrlConsistencyValidatorTest {
                     createAgency(0, "first agency id value", "www.mobilitydata.org"),
                     createAgency(2, "other agency id value", "www.someotherurl")),
                 ImmutableList.of(),
-                ImmutableList.of(createStop(44, "stop id value", "stop url value"))))
+                ImmutableList.of(createStop(44, "stop url value"))))
         .isEmpty();
   }
 
   @Test
   public void sameStopAndAgencyUrl_generatesNotice() {
-    assertThat(
-            generateNotices(
-                ImmutableList.of(
-                    createAgency(0, "first agency name value", "www.mobilitydata.org"),
-                    createAgency(2, "other agency name value", "www.anotherurl.com")),
-                ImmutableList.of(),
-                ImmutableList.of(createStop(456, "stop id value", "www.mobilitydata.org"))))
+    ImmutableList<GtfsAgency> agencies =
+        ImmutableList.of(
+            createAgency(0, "first agency name value", "www.mobilitydata.org"),
+            createAgency(2, "other agency name value", "www.anotherurl.com"),
+            createAgency(4, "another agency name value", "www.mobilitydata.org"),
+            createAgency(8, "some agency name value", null));
+
+    ImmutableList<GtfsStop> stops =
+        ImmutableList.of(createStop(456, "www.mobilitydata.org"), createStop(55, null));
+    assertThat(generateNotices(agencies, ImmutableList.of(), stops))
         .containsExactly(
-            new SameStopAndAgencyUrlNotice(
-                456, "stop id value", "first agency name value", "www.mobilitydata.org", 0));
+            new SameStopAndAgencyUrlNotice(stops.get(0), agencies.get(0)),
+            new SameStopAndAgencyUrlNotice(stops.get(0), agencies.get(2)));
   }
 
   @Test
@@ -140,20 +146,21 @@ public class UrlConsistencyValidatorTest {
     assertThat(
             generateNotices(
                 ImmutableList.of(),
-                ImmutableList.of(createRoute("first agency id value", "www.mobilitydata.org")),
-                ImmutableList.of(createStop(44, "stop id value", "stop url value"))))
+                ImmutableList.of(createRoute(8, "first agency id value", "www.mobilitydata.org")),
+                ImmutableList.of(createStop(44, "stop url value"))))
         .isEmpty();
   }
 
   @Test
   public void sameStopAndRouteUrl_generatesNotice() {
-    assertThat(
-            generateNotices(
-                ImmutableList.of(),
-                ImmutableList.of(createRoute("first agency id value", "www.mobilitydata.org")),
-                ImmutableList.of(createStop(456, "stop id value", "www.mobilitydata.org"))))
+    ImmutableList<GtfsRoute> routes =
+        ImmutableList.of(createRoute(5, "first agency id value", "www.mobilitydata.org"));
+    ImmutableList<GtfsStop> stops =
+        ImmutableList.of(
+            createStop(456, "www.mobilitydata.org"), createStop(88, "www.mobilitYData.org"));
+    assertThat(generateNotices(ImmutableList.of(), routes, stops))
         .containsExactly(
-            new SameStopAndRouteUrlNotice(
-                456, "stop id value", "www.mobilitydata.org", "route id value", 3));
+            new SameStopAndRouteUrlNotice(stops.get(0), routes.get(0)),
+            new SameStopAndRouteUrlNotice(stops.get(1), routes.get(0)));
   }
 }
