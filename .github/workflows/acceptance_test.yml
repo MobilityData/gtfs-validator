@@ -141,7 +141,7 @@ jobs:
           CLUSTER_NAME: gtfs-validator-snapshot-cluster
           ZONE_NAME: us-east1
         with:
-          args: apply -f deployment.yaml
+          args: apply -f .
 #  retrieve-urls:
 #  execute-snapshot-version:
 #  execute-latest-release:
