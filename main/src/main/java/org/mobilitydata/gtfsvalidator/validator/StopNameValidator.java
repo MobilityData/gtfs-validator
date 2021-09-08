@@ -39,14 +39,14 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
     if (!stop.hasStopName() || !stop.hasStopDesc()) {
       return;
     }
-    if (!isValidRouteDesc(stop.stopDesc(), stop.stopName())) {
+    if (!isValidStopDesc(stop.stopDesc(), stop.stopName())) {
       noticeContainer.addValidationNotice(
           new SameNameAndDescriptionForStopNotice(
               stop.csvRowNumber(), stop.stopId(), stop.stopDesc()));
     }
   }
 
-  private boolean isValidRouteDesc(String stopDesc, String stopName) {
+  private boolean isValidStopDesc(String stopDesc, String stopName) {
     // ignore lower case and upper case difference
     return !stopDesc.equalsIgnoreCase(stopName);
   }

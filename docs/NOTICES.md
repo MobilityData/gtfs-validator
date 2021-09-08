@@ -901,7 +901,7 @@
 |----------------	|-----------------------------------------	|--------	|
 | `csvRowNumber`  | The row number of the faulty record.      | Long 	  |
 | `stopId`        | The id of the faulty record.              | String  |
-| `routeDesc`    	| The faulty record's `stop_desc`.         	| String 	|
+| `stopDesc`    	| The faulty record's `stop_desc`.         	| String 	|
 
 ##### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
