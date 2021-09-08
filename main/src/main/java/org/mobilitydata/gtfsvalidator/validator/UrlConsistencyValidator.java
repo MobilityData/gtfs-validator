@@ -110,14 +110,11 @@ public class UrlConsistencyValidator extends FileValidator {
    */
   private ListMultimap<String, GtfsAgency> agenciesByUrlMap(GtfsAgencyTableContainer agencyTable) {
     ListMultimap<String, GtfsAgency> agenciesByUrl = ArrayListMultimap.create();
-    agencyTable
-        .getEntities()
-        .forEach(
-            agency -> {
-              if (agency.hasAgencyUrl()) {
-                agenciesByUrl.put(Ascii.toLowerCase(agency.agencyUrl()), agency);
-              }
-            });
+    for (GtfsAgency agency : agencyTable.getEntities()) {
+      if (agency.hasAgencyUrl()) {
+        agenciesByUrl.put(Ascii.toLowerCase(agency.agencyUrl()), agency);
+      }
+    }
     return agenciesByUrl;
   }
 
