@@ -136,6 +136,8 @@ jobs:
       - name: Substitute values in service.yaml
         run: |
           sed -i -e "s/{{SERVICE_NAME}}/gtfs-validator-snapshot-service/" service.yaml
+          sed -i -e "s/{{WORKLOAD_NAME}}/gtfs-validator-snapshot-workload/" service.yaml
+
       - name: Authenticate to GKE
         id: get-credentials
         uses: google-github-actions/get-gke-credentials@main
@@ -173,7 +175,8 @@ jobs:
           sed -i -e "s/{{DEPLOYMENT_NAME}}/gtfs-validator-latest-release-workload/g" deployment.yaml
       - name: Substitute values in service.yaml
         run: |
-          sed -i -e "s/{{SERVICE_NAME}}/gtfs-validator-latest-release-service/" service.yaml
+          sed -i -e "s/{{SERVICE_NAME}}/gtfs-validator-latest-release-workload-service/" service.yaml
+          sed -i -e "s/{{WORKLOAD_NAME}}/gtfs-validator-latest-release-workfload/" service.yaml
       - name: Authenticate to GKE
         id: get-credentials
         uses: google-github-actions/get-gke-credentials@main
