@@ -180,7 +180,7 @@ jobs:
         id: get-credentials
         uses: google-github-actions/get-gke-credentials@main
         with:
-          cluster_name: gtfs-validator-snapshot-cluster
+          cluster_name: gtfs-validator-${{ steps.previoustag.outputs.tag }}-cluster
           location: us-east1
           credentials: ${{ secrets.GCP_SA_KEY }}
       - name: Deploy to GKE
