@@ -238,5 +238,13 @@ jobs:
       - name: Download validaton reports folder
         run: |
           gsutil -m cp -r "gs://gtfs-validator-reports/commit sha value/" .
+      - name: Explore folder
+        run: |
+          ls -a
+      - name: Persist validation reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: validation_reports
+          path: .
 #  delete-snapshot-resources:
 #  delete-latest-release-resources:
