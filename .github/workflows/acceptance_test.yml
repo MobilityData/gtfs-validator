@@ -139,7 +139,7 @@ jobs:
           cluster_name: gtfs-validator-snapshot-cluster
           location: us-east1
           credentials: ${{ secrets.GCP_SA_KEY }}
-      - id: deploy to gke
+      - id: deploy-to-gke
         run: kubectl apply -f deployment.yaml
 #      - name: kubectl - Google Cloud GKE cluster.
 #        uses: ameydev/gke-kubectl-action@master
