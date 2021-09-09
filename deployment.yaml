@@ -1,0 +1,46 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "{{DEPLOYMENT_NAME}}"
+  namespace: "default"
+  labels:
+    app: "{{DEPLOYMENT_NAME}}"
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: "{{DEPLOYMENT_NAME}}"
+  template:
+    metadata:
+      labels:
+        app: "{{DEPLOYMENT_NAME}}"
+    spec:
+      containers:
+        - name: "gtfs-validator"
+          image: "us-east1-docker.pkg.dev/{{PROJECT_ID}}/gtfs-validator-repo/gtfs-validator-gke:{{TAG}}"
+          ports:
+            - containerPort: 8080
+          env:
+            - name: PORT
+              value: "8080"
+---
+apiVersion: "autoscaling/v2beta1"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "{{DEPLOYMENT_NAME}}-hpa-yhuq"
+  namespace: "default"
+  labels:
+    app: "{{DEPLOYMENT_NAME}}"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "{{DEPLOYMENT_NAME}}"
+    apiVersion: "apps/v1"
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: "Resource"
+      resource:
+        name: "cpu"
+        targetAverageUtilization: 80
