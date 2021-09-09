@@ -245,6 +245,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: validation_reports
-          path: commit sha value
+          path: ./commit sha value
 #  delete-snapshot-resources:
 #  delete-latest-release-resources:
+#  compare validation reports:
