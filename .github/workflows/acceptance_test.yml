@@ -237,8 +237,6 @@ jobs:
           export_default_credentials: true
       - name: Download validaton reports folder
         run: |
-          gsutil -m cp -r \
-            "gs://gtfs-validator-reports/commit\ sha\ value/" \
-            .
+          gsutil -m cp -r "gs://gtfs-validator-reports/commit sha value/" .
 #  delete-snapshot-resources:
 #  delete-latest-release-resources:
