@@ -175,6 +175,7 @@ public class GtfsValidatorController {
           messageBuilder.append(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
     GtfsFeedLoader feedLoader = new GtfsFeedLoader();
+    feedLoader.setNumThreads(args.getNumThreads());
     try {
       gtfsInput = createGtfsInput(args);
     } catch (IOException | URISyntaxException ioException) {
