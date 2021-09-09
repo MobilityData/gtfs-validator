@@ -133,15 +133,23 @@ jobs:
           sed -i -e "s/{{PROJECT_ID}}/${{ secrets.GCP_PROJECT_ID }}/" deployment.yaml
           sed -i -e "s/{{TAG}}/${{ steps.prep.outputs.versionTag }}/" deployment.yaml
 #          kubectl apply -f deployment.yaml
-      - name: kubectl - Google Cloud GKE cluster.
-        uses: ameydev/gke-kubectl-action@master
-        env:
-          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-          APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
-          CLUSTER_NAME: gtfs-validator-snapshot-cluster
-          ZONE_NAME: us-east1
+      - id: get-credentials
+        uses: google-github-actions/get-gke-credentials@main
         with:
-          args: apply -f .
+          cluster_name: gtfs-validator-snapshot-cluster
+          location: us-east1
+          credentials: ${{ secrets.GCP_SA_KEY }}
+      - id: deploy to gke
+        run: kubectl apply -f deployment.yaml
+#      - name: kubectl - Google Cloud GKE cluster.
+#        uses: ameydev/gke-kubectl-action@master
+#        env:
+#          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+#          APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
+#          CLUSTER_NAME: gtfs-validator-snapshot-cluster
+#          ZONE_NAME: us-east1
+#        with:
+#          args: apply -f .
 #  retrieve-urls:
 #  execute-snapshot-version:
 #  execute-latest-release:
