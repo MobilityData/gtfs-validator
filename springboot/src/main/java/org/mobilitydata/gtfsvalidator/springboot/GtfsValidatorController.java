@@ -88,9 +88,8 @@ public class GtfsValidatorController {
   private static final String CLIENT_X509_CERT_URL = "CLIENT_X509_CERT_URL";
 
   /**
-   * Runs {@code org.mobilitydata.gtfsvalidator.cli.Main.main} with the arguments extracted via the
-   * query parameters. Returns the the {@code ResponseEntity} that contains information about the
-   * response's {@code HttpStatus} and a message (as a {@code String}) that gives more information
+   * Validates a dataset based on the query parameters. Returns the the {@code ResponseEntity} that
+   * contains information about the response's {@code HttpStatus} and a message (as a {@code String}) that gives more information
    * about success or failure. Please note that this method requires authentication to be setup
    * prior to execution i.e. the following environment variables have to be defined:
    *
@@ -121,14 +120,14 @@ public class GtfsValidatorController {
    * <a href=https://cloud.google.com/storage/docs/json_api/v1/status-codes>Possible HTTP status
    * codes</a>
    *
-   * @param output_base Base directory to store the outputs
+   * @param outputBase Base directory to store the outputs
    * @param threads Number of threads to use
-   * @param country_code Country code of the feed, e.g., `nl`. It must be a two-letter country code
+   * @param countryCode Country code of the feed, e.g., `nl`. It must be a two-letter country code
    *     (ISO 3166-1 alpha-2)")
    * @param url The fully qualified URL to download GTFS archive
-   * @param validation_report_name The name of the validation report including .json extension.
-   * @param dataset_id the id of the dataset validated
-   * @param commit_sha the commit SHA
+   * @param validationReportName The name of the validation report including .json extension.
+   * @param datasetId the id of the dataset validated. It is arbitrarily determined by calling code, it is used to sort and store validation reports in Google Cloud Storage
+   * @param commitSha the commit SHA attributed by Github. It is used to sort and store validation reports in Google Cloud Storage.
    * @return the {@code ResponseEntity} that contains information about the response's {@code
    *     HttpStatus} and a message (as a {@code String}) that gives more information about success
    *     or failure. <a href=https://cloud.google.com/storage/docs/json_api/v1/status-codes>Possible
@@ -137,25 +136,25 @@ public class GtfsValidatorController {
   @GetMapping(value = "/", produces = "application/json; charset=UTF-8")
   @ResponseBody
   public ResponseEntity<HashMap<String, String>> run(
-      @RequestParam(required = false, defaultValue = DEFAULT_OUTPUT_BASE) String output_base,
+      @RequestParam(required = false, defaultValue = DEFAULT_OUTPUT_BASE) String outputBase,
       @RequestParam(required = false, defaultValue = DEFAULT_NUM_THREADS) String threads,
-      @RequestParam(required = false, defaultValue = DEFAULT_COUNTRY_CODE) String country_code,
+      @RequestParam(required = false, defaultValue = DEFAULT_COUNTRY_CODE) String countryCode,
       @RequestParam() String url,
       @RequestParam(required = false, defaultValue = Arguments.VALIDATION_REPORT_NAME_JSON)
-          String validation_report_name,
+          String validationReportName,
       @RequestParam(required = false, defaultValue = Arguments.SYSTEM_ERRORS_REPORT_NAME_JSON)
-          String system_error_report_name,
-      @RequestParam(required = false, defaultValue = "dataset id value") String dataset_id,
-      @RequestParam(required = false, defaultValue = "commit sha value") String commit_sha) {
+          String systemErrorReportName,
+      @RequestParam(required = false, defaultValue = "dataset id value") String datasetId,
+      @RequestParam(required = false, defaultValue = "commit sha value") String commitSha) {
 
     Arguments args =
         queryParametersToArguments(
-            output_base,
+            outputBase,
             threads,
-            country_code,
+            countryCode,
             url,
-            validation_report_name,
-            system_error_report_name);
+            validationReportName,
+            systemErrorReportName);
     StringBuilder messageBuilder = new StringBuilder();
     HttpStatus status;
     final long startNanos = System.nanoTime();
@@ -212,35 +211,35 @@ public class GtfsValidatorController {
     exportReport(noticeContainer, args);
     return generateResponse(
         messageBuilder,
-        pushValidationReportToCloudStorage(commit_sha, dataset_id, args, messageBuilder));
+        pushValidationReportToCloudStorage(commitSha, datasetId, args, messageBuilder));
   }
 
   /**
    * Converts query parameters to {@code Argument}.
    *
-   * @param output_base Base directory to store the outputs
+   * @param outputBase Base directory to store the outputs
    * @param threads Number of threads to use
-   * @param country_code Country code of the feed, e.g., `nl`. It must be a two-letter country code
+   * @param countryCode Country code of the feed, e.g., `nl`. It must be a two-letter country code
    *     (ISO 3166-1 alpha-2)").
    * @param url The fully qualified URL to download GTFS archive
-   * @param validation_report_name The name of the validation report including .json extension.
-   * @param system_error_report_name The name of the system error report including .json extension.
+   * @param validationReportName The name of the validation report including .json extension.
+   * @param systemErrorReportName The name of the system error report including .json extension.
    * @return the {@code Argument} instance generated from the query parameters passed.
    */
   private Arguments queryParametersToArguments(
-      String output_base,
+      String outputBase,
       String threads,
-      String country_code,
+      String countryCode,
       String url,
-      String validation_report_name,
-      String system_error_report_name) {
+      String validationReportName,
+      String systemErrorReportName) {
     final String[] argv = {
-      "-o", output_base,
+      "-o", outputBase,
       "-t", threads,
-      "-c", country_code,
+      "-c", countryCode,
       "-u", url,
-      "-v", validation_report_name,
-      "-e", system_error_report_name
+      "-v", validationReportName,
+      "-e", systemErrorReportName
     };
     Arguments args = new Arguments();
     JCommander jCommander = new JCommander(args);
@@ -294,8 +293,8 @@ public class GtfsValidatorController {
    *       documentation for authentication procedure</a>
    * </ul>
    *
-   * @param commitSha the commit SHA
-   * @param datasetId the id of the dataset
+   * @param commitSha the commit SHA attributed by Github. It is used to sort and store validation reportsin Google Cloud Storage.
+   * @param datasetId the id of the dataset validated. It is arbitrarily determined by calling code, it is used to sort and store validation reports in Google Cloud Storage
    * @param args the {@code Argument} generated from the query parameters
    * @return the {@code HttpStatus} of the validation report storage process
    */
