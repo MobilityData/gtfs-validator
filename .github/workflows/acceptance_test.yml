@@ -52,7 +52,7 @@ jobs:
         with:
           image_name: gtfs-validator-repo/gtfs-validator-gke
           image_tag: ${{ steps.prep.outputs.versionTag }}
-          docker_context: ./
+          docker_context: ./springboot/
           gar_hostname: us-east1-docker.pkg.dev
           gar_project: ${{ secrets.GCP_PROJECT_ID }}
           gar_service_account: ${{ secrets.GCP_SA_KEY }}
