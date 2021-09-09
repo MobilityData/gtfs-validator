@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: gtfs-validator-container
-          image: us-east1-docker.pkg.dev/{{PROJECT_ID}}/gtfs-valdiator-repo/gtfs-validator-gke:{{TAG}}}
+          image: us-east1-docker.pkg.dev/{{PROJECT_ID}}/gtfs-validator-repo/gtfs-validator-gke:{{TAG}}}
           # This app listens on port 8080 for web traffic by default.
           ports:
             - containerPort: 8080
