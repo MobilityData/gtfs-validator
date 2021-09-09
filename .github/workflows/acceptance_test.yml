@@ -132,9 +132,6 @@ jobs:
         run: |
           sed -i -e "s/{{PROJECT_ID}}/${{ secrets.GCP_PROJECT_ID }}/" deployment.yaml
           sed -i -e "s/{{TAG}}/${{ steps.prep.outputs.versionTag }}/" deployment.yaml
-          cat deployment.yaml
-          sleep 1m
-          cat deployment.yaml
 #          kubectl apply -f deployment.yaml
       - id: get-credentials
         uses: google-github-actions/get-gke-credentials@main
