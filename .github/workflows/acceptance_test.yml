@@ -132,6 +132,9 @@ jobs:
         run: |
           sed -i -e "s/{{PROJECT_ID}}/${{ secrets.GCP_PROJECT_ID }}/" deployment.yaml
           sed -i -e "s/{{TAG}}/${{ steps.prep.outputs.versionTag }}/" deployment.yaml
+      - name: Substitute values in service.yaml
+        run: |
+          sed -i -e "s/{{SERVICE_NAME}}/gtfs-validator-snapshot-service/" service.yaml
       - name: Authenticate to GKE
         id: get-credentials
         uses: google-github-actions/get-gke-credentials@main
@@ -166,6 +169,9 @@ jobs:
         run: |
           sed -i -e "s/{{PROJECT_ID}}/${{ secrets.GCP_PROJECT_ID }}/" deployment.yaml
           sed -i -e "s/{{TAG}}/${{ steps.previoustag.outputs.tag }}/" deployment.yaml
+      - name: Substitute values in service.yaml
+        run: |
+          sed -i -e "s/{{SERVICE_NAME}}/gtfs-validator-latest-release-service/" service.yaml
       - name: Authenticate to GKE
         id: get-credentials
         uses: google-github-actions/get-gke-credentials@main
