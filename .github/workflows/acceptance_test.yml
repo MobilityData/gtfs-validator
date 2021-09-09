@@ -132,6 +132,7 @@ jobs:
         run: |
           sed -i -e "s/{{PROJECT_ID}}/${{ secrets.GCP_PROJECT_ID }}/" deployment.yaml
           sed -i -e "s/{{TAG}}/${{ steps.prep.outputs.versionTag }}/" deployment.yaml
+          sed -i -e "s/{{DEPLOYMENT_NAME}}/gtfs-validator-snapshot-workload/g" deployment.yaml
       - name: Substitute values in service.yaml
         run: |
           sed -i -e "s/{{SERVICE_NAME}}/gtfs-validator-snapshot-service/" service.yaml
@@ -169,6 +170,7 @@ jobs:
         run: |
           sed -i -e "s/{{PROJECT_ID}}/${{ secrets.GCP_PROJECT_ID }}/" deployment.yaml
           sed -i -e "s/{{TAG}}/${{ steps.previoustag.outputs.tag }}/" deployment.yaml
+          sed -i -e "s/{{DEPLOYMENT_NAME}}/gtfs-validator-latest-release-workload/g" deployment.yaml
       - name: Substitute values in service.yaml
         run: |
           sed -i -e "s/{{SERVICE_NAME}}/gtfs-validator-latest-release-service/" service.yaml

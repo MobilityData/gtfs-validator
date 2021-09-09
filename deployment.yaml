@@ -2,19 +2,19 @@
 apiVersion: "apps/v1"
 kind: "Deployment"
 metadata:
-  name: "nginx-1"
+  name: "{{DEPLOYMENT_NAME}}"
   namespace: "default"
   labels:
-    app: "nginx-1"
+    app: "{{DEPLOYMENT_NAME}}"
 spec:
   replicas: 10
   selector:
     matchLabels:
-      app: "nginx-1"
+      app: "{{DEPLOYMENT_NAME}}"
   template:
     metadata:
       labels:
-        app: "nginx-1"
+        app: "{{DEPLOYMENT_NAME}}"
     spec:
       containers:
         - name: "gtfs-validator"
@@ -28,14 +28,14 @@ spec:
 apiVersion: "autoscaling/v2beta1"
 kind: "HorizontalPodAutoscaler"
 metadata:
-  name: "nginx-1-hpa-yhuq"
+  name: "{{DEPLOYMENT_NAME}}-hpa-yhuq"
   namespace: "default"
   labels:
-    app: "nginx-1"
+    app: "{{DEPLOYMENT_NAME}}"
 spec:
   scaleTargetRef:
     kind: "Deployment"
-    name: "nginx-1"
+    name: "{{DEPLOYMENT_NAME}}"
     apiVersion: "apps/v1"
   minReplicas: 1
   maxReplicas: 5
