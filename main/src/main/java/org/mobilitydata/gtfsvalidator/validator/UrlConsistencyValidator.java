@@ -19,7 +19,6 @@ package org.mobilitydata.gtfsvalidator.validator;
 import com.google.common.base.Ascii;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import java.util.List;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -77,8 +76,7 @@ public class UrlConsistencyValidator extends FileValidator {
       for (GtfsAgency agency : agencyByUrlMap.get(Ascii.toLowerCase(stop.stopUrl()))) {
         noticeContainer.addValidationNotice(new SameStopAndAgencyUrlNotice(stop, agency));
       }
-      List<GtfsRoute> routes = routesByUrlMap.get(Ascii.toLowerCase(stop.stopUrl()));
-      for (GtfsRoute route : routes) {
+      for (GtfsRoute route : routesByUrlMap.get(Ascii.toLowerCase(stop.stopUrl()))) {
         noticeContainer.addValidationNotice(new SameStopAndRouteUrlNotice(stop, route));
       }
     }
