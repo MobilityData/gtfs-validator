@@ -27,6 +27,7 @@ spec:
           resources:
             requests:
               memory: "32Gi"
+              cpu: "16000m"
 ---
 apiVersion: "autoscaling/v2beta1"
 kind: "HorizontalPodAutoscaler"
