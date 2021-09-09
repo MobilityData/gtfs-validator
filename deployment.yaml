@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: gtfs-validator-gke
 spec:
-  replicas: 150
+  replicas: 110
   selector:
     matchLabels:
       app: gtfs-validator
