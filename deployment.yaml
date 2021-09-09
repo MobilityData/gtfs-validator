@@ -1,23 +1,46 @@
-apiVersion: apps/v1
-kind: Deployment
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
 metadata:
-  name: gtfs-validator-gke
+  name: "nginx-1"
+  namespace: "default"
+  labels:
+    app: "nginx-1"
 spec:
   replicas: 110
   selector:
     matchLabels:
-      app: gtfs-validator
+      app: "nginx-1"
   template:
     metadata:
       labels:
-        app: gtfs-validator
+        app: "nginx-1"
     spec:
       containers:
-        - name: gtfs-validator-container
+        - name: "gtfs-validator"
           image: us-east1-docker.pkg.dev/{{PROJECT_ID}}/gtfs-validator-repo/gtfs-validator-gke:{{TAG}}}
-          # This app listens on port 8080 for web traffic by default.
           ports:
             - containerPort: 8080
           env:
             - name: PORT
               value: "8080"
+---
+apiVersion: "autoscaling/v2beta1"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "nginx-1-hpa-yhuq"
+  namespace: "default"
+  labels:
+    app: "nginx-1"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "nginx-1"
+    apiVersion: "apps/v1"
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: "Resource"
+      resource:
+        name: "cpu"
+        targetAverageUtilization: 80
