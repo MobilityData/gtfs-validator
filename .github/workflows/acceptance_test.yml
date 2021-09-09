@@ -143,6 +143,9 @@ jobs:
       - name: Deploy to GKE
         id: deploy-to-gke
         run: kubectl apply -f deployment.yaml
+      - name: Expose service
+        id: expose-service
+        run: kubectl apply -f service.yaml
 #      - name: kubectl - Google Cloud GKE cluster.
 #        uses: ameydev/gke-kubectl-action@master
 #        env:
