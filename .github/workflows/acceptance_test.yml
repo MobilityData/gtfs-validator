@@ -148,7 +148,7 @@ jobs:
           credentials: ${{ secrets.GCP_SA_KEY }}
       - name: Create secrets
         run: |
-          kubectl delete secrets ${{secrets.SNAPSHOT_SECRET_NAME}}
+#          kubectl delete secrets ${{secrets.SNAPSHOT_SECRET_NAME}}
           kubectl create secret generic ${{secrets.SNAPSHOT_SECRET_NAME}} --from-literal=TYPE="${{ secrets.TYPE }}" --from-literal=PROJECT_ID="${{ secrets.PROJECT_ID }}" --from-literal=PRIVATE_KEY_ID="${{ secrets.PRIVATE_KEY_ID }}" --from-literal=PRIVATE_KEY="${{ secrets.PRIVATE_KEY }}" --from-literal=CLIENT_EMAIL="${{ secrets.CLIENT_EMAIL }}" --from-literal=CLIENT_ID="${{ secrets.CLIENT_ID }}" --from-literal=AUTH_URI="${{ secrets.AUTH_URI }}" --from-literal=TOKEN_URI="${{ secrets.TOKEN_URI }}" --from-literal=AUTH_PROVIDER_X509_CERT_URL="${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}" --from-literal=CLIENT_X509_CERT_URL="${{ secrets.CLIENT_X509_CERT_URL }}"
       - name: Deploy to GKE
         id: deploy-to-gke
@@ -193,7 +193,7 @@ jobs:
           credentials: ${{ secrets.GCP_SA_KEY }}
       - name: Create secrets
         run: |
-          kubectl delete secrets ${{secrets.LATEST_RELEASE_SECRET_NAME}}
+#          kubectl delete secrets ${{secrets.LATEST_RELEASE_SECRET_NAME}}
           kubectl create secret generic ${{secrets.LATEST_RELEASE_SECRET_NAME}} --from-literal=TYPE="${{ secrets.TYPE }}" --from-literal=PROJECT_ID="${{ secrets.PROJECT_ID }}" --from-literal=PRIVATE_KEY_ID="${{ secrets.PRIVATE_KEY_ID }}" --from-literal=PRIVATE_KEY="${{ secrets.PRIVATE_KEY }}" --from-literal=CLIENT_EMAIL="${{ secrets.CLIENT_EMAIL }}" --from-literal=CLIENT_ID="${{ secrets.CLIENT_ID }}" --from-literal=AUTH_URI="${{ secrets.AUTH_URI }}" --from-literal=TOKEN_URI="${{ secrets.TOKEN_URI }}" --from-literal=AUTH_PROVIDER_X509_CERT_URL="${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}" --from-literal=CLIENT_X509_CERT_URL="${{ secrets.CLIENT_X509_CERT_URL }}"
       - name: Deploy to GKE
         id: deploy-to-gke
