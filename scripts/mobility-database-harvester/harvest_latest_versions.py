@@ -138,9 +138,7 @@ def harvest_archives_ids(catalog_data):
     archives_ids = []
 
     sources = catalog_data[CLAIMS][SOURCE_PROPERTY]
-    n = len(sources)
     for source in sources:
-        print("%d/%d", archives_ids.index(source), n)
         source_id = source[MAINSNAK][DATAVALUE][VALUE][ID]
         source_data = get_entity_data(source_id)
         source_archives_id = source_data[CLAIMS][ARCHIVES_ID_PROPERTY][0][MAINSNAK][
