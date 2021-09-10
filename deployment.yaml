@@ -50,7 +50,7 @@ spec:
             - name: CLIENT_X509_CERT_URL
               value: "{{CLIENT_X509_CERT_URL}}"
             - name: VALIDATION_REPORT_BUCKET
-              value: {{VALIDATION_REPORT_BUCKET}}
+              value: "{{VALIDATION_REPORT_BUCKET}}"
             - name: JVM_OPTS
               value: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 -Xms8G"
 
