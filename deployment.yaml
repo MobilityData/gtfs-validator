@@ -7,7 +7,7 @@ metadata:
   labels:
     app: "{{DEPLOYMENT_NAME}}"
 spec:
-  replicas: 10
+  replicas: 100
   selector:
     matchLabels:
       app: "{{DEPLOYMENT_NAME}}"
@@ -38,7 +38,7 @@ spec:
     name: "{{DEPLOYMENT_NAME}}"
     apiVersion: "apps/v1"
   minReplicas: 5
-  maxReplicas: 10
+  maxReplicas: 150
   metrics:
     - type: "Resource"
       resource:
