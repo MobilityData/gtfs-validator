@@ -30,7 +30,7 @@ spec:
             - name: PORT
               value: "8080"
             - name: JVM_OPTS
-              value: "-Xms8G -Xmx8G"
+              value: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 -Xms8G"
 ---
 apiVersion: "autoscaling/v2beta1"
 kind: "HorizontalPodAutoscaler"
