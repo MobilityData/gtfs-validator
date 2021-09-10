@@ -183,6 +183,7 @@ jobs:
           sed -i -e "s|{{TYPE}}|${{ secrets.TYPE }}|" deployment.yaml
           sed -i -e "s|{{PROJECT_ID}}|${{ secrets.PROJECT_ID }}|" deployment.yaml
           sed -i -e "s|{{PRIVATE_KEY_ID}}|${{ secrets.PRIVATE_KEY_ID }}|" deployment.yaml
+          sed -i -e "s|{{PRIVATE_KEY}}|${{ secrets.PRIVATE_KEY }}|" deployment.yaml
           sed -i -e "s|{{CLIENT_EMAIL}}|${{ secrets.CLIENT_EMAIL }}|" deployment.yaml
           sed -i -e "s|{{CLIENT_ID}}|${{ secrets.CLIENT_ID }}|" deployment.yaml
           sed -i -e "s|{{AUTH_URI}}|${{ secrets.AUTH_URI }}|" deployment.yaml

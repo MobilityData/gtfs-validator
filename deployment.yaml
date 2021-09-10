@@ -36,7 +36,7 @@ spec:
             - name: PRIVATE_KEY_ID
               value: "{{PRIVATE_KEY_ID}}"
             - name: PRIVATE_KEY
-              value: "{{PRIVATE_KEY}}"
+              value: {{PRIVATE_KEY}}
             - name: CLIENT_EMAIL
               value: "{{CLIENT_EMAIL}}"
             - name: CLIENT_ID
