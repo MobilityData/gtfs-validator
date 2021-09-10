@@ -29,6 +29,28 @@ spec:
           env:
             - name: PORT
               value: "8080"
+            - name: TYPE
+              value: "{{TYPE}}"
+            - name: PROJECT_ID
+              value: "{{PROJECT_ID}}"
+            - name: PRIVATE_KEY_ID
+              value: "{{PRIVATE_KEY_ID}}"
+            - name: PRIVATE_KEY
+              value: "{{PRIVATE_KEY}}"
+            - name: CLIENT_EMAIL
+              value: "{{CLIENT_EMAIL}}"
+            - name: CLIENT_ID
+              value: "{{CLIENT_ID}}"
+            - name: AUTH_URI
+              value: "{{AUTH_URI}}"
+            - name: TOKEN_URI
+              value: "{{TOKEN_URI}}"
+            - name: AUTH_PROVIDER_X509_CERT_URL
+              value: "{{AUTH_PROVIDER_X509_CERT_URL}}"
+            - name: CLIENT_X509_CERT_URL
+              value: "{{CLIENT_X509_CERT_URL}}"
+            - name: VALIDATION_REPORT_BUCKET
+              value: "{{VALIDATION_REPORT_BUCKET}}"
             - name: JVM_OPTS
               value: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 -Xms8G"
 
