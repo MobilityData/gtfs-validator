@@ -140,7 +140,6 @@ jobs:
           sed -i -e "s/{{TOKEN_URI}}/${{ secrets.TOKEN_URI }}/" deployment.yaml
           sed -i -e "s/{{AUTH_PROVIDER_X509_CERT_URL}}/${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}/" deployment.yaml
           sed -i -e "s/{{CLIENT_X509_CERT_URL}}/${{ secrets.CLIENT_X509_CERT_URL }}/" deployment.yaml
-#          sed -i -e "s/{{VALIDATION_REPORT_BUCKET}}/gtfs-validator-reports/g" deployment.yaml
           sed -i -e "s/{{PROJECT_ID}}/${{ secrets.GCP_PROJECT_ID }}/" deployment.yaml
           sed -i -e "s/{{TAG}}/${{ steps.prep.outputs.versionTag }}/" deployment.yaml
           sed -i -e "s/{{DEPLOYMENT_NAME}}/gtfs-validator-snapshot-workload/g" deployment.yaml
