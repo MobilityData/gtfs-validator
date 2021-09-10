@@ -30,25 +30,60 @@ spec:
             - name: PORT
               value: "8080"
             - name: TYPE
-              value: "{{TYPE}}"
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: TYPE
+            - name: TYPE
+              valueFrom:
+                secretKeyRef:
+                  name: mysecret
+                  key: TYPE
             - name: PROJECT_ID
-              value: "{{PROJECT_ID}}"
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: PROJECT_ID
             - name: PRIVATE_KEY_ID
-              value: "{{PRIVATE_KEY_ID}}"
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: PRIVATE_KEY_ID
             - name: PRIVATE_KEY
-              value: {{PRIVATE_KEY}}
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: PRIVATE_KEY
             - name: CLIENT_EMAIL
-              value: "{{CLIENT_EMAIL}}"
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: CLIENT_EMAIL
             - name: CLIENT_ID
-              value: "{{CLIENT_ID}}"
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: CLIENT_ID
             - name: AUTH_URI
-              value: "{{AUTH_URI}}"
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: AUTH_URI
             - name: TOKEN_URI
-              value: "{{TOKEN_URI}}"
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: TOKEN_URI
             - name: AUTH_PROVIDER_X509_CERT_URL
-              value: "{{AUTH_PROVIDER_X509_CERT_URL}}"
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: AUTH_PROVIDER_X509_CERT_URL
             - name: CLIENT_X509_CERT_URL
-              value: "{{CLIENT_X509_CERT_URL}}"
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: CLIENT_X509_CERT_URL
             - name: VALIDATION_REPORT_BUCKET
               value: "{{VALIDATION_REPORT_BUCKET}}"
             - name: JVM_OPTS

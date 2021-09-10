@@ -130,16 +130,6 @@ jobs:
 #          gcloud container clusters create-auto gtfs-validator-snapshot-cluster --zone us-east1
       - name: Substitute values in deployment.yaml
         run: |
-          sed -i -e "s|{{TYPE}}|${{ secrets.TYPE }}|" deployment.yaml
-          sed -i -e "s|{{PROJECT_ID}}|${{ secrets.PROJECT_ID }}|" deployment.yaml
-          sed -i -e "s|{{PRIVATE_KEY_ID}}|${{ secrets.PRIVATE_KEY_ID }}|" deployment.yaml
-          sed -i -e "s|{{PRIVATE_KEY}}|${{ secrets.PRIVATE_KEY }}|" deployment.yaml
-          sed -i -e "s|{{CLIENT_EMAIL}}|${{ secrets.CLIENT_EMAIL }}|" deployment.yaml
-          sed -i -e "s|{{CLIENT_ID}}|${{ secrets.CLIENT_ID }}|" deployment.yaml
-          sed -i -e "s|{{AUTH_URI}}|${{ secrets.AUTH_URI }}|" deployment.yaml
-          sed -i -e "s|{{TOKEN_URI}}|${{ secrets.TOKEN_URI }}|" deployment.yaml
-          sed -i -e "s|{{AUTH_PROVIDER_X509_CERT_URL}}|${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}|" deployment.yaml
-          sed -i -e "s|{{CLIENT_X509_CERT_URL}}|${{ secrets.CLIENT_X509_CERT_URL }}|" deployment.yaml
           sed -i -e "s|{{VALIDATION_REPORT_BUCKET}}|gtfs-validator-reports|" deployment.yaml
           sed -i -e "s/{{PROJECT_ID}}/${{ secrets.GCP_PROJECT_ID }}/" deployment.yaml
           sed -i -e "s/{{TAG}}/${{ steps.prep.outputs.versionTag }}/" deployment.yaml
@@ -155,6 +145,19 @@ jobs:
           cluster_name: gtfs-validator-snapshot-cluster
           location: us-east1
           credentials: ${{ secrets.GCP_SA_KEY }}
+      - name: Define secrets
+        run: |
+          kubectl create secret generic secrets \
+          --from-literal=TYPE=${{ secrets.TYPE }} \
+          --from-literal=PROJECT_ID=${{ secrets.PROJECT_ID }}\
+          --from-literal=PRIVATE_KEY_ID=${{ secrets.PRIVATE_KEY_ID }}\
+          --from-literal=PRIVATE_KEY=${{ secrets.PRIVATE_KEY }} \
+          --from-literal=CLIENT_EMAIL=${{ secrets.CLIENT_EMAIL }} \
+          --from-literal=CLIENT_ID=${{ secrets.CLIENT_ID }} \
+          --from-literal=AUTH_URI=${{ secrets.AUTH_URI }} \
+          --from-literal=TOKEN_URI=${{ secrets.TOKEN_URI }} \
+          --from-literal=AUTH_PROVIDER_X509_CERT_URL=${{ secrets.AUTH_PROVIDER_X509_CERT_URL }} \
+          --from-literal=CLIENT_X509_CERT_URL=${{ secrets.CLIENT_X509_CERT_URL }}
       - name: Deploy to GKE
         id: deploy-to-gke
         run: kubectl apply -f deployment.yaml
@@ -180,16 +183,6 @@ jobs:
 #          gcloud container clusters create-auto gtfs-validator-latest-release-cluster --zone us-east1
       - name: Substitute values in deployment.yaml
         run: |
-          sed -i -e "s|{{TYPE}}|${{ secrets.TYPE }}|" deployment.yaml
-          sed -i -e "s|{{PROJECT_ID}}|${{ secrets.PROJECT_ID }}|" deployment.yaml
-          sed -i -e "s|{{PRIVATE_KEY_ID}}|${{ secrets.PRIVATE_KEY_ID }}|" deployment.yaml
-          sed -i -e "s|{{PRIVATE_KEY}}|${{ secrets.PRIVATE_KEY }}|" deployment.yaml
-          sed -i -e "s|{{CLIENT_EMAIL}}|${{ secrets.CLIENT_EMAIL }}|" deployment.yaml
-          sed -i -e "s|{{CLIENT_ID}}|${{ secrets.CLIENT_ID }}|" deployment.yaml
-          sed -i -e "s|{{AUTH_URI}}|${{ secrets.AUTH_URI }}|" deployment.yaml
-          sed -i -e "s|{{TOKEN_URI}}|${{ secrets.TOKEN_URI }}|" deployment.yaml
-          sed -i -e "s|{{AUTH_PROVIDER_X509_CERT_URL}}|${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}|" deployment.yaml
-          sed -i -e "s|{{CLIENT_X509_CERT_URL}}|${{ secrets.CLIENT_X509_CERT_URL }}|" deployment.yaml
           sed -i -e "s|{{VALIDATION_REPORT_BUCKET}}|gtfs-validator-reports|" deployment.yaml
           sed -i -e "s/{{PROJECT_ID}}/${{ secrets.GCP_PROJECT_ID }}/" deployment.yaml
           sed -i -e "s/{{TAG}}/${{ steps.previoustag.outputs.tag }}/" deployment.yaml
@@ -205,6 +198,19 @@ jobs:
           cluster_name: gtfs-validator-latest-release-cluster
           location: us-east1
           credentials: ${{ secrets.GCP_SA_KEY }}
+      - name: Define secrets
+        run: |
+          kubectl create secret generic secrets \
+          --from-literal=TYPE=${{ secrets.TYPE }} \
+          --from-literal=PROJECT_ID=${{ secrets.PROJECT_ID }}\
+          --from-literal=PRIVATE_KEY_ID=${{ secrets.PRIVATE_KEY_ID }}\
+          --from-literal=PRIVATE_KEY=${{ secrets.PRIVATE_KEY }} \
+          --from-literal=CLIENT_EMAIL=${{ secrets.CLIENT_EMAIL }} \
+          --from-literal=CLIENT_ID=${{ secrets.CLIENT_ID }} \
+          --from-literal=AUTH_URI=${{ secrets.AUTH_URI }} \
+          --from-literal=TOKEN_URI=${{ secrets.TOKEN_URI }} \
+          --from-literal=AUTH_PROVIDER_X509_CERT_URL=${{ secrets.AUTH_PROVIDER_X509_CERT_URL }} \
+          --from-literal=CLIENT_X509_CERT_URL=${{ secrets.CLIENT_X509_CERT_URL }}
       - name: Deploy to GKE
         id: deploy-to-gke
         run: kubectl apply -f deployment.yaml
