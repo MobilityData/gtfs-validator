@@ -147,8 +147,8 @@ public class GtfsValidatorController {
           String validationReportName,
       @RequestParam(required = false, defaultValue = Arguments.SYSTEM_ERRORS_REPORT_NAME_JSON)
           String systemErrorReportName,
-      @RequestParam(required = false, defaultValue = "dataset id value") String datasetId,
-      @RequestParam(required = false, defaultValue = "commit sha value") String commitSha) {
+      @RequestParam() String datasetId,
+      @RequestParam() String commitSha) {
 
     Arguments args =
         queryParametersToArguments(

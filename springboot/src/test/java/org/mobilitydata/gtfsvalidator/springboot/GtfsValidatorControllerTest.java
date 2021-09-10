@@ -77,7 +77,7 @@ public class GtfsValidatorControllerTest {
     mockMvc
         .perform(
             MockMvcRequestBuilders.get(
-                "/?url=http://webapps.thebus.org/transitdata/Production/google_transit.zip&country_code=us"))
+                "/?url=http://webapps.thebus.org/transitdata/Production/google_transit.zip&country_code=us&datasetId=value&commitSha=1234"))
         .andExpect(MockMvcResultMatchers.status().isPreconditionFailed())
         .andReturn();
   }
@@ -99,7 +99,7 @@ public class GtfsValidatorControllerTest {
     mockMvc
         .perform(
             MockMvcRequestBuilders.get(
-                "/?url=http://webapps.thebus.org/transitdata/Production/google_transit.zip&country_code=us"))
+                "/?url=http://webapps.thebus.org/transitdata/Production/google_transit.zip&country_code=us&datasetId=value&commitSha=1234"))
         .andExpect(MockMvcResultMatchers.status().isUnauthorized())
         .andReturn();
   }
