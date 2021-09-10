@@ -21,6 +21,11 @@ spec:
           image: "us-east1-docker.pkg.dev/{{PROJECT_ID}}/gtfs-validator-repo/gtfs-validator-gke:{{TAG}}"
           ports:
             - containerPort: 8080
+          resources:
+            requests:
+              memory: "8Gi"
+            limits:
+              memory: "8Gi"
           env:
             - name: PORT
               value: "8080"
