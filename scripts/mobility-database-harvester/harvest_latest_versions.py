@@ -156,6 +156,7 @@ def harvest_latest_versions(archives_ids):
     latest_versions = {}
 
     for archives_id in archives_ids:
+        print(archives_id)
         bucket_id = client.lookup_bucket(
             LATEST_BUCKET_PATH.format(source_archives_id=archives_id)
         )
