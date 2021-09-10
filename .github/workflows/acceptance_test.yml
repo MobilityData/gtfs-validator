@@ -189,41 +189,41 @@ jobs:
       - name: Expose service
         id: expose-service
         run: kubectl apply -f service.yaml
-  fetch-urls:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - name: Set up python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Install dependencies
-        run: pip3 install -r scripts/mobility-database-harvester/requirements.txt
-      - name: Get datasets' metadata
-        id: set-matrix
-        run: |
-          python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
-          DATASETS=$(jq . datasets_metadata/latest_versions.json -R
-          echo $DATASETS
-          echo "::set-output name=matrix::$DATASETS"
-        env:
-          TYPE: ${{ secrets.TYPE }}
-          PROJECT_ID: ${{ secrets.PROJECT_ID }}
-          PRIVATE_KEY_ID: ${{ secrets.PRIVATE_KEY_ID }}
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-          CLIENT_EMAIL: ${{ secrets.CLIENT_EMAIL }}
-          CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          AUTH_URI: ${{ secrets.AUTH_URI }}
-          TOKEN_URI: ${{ secrets.TOKEN_URI }}
-          AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}
-          CLIENT_X509_CERT_URL: ${{ secrets.CLIENT_X509_CERT_URL }}
-      - name: Persist datasets metadata
-        uses: actions/upload-artifact@v2
-        with:
-          name: datasets_metadata
-          path: datasets_metadata
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+#  fetch-urls:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v1
+#      - name: Set up python 3.9
+#        uses: actions/setup-python@v2
+#        with:
+#          python-version: 3.9
+#      - name: Install dependencies
+#        run: pip3 install -r scripts/mobility-database-harvester/requirements.txt
+#      - name: Get datasets' metadata
+#        id: set-matrix
+#        run: |
+#          python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
+#          DATASETS=$(jq . datasets_metadata/latest_versions.json -R
+#          echo $DATASETS
+#          echo "::set-output name=matrix::$DATASETS"
+#        env:
+#          TYPE: ${{ secrets.TYPE }}
+#          PROJECT_ID: ${{ secrets.PROJECT_ID }}
+#          PRIVATE_KEY_ID: ${{ secrets.PRIVATE_KEY_ID }}
+#          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+#          CLIENT_EMAIL: ${{ secrets.CLIENT_EMAIL }}
+#          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+#          AUTH_URI: ${{ secrets.AUTH_URI }}
+#          TOKEN_URI: ${{ secrets.TOKEN_URI }}
+#          AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}
+#          CLIENT_X509_CERT_URL: ${{ secrets.CLIENT_X509_CERT_URL }}
+#      - name: Persist datasets metadata
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: datasets_metadata
+#          path: datasets_metadata
+#    outputs:
+#      matrix: ${{ steps.set-matrix.outputs.matrix }}
 #  execute-snapshot-version:
 #  execute-latest-release:
   download-validation-reports:
