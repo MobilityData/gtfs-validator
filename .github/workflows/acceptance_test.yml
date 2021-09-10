@@ -100,7 +100,7 @@ jobs:
           gar_service_account: ${{ secrets.GCP_SA_KEY }}
           tag_latest_version: true
   set-up-kubernetes-for-snapshot:
-    needs: [ push-snapshot-to-gar, setup-secrets ]
+    needs: [ push-snapshot-to-gar ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -155,7 +155,7 @@ jobs:
         id: expose-service
         run: kubectl apply -f service.yaml
   set-up-kubernetes-for-latest-release:
-    needs: [ push-latest-release-to-gar, setup-secrets ]
+    needs: [ push-latest-release-to-gar ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
