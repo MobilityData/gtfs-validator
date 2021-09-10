@@ -34,11 +34,6 @@ spec:
                 secretKeyRef:
                   name: secrets
                   key: TYPE
-            - name: TYPE
-              valueFrom:
-                secretKeyRef:
-                  name: mysecret
-                  key: TYPE
             - name: PROJECT_ID
               valueFrom:
                 secretKeyRef:
