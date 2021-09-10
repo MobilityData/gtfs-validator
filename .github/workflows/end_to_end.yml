@@ -2,8 +2,13 @@ name: End to end
 
 on:
   push:
-    branches: [ master, extend-end-to-end ] #<-- replace extend-end-to-end by the name of the agency/publisher
-
+    branches: [ master ]
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    branches: [ master ]
+    paths-ignore:
+      - '**.md'
 jobs:
   validate_gradle_wrapper:
     runs-on: ubuntu-latest
