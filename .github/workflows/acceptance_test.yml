@@ -156,6 +156,18 @@ jobs:
       - name: Expose service
         id: expose-service
         run: kubectl apply -f service.yaml
+      - name: Wait a few minutes for service to be up and running
+        id: wait
+        run: sleep 2m
+      - name: Export snapshot service IP
+        id: set-snapshot-service-ip
+        run: |
+          echo $(kubectl get services gtfs-validator-snapshot-service -o json) > info.json
+          IP=$(jq -r '.status.loadBalancer.ingress[0] .ip' info.json)
+          echo $DATASETS
+          echo "::set-output name=ip::$IP"
+    outputs:
+      ip: ${{ steps.set-snapshot-service-ip.outputs.ip }}
   set-up-kubernetes-for-latest-release:
     needs: [ push-latest-release-to-gar ]
     runs-on: ubuntu-latest
@@ -236,28 +248,34 @@ jobs:
           path: datasets_metadata
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
-#  execute-snapshot-version:
-#  execute-latest-release:
-  download-validation-reports:
+  execute-snapshot-version:
+    needs: [ set-up-kubernetes-for-snapshot ]
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@master
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
-      - name: Download validaton reports folder
+      - name: display-ip
         run: |
-          gsutil -m cp -r "gs://gtfs-validator-reports/commit sha value/" .
-      - name: Explore folder
-        run: |
-          ls -a
-      - name: Persist validation reports
-        uses: actions/upload-artifact@v2
-        with:
-          name: validation_reports
-          path: ./commit sha value
+          echo ${{ needs.set-up-kubernetes-for-snapshot.outputs.ip }}
+#  execute-latest-release:
+#  download-validation-reports:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Set up Cloud SDK
+#        uses: google-github-actions/setup-gcloud@master
+#        with:
+#          project_id: ${{ secrets.GCP_PROJECT_ID }}
+#          service_account_key: ${{ secrets.GCP_SA_KEY }}
+#          export_default_credentials: true
+#      - name: Download validation reports folder
+#        run: |
+#          gsutil -m cp -r "gs://gtfs-validator-reports/commit sha value/" .
+#      - name: Explore folder
+#        run: |
+#          ls -a
+#      - name: Persist validation reports
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: validation_reports
+#          path: ./commit sha value
 #  delete-snapshot-resources:
 #  delete-latest-release-resources:
 #  compare validation reports:
