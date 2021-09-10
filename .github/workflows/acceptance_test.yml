@@ -6,6 +6,18 @@ on:
     paths-ignore:
       - '**.md'
 jobs:
+  setup-secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+      - name: Define secrets
+        run: |
+          kubectl create secret generic secrets --from-literal=TYPE="${{ secrets.TYPE }}" --from-literal=PROJECT_ID="${{ secrets.PROJECT_ID }}" --from-literal=PRIVATE_KEY_ID="${{ secrets.PRIVATE_KEY_ID }}" --from-literal=PRIVATE_KEY="${{ secrets.PRIVATE_KEY }}" --from-literal=CLIENT_EMAIL="${{ secrets.CLIENT_EMAIL }}" --from-literal=CLIENT_ID="${{ secrets.CLIENT_ID }}" --from-literal=AUTH_URI="${{ secrets.AUTH_URI }}" --from-literal=TOKEN_URI="${{ secrets.TOKEN_URI }}" --from-literal=AUTH_PROVIDER_X509_CERT_URL="${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}" --from-literal=CLIENT_X509_CERT_URL="${{ secrets.CLIENT_X509_CERT_URL }}"
   push-snapshot-to-gar:
     runs-on: ubuntu-latest
     steps:
@@ -100,7 +112,7 @@ jobs:
           gar_service_account: ${{ secrets.GCP_SA_KEY }}
           tag_latest_version: true
   set-up-kubernetes-for-snapshot:
-    needs: [ push-snapshot-to-gar ]
+    needs: [ push-snapshot-to-gar, setup-secrets ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -145,9 +157,6 @@ jobs:
           cluster_name: gtfs-validator-snapshot-cluster
           location: us-east1
           credentials: ${{ secrets.GCP_SA_KEY }}
-      - name: Define secrets
-        run: |
-          kubectl create secret generic snapshot-secrets --from-literal=TYPE="${{ secrets.TYPE }}" --from-literal=PROJECT_ID="${{ secrets.PROJECT_ID }}" --from-literal=PRIVATE_KEY_ID="${{ secrets.PRIVATE_KEY_ID }}" --from-literal=PRIVATE_KEY="${{ secrets.PRIVATE_KEY }}" --from-literal=CLIENT_EMAIL="${{ secrets.CLIENT_EMAIL }}" --from-literal=CLIENT_ID="${{ secrets.CLIENT_ID }}" --from-literal=AUTH_URI="${{ secrets.AUTH_URI }}" --from-literal=TOKEN_URI="${{ secrets.TOKEN_URI }}" --from-literal=AUTH_PROVIDER_X509_CERT_URL="${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}" --from-literal=CLIENT_X509_CERT_URL="${{ secrets.CLIENT_X509_CERT_URL }}"
       - name: Deploy to GKE
         id: deploy-to-gke
         run: kubectl apply -f deployment.yaml
@@ -155,7 +164,7 @@ jobs:
         id: expose-service
         run: kubectl apply -f service.yaml
   set-up-kubernetes-for-latest-release:
-    needs: [ push-latest-release-to-gar ]
+    needs: [ push-latest-release-to-gar, setup-secrets ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -188,9 +197,6 @@ jobs:
           cluster_name: gtfs-validator-latest-release-cluster
           location: us-east1
           credentials: ${{ secrets.GCP_SA_KEY }}
-      - name: Define secrets
-        run: |
-          kubectl create secret my-secrets generic --from-literal=TYPE="${{ secrets.TYPE }}" --from-literal=PROJECT_ID="${{ secrets.PROJECT_ID }}" --from-literal=PRIVATE_KEY_ID="${{ secrets.PRIVATE_KEY_ID }}" --from-literal=PRIVATE_KEY="${{ secrets.PRIVATE_KEY }}" --from-literal=CLIENT_EMAIL="${{ secrets.CLIENT_EMAIL }}" --from-literal=CLIENT_ID="${{ secrets.CLIENT_ID }}" --from-literal=AUTH_URI="${{ secrets.AUTH_URI }}" --from-literal=TOKEN_URI="${{ secrets.TOKEN_URI }}" --from-literal=AUTH_PROVIDER_X509_CERT_URL="${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}" --from-literal=CLIENT_X509_CERT_URL="${{ secrets.CLIENT_X509_CERT_URL }}"
       - name: Deploy to GKE
         id: deploy-to-gke
         run: kubectl apply -f deployment.yaml
