@@ -144,7 +144,7 @@ jobs:
         uses: google-github-actions/get-gke-credentials@main
         with:
           cluster_name: gtfs-validator-snapshot-cluster
-          location: us-east1-b
+          location: us-east1
           credentials: ${{ secrets.GCP_SA_KEY }}
       - name: Create secrets
         run: |
@@ -200,7 +200,7 @@ jobs:
         uses: google-github-actions/get-gke-credentials@main
         with:
           cluster_name: gtfs-validator-latest-release-cluster
-          location: us-east1-b
+          location: us-east1
           credentials: ${{ secrets.GCP_SA_KEY }}
       - name: Create secrets
         run: |
