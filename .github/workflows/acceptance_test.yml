@@ -262,8 +262,8 @@ jobs:
           do
             export SOURCE=$source;
             export URL=$(jq '.[$SOURCE_NAME]' latest_versions.json --arg SOURCE_NAME $SOURCE -r);
-            echo "http://${{ needs.set-up-kubernetes-for-snapshot.outputs.ip }}/?url=$URL&datasetId=$source&commitSha=${{ github.sha }}&threads=16"
-            curl "http://${{ needs.set-up-kubernetes-for-snapshot.outputs.ip }}/?url=$URL&datasetId=$source&commitSha=${{ github.sha }}&threads=16" &
+            echo "http://${{ needs.set-up-kubernetes-for-snapshot.outputs.ip }}/?datasetId=$source&commitSha=${{ github.sha }}&threads=16&url=$URL&"
+            curl "http://${{ needs.set-up-kubernetes-for-snapshot.outputs.ip }}/?datasetId=$source&commitSha=${{ github.sha }}&threads=16&url=$URL&"
           done;
           wait
 #  execute-latest-release:
