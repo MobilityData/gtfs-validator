@@ -8,6 +8,10 @@ on:
       - 'Dockerfile'
       - '.gitignore'
       - 'LICENSE'
+      - 'docker.yml'
+      - 'formatting.yml'
+      - 'test_pack_dock.yml'
+      - 'triage.yml'
   pull_request:
     branches: [ master ]
     paths-ignore:
@@ -15,6 +19,10 @@ on:
       - 'Dockerfile'
       - '.gitignore'
       - 'LICENSE'
+      - 'docker.yml'
+      - 'formatting.yml'
+      - 'test_pack_dock.yml'
+      - 'triage.yml'
 jobs:
   validate_gradle_wrapper:
     runs-on: ubuntu-latest
