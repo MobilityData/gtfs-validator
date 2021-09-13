@@ -82,7 +82,7 @@ spec:
             - name: VALIDATION_REPORT_BUCKET
               value: "{{VALIDATION_REPORT_BUCKET}}"
             - name: JVM_OPTS
-              value: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 -Xms16G"
+              value: "-Xmx16G -Xms16G"
 
 ---
 apiVersion: "autoscaling/v2beta1"
