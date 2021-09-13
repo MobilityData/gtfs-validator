@@ -5,11 +5,16 @@ on:
     branches: [ master ]
     paths-ignore:
       - '**.md'
+      - 'Dockerfile'
+      - '.gitignore'
+      - 'LICENSE'
   pull_request:
     branches: [ master ]
     paths-ignore:
       - '**.md'
-
+      - 'Dockerfile'
+      - '.gitignore'
+      - 'LICENSE'
 jobs:
   validate_gradle_wrapper:
     runs-on: ubuntu-latest
