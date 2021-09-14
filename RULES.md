@@ -144,8 +144,11 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`SameRouteAndAgencyUrlNotice`](#SameRouteAndAgencyUrlNotice)                       | Same `routes.route_url` and `agency.agency_url`.                                                                                                  	        |
 | [`SameStopAndAgencyUrlNotice`](#SameStopAndAgencyUrlNotice)                         | Same `stops.stop_url` and `agency.agency_url`.                                                                                                  	            |
 | [`SameStopAndRouteUrlNotice`](#SameStopAndRouteUrlNotice)                          	| Same `stops.stop_url` and `routes.route_url`.                                                                                                  	            |
+| [`StopHasTooManyMatchesForShapeNotice`](#StopHasTooManyMatchesForShapeNotice)     	| Stop entry that has many potential matches to the trip's path of travel.                                                                                       |
+| [`StopsMatchShapeOutOfOrderNotice`](#StopsMatchShapeOutOfOrderNotice)     	        | Two stop entries are different than their arrival-departure order defined by the shapes.txt                                                                   |
 | [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	| `arrival_time` or `departure_time` not specified for timepoint.                                                                                             	|
-| [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	| Stop too far from trip shape.                                                                                                                               	|
+| [`StopTooFarFromShapeNotice`](#StopTooFarFromShapeNotice)                 	        | Stop too far from trip shape.                                                                                                                               	|
+| [`StopTooFarFromShapeUsingUserDistanceNotice`](#StopTooFarFromShapeUsingUserDistanceNotice)| Stop time too far from shape.                                                                                                                     |
 | [`StopWithoutStopTimeNotice`](#StopWithoutStopTimeNotice)                             | A stop in `stops.txt` is not referenced by any `stop_times.stop_id`.                                                                                          |
 | [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                              	| Stop without value for `stops.zone_id`.                                                                                                                     	|
 | [`TranslationForeignKeyViolationNotice`](#TranslationForeignKeyViolationNotice)       | An entity with the given `record_id` and `record_sub_id` cannot be found in the referenced table.                                                             |
@@ -855,6 +858,18 @@ A stop should not have the same `stop.stop_url` as a record from `routes.txt`.
 
 ##### References:
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+ 
+<a name="StopHasTooManyMatchesForShapeNotice"/>
+
+#### StopHasTooManyMatchesForShapeNotice
+
+A stop entry that has many potential matches to the trip's path of travel, as defined  by the shape entry in `shapes.txt`.
+
+<a name="StopsMatchShapeOutOfOrderNotice"/>
+
+#### StopsMatchShapeOutOfOrderNotice
+
+Two stop entries in `stop_times.txt` are different than their arrival-departure order as defined by the shape in the `shapes.txt` file.
 
 <a name="StopTimeTimepointWithoutTimeNotice"/>
 
@@ -865,14 +880,20 @@ Any record with `stop_times.timepoint` set to 1 should define a value for `stop_
 ##### References:
 * [GTFS stop_times.txt specification](https://gtfs.org/reference/static#stoptimestxt)
 
-<a name="StopTooFarFromTripShapeNotice"/>
+<a name="StopTooFarFromShapeNotice"/>
 
-#### StopTooFarFromTripShapeNotice
+#### StopTooFarFromShapeNotice
 
 Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100 meters of stop locations which a trip serves.
 
 ##### References:
 * [GTFS Best Practices shapes.txt](https://gtfs.org/best-practices/#shapestxt)
+ 
+<a name="StopTooFarFromShapeUsingUserDistanceNotice"/>
+
+#### StopTooFarFromShapeUsingUserDistanceNotice
+
+A stop time entry that is a large distance away from the location of the shape in `shapes.txt` as defined by `shape_dist_traveled` values.
 
 <a name="StopWithoutStopTimeNotice"/>
 

@@ -141,8 +141,8 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
   }
 
   /**
-   * A single route has identical values for {@code routes.route_desc} and {@code route_long_name} or
-   * {@code route_short_name}.
+   * A single route has identical values for {@code routes.route_desc} and {@code route_long_name}
+   * or {@code route_short_name}.
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
    */

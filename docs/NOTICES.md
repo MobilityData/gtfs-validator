@@ -638,8 +638,11 @@
 | `same_route_and_agency_url`                	| [`SameRouteAndAgencyUrlNotice`](#SameRouteAndAgencyUrlNotice)                       |
 | `same_stop_and_agency_url`                 	| [`SameStopAndAgencyUrlNotice`](#SameStopAndAgencyUrlNotice)                         |
 | `same_stop_and_route_url`                  	| [`SameStopAndRouteUrlNotice`](#SameStopAndRouteUrlNotice)                           |
+| `stop_has_too_many_matches_for_shape`        	| [`StopHasTooManyMatchesForShapeNotice`](#StopHasTooManyMatchesForShapeNotice)     	|
+| `stops_match_shape_out_of_order`             	| [`StopsMatchShapeOutOfOrderNotice`](#StopsMatchShapeOutOfOrderNotice)              	|
 | `stop_time_timepoint_without_times`        	| [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	|
-| `stop_too_far_from_trip_shape`            	| [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	|
+| `stop_too_far_from_shape_using_user_distance`	| [`StopTooFarFromShapeUsingUserDistanceNotice`](#StopTooFarFromShapeUsingUserDistanceNotice)                 	|
+| `stop_too_far_from_shape`                 	| [`StopTooFarFromShapeNotice`](#StopTooFarFromShapeNotice)                 	|
 | `stop_without_zone_id`                     	| [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                 	            |
 | `too_fast_travel`                          	| [`TooFastTravelNotice`](#TooFastTravelNotice)                                     	|
 | `translation_foreign_key_violation`           | [`TranslationForeignKeyViolationNotice`](#TranslationForeignKeyViolationNotice)	    |
@@ -964,6 +967,47 @@
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
+#### [StopHasTooManyMatchesForShapeNotice](/RULES.md#StopHasTooManyMatchesForShapeNotice)
+##### Fields description
+
+| Field name             	| Description                                                	| Type    	|
+|------------------------	|------------------------------------------------------------	|---------	|
+| `tripCsvRowNumber`     	| The row number of the faulty record from `trips.txt`.      	| Long    	|
+| `shapeId`              	| The id of the shape that is referred to.                   	| String  	|
+| `tripId`               	| The id of the trip that is referred to.                    	| String  	|
+| `stopTimeCsvRowNumber` 	| The row number of the faulty record from `stop_times.txt`. 	| Long  	|
+| `stopId`               	| The id of the stop that is referred to.                    	| String  	|
+| `stopName`             	| The name of the stop that is referred to.                  	| String  	|
+| `match`                	| Latitude and longitude pair of the location.               	| Object  	|
+| `matchCount`           	| The number of matches for the stop that is referred to.    	| Integer 	|
+
+##### Affected files
+* [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
+* [`stops_times.txt`](http://gtfs.org/reference/static#stopstimestxt)
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+
+#### [StopsMatchShapeOutOfOrderNotice](/RULES.md#StopsMatchShapeOutOfOrderNotice)
+##### Fields description
+
+| Field name              	| Description                                                       	| Type   	|
+|-------------------------	|-------------------------------------------------------------------	|--------	|
+| `tripCsvRowNumber`      	| The row number of the faulty record from `trips.txt`.             	| Long   	|
+| `shapeId`               	| The id of the shape that is referred to.                          	| String 	|
+| `tripId`                	| The id of the trip that is referred to.                           	| String 	|
+| `stopTimeCsvRowNumber1` 	| The row number of the first faulty record from `stop_times.txt`.  	| Long   	|
+| `stopId1`               	| The id of the first stop that is referred to.                     	| String 	|
+| `stopName1`             	| The name of the first stop that is referred to.                   	| String 	|
+| `match1`                	| Latitude and longitude pair of the first matching location.       	| Object 	|
+| `stopTimeCsvRowNumber2` 	| The row number of the second faulty record from `stop_times.txt`. 	| Long   	|
+| `stopId2`               	| The id of the second stop that is referred to.                    	| String 	|
+| `stopName2`             	| The name of the second stop that is referred to.                  	| String 	|
+| `match2`                	| Latitude and longitude pair of the second matching location.      	| Object 	|
+
+##### Affected files
+* [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
+* [`stops_times.txt`](http://gtfs.org/reference/static#stopstimestxt)
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+
 #### [StopTimeTimepointWithoutTimesNotice](/RULES.md#StopTimeTimepointWithoutTimesNotice)
 ##### Fields description
 
@@ -977,18 +1021,41 @@
 ##### Affected files
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-#### [StopTooFarFromTripShapeNotice](/RULES.md#StopTooFarFromTripShapeNotice)
+#### [StopTooFarFromShapeUsingUserDistanceNotice](/RULES.md#StopTooFarFromShapeUsingUserDistanceNotice)
 ##### Fields description
 
-| Field name               	| Description                                	| Type   	|
-|--------------------------	|--------------------------------------------	|--------	|
-| `stopId`                 	| The faulty record's id.                    	| String 	|
-| `stopSequence`           	| The faulty record's `stops.stop_sequence`. 	| String 	|
-| `tripId`                 	| The faulty record's `tripId`.              	| String 	|
-| `shapeId`                	| The faulty record's `shapeId`.             	| String 	|
-| `stopShapeThresholdMeters`| Distance margin.                           	| Double 	|
+| Field name             	| Description                                                	| Type   	|
+|------------------------	|------------------------------------------------------------	|--------	|
+| `tripCsvRowNumber`     	| The row number of the faulty record from `trips.txt`.      	| Long   	|
+| `shapeId`              	| The id of the shape that is referred to.                   	| String 	|
+| `tripId`               	| The id of the trip that is referred to.                    	| String 	|
+| `stopTimeCsvRowNumber` 	| The row number of the faulty record from `stop_times.txt`. 	| Long   	|
+| `stopId`               	| The id of the stop that is referred to.                    	| String 	|
+| `stopName`             	| The name of the stop that is referred to.                  	| String 	|
+| `match`                	| Latitude and longitude pair of the location.               	| Object 	|
+| `geoDistanceToShape`   	| Distance from stop to shape.                               	| Double 	|
 
 ##### Affected files
+* [`stop_times.txt`](http://gtfs.org/reference/static#stoptimestxt)
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+* [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
+
+#### [StopTooFarFromShapeNotice](/RULES.md#StopTooFarFromShapeNotice)
+##### Fields description
+
+| Field name             	| Description                                                	| Type   	|
+|------------------------	|------------------------------------------------------------	|--------	|
+| `tripCsvRowNumber`     	| The row number of the faulty record from `trips.txt`.      	| Long   	|
+| `shapeId`              	| The id of the shape that is referred to.                   	| String 	|
+| `tripId`               	| The id of the trip that is referred to.                    	| String 	|
+| `stopTimeCsvRowNumber` 	| The row number of the faulty record from `stop_times.txt`. 	| Long   	|
+| `stopId`               	| The id of the stop that is referred to.                    	| String 	|
+| `stopName`             	| The name of the stop that is referred to.                  	| String 	|
+| `match`                	| Latitude and longitude pair of the location.               	| Object 	|
+| `geoDistanceToShape`   	| Distance from stop to shape.                               	| Double 	|
+
+##### Affected files
+* [`stop_times.txt`](http://gtfs.org/reference/static#stoptimestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 
