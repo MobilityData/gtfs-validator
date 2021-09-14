@@ -783,7 +783,7 @@ A route's color and `route_text_color` should be contrasting.
 
 #### RouteShortAndLongNameEqualNotice
 
-Short and long name are equal for a route.
+Short and long name are equal for a single route.
 
 ##### References:
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)

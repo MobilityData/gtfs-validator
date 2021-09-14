@@ -101,7 +101,7 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
   }
 
   /**
-   * Short and long name are equal for a route.
+   * Short and long name are equal for a single route.
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
@@ -122,7 +122,7 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
   }
 
   /**
-   * Short name of a route is too long (more than 12 characters,
+   * Short name of a single route is too long (more than 12 characters,
    * https://gtfs.org/best-practices/#routestxt).
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
@@ -141,7 +141,7 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
   }
 
   /**
-   * A route has identical values for {@code routes.route_desc} and {@code route_long_name} or
+   * A single route has identical values for {@code routes.route_desc} and {@code route_long_name} or
    * {@code route_short_name}.
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
