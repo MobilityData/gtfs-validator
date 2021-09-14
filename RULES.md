@@ -133,6 +133,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	| More than one row in CSV.                                                                                                                                   	|
 | [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	| Non ascii or non printable char in  `id`.                                                                                                                   	|
 | [`PathwayDanglingGenericNodeNotice`](#PathwayDanglingGenericNodeNotice)           	| A generic node has only one incident location in a pathway graph.                                                                                             |
+| [`PathwayLoopNotice`](#PathwayLoopNotice)                                         	| A pathway starts and ends at the same location.                                                                                                               |
 | [`PathwayUnreachableLocationNotice`](#PathwayUnreachableLocationNotice)               | A location is not reachable at least in one direction: from the entrances or to the exits.                                                                    |
 | [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)       	| A platform has no `parent_station` field set.                                                                                                               	|
 | [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	| Insufficient route color contrast.                                                                                                                          	|
@@ -743,6 +744,12 @@ because there is no benefit in visiting it.
 
 ##### References:
 * [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
+* 
+<a name="PathwayLoopNotice"/>
+
+#### PathwayLoopNotice
+
+A pathway should not have same values for `from_stop_id` and `to_stop_id`.
 
 <a name="PathwayUnreachableLocationNotice"/>
 

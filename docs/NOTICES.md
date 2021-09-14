@@ -627,6 +627,7 @@
 | `more_than_one_entity`                     	| [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	|
 | `non_ascii_or_non_printable_char`          	| [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	|
 | `pathway_dangling_generic_node`               | [`PathwayDanglingGenericNodeNotice`](#PathwayDanglingGenericNodeNotice)	            |
+| `pathway_loop`                                | [`PathwayLoopNotice`](#PathwayLoopNotice)	                                            |
 | `pathway_unreachable_location`                | [`PathwayUnreachableLocationNotice`](#PathwayUnreachableLocationNotice)	            |
 | `platform_without_parent_station`          	| [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)       	|
 | `route_color_contrast`                     	| [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	|
@@ -811,6 +812,18 @@
 ##### Affected files
 * [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+
+#### [PathwayLoopNotice](/RULES.md#PathwayLoopNotice)
+##### Fields description
+
+| Field name     	| Description                                                                                 	| Type   	|
+|----------------	|---------------------------------------------------------------------------------------------	|--------	|
+| `csvRowNumber` 	| Row number of the faulty row from `pathways.txt`.                                           	| Long   	|
+| `pathwayId`    	| The id of the faulty record.                                                                	| String 	|
+| `stopId`       	| The `pathway.stop_id` that is repeated in `pathways.from_stop_id` and `pathways.to_stop_id`. 	| String 	|
+
+##### Affected files
+* [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
 
 #### [PathwayUnreachableLocationNotice](/RULES.md#PathwayUnreachableLocationNotice)
 ##### Fields description
