@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: "gtfs-validator"
-          image: "us-east4-docker.pkg.dev/{{PROJECT_ID}}/gtfs-validator-repo/gtfs-validator-gke:{{TAG}}"
+          image: "us-east1-docker.pkg.dev/{{PROJECT_ID}}/gtfs-validator-repo/gtfs-validator-gke:{{TAG}}"
           ports:
             - containerPort: 8080
           resources:
