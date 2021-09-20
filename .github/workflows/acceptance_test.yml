@@ -107,61 +107,61 @@ jobs:
           path: datasets_metadata
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
-#  get-latest-changes-report:
-#    needs: [ pack, fetch-urls ]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Retrieve metadata from previous job
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: datasets_metadata
-#      - name: Download latest changes .jar file from previous job
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: gtfs-validator-snapshot
-#      - name: Execute jar on each URL from metadata
-#        run: |
-#          pwd
-#          ls -a
-#          export KEYS=$(jq '. | keys[]' latest_versions.json -r)
-#          for source in $KEYS;
-#          do
-#            export SOURCE=$source;
-#            export URL=$(jq '.[$SOURCE_NAME]' latest_versions.json --arg SOURCE_NAME $SOURCE -r);
-#            java -jar gtfs-validator*.jar --url $URL --output_base output/$SOURCE --validation_report_name latest.json;
-#          done
-#      - name: Persist reports
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: reports_all
-#          path: output
-  get-reference-report:
-    needs: [ download-latest-gtfs-validator-release-jar, fetch-urls ]
+  get-latest-changes-report:
+    needs: [ pack, fetch-urls ]
     runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:
       - name: Retrieve metadata from previous job
         uses: actions/download-artifact@v2
         with:
           name: datasets_metadata
-      - name: Download reference .jar file from previous job
+      - name: Download latest changes .jar file from previous job
         uses: actions/download-artifact@v2
         with:
-          name: reference_jar
-      - name: Execute jar
-        # the following line will be changed after v3.0 is published without -f CLI parameter
-        run: java -jar gtfs-validator*.jar --url ${{ matrix.url }} --output_base output/${{ matrix.id }} --feed_name ca-test
+          name: gtfs-validator-snapshot
+      - name: Execute jar on each URL from metadata
+        run: |
+          pwd
+          ls -a
+          export KEYS=$(jq '. | keys[]' latest_versions.json -r)
+          for source in $KEYS;
+          do
+            export SOURCE=$source;
+            export URL=$(jq '.[$SOURCE_NAME]' latest_versions.json --arg SOURCE_NAME $SOURCE -r);
+            java -jar gtfs-validator*.jar --url $URL --output_base output/$SOURCE --validation_report_name latest.json &
+          done
       - name: Persist reports
         uses: actions/upload-artifact@v2
         with:
           name: reports_all
           path: output
-      - name: Persist reports
-        uses: actions/upload-artifact@v2
-        with:
-          name: reports_all
-          path: output
+#  get-reference-report:
+#    needs: [ download-latest-gtfs-validator-release-jar, fetch-urls ]
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
+#    steps:
+#      - name: Retrieve metadata from previous job
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: datasets_metadata
+#      - name: Download reference .jar file from previous job
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: reference_jar
+#      - name: Execute jar
+#        # the following line will be changed after v3.0 is published without -f CLI parameter
+#        run: java -jar gtfs-validator*.jar --url ${{ matrix.url }} --output_base output/${{ matrix.id }} --feed_name ca-test
+#      - name: Persist reports
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: reports_all
+#          path: output
+#      - name: Persist reports
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: reports_all
+#          path: output
 #  compare-outputs:
 #    needs: [ get-reference-report, get-latest-changes-report ]
 #    runs-on: ubuntu-latest
