@@ -144,7 +144,7 @@ public class ForeignKeyValidatorGenerator {
             .addParameter(parentClasses.tableContainerTypeName(), "parentContainer");
     if (parentField.primaryKey()) {
       hasReferencedKeyMethod.addStatement(
-          "return parentContainer.$L(key) != null",
+          "return parentContainer.$L(key).isPresent()",
           FieldNameConverter.byKeyMethodName(parentField.name()));
     } else if (parentField.firstKey() || parentField.index()) {
       hasReferencedKeyMethod.addStatement(

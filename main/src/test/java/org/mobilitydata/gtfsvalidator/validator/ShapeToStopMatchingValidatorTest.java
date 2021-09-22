@@ -234,7 +234,7 @@ public class ShapeToStopMatchingValidatorTest {
             new StopTooFarFromShapeNotice(
                 trip,
                 stopTimes.get(1),
-                stops.get(1),
+                stops.get(1).stopName(),
                 S2LatLng.fromDegrees(47.366073, 8.525384),
                 150.578313));
   }
@@ -262,7 +262,7 @@ public class ShapeToStopMatchingValidatorTest {
             new StopHasTooManyMatchesForShapeNotice(
                 trip,
                 stopTimes.get(0),
-                stops.get(0),
+                stops.get(0).stopName(),
                 S2LatLng.fromDegrees(47.365034, 8.525651),
                 3));
   }
@@ -293,10 +293,10 @@ public class ShapeToStopMatchingValidatorTest {
             new StopsMatchShapeOutOfOrderNotice(
                 trip,
                 stopTimes.get(1),
-                stops.get(1),
+                stops.get(1).stopName(),
                 S2LatLng.fromDegrees(47.366044, 8.525183),
                 stopTimes.get(0),
-                stops.get(0),
+                stops.get(0).stopName(),
                 S2LatLng.fromDegrees(47.364081, 8.525713)));
   }
 }

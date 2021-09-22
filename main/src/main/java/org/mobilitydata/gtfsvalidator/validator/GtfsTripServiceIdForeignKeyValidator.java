@@ -71,7 +71,7 @@ public class GtfsTripServiceIdForeignKeyValidator extends FileValidator {
       String childKey,
       GtfsCalendarTableContainer calendarContainer,
       GtfsCalendarDateTableContainer calendarDateContainer) {
-    return calendarContainer.byServiceId(childKey) != null
+    return calendarContainer.byServiceId(childKey).isPresent()
         || !calendarDateContainer.byServiceId(childKey).isEmpty();
   }
 }
