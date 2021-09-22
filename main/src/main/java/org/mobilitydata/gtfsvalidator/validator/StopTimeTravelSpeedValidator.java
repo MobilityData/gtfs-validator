@@ -77,10 +77,9 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
     for (List<GtfsStopTime> stopTimes : Multimaps.asMap(stopTimeTable.byTripIdMap()).values()) {
       tripTable
           .byTripId(stopTimes.get(0).tripId())
+          .map(trip -> new TripAndStopTimes(trip, stopTimes))
           .ifPresent(
-              trip ->
-                  tripsByHash.put(
-                      tripFprint(trip, stopTimes), new TripAndStopTimes(trip, stopTimes)));
+              tripAndStopTimes -> tripsByHash.put(tripAndStopTimes.tripFprint(), tripAndStopTimes));
     }
 
     for (List<TripAndStopTimes> trips : Multimaps.asMap(tripsByHash).values()) {
@@ -115,6 +114,27 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
 
     public List<GtfsStopTime> getStopTimes() {
       return stopTimes;
+    }
+
+    /**
+     * Returns a fingerprint of all trip data that is relevant for validation of far stops: route
+     * id, stop ids and arrival and departure times.
+     */
+    public long tripFprint() {
+      Hasher hasher =
+          HASH_FUNCTION
+              .newHasher()
+              .putInt(trip.routeId().length())
+              .putUnencodedChars(trip.routeId())
+              .putInt(stopTimes.size());
+      for (GtfsStopTime stopTime : stopTimes) {
+        hasher
+            .putInt(stopTime.stopId().length())
+            .putUnencodedChars(stopTime.stopId())
+            .putInt(stopTime.arrivalTime().getSecondsSinceMidnight())
+            .putInt(stopTime.departureTime().getSecondsSinceMidnight());
+      }
+      return hasher.hash().asLong();
     }
   }
 
@@ -276,27 +296,6 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
 
   private static final int NUM_SECONDS_PER_MINUTE = 60;
   private static final int NUM_SECONDS_PER_HOUR = 3600;
-
-  /**
-   * Returns a fingerprint of all trip data that is relevant for validation of far stops: route id,
-   * stop ids and arrival and departure times.
-   */
-  private static long tripFprint(GtfsTrip trip, List<GtfsStopTime> stopTimes) {
-    Hasher hasher =
-        HASH_FUNCTION
-            .newHasher()
-            .putInt(trip.routeId().length())
-            .putUnencodedChars(trip.routeId())
-            .putInt(stopTimes.size());
-    for (GtfsStopTime stopTime : stopTimes) {
-      hasher
-          .putInt(stopTime.stopId().length())
-          .putUnencodedChars(stopTime.stopId())
-          .putInt(stopTime.arrivalTime().getSecondsSinceMidnight())
-          .putInt(stopTime.departureTime().getSecondsSinceMidnight());
-    }
-    return hasher.hash().asLong();
-  }
 
   /** Returns a speed threshold (km/h) for a given vehicle type. */
   private static double getMaxVehicleSpeedKph(GtfsRouteType routeType) {

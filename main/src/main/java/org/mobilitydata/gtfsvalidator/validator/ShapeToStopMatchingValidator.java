@@ -210,8 +210,7 @@ public class ShapeToStopMatchingValidator extends FileValidator {
   }
 
   private String stopNameForStopTime(GtfsStopTime stopTime) {
-    Optional<GtfsStop> stop = stopTable.byStopId(stopTime.stopId());
-    return stop.isPresent() ? stop.get().stopName() : "";
+    return stopTable.byStopId(stopTime.stopId()).map(GtfsStop::stopName).orElse("");
   }
 
   private enum MatchingDistance {
