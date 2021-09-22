@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.table;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth8.assertThat;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -24,6 +25,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -72,8 +74,9 @@ public class GtfsLevelTableLoaderTest {
 
     assertThat(noticeContainer.getValidationNotices()).isEmpty();
     assertThat(tableContainer.entityCount()).isEqualTo(1);
-    GtfsLevel level = tableContainer.byLevelId("level1");
-    assertThat(level).isNotNull();
+    Optional<GtfsLevel> optionalLevel = tableContainer.byLevelId("level1");
+    assertThat(optionalLevel).isPresent();
+    GtfsLevel level = optionalLevel.get();
     assertThat(level.levelId()).isEqualTo("level1");
     assertThat(level.levelName()).isEqualTo("Ground");
     assertThat(level.levelIndex()).isEqualTo(1);

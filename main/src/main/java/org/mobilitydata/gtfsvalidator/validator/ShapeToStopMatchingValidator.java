@@ -23,12 +23,14 @@ import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
@@ -120,19 +122,21 @@ public class ShapeToStopMatchingValidator extends FileValidator {
       final ShapePoints shapePoints = ShapePoints.fromGtfsShape(gtfsShapePoints);
       // Report each stop that is too far from shape only once, even if there are multiple trips
       // that visit it.
-      Set<Long> processedtripHashes = new HashSet<>();
+      Set<Long> processedTripHashes = new HashSet<>();
       Set<String> reportedStopIds = new HashSet<>();
       for (GtfsTrip trip : trips) {
         List<GtfsStopTime> stopTimes = stopTimeTable.byTripId(trip.tripId());
-        if (!processedtripHashes.add(tripHash(stopTimes))) {
+        if (!processedTripHashes.add(tripHash(stopTimes))) {
+          continue;
+        }
+        Optional<GtfsRoute> route = routeTable.byRouteId(trip.routeId());
+        if (!route.isPresent()) {
+          // Broken reference is reported in another rule.
           continue;
         }
         final StopPoints stopPoints =
             StopPoints.fromStopTimes(
-                stopTimes,
-                stopTable,
-                StopPoints.routeTypeToStationSize(
-                    routeTable.byRouteId(trip.routeId()).routeType()));
+                stopTimes, stopTable, StopPoints.routeTypeToStationSize(route.get().routeType()));
 
         reportProblems(
             trip,
@@ -177,36 +181,37 @@ public class ShapeToStopMatchingValidator extends FileValidator {
             ? new StopTooFarFromShapeNotice(
                 trip,
                 problem.getStopTime(),
-                stopForStopTime(problem.getStopTime()),
+                stopNameForStopTime(problem.getStopTime()),
                 problem.getMatch().getLocationLatLng(),
                 problem.getMatch().getGeoDistanceToShape())
             : new StopTooFarFromShapeUsingUserDistanceNotice(
                 trip,
                 problem.getStopTime(),
-                stopForStopTime(problem.getStopTime()),
+                stopNameForStopTime(problem.getStopTime()),
                 problem.getMatch().getLocationLatLng(),
                 problem.getMatch().getGeoDistanceToShape());
       case STOPS_MATCH_OUT_OF_ORDER:
         return new StopsMatchShapeOutOfOrderNotice(
             trip,
             problem.getStopTime(),
-            stopForStopTime(problem.getStopTime()),
+            stopNameForStopTime(problem.getStopTime()),
             problem.getMatch().getLocationLatLng(),
             problem.getPrevStopTime(),
-            stopForStopTime(problem.getPrevStopTime()),
+            stopNameForStopTime(problem.getPrevStopTime()),
             problem.getPrevMatch().getLocationLatLng());
       default: // STOP_HAS_TOO_MANY_MATCHES
         return new StopHasTooManyMatchesForShapeNotice(
             trip,
             problem.getStopTime(),
-            stopForStopTime(problem.getStopTime()),
+            stopNameForStopTime(problem.getStopTime()),
             problem.getMatch().getLocationLatLng(),
             problem.getMatchCount());
     }
   }
 
-  private GtfsStop stopForStopTime(GtfsStopTime stopTime) {
-    return stopTable.byStopId(stopTime.stopId());
+  private String stopNameForStopTime(GtfsStopTime stopTime) {
+    Optional<GtfsStop> stop = stopTable.byStopId(stopTime.stopId());
+    return stop.isPresent() ? stop.get().stopName() : "";
   }
 
   private enum MatchingDistance {
@@ -241,14 +246,14 @@ public class ShapeToStopMatchingValidator extends FileValidator {
     private final int matchCount;
 
     StopHasTooManyMatchesForShapeNotice(
-        GtfsTrip trip, GtfsStopTime stopTime, GtfsStop stop, S2LatLng location, int matchCount) {
+        GtfsTrip trip, GtfsStopTime stopTime, String stopName, S2LatLng location, int matchCount) {
       super(SeverityLevel.WARNING);
       this.tripCsvRowNumber = trip.csvRowNumber();
       this.shapeId = trip.shapeId();
       this.tripId = trip.tripId();
       this.stopTimeCsvRowNumber = stopTime.csvRowNumber();
       this.stopId = stopTime.stopId();
-      this.stopName = stop.stopName();
+      this.stopName = stopName;
       this.match = location;
       this.matchCount = matchCount;
     }
@@ -275,7 +280,7 @@ public class ShapeToStopMatchingValidator extends FileValidator {
     StopTooFarFromShapeUsingUserDistanceNotice(
         GtfsTrip trip,
         GtfsStopTime stopTime,
-        GtfsStop stop,
+        String stopName,
         S2LatLng location,
         double geoDistanceToShape) {
       super(SeverityLevel.WARNING);
@@ -284,7 +289,7 @@ public class ShapeToStopMatchingValidator extends FileValidator {
       this.tripId = trip.tripId();
       this.stopTimeCsvRowNumber = stopTime.csvRowNumber();
       this.stopId = stopTime.stopId();
-      this.stopName = stop.stopName();
+      this.stopName = stopName;
       this.match = location;
       this.geoDistanceToShape = geoDistanceToShape;
     }
@@ -309,7 +314,7 @@ public class ShapeToStopMatchingValidator extends FileValidator {
     StopTooFarFromShapeNotice(
         GtfsTrip trip,
         GtfsStopTime stopTime,
-        GtfsStop stop,
+        String stopName,
         S2LatLng location,
         double geoDistanceToShape) {
       super(SeverityLevel.WARNING);
@@ -318,7 +323,7 @@ public class ShapeToStopMatchingValidator extends FileValidator {
       this.tripId = trip.tripId();
       this.stopTimeCsvRowNumber = stopTime.csvRowNumber();
       this.stopId = stopTime.stopId();
-      this.stopName = stop.stopName();
+      this.stopName = stopName;
       this.match = location;
       this.geoDistanceToShape = geoDistanceToShape;
     }
@@ -348,10 +353,10 @@ public class ShapeToStopMatchingValidator extends FileValidator {
     public StopsMatchShapeOutOfOrderNotice(
         GtfsTrip trip,
         GtfsStopTime stopTime1,
-        GtfsStop stop1,
+        String stopName1,
         S2LatLng location1,
         GtfsStopTime stopTime2,
-        GtfsStop stop2,
+        String stopName2,
         S2LatLng location2) {
       super(SeverityLevel.WARNING);
       this.tripCsvRowNumber = trip.csvRowNumber();
@@ -359,11 +364,11 @@ public class ShapeToStopMatchingValidator extends FileValidator {
       this.tripId = trip.tripId();
       this.stopTimeCsvRowNumber1 = stopTime1.csvRowNumber();
       this.stopId1 = stopTime1.stopId();
-      this.stopName1 = stop1.stopName();
+      this.stopName1 = stopName1;
       this.match1 = location1;
       this.stopTimeCsvRowNumber2 = stopTime2.csvRowNumber();
       this.stopId2 = stopTime2.stopId();
-      this.stopName2 = stop2.stopName();
+      this.stopName2 = stopName2;
       this.match2 = location2;
     }
   }

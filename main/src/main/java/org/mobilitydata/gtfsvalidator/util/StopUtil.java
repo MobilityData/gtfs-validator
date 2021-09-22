@@ -35,12 +35,16 @@ public class StopUtil {
   public static S2LatLng getStopOrParentLatLng(GtfsStopTableContainer stopTable, String stopId) {
     // Do not do an infinite loop since there may be a data bug and an infinite cycle of parents.
     for (int i = 0; i < 3; ++i) {
-      GtfsStop stop = stopTable.byStopId(stopId);
-      if (stop.hasStopLatLon()) {
-        return stop.stopLatLon();
+      Optional<GtfsStop> optionalLocation = stopTable.byStopId(stopId);
+      if (!optionalLocation.isPresent()) {
+        break;
       }
-      if (stop.hasParentStation()) {
-        stopId = stop.parentStation();
+      GtfsStop location = optionalLocation.get();
+      if (location.hasStopLatLon()) {
+        return location.stopLatLon();
+      }
+      if (location.hasParentStation()) {
+        stopId = location.parentStation();
       } else {
         break;
       }
@@ -66,10 +70,11 @@ public class StopUtil {
       GtfsStopTableContainer stopTable, String stopId) {
     // Do not do an infinite loop since there may be a data bug and an infinite cycle of parents.
     for (int i = 0; i < 3; ++i) {
-      GtfsStop location = stopTable.byStopId(stopId);
-      if (location == null) {
+      Optional<GtfsStop> optionalLocation = stopTable.byStopId(stopId);
+      if (!optionalLocation.isPresent()) {
         break;
       }
+      GtfsStop location = optionalLocation.get();
       if (location.locationType().equals(GtfsLocationType.STATION)) {
         return Optional.of(location);
       }

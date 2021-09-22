@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
@@ -59,9 +60,9 @@ public class MissingLevelIdValidator extends FileValidator {
       }
     }
     for (String stopId : elevatorEndpoints) {
-      GtfsStop location = stops.byStopId(stopId);
-      if (location != null && !location.hasLevelId()) {
-        noticeContainer.addValidationNotice(new MissingLevelIdNotice(location));
+      Optional<GtfsStop> location = stops.byStopId(stopId);
+      if (location.isPresent() && !location.get().hasLevelId()) {
+        noticeContainer.addValidationNotice(new MissingLevelIdNotice(location.get()));
       }
     }
   }

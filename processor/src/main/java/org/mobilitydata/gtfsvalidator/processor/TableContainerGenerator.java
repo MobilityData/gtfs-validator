@@ -122,9 +122,10 @@ public class TableContainerGenerator {
     typeSpec.addMethod(
         MethodSpec.methodBuilder(methodName)
             .addModifiers(Modifier.PUBLIC)
+            .addAnnotation(Nullable.class)
             .addParameter(TypeName.get(indexField.javaType()), "key")
-            .returns(entityTypeName)
-            .addStatement("return $L.get(key)", fieldName)
+            .returns(ParameterizedTypeName.get(ClassName.get(Optional.class), entityTypeName))
+            .addStatement("return Optional.ofNullable($L.getOrDefault(key, null))", fieldName)
             .build());
   }
 
