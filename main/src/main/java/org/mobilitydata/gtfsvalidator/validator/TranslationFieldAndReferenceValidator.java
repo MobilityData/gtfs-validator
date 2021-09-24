@@ -126,7 +126,7 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
     }
     Optional<GtfsTableContainer<?>> parentTable =
         feedContainer.getTableForFilename(translation.tableName() + ".txt");
-    if (!parentTable.isPresent() || parentTable.get().isMissingFile()) {
+    if (parentTable.isEmpty() || parentTable.get().isMissingFile()) {
       noticeContainer.addValidationNotice(new TranslationUnknownTableNameNotice(translation));
     } else if (!translation.hasFieldValue()) {
       validateReferenceIntegrity(translation, parentTable.get(), noticeContainer);
@@ -158,7 +158,7 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
             noticeContainer)) {
       return;
     }
-    if (!parentTable.byPrimaryKey(translation.recordId(), translation.recordSubId()).isPresent()) {
+    if (parentTable.byPrimaryKey(translation.recordId(), translation.recordSubId()).isEmpty()) {
       noticeContainer.addValidationNotice(new TranslationForeignKeyViolationNotice(translation));
     }
   }

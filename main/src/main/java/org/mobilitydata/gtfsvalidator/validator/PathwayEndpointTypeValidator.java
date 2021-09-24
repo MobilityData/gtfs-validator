@@ -69,7 +69,7 @@ public class PathwayEndpointTypeValidator extends FileValidator {
   private void checkEndpoint(
       GtfsPathway pathway, String fieldName, String stopId, NoticeContainer noticeContainer) {
     Optional<GtfsStop> stop = stopTable.byStopId(stopId);
-    if (!stop.isPresent()) {
+    if (stop.isEmpty()) {
       // Broken reference is reported in another rule.
       return;
     }

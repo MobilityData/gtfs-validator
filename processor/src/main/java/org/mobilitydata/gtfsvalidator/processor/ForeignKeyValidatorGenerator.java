@@ -53,7 +53,7 @@ public class ForeignKeyValidatorGenerator {
     List<JavaFile> validators = new ArrayList<>();
     for (GtfsFileDescriptor childFile : fileDescriptors.values()) {
       for (GtfsFieldDescriptor childField : childFile.fields()) {
-        if (!childField.foreignKey().isPresent()) {
+        if (childField.foreignKey().isEmpty()) {
           continue;
         }
         ForeignKeyDescriptor foreignKey = childField.foreignKey().get();

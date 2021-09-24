@@ -86,7 +86,7 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
       final TripAndStopTimes tripAndStopTimes = trips.get(0);
       // All trips belong to the same route.
       final Optional<GtfsRoute> route = routeTable.byRouteId(tripAndStopTimes.getTrip().routeId());
-      if (!route.isPresent()) {
+      if (route.isEmpty()) {
         // Broken reference is reported in another rule.
         continue;
       }
@@ -174,7 +174,7 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
         continue;
       }
       final Optional<GtfsStop> endStop = stopTable.byStopId(endStopTime.stopId());
-      if (!endStop.isPresent()) {
+      if (endStop.isEmpty()) {
         // Broken reference is reported in another rule.
         return;
       }
@@ -193,7 +193,7 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
           continue;
         }
         Optional<GtfsStop> startStop = stopTable.byStopId(startStopTime.stopId());
-        if (!startStop.isPresent()) {
+        if (startStop.isEmpty()) {
           // Broken reference is reported in another rule.
           return;
         }
@@ -244,7 +244,7 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
       }
       final Optional<GtfsStop> stop1 = stopTable.byStopId(stopTime1.stopId());
       final Optional<GtfsStop> stop2 = stopTable.byStopId(stopTime2.stopId());
-      if (!stop1.isPresent() || !stop2.isPresent()) {
+      if (stop1.isEmpty() || stop2.isEmpty()) {
         // Broken reference is reported in another rule.
         return;
       }
