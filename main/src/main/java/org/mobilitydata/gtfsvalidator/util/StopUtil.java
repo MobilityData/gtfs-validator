@@ -36,7 +36,7 @@ public class StopUtil {
     // Do not do an infinite loop since there may be a data bug and an infinite cycle of parents.
     for (int i = 0; i < 3; ++i) {
       Optional<GtfsStop> optionalLocation = stopTable.byStopId(stopId);
-      if (!optionalLocation.isPresent()) {
+      if (optionalLocation.isEmpty()) {
         break;
       }
       GtfsStop location = optionalLocation.get();
@@ -71,7 +71,7 @@ public class StopUtil {
     // Do not do an infinite loop since there may be a data bug and an infinite cycle of parents.
     for (int i = 0; i < 3; ++i) {
       Optional<GtfsStop> optionalLocation = stopTable.byStopId(stopId);
-      if (!optionalLocation.isPresent()) {
+      if (optionalLocation.isEmpty()) {
         break;
       }
       GtfsStop location = optionalLocation.get();

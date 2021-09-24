@@ -130,7 +130,7 @@ public class ShapeToStopMatchingValidator extends FileValidator {
           continue;
         }
         Optional<GtfsRoute> route = routeTable.byRouteId(trip.routeId());
-        if (!route.isPresent()) {
+        if (route.isEmpty()) {
           // Broken reference is reported in another rule.
           continue;
         }

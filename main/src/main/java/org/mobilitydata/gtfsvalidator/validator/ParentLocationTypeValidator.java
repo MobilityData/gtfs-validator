@@ -60,7 +60,7 @@ public class ParentLocationTypeValidator extends FileValidator {
         continue;
       }
       Optional<GtfsStop> optionalParentLocation = stopTable.byStopId(location.parentStation());
-      if (!optionalParentLocation.isPresent()) {
+      if (optionalParentLocation.isEmpty()) {
         // Broken reference is reported in another rule.
         continue;
       }
