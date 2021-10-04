@@ -68,7 +68,7 @@ public class StopZoneIdValidator extends FileValidator {
     private final long csvRowNumber;
 
     StopWithoutZoneIdNotice(GtfsStop stop) {
-      super(SeverityLevel.WARNING);
+      super(SeverityLevel.ERROR);
       this.stopId = stop.stopId();
       this.stopName = stop.stopName();
       this.csvRowNumber = stop.csvRowNumber();
