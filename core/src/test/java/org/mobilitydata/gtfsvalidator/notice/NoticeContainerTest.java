@@ -124,4 +124,21 @@ public class NoticeContainerTest {
                 .size())
         .isEqualTo(15);
   }
+
+  @Test
+  public void addValidationNotice_setMaxTotalValidationNotices() {
+    ValidationNotice n1 = new MissingRequiredFileNotice("stops.txt");
+    ValidationNotice n2 = new UnknownFileNotice("unknown.txt");
+    NoticeContainer noticeContainer = new NoticeContainer();
+    int MAX_TOTAL_VALIDATION_NOTICES = 30;
+    int MAX_VALIDATION_NOTICES_PER_TYPE = 16;
+    for (int i = 0; i < MAX_TOTAL_VALIDATION_NOTICES + 5; i++) {
+      noticeContainer.addValidationNotice(
+          n1, MAX_TOTAL_VALIDATION_NOTICES, MAX_VALIDATION_NOTICES_PER_TYPE);
+      noticeContainer.addValidationNotice(
+          n2, MAX_TOTAL_VALIDATION_NOTICES, MAX_VALIDATION_NOTICES_PER_TYPE);
+    }
+    assertThat(noticeContainer.getValidationNotices().size())
+        .isEqualTo(MAX_TOTAL_VALIDATION_NOTICES);
+  }
 }
