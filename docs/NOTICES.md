@@ -39,7 +39,6 @@
 | `number_out_of_range`                                  	| [`NumberOutOfRangeNotice`](#NumberOutOfRangeNotice)                                                             	|
 | `overlapping_frequency`                                	| [`OverlappingFrequencyNotice`](#OverlappingFrequencyNotice)                                                     	|
 | `route_both_short_and_long_name_missing`               	| [`RouteBothShortAndLongNameMissingNotice`](#RouteBothShortAndLongNameMissingNotice)                             	|
-| `same_name_and_description_for_stop`       	            | [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)     	                            |
 | `start_and_end_range_equal`                            	| [`StartAndEndRangeEqualNotice`](#StartAndEndRangeEqualNotice)                                                   	|
 | `start_and_end_range_out_of_order`                     	| [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         	|
 | `station_with_parent_station`                          	| [`StationWithParentStationNotice`](#StationWithParentStationNotice)                                             	|
@@ -504,18 +503,6 @@
 ##### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-#### [SameNameAndDescriptionForStopNotice](/RULES.md#SameNameAndDescriptionForStopNotice)
-##### Fields description
-
-| Field name     	| Description                             	| Type   	|
-|----------------	|-----------------------------------------	|--------	|
-| `csvRowNumber`  | The row number of the faulty record.      | Long 	  |
-| `stopId`        | The id of the faulty record.              | String  |
-| `stopDesc`    	| The faulty record's `stop_desc`.         	| String 	|
-
-##### Affected files
-* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
-
 #### [`StartAndEndRangeEqualNotice`](/RULES.md#StartAndEndRangeEqualNotice)
 ##### Fields description
 
@@ -646,6 +633,7 @@
 | `route_short_and_long_name_equal`          	| [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	|
 | `route_short_name_too_long`                	| [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	|
 | `same_name_and_description_for_route`       | [`SameNameAndDescriptionForRouteNotice`](#SameNameAndDescriptionForRouteNotice)     |
+| `same_name_and_description_for_stop`       	| [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)     	|
 | `same_route_and_agency_url`                	| [`SameRouteAndAgencyUrlNotice`](#SameRouteAndAgencyUrlNotice)                       |
 | `same_stop_and_agency_url`                 	| [`SameStopAndAgencyUrlNotice`](#SameStopAndAgencyUrlNotice)                         |
 | `same_stop_and_route_url`                  	| [`SameStopAndRouteUrlNotice`](#SameStopAndRouteUrlNotice)                           |
@@ -905,6 +893,18 @@
 
 ##### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
+
+#### [SameNameAndDescriptionForStopNotice](/RULES.md#SameNameAndDescriptionForStopNotice)
+##### Fields description
+
+| Field name     	| Description                             	| Type   	|
+|----------------	|-----------------------------------------	|--------	|
+| `csvRowNumber`  | The row number of the faulty record.      | Long 	  |
+| `stopId`        | The id of the faulty record.              | String  |
+| `stopDesc`    	| The faulty record's `stop_desc`.         	| String 	|
+
+##### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
 #### [SameRouteAndAgencyUrlNotice](/RULES.md#SameRouteAndAgencyUrlNotice)
 ##### Fields description

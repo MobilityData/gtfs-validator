@@ -103,7 +103,6 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`PathwayToPlatformWithBoardingAreasNotice`](#PathwayToPlatformWithBoardingAreasNotice)                         | A pathway has an endpoint that is a platform which has boarding areas.                                                                                 |
 | [`PathwayToWrongLocationTypeNotice`](#PathwayToWrongLocationTypeNotice)                                             | A pathway has an endpoint that is a station.                                                                                                           |
 | [`RouteBothShortAndLongNameMissingNotice`](#RouteBothShortAndLongNameMissingNotice)                             | Missing route short name and long name.                                                                                                                |
-| [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)                                   | Same name and description for stop.                                                                                                                    |
 | [`StartAndEndRangeEqualNotice`](#StartAndEndRangeEqualNotice)                                                   | Two date or time fields are equal.                                                                                                                     |
 | [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         | Two date or time fields are out of order.                                                                                                              |
 | [`StationWithParentStationNotice`](#StationWithParentStationNotice)                                             | A station has `parent_station` field set.                                                                                                              |
@@ -140,6 +139,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	| Short and long name are equal for a route.                                                                                                                  	|
 | [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	| Short name of a route is too long (more than 12 characters).                                                                                                	|
 | [`SameNameAndDescriptionForRouteNotice`](#SameNameAndDescriptionForRouteNotice)     | Same name and description for route.                                                                                                                        	|
+| [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)       | Same name and description for stop.                                                                                                                      	    |
 | [`SameRouteAndAgencyUrlNotice`](#SameRouteAndAgencyUrlNotice)                       | Same `routes.route_url` and `agency.agency_url`.                                                                                                  	        |
 | [`SameStopAndAgencyUrlNotice`](#SameStopAndAgencyUrlNotice)                         | Same `stops.stop_url` and `agency.agency_url`.                                                                                                  	            |
 | [`SameStopAndRouteUrlNotice`](#SameStopAndRouteUrlNotice)                          	| Same `stops.stop_url` and `routes.route_url`.                                                                                                  	            |
@@ -471,6 +471,7 @@ assigned - instead, pathways must be assigned to its boarding areas.
 ##### References:
 * [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
 
+<a name="RouteBothShortAndLongNameMissingNotice"/>
 
 <a name="PathwayToWrongLocationTypeNotice"/>
 
@@ -482,25 +483,12 @@ entrances/exits, generic nodes or boarding areas.
 ##### References:
 * [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
 
-<a name="RouteBothShortAndLongNameMissingNotice"/>
-
 #### RouteBothShortAndLongNameMissingNotice
 
 Both short_name and long_name are missing for a route.
 
 ##### References:
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
-
-<a name="SameNameAndDescriptionForStopNotice"/>
-
-#### SameNameAndDescriptionForStopNotice
-
-The GTFS spec defines `stops.txt` [stop_description](https://gtfs.org/reference/static/#stopstxt) as:
-
-> Description of the location that provides useful, quality information. Do not simply duplicate the name of the location.
-
-##### References:
-* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 
 <a name="StartAndEndRangeEqualNotice"/>
 
@@ -822,6 +810,17 @@ See the GTFS and GTFS Best Practices links below for more examples of how to pop
 ##### References:
 [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 [routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
+
+<a name="SameNameAndDescriptionForStopNotice"/>
+
+#### SameNameAndDescriptionForStopNotice
+
+The GTFS spec defines `stops.txt` [stop_description](https://gtfs.org/reference/static/#stopstxt) as:
+
+> Description of the location that provides useful, quality information. Do not simply duplicate the name of the location.
+
+##### References:
+[stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 
 <a name="SameRouteAndAgencyUrlNotice"/>
 
