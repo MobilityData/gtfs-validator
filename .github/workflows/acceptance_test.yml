@@ -86,7 +86,7 @@ jobs:
         id: set-matrix
         run: |
           python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
-          DATASETS=$(jq . datasets_metadata/latest_versions.json -R)
+          DATASETS=$(jq .root datasets_metadata/latest_versions.json -R)
           echo $DATASETS
           echo "::set-output name=matrix::$DATASETS"
         env:
@@ -110,6 +110,8 @@ jobs:
   get-latest-changes-report:
     needs: [ pack, fetch-urls ]
     runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:
       - name: Retrieve metadata from previous job
         uses: actions/download-artifact@v2
@@ -120,16 +122,7 @@ jobs:
         with:
           name: gtfs-validator-snapshot
       - name: Execute jar on each URL from metadata
-        run: |
-          pwd
-          ls -a
-          export KEYS=$(jq '. | keys[]' latest_versions.json -r)
-          for source in $KEYS;
-          do
-            export SOURCE=$source;
-            export URL=$(jq '.[$SOURCE_NAME]' latest_versions.json --arg SOURCE_NAME $SOURCE -r);
-            java -jar gtfs-validator*.jar --url $URL --output_base output/$SOURCE --validation_report_name latest.json &
-          done
+        run: java -jar gtfs-validator*.jar --url ${{ matrix.url }} --output_base output/${{ matrix.id }} --validation_report_name latest.json
       - name: Persist reports
         uses: actions/upload-artifact@v2
         with:
