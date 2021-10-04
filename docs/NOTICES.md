@@ -42,6 +42,7 @@
 | `start_and_end_range_equal`                            	| [`StartAndEndRangeEqualNotice`](#StartAndEndRangeEqualNotice)                                                   	|
 | `start_and_end_range_out_of_order`                     	| [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         	|
 | `station_with_parent_station`                          	| [`StationWithParentStationNotice`](#StationWithParentStationNotice)                                             	|
+| `stop_time_timepoint_without_times`                    	| [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	                            |
 | `stop_time_wit_arrival_before_previous_departure_time` 	| [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](#StopTimeWithArrivalBeforePreviousDepartureTimeNotice) 	|
 | `stop_time_with_only_arrival_or_departure_time`        	| [`StopTimeWithOnlyArrivalOrDepartureTimeNotice`](#StopTimeWithOnlyArrivalOrDepartureTimeNotice)                 	|
 | `translation_unexpected_value`                           	| [`TranslationUnexpectedValueNotice`](#TranslationUnexpectedValueNotice)                                               	|
@@ -549,6 +550,19 @@
 ##### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
+#### [StopTimeTimepointWithoutTimesNotice](/RULES.md#StopTimeTimepointWithoutTimesNotice)
+##### Fields description
+
+| Field name     	  | Description                                	| Type   	|
+|-----------------	|--------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row number of the faulty record.       	| Long   	|
+| `tripId`         	| The faulty record's id.                    	| String 	|
+| `stopSequence`   	| The faulty record's `stops.stop_sequence`. 	| String 	|
+| `specifiedField` 	| Either `departure_time` or `arrival_time`. 	| String 	|
+
+##### Affected files
+* [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
+
 #### [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](/RULES.md#StopTimeWithArrivalBeforePreviousDepartureTimeNotice)
 ##### Fields description
 
@@ -637,7 +651,6 @@
 | `same_route_and_agency_url`                	| [`SameRouteAndAgencyUrlNotice`](#SameRouteAndAgencyUrlNotice)                       |
 | `same_stop_and_agency_url`                 	| [`SameStopAndAgencyUrlNotice`](#SameStopAndAgencyUrlNotice)                         |
 | `same_stop_and_route_url`                  	| [`SameStopAndRouteUrlNotice`](#SameStopAndRouteUrlNotice)                           |
-| `stop_time_timepoint_without_times`        	| [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	|
 | `stop_too_far_from_trip_shape`            	| [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	|
 | `stop_without_zone_id`                     	| [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                 	            |
 | `too_fast_travel`                          	| [`TooFastTravelNotice`](#TooFastTravelNotice)                                     	|
@@ -950,19 +963,6 @@
 ##### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
-
-#### [StopTimeTimepointWithoutTimesNotice](/RULES.md#StopTimeTimepointWithoutTimesNotice)
-##### Fields description
-
-| Field name     	  | Description                                	| Type   	|
-|-----------------	|--------------------------------------------	|--------	|
-| `csvRowNumber`   	| The row number of the faulty record.       	| Long   	|
-| `tripId`         	| The faulty record's id.                    	| String 	|
-| `stopSequence`   	| The faulty record's `stops.stop_sequence`. 	| String 	|
-| `specifiedField` 	| Either `departure_time` or `arrival_time`. 	| String 	|
-
-##### Affected files
-* [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
 #### [StopTooFarFromTripShapeNotice](/RULES.md#StopTooFarFromTripShapeNotice)
 ##### Fields description
