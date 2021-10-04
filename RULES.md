@@ -76,6 +76,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`DuplicatedColumnNotice`](#DuplicatedColumnNotice)                                                             | Duplicated column in CSV.                                                                                                                              |
 | [`DuplicateFareRuleZoneIdFieldsNotice`](#DuplicateFareRuleZoneIdFieldsNotice)                                   | Duplicate rows from `fare_rules.txt` based on `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.contains_id` and `fare_rules.destination_id`. |
 | [`DuplicateKeyNotice`](#DuplicateKeyNotice)                                                                     | Duplicated entity.                                                                                                                                     |
+| [`EmptyColumnNameNotice`](#EmptyColumnNameNotice)                                                            	  | A column name is empty.                                                                                                                                |
 | [`EmptyFileNotice`](#EmptyFileNotice)                                                                           | A CSV file is empty.                                                                                                                                   |
 | [`ForeignKeyViolationNotice`](#ForeignKeyViolationNotice)                                                       | Wrong foreign key.                                                                                                                                     |
 | [`InconsistentAgencyTimezoneNotice`](#InconsistentAgencyTimezoneNotice)                                         | Inconsistent Timezone among agencies.                                                                                                                  |
@@ -119,7 +120,6 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 |-----------------------------------------------------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------	|
 | [`AttributionWithoutRoleNotice`](#AttributionWithoutRoleNotice)                   	| Attribution with no role.                                                                                                                                   	|
 | [`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)                           	| Duplicate  `routes.route_long_name`. Duplicate `routes.route_short_name`. Duplicate combination of fields `route_long_name`  and `routes.route_short_name`. 	|
-| [`EmptyColumnNameNotice`](#EmptyColumnNameNotice)                                 	| A column name is empty.                                                                                                                                     	|
 | [`EmptyRowNotice`](#EmptyRowNotice)                                               	| A row in the input file has only spaces.                                                                                                                      |
 | [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsecutiveStopsNotice) | A transit vehicle moves too fast between two consecutive stops.                                                                            	                |
 | [`FastTravelBetweenFarStopsNotice`](#FastTravelBetweenFarStopsNotice)                 | A transit vehicle moves too fast between two far stops.                                                                            	                        |
@@ -236,6 +236,15 @@ The values of the given key and rows are duplicates.
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
+
+<a name="EmptyColumnNameNotice"/>
+
+#### EmptyColumnNameNotice
+
+A column name has not been provided. Such columns are skipped by the validator.
+
+##### References:
+* [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
 
 <a name="EmptyFileNotice"/>
 
@@ -592,14 +601,6 @@ Note that there may be valid cases where routes have the same short and long nam
 ##### References:
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 * [routes.txt best practices](http://gtfs.org/best-practices/#routestxt)
-<a name="EmptyColumnNameNotice"/>
-
-#### EmptyColumnNameNotice
-
-A column name has not been provided. Such columns are skipped by the validator.
-
-##### References:
-* [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
 
 <a name="EmptyRowNotice"/>
 

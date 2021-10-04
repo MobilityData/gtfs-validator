@@ -14,6 +14,7 @@
 | `duplicated_column`                                    	| [`DuplicatedColumnNotice`](#DuplicatedColumnNotice)                                                             	|
 | `duplicate_fare_rule_zone_id_fields`                   	| [`DuplicateFareRuleZoneIdFieldsNotice`](#DuplicateFareRuleZoneIdFieldsNotice)                                   	|
 | `duplicate_key`                                        	| [`DuplicateKeyNotice`](#DuplicateKeyNotice)                                                                     	|
+| `empty_column_name`                                   	| [`EmptyColumnNameNotice`](#EmptyColumnNameNotice)                                         	                    |
 | `empty_file`                                           	| [`EmptyFileNotice`](#EmptyFileNotice)                                                                           	|
 | `foreign_key_violation`                                	| [`ForeignKeyViolationNotice`](#ForeignKeyViolationNotice)                                                       	|
 | `inconsistent_agency_timezone`                         	| [`InconsistentAgencyTimezoneNotice`](#InconsistentAgencyTimezoneNotice)                                         	|
@@ -150,6 +151,17 @@
 | `fieldValue1`    	| Composite key's first value.       	| Object 	|
 | `fieldName2`     	| Composite key's second field name. 	| String 	|
 | `fieldValue2`    	| Composite key's second value.      	| Object 	|
+
+##### Affected files
+[All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
+
+#### [EmptyColumnNameNotice](/RULES.md#EmptyColumnNameNotice)
+##### Fields description
+
+| Field name 	| Description                    	  | Type    	|
+|------------	|---------------------------------	|---------	|
+| `filename`   	| The name of the faulty file.   	| String   	|
+| `index`      	| The index of the empty column. 	| Integer 	|
 
 ##### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
@@ -614,7 +626,6 @@
 |--------------------------------------------	|-----------------------------------------------------------------------------------	|
 | `attribution_without_role`           	      | [`AttributionWithoutRoleNotice`](#AttributionWithoutRoleNotice)                   	|
 | `duplicate_route_name`                      | [`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)                           	|
-| `empty_column_name`                        	| [`EmptyColumnNameNotice`](#EmptyColumnNameNotice)                                 	|
 | `empty_row`                                	| [`EmptyRowNotice`](#EmptyRowNotice)                                               	|
 | `fast_travel_between_consecutive_stops`      	| [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsecutiveStopsNotice) |
 | `fast_travel_between_far_stops`               | [`FastTravelBetweenFarStopsNotice`](#FastTravelBetweenFarStopsNotice)                 |
@@ -676,17 +687,6 @@
 
 ##### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
-
-#### [EmptyColumnNameNotice](/RULES.md#EmptyColumnNameNotice)
-##### Fields description
-
-| Field name 	| Description                    	  | Type    	|
-|------------	|---------------------------------	|---------	|
-| `filename`   	| The name of the faulty file.   	| String   	|
-| `index`      	| The index of the empty column. 	| Integer 	|
-
-##### Affected files
-[All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
 #### [EmptyRowNotice](/RULES.md#EmptyRowNotice)
 ##### Fields description
