@@ -16,10 +16,9 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import com.google.common.collect.ImmutableMap;
+import java.util.Optional;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -60,7 +59,12 @@ public class ParentLocationTypeValidator extends FileValidator {
       if (!location.hasParentStation()) {
         continue;
       }
-      GtfsStop parentLocation = stopTable.byStopId(location.parentStation());
+      Optional<GtfsStop> optionalParentLocation = stopTable.byStopId(location.parentStation());
+      if (optionalParentLocation.isEmpty()) {
+        // Broken reference is reported in another rule.
+        continue;
+      }
+      GtfsStop parentLocation = optionalParentLocation.get();
       GtfsLocationType expected = expectedParentLocationType(location.locationType());
       if (expected != GtfsLocationType.UNRECOGNIZED && parentLocation.locationType() != expected) {
         noticeContainer.addValidationNotice(
@@ -85,7 +89,16 @@ public class ParentLocationTypeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class WrongParentLocationTypeNotice extends ValidationNotice {
-    @SchemaExport
+    private final long csvRowNumber;
+    private final String stopId;
+    private final String stopName;
+    private final int locationType;
+    private final long parentCsvRowNumber;
+    private final String parentStation;
+    private final String parentStopName;
+    private final int parentLocationType;
+    private final int expectedLocationType;
+
     WrongParentLocationTypeNotice(
         long csvRowNumber,
         String stopId,
@@ -96,19 +109,16 @@ public class ParentLocationTypeValidator extends FileValidator {
         String parentStopName,
         int parentLocationType,
         int expectedLocationType) {
-      super(
-          new ImmutableMap.Builder<String, Object>()
-              .put("csvRowNumber", csvRowNumber)
-              .put("stopId", stopId)
-              .put("stopName", stopName)
-              .put("locationType", locationType)
-              .put("parentCsvRowNumber", parentCsvRowNumber)
-              .put("parentStation", parentStation)
-              .put("parentStopName", parentStopName)
-              .put("parentLocationType", parentLocationType)
-              .put("expectedLocationType", expectedLocationType)
-              .build(),
-          SeverityLevel.ERROR);
+      super(SeverityLevel.ERROR);
+      this.csvRowNumber = csvRowNumber;
+      this.stopId = stopId;
+      this.stopName = stopName;
+      this.locationType = locationType;
+      this.parentCsvRowNumber = parentCsvRowNumber;
+      this.parentStation = parentStation;
+      this.parentStopName = parentStopName;
+      this.parentLocationType = parentLocationType;
+      this.expectedLocationType = expectedLocationType;
     }
   }
 }

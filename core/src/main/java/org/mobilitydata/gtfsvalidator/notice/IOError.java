@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 
 /**
@@ -26,11 +25,12 @@ import java.io.IOException;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class IOError extends SystemError {
+  private final String exception;
+  private final String message;
 
   public IOError(IOException exception) {
-    super(
-        ImmutableMap.of(
-            "exception", exception.getClass().getCanonicalName(),
-            "message", Strings.nullToEmpty(exception.getMessage())));
+    this.exception = exception.getClass().getCanonicalName();
+    // Throwable.getMessage() may return null.
+    this.message = Strings.nullToEmpty(exception.getMessage());
   }
 }

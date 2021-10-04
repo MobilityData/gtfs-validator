@@ -16,9 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -41,14 +39,14 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
     if (!stop.hasStopName() || !stop.hasStopDesc()) {
       return;
     }
-    if (!isValidRouteDesc(stop.stopDesc(), stop.stopName())) {
+    if (!isValidStopDesc(stop.stopDesc(), stop.stopName())) {
       noticeContainer.addValidationNotice(
           new SameNameAndDescriptionForStopNotice(
               stop.csvRowNumber(), stop.stopId(), stop.stopDesc()));
     }
   }
 
-  private boolean isValidRouteDesc(String stopDesc, String stopName) {
+  private boolean isValidStopDesc(String stopDesc, String stopName) {
     // ignore lower case and upper case difference
     return !stopDesc.equalsIgnoreCase(stopName);
   }
@@ -63,15 +61,15 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
    */
   static class SameNameAndDescriptionForStopNotice extends ValidationNotice {
 
-    @SchemaExport
+    private final long csvRowNumber;
+    private final String stopId;
+    private final String routeDesc;
+
     SameNameAndDescriptionForStopNotice(long csvRowNumber, String stopId, String routeDesc) {
-      super(
-          new ImmutableMap.Builder<String, Object>()
-              .put("stopId", stopId)
-              .put("csvRowNumber", csvRowNumber)
-              .put("routeDesc", routeDesc)
-              .build(),
-          SeverityLevel.WARNING);
+      super(SeverityLevel.WARNING);
+      this.stopId = stopId;
+      this.csvRowNumber = csvRowNumber;
+      this.routeDesc = routeDesc;
     }
   }
 }

@@ -1,6 +1,5 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimaps;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,7 +7,6 @@ import java.util.Comparator;
 import java.util.List;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -71,21 +69,24 @@ public class OverlappingFrequencyValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class OverlappingFrequencyNotice extends ValidationNotice {
-    @SchemaExport
+    private final long prevCsvRowNumber;
+    private final GtfsTime prevEndTime;
+    private final long currCsvRowNumber;
+    private final GtfsTime currStartTime;
+    private final String tripId;
+
     OverlappingFrequencyNotice(
         long prevCsvRowNumber,
         GtfsTime prevEndTime,
         long currCsvRowNumber,
         GtfsTime currStartTime,
         String tripId) {
-      super(
-          ImmutableMap.of(
-              "prevCsvRowNumber", prevCsvRowNumber,
-              "prevEndTime", prevEndTime.toHHMMSS(),
-              "currCsvRowNumber", currCsvRowNumber,
-              "currStartTime", currStartTime.toHHMMSS(),
-              "tripId", tripId),
-          SeverityLevel.ERROR);
+      super(SeverityLevel.ERROR);
+      this.prevCsvRowNumber = prevCsvRowNumber;
+      this.prevEndTime = prevEndTime;
+      this.currCsvRowNumber = currCsvRowNumber;
+      this.currStartTime = currStartTime;
+      this.tripId = tripId;
     }
   }
 }

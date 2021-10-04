@@ -16,8 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import java.util.Map;
-
 /**
  * ValidationNotice is the base class for all validation errors and warnings related to the content
  * of a GTFS feed.
@@ -27,7 +25,8 @@ import java.util.Map;
  * notices.
  */
 public abstract class ValidationNotice extends Notice {
-  public ValidationNotice(Map<String, Object> context, SeverityLevel severityLevel) {
-    super(context, severityLevel);
+
+  public ValidationNotice(SeverityLevel severityLevel) {
+    super(severityLevel);
   }
 }

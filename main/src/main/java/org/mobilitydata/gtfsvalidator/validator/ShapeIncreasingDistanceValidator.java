@@ -16,12 +16,10 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimaps;
 import java.util.List;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -76,7 +74,14 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class DecreasingOrEqualShapeDistanceNotice extends ValidationNotice {
-    @SchemaExport
+    private final String shapeId;
+    private final long csvRowNumber;
+    private final double shapeDistTraveled;
+    private final int shapePtSequence;
+    private final long prevCsvRowNumber;
+    private final double prevShapeDistTraveled;
+    private final int prevShapePtSequence;
+
     DecreasingOrEqualShapeDistanceNotice(
         String shapeId,
         long csvRowNumber,
@@ -85,17 +90,14 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
         long prevCsvRowNumber,
         double prevShapeDistTraveled,
         int prevShapePtSequence) {
-      super(
-          new ImmutableMap.Builder<String, Object>()
-              .put("shapeId", shapeId)
-              .put("csvRowNumber", csvRowNumber)
-              .put("shapeDistTraveled", shapeDistTraveled)
-              .put("shapePtSequence", shapePtSequence)
-              .put("prevCsvRowNumber", prevCsvRowNumber)
-              .put("prevShapeDistTraveled", prevShapeDistTraveled)
-              .put("prevShapePtSequence", prevShapePtSequence)
-              .build(),
-          SeverityLevel.ERROR);
+      super(SeverityLevel.ERROR);
+      this.shapeId = shapeId;
+      this.csvRowNumber = csvRowNumber;
+      this.shapeDistTraveled = shapeDistTraveled;
+      this.shapePtSequence = shapePtSequence;
+      this.prevCsvRowNumber = prevCsvRowNumber;
+      this.prevShapeDistTraveled = prevShapeDistTraveled;
+      this.prevShapePtSequence = prevShapePtSequence;
     }
   }
 }

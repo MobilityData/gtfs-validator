@@ -94,8 +94,8 @@ public class CalendarUtilTest {
   @Test
   public void createServicePeriod_empty() {
     ServicePeriod servicePeriod = CalendarUtil.createServicePeriod(null, ImmutableList.of());
-    assertThat(servicePeriod.getServiceStart()).isEqualTo(ServicePeriod.EPOCH);
-    assertThat(servicePeriod.getServiceEnd()).isEqualTo(ServicePeriod.EPOCH);
+    assertThat(servicePeriod.getServiceStart()).isEqualTo(LocalDate.EPOCH);
+    assertThat(servicePeriod.getServiceEnd()).isEqualTo(LocalDate.EPOCH);
     assertThat(servicePeriod.getWeeklyPattern()).isEqualTo(0);
     assertThat(servicePeriod.getAddedDays()).isEmpty();
     assertThat(servicePeriod.getRemovedDays()).isEmpty();
@@ -165,8 +165,8 @@ public class CalendarUtilTest {
                 ImmutableSet.of()),
             "s3",
             new ServicePeriod(
-                ServicePeriod.EPOCH,
-                ServicePeriod.EPOCH,
+                LocalDate.EPOCH,
+                LocalDate.EPOCH,
                 (byte) 0,
                 ImmutableSet.of(LocalDate.of(2021, 3, 8)),
                 ImmutableSet.of(LocalDate.of(2021, 3, 9))));
@@ -193,8 +193,8 @@ public class CalendarUtilTest {
                         ImmutableSet.of()),
                     "s3",
                     new ServicePeriod(
-                        ServicePeriod.EPOCH,
-                        ServicePeriod.EPOCH,
+                        LocalDate.EPOCH,
+                        LocalDate.EPOCH,
                         (byte) 0,
                         ImmutableSet.of(LocalDate.of(2021, 3, 8)),
                         ImmutableSet.of(LocalDate.of(2021, 3, 9))))))

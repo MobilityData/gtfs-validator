@@ -27,13 +27,17 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class GtfsDateTest {
   @Test
-  public void fromString() {
+  public void fromString_valid() {
     assertThat(GtfsDate.fromString("20200901").getLocalDate()).isEqualTo(LocalDate.of(2020, 9, 1));
     assertThat(GtfsDate.fromString("19970103").getLocalDate()).isEqualTo(LocalDate.of(1997, 1, 3));
+  }
 
+  @Test
+  public void fromString_invalid() {
     assertThrows(IllegalArgumentException.class, () -> GtfsDate.fromString("0"));
     assertThrows(IllegalArgumentException.class, () -> GtfsDate.fromString("qwerty"));
     assertThrows(IllegalArgumentException.class, () -> GtfsDate.fromString("today"));
+    assertThrows(IllegalArgumentException.class, () -> GtfsDate.fromString("20219999"));
   }
 
   @Test

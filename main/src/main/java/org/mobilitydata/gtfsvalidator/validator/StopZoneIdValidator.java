@@ -16,10 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import com.google.common.collect.ImmutableMap;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -29,9 +27,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 
 /**
- * Validates that all stops in "stops.txt" have a value for {@code stops.zone_id} if fare
- * information is provided using "fare_rules.txt". This rule does not apply if a record from
- * "stops.txt" represents a station or station entrance i.e {@code stops.location_type = 1 or 2}.
+ * Check that if {@code fare_rules.txt} is provided, then all stops and platforms (location_type =
+ * 0) have {@code stops.zone_id} assigned.
  *
  * <p>Generated notice: {@link StopWithoutZoneIdNotice}.
  */
@@ -53,20 +50,10 @@ public class StopZoneIdValidator extends FileValidator {
       return;
     }
     for (GtfsStop stop : stopTable.getEntities()) {
-      if (isStationOrEntrance(stop)) {
-        return;
+      if (stop.locationType().equals(GtfsLocationType.STOP) && !stop.hasZoneId()) {
+        noticeContainer.addValidationNotice(new StopWithoutZoneIdNotice(stop));
       }
-      if (stop.hasZoneId()) {
-        return;
-      }
-      noticeContainer.addValidationNotice(
-          new StopWithoutZoneIdNotice(stop.stopId(), stop.csvRowNumber()));
     }
-  }
-
-  private boolean isStationOrEntrance(GtfsStop stop) {
-    return stop.locationType().equals(GtfsLocationType.STATION)
-        || stop.locationType().equals(GtfsLocationType.STOP);
   }
 
   /**
@@ -76,14 +63,15 @@ public class StopZoneIdValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING} - Will be upgraded to {@code SeverityLevel.ERROR}
    */
   static class StopWithoutZoneIdNotice extends ValidationNotice {
+    private final String stopId;
+    private final String stopName;
+    private final long csvRowNumber;
 
-    @SchemaExport
-    StopWithoutZoneIdNotice(String stopId, long csvRowNumber) {
-      super(
-          ImmutableMap.of(
-              "stopId", stopId,
-              "csvRowNumber", csvRowNumber),
-          SeverityLevel.WARNING);
+    StopWithoutZoneIdNotice(GtfsStop stop) {
+      super(SeverityLevel.WARNING);
+      this.stopId = stop.stopId();
+      this.stopName = stop.stopName();
+      this.csvRowNumber = stop.csvRowNumber();
     }
   }
 }

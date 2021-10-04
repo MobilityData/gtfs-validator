@@ -16,9 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -75,20 +73,18 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class StationWithParentStationNotice extends ValidationNotice {
-    @SchemaExport
+    private final long csvRowNumber;
+    private final String stopId;
+    private final String stopName;
+    private final String parentStation;
+
     StationWithParentStationNotice(
         long csvRowNumber, String stopId, String stopName, String parentStation) {
-      super(
-          ImmutableMap.of(
-              "stopId",
-              stopId,
-              "stopName",
-              stopName,
-              "csvRowNumber",
-              csvRowNumber,
-              "parentStation",
-              parentStation),
-          SeverityLevel.ERROR);
+      super(SeverityLevel.ERROR);
+      this.stopId = stopId;
+      this.stopName = stopName;
+      this.csvRowNumber = csvRowNumber;
+      this.parentStation = parentStation;
     }
   }
 
@@ -101,20 +97,18 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class LocationWithoutParentStationNotice extends ValidationNotice {
-    @SchemaExport
+    private final long csvRowNumber;
+    private final String stopId;
+    private final String stopName;
+    private final int locationType;
+
     LocationWithoutParentStationNotice(
         long csvRowNumber, String stopId, String stopName, int locationType) {
-      super(
-          ImmutableMap.of(
-              "csvRowNumber",
-              csvRowNumber,
-              "stopId",
-              stopId,
-              "stopName",
-              stopName,
-              "locationType",
-              locationType),
-          SeverityLevel.ERROR);
+      super(SeverityLevel.ERROR);
+      this.csvRowNumber = csvRowNumber;
+      this.stopId = stopId;
+      this.stopName = stopName;
+      this.locationType = locationType;
     }
   }
 
@@ -126,11 +120,15 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class PlatformWithoutParentStationNotice extends ValidationNotice {
-    @SchemaExport
+    private final long csvRowNumber;
+    private final String stopId;
+    private final String stopName;
+
     PlatformWithoutParentStationNotice(long csvRowNumber, String stopId, String stopName) {
-      super(
-          ImmutableMap.of("csvRowNumber", csvRowNumber, "stopId", stopId, "stopName", stopName),
-          SeverityLevel.WARNING);
+      super(SeverityLevel.WARNING);
+      this.csvRowNumber = csvRowNumber;
+      this.stopId = stopId;
+      this.stopName = stopName;
     }
   }
 }

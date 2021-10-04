@@ -16,29 +16,23 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
-
 /**
  * A field cannot be parsed as a floating point number.
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class InvalidFloatNotice extends ValidationNotice {
+  private final String filename;
+  private final long csvRowNumber;
+  private final String fieldName;
+  private final String fieldValue;
 
-  @SchemaExport
   public InvalidFloatNotice(
       String filename, long csvRowNumber, String fieldName, String fieldValue) {
-    super(
-        ImmutableMap.of(
-            "filename",
-            filename,
-            "csvRowNumber",
-            csvRowNumber,
-            "fieldName",
-            fieldName,
-            "fieldValue",
-            fieldValue),
-        SeverityLevel.ERROR);
+    super(SeverityLevel.ERROR);
+    this.filename = filename;
+    this.csvRowNumber = csvRowNumber;
+    this.fieldName = fieldName;
+    this.fieldValue = fieldValue;
   }
 }

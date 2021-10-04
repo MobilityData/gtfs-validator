@@ -16,9 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -51,11 +49,13 @@ public class FeedServiceDateValidator extends SingleEntityValidator<GtfsFeedInfo
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class MissingFeedInfoDateNotice extends ValidationNotice {
-    @SchemaExport
+    private final long csvRowNumber;
+    private final String fieldName;
+
     MissingFeedInfoDateNotice(long csvRowNumber, String fieldName) {
-      super(
-          ImmutableMap.of("csvRowNumber", csvRowNumber, "fieldName", fieldName),
-          SeverityLevel.WARNING);
+      super(SeverityLevel.WARNING);
+      this.csvRowNumber = csvRowNumber;
+      this.fieldName = fieldName;
     }
   }
 }

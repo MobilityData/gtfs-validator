@@ -16,11 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import static org.mobilitydata.gtfsvalidator.table.GtfsRouteTableLoader.FILENAME;
-
-import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -94,13 +90,13 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class RouteBothShortAndLongNameMissingNotice extends ValidationNotice {
-    @SchemaExport
+    private final String routeId;
+    private final long csvRowNumber;
+
     RouteBothShortAndLongNameMissingNotice(String routeId, long csvRowNumber) {
-      super(
-          ImmutableMap.of(
-              "routeId", routeId,
-              "csvRowNumber", csvRowNumber),
-          SeverityLevel.ERROR);
+      super(SeverityLevel.ERROR);
+      this.routeId = routeId;
+      this.csvRowNumber = csvRowNumber;
     }
   }
 
@@ -110,16 +106,18 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class RouteShortAndLongNameEqualNotice extends ValidationNotice {
-    @SchemaExport
+    private final String routeId;
+    private final long csvRowNumber;
+    private final String routeShortName;
+    private final String routeLongName;
+
     RouteShortAndLongNameEqualNotice(
         String routeId, long csvRowNumber, String routeShortName, String routeLongName) {
-      super(
-          ImmutableMap.of(
-              "routeId", routeId,
-              "csvRowNumber", csvRowNumber,
-              "routeShortName", routeShortName,
-              "routeLongName", routeLongName),
-          SeverityLevel.WARNING);
+      super(SeverityLevel.WARNING);
+      this.routeId = routeId;
+      this.csvRowNumber = csvRowNumber;
+      this.routeShortName = routeShortName;
+      this.routeLongName = routeLongName;
     }
   }
 
@@ -130,14 +128,15 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class RouteShortNameTooLongNotice extends ValidationNotice {
-    @SchemaExport
+    private final String routeId;
+    private final long csvRowNumber;
+    private final String routeShortName;
+
     RouteShortNameTooLongNotice(String routeId, long csvRowNumber, String routeShortName) {
-      super(
-          ImmutableMap.of(
-              "routeId", routeId,
-              "csvRowNumber", csvRowNumber,
-              "routeShortName", routeShortName),
-          SeverityLevel.WARNING);
+      super(SeverityLevel.WARNING);
+      this.routeId = routeId;
+      this.csvRowNumber = csvRowNumber;
+      this.routeShortName = routeShortName;
     }
   }
 
@@ -148,18 +147,18 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class SameNameAndDescriptionForRouteNotice extends ValidationNotice {
-    @SchemaExport
+    private final long csvRowNumber;
+    private final String routeId;
+    private final String routeDesc;
+    private final String specifiedField;
+
     SameNameAndDescriptionForRouteNotice(
         long csvRowNumber, String routeId, String routeDesc, String routeShortOrLongName) {
-      super(
-          new ImmutableMap.Builder<String, Object>()
-              .put("filename", FILENAME)
-              .put("routeId", routeId)
-              .put("csvRowNumber", csvRowNumber)
-              .put("routeDesc", routeDesc)
-              .put("specifiedField", routeShortOrLongName)
-              .build(),
-          SeverityLevel.WARNING);
+      super(SeverityLevel.WARNING);
+      this.routeId = routeId;
+      this.csvRowNumber = csvRowNumber;
+      this.routeDesc = routeDesc;
+      this.specifiedField = routeShortOrLongName;
     }
   }
 }

@@ -80,7 +80,7 @@ public class EndRangeValidatorGenerator {
 
     boolean hasEndRange = false;
     for (GtfsFieldDescriptor startField : fileDescriptor.fields()) {
-      if (!startField.endRange().isPresent()) {
+      if (startField.endRange().isEmpty()) {
         continue;
       }
       EndRangeDescriptor endRange = startField.endRange().get();

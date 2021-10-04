@@ -18,7 +18,6 @@ package org.mobilitydata.gtfsvalidator.parsing;
 
 import java.math.BigDecimal;
 import java.time.ZoneId;
-import java.time.zone.ZoneRulesException;
 import java.util.Currency;
 import java.util.Locale;
 import java.util.function.Function;
@@ -360,9 +359,9 @@ public class RowParser {
     }
     try {
       return parsingFunction.apply(s);
-    } catch (IllegalArgumentException | ZoneRulesException e) {
+    } catch (RuntimeException e) {
       // Most parsing functions throw an IllegalArgumentException but ZoneId.of() throws
-      // a ZoneRulesException.
+      // a ZoneRulesException or DateTimeException. Be sure to catch all of them.
       noticeContainer.addValidationNotice(
           noticingFunction.apply(
               fileName, row.getRowNumber(), header.getColumnName(columnIndex), s));

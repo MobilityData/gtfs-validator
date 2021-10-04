@@ -67,46 +67,49 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 
 ## Table of errors
 
-| Name                                                                                                            	| Description                                                                                                                                                 	|
-|-----------------------------------------------------------------------------------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------	|
-| [`BlockTripsWithOverlappingStopTimesNotice`](#BlockTripsWithOverlappingStopTimesNotice)                         	| Block trips with overlapping stop times.                                                                                                                    	|
-| [`CsvParsingFailedNotice`](#CsvParsingFailedNotice)                                                             	| Parsing of a CSV file failed.                                                                                                                             	|
-| [`DecreasingOrEqualShapeDistanceNotice`](#DecreasingOrEqualShapeDistanceNotice)                                 	| Decreasing or equal `shape_dist_traveled` in `shapes.txt`.                                                                                                  	|
-| [`DecreasingOrEqualStopTimeDistanceNotice`](#DecreasingOrEqualStopTimeDistanceNotice)                           	| Decreasing or equal `shape_dist_traveled` in `stop_times.txt`.                                                                                              	|
-| [`DuplicatedColumnNotice`](#DuplicatedColumnNotice)                                                             	| Duplicated column in CSV.                                                                                                                                   	|
-| [`DuplicateFareRuleZoneIdFieldsNotice`](#DuplicateFareRuleZoneIdFieldsNotice)                                   	| Duplicate rows from `fare_rules.txt` based on `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.contains_id` and `fare_rules.destination_id`. 	|
-| [`DuplicateKeyNotice`](#DuplicateKeyNotice)                                                                       	| Duplicated entity.                                                                                                                                          	|
-| [`EmptyFileNotice`](#EmptyFileNotice)                                                                           	| A CSV file is empty.                                                                                                                                        	|
-| [`ForeignKeyViolationNotice`](#ForeignKeyViolationNotice)                                                                           	| Wrong foreign key.                                                                                                                                          	|
-| [`InconsistentAgencyTimezoneNotice`](#InconsistentAgencyTimezoneNotice)                                         	| Inconsistent Timezone among agencies.                                                                                                                       	|
-| [`InvalidColorNotice`](#InvalidColorNotice)                                                                     	| A field contains an invalid color value.                                                                                                                    	|
-| [`InvalidCurrencyNotice`](#InvalidCurrencyNotice)                                                               	| A field contains a wrong currency code.                                                                                                                     	|
-| [`InvalidDateNotice`](#InvalidDateNotice)                                                                       	| A field cannot be parsed as date.                                                                                                                           	|
-| [`InvalidEmailNotice`](#InvalidEmailNotice)                                                                     	| A field contains a malformed email address.                                                                                                                 	|
-| [`InvalidFloatNotice`](#InvalidFloatNotice)                                                                     	| A field cannot be parsed as a floating point number.                                                                                                        	|
-| [`InvalidIntegerNotice`](#InvalidIntegerNotice)                                                                 	| A field cannot be parsed as an integer.                                                                                                                     	|
-| [`InvalidLanguageCodeNotice`](#InvalidLanguageCodeNotice)                                                       	| A field contains a wrong language code.                                                                                                                     	|
-| [`InvalidPhoneNumberNotice`](#InvalidPhoneNumberNotice)                                                         	| A field contains a malformed phone number.                                                                                                                  	|
-| [`InvalidRowLengthNotice`](#InvalidRowLengthNotice)                                                               	| Invalid csv row length.                                                                                                                                     	|
-| [`InvalidTimeNotice`](#InvalidTimeNotice)                                                                       	| A field cannot be parsed as time.                                                                                                                           	|
-| [`InvalidTimezoneNotice`](#InvalidTimezoneNotice)                                                               	| A field cannot be parsed as a timezone.                                                                                                                     	|
-| [`InvalidUrlNotice`](#InvalidUrlNotice)                                                                         	| A field contains a malformed URL.                                                                                                                           	|
-| [`LocationWithoutParentStationNotice`](#LocationWithoutParentStationNotice)                                     	| A location that must have `parent_station` field does not have it.                                                                                          	|
-| [`MissingCalendarAndCalendarDateFilesNotice`](#MissingCalendarAndCalendarDateFilesNotice)                       	| Missing GTFS files `calendar.txt` and `calendar_dates.txt`.                                                                                                 	|
-| [`MissingRequiredColumnNotice`](#MissingRequiredColumnNotice)                                                     	| A required column is missing in the input file.                                                                                                             	|
-| [`MissingRequiredFieldNotice`](#MissingRequiredFieldNotice)                                                       	| A required field is missing.                                                                                                                                	|
-| [`MissingRequiredFileNotice`](#MissingRequiredFileNotice)                                                         	| A required file is missing.                                                                                                                                 	|
-| [`MissingTripEdgeNotice`](#MissingTripEdgeNotice)                                                               	| Missing trip edge `arrival_time` or `departure_time`.                                                                                                       	|
-| [`NewLineInValueNotice`](#NewLineInValueNotice)                                                                 	| New line or carriage return in a value in CSV file.                                                                                                         	|
-| [`NumberOutOfRangeNotice`](#NumberOutOfRangeNotice)                                                               	| Out of range value.                                                                                                                                         	|
-| [`OverlappingFrequencyNotice`](#OverlappingFrequencyNotice)                                                     	| Trip frequencies overlap.                                                                                                                                   	|
-| [`RouteBothShortAndLongNameMissingNotice`](#RouteBothShortAndLongNameMissingNotice)                             	| Missing route short name and long name.                                                                                                                     	|
-| [`StartAndEndRangeEqualNotice`](#StartAndEndRangeEqualNotice)                                                   	| Two date or time fields are equal.                                                                                                                          	|
-| [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         	| Two date or time fields are out of order.                                                                                                                   	|
-| [`StationWithParentStationNotice`](#StationWithParentStationNotice)                                             	| A station has `parent_station` field set.                                                                                                                   	|
-| [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](#StopTimeWithArrivalBeforePreviousDepartureTimeNotice) 	| Backwards time travel between stops in `stop_times.txt`                                                                                                     	|
-| [`StopTimeWithOnlyArrivalOrDepartureTimeNotice`](#StopTimeWithOnlyArrivalOrDepartureTimeNotice)                 	| Missing `stop_times.arrival_time` or `stop_times.departure_time`.                                                                                           	|
-| [`WrongParentLocationTypeNotice`](#WrongParentLocationTypeNotice)                                               	| Incorrect type of the parent location.                                                                                                                      	|
+| Name                                                                                                            | Description                                                                                                                                            |
+|-----------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`BlockTripsWithOverlappingStopTimesNotice`](#BlockTripsWithOverlappingStopTimesNotice)                         | Block trips with overlapping stop times.                                                                                                               |
+| [`CsvParsingFailedNotice`](#CsvParsingFailedNotice)                                                             | Parsing of a CSV file failed.                                                                                                                          |
+| [`DecreasingOrEqualShapeDistanceNotice`](#DecreasingOrEqualShapeDistanceNotice)                                 | Decreasing or equal `shape_dist_traveled` in `shapes.txt`.                                                                                             |
+| [`DecreasingOrEqualStopTimeDistanceNotice`](#DecreasingOrEqualStopTimeDistanceNotice)                           | Decreasing or equal `shape_dist_traveled` in `stop_times.txt`.                                                                                         |
+| [`DuplicatedColumnNotice`](#DuplicatedColumnNotice)                                                             | Duplicated column in CSV.                                                                                                                              |
+| [`DuplicateFareRuleZoneIdFieldsNotice`](#DuplicateFareRuleZoneIdFieldsNotice)                                   | Duplicate rows from `fare_rules.txt` based on `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.contains_id` and `fare_rules.destination_id`. |
+| [`DuplicateKeyNotice`](#DuplicateKeyNotice)                                                                     | Duplicated entity.                                                                                                                                     |
+| [`EmptyFileNotice`](#EmptyFileNotice)                                                                           | A CSV file is empty.                                                                                                                                   |
+| [`ForeignKeyViolationNotice`](#ForeignKeyViolationNotice)                                                       | Wrong foreign key.                                                                                                                                     |
+| [`InconsistentAgencyTimezoneNotice`](#InconsistentAgencyTimezoneNotice)                                         | Inconsistent Timezone among agencies.                                                                                                                  |
+| [`InvalidColorNotice`](#InvalidColorNotice)                                                                     | A field contains an invalid color value.                                                                                                               |
+| [`InvalidCurrencyNotice`](#InvalidCurrencyNotice)                                                               | A field contains a wrong currency code.                                                                                                                |
+| [`InvalidDateNotice`](#InvalidDateNotice)                                                                       | A field cannot be parsed as date.                                                                                                                      |
+| [`InvalidEmailNotice`](#InvalidEmailNotice)                                                                     | A field contains a malformed email address.                                                                                                            |
+| [`InvalidFloatNotice`](#InvalidFloatNotice)                                                                     | A field cannot be parsed as a floating point number.                                                                                                   |
+| [`InvalidIntegerNotice`](#InvalidIntegerNotice)                                                                 | A field cannot be parsed as an integer.                                                                                                                |
+| [`InvalidLanguageCodeNotice`](#InvalidLanguageCodeNotice)                                                       | A field contains a wrong language code.                                                                                                                |
+| [`InvalidPhoneNumberNotice`](#InvalidPhoneNumberNotice)                                                         | A field contains a malformed phone number.                                                                                                             |
+| [`InvalidRowLengthNotice`](#InvalidRowLengthNotice)                                                             | Invalid csv row length.                                                                                                                                |
+| [`InvalidTimeNotice`](#InvalidTimeNotice)                                                                       | A field cannot be parsed as time.                                                                                                                      |
+| [`InvalidTimezoneNotice`](#InvalidTimezoneNotice)                                                               | A field cannot be parsed as a timezone.                                                                                                                |
+| [`InvalidUrlNotice`](#InvalidUrlNotice)                                                                         | A field contains a malformed URL.                                                                                                                      |
+| [`LocationWithoutParentStationNotice`](#LocationWithoutParentStationNotice)                                     | A location that must have `parent_station` field does not have it.                                                                                     |
+| [`MissingCalendarAndCalendarDateFilesNotice`](#MissingCalendarAndCalendarDateFilesNotice)                       | Missing GTFS files `calendar.txt` and `calendar_dates.txt`.                                                                                            |
+| [`MissingRequiredColumnNotice`](#MissingRequiredColumnNotice)                                                   | A required column is missing in the input file.                                                                                                        |
+| [`MissingRequiredFieldNotice`](#MissingRequiredFieldNotice)                                                     | A required field is missing.                                                                                                                           |
+| [`MissingRequiredFileNotice`](#MissingRequiredFileNotice)                                                       | A required file is missing.                                                                                                                            |
+| [`MissingTripEdgeNotice`](#MissingTripEdgeNotice)                                                               | Missing trip edge `arrival_time` or `departure_time`.                                                                                                  |
+| [`NewLineInValueNotice`](#NewLineInValueNotice)                                                                 | New line or carriage return in a value in CSV file.                                                                                                    |
+| [`NumberOutOfRangeNotice`](#NumberOutOfRangeNotice)                                                             | Out of range value.                                                                                                                                    |
+| [`OverlappingFrequencyNotice`](#OverlappingFrequencyNotice)                                                     | Trip frequencies overlap.                                                                                                                              |
+| [`PathwayToPlatformWithBoardingAreasNotice`](#PathwayToPlatformWithBoardingAreasNotice)                         | A pathway has an endpoint that is a platform which has boarding areas.                                                                                 |
+| [`PathwayToWrongLocationTypeNotice`](#PathwayToWrongLocationTypeNotice)                                             | A pathway has an endpoint that is a station.                                                                                                           |
+| [`RouteBothShortAndLongNameMissingNotice`](#RouteBothShortAndLongNameMissingNotice)                             | Missing route short name and long name.                                                                                                                |
+| [`StartAndEndRangeEqualNotice`](#StartAndEndRangeEqualNotice)                                                   | Two date or time fields are equal.                                                                                                                     |
+| [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         | Two date or time fields are out of order.                                                                                                              |
+| [`StationWithParentStationNotice`](#StationWithParentStationNotice)                                             | A station has `parent_station` field set.                                                                                                              |
+| [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](#StopTimeWithArrivalBeforePreviousDepartureTimeNotice) | Backwards time travel between stops in `stop_times.txt`                                                                                                |
+| [`StopTimeWithOnlyArrivalOrDepartureTimeNotice`](#StopTimeWithOnlyArrivalOrDepartureTimeNotice)                 | Missing `stop_times.arrival_time` or `stop_times.departure_time`.                                                                                      |
+| [`TranslationUnexpectedValueNotice`](#TranslationUnexpectedValueNotice)                                         | A field in a translations row has value but must be empty.                                                                                             |
+| [`WrongParentLocationTypeNotice`](#WrongParentLocationTypeNotice)                                               | Incorrect type of the parent location.                                                                                                                 |
 
 <a name="WARNINGS"/>
 
@@ -117,28 +120,35 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`AttributionWithoutRoleNotice`](#AttributionWithoutRoleNotice)                   	| Attribution with no role.                                                                                                                                   	|
 | [`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)                           	| Duplicate  `routes.route_long_name`. Duplicate `routes.route_short_name`. Duplicate combination of fields `route_long_name`  and `routes.route_short_name`. 	|
 | [`EmptyColumnNameNotice`](#EmptyColumnNameNotice)                                 	| A column name is empty.                                                                                                                                     	|
-| [`EmptyRowNotice`](#EmptyRowNotice)                                               	| A file is unknown.                                                                                                                                          	|
+| [`EmptyRowNotice`](#EmptyRowNotice)                                               	| A row in the input file has only spaces.                                                                                                                      |
+| [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsecutiveStopsNotice) | A transit vehicle moves too fast between two consecutive stops.                                                                            	                |
+| [`FastTravelBetweenFarStopsNotice`](#FastTravelBetweenFarStopsNotice)                 | A transit vehicle moves too fast between two far stops.                                                                            	                        |
 | [`FeedExpirationDateNotice`](#FeedExpirationDateNotice)                           	| Dataset should be valid for at least the next 7 days. Dataset should cover at least the next 30 days of service.                                            	|
 | [`FeedInfoLangAndAgencyMismatchNotice`](#FeedInfoLangAndAgencyLangMismatchNotice) 	| Mismatching feed and agency language fields.                                                                                                                	|
 | [`InconsistentAgencyLangNotice`](#InconsistentAgencyLangNotice)                   	| Inconsistent language among agencies.                                                                                                                       	|
-| [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)           | The value in CSV file has leading or trailing whitespaces.                                                                                                  	|
+| [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)         | The value in CSV file has leading or trailing whitespaces.                                                                                                  	|
+| [`LocationWithUnexpectedStopTimeNotice`](#LocationWithUnexpectedStopTimeNotice)       | A location in `stops.txt` that is not a stop is referenced by some `stop_times.stop_id`.                                                                      |
 | [`MissingFeedInfoDateNotice`](#MissingFeedInfoDateNotice)                         	| `feed_end_date` should be provided if `feed_start_date` is provided. `feed_start_date` should be provided if `feed_end_date` is provided.                   	|
+| [`MissingLevelFileNotice`](#MissingLevelFileNotice)       	                                | `levels.txt` is conditionally required.                                                                                                                	    |
 | [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	| More than one row in CSV.                                                                                                                                   	|
 | [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	| Non ascii or non printable char in  `id`.                                                                                                                   	|
+| [`PathwayDanglingGenericNodeNotice`](#PathwayDanglingGenericNodeNotice)           	| A generic node has only one incident location in a pathway graph.                                                                                             |
+| [`PathwayUnreachableLocationNotice`](#PathwayUnreachableLocationNotice)               | A location is not reachable at least in one direction: from the entrances or to the exits.                                                                    |
 | [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)       	| A platform has no `parent_station` field set.                                                                                                               	|
 | [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	| Insufficient route color contrast.                                                                                                                          	|
 | [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	| Short and long name are equal for a route.                                                                                                                  	|
 | [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	| Short name of a route is too long (more than 12 characters).                                                                                                	|
-| [`SameNameAndDescriptionForRouteNotice`](#SameNameAndDescriptionForRouteNotice)       | Same name and description for route.                                                                                                                        	|
-| [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)         | Same name and description for stop.                                                                                                                      	    |
-| [`SameRouteAndAgencyUrlNotice`](#SameRouteAndAgencyUrlNotice)                       	| Same `routes.route_url` and `agency.agency_url`.                                                                                                  	        |
-| [`SameStopAndAgencyUrlNotice`](#SameStopAndAgencyUrlNotice)                          	| Same `stops.stop_url` and `agency.agency_url`.                                                                                                  	            |
+| [`SameNameAndDescriptionForRouteNotice`](#SameNameAndDescriptionForRouteNotice)     | Same name and description for route.                                                                                                                        	|
+| [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)       | Same name and description for stop.                                                                                                                      	    |
+| [`SameRouteAndAgencyUrlNotice`](#SameRouteAndAgencyUrlNotice)                       | Same `routes.route_url` and `agency.agency_url`.                                                                                                  	        |
+| [`SameStopAndAgencyUrlNotice`](#SameStopAndAgencyUrlNotice)                         | Same `stops.stop_url` and `agency.agency_url`.                                                                                                  	            |
 | [`SameStopAndRouteUrlNotice`](#SameStopAndRouteUrlNotice)                          	| Same `stops.stop_url` and `routes.route_url`.                                                                                                  	            |
-| [`StartAndEndTimeEqualNotice`](#StartAndEndTimeEqualNotice)                       	| Equal `frequencies.start_time` and `frequencies.end_time`.                                                                                                  	|
 | [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	| `arrival_time` or `departure_time` not specified for timepoint.                                                                                             	|
 | [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	| Stop too far from trip shape.                                                                                                                               	|
+| [`StopWithoutStopTimeNotice`](#StopWithoutStopTimeNotice)                             | A stop in `stops.txt` is not referenced by any `stop_times.stop_id`.                                                                                          |
 | [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                              	| Stop without value for `stops.zone_id`.                                                                                                                     	|
-| [`TooFastTravelNotice`](#TooFastTravelNotice)                                     	| Fast travel between stops in `stop_times.txt`.                                                                                                              	|
+| [`TranslationForeignKeyViolationNotice`](#TranslationForeignKeyViolationNotice)       | An entity with the given `record_id` and `record_sub_id` cannot be found in the referenced table.                                                             |
+| [`TranslationUnknownTableNameNotice`](#TranslationUnknownTableNameNotice)             | A translation references an unknown or missing GTFS table.                                                                                                    |
 | [`UnexpectedEnumValueNotice`](#UnexpectedEnumValueNotice)                         	| An enum has an unexpected value.                                                                                                                            	|
 | [`UnusableTripNotice`](#UnusableTripNotice)                                       	| Trips must have more than one stop to be usable.                                                                                                            	|
 | [`UnusedShapeNotice`](#UnusedShapeNotice)                                         	| Shape is not used in GTFS file `trips.txt`.                                                                                                                 	|
@@ -450,7 +460,28 @@ Trip frequencies must not overlap in time
 ##### References:
 * [frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
 
+<a name="PathwayToPlatformWithBoardingAreasNotice"/>
+
+#### PathwayToPlatformWithBoardingAreasNotice
+
+A pathway has an endpoint that is a platform which has boarding areas. A platform that has boarding
+areas is treated as a parent object, not a point. In such cases, the platform must not have pathways
+assigned - instead, pathways must be assigned to its boarding areas.
+
+##### References:
+* [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
+
 <a name="RouteBothShortAndLongNameMissingNotice"/>
+
+<a name="PathwayToWrongLocationTypeNotice"/>
+
+#### PathwayToWrongLocationTypeNotice
+
+A pathway has an endpoint that is a station. Pathways endpoints must be platforms (stops),
+entrances/exits, generic nodes or boarding areas.
+
+##### References:
+* [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
 
 #### RouteBothShortAndLongNameMissingNotice
 
@@ -459,25 +490,11 @@ Both short_name and long_name are missing for a route.
 ##### References:
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 
-<a name="SameNameAndDescriptionForRouteNotice"/>
-
-#### SameNameAndDescriptionForRouteNotice
-
-The GTFS spec defines `routes.txt` [route_desc](https://gtfs.org/reference/static/#routestxt) as:
-
-> Description of a route that provides useful, quality information. Do not simply duplicate the name of the route.
-
-See the GTFS and GTFS Best Practices links below for more examples of how to populate the `route_short_name`, `route_long_name`, and `route_desc` fields.
-
-##### References:
-[routes.txt specification](http://gtfs.org/reference/static/#routestxt)
-[routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
-
 <a name="StartAndEndRangeEqualNotice"/>
 
 #### StartAndEndRangeEqualNotice
 
-Date or time fields have been found equal.
+The fields `frequencies.start_date` and `frequencies.end_date` have been found equal in `frequencies.txt`. The GTFS spec is currently unclear how this case should be handled (e.g., is it a trip that circulates once?). It is recommended to use a trip not defined via frequencies.txt for this case.
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
@@ -486,7 +503,7 @@ Date or time fields have been found equal.
 
 #### StartAndEndRangeOutOfOrderNotice
 
-Date or time fields have been found out of order.
+Date or time fields have been found out of order in `calendar.txt`, `feed_info.txt` and `stop_times.txt`.
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
@@ -495,16 +512,16 @@ Date or time fields have been found out of order.
 
 #### StationWithParentStationNotice
 
-Field `parent_station` must be empty when `location_type` is 2.
+Field `parent_station` must be empty when `location_type` is 1.
 
 ##### References:
-[stop_times.txt](http://gtfs.org/reference/static/#stop_timestxt)
+[stop.txt](http://gtfs.org/reference/static/#stopstxt)
 
 <a name="StopTimeWithArrivalBeforePreviousDepartureTimeNotice"/>
 
 #### StopTimeWithArrivalBeforePreviousDepartureTimeNotice
 
-For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must not precede the `departure_time` of n-th stoptime in sequence.
+For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must not precede the `departure_time` of n-th stoptime in sequence in `stop_times.txt`.
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
@@ -526,6 +543,15 @@ Missing `stop_time.arrival_time` or `stop_time.departure_time`
 
 ##### References:
 * [stop_times.txt specification](http://gtfs.org/reference/static/#stop_timestxt)
+
+<a name="TranslationUnexpectedValueNotice"/>
+
+#### TranslationUnexpectedValueNotice
+
+A field in a translations row has value but must be empty.
+
+##### References:
+* [translations.txt specification](http://gtfs.org/reference/static/#translationstxt)
 
 <a name="WrongParentLocationTypeNotice"/>
 
@@ -565,7 +591,7 @@ Note that there may be valid cases where routes have the same short and long nam
 
 ##### References:
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
-
+* [routes.txt best practices](http://gtfs.org/best-practices/#routestxt)
 <a name="EmptyColumnNameNotice"/>
 
 #### EmptyColumnNameNotice
@@ -584,6 +610,44 @@ A row in the input file has only spaces.
 ##### References:
 * [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
 
+<a name="FastTravelBetweenConsecutiveStopsNotice"/>
+
+#### FastTravelBetweenConsecutiveStopsNotice
+
+A transit vehicle moves too fast between two consecutive stops. The speed threshold depends on route type.
+
+##### Speed thresholds
+
+| Route type | Description | Threshold, km/h |
+|------------|-------------|-----------------|
+| 0          | Light rail  | 100             |
+| 1          | Subway      | 150             |
+| 2          | Rail        | 500             |
+| 3          | Bus         | 150             |
+| 4          | Ferry       |  80             |
+| 5          | Cable tram  |  30             |
+| 6          | Aerial lift |  50             |
+| 7          | Funicular   |  50             |
+| 11         | Trolleybus  | 150             |
+| 12         | Monorail    | 150             |
+| -          | Unknown     | 200             |
+
+##### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+
+#### FastTravelBetweenFarStopsNotice
+
+A transit vehicle moves too fast between far consecutive stops (more than in 10 km apart). 
+This normally indicates a more serious problem than too fast travel between consecutive stops.
+The speed threshold depends on route type.
+
+##### Speed thresholds
+
+Same as for [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsecutiveStopsNotice).
+
+##### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+
 <a name="FeedExpirationDateNotice"/>
 
 #### FeedExpirationDateNotice
@@ -597,7 +661,7 @@ If possible, the GTFS dataset should cover at least the next 30 days of service.
 <a name="FeedInfoLangAndAgencyLangMismatchNotice"/>
 
 #### FeedInfoLangAndAgencyLangMismatchNotice
-1. Files `agency.txt` and `feed_info.txt` must define matching `agency.agency_lang` and `feed_info.feed_lang`.
+1. Files `agency.txt` and `feed_info.txt` should define matching `agency.agency_lang` and `feed_info.feed_lang`.
   The default language may be multilingual for datasets with the original text in multiple languages. In such cases, the feed_lang field should contain the language code mul defined by the norm ISO 639-2.
   * If `feed_lang` is not `mul` and does not match with `agency_lang`, that's an error
   * If there is more than one `agency_lang` and `feed_lang` isn't `mul`, that's an error
@@ -625,6 +689,15 @@ The value in CSV file has leading or trailing whitespaces.
 ##### References:
 * [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
 
+<a name="LocationWithUnexpectedStopTimeNotice"/>
+
+#### LocationWithUnexpectedStopTimeNotice
+
+Referenced locations (using `stop_times.stop_id`) must be stops/platforms, i.e. their `stops.location_type` value must be 0 or empty.
+
+##### References:
+* [stop_times.txt GTFS specification](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stoptimestxt)
+
 <a name="MissingFeedInfoDateNotice"/>
 
 #### MissingFeedInfoDateNotice
@@ -633,6 +706,15 @@ Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one
 
 ##### References:
 * [feed_info.txt Best practices](http://gtfs.org/best-practices/#feed_infotxt)
+
+<a name="MissingLevelIdNotice"/>
+
+#### MissingLevelIdNotice
+
+GTFS file `levels.txt` is required for elevator (`pathway_mode=5`). A row from `stops.txt` linked to an elevator pathway has no value for `stops.level_id`.
+
+##### References:
+* [levels.txt specification](http://gtfs.org/reference/static/#levelstxt)
 
 <a name="MoreThanOneEntityNotice"/>
 
@@ -647,10 +729,36 @@ The file is expected to have a single entity but has more (e.g., "feed_info.txt"
 
 #### NonAsciiOrNonPrintableCharNotice
 
-A value of filed with type `id` contains non ASCII or non printable characters. This is not recommended.
+A value of a field with type `id` contains non ASCII or non printable characters. This is not recommended.
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
+
+<a name="PathwayDanglingGenericNodeNotice"/>
+
+#### PathwayDanglingGenericNodeNotice
+
+A generic node has only one incident location in a pathway graph. Such generic node is useless
+because there is no benefit in visiting it.
+
+##### References:
+* [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
+
+<a name="PathwayUnreachableLocationNotice"/>
+
+#### PathwayUnreachableLocationNotice
+
+A location belongs to a station that has pathways and is not reachable at least in one direction:
+from the entrances or to the exits.
+
+Notices are reported for platforms, boarding areas and generic nodes but not for entrances or
+stations.
+
+Notices are not reported for platforms that have boarding areas since such platforms may not
+have incident pathways. Instead, notices are reported for the boarding areas.
+
+##### References:
+* [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
 
 <a name="PlatformWithoutParentStationNotice"/>
 
@@ -688,6 +796,20 @@ Short name of a route is too long (more than 12 characters).
 
 ##### References:
 * [routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
+
+<a name="SameNameAndDescriptionForRouteNotice"/>
+
+#### SameNameAndDescriptionForRouteNotice
+
+The GTFS spec defines `routes.txt` [route_desc](https://gtfs.org/reference/static/#routestxt) as:
+
+> Description of a route that provides useful, quality information. Do not simply duplicate the name of the route.
+
+See the GTFS and GTFS Best Practices links below for more examples of how to populate the `route_short_name`, `route_long_name`, and `route_desc` fields.
+
+##### References:
+[routes.txt specification](http://gtfs.org/reference/static/#routestxt)
+[routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
 
 <a name="SameNameAndDescriptionForStopNotice"/>
 
@@ -727,15 +849,6 @@ A stop should not have the same `stop.stop_url` as a record from `routes.txt`.
 ##### References:
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 
-<a name="StartAndEndTimeEqualNotice"/>
-
-#### StartAndEndTimeEqualNotice
-
-Start and end times are equal in GTFS file `frequencies.txt`. The GTFS spec is currently unclear how this case should be handled (e.g., is it a trip that circulates once?). It is recommended to use a trip not defined via frequencies.txt for this case.
-
-##### References:
-* [Original Python validator implementation](https://github.com/google/transitfeed)
-
 <a name="StopTimeTimepointWithoutTimeNotice"/>
 
 ### StopTimeTimepointWithoutTimesNotice
@@ -754,23 +867,39 @@ Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100
 ##### References:
 * [GTFS Best Practices shapes.txt](https://gtfs.org/best-practices/#shapestxt)
 
+<a name="StopWithoutStopTimeNotice"/>
+
+#### StopWithoutStopTimeNotice
+
+A stop in `stops.txt` is not referenced by any `stop_times.stop_id`, so it is not used by any trip.
+Such stops normally do not provide user value. This notice may indicate a typo in `stop_times.txt`.
+
 <a name="StopWithoutZoneIdNotice"/>
 
 #### StopWithoutZoneIdNotice
 
-Per GTFS specification, `stops.zone_id` should be provided if fare information is provided using `fare_rules.txt`. This rule does not apply to records from `stops.txt` that represent a stop or en entrance (i.e. `stops.location_type = 1 or 2`).
+If `fare_rules.txt` is provided, then all stops and platforms (location_type = 0) must have `stops.zone_id` assigned.
 
 ##### References:
 * [GTFS stops.txt specification](https://gtfs.org/reference/static#stopstxt)
 
-<a name="TooFastTravelNotice"/>
+<a name="TranslationForeignKeyViolationNotice"/>
 
-#### TooFastTravelNotice
+#### TranslationForeignKeyViolationNotice
 
-As implemented in the original [Google Python GTFS validator](https://github.com/google/transitfeed/wiki/FeedValidator), the calculated speed between stops should not be greater than 150 km/h (42 m/s SI or 93 mph). 
+An entity with the given `record_id` and `record_sub_id` cannot be found in the referenced table.
 
 ##### References:
-* [Original Python validator implementation](https://github.com/google/transitfeed)
+* [translations.txt specification](http://gtfs.org/reference/static/#translationstxt)
+
+<a name="TranslationUnknownTableNameNotice"/>
+
+#### TranslationUnknownTableNameNotice
+
+A translation references an unknown or missing GTFS table.
+
+##### References:
+* [translations.txt specification](http://gtfs.org/reference/static/#translationstxt)
 
 <a name="UnexpectedEnumValueNotice"/>
 
@@ -803,7 +932,7 @@ All records defined by GTFS `shapes.txt` should be used in `trips.txt`.
 
 #### UnusedTripNotice
 
-Trips must be referred to at least once in `stop_times.txt`.
+Trips should be referred to at least once in `stop_times.txt`.
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)

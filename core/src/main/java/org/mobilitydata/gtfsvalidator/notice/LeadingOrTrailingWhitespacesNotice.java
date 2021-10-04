@@ -16,9 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
-
 /**
  * The value in CSV file has leading or trailing whitespaces.
  *
@@ -34,21 +31,17 @@ import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
  * that is why we always strip whitespaces.
  */
 public class LeadingOrTrailingWhitespacesNotice extends ValidationNotice {
+  private final String filename;
+  private final long csvRowNumber;
+  private final String fieldName;
+  private final String fieldValue;
 
-  /** Constructs a notice with the default severity {@code WARNING}. */
-  @SchemaExport
   public LeadingOrTrailingWhitespacesNotice(
       String filename, long csvRowNumber, String fieldName, String fieldValue) {
-    super(
-        ImmutableMap.of(
-            "filename",
-            filename,
-            "csvRowNumber",
-            csvRowNumber,
-            "fieldName",
-            fieldName,
-            "fieldValue",
-            fieldValue),
-        SeverityLevel.WARNING);
+    super(SeverityLevel.WARNING);
+    this.filename = filename;
+    this.csvRowNumber = csvRowNumber;
+    this.fieldName = fieldName;
+    this.fieldValue = fieldValue;
   }
 }

@@ -16,14 +16,12 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -73,59 +71,25 @@ public class DuplicateRouteNameValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class DuplicateRouteNameNotice extends ValidationNotice {
+    private final long csvRowNumber1;
+    private final String routeId1;
+    private final long csvRowNumber2;
+    private final String routeId2;
+    private final String routeShortName;
+    private final String routeLongName;
+    private final int routeTypeValue;
+    private final String agencyId;
 
-    /**
-     * Constructor used while extracting notice information.
-     *
-     * @param csvRowNumber1 the first route's csv row number
-     * @param routeId1 the first route's id
-     * @param csvRowNumber2 the other route's csv row number
-     * @param routeId2 the other route's id
-     * @param routeShortName the duplicate route short name
-     * @param routeLongName the duplicate route long name
-     * @param routeTypeValue the route type value
-     * @param agencyId the agency id
-     */
-    @SchemaExport
-    DuplicateRouteNameNotice(
-        long csvRowNumber1,
-        String routeId1,
-        long csvRowNumber2,
-        String routeId2,
-        String routeShortName,
-        String routeLongName,
-        int routeTypeValue,
-        String agencyId) {
-      super(
-          new ImmutableMap.Builder<String, Object>()
-              .put("csvRowNumber1", csvRowNumber1)
-              .put("routeId1", routeId1)
-              .put("csvRowNumber2", csvRowNumber2)
-              .put("routeId2", routeId2)
-              .put("routeShortName", routeShortName)
-              .put("routeLongName", routeLongName)
-              .put("routeType", routeTypeValue)
-              .put("agencyId", agencyId)
-              .build(),
-          SeverityLevel.WARNING);
-    }
-
-    /**
-     * Default constructor for notice.
-     *
-     * @param route1 the first route to extract information from.
-     * @param route2 the other route to extract information from.
-     */
     DuplicateRouteNameNotice(GtfsRoute route1, GtfsRoute route2) {
-      this(
-          route1.csvRowNumber(),
-          route1.routeId(),
-          route2.csvRowNumber(),
-          route2.routeId(),
-          route1.routeShortName(),
-          route1.routeLongName(),
-          route1.routeTypeValue(),
-          route1.agencyId());
+      super(SeverityLevel.WARNING);
+      this.csvRowNumber1 = route1.csvRowNumber();
+      this.routeId1 = route1.routeId();
+      this.csvRowNumber2 = route2.csvRowNumber();
+      this.routeId2 = route2.routeId();
+      this.routeShortName = route1.routeShortName();
+      this.routeLongName = route1.routeLongName();
+      this.routeTypeValue = route1.routeTypeValue();
+      this.agencyId = route1.agencyId();
     }
   }
 }

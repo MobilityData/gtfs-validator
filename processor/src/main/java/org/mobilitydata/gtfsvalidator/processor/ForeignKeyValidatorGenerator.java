@@ -53,7 +53,7 @@ public class ForeignKeyValidatorGenerator {
     List<JavaFile> validators = new ArrayList<>();
     for (GtfsFileDescriptor childFile : fileDescriptors.values()) {
       for (GtfsFieldDescriptor childField : childFile.fields()) {
-        if (!childField.foreignKey().isPresent()) {
+        if (childField.foreignKey().isEmpty()) {
           continue;
         }
         ForeignKeyDescriptor foreignKey = childField.foreignKey().get();
@@ -144,7 +144,7 @@ public class ForeignKeyValidatorGenerator {
             .addParameter(parentClasses.tableContainerTypeName(), "parentContainer");
     if (parentField.primaryKey()) {
       hasReferencedKeyMethod.addStatement(
-          "return parentContainer.$L(key) != null",
+          "return parentContainer.$L(key).isPresent()",
           FieldNameConverter.byKeyMethodName(parentField.name()));
     } else if (parentField.firstKey() || parentField.index()) {
       hasReferencedKeyMethod.addStatement(

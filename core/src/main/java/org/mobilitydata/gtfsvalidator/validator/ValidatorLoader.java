@@ -141,10 +141,16 @@ public class ValidatorLoader {
       throws ValidatorLoaderException {
     Constructor<T> constructor = chooseConstructor(validatorClass);
 
+    // Indicates that the full GtfsFeedContainer needs to be injected.
+    boolean injectFeedContainer = false;
     // Find out which GTFS tables need to be injected.
     List<Class<? extends GtfsTableContainer<?>>> injectedTables = new ArrayList<>();
     for (Class<?> parameterType : constructor.getParameterTypes()) {
       if (isInjectableFromContext(parameterType)) {
+        continue;
+      }
+      if (GtfsFeedContainer.class.isAssignableFrom(parameterType)) {
+        injectFeedContainer = true;
         continue;
       }
       if (!GtfsTableContainer.class.isAssignableFrom(parameterType)) {
@@ -156,7 +162,7 @@ public class ValidatorLoader {
       injectedTables.add((Class<? extends GtfsTableContainer<?>>) parameterType);
     }
 
-    if (injectedTables.size() == 1) {
+    if (!injectFeedContainer && injectedTables.size() == 1) {
       singleFileValidators.put(injectedTables.get(0), validatorClass);
     } else {
       multiFileValidators.add(validatorClass);
@@ -246,9 +252,11 @@ public class ValidatorLoader {
     return createValidator(
         clazz,
         parameterClass ->
-            GtfsTableContainer.class.isAssignableFrom(parameterClass)
-                ? feed.getTable((Class<? extends GtfsTableContainer<?>>) parameterClass)
-                : validationContext.get(parameterClass));
+            GtfsFeedContainer.class.isAssignableFrom(parameterClass)
+                ? feed
+                : GtfsTableContainer.class.isAssignableFrom(parameterClass)
+                    ? feed.getTable((Class<? extends GtfsTableContainer<?>>) parameterClass)
+                    : validationContext.get(parameterClass));
   }
 
   /** Describes all loaded validators. */

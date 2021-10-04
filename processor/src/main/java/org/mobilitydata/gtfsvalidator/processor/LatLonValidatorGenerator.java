@@ -16,10 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.processor;
 
-import com.google.common.geometry.S2LatLng;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
@@ -74,8 +72,6 @@ public class LatLonValidatorGenerator {
                     ClassName.get(SingleEntityValidator.class),
                     entityClasses.entityImplementationTypeName()));
 
-    addPoles(typeSpec);
-
     MethodSpec.Builder validateMethod =
         MethodSpec.methodBuilder("validate")
             .addModifiers(Modifier.PUBLIC)
@@ -91,19 +87,6 @@ public class LatLonValidatorGenerator {
     typeSpec.addMethod(validateMethod.build());
 
     return JavaFile.builder(VALIDATOR_PACKAGE_NAME, typeSpec.build()).build();
-  }
-
-  private static void addPoles(TypeSpec.Builder typeSpec) {
-    typeSpec.addField(
-        FieldSpec.builder(
-                S2LatLng.class, "NORTH_POLE", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
-            .initializer("$T.fromDegrees(90, 0)", S2LatLng.class)
-            .build());
-    typeSpec.addField(
-        FieldSpec.builder(
-                S2LatLng.class, "SOUTH_POLE", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
-            .initializer("$T.fromDegrees(-90, 0)", S2LatLng.class)
-            .build());
   }
 
   private static void validateLatLon(
@@ -125,10 +108,7 @@ public class LatLonValidatorGenerator {
         .endControlFlow();
 
     validateMethod
-        .addStatement("$T point = entity.$L()", S2LatLng.class, latLonDescriptor.latLonField())
-        .beginControlFlow(
-            "if (point.getEarthDistance(NORTH_POLE) <= 1.0 || point.getEarthDistance(SOUTH_POLE)"
-                + " <= 1.0)")
+        .beginControlFlow("if (Math.abs(entity.$L()) >= 89.0)", latLonDescriptor.latField())
         .addStatement(
             "noticeContainer.addValidationNotice(new $T($L))",
             PointNearPoleNotice.class,

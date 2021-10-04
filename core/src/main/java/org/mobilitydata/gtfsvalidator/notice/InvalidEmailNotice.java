@@ -16,9 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
-
 /**
  * A field contains a malformed email address.
  *
@@ -29,29 +26,26 @@ import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
  * reference</a> does not provide any special requirements or standards.
  */
 public class InvalidEmailNotice extends ValidationNotice {
+  private final String filename;
+  private final long csvRowNumber;
+  private final String fieldName;
+  private final String fieldValue;
 
   /**
    * Constructs a notice with given severity. This constructor may be used by users that want to
    * lower the priority to {@code WARNING}.
    */
-  @SchemaExport
   public InvalidEmailNotice(
       String filename,
       long csvRowNumber,
       String fieldName,
       String fieldValue,
       SeverityLevel severityLevel) {
-    super(
-        ImmutableMap.of(
-            "filename",
-            filename,
-            "csvRowNumber",
-            csvRowNumber,
-            "fieldName",
-            fieldName,
-            "fieldValue",
-            fieldValue),
-        severityLevel);
+    super(severityLevel);
+    this.filename = filename;
+    this.csvRowNumber = csvRowNumber;
+    this.fieldName = fieldName;
+    this.fieldValue = fieldValue;
   }
 
   /** Constructs a notice with the default severity {@code ERROR}. */

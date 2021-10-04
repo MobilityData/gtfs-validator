@@ -16,8 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
+import javax.annotation.Nullable;
 
 /**
  * Start and end range fields are equal for a certain GTFS entity.
@@ -28,7 +27,13 @@ import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
  */
 public class StartAndEndRangeEqualNotice extends ValidationNotice {
 
-  @SchemaExport
+  private final String filename;
+  private final long csvRowNumber;
+  @Nullable private final String entityId;
+  private final String startFieldName;
+  private final String endFieldName;
+  private final String value;
+
   public StartAndEndRangeEqualNotice(
       String filename,
       long csvRowNumber,
@@ -36,16 +41,13 @@ public class StartAndEndRangeEqualNotice extends ValidationNotice {
       String startFieldName,
       String endFieldName,
       String value) {
-    super(
-        new ImmutableMap.Builder<String, Object>()
-            .put("filename", filename)
-            .put("csvRowNumber", csvRowNumber)
-            .put("entityId", entityId)
-            .put("startFieldName", startFieldName)
-            .put("endFieldName", endFieldName)
-            .put("value", value)
-            .build(),
-        SeverityLevel.ERROR);
+    super(SeverityLevel.ERROR);
+    this.filename = filename;
+    this.csvRowNumber = csvRowNumber;
+    this.entityId = entityId;
+    this.startFieldName = startFieldName;
+    this.endFieldName = endFieldName;
+    this.value = value;
   }
 
   public StartAndEndRangeEqualNotice(
@@ -54,19 +56,12 @@ public class StartAndEndRangeEqualNotice extends ValidationNotice {
       String startFieldName,
       String endFieldName,
       String value) {
-    super(
-        new ImmutableMap.Builder<String, Object>()
-            .put("filename", filename)
-            .put("csvRowNumber", csvRowNumber)
-            .put("startFieldName", startFieldName)
-            .put("endFieldName", endFieldName)
-            .put("value", value)
-            .build(),
-        SeverityLevel.ERROR);
-  }
-
-  @Override
-  public String getCode() {
-    return "start_and_end_range_equal";
+    super(SeverityLevel.ERROR);
+    this.filename = filename;
+    this.csvRowNumber = csvRowNumber;
+    this.entityId = null;
+    this.startFieldName = startFieldName;
+    this.endFieldName = endFieldName;
+    this.value = value;
   }
 }

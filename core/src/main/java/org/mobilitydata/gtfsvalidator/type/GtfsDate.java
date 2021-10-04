@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.type;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 
 /** Represents GTFS date. */
@@ -34,6 +35,13 @@ public class GtfsDate implements Comparable<GtfsDate> {
     return new GtfsDate(LocalDate.ofEpochDay(epochDay));
   }
 
+  /**
+   * Parses date from string in {@code YYYYMMDD} format.
+   *
+   * @param yyyymmdd date in {@code YYYYMMDD} format, e.g. "20210102"
+   * @throws IllegalArgumentException for invalid date string
+   * @return a GtfsDate instance
+   */
   public static GtfsDate fromString(String yyyymmdd) {
     if (yyyymmdd.length() != 8) {
       throw new IllegalArgumentException("Date must have YYYYMMDD format: " + yyyymmdd);
@@ -46,7 +54,11 @@ public class GtfsDate implements Comparable<GtfsDate> {
     } catch (NumberFormatException ex) {
       throw new IllegalArgumentException("Date must have YYYYMMDD format: " + yyyymmdd);
     }
-    return new GtfsDate(LocalDate.of(year, month, day));
+    try {
+      return new GtfsDate(LocalDate.of(year, month, day));
+    } catch (DateTimeException e) {
+      throw new IllegalArgumentException("Invalid date " + yyyymmdd, e);
+    }
   }
 
   public int getYear() {

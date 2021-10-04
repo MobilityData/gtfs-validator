@@ -16,9 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import com.google.common.collect.ImmutableMap;
-import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
-
 /**
  * ID value contains something different from printable ASCII characters.
  *
@@ -28,15 +25,17 @@ import org.mobilitydata.gtfsvalidator.annotation.SchemaExport;
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
-  @SchemaExport
+  private final String filename;
+  private final long csvRowNumber;
+  private final String columnName;
+  private final String fieldValue;
+
   public NonAsciiOrNonPrintableCharNotice(
       String filename, long csvRowNumber, String columnName, String fieldValue) {
-    super(
-        ImmutableMap.of(
-            "filename", filename,
-            "csvRowNumber", csvRowNumber,
-            "columnName", columnName,
-            "fieldValue", fieldValue),
-        SeverityLevel.WARNING);
+    super(SeverityLevel.WARNING);
+    this.filename = filename;
+    this.csvRowNumber = csvRowNumber;
+    this.columnName = columnName;
+    this.fieldValue = fieldValue;
   }
 }

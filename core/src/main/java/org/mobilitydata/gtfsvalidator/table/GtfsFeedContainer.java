@@ -16,11 +16,13 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import com.google.common.base.Ascii;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
 
 /**
@@ -40,8 +42,20 @@ public class GtfsFeedContainer {
     }
   }
 
-  public GtfsTableContainer<?> getTable(String filename) {
-    return tables.get(filename);
+  /**
+   * Returns GTFS table for given file name, if any.
+   *
+   * <p>Returns empty if the table is not supported by schema. If table is supported but not
+   * provided in the feed, then returns an empty table container with {@link
+   * TableStatus#MISSING_FILE}.
+   *
+   * <p>File names are case-insensitive.
+   *
+   * @param filename file name, including ".txt" extension
+   * @return GTFS table or empty if the table is not supported by schema
+   */
+  public Optional<GtfsTableContainer<?>> getTableForFilename(String filename) {
+    return Optional.ofNullable(tables.getOrDefault(Ascii.toLowerCase(filename), null));
   }
 
   public <T extends GtfsTableContainer<?>> T getTable(Class<T> clazz) {
