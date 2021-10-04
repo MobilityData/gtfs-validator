@@ -33,7 +33,7 @@ import java.util.List;
  */
 public class NoticeContainer {
   /** Limit on the amount of exported notices of the same type and severity. */
-  private static final int MAX_EXPORTS_PER_NOTICE_TYPE = 100000;
+  private static final int MAX_EXPORTS_PER_NOTICE_TYPE = 100_000;
 
   /**
    * Limit on the total amount of stored validation notices.
@@ -44,7 +44,7 @@ public class NoticeContainer {
    *
    * <p>Note that system errors are not limited since we don't expect to have a lot of them.
    */
-  private static final int MAX_VALIDATION_NOTICES = 10000000;
+  private static final int MAX_VALIDATION_NOTICES = 100_000;
 
   private final List<ValidationNotice> validationNotices = new ArrayList<>();
   private final List<SystemError> systemErrors = new ArrayList<>();
