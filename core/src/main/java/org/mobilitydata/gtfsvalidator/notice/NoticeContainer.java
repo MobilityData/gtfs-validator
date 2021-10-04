@@ -69,7 +69,7 @@ public class NoticeContainer {
         groupNoticesByTypeAndSeverity(validationNotices);
     List<ValidationNotice> noticesForType =
         noticesOfType.get(notice.getCode() + notice.getSeverityLevel().ordinal());
-    if (noticesForType.size() < maxValidationNoticePerType) {
+    if (noticesForType == null || noticesForType.size() < maxValidationNoticePerType) {
       validationNotices.add(notice);
     }
   }
