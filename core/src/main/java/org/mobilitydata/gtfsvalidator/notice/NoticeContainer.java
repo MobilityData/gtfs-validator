@@ -62,7 +62,7 @@ public class NoticeContainer {
     if (notice.isError()) {
       hasValidationErrors = true;
     }
-    if (validationNotices.size() >= maxTotalValidationNotices) {
+    if (validationNotices.size() > maxTotalValidationNotices) {
       return;
     }
     ListMultimap<String, ValidationNotice> noticesOfType =
