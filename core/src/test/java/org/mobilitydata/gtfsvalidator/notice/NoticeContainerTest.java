@@ -97,4 +97,31 @@ public class NoticeContainerTest {
     assertThat(c1.getValidationNotices()).containsExactly(n1, n2);
     assertThat(c1.getSystemErrors()).containsExactly(e1, e2);
   }
+
+  @Test
+  public void addValidationNotice_setMax_perNoticeType() {
+    ValidationNotice n1 = new MissingRequiredFileNotice("stops.txt");
+    ValidationNotice n2 = new UnknownFileNotice("unknown.txt");
+    NoticeContainer noticeContainer = new NoticeContainer();
+    int MAX_TOTAL_VALIDATION_NOTICES = 50;
+    int MAX_VALIDATION_NOTICES_PER_TYPE = 15;
+    for (int i = 0; i < MAX_TOTAL_VALIDATION_NOTICES + 5; i++) {
+      noticeContainer.addValidationNotice(
+          n1, MAX_TOTAL_VALIDATION_NOTICES, MAX_VALIDATION_NOTICES_PER_TYPE);
+      noticeContainer.addValidationNotice(
+          n2, MAX_TOTAL_VALIDATION_NOTICES, MAX_VALIDATION_NOTICES_PER_TYPE);
+    }
+    assertThat(noticeContainer.getValidationNotices().size())
+        .isEqualTo(2 * MAX_VALIDATION_NOTICES_PER_TYPE);
+    assertThat(
+            NoticeContainer.groupNoticesByTypeAndSeverity(noticeContainer.getValidationNotices())
+                .get(n1.getCode() + n1.getSeverityLevel().ordinal())
+                .size())
+        .isEqualTo(15);
+    assertThat(
+            NoticeContainer.groupNoticesByTypeAndSeverity(noticeContainer.getValidationNotices())
+                .get(n2.getCode() + n2.getSeverityLevel().ordinal())
+                .size())
+        .isEqualTo(15);
+  }
 }

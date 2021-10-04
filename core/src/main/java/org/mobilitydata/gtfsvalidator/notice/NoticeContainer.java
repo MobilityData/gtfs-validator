@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
 import com.google.gson.JsonArray;
@@ -32,8 +33,8 @@ import java.util.List;
  * own NoticeContainer, and after execution is complete the results are merged.
  */
 public class NoticeContainer {
-  /** Limit on the amount of exported notices of the same type and severity. */
-  private static final int MAX_EXPORTS_PER_NOTICE_TYPE = 100_000;
+  /** Limit on the amount notices of the same type and severity. */
+  private static final int MAX_PER_NOTICE_TYPE_AND_SEVERITY = 100_000;
 
   /**
    * Limit on the total amount of stored validation notices.
@@ -44,7 +45,7 @@ public class NoticeContainer {
    *
    * <p>Note that system errors are not limited since we don't expect to have a lot of them.
    */
-  private static final int MAX_VALIDATION_NOTICES = 100_000;
+  private static final int MAX_VALIDATION_NOTICES = 10_000_000;
 
   private final List<ValidationNotice> validationNotices = new ArrayList<>();
   private final List<SystemError> systemErrors = new ArrayList<>();
@@ -52,10 +53,23 @@ public class NoticeContainer {
 
   /** Adds a new validation notice to the container (if there is capacity). */
   public void addValidationNotice(ValidationNotice notice) {
+    addValidationNotice(notice, MAX_VALIDATION_NOTICES, MAX_PER_NOTICE_TYPE_AND_SEVERITY);
+  }
+
+  /** Adds a new validation notice to the container (if there is capacity). */
+  public void addValidationNotice(
+      ValidationNotice notice, int maxTotalValidationNotices, int maxValidationNoticePerType) {
     if (notice.isError()) {
       hasValidationErrors = true;
     }
-    if (validationNotices.size() <= MAX_VALIDATION_NOTICES) {
+    if (validationNotices.size() > maxTotalValidationNotices) {
+      return;
+    }
+    ListMultimap<String, ValidationNotice> noticesOfType =
+        groupNoticesByTypeAndSeverity(validationNotices);
+    List<ValidationNotice> noticesForType =
+        noticesOfType.get(notice.getCode() + notice.getSeverityLevel().ordinal());
+    if (noticesForType == null || noticesForType.size() < maxValidationNoticePerType) {
       validationNotices.add(notice);
     }
   }
@@ -107,7 +121,7 @@ public class NoticeContainer {
   /**
    * Exports notices as JSON.
    *
-   * <p>Up to {@link #MAX_EXPORTS_PER_NOTICE_TYPE} is exported per each type+severity.
+   * <p>Up to {@link #MAX_PER_NOTICE_TYPE_AND_SEVERITY} is exported per each type+severity.
    */
   private static <T extends Notice> JsonObject exportJson(List<T> notices) {
     JsonObject root = new JsonObject();
@@ -123,13 +137,7 @@ public class NoticeContainer {
       noticesOfTypeJson.addProperty("totalNotices", noticesOfType.size());
       JsonArray noticesArrayJson = new JsonArray();
       noticesOfTypeJson.add("notices", noticesArrayJson);
-      int i = 0;
       for (T notice : noticesOfType) {
-        ++i;
-        if (i > MAX_EXPORTS_PER_NOTICE_TYPE) {
-          // Do not export too many notices for this type.
-          break;
-        }
         noticesArrayJson.add(notice.getContext());
       }
     }
@@ -137,8 +145,8 @@ public class NoticeContainer {
     return root;
   }
 
-  private static <T extends Notice> ListMultimap<String, T> groupNoticesByTypeAndSeverity(
-      List<T> notices) {
+  @VisibleForTesting
+  static <T extends Notice> ListMultimap<String, T> groupNoticesByTypeAndSeverity(List<T> notices) {
     ListMultimap<String, T> noticesByType = MultimapBuilder.treeKeys().arrayListValues().build();
     for (T notice : notices) {
       noticesByType.put(notice.getCode() + notice.getSeverityLevel().ordinal(), notice);
