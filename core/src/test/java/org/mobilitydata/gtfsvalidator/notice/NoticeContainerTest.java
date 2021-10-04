@@ -99,7 +99,7 @@ public class NoticeContainerTest {
   }
 
   @Test
-  public void addValidationNotice_setMax_perNoticeTypeAndSeverity() {
+  public void addValidationNotice_setMax_perNoticeType() {
     ValidationNotice n1 = new MissingRequiredFileNotice("stops.txt");
     ValidationNotice n2 = new UnknownFileNotice("unknown.txt");
     NoticeContainer noticeContainer = new NoticeContainer();
