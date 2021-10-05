@@ -29,6 +29,7 @@
 | `invalid_time`                                         	| [`InvalidTimeNotice`](#InvalidTimeNotice)                                                                       	|
 | `invalid_timezone`                                     	| [`InvalidTimezoneNotice`](#InvalidTimezoneNotice)                                                               	|
 | `invalid_url`                                          	| [`InvalidUrlNotice`](#InvalidUrlNotice)                                                                         	|
+| `location_with_unexpected_stop_time`                      | [`LocationWithUnexpectedStopTimeNotice`](#LocationWithUnexpectedStopTimeNotice)	                                |
 | `location_without_parent_station`                      	| [`LocationWithoutParentStationNotice`](#LocationWithoutParentStationNotice)                                     	|
 | `missing_calendar_and_calendar_date_files`             	| [`MissingCalendarAndCalendarDateFilesNotice`](#MissingCalendarAndCalendarDateFilesNotice)                       	|
 | `missing_required_column`                              	| [`MissingRequiredColumnNotice`](#MissingRequiredColumnNotice)                                                   	|
@@ -381,6 +382,20 @@
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
+
+#### [LocationWithUnexpectedStopTimeNotice](/RULES.md#LocationWithUnexpectedStopTimeNotice)
+##### Fields description
+
+| Field name             	| Description                                                	| Type   	|
+|------------------------	|------------------------------------------------------------	|--------	|
+| `csvRowNumber`         	| The row number of the faulty record from `stops.txt`.      	| Long   	|
+| `stopId`               	| The id of the faulty record from `stops.txt`.              	| String 	|
+| `stopName`             	| The `stops.stop_name` of the faulty record.                	| String 	|
+| `stopTimeCsvRowNumber` 	| The row number of the faulty record from `stop_times.txt`. 	| Long   	|
+
+##### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+* [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
 #### [`LocationWithoutParentStationNotice`](/RULES.md#LocationWithoutParentStationNotice)
 ##### Fields description
