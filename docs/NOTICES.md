@@ -47,6 +47,7 @@
 | `stop_without_zone_id`                     	            | [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                 	                                        |
 | `stop_time_wit_arrival_before_previous_departure_time` 	| [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](#StopTimeWithArrivalBeforePreviousDepartureTimeNotice) 	|
 | `stop_time_with_only_arrival_or_departure_time`        	| [`StopTimeWithOnlyArrivalOrDepartureTimeNotice`](#StopTimeWithOnlyArrivalOrDepartureTimeNotice)                 	|
+| `translation_foreign_key_violation`                       | [`TranslationForeignKeyViolationNotice`](#TranslationForeignKeyViolationNotice)	                                |
 | `translation_unexpected_value`                           	| [`TranslationUnexpectedValueNotice`](#TranslationUnexpectedValueNotice)                                               	|
 | `wrong_parent_location_type`                           	| [`WrongParentLocationTypeNotice`](#WrongParentLocationTypeNotice)                                               	|
 
@@ -617,6 +618,19 @@
 ##### Affected files
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
+#### [`TranslationForeignKeyViolationNotice`](/RULES.md#TranslationForeignKeyViolationNotice)
+##### Fields description
+
+| Field name       | Description                            | Type    	|
+|------------------|----------------------------------------|-------	|
+| `csvRowNumber`   | The row number of the faulty record.   | Long    	|
+| `tableName`      | `table_name` of the faulty record.     | String  	|
+| `recordId`       | `record_id` of the faulty record.      | String  	|
+| `recordSubId`    | `record_sub_id` of the faulty record.  | String  	|
+
+##### Affected files
+* [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
+
 #### [`TranslationUnexpectedValueNotice`](/RULES.md#TranslationUnexpectedValueNotice)
 ##### Fields description
 
@@ -680,7 +694,6 @@
 | `stop_time_timepoint_without_times`        	| [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	|
 | `stop_too_far_from_trip_shape`            	| [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	|
 | `too_fast_travel`                          	| [`TooFastTravelNotice`](#TooFastTravelNotice)                                     	|
-| `translation_foreign_key_violation`           | [`TranslationForeignKeyViolationNotice`](#TranslationForeignKeyViolationNotice)	    |
 | `translation_unknown_table_name`              | [`TranslationUnknownTableNameNotice`](#TranslationUnknownTableNameNotice)	            |
 | `unexpected_enum_value`                    	| [`UnexpectedEnumValueNotice`](#UnexpectedEnumValueNotice)                         	|
 | `unusable_trip`                            	| [`UnusableTripNotice`](#UnusableTripNotice)                                       	|
@@ -1060,19 +1073,6 @@
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
-
-#### [`TranslationForeignKeyViolationNotice`](/RULES.md#TranslationForeignKeyViolationNotice)
-##### Fields description
-
-| Field name       | Description                            | Type    	|
-|------------------|----------------------------------------|-------	|
-| `csvRowNumber`   | The row number of the faulty record.   | Long    	|
-| `tableName`      | `table_name` of the faulty record.     | String  	|
-| `recordId`       | `record_id` of the faulty record.      | String  	|
-| `recordSubId`    | `record_sub_id` of the faulty record.  | String  	|
-
-##### Affected files
-* [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 
 #### [`TranslationUnknownTableNameNotice`](/RULES.md#TranslationUnknownTableNameNotice)
 ##### Fields description
