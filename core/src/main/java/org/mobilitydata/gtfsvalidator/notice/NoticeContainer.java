@@ -137,7 +137,12 @@ public class NoticeContainer {
       noticesOfTypeJson.addProperty("totalNotices", noticesOfType.size());
       JsonArray noticesArrayJson = new JsonArray();
       noticesOfTypeJson.add("notices", noticesArrayJson);
+      int i = 0;
       for (T notice : noticesOfType) {
+        if (i > MAX_PER_NOTICE_TYPE_AND_SEVERITY) {
+          // Do not export too many notices for this type.
+          break;
+        }
         noticesArrayJson.add(notice.getContext());
       }
     }
