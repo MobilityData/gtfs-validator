@@ -42,6 +42,7 @@
 | `start_and_end_range_equal`                            	| [`StartAndEndRangeEqualNotice`](#StartAndEndRangeEqualNotice)                                                   	|
 | `start_and_end_range_out_of_order`                     	| [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         	|
 | `station_with_parent_station`                          	| [`StationWithParentStationNotice`](#StationWithParentStationNotice)                                             	|
+| `stop_without_zone_id`                     	            | [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                 	                                        |
 | `stop_time_wit_arrival_before_previous_departure_time` 	| [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](#StopTimeWithArrivalBeforePreviousDepartureTimeNotice) 	|
 | `stop_time_with_only_arrival_or_departure_time`        	| [`StopTimeWithOnlyArrivalOrDepartureTimeNotice`](#StopTimeWithOnlyArrivalOrDepartureTimeNotice)                 	|
 | `translation_unexpected_value`                           	| [`TranslationUnexpectedValueNotice`](#TranslationUnexpectedValueNotice)                                               	|
@@ -549,6 +550,19 @@
 ##### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
+#### [StopWithoutZoneIdNotice](/RULES.md#StopWithoutZoneIdNotice)
+##### Fields description
+
+| Field name               	| Description                                	| Type   	|
+|--------------------------	|--------------------------------------------	|--------	|
+| `stopId`                 	| The faulty record's id.                    	| String 	|
+| `stopName`                | The faulty record's `stops.stop_name`.       	| String 	|
+| `csvRowNumber`        	| The row number of the faulty record.       	| Long   	|
+
+##### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+* [`fare_rules.txt`](http://gtfs.org/reference/static#farerulestxt)
+
 #### [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](/RULES.md#StopTimeWithArrivalBeforePreviousDepartureTimeNotice)
 ##### Fields description
 
@@ -639,7 +653,6 @@
 | `same_stop_and_route_url`                  	| [`SameStopAndRouteUrlNotice`](#SameStopAndRouteUrlNotice)                           |
 | `stop_time_timepoint_without_times`        	| [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	|
 | `stop_too_far_from_trip_shape`            	| [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	|
-| `stop_without_zone_id`                     	| [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                 	            |
 | `too_fast_travel`                          	| [`TooFastTravelNotice`](#TooFastTravelNotice)                                     	|
 | `translation_foreign_key_violation`           | [`TranslationForeignKeyViolationNotice`](#TranslationForeignKeyViolationNotice)	    |
 | `translation_unknown_table_name`              | [`TranslationUnknownTableNameNotice`](#TranslationUnknownTableNameNotice)	            |
@@ -978,19 +991,6 @@
 ##### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
-
-#### [StopWithoutZoneIdNotice](/RULES.md#StopWithoutZoneIdNotice)
-##### Fields description
-
-| Field name               	| Description                                	| Type   	|
-|--------------------------	|--------------------------------------------	|--------	|
-| `stopId`                 	| The faulty record's id.                    	| String 	|
-| `stopName`                | The faulty record's `stops.stop_name`.       	| String 	|
-| `csvRowNumber`        	| The row number of the faulty record.       	| Long   	|
-
-##### Affected files
-* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
-* [`fare_rules.txt`](http://gtfs.org/reference/static#farerulestxt)
 
 #### [FastTravelBetweenConsecutiveStopsNotice](/RULES.md#FastTravelBetweenConsecutiveStopsNotice)
 ##### Fields description
