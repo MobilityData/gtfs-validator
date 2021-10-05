@@ -14,6 +14,7 @@
 | `duplicated_column`                                    	| [`DuplicatedColumnNotice`](#DuplicatedColumnNotice)                                                             	|
 | `duplicate_fare_rule_zone_id_fields`                   	| [`DuplicateFareRuleZoneIdFieldsNotice`](#DuplicateFareRuleZoneIdFieldsNotice)                                   	|
 | `duplicate_key`                                        	| [`DuplicateKeyNotice`](#DuplicateKeyNotice)                                                                     	|
+| `empty_column_name`                                   	| [`EmptyColumnNameNotice`](#EmptyColumnNameNotice)                                         	                    |
 | `empty_file`                                           	| [`EmptyFileNotice`](#EmptyFileNotice)                                                                           	|
 | `foreign_key_violation`                                	| [`ForeignKeyViolationNotice`](#ForeignKeyViolationNotice)                                                       	|
 | `inconsistent_agency_timezone`                         	| [`InconsistentAgencyTimezoneNotice`](#InconsistentAgencyTimezoneNotice)                                         	|
@@ -29,6 +30,7 @@
 | `invalid_time`                                         	| [`InvalidTimeNotice`](#InvalidTimeNotice)                                                                       	|
 | `invalid_timezone`                                     	| [`InvalidTimezoneNotice`](#InvalidTimezoneNotice)                                                               	|
 | `invalid_url`                                          	| [`InvalidUrlNotice`](#InvalidUrlNotice)                                                                         	|
+| `location_with_unexpected_stop_time`                      | [`LocationWithUnexpectedStopTimeNotice`](#LocationWithUnexpectedStopTimeNotice)	                                |
 | `location_without_parent_station`                      	| [`LocationWithoutParentStationNotice`](#LocationWithoutParentStationNotice)                                     	|
 | `missing_calendar_and_calendar_date_files`             	| [`MissingCalendarAndCalendarDateFilesNotice`](#MissingCalendarAndCalendarDateFilesNotice)                       	|
 | `missing_required_column`                              	| [`MissingRequiredColumnNotice`](#MissingRequiredColumnNotice)                                                   	|
@@ -42,6 +44,7 @@
 | `start_and_end_range_equal`                            	| [`StartAndEndRangeEqualNotice`](#StartAndEndRangeEqualNotice)                                                   	|
 | `start_and_end_range_out_of_order`                     	| [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         	|
 | `station_with_parent_station`                          	| [`StationWithParentStationNotice`](#StationWithParentStationNotice)                                             	|
+| `stop_without_zone_id`                     	            | [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                 	                                        |
 | `stop_time_wit_arrival_before_previous_departure_time` 	| [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](#StopTimeWithArrivalBeforePreviousDepartureTimeNotice) 	|
 | `stop_time_with_only_arrival_or_departure_time`        	| [`StopTimeWithOnlyArrivalOrDepartureTimeNotice`](#StopTimeWithOnlyArrivalOrDepartureTimeNotice)                 	|
 | `translation_unexpected_value`                           	| [`TranslationUnexpectedValueNotice`](#TranslationUnexpectedValueNotice)                                               	|
@@ -150,6 +153,17 @@
 | `fieldValue1`    	| Composite key's first value.       	| Object 	|
 | `fieldName2`     	| Composite key's second field name. 	| String 	|
 | `fieldValue2`    	| Composite key's second value.      	| Object 	|
+
+##### Affected files
+[All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
+
+#### [EmptyColumnNameNotice](/RULES.md#EmptyColumnNameNotice)
+##### Fields description
+
+| Field name 	| Description                    	  | Type    	|
+|------------	|---------------------------------	|---------	|
+| `filename`   	| The name of the faulty file.   	| String   	|
+| `index`      	| The index of the empty column. 	| Integer 	|
 
 ##### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
@@ -381,6 +395,20 @@
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 
+#### [LocationWithUnexpectedStopTimeNotice](/RULES.md#LocationWithUnexpectedStopTimeNotice)
+##### Fields description
+
+| Field name             	| Description                                                	| Type   	|
+|------------------------	|------------------------------------------------------------	|--------	|
+| `csvRowNumber`         	| The row number of the faulty record from `stops.txt`.      	| Long   	|
+| `stopId`               	| The id of the faulty record from `stops.txt`.              	| String 	|
+| `stopName`             	| The `stops.stop_name` of the faulty record.                	| String 	|
+| `stopTimeCsvRowNumber` 	| The row number of the faulty record from `stop_times.txt`. 	| Long   	|
+
+##### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+* [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
+
 #### [`LocationWithoutParentStationNotice`](/RULES.md#LocationWithoutParentStationNotice)
 ##### Fields description
 
@@ -549,6 +577,19 @@
 ##### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
+#### [StopWithoutZoneIdNotice](/RULES.md#StopWithoutZoneIdNotice)
+##### Fields description
+
+| Field name               	| Description                                	| Type   	|
+|--------------------------	|--------------------------------------------	|--------	|
+| `stopId`                 	| The faulty record's id.                    	| String 	|
+| `stopName`                | The faulty record's `stops.stop_name`.       	| String 	|
+| `csvRowNumber`        	| The row number of the faulty record.       	| Long   	|
+
+##### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+* [`fare_rules.txt`](http://gtfs.org/reference/static#farerulestxt)
+
 #### [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](/RULES.md#StopTimeWithArrivalBeforePreviousDepartureTimeNotice)
 ##### Fields description
 
@@ -614,7 +655,6 @@
 |--------------------------------------------	|-----------------------------------------------------------------------------------	|
 | `attribution_without_role`           	      | [`AttributionWithoutRoleNotice`](#AttributionWithoutRoleNotice)                   	|
 | `duplicate_route_name`                      | [`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)                           	|
-| `empty_column_name`                        	| [`EmptyColumnNameNotice`](#EmptyColumnNameNotice)                                 	|
 | `empty_row`                                	| [`EmptyRowNotice`](#EmptyRowNotice)                                               	|
 | `fast_travel_between_consecutive_stops`      	| [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsecutiveStopsNotice) |
 | `fast_travel_between_far_stops`               | [`FastTravelBetweenFarStopsNotice`](#FastTravelBetweenFarStopsNotice)                 |
@@ -639,7 +679,6 @@
 | `same_stop_and_route_url`                  	| [`SameStopAndRouteUrlNotice`](#SameStopAndRouteUrlNotice)                           |
 | `stop_time_timepoint_without_times`        	| [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	|
 | `stop_too_far_from_trip_shape`            	| [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	|
-| `stop_without_zone_id`                     	| [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                 	            |
 | `too_fast_travel`                          	| [`TooFastTravelNotice`](#TooFastTravelNotice)                                     	|
 | `translation_foreign_key_violation`           | [`TranslationForeignKeyViolationNotice`](#TranslationForeignKeyViolationNotice)	    |
 | `translation_unknown_table_name`              | [`TranslationUnknownTableNameNotice`](#TranslationUnknownTableNameNotice)	            |
@@ -676,17 +715,6 @@
 
 ##### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
-
-#### [EmptyColumnNameNotice](/RULES.md#EmptyColumnNameNotice)
-##### Fields description
-
-| Field name 	| Description                    	  | Type    	|
-|------------	|---------------------------------	|---------	|
-| `filename`   	| The name of the faulty file.   	| String   	|
-| `index`      	| The index of the empty column. 	| Integer 	|
-
-##### Affected files
-[All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
 #### [EmptyRowNotice](/RULES.md#EmptyRowNotice)
 ##### Fields description
@@ -978,19 +1006,6 @@
 ##### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
-
-#### [StopWithoutZoneIdNotice](/RULES.md#StopWithoutZoneIdNotice)
-##### Fields description
-
-| Field name               	| Description                                	| Type   	|
-|--------------------------	|--------------------------------------------	|--------	|
-| `stopId`                 	| The faulty record's id.                    	| String 	|
-| `stopName`                | The faulty record's `stops.stop_name`.       	| String 	|
-| `csvRowNumber`        	| The row number of the faulty record.       	| Long   	|
-
-##### Affected files
-* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
-* [`fare_rules.txt`](http://gtfs.org/reference/static#farerulestxt)
 
 #### [FastTravelBetweenConsecutiveStopsNotice](/RULES.md#FastTravelBetweenConsecutiveStopsNotice)
 ##### Fields description

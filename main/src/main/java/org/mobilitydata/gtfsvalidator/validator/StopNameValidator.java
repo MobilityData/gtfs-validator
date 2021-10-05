@@ -57,7 +57,7 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
    * <p>"Do not simply duplicate the name of the location."
    * (http://gtfs.org/reference/static#stopstxt)
    *
-   * <p>Severity: {@code SeverityLevel.WARNING} - To be upgraded to {@code SeverityLevel.ERROR}
+   * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class SameNameAndDescriptionForStopNotice extends ValidationNotice {
 
