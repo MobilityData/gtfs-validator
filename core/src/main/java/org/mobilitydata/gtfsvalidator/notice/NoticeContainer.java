@@ -72,7 +72,6 @@ public class NoticeContainer {
     if (noticesForType.size() < maxValidationNoticePerType) {
       validationNotices.add(notice);
     }
-
   }
 
   /** Adds a new system error to the container (if there is capacity). */
