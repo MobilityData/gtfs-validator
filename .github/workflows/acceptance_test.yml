@@ -111,7 +111,7 @@ jobs:
     needs: [ pack, fetch-urls ]
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
+      matrix: ${{ needs.fetch-urls.outputs.matrix }}
     steps:
       - name: Retrieve metadata from previous job
         uses: actions/download-artifact@v2
