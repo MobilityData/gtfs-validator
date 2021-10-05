@@ -104,6 +104,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`OverlappingFrequencyNotice`](#OverlappingFrequencyNotice)                                                     | Trip frequencies overlap.                                                                                                                              |
 | [`PathwayToPlatformWithBoardingAreasNotice`](#PathwayToPlatformWithBoardingAreasNotice)                         | A pathway has an endpoint that is a platform which has boarding areas.                                                                                 |
 | [`PathwayToWrongLocationTypeNotice`](#PathwayToWrongLocationTypeNotice)                                             | A pathway has an endpoint that is a station.                                                                                                           |
+| [`PathwayUnreachableLocationNotice`](#PathwayUnreachableLocationNotice)                                         | A location is not reachable at least in one direction: from the entrances or to the exits.                                                             |
 | [`RouteBothShortAndLongNameMissingNotice`](#RouteBothShortAndLongNameMissingNotice)                             | Missing route short name and long name.                                                                                                                |
 | [`StartAndEndRangeEqualNotice`](#StartAndEndRangeEqualNotice)                                                   | Two date or time fields are equal.                                                                                                                     |
 | [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         | Two date or time fields are out of order.                                                                                                              |
@@ -134,7 +135,6 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	| More than one row in CSV.                                                                                                                                   	|
 | [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	| Non ascii or non printable char in  `id`.                                                                                                                   	|
 | [`PathwayDanglingGenericNodeNotice`](#PathwayDanglingGenericNodeNotice)           	| A generic node has only one incident location in a pathway graph.                                                                                             |
-| [`PathwayUnreachableLocationNotice`](#PathwayUnreachableLocationNotice)               | A location is not reachable at least in one direction: from the entrances or to the exits.                                                                    |
 | [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)       	| A platform has no `parent_station` field set.                                                                                                               	|
 | [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	| Insufficient route color contrast.                                                                                                                          	|
 | [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	| Short and long name are equal for a route.                                                                                                                  	|
@@ -501,6 +501,22 @@ entrances/exits, generic nodes or boarding areas.
 ##### References:
 * [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
 
+<a name="PathwayUnreachableLocationNotice"/>
+
+#### PathwayUnreachableLocationNotice
+
+A location belongs to a station that has pathways and is not reachable at least in one direction:
+from the entrances or to the exits.
+
+Notices are reported for platforms, boarding areas and generic nodes but not for entrances or
+stations.
+
+Notices are not reported for platforms that have boarding areas since such platforms may not
+have incident pathways. Instead, notices are reported for the boarding areas.
+
+##### References:
+* [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
+
 #### RouteBothShortAndLongNameMissingNotice
 
 Both short_name and long_name are missing for a route.
@@ -750,22 +766,6 @@ A value of a field with type `id` contains non ASCII or non printable characters
 
 A generic node has only one incident location in a pathway graph. Such generic node is useless
 because there is no benefit in visiting it.
-
-##### References:
-* [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
-
-<a name="PathwayUnreachableLocationNotice"/>
-
-#### PathwayUnreachableLocationNotice
-
-A location belongs to a station that has pathways and is not reachable at least in one direction:
-from the entrances or to the exits.
-
-Notices are reported for platforms, boarding areas and generic nodes but not for entrances or
-stations.
-
-Notices are not reported for platforms that have boarding areas since such platforms may not
-have incident pathways. Instead, notices are reported for the boarding areas.
 
 ##### References:
 * [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
