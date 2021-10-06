@@ -50,6 +50,9 @@ public class NoticeContainer {
    */
   private static final int MAX_VALIDATION_NOTICES = 10_000_000;
 
+  /** Limit on the amount of exported notices */
+  private static final int MAX_EXPORTS_PER_NOTICE_TYPE = 1_000;
+
   private final List<ValidationNotice> validationNotices = new ArrayList<>();
   private final List<SystemError> systemErrors = new ArrayList<>();
   private boolean hasValidationErrors = false;
@@ -126,7 +129,7 @@ public class NoticeContainer {
   /**
    * Exports notices as JSON.
    *
-   * <p>Up to {@link #MAX_PER_NOTICE_TYPE_AND_SEVERITY} is exported per each type+severity.
+   * <p>Up to {@link #MAX_EXPORTS_PER_NOTICE_TYPE} is exported per each type+severity.
    */
   private static <T extends Notice> JsonObject exportJson(List<T> notices) {
     JsonObject root = new JsonObject();
@@ -142,7 +145,13 @@ public class NoticeContainer {
       noticesOfTypeJson.addProperty("totalNotices", noticesOfType.size());
       JsonArray noticesArrayJson = new JsonArray();
       noticesOfTypeJson.add("notices", noticesArrayJson);
+      int i = 0;
       for (T notice : noticesOfType) {
+        ++i;
+        if (i > MAX_EXPORTS_PER_NOTICE_TYPE) {
+          // Do not export too many notices for this type.
+          break;
+        }
         noticesArrayJson.add(notice.getContext());
       }
     }
