@@ -123,6 +123,6 @@ public class TableHeaderValidatorTest {
     assertThat(container.getValidationNotices())
         .containsExactly(
             new EmptyColumnNameNotice("stops.txt", 2), new EmptyColumnNameNotice("stops.txt", 4));
-    assertThat(container.hasValidationErrors()).isFalse();
+    assertThat(container.hasValidationErrors()).isTrue();
   }
 }
