@@ -87,7 +87,6 @@ test {
     }
 }
 
-
 // Share the test report data to be aggregated for the whole project
 configurations {
     binaryTestResultsElements {

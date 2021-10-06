@@ -67,7 +67,6 @@ compileTestJava {
     options.compilerArgs << '-parameters'
 }
 
-
 // Share the test report data to be aggregated for the whole project
 configurations {
     binaryTestResultsElements {
