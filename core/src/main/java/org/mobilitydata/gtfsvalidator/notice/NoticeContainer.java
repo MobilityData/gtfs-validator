@@ -37,8 +37,6 @@ public class NoticeContainer {
   /** Limit on the amount notices of the same type and severity. */
   private static final int MAX_PER_NOTICE_TYPE_AND_SEVERITY = 100_000;
 
-  private static final HashMap<String, Integer> noticesCountPerTypeAndSeverity = new HashMap<>();
-
   /**
    * Limit on the total amount of stored validation notices.
    *
@@ -55,6 +53,7 @@ public class NoticeContainer {
 
   private final List<ValidationNotice> validationNotices = new ArrayList<>();
   private final List<SystemError> systemErrors = new ArrayList<>();
+  private final HashMap<String, Integer> noticesCountPerTypeAndSeverity = new HashMap<>();
   private boolean hasValidationErrors = false;
 
   /** Adds a new validation notice to the container (if there is capacity). */
@@ -73,12 +72,11 @@ public class NoticeContainer {
     }
     int count =
         noticesCountPerTypeAndSeverity.getOrDefault(
-            notice.getCode() + notice.getSeverityLevel().ordinal(), 1);
-    if (count <= maxValidationNoticePerType) {
+            notice.getCode() + notice.getSeverityLevel().ordinal(), 0);
+    if (count < maxValidationNoticePerType) {
       validationNotices.add(notice);
-      count++;
       noticesCountPerTypeAndSeverity.put(
-          notice.getCode() + notice.getSeverityLevel().ordinal(), count);
+          notice.getCode() + notice.getSeverityLevel().ordinal(), count + 1);
     }
   }
 

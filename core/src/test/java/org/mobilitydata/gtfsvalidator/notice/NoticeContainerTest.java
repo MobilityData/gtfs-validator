@@ -117,12 +117,12 @@ public class NoticeContainerTest {
             NoticeContainer.groupNoticesByTypeAndSeverity(noticeContainer.getValidationNotices())
                 .get(n1.getCode() + n1.getSeverityLevel().ordinal())
                 .size())
-        .isEqualTo(15);
+        .isEqualTo(MAX_VALIDATION_NOTICES_PER_TYPE);
     assertThat(
             NoticeContainer.groupNoticesByTypeAndSeverity(noticeContainer.getValidationNotices())
                 .get(n2.getCode() + n2.getSeverityLevel().ordinal())
                 .size())
-        .isEqualTo(15);
+        .isEqualTo(MAX_VALIDATION_NOTICES_PER_TYPE);
   }
 
   @Test
@@ -131,12 +131,12 @@ public class NoticeContainerTest {
     ValidationNotice n2 = new UnknownFileNotice("unknown.txt");
     NoticeContainer noticeContainer = new NoticeContainer();
     int MAX_TOTAL_VALIDATION_NOTICES = 30;
-    int MAX_VALIDATION_NOTICES_PER_TYPE = 16;
+    int MAX_PER_NOTICE_TYPE_AND_SEVERITY = 16;
     for (int i = 0; i < MAX_TOTAL_VALIDATION_NOTICES + 5; i++) {
       noticeContainer.addValidationNotice(
-          n1, MAX_TOTAL_VALIDATION_NOTICES, MAX_VALIDATION_NOTICES_PER_TYPE);
+          n1, MAX_TOTAL_VALIDATION_NOTICES, MAX_PER_NOTICE_TYPE_AND_SEVERITY);
       noticeContainer.addValidationNotice(
-          n2, MAX_TOTAL_VALIDATION_NOTICES, MAX_VALIDATION_NOTICES_PER_TYPE);
+          n2, MAX_TOTAL_VALIDATION_NOTICES, MAX_PER_NOTICE_TYPE_AND_SEVERITY);
     }
     assertThat(noticeContainer.getValidationNotices().size())
         .isEqualTo(MAX_TOTAL_VALIDATION_NOTICES);
