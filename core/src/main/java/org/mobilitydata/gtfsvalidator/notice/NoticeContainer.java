@@ -57,12 +57,12 @@ public class NoticeContainer {
   private boolean hasValidationErrors = false;
 
   /** Adds a new validation notice to the container (if there is capacity). */
-  public synchronized void addValidationNotice(ValidationNotice notice) {
+  public void addValidationNotice(ValidationNotice notice) {
     addValidationNotice(notice, MAX_VALIDATION_NOTICES, MAX_PER_NOTICE_TYPE_AND_SEVERITY);
   }
 
   /** Adds a new validation notice to the container (if there is capacity). */
-  public synchronized void addValidationNotice(
+  public void addValidationNotice(
       ValidationNotice notice, int maxTotalValidationNotices, int maxValidationNoticePerType) {
     if (notice.isError()) {
       hasValidationErrors = true;
