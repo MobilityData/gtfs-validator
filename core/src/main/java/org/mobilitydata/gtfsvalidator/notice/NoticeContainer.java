@@ -24,6 +24,7 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -35,6 +36,8 @@ import java.util.List;
 public class NoticeContainer {
   /** Limit on the amount notices of the same type and severity. */
   private static final int MAX_PER_NOTICE_TYPE_AND_SEVERITY = 100_000;
+
+  private static final HashMap<String, Integer> noticesCountPerTypeAndSeverity = new HashMap<>();
 
   /**
    * Limit on the total amount of stored validation notices.
@@ -52,12 +55,12 @@ public class NoticeContainer {
   private boolean hasValidationErrors = false;
 
   /** Adds a new validation notice to the container (if there is capacity). */
-  public void addValidationNotice(ValidationNotice notice) {
+  public synchronized void addValidationNotice(ValidationNotice notice) {
     addValidationNotice(notice, MAX_VALIDATION_NOTICES, MAX_PER_NOTICE_TYPE_AND_SEVERITY);
   }
 
   /** Adds a new validation notice to the container (if there is capacity). */
-  public void addValidationNotice(
+  public synchronized void addValidationNotice(
       ValidationNotice notice, int maxTotalValidationNotices, int maxValidationNoticePerType) {
     if (notice.isError()) {
       hasValidationErrors = true;
@@ -65,12 +68,13 @@ public class NoticeContainer {
     if (validationNotices.size() >= maxTotalValidationNotices) {
       return;
     }
-    ListMultimap<String, ValidationNotice> noticesOfType =
-        groupNoticesByTypeAndSeverity(validationNotices);
-    List<ValidationNotice> noticesForType =
-        noticesOfType.get(notice.getCode() + notice.getSeverityLevel().ordinal());
-    if (noticesForType.size() < maxValidationNoticePerType) {
+    int count =
+        noticesCountPerTypeAndSeverity.getOrDefault(notice.getCode() + notice.getSeverityLevel().ordinal(), 1);
+    if (count <= maxValidationNoticePerType) {
       validationNotices.add(notice);
+      count++;
+      noticesCountPerTypeAndSeverity.put(
+          notice.getCode() + notice.getSeverityLevel().ordinal(), count);
     }
   }
 
@@ -137,17 +141,10 @@ public class NoticeContainer {
       noticesOfTypeJson.addProperty("totalNotices", noticesOfType.size());
       JsonArray noticesArrayJson = new JsonArray();
       noticesOfTypeJson.add("notices", noticesArrayJson);
-      int i = 0;
       for (T notice : noticesOfType) {
-        ++i;
-        if (i > MAX_PER_NOTICE_TYPE_AND_SEVERITY) {
-          // Do not export too many notices for this type.
-          break;
-        }
         noticesArrayJson.add(notice.getContext());
       }
     }
-
     return root;
   }
 
