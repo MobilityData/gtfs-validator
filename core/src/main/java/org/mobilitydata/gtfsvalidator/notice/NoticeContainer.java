@@ -69,7 +69,8 @@ public class NoticeContainer {
       return;
     }
     int count =
-        noticesCountPerTypeAndSeverity.getOrDefault(notice.getCode() + notice.getSeverityLevel().ordinal(), 1);
+        noticesCountPerTypeAndSeverity.getOrDefault(
+            notice.getCode() + notice.getSeverityLevel().ordinal(), 1);
     if (count <= maxValidationNoticePerType) {
       validationNotices.add(notice);
       count++;
