@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import java.util.Optional;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -58,7 +59,12 @@ public class ParentLocationTypeValidator extends FileValidator {
       if (!location.hasParentStation()) {
         continue;
       }
-      GtfsStop parentLocation = stopTable.byStopId(location.parentStation());
+      Optional<GtfsStop> optionalParentLocation = stopTable.byStopId(location.parentStation());
+      if (optionalParentLocation.isEmpty()) {
+        // Broken reference is reported in another rule.
+        continue;
+      }
+      GtfsStop parentLocation = optionalParentLocation.get();
       GtfsLocationType expected = expectedParentLocationType(location.locationType());
       if (expected != GtfsLocationType.UNRECOGNIZED && parentLocation.locationType() != expected) {
         noticeContainer.addValidationNotice(

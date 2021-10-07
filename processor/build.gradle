@@ -5,7 +5,7 @@ plugins {
 group 'org.mobilitydata'
 version "${System.getenv("versionTag")}"
 
-sourceCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
     mavenCentral()
@@ -34,5 +34,18 @@ test {
     // Show test results.
     testLogging {
         events "passed", "skipped", "failed"
+    }
+}
+
+// Share the test report data to be aggregated for the whole project
+configurations {
+    binaryTestResultsElements {
+        canBeResolved = false
+        canBeConsumed = true
+        attributes {
+            attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category, Category.DOCUMENTATION))
+            attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named(DocsType, 'test-report-data'))
+        }
+        outgoing.artifact(test.binaryResultsDirectory)
     }
 }

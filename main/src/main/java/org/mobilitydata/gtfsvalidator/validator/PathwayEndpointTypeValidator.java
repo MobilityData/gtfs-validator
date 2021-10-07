@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import java.util.Optional;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -67,8 +68,12 @@ public class PathwayEndpointTypeValidator extends FileValidator {
 
   private void checkEndpoint(
       GtfsPathway pathway, String fieldName, String stopId, NoticeContainer noticeContainer) {
-    GtfsStop stop = stopTable.byStopId(stopId);
-    switch (stop.locationType()) {
+    Optional<GtfsStop> stop = stopTable.byStopId(stopId);
+    if (stop.isEmpty()) {
+      // Broken reference is reported in another rule.
+      return;
+    }
+    switch (stop.get().locationType()) {
       case STOP:
         if (!stopTable.byParentStation(stopId).isEmpty()) {
           noticeContainer.addValidationNotice(

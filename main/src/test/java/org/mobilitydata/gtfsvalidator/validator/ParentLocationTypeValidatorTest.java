@@ -152,4 +152,23 @@ public class ParentLocationTypeValidatorTest {
     assertThat(validateNoParent(GtfsLocationType.GENERIC_NODE)).isEmpty();
     assertThat(validateNoParent(GtfsLocationType.BOARDING_AREA)).isEmpty();
   }
+
+  @Test
+  public void foreignKeyViolation_handledGracefully() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    new ParentLocationTypeValidator(
+            GtfsStopTableContainer.forEntities(
+                ImmutableList.of(
+                    new GtfsStop.Builder()
+                        .setCsvRowNumber(1)
+                        .setStopId("child")
+                        .setStopName("Child location")
+                        .setLocationType(GtfsLocationType.STOP)
+                        .setParentStation("parent")
+                        .build()),
+                noticeContainer))
+        .validate(noticeContainer);
+
+    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+  }
 }

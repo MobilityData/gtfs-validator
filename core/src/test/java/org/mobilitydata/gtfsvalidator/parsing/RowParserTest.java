@@ -237,11 +237,18 @@ public class RowParserTest {
   }
 
   @Test
-  public void asTimezone() {
+  public void asTimezone_valid() {
     assertThat(createParser("America/Toronto").asTimezone(0, true))
         .isEqualTo(ZoneId.of("America/Toronto"));
+  }
 
+  @Test
+  public void asTimezone_invalid() {
+    // ZoneId.of("invalid") throws ZoneRulesException.
     assertThat(createParser("invalid").asTimezone(0, true)).isNull();
+
+    // ZoneId.of("Latinoamerica/ Argentina") throws DateTimeException.
+    assertThat(createParser("Latinoamerica/ Argentina").asTimezone(0, true)).isNull();
   }
 
   @Test

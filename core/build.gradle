@@ -21,7 +21,7 @@ plugins {
 group 'org.mobilitydata'
 version "gtfs-validator-${System.getenv("versionTag")}"
 
-sourceCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_11
 compileTestJava.options.encoding = "UTF-8"
 
 repositories {
@@ -65,4 +65,17 @@ compileJava {
 
 compileTestJava {
     options.compilerArgs << '-parameters'
+}
+
+// Share the test report data to be aggregated for the whole project
+configurations {
+    binaryTestResultsElements {
+        canBeResolved = false
+        canBeConsumed = true
+        attributes {
+            attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category, Category.DOCUMENTATION))
+            attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named(DocsType, 'test-report-data'))
+        }
+        outgoing.artifact(test.binaryResultsDirectory)
+    }
 }
