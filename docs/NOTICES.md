@@ -33,6 +33,7 @@
 | `location_with_unexpected_stop_time`                      | [`LocationWithUnexpectedStopTimeNotice`](#LocationWithUnexpectedStopTimeNotice)	                                |
 | `location_without_parent_station`                      	| [`LocationWithoutParentStationNotice`](#LocationWithoutParentStationNotice)                                     	|
 | `missing_calendar_and_calendar_date_files`             	| [`MissingCalendarAndCalendarDateFilesNotice`](#MissingCalendarAndCalendarDateFilesNotice)                       	|
+| `missing_level_id`                         	            | [`MissingLevelIdNotice`](#MissingLevelIdNotice)                                       	                        |
 | `missing_required_column`                              	| [`MissingRequiredColumnNotice`](#MissingRequiredColumnNotice)                                                   	|
 | `missing_required_field`                               	| [`MissingRequiredFieldNotice`](#MissingRequiredFieldNotice)                                                     	|
 | `missing_required_file`                                	| [`MissingRequiredFileNotice`](#MissingRequiredFileNotice)                                                       	|
@@ -432,6 +433,17 @@
 * [`calendar.txt`](http://gtfs.org/reference/static#calendartxt)
 * [`calendar_dates.txt`](http://gtfs.org/reference/static#calendar_datestxt)
 
+#### [MissingLevelIdNotice](/RULES.md#MissingLevelIdNotice)
+##### Fields description
+
+| Field name    	| Description                                                      	 | Type   	|
+|---------------	|------------------------------------------------------------------- |--------	|
+| `csvRowNumber`  | The row number of the faulty record. 	                             | Long   	|
+| `stopId`   	  | The id of the faulty from `stops.txt`.                               | String   |
+
+##### Affected files
+* [`levels.txt`](http://gtfs.org/reference/static#levelstxt)
+
 #### [`MissingRequiredColumnNotice`](/RULES.md#MissingRequiredColumnNotice)
 ##### Fields description
 
@@ -663,7 +675,6 @@
 | `inconsistent_agency_lang`                 	| [`InconsistentAgencyLangNotice`](#InconsistentAgencyLangNotice)                   	|
 | `leading_or_trailing_whitespaces`           | [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)         |
 | `missing_feed_info_date`                   	| [`MissingFeedInfoDateNotice`](#MissingFeedInfoDateNotice)                         	|
-| `missing_level_id`                         	| [`MissingLevelIdNotice`](#MissingLevelIdNotice)                                       	|
 | `more_than_one_entity`                     	| [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	|
 | `non_ascii_or_non_printable_char`          	| [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	|
 | `pathway_dangling_generic_node`               | [`PathwayDanglingGenericNodeNotice`](#PathwayDanglingGenericNodeNotice)	            |
@@ -795,17 +806,6 @@
 
 ##### Affected files
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
-
-#### [MissingLevelIdNotice](/RULES.md#MissingLevelIdNotice)
-##### Fields description
-
-| Field name    	| Description                                                      	 | Type   	|
-|---------------	|------------------------------------------------------------------- |--------	|
-| `csvRowNumber`  | The row number of the faulty record. 	                             | Long   	|
-| `stopId`   	  | The id of the faulty from `stops.txt`.                               | String   |
-
-##### Affected files
-* [`levels.txt`](http://gtfs.org/reference/static#levelstxt)
 
 #### [MoreThanOneEntityNotice](/RULES.md#MoreThanOneEntityNotice)
 ##### Fields description

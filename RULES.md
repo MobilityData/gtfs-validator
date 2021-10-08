@@ -415,6 +415,15 @@ Both files calendar_dates.txt and calendar.txt are missing from the GTFS archive
 * [calendar.txt specification](http://gtfs.org/reference/static/#calendartxt)
 * [calendar_dates.txt specification](http://gtfs.org/reference/static/#calendar_datestxt)
 
+<a name="MissingLevelIdNotice"/>
+
+#### MissingLevelIdNotice
+
+GTFS file `levels.txt` is required for elevator (`pathway_mode=5`). A row from `stops.txt` linked to an elevator pathway has no value for `stops.level_id`.
+
+##### References:
+* [levels.txt specification](http://gtfs.org/reference/static/#levelstxt)
+
 <a name="MissingRequiredColumnNotice"/>
 
 #### MissingRequiredColumnNotice
@@ -720,15 +729,6 @@ Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one
 
 ##### References:
 * [feed_info.txt Best practices](http://gtfs.org/best-practices/#feed_infotxt)
-
-<a name="MissingLevelIdNotice"/>
-
-#### MissingLevelIdNotice
-
-GTFS file `levels.txt` is required for elevator (`pathway_mode=5`). A row from `stops.txt` linked to an elevator pathway has no value for `stops.level_id`.
-
-##### References:
-* [levels.txt specification](http://gtfs.org/reference/static/#levelstxt)
 
 <a name="MoreThanOneEntityNotice"/>
 
