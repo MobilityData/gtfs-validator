@@ -629,6 +629,12 @@ All routes of the same `route_type` with the same `agency_id` should have unique
 
 Note that there may be valid cases where routes have the same short and long name, e.g., if they serve different areas. However, different directions must be modeled as the same route.
 
+Example of bad data:
+| `route_id` 	| `route_short_name` 	| `route_long_name` 	|
+|------------	|--------------------	|-------------------	|
+| route1     	| U1                 	| Southern          	|
+| route2     	| U1                 	| Southern          	|
+
 ##### References:
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 * [routes.txt best practices](http://gtfs.org/best-practices/#routestxt)
@@ -804,6 +810,12 @@ A route's color and `route_text_color` should be contrasting.
 #### RouteShortAndLongNameEqualNotice
 
 Short and long name are equal for a single route.
+
+Example of bad data:
+
+| `route_id` 	| `route_short_name` 	| `route_long_name` 	|
+|------------	|--------------------	|-------------------	|
+| route1     	| L1                 	| L1                	|
 
 ##### References:
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
