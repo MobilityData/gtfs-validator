@@ -69,7 +69,8 @@ jobs:
         run: echo ${{ github.run_id }}
       - name: Download jar
         run: |
-          curl https://api.github.com/repos/MobilityData/gtfs-validator/actions/runs/${{ github.run_id }}/artifacts | jq '.artifacts[0].archive_download_url' -r
+          URL = $(https://api.github.com/repos/MobilityData/gtfs-validator/actions/runs/${{ github.run_id }}/artifacts | jq '.artifacts[0].archive_download_url' -r)
+          curl $URL
           ls -a
       - name: Push jar to GCS
         run: gsutil cp ./RULES.md gs://gtfs-validator-jars/
