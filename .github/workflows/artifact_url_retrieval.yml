@@ -61,3 +61,7 @@ jobs:
           path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
       - name: Retrieve run id
         run: echo ${{ github.run_id }}
+      - name: Download jar
+        run: |
+          curl https://api.github.com/repos/MobilityData/gtfs-validator/actions/runs/${{ github.run_id }}/artifacts | jq '.artifacts[0].archive_download_url' -r
+
