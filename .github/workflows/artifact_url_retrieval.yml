@@ -64,4 +64,5 @@ jobs:
       - name: Download jar
         run: |
           curl https://api.github.com/repos/MobilityData/gtfs-validator/actions/runs/${{ github.run_id }}/artifacts | jq '.artifacts[0].archive_download_url' -r
+          ls -a
 
