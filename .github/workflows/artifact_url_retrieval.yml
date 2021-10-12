@@ -65,12 +65,5 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
-      - name: Retrieve run id
-        run: echo ${{ github.run_id }}
-      - name: Download jar
-        run: |
-          URL=$(curl https://api.github.com/repos/MobilityData/gtfs-validator/actions/runs/${{ github.run_id }}/artifacts | jq '.artifacts[0].archive_download_url' -r)
-          curl $URL
-          ls -a
       - name: Push jar to GCS
-        run: gsutil cp ./RULES.md gs://gtfs-validator-jars/
+        run: gsutil cp main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar gs://gtfs-validator-jars/
