@@ -45,7 +45,7 @@ public class CloudTrigger implements BackgroundFunction<Message> {
         Runtime.getRuntime()
             .exec(String.format("java -jar %s -u %s -o %s", jarName, datasetUrl, outputBase));
         // Upload validation report to GCS
-        BlobId blobId = BlobId.of(bucketName, "report.json");
+        BlobId blobId = BlobId.of("gtfs-validator-reports", "report.json");
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
         storage.create(blobInfo, Files.readAllBytes(Paths.get("./report.json")));
         logger.atInfo().log("Validation report from from %s successfully uploaded to bucket!");
