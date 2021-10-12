@@ -117,4 +117,10 @@ public class NoticeTest {
       this.someField = someField;
     }
   }
+
+  @Test
+  public void getMappingKey_returnsFieldCombination() {
+    OtherStringFieldNotice notice = new OtherStringFieldNotice("some field", SeverityLevel.ERROR);
+    assertThat(notice.getMappingKey()).matches(notice.getCode() + SeverityLevel.ERROR.ordinal());
+  }
 }

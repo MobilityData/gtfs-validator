@@ -81,6 +81,15 @@ public abstract class Notice {
         CaseFormat.LOWER_UNDERSCORE, StringUtils.removeEnd(className, NOTICE_SUFFIX));
   }
 
+  /**
+   * Returns the key used to group notices per type and severity: code + ordinal of severity level.
+   *
+   * @return the key used to group notices per type and severity: code + ordinal of severity level.
+   */
+  public String getMappingKey() {
+    return getCode() + getSeverityLevel().ordinal();
+  }
+
   @Override
   public boolean equals(Object other) {
     if (this == other) {
