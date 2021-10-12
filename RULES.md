@@ -122,7 +122,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | Name                                                                              	| Description                                                                                                                                                 	|
 |-----------------------------------------------------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------	|
 | [`AttributionWithoutRoleNotice`](#AttributionWithoutRoleNotice)                   	| Attribution with no role.                                                                                                                                   	|
-| [`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)                           	| Duplicate  `routes.route_long_name`. Duplicate `routes.route_short_name`. Duplicate combination of fields `route_long_name`  and `routes.route_short_name`. 	|
+| [`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)                           	| Two distinct routes have either the same `route_short_name`, the same `route_long_name`, or the same combination of `route_short_name` and `route_long_name`. | 
 | [`EmptyRowNotice`](#EmptyRowNotice)                                               	| A row in the input file has only spaces.                                                                                                                      |
 | [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsecutiveStopsNotice) | A transit vehicle moves too fast between two consecutive stops.                                                                            	                |
 | [`FastTravelBetweenFarStopsNotice`](#FastTravelBetweenFarStopsNotice)                 | A transit vehicle moves too fast between two far stops.                                                                            	                        |
@@ -138,7 +138,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`PathwayUnreachableLocationNotice`](#PathwayUnreachableLocationNotice)               | A location is not reachable at least in one direction: from the entrances or to the exits.                                                                    |
 | [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)       	| A platform has no `parent_station` field set.                                                                                                               	|
 | [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	| Insufficient route color contrast.                                                                                                                          	|
-| [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	| Short and long name are equal for a route.                                                                                                                  	|
+| [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	| `route_short_name` and `route_long_name` are equal for a single route.                                                                                        |
 | [`RouteShortNameTooLongNotice`](#RouteShortNameTooLongNotice)                     	| Short name of a route is too long (more than 12 characters).                                                                                                	|
 | [`SameNameAndDescriptionForRouteNotice`](#SameNameAndDescriptionForRouteNotice)     | Same name and description for route.                                                                                                                        	|
 | [`SameNameAndDescriptionForStopNotice`](#SameNameAndDescriptionForStopNotice)       | Same name and description for stop.                                                                                                                      	    |
@@ -809,7 +809,7 @@ A route's color and `route_text_color` should be contrasting.
 
 #### RouteShortAndLongNameEqualNotice
 
-Short and long name are equal for a single route.
+A single route has the same values for `route_short_name` and `route_long_name`.
 
 Example of bad data:
 
