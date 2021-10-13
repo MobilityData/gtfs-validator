@@ -11,9 +11,9 @@ jobs:
     steps:
       - name: get url list
         run: |
-        DATASETS=$(curl https://gtfs-validator.free.beeceptor.com/urls | jq tostring)
-        echo $DATASETS
-        echo "::set-output name=matrix::$DATASETS"
+          DATASETS=$(curl https://gtfs-validator.free.beeceptor.com/urls | jq tostring)
+          echo $DATASETS
+          echo "::set-output name=matrix::$DATASETS"
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   get-latest-changes-report:
