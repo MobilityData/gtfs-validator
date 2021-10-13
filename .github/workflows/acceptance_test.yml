@@ -13,7 +13,7 @@ jobs:
     steps:
       - id: set-matrix
         run: |
-          DATASETS=$(curl https://gtfs-validator.free.beeceptor.com/urls | jq tostring)
+          DATASETS=$(curl https://gtfs-validator.free.beeceptor.com/urls)
           echo $DATASETS
           echo "::set-output name=matrix::$DATASETS"
   get-latest-changes-report:
