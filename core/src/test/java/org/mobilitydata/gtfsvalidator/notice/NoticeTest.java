@@ -121,6 +121,6 @@ public class NoticeTest {
   @Test
   public void getMappingKey_returnsFieldCombination() {
     OtherStringFieldNotice notice = new OtherStringFieldNotice("some field", SeverityLevel.ERROR);
-    assertThat(notice.getMappingKey()).matches(notice.getCode() + SeverityLevel.ERROR.ordinal());
+    assertThat(notice.getMappingKey()).matches("other_string_field2");
   }
 }

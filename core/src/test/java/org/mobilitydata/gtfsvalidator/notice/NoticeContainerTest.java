@@ -147,4 +147,24 @@ public class NoticeContainerTest {
     assertThat(noticeContainer.getValidationNotices().size())
         .isEqualTo(MAX_TOTAL_VALIDATION_NOTICES);
   }
+
+  @Test
+  public void exportNotices_shouldReflectTheTotalNumberOfNoticesAndSampleNotices() {
+    NoticeContainer container = new NoticeContainer(15, 8, 3);
+    for (int i = 0; i < 55; i++) {
+      container.addValidationNotice(new StringFieldNotice("1", SeverityLevel.ERROR));
+      container.addValidationNotice(new DoubleFieldNotice(2.0, SeverityLevel.ERROR));
+      container.addValidationNotice(new StringFieldNotice("3", SeverityLevel.INFO));
+    }
+    assertThat(new Gson().toJson(container.exportValidationNotices()))
+        .isEqualTo(
+            "{\"notices\":["
+                + "{\"code\":\"double_field\",\"severity\":\"ERROR\",\"totalNotices\":55,"
+                + "\"notices\":[{\"doubleField\":2.0},{\"doubleField\":2.0},{\"doubleField"
+                + "\":2.0}]},{\"code\":\"string_field\",\"severity\":\"INFO\",\"totalNotices\":55,"
+                + "\"notices\":[{\"someField\":\"3\"},{\"someField\":\"3\"},{\"someField\":\"3"
+                + "\"}]},{\"code\":\"string_field\",\"severity\":\"ERROR\",\"totalNotices\":55,"
+                + "\"notices\":[{\"someField\":\"1\"},{\"someField\":\"1\"},{\"someField\":\"1"
+                + "\"}]}]}");
+  }
 }
