@@ -11,6 +11,8 @@
 # limitations under the License.
 
 import argparse
+import math
+
 import dateutil.parser as dp
 import json
 import requests
@@ -80,8 +82,9 @@ LATEST_URL = "https://storage.googleapis.com/storage/v1/b/{source_archives_id}_l
 MAX_JOB_NUMBER = 256
 
 # json keys
-ROOT="root"
+ROOT="include"
 URL_KEY= "url"
+DATA = "data"
 
 def get_credentials():
     credentials = {
@@ -160,11 +163,12 @@ def harvest_latest_versions(archives_ids):
     client = storage.Client.from_service_account_info(
         info=json.loads(get_credentials())
     )
-    latest_versions = {ROOT: []}
-
+    latest_versions_data = [{DATA: []}]
+    i = 0
     print(f'Harvesting {len(archives_ids)} latest versions.')
+    item_count_per_sublist = math.ceil(len(archives_ids)/MAX_JOB_NUMBER)
     for archives_id in archives_ids:
-        print(f'{round(100*(archives_ids.index(archives_id)+1))/len(archives_ids)}% completed')
+        print(f'{math.ceil(100*(archives_ids.index(archives_id)+1)/len(archives_ids))}% completed')
         bucket_id = client.lookup_bucket(
             LATEST_BUCKET_PATH.format(source_archives_id=archives_id)
         )
@@ -177,10 +181,14 @@ def harvest_latest_versions(archives_ids):
                 archives_url = LATEST_URL.format(
                     source_archives_id=archives_id, blob_name=blob.name
                 )
-                latest_versions[ROOT].append({ID: archives_id, URL_KEY: archives_url})
-    latest_versions[ROOT] = np.array_split(np.array(latest_versions[ROOT]), MAX_JOB_NUMBER)
-    latest_versions[ROOT] = [version.tolist() for version in [*latest_versions[ROOT]]]
-    return latest_versions
+                dataset_information = {ID: archives_id, URL_KEY: archives_url}
+                if len(latest_versions_data[i][DATA]) < item_count_per_sublist:
+                    latest_versions_data[i][DATA].append(dataset_information)
+                else:
+                    latest_versions_data.append({DATA: []})
+                    i = i+1
+                    latest_versions_data[i][DATA].append(dataset_information)
+    return {ROOT: latest_versions_data}
 
 
 if __name__ == "__main__":
