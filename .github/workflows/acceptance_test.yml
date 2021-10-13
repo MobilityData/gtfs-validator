@@ -11,4 +11,3 @@ jobs:
     steps:
       - name: get url list
         run: curl https://gtfs-validator.free.beeceptor.com/urls
-
