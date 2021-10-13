@@ -9,13 +9,10 @@ import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import com.google.common.flogger.FluentLogger;
 import com.google.events.cloud.pubsub.v1.Message;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Base64;
+import java.util.Map;
 
 public class CloudTrigger implements BackgroundFunction<Message> {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
@@ -23,14 +20,10 @@ public class CloudTrigger implements BackgroundFunction<Message> {
   @Override
   public void accept(Message message, Context context) {
     if (message != null && message.getData() != null) {
-      String messageString =
-          new String(
-              Base64.getDecoder().decode(message.getData().getBytes(StandardCharsets.UTF_8)),
-              StandardCharsets.UTF_8);
-      JsonObject gson = new Gson().fromJson(messageString, JsonObject.class);
-      String jarName = gson.get("jarName").getAsString();
-      String datasetUrl = gson.get("datasetUrl").getAsString();
-      String outputBase = gson.get("outputBase").getAsString();
+      Map<String, String> attributes = message.getAttributes();
+      String jarName = attributes.get("jarName");
+      String datasetUrl = attributes.get("datasetUrl");
+      String outputBase = attributes.get("outputBase");
 
       // Retrieve jar from GCS
       String projectId = "gfs-validator-320318";
