@@ -8,18 +8,18 @@ on:
 jobs:
   fetch-urls:
     runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - id: set-matrix
         run: |
           DATASETS=$(curl https://gtfs-validator.free.beeceptor.com/urls | jq tostring)
           echo "::set-output name=matrix::$DATASETS"
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
   get-latest-changes-report:
-    needs: [ fetch-urls ]
+    needs: fetch-urls
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
+      matrix: ${{fromJson(needs.fetch-urls.outputs.matrix)}}
     steps:
       - run: |
           echo ${{ matrix.data }}
