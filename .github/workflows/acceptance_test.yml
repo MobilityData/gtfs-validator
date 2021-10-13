@@ -9,7 +9,8 @@ jobs:
   fetch-urls:
     runs-on: ubuntu-latest
     steps:
-      - id: set-matrix
+      - name: Set URL matrix
+        id: set-matrix
         run: |
           DATASETS=$(curl https://gtfs-validator.free.beeceptor.com/urls)
           echo "::set-output name=matrix::$DATASETS"
