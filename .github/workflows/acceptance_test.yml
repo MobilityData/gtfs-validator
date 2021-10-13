@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: get url list
         run: |
-          DATASETS=$(curl https://gtfs-validator.free.beeceptor.com/urls | jq tostring)
+          DATASETS=$(curl https://gtfs-validator.free.beeceptor.com/urls)
           echo $DATASETS
           echo "::set-output name=matrix::$DATASETS"
     outputs:
