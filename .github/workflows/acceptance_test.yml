@@ -13,6 +13,7 @@ jobs:
         id: set-matrix
         run: |
           DATASETS=$(curl https://gtfs-validator.free.beeceptor.com/urls)
+          echo $DATASETS
           echo "::set-output name=matrix::$DATASETS"
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
