@@ -22,5 +22,5 @@ jobs:
     strategy:
       matrix: ${{fromJson(needs.set-matrix.outputs.matrix)}}
     steps:
-      - run: |
-          echo blabla
+      - name: display matrix data
+        run: echo ${{ matrix.data }}
