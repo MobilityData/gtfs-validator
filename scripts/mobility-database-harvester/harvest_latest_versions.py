@@ -180,8 +180,6 @@ def harvest_latest_versions(archives_ids):
                 latest_versions[ROOT].append({ID: archives_id, URL_KEY: archives_url})
     latest_versions[ROOT] = np.array_split(np.array(latest_versions[ROOT]), MAX_JOB_NUMBER)
     latest_versions[ROOT] = [version.tolist() for version in [*latest_versions[ROOT]]]
-    # for version in latest_versions[ROOT]:
-    #     version = version.tolist()
     return latest_versions
 
 
