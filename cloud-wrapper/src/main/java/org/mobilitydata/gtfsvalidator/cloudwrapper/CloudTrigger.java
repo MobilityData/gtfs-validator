@@ -29,7 +29,7 @@ public class CloudTrigger implements BackgroundFunction<Message> {
       // Retrieve jar from GCS
       String projectId = "gfs-validator-320318";
       String bucketName = "gtfs-validator-jars";
-      String destFilePath = "../";
+      String destFilePath = "../tmp";
       Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
       Blob blob = storage.get(BlobId.of(bucketName, jarName));
 
