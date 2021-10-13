@@ -19,8 +19,6 @@ jobs:
   get-latest-changes-report:
     needs: fetch-urls
     runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{fromJson(needs.fetch-urls.outputs.matrix)}}
     steps:
       - run: |
-          echo ${{ matrix.data }}
+          echo blablabla
