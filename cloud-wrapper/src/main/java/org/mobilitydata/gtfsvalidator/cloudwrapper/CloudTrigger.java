@@ -9,6 +9,7 @@ import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import com.google.common.flogger.FluentLogger;
 import com.google.events.cloud.pubsub.v1.Message;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -28,9 +29,18 @@ public class CloudTrigger implements BackgroundFunction<Message> {
       // Retrieve jar from GCS
       String projectId = "gfs-validator-320318";
       String bucketName = "gtfs-validator-jars";
-      String destFilePath = ".";
+      String destFilePath = "../";
       Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
       Blob blob = storage.get(BlobId.of(bucketName, jarName));
+
+      File currentDirectory = new File("../");
+      File[] files = currentDirectory.listFiles();
+
+      logger.atInfo().log("Files:");
+      for (File f : files) {
+      logger.atInfo().log("\t%s%n", f.getName());
+      }
+
       blob.downloadTo(Paths.get(destFilePath));
 
       try {
