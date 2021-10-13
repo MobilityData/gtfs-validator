@@ -11,9 +11,9 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - name: get url list
+      - id: set-matrix
         run: |
-          DATASETS=$(curl https://gtfs-validator.free.beeceptor.com/urls)
+          DATASETS=$(curl https://gtfs-validator.free.beeceptor.com/urls | jq tostring)
           echo $DATASETS
           echo "::set-output name=matrix::$DATASETS"
   get-latest-changes-report:
@@ -23,4 +23,3 @@ jobs:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:
       - run: echo ${{ matrix.data }}
-
