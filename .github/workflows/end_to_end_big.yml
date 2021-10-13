@@ -13,7 +13,6 @@ on:
       - 'formatting.yml'
       - 'test_pack_dock.yml'
       - 'triage.yml'
-      - 'acceptance_test.yml'
   pull_request:
     branches: [ master ]
     paths-ignore:
@@ -26,7 +25,6 @@ on:
       - 'formatting.yml'
       - 'test_pack_dock.yml'
       - 'triage.yml'
-      - 'acceptance_test.yml'
 jobs:
   validate_gradle_wrapper:
     runs-on: ubuntu-latest
