@@ -16,6 +16,7 @@ import json
 import requests
 import os
 from os import path
+import numpy as np
 
 from google.cloud import storage
 
@@ -75,6 +76,12 @@ EPOCH_DATE = "1970-01-01T00:00:00Z"
 LATEST_BUCKET_PATH = "{source_archives_id}_latest"
 LATEST_URL = "https://storage.googleapis.com/storage/v1/b/{source_archives_id}_latest/o/{blob_name}?alt=media"
 
+# Github constants
+MAX_JOB_NUMBER = 256
+
+# json keys
+ROOT="root"
+URL_KEY= "url"
 
 def get_credentials():
     credentials = {
@@ -153,9 +160,11 @@ def harvest_latest_versions(archives_ids):
     client = storage.Client.from_service_account_info(
         info=json.loads(get_credentials())
     )
-    latest_versions = {}
+    latest_versions = {ROOT: []}
 
+    print(f'Harvesting {len(archives_ids)} latest versions.')
     for archives_id in archives_ids:
+        print(f'{round(100*(archives_ids.index(archives_id)+1))/len(archives_ids)}% completed')
         bucket_id = client.lookup_bucket(
             LATEST_BUCKET_PATH.format(source_archives_id=archives_id)
         )
@@ -168,8 +177,11 @@ def harvest_latest_versions(archives_ids):
                 archives_url = LATEST_URL.format(
                     source_archives_id=archives_id, blob_name=blob.name
                 )
-                latest_versions[archives_id] = archives_url
-
+                latest_versions[ROOT].append({ID: archives_id, URL_KEY: archives_url})
+    latest_versions[ROOT] = np.array_split(np.array(latest_versions[ROOT]), MAX_JOB_NUMBER)
+    latest_versions[ROOT] = [version.tolist() for version in [*latest_versions[ROOT]]]
+    # for version in latest_versions[ROOT]:
+    #     version = version.tolist()
     return latest_versions
 
 
