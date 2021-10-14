@@ -25,4 +25,4 @@ jobs:
     steps:
       - name: display matrix data
         run: |
-          echo ${{ matrix.data }}[*]
+          echo $(${{ matrix.data }}[*])
