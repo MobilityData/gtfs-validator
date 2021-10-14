@@ -20,6 +20,8 @@ jobs:
   get-latest-changes-report:
     needs: fetch-urls
     runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ needs.fetch-urls.outputs.matrix }}
     steps:
       - name: display matrix data
-        run: echo ${{ needs.fetch-urls.outputs.matrix }}
+        run: echo ${{ matrix.project }}
