@@ -17,12 +17,3 @@ jobs:
           echo "::set-output name=matrix::$DATASETS"
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
-  get-latest-changes-report:
-    needs: fetch-urls
-    runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
-    steps:
-      - name: display matrix data
-        run: echo ${{ matrix.data }}
-
