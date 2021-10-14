@@ -22,4 +22,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: display matrix data
-        run: echo ${{ needs.set-matrix.outputs.matrix }}
+        run: echo ${{ needs.fetch-urls.outputs.matrix }}
