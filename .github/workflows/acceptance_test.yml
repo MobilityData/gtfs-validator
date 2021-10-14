@@ -26,7 +26,7 @@ jobs:
       - name: display matrix data
         run: |
           my_array=${{ matrix.data}}
-          for i in ${my_array[@]}};
+          for i in ${my_array[@]};
           do
             echo $i
           done;
