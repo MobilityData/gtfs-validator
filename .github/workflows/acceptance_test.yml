@@ -21,7 +21,7 @@ jobs:
     needs: fetch-urls
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ needs.fetch-urls.outputs.matrix }}
+      matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:
       - name: display matrix data
         run: echo ${{ matrix.project }}
