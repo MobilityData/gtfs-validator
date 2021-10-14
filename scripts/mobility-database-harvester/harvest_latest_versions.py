@@ -183,11 +183,11 @@ def harvest_latest_versions(archives_ids):
                 )
                 dataset_information = {ID: archives_id, URL_KEY: archives_url}
                 if len(latest_versions_data[i][DATA]) < item_count_per_sublist:
-                    latest_versions_data[i][DATA].append(dataset_information)
+                    latest_versions_data[i][DATA].append(json.dumps(dataset_information, separators=(',', ':')))
                 else:
                     latest_versions_data.append({DATA: []})
                     i = i+1
-                    latest_versions_data[i][DATA].append(dataset_information)
+                    latest_versions_data[i][DATA].append(json.dumps(dataset_information, separators=(',', ':')))
     return {ROOT: latest_versions_data}
 
 
