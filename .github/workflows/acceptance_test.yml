@@ -12,7 +12,7 @@ jobs:
       - name: Set URL matrix
         id: set-matrix
         run: |
-          DATASETS=$(curl https://gtfs-validator2.free.beeceptor.com/test)
+          DATASETS=$(curl https://gtfs-validator2.free.beeceptor.com/url)
           echo $DATASETS
           echo "::set-output name=matrix::$DATASETS"
     outputs:
@@ -24,4 +24,4 @@ jobs:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:
       - name: display matrix data
-        run: echo ${{ matrix.project }}
+        run: echo ${{ matrix.data }}
