@@ -12,7 +12,7 @@ jobs:
       - name: Set URL matrix
         id: set-matrix
         run: |
-          DATASETS=$(curl https://gtfs-validator2.free.beeceptor.com/test)
+          DATASETS=$(curl https://gtfs-validator.free.beeceptor.com/test)
           echo $DATASETS
           echo "::set-output name=matrix::$DATASETS"
     outputs:
