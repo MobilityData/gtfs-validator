@@ -79,7 +79,7 @@ LATEST_BUCKET_PATH = "{source_archives_id}_latest"
 LATEST_URL = "https://storage.googleapis.com/storage/v1/b/{source_archives_id}_latest/o/{blob_name}?alt=media"
 
 # Github constants
-MAX_JOB_NUMBER = 150
+MAX_JOB_NUMBER = 25
 
 # json keys
 ROOT="include"
