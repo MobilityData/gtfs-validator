@@ -20,8 +20,6 @@ jobs:
   get-latest-changes-report:
     needs: fetch-urls
     runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{fromJson(needs.set-matrix.outputs.matrix)}}
     steps:
       - name: display matrix data
-        run: echo ${{ matrix.data }}
+        run: echo ${{ needs.set-matrix.outputs.matrix }}
