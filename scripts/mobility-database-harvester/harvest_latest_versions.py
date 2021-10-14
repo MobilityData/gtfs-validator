@@ -120,7 +120,7 @@ def parse_archives_ids_file(data_path, filename):
 def save_content_to_file(content, data_path, filename):
     file_path = path.join(data_path, filename)
     with open(file_path, "w") as f:
-        json.dump(content, f)
+        json.dump(content, f, separators=(',', ':'))
 
 
 def save_archives_ids_file(harvesting_date, archives_ids, data_path, filename):
