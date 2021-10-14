@@ -27,3 +27,4 @@ jobs:
         run: |
           array=${{ matrix.data }}
           echo $array
+          echo ${#array[*]}
