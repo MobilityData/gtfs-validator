@@ -13,9 +13,7 @@ do
    el=${el//,/\",}
    el=${el//\":/\":\"}
    el=${el//$closing_curly_bracket/\"$closing_curly_bracket}
-   ID=jq '.id' <<< "$el"
-   URL=jq '.url' <<< "$el"
-   echo $ID
-   echo $URL
+
+   echo $el
    # or do whatever with individual element of the array
 done
