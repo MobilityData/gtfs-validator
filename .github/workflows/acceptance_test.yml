@@ -26,4 +26,7 @@ jobs:
       - uses: actions/checkout@v1
       - name: display matrix data
         run: |
-          sh ../../run.sh ${{ matrix.data}}
+          pwd
+          cd ../../
+          pwd
+          ls
