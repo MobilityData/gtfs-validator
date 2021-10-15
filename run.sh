@@ -1,8 +1,3 @@
-my_array=$2
-echo "$my_array"
-echo "/n"
-echo "/n"
-IFS=" " read -a -r data_array <<< "$my_array"
-echo "/n"
-echo "/n"
-echo ${#data_array[@]}
+declare -a my_array
+my_array=( "$@" )
+echo ${#my_array[@]}
