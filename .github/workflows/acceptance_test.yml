@@ -28,4 +28,4 @@ jobs:
         run: |
           array_string="${{ matrix.data }}"
           IFS=" " read -a data_array <<< $array_string
-          sh run.sh ${my_array[@]}
+          sh run.sh ${data_array[@]}
