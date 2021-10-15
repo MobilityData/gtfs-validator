@@ -1,5 +1,4 @@
 #!/bin/bash
-
 echo 1
 array_string=$*
 echo 2
