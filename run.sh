@@ -1,12 +1,9 @@
-echo "\n"
-echo "\n"
+echo 1
 array_string=$*
-echo "\n"
-echo "\n"
+echo 2
 echo $array_string
-echo "\n"
-echo "\n"
+echo 3
 IFS=" " read -a my_array <<< $array_string
-echo "\n"
-echo "\n"
+echo 4
 echo ${#my_array[@]}
+echo "end"
