@@ -26,6 +26,7 @@ jobs:
       - uses: actions/checkout@v1
       - name: display matrix data
         run: |
+          ls
           pwd
           cd ../../
           pwd
