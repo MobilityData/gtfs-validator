@@ -27,4 +27,4 @@ jobs:
       - name: display matrix data
         run: |
           array_string="${{ matrix.data }}"
-          sh run.sh $array_string
+          bash run.sh $array_string
