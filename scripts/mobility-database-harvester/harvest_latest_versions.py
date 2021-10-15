@@ -187,7 +187,7 @@ def harvest_latest_versions(archives_ids):
                     latest_versions_data[i][DATA].append(dataset_information)
                     latest_version_data_string = latest_version_data_string + json.dumps(dataset_information, separators=(",", ":"))
                 else:
-                    latest_versions_data[i] = "(%s)" % latest_version_data_string
+                    latest_versions_data[i] = latest_version_data_string
                     latest_versions_data[i] = {DATA: latest_versions_data[i].replace("}{", "} {")}
                     latest_versions_data.append({DATA: []})
                     i = i+1
