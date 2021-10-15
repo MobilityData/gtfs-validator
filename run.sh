@@ -13,5 +13,9 @@ do
    ID=$(jq '.id' <<< "$el")
    URL=$(jq '.url' <<< "$el")
    path_name=${ID//\"/}
-   java -jar gtfs-validator*.jar --url $URL --output_base output/$path_name -t 4
+   response=$(curl --write-out '%{http_code}' --silent --output /dev/null $URL)
+   if [ $response != "404" ];
+   then
+    java -Xmx8G -Xms8G -jar gtfs-validator*.jar --url $URL --output_base output/$path_name
+   fi
 done
