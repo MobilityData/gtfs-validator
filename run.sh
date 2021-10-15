@@ -17,6 +17,6 @@ do
    echo $ID
    echo $URL
    path_name=${ID//\"/}
-   java -jar gtfs-validator*.jar --url $URL --output_base output/$path_name
+   java -jar gtfs-validator*.jar --url $URL --output_base output/$path_name -t 4
    # or do whatever with individual element of the array
 done
