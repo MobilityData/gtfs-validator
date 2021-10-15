@@ -74,6 +74,7 @@ jobs:
           array_string="${{ matrix.data }}"
           bash run.sh $array_string
       - name: Persist reports
+        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: reports_all
