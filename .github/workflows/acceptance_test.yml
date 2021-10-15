@@ -60,6 +60,7 @@ jobs:
   get-latest-changes-report:
     needs: [ fetch-urls, pack ]
     runs-on: ubuntu-latest
+    continue-on-error: true
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:
