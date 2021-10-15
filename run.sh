@@ -16,5 +16,6 @@ do
    URL=$(jq '.url' <<< "$el")
    echo $ID
    echo $URL
+   java -jar gtfs-validator*.jar --url $URL --output_base output/$ID
    # or do whatever with individual element of the array
 done
