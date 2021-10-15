@@ -27,4 +27,5 @@ jobs:
       - name: display matrix data
         run: |
           echo ${{ matrix.data }}
-          sh run.sh ${{ matrix.data }}
+          my_array=${{ matrix.data }}
+          sh run.sh "${my_array[@]}"
