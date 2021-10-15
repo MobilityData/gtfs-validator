@@ -23,6 +23,7 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:
+      - uses: actions/checkout@v1
       - name: display matrix data
         run: |
           sh ../../run.sh ${{ matrix.data}}
