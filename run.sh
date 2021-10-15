@@ -1,4 +1,4 @@
-my_array=$1
+my_array=$2
 echo "$my_array"
 echo "/n"
 echo "/n"
