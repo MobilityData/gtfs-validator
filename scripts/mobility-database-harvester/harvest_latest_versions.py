@@ -79,7 +79,7 @@ LATEST_BUCKET_PATH = "{source_archives_id}_latest"
 LATEST_URL = "https://storage.googleapis.com/storage/v1/b/{source_archives_id}_latest/o/{blob_name}?alt=media"
 
 # Github constants
-MAX_JOB_NUMBER = 20
+MAX_JOB_NUMBER = 256
 
 # json keys
 ROOT="include"
@@ -164,6 +164,7 @@ def harvest_latest_versions(archives_ids):
         info=json.loads(get_credentials())
     )
     latest_versions_data = [{DATA: []}]
+    latest_version_data_string = ""
     i = 0
     print(f'Harvesting {len(archives_ids)} latest versions.')
     item_count_per_sublist = math.ceil(len(archives_ids)/MAX_JOB_NUMBER)
@@ -184,10 +185,14 @@ def harvest_latest_versions(archives_ids):
                 dataset_information = {ID: archives_id, URL_KEY: archives_url}
                 if len(latest_versions_data[i][DATA]) < item_count_per_sublist:
                     latest_versions_data[i][DATA].append(dataset_information)
+                    latest_version_data_string = latest_version_data_string + json.dumps(dataset_information, separators=(",", ":"))
                 else:
+                    latest_versions_data[i] = "(%s)" % latest_version_data_string
+                    latest_versions_data[i] = {DATA: latest_versions_data[i].replace("}{", "} {")}
                     latest_versions_data.append({DATA: []})
                     i = i+1
                     latest_versions_data[i][DATA].append(dataset_information)
+                    latest_version_data_string = ""
     return {ROOT: latest_versions_data}
 
 
