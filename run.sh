@@ -1,7 +1,7 @@
 #!/bin/bash
 array_string=$*
 echo $array_string
-IFS=" " read -a -r my_array <<< $array_string
+IFS=" " read -a my_array <<< $array_string
 echo ${#my_array[@]}
 
 for el in "${my_array[@]}"
