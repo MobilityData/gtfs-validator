@@ -13,7 +13,8 @@ do
 
    ID=$(jq '.id' <<< "$el")
    URL=$(jq '.url' <<< "$el")
-   echo $el
+   echo $ID
+   echo $URL
    path_name=${ID//\"/}
    response=$(curl --write-out '%{http_code}' --silent --output /dev/null $URL)
    if [ $response == 404 ]; then
