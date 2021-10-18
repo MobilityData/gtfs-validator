@@ -99,29 +99,7 @@ jobs:
           echo "::set-output name=matrix::$DATASETS"
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
-  get-latest-changes-report:
-    needs: [ fetch-urls, pack-snapshot ]
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    strategy:
-      matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
-    steps:
-      - uses: actions/checkout@v1
-      - name: Download latest changes .jar file from previous job
-        uses: actions/download-artifact@v2
-        with:
-          name: gtfs-validator-snapshot
-      - name: display matrix data
-        run: |
-          queue="${{ matrix.data }}"
-          bash ./scripts/snapshot_runner.sh $queue
-      - name: Persist reports
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: reports_all
-          path: output
-  get-reference-report:
+  get-reports:
     needs: [ fetch-urls, pack-master ]
     runs-on: ubuntu-latest
     continue-on-error: true
@@ -129,14 +107,18 @@ jobs:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v1
-      - name: Download latest changes .jar file from previous job
+      - name: Download .jar file from master branch
         uses: actions/download-artifact@v2
         with:
           name: gtfs-validator-master
+      - name: Download latest changes .jar file from previous job
+        uses: actions/download-artifact@v2
+        with:
+          name: gtfs-validator-snapshot
       - name: display matrix data
         run: |
           queue="${{ matrix.data }}"
-          bash ./scripts/master_runner.sh $queue
+          bash ./scripts/queue_runner.sh $queue
       - name: Persist reports
         if: always()
         uses: actions/upload-artifact@v2

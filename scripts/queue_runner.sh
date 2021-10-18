@@ -13,6 +13,6 @@ do
    ID=$(jq '.id' <<< "$item")
    URL=$(jq '.url' <<< "$item")
    path_name=${ID//\"/}
-   ls -a
    java -Xmx8G -Xms8G -jar gtfs-validator*SNAPSHOT_cli.jar --url $URL --output_base output/$path_name
+   java -Xmx8G -Xms8G -jar gtfs-validator*MASTER_cli.jar --url $URL --output_base output/$path_name --validation_report_name reference.json --system_errors_report_name reference_errors.json
 done
