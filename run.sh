@@ -8,7 +8,7 @@ do
    el=${el//\{id/\{\"id\"}
    el=${el//,/\",}
    el=${el//\":/\":\"}
-   el=${el//,url/\,\"url\"}
+   el=${el//\,url/\,\"url\"}
    el=${el//$closing_curly_bracket/\"$closing_curly_bracket}
 
    ID=$(jq '.id' <<< "$el")
