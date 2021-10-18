@@ -18,7 +18,6 @@ import json
 import requests
 import os
 from os import path
-import numpy as np
 
 from google.cloud import storage
 
