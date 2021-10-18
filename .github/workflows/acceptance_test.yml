@@ -100,7 +100,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   get-reports:
-    needs: [ fetch-urls, pack-master ]
+    needs: [ fetch-urls, pack-master, pack-snapshot ]
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
