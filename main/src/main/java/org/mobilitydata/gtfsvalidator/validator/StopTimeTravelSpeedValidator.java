@@ -35,7 +35,6 @@ import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsRouteType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
@@ -43,6 +42,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
+import org.mobilitydata.gtfsvalidator.util.HierarchicalVehicleType;
 import org.mobilitydata.gtfsvalidator.util.S2Earth;
 
 /**
@@ -90,7 +90,7 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
         // Broken reference is reported in another rule.
         continue;
       }
-      final double maxSpeedKph = getMaxVehicleSpeedKph(route.get().routeType());
+      final double maxSpeedKph = getMaxVehicleSpeedKph(route.get());
       final double[] distancesKm = findDistancesKmBetweenStops(tripAndStopTimes.getStopTimes());
 
       validateConsecutiveStops(trips, distancesKm, maxSpeedKph, noticeContainer);
@@ -298,8 +298,9 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
   private static final int NUM_SECONDS_PER_HOUR = 3600;
 
   /** Returns a speed threshold (km/h) for a given vehicle type. */
-  private static double getMaxVehicleSpeedKph(GtfsRouteType routeType) {
-    switch (routeType) {
+  private static double getMaxVehicleSpeedKph(GtfsRoute route) {
+    // Pass int routeTypeValue to support potential non-standard route types (HVT).
+    switch (HierarchicalVehicleType.toBasicGtfsRouteType(route.routeTypeValue())) {
       case LIGHT_RAIL:
         // The Houston METRORail can reach speeds of 100 km/h.
         return 100;
