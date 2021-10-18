@@ -81,9 +81,10 @@ LATEST_URL = "https://storage.googleapis.com/storage/v1/b/{source_archives_id}_l
 MAX_JOB_NUMBER = 256
 
 # json keys
-ROOT="include"
-URL_KEY= "url"
+ROOT = "include"
+URL_KEY = "url"
 DATA = "data"
+
 
 def get_credentials():
     credentials = {
@@ -95,10 +96,10 @@ def get_credentials():
         CLIENT_ID_KEY: os.getenv(CLIENT_ID).replace("\\n", "\n"),
         AUTH_URI_KEY: os.getenv(AUTH_URI).replace("\\n", "\n"),
         TOKEN_URI_KEY: os.getenv(TOKEN_URI).replace("\\n", "\n"),
-        AUTH_PROVIDER_X509_CERT_URL_KEY:
-            os.getenv(AUTH_PROVIDER_X509_CERT_URL).replace("\\n", "\n"),
-        CLIENT_X509_CERT_URL_KEY:
-            os.getenv(CLIENT_X509_CERT_URL).replace("\\n", "\n"),
+        AUTH_PROVIDER_X509_CERT_URL_KEY: os.getenv(AUTH_PROVIDER_X509_CERT_URL).replace(
+            "\\n", "\n"
+        ),
+        CLIENT_X509_CERT_URL_KEY: os.getenv(CLIENT_X509_CERT_URL).replace("\\n", "\n"),
     }
     return str(credentials).replace("'", '"')
 
@@ -119,12 +120,11 @@ def parse_archives_ids_file(data_path, filename):
 def save_content_to_file(content, data_path, filename):
     file_path = path.join(data_path, filename)
     with open(file_path, "w") as f:
-        json.dump(content, f, separators=(',', ':'))
+        json.dump(content, f, separators=(",", ":"))
 
 
 def save_archives_ids_file(harvesting_date, archives_ids, data_path, filename):
-    archives_ids_json =\
-        {HARVESTING_DATE: harvesting_date, ARCHIVES_IDS: archives_ids}
+    archives_ids_json = {HARVESTING_DATE: harvesting_date, ARCHIVES_IDS: archives_ids}
     save_content_to_file(archives_ids_json, data_path, filename)
 
 
@@ -165,10 +165,12 @@ def harvest_latest_versions(archives_ids):
     latest_versions_data = [{DATA: []}]
     latest_version_data_string = ""
     i = 0
-    print(f'Harvesting {len(archives_ids)} latest versions.')
-    item_count_per_sublist = math.ceil(len(archives_ids)/MAX_JOB_NUMBER)
+    print(f"Harvesting {len(archives_ids)} latest versions.")
+    item_count_per_sublist = math.ceil(len(archives_ids) / MAX_JOB_NUMBER)
     for archives_id in archives_ids:
-        print(f'{math.ceil(100*(archives_ids.index(archives_id)+1)/len(archives_ids))}% completed')
+        print(
+            f"{math.ceil(100*(archives_ids.index(archives_id)+1)/len(archives_ids))}% completed"
+        )
         bucket_id = client.lookup_bucket(
             LATEST_BUCKET_PATH.format(source_archives_id=archives_id)
         )
@@ -184,12 +186,17 @@ def harvest_latest_versions(archives_ids):
                 dataset_information = {ID: archives_id, URL_KEY: archives_url}
                 if len(latest_versions_data[i][DATA]) < item_count_per_sublist:
                     latest_versions_data[i][DATA].append(dataset_information)
-                    latest_version_data_string = latest_version_data_string + json.dumps(dataset_information, separators=(",", ":"))
+                    latest_version_data_string = (
+                        latest_version_data_string
+                        + json.dumps(dataset_information, separators=(",", ":"))
+                    )
                 else:
                     latest_versions_data[i] = latest_version_data_string
-                    latest_versions_data[i] = {DATA: latest_versions_data[i].replace("}{", "} {")}
+                    latest_versions_data[i] = {
+                        DATA: latest_versions_data[i].replace("}{", "} {")
+                    }
                     latest_versions_data.append({DATA: []})
-                    i = i+1
+                    i = i + 1
                     latest_versions_data[i][DATA].append(dataset_information)
                     latest_version_data_string = ""
     latest_versions_data[i] = latest_version_data_string
