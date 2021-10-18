@@ -6,9 +6,9 @@ echo "${my_array[@]}"
 for el in "${my_array[@]}"
 do
    el=${el//\{id/\{\"id\"}
-   el=${el//url/\"url\"}
    el=${el//,/\",}
    el=${el//\":/\":\"}
+   el=${el//,url/\,\"url\"}
    el=${el//$closing_curly_bracket/\"$closing_curly_bracket}
 
    ID=$(jq '.id' <<< "$el")
