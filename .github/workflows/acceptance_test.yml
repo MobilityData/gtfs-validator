@@ -72,7 +72,7 @@ jobs:
       - name: display matrix data
         run: |
           queue="${{ matrix.data }}"
-          bash run.sh $queue
+          bash ./scripts/snapshot_runner.sh $queue
       - name: Persist reports
         if: always()
         uses: actions/upload-artifact@v2
