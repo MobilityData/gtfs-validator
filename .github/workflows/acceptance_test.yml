@@ -121,3 +121,25 @@ jobs:
         with:
           name: reports_all
           path: output
+  get-reference-report:
+    needs: [ fetch-urls, pack-snapshot ]
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v1
+      - name: Download latest changes .jar file from previous job
+        uses: actions/download-artifact@v2
+        with:
+          name: gtfs-validator-master
+      - name: display matrix data
+        run: |
+          queue="${{ matrix.data }}"
+          bash ./scripts/master_runner.sh $queue
+      - name: Persist reports
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: reports_all
+          path: output
