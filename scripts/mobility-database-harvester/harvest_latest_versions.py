@@ -192,6 +192,8 @@ def harvest_latest_versions(archives_ids):
                     i = i+1
                     latest_versions_data[i][DATA].append(dataset_information)
                     latest_version_data_string = ""
+    latest_versions_data[i] = latest_version_data_string
+    latest_versions_data[i] = {DATA: latest_versions_data[i].replace("}{", "} {")}
     return {ROOT: latest_versions_data}
 
 
