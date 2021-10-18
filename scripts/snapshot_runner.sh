@@ -13,5 +13,5 @@ do
    ID=$(jq '.id' <<< "$item")
    URL=$(jq '.url' <<< "$item")
    path_name=${ID//\"/}
-   java -Xmx8G -Xms8G -jar gtfs-validator*.jar --url $URL --output_base output/$path_name
+   java -Xmx8G -Xms8G -jar gtfs-validator*SNAPSHOT.jar --url $URL --output_base output/$path_name
 done
