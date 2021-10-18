@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class NoticeContainer {
   /** Limit on the amount notices of the same type and severity. */
-  private static final int MAX_VALIDATION_NOTICE_TYPE_AND_SEVERITY = 100_000;
+  private static final int MAX_VALIDATION_NOTICES_TYPE_AND_SEVERITY = 100_000;
 
   /**
    * Limit on the total amount of stored validation notices.
@@ -53,8 +53,8 @@ public class NoticeContainer {
   private static final int MAX_EXPORTS_PER_NOTICE_TYPE_AND_SEVERITY = 1_000;
 
   private final int maxTotalValidationNotices;
-  private final int maxValidationNoticePerTypeAndSeverity;
-  private final int maxExportPerNoticeTypeAndSeverity;
+  private final int maxValidationNoticesPerTypeAndSeverity;
+  private final int maxExportsPerNoticeTypeAndSeverity;
   private final List<ValidationNotice> validationNotices = new ArrayList<>();
   private final List<SystemError> systemErrors = new ArrayList<>();
   private final Map<String, Integer> noticesCountPerTypeAndSeverity = new HashMap<>();
@@ -75,15 +75,15 @@ public class NoticeContainer {
       int maxValidationNoticePerTypeAndSeverity,
       int maxExportPerNoticeTypeAndSeverity) {
     this.maxTotalValidationNotices = maxTotalValidationNotices;
-    this.maxValidationNoticePerTypeAndSeverity = maxValidationNoticePerTypeAndSeverity;
-    this.maxExportPerNoticeTypeAndSeverity = maxExportPerNoticeTypeAndSeverity;
+    this.maxValidationNoticesPerTypeAndSeverity = maxValidationNoticePerTypeAndSeverity;
+    this.maxExportsPerNoticeTypeAndSeverity = maxExportPerNoticeTypeAndSeverity;
   }
 
   /** Used if no constant is provided: limits on amount of notices are set using class constants. */
   public NoticeContainer() {
     this(
         MAX_TOTAL_VALIDATION_NOTICES,
-        MAX_VALIDATION_NOTICE_TYPE_AND_SEVERITY,
+        MAX_VALIDATION_NOTICES_TYPE_AND_SEVERITY,
         MAX_EXPORTS_PER_NOTICE_TYPE_AND_SEVERITY);
   }
 
@@ -95,7 +95,7 @@ public class NoticeContainer {
     updateNoticeCount(notice);
     if (validationNotices.size() >= maxTotalValidationNotices
         || noticesCountPerTypeAndSeverity.get(notice.getMappingKey())
-            > maxValidationNoticePerTypeAndSeverity) {
+            > maxValidationNoticesPerTypeAndSeverity) {
       return;
     }
     validationNotices.add(notice);
@@ -159,7 +159,7 @@ public class NoticeContainer {
   /**
    * Exports notices as JSON.
    *
-   * <p>Up to {@link #maxExportPerNoticeTypeAndSeverity} is exported per each type+severity.
+   * <p>Up to {@link #maxExportsPerNoticeTypeAndSeverity} is exported per each type+severity.
    */
   private <T extends Notice> JsonObject exportJson(List<T> notices) {
     JsonObject root = new JsonObject();
@@ -174,14 +174,12 @@ public class NoticeContainer {
       noticesOfTypeJson.addProperty("severity", firstNotice.getSeverityLevel().toString());
       noticesOfTypeJson.addProperty(
           "totalNotices", noticesCountPerTypeAndSeverity.get(firstNotice.getMappingKey()));
-      noticesOfTypeJson.addProperty(
-          "sampleNotices", Math.min(maxExportPerNoticeTypeAndSeverity, noticesOfType.size()));
       JsonArray noticesArrayJson = new JsonArray();
-      noticesOfTypeJson.add("notices", noticesArrayJson);
+      noticesOfTypeJson.add("sampleNotices", noticesArrayJson);
       int i = 0;
       for (T notice : noticesOfType) {
         ++i;
-        if (i > maxExportPerNoticeTypeAndSeverity) {
+        if (i > maxExportsPerNoticeTypeAndSeverity) {
           // Do not export too many notices for this type.
           break;
         }
