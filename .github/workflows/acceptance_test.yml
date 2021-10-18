@@ -72,6 +72,7 @@ jobs:
       - name: display matrix data
         run: |
           array_string="${{ matrix.data }}"
+          echo $array_string
           bash run.sh $array_string
       - name: Persist reports
         if: always()
