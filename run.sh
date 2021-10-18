@@ -5,7 +5,7 @@ IFS=" " read -a my_array <<< $array_string
 echo "${my_array[@]}"
 for el in "${my_array[@]}"
 do
-   el=${el//\{id/\"\{id\"}
+   el=${el//\{id/\{\"id\"}
    el=${el//url/\"url\"}
    el=${el//,/\",}
    el=${el//\":/\":\"}
