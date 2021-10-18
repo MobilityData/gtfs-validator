@@ -6,7 +6,7 @@ on:
     paths-ignore:
       - '**.md'
 jobs:
-  pack:
+  pack-snapshot:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -58,7 +58,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   get-latest-changes-report:
-    needs: [ fetch-urls, pack ]
+    needs: [ fetch-urls, pack-snapshot ]
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
@@ -71,8 +71,8 @@ jobs:
           name: gtfs-validator-snapshot
       - name: display matrix data
         run: |
-          array_string="${{ matrix.data }}"
-          bash run.sh $array_string
+          queue="${{ matrix.data }}"
+          bash run.sh $queue
       - name: Persist reports
         if: always()
         uses: actions/upload-artifact@v2

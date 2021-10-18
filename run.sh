@@ -1,8 +1,8 @@
 #!/bin/bash
 closing_curly_bracket="}"
-array_string=$*
-IFS=" " read -a my_array <<< $array_string
-for el in "${my_array[@]}"
+raw_queue_string=$*
+IFS=" " read -a queue <<< $raw_queue_string
+for el in "${queue[@]}"
 do
    el=${el//\{id/\{\"id\"}
    el=${el//,/\",}
