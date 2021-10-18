@@ -122,7 +122,7 @@ jobs:
           name: reports_all
           path: output
   get-reference-report:
-    needs: [ fetch-urls, pack-snapshot ]
+    needs: [ fetch-urls, pack-master ]
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
