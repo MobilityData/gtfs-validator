@@ -75,9 +75,6 @@ EPOCH_DATE = "1970-01-01T00:00:00Z"
 LATEST_BUCKET_PATH = "{source_archives_id}_latest"
 LATEST_URL = "https://storage.googleapis.com/storage/v1/b/{source_archives_id}_latest/o/{blob_name}?alt=media"
 
-#json keys
-ROOT="root"
-URL_KEY="url"
 
 def get_credentials():
     credentials = {
@@ -92,7 +89,7 @@ def get_credentials():
         AUTH_PROVIDER_X509_CERT_URL_KEY:
             os.getenv(AUTH_PROVIDER_X509_CERT_URL).replace("\\n", "\n"),
         CLIENT_X509_CERT_URL_KEY:
-            os.getenv(CLIENT_X509_CERT_URL).replace("\\n", "\n")
+            os.getenv(CLIENT_X509_CERT_URL).replace("\\n", "\n"),
     }
     return str(credentials).replace("'", '"')
 
@@ -117,7 +114,7 @@ def save_content_to_file(content, data_path, filename):
 
 
 def save_archives_ids_file(harvesting_date, archives_ids, data_path, filename):
-    archives_ids_json =\
+    archives_ids_json = \
         {HARVESTING_DATE: harvesting_date, ARCHIVES_IDS: archives_ids}
     save_content_to_file(archives_ids_json, data_path, filename)
 
@@ -156,7 +153,7 @@ def harvest_latest_versions(archives_ids):
     client = storage.Client.from_service_account_info(
         info=json.loads(get_credentials())
     )
-    latest_versions = {ROOT: []}
+    latest_versions = {}
 
     for archives_id in archives_ids:
         bucket_id = client.lookup_bucket(
@@ -171,7 +168,7 @@ def harvest_latest_versions(archives_ids):
                 archives_url = LATEST_URL.format(
                     source_archives_id=archives_id, blob_name=blob.name
                 )
-                latest_versions[ROOT].append({ID: archives_id, URL_KEY: archives_url})
+                latest_versions[archives_id] = archives_url
 
     return latest_versions
 
