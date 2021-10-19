@@ -37,7 +37,7 @@ public class NoticeSummary {
   @SerializedName("totalNotices")
   private final int count;
 
-  @SerializedName("notices")
+  @SerializedName("sampleNotices")
   private final Set<Map<String, Object>> contexts;
 
   public NoticeSummary(
