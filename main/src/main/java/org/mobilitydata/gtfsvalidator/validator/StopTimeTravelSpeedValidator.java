@@ -298,7 +298,8 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
   private static final int NUM_SECONDS_PER_HOUR = 3600;
 
   /** Returns a speed threshold (km/h) for a given vehicle type. */
-  private static double getMaxVehicleSpeedKph(GtfsRoute route) {
+  @VisibleForTesting
+  static double getMaxVehicleSpeedKph(GtfsRoute route) {
     // Pass int routeTypeValue to support potential non-standard route types (HVT).
     switch (HierarchicalVehicleType.toBasicGtfsRouteType(route.routeTypeValue())) {
       case LIGHT_RAIL:

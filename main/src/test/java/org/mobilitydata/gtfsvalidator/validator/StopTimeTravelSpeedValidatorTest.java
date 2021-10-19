@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mobilitydata.gtfsvalidator.validator.StopTimeTravelSpeedValidator.getMaxVehicleSpeedKph;
 import static org.mobilitydata.gtfsvalidator.validator.StopTimeTravelSpeedValidator.getSpeedKphBetweenStops;
 
 import com.google.common.collect.ImmutableList;
@@ -39,6 +40,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
+import org.mobilitydata.gtfsvalidator.util.HierarchicalVehicleType;
 import org.mobilitydata.gtfsvalidator.util.S2Earth;
 import org.mobilitydata.gtfsvalidator.validator.StopTimeTravelSpeedValidator.FastTravelBetweenConsecutiveStopsNotice;
 import org.mobilitydata.gtfsvalidator.validator.StopTimeTravelSpeedValidator.FastTravelBetweenFarStopsNotice;
@@ -325,5 +327,31 @@ public final class StopTimeTravelSpeedValidatorTest {
     List<GtfsStopTime> stopTimes =
         createStopTimesSameDepartureArrival(ImmutableList.of(GtfsTime.fromString("08:00:00")));
     assertThat(getSpeedKphBetweenStops(2, stopTimes.get(0), stopTimes.get(0))).isEqualTo(120);
+  }
+
+  @Test
+  public void getMaxVehicleSpeedKph_standardGtfs() {
+    assertThat(
+            getMaxVehicleSpeedKph(new GtfsRoute.Builder().setRouteType(GtfsRouteType.RAIL).build()))
+        .isEqualTo(500);
+    assertThat(
+            getMaxVehicleSpeedKph(new GtfsRoute.Builder().setRouteType(GtfsRouteType.BUS).build()))
+        .isEqualTo(150);
+  }
+
+  @Test
+  public void getMaxVehicleSpeedKph_hvt() {
+    assertThat(
+            getMaxVehicleSpeedKph(
+                new GtfsRoute.Builder()
+                    .setRouteType(HierarchicalVehicleType.HIGH_SPEED_RAIL)
+                    .build()))
+        .isEqualTo(500);
+    assertThat(
+            getMaxVehicleSpeedKph(
+                new GtfsRoute.Builder()
+                    .setRouteType(HierarchicalVehicleType.FUNICULAR_SERVICE)
+                    .build()))
+        .isEqualTo(50);
   }
 }

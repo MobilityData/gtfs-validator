@@ -1,6 +1,7 @@
 package org.mobilitydata.gtfsvalidator.util;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
 import static org.mobilitydata.gtfsvalidator.util.HierarchicalVehicleType.toBasicGtfsRouteType;
 
 import org.junit.Test;
@@ -30,83 +31,63 @@ public class HierarchicalVehicleTypeTest {
         .isEqualTo(GtfsRouteType.MONORAIL);
   }
 
-  @Test
-  public void toBasicGtfsRouteType_hierarchicalVehicleTypes_rail() {
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.RAILWAY_SERVICE))
-        .isEqualTo(GtfsRouteType.RAIL);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.HIGH_SPEED_RAIL))
-        .isEqualTo(GtfsRouteType.RAIL);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.LONG_DISTANCE_TRAINS))
-        .isEqualTo(GtfsRouteType.RAIL);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.INTER_REGIONAL_RAIL))
-        .isEqualTo(GtfsRouteType.RAIL);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.SLEEPER_RAIL))
-        .isEqualTo(GtfsRouteType.RAIL);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.REGIONAL_RAIL))
-        .isEqualTo(GtfsRouteType.RAIL);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.TOURIST_RAILWAY))
-        .isEqualTo(GtfsRouteType.RAIL);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.RAIL_SHUTTLE))
-        .isEqualTo(GtfsRouteType.RAIL);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.SUBURBAN_RAILWAY))
-        .isEqualTo(GtfsRouteType.RAIL);
+  private static void assertAllSubtypes(int baseHvt, GtfsRouteType expectedRouteType) {
+    for (int i = 0; i < 99; ++i) {
+      assertWithMessage(String.format("HVT %d", baseHvt + i))
+          .that(toBasicGtfsRouteType(baseHvt + i))
+          .isEqualTo(expectedRouteType);
+    }
   }
 
   @Test
-  public void toBasicGtfsRouteType_hierarchicalVehicleTypes_coach() {
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.COACH_SERVICE))
-        .isEqualTo(GtfsRouteType.BUS);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.INTERNATIONAL_COACH))
-        .isEqualTo(GtfsRouteType.BUS);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.NATIONAL_COACH))
-        .isEqualTo(GtfsRouteType.BUS);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.REGIONAL_COACH))
+  public void toBasicGtfsRouteType_hierarchicalVehicleTypes_rail() {
+    assertAllSubtypes(HierarchicalVehicleType.RAILWAY_SERVICE, GtfsRouteType.RAIL);
+  }
+
+  @Test
+  public void toBasicGtfsRouteType_hierarchicalVehicleTypes_bus() {
+    assertAllSubtypes(HierarchicalVehicleType.COACH_SERVICE, GtfsRouteType.BUS);
+    assertAllSubtypes(HierarchicalVehicleType.BUS_SERVICE, GtfsRouteType.BUS);
+    assertAllSubtypes(HierarchicalVehicleType.TROLLEYBUS_SERVICE, GtfsRouteType.TROLLEYBUS);
+    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.COMMUNAL_TAXI))
         .isEqualTo(GtfsRouteType.BUS);
   }
 
   @Test
   public void toBasicGtfsRouteType_hierarchicalVehicleTypes_urbanRailway() {
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.URBAN_RAILWAY_SERVICE))
-        .isEqualTo(GtfsRouteType.SUBWAY);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.METRO)).isEqualTo(GtfsRouteType.SUBWAY);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.UNDERGROUND))
-        .isEqualTo(GtfsRouteType.SUBWAY);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.URBAN_RAILWAY))
-        .isEqualTo(GtfsRouteType.SUBWAY);
+    for (int i = 0; i < 99; ++i) {
+      if (HierarchicalVehicleType.URBAN_RAILWAY_SERVICE + i != HierarchicalVehicleType.MONORAIL) {
+        assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.URBAN_RAILWAY_SERVICE + i))
+            .isEqualTo(GtfsRouteType.SUBWAY);
+      }
+    }
     assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.MONORAIL))
         .isEqualTo(GtfsRouteType.MONORAIL);
   }
 
   @Test
-  public void toBasicGtfsRouteType_hierarchicalVehicleTypes_bus() {
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.BUS_SERVICE))
-        .isEqualTo(GtfsRouteType.BUS);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.REGIONAL_BUS))
-        .isEqualTo(GtfsRouteType.BUS);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.EXPRESS_BUS))
-        .isEqualTo(GtfsRouteType.BUS);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.LOCAL_BUS))
-        .isEqualTo(GtfsRouteType.BUS);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.DEMAND_AND_RESPONSE_BUS))
-        .isEqualTo(GtfsRouteType.BUS);
+  public void toBasicGtfsRouteType_hierarchicalVehicleTypes_tram() {
+    assertAllSubtypes(HierarchicalVehicleType.TRAM_SERVICE, GtfsRouteType.LIGHT_RAIL);
   }
 
   @Test
-  public void toBasicGtfsRouteType_hierarchicalVehicleTypes_others() {
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.TROLLEYBUS_SERVICE))
-        .isEqualTo(GtfsRouteType.TROLLEYBUS);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.TRAM_SERVICE))
-        .isEqualTo(GtfsRouteType.LIGHT_RAIL);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.WATER_TRANSPORT_SERVICE))
-        .isEqualTo(GtfsRouteType.FERRY);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.FERRY_SERVICE))
-        .isEqualTo(GtfsRouteType.FERRY);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.AERIAL_LIFT_SERVICE))
-        .isEqualTo(GtfsRouteType.AERIAL_LIFT);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.FUNICULAR_SERVICE))
-        .isEqualTo(GtfsRouteType.FUNICULAR);
-    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.COMMUNAL_TAXI))
-        .isEqualTo(GtfsRouteType.BUS);
+  public void toBasicGtfsRouteType_hierarchicalVehicleTypes_ferry() {
+    assertAllSubtypes(HierarchicalVehicleType.WATER_TRANSPORT_SERVICE, GtfsRouteType.FERRY);
+    assertAllSubtypes(HierarchicalVehicleType.FERRY_SERVICE, GtfsRouteType.FERRY);
+  }
+
+  @Test
+  public void toBasicGtfsRouteType_hierarchicalVehicleTypes_cable() {
+    assertAllSubtypes(HierarchicalVehicleType.AERIAL_LIFT_SERVICE, GtfsRouteType.AERIAL_LIFT);
+    assertAllSubtypes(HierarchicalVehicleType.FUNICULAR_SERVICE, GtfsRouteType.FUNICULAR);
+  }
+
+  @Test
+  public void toBasicGtfsRouteType_hierarchicalVehicleTypes_unrecognized() {
+    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.AIR_SERVICE))
+        .isEqualTo(GtfsRouteType.UNRECOGNIZED);
+    assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.TAXI_SERVICE))
+        .isEqualTo(GtfsRouteType.UNRECOGNIZED);
     assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.MISCELLANEOUS_SERVICE))
         .isEqualTo(GtfsRouteType.UNRECOGNIZED);
     assertThat(toBasicGtfsRouteType(HierarchicalVehicleType.HORSE_DRAWN_CARRIAGE))
