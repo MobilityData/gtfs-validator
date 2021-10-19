@@ -39,15 +39,16 @@ public class NoticeContainerTest {
 
     assertThat(new Gson().toJson(container.exportValidationNotices()))
         .isEqualTo(
-            "{\"notices\":["
-                + "{\"code\":\"missing_required_file\",\"severity\":\"ERROR\","
-                + "\"totalNotices\":2,\"notices\":"
-                + "[{\"filename\":\"stops.txt\"},{\"filename\":\"agency.txt\"}]}]}");
+            "{\"notices\":[{\"code\":\"missing_required_file\",\"severity\":\"ERROR\","
+                + "\"totalNotices\":2,\"sampleNotices\":[{\"filename\":\"stops.txt"
+                + "\"},{\"filename\":\"agency.txt\"}]}]}");
     assertThat(new Gson().toJson(container.exportSystemErrors()))
         .isEqualTo(
-            "{\"notices\":[{\"code\":\"runtime_exception_in_validator_error\",\"severity\":\"ERROR\","
-                + "\"totalNotices\":1,\"notices\":[{\"validator\":\"FaultyValidator\",\"exception\":\"java.lang.IndexOutOfBoundsException\",\"message\":\"Index"
-                + " 0 out of bounds\"}]}]}");
+            ""
+                + "{\"notices\":[{\"code\":\"runtime_exception_in_validator_error\",\"severity\":"
+                + "\"ERROR\",\"totalNotices\":1,\"sampleNotices\":[{\"validator\":"
+                + "\"FaultyValidator\",\"exception\":\"java.lang.IndexOutOfBoundsException\","
+                + "\"message\":\"Index 0 out of bounds\"}]}]}");
   }
 
   @Test
@@ -58,7 +59,7 @@ public class NoticeContainerTest {
     assertThat(new Gson().toJson(container.exportValidationNotices()))
         .isEqualTo(
             "{\"notices\":[{\"code\":\"double_field\",\"severity\":\"ERROR\","
-                + "\"totalNotices\":1,\"notices\":[{\"doubleField\":Infinity}]}]}");
+                + "\"totalNotices\":1,\"sampleNotices\":[{\"doubleField\":Infinity}]}]}");
   }
 
   @Test
@@ -70,10 +71,11 @@ public class NoticeContainerTest {
 
     assertThat(new Gson().toJson(container.exportValidationNotices()))
         .isEqualTo(
-            "{\"notices\":["
-                + "{\"code\":\"double_field\",\"severity\":\"ERROR\",\"totalNotices\":1,\"notices\":[{\"doubleField\":2.0}]},"
-                + "{\"code\":\"string_field\",\"severity\":\"INFO\",\"totalNotices\":1,\"notices\":[{\"someField\":\"3\"}]},"
-                + "{\"code\":\"string_field\",\"severity\":\"ERROR\",\"totalNotices\":1,\"notices\":[{\"someField\":\"1\"}]}]}");
+            "{\"notices\":[{\"code\":\"double_field\",\"severity\":\"ERROR\","
+                + "\"totalNotices\":1,\"sampleNotices\":[{\"doubleField\":2.0}]},{\"code\":"
+                + "\"string_field\",\"severity\":\"INFO\",\"totalNotices\":1,\"sampleNotices\":[{"
+                + "\"someField\":\"3\"}]},{\"code\":\"string_field\",\"severity\":\"ERROR\","
+                + "\"totalNotices\":1,\"sampleNotices\":[{\"someField\":\"1\"}]}]}");
   }
 
   @Test
@@ -96,5 +98,74 @@ public class NoticeContainerTest {
 
     assertThat(c1.getValidationNotices()).containsExactly(n1, n2);
     assertThat(c1.getSystemErrors()).containsExactly(e1, e2);
+  }
+
+  @Test
+  public void addValidationNotice_setMax_perNoticeTypeAndSeverity() {
+    ValidationNotice n1 = new DoubleFieldNotice(2.0, SeverityLevel.WARNING);
+    ValidationNotice n2 = new DoubleFieldNotice(2.0, SeverityLevel.ERROR);
+    int MAX_TOTAL_VALIDATION_NOTICES = 50;
+    int MAX_PER_NOTICE_TYPE_AND_SEVERITY = 15;
+    int MAX_EXPORT_PER_NOTICE_TYPE_AND_SEVERITY = 15;
+    NoticeContainer noticeContainer =
+        new NoticeContainer(
+            MAX_TOTAL_VALIDATION_NOTICES,
+            MAX_PER_NOTICE_TYPE_AND_SEVERITY,
+            MAX_EXPORT_PER_NOTICE_TYPE_AND_SEVERITY);
+    for (int i = 0; i < MAX_TOTAL_VALIDATION_NOTICES + 5; i++) {
+      noticeContainer.addValidationNotice(n1);
+      noticeContainer.addValidationNotice(n2);
+    }
+    assertThat(noticeContainer.getValidationNotices().size())
+        .isEqualTo(2 * MAX_PER_NOTICE_TYPE_AND_SEVERITY);
+    assertThat(
+            NoticeContainer.groupNoticesByTypeAndSeverity(noticeContainer.getValidationNotices())
+                .get(n1.getMappingKey())
+                .size())
+        .isEqualTo(MAX_PER_NOTICE_TYPE_AND_SEVERITY);
+    assertThat(
+            NoticeContainer.groupNoticesByTypeAndSeverity(noticeContainer.getValidationNotices())
+                .get(n2.getMappingKey())
+                .size())
+        .isEqualTo(MAX_PER_NOTICE_TYPE_AND_SEVERITY);
+  }
+
+  @Test
+  public void addValidationNotice_setMaxTotalValidationNotices() {
+    ValidationNotice n1 = new MissingRequiredFileNotice("stops.txt");
+    ValidationNotice n2 = new UnknownFileNotice("unknown.txt");
+    int MAX_TOTAL_VALIDATION_NOTICES = 30;
+    int MAX_VALIDATION_NOTICE_PER_TYPE_AND_SEVERITY = 16;
+    int MAX_EXPORT_PER_NOTICE_TYPE_AND_SEVERITY = 16;
+    NoticeContainer noticeContainer =
+        new NoticeContainer(
+            MAX_TOTAL_VALIDATION_NOTICES,
+            MAX_VALIDATION_NOTICE_PER_TYPE_AND_SEVERITY,
+            MAX_EXPORT_PER_NOTICE_TYPE_AND_SEVERITY);
+    for (int i = 0; i < MAX_TOTAL_VALIDATION_NOTICES + 5; i++) {
+      noticeContainer.addValidationNotice(n1);
+      noticeContainer.addValidationNotice(n2);
+    }
+    assertThat(noticeContainer.getValidationNotices().size())
+        .isEqualTo(MAX_TOTAL_VALIDATION_NOTICES);
+  }
+
+  @Test
+  public void exportNotices_shouldReflectTheTotalNumberOfNoticesAndSampleNotices() {
+    NoticeContainer container = new NoticeContainer(26, 8, 3);
+    for (int i = 0; i < 55; i++) {
+      container.addValidationNotice(new StringFieldNotice("1", SeverityLevel.ERROR));
+      container.addValidationNotice(new DoubleFieldNotice(2.0, SeverityLevel.ERROR));
+      container.addValidationNotice(new StringFieldNotice("3", SeverityLevel.INFO));
+    }
+    assertThat(new Gson().toJson(container.exportValidationNotices()))
+        .isEqualTo(
+            "{\"notices\":[{\"code\":\"double_field\",\"severity\":\"ERROR\","
+                + "\"totalNotices\":55,\"sampleNotices\":[{\"doubleField\":2.0},{\"doubleField"
+                + "\":2.0},{\"doubleField\":2.0}]},{\"code\":\"string_field\",\"severity\":\"INFO"
+                + "\",\"totalNotices\":55,\"sampleNotices\":[{\"someField\":\"3\"},{\"someField\":"
+                + "\"3\"},{\"someField\":\"3\"}]},{\"code\":\"string_field\",\"severity\":\"ERROR"
+                + "\",\"totalNotices\":55,\"sampleNotices\":[{\"someField\":\"1\"},{\"someField"
+                + "\":\"1\"},{\"someField\":\"1\"}]}]}");
   }
 }
