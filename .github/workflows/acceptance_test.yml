@@ -127,7 +127,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: reports_all
-          path: output/${{ github.sha }}
+          path: ${{ github.sha }}/output
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@master
         with:
