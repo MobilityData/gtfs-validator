@@ -18,9 +18,7 @@ package org.mobilitydata.gtfsvalidator.cli;
 
 import com.beust.jcommander.Parameter;
 
-/**
- * Command-line arguments for GTFS Validator CLI.
- */
+/** Command-line arguments for GTFS Validator CLI. */
 public class Arguments {
 
   @Parameter(
