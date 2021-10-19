@@ -118,7 +118,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: gtfs-validator-snapshot
-      - name: display matrix data
+      - name: Run validators on queued URLs
         run: |
           queue="${{ matrix.data }}"
           bash ./scripts/queue_runner.sh $queue
