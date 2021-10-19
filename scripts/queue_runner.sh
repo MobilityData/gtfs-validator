@@ -17,3 +17,4 @@ do
    java -Xmx8G -Xms8G -jar gtfs-validator*MASTER_cli.jar --url $URL --output_base ${{ github.sha }}/output/$path_name --validation_report_name reference.json --system_errors_report_name reference_errors.json &
    wait
 done
+
