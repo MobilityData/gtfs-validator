@@ -139,6 +139,6 @@ jobs:
         if: always()
         uses: google-github-actions/upload-cloud-storage@main
         with:
-          path: output/${{ github.sha }}
+          path: ${{ github.sha }}/output
           destination: gtfs-validator-reports
 
