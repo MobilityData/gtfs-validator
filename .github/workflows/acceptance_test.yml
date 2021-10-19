@@ -122,6 +122,8 @@ jobs:
         run: |
           queue="${{ matrix.data }}"
           bash ./scripts/queue_runner.sh $queue
+        env:
+          OUTPUT_BASE: ${{ github.sha }}
       - name: Persist reports
         if: always()
         uses: actions/upload-artifact@v2
