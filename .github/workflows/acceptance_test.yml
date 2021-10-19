@@ -127,7 +127,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: reports_all
-          path: output
+          path: output/${{ github.sha }}
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@master
         with:
@@ -139,5 +139,5 @@ jobs:
         if: always()
         uses: google-github-actions/upload-cloud-storage@main
         with:
-          path: output/
-          destination: bucket-name
+          path: output/${{ github.sha }}
+          destination: gtfs-validator-reports
