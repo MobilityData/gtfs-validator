@@ -97,9 +97,25 @@ jobs:
       - name: Set URL matrix
         id: set-matrix
         run: |
-          DATASETS=$(curl https://gtfs-validator2.free.beeceptor.com/test)
+          pwd
+          ls
+          python3 scripts/mobility-database-harvester/harvest_lastest_versions.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
+          pwd
+          ls
+          DATASETS=$(jq .root scripts/mobility-database-harvester/datasets_metadata/latest_versions.json -cs)
           echo $DATASETS
           echo "::set-output name=matrix::$DATASETS"
+        env:
+          TYPE: ${{ secrets.TYPE }}
+          PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          PRIVATE_KEY_ID: ${{ secrets.PRIVATE_KEY_ID }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          CLIENT_EMAIL: ${{ secrets.CLIENT_EMAIL }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          AUTH_URI: ${{ secrets.AUTH_URI }}
+          TOKEN_URI: ${{ secrets.TOKEN_URI }}
+          AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}
+          CLIENT_X509_CERT_URL: ${{ secrets.CLIENT_X509_CERT_URL }}
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   get-reports:
