@@ -11,13 +11,14 @@
 # limitations under the License.
 
 import argparse
-import math
 
 import dateutil.parser as dp
+import numpy as np
 import json
 import requests
 import os
 from os import path
+from tqdm import tqdm
 
 from google.cloud import storage
 
@@ -162,45 +163,34 @@ def harvest_latest_versions(archives_ids):
     client = storage.Client.from_service_account_info(
         info=json.loads(get_credentials())
     )
-    latest_versions_data = [{DATA: []}]
-    latest_version_data_string = ""
-    i = 0
-    print(f"Harvesting {len(archives_ids)} latest versions.")
-    item_count_per_sublist = math.ceil(len(archives_ids) / MAX_JOB_NUMBER)
-    for archives_id in archives_ids:
-        print(
-            f"{math.ceil(100*(archives_ids.index(archives_id)+1)/len(archives_ids))}% completed"
-        )
-        bucket_id = client.lookup_bucket(
-            LATEST_BUCKET_PATH.format(source_archives_id=archives_id)
-        )
-        if bucket_id is not None:
-            bucket = client.get_bucket(
-                LATEST_BUCKET_PATH.format(source_archives_id=archives_id)
+    latest_versions_data = []
+
+    jobs = np.array_split(archives_ids, MAX_JOB_NUMBER)
+    jobs = [list(job_archives_ids) for job_archives_ids in jobs]
+
+    for job_archives_ids in tqdm(jobs):
+        latest_version_data_string = ""
+        while len(job_archives_ids) > 0:
+            archive_id = job_archives_ids.pop()
+            bucket_id = client.lookup_bucket(
+                LATEST_BUCKET_PATH.format(source_archives_id=archive_id)
             )
-            blobs = client.list_blobs(bucket.name)
-            for blob in blobs:
-                archives_url = LATEST_URL.format(
-                    source_archives_id=archives_id, blob_name=blob.name
+            if bucket_id is not None:
+                bucket = client.get_bucket(
+                    LATEST_BUCKET_PATH.format(source_archives_id=archive_id)
                 )
-                dataset_information = {ID: archives_id, URL_KEY: archives_url}
-                if len(latest_versions_data[i][DATA]) < item_count_per_sublist:
-                    latest_versions_data[i][DATA].append(dataset_information)
+                blobs = client.list_blobs(bucket.name)
+                for blob in blobs:
+                    archive_url = LATEST_URL.format(
+                        source_archives_id=archive_id, blob_name=blob.name
+                    )
+                    dataset_information = {ID: archive_id, URL_KEY: archive_url}
                     latest_version_data_string = (
                         latest_version_data_string
                         + json.dumps(dataset_information, separators=(",", ":"))
                     )
-                else:
-                    latest_versions_data[i] = latest_version_data_string
-                    latest_versions_data[i] = {
-                        DATA: latest_versions_data[i].replace("}{", "} {")
-                    }
-                    latest_versions_data.append({DATA: []})
-                    i = i + 1
-                    latest_versions_data[i][DATA].append(dataset_information)
-                    latest_version_data_string = ""
-    latest_versions_data[i] = latest_version_data_string
-    latest_versions_data[i] = {DATA: latest_versions_data[i].replace("}{", "} {")}
+        job_data = {DATA: latest_version_data_string.replace("}{", "} {")}
+        latest_versions_data.append(job_data)
     return {ROOT: latest_versions_data}
 
 
