@@ -94,8 +94,9 @@ jobs:
     needs: [ pack-master, pack-snapshot ]
     runs-on: ubuntu-latest
     steps:
-      - name: Set URL matrix
+      - name: Checkout repository code
         uses: actions/checkout@v1
+      - name: Set URL matrix
         id: set-matrix
         run: |
           pwd
