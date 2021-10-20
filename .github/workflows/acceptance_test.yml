@@ -95,6 +95,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set URL matrix
+        uses: actions/checkout@v1
         id: set-matrix
         run: |
           pwd
