@@ -106,6 +106,7 @@ jobs:
       - name: Set URL matrix
         id: set-matrix
         run: |
+          pip install -r scripts/mobility-database-harvester/requirements.txt
           python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
           DATASETS=$(jq .root scripts/mobility-database-harvester/datasets_metadata/latest_versions.json -cs)
           echo $DATASETS
