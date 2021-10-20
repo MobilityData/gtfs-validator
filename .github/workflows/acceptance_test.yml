@@ -114,7 +114,7 @@ jobs:
           cd scripts/mobility-database-harvester/datasets_metadata
           echo "\n"
           ls
-          DATASETS=$(jq . scripts/mobility-database-harvester/datasets_metadata/latest_versions.json -cs)
+          DATASETS=$(jq . datasets_metadata/latest_versions.json -cs)
           echo $DATASETS
           echo "::set-output name=matrix::$DATASETS"
         env:
