@@ -24,6 +24,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -42,11 +44,17 @@ public class ValidationReport {
           .serializeSpecialFloatingPointValues()
           .create();
   private final Set<NoticeSummary> notices;
+  private final Map<String, NoticeSummary> noticesMap;
   private final ImmutableSet<String> errorCodes;
 
   ValidationReport(Set<NoticeSummary> notices, ImmutableSet<String> errorCodes) {
     this.notices = notices;
     this.errorCodes = errorCodes;
+    Map<String, NoticeSummary> noticesMap = new HashMap<>();
+    for (NoticeSummary noticeSummary : notices) {
+      noticesMap.put(noticeSummary.getCode(), noticeSummary);
+    }
+    this.noticesMap = noticesMap;
   }
 
   /**
@@ -80,6 +88,14 @@ public class ValidationReport {
    */
   public Set<NoticeSummary> getNotices() {
     return notices;
+  }
+
+  public NoticeSummary getNoticeByCode(String noticeCode) {
+    return noticesMap.get(noticeCode);
+  }
+
+  public Map<String, NoticeSummary> getNoticesMap() {
+    return noticesMap;
   }
 
   /**
@@ -129,7 +145,36 @@ public class ValidationReport {
    * as parameter.
    */
   public int getNewErrorCount(ValidationReport other) {
-    return Sets.difference(other.getErrorCodes(), getErrorCodes()).size();
+    return getNewErrorsListing(other).size();
+  }
+
+  /**
+   * Returns the listing of new error codes introduced by the other {@code ValidationReport} passed
+   * as parameter, e.g. if this {@code ValidationReport} has the following error codes:
+   *
+   * <ul>
+   *   <li>invalid_phone_number;
+   *   <li>number_out_of_range;
+   * </ul>
+   * <p>
+   * and the other {@code ValidationReport} has the following error codes:
+   *
+   * <ul>
+   *   <li>invalid_phone_number;
+   *   <li>number_out_of_range;
+   *   <li>invalid_email_address;
+   *   <li>invalid_url;
+   * </ul>
+   *
+   * <p>then this returns a {@code Set} that contains the two new errors codes (invalid_email_address,
+   * invalid_url) not present in this {@code ValidationReport}
+   *
+   * @param other the other {@code ValidationReport}
+   * @return the listing of new error codes introduced by the other {@code ValidationReport} passed
+   * as parameter.
+   */
+  public Set<String> getNewErrorsListing(ValidationReport other) {
+    return Sets.difference(other.getErrorCodes(), getErrorCodes());
   }
 
   /**

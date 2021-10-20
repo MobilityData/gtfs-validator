@@ -28,8 +28,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import org.mobilitydata.gtfsvalidator.outputcomparator.io.NoticeStat;
 import org.mobilitydata.gtfsvalidator.outputcomparator.io.ValidationReport;
 
 public class Main {
@@ -58,34 +61,39 @@ public class Main {
           "Specified directory is empty, cannot generate acceptance tests report.");
       return;
     }
-    ImmutableMap.Builder<String, Integer> mapBuilder = new Builder<>();
     int badDatasetCount = 0;
 
     List<File> reportDirs = reportDirectory.stream().filter(File::isDirectory)
         .collect(Collectors.toList());
 
     int totalDatasetCount = reportDirs.size();
+    Map<String, NoticeStat> acceptanceTestReportMap = new HashMap<>();
 
     try {
       for (File file : reportDirs) {
+        String datasetId = file.getName();
         int newErrorCount = 0;
         ValidationReport referenceReport =
             ValidationReport.fromPath(
                 file.toPath().resolve(args.getReferenceValidationReportName()));
         ValidationReport latestReport =
             ValidationReport.fromPath(file.toPath().resolve(args.getLatestValidationReportName()));
-
         if (referenceReport.hasSameErrorCodes(latestReport)) {
-          mapBuilder.put(file.getName(), newErrorCount);
           continue;
         }
+        for (String errorCode : referenceReport.getNewErrorsListing(latestReport)) {
+          NoticeStat noticeStat = acceptanceTestReportMap.getOrDefault(errorCode, new NoticeStat());
+          acceptanceTestReportMap.putIfAbsent(errorCode, noticeStat);
+          int datasetNoticeCount = latestReport.getNoticeByCode(errorCode).getCount();
+          noticeStat.update(datasetId, datasetNoticeCount);
+        }
+
         newErrorCount = referenceReport.getNewErrorCount(latestReport);
-        mapBuilder.put(file.getName(), newErrorCount);
         if (newErrorCount >= args.getNewErrorThreshold()) {
           ++badDatasetCount;
         }
       }
-      exportAcceptanceReport(mapBuilder.build(), args.getReportDirectory());
+      exportAcceptanceReport(acceptanceTestReportMap, args.getReportDirectory());
       checkRuleValidity(badDatasetCount, totalDatasetCount,
           args.getPercentInvalidDatasetsThreshold());
     } catch (IOException e) {
@@ -95,14 +103,14 @@ public class Main {
   }
 
   /**
-   * Exports the acceptance test report (map of String, Object) as json.
+   * Exports the acceptance test report (map of {@code String}, {@code NoticeStat}) as json.
    *
    * @param acceptanceReportData acceptance report content.
-   * @param outputBase           base path to output.
+   * @param outputBase base path to output.
    * @throws IOException if an I/O error occurs writing to or creating the file.
    */
   private static void exportAcceptanceReport(
-      ImmutableMap<String, Integer> acceptanceReportData, String outputBase) throws IOException {
+      Map<String, NoticeStat> acceptanceReportData, String outputBase) throws IOException {
     Gson gson = new GsonBuilder().serializeNulls().create();
     Files.write(
         Paths.get(outputBase, ACCEPTANCE_REPORT_JSON),
