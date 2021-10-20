@@ -6,7 +6,7 @@ on:
     paths-ignore:
       - '**.md'
 jobs:
-  validate_gradle_wrapper:
+  validate-gradle-wrapper:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -108,7 +108,7 @@ jobs:
         run: |
           pip install -r scripts/mobility-database-harvester/requirements.txt
           python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
-          DATASETS=$(jq .root scripts/mobility-database-harvester/datasets_metadata/latest_versions.json -cs)
+          DATASETS=$(jq . scripts/mobility-database-harvester/datasets_metadata/latest_versions.json -cs)
           echo $DATASETS
           echo "::set-output name=matrix::$DATASETS"
         env:
