@@ -98,7 +98,6 @@ jobs:
           name: gtfs-validator-master
           path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
   fetch-urls:
-    needs: [ pack-master, pack-snapshot ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository code
@@ -110,6 +109,11 @@ jobs:
         id: set-matrix
         run: |
           python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
+          pwd
+          ls
+          cd scripts/mobility-database-harvester/datasets_metadata
+          echo "\n"
+          ls
           DATASETS=$(jq . scripts/mobility-database-harvester/datasets_metadata/latest_versions.json -cs)
           echo $DATASETS
           echo "::set-output name=matrix::$DATASETS"
