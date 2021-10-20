@@ -2,7 +2,7 @@ name: Rule acceptance tests
 
 on:
   push:
-    branches: [ master, ci/use-github-matrix ]
+    branches: [ master ]
     paths-ignore:
       - '**.md'
 jobs:
