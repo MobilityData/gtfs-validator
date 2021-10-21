@@ -49,6 +49,12 @@ public class Arguments {
       required = true)
   private double percentInvalidDatasetsThreshold;
 
+  @Parameter(
+      names = {"-o", "--output_base"},
+      description = "Base directory to store the outputs",
+      required = true)
+  private String outputBase;
+
   public String getReportDirectory() {
     return reportDirectory;
   }
@@ -67,5 +73,9 @@ public class Arguments {
 
   public double getPercentInvalidDatasetsThreshold() {
     return percentInvalidDatasetsThreshold;
+  }
+
+  public String getOutputBase() {
+    return outputBase;
   }
 }
