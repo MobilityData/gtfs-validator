@@ -1,10 +1,10 @@
 # Rule acceptance tests 
 
 ## Goal
-Execute the validator against all datasets and verify that a new rule implementation does not make "a lot" of GTFS datasets suddenly invalid. 
-The source of truth is defined as the last release of the validator (`v2.0` as of now). 
+Execute the validator against all datasets (latest version hosted in the MobilityDatabase) and quantify the effect of a code change on all of them.  
+The source of truth is defined as the latest stable version of the validator (the on available on [the master branch of this repository](https://github.com/MobilityData/gtfs-validator/tree/master)). 
 
-For the latest version of all GTFS datasets from the MobilityArchives, the validation report from both the snapshot and the source of truth are compared: a new rule implementation is defined as valid if the percentage of newly invalid datasets does not exceed N/100 (**N to be defined**).
+For the latest version of all GTFS datasets from the MobilityArchives, the validation report from both the snapshot and the source of truth are compared. An acceptance test report is generated: it quantifies for each agency/dataset the number of new errors (as defined [here](https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#definitions)) in introduced.
    
 ## Process description
 
@@ -18,18 +18,80 @@ This workflow:
 1. defines a matrix of urls (fetched from the Mobility archives) that will be used in further validation process; 
 
 On each of these urls:
-1. the latest release of the validator is executed and the validation report is output in JSON (`report.json`);
-1. the snapshot version of the validator is executed and the validation report stored (as `latest.json`).
+1. the latest stable version of the validator is executed and the validation report is output as JSON (under `reference.json`);
+1. the snapshot version of the validator is executed and the validation report stored (as `report.json`).
 
-GitHub uses the defined matrix to execute these two steps in parallel for each url in the matrix. 
-At the end of execution of the two aforementioned steps for all urls in the matrix, all validation reports are gathered in a single folder (`reports_all`) and compared - the percentage of newly invalid datasets is output to the console.
-The final acceptance test report is saved by the workflow artifact as `acceptance_report.json`. This file keeps the count of new error types introduced by the snapshot version for each agency.
+At the end of execution of the two aforementioned steps for all urls in the matrix, all validation reports are gathered in a single folder (`output`) and compared - the percentage of newly invalid datasets is output to the console.
+The final acceptance test report is saved by the workflow artifact as `acceptance_report.json`. This file keeps the count of new error types introduced by the snapshot version for each agency/dataset.
 
 Sample example of said acceptance report:
 ```json
 {
-  "transperth": 1,
-  "octa": 0,
-  "thb": 0
+  "newNotices": [
+    {
+      "first_notice_code": {
+        "affectedDatasetsCount": 2,
+        "affectedDatasets": [
+          "dataset-id-1",
+          "dataset-id-2"
+        ],
+        "countPerDataset": [
+          {
+            "dataset-id-1": 4
+          },
+          {
+            "dataset-id-2": 6
+          }
+        ]
+      }
+    },
+    {
+      "fourth_notice_code": {
+        "affectedDatasetsCount": 1,
+        "affectedDatasets": [
+          "dataset-id-5"
+        ],
+        "countPerDataset": [
+          {
+            "dataset-id-5": 5
+          }
+        ]
+      }
+    },
+    {
+      "second_notice_code": {
+        "affectedDatasetsCount": 1,
+        "affectedDatasets": [
+          "dataset-id-2"
+        ],
+        "countPerDataset": [
+          {
+            "dataset-id-2": 40
+          }
+        ]
+      }
+    },
+    {
+      "third_notice_code": {
+        "affectedDatasetsCount": 3,
+        "affectedDatasets": [
+          "dataset-id-1",
+          "dataset-id-3",
+          "dataset-id-5"
+        ],
+        "countPerDataset": [
+          {
+            "dataset-id-1": 40
+          },
+          {
+            "dataset-id-3": 15
+          },
+          {
+            "dataset-id-5": 2
+          }
+        ]
+      }
+    }
+  ]
 }
 ```
