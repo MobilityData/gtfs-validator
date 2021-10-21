@@ -94,10 +94,6 @@ public class ValidationReport {
     return noticesMap.get(noticeCode);
   }
 
-  public Map<String, NoticeSummary> getNoticesMap() {
-    return noticesMap;
-  }
-
   /**
    * Returns the immutable and ordered set of error codes contained in this {@code ValidationReport}
    *
