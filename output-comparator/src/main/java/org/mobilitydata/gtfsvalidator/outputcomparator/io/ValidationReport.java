@@ -62,7 +62,7 @@ public class ValidationReport {
    *
    * @param path the path to the json file
    * @return the {@code ValidationReport} that contains the {@code ValidationReport} related to the
-   * json file whose path was passed as parameter.
+   *     json file whose path was passed as parameter.
    */
   public static ValidationReport fromPath(Path path) throws IOException {
     try (BufferedReader reader = Files.newBufferedReader(path)) {
@@ -75,7 +75,7 @@ public class ValidationReport {
    *
    * @param jsonString the json string
    * @return the {@code ValidationReport} that contains the {@code ValidationReport} related to the
-   * json string passed as parameter.
+   *     json string passed as parameter.
    */
   public static ValidationReport fromJsonString(String jsonString) {
     return GSON.fromJson(jsonString, ValidationReport.class);
@@ -99,8 +99,7 @@ public class ValidationReport {
   }
 
   /**
-   * Returns the immutable and ordered set of error codes contained in this {@code
-   * ValidationReport}
+   * Returns the immutable and ordered set of error codes contained in this {@code ValidationReport}
    *
    * @return the immutable and ordered set of error codes contained in this {@code ValidationReport}
    */
@@ -113,7 +112,7 @@ public class ValidationReport {
    *
    * @param otherValidationReport the other {@code ValidationReport}.
    * @return true if the two {@code ValidationReport} contain the same set of error codes, false
-   * otherwise.
+   *     otherwise.
    */
   public boolean hasSameErrorCodes(ValidationReport otherValidationReport) {
     return getErrorCodes().equals(otherValidationReport.getErrorCodes());
@@ -127,8 +126,8 @@ public class ValidationReport {
    *   <li>invalid_phone_number;
    *   <li>number_out_of_range;
    * </ul>
-   * <p>
-   * and the other {@code ValidationReport} has the following error codes:
+   *
+   * <p>and the other {@code ValidationReport} has the following error codes:
    *
    * <ul>
    *   <li>invalid_phone_number;
@@ -142,7 +141,7 @@ public class ValidationReport {
    *
    * @param other the other {@code ValidationReport}
    * @return the number of new error codes introduced by the other {@code ValidationReport} passed
-   * as parameter.
+   *     as parameter.
    */
   public int getNewErrorCount(ValidationReport other) {
     return getNewErrorsListing(other).size();
@@ -156,8 +155,8 @@ public class ValidationReport {
    *   <li>invalid_phone_number;
    *   <li>number_out_of_range;
    * </ul>
-   * <p>
-   * and the other {@code ValidationReport} has the following error codes:
+   *
+   * <p>and the other {@code ValidationReport} has the following error codes:
    *
    * <ul>
    *   <li>invalid_phone_number;
@@ -166,12 +165,12 @@ public class ValidationReport {
    *   <li>invalid_url;
    * </ul>
    *
-   * <p>then this returns a {@code Set} that contains the two new errors codes (invalid_email_address,
-   * invalid_url) not present in this {@code ValidationReport}
+   * <p>then this returns a {@code Set} that contains the two new errors codes
+   * (invalid_email_address, invalid_url) not present in this {@code ValidationReport}
    *
    * @param other the other {@code ValidationReport}
    * @return the listing of new error codes introduced by the other {@code ValidationReport} passed
-   * as parameter.
+   *     as parameter.
    */
   public Set<String> getNewErrorsListing(ValidationReport other) {
     return Sets.difference(other.getErrorCodes(), getErrorCodes());
@@ -183,7 +182,7 @@ public class ValidationReport {
    *
    * @param other the other {@code ValidationReport}.
    * @return true if both validation reports are equal regardless of the order of the fields in the
-   * set of {@code NoticeSummary}.
+   *     set of {@code NoticeSummary}.
    */
   @Override
   public boolean equals(Object other) {
