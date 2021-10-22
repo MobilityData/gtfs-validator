@@ -117,6 +117,10 @@ public class NoticeContainer {
     noticesCountPerTypeAndSeverity.put(notice.getMappingKey(), count + 1);
   }
 
+  public Map<String, Integer> getNoticesCountPerTypeAndSeverity() {
+    return noticesCountPerTypeAndSeverity;
+  }
+
   /**
    * Adds all validation notices and system errors from another container.
    *
@@ -129,6 +133,9 @@ public class NoticeContainer {
     validationNotices.addAll(otherContainer.validationNotices);
     systemErrors.addAll(otherContainer.systemErrors);
     hasValidationErrors |= otherContainer.hasValidationErrors;
+    for (Notice notice : otherContainer.getValidationNotices()) {
+      updateNoticeCount(notice);
+    }
   }
 
   /** Tells if this container has any {@code ValidationNotice} that is an error. */
