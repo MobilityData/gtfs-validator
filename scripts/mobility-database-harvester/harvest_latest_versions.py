@@ -100,7 +100,7 @@ def get_credentials():
         AUTH_PROVIDER_X509_CERT_URL_KEY: os.getenv(MD_AUTH_PROVIDER_X509_CERT_URL).replace(
             "\\n", "\n"
         ),
-        CLIENT_X509_CERT_URL_KEY: os.getenv(CLIENT_X509_CERT_URL).replace("\\n", "\n"),
+        CLIENT_X509_CERT_URL_KEY: os.getenv(MD_CLIENT_X509_CERT_URL).replace("\\n", "\n"),
     }
     return str(credentials).replace("'", '"')
 
