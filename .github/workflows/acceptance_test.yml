@@ -1,20 +1,31 @@
 name: Rule acceptance tests
 
 on:
-  push:
-    branches: [ master, ci/use-github-matrix ]
+  pull_request:
+    branches: [ master ]
     paths-ignore:
       - '**.md'
+      - 'Dockerfile'
+      - '.gitignore'
+      - 'LICENSE'
+      - 'docker.yml'
+      - 'formatting.yml'
+      - 'test_pack_dock.yml'
+      - 'triage.yml'
+      - 'end_to_end.yml'
+      - 'end_to_end_big.yml'
+      - 'end_to_end_100.yml'
+      
 jobs:
   validate-gradle-wrapper:
     runs-on: ubuntu-latest
+    if: "contains(github.event.head_commit.message, 'acceptance test')"
     steps:
       - uses: actions/checkout@v2
       - uses: gradle/wrapper-validation-action@v1
   pack-snapshot:
     needs: [ validate-gradle-wrapper ]
     runs-on: ubuntu-latest
-    if: "contains(github.event.head_commit.message, 'acceptance test')"
     steps:
       - uses: actions/checkout@v1
       - name: Prepare version name
@@ -60,7 +71,6 @@ jobs:
   pack-master:
     needs: [ validate-gradle-wrapper ]
     runs-on: ubuntu-latest
-    if: "contains(github.event.head_commit.message, 'acceptance test')"
     steps:
       - uses: actions/checkout@v1
         with:
@@ -103,6 +113,7 @@ jobs:
           path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
   fetch-urls:
     runs-on: ubuntu-latest
+    if: "contains(github.event.head_commit.message, 'acceptance test')"    
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v1
