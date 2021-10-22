@@ -15,7 +15,7 @@ on:
       - 'end_to_end.yml'
       - 'end_to_end_big.yml'
       - 'end_to_end_100.yml'
-      
+
 jobs:
   validate-gradle-wrapper:
     runs-on: ubuntu-latest
@@ -113,7 +113,7 @@ jobs:
           path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
   fetch-urls:
     runs-on: ubuntu-latest
-    if: "contains(github.event.head_commit.message, 'acceptance test')"    
+    if: "contains(github.event.head_commit.message, 'acceptance test')"
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v1
@@ -180,4 +180,3 @@ jobs:
         with:
           path: ${{ github.sha }}/output
           destination: gtfs-validator-reports
-
