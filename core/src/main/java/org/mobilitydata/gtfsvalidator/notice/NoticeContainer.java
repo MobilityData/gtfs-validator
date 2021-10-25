@@ -117,8 +117,9 @@ public class NoticeContainer {
     noticesCountPerTypeAndSeverity.put(notice.getMappingKey(), count + 1);
   }
 
-  public Map<String, Integer> getNoticesCountPerTypeAndSeverity() {
-    return noticesCountPerTypeAndSeverity;
+  @VisibleForTesting
+  Map<String, Integer> getNoticesCountPerTypeAndSeverity() {
+    return Collections.unmodifiableMap(noticesCountPerTypeAndSeverity);
   }
 
   /**
@@ -130,11 +131,12 @@ public class NoticeContainer {
    * @param otherContainer a container to take the notices from
    */
   public void addAll(NoticeContainer otherContainer) {
-    validationNotices.addAll(otherContainer.validationNotices);
-    systemErrors.addAll(otherContainer.systemErrors);
     hasValidationErrors |= otherContainer.hasValidationErrors;
-    for (Notice notice : otherContainer.getValidationNotices()) {
-      updateNoticeCount(notice);
+    for (ValidationNotice validationNotice : otherContainer.getValidationNotices()) {
+      addValidationNotice(validationNotice);
+    }
+    for (SystemError systemError : otherContainer.getSystemErrors()) {
+      addSystemError(systemError);
     }
   }
 
