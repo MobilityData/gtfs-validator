@@ -19,6 +19,8 @@ package org.mobilitydata.gtfsvalidator.notice;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.gson.Gson;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -96,8 +98,14 @@ public class NoticeContainerTest {
     c2.addSystemError(e2);
     c1.addAll(c2);
 
+    Map<String, Integer> noticeCount = new HashMap<>();
+    noticeCount.put(n1.getMappingKey(), 1);
+    noticeCount.put(n2.getMappingKey(), 1);
+    noticeCount.put(e1.getMappingKey(), 1);
+    noticeCount.put(e2.getMappingKey(), 1);
     assertThat(c1.getValidationNotices()).containsExactly(n1, n2);
     assertThat(c1.getSystemErrors()).containsExactly(e1, e2);
+    assertThat(c1.getNoticesCountPerTypeAndSeverity()).containsExactlyEntriesIn(noticeCount);
   }
 
   @Test
