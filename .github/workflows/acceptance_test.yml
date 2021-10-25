@@ -178,3 +178,4 @@ jobs:
         with:
           path: ${{ github.sha }}/output
           destination: gtfs-validator-reports
+
