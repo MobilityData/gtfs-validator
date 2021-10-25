@@ -21,7 +21,7 @@ concurrency:
 jobs:
   validate-gradle-wrapper:
     runs-on: ubuntu-latest
-    if: ${{ contains(github.event.head_commit.message, '[acceptance test skip]') }}
+    if: ${{ !contains(github.event.head_commit.message, '[acceptance test skip]') }}
     steps:
       - uses: actions/checkout@v2
       - uses: gradle/wrapper-validation-action@v1
@@ -33,6 +33,7 @@ jobs:
       - name: Prepare version name
         id: prep
         run: |
+          echo ${{ github.event.head_commit.message }}
           VERSION_TAG=edge
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             VERSION_TAG=${GITHUB_REF#refs/tags/}
@@ -111,7 +112,7 @@ jobs:
           path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
   fetch-urls:
     runs-on: ubuntu-latest
-    if: ${{ contains(github.event.head_commit.message, '[acceptance test skip]') }}
+    if: ${{ !contains(github.event.head_commit.message, '[acceptance test skip]') }}
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v1
@@ -178,3 +179,4 @@ jobs:
         with:
           path: ${{ github.sha }}/output
           destination: gtfs-validator-reports
+
