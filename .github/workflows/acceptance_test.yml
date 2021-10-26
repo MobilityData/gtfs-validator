@@ -27,7 +27,7 @@ jobs:
       - uses: gradle/wrapper-validation-action@v1
       - name: Display commit message
         run: |
-          echo ${{ github.event.head_commit.message }}
+          echo "${{toJSON(github.event)}}"
   pack-snapshot:
     needs: [ validate-gradle-wrapper ]
     runs-on: ubuntu-latest
