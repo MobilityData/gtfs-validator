@@ -219,7 +219,7 @@ jobs:
           name: reports_all
       - name: Generate acceptance report test
         run: |
-          java -jar output-comparator*.jar --report_directory ${{ github.sha }}/output --new_error_threshold 1 --reference_report_name reference.json --latest_report_name report.json --percent_invalid_datasets_thrshold 10 --output_base ${{ github.sha }}/acceptance-test-output
+          java -jar output-comparator*.jar --report_directory ${{ github.sha }}/output --new_error_threshold 1 --reference_report_name reference.json --latest_report_name report.json --percent_invalid_datasets_threshold 10 --output_base ${{ github.sha }}/acceptance-test-output
       - name: Persist acceptance test report
         uses: actions/upload-artifact@v2
         with:
@@ -235,5 +235,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Acceptance test have been run. Here are the results: ```json $REPORT```."
+              body: "Acceptance test have run. Here are the results: ```json $REPORT```."
             })
