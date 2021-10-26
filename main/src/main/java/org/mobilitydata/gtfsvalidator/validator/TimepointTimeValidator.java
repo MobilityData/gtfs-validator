@@ -32,6 +32,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTimepoint;
  * <ul>
  *   <li>{@link StopTimeTimepointWithoutTimesNotice} - a timepoint does not specifies arrival_time
  *       or departure_time
+ *   <li>{@link MissingTimepointValue} - value for {@code stop_times.timepoint} is missing
  * </ul>
  */
 @GtfsValidator
