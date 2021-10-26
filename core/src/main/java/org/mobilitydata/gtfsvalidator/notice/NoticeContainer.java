@@ -117,11 +117,6 @@ public class NoticeContainer {
     noticesCountPerTypeAndSeverity.put(notice.getMappingKey(), count + 1);
   }
 
-  @VisibleForTesting
-  Map<String, Integer> getNoticesCountPerTypeAndSeverity() {
-    return Collections.unmodifiableMap(noticesCountPerTypeAndSeverity);
-  }
-
   /**
    * Adds all validation notices and system errors from another container.
    *
