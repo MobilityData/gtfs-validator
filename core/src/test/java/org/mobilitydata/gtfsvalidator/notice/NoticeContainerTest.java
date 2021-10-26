@@ -98,13 +98,24 @@ public class NoticeContainerTest {
     c2.addSystemError(e2);
     c1.addAll(c2);
 
-    Map<String, Integer> noticeCount = new HashMap<>();
-    noticeCount.put(n1.getMappingKey(), 1);
-    noticeCount.put(n2.getMappingKey(), 1);
-    noticeCount.put(e1.getMappingKey(), 2);
     assertThat(c1.getValidationNotices()).containsExactly(n1, n2);
     assertThat(c1.getSystemErrors()).containsExactly(e1, e2);
-    assertThat(c1.getNoticesCountPerTypeAndSeverity()).containsExactlyEntriesIn(noticeCount);
+  }
+
+  @Test
+  public void exportValidationNoticesAfterAddAll_shouldIncludeAllValidationNotices() {
+    ValidationNotice n1 = new MissingRequiredFileNotice("stops.txt");
+    ValidationNotice n2 = new UnknownFileNotice("unknown.txt");
+    NoticeContainer c1 = new NoticeContainer();
+    c1.addValidationNotice(n1);
+    NoticeContainer c2 = new NoticeContainer();
+    c2.addValidationNotice(n2);
+    c1.addAll(c2);
+    assertThat(new Gson().toJson(c1.exportValidationNotices())).isEqualTo(
+        "{\"notices\":[{\"code\":\"missing_required_file\",\"severity\":\"ERROR\","
+            + "\"totalNotices\":1,\"sampleNotices\":[{\"filename\":\"stops.txt\"}]},{\"code\":"
+            + "\"unknown_file\",\"severity\":\"INFO\",\"totalNotices\":1,\"sampleNotices\":[{"
+            + "\"filename\":\"unknown.txt\"}]}]}");
   }
 
   @Test
