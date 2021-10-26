@@ -36,15 +36,9 @@ jobs:
         id: pr_get_commit_message
         run: echo ::set-output name=pr_commit_message::$(git log --format=%B -n 1 HEAD^2)
 
-    # Finally we want to make the commit message available to other jobs. This can be done with job-level outputs
-    # However as we do not know whether the commit message was set in Push or Pull Request event we need to do some
-    # bash magic to resolve the one or the other
-    #
     # For **Pull Request** events this will resolve to something like "$( [ -z "commit message pr" ] && echo "" || echo "commit message pr" )" which then resolves to just "commit message pr"
-    #
-    # For **Push** events this will resolve to something like "$( [ -z "" ] && echo "commit message push"  || echo "" )" which then resolves to just "commit message push"
     outputs:
-      commit_message: $( [ -z "${{ steps.pr_get_commit_message.outputs.pr_commit_message }}" ] && echo "${{ steps.push_get_commit_message.outputs.push_commit_message }}" || echo "${{ steps.pr_get_commit_message.outputs.pr_commit_message }}" )
+      commit_message: $( [ -z "${{ steps.pr_get_commit_message.outputs.pr_commit_message }}" ] || echo "${{ steps.pr_get_commit_message.outputs.pr_commit_message }}" )
   validate-gradle-wrapper:
     if: "!contains(needs.pre_ci.outputs.commit_message, '[acceptance test skip]')"
     needs: pre_ci
