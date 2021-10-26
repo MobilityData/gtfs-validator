@@ -38,6 +38,7 @@ jobs:
     outputs:
       commit-message: $ {{steps.get-commit-message.outputs.commitmsg }}
     steps:
+      - uses: actions/checkout@v1
       - name: Get Github context
         env:
           GITHUB_CONTEXT: ${{ toJSon(github) }}
