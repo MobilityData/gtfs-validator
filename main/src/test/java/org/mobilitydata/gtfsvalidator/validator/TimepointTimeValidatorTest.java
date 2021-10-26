@@ -123,4 +123,20 @@ public class TimepointTimeValidatorTest {
                     .build()))
         .isEmpty();
   }
+
+  @Test
+  public void emptyTimepoint_noTime_ShouldNotGenerateNotice() {
+    assertThat(
+            generateNotices(
+                new GtfsStopTime.Builder()
+                    .setCsvRowNumber(1)
+                    .setTripId("first trip id")
+                    .setArrivalTime(null)
+                    .setDepartureTime(null)
+                    .setStopId("stop id")
+                    .setStopSequence(2)
+                    .setTimepoint((Integer) null)
+                    .build()))
+        .isEmpty();
+  }
 }

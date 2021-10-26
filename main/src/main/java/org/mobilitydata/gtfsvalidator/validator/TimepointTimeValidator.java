@@ -61,7 +61,7 @@ public class TimepointTimeValidator extends SingleEntityValidator<GtfsStopTime> 
   }
 
   private boolean isTimepoint(GtfsStopTime stopTime) {
-    return stopTime.timepoint().equals(GtfsStopTimeTimepoint.EXACT);
+    return stopTime.hasTimepoint() && stopTime.timepoint().equals(GtfsStopTimeTimepoint.EXACT);
   }
 
   /**
