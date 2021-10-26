@@ -25,6 +25,7 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
+import org.mobilitydata.gtfsvalidator.validator.TimepointTimeValidator.MissingTimepointValue;
 import org.mobilitydata.gtfsvalidator.validator.TimepointTimeValidator.StopTimeTimepointWithoutTimesNotice;
 
 public class TimepointTimeValidatorTest {
@@ -125,18 +126,32 @@ public class TimepointTimeValidatorTest {
   }
 
   @Test
-  public void emptyTimepoint_noTime_ShouldNotGenerateNotice() {
-    assertThat(
-            generateNotices(
-                new GtfsStopTime.Builder()
-                    .setCsvRowNumber(1)
-                    .setTripId("first trip id")
-                    .setArrivalTime(null)
-                    .setDepartureTime(null)
-                    .setStopId("stop id")
-                    .setStopSequence(2)
-                    .setTimepoint((Integer) null)
-                    .build()))
-        .isEmpty();
+  public void emptyTimepoint_noTime_shouldGenerateNotice() {
+    GtfsStopTime stopTime =
+        new GtfsStopTime.Builder()
+            .setCsvRowNumber(1)
+            .setTripId("first trip id")
+            .setArrivalTime(null)
+            .setDepartureTime(null)
+            .setStopId("stop id")
+            .setStopSequence(2)
+            .setTimepoint((Integer) null)
+            .build();
+    assertThat(generateNotices(stopTime)).containsExactly(new MissingTimepointValue(stopTime));
+  }
+
+  @Test
+  public void emptyTimepoint_withTime_shouldGenerateNotice() {
+    GtfsStopTime stopTime =
+        new GtfsStopTime.Builder()
+            .setCsvRowNumber(1)
+            .setTripId("first trip id")
+            .setArrivalTime(null)
+            .setDepartureTime(null)
+            .setStopId("stop id")
+            .setStopSequence(2)
+            .setTimepoint((Integer) null)
+            .build();
+    assertThat(generateNotices(stopTime)).containsExactly(new MissingTimepointValue(stopTime));
   }
 }

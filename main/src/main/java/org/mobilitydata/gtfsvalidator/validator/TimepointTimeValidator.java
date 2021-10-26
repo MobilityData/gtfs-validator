@@ -39,6 +39,9 @@ public class TimepointTimeValidator extends SingleEntityValidator<GtfsStopTime> 
 
   @Override
   public void validate(GtfsStopTime stopTime, NoticeContainer noticeContainer) {
+    if (!stopTime.hasTimepoint()) {
+      noticeContainer.addValidationNotice(new MissingTimepointValue(stopTime));
+    }
     if (!isTimepoint(stopTime)) {
       return;
     }
@@ -67,7 +70,7 @@ public class TimepointTimeValidator extends SingleEntityValidator<GtfsStopTime> 
   /**
    * Timepoint without time
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>Severity: {@code SeverityLevel.WARNING} - to be upgraded as {@code SeverityLevel.ERROR}
    */
   static class StopTimeTimepointWithoutTimesNotice extends ValidationNotice {
     private final long csvRowNumber;
@@ -82,6 +85,24 @@ public class TimepointTimeValidator extends SingleEntityValidator<GtfsStopTime> 
       this.tripId = tripId;
       this.stopSequence = stopSequence;
       this.specifiedField = specifiedField;
+    }
+  }
+
+  /**
+   * {@code stop_times.timepoint} value is missing
+   *
+   * <p>Severity: {@code SeverityLevel.WARNING}
+   */
+  static class MissingTimepointValue extends ValidationNotice {
+    private final long csvRowNumber;
+    private final String tripId;
+    private final long stopSequence;
+
+    MissingTimepointValue(GtfsStopTime stopTime) {
+      super(SeverityLevel.WARNING);
+      this.csvRowNumber = stopTime.csvRowNumber();
+      this.tripId = stopTime.tripId();
+      this.stopSequence = stopTime.stopSequence();
     }
   }
 }
