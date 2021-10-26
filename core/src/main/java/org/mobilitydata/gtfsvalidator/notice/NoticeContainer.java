@@ -121,8 +121,10 @@ public class NoticeContainer {
    * Adds all validation notices and system errors from another container.
    *
    * <p>This is useful for multithreaded validation: each thread has its own notice container which
-   * is merged into the global container when the thread finishes.
-   * Please note that the final {@code NoticeContainer} may contain more than the maximum amount of {@code ValidationNotice} allowed by {@code NoticeContainer#MAX_TOTAL_VALIDATION_NOTICES} and {@code NoticeContainer#MAX_VALIDATION_NOTICES_TYPE_AND_SEVERITY}
+   * is merged into the global container when the thread finishes. Please note that the final {@code
+   * NoticeContainer} may contain more than the maximum amount of {@code ValidationNotice} allowed
+   * by {@code NoticeContainer#MAX_TOTAL_VALIDATION_NOTICES} and {@code
+   * NoticeContainer#MAX_VALIDATION_NOTICES_TYPE_AND_SEVERITY}
    *
    * @param otherContainer a container to take the notices from
    */
@@ -132,7 +134,9 @@ public class NoticeContainer {
     hasValidationErrors |= otherContainer.hasValidationErrors;
     for (String noticeMappingKey : otherContainer.noticesCountPerTypeAndSeverity.keySet()) {
       int count = noticesCountPerTypeAndSeverity.getOrDefault(noticeMappingKey, 0);
-      noticesCountPerTypeAndSeverity.put(noticeMappingKey, count + otherContainer.noticesCountPerTypeAndSeverity.get(noticeMappingKey));
+      noticesCountPerTypeAndSeverity.put(
+          noticeMappingKey,
+          count + otherContainer.noticesCountPerTypeAndSeverity.get(noticeMappingKey));
     }
   }
 

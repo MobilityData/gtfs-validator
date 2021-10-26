@@ -19,8 +19,6 @@ package org.mobilitydata.gtfsvalidator.notice;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.gson.Gson;
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -111,11 +109,12 @@ public class NoticeContainerTest {
     NoticeContainer c2 = new NoticeContainer();
     c2.addValidationNotice(n2);
     c1.addAll(c2);
-    assertThat(new Gson().toJson(c1.exportValidationNotices())).isEqualTo(
-        "{\"notices\":[{\"code\":\"missing_required_file\",\"severity\":\"ERROR\","
-            + "\"totalNotices\":1,\"sampleNotices\":[{\"filename\":\"stops.txt\"}]},{\"code\":"
-            + "\"unknown_file\",\"severity\":\"INFO\",\"totalNotices\":1,\"sampleNotices\":[{"
-            + "\"filename\":\"unknown.txt\"}]}]}");
+    assertThat(new Gson().toJson(c1.exportValidationNotices()))
+        .isEqualTo(
+            "{\"notices\":[{\"code\":\"missing_required_file\",\"severity\":\"ERROR\","
+                + "\"totalNotices\":1,\"sampleNotices\":[{\"filename\":\"stops.txt\"}]},{\"code\":"
+                + "\"unknown_file\",\"severity\":\"INFO\",\"totalNotices\":1,\"sampleNotices\":[{"
+                + "\"filename\":\"unknown.txt\"}]}]}");
   }
 
   @Test
