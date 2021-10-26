@@ -15,6 +15,20 @@ on:
       - 'end_to_end.yml'
       - 'end_to_end_big.yml'
       - 'end_to_end_100.yml'
+  push:
+    branches: [ master, use-github-matrix ]
+    paths-ignore:
+      - '**.md'
+      - 'Dockerfile'
+      - '.gitignore'
+      - 'LICENSE'
+      - 'docker.yml'
+      - 'formatting.yml'
+      - 'test_pack_dock.yml'
+      - 'triage.yml'
+      - 'end_to_end.yml'
+      - 'end_to_end_big.yml'
+      - 'end_to_end_100.yml'
 concurrency:
   group: ${{ github.head_ref }}
   cancel-in-progress: true
@@ -25,9 +39,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: gradle/wrapper-validation-action@v1
-      - name: Display commit message
-        run: |
-          echo "${{toJSON(github.event)}}"
   pack-snapshot:
     needs: [ validate-gradle-wrapper ]
     runs-on: ubuntu-latest
