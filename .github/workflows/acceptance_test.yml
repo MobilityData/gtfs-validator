@@ -33,9 +33,21 @@ concurrency:
   group: ${{ github.head_ref }}
   cancel-in-progress: true
 jobs:
+  check-commit-message:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Github context
+        env:
+          GITHUB_CONTEXT: ${{ toJSon(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Get commit message
+        run: |
+          echo ::set-env name=commitmsg::$(git log --format=%B -n 1 ${{ github.event.after }})
+      - name: Show commit message
+        run : echo $commitmsg
   validate-gradle-wrapper:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '[acceptance test skip]') }}
+    if: !contains(env.commitmessage, '[acceptance test skip]')
     steps:
       - uses: actions/checkout@v2
       - uses: gradle/wrapper-validation-action@v1
@@ -126,7 +138,6 @@ jobs:
           path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
   fetch-urls:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '[acceptance test skip]') }}
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v1
