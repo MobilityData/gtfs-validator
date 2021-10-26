@@ -35,19 +35,22 @@ concurrency:
 jobs:
   check-commit-message:
     runs-on: ubuntu-latest
+    outputs:
+      commit-message: $ {{steps.get-commit-message.outputs.commitmsg }}
     steps:
       - name: Get Github context
         env:
           GITHUB_CONTEXT: ${{ toJSon(github) }}
         run: echo "$GITHUB_CONTEXT"
       - name: Get commit message
+        id: get-commit-message
         run: |
-          echo ::set-env name=commitmsg::$(git log --format=%B -n 1 ${{ github.event.after }})
+          echo ::set-output name=commitmsg::$(git log --format=%B -n 1 ${{ github.event.after }})
       - name: Show commit message
         run : echo $commitmsg
   validate-gradle-wrapper:
     runs-on: ubuntu-latest
-    if: !contains(env.commitmessage, '[acceptance test skip]')
+    if: ${{ !contains(needs.check-commit-message.outputs.commit-message, '[acceptance test skip]') }}
     steps:
       - uses: actions/checkout@v2
       - uses: gradle/wrapper-validation-action@v1
