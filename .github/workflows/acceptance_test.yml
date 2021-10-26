@@ -230,7 +230,7 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            REPORT=$(jq . ${{ github.sha }}/acceptance-test-output/acceptance_report.json -c)
+            REPORT=$(jq . ${{ github.sha }}/acceptance-test-output/acceptance_report.json)
             github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
