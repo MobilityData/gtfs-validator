@@ -87,9 +87,6 @@ jobs:
         with:
           name: gtfs-validator-snapshot
           path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
-      - name: debug
-        run: |
-          ls output-comparator/build/libs
       - name: Persist comparator snapshot jar
         uses: actions/upload-artifact@v2
         with:
