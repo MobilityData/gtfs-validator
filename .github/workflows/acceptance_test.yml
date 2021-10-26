@@ -39,19 +39,26 @@ jobs:
       commit-message: $ {{steps.get-commit-message.outputs.commitmsg }}
     steps:
       - uses: actions/checkout@v1
-      - name: Get Github context
+      - name: Should acceptance test be skipped?
         env:
-          GITHUB_CONTEXT: ${{ toJSon(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: Get commit message
-        id: get-commit-message
+          COMMIT_FILTER: "[acceptance test skip]"
         run: |
-          echo ::set-output name=commitmsg::$(git log --format=%B -n 1 ${{ github.event.after }})
-      - name: Show commit message
-        run : echo $commitmsg
+          # Get last commit message
+          readonly local last_commit_log=$(git log -1 --pretty=format:"%s")
+          echo "last commit log: $last_commit_log"
+
+          readonly local filter_count=$(echo "$last_commit_log" | grep -c "$COMMIT_FILTER" )
+          echo "number of occurence of '$COMMIT_FILTER' in '$last_commit_log': $filter_count"
+
+          if [[ "$filter_count" -eq 0 ]]; then
+            echo "all good, continue"
+          else
+            echo "the last commit log \"$last_commit_log\" contains \"$COMMIT_FILTER\", stopping"
+            exit 78
+          fi
   validate-gradle-wrapper:
+    needs: [ check-commit-message ]
     runs-on: ubuntu-latest
-    if: ${{ !contains(needs.check-commit-message.outputs.commit-message, '[acceptance test skip]') }}
     steps:
       - uses: actions/checkout@v2
       - uses: gradle/wrapper-validation-action@v1
@@ -141,6 +148,7 @@ jobs:
           name: gtfs-validator-master
           path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
   fetch-urls:
+    needs: [ check-commit-message ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository code
