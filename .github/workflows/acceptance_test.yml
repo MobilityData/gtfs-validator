@@ -34,16 +34,15 @@ concurrency:
   cancel-in-progress: true
 jobs:
   check-commit-message:
+    env:
+      commitmsg: ${{ github.event.head_commit.message }}
     runs-on: ubuntu-latest
-    outputs:
-      commit-message: $ {{steps.get-commit-message.outputs.commitmsg }}
     steps:
-      - uses: actions/checkout@v1
-      - name: Should acceptance test be skipped?
-        env:
-          COMMIT_FILTER: "[acceptance test skip]"
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: get commit message
         run: |
-          echo "${{toJson(github.event)}}"
+          echo Commit MSG = ${{ env.commitmsg }}
   validate-gradle-wrapper:
     needs: [ check-commit-message ]
     runs-on: ubuntu-latest
