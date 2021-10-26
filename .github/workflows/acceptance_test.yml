@@ -54,7 +54,6 @@ jobs:
       - name: Prepare version name
         id: prep
         run: |
-          echo ${{ github.event.head_commit.message }}
           VERSION_TAG=edge
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             VERSION_TAG=${GITHUB_REF#refs/tags/}
@@ -88,6 +87,9 @@ jobs:
         with:
           name: gtfs-validator-snapshot
           path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
+      - name: debug
+        run: |
+          ls -a
       - name: Persist comparator snapshot jar
         uses: actions/upload-artifact@v2
         with:
