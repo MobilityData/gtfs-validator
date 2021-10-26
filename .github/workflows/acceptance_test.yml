@@ -160,7 +160,7 @@ jobs:
           name: gtfs-validator-master
           path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
   fetch-urls:
-    needs: [ check-commit-message ]
+    needs: [ pre_ci ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository code
