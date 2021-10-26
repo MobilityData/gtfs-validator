@@ -15,20 +15,6 @@ on:
       - 'end_to_end.yml'
       - 'end_to_end_big.yml'
       - 'end_to_end_100.yml'
-  push:
-    branches: [ master, use-github-matrix ]
-    paths-ignore:
-      - '**.md'
-      - 'Dockerfile'
-      - '.gitignore'
-      - 'LICENSE'
-      - 'docker.yml'
-      - 'formatting.yml'
-      - 'test_pack_dock.yml'
-      - 'triage.yml'
-      - 'end_to_end.yml'
-      - 'end_to_end_big.yml'
-      - 'end_to_end_100.yml'
 concurrency:
   group: ${{ github.head_ref }}
   cancel-in-progress: true
@@ -42,14 +28,6 @@ jobs:
         with:
           # We need to fetch with a depth of 2 for pull_request so we can do HEAD^2
           fetch-depth: 2
-
-        # If this workflow was triggered by a push then resolve the commit message from HEAD
-        # It is stored in output steps, to be referenced with ${{ steps.push_get_commit_message.outputs.push_commit_message }}
-      - name: "[Push] Get commit message"
-        if: github.event_name == 'push'
-        id: push_get_commit_message
-        run:
-          echo ::set-output name=push_commit_message::$(git log --format=%B -n 1 HEAD)
 
         # If this workflow was triggered by a pull request (open or synchronize!) then resolve the commit message from HEAD^2
         # It is stored in output steps, to be referenced with ${{ steps.pr_get_commit_message.outputs.pr_commit_message }}
