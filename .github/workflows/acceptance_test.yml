@@ -160,7 +160,8 @@ jobs:
           name: gtfs-validator-master
           path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
   fetch-urls:
-    needs: [ pre_ci ]
+    if: "!contains(needs.pre_ci.outputs.commit_message, '[acceptance test skip]')"
+    needs: pre_ci
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository code
