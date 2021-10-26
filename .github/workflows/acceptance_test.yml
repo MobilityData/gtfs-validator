@@ -216,7 +216,7 @@ jobs:
       - name: Retrieve reports from previous job
         uses: actions/download-artifact@v2
         with:
-          name: gtfs-validator-reports
+          name: reports_all
       - name: Generate acceptance report test
         run: |
           java -jar output-comparator*.jar --report_directory ${{ github.sha }}/output --new_error_threshold 1 --reference_report_name reference.json --latest_report_name report.json --percent_invalid_datasets_thrshold 10 --output_base ${{ github.sha }}/acceptance-test-output
