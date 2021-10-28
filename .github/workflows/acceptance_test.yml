@@ -223,4 +223,3 @@ jobs:
               repo: context.repo.repo,
               body: "Acceptance test have run on commit ${{ github.sha }}. More details bellow: ```${{ env.REPORT }}```."
             })
-
