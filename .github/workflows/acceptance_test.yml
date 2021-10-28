@@ -223,3 +223,4 @@ jobs:
               body: "Acceptance test have run on commit ${{ github.sha }}. More details bellow: ```${{fromJson(steps.acceptance-report.outputs.REPORT)}}```."
             })
 
+
