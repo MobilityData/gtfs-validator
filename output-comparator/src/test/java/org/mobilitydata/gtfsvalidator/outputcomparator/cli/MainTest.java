@@ -57,7 +57,7 @@ public class MainTest {
     JsonObject acceptanceTestReportJson = generateAcceptanceTestReport(reportData);
     assertThat(GSON.toJson(acceptanceTestReportJson))
         .isEqualTo(
-            "{\"newNotices\":[{\"first_notice_code\":{\"affectedDatasetsCount\":2,"
+            "{\"newErrors\":[{\"first_notice_code\":{\"affectedDatasetsCount\":2,"
                 + "\"affectedDatasets\":[\"dataset-id-1\",\"dataset-id-2\"],\"countPerDataset"
                 + "\":[{\"dataset-id-1\":4},{\"dataset-id-2\":6}]}},{\"fourth_notice_code\":{"
                 + "\"affectedDatasetsCount\":1,\"affectedDatasets\":[\"dataset-id-5\"],"

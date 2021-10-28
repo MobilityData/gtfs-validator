@@ -116,7 +116,7 @@ public class Main {
       Map<String, NoticeStat> acceptanceTestReportData) {
     JsonObject root = new JsonObject();
     JsonArray jsonNotices = new JsonArray();
-    root.add("newNotices", jsonNotices);
+    root.add("newErrors", jsonNotices);
 
     for (String noticeCode : acceptanceTestReportData.keySet()) {
       JsonObject noticeStatJson = new JsonObject();

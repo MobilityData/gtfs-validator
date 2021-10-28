@@ -27,7 +27,7 @@ The final acceptance test report is saved by the workflow artifact as `acceptanc
 Sample example of said acceptance report:
 ```json
 {
-  "newNotices": [
+  "newErrors": [
     {
       "first_notice_code": {
         "affectedDatasetsCount": 2,
