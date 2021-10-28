@@ -209,7 +209,7 @@ jobs:
           path: ${{ github.sha }}/acceptance-test-output
       - name: Get acceptance report
         run: |
-          export REPORT_VALUE=$(jq . ${{ github.sha }}/acceptance-test-output/acceptance_report.json)
+          export REPORT_VALUE='$(jq . ${{ github.sha }}/acceptance-test-output/acceptance_report.json -R)'
           echo "REPORT=$REPORT_VALUE" >> $GITHUB_ENV
           echo $REPORT_VALUE
       - name: Comment PR with acceptance test report
@@ -221,6 +221,6 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Acceptance test have run on commit ${{ github.sha }}. More details bellow: ```json ${{ env.REPORT }} ```."
+              body: "Acceptance test have run on commit ${{ github.sha }}. More details bellow: ```${{ env.REPORT }}```."
             })
 
