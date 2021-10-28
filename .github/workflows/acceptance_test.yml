@@ -137,14 +137,32 @@ jobs:
           path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
   fetch-urls:
     if: "!contains(needs.pre_ci.outputs.commit_message, '[acceptance test skip]')"
+    needs: pre_ci
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v1
+      - name: Install dependencies
+        run: |
+          pip install -r scripts/mobility-database-harvester/requirements.txt
       - name: Set URL matrix
         id: set-matrix
         run: |
-          DATASETS=$(curl https://gtfs-validator.free.beeceptor.com/test)
+          python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
+          DATASETS=$(jq . datasets_metadata/latest_versions.json -c)
           echo $DATASETS
           echo "::set-output name=matrix::$DATASETS"
+        env:
+          MD_TYPE: ${{ secrets.MD_TYPE }}
+          MD_PROJECT_ID: ${{ secrets.MD_PROJECT_ID }}
+          MD_PRIVATE_KEY_ID: ${{ secrets.MD_PRIVATE_KEY_ID }}
+          MD_PRIVATE_KEY: ${{ secrets.MD_PRIVATE_KEY }}
+          MD_CLIENT_EMAIL: ${{ secrets.MD_CLIENT_EMAIL }}
+          MD_CLIENT_ID: ${{ secrets.MD_CLIENT_ID }}
+          MD_AUTH_URI: ${{ secrets.MD_AUTH_URI }}
+          MD_TOKEN_URI: ${{ secrets.MD_TOKEN_URI }}
+          MD_AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.MD_AUTH_PROVIDER_X509_CERT_URL }}
+          MD_CLIENT_X509_CERT_URL: ${{ secrets.MD_CLIENT_X509_CERT_URL }}
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   get-reports:
@@ -218,4 +236,3 @@ jobs:
               repo: context.repo.repo,
               body: "Acceptance test have run on commit ${{ github.sha }}. Download `acceptance_test_report` in the artifacts listed [here](https://github.com/MobilityData/gtfs-validator/actions/runs/${{github.run_id}}) to retrieve the details of said test. Please note that artifacts are persisted for a maximum period of 90 days after generation."
             })
-
