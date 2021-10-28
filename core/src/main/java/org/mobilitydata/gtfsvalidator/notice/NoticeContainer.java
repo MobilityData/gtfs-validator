@@ -133,7 +133,7 @@ public class NoticeContainer {
     validationNotices.addAll(otherContainer.validationNotices);
     systemErrors.addAll(otherContainer.systemErrors);
     hasValidationErrors |= otherContainer.hasValidationErrors;
-    for (Entry<String, Integer> entry  : otherContainer.noticesCountPerTypeAndSeverity.entrySet()) {
+    for (Entry<String, Integer> entry : otherContainer.noticesCountPerTypeAndSeverity.entrySet()) {
       int count = noticesCountPerTypeAndSeverity.getOrDefault(entry.getKey(), 0);
       noticesCountPerTypeAndSeverity.put(entry.getKey(), count + entry.getValue());
     }
