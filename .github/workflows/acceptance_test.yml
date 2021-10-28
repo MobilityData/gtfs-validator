@@ -209,12 +209,10 @@ jobs:
           path: ${{ github.sha }}/acceptance-test-output
       - name: Get acceptance report
         run: |
-          export REPORT=$
-          echo "::set-env name=REPORT::$REPORT"
+          export REPORT=$(jq . ${{ github.sha }}/acceptance-test-output/acceptance_report.json)
+          echo "REPORT=REPORT" >> $REPORT
       - name: Comment PR with acceptance test report
         uses: actions/github-script@v4
-        env:
-          REPORT: ${{ (jq . ${{ github.sha }}/acceptance-test-output/acceptance_report.json) }}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
