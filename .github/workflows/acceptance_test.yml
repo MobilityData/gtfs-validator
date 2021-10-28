@@ -209,7 +209,7 @@ jobs:
           path: ${{ github.sha }}/acceptance-test-output
       - name: Get acceptance report
         run: |
-          export REPORT_VALUE=\'$(jq . ${{ github.sha }}/acceptance-test-output/acceptance_report.json -R)\'
+          export REPORT_VALUE=$(jq . ${{ github.sha }}/acceptance-test-output/acceptance_report.json -R)
           echo "REPORT=$REPORT_VALUE" >> $GITHUB_ENV
           echo $REPORT_VALUE
       - name: Comment PR with acceptance test report
