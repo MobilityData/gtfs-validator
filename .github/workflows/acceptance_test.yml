@@ -207,19 +207,19 @@ jobs:
         with:
           name: acceptance_test_report
           path: ${{ github.sha }}/acceptance-test-output
-      - name: Debug
+      - name: Get acceptance report
         run: |
-          ls
+          export REPORT=$(jq . ${{ github.sha }}/acceptance-test-output/acceptance_report.json)
+          echo "::set-env name=REPORT::$REPORT"
       - name: Comment PR with acceptance test report
         uses: actions/github-script@v4
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            REPORT=$(jq . ${{ github.sha }}/acceptance-test-output/acceptance_report.json)
             echo $REPORT
             github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Acceptance test have run. Here are the results: ```json ${{ REPORT }} ```."
+              body: "Acceptance test have run. Here are the results: ```json $REPORT ```."
             })
