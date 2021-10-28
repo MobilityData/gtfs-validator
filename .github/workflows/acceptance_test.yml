@@ -220,5 +220,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Acceptance test have run on commit $github.event.. Here are the results: ```json {{ env.REPORT }} ```."
+              body: "Acceptance test have run. Here are the results: ```json ${{ env.REPORT }} ```."
             })
