@@ -101,7 +101,7 @@ public class NoticeContainerTest {
   }
 
   @Test
-  public void exportValidationNoticesAfterAddAll_shouldIncludeAllValidationNotices() {
+  public void exportNoticesAfterAddAll__shouldIncludeTotalCountPerType() {
     ValidationNotice n1 = new MissingRequiredFileNotice("stops.txt");
     ValidationNotice n2 = new UnknownFileNotice("unknown.txt");
     NoticeContainer c1 = new NoticeContainer();

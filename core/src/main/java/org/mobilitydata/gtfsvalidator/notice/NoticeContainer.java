@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Container for validation notices (errors and warnings).
@@ -122,9 +123,9 @@ public class NoticeContainer {
    *
    * <p>This is useful for multithreaded validation: each thread has its own notice container which
    * is merged into the global container when the thread finishes. Please note that the final {@code
-   * NoticeContainer} may contain more than the maximum amount of {@code ValidationNotice} allowed
-   * by {@code NoticeContainer#MAX_TOTAL_VALIDATION_NOTICES} and {@code
-   * NoticeContainer#MAX_VALIDATION_NOTICES_TYPE_AND_SEVERITY}
+   * NoticeContainer} may con noticesCountPerTypeAndSeverity.put(tain more than the maximum amount
+   * of {@code ValidationNotice} allowed by {@code NoticeContainer#MAX_TOTAL_VALIDATION_NOTICES} and
+   * {@code NoticeContainer#MAX_VALIDATION_NOTICES_TYPE_AND_SEVERITY}
    *
    * @param otherContainer a container to take the notices from
    */
@@ -132,11 +133,9 @@ public class NoticeContainer {
     validationNotices.addAll(otherContainer.validationNotices);
     systemErrors.addAll(otherContainer.systemErrors);
     hasValidationErrors |= otherContainer.hasValidationErrors;
-    for (String noticeMappingKey : otherContainer.noticesCountPerTypeAndSeverity.keySet()) {
-      int count = noticesCountPerTypeAndSeverity.getOrDefault(noticeMappingKey, 0);
-      noticesCountPerTypeAndSeverity.put(
-          noticeMappingKey,
-          count + otherContainer.noticesCountPerTypeAndSeverity.get(noticeMappingKey));
+    for (Entry<String, Integer> entry  : otherContainer.noticesCountPerTypeAndSeverity.entrySet()) {
+      int count = noticesCountPerTypeAndSeverity.getOrDefault(entry.getKey(), 0);
+      noticesCountPerTypeAndSeverity.put(entry.getKey(), count + entry.getValue());
     }
   }
 
