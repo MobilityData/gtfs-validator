@@ -188,7 +188,7 @@ jobs:
           path: ${{ github.sha }}/output
           destination: gtfs-validator-reports
   compare-outputs:
-    needs: get-reports
+    needs: [ get-reports ]
     runs-on: ubuntu-latest
     steps:
       - name: Download comparator .jar file from previous job
@@ -204,7 +204,7 @@ jobs:
           ls
       - name: Generate acceptance report test
         run: |
-          java -jar output-comparator*.jar --report_directory ${{ github.sha }}/output --new_error_threshold 1 --reference_report_name reference.json --latest_report_name report.json --percent_invalid_datasets_threshold 10 --output_base ${{ github.sha }}/acceptance-test-output
+          java -jar output-comparator*.jar --report_directory . --new_error_threshold 1 --reference_report_name reference.json --latest_report_name report.json --percent_invalid_datasets_threshold 10 --output_base ${{ github.sha }}/acceptance-test-output
       - name: Persist acceptance test report
         uses: actions/upload-artifact@v2
         with:
