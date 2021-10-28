@@ -221,11 +221,13 @@ jobs:
         run: |
           java -jar output-comparator*.jar --report_directory . --new_error_threshold 1 --reference_report_name reference.json --latest_report_name report.json --percent_invalid_datasets_threshold 10 --output_base ${{ github.sha }}/acceptance-test-output
       - name: Persist acceptance test report
+        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: acceptance_test_report
           path: ${{ github.sha }}/acceptance-test-output
       - name: Comment PR with acceptance test report
+        if: always()
         uses: actions/github-script@v4
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
