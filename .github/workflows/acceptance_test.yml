@@ -208,7 +208,7 @@ jobs:
           name: acceptance_test_report
           path: ${{ github.sha }}/acceptance-test-output
       - name: Get acceptance report
-      - id: acceptance-report
+        id: acceptance-report
         run: |
           echo "::set-output name=REPORT::$(jq . ${{ github.sha }}/acceptance-test-output/acceptance_report.json -R)"
       - name: Comment PR with acceptance test report
