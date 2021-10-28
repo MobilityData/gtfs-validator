@@ -101,6 +101,23 @@ public class NoticeContainerTest {
   }
 
   @Test
+  public void exportNoticesAfterAddAll_shouldIncludeTotalCountPerType() {
+    ValidationNotice n1 = new MissingRequiredFileNotice("stops.txt");
+    ValidationNotice n2 = new UnknownFileNotice("unknown.txt");
+    NoticeContainer c1 = new NoticeContainer();
+    c1.addValidationNotice(n1);
+    NoticeContainer c2 = new NoticeContainer();
+    c2.addValidationNotice(n2);
+    c1.addAll(c2);
+    assertThat(new Gson().toJson(c1.exportValidationNotices()))
+        .isEqualTo(
+            "{\"notices\":[{\"code\":\"missing_required_file\",\"severity\":\"ERROR\","
+                + "\"totalNotices\":1,\"sampleNotices\":[{\"filename\":\"stops.txt\"}]},{\"code\":"
+                + "\"unknown_file\",\"severity\":\"INFO\",\"totalNotices\":1,\"sampleNotices\":[{"
+                + "\"filename\":\"unknown.txt\"}]}]}");
+  }
+
+  @Test
   public void addValidationNotice_setMax_perNoticeTypeAndSeverity() {
     ValidationNotice n1 = new DoubleFieldNotice(2.0, SeverityLevel.WARNING);
     ValidationNotice n2 = new DoubleFieldNotice(2.0, SeverityLevel.ERROR);
