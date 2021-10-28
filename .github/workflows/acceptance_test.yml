@@ -216,9 +216,10 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             REPORT=$(jq . ${{ github.sha }}/acceptance-test-output/acceptance_report.json)
+            echo $REPORT
             github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Acceptance test have run. Here are the results: ```json $REPORT```."
+              body: "Acceptance test have run. Here are the results: ```json ${{ REPORT }} ```."
             })
