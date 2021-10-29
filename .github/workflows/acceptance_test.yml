@@ -219,7 +219,7 @@ jobs:
           name: reports_all
       - name: Generate acceptance report test
         run: |
-          java -jar output-comparator*.jar --report_directory . --new_error_threshold 1 --reference_report_name reference.json --latest_report_name latest.json --percent_invalid_datasets_threshold 10 --output_base ${{ github.sha }}/acceptance-test-output
+          java -jar output-comparator*.jar --report_directory . --new_error_threshold 1 --reference_report_name reference.json --latest_report_name latest.json --percent_invalid_datasets_threshold 1 --output_base ${{ github.sha }}/acceptance-test-output
       - name: Persist acceptance test report
         if: always()
         uses: actions/upload-artifact@v2
