@@ -43,16 +43,16 @@ MAINSNAK = "mainsnak"
 DATAVALUE = "datavalue"
 VALUE = "value"
 ID = "id"
-TYPE = "TYPE"
-PROJECT_ID = "PROJECT_ID"
-PRIVATE_KEY_ID = "PRIVATE_KEY_ID"
-PRIVATE_KEY = "PRIVATE_KEY"
-CLIENT_EMAIL = "CLIENT_EMAIL"
-CLIENT_ID = "CLIENT_ID"
-AUTH_URI = "AUTH_URI"
-TOKEN_URI = "TOKEN_URI"
-AUTH_PROVIDER_X509_CERT_URL = "AUTH_PROVIDER_X509_CERT_URL"
-CLIENT_X509_CERT_URL = "CLIENT_X509_CERT_URL"
+MD_TYPE = "MD_TYPE"
+MD_PROJECT_ID = "MD_PROJECT_ID"
+MD_PRIVATE_KEY_ID = "MD_PRIVATE_KEY_ID"
+MD_PRIVATE_KEY = "MD_PRIVATE_KEY"
+MD_CLIENT_EMAIL = "MD_CLIENT_EMAIL"
+MD_CLIENT_ID = "MD_CLIENT_ID"
+MD_AUTH_URI = "MD_AUTH_URI"
+MD_TOKEN_URI = "MD_TOKEN_URI"
+MD_AUTH_PROVIDER_X509_CERT_URL = "MD_AUTH_PROVIDER_X509_CERT_URL"
+MD_CLIENT_X509_CERT_URL = "MD_CLIENT_X509_CERT_URL"
 
 # Credentials keys
 TYPE_KEY = "type"
@@ -89,18 +89,18 @@ DATA = "data"
 
 def get_credentials():
     credentials = {
-        TYPE_KEY: os.getenv(TYPE).replace("\\n", "\n"),
-        PROJECT_ID_KEY: os.getenv(PROJECT_ID).replace("\\n", "\n"),
-        PRIVATE_KEY_ID_KEY: os.getenv(PRIVATE_KEY_ID).replace("\\n", "\n"),
-        PRIVATE_KEY_KEY: os.getenv(PRIVATE_KEY).replace("\\n", "\n"),
-        CLIENT_EMAIL_KEY: os.getenv(CLIENT_EMAIL).replace("\\n", "\n"),
-        CLIENT_ID_KEY: os.getenv(CLIENT_ID).replace("\\n", "\n"),
-        AUTH_URI_KEY: os.getenv(AUTH_URI).replace("\\n", "\n"),
-        TOKEN_URI_KEY: os.getenv(TOKEN_URI).replace("\\n", "\n"),
-        AUTH_PROVIDER_X509_CERT_URL_KEY: os.getenv(AUTH_PROVIDER_X509_CERT_URL).replace(
+        TYPE_KEY: os.getenv(MD_TYPE).replace("\\n", "\n"),
+        PROJECT_ID_KEY: os.getenv(MD_PROJECT_ID).replace("\\n", "\n"),
+        PRIVATE_KEY_ID_KEY: os.getenv(MD_PRIVATE_KEY_ID).replace("\\n", "\n"),
+        PRIVATE_KEY_KEY: os.getenv(MD_PRIVATE_KEY).replace("\\n", "\n"),
+        CLIENT_EMAIL_KEY: os.getenv(MD_CLIENT_EMAIL).replace("\\n", "\n"),
+        CLIENT_ID_KEY: os.getenv(MD_CLIENT_ID).replace("\\n", "\n"),
+        AUTH_URI_KEY: os.getenv(MD_AUTH_URI).replace("\\n", "\n"),
+        TOKEN_URI_KEY: os.getenv(MD_TOKEN_URI).replace("\\n", "\n"),
+        AUTH_PROVIDER_X509_CERT_URL_KEY: os.getenv(MD_AUTH_PROVIDER_X509_CERT_URL).replace(
             "\\n", "\n"
         ),
-        CLIENT_X509_CERT_URL_KEY: os.getenv(CLIENT_X509_CERT_URL).replace("\\n", "\n"),
+        CLIENT_X509_CERT_URL_KEY: os.getenv(MD_CLIENT_X509_CERT_URL).replace("\\n", "\n"),
     }
     return str(credentials).replace("'", '"')
 

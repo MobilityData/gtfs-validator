@@ -1,0 +1,203 @@
+name: Rule acceptance tests
+
+on:
+  pull_request:
+    branches: [ master ]
+    paths-ignore:
+      - '**.md'
+      - 'Dockerfile'
+      - '.gitignore'
+      - 'LICENSE'
+      - 'docker.yml'
+      - 'formatting.yml'
+      - 'test_pack_dock.yml'
+      - 'triage.yml'
+      - 'end_to_end.yml'
+      - 'end_to_end_big.yml'
+      - 'end_to_end_100.yml'
+concurrency:
+  group: ${{ github.head_ref }}
+  cancel-in-progress: true
+jobs:
+  pre_ci:
+    name: Prepare CI environment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v2
+        with:
+          # We need to fetch with a depth of 2 for pull_request so we can do HEAD^2
+          fetch-depth: 2
+
+        # If this workflow was triggered by a pull request (open or synchronize!) then resolve the commit message from HEAD^2
+        # It is stored in output steps, to be referenced with ${{ steps.pr_get_commit_message.outputs.pr_commit_message }}
+      - name: "[Pull Request] Get commit message"
+        if: github.event_name == 'pull_request'
+        id: pr_get_commit_message
+        run: echo ::set-output name=pr_commit_message::$(git log --format=%B -n 1 HEAD^2)
+
+    # For **Pull Request** events this will resolve to something like "$( [ -z "commit message pr" ] && echo "" || echo "commit message pr" )" which then resolves to just "commit message pr"
+    outputs:
+      commit_message: $( [ -z "${{ steps.pr_get_commit_message.outputs.pr_commit_message }}" ] || echo "${{ steps.pr_get_commit_message.outputs.pr_commit_message }}" )
+  validate-gradle-wrapper:
+    if: "!contains(needs.pre_ci.outputs.commit_message, '[acceptance test skip]')"
+    needs: pre_ci
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: gradle/wrapper-validation-action@v1
+  pack-snapshot:
+    needs: [ validate-gradle-wrapper ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Prepare version name
+        id: prep
+        run: |
+          echo ${{ github.event.head_commit.message }}
+          VERSION_TAG=edge
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION_TAG=${GITHUB_REF#refs/tags/}
+          elif [[ $GITHUB_REF == refs/heads/* ]]; then
+            VERSION_TAG=-$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+          elif [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION_TAG=-pr-${{ github.event.number }}
+          fi
+          if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
+            VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
+          fi
+          echo ::set-output name=versionTag::${VERSION_TAG}
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+      - name: Package cli app jar with Gradle
+        uses: eskatos/gradle-command-action@v1
+        env:
+          versionTag: ${{ steps.prep.outputs.versionTag }}
+        with:
+          arguments: shadowJar
+      - name: Persist gtfs-validator snapshot jar
+        uses: actions/upload-artifact@v2
+        with:
+          name: gtfs-validator-snapshot
+          path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
+  pack-master:
+    needs: [ validate-gradle-wrapper ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          ref: master
+      - name: Prepare version name
+        id: prep
+        run: |
+          VERSION_TAG=edge
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION_TAG=${GITHUB_REF#refs/tags/}
+          elif [[ $GITHUB_REF == refs/heads/* ]]; then
+            VERSION_TAG=-$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+          elif [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION_TAG=-pr-${{ github.event.number }}
+          fi
+          if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
+            VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-MASTER
+          fi
+          echo ::set-output name=versionTag::${VERSION_TAG}
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+      - name: Package cli app jar with Gradle
+        uses: eskatos/gradle-command-action@v1
+        env:
+          versionTag: ${{ steps.prep.outputs.versionTag }}
+        with:
+          arguments: shadowJar
+      - name: Persist gtfs-validator jar from master branch
+        uses: actions/upload-artifact@v2
+        with:
+          name: gtfs-validator-master
+          path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
+  fetch-urls:
+    if: "!contains(needs.pre_ci.outputs.commit_message, '[acceptance test skip]')"
+    needs: pre_ci
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v1
+      - name: Install dependencies
+        run: |
+          pip install -r scripts/mobility-database-harvester/requirements.txt
+      - name: Set URL matrix
+        id: set-matrix
+        run: |
+          python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d datasets_metadata -a gtfs_archives_ids.json -l latest_versions.json
+          DATASETS=$(jq . datasets_metadata/latest_versions.json -c)
+          echo $DATASETS
+          echo "::set-output name=matrix::$DATASETS"
+        env:
+          MD_TYPE: ${{ secrets.MD_TYPE }}
+          MD_PROJECT_ID: ${{ secrets.MD_PROJECT_ID }}
+          MD_PRIVATE_KEY_ID: ${{ secrets.MD_PRIVATE_KEY_ID }}
+          MD_PRIVATE_KEY: ${{ secrets.MD_PRIVATE_KEY }}
+          MD_CLIENT_EMAIL: ${{ secrets.MD_CLIENT_EMAIL }}
+          MD_CLIENT_ID: ${{ secrets.MD_CLIENT_ID }}
+          MD_AUTH_URI: ${{ secrets.MD_AUTH_URI }}
+          MD_TOKEN_URI: ${{ secrets.MD_TOKEN_URI }}
+          MD_AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.MD_AUTH_PROVIDER_X509_CERT_URL }}
+          MD_CLIENT_X509_CERT_URL: ${{ secrets.MD_CLIENT_X509_CERT_URL }}
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+  get-reports:
+    needs: [ fetch-urls, pack-master, pack-snapshot ]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v1
+      - name: Download .jar file from master branch
+        uses: actions/download-artifact@v2
+        with:
+          name: gtfs-validator-master
+      - name: Download latest changes .jar file from previous job
+        uses: actions/download-artifact@v2
+        with:
+          name: gtfs-validator-snapshot
+      - name: Run validators on queued URLs
+        run: |
+          queue="${{ matrix.data }}"
+          bash ./scripts/queue_runner.sh $queue
+        env:
+          OUTPUT_BASE: ${{ github.sha }}
+      - name: Persist reports
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: reports_all
+          path: ${{ github.sha }}/output
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.VALIDATOR_PROJECT_ID }}
+          service_account_key: ${{ secrets.VALIDATOR_SA_KEY }}
+          export_default_credentials: true
+      - name: Upload reports to Google Cloud Storage
+        id: upload-files
+        if: always()
+        uses: google-github-actions/upload-cloud-storage@main
+        with:
+          path: ${{ github.sha }}/output
+          destination: gtfs-validator-reports
