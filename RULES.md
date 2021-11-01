@@ -741,7 +741,7 @@ Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one
 
 #### MissingTimepointValue
 
-Even though the specification allows no column `timepoint` in `stop_times.txt`, when provided `stop_times.timepoint` should not be empty. 
+Even though the column `timepoint` is optional in `stop_times.txt` according to the specification, `stop_times.timepoint` should not be empty when provided. 
 
 ##### References:
 * [stop_times.txt specification](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stop_timestxt)
