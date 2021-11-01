@@ -59,6 +59,10 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
 
   public abstract String gtfsFilename();
 
+  public boolean hasColumn(String columnName) {
+    return header.hasColumn(columnName);
+  }
+
   /**
    * Returns names of the columns that are keys in that table.
    *
