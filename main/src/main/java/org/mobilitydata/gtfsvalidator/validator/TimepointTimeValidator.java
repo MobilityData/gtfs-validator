@@ -59,6 +59,9 @@ public class TimepointTimeValidator extends FileValidator {
       return;
     }
     for (GtfsStopTime stopTime : stopTimes.getEntities()) {
+      if (!stopTime.hasTimepoint()) {
+        noticeContainer.addValidationNotice(new MissingTimepointValueNotice(stopTime));
+      }
       if (isTimepoint(stopTime)) {
         if (!stopTime.hasArrivalTime()) {
           noticeContainer.addValidationNotice(
@@ -70,10 +73,6 @@ public class TimepointTimeValidator extends FileValidator {
               new StopTimeTimepointWithoutTimesNotice(
                   stopTime, GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME));
         }
-        break;
-      }
-      if (!stopTime.hasTimepoint()) {
-        noticeContainer.addValidationNotice(new MissingTimepointValueNotice(stopTime));
       }
     }
   }
