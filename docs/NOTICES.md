@@ -811,11 +811,11 @@
 #### [MissingTimepointValue](/RULES.md#MissingTimepointValue)
 ##### Fields description
 
-| Field name     	| Description                                 	| Type   	|
-|----------------	|---------------------------------------------	|--------	|
-| `csvRowNumber` 	| The row number of the faulty record.        	| Long   	|
-| `tripId`         	| The faulty record's `trip_id`.               	| String 	|
-| `stopSequence`   	| The faulty record's `stops.stop_sequence`. 	| String 	|
+| Field name     	| Description                                     	| Type   	|
+|----------------	|-------------------------------------------------	|--------	|
+| `csvRowNumber` 	| The row number of the faulty record.            	| Long   	|
+| `tripId`       	| The faulty record's `stop_times.trip_id`.         | String 	|
+| `stopSequence` 	| The faulty record's `stop_times.stop_sequence`. 	| String 	|
 
 ##### Affected files
 * [`stop_times.txt`](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stop_timestxt)
