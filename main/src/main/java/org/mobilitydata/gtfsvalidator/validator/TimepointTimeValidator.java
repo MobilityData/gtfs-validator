@@ -51,6 +51,10 @@ public class TimepointTimeValidator extends FileValidator {
   public void validate(NoticeContainer noticeContainer) {
     boolean useTimepointColumn = stopTimes.hasColumn(GtfsStopTimeTableLoader.TIMEPOINT_FIELD_NAME);
     if (!useTimepointColumn) {
+      // legacy datasets do not use timepoint column in stop_times.txt as a result:
+      // - this should be flagged;
+      // - but also no notice regarding the absence of arrival_time or departure_time should be
+      // generated
       noticeContainer.addValidationNotice(new MissingTimepointColumnNotice());
     }
     for (GtfsStopTime stopTime : stopTimes.getEntities()) {
@@ -63,18 +67,12 @@ public class TimepointTimeValidator extends FileValidator {
       if (!stopTime.hasArrivalTime()) {
         noticeContainer.addValidationNotice(
             new StopTimeTimepointWithoutTimesNotice(
-                stopTime.csvRowNumber(),
-                stopTime.tripId(),
-                stopTime.stopSequence(),
-                String.format(GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME)));
+                stopTime, String.format(GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME)));
       }
       if (!stopTime.hasDepartureTime()) {
         noticeContainer.addValidationNotice(
             new StopTimeTimepointWithoutTimesNotice(
-                stopTime.csvRowNumber(),
-                stopTime.tripId(),
-                stopTime.stopSequence(),
-                GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME));
+                stopTime, GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME));
       }
     }
   }
@@ -94,12 +92,11 @@ public class TimepointTimeValidator extends FileValidator {
     private final long stopSequence;
     private final String specifiedField;
 
-    StopTimeTimepointWithoutTimesNotice(
-        long csvRowNumber, String tripId, long stopSequence, String specifiedField) {
+    StopTimeTimepointWithoutTimesNotice(GtfsStopTime stopTime, String specifiedField) {
       super(SeverityLevel.WARNING);
-      this.csvRowNumber = csvRowNumber;
-      this.tripId = tripId;
-      this.stopSequence = stopSequence;
+      this.csvRowNumber = stopTime.csvRowNumber();
+      this.tripId = stopTime.tripId();
+      this.stopSequence = stopTime.stopSequence();
       this.specifiedField = specifiedField;
     }
   }

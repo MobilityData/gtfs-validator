@@ -95,6 +95,7 @@ public class TimepointTimeValidatorTest {
 
   @Test
   public void noTimepointColumn_noTimeProvided_shouldGenerateNotice() {
+    // unit test for legacy data that do not use timepoint column
     List<GtfsStopTime> stopTimes = new ArrayList<>();
     stopTimes.add(
         new GtfsStopTime.Builder()
@@ -112,6 +113,7 @@ public class TimepointTimeValidatorTest {
 
   @Test
   public void noTimepointColumn_timesProvided_shouldNotGenerateNotice() {
+    // unit test for legacy data that do not use timepoint column
     List<GtfsStopTime> stopTimes = new ArrayList<>();
     stopTimes.add(
         new GtfsStopTime.Builder()
@@ -142,9 +144,8 @@ public class TimepointTimeValidatorTest {
             .build());
     assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes))
         .containsExactly(
-            new StopTimeTimepointWithoutTimesNotice(1, "first trip id", 2, ARRIVAL_TIME_FIELD_NAME),
-            new StopTimeTimepointWithoutTimesNotice(
-                1, "first trip id", 2, DEPARTURE_TIME_FIELD_NAME));
+            new StopTimeTimepointWithoutTimesNotice(stopTimes.get(0), ARRIVAL_TIME_FIELD_NAME),
+            new StopTimeTimepointWithoutTimesNotice(stopTimes.get(0), DEPARTURE_TIME_FIELD_NAME));
   }
 
   @Test
@@ -178,8 +179,7 @@ public class TimepointTimeValidatorTest {
             .build());
     assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes))
         .containsExactly(
-            new StopTimeTimepointWithoutTimesNotice(
-                1, "first trip id", 2, DEPARTURE_TIME_FIELD_NAME));
+            new StopTimeTimepointWithoutTimesNotice(stopTimes.get(0), DEPARTURE_TIME_FIELD_NAME));
   }
 
   @Test
@@ -197,8 +197,7 @@ public class TimepointTimeValidatorTest {
             .build());
     assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes))
         .containsExactly(
-            new StopTimeTimepointWithoutTimesNotice(
-                1, "first trip id", 2, ARRIVAL_TIME_FIELD_NAME));
+            new StopTimeTimepointWithoutTimesNotice(stopTimes.get(0), ARRIVAL_TIME_FIELD_NAME));
   }
 
   @Test
