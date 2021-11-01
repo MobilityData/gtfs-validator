@@ -40,6 +40,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 import org.mobilitydata.gtfsvalidator.validator.TimepointTimeValidator.MissingTimepointColumnNotice;
+import org.mobilitydata.gtfsvalidator.validator.TimepointTimeValidator.MissingTimepointValueNotice;
 import org.mobilitydata.gtfsvalidator.validator.TimepointTimeValidator.StopTimeTimepointWithoutTimesNotice;
 
 public class TimepointTimeValidatorTest {
@@ -230,5 +231,39 @@ public class TimepointTimeValidatorTest {
             .setTimepoint(0)
             .build());
     assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes)).isEmpty();
+  }
+
+  @Test
+  public void emptyTimepoint_noTimesProvided_shouldGenerateNotice() {
+    List<GtfsStopTime> stopTimes = new ArrayList<>();
+    stopTimes.add(
+        new GtfsStopTime.Builder()
+            .setCsvRowNumber(1)
+            .setTripId("first trip id")
+            .setArrivalTime(null)
+            .setDepartureTime(null)
+            .setStopId("stop id")
+            .setStopSequence(2)
+            .setTimepoint((Integer) null)
+            .build());
+    assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes))
+        .containsExactly(new MissingTimepointValueNotice(stopTimes.get(0)));
+  }
+
+  @Test
+  public void emptyTimepoint_timesProvided_shouldNotGenerateNotice() {
+    List<GtfsStopTime> stopTimes = new ArrayList<>();
+    stopTimes.add(
+        new GtfsStopTime.Builder()
+            .setCsvRowNumber(1)
+            .setTripId("first trip id")
+            .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
+            .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(580))
+            .setStopId("stop id")
+            .setStopSequence(2)
+            .setTimepoint((Integer) null)
+            .build());
+    assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes))
+        .containsExactly(new MissingTimepointValueNotice(stopTimes.get(0)));
   }
 }
