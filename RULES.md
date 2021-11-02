@@ -92,8 +92,8 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`InvalidTimeNotice`](#InvalidTimeNotice)                                                                       | A field cannot be parsed as time.                                                                                                                      |
 | [`InvalidTimezoneNotice`](#InvalidTimezoneNotice)                                                               | A field cannot be parsed as a timezone.                                                                                                                |
 | [`InvalidUrlNotice`](#InvalidUrlNotice)                                                                         | A field contains a malformed URL.                                                                                                                      |
-| [`LocationWithUnexpectedStopTimeNotice`](#LocationWithUnexpectedStopTimeNotice)                                 | A location in `stops.txt` that is not a stop is referenced by some `stop_times.stop_id`.                                                               |
 | [`LocationWithoutParentStationNotice`](#LocationWithoutParentStationNotice)                                     | A location that must have `parent_station` field does not have it.                                                                                     |
+| [`LocationWithUnexpectedStopTimeNotice`](#LocationWithUnexpectedStopTimeNotice)                                 | A location in `stops.txt` that is not a stop is referenced by some `stop_times.stop_id`.                                                               |
 | [`MissingCalendarAndCalendarDateFilesNotice`](#MissingCalendarAndCalendarDateFilesNotice)                       | Missing GTFS files `calendar.txt` and `calendar_dates.txt`.                                                                                            |
 | [`MissingLevelIdNotice`](#MissingLevelIdNotice)       	                                                      | `stops.level_id` is conditionally required.                                                                                                            |
 | [`MissingRequiredColumnNotice`](#MissingRequiredColumnNotice)                                                   | A required column is missing in the input file.                                                                                                        |
@@ -387,15 +387,6 @@ Value of field with type `url` is not valid. Definitions for valid URLs are quit
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 * [Apache Commons UrlValidator](https://commons.apache.org/proper/commons-validator/apidocs/org/apache/commons/validator/routines/UrlValidator.html)
 
-<a name="LocationWithUnexpectedStopTimeNotice"/>
-
-#### LocationWithUnexpectedStopTimeNotice
-
-Referenced locations (using `stop_times.stop_id`) must be stops/platforms, i.e. their `stops.location_type` value must be 0 or empty.
-
-##### References:
-* [stop_times.txt GTFS specification](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stoptimestxt)
-
 <a name="LocationWithoutParentStationNotice"/>
 
 #### LocationWithoutParentStationNotice
@@ -404,6 +395,15 @@ A location that must have `parent_station` field does not have it. The following
 
 ##### References:
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+
+<a name="LocationWithUnexpectedStopTimeNotice"/>
+
+#### LocationWithUnexpectedStopTimeNotice
+
+Referenced locations (using `stop_times.stop_id`) must be stops/platforms, i.e. their `stops.location_type` value must be 0 or empty.
+
+##### References:
+* [stop_times.txt GTFS specification](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stoptimestxt)
 
 <a name="MissingCalendarAndCalendarDateFilesNotice"/>
 
@@ -895,7 +895,7 @@ Two stop entries in `stop_times.txt` are different than their arrival-departure 
 
 <a name="StopTimeTimepointWithoutTimeNotice"/>
 
-### StopTimeTimepointWithoutTimesNotice
+#### StopTimeTimepointWithoutTimesNotice
 
 Any record with `stop_times.timepoint` set to 1 should define a value for `stop_times.arrival_time` and `stop_times.departure_time` fields. 
 
