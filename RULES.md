@@ -131,8 +131,8 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`InconsistentAgencyLangNotice`](#InconsistentAgencyLangNotice)                   	| Inconsistent language among agencies.                                                                                                                       	|
 | [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)         | The value in CSV file has leading or trailing whitespaces.                                                                                                  	|
 | [`MissingFeedInfoDateNotice`](#MissingFeedInfoDateNotice)                         	| `feed_end_date` should be provided if `feed_start_date` is provided. `feed_start_date` should be provided if `feed_end_date` is provided.                   	|
-| [`MissingTimepointColumn`](#MissingTimepointColumn)                         	        | `timepoint` field is missing for a dataset.                                                                                                        	        |
-| [`MissingTimepointValue`](#MissingTimepointValue)                         	        | `stop_times.timepoint` value is missing for a record.                                                                                                        	|
+| [`MissingTimepointColumnNotice`](#MissingTimepointColumnNotice)                         	        | `timepoint` field is missing for a dataset.                                                                                                        	        |
+| [`MissingTimepointValueNotice`](#MissingTimepointValueNotice)                         	        | `stop_times.timepoint` value is missing for a record.                                                                                                        	|
 | [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	| More than one row in CSV.                                                                                                                                   	|
 | [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	| Non ascii or non printable char in  `id`.                                                                                                                   	|
 | [`PathwayDanglingGenericNodeNotice`](#PathwayDanglingGenericNodeNotice)           	| A generic node has only one incident location in a pathway graph.                                                                                             |
@@ -738,18 +738,18 @@ Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one
 ##### References:
 * [feed_info.txt Best practices](http://gtfs.org/best-practices/#feed_infotxt)
  
-<a name="MissingTimepointValue"/>
+<a name="MissingTimepointValueNotice"/>
 
-#### MissingTimepointValue
+#### MissingTimepointValueNotice
 
 Even though the column `timepoint` is optional in `stop_times.txt` according to the specification, `stop_times.timepoint` should not be empty when provided. 
 
 ##### References:
 * [stop_times.txt specification](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stop_timestxt)
 
-<a name="MissingTimepointColumn"/>
+<a name="MissingTimepointColumnNotice"/>
 
-#### MissingTimepointColumn
+#### MissingTimepointColumnNotice
 
 The `timepoint` field should be provided.
 
