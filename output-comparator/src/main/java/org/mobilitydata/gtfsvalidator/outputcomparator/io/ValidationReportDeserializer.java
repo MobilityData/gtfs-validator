@@ -31,7 +31,7 @@ import java.util.Set;
 
 /**
  * Used to deserialize a validation report. This represents a validation report as a list of {@code
- * NoticeAggregate} which provides information about each notice generated during a GTFS dataset
+ * NoticeSummary} which provides information about each notice generated during a GTFS dataset
  * validation.
  */
 public class ValidationReportDeserializer implements JsonDeserializer<ValidationReport> {
@@ -41,9 +41,9 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
   private static final String NOTICES_MEMBER_NAME = "notices";
 
   /**
-   * Return the sorted set of error codes from a list of {@code NoticeAggregate}.
+   * Return the sorted set of error codes from a list of {@code NoticeSummary}.
    *
-   * @return the sorted set of error codes from a list of {@code NoticeAggregate}.
+   * @return the sorted set of error codes from a list of {@code NoticeSummary}.
    */
   private static ImmutableSet<String> extractErrorCodes(Set<NoticeSummary> notices) {
     ImmutableSet.Builder<String> errorCodesSetBuilder = new ImmutableSet.Builder<>();
