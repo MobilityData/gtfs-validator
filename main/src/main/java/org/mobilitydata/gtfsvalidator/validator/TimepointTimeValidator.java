@@ -124,6 +124,7 @@ public class TimepointTimeValidator extends FileValidator {
     private final String filename;
 
     MissingTimepointColumnNotice() {
+
       super(SeverityLevel.WARNING);
       this.filename = GtfsStopTimeTableLoader.FILENAME;
     }
