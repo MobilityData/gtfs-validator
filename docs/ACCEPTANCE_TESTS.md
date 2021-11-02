@@ -2,7 +2,7 @@
 
 ## Goal
 Execute the validator against all datasets (latest version hosted in the MobilityDatabase) and quantify the effect of a code change on all of them.  
-The source of truth is defined as the latest stable version of the validator (the on available on [the master branch of this repository](https://github.com/MobilityData/gtfs-validator/tree/master)). 
+The source of truth is defined as the latest stable version of the validator the ([master branch](https://github.com/MobilityData/gtfs-validator/tree/master)) of this repository. 
 
 For the latest version of all GTFS datasets from the MobilityArchives, the validation report from both the snapshot and the source of truth are compared. An acceptance test report is generated: it quantifies for each agency/dataset the number of new errors (as defined [here](https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#definitions)) in introduced.
    
@@ -24,7 +24,7 @@ On each of these urls:
 At the end of execution of the two aforementioned steps for all urls in the matrix, all validation reports are gathered in a single folder (`output`) and compared - the percentage of newly invalid datasets is output to the console.
 The final acceptance test report is saved by the workflow artifact as `acceptance_report.json`. This file keeps the count of new error types introduced by the snapshot version for each agency/dataset.
 
-Sample example of said acceptance report:
+Sample output:
 ```json
 {
   "newErrors": [
