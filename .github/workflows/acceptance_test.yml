@@ -187,7 +187,6 @@ jobs:
         env:
           OUTPUT_BASE: ${{ github.sha }}
       - name: Persist reports
-        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: reports_all
@@ -200,7 +199,6 @@ jobs:
           export_default_credentials: true
       - name: Upload reports to Google Cloud Storage
         id: upload-files
-        if: always()
         uses: google-github-actions/upload-cloud-storage@main
         with:
           path: ${{ github.sha }}/output
