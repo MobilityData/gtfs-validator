@@ -159,6 +159,11 @@ jobs:
           MD_TOKEN_URI: ${{ secrets.MD_TOKEN_URI }}
           MD_AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.MD_AUTH_PROVIDER_X509_CERT_URL }}
           MD_CLIENT_X509_CERT_URL: ${{ secrets.MD_CLIENT_X509_CERT_URL }}
+      - name: Persist metadata
+        uses: actions/upload-artifact@v2
+        with:
+          name: datasets_metadata
+          path: datasets_metadata
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   get-reports:
