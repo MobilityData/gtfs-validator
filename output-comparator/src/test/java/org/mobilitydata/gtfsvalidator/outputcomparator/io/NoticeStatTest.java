@@ -33,7 +33,7 @@ public class NoticeStatTest {
 
   @Test
   public void update_shouldUpdateAllFields() {
-    NoticeStat noticeStat = NoticeStat.newInstance();
+    NoticeStat noticeStat = new NoticeStat();
     noticeStat.update("dataset-id-1", 44);
     noticeStat.update("dataset-id-2", 1);
     noticeStat.update("dataset-id-2", 5);
@@ -48,7 +48,7 @@ public class NoticeStatTest {
 
   @Test
   public void toJson_noData() {
-    NoticeStat noticeStat = NoticeStat.newInstance();
+    NoticeStat noticeStat = new NoticeStat();
     JsonObject noticeStatJson = noticeStat.toJson();
     assertThat(noticeStatJson.get(NoticeStat.AFFECTED_DATASETS)).isEqualTo(new JsonArray());
     assertThat(noticeStatJson.get(NoticeStat.AFFECTED_DATASETS_COUNT))
@@ -58,7 +58,7 @@ public class NoticeStatTest {
 
   @Test
   public void toJson_emptyMap() {
-    NoticeStat noticeStat = NoticeStat.newInstance();
+    NoticeStat noticeStat = new NoticeStat();
     noticeStat.update("dataset-id-1", 44);
     noticeStat.update("dataset-id-2", 1);
     noticeStat.update("dataset-id-2", 5);

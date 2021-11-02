@@ -19,13 +19,15 @@ package org.mobilitydata.gtfsvalidator.outputcomparator.cli;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mobilitydata.gtfsvalidator.outputcomparator.cli.Main.generateAcceptanceTestReport;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSortedMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -35,21 +37,28 @@ import org.mobilitydata.gtfsvalidator.outputcomparator.io.NoticeStat;
 public class MainTest {
   private static final Gson GSON = new GsonBuilder().serializeNulls().create();
 
+  private static NoticeStat createNoticeStat(SortedMap<String, Integer> countPerDataset) {
+    SortedSet<String> affectedDatasets = new TreeSet<>(countPerDataset.keySet());
+    int affectedDatasetsCount = countPerDataset.size();
+    return new NoticeStat(affectedDatasetsCount, affectedDatasets, countPerDataset);
+  }
+
   @Test
   public void noNewNotice_generatesEmptyReport() {
     JsonObject acceptanceTestReportJson = generateAcceptanceTestReport(new TreeMap<>());
-    assertThat(acceptanceTestReportJson.get("newNotices")).isEqualTo(new JsonArray());
+    assertThat(acceptanceTestReportJson.get("newNotices")).isNull();
   }
 
   @Test
   public void newNotices_generatesReport() {
     Map<String, NoticeStat> reportData = new TreeMap<>();
     NoticeStat firstNoticeStat =
-        new NoticeStat(ImmutableMap.of("dataset-id-1", 4, "dataset-id-2", 6));
-    NoticeStat secondNoticeStat = new NoticeStat(ImmutableMap.of("dataset-id-2", 40));
+        createNoticeStat(ImmutableSortedMap.of("dataset-id-1", 4, "dataset-id-2", 6));
+    NoticeStat secondNoticeStat = createNoticeStat(ImmutableSortedMap.of("dataset-id-2", 40));
     NoticeStat thirdNoticeStat =
-        new NoticeStat(ImmutableMap.of("dataset-id-1", 40, "dataset-id-3", 15, "dataset-id-5", 2));
-    NoticeStat fourthNoticeStat = new NoticeStat(ImmutableMap.of("dataset-id-5", 5));
+        createNoticeStat(
+            ImmutableSortedMap.of("dataset-id-1", 40, "dataset-id-3", 15, "dataset-id-5", 2));
+    NoticeStat fourthNoticeStat = createNoticeStat(ImmutableSortedMap.of("dataset-id-5", 5));
     reportData.put("first_notice_code", firstNoticeStat);
     reportData.put("second_notice_code", secondNoticeStat);
     reportData.put("third_notice_code", thirdNoticeStat);

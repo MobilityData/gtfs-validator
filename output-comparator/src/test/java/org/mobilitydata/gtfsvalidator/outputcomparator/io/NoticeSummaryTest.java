@@ -30,7 +30,7 @@ import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 @RunWith(JUnit4.class)
 public class NoticeSummaryTest {
 
-  private static NoticeSummary createNoticeAggregate(
+  private static NoticeSummary createNoticeSummary(
       String code,
       SeverityLevel severityLevel,
       int totalNotices,
@@ -41,7 +41,7 @@ public class NoticeSummaryTest {
   @Test
   public void equals_sameNotices_true() {
     assertThat(
-            createNoticeAggregate(
+            createNoticeSummary(
                 "invalid_url",
                 SeverityLevel.ERROR,
                 1,
@@ -53,7 +53,7 @@ public class NoticeSummaryTest {
                         .put("fieldValue", "erroneous url")
                         .build())))
         .isEqualTo(
-            createNoticeAggregate(
+            createNoticeSummary(
                 "invalid_url",
                 SeverityLevel.ERROR,
                 1,
@@ -69,7 +69,7 @@ public class NoticeSummaryTest {
   @Test
   public void equals_sameNotices_differentOrder_true() {
     assertThat(
-            createNoticeAggregate(
+            createNoticeSummary(
                 "invalid_url",
                 SeverityLevel.ERROR,
                 1,
@@ -81,7 +81,7 @@ public class NoticeSummaryTest {
                         .put("fieldValue", "erroneous url")
                         .build())))
         .isEqualTo(
-            createNoticeAggregate(
+            createNoticeSummary(
                 "invalid_url",
                 SeverityLevel.ERROR,
                 1,
@@ -97,7 +97,7 @@ public class NoticeSummaryTest {
   @Test
   public void equals_differentNotices_false() {
     assertThat(
-            createNoticeAggregate(
+            createNoticeSummary(
                 "invalid_url",
                 SeverityLevel.ERROR,
                 1,
@@ -109,7 +109,7 @@ public class NoticeSummaryTest {
                         .put("fieldValue", "erroneous url")
                         .build())))
         .isNotEqualTo(
-            createNoticeAggregate(
+            createNoticeSummary(
                 "invalid_url",
                 SeverityLevel.ERROR,
                 1,
@@ -124,16 +124,15 @@ public class NoticeSummaryTest {
 
   @Test
   public void equals_differentCode_false() {
-    assertThat(createNoticeAggregate("invalid_url", SeverityLevel.ERROR, 1, ImmutableSet.of()))
+    assertThat(createNoticeSummary("invalid_url", SeverityLevel.ERROR, 1, ImmutableSet.of()))
         .isNotEqualTo(
-            createNoticeAggregate(
-                "invalid_phone_number", SeverityLevel.ERROR, 2, ImmutableSet.of()));
+            createNoticeSummary("invalid_phone_number", SeverityLevel.ERROR, 2, ImmutableSet.of()));
   }
 
   @Test
   public void equals_differentSeverity_false() {
     assertThat(
-            createNoticeAggregate(
+            createNoticeSummary(
                 "invalid_url",
                 SeverityLevel.INFO,
                 2,
@@ -145,7 +144,7 @@ public class NoticeSummaryTest {
                         .put("fieldValue", "erroneous url")
                         .build())))
         .isNotEqualTo(
-            createNoticeAggregate(
+            createNoticeSummary(
                 "invalid_url",
                 SeverityLevel.ERROR,
                 2,
@@ -160,8 +159,8 @@ public class NoticeSummaryTest {
 
   @Test
   public void equals_differentTotalNotices_false() {
-    assertThat(createNoticeAggregate("invalid_url", SeverityLevel.ERROR, 1, ImmutableSet.of()))
+    assertThat(createNoticeSummary("invalid_url", SeverityLevel.ERROR, 1, ImmutableSet.of()))
         .isNotEqualTo(
-            createNoticeAggregate("invalid_url", SeverityLevel.ERROR, 2, ImmutableSet.of()));
+            createNoticeSummary("invalid_url", SeverityLevel.ERROR, 2, ImmutableSet.of()));
   }
 }

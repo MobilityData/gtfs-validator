@@ -86,7 +86,7 @@ public class Main {
         }
         for (String noticeCode : referenceReport.getNewErrorsListing(latestReport)) {
           NoticeStat noticeStat =
-              acceptanceTestReportMap.getOrDefault(noticeCode, NoticeStat.newInstance());
+              acceptanceTestReportMap.getOrDefault(noticeCode, new NoticeStat());
           acceptanceTestReportMap.putIfAbsent(noticeCode, noticeStat);
           noticeStat.update(file.getName(), latestReport.getNoticeByCode(noticeCode).getCount());
         }

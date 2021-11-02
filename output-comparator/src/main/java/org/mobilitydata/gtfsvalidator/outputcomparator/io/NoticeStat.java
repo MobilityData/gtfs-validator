@@ -21,6 +21,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -39,19 +41,21 @@ public class NoticeStat {
   protected static final String AFFECTED_DATASETS_COUNT = "affectedDatasetsCount";
   protected static final String AFFECTED_DATASETS = "affectedDatasets";
   protected static final String COUNT_PER_DATASET = "countPerDataset";
+  private final SortedSet<String> affectedDatasets;
+  private final SortedMap<String, Integer> countPerDataset;
   private int affectedDatasetsCount;
-  private Set<String> affectedDatasets;
-  private Map<String, Integer> countPerDataset;
 
-  public static NoticeStat newInstance() {
-    return new NoticeStat(new TreeMap<>());
-  }
-
-  public NoticeStat(Map<String, Integer> countPerDataset) {
-    Set<String> affectedDatasets = new TreeSet<>(countPerDataset.keySet());
+  public NoticeStat(
+      int affectedDatasetsCount,
+      SortedSet<String> affectedDatasets,
+      SortedMap<String, Integer> countPerDataset) {
+    this.affectedDatasetsCount = affectedDatasetsCount;
     this.affectedDatasets = affectedDatasets;
     this.countPerDataset = countPerDataset;
-    this.affectedDatasetsCount = countPerDataset.size();
+  }
+
+  public NoticeStat() {
+    this(0, new TreeSet<>(), new TreeMap<>());
   }
 
   @VisibleForTesting
@@ -69,26 +73,15 @@ public class NoticeStat {
     return affectedDatasetsCount;
   }
 
-  private void updateAffectedDatasets(String affectedDataset) {
-    this.affectedDatasets.add(affectedDataset);
-  }
-
-  private void updateAffectedDatasetsCount(int affectedDatasetsCount) {
-    this.affectedDatasetsCount = affectedDatasetsCount;
-  }
-
   /**
    * Updates field countPerDataset for a given datasetId
    *
    * @param datasetId the id of the dataset to update
-   * @param count the new value for {@code NoticeStat#count}
+   * @param newCount the new value for {@code NoticeStat#count}
    */
-  private void updateCountPerDataset(String datasetId, Integer count) {
-    if (this.countPerDataset.get(datasetId) == null) {
-      this.countPerDataset.put(datasetId, count);
-      return;
-    }
-    this.countPerDataset.put(datasetId, this.countPerDataset.get(datasetId) + count);
+  private void updateCountPerDataset(String datasetId, Integer newCount) {
+    Integer currentCount = this.countPerDataset.getOrDefault(datasetId, 0);
+    this.countPerDataset.put(datasetId, currentCount + newCount);
   }
 
   /**
@@ -98,9 +91,9 @@ public class NoticeStat {
    * @param noticeCount the number of notices raised by a given dataset identified by its id
    */
   public void update(String datasetId, int noticeCount) {
-    updateAffectedDatasets(datasetId);
+    this.affectedDatasets.add(datasetId);
     updateCountPerDataset(datasetId, noticeCount);
-    updateAffectedDatasetsCount(this.affectedDatasets.size());
+    this.affectedDatasetsCount = this.affectedDatasets.size();
   }
 
   /**
