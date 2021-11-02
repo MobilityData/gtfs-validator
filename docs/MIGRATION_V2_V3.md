@@ -1,6 +1,6 @@
 # Notice migration from V2.0.0 to V3.0.0
 
-New rules were added, others were replaced by a group of new rules, and others had their severity changed in order to solve discrepancies with the [GTFS specification](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md).
+New rules were added, others were replaced by several new rules, and others had their severity changed in order to solve discrepancies with the [GTFS specification](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md).
 
 | V2.0.0                                               |          | V3.0.0                                                                                                                                                                           |          | Comments                                                                                                                                                         |
 | ---------------------------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
