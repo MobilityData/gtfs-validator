@@ -27,6 +27,7 @@ import com.google.gson.JsonObject;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -58,7 +59,7 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
   @Override
   public ValidationReport deserialize(
       JsonElement json, Type typoOfT, JsonDeserializationContext context) {
-    Set<NoticeSummary> notices = new HashSet<>();
+    Set<NoticeSummary> notices = new LinkedHashSet<>();
     JsonObject rootObject = json.getAsJsonObject();
     JsonArray noticesArray = rootObject.getAsJsonArray(NOTICES_MEMBER_NAME);
     for (JsonElement childObject : noticesArray) {
