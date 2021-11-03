@@ -1,4 +1,4 @@
-name: Rule acceptance tests
+name: v2 vs v3 evaluation
 
 on:
   pull_request:
