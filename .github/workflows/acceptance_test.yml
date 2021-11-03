@@ -234,5 +234,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Acceptance test have run on commit ${{ github.sha }}. Download `acceptance_test_report` in the artifacts listed [here](https://github.com/MobilityData/gtfs-validator/actions/runs/${{github.run_id}}) to retrieve the details of said test. Please note that artifacts are persisted for a maximum period of 90 days after generation."
+              body: "Download the `acceptance_test_report` for commit ${{ github.sha }} in the artifacts listed [here](https://github.com/MobilityData/gtfs-validator/actions/runs/${{github.run_id}}). This report will disappear after 90 days. Read more about the acceptance tests [here](https://github.com/MobilityData/gtfs-validator/docs/ACCEPTANCE_TESTS.md)."
             })
