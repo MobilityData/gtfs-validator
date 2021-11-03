@@ -31,8 +31,8 @@ import java.util.regex.Pattern;
  * ValidationNotice} this gives information about:
  *
  * <ul>
- *   <li>the number of datasets that raised this {@code Notice}
- *   <li>the ids of the datasets that raised this {@code Notice}
+ *   <li>the number of datasets that raised this {@code ValidationNotice}
+ *   <li>the ids of the datasets that raised this {@code ValidationNotice} and the url to be used to download them
  *   <li>the total number of this {@code ValidationNotice} in each datasets concerned
  * </ul>
  */

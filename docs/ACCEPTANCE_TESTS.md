@@ -40,8 +40,12 @@ Sample output:
       "first_notice_code": {
         "affectedDatasetsCount": 2,
         "affectedDatasets": [
-          "dataset-id-1",
-          "dataset-id-2"
+          {
+            "dataset-id-1": "url to dataset 1"
+          },
+          {
+            "dataset-id-2": "url to dataset 2"
+          }
         ],
         "countPerDataset": [
           {
@@ -57,7 +61,9 @@ Sample output:
       "fourth_notice_code": {
         "affectedDatasetsCount": 1,
         "affectedDatasets": [
-          "dataset-id-5"
+          {
+            "dataset-id-5": "url to dataset 5"
+          }
         ],
         "countPerDataset": [
           {
@@ -70,7 +76,9 @@ Sample output:
       "second_notice_code": {
         "affectedDatasetsCount": 1,
         "affectedDatasets": [
-          "dataset-id-2"
+          {
+            "dataset-id-2": "url to dataset 2"
+          }
         ],
         "countPerDataset": [
           {
@@ -83,9 +91,15 @@ Sample output:
       "third_notice_code": {
         "affectedDatasetsCount": 3,
         "affectedDatasets": [
-          "dataset-id-1",
-          "dataset-id-3",
-          "dataset-id-5"
+          {
+            "dataset-id-1": "url to dataset 1"
+          },
+          {
+            "dataset-id-3": "url to dataset 3"
+          },
+          {
+            "dataset-id-5": "url to dataset 5"
+          }
         ],
         "countPerDataset": [
           {
