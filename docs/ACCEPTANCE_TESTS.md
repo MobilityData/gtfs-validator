@@ -38,78 +38,78 @@ Sample output:
   "newErrors": [
     {
       "first_notice_code": {
-        "affectedDatasetsCount": 2,
-        "affectedDatasets": [
+        "affectedSourceCount": 2,
+        "affectedSources": [
           {
-            "dataset-id-1": "url to dataset 1"
+            "source-id-1": "url to dataset 1"
           },
           {
-            "dataset-id-2": "url to dataset 2"
+            "source-id-2": "url to dataset 2"
           }
         ],
-        "countPerDataset": [
+        "countPerSource": [
           {
-            "dataset-id-1": 4
+            "source-id-1": 4
           },
           {
-            "dataset-id-2": 6
+            "source-id-2": 6
           }
         ]
       }
     },
     {
       "fourth_notice_code": {
-        "affectedDatasetsCount": 1,
-        "affectedDatasets": [
+        "affectedSourceCount": 1,
+        "affectedSources": [
           {
-            "dataset-id-5": "url to dataset 5"
+            "source-id-5": "url to dataset 5"
           }
         ],
-        "countPerDataset": [
+        "countPerSource": [
           {
-            "dataset-id-5": 5
+            "source-id-5": 5
           }
         ]
       }
     },
     {
       "second_notice_code": {
-        "affectedDatasetsCount": 1,
-        "affectedDatasets": [
+        "affectedSourceCount": 1,
+        "affectedSources": [
           {
-            "dataset-id-2": "url to dataset 2"
+            "source-id-2": "url to dataset 2"
           }
         ],
-        "countPerDataset": [
+        "countPerSource": [
           {
-            "dataset-id-2": 40
+            "source-id-2": 40
           }
         ]
       }
     },
     {
       "third_notice_code": {
-        "affectedDatasetsCount": 3,
-        "affectedDatasets": [
+        "affectedSourceCount": 3,
+        "affectedSources": [
           {
-            "dataset-id-1": "url to dataset 1"
+            "source-id-1": "url to dataset 1"
           },
           {
-            "dataset-id-3": "url to dataset 3"
+            "source-id-3": "url to dataset 3"
           },
           {
-            "dataset-id-5": "url to dataset 5"
+            "source-id-5": "url to dataset 5"
           }
         ],
-        "countPerDataset": [
+        "countPerSource": [
           {
-            "dataset-id-1": 40
+            "source-id-1": 40
           },
           {
-            "dataset-id-3": 15
+            "source-id-3": 15
           },
           {
-            "dataset-id-5": 2
+            "source-id-5": 2
           }
         ]
       }
@@ -117,3 +117,5 @@ Sample output:
   ]
 }
 ```
+
+Where each source id value come from the MobilityDatabase: they are a unique [property](http://mobilitydatabase.org/wiki/Property:P33) used to identify each source of data. 
