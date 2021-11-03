@@ -20,7 +20,7 @@ For the latest version of all GTFS datasets from the [MobilityDatabase](http://m
 The logic for this process is defined in [`acceptance_test.yml`](../.github/workflows/acceptance_test.yml).
 
 This workflow:
-1. packages the `comparator` module;
+1. packages the `output-comparator` module;
 1. packages the proposed version of the validator;
 1. downloads the version of the validator that is on the [`master` branch](https://github.com/MobilityData/gtfs-validator/tree/master);
 1. defines a matrix of urls (fetched from the [MobilityDatabase](http://mobilitydatabase.org/wiki/Main_Page)) that will be used in further validation process; 
@@ -41,10 +41,10 @@ Sample output:
         "affectedSourcesCount": 2,
         "affectedSources": [
           {
-            "source-id-1": "url to latest version of dataset issue by source 1"
+            "source-id-1": "url to the latest version of the dataset issued by source-id-1"
           },
           {
-            "source-id-2": "url to latest version of dataset issue by source 2"
+            "source-id-2": "url to the latest version of the dataset issued by source-id-2"
           }
         ],
         "countPerSource": [
@@ -62,7 +62,7 @@ Sample output:
         "affectedSourcesCount": 1,
         "affectedSources": [
           {
-            "source-id-5": "url to latest version of dataset issue by source 5"
+            "source-id-5": "url to the latest version of the dataset issued by source-id-5"
           }
         ],
         "countPerSource": [
@@ -77,7 +77,7 @@ Sample output:
         "affectedSourcesCount": 1,
         "affectedSources": [
           {
-            "source-id-2": "url to latest version of dataset issue by source 2"
+            "source-id-2": "url to the latest version of the dataset issued by source-id-2"
           }
         ],
         "countPerSource": [
@@ -92,13 +92,13 @@ Sample output:
         "affectedSourcesCount": 3,
         "affectedSources": [
           {
-            "source-id-1": "url to latest version of dataset issue by source 1"
+            "source-id-1": "url to the latest version of the dataset issued by source-id-1"
           },
           {
-            "source-id-3": "url to latest version of dataset issue by source 3"
+            "source-id-3": "url to the latest version of the dataset issued by source-id-3"
           },
           {
-            "source-id-5": "url to latest version of dataset issue by source 5"
+            "source-id-5": "url to the latest version of the dataset issued by source-id-5"
           }
         ],
         "countPerSource": [
