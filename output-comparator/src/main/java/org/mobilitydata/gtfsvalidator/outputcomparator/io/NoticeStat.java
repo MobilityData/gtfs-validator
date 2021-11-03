@@ -20,11 +20,11 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 import java.util.SortedMap;
-import java.util.SortedSet;
 import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Used to store details about a particular {@code ValidationNotice}. For one {@code
@@ -41,13 +41,13 @@ public class NoticeStat {
   protected static final String AFFECTED_DATASETS_COUNT = "affectedDatasetsCount";
   protected static final String AFFECTED_DATASETS = "affectedDatasets";
   protected static final String COUNT_PER_DATASET = "countPerDataset";
-  private final SortedSet<String> affectedDatasets;
+  private final SortedMap<String, String> affectedDatasets;
   private final SortedMap<String, Integer> countPerDataset;
   private int affectedDatasetsCount;
 
   public NoticeStat(
       int affectedDatasetsCount,
-      SortedSet<String> affectedDatasets,
+      SortedMap<String, String> affectedDatasets,
       SortedMap<String, Integer> countPerDataset) {
     this.affectedDatasetsCount = affectedDatasetsCount;
     this.affectedDatasets = affectedDatasets;
@@ -55,11 +55,11 @@ public class NoticeStat {
   }
 
   public NoticeStat() {
-    this(0, new TreeSet<>(), new TreeMap<>());
+    this(0, new TreeMap<>(), new TreeMap<>());
   }
 
   @VisibleForTesting
-  public Set<String> getAffectedDatasets() {
+  public SortedMap<String, String> getAffectedDatasets() {
     return affectedDatasets;
   }
 
@@ -71,6 +71,17 @@ public class NoticeStat {
   @VisibleForTesting
   public int getAffectedDatasetsCount() {
     return affectedDatasetsCount;
+  }
+
+  public static String retrieveSourceUrl(String urlAsString, String datasetId) {
+    Pattern pattern =
+        Pattern.compile(
+            String.format(
+                "https://storage.googleapis.com/storage/v1/b/%s_latest/o/\\w+.zip\\?alt=media",
+                datasetId));
+    Matcher matcher = pattern.matcher(urlAsString);
+    matcher.find();
+    return matcher.group();
   }
 
   /**
@@ -90,8 +101,8 @@ public class NoticeStat {
    * @param datasetId the id of the dataset
    * @param noticeCount the number of notices raised by a given dataset identified by its id
    */
-  public void update(String datasetId, int noticeCount) {
-    this.affectedDatasets.add(datasetId);
+  public void update(String datasetId, int noticeCount, String urls) {
+    this.affectedDatasets.put(datasetId, retrieveSourceUrl(urls, datasetId));
     updateCountPerDataset(datasetId, noticeCount);
     this.affectedDatasetsCount = this.affectedDatasets.size();
   }
@@ -109,11 +120,13 @@ public class NoticeStat {
     root.add(AFFECTED_DATASETS, affectedDatasetsJsonArray);
     root.add(COUNT_PER_DATASET, statsJsonArray);
 
-    for (String datasetId : affectedDatasets) {
-      affectedDatasetsJsonArray.add(datasetId);
+    for (Entry<String, String> entry : affectedDatasets.entrySet()) {
+      JsonObject datasetInfo = new JsonObject();
+      datasetInfo.addProperty(entry.getKey(), entry.getValue());
+      affectedDatasetsJsonArray.add(datasetInfo);
       JsonObject statJson = new JsonObject();
       statsJsonArray.add(statJson);
-      statJson.addProperty(datasetId, countPerDataset.get(datasetId));
+      statJson.addProperty(entry.getKey(), countPerDataset.get(entry.getKey()));
     }
     return root;
   }

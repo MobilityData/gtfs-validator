@@ -42,7 +42,8 @@ public class Main {
   private static final String ACCEPTANCE_REPORT_JSON = "acceptance_report.json";
   private static final int IO_EXCEPTION_EXIT_CODE = 1;
   private static final int INVALID_NEW_RULE_EXIT_CODE = 2;
-  private static final Gson GSON = new GsonBuilder().serializeNulls().create();
+  private static final Gson GSON =
+      new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
 
   public static void main(String[] argv) {
     Arguments args = new Arguments();
@@ -74,6 +75,7 @@ public class Main {
     Map<String, NoticeStat> acceptanceTestReportMap = new TreeMap<>();
 
     try {
+      String urlsAsString = Files.readString(args.getSourceUrlPath());
       for (File file : reportDirs) {
         int newErrorCount;
         ValidationReport referenceReport =
@@ -84,11 +86,13 @@ public class Main {
         if (referenceReport.hasSameErrorCodes(latestReport)) {
           continue;
         }
+
         for (String noticeCode : referenceReport.getNewErrorsListing(latestReport)) {
           NoticeStat noticeStat =
               acceptanceTestReportMap.getOrDefault(noticeCode, new NoticeStat());
           acceptanceTestReportMap.putIfAbsent(noticeCode, noticeStat);
-          noticeStat.update(file.getName(), latestReport.getNoticeByCode(noticeCode).getCount());
+          noticeStat.update(
+              file.getName(), latestReport.getNoticeByCode(noticeCode).getCount(), urlsAsString);
         }
 
         newErrorCount = referenceReport.getNewErrorCount(latestReport);

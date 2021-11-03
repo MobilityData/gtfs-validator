@@ -30,18 +30,24 @@ import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class NoticeStatTest {
+  private static final String URL_PATTERN =
+      "https://storage.googleapis.com/storage/v1/b/%s_latest/o/1234.zip?alt=media";
+  private static final String URLS =
+      String.format(
+          "%s %s",
+          String.format(URL_PATTERN, "dataset-id-1"), String.format(URL_PATTERN, "dataset-id-2"));
 
   @Test
   public void update_shouldUpdateAllFields() {
     NoticeStat noticeStat = new NoticeStat();
-    noticeStat.update("dataset-id-1", 44);
-    noticeStat.update("dataset-id-2", 1);
-    noticeStat.update("dataset-id-2", 5);
+    noticeStat.update("dataset-id-1", 44, URLS);
+    noticeStat.update("dataset-id-2", 1, URLS);
+    noticeStat.update("dataset-id-2", 5, URLS);
     Map<String, Integer> datasetInfo = new HashMap<>();
     datasetInfo.put("dataset-id-1", 44);
     datasetInfo.put("dataset-id-2", 6);
     assertThat(noticeStat.getAffectedDatasetsCount()).isEqualTo(2);
-    assertThat(noticeStat.getAffectedDatasets())
+    assertThat(noticeStat.getAffectedDatasets().keySet())
         .containsExactlyElementsIn(Set.of("dataset-id-1", "dataset-id-2"));
     assertThat(noticeStat.getCountPerDataset()).containsExactlyEntriesIn(datasetInfo);
   }
@@ -59,13 +65,20 @@ public class NoticeStatTest {
   @Test
   public void toJson_emptyMap() {
     NoticeStat noticeStat = new NoticeStat();
-    noticeStat.update("dataset-id-1", 44);
-    noticeStat.update("dataset-id-2", 1);
-    noticeStat.update("dataset-id-2", 5);
+
+    noticeStat.update("dataset-id-1", 44, URLS);
+    noticeStat.update("dataset-id-2", 1, URLS);
+    noticeStat.update("dataset-id-2", 5, URLS);
     JsonObject noticeStatJson = noticeStat.toJson();
     JsonArray affectedDatasetsJsonArray = new JsonArray();
-    affectedDatasetsJsonArray.add("dataset-id-1");
-    affectedDatasetsJsonArray.add("dataset-id-2");
+
+    JsonObject firstDatasetInfo = new JsonObject();
+    JsonObject secondDatasetInfo = new JsonObject();
+    firstDatasetInfo.addProperty("dataset-id-1", String.format(URL_PATTERN, "dataset-id-1"));
+    secondDatasetInfo.addProperty("dataset-id-2", String.format(URL_PATTERN, "dataset-id-2"));
+
+    affectedDatasetsJsonArray.add(firstDatasetInfo);
+    affectedDatasetsJsonArray.add(secondDatasetInfo);
     JsonArray countPerDatasetJsonArray = new JsonArray();
     JsonObject firstDatasetInformation = new JsonObject();
     firstDatasetInformation.addProperty("dataset-id-1", 44);

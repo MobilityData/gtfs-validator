@@ -25,9 +25,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import java.util.Map;
 import java.util.SortedMap;
-import java.util.SortedSet;
 import java.util.TreeMap;
-import java.util.TreeSet;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -35,10 +33,16 @@ import org.mobilitydata.gtfsvalidator.outputcomparator.io.NoticeStat;
 
 @RunWith(JUnit4.class)
 public class MainTest {
-  private static final Gson GSON = new GsonBuilder().serializeNulls().create();
+  private static final Gson GSON =
+      new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
+  private static final String URL_PATTERN =
+      "https://storage.googleapis.com/storage/v1/b/%s_latest/o/1234.zip?alt=media";
 
   private static NoticeStat createNoticeStat(SortedMap<String, Integer> countPerDataset) {
-    SortedSet<String> affectedDatasets = new TreeSet<>(countPerDataset.keySet());
+    SortedMap<String, String> affectedDatasets = new TreeMap<>();
+    for (String datasetId : countPerDataset.keySet()) {
+      affectedDatasets.put(datasetId, String.format(URL_PATTERN, datasetId));
+    }
     int affectedDatasetsCount = countPerDataset.size();
     return new NoticeStat(affectedDatasetsCount, affectedDatasets, countPerDataset);
   }
@@ -67,14 +71,22 @@ public class MainTest {
     assertThat(GSON.toJson(acceptanceTestReportJson))
         .isEqualTo(
             "{\"newErrors\":[{\"first_notice_code\":{\"affectedDatasetsCount\":2,"
-                + "\"affectedDatasets\":[\"dataset-id-1\",\"dataset-id-2\"],\"countPerDataset"
-                + "\":[{\"dataset-id-1\":4},{\"dataset-id-2\":6}]}},{\"fourth_notice_code\":{"
-                + "\"affectedDatasetsCount\":1,\"affectedDatasets\":[\"dataset-id-5\"],"
-                + "\"countPerDataset\":[{\"dataset-id-5\":5}]}},{\"second_notice_code\":{"
-                + "\"affectedDatasetsCount\":1,\"affectedDatasets\":[\"dataset-id-2\"],"
-                + "\"countPerDataset\":[{\"dataset-id-2\":40}]}},{\"third_notice_code\":{"
-                + "\"affectedDatasetsCount\":3,\"affectedDatasets\":[\"dataset-id-1\",\"dataset-id-3"
-                + "\",\"dataset-id-5\"],\"countPerDataset\":[{\"dataset-id-1\":40},{\"dataset-id-3"
-                + "\":15},{\"dataset-id-5\":2}]}}]}");
+                + "\"affectedDatasets\":[{\"dataset-id-1\":\"https://storage.googleapis.com"
+                + "/storage/v1/b/dataset-id-1_latest/o/1234.zip?alt=media\"},{\"dataset-id-2\":"
+                + "\"https://storage.googleapis.com/storage/v1/b/dataset-id-2_latest/o/1234.zip"
+                + "?alt=media\"}],\"countPerDataset\":[{\"dataset-id-1\":4},{\"dataset-id-2"
+                + "\":6}]}},{\"fourth_notice_code\":{\"affectedDatasetsCount\":1,\"affectedDatasets"
+                + "\":[{\"dataset-id-5\":\"https://storage.googleapis.com/storage/v1/b/"
+                + "dataset-id-5_latest/o/1234.zip?alt=media\"}],\"countPerDataset\":[{"
+                + "\"dataset-id-5\":5}]}},{\"second_notice_code\":{\"affectedDatasetsCount\":1,"
+                + "\"affectedDatasets\":[{\"dataset-id-2\":\"https://storage.googleapis.com/"
+                + "storage/v1/b/dataset-id-2_latest/o/1234.zip?alt=media\"}],\"countPerDataset"
+                + "\":[{\"dataset-id-2\":40}]}},{\"third_notice_code\":{\"affectedDatasetsCount"
+                + "\":3,\"affectedDatasets\":[{\"dataset-id-1\":\"https://storage.googleapis.com"
+                + "/storage/v1/b/dataset-id-1_latest/o/1234.zip?alt=media\"},{\"dataset-id-3\":"
+                + "\"https://storage.googleapis.com/storage/v1/b/dataset-id-3_latest/o/1234.zip"
+                + "?alt=media\"},{\"dataset-id-5\":\"https://storage.googleapis.com/storage/v1/b/"
+                + "dataset-id-5_latest/o/1234.zip?alt=media\"}],\"countPerDataset\":["
+                + "{\"dataset-id-1\":40},{\"dataset-id-3\":15},{\"dataset-id-5\":2}]}}]}");
   }
 }

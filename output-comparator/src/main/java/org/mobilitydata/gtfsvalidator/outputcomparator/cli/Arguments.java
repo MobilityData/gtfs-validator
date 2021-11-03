@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.outputcomparator.cli;
 
 import com.beust.jcommander.Parameter;
+import java.nio.file.Path;
 
 /** Command-line arguments for output-comparator CLI. */
 public class Arguments {
@@ -55,6 +56,12 @@ public class Arguments {
       required = true)
   private String outputBase;
 
+  @Parameter(
+      names = {"-s", "--source_urls"},
+      description = "Path to source urls",
+      required = true)
+  private String sourceUrlPath;
+
   public String getReportDirectory() {
     return reportDirectory;
   }
@@ -77,5 +84,9 @@ public class Arguments {
 
   public String getOutputBase() {
     return outputBase;
+  }
+
+  public Path getSourceUrlPath() {
+    return Path.of(sourceUrlPath);
   }
 }
