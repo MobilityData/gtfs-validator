@@ -118,4 +118,6 @@ Sample output:
 }
 ```
 
-Where each source id value come from the MobilityDatabase: they are a unique [property](http://mobilitydatabase.org/wiki/Property:P33) used to identify each source of data. 
+Where each source id value come from the MobilityDatabase: they are a unique [property](http://mobilitydatabase.org/wiki/Property:P33) used to identify each source of data.
+
+The source id can be used to find all datasets versions of a source on the [MobilityDatabase](http://mobilitydatabase.org/wiki/Main_Page) for the sakes of debugging or exploration.
