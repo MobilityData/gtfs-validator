@@ -41,6 +41,7 @@ public class NoticeStat {
   protected static final String AFFECTED_DATASETS_COUNT = "affectedDatasetsCount";
   protected static final String AFFECTED_DATASETS = "affectedDatasets";
   protected static final String COUNT_PER_DATASET = "countPerDataset";
+  private static final String URL_PATTERN = "https://storage.googleapis.com/storage/v1/b/%s_latest/o/\\w+.zip\\?alt=media";
   private final SortedMap<String, String> affectedDatasets;
   private final SortedMap<String, Integer> countPerDataset;
   private int affectedDatasetsCount;
@@ -74,11 +75,7 @@ public class NoticeStat {
   }
 
   public static String retrieveSourceUrl(String urlAsString, String datasetId) {
-    Pattern pattern =
-        Pattern.compile(
-            String.format(
-                "https://storage.googleapis.com/storage/v1/b/%s_latest/o/\\w+.zip\\?alt=media",
-                datasetId));
+    Pattern pattern = Pattern.compile(String.format(URL_PATTERN, datasetId));
     Matcher matcher = pattern.matcher(urlAsString);
     matcher.find();
     return matcher.group();
