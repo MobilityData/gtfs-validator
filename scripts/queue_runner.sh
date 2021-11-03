@@ -17,4 +17,3 @@ do
    java -Xmx8G -Xms8G -jar gtfs-validator*v2_cli.jar --url $URL --output_base $OUTPUT_BASE/output/$path_name -f us-test
    wait
 done
-
