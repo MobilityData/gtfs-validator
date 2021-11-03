@@ -90,7 +90,6 @@ public class NoticeStatTest {
         .isEqualTo(affectedDatasetsJsonArray);
     assertThat(noticeStatJson.get(NoticeStat.AFFECTED_SOURCES_COUNT))
         .isEqualTo(new JsonPrimitive(2));
-    assertThat(noticeStatJson.get(NoticeStat.COUNT_PER_SOURCE))
-        .isEqualTo(countPerDatasetJsonArray);
+    assertThat(noticeStatJson.get(NoticeStat.COUNT_PER_SOURCE)).isEqualTo(countPerDatasetJsonArray);
   }
 }

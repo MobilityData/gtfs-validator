@@ -32,7 +32,8 @@ import java.util.regex.Pattern;
  *
  * <ul>
  *   <li>the number of datasets that raised this {@code ValidationNotice}
- *   <li>the ids of the datasets that raised this {@code ValidationNotice} and the url to be used to download them
+ *   <li>the ids of the datasets that raised this {@code ValidationNotice} and the url to be used to
+ *       download them
  *   <li>the total number of this {@code ValidationNotice} in each datasets concerned
  * </ul>
  */
@@ -41,7 +42,8 @@ public class NoticeStat {
   protected static final String AFFECTED_SOURCES_COUNT = "affectedSourcesCount";
   protected static final String AFFECTED_SOURCES = "affectedSources";
   protected static final String COUNT_PER_SOURCE = "countPerSource";
-  private static final String URL_PATTERN = "https://storage.googleapis.com/storage/v1/b/%s_latest/o/\\w+.zip\\?alt=media";
+  private static final String URL_PATTERN =
+      "https://storage.googleapis.com/storage/v1/b/%s_latest/o/\\w+.zip\\?alt=media";
   private final SortedMap<String, String> affectedSources;
   private final SortedMap<String, Integer> countPerSource;
   private int affectedSourcesCount;
@@ -96,7 +98,8 @@ public class NoticeStat {
    * Updates all fields of this {@code NoticeStat}.
    *
    * @param sourceId the id of the source
-   * @param noticeCount the number of notices raised by the latest dataset version from a given source identified by its id
+   * @param noticeCount the number of notices raised by the latest dataset version from a given
+   *     source identified by its id
    */
   public void update(String sourceId, int noticeCount, String urls) {
     this.affectedSources.put(sourceId, retrieveSourceUrl(urls, sourceId));
