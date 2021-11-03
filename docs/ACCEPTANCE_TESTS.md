@@ -5,7 +5,7 @@
 _Definitions_ 
 - **The reference validator** is defined as the latest version of the validator available on the ([master branch](https://github.com/MobilityData/gtfs-validator/tree/master)) of this repository. 
 - **The proposed validator** is defined as the version of the validator that results from the changes introduced in the pull request that is proposed.
-- **Acceptance criteria** is defined as the version of the validator that results from the changes introduced in the pull request that is proposed.
+- **The acceptance criteria** (mentioned in the diagram below) is defined as the impact that a pull request has on datasets: does this pull request disrupt a large quantities of datasets? If yes, the pull request should be flagged as introducing breaking changes or rejected, if no then the pull request can be safely merged to the [`master` branch](https://github.com/MobilityData/gtfs-validator/tree/master).       
 
 Execute the proposed validator against all datasets (latest version hosted in the [MobilityDatabase](http://mobilitydatabase.org/wiki/Main_Page)) and quantify the effect of a code change on all of them.  
 
