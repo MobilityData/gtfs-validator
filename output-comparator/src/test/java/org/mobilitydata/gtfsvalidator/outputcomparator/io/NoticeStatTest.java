@@ -35,62 +35,62 @@ public class NoticeStatTest {
   private static final String URLS =
       String.format(
           "%s %s",
-          String.format(URL_PATTERN, "dataset-id-1"), String.format(URL_PATTERN, "dataset-id-2"));
+          String.format(URL_PATTERN, "source-id-1"), String.format(URL_PATTERN, "source-id-2"));
 
   @Test
   public void update_shouldUpdateAllFields() {
     NoticeStat noticeStat = new NoticeStat();
-    noticeStat.update("dataset-id-1", 44, URLS);
-    noticeStat.update("dataset-id-2", 1, URLS);
-    noticeStat.update("dataset-id-2", 5, URLS);
+    noticeStat.update("source-id-1", 44, URLS);
+    noticeStat.update("source-id-2", 1, URLS);
+    noticeStat.update("source-id-2", 5, URLS);
     Map<String, Integer> datasetInfo = new HashMap<>();
-    datasetInfo.put("dataset-id-1", 44);
-    datasetInfo.put("dataset-id-2", 6);
-    assertThat(noticeStat.getAffectedDatasetsCount()).isEqualTo(2);
-    assertThat(noticeStat.getAffectedDatasets().keySet())
-        .containsExactlyElementsIn(Set.of("dataset-id-1", "dataset-id-2"));
-    assertThat(noticeStat.getCountPerDataset()).containsExactlyEntriesIn(datasetInfo);
+    datasetInfo.put("source-id-1", 44);
+    datasetInfo.put("source-id-2", 6);
+    assertThat(noticeStat.getAffectedSourcesCount()).isEqualTo(2);
+    assertThat(noticeStat.getAffectedSources().keySet())
+        .containsExactlyElementsIn(Set.of("source-id-1", "source-id-2"));
+    assertThat(noticeStat.getCountPerSource()).containsExactlyEntriesIn(datasetInfo);
   }
 
   @Test
   public void toJson_noData() {
     NoticeStat noticeStat = new NoticeStat();
     JsonObject noticeStatJson = noticeStat.toJson();
-    assertThat(noticeStatJson.get(NoticeStat.AFFECTED_DATASETS)).isEqualTo(new JsonArray());
-    assertThat(noticeStatJson.get(NoticeStat.AFFECTED_DATASETS_COUNT))
+    assertThat(noticeStatJson.get(NoticeStat.AFFECTED_SOURCES)).isEqualTo(new JsonArray());
+    assertThat(noticeStatJson.get(NoticeStat.AFFECTED_SOURCES_COUNT))
         .isEqualTo(new JsonPrimitive(0));
-    assertThat(noticeStatJson.get(NoticeStat.COUNT_PER_DATASET)).isEqualTo(new JsonArray());
+    assertThat(noticeStatJson.get(NoticeStat.COUNT_PER_SOURCE)).isEqualTo(new JsonArray());
   }
 
   @Test
   public void toJson_emptyMap() {
     NoticeStat noticeStat = new NoticeStat();
 
-    noticeStat.update("dataset-id-1", 44, URLS);
-    noticeStat.update("dataset-id-2", 1, URLS);
-    noticeStat.update("dataset-id-2", 5, URLS);
+    noticeStat.update("source-id-1", 44, URLS);
+    noticeStat.update("source-id-2", 1, URLS);
+    noticeStat.update("source-id-2", 5, URLS);
     JsonObject noticeStatJson = noticeStat.toJson();
     JsonArray affectedDatasetsJsonArray = new JsonArray();
 
     JsonObject firstDatasetInfo = new JsonObject();
     JsonObject secondDatasetInfo = new JsonObject();
-    firstDatasetInfo.addProperty("dataset-id-1", String.format(URL_PATTERN, "dataset-id-1"));
-    secondDatasetInfo.addProperty("dataset-id-2", String.format(URL_PATTERN, "dataset-id-2"));
+    firstDatasetInfo.addProperty("source-id-1", String.format(URL_PATTERN, "source-id-1"));
+    secondDatasetInfo.addProperty("source-id-2", String.format(URL_PATTERN, "source-id-2"));
 
     affectedDatasetsJsonArray.add(firstDatasetInfo);
     affectedDatasetsJsonArray.add(secondDatasetInfo);
     JsonArray countPerDatasetJsonArray = new JsonArray();
     JsonObject firstDatasetInformation = new JsonObject();
-    firstDatasetInformation.addProperty("dataset-id-1", 44);
+    firstDatasetInformation.addProperty("source-id-1", 44);
     JsonObject secondDatasetInformation = new JsonObject();
-    secondDatasetInformation.addProperty("dataset-id-2", 6);
+    secondDatasetInformation.addProperty("source-id-2", 6);
     countPerDatasetJsonArray.add(firstDatasetInformation);
     countPerDatasetJsonArray.add(secondDatasetInformation);
-    assertThat(noticeStatJson.get(NoticeStat.AFFECTED_DATASETS))
+    assertThat(noticeStatJson.get(NoticeStat.AFFECTED_SOURCES))
         .isEqualTo(affectedDatasetsJsonArray);
-    assertThat(noticeStatJson.get(NoticeStat.AFFECTED_DATASETS_COUNT))
+    assertThat(noticeStatJson.get(NoticeStat.AFFECTED_SOURCES_COUNT))
         .isEqualTo(new JsonPrimitive(2));
-    assertThat(noticeStatJson.get(NoticeStat.COUNT_PER_DATASET))
+    assertThat(noticeStatJson.get(NoticeStat.COUNT_PER_SOURCE))
         .isEqualTo(countPerDatasetJsonArray);
   }
 }

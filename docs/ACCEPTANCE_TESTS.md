@@ -38,13 +38,13 @@ Sample output:
   "newErrors": [
     {
       "first_notice_code": {
-        "affectedSourceCount": 2,
+        "affectedSourcesCount": 2,
         "affectedSources": [
           {
-            "source-id-1": "url to dataset 1"
+            "source-id-1": "url to latest version of dataset issue by source 1"
           },
           {
-            "source-id-2": "url to dataset 2"
+            "source-id-2": "url to latest version of dataset issue by source 2"
           }
         ],
         "countPerSource": [
@@ -59,10 +59,10 @@ Sample output:
     },
     {
       "fourth_notice_code": {
-        "affectedSourceCount": 1,
+        "affectedSourcesCount": 1,
         "affectedSources": [
           {
-            "source-id-5": "url to dataset 5"
+            "source-id-5": "url to latest version of dataset issue by source 5"
           }
         ],
         "countPerSource": [
@@ -74,10 +74,10 @@ Sample output:
     },
     {
       "second_notice_code": {
-        "affectedSourceCount": 1,
+        "affectedSourcesCount": 1,
         "affectedSources": [
           {
-            "source-id-2": "url to dataset 2"
+            "source-id-2": "url to latest version of dataset issue by source 2"
           }
         ],
         "countPerSource": [
@@ -89,16 +89,16 @@ Sample output:
     },
     {
       "third_notice_code": {
-        "affectedSourceCount": 3,
+        "affectedSourcesCount": 3,
         "affectedSources": [
           {
-            "source-id-1": "url to dataset 1"
+            "source-id-1": "url to latest version of dataset issue by source 1"
           },
           {
-            "source-id-3": "url to dataset 3"
+            "source-id-3": "url to latest version of dataset issue by source 3"
           },
           {
-            "source-id-5": "url to dataset 5"
+            "source-id-5": "url to latest version of dataset issue by source 5"
           }
         ],
         "countPerSource": [

@@ -38,13 +38,13 @@ public class MainTest {
   private static final String URL_PATTERN =
       "https://storage.googleapis.com/storage/v1/b/%s_latest/o/1234.zip?alt=media";
 
-  private static NoticeStat createNoticeStat(SortedMap<String, Integer> countPerDataset) {
-    SortedMap<String, String> affectedDatasets = new TreeMap<>();
-    for (String datasetId : countPerDataset.keySet()) {
-      affectedDatasets.put(datasetId, String.format(URL_PATTERN, datasetId));
+  private static NoticeStat createNoticeStat(SortedMap<String, Integer> countPerSource) {
+    SortedMap<String, String> affectedSources = new TreeMap<>();
+    for (String sourceId : countPerSource.keySet()) {
+      affectedSources.put(sourceId, String.format(URL_PATTERN, sourceId));
     }
-    int affectedDatasetsCount = countPerDataset.size();
-    return new NoticeStat(affectedDatasetsCount, affectedDatasets, countPerDataset);
+    int affectedSourcesCount = countPerSource.size();
+    return new NoticeStat(affectedSourcesCount, affectedSources, countPerSource);
   }
 
   @Test
@@ -57,12 +57,12 @@ public class MainTest {
   public void newNotices_generatesReport() {
     Map<String, NoticeStat> reportData = new TreeMap<>();
     NoticeStat firstNoticeStat =
-        createNoticeStat(ImmutableSortedMap.of("dataset-id-1", 4, "dataset-id-2", 6));
-    NoticeStat secondNoticeStat = createNoticeStat(ImmutableSortedMap.of("dataset-id-2", 40));
+        createNoticeStat(ImmutableSortedMap.of("source-id-1", 4, "source-id-2", 6));
+    NoticeStat secondNoticeStat = createNoticeStat(ImmutableSortedMap.of("source-id-2", 40));
     NoticeStat thirdNoticeStat =
         createNoticeStat(
-            ImmutableSortedMap.of("dataset-id-1", 40, "dataset-id-3", 15, "dataset-id-5", 2));
-    NoticeStat fourthNoticeStat = createNoticeStat(ImmutableSortedMap.of("dataset-id-5", 5));
+            ImmutableSortedMap.of("source-id-1", 40, "source-id-3", 15, "source-id-5", 2));
+    NoticeStat fourthNoticeStat = createNoticeStat(ImmutableSortedMap.of("source-id-5", 5));
     reportData.put("first_notice_code", firstNoticeStat);
     reportData.put("second_notice_code", secondNoticeStat);
     reportData.put("third_notice_code", thirdNoticeStat);
@@ -70,23 +70,23 @@ public class MainTest {
     JsonObject acceptanceTestReportJson = generateAcceptanceTestReport(reportData);
     assertThat(GSON.toJson(acceptanceTestReportJson))
         .isEqualTo(
-            "{\"newErrors\":[{\"first_notice_code\":{\"affectedDatasetsCount\":2,"
-                + "\"affectedDatasets\":[{\"dataset-id-1\":\"https://storage.googleapis.com"
-                + "/storage/v1/b/dataset-id-1_latest/o/1234.zip?alt=media\"},{\"dataset-id-2\":"
-                + "\"https://storage.googleapis.com/storage/v1/b/dataset-id-2_latest/o/1234.zip"
-                + "?alt=media\"}],\"countPerDataset\":[{\"dataset-id-1\":4},{\"dataset-id-2"
-                + "\":6}]}},{\"fourth_notice_code\":{\"affectedDatasetsCount\":1,\"affectedDatasets"
-                + "\":[{\"dataset-id-5\":\"https://storage.googleapis.com/storage/v1/b/"
-                + "dataset-id-5_latest/o/1234.zip?alt=media\"}],\"countPerDataset\":[{"
-                + "\"dataset-id-5\":5}]}},{\"second_notice_code\":{\"affectedDatasetsCount\":1,"
-                + "\"affectedDatasets\":[{\"dataset-id-2\":\"https://storage.googleapis.com/"
-                + "storage/v1/b/dataset-id-2_latest/o/1234.zip?alt=media\"}],\"countPerDataset"
-                + "\":[{\"dataset-id-2\":40}]}},{\"third_notice_code\":{\"affectedDatasetsCount"
-                + "\":3,\"affectedDatasets\":[{\"dataset-id-1\":\"https://storage.googleapis.com"
-                + "/storage/v1/b/dataset-id-1_latest/o/1234.zip?alt=media\"},{\"dataset-id-3\":"
-                + "\"https://storage.googleapis.com/storage/v1/b/dataset-id-3_latest/o/1234.zip"
-                + "?alt=media\"},{\"dataset-id-5\":\"https://storage.googleapis.com/storage/v1/b/"
-                + "dataset-id-5_latest/o/1234.zip?alt=media\"}],\"countPerDataset\":["
-                + "{\"dataset-id-1\":40},{\"dataset-id-3\":15},{\"dataset-id-5\":2}]}}]}");
+            "{\"newErrors\":[{\"first_notice_code\":{\"affectedSourcesCount\":2,"
+                + "\"affectedSources\":[{\"source-id-1\":\"https://storage.googleapis.com"
+                + "/storage/v1/b/source-id-1_latest/o/1234.zip?alt=media\"},{\"source-id-2\":"
+                + "\"https://storage.googleapis.com/storage/v1/b/source-id-2_latest/o/1234.zip"
+                + "?alt=media\"}],\"countPerSource\":[{\"source-id-1\":4},{\"source-id-2"
+                + "\":6}]}},{\"fourth_notice_code\":{\"affectedSourcesCount\":1,\"affectedSources"
+                + "\":[{\"source-id-5\":\"https://storage.googleapis.com/storage/v1/b/"
+                + "source-id-5_latest/o/1234.zip?alt=media\"}],\"countPerSource\":[{"
+                + "\"source-id-5\":5}]}},{\"second_notice_code\":{\"affectedSourcesCount\":1,"
+                + "\"affectedSources\":[{\"source-id-2\":\"https://storage.googleapis.com/"
+                + "storage/v1/b/source-id-2_latest/o/1234.zip?alt=media\"}],\"countPerSource"
+                + "\":[{\"source-id-2\":40}]}},{\"third_notice_code\":{\"affectedSourcesCount"
+                + "\":3,\"affectedSources\":[{\"source-id-1\":\"https://storage.googleapis.com"
+                + "/storage/v1/b/source-id-1_latest/o/1234.zip?alt=media\"},{\"source-id-3\":"
+                + "\"https://storage.googleapis.com/storage/v1/b/source-id-3_latest/o/1234.zip"
+                + "?alt=media\"},{\"source-id-5\":\"https://storage.googleapis.com/storage/v1/b/"
+                + "source-id-5_latest/o/1234.zip?alt=media\"}],\"countPerSource\":["
+                + "{\"source-id-1\":40},{\"source-id-3\":15},{\"source-id-5\":2}]}}]}");
   }
 }

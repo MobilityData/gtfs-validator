@@ -38,21 +38,21 @@ import java.util.regex.Pattern;
  */
 public class NoticeStat {
 
-  protected static final String AFFECTED_DATASETS_COUNT = "affectedDatasetsCount";
-  protected static final String AFFECTED_DATASETS = "affectedDatasets";
-  protected static final String COUNT_PER_DATASET = "countPerDataset";
+  protected static final String AFFECTED_SOURCES_COUNT = "affectedSourcesCount";
+  protected static final String AFFECTED_SOURCES = "affectedSources";
+  protected static final String COUNT_PER_SOURCE = "countPerSource";
   private static final String URL_PATTERN = "https://storage.googleapis.com/storage/v1/b/%s_latest/o/\\w+.zip\\?alt=media";
-  private final SortedMap<String, String> affectedDatasets;
-  private final SortedMap<String, Integer> countPerDataset;
-  private int affectedDatasetsCount;
+  private final SortedMap<String, String> affectedSources;
+  private final SortedMap<String, Integer> countPerSource;
+  private int affectedSourcesCount;
 
   public NoticeStat(
       int affectedDatasetsCount,
       SortedMap<String, String> affectedDatasets,
       SortedMap<String, Integer> countPerDataset) {
-    this.affectedDatasetsCount = affectedDatasetsCount;
-    this.affectedDatasets = affectedDatasets;
-    this.countPerDataset = countPerDataset;
+    this.affectedSourcesCount = affectedDatasetsCount;
+    this.affectedSources = affectedDatasets;
+    this.countPerSource = countPerDataset;
   }
 
   public NoticeStat() {
@@ -60,18 +60,18 @@ public class NoticeStat {
   }
 
   @VisibleForTesting
-  public SortedMap<String, String> getAffectedDatasets() {
-    return affectedDatasets;
+  public SortedMap<String, String> getAffectedSources() {
+    return affectedSources;
   }
 
   @VisibleForTesting
-  public Map<String, Integer> getCountPerDataset() {
-    return countPerDataset;
+  public Map<String, Integer> getCountPerSource() {
+    return countPerSource;
   }
 
   @VisibleForTesting
-  public int getAffectedDatasetsCount() {
-    return affectedDatasetsCount;
+  public int getAffectedSourcesCount() {
+    return affectedSourcesCount;
   }
 
   public static String retrieveSourceUrl(String urlAsString, String datasetId) {
@@ -82,26 +82,26 @@ public class NoticeStat {
   }
 
   /**
-   * Updates field countPerDataset for a given datasetId
+   * Updates field countPerDataset for a given sourceId
    *
-   * @param datasetId the id of the dataset to update
+   * @param sourceId the id of the source to update
    * @param newCount the new value for {@code NoticeStat#count}
    */
-  private void updateCountPerDataset(String datasetId, Integer newCount) {
-    Integer currentCount = this.countPerDataset.getOrDefault(datasetId, 0);
-    this.countPerDataset.put(datasetId, currentCount + newCount);
+  private void updateCountPerDataset(String sourceId, Integer newCount) {
+    Integer currentCount = this.countPerSource.getOrDefault(sourceId, 0);
+    this.countPerSource.put(sourceId, currentCount + newCount);
   }
 
   /**
    * Updates all fields of this {@code NoticeStat}.
    *
-   * @param datasetId the id of the dataset
-   * @param noticeCount the number of notices raised by a given dataset identified by its id
+   * @param sourceId the id of the source
+   * @param noticeCount the number of notices raised by the latest dataset version from a given source identified by its id
    */
-  public void update(String datasetId, int noticeCount, String urls) {
-    this.affectedDatasets.put(datasetId, retrieveSourceUrl(urls, datasetId));
-    updateCountPerDataset(datasetId, noticeCount);
-    this.affectedDatasetsCount = this.affectedDatasets.size();
+  public void update(String sourceId, int noticeCount, String urls) {
+    this.affectedSources.put(sourceId, retrieveSourceUrl(urls, sourceId));
+    updateCountPerDataset(sourceId, noticeCount);
+    this.affectedSourcesCount = this.affectedSources.size();
   }
 
   /**
@@ -113,17 +113,17 @@ public class NoticeStat {
     JsonObject root = new JsonObject();
     JsonArray affectedDatasetsJsonArray = new JsonArray();
     JsonArray statsJsonArray = new JsonArray();
-    root.addProperty(AFFECTED_DATASETS_COUNT, affectedDatasetsCount);
-    root.add(AFFECTED_DATASETS, affectedDatasetsJsonArray);
-    root.add(COUNT_PER_DATASET, statsJsonArray);
+    root.addProperty(AFFECTED_SOURCES_COUNT, affectedSourcesCount);
+    root.add(AFFECTED_SOURCES, affectedDatasetsJsonArray);
+    root.add(COUNT_PER_SOURCE, statsJsonArray);
 
-    for (Entry<String, String> entry : affectedDatasets.entrySet()) {
+    for (Entry<String, String> entry : affectedSources.entrySet()) {
       JsonObject datasetInfo = new JsonObject();
       datasetInfo.addProperty(entry.getKey(), entry.getValue());
       affectedDatasetsJsonArray.add(datasetInfo);
       JsonObject statJson = new JsonObject();
       statsJsonArray.add(statJson);
-      statJson.addProperty(entry.getKey(), countPerDataset.get(entry.getKey()));
+      statJson.addProperty(entry.getKey(), countPerSource.get(entry.getKey()));
     }
     return root;
   }

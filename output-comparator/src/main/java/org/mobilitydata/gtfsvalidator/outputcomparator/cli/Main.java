@@ -112,7 +112,7 @@ public class Main {
   /**
    * Generates acceptance test report.
    *
-   * @param acceptanceTestReportData acceptance test data (mapped by datasetId, {@code NoticeStat})
+   * @param acceptanceTestReportData acceptance test data (mapped by sourceId, {@code NoticeStat})
    * @return the {@code JsonObject} representation of the acceptance test report
    */
   @VisibleForTesting
