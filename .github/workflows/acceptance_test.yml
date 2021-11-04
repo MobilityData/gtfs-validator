@@ -144,7 +144,7 @@ jobs:
       - name: Set URL matrix
         id: set-matrix
         run: |
-          python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d datasets_metadata -l gtfs_latest_versions.json -o gtfs_older_versions.json
+          python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d scripts/mobility-database-harvester/datasets_metadata -l gtfs_latest_versions.json -o gtfs_older_versions.json
           DATASETS=$(jq . datasets_metadata/latest_versions.json -c)
           echo $DATASETS
           echo "::set-output name=matrix::$DATASETS"
