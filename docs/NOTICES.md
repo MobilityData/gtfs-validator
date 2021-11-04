@@ -41,6 +41,7 @@
 | `new_line_in_value`                                    	| [`NewLineInValueNotice`](#NewLineInValueNotice)                                                                 	|
 | `number_out_of_range`                                  	| [`NumberOutOfRangeNotice`](#NumberOutOfRangeNotice)                                                             	|
 | `overlapping_frequency`                                	| [`OverlappingFrequencyNotice`](#OverlappingFrequencyNotice)                                                     	|
+| `pathway_unreachable_location`                            | [`PathwayUnreachableLocationNotice`](#PathwayUnreachableLocationNotice)	                                        |
 | `route_both_short_and_long_name_missing`               	| [`RouteBothShortAndLongNameMissingNotice`](#RouteBothShortAndLongNameMissingNotice)                             	|
 | `start_and_end_range_equal`                            	| [`StartAndEndRangeEqualNotice`](#StartAndEndRangeEqualNotice)                                                   	|
 | `start_and_end_range_out_of_order`                     	| [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         	|
@@ -48,6 +49,7 @@
 | `stop_without_zone_id`                     	            | [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                 	                                        |
 | `stop_time_wit_arrival_before_previous_departure_time` 	| [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](#StopTimeWithArrivalBeforePreviousDepartureTimeNotice) 	|
 | `stop_time_with_only_arrival_or_departure_time`        	| [`StopTimeWithOnlyArrivalOrDepartureTimeNotice`](#StopTimeWithOnlyArrivalOrDepartureTimeNotice)                 	|
+| `translation_foreign_key_violation`                       | [`TranslationForeignKeyViolationNotice`](#TranslationForeignKeyViolationNotice)	                                |
 | `translation_unexpected_value`                           	| [`TranslationUnexpectedValueNotice`](#TranslationUnexpectedValueNotice)                                               	|
 | `wrong_parent_location_type`                           	| [`WrongParentLocationTypeNotice`](#WrongParentLocationTypeNotice)                                               	|
 
@@ -532,6 +534,23 @@
 ##### Affected files
 * [`frequencies.txt`](http://gtfs.org/reference/static#frequenciestxt)
 
+#### [PathwayUnreachableLocationNotice](/RULES.md#PathwayUnreachableLocationNotice)
+##### Fields description
+
+| Field name   	 | Description                                         | Type    	|
+|----------------|--------------------------------------------------|---------	|
+| `csvRowNumber` | Row number of the unreachable location.             | Long    	|
+| `stopId`     	 | The id of the unreachable location.                 | String  	|
+| `stopName`   	 | The stop name of the unreachable location.     	   | String  	|
+| `locationType` | The type of the unreachable location. 	           | Integer 	|
+| `parentStation`| The parent of the unreachable location. 	           | String 	|
+| `hasEntrance`  | Whether the location is reachable from entrances.   | String 	|
+| `hasExit`      | Whether some exit can be reached from the location. | String 	|
+
+##### Affected files
+* [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+
 #### [`RouteBothShortAndLongNameMissingNotice`](/RULES.md#RouteBothShortAndLongNameMissingNotice)
 ##### Fields description
 
@@ -629,6 +648,19 @@
 ##### Affected files
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
+#### [`TranslationForeignKeyViolationNotice`](/RULES.md#TranslationForeignKeyViolationNotice)
+##### Fields description
+
+| Field name       | Description                            | Type    	|
+|------------------|----------------------------------------|-------	|
+| `csvRowNumber`   | The row number of the faulty record.   | Long    	|
+| `tableName`      | `table_name` of the faulty record.     | String  	|
+| `recordId`       | `record_id` of the faulty record.      | String  	|
+| `recordSubId`    | `record_sub_id` of the faulty record.  | String  	|
+
+##### Affected files
+* [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
+
 #### [`TranslationUnexpectedValueNotice`](/RULES.md#TranslationUnexpectedValueNotice)
 ##### Fields description
 
@@ -681,7 +713,6 @@
 | `non_ascii_or_non_printable_char`          	| [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	|
 | `pathway_dangling_generic_node`               | [`PathwayDanglingGenericNodeNotice`](#PathwayDanglingGenericNodeNotice)	            |
 | `pathway_loop`                                | [`PathwayLoopNotice`](#PathwayLoopNotice)	                                            |
-| `pathway_unreachable_location`                | [`PathwayUnreachableLocationNotice`](#PathwayUnreachableLocationNotice)	            |
 | `platform_without_parent_station`          	| [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)       	|
 | `route_color_contrast`                     	| [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	|
 | `route_short_and_long_name_equal`          	| [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	|
@@ -698,7 +729,6 @@
 | `stop_too_far_from_shape_using_user_distance`	| [`StopTooFarFromShapeUsingUserDistanceNotice`](#StopTooFarFromShapeUsingUserDistanceNotice)                 	|
 | `stop_too_far_from_shape`                 	| [`StopTooFarFromShapeNotice`](#StopTooFarFromShapeNotice)                 	|
 | `too_fast_travel`                          	| [`TooFastTravelNotice`](#TooFastTravelNotice)                                     	|
-| `translation_foreign_key_violation`           | [`TranslationForeignKeyViolationNotice`](#TranslationForeignKeyViolationNotice)	    |
 | `translation_unknown_table_name`              | [`TranslationUnknownTableNameNotice`](#TranslationUnknownTableNameNotice)	            |
 | `unexpected_enum_value`                    	| [`UnexpectedEnumValueNotice`](#UnexpectedEnumValueNotice)                         	|
 | `unusable_trip`                            	| [`UnusableTripNotice`](#UnusableTripNotice)                                       	|
@@ -880,23 +910,6 @@
 
 ##### Affected files
 * [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
-
-#### [PathwayUnreachableLocationNotice](/RULES.md#PathwayUnreachableLocationNotice)
-##### Fields description
-
-| Field name   	 | Description                                         | Type    	|
-|----------------|--------------------------------------------------|---------	|
-| `csvRowNumber` | Row number of the unreachable location.             | Long    	|
-| `stopId`     	 | The id of the unreachable location.                 | String  	|
-| `stopName`   	 | The stop name of the unreachable location.     	   | String  	|
-| `locationType` | The type of the unreachable location. 	           | Integer 	|
-| `parentStation`| The parent of the unreachable location. 	           | String 	|
-| `hasEntrance`  | Whether the location is reachable from entrances.   | String 	|
-| `hasExit`      | Whether some exit can be reached from the location. | String 	|
-
-##### Affected files
-* [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
-* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
 #### [PlatformWithoutParentStationNotice](/RULES.md#PlatformWithoutParentStationNotice)
 ##### Fields description
@@ -1165,19 +1178,6 @@
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
-
-#### [`TranslationForeignKeyViolationNotice`](/RULES.md#TranslationForeignKeyViolationNotice)
-##### Fields description
-
-| Field name       | Description                            | Type    	|
-|------------------|----------------------------------------|-------	|
-| `csvRowNumber`   | The row number of the faulty record.   | Long    	|
-| `tableName`      | `table_name` of the faulty record.     | String  	|
-| `recordId`       | `record_id` of the faulty record.      | String  	|
-| `recordSubId`    | `record_sub_id` of the faulty record.  | String  	|
-
-##### Affected files
-* [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 
 #### [`TranslationUnknownTableNameNotice`](/RULES.md#TranslationUnknownTableNameNotice)
 ##### Fields description
