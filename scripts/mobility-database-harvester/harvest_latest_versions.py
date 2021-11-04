@@ -11,11 +11,14 @@
 # limitations under the License.
 
 import argparse
+
 import dateutil.parser as dp
+import numpy as np
 import json
 import requests
 import os
 from os import path
+from tqdm import tqdm
 
 from google.cloud import storage
 
@@ -40,16 +43,16 @@ MAINSNAK = "mainsnak"
 DATAVALUE = "datavalue"
 VALUE = "value"
 ID = "id"
-TYPE = "TYPE"
-PROJECT_ID = "PROJECT_ID"
-PRIVATE_KEY_ID = "PRIVATE_KEY_ID"
-PRIVATE_KEY = "PRIVATE_KEY"
-CLIENT_EMAIL = "CLIENT_EMAIL"
-CLIENT_ID = "CLIENT_ID"
-AUTH_URI = "AUTH_URI"
-TOKEN_URI = "TOKEN_URI"
-AUTH_PROVIDER_X509_CERT_URL = "AUTH_PROVIDER_X509_CERT_URL"
-CLIENT_X509_CERT_URL = "CLIENT_X509_CERT_URL"
+MD_TYPE = "MD_TYPE"
+MD_PROJECT_ID = "MD_PROJECT_ID"
+MD_PRIVATE_KEY_ID = "MD_PRIVATE_KEY_ID"
+MD_PRIVATE_KEY = "MD_PRIVATE_KEY"
+MD_CLIENT_EMAIL = "MD_CLIENT_EMAIL"
+MD_CLIENT_ID = "MD_CLIENT_ID"
+MD_AUTH_URI = "MD_AUTH_URI"
+MD_TOKEN_URI = "MD_TOKEN_URI"
+MD_AUTH_PROVIDER_X509_CERT_URL = "MD_AUTH_PROVIDER_X509_CERT_URL"
+MD_CLIENT_X509_CERT_URL = "MD_CLIENT_X509_CERT_URL"
 
 # Credentials keys
 TYPE_KEY = "type"
@@ -75,21 +78,29 @@ EPOCH_DATE = "1970-01-01T00:00:00Z"
 LATEST_BUCKET_PATH = "{source_archives_id}_latest"
 LATEST_URL = "https://storage.googleapis.com/storage/v1/b/{source_archives_id}_latest/o/{blob_name}?alt=media"
 
+# Github constants
+MAX_JOB_NUMBER = 256
+
+# json keys
+ROOT = "include"
+URL_KEY = "url"
+DATA = "data"
+
 
 def get_credentials():
     credentials = {
-        TYPE_KEY: os.getenv(TYPE).replace("\\n", "\n"),
-        PROJECT_ID_KEY: os.getenv(PROJECT_ID).replace("\\n", "\n"),
-        PRIVATE_KEY_ID_KEY: os.getenv(PRIVATE_KEY_ID).replace("\\n", "\n"),
-        PRIVATE_KEY_KEY: os.getenv(PRIVATE_KEY).replace("\\n", "\n"),
-        CLIENT_EMAIL_KEY: os.getenv(CLIENT_EMAIL).replace("\\n", "\n"),
-        CLIENT_ID_KEY: os.getenv(CLIENT_ID).replace("\\n", "\n"),
-        AUTH_URI_KEY: os.getenv(AUTH_URI).replace("\\n", "\n"),
-        TOKEN_URI_KEY: os.getenv(TOKEN_URI).replace("\\n", "\n"),
-        AUTH_PROVIDER_X509_CERT_URL_KEY:
-            os.getenv(AUTH_PROVIDER_X509_CERT_URL).replace("\\n", "\n"),
-        CLIENT_X509_CERT_URL_KEY:
-            os.getenv(CLIENT_X509_CERT_URL).replace("\\n", "\n"),
+        TYPE_KEY: os.getenv(MD_TYPE).replace("\\n", "\n"),
+        PROJECT_ID_KEY: os.getenv(MD_PROJECT_ID).replace("\\n", "\n"),
+        PRIVATE_KEY_ID_KEY: os.getenv(MD_PRIVATE_KEY_ID).replace("\\n", "\n"),
+        PRIVATE_KEY_KEY: os.getenv(MD_PRIVATE_KEY).replace("\\n", "\n"),
+        CLIENT_EMAIL_KEY: os.getenv(MD_CLIENT_EMAIL).replace("\\n", "\n"),
+        CLIENT_ID_KEY: os.getenv(MD_CLIENT_ID).replace("\\n", "\n"),
+        AUTH_URI_KEY: os.getenv(MD_AUTH_URI).replace("\\n", "\n"),
+        TOKEN_URI_KEY: os.getenv(MD_TOKEN_URI).replace("\\n", "\n"),
+        AUTH_PROVIDER_X509_CERT_URL_KEY: os.getenv(MD_AUTH_PROVIDER_X509_CERT_URL).replace(
+            "\\n", "\n"
+        ),
+        CLIENT_X509_CERT_URL_KEY: os.getenv(MD_CLIENT_X509_CERT_URL).replace("\\n", "\n"),
     }
     return str(credentials).replace("'", '"')
 
@@ -110,12 +121,11 @@ def parse_archives_ids_file(data_path, filename):
 def save_content_to_file(content, data_path, filename):
     file_path = path.join(data_path, filename)
     with open(file_path, "w") as f:
-        json.dump(content, f)
+        json.dump(content, f, separators=(",", ":"))
 
 
 def save_archives_ids_file(harvesting_date, archives_ids, data_path, filename):
-    archives_ids_json =\
-        {HARVESTING_DATE: harvesting_date, ARCHIVES_IDS: archives_ids}
+    archives_ids_json = {HARVESTING_DATE: harvesting_date, ARCHIVES_IDS: archives_ids}
     save_content_to_file(archives_ids_json, data_path, filename)
 
 
@@ -153,24 +163,35 @@ def harvest_latest_versions(archives_ids):
     client = storage.Client.from_service_account_info(
         info=json.loads(get_credentials())
     )
-    latest_versions = {}
+    latest_versions_data = []
 
-    for archives_id in archives_ids:
-        bucket_id = client.lookup_bucket(
-            LATEST_BUCKET_PATH.format(source_archives_id=archives_id)
-        )
-        if bucket_id is not None:
-            bucket = client.get_bucket(
-                LATEST_BUCKET_PATH.format(source_archives_id=archives_id)
+    jobs = np.array_split(archives_ids, MAX_JOB_NUMBER)
+    jobs = [list(job_archives_ids) for job_archives_ids in jobs]
+
+    for job_archives_ids in tqdm(jobs):
+        latest_version_data_string = ""
+        while len(job_archives_ids) > 0:
+            archive_id = job_archives_ids.pop()
+            bucket_id = client.lookup_bucket(
+                LATEST_BUCKET_PATH.format(source_archives_id=archive_id)
             )
-            blobs = client.list_blobs(bucket.name)
-            for blob in blobs:
-                archives_url = LATEST_URL.format(
-                    source_archives_id=archives_id, blob_name=blob.name
+            if bucket_id is not None:
+                bucket = client.get_bucket(
+                    LATEST_BUCKET_PATH.format(source_archives_id=archive_id)
                 )
-                latest_versions[archives_id] = archives_url
-
-    return latest_versions
+                blobs = client.list_blobs(bucket.name)
+                for blob in blobs:
+                    archive_url = LATEST_URL.format(
+                        source_archives_id=archive_id, blob_name=blob.name
+                    )
+                    dataset_information = {ID: archive_id, URL_KEY: archive_url}
+                    latest_version_data_string = (
+                        latest_version_data_string
+                        + json.dumps(dataset_information, separators=(",", ":"))
+                    )
+        job_data = {DATA: latest_version_data_string.replace("}{", "} {")}
+        latest_versions_data.append(job_data)
+    return {ROOT: latest_versions_data}
 
 
 if __name__ == "__main__":
