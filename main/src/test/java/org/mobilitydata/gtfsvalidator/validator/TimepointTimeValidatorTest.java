@@ -223,14 +223,16 @@ public class TimepointTimeValidatorTest {
             .setCsvRowNumber(1)
             .setTripId("second trip id")
             .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
-            .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(580))
+            .setDepartureTime(null)
             .setStopId("stop id 2")
             .setStopSequence(2)
             .setTimepoint(1)
             .build());
     assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes))
         .containsExactly(
-            new StopTimeTimepointWithoutTimesNotice(stopTimes.get(0), DEPARTURE_TIME_FIELD_NAME));
+            new StopTimeTimepointWithoutTimesNotice(stopTimes.get(0), DEPARTURE_TIME_FIELD_NAME),
+            new StopTimeTimepointWithoutTimesNotice(stopTimes.get(1), DEPARTURE_TIME_FIELD_NAME)
+            );
   }
 
   @Test
@@ -250,7 +252,7 @@ public class TimepointTimeValidatorTest {
         new GtfsStopTime.Builder()
             .setCsvRowNumber(1)
             .setTripId("second trip id")
-            .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
+            .setArrivalTime(null)
             .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(580))
             .setStopId("stop id 2")
             .setStopSequence(2)
@@ -258,7 +260,9 @@ public class TimepointTimeValidatorTest {
             .build());
     assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes))
         .containsExactly(
-            new StopTimeTimepointWithoutTimesNotice(stopTimes.get(0), ARRIVAL_TIME_FIELD_NAME));
+            new StopTimeTimepointWithoutTimesNotice(stopTimes.get(0), ARRIVAL_TIME_FIELD_NAME),
+            new StopTimeTimepointWithoutTimesNotice(stopTimes.get(1), ARRIVAL_TIME_FIELD_NAME)
+            );
   }
 
   @Test
@@ -336,12 +340,13 @@ public class TimepointTimeValidatorTest {
             .setStopSequence(2)
             .setTimepoint(1)
             .build());
+
     assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes))
         .containsExactly(new MissingTimepointValueNotice(stopTimes.get(0)));
   }
 
   @Test
-  public void emptyTimepoint_timesProvided_shouldNotGenerateNotice() {
+  public void emptyTimepoint_timesProvided_shouldGenerateNotice() {
     List<GtfsStopTime> stopTimes = new ArrayList<>();
     stopTimes.add(
         new GtfsStopTime.Builder()

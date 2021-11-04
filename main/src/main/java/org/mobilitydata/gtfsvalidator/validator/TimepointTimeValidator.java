@@ -49,8 +49,7 @@ public class TimepointTimeValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    boolean useTimepointColumn = stopTimes.hasColumn(GtfsStopTimeTableLoader.TIMEPOINT_FIELD_NAME);
-    if (!useTimepointColumn) {
+    if (!stopTimes.hasColumn(GtfsStopTimeTableLoader.TIMEPOINT_FIELD_NAME)) {
       // legacy datasets do not use timepoint column in stop_times.txt as a result:
       // - this should be flagged;
       // - but also no notice regarding the absence of arrival_time or departure_time should be
@@ -124,7 +123,6 @@ public class TimepointTimeValidator extends FileValidator {
     private final String filename;
 
     MissingTimepointColumnNotice() {
-
       super(SeverityLevel.WARNING);
       this.filename = GtfsStopTimeTableLoader.FILENAME;
     }
