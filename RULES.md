@@ -795,22 +795,6 @@ because there is no benefit in visiting it.
 
 A pathway should not have same values for `from_stop_id` and `to_stop_id`.
 
-<a name="PathwayUnreachableLocationNotice"/>
-
-#### PathwayUnreachableLocationNotice
-
-A location belongs to a station that has pathways and is not reachable at least in one direction:
-from the entrances or to the exits.
-
-Notices are reported for platforms, boarding areas and generic nodes but not for entrances or
-stations.
-
-Notices are not reported for platforms that have boarding areas since such platforms may not
-have incident pathways. Instead, notices are reported for the boarding areas.
-
-##### References:
-* [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
-
 <a name="PlatformWithoutParentStationNotice"/>
 
 #### PlatformWithoutParentStationNotice
