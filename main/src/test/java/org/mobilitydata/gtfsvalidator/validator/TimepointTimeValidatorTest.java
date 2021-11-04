@@ -231,8 +231,7 @@ public class TimepointTimeValidatorTest {
     assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes))
         .containsExactly(
             new StopTimeTimepointWithoutTimesNotice(stopTimes.get(0), DEPARTURE_TIME_FIELD_NAME),
-            new StopTimeTimepointWithoutTimesNotice(stopTimes.get(1), DEPARTURE_TIME_FIELD_NAME)
-            );
+            new StopTimeTimepointWithoutTimesNotice(stopTimes.get(1), DEPARTURE_TIME_FIELD_NAME));
   }
 
   @Test
@@ -261,8 +260,7 @@ public class TimepointTimeValidatorTest {
     assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes))
         .containsExactly(
             new StopTimeTimepointWithoutTimesNotice(stopTimes.get(0), ARRIVAL_TIME_FIELD_NAME),
-            new StopTimeTimepointWithoutTimesNotice(stopTimes.get(1), ARRIVAL_TIME_FIELD_NAME)
-            );
+            new StopTimeTimepointWithoutTimesNotice(stopTimes.get(1), ARRIVAL_TIME_FIELD_NAME));
   }
 
   @Test
