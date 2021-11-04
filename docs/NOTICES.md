@@ -41,6 +41,7 @@
 | `new_line_in_value`                                    	| [`NewLineInValueNotice`](#NewLineInValueNotice)                                                                 	|
 | `number_out_of_range`                                  	| [`NumberOutOfRangeNotice`](#NumberOutOfRangeNotice)                                                             	|
 | `overlapping_frequency`                                	| [`OverlappingFrequencyNotice`](#OverlappingFrequencyNotice)                                                     	|
+| `pathway_unreachable_location`                            | [`PathwayUnreachableLocationNotice`](#PathwayUnreachableLocationNotice)	                                        |
 | `route_both_short_and_long_name_missing`               	| [`RouteBothShortAndLongNameMissingNotice`](#RouteBothShortAndLongNameMissingNotice)                             	|
 | `start_and_end_range_equal`                            	| [`StartAndEndRangeEqualNotice`](#StartAndEndRangeEqualNotice)                                                   	|
 | `start_and_end_range_out_of_order`                     	| [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         	|
@@ -533,6 +534,23 @@
 ##### Affected files
 * [`frequencies.txt`](http://gtfs.org/reference/static#frequenciestxt)
 
+#### [PathwayUnreachableLocationNotice](/RULES.md#PathwayUnreachableLocationNotice)
+##### Fields description
+
+| Field name   	 | Description                                         | Type    	|
+|----------------|--------------------------------------------------|---------	|
+| `csvRowNumber` | Row number of the unreachable location.             | Long    	|
+| `stopId`     	 | The id of the unreachable location.                 | String  	|
+| `stopName`   	 | The stop name of the unreachable location.     	   | String  	|
+| `locationType` | The type of the unreachable location. 	           | Integer 	|
+| `parentStation`| The parent of the unreachable location. 	           | String 	|
+| `hasEntrance`  | Whether the location is reachable from entrances.   | String 	|
+| `hasExit`      | Whether some exit can be reached from the location. | String 	|
+
+##### Affected files
+* [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+
 #### [`RouteBothShortAndLongNameMissingNotice`](/RULES.md#RouteBothShortAndLongNameMissingNotice)
 ##### Fields description
 
@@ -693,7 +711,6 @@
 | `non_ascii_or_non_printable_char`          	| [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	|
 | `pathway_dangling_generic_node`               | [`PathwayDanglingGenericNodeNotice`](#PathwayDanglingGenericNodeNotice)	            |
 | `pathway_loop`                                | [`PathwayLoopNotice`](#PathwayLoopNotice)	                                            |
-| `pathway_unreachable_location`                | [`PathwayUnreachableLocationNotice`](#PathwayUnreachableLocationNotice)	            |
 | `platform_without_parent_station`          	| [`PlatformWithoutParentStationNotice`](#PlatformWithoutParentStationNotice)       	|
 | `route_color_contrast`                     	| [`RouteColorContrastNotice`](#RouteColorContrastNotice)                           	|
 | `route_short_and_long_name_equal`          	| [`RouteShortAndLongNameEqualNotice`](#RouteShortAndLongNameEqualNotice)           	|
@@ -869,23 +886,6 @@
 
 ##### Affected files
 * [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
-
-#### [PathwayUnreachableLocationNotice](/RULES.md#PathwayUnreachableLocationNotice)
-##### Fields description
-
-| Field name   	 | Description                                         | Type    	|
-|----------------|--------------------------------------------------|---------	|
-| `csvRowNumber` | Row number of the unreachable location.             | Long    	|
-| `stopId`     	 | The id of the unreachable location.                 | String  	|
-| `stopName`   	 | The stop name of the unreachable location.     	   | String  	|
-| `locationType` | The type of the unreachable location. 	           | Integer 	|
-| `parentStation`| The parent of the unreachable location. 	           | String 	|
-| `hasEntrance`  | Whether the location is reachable from entrances.   | String 	|
-| `hasExit`      | Whether some exit can be reached from the location. | String 	|
-
-##### Affected files
-* [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
-* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
 #### [PlatformWithoutParentStationNotice](/RULES.md#PlatformWithoutParentStationNotice)
 ##### Fields description
