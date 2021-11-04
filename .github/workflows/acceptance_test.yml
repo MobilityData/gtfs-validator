@@ -148,6 +148,12 @@ jobs:
           DATASETS=$(jq . scripts/mobility-database-harvester/datasets_metadata/latest_versions.json -c)
           echo $DATASETS
           echo "::set-output name=matrix::$DATASETS"
+      - name: Persist metadata
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: datasets_metadata
+          path: scripts/mobility-database-harvester/datasets_metadata
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   get-reports:
