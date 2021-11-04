@@ -255,7 +255,7 @@ if __name__ == "__main__":
         {OLDER_VERSIONS: list(older_versions)}, data_path, older_versions_file
     )
     save_content_to_file(
-        latest_versions, data_path, GITHUB_FORMATTED_LATEST_VERSIONS_JSON
+        latest_versions, data_path, latest_versions_file
     )
     github_formatted_latest_versions = apply_github_matrix_formatting(
         load_content(data_path, latest_versions_file)
