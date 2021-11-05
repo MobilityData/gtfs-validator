@@ -5,7 +5,7 @@ A tool to compare validation reports produced by the [gtfs-validator](https://ww
 # Introduction
 This is a command-line tool written in Java that performs the following steps:
 1. loads validation reports from disk;
-1. compares pairs of validation reports produced by two versions f the validator;  
+1. compares pairs of validation reports produced by two versions of the validator;  
 1. generates a report that quantifies the new errors introduced by a new implementation. 
 
 # Run the app via command line

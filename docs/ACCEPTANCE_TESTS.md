@@ -8,11 +8,11 @@ _Definitions_
 ## Goal
 
 Because GTFS data consumers and producers rely on the validator it is important to know if a pull request introduces a breaking change (i.e. the proposed validator declares existing valid datasets invalid).
-If this step is skipped, newly declared invalid datasets could be rejected by GTFS data consumers (e.g. Transit App, Google Maps) which could lead to public transit systems disappearing from their interface which means that riders would no longer be able to access information about their commute that they are used to having from these platforms.   
+If this step is skipped, newly declared invalid datasets could be rejected by GTFS data consumers (e.g. Transit App, Google Maps) which could lead to public transit systems disappearing from their interface which means that riders would no longer be able to access the trip information they are used to getting on these platforms.   
    
 ## Process description
 
-For the latest version of all GTFS datasets from the [MobilityDatabase](http://mobilitydatabase.org/wiki/Main_Page), the validation report from both the proposed and the reference are compared. An acceptance test report is generated: it quantifies for each agency/dataset the number of new errors (as defined [here](https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#definitions)) that have been introduced.
+For the latest version of all GTFS datasets from the [MobilityDatabase](http://mobilitydatabase.org/wiki/Main_Page), the validation report from both the proposed and the reference validator are compared. An acceptance test report is generated: it quantifies for each agency/dataset the number of new errors (as defined [here](https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#definitions)) that have been introduced.
 ![steps](https://user-images.githubusercontent.com/35747326/139877746-fd047437-38b3-44fa-aeb8-37d925c289e8.png)
 
 ## Github Actions
@@ -22,14 +22,14 @@ The logic for this process is defined in [`acceptance_test.yml`](../.github/work
 This workflow:
 1. packages the `output-comparator` module;
 1. packages the proposed version of the validator;
-1. downloads the version of the validator that is on the [`master` branch](https://github.com/MobilityData/gtfs-validator/tree/master);
-1. defines a matrix of urls (fetched from the [MobilityDatabase](http://mobilitydatabase.org/wiki/Main_Page)) that will be used in further validation process; 
+1. downloads the version of the reference validator that is on the [`master` branch](https://github.com/MobilityData/gtfs-validator/tree/master);
+1. defines a matrix of urls (fetched from the [MobilityDatabase](http://mobilitydatabase.org/wiki/Main_Page)) that will be used in the further validation process; 
 
 On each of these urls:
 1. the reference version of the validator is executed and the validation report is output as JSON (under `reference.json`);
 1. the proposed version of the validator is executed and the validation report is output as JSON (under `latest.json`).
 
-At the end of execution of the two aforementioned steps for all urls in the matrix, all validation reports are gathered in a single folder (`output`) and compared - the percentage of newly invalid datasets is output to the console.
+At the end of execution of the two aforementioned steps for every url in the matrix, all the validation reports are gathered in a single folder (`output`) and compared - the percentage of newly invalid datasets is output to the console.
 The final acceptance test report is saved by as a workflow artifact (under `acceptance_report.json`). This file keeps the count of new error types introduced by the proposed version for each agency/dataset.
 
 Sample output:
