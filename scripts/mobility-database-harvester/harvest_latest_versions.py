@@ -153,7 +153,7 @@ if __name__ == "__main__":
         latest_versions[source_archives_id] = latest_url
 
     save_content_to_file(
-        latest_versions, data_path, latest_versions_file
+        latest_versions, data_path, "gtfs_latest_versions.json"
     )
     github_formatted_latest_versions = apply_github_matrix_formatting(
         load_content(data_path, "gtfs_latest_versions.json")
