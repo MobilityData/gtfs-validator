@@ -163,3 +163,4 @@ if __name__ == "__main__":
         data_path,
         latest_versions_file,
     )
+
