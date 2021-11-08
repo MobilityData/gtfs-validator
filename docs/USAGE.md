@@ -1,8 +1,8 @@
 # Instructions to run the application locally
-*If you're running a [`v1.x` release JAR file](https://github.com/MobilityData/gtfs-validator/releases) you'll need Java 11, and can follow [these instructions](https://github.com/MobilityData/gtfs-validator/tree/v1.4.0#via-java-on-your-local-computer). The below instructions are for the master branch, which will be v2.0.*
+The below instructions are for the [`v3.0.0-beta`](https://github.com/MobilityData/gtfs-validator/releases/tag/v3.0.0-beta) release.
 
-1. Install [Java 8 or higher](https://www.oracle.com/java/technologies/javase-downloads.html).
-1. Download the latest gtfs-validator JAR file from our [Releases page](https://github.com/MobilityData/gtfs-validator/releases) or snapshot artifact from [GitHub Actions](https://github.com/MobilityData/gtfs-validator/actions?query=branch%3Amaster).
+1. Install [Java 11 or higher](https://www.oracle.com/java/technologies/javase-downloads.html).
+1. Download the latest gtfs-validator JAR file from our [Releases page](https://github.com/MobilityData/gtfs-validator/releases).
 
 ## via cli-app
 **Full list of command line parameters available**
@@ -10,7 +10,7 @@
 | Short name 	| Long name                     	| required? 	| Description                                                                                                               	|
 |------------	|-------------------------------	|-----------	|---------------------------------------------------------------------------------------------------------------------------	|
 | `-i`       	| `--input`                     	| Optional  	| Location of the input GTFS ZIP or unarchived directory.                                                                   	|
-| `-c`       	| `--country_code`                 	| Optional  	| Country code of the feed, e.g., `nl`. It must be a two-letter country code (ISO 3166-1 alpha-2).                           	|
+| `-c`       	| `--country_code`                 	| Optional  	| Country code of the feed, e.g., `nl`. It must be a two-letter country code (ISO 3166-1 beta-2).                           	|
 | `-h`       	| `--help`                 	        | Optional  	| Print help menu.                                                                                                              |
 | `-o`       	| `--output`                    	| Optional  	| Base directory to store the outputs.                                                                                      	|
 | `-s`       	| `--storage_directory`         	| Optional  	| Target path where to store the GTFS archive. Downloaded from network (if not provided, the ZIP will be stored in memory). 	|
@@ -30,7 +30,7 @@
 Sample usage:
 
 ``` 
-java -jar gtfs-validator-v2.0.jar --input relative/path/to/dataset.zip --output relative/output/path --feed_name <name_of_the_feed> --threads <number_of_threads_to_use> 
+java -jar gtfs-validator-v3.0.0-beta.jar --input relative/path/to/dataset.zip --output relative/output/path --country_code <country_code> --threads <number_of_threads_to_use> 
 ```
 
 ...which will:
@@ -38,13 +38,13 @@ java -jar gtfs-validator-v2.0.jar --input relative/path/to/dataset.zip --output 
  1. Validate the GTFS data and output the results to the directory located at `relative/output/path`. 
  1. Export both validation and system errors reports to JSON by default. This folder will contain the `.json` file with information related to the validation process. The validation report will (by default) be named as `report.json` and the system errors report can be found under the name of `system_errors.json`.
  
-  ⚠️ Note that reports naming can be overridden by providing values to `-v` and/or `-e` CLI arguments. These **should** include `.json` extension.
+  ⚠️ Note that reports naming can be overridden by providing values to `-validation_report_name` and/or `-system_errors_report_name` CLI arguments. These **should** include `.json` extension.
 
 ### on a hosted GTFS zip file at a URL
 Sample usage:
 
 ``` 
-java -jar gtfs-validator-v2.0.jar --url https://url/to/dataset.zip --output relative/output/path --feed_name <name_of_the_feed> --threads <number_of_threads_to_use> --storage_directory input.zip
+java -jar gtfs-validator-v3.0.0-beta.jar --url https://url/to/dataset.zip --output relative/output/path --country_code <country_code> --threads <number_of_threads_to_use> --storage_directory input.zip
 ```
 
 ...which will:
@@ -69,7 +69,7 @@ Sample usage:
 
 ### Without file validation
 ``` 
-java -jar gtfs-validator-SNAPSHOT.jar --export_notice_schema
+java -jar gtfs-validator-v3.0.0-beta.jar --export_notice_schema
 ```
 
 ...which will:
@@ -77,7 +77,7 @@ java -jar gtfs-validator-SNAPSHOT.jar --export_notice_schema
  
 ### With file validation
 ``` 
-java -jar gtfs-validator-SNAPSHOT.jar --export_notice_schema --url https://url/to/dataset.zip --output relative/output/path --country_code <country_code> --threads <number_of_threads_to_use> --storage_directory input.zip 
+java -jar gtfs-validator-v3.0.0-beta.jar --export_notice_schema --url https://url/to/dataset.zip --output relative/output/path --country_code <country_code> --threads <number_of_threads_to_use> --storage_directory input.zip 
 ```
 
 ...which will:
