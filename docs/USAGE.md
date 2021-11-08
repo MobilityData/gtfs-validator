@@ -10,7 +10,7 @@ The below instructions are for the [`v3.0.0-beta`](https://github.com/MobilityDa
 | Short name 	| Long name                     	| required? 	| Description                                                                                                               	|
 |------------	|-------------------------------	|-----------	|---------------------------------------------------------------------------------------------------------------------------	|
 | `-i`       	| `--input`                     	| Optional  	| Location of the input GTFS ZIP or unarchived directory.                                                                   	|
-| `-c`       	| `--country_code`                 	| Optional  	| Country code of the feed, e.g., `nl`. It must be a two-letter country code (ISO 3166-1 beta-2).                           	|
+| `-c`       	| `--country_code`                 	| Optional  	| Country code of the feed, e.g., `nl`. It must be a two-letter country code (ISO 3166-1 alpha-2).                           	|
 | `-h`       	| `--help`                 	        | Optional  	| Print help menu.                                                                                                              |
 | `-o`       	| `--output`                    	| Optional  	| Base directory to store the outputs.                                                                                      	|
 | `-s`       	| `--storage_directory`         	| Optional  	| Target path where to store the GTFS archive. Downloaded from network (if not provided, the ZIP will be stored in memory). 	|
