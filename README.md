@@ -2,7 +2,7 @@
 
 A GTFS Schedule (static) [General Transit Feed Specification (GTFS)](https://gtfs.mobilitydata.org/spec/gtfs-schedule) feed validator
 
-This README contains information for the [`v3.0.0-beta`] release of this project. If you'd like to view documentation for past releases of the project, see:
+This README contains information for the [`v3.0.0`] release of this project. If you'd like to view documentation for past releases of the project, see:
 * [v1.4.0](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0-docs/README.md)
 * [v2.0.0](https://github.com/MobilityData/gtfs-validator/blob/v2.0.0-docs/README.md)
 
@@ -15,7 +15,7 @@ This is a command-line tool written in Java that performs the following steps:
 # Run the app via command line
 ### Setup
 1. Install [Java 11 or higher](https://www.oracle.com/java/technologies/javase-downloads.html)
-1. Download the [v3.0.0-beta release jar](https://github.com/MobilityData/gtfs-validator/releases/tag/v3.0.0-beta) of the validator.
+1. Download the [v3.0.0 release jar](https://github.com/MobilityData/gtfs-validator/releases/tag/v3.0.0) of the validator.
 
 ### Run it
 To validate a GTFS dataset on your computer:

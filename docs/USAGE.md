@@ -1,5 +1,5 @@
 # Instructions to run the application locally
-The below instructions are for the [`v3.0.0-beta`](https://github.com/MobilityData/gtfs-validator/releases/tag/v3.0.0-beta) release.
+The below instructions are for the [`v3.0.0`](https://github.com/MobilityData/gtfs-validator/releases/tag/v3.0.0) release.
 
 1. Install [Java 11 or higher](https://www.oracle.com/java/technologies/javase-downloads.html).
 1. Download the latest gtfs-validator JAR file from our [Releases page](https://github.com/MobilityData/gtfs-validator/releases).
@@ -30,7 +30,7 @@ The below instructions are for the [`v3.0.0-beta`](https://github.com/MobilityDa
 Sample usage:
 
 ``` 
-java -jar gtfs-validator-v3.0.0-beta.jar --input relative/path/to/dataset.zip --output relative/output/path --country_code <country_code> --threads <number_of_threads_to_use> 
+java -jar gtfs-validator-v3.0.0.jar --input relative/path/to/dataset.zip --output relative/output/path --country_code <country_code> --threads <number_of_threads_to_use> 
 ```
 
 ...which will:
@@ -44,7 +44,7 @@ java -jar gtfs-validator-v3.0.0-beta.jar --input relative/path/to/dataset.zip --
 Sample usage:
 
 ``` 
-java -jar gtfs-validator-v3.0.0-beta.jar --url https://url/to/dataset.zip --output relative/output/path --country_code <country_code> --threads <number_of_threads_to_use> --storage_directory input.zip
+java -jar gtfs-validator-v3.0.0.jar --url https://url/to/dataset.zip --output relative/output/path --country_code <country_code> --threads <number_of_threads_to_use> --storage_directory input.zip
 ```
 
 ...which will:
@@ -69,7 +69,7 @@ Sample usage:
 
 ### Without file validation
 ``` 
-java -jar gtfs-validator-v3.0.0-beta.jar --export_notice_schema
+java -jar gtfs-validator-v3.0.0.jar --export_notice_schema
 ```
 
 ...which will:
@@ -77,7 +77,7 @@ java -jar gtfs-validator-v3.0.0-beta.jar --export_notice_schema
  
 ### With file validation
 ``` 
-java -jar gtfs-validator-v3.0.0-beta.jar --export_notice_schema --url https://url/to/dataset.zip --output relative/output/path --country_code <country_code> --threads <number_of_threads_to_use> --storage_directory input.zip 
+java -jar gtfs-validator-v3.0.0.jar --export_notice_schema --url https://url/to/dataset.zip --output relative/output/path --country_code <country_code> --threads <number_of_threads_to_use> --storage_directory input.zip 
 ```
 
 ...which will:
