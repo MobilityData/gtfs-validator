@@ -65,7 +65,7 @@ public class TimepointTimeValidator extends FileValidator {
         if (!stopTime.hasArrivalTime()) {
           noticeContainer.addValidationNotice(
               new StopTimeTimepointWithoutTimesNotice(
-                  stopTime, String.format(GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME)));
+                  stopTime, GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME));
         }
         if (!stopTime.hasDepartureTime()) {
           noticeContainer.addValidationNotice(
@@ -118,7 +118,11 @@ public class TimepointTimeValidator extends FileValidator {
     }
   }
 
-  /** Column {@code stop_times.timepoint} is missing. */
+  /**
+   * Column {@code stop_times.timepoint} is missing.
+   *
+   * <p>Severity: {@code SeverityLevel.WARNING}
+   */
   static class MissingTimepointColumnNotice extends ValidationNotice {
     private final String filename;
 
