@@ -161,5 +161,4 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
       this.specifiedField = routeShortOrLongName;
     }
   }
-
 }
