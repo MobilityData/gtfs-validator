@@ -2,7 +2,7 @@
 
 A GTFS Schedule (static) [General Transit Feed Specification (GTFS)](https://gtfs.mobilitydata.org/spec/gtfs-schedule) feed validator
 
-This README contains information for the [`v3.0.0`] release of this project. If you'd like to view documentation for past releases of the project, see:
+This README contains information for the [`v3.0.0`](https://github.com/MobilityData/gtfs-validator/releases/tag/v3.0.0) release of this project. If you'd like to view documentation for past releases of the project, see:
 * [v1.4.0](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0-docs/README.md)
 * [v2.0.0](https://github.com/MobilityData/gtfs-validator/blob/v2.0.0-docs/README.md)
 
