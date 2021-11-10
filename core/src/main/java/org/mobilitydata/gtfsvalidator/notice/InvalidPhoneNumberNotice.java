@@ -33,10 +33,7 @@ public class InvalidPhoneNumberNotice extends ValidationNotice {
 
   /** Constructs a notice with the default severity {@code WARNING}. */
   public InvalidPhoneNumberNotice(
-      String filename,
-      long csvRowNumber,
-      String fieldName,
-      String fieldValue) {
+      String filename, long csvRowNumber, String fieldName, String fieldValue) {
     super(SeverityLevel.WARNING);
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
