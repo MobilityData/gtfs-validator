@@ -152,16 +152,6 @@ public class DefaultFieldValidatorTest {
             CELL_CONTEXT.csvRowNumber(),
             CELL_CONTEXT.fieldName(),
             "003280038762246"));
-
-    assertInvalid(
-        nc ->
-            new DefaultFieldValidator(CountryCode.forStringOrUnknown("ZZ"))
-                .validatePhoneNumber("003280038762246", CELL_CONTEXT, nc),
-        new InvalidPhoneNumberNotice(
-            CELL_CONTEXT.filename(),
-            CELL_CONTEXT.csvRowNumber(),
-            CELL_CONTEXT.fieldName(),
-            "003280038762246"));
   }
 
   @Test
