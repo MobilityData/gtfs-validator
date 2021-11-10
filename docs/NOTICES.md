@@ -42,6 +42,7 @@
 | `number_out_of_range`                                  	| [`NumberOutOfRangeNotice`](#NumberOutOfRangeNotice)                                                             	|
 | `overlapping_frequency`                                	| [`OverlappingFrequencyNotice`](#OverlappingFrequencyNotice)                                                     	|
 | `pathway_unreachable_location`                            | [`PathwayUnreachableLocationNotice`](#PathwayUnreachableLocationNotice)	                                        |
+| `point_near_origin`                                       | [`PointNearOriginNotice`](#PointNearOriginNotice)	                                        |
 | `route_both_short_and_long_name_missing`               	| [`RouteBothShortAndLongNameMissingNotice`](#RouteBothShortAndLongNameMissingNotice)                             	|
 | `start_and_end_range_equal`                            	| [`StartAndEndRangeEqualNotice`](#StartAndEndRangeEqualNotice)                                                   	|
 | `start_and_end_range_out_of_order`                     	| [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         	|
@@ -550,6 +551,22 @@
 ##### Affected files
 * [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+
+#### [PointNearOriginNotice](/RULES.md#PointNearOriginNotice)
+##### Fields description
+
+| Field name      	| Description                                      	| Type    	|
+|-----------------	|--------------------------------------------------	|---------	|
+| `filename`      	| The name of the affected GTFS file.              	| String  	|
+| `csvRowNumber`  	| The row of the faulty row.                       	| Integer 	|
+| `latFieldName`  	| The name of the field that uses latitude value.  	| String  	|
+| `latFieldValue` 	| The latitude of the faulty row.                  	| Double  	|
+| `lonFieldName`  	| The name of the field that uses longitude value. 	| String  	|
+| `lonFieldValue` 	| The longitude of the faulty row                  	| Double  	|
+
+##### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+* [`shapes.txt`](http://gtfs.org/reference/static#shapestxt)
 
 #### [`RouteBothShortAndLongNameMissingNotice`](/RULES.md#RouteBothShortAndLongNameMissingNotice)
 ##### Fields description

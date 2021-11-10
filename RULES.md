@@ -106,6 +106,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`PathwayToPlatformWithBoardingAreasNotice`](#PathwayToPlatformWithBoardingAreasNotice)                         | A pathway has an endpoint that is a platform which has boarding areas.                                                                                 |
 | [`PathwayToWrongLocationTypeNotice`](#PathwayToWrongLocationTypeNotice)                                             | A pathway has an endpoint that is a station.                                                                                                           |
 | [`PathwayUnreachableLocationNotice`](#PathwayUnreachableLocationNotice)                                         | A location is not reachable at least in one direction: from the entrances or to the exits.                                                             |
+| [`PointNearOriginNotice`](#PointNearOriginNotice)                                                               | A point is too close to origin `(0, 0)`.                                                                                                               |
 | [`RouteBothShortAndLongNameMissingNotice`](#RouteBothShortAndLongNameMissingNotice)                             | Missing route short name and long name.                                                                                                                |
 | [`StartAndEndRangeEqualNotice`](#StartAndEndRangeEqualNotice)                                                   | Two date or time fields are equal.                                                                                                                     |
 | [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         | Two date or time fields are out of order.                                                                                                              |
@@ -531,6 +532,15 @@ have incident pathways. Instead, notices are reported for the boarding areas.
 
 ##### References:
 * [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
+ 
+<a name="PointNearOriginNotice"/>
+
+#### PointNearOriginNotice
+
+A point is too close to origin `(0, 0)`.
+
+##### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
 
 #### RouteBothShortAndLongNameMissingNotice
 
