@@ -121,16 +121,17 @@ public class DefaultFieldValidatorTest {
                 .validatePhoneNumber("004980038762246", CELL_CONTEXT, nc));
 
     assertValid(
-            nc ->
-                    new DefaultFieldValidator(CountryCode.forStringOrUnknown("us"))
-                            .validatePhoneNumber("813-254-4278", CELL_CONTEXT, nc));
+        nc ->
+            new DefaultFieldValidator(CountryCode.forStringOrUnknown("us"))
+                .validatePhoneNumber("813-254-4278", CELL_CONTEXT, nc));
 
-    // The below format fails validation without a known country code, so check that we skip validation when country
+    // The below format fails validation without a known country code, so check that we skip
+    // validation when country
     // code is unknown
     assertValid(
-            nc ->
-                    new DefaultFieldValidator(CountryCode.forStringOrUnknown("ZZ"))
-                            .validatePhoneNumber("813-254-4278", CELL_CONTEXT, nc));
+        nc ->
+            new DefaultFieldValidator(CountryCode.forStringOrUnknown("ZZ"))
+                .validatePhoneNumber("813-254-4278", CELL_CONTEXT, nc));
   }
 
   @Test
