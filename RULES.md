@@ -87,7 +87,6 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`InvalidFloatNotice`](#InvalidFloatNotice)                                                                     | A field cannot be parsed as a floating point number.                                                                                                   |
 | [`InvalidIntegerNotice`](#InvalidIntegerNotice)                                                                 | A field cannot be parsed as an integer.                                                                                                                |
 | [`InvalidLanguageCodeNotice`](#InvalidLanguageCodeNotice)                                                       | A field contains a wrong language code.                                                                                                                |
-| [`InvalidPhoneNumberNotice`](#InvalidPhoneNumberNotice)                                                         | A field contains a malformed phone number.                                                                                                             |
 | [`InvalidRowLengthNotice`](#InvalidRowLengthNotice)                                                             | Invalid csv row length.                                                                                                                                |
 | [`InvalidTimeNotice`](#InvalidTimeNotice)                                                                       | A field cannot be parsed as time.                                                                                                                      |
 | [`InvalidTimezoneNotice`](#InvalidTimezoneNotice)                                                               | A field cannot be parsed as a timezone.                                                                                                                |
@@ -132,6 +131,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`FeedExpirationDateNotice`](#FeedExpirationDateNotice)                           	| Dataset should be valid for at least the next 7 days. Dataset should cover at least the next 30 days of service.                                            	|
 | [`FeedInfoLangAndAgencyMismatchNotice`](#FeedInfoLangAndAgencyLangMismatchNotice) 	| Mismatching feed and agency language fields.                                                                                                                	|
 | [`InconsistentAgencyLangNotice`](#InconsistentAgencyLangNotice)                   	| Inconsistent language among agencies.                                                                                                                       	|
+| [`InvalidPhoneNumberNotice`](#InvalidPhoneNumberNotice)                               | A field contains a malformed phone number.                                                                                                                    |
 | [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)         | The value in CSV file has leading or trailing whitespaces.                                                                                                  	|
 | [`MissingFeedInfoDateNotice`](#MissingFeedInfoDateNotice)                         	| `feed_end_date` should be provided if `feed_start_date` is provided. `feed_start_date` should be provided if `feed_end_date` is provided.                   	|
 | [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	| More than one row in CSV.                                                                                                                                   	|
@@ -338,15 +338,6 @@ Value of field with type `integer` is not valid.
 #### InvalidLanguageCodeNotice
 
 Value of field with type `language` is not valid. Language codes must follow <a href="http://www.rfc-editor.org/rfc/bcp/bcp47.txt">IETF BCP 47</a>.
-
-##### References:
-* [Field Types Description](http://gtfs.org/reference/static/#field-types)
-
-<a name="InvalidPhoneNumberNotice"/>
-
-#### InvalidPhoneNumberNotice
-
-Value of field with type `phone number` is not valid.
 
 ##### References:
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
@@ -752,6 +743,15 @@ Agencies from GTFS `agency.txt` have been found to have different languages.
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
+
+<a name="InvalidPhoneNumberNotice"/>
+
+#### InvalidPhoneNumberNotice
+
+Value of field with type `phone number` is not valid.
+
+##### References:
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
 
 <a name="LeadingOrTrailingWhitespacesNotice"/>
 

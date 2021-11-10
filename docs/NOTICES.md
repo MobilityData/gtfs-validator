@@ -25,7 +25,6 @@
 | `invalid_float`                                        	| [`InvalidFloatNotice`](#InvalidFloatNotice)                                                                     	|
 | `invalid_integer`                                      	| [`InvalidIntegerNotice`](#InvalidIntegerNotice)                                                                 	|
 | `invalid_language_code`                                	| [`InvalidLanguageCodeNotice`](#InvalidLanguageCodeNotice)                                                       	|
-| `invalid_phone_number`                                 	| [`InvalidPhoneNumberNotice`](#InvalidPhoneNumberNotice)                                                         	|
 | `invalid_row_length`                                   	| [`InvalidRowLengthNotice`](#InvalidRowLengthNotice)                                                             	|
 | `invalid_time`                                         	| [`InvalidTimeNotice`](#InvalidTimeNotice)                                                                       	|
 | `invalid_timezone`                                     	| [`InvalidTimezoneNotice`](#InvalidTimezoneNotice)                                                               	|
@@ -312,21 +311,6 @@
 * [`transfers.txt`](http://gtfs.org/reference/static#transferstxt)
 
 #### [`InvalidLanguageCodeNotice`](/RULES.md#InvalidLanguageCodeNotice)
-##### Fields description
-
-| Field name   	| Description                   	| Type   	|
-|--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
-| `csvRowNumber`| The row of the faulty record. 	| Long   	|
-| `fieldName`  	| Faulty record's field name.   	| String 	|
-| `fieldValue` 	| Faulty value.                 	| String 	|
-
-##### Affected files
-* [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
-* [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
-* [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
-
-#### [`InvalidPhoneNumberNotice`](/RULES.md#InvalidPhoneNumberNotice)
 ##### Fields description
 
 | Field name   	| Description                   	| Type   	|
@@ -722,6 +706,7 @@
 | `feed_expiration_date`                     	| [`FeedExpirationDateNotice`](#FeedExpirationDateNotice)                           	|
 | `feed_info_lang_and_agency_mismatch` 	      | [`FeedInfoLangAndAgencyMismatchNotice`](#FeedInfoLangAndAgencyLangMismatchNotice) 	|
 | `inconsistent_agency_lang`                 	| [`InconsistentAgencyLangNotice`](#InconsistentAgencyLangNotice)                   	|
+| `invalid_phone_number`                                 	| [`InvalidPhoneNumberNotice`](#InvalidPhoneNumberNotice)                                                         	|
 | `leading_or_trailing_whitespaces`           | [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)         |
 | `missing_feed_info_date`                   	| [`MissingFeedInfoDateNotice`](#MissingFeedInfoDateNotice)                         	|
 | `more_than_one_entity`                     	| [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	|
@@ -829,6 +814,21 @@
 
 ##### Affected files
 * [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
+
+#### [`InvalidPhoneNumberNotice`](/RULES.md#InvalidPhoneNumberNotice)
+##### Fields description
+
+| Field name   	| Description                   	| Type   	|
+|--------------	|-------------------------------	|--------	|
+| `filename`   	| The row of the faulty record. 	| String 	|
+| `csvRowNumber`| The row of the faulty record. 	| Long   	|
+| `fieldName`  	| Faulty record's field name.   	| String 	|
+| `fieldValue` 	| Faulty value.                 	| String 	|
+
+##### Affected files
+* [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
+* [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
+* [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 
 #### [LeadingOrTrailingWhitespacesNotice](/RULES.md#LeadingOrTrailingWhitespacesNotice)
 ##### Fields description

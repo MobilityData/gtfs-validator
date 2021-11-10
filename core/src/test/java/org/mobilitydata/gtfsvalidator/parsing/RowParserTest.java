@@ -75,7 +75,7 @@ public class RowParserTest {
     assertThat(parser.getNoticeContainer().hasValidationErrors()).isFalse();
   }
 
-  private static <T> void assertInvalid(
+  private static <T> void assertGeneratesError(
       String cellValue,
       Function<RowParser, T> parse,
       T expected,
@@ -87,6 +87,18 @@ public class RowParserTest {
     assertThat(parser.getNoticeContainer().hasValidationErrors()).isTrue();
   }
 
+  private static <T> void assertGeneratesWarning(
+      String cellValue,
+      Function<RowParser, T> parse,
+      T expected,
+      ValidationNotice... validationNotices) {
+    RowParser parser = createParser(cellValue);
+    assertThat(parse.apply(parser)).isEqualTo(expected);
+    assertThat(parser.getNoticeContainer().getValidationNotices())
+        .containsExactlyElementsIn(validationNotices);
+    assertThat(parser.getNoticeContainer().hasValidationErrors()).isFalse();
+  }
+
   @Test
   public void asUrl_valid() {
     assertValid("http://google.com", p -> p.asUrl(0, true), "http://google.com");
@@ -94,7 +106,7 @@ public class RowParserTest {
 
   @Test
   public void asUrl_invalid() {
-    assertInvalid(
+    assertGeneratesError(
         "invalid",
         p -> p.asUrl(0, true),
         "invalid",
@@ -168,7 +180,7 @@ public class RowParserTest {
 
   @Test
   public void asEmail_invalid() {
-    assertInvalid(
+    assertGeneratesError(
         "invalid",
         p -> p.asEmail(0, true),
         "invalid",
@@ -211,7 +223,7 @@ public class RowParserTest {
 
   @Test
   public void asPhoneNumber_invalid() {
-    assertInvalid(
+    assertGeneratesWarning(
         "invalid",
         p -> p.asPhoneNumber(0, true),
         "invalid",
@@ -271,13 +283,13 @@ public class RowParserTest {
 
   @Test
   public void asLatitude_outOfRange() {
-    assertInvalid(
+    assertGeneratesError(
         "-91",
         p -> p.asLatitude(0, true),
         -91.0,
         new NumberOutOfRangeNotice(
             "stops.txt", 8, "column name", "latitude within [-90, 90]", -91.0));
-    assertInvalid(
+    assertGeneratesError(
         "91",
         p -> p.asLatitude(0, true),
         91.0,
@@ -287,7 +299,7 @@ public class RowParserTest {
 
   @Test
   public void asLatitude_nonParsable() {
-    assertInvalid(
+    assertGeneratesError(
         "invalid",
         p -> p.asLatitude(0, true),
         null,
@@ -303,13 +315,13 @@ public class RowParserTest {
 
   @Test
   public void asLongitude_outOfRange() {
-    assertInvalid(
+    assertGeneratesError(
         "-181",
         p -> p.asLongitude(0, true),
         -181.0,
         new NumberOutOfRangeNotice(
             "stops.txt", 8, "column name", "longitude within [-180, 180]", -181.0));
-    assertInvalid(
+    assertGeneratesError(
         "181",
         p -> p.asLongitude(0, true),
         181.0,
@@ -319,7 +331,7 @@ public class RowParserTest {
 
   @Test
   public void asLongitude_nonParsable() {
-    assertInvalid(
+    assertGeneratesError(
         "invalid",
         p -> p.asLongitude(0, true),
         null,
