@@ -227,7 +227,7 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
     private final String recordSubId;
 
     TranslationForeignKeyViolationNotice(GtfsTranslation translation) {
-      super(SeverityLevel.ERROR);
+      super(SeverityLevel.WARNING);
       this.csvRowNumber = translation.csvRowNumber();
       this.tableName = translation.tableName();
       this.recordId = translation.recordId();
