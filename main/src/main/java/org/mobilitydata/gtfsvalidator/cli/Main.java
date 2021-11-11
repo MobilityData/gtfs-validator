@@ -56,7 +56,6 @@ public class Main {
     if (args == null) {
       System.exit(1);
     }
-
     ValidatorLoader validatorLoader = null;
     try {
       validatorLoader = new ValidatorLoader();
