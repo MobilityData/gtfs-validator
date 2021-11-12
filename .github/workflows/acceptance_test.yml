@@ -211,8 +211,9 @@ jobs:
         with:
           name: reports_all
       - name: Generate acceptance report test
+        uses: actions/checkout@v1
         run: |
-          java -jar output-comparator*.jar --report_directory . --new_error_threshold 1 --reference_report_name reference.json --latest_report_name latest.json --percent_invalid_datasets_threshold 1 --output_base ${{ github.sha }}/acceptance-test-output
+          java -jar output-comparator*.jar --report_directory . --new_error_threshold 1 --reference_report_name reference.json --latest_report_name latest.json --percent_invalid_datasets_threshold 1 --output_base ${{ github.sha }}/acceptance-test-output --source_urls scripts/mobility-database-harvester/datasets_metadata/gtfs_latest_versions.json
       - name: Persist acceptance test report
         if: always()
         uses: actions/upload-artifact@v2
