@@ -232,3 +232,4 @@ jobs:
               repo: context.repo.repo,
               body: "Download the `acceptance_test_report` for commit ${{ github.sha }} in the artifacts listed [here](https://github.com/MobilityData/gtfs-validator/actions/runs/${{github.run_id}}). This report will disappear after 90 days. Read more about the acceptance tests [here](https://github.com/MobilityData/gtfs-validator/docs/ACCEPTANCE_TESTS.md)."
             })
+
