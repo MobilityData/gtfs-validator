@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.outputcomparator.io;
+package org.mobilitydata.gtfsvalidator.model;
 
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Expose;
+import com.google.gson.internal.LinkedTreeMap;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 
 /**
@@ -29,27 +30,26 @@ import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
  * related to the error code and a list of notice contexts (which provides additional information
  * about each notice.
  */
-public class NoticeSummary {
+public class SampleNotice {
 
-  private final String code;
-  private final SeverityLevel severity;
+  @Expose() private final String code;
+  @Expose() private final SeverityLevel severity;
+  @Expose() private final int totalNotices;
+  @Expose() private final List<LinkedTreeMap<String, Object>> sampleNotices;
 
-  @SerializedName("totalNotices")
-  private final int count;
-
-  @SerializedName("sampleNotices")
-  private final Set<Map<String, Object>> contexts;
-
-  public NoticeSummary(
-      String code, SeverityLevel severity, int count, Set<Map<String, Object>> contexts) {
+  public SampleNotice(
+      String code,
+      SeverityLevel severity,
+      int count,
+      List<LinkedTreeMap<String, Object>> contexts) {
     this.code = code;
     this.severity = severity;
-    this.count = count;
-    this.contexts = contexts;
+    this.totalNotices = count;
+    this.sampleNotices = contexts;
   }
 
-  public int getCount() {
-    return count;
+  public int getTotalNotices() {
+    return totalNotices;
   }
 
   public SeverityLevel getSeverity() {
@@ -60,8 +60,8 @@ public class NoticeSummary {
     return code;
   }
 
-  public Set<Map<String, Object>> getContexts() {
-    return Collections.unmodifiableSet(contexts);
+  public List<Map<String, Object>> getSampleNotices() {
+    return Collections.unmodifiableList(sampleNotices);
   }
 
   public boolean isError() {
@@ -73,12 +73,12 @@ public class NoticeSummary {
     if (this == other) {
       return true;
     }
-    if (other instanceof NoticeSummary) {
-      NoticeSummary otherNoticeSummary = (NoticeSummary) other;
+    if (other instanceof SampleNotice) {
+      SampleNotice otherNoticeSummary = (SampleNotice) other;
       return this.getCode().equals(otherNoticeSummary.getCode())
           && this.getSeverity().equals(otherNoticeSummary.getSeverity())
-          && this.getCount() == (otherNoticeSummary.getCount())
-          && getContexts().equals(otherNoticeSummary.getContexts());
+          && this.getTotalNotices() == (otherNoticeSummary.getTotalNotices())
+          && getSampleNotices().equals(otherNoticeSummary.getSampleNotices());
     }
     return false;
   }

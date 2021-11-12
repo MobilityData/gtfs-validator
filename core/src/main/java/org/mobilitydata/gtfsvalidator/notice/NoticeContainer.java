@@ -16,18 +16,34 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.notice.Notice.GSON;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
-import com.google.gson.JsonArray;
+import com.google.common.collect.Sets;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.internal.LinkedTreeMap;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeSet;
+import org.mobilitydata.gtfsvalidator.model.SampleNotice;
+import org.mobilitydata.gtfsvalidator.model.ValidationReportDeserializer;
 
 /**
  * Container for validation notices (errors and warnings).
@@ -59,7 +75,7 @@ public class NoticeContainer {
   private final List<ValidationNotice> validationNotices = new ArrayList<>();
   private final List<SystemError> systemErrors = new ArrayList<>();
   private final Map<String, Integer> noticesCountPerTypeAndSeverity = new HashMap<>();
-  private boolean hasValidationErrors = false;
+  private transient boolean hasValidationErrors = false;
 
   /**
    * Used to specify limits on amount of notices in this {@code NoticeContainer}.
@@ -164,37 +180,11 @@ public class NoticeContainer {
     return exportJson(systemErrors);
   }
 
-  /**
-   * Exports notices as JSON.
-   *
-   * <p>Up to {@link #maxExportsPerNoticeTypeAndSeverity} is exported per each type+severity.
-   */
-  private <T extends Notice> JsonObject exportJson(List<T> notices) {
-    JsonObject root = new JsonObject();
-    JsonArray jsonNotices = new JsonArray();
-    root.add("notices", jsonNotices);
-
-    for (Collection<T> noticesOfType : groupNoticesByTypeAndSeverity(notices).asMap().values()) {
-      JsonObject noticesOfTypeJson = new JsonObject();
-      jsonNotices.add(noticesOfTypeJson);
-      T firstNotice = noticesOfType.iterator().next();
-      noticesOfTypeJson.addProperty("code", firstNotice.getCode());
-      noticesOfTypeJson.addProperty("severity", firstNotice.getSeverityLevel().toString());
-      noticesOfTypeJson.addProperty(
-          "totalNotices", noticesCountPerTypeAndSeverity.get(firstNotice.getMappingKey()));
-      JsonArray noticesArrayJson = new JsonArray();
-      noticesOfTypeJson.add("sampleNotices", noticesArrayJson);
-      int i = 0;
-      for (T notice : noticesOfType) {
-        ++i;
-        if (i > maxExportsPerNoticeTypeAndSeverity) {
-          // Do not export too many notices for this type.
-          break;
-        }
-        noticesArrayJson.add(notice.getContext());
-      }
-    }
-    return root;
+  public <T extends Notice> JsonObject exportJson(List<T> notices) {
+    return GSON.toJsonTree(
+            ValidationReport.fromNoticeCollection(
+                notices, maxExportsPerNoticeTypeAndSeverity, noticesCountPerTypeAndSeverity))
+        .getAsJsonObject();
   }
 
   @VisibleForTesting
@@ -204,5 +194,211 @@ public class NoticeContainer {
       noticesByType.put(notice.getMappingKey(), notice);
     }
     return noticesByType;
+  }
+
+  /**
+   * Used to (de)serialize a {@code NoticeContainer}. This represents a validation report as a list
+   * of {@code SampleNotice} which provides information about each notice generated during a GTFS
+   * dataset validation. This objects stores both notices and error codes from a list of {@code
+   * SampleNotice}. Error codes are cached at construction in this object in order to facilitate
+   * quick comparison between reports.
+   */
+  public static class ValidationReport {
+
+    private static final Gson GSON =
+        new GsonBuilder()
+            .registerTypeAdapter(ValidationReport.class, new ValidationReportDeserializer())
+            .serializeNulls()
+            .serializeSpecialFloatingPointValues()
+            .create();
+    private final Set<SampleNotice> notices;
+    private final transient Map<String, SampleNotice> noticesMap;
+    private final transient Set<String> errorCodes;
+
+    /**
+     * Public constructor needed for deserialization by {@code ValidationReportDeserializer}
+     *
+     * @param notices set of {@code Notice}s
+     * @param errorCodes set of error codes
+     */
+    public ValidationReport(Set<SampleNotice> notices, Set<String> errorCodes) {
+      this.notices = notices;
+      this.errorCodes = errorCodes;
+      Map<String, SampleNotice> noticesMap = new HashMap<>();
+      for (SampleNotice sampleNotice : notices) {
+        noticesMap.put(sampleNotice.getCode(), sampleNotice);
+      }
+      this.noticesMap = noticesMap;
+    }
+
+    /**
+     * Creates a {@code ValidationReport} from a {@code Path}. Used for deserialization.
+     *
+     * @param path the path to the json file
+     * @return the {@code ValidationReport} that contains the {@code ValidationReport} related to
+     *     the json file whose path was passed as parameter.
+     */
+    public static ValidationReport fromPath(Path path) throws IOException {
+      try (BufferedReader reader = Files.newBufferedReader(path)) {
+        return GSON.fromJson(reader, ValidationReport.class);
+      }
+    }
+
+    /**
+     * Creates a {@code ValidationReport} from a json string. Used for deserialization in tests.
+     *
+     * @param jsonString the json string
+     * @return the {@code ValidationReport} that contains the {@code ValidationReport} related to
+     *     the json string passed as parameter.
+     */
+    public static ValidationReport fromJsonString(String jsonString) {
+      return GSON.fromJson(jsonString, ValidationReport.class);
+    }
+
+    public static <T extends Notice> ValidationReport fromNoticeCollection(
+        List<T> notices,
+        int maxExportsPerNoticeTypeAndSeverity,
+        Map<String, Integer> noticesCountPerTypeAndSeverity) {
+      Set<SampleNotice> noticeSamples = new LinkedHashSet<>();
+      Gson gson = new Gson();
+      Set<String> errorCodes = new TreeSet<>();
+      Type contextType = new TypeToken<Map<String, Object>>() {}.getType();
+      for (Collection<T> noticesOfType :
+          NoticeContainer.groupNoticesByTypeAndSeverity(notices).asMap().values()) {
+        T firstNotice = noticesOfType.iterator().next();
+        if (firstNotice.isError()) {
+          errorCodes.add(firstNotice.getCode());
+        }
+        List<LinkedTreeMap<String, Object>> contexts = new ArrayList<>();
+        int i = 0;
+        for (T notice : noticesOfType) {
+          ++i;
+          if (i > maxExportsPerNoticeTypeAndSeverity) {
+            // Do not export too many notices for this type.
+            break;
+          }
+          contexts.add(gson.fromJson(notice.getContext(), contextType));
+        }
+        noticeSamples.add(
+            new SampleNotice(
+                firstNotice.getCode(),
+                firstNotice.getSeverityLevel(),
+                noticesCountPerTypeAndSeverity.get(firstNotice.getMappingKey()),
+                contexts));
+      }
+      return new ValidationReport(noticeSamples, errorCodes);
+    }
+    /**
+     * Returns the list of {@code SampleNotice} of this {@code ValidationReport}.
+     *
+     * @return the list of {@code SampleNotice} of this {@code ValidationReport}.
+     */
+    public Set<SampleNotice> getNotices() {
+      return notices;
+    }
+
+    public SampleNotice getNoticeByCode(String noticeCode) {
+      return noticesMap.get(noticeCode);
+    }
+
+    /**
+     * Returns the immutable and ordered set of error codes contained in this {@code
+     * ValidationReport}
+     *
+     * @return the immutable and ordered set of error codes contained in this {@code
+     *     ValidationReport}
+     */
+    public Set<String> getErrorCodes() {
+      return errorCodes;
+    }
+
+    /**
+     * Compares two validation reports: returns true if they contain the same set of error codes.
+     *
+     * @param otherValidationReport the other {@code ValidationReport}.
+     * @return true if the two {@code ValidationReport} contain the same set of error codes, false
+     *     otherwise.
+     */
+    public boolean hasSameErrorCodes(ValidationReport otherValidationReport) {
+      return getErrorCodes().equals(otherValidationReport.getErrorCodes());
+    }
+
+    /**
+     * Returns the number of new error codes introduced by the other {@code ValidationReport} passed
+     * as parameter, e.g. if this {@code ValidationReport} has the following error codes:
+     *
+     * <ul>
+     *   <li>invalid_phone_number;
+     *   <li>number_out_of_range;
+     * </ul>
+     *
+     * <p>and the other {@code ValidationReport} has the following error codes:
+     *
+     * <ul>
+     *   <li>invalid_phone_number;
+     *   <li>number_out_of_range;
+     *   <li>invalid_email_address;
+     *   <li>invalid_url;
+     * </ul>
+     *
+     * <p>then this methods returns 2 as it contains two new errors codes (invalid_email_address,
+     * invalid_url) not present in this {@code ValidationReport}
+     *
+     * @param other the other {@code ValidationReport}
+     * @return the number of new error codes introduced by the other {@code ValidationReport} passed
+     *     as parameter.
+     */
+    public int getNewErrorCount(ValidationReport other) {
+      return getNewErrorsListing(other).size();
+    }
+
+    /**
+     * Returns the listing of new error codes introduced by the other {@code ValidationReport}
+     * passed as parameter, e.g. if this {@code ValidationReport} has the following error codes:
+     *
+     * <ul>
+     *   <li>invalid_phone_number;
+     *   <li>number_out_of_range;
+     * </ul>
+     *
+     * <p>and the other {@code ValidationReport} has the following error codes:
+     *
+     * <ul>
+     *   <li>invalid_phone_number;
+     *   <li>number_out_of_range;
+     *   <li>invalid_email_address;
+     *   <li>invalid_url;
+     * </ul>
+     *
+     * <p>then this returns a {@code Set} that contains the two new errors codes
+     * (invalid_email_address, invalid_url) not present in this {@code ValidationReport}
+     *
+     * @param other the other {@code ValidationReport}
+     * @return the listing of new error codes introduced by the other {@code ValidationReport}
+     *     passed as parameter.
+     */
+    public Set<String> getNewErrorsListing(ValidationReport other) {
+      return Sets.difference(other.getErrorCodes(), getErrorCodes());
+    }
+
+    /**
+     * Determines if two validation reports are equal regardless of the order of the fields in the
+     * set of {@code SampleNotice}.
+     *
+     * @param other the other {@code ValidationReport}.
+     * @return true if both validation reports are equal regardless of the order of the fields in
+     *     the set of {@code SampleNotice}.
+     */
+    @Override
+    public boolean equals(Object other) {
+      if (this == other) {
+        return true;
+      }
+      if (other instanceof ValidationReport) {
+        ValidationReport otherReport = (ValidationReport) other;
+        return getNotices().equals(otherReport.getNotices());
+      }
+      return false;
+    }
   }
 }

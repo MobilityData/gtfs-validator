@@ -33,8 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+import org.mobilitydata.gtfsvalidator.notice.NoticeContainer.ValidationReport;
 import org.mobilitydata.gtfsvalidator.outputcomparator.io.NoticeStat;
-import org.mobilitydata.gtfsvalidator.outputcomparator.io.ValidationReport;
 
 public class Main {
 
@@ -92,7 +92,9 @@ public class Main {
               acceptanceTestReportMap.getOrDefault(noticeCode, new NoticeStat());
           acceptanceTestReportMap.putIfAbsent(noticeCode, noticeStat);
           noticeStat.update(
-              file.getName(), latestReport.getNoticeByCode(noticeCode).getCount(), urlsAsString);
+              file.getName(),
+              latestReport.getNoticeByCode(noticeCode).getTotalNotices(),
+              urlsAsString);
         }
 
         newErrorCount = referenceReport.getNewErrorCount(latestReport);

@@ -43,13 +43,13 @@ public class NoticeStatTest {
     noticeStat.update("source-id-1", 44, URLS);
     noticeStat.update("source-id-2", 1, URLS);
     noticeStat.update("source-id-2", 5, URLS);
-    Map<String, Integer> datasetInfo = new HashMap<>();
-    datasetInfo.put("source-id-1", 44);
-    datasetInfo.put("source-id-2", 6);
+    Map<String, Integer> sourceInfo = new HashMap<>();
+    sourceInfo.put("source-id-1", 44);
+    sourceInfo.put("source-id-2", 6);
     assertThat(noticeStat.getAffectedSourcesCount()).isEqualTo(2);
     assertThat(noticeStat.getAffectedSources().keySet())
         .containsExactlyElementsIn(Set.of("source-id-1", "source-id-2"));
-    assertThat(noticeStat.getCountPerSource()).containsExactlyEntriesIn(datasetInfo);
+    assertThat(noticeStat.getCountPerSource()).containsExactlyEntriesIn(sourceInfo);
   }
 
   @Test
@@ -70,26 +70,27 @@ public class NoticeStatTest {
     noticeStat.update("source-id-2", 1, URLS);
     noticeStat.update("source-id-2", 5, URLS);
     JsonObject noticeStatJson = noticeStat.toJson();
-    JsonArray affectedDatasetsJsonArray = new JsonArray();
+    JsonArray affectedSourcesJsonArray = new JsonArray();
 
-    JsonObject firstDatasetInfo = new JsonObject();
-    JsonObject secondDatasetInfo = new JsonObject();
-    firstDatasetInfo.addProperty("source-id-1", String.format(URL_PATTERN, "source-id-1"));
-    secondDatasetInfo.addProperty("source-id-2", String.format(URL_PATTERN, "source-id-2"));
+    JsonObject firstSourceInfo = new JsonObject();
+    firstSourceInfo.addProperty("source-id-1", String.format(URL_PATTERN, "source-id-1"));
+    JsonObject secondSourceInfo = new JsonObject();
+    secondSourceInfo.addProperty("source-id-2", String.format(URL_PATTERN, "source-id-2"));
 
-    affectedDatasetsJsonArray.add(firstDatasetInfo);
-    affectedDatasetsJsonArray.add(secondDatasetInfo);
-    JsonArray countPerDatasetJsonArray = new JsonArray();
+    affectedSourcesJsonArray.add(firstSourceInfo);
+    affectedSourcesJsonArray.add(secondSourceInfo);
+    JsonArray countPerSourceJsonArray = new JsonArray();
     JsonObject firstDatasetInformation = new JsonObject();
     firstDatasetInformation.addProperty("source-id-1", 44);
     JsonObject secondDatasetInformation = new JsonObject();
     secondDatasetInformation.addProperty("source-id-2", 6);
-    countPerDatasetJsonArray.add(firstDatasetInformation);
-    countPerDatasetJsonArray.add(secondDatasetInformation);
-    assertThat(noticeStatJson.get(NoticeStat.AFFECTED_SOURCES))
-        .isEqualTo(affectedDatasetsJsonArray);
+
+    countPerSourceJsonArray.add(firstDatasetInformation);
+
+    countPerSourceJsonArray.add(secondDatasetInformation);
+    assertThat(noticeStatJson.get(NoticeStat.AFFECTED_SOURCES)).isEqualTo(affectedSourcesJsonArray);
     assertThat(noticeStatJson.get(NoticeStat.AFFECTED_SOURCES_COUNT))
         .isEqualTo(new JsonPrimitive(2));
-    assertThat(noticeStatJson.get(NoticeStat.COUNT_PER_SOURCE)).isEqualTo(countPerDatasetJsonArray);
+    assertThat(noticeStatJson.get(NoticeStat.COUNT_PER_SOURCE)).isEqualTo(countPerSourceJsonArray);
   }
 }

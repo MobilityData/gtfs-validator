@@ -31,10 +31,10 @@ import java.util.regex.Pattern;
  * ValidationNotice} this gives information about:
  *
  * <ul>
- *   <li>the number of datasets that raised this {@code ValidationNotice}
- *   <li>the ids of the datasets that raised this {@code ValidationNotice} and the url to be used to
+ *   <li>the number of sources that raised this {@code ValidationNotice}
+ *   <li>the ids of the sources that raised this {@code ValidationNotice} and the url to be used to
  *       download them
- *   <li>the total number of this {@code ValidationNotice} in each datasets concerned
+ *   <li>the total number of this {@code ValidationNotice} in each source concerned
  * </ul>
  */
 public class NoticeStat {
@@ -49,12 +49,12 @@ public class NoticeStat {
   private int affectedSourcesCount;
 
   public NoticeStat(
-      int affectedDatasetsCount,
-      SortedMap<String, String> affectedDatasets,
-      SortedMap<String, Integer> countPerDataset) {
-    this.affectedSourcesCount = affectedDatasetsCount;
-    this.affectedSources = affectedDatasets;
-    this.countPerSource = countPerDataset;
+      int affectedSourcesCount,
+      SortedMap<String, String> affectedSourced,
+      SortedMap<String, Integer> countPerSource) {
+    this.affectedSourcesCount = affectedSourcesCount;
+    this.affectedSources = affectedSourced;
+    this.countPerSource = countPerSource;
   }
 
   public NoticeStat() {
@@ -76,20 +76,20 @@ public class NoticeStat {
     return affectedSourcesCount;
   }
 
-  public static String retrieveSourceUrl(String urlAsString, String datasetId) {
-    Pattern pattern = Pattern.compile(String.format(URL_PATTERN, datasetId));
+  public static String retrieveSourceUrl(String urlAsString, String sourceId) {
+    Pattern pattern = Pattern.compile(String.format(URL_PATTERN, sourceId));
     Matcher matcher = pattern.matcher(urlAsString);
     matcher.find();
     return matcher.group();
   }
 
   /**
-   * Updates field countPerDataset for a given sourceId
+   * Updates field countPerSource for a given sourceId
    *
    * @param sourceId the id of the source to update
    * @param newCount the new value for {@code NoticeStat#count}
    */
-  private void updateCountPerDataset(String sourceId, Integer newCount) {
+  private void updateCountPerSource(String sourceId, Integer newCount) {
     Integer currentCount = this.countPerSource.getOrDefault(sourceId, 0);
     this.countPerSource.put(sourceId, currentCount + newCount);
   }
@@ -103,7 +103,7 @@ public class NoticeStat {
    */
   public void update(String sourceId, int noticeCount, String urls) {
     this.affectedSources.put(sourceId, retrieveSourceUrl(urls, sourceId));
-    updateCountPerDataset(sourceId, noticeCount);
+    updateCountPerSource(sourceId, noticeCount);
     this.affectedSourcesCount = this.affectedSources.size();
   }
 
@@ -114,16 +114,16 @@ public class NoticeStat {
    */
   public JsonObject toJson() {
     JsonObject root = new JsonObject();
-    JsonArray affectedDatasetsJsonArray = new JsonArray();
+    JsonArray affectedSourcesJsonArray = new JsonArray();
     JsonArray statsJsonArray = new JsonArray();
     root.addProperty(AFFECTED_SOURCES_COUNT, affectedSourcesCount);
-    root.add(AFFECTED_SOURCES, affectedDatasetsJsonArray);
+    root.add(AFFECTED_SOURCES, affectedSourcesJsonArray);
     root.add(COUNT_PER_SOURCE, statsJsonArray);
 
     for (Entry<String, String> entry : affectedSources.entrySet()) {
-      JsonObject datasetInfo = new JsonObject();
-      datasetInfo.addProperty(entry.getKey(), entry.getValue());
-      affectedDatasetsJsonArray.add(datasetInfo);
+      JsonObject sourceInfo = new JsonObject();
+      sourceInfo.addProperty(entry.getKey(), entry.getValue());
+      affectedSourcesJsonArray.add(sourceInfo);
       JsonObject statJson = new JsonObject();
       statsJsonArray.add(statJson);
       statJson.addProperty(entry.getKey(), countPerSource.get(entry.getKey()));

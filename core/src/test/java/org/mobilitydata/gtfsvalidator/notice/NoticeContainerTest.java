@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mobilitydata.gtfsvalidator.notice.NoticeContainer.ValidationReport;
 import org.mobilitydata.gtfsvalidator.notice.testnotices.DoubleFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.testnotices.StringFieldNotice;
 
@@ -184,5 +185,576 @@ public class NoticeContainerTest {
                 + "\"3\"},{\"someField\":\"3\"}]},{\"code\":\"string_field\",\"severity\":\"ERROR"
                 + "\",\"totalNotices\":55,\"sampleNotices\":[{\"someField\":\"1\"},{\"someField"
                 + "\":\"1\"},{\"someField\":\"1\"}]}]}");
+  }
+
+  private static ValidationReport createValidationReportFromJsonString(String jsonString) {
+    return ValidationReport.fromJsonString(jsonString);
+  }
+
+  @Test
+  public void equals_sameReports_true() {
+    assertThat(
+            createValidationReportFromJsonString(
+                "{\n"
+                    + "  \"notices\": [\n"
+                    + "    {\n"
+                    + "      \"code\": \"invalid_url\",\n"
+                    + "      \"severity\": \"ERROR\",\n"
+                    + "      \"totalNotices\": 1,\n"
+                    + "      \"sampleNotices\": [\n"
+                    + "        {\n"
+                    + "          \"filename\": \"stops.txt\",\n"
+                    + "          \"csvRowNumber\": 163,\n"
+                    + "          \"fieldName\": \"stop_url\",\n"
+                    + "          \"fieldValue\": \"http://www.stm.info/fr/infos/reseaux/metro/square-victoria–oaci\"\n"
+                    + "        }\n"
+                    + "      ]\n"
+                    + "    },\n"
+                    + "    {\n"
+                    + "      \"code\": \"unknown_column\",\n"
+                    + "      \"severity\": \"INFO\",\n"
+                    + "      \"totalNotices\": 1,\n"
+                    + "      \"sampleNotices\": [\n"
+                    + "        {\n"
+                    + "          \"filename\": \"trips.txt\",\n"
+                    + "          \"fieldName\": \"note_fr\",\n"
+                    + "          \"index\": 8\n"
+                    + "        }\n"
+                    + "      ]\n"
+                    + "    }\n"
+                    + "  ]\n"
+                    + "}"))
+        .isEqualTo(
+            createValidationReportFromJsonString(
+                "{\n"
+                    + "  \"notices\": [\n"
+                    + "    {\n"
+                    + "      \"code\": \"invalid_url\",\n"
+                    + "      \"severity\": \"ERROR\",\n"
+                    + "      \"totalNotices\": 1,\n"
+                    + "      \"sampleNotices\": [\n"
+                    + "        {\n"
+                    + "          \"filename\": \"stops.txt\",\n"
+                    + "          \"csvRowNumber\": 163,\n"
+                    + "          \"fieldName\": \"stop_url\",\n"
+                    + "          \"fieldValue\": \"http://www.stm.info/fr/infos/reseaux/metro/square-victoria–oaci\"\n"
+                    + "        }\n"
+                    + "      ]\n"
+                    + "    },\n"
+                    + "    {\n"
+                    + "      \"code\": \"unknown_column\",\n"
+                    + "      \"severity\": \"INFO\",\n"
+                    + "      \"totalNotices\": 1,\n"
+                    + "      \"sampleNotices\": [\n"
+                    + "        {\n"
+                    + "          \"filename\": \"trips.txt\",\n"
+                    + "          \"fieldName\": \"note_fr\",\n"
+                    + "          \"index\": 8\n"
+                    + "        }\n"
+                    + "      ]\n"
+                    + "    }\n"
+                    + "  ]\n"
+                    + "}"));
+  }
+
+  @Test
+  public void equals_differentFieldsOrder_true() {
+    assertThat(
+            createValidationReportFromJsonString(
+                "{\n"
+                    + "  \"notices\": [\n"
+                    + "    {\n"
+                    + "      \"code\": \"invalid_url\",\n"
+                    + "      \"severity\": \"ERROR\",\n"
+                    + "      \"totalNotices\": 1,\n"
+                    + "      \"sampleNotices\": [\n"
+                    + "        {\n"
+                    + "          \"filename\": \"stops.txt\",\n"
+                    + "          \"csvRowNumber\": 163,\n"
+                    + "          \"fieldName\": \"stop_url\",\n"
+                    + "          \"fieldValue\": \"http://www.stm.info/fr/infos/reseaux/metro/square-victoria–oaci\"\n"
+                    + "        }\n"
+                    + "      ]\n"
+                    + "    },\n"
+                    + "    {\n"
+                    + "      \"code\": \"unknown_column\",\n"
+                    + "      \"severity\": \"INFO\",\n"
+                    + "      \"totalNotices\": 1,\n"
+                    + "      \"sampleNotices\": [\n"
+                    + "        {\n"
+                    + "          \"filename\": \"trips.txt\",\n"
+                    + "          \"fieldName\": \"note_fr\",\n"
+                    + "          \"index\": 8\n"
+                    + "        }\n"
+                    + "      ]\n"
+                    + "    }\n"
+                    + "  ]\n"
+                    + "}"))
+        .isEqualTo(
+            createValidationReportFromJsonString(
+                "{\n"
+                    + "  \"notices\": [\n"
+                    + "    {\n"
+                    + "      \"code\": \"unknown_column\",\n"
+                    + "      \"totalNotices\": 1,\n"
+                    + "      \"severity\": \"INFO\",\n"
+                    + "      \"sampleNotices\": [\n"
+                    + "        {\n"
+                    + "          \"filename\": \"trips.txt\",\n"
+                    + "          \"fieldName\": \"note_fr\",\n"
+                    + "          \"index\": 8\n"
+                    + "        }\n"
+                    + "      ]\n"
+                    + "    },\n"
+                    + "    {\n"
+                    + "      \"severity\": \"ERROR\",\n"
+                    + "      \"code\": \"invalid_url\",\n"
+                    + "      \"totalNotices\": 1,\n"
+                    + "      \"sampleNotices\": [\n"
+                    + "        {\n"
+                    + "          \"filename\": \"stops.txt\",\n"
+                    + "          \"csvRowNumber\": 163,\n"
+                    + "          \"fieldName\": \"stop_url\",\n"
+                    + "          \"fieldValue\": \"http://www.stm.info/fr/infos/reseaux/metro/square-victoria–oaci\"\n"
+                    + "        }\n"
+                    + "      ]\n"
+                    + "    }\n"
+                    + "  ]\n"
+                    + "}"));
+  }
+
+  @Test
+  public void equals_differentReports_false() {
+    assertThat(
+            createValidationReportFromJsonString(
+                "{\n"
+                    + "  \"notices\": [\n"
+                    + "    {\n"
+                    + "      \"code\": \"invalid_url\",\n"
+                    + "      \"severity\": \"ERROR\",\n"
+                    + "      \"totalNotices\": 1,\n"
+                    + "      \"sampleNotices\": [\n"
+                    + "        {\n"
+                    + "          \"filename\": \"stops.txt\",\n"
+                    + "          \"csvRowNumber\": 163,\n"
+                    + "          \"fieldName\": \"stop_url\",\n"
+                    + "          \"fieldValue\": \"http://www.stm.info/fr/infos/reseaux/metro/square-victoria–oaci\"\n"
+                    + "        }\n"
+                    + "      ]\n"
+                    + "    },\n"
+                    + "    {\n"
+                    + "      \"code\": \"unknown_column\",\n"
+                    + "      \"severity\": \"INFO\",\n"
+                    + "      \"totalNotices\": 1,\n"
+                    + "      \"sampleNotices\": [\n"
+                    + "        {\n"
+                    + "          \"filename\": \"trips.txt\",\n"
+                    + "          \"fieldName\": \"note_fr\",\n"
+                    + "          \"index\": 8\n"
+                    + "        }\n"
+                    + "      ]\n"
+                    + "    }\n"
+                    + "  ]\n"
+                    + "}"))
+        .isNotEqualTo(
+            createValidationReportFromJsonString(
+                "{\n"
+                    + "  \"notices\": [\n"
+                    + "    {\n"
+                    + "      \"code\": \"invalid_url\",\n"
+                    + "      \"severity\": \"ERROR\",\n"
+                    + "      \"totalNotices\": 1,\n"
+                    + "      \"sampleNotices\": [\n"
+                    + "        {\n"
+                    + "          \"filename\": \"stops.txt\",\n"
+                    + "          \"csvRowNumber\": 163,\n"
+                    + "          \"fieldName\": \"stop_url\",\n"
+                    + "          \"fieldValue\": \"http://www.stm.info/fr/infos/reseaux/metro/square-victoria–oaci\"\n"
+                    + "        }\n"
+                    + "      ]\n"
+                    + "    },\n"
+                    + "    {\n"
+                    + "      \"code\": \"unknown_column\",\n"
+                    + "      \"severity\": \"INFO\",\n"
+                    + "      \"totalNotices\": 2,\n"
+                    + "      \"sampleNotices\": [\n"
+                    + "        {\n"
+                    + "          \"filename\": \"trips.txt\",\n"
+                    + "          \"fieldName\": \"note_fr\",\n"
+                    + "          \"index\": 8\n"
+                    + "        }\n"
+                    + "      ]\n"
+                    + "    }\n"
+                    + "  ]\n"
+                    + "}"));
+  }
+
+  @Test
+  public void getErrorCodes_errorsInReport_nonEmptySet() {
+    assertThat(
+            createValidationReportFromJsonString(
+                    "{\n"
+                        + "  \"notices\": [\n"
+                        + "    {\n"
+                        + "      \"code\": \"invalid_url\",\n"
+                        + "      \"severity\": \"ERROR\",\n"
+                        + "      \"totalNotices\": 1,\n"
+                        + "      \"sampleNotices\": [\n"
+                        + "        {\n"
+                        + "          \"filename\": \"stops.txt\",\n"
+                        + "          \"csvRowNumber\": 163,\n"
+                        + "          \"fieldName\": \"stop_url\",\n"
+                        + "          \"fieldValue\": \"http://www.stm.info/fr/infos/reseaux/metro/square-victoria–oaci\"\n"
+                        + "        }\n"
+                        + "      ]\n"
+                        + "    },\n"
+                        + "    {\n"
+                        + "      \"code\": \"unknown_column\",\n"
+                        + "      \"severity\": \"ERROR\",\n"
+                        + "      \"totalNotices\": 4,\n"
+                        + "      \"sampleNotices\": [\n"
+                        + "        {\n"
+                        + "          \"filename\": \"trips.txt\",\n"
+                        + "          \"fieldName\": \"note_fr\",\n"
+                        + "          \"index\": 8\n"
+                        + "        }\n"
+                        + "      ]\n"
+                        + "    }\n"
+                        + "  ]\n"
+                        + "}")
+                .getErrorCodes())
+        .containsExactly("invalid_url", "unknown_column");
+  }
+
+  @Test
+  public void getErrorCode_emptyReport_emptySet() {
+    assertThat(
+            createValidationReportFromJsonString("{\n" + "  \"notices\": []\n" + "}")
+                .getErrorCodes())
+        .isEmpty();
+  }
+
+  @Test
+  public void getErrorCodes_noError_emptySet() {
+    assertThat(
+            createValidationReportFromJsonString(
+                    "{\n"
+                        + "  \"notices\": [\n"
+                        + "    {\n"
+                        + "      \"code\": \"invalid_url\",\n"
+                        + "      \"severity\": \"INFO\",\n"
+                        + "      \"totalNotices\": 1,\n"
+                        + "      \"sampleNotices\": [\n"
+                        + "        {\n"
+                        + "          \"filename\": \"stops.txt\",\n"
+                        + "          \"csvRowNumber\": 163,\n"
+                        + "          \"fieldName\": \"stop_url\",\n"
+                        + "          \"fieldValue\": \"http://www.stm.info/fr/infos/reseaux/metro/square-victoria–oaci\"\n"
+                        + "        }\n"
+                        + "      ]\n"
+                        + "    },\n"
+                        + "    {\n"
+                        + "      \"code\": \"unknown_column\",\n"
+                        + "      \"severity\": \"WARNING\",\n"
+                        + "      \"totalNotices\": 1,\n"
+                        + "      \"sampleNotices\": [\n"
+                        + "        {\n"
+                        + "          \"filename\": \"trips.txt\",\n"
+                        + "          \"fieldName\": \"note_fr\",\n"
+                        + "          \"index\": 8\n"
+                        + "        }\n"
+                        + "      ]\n"
+                        + "    }\n"
+                        + "  ]\n"
+                        + "}")
+                .getErrorCodes())
+        .isEmpty();
+  }
+
+  @Test
+  public void hasSameErrorCodes_sameErrorsInReports_true() {
+    assertThat(
+            createValidationReportFromJsonString(
+                    "{\n"
+                        + "  \"notices\": [\n"
+                        + "    {\n"
+                        + "      \"code\": \"invalid_url\",\n"
+                        + "      \"severity\": \"ERROR\",\n"
+                        + "      \"totalNotices\": 1,\n"
+                        + "      \"sampleNotices\": [\n"
+                        + "        {\n"
+                        + "          \"filename\": \"stops.txt\",\n"
+                        + "          \"csvRowNumber\": 163,\n"
+                        + "          \"fieldName\": \"stop_url\",\n"
+                        + "          \"fieldValue\": \"http://www.stm.info/fr/infos/reseaux/metro/square-victoria–oaci\"\n"
+                        + "        }\n"
+                        + "      ]\n"
+                        + "    },\n"
+                        + "    {\n"
+                        + "      \"code\": \"unknown_column\",\n"
+                        + "      \"severity\": \"ERROR\",\n"
+                        + "      \"totalNotices\": 1,\n"
+                        + "      \"sampleNotices\": [\n"
+                        + "        {\n"
+                        + "          \"filename\": \"trips.txt\",\n"
+                        + "          \"fieldName\": \"note_fr\",\n"
+                        + "          \"index\": 8\n"
+                        + "        }\n"
+                        + "      ]\n"
+                        + "    }\n"
+                        + "  ]\n"
+                        + "}")
+                .hasSameErrorCodes(
+                    createValidationReportFromJsonString(
+                        "{\n"
+                            + "  \"notices\": [\n"
+                            + "    {\n"
+                            + "      \"code\": \"invalid_url\",\n"
+                            + "      \"severity\": \"ERROR\",\n"
+                            + "      \"totalNotices\": 1,\n"
+                            + "      \"sampleNotices\": [\n"
+                            + "        {\n"
+                            + "          \"filename\": \"stops.txt\",\n"
+                            + "          \"csvRowNumber\": 163,\n"
+                            + "          \"fieldName\": \"stop_url\",\n"
+                            + "          \"fieldValue\": \"http://www.stm.info/fr/infos/reseaux/metro/square-victoria–oaci\"\n"
+                            + "        }\n"
+                            + "      ]\n"
+                            + "    },\n"
+                            + "    {\n"
+                            + "      \"code\": \"unknown_column\",\n"
+                            + "      \"severity\": \"ERROR\",\n"
+                            + "      \"totalNotices\": 1,\n"
+                            + "      \"sampleNotices\": [\n"
+                            + "        {\n"
+                            + "          \"filename\": \"trips.txt\",\n"
+                            + "          \"fieldName\": \"note_fr\",\n"
+                            + "          \"index\": 8\n"
+                            + "        }\n"
+                            + "      ]\n"
+                            + "    }\n"
+                            + "  ]\n"
+                            + "}")))
+        .isTrue();
+  }
+
+  @Test
+  public void hasSameErrorCodes_differentErrorsInReport_false() {
+    assertThat(
+            createValidationReportFromJsonString(
+                    "{\n"
+                        + "  \"notices\": [\n"
+                        + "    {\n"
+                        + "      \"code\": \"invalid_url\",\n"
+                        + "      \"severity\": \"ERROR\",\n"
+                        + "      \"totalNotices\": 1,\n"
+                        + "      \"sampleNotices\": [\n"
+                        + "        {\n"
+                        + "          \"filename\": \"stops.txt\",\n"
+                        + "          \"csvRowNumber\": 163,\n"
+                        + "          \"fieldName\": \"stop_url\",\n"
+                        + "          \"fieldValue\": \"http://www.stm.info/fr/infos/reseaux/metro/square-victoria–oaci\"\n"
+                        + "        }\n"
+                        + "      ]\n"
+                        + "    },\n"
+                        + "    {\n"
+                        + "      \"code\": \"unknown_column\",\n"
+                        + "      \"severity\": \"ERROR\",\n"
+                        + "      \"totalNotices\": 1,\n"
+                        + "      \"sampleNotices\": [\n"
+                        + "        {\n"
+                        + "          \"filename\": \"trips.txt\",\n"
+                        + "          \"fieldName\": \"note_fr\",\n"
+                        + "          \"index\": 8\n"
+                        + "        }\n"
+                        + "      ]\n"
+                        + "    }\n"
+                        + "  ]\n"
+                        + "}")
+                .hasSameErrorCodes(
+                    createValidationReportFromJsonString(
+                        "{\n"
+                            + "  \"notices\": [\n"
+                            + "    {\n"
+                            + "      \"code\": \"invalid_url\",\n"
+                            + "      \"severity\": \"ERROR\",\n"
+                            + "      \"totalNotices\": 1,\n"
+                            + "      \"sampleNotices\": [\n"
+                            + "        {\n"
+                            + "          \"filename\": \"stops.txt\",\n"
+                            + "          \"csvRowNumber\": 163,\n"
+                            + "          \"fieldName\": \"stop_url\",\n"
+                            + "          \"fieldValue\": \"http://www.stm.info/fr/infos/reseaux/metro/square-victoria–oaci\"\n"
+                            + "        }\n"
+                            + "      ]\n"
+                            + "    }"
+                            + "  ]\n"
+                            + "}")))
+        .isFalse();
+  }
+
+  @Test
+  public void getNewErrorCount_sameErrorsInReports_zero() {
+    assertThat(
+            createValidationReportFromJsonString(
+                    "{\n"
+                        + "  \"notices\": [\n"
+                        + "    {\n"
+                        + "      \"code\": \"invalid_url\",\n"
+                        + "      \"severity\": \"ERROR\",\n"
+                        + "      \"totalNotices\": 2,\n"
+                        + "      \"sampleNotices\": [\n"
+                        + "        {\n"
+                        + "          \"filename\": \"stops.txt\",\n"
+                        + "          \"csvRowNumber\": 163,\n"
+                        + "          \"fieldName\": \"stop_url\",\n"
+                        + "          \"fieldValue\": \"http://www.stm.info/fr/infos/reseaux/metro/square-victoria–oaci\"\n"
+                        + "        }\n"
+                        + "      ]\n"
+                        + "    }"
+                        + "  ]\n"
+                        + "}")
+                .getNewErrorCount(
+                    createValidationReportFromJsonString(
+                        "{\n"
+                            + "  \"notices\": [\n"
+                            + "    {\n"
+                            + "      \"code\": \"invalid_url\",\n"
+                            + "      \"severity\": \"ERROR\",\n"
+                            + "      \"totalNotices\": 1,\n"
+                            + "      \"sampleNotices\": [\n"
+                            + "        {\n"
+                            + "          \"filename\": \"stops.txt\",\n"
+                            + "          \"csvRowNumber\": 163,\n"
+                            + "          \"fieldName\": \"stop_url\",\n"
+                            + "          \"fieldValue\": \"http://www.stm.info/fr/infos/reseaux/metro/square-victoria–oaci\"\n"
+                            + "        }\n"
+                            + "      ]\n"
+                            + "    }"
+                            + "  ]\n"
+                            + "}")))
+        .isEqualTo(0);
+  }
+
+  @Test
+  public void getNewErrorCount_noNewErrorInReport_zero() {
+    assertThat(
+            createValidationReportFromJsonString(
+                    "{\n"
+                        + "  \"notices\": [\n"
+                        + "    {\n"
+                        + "      \"code\": \"invalid_url\",\n"
+                        + "      \"severity\": \"ERROR\",\n"
+                        + "      \"totalNotices\": 1,\n"
+                        + "      \"sampleNotices\": [\n"
+                        + "        {\n"
+                        + "          \"filename\": \"stops.txt\",\n"
+                        + "          \"csvRowNumber\": 163,\n"
+                        + "          \"fieldName\": \"stop_url\",\n"
+                        + "          \"fieldValue\": \"http://www.stm.info/fr/infos/reseaux/metro/square-victoria–oaci\"\n"
+                        + "        }\n"
+                        + "      ]\n"
+                        + "    }"
+                        + "  ]\n"
+                        + "}")
+                .getNewErrorCount(
+                    createValidationReportFromJsonString(
+                        "{\n"
+                            + "  \"notices\": [\n"
+                            + "    {\n"
+                            + "      \"code\": \"some_error_code\",\n"
+                            + "      \"severity\": \"INFO\",\n"
+                            + "      \"totalNotices\": 1,\n"
+                            + "      \"sampleNotices\": [\n"
+                            + "        {\n"
+                            + "          \"filename\": \"stops.txt\",\n"
+                            + "          \"csvRowNumber\": 163,\n"
+                            + "          \"fieldName\": \"stop_url\",\n"
+                            + "          \"fieldValue\": \"http://www.stm.info/fr/infos/reseaux/metro/square-victoria–oaci\"\n"
+                            + "        }\n"
+                            + "      ]\n"
+                            + "    }"
+                            + "  ]\n"
+                            + "}")))
+        .isEqualTo(0);
+  }
+
+  @Test
+  public void getNewErrorCount_twoNewErrorsInNewReport_two() {
+    assertThat(
+            createValidationReportFromJsonString(
+                    "{\n"
+                        + "  \"notices\": [\n"
+                        + "    {\n"
+                        + "      \"code\": \"invalid_url\",\n"
+                        + "      \"severity\": \"ERROR\",\n"
+                        + "      \"totalNotices\": 1,\n"
+                        + "      \"sampleNotices\": [\n"
+                        + "        {\n"
+                        + "          \"filename\": \"stops.txt\",\n"
+                        + "          \"csvRowNumber\": 163,\n"
+                        + "          \"fieldName\": \"stop_url\",\n"
+                        + "          \"fieldValue\": \"http://www.stm.info/fr/infos/reseaux/metro/square-victoria–oaci\"\n"
+                        + "        }\n"
+                        + "      ]\n"
+                        + "    }"
+                        + "  ]\n"
+                        + "}")
+                .getNewErrorCount(
+                    createValidationReportFromJsonString(
+                        "{\n"
+                            + "  \"notices\": [\n"
+                            + "    {\n"
+                            + "      \"code\": \"invalid_url\",\n"
+                            + "      \"severity\": \"ERROR\",\n"
+                            + "      \"totalNotices\": 1,\n"
+                            + "      \"sampleNotices\": [\n"
+                            + "        {\n"
+                            + "          \"filename\": \"stops.txt\",\n"
+                            + "          \"csvRowNumber\": 163,\n"
+                            + "          \"fieldName\": \"stop_url\",\n"
+                            + "          \"fieldValue\": \"http://www.stm.info/fr/infos/reseaux/metro/square-victoria–oaci\"\n"
+                            + "        }\n"
+                            + "      ]\n"
+                            + "    },\n"
+                            + "    {\n"
+                            + "      \"code\": \"invalid_url\",\n"
+                            + "      \"severity\": \"ERROR\",\n"
+                            + "      \"totalNotices\": 1,\n"
+                            + "      \"sampleNotices\": [\n"
+                            + "        {\n"
+                            + "          \"filename\": \"trips.txt\",\n"
+                            + "          \"fieldName\": \"note_fr\",\n"
+                            + "          \"index\": 8\n"
+                            + "        }\n"
+                            + "      ]\n"
+                            + "    },\n"
+                            + "    {\n"
+                            + "      \"code\": \"some_error_code\",\n"
+                            + "      \"severity\": \"ERROR\",\n"
+                            + "      \"totalNotices\": 1,\n"
+                            + "      \"sampleNotices\": [\n"
+                            + "        {\n"
+                            + "          \"filename\": \"trips.txt\",\n"
+                            + "          \"fieldName\": \"note_fr\",\n"
+                            + "          \"index\": 8\n"
+                            + "        }\n"
+                            + "      ]\n"
+                            + "    },\n"
+                            + "    {\n"
+                            + "      \"code\": \"another_error_code\",\n"
+                            + "      \"severity\": \"ERROR\",\n"
+                            + "      \"totalNotices\": 1,\n"
+                            + "      \"sampleNotices\": [\n"
+                            + "        {\n"
+                            + "          \"filename\": \"trips.txt\",\n"
+                            + "          \"fieldName\": \"note_fr\",\n"
+                            + "          \"index\": 8\n"
+                            + "        }\n"
+                            + "      ]\n"
+                            + "    }\n"
+                            + "  ]\n"
+                            + "}")))
+        .isEqualTo(2);
   }
 }

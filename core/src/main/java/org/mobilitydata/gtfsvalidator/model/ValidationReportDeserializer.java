@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.outputcomparator.io;
+package org.mobilitydata.gtfsvalidator.model;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
@@ -28,10 +28,11 @@ import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import org.mobilitydata.gtfsvalidator.notice.NoticeContainer.ValidationReport;
 
 /**
  * Used to deserialize a validation report. This represents a validation report as a list of {@code
- * NoticeSummary} which provides information about each notice generated during a GTFS dataset
+ * SampleNotice} which provides information about each notice generated during a GTFS dataset
  * validation.
  */
 public class ValidationReportDeserializer implements JsonDeserializer<ValidationReport> {
@@ -41,15 +42,15 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
   private static final String NOTICES_MEMBER_NAME = "notices";
 
   /**
-   * Return the sorted set of error codes from a list of {@code NoticeSummary}.
+   * Return the sorted set of error codes from a list of {@code SampleNotice}.
    *
-   * @return the sorted set of error codes from a list of {@code NoticeSummary}.
+   * @return the sorted set of error codes from a list of {@code SampleNotice}.
    */
-  private static ImmutableSet<String> extractErrorCodes(Set<NoticeSummary> notices) {
+  private static ImmutableSet<String> extractErrorCodes(Set<SampleNotice> notices) {
     ImmutableSet.Builder<String> errorCodesSetBuilder = new ImmutableSet.Builder<>();
-    for (NoticeSummary noticeSummary : notices) {
-      if (noticeSummary.isError()) {
-        errorCodesSetBuilder.add(noticeSummary.getCode());
+    for (SampleNotice sampleNotice : notices) {
+      if (sampleNotice.isError()) {
+        errorCodesSetBuilder.add(sampleNotice.getCode());
       }
     }
     return errorCodesSetBuilder.build();
@@ -58,11 +59,11 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
   @Override
   public ValidationReport deserialize(
       JsonElement json, Type typoOfT, JsonDeserializationContext context) {
-    Set<NoticeSummary> notices = new LinkedHashSet<>();
+    Set<SampleNotice> notices = new LinkedHashSet<>();
     JsonObject rootObject = json.getAsJsonObject();
     JsonArray noticesArray = rootObject.getAsJsonArray(NOTICES_MEMBER_NAME);
     for (JsonElement childObject : noticesArray) {
-      notices.add(GSON.fromJson(childObject, NoticeSummary.class));
+      notices.add(GSON.fromJson(childObject, SampleNotice.class));
     }
     return new ValidationReport(Collections.unmodifiableSet(notices), extractErrorCodes(notices));
   }
