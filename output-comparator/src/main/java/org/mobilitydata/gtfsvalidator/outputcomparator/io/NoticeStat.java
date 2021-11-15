@@ -42,8 +42,8 @@ public class NoticeStat {
   protected static final String AFFECTED_SOURCES_COUNT = "affectedSourcesCount";
   protected static final String AFFECTED_SOURCES = "affectedSources";
   protected static final String COUNT_PER_SOURCE = "countPerSource";
-  private static final String URL_PATTERN =
-      "https://storage.googleapis.com/storage/v1/b/%s_latest/o/\\w+.zip\\?alt=media";
+  public static final String URL_PATTERN =
+      "https://storage.googleapis.com/storage/v1/b/%s_archives_\\d{4}-\\d{2}-\\d{2}/o/\\w+.zip\\?alt=media";
   private final SortedMap<String, String> affectedSources;
   private final SortedMap<String, Integer> countPerSource;
   private int affectedSourcesCount;

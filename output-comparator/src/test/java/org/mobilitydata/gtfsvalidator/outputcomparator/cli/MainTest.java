@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.outputcomparator.cli;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mobilitydata.gtfsvalidator.outputcomparator.cli.Main.generateAcceptanceTestReport;
+import static org.mobilitydata.gtfsvalidator.outputcomparator.io.NoticeStat.URL_PATTERN;
 
 import com.google.common.collect.ImmutableSortedMap;
 import com.google.gson.Gson;
@@ -35,8 +36,8 @@ import org.mobilitydata.gtfsvalidator.outputcomparator.io.NoticeStat;
 public class MainTest {
   private static final Gson GSON =
       new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
-  private static final String URL_PATTERN =
-      "https://storage.googleapis.com/storage/v1/b/%s_latest/o/1234.zip?alt=media";
+//  private static final String URL_PATTERN =
+//      "https://storage.googleapis.com/storage/v1/b/%s_latest/o/1234.zip?alt=media";
 
   private static NoticeStat createNoticeStat(SortedMap<String, Integer> countPerSource) {
     SortedMap<String, String> affectedSources = new TreeMap<>();

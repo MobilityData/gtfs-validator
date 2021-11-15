@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mobilitydata.gtfsvalidator.outputcomparator.io.NoticeStat.URL_PATTERN;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -30,8 +31,6 @@ import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class NoticeStatTest {
-  private static final String URL_PATTERN =
-      "https://storage.googleapis.com/storage/v1/b/%s_latest/o/1234.zip?alt=media";
   private static final String URLS =
       String.format(
           "%s %s",
