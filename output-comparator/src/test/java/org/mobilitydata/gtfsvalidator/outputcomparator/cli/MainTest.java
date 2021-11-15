@@ -36,8 +36,6 @@ import org.mobilitydata.gtfsvalidator.outputcomparator.io.NoticeStat;
 public class MainTest {
   private static final Gson GSON =
       new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
-//  private static final String URL_PATTERN =
-//      "https://storage.googleapis.com/storage/v1/b/%s_latest/o/1234.zip?alt=media";
 
   private static NoticeStat createNoticeStat(SortedMap<String, Integer> countPerSource) {
     SortedMap<String, String> affectedSources = new TreeMap<>();
