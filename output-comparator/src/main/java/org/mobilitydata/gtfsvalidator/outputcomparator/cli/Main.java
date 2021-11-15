@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-import org.apache.commons.io.filefilter.FileFileFilter;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer.ValidationReport;
 import org.mobilitydata.gtfsvalidator.outputcomparator.io.NoticeStat;
 
@@ -78,8 +77,11 @@ public class Main {
     try {
       String urlsAsString = Files.readString(args.getSourceUrlPath());
       for (File file : reportDirs) {
-        if (file.getName().contains(".")) {
-          return;
+        if (!new File(file.toPath().resolve(args.getReferenceValidationReportName()).toString())
+                .exists()
+            || !new File(file.toPath().resolve(args.getLatestValidationReportName()).toString())
+                .exists()) {
+          continue;
         }
         int newErrorCount;
         ValidationReport referenceReport =
