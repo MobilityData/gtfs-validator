@@ -119,6 +119,18 @@ public class DefaultFieldValidatorTest {
         nc ->
             new DefaultFieldValidator(CountryCode.forStringOrUnknown("NL"))
                 .validatePhoneNumber("004980038762246", CELL_CONTEXT, nc));
+
+    assertValid(
+        nc ->
+            new DefaultFieldValidator(CountryCode.forStringOrUnknown("us"))
+                .validatePhoneNumber("813-254-4278", CELL_CONTEXT, nc));
+
+    // The below format fails validation without a known country code, so check that we skip
+    // validation when country code is unknown.
+    assertValid(
+        nc ->
+            new DefaultFieldValidator(CountryCode.forStringOrUnknown("ZZ"))
+                .validatePhoneNumber("813-254-4278", CELL_CONTEXT, nc));
   }
 
   @Test
@@ -134,16 +146,6 @@ public class DefaultFieldValidatorTest {
     assertInvalid(
         nc ->
             new DefaultFieldValidator(CountryCode.forStringOrUnknown("NL"))
-                .validatePhoneNumber("003280038762246", CELL_CONTEXT, nc),
-        new InvalidPhoneNumberNotice(
-            CELL_CONTEXT.filename(),
-            CELL_CONTEXT.csvRowNumber(),
-            CELL_CONTEXT.fieldName(),
-            "003280038762246"));
-
-    assertInvalid(
-        nc ->
-            new DefaultFieldValidator(CountryCode.forStringOrUnknown("ZZ"))
                 .validatePhoneNumber("003280038762246", CELL_CONTEXT, nc),
         new InvalidPhoneNumberNotice(
             CELL_CONTEXT.filename(),

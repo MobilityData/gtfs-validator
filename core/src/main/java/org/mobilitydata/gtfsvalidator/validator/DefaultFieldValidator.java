@@ -93,6 +93,11 @@ public class DefaultFieldValidator implements GtfsFieldValidator {
   @Override
   public void validatePhoneNumber(
       String phoneNumber, GtfsCellContext cellContext, NoticeContainer noticeContainer) {
+    if (countryCode.isUnknown()) {
+      // If the user didn't provide a country code or the provided country-code was invalid, skip
+      // validation.
+      return;
+    }
     if (!PhoneNumberUtil.getInstance()
         .isPossibleNumber(phoneNumber, countryCode.getCountryCode())) {
       noticeContainer.addValidationNotice(
