@@ -220,7 +220,7 @@ jobs:
           ls -a
       - name: Generate acceptance report test
         run: |
-          java -jar output-comparator*.jar --report_directory . --new_error_threshold 1 --reference_report_name reference.json --latest_report_name latest.json --percent_invalid_datasets_threshold 1 --output_base ${{ github.sha }}/acceptance-test-output --source_urls gtfs_latest_versions.json
+          java -jar output-comparator*.jar --report_directory . --new_error_threshold 1 --reference_report_name reference.json --latest_report_name latest.json --percent_invalid_datasets_threshold 1 --output_base acceptance-test-output --source_urls gtfs_latest_versions.json
       - name: Explore folders (2)
         run: |
           ls -a
@@ -229,7 +229,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: acceptance_test_report
-          path: ${{ github.sha }}/acceptance-test-output
+          path: acceptance-test-output
       - name: Comment PR with acceptance test report
         if: always()
         uses: actions/github-script@v4
