@@ -106,6 +106,7 @@ public class Main {
       checkRuleValidity(
           badDatasetCount, totalDatasetCount, args.getPercentInvalidDatasetsThreshold());
     } catch (IOException e) {
+      System.out.println(e);
       logger.atSevere().withCause(e);
       System.exit(IO_EXCEPTION_EXIT_CODE);
     }
