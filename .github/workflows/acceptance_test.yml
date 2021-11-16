@@ -234,15 +234,9 @@ jobs:
           echo "$PR_COMMENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           echo $env.PR_COMMENT
-      - name: Comment PR with acceptance test report
+      - name: Comment Pull Request
         if: always()
-        uses: actions/github-script@v4
+        uses: thollander/actions-comment-pull-request@v1.0.4
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: ${{ env.PR_COMMENT }}
-            })
+          message: ${{ env.PR_COMMENT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
