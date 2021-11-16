@@ -93,7 +93,7 @@ public class TimepointTimeValidator extends FileValidator {
     private final String specifiedField;
 
     StopTimeTimepointWithoutTimesNotice(GtfsStopTime stopTime, String specifiedField) {
-      super(SeverityLevel.WARNING);
+      super(SeverityLevel.ERROR);
       this.csvRowNumber = stopTime.csvRowNumber();
       this.tripId = stopTime.tripId();
       this.stopSequence = stopTime.stopSequence();
