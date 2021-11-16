@@ -77,18 +77,15 @@ public class Main {
     try {
       String urlsAsString = Files.readString(args.getSourceUrlPath());
       for (File file : reportDirs) {
-        if (!new File(file.toPath().resolve(args.getReferenceValidationReportName()).toString())
-                .exists()
-            || !new File(file.toPath().resolve(args.getLatestValidationReportName()).toString())
-                .exists()) {
+        Path referenceReportPath = file.toPath().resolve(args.getReferenceValidationReportName());
+        Path latestReportPath = file.toPath().resolve(args.getLatestValidationReportName());
+        if (!new File(referenceReportPath.toString()).isFile()
+            || !new File(latestReportPath.toString()).isFile()) {
           continue;
         }
         int newErrorCount;
-        ValidationReport referenceReport =
-            ValidationReport.fromPath(
-                file.toPath().resolve(args.getReferenceValidationReportName()));
-        ValidationReport latestReport =
-            ValidationReport.fromPath(file.toPath().resolve(args.getLatestValidationReportName()));
+        ValidationReport referenceReport = ValidationReport.fromPath(referenceReportPath);
+        ValidationReport latestReport = ValidationReport.fromPath(latestReportPath);
         if (referenceReport.hasSameErrorCodes(latestReport)) {
           continue;
         }
@@ -112,7 +109,6 @@ public class Main {
       checkRuleValidity(
           badDatasetCount, totalDatasetCount, args.getPercentInvalidDatasetsThreshold());
     } catch (IOException e) {
-      System.out.println(e);
       logger.atSevere().withCause(e);
       System.exit(IO_EXCEPTION_EXIT_CODE);
     }
