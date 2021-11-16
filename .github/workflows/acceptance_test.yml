@@ -242,5 +242,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "${{ steps.generate-comment.outputs.pr_comment) }}"
+              body: "${{ steps.generate-comment.outputs.pr_comment }}"
             })
