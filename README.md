@@ -20,11 +20,11 @@ This is a command-line tool written in Java that performs the following steps:
 ### Run it
 To validate a GTFS dataset on your computer:
 
-`java -jar gtfs-validator-v-snapshot_cli.jar -i /myDirectory/gtfs.zip -o output -c ca` 
+`java -jar gtfs-validator-v3.0.0-beta_cli.jar -i /myDirectory/gtfs.zip -o output -c ca` 
 
 To download and validate a GTFS dataset from a URL:
 
-`java -jar gtfs-validator-v-snapshot_cli.jar -u https://www.abc.com/gtfs.zip -o output -c ca`
+`java -jar gtfs-validator-v3.0.0-beta_cli.jar -u https://www.abc.com/gtfs.zip -o output -c ca`
 
 where:
 * `--input` or `-i`: the path to the GTFS file (e.g., `/myDirectory/gtfs.zip`)
