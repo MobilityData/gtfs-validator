@@ -17,7 +17,8 @@ import json
 # This script generates a text to be used as a PR comment.
 # Made for Python 3.9.
 ###############################################################################
-AFFECTED_ARCHIVES_COUNT = "affectedArchivesCount"
+AFFECTED_SOURCES = "affectedSources"
+AFFECTED_SOURCES_COUNT = "affectedSourcesCount"
 
 
 def load_content(data_path):
@@ -69,11 +70,11 @@ if __name__ == "__main__":
 
     for notice_sample in acceptance_test_report["newErrors"]:
         notice_code = list(notice_sample.keys())[0]
-        notice_info = f"- `{notice_code}`: {notice_sample[notice_code][AFFECTED_ARCHIVES_COUNT]} datasets (including "
-        for archive_ids in notice_sample[notice_code]["affectedArchives"]:
-            for archive_id in list(archive_ids.keys()):
+        notice_info = f"- `{notice_code}`: {notice_sample[notice_code][AFFECTED_SOURCES_COUNT]} datasets (including "
+        for source_ids in notice_sample[notice_code][AFFECTED_SOURCES]:
+            for source_id in list(source_ids.keys()):
                 notice_info += (
-                    f"[`{archive_id}`]({get_url(archive_id, args.path_to_urls)}), "
+                    f"[`{source_id}`]({get_url(source_id, args.path_to_urls)}), "
                 )
         comment = comment + notice_info[:-2] + ")\n"
     comment = (
