@@ -724,6 +724,8 @@
 | `inconsistent_agency_lang`                 	| [`InconsistentAgencyLangNotice`](#InconsistentAgencyLangNotice)                   	|
 | `leading_or_trailing_whitespaces`           | [`LeadingOrTrailingWhitespacesNotice`](#LeadingOrTrailingWhitespacesNotice)         |
 | `missing_feed_info_date`                   	| [`MissingFeedInfoDateNotice`](#MissingFeedInfoDateNotice)                         	|
+| `missing_timepoint_column`                   	| [`MissingTimepointColumnNotice`](#MissingTimepointColumnNotice)                       |
+| `missing_timepoint_value`                   	| [`MissingTimepointValueNotice`](#MissingTimepointValueNotice)                         |
 | `more_than_one_entity`                     	| [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice)                             	|
 | `non_ascii_or_non_printable_char`          	| [`NonAsciiOrNonPrintableCharNotice`](#NonAsciiOrNonPrintableCharNotice)           	|
 | `pathway_dangling_generic_node`               | [`PathwayDanglingGenericNodeNotice`](#PathwayDanglingGenericNodeNotice)	            |
@@ -853,6 +855,28 @@
 
 ##### Affected files
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
+
+#### [MissingTimepointColumnNotice](/RULES.md#MissingTimepointColumnNotice)
+##### Fields description
+
+| Field name     	| Description                                     	| Type   	|
+|----------------	|-------------------------------------------------	|--------	|
+| `filename`    	| The name of the affected file.                  	| String   	|
+
+##### Affected files
+* [`stop_times.txt`](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stop_timestxt)
+
+#### [MissingTimepointValueNotice](/RULES.md#MissingTimepointValueNotice)
+##### Fields description
+
+| Field name     	| Description                                     	| Type   	|
+|----------------	|-------------------------------------------------	|--------	|
+| `csvRowNumber` 	| The row number of the faulty record.            	| Long   	|
+| `tripId`       	| The faulty record's `stop_times.trip_id`.         | String 	|
+| `stopSequence` 	| The faulty record's `stop_times.stop_sequence`. 	| String 	|
+
+##### Affected files
+* [`stop_times.txt`](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stop_timestxt)
 
 #### [MoreThanOneEntityNotice](/RULES.md#MoreThanOneEntityNotice)
 ##### Fields description
