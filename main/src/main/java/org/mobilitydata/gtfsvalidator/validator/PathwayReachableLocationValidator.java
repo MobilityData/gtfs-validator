@@ -172,7 +172,7 @@ public class PathwayReachableLocationValidator extends FileValidator {
     private final boolean hasExit;
 
     PathwayUnreachableLocationNotice(GtfsStop location, boolean hasEntrance, boolean hasExit) {
-      super(SeverityLevel.WARNING);
+      super(SeverityLevel.ERROR);
       this.csvRowNumber = location.csvRowNumber();
       this.stopId = location.stopId();
       this.stopName = location.stopName();

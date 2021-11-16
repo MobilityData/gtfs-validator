@@ -77,7 +77,7 @@ public class TimepointTimeValidator extends SingleEntityValidator<GtfsStopTime> 
 
     StopTimeTimepointWithoutTimesNotice(
         long csvRowNumber, String tripId, long stopSequence, String specifiedField) {
-      super(SeverityLevel.ERROR);
+      super(SeverityLevel.WARNING);
       this.csvRowNumber = csvRowNumber;
       this.tripId = tripId;
       this.stopSequence = stopSequence;
