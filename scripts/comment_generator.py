@@ -79,6 +79,6 @@ if __name__ == "__main__":
         comment = comment + notice_info[:-2] + ")\n"
     comment = (
         comment
-        + f"\nDownload the full acceptance test report for commit {args.commit_id} [here](https://github.com/MobilityData/gtfs-validator/actions/runs/{args.run_id}) (report will disappear after 90 days)."
+        + f".\nDownload the full acceptance test report for commit {args.commit_id} [here](https://github.com/MobilityData/gtfs-validator/actions/runs/{args.run_id}) (report will disappear after 90 days)."
     )
     print(comment)

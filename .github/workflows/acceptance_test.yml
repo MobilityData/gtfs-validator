@@ -229,9 +229,11 @@ jobs:
         if: always()
         run: |
           python3 scripts/comment_generator.py -u gtfs_latest_versions.json -a acceptance-test-output/acceptance_report.json -c ${{ github.sha }} -r ${{github.run_id}} > pr_comment.txt
-          pr_comment=$(<pr_comment.txt)
-          echo $pr_comment
-          echo "pr_comment=$pr_comment" >> $GITHUB_ENV
+          PR_COMMENT=$(<pr_comment.txt)
+          echo $PR_COMMENT
+          echo "::set-output name=pr_comment::$PR_COMMENT"
+      outputs:
+        pr_comment: ${{ steps.generate-comment.outputs.pr_comment }}
   comment-pr:
     needs: [ compare-outputs ]
     runs-on: ubuntu-latest
@@ -246,5 +248,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "${github.pr_comment}}"
+              body: "${{ needs.compare-outputs.outputs.pr_comment) }}"
             })
