@@ -232,8 +232,8 @@ jobs:
           PR_COMMENT=$(<pr_comment.txt)
           echo $PR_COMMENT
           echo "::set-output name=pr_comment::$PR_COMMENT"
-      outputs:
-        pr_comment: ${{ steps.generate-comment.outputs.pr_comment }}
+    outputs:
+      pr_comment: ${{ steps.generate-comment.outputs.pr_comment }}
   comment-pr:
     needs: [ compare-outputs ]
     runs-on: ubuntu-latest
