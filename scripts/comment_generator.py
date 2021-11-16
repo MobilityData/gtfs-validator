@@ -62,7 +62,7 @@ if __name__ == "__main__":
     acceptance_test_report = load_content(args.acceptance_test_report_path)
     urls_map = load_content(args.path_to_urls)
     comment = (
-        "Hello, @${{ github.actor }}! Thanks for this contribution."
+        "Thanks for this contribution."
         " Due to changes in this pull request, "
         "the following validation rules trigger errors for datasets"
         " that were previously considered valid:\n"

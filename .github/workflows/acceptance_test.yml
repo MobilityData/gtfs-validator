@@ -233,7 +233,6 @@ jobs:
           echo "PR_COMMENT<<EOF" >> $GITHUB_ENV
           echo "$PR_COMMENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-          echo $env.PR_COMMENT
       - name: Comment Pull Request
         if: always()
         uses: thollander/actions-comment-pull-request@v1.0.4
