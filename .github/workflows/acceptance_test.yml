@@ -243,5 +243,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "${{ env.PR_COMMENT }}"
+              body: """${{ env.PR_COMMENT }}"""
             })
