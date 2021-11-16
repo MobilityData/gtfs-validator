@@ -226,12 +226,13 @@ jobs:
           path: acceptance-test-output
       - name: Comment PR with acceptance test report
         if: always()
+        run:
+          python3 scripts/comment_generator.py -u gtfs_latest_versions.json -a acceptance_test_report.json -c ${{ github.sha }} -r ${{github.run_id}} > pr_comment.txt
+          pr_comment=$(<pr_comment.txt)
         uses: actions/github-script@v4
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            python3 scripts/comment_generator.py -u gtfs_latest_versions.json -a acceptance_test_report.json -c ${{ github.sha }} -r ${{github.run_id}} > pr_comment.txt
-            pr_comment=$(<pr_comment.txt)
             github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
