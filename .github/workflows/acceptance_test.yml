@@ -224,11 +224,21 @@ jobs:
         with:
           name: acceptance_test_report
           path: acceptance-test-output
-      - name: Comment PR with acceptance test report
+      - name: Generate PR comment
+        id: generate-comment
         if: always()
-        run:
+        run: |
           python3 scripts/comment_generator.py -u gtfs_latest_versions.json -a acceptance_test_report.json -c ${{ github.sha }} -r ${{github.run_id}} > pr_comment.txt
           pr_comment=$(<pr_comment.txt)
+          echo ::set-output name=comment::$(pr_comment)
+    outputs:
+      pr_comment: ${{ steps.generate-comment.outputs.comment }}
+  comment-pr:
+    needs: [ compare-outputs ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comment PR with acceptance test report
+        if: always()
         uses: actions/github-script@v4
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -237,5 +247,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "$pr_comment"
+              body: "${needs.compare-outputs.outputs.pr_comment}"
             })
