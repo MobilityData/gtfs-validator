@@ -233,6 +233,7 @@ jobs:
           echo "PR_COMMENT<<EOF" >> $GITHUB_ENV
           echo "$PR_COMMENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
+          echo $env.PR_COMMENT
       - name: Comment PR with acceptance test report
         if: always()
         uses: actions/github-script@v4

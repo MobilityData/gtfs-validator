@@ -216,7 +216,7 @@ if __name__ == "__main__":
     sources = list_sources(catalog_data)
 
     latest_versions = {}
-    for source in tqdm(sources):
+    for source in tqdm(sources[:200]):
         source_data = get_entity_data(source)
         source_archives_id = get_archives_id(source_data)
         datasets = list_datasets(source_data)
