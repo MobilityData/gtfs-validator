@@ -16,11 +16,13 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTimepoint;
 
@@ -32,42 +34,57 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTimepoint;
  * <ul>
  *   <li>{@link StopTimeTimepointWithoutTimesNotice} - a timepoint does not specifies arrival_time
  *       or departure_time
+ *   <li>{@link MissingTimepointValueNotice} - value for {@code stop_times.timepoint} is missing
+ *   <li>{@link MissingTimepointColumnNotice} - field {@code stop_times.timepoint} is missing
  * </ul>
  */
 @GtfsValidator
-public class TimepointTimeValidator extends SingleEntityValidator<GtfsStopTime> {
+public class TimepointTimeValidator extends FileValidator {
+  private final GtfsStopTimeTableContainer stopTimes;
+
+  @Inject
+  TimepointTimeValidator(GtfsStopTimeTableContainer stopTimes) {
+    this.stopTimes = stopTimes;
+  }
 
   @Override
-  public void validate(GtfsStopTime stopTime, NoticeContainer noticeContainer) {
-    if (!isTimepoint(stopTime)) {
+  public void validate(NoticeContainer noticeContainer) {
+    if (!stopTimes.hasColumn(GtfsStopTimeTableLoader.TIMEPOINT_FIELD_NAME)) {
+      // legacy datasets do not use timepoint column in stop_times.txt as a result:
+      // - this should be flagged;
+      // - but also no notice regarding the absence of arrival_time or departure_time should be
+      // generated
+      noticeContainer.addValidationNotice(new MissingTimepointColumnNotice());
       return;
     }
-    if (!stopTime.hasArrivalTime()) {
-      noticeContainer.addValidationNotice(
-          new StopTimeTimepointWithoutTimesNotice(
-              stopTime.csvRowNumber(),
-              stopTime.tripId(),
-              stopTime.stopSequence(),
-              String.format(GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME)));
-    }
-    if (!stopTime.hasDepartureTime()) {
-      noticeContainer.addValidationNotice(
-          new StopTimeTimepointWithoutTimesNotice(
-              stopTime.csvRowNumber(),
-              stopTime.tripId(),
-              stopTime.stopSequence(),
-              GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME));
+    for (GtfsStopTime stopTime : stopTimes.getEntities()) {
+      if (!stopTime.hasTimepoint()) {
+        noticeContainer.addValidationNotice(new MissingTimepointValueNotice(stopTime));
+      }
+      if (isTimepoint(stopTime)) {
+        if (!stopTime.hasArrivalTime()) {
+          noticeContainer.addValidationNotice(
+              new StopTimeTimepointWithoutTimesNotice(
+                  stopTime, GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME));
+        }
+        if (!stopTime.hasDepartureTime()) {
+          noticeContainer.addValidationNotice(
+              new StopTimeTimepointWithoutTimesNotice(
+                  stopTime, GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME));
+        }
+      }
     }
   }
 
   private boolean isTimepoint(GtfsStopTime stopTime) {
-    return stopTime.timepoint().equals(GtfsStopTimeTimepoint.EXACT);
+    return stopTime.hasTimepoint() && stopTime.timepoint().equals(GtfsStopTimeTimepoint.EXACT);
   }
 
   /**
    * Timepoint without time
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>Severity: {@code SeverityLevel.WARNING} - to be upgraded as {@code SeverityLevel.ERROR} see
+   * https://github.com/MobilityData/gtfs-validator/issues/1017
    */
   static class StopTimeTimepointWithoutTimesNotice extends ValidationNotice {
     private final long csvRowNumber;
@@ -75,13 +92,44 @@ public class TimepointTimeValidator extends SingleEntityValidator<GtfsStopTime> 
     private final long stopSequence;
     private final String specifiedField;
 
-    StopTimeTimepointWithoutTimesNotice(
-        long csvRowNumber, String tripId, long stopSequence, String specifiedField) {
+    StopTimeTimepointWithoutTimesNotice(GtfsStopTime stopTime, String specifiedField) {
       super(SeverityLevel.WARNING);
-      this.csvRowNumber = csvRowNumber;
-      this.tripId = tripId;
-      this.stopSequence = stopSequence;
+      this.csvRowNumber = stopTime.csvRowNumber();
+      this.tripId = stopTime.tripId();
+      this.stopSequence = stopTime.stopSequence();
       this.specifiedField = specifiedField;
+    }
+  }
+
+  /**
+   * {@code stop_times.timepoint} value is missing
+   *
+   * <p>Severity: {@code SeverityLevel.WARNING}
+   */
+  static class MissingTimepointValueNotice extends ValidationNotice {
+    private final long csvRowNumber;
+    private final String tripId;
+    private final long stopSequence;
+
+    MissingTimepointValueNotice(GtfsStopTime stopTime) {
+      super(SeverityLevel.WARNING);
+      this.csvRowNumber = stopTime.csvRowNumber();
+      this.tripId = stopTime.tripId();
+      this.stopSequence = stopTime.stopSequence();
+    }
+  }
+
+  /**
+   * Column {@code stop_times.timepoint} is missing.
+   *
+   * <p>Severity: {@code SeverityLevel.WARNING}
+   */
+  static class MissingTimepointColumnNotice extends ValidationNotice {
+    private final String filename;
+
+    MissingTimepointColumnNotice() {
+      super(SeverityLevel.WARNING);
+      this.filename = GtfsStopTimeTableLoader.FILENAME;
     }
   }
 }

@@ -17,110 +17,274 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTableLoader.STOP_ID_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.CONTINUOUS_DROP_OFF_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.CONTINUOUS_PICKUP_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.DROP_OFF_TYPE_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.PICKUP_TYPE_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.SHAPE_DIST_TRAVELED_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.STOP_HEADSIGN_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.STOP_SEQUENCE_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.TIMEPOINT_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.TRIP_ID_FIELD_NAME;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
-import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
+import org.mobilitydata.gtfsvalidator.validator.TimepointTimeValidator.MissingTimepointColumnNotice;
+import org.mobilitydata.gtfsvalidator.validator.TimepointTimeValidator.MissingTimepointValueNotice;
 import org.mobilitydata.gtfsvalidator.validator.TimepointTimeValidator.StopTimeTimepointWithoutTimesNotice;
 
 public class TimepointTimeValidatorTest {
 
-  private static List<ValidationNotice> generateNotices(GtfsStopTime stopTime) {
+  private static GtfsStopTimeTableContainer createTable(
+      CsvHeader header, List<GtfsStopTime> stopTimes, NoticeContainer noticeContainer) {
+    return GtfsStopTimeTableContainer.forHeaderAndEntities(header, stopTimes, noticeContainer);
+  }
+
+  private static List<ValidationNotice> generateNotices(
+      CsvHeader header, List<GtfsStopTime> stopTimes) {
     NoticeContainer noticeContainer = new NoticeContainer();
-    TimepointTimeValidator validator = new TimepointTimeValidator();
-    validator.validate(stopTime, noticeContainer);
+    TimepointTimeValidator validator =
+        new TimepointTimeValidator(createTable(header, stopTimes, noticeContainer));
+    validator.validate(noticeContainer);
     return noticeContainer.getValidationNotices();
+  }
+
+  // using this header will trigger a MissingTimepointColumnNotice
+  private static CsvHeader createLegacyHeader() {
+    return new CsvHeader(
+        new String[] {
+          TRIP_ID_FIELD_NAME,
+          ARRIVAL_TIME_FIELD_NAME,
+          DEPARTURE_TIME_FIELD_NAME,
+          STOP_ID_FIELD_NAME,
+          STOP_SEQUENCE_FIELD_NAME,
+          STOP_HEADSIGN_FIELD_NAME,
+          PICKUP_TYPE_FIELD_NAME,
+          DROP_OFF_TYPE_FIELD_NAME,
+          CONTINUOUS_PICKUP_FIELD_NAME,
+          CONTINUOUS_DROP_OFF_FIELD_NAME,
+          SHAPE_DIST_TRAVELED_FIELD_NAME
+        });
+  }
+
+  private static CsvHeader createHeaderWithTimepointColumn() {
+    return new CsvHeader(
+        new String[] {
+          TRIP_ID_FIELD_NAME,
+          ARRIVAL_TIME_FIELD_NAME,
+          DEPARTURE_TIME_FIELD_NAME,
+          STOP_ID_FIELD_NAME,
+          STOP_SEQUENCE_FIELD_NAME,
+          STOP_HEADSIGN_FIELD_NAME,
+          PICKUP_TYPE_FIELD_NAME,
+          DROP_OFF_TYPE_FIELD_NAME,
+          CONTINUOUS_PICKUP_FIELD_NAME,
+          CONTINUOUS_DROP_OFF_FIELD_NAME,
+          SHAPE_DIST_TRAVELED_FIELD_NAME,
+          TIMEPOINT_FIELD_NAME
+        });
+  }
+
+  @Test
+  public void noTimepointColumn_noTimeProvided_shouldGenerateNotice() {
+    // Using createLegacyHeader() that omits the timestamp column will trigger the
+    // MissingTimepointColumnNotice.
+    // .setTimepoint(null) is used to indicate that no value is provided, although it has no effect
+    // in this test.
+    List<GtfsStopTime> stopTimes = new ArrayList<>();
+    stopTimes.add(
+        new GtfsStopTime.Builder()
+            .setCsvRowNumber(1)
+            .setTripId("first trip id")
+            .setArrivalTime(null)
+            .setDepartureTime(null)
+            .setStopId("stop id 0")
+            .setStopSequence(2)
+            .setTimepoint((Integer) null)
+            .build());
+    stopTimes.add(
+        new GtfsStopTime.Builder()
+            .setCsvRowNumber(4)
+            .setTripId("second trip id")
+            .setArrivalTime(null)
+            .setDepartureTime(null)
+            .setStopId("stop id 1")
+            .setStopSequence(2)
+            .setTimepoint((Integer) null)
+            .build());
+    assertThat(generateNotices(createLegacyHeader(), stopTimes))
+        .containsExactly(new MissingTimepointColumnNotice());
+  }
+
+  @Test
+  public void noTimepointColumn_timesProvided_shouldGenerateNotice() {
+    // Using createLegacyHeader() that omits the timestamp column will trigger the
+    // MissingTimepointColumnNotice.
+    // .setTimepoint(null) is used to indicate that no value is provided, although it has no effect
+    // in this test.
+    List<GtfsStopTime> stopTimes = new ArrayList<>();
+    stopTimes.add(
+        new GtfsStopTime.Builder()
+            .setCsvRowNumber(1)
+            .setTripId("first trip id")
+            .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
+            .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(580))
+            .setStopId("stop id")
+            .setStopSequence(2)
+            .setTimepoint((Integer) null)
+            .build());
+    assertThat(generateNotices(createLegacyHeader(), stopTimes))
+        .containsExactly(new MissingTimepointColumnNotice());
   }
 
   @Test
   public void timepointWithNoTimeShouldGenerateNotices() {
-    assertThat(
-            generateNotices(
-                new GtfsStopTime.Builder()
-                    .setCsvRowNumber(1)
-                    .setTripId("first trip id")
-                    .setArrivalTime(null)
-                    .setDepartureTime(null)
-                    .setStopId("stop id")
-                    .setStopSequence(2)
-                    .setTimepoint(1)
-                    .build()))
+    List<GtfsStopTime> stopTimes = new ArrayList<>();
+    stopTimes.add(
+        new GtfsStopTime.Builder()
+            .setCsvRowNumber(1)
+            .setTripId("first trip id")
+            .setArrivalTime(null)
+            .setDepartureTime(null)
+            .setStopId("stop id")
+            .setStopSequence(2)
+            .setTimepoint(1)
+            .build());
+    assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes))
         .containsExactly(
-            new StopTimeTimepointWithoutTimesNotice(
-                1, "first trip id", 2, GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME),
-            new StopTimeTimepointWithoutTimesNotice(
-                1, "first trip id", 2, GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME));
+            new StopTimeTimepointWithoutTimesNotice(stopTimes.get(0), ARRIVAL_TIME_FIELD_NAME),
+            new StopTimeTimepointWithoutTimesNotice(stopTimes.get(0), DEPARTURE_TIME_FIELD_NAME));
   }
 
   @Test
   public void timepointWithBothTimesShouldNotGenerateNotice() {
-    assertThat(
-            generateNotices(
-                new GtfsStopTime.Builder()
-                    .setCsvRowNumber(1)
-                    .setTripId("first trip id")
-                    .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
-                    .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(580))
-                    .setStopId("stop id")
-                    .setStopSequence(2)
-                    .setTimepoint(1)
-                    .build()))
-        .isEmpty();
+    List<GtfsStopTime> stopTimes = new ArrayList<>();
+    stopTimes.add(
+        new GtfsStopTime.Builder()
+            .setCsvRowNumber(1)
+            .setTripId("first trip id")
+            .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
+            .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(580))
+            .setStopId("stop id")
+            .setStopSequence(2)
+            .setTimepoint(1)
+            .build());
+    assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes)).isEmpty();
   }
 
   @Test
-  public void missingDepartureTimeShouldGenerateNotice() {
-    assertThat(
-            generateNotices(
-                new GtfsStopTime.Builder()
-                    .setCsvRowNumber(1)
-                    .setTripId("first trip id")
-                    .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
-                    .setDepartureTime(null)
-                    .setStopId("stop id")
-                    .setStopSequence(2)
-                    .setTimepoint(1)
-                    .build()))
+  public void timepoint_missingDepartureTimeShouldGenerateNotice() {
+    List<GtfsStopTime> stopTimes = new ArrayList<>();
+    stopTimes.add(
+        new GtfsStopTime.Builder()
+            .setCsvRowNumber(1)
+            .setTripId("first trip id")
+            .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
+            .setDepartureTime(null)
+            .setStopId("stop id")
+            .setStopSequence(2)
+            .setTimepoint(1)
+            .build());
+    assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes))
         .containsExactly(
-            new StopTimeTimepointWithoutTimesNotice(
-                1, "first trip id", 2, GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME));
+            new StopTimeTimepointWithoutTimesNotice(stopTimes.get(0), DEPARTURE_TIME_FIELD_NAME));
   }
 
   @Test
-  public void missingArrivalTimeShouldGenerateNotice() {
-    assertThat(
-            generateNotices(
-                new GtfsStopTime.Builder()
-                    .setCsvRowNumber(1)
-                    .setTripId("first trip id")
-                    .setArrivalTime(null)
-                    .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(450))
-                    .setStopId("stop id")
-                    .setStopSequence(2)
-                    .setTimepoint(1)
-                    .build()))
+  public void timepoint_missingArrivalTimeShouldGenerateNotice() {
+    List<GtfsStopTime> stopTimes = new ArrayList<>();
+    stopTimes.add(
+        new GtfsStopTime.Builder()
+            .setCsvRowNumber(1)
+            .setTripId("first trip id")
+            .setArrivalTime(null)
+            .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(450))
+            .setStopId("stop id")
+            .setStopSequence(2)
+            .setTimepoint(1)
+            .build());
+    assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes))
         .containsExactly(
-            new StopTimeTimepointWithoutTimesNotice(
-                1, "first trip id", 2, GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME));
+            new StopTimeTimepointWithoutTimesNotice(stopTimes.get(0), ARRIVAL_TIME_FIELD_NAME));
   }
 
   @Test
-  public void nonTimepointShouldNotGenerateNotice() {
-    assertThat(
-            generateNotices(
-                new GtfsStopTime.Builder()
-                    .setCsvRowNumber(1)
-                    .setTripId("first trip id")
-                    .setArrivalTime(null)
-                    .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(580))
-                    .setStopId("stop id")
-                    .setStopSequence(2)
-                    .setTimepoint(0)
-                    .build()))
-        .isEmpty();
+  public void nonTimepoint_noTimeProvided_shouldNotGenerateNotice() {
+    List<GtfsStopTime> stopTimes = new ArrayList<>();
+    stopTimes.add(
+        new GtfsStopTime.Builder()
+            .setCsvRowNumber(1)
+            .setTripId("first trip id")
+            .setArrivalTime(null)
+            .setDepartureTime(null)
+            .setStopId("stop id")
+            .setStopSequence(2)
+            .setTimepoint(0)
+            .build());
+    assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes)).isEmpty();
+  }
+
+  @Test
+  public void nonTimepoint_timesProvided_shouldNotGenerateNotice() {
+    List<GtfsStopTime> stopTimes = new ArrayList<>();
+    stopTimes.add(
+        new GtfsStopTime.Builder()
+            .setCsvRowNumber(1)
+            .setTripId("first trip id")
+            .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
+            .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(580))
+            .setStopId("stop id")
+            .setStopSequence(2)
+            .setTimepoint(0)
+            .build());
+    assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes)).isEmpty();
+  }
+
+  @Test
+  public void emptyTimepoint_noTimesProvided_shouldGenerateNotice() {
+    // setting .setTimepoint(null) is used to define a missing value
+    // (even if the timepoint value is included in header)
+    List<GtfsStopTime> stopTimes = new ArrayList<>();
+    stopTimes.add(
+        new GtfsStopTime.Builder()
+            .setCsvRowNumber(1)
+            .setTripId("first trip id")
+            .setArrivalTime(null)
+            .setDepartureTime(null)
+            .setStopId("stop id")
+            .setStopSequence(2)
+            .setTimepoint((Integer) null)
+            .build());
+    assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes))
+        .containsExactly(new MissingTimepointValueNotice(stopTimes.get(0)));
+  }
+
+  @Test
+  public void emptyTimepoint_timesProvided_shouldGenerateNotice() {
+    // setting .setTimepoint(null) is used to define a missing value
+    // (even if the timepoint value is included in header)
+    List<GtfsStopTime> stopTimes = new ArrayList<>();
+    stopTimes.add(
+        new GtfsStopTime.Builder()
+            .setCsvRowNumber(1)
+            .setTripId("first trip id")
+            .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
+            .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(580))
+            .setStopId("stop id")
+            .setStopSequence(2)
+            .setTimepoint((Integer) null)
+            .build());
+    assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes))
+        .containsExactly(new MissingTimepointValueNotice(stopTimes.get(0)));
   }
 }
