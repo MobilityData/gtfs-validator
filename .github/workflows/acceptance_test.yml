@@ -230,10 +230,9 @@ jobs:
         run: |
           python3 scripts/comment_generator.py -u gtfs_latest_versions.json -a acceptance-test-output/acceptance_report.json -c ${{ github.sha }} -r ${{github.run_id}} > pr_comment.txt
           PR_COMMENT=$(<pr_comment.txt)
-          echo $PR_COMMENT
-          $PR_COMMENT="${PR_COMMENT//$'\n'/'%0A'}"
-          $PR_COMMENT="${PR_COMMENT//$'\r'/'%0D'}"
-          echo "::set-output name=pr_comment::$PR_COMMENT"
+          echo "PR_COMMENT<<EOF" >> $GITHUB_ENV
+          echo "$PR_COMMENT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
       - name: Comment PR with acceptance test report
         if: always()
         uses: actions/github-script@v4
@@ -244,5 +243,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "${{ steps.generate-comment.outputs.pr_comment }}"
+              body: "${{ env.PR_COMMENT }}"
             })
