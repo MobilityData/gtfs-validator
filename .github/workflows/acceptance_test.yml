@@ -232,12 +232,6 @@ jobs:
           PR_COMMENT=$(<pr_comment.txt)
           echo $PR_COMMENT
           echo "::set-output name=pr_comment::$PR_COMMENT"
-    outputs:
-      pr_comment: ${{ steps.generate-comment.outputs.pr_comment }}
-  comment-pr:
-    needs: [ compare-outputs ]
-    runs-on: ubuntu-latest
-    steps:
       - name: Comment PR with acceptance test report
         if: always()
         uses: actions/github-script@v4
@@ -248,5 +242,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "${{ needs.compare-outputs.outputs.pr_comment) }}"
+              body: "${{ steps.generate-comment.outputs.pr_comment) }}"
             })
