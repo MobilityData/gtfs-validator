@@ -59,6 +59,7 @@ public class TimepointTimeValidatorTest {
     return noticeContainer.getValidationNotices();
   }
 
+  // using this header will trigger a MissingTimepointColumnNotice
   private static CsvHeader createLegacyHeader() {
     return new CsvHeader(
         new String[] {
@@ -97,6 +98,8 @@ public class TimepointTimeValidatorTest {
   @Test
   public void noTimepointColumn_noTimeProvided_shouldGenerateNotice() {
     // unit test for legacy data that do not use timepoint column
+    // setting .setTimepoint(null) is used to define a missing value
+    // (even if the timepoint value is included in header)
     List<GtfsStopTime> stopTimes = new ArrayList<>();
     stopTimes.add(
         new GtfsStopTime.Builder()
@@ -125,6 +128,8 @@ public class TimepointTimeValidatorTest {
   @Test
   public void noTimepointColumn_timesProvided_shouldGenerateNotice() {
     // unit test for legacy data that do not use timepoint column
+    // setting .setTimepoint(null) is used to define a missing value
+    // (even if the timepoint value is included in header)
     List<GtfsStopTime> stopTimes = new ArrayList<>();
     stopTimes.add(
         new GtfsStopTime.Builder()
@@ -267,6 +272,8 @@ public class TimepointTimeValidatorTest {
 
   @Test
   public void emptyTimepoint_noTimesProvided_shouldGenerateNotice() {
+    // setting .setTimepoint(null) is used to define a missing value
+    // (even if the timepoint value is included in header)
     List<GtfsStopTime> stopTimes = new ArrayList<>();
     stopTimes.add(
         new GtfsStopTime.Builder()
@@ -284,6 +291,8 @@ public class TimepointTimeValidatorTest {
 
   @Test
   public void emptyTimepoint_timesProvided_shouldGenerateNotice() {
+    // setting .setTimepoint(null) is used to define a missing value
+    // (even if the timepoint value is included in header)
     List<GtfsStopTime> stopTimes = new ArrayList<>();
     stopTimes.add(
         new GtfsStopTime.Builder()
