@@ -123,7 +123,7 @@ public class TimepointTimeValidatorTest {
   }
 
   @Test
-  public void noTimepointColumn_timesProvided_shouldNotGenerateNotice() {
+  public void noTimepointColumn_timesProvided_shouldGenerateNotice() {
     // unit test for legacy data that do not use timepoint column
     List<GtfsStopTime> stopTimes = new ArrayList<>();
     stopTimes.add(
@@ -135,16 +135,6 @@ public class TimepointTimeValidatorTest {
             .setStopId("stop id")
             .setStopSequence(2)
             .setTimepoint((Integer) null)
-            .build());
-    stopTimes.add(
-        new GtfsStopTime.Builder()
-            .setCsvRowNumber(1)
-            .setTripId("second trip id")
-            .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
-            .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(580))
-            .setStopId("stop id 2")
-            .setStopSequence(2)
-            .setTimepoint(1)
             .build());
     assertThat(generateNotices(createLegacyHeader(), stopTimes))
         .containsExactly(new MissingTimepointColumnNotice());
@@ -160,16 +150,6 @@ public class TimepointTimeValidatorTest {
             .setArrivalTime(null)
             .setDepartureTime(null)
             .setStopId("stop id")
-            .setStopSequence(2)
-            .setTimepoint(1)
-            .build());
-    stopTimes.add(
-        new GtfsStopTime.Builder()
-            .setCsvRowNumber(1)
-            .setTripId("second trip id")
-            .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
-            .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(580))
-            .setStopId("stop id 2")
             .setStopSequence(2)
             .setTimepoint(1)
             .build());
@@ -189,16 +169,6 @@ public class TimepointTimeValidatorTest {
             .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
             .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(580))
             .setStopId("stop id")
-            .setStopSequence(2)
-            .setTimepoint(1)
-            .build());
-    stopTimes.add(
-        new GtfsStopTime.Builder()
-            .setCsvRowNumber(1)
-            .setTripId("second trip id")
-            .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
-            .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(580))
-            .setStopId("stop id 2")
             .setStopSequence(2)
             .setTimepoint(1)
             .build());
@@ -276,16 +246,6 @@ public class TimepointTimeValidatorTest {
             .setStopSequence(2)
             .setTimepoint(0)
             .build());
-    stopTimes.add(
-        new GtfsStopTime.Builder()
-            .setCsvRowNumber(1)
-            .setTripId("second trip id")
-            .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
-            .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(580))
-            .setStopId("stop id 2")
-            .setStopSequence(2)
-            .setTimepoint(1)
-            .build());
     assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes)).isEmpty();
   }
 
@@ -301,16 +261,6 @@ public class TimepointTimeValidatorTest {
             .setStopId("stop id")
             .setStopSequence(2)
             .setTimepoint(0)
-            .build());
-    stopTimes.add(
-        new GtfsStopTime.Builder()
-            .setCsvRowNumber(1)
-            .setTripId("second trip id")
-            .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
-            .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(580))
-            .setStopId("stop id 2")
-            .setStopSequence(2)
-            .setTimepoint(1)
             .build());
     assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes)).isEmpty();
   }
@@ -328,17 +278,6 @@ public class TimepointTimeValidatorTest {
             .setStopSequence(2)
             .setTimepoint((Integer) null)
             .build());
-    stopTimes.add(
-        new GtfsStopTime.Builder()
-            .setCsvRowNumber(1)
-            .setTripId("second trip id")
-            .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
-            .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(580))
-            .setStopId("stop id 2")
-            .setStopSequence(2)
-            .setTimepoint(1)
-            .build());
-
     assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes))
         .containsExactly(new MissingTimepointValueNotice(stopTimes.get(0)));
   }
@@ -355,16 +294,6 @@ public class TimepointTimeValidatorTest {
             .setStopId("stop id")
             .setStopSequence(2)
             .setTimepoint((Integer) null)
-            .build());
-    stopTimes.add(
-        new GtfsStopTime.Builder()
-            .setCsvRowNumber(1)
-            .setTripId("second trip id")
-            .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
-            .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(580))
-            .setStopId("stop id 2")
-            .setStopSequence(2)
-            .setTimepoint(1)
             .build());
     assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes))
         .containsExactly(new MissingTimepointValueNotice(stopTimes.get(0)));
