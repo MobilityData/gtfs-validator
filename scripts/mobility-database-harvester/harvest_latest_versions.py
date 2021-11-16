@@ -155,7 +155,7 @@ def load_content(data_path, filename):
 def apply_github_matrix_formatting(json_data):
     latest_versions_data = []
 
-    jobs = np.array_split(list(json_data.keys()), MAX_JOB_NUMBER)
+    jobs = np.array_split(list(json_data.keys()), min(MAX_JOB_NUMBER, len(list(json_data.keys()))))
     jobs = [list(job_archives_ids) for job_archives_ids in jobs]
     for job_archives_ids in jobs:
         latest_version_data_string = ""
@@ -216,7 +216,7 @@ if __name__ == "__main__":
     sources = list_sources(catalog_data)
 
     latest_versions = {}
-    for source in tqdm(sources[:200]):
+    for source in tqdm(sources[:150]):
         source_data = get_entity_data(source)
         source_archives_id = get_archives_id(source_data)
         datasets = list_datasets(source_data)
