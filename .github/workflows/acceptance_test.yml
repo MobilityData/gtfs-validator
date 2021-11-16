@@ -231,9 +231,7 @@ jobs:
           python3 scripts/comment_generator.py -u gtfs_latest_versions.json -a acceptance-test-output/acceptance_report.json -c ${{ github.sha }} -r ${{github.run_id}} > pr_comment.txt
           pr_comment=$(<pr_comment.txt)
           echo $pr_comment
-          echo "pr_comment=${pr_comment}" >> $GITHUB_ENV
-    outputs:
-      pr_comment: ${{ steps.generate-comment.outputs.comment }}
+          echo "pr_comment=$pr_comment" >> $GITHUB_ENV
   comment-pr:
     needs: [ compare-outputs ]
     runs-on: ubuntu-latest
