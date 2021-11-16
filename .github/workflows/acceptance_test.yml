@@ -231,6 +231,9 @@ jobs:
           python3 scripts/comment_generator.py -u gtfs_latest_versions.json -a acceptance-test-output/acceptance_report.json -c ${{ github.sha }} -r ${{github.run_id}} > pr_comment.txt
           PR_COMMENT=$(<pr_comment.txt)
           echo $PR_COMMENT
+          $PR_COMMENT="${PR_COMMENT//'%'/'%25'}"
+          $PR_COMMENT="${PR_COMMENT//$'\n'/'%0A'}"
+          $PR_COMMENT="${PR_COMMENT//$'\r'/'%0D'}"
           echo "::set-output name=pr_comment::$PR_COMMENT"
       - name: Comment PR with acceptance test report
         if: always()
