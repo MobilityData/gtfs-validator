@@ -219,21 +219,24 @@ jobs:
         run: |
           java -jar output-comparator*.jar --report_directory . --new_error_threshold 1 --reference_report_name reference.json --latest_report_name latest.json --percent_invalid_datasets_threshold 1 --output_base acceptance-test-output --source_urls gtfs_latest_versions.json
       - name: Persist acceptance test report
-        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: acceptance_test_report
           path: acceptance-test-output
+      - name: Generate PR comment
+        id: generate-comment
+        run: |
+          python3 scripts/comment_generator.py -u gtfs_latest_versions.json -a acceptance_test_report.json -c ${{ github.sha }} -r ${{github.run_id}} > pr_comment.txt
+        shell: bash
       - name: Comment PR with acceptance test report
-        if: always()
         uses: actions/github-script@v4
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
+            pr_comment=$(<pr_comment.txt)
             github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Download the `acceptance_test_report` for commit ${{ github.sha }} in the artifacts listed [here](https://github.com/MobilityData/gtfs-validator/actions/runs/${{github.run_id}}). This report will disappear after 90 days. Read more about the acceptance tests [here](https://github.com/MobilityData/gtfs-validator/docs/ACCEPTANCE_TESTS.md)."
+              body: "$pr_comment"
             })
-
