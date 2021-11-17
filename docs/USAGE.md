@@ -18,7 +18,7 @@ The below instructions are for the [`v3.0.0-beta`](https://github.com/MobilityDa
 | `-u`       	| `--url`                       	| Optional  	| Fully qualified URL to download GTFS archive.                                                                             	|
 | `-v`       	| `--validation_report_name`    	| Optional  	| Name of the validation report (including `.json` extension).                                                              	|
 | `-e`       	| `--system_errors_report_name` 	| Optional  	| Name of the system errors report (including `.json` extension).                                                             	|
-| `-n`       	| `--export_notice_schema`       	| Optional  	| Export notice schema as a json file.                                                                                           |
+| `-n`       	| `--export_notices_schema`       	| Optional  	| Export notice schema as a json file.                                                                                           |
 
 ⚠️ Note that exactly one of the following options must be provided: `--url` or `--input`.
 
