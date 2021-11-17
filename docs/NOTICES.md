@@ -47,6 +47,7 @@
 | `start_and_end_range_equal`                            	| [`StartAndEndRangeEqualNotice`](#StartAndEndRangeEqualNotice)                                                   	|
 | `start_and_end_range_out_of_order`                     	| [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         	|
 | `station_with_parent_station`                          	| [`StationWithParentStationNotice`](#StationWithParentStationNotice)                                             	|
+| `stop_time_timepoint_without_times`        	            | [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	                            |
 | `stop_without_zone_id`                     	            | [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                 	                                        |
 | `stop_time_wit_arrival_before_previous_departure_time` 	| [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](#StopTimeWithArrivalBeforePreviousDepartureTimeNotice) 	|
 | `stop_time_with_only_arrival_or_departure_time`        	| [`StopTimeWithOnlyArrivalOrDepartureTimeNotice`](#StopTimeWithOnlyArrivalOrDepartureTimeNotice)                 	|
@@ -625,6 +626,19 @@
 ##### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
+#### [StopTimeTimepointWithoutTimesNotice](/RULES.md#StopTimeTimepointWithoutTimesNotice)
+##### Fields description
+
+| Field name     	  | Description                                	| Type   	|
+|-----------------	|--------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row number of the faulty record.       	| Long   	|
+| `tripId`         	| The faulty record's id.                    	| String 	|
+| `stopSequence`   	| The faulty record's `stops.stop_sequence`. 	| String 	|
+| `specifiedField` 	| Either `departure_time` or `arrival_time`. 	| String 	|
+
+##### Affected files
+* [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
+
 #### [StopWithoutZoneIdNotice](/RULES.md#StopWithoutZoneIdNotice)
 ##### Fields description
 
@@ -741,7 +755,6 @@
 | `same_stop_and_route_url`                  	| [`SameStopAndRouteUrlNotice`](#SameStopAndRouteUrlNotice)                           |
 | `stop_has_too_many_matches_for_shape`        	| [`StopHasTooManyMatchesForShapeNotice`](#StopHasTooManyMatchesForShapeNotice)     	|
 | `stops_match_shape_out_of_order`             	| [`StopsMatchShapeOutOfOrderNotice`](#StopsMatchShapeOutOfOrderNotice)              	|
-| `stop_time_timepoint_without_times`        	| [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	|
 | `stop_too_far_from_trip_shape`            	| [`StopTooFarFromTripShapeNotice`](#StopTooFarFromTripShapeNotice)                 	|
 | `stop_too_far_from_shape_using_user_distance`	| [`StopTooFarFromShapeUsingUserDistanceNotice`](#StopTooFarFromShapeUsingUserDistanceNotice)                 	|
 | `stop_too_far_from_shape`                 	| [`StopTooFarFromShapeNotice`](#StopTooFarFromShapeNotice)                 	|
@@ -1090,19 +1103,6 @@
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 * [`stops_times.txt`](http://gtfs.org/reference/static#stopstimestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
-
-#### [StopTimeTimepointWithoutTimesNotice](/RULES.md#StopTimeTimepointWithoutTimesNotice)
-##### Fields description
-
-| Field name     	  | Description                                	| Type   	|
-|-----------------	|--------------------------------------------	|--------	|
-| `csvRowNumber`   	| The row number of the faulty record.       	| Long   	|
-| `tripId`         	| The faulty record's id.                    	| String 	|
-| `stopSequence`   	| The faulty record's `stops.stop_sequence`. 	| String 	|
-| `specifiedField` 	| Either `departure_time` or `arrival_time`. 	| String 	|
-
-##### Affected files
-* [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
 #### [StopTooFarFromShapeUsingUserDistanceNotice](/RULES.md#StopTooFarFromShapeUsingUserDistanceNotice)
 ##### Fields description
