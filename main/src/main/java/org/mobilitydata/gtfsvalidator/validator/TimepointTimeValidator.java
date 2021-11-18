@@ -83,8 +83,7 @@ public class TimepointTimeValidator extends FileValidator {
   /**
    * Timepoint without time
    *
-   * <p>Severity: {@code SeverityLevel.WARNING} - to be upgraded as {@code SeverityLevel.ERROR} see
-   * https://github.com/MobilityData/gtfs-validator/issues/1017
+   * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class StopTimeTimepointWithoutTimesNotice extends ValidationNotice {
     private final long csvRowNumber;

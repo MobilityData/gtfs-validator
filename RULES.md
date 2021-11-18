@@ -111,6 +111,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`StartAndEndRangeEqualNotice`](#StartAndEndRangeEqualNotice)                                                   | Two date or time fields are equal.                                                                                                                     |
 | [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         | Two date or time fields are out of order.                                                                                                              |
 | [`StationWithParentStationNotice`](#StationWithParentStationNotice)                                             | A station has `parent_station` field set.                                                                                                              |
+| [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	                          | `arrival_time` or `departure_time` not specified for timepoint.                                                                                        |
 | [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](#StopTimeWithArrivalBeforePreviousDepartureTimeNotice) | Backwards time travel between stops in `stop_times.txt`                                                                                                |
 | [`StopTimeWithOnlyArrivalOrDepartureTimeNotice`](#StopTimeWithOnlyArrivalOrDepartureTimeNotice)                 | Missing `stop_times.arrival_time` or `stop_times.departure_time`.                                                                                      |
 | [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                                                           | Stop without value for `stops.zone_id`.                                                                                                                |
@@ -151,7 +152,6 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`SameStopAndRouteUrlNotice`](#SameStopAndRouteUrlNotice)                          	| Same `stops.stop_url` and `routes.route_url`.                                                                                                  	            |
 | [`StopHasTooManyMatchesForShapeNotice`](#StopHasTooManyMatchesForShapeNotice)     	| Stop entry that has many potential matches to the trip's path of travel.                                                                                       |
 | [`StopsMatchShapeOutOfOrderNotice`](#StopsMatchShapeOutOfOrderNotice)     	        | Two stop entries are different than their arrival-departure order defined by the shapes.txt                                                                   |
-| [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	| `arrival_time` or `departure_time` not specified for timepoint.                                                                                             	|
 | [`StopTooFarFromShapeNotice`](#StopTooFarFromShapeNotice)                 	        | Stop too far from trip shape.                                                                                                                               	|
 | [`StopTooFarFromShapeUsingUserDistanceNotice`](#StopTooFarFromShapeUsingUserDistanceNotice)| Stop time too far from shape.                                                                                                                     |
 | [`StopWithoutStopTimeNotice`](#StopWithoutStopTimeNotice)                             | A stop in `stops.txt` is not referenced by any `stop_times.stop_id`.                                                                                          |
@@ -576,6 +576,15 @@ Field `parent_station` must be empty when `location_type` is 1.
 ##### References:
 [stop.txt](http://gtfs.org/reference/static/#stopstxt)
 
+<a name="StopTimeTimepointWithoutTimesNotice"/>
+
+#### StopTimeTimepointWithoutTimesNotice
+
+Any records with `stop_times.timepoint` set to 1 must define a value for `stop_times.arrival_time` and `stop_times.departure_time` fields.
+
+##### References:
+* [GTFS stop_times.txt specification](https://gtfs.org/reference/static#stoptimestxt)
+
 <a name="StopTimeWithArrivalBeforePreviousDepartureTimeNotice"/>
 
 #### StopTimeWithArrivalBeforePreviousDepartureTimeNotice
@@ -931,15 +940,6 @@ A stop entry that has many potential matches to the trip's path of travel, as de
 #### StopsMatchShapeOutOfOrderNotice
 
 Two stop entries in `stop_times.txt` are different than their arrival-departure order as defined by the shape in the `shapes.txt` file.
-
-<a name="StopTimeTimepointWithoutTimeNotice"/>
-
-#### StopTimeTimepointWithoutTimesNotice
-
-Any record with `stop_times.timepoint` set to 1 should define a value for `stop_times.arrival_time` and `stop_times.departure_time` fields. 
-
-##### References:
-* [GTFS stop_times.txt specification](https://gtfs.org/reference/static#stoptimestxt)
 
 <a name="StopTooFarFromShapeNotice"/>
 
