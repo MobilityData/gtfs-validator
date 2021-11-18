@@ -580,7 +580,7 @@ Field `parent_station` must be empty when `location_type` is 1.
 
 #### StopTimeTimepointWithoutTimesNotice
 
-Any record with `stop_times.timepoint` set to 1 should define a value for `stop_times.arrival_time` and `stop_times.departure_time` fields.
+Any records with `stop_times.timepoint` set to 1 must define a value for `stop_times.arrival_time` and `stop_times.departure_time` fields.
 
 ##### References:
 * [GTFS stop_times.txt specification](https://gtfs.org/reference/static#stoptimestxt)
