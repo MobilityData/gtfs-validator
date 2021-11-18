@@ -594,15 +594,6 @@ For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 
-<a name="StopTimeWithDepartureBeforeArrivalTimeNotice"/>
-
-#### StopTimeWithDepartureBeforeArrivalTimeNotice
-
-The `departure_time` must not precede the `arrival_time` in `stop_times.txt` if both are given. 
-
-##### References:
-* [Original Python validator implementation](https://github.com/google/transitfeed)
-
 <a name="StopTimeWithOnlyArrivalOrDepartureTimeNotice"/>
 
 #### StopTimeWithOnlyArrivalOrDepartureTimeNotice
