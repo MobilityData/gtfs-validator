@@ -83,6 +83,7 @@ public class TimepointTimeValidator extends FileValidator {
   /**
    * Timepoint without time
    *
+   *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class StopTimeTimepointWithoutTimesNotice extends ValidationNotice {
