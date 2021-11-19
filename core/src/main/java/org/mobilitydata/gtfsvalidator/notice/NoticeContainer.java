@@ -42,7 +42,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
-import org.mobilitydata.gtfsvalidator.model.SampleNotice;
+import org.mobilitydata.gtfsvalidator.model.NoticeReport;
 import org.mobilitydata.gtfsvalidator.model.ValidationReportDeserializer;
 
 /**
@@ -198,9 +198,9 @@ public class NoticeContainer {
 
   /**
    * Used to (de)serialize a {@code NoticeContainer}. This represents a validation report as a list
-   * of {@code SampleNotice} which provides information about each notice generated during a GTFS
+   * of {@code NoticeReport} which provides information about each notice generated during a GTFS
    * dataset validation. This objects stores both notices and error codes from a list of {@code
-   * SampleNotice}. Error codes are cached at construction in this object in order to facilitate
+   * NoticeReport}. Error codes are cached at construction in this object in order to facilitate
    * quick comparison between reports.
    */
   public static class ValidationReport {
@@ -211,8 +211,8 @@ public class NoticeContainer {
             .serializeNulls()
             .serializeSpecialFloatingPointValues()
             .create();
-    private final Set<SampleNotice> notices;
-    private final transient Map<String, SampleNotice> noticesMap;
+    private final Set<NoticeReport> notices;
+    private final transient Map<String, NoticeReport> noticesMap;
     private final transient Set<String> errorCodes;
 
     /**
@@ -221,12 +221,12 @@ public class NoticeContainer {
      * @param notices set of {@code Notice}s
      * @param errorCodes set of error codes
      */
-    public ValidationReport(Set<SampleNotice> notices, Set<String> errorCodes) {
+    public ValidationReport(Set<NoticeReport> notices, Set<String> errorCodes) {
       this.notices = notices;
       this.errorCodes = errorCodes;
-      Map<String, SampleNotice> noticesMap = new HashMap<>();
-      for (SampleNotice sampleNotice : notices) {
-        noticesMap.put(sampleNotice.getCode(), sampleNotice);
+      Map<String, NoticeReport> noticesMap = new HashMap<>();
+      for (NoticeReport noticeReport : notices) {
+        noticesMap.put(noticeReport.getCode(), noticeReport);
       }
       this.noticesMap = noticesMap;
     }
@@ -259,7 +259,7 @@ public class NoticeContainer {
         List<T> notices,
         int maxExportsPerNoticeTypeAndSeverity,
         Map<String, Integer> noticesCountPerTypeAndSeverity) {
-      Set<SampleNotice> noticeSamples = new LinkedHashSet<>();
+      Set<NoticeReport> noticeReports = new LinkedHashSet<>();
       Gson gson = new Gson();
       Set<String> errorCodes = new TreeSet<>();
       Type contextType = new TypeToken<Map<String, Object>>() {}.getType();
@@ -279,25 +279,25 @@ public class NoticeContainer {
           }
           contexts.add(gson.fromJson(notice.getContext(), contextType));
         }
-        noticeSamples.add(
-            new SampleNotice(
+        noticeReports.add(
+            new NoticeReport(
                 firstNotice.getCode(),
                 firstNotice.getSeverityLevel(),
                 noticesCountPerTypeAndSeverity.get(firstNotice.getMappingKey()),
                 contexts));
       }
-      return new ValidationReport(noticeSamples, errorCodes);
+      return new ValidationReport(noticeReports, errorCodes);
     }
     /**
-     * Returns the list of {@code SampleNotice} of this {@code ValidationReport}.
+     * Returns the list of {@code NoticeReport} of this {@code ValidationReport}.
      *
-     * @return the list of {@code SampleNotice} of this {@code ValidationReport}.
+     * @return the list of {@code NoticeReport} of this {@code ValidationReport}.
      */
-    public Set<SampleNotice> getNotices() {
+    public Set<NoticeReport> getNotices() {
       return notices;
     }
 
-    public SampleNotice getNoticeByCode(String noticeCode) {
+    public NoticeReport getNoticeByCode(String noticeCode) {
       return noticesMap.get(noticeCode);
     }
 
@@ -383,11 +383,11 @@ public class NoticeContainer {
 
     /**
      * Determines if two validation reports are equal regardless of the order of the fields in the
-     * set of {@code SampleNotice}.
+     * set of {@code NoticeReport}.
      *
      * @param other the other {@code ValidationReport}.
      * @return true if both validation reports are equal regardless of the order of the fields in
-     *     the set of {@code SampleNotice}.
+     *     the set of {@code NoticeReport}.
      */
     @Override
     public boolean equals(Object other) {

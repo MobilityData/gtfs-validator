@@ -26,12 +26,12 @@ import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 @RunWith(JUnit4.class)
 public class NoticeSummaryTest {
 
-  private static SampleNotice createSampleNotice(
+  private static NoticeReport createNoticeReport(
       String code,
       SeverityLevel severityLevel,
       int totalNotices,
       List<LinkedTreeMap<String, Object>> notices) {
-    return new SampleNotice(code, severityLevel, totalNotices, notices);
+    return new NoticeReport(code, severityLevel, totalNotices, notices);
   }
 
   @Test
@@ -43,9 +43,9 @@ public class NoticeSummaryTest {
     noticeMap.put("fieldValue", "erroneous url");
 
     assertThat(
-            createSampleNotice("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(noticeMap)))
+            createNoticeReport("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(noticeMap)))
         .isEqualTo(
-            createSampleNotice("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(noticeMap)));
+            createNoticeReport("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(noticeMap)));
   }
 
   @Test
@@ -63,9 +63,9 @@ public class NoticeSummaryTest {
     otherMap.put("fieldName", "stop_url");
 
     assertThat(
-            createSampleNotice("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(firstMap)))
+            createNoticeReport("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(firstMap)))
         .isEqualTo(
-            createSampleNotice("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(otherMap)));
+            createNoticeReport("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(otherMap)));
   }
 
   @Test
@@ -82,16 +82,16 @@ public class NoticeSummaryTest {
     otherMap.put("fieldValue", "erroneous url");
     otherMap.put("fieldName", "other_url_field");
     assertThat(
-            createSampleNotice("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(firstMap)))
+            createNoticeReport("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(firstMap)))
         .isNotEqualTo(
-            createSampleNotice("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(otherMap)));
+            createNoticeReport("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(otherMap)));
   }
 
   @Test
   public void equals_differentCode_false() {
-    assertThat(createSampleNotice("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of()))
+    assertThat(createNoticeReport("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of()))
         .isNotEqualTo(
-            createSampleNotice("invalid_phone_number", SeverityLevel.ERROR, 2, ImmutableList.of()));
+            createNoticeReport("invalid_phone_number", SeverityLevel.ERROR, 2, ImmutableList.of()));
   }
 
   @Test
@@ -103,15 +103,15 @@ public class NoticeSummaryTest {
     noticeMap.put("fieldValue", "erroneous url");
 
     assertThat(
-            createSampleNotice("invalid_url", SeverityLevel.INFO, 2, ImmutableList.of(noticeMap)))
+            createNoticeReport("invalid_url", SeverityLevel.INFO, 2, ImmutableList.of(noticeMap)))
         .isNotEqualTo(
-            createSampleNotice("invalid_url", SeverityLevel.ERROR, 2, ImmutableList.of(noticeMap)));
+            createNoticeReport("invalid_url", SeverityLevel.ERROR, 2, ImmutableList.of(noticeMap)));
   }
 
   @Test
   public void equals_differentTotalNotices_false() {
-    assertThat(createSampleNotice("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of()))
+    assertThat(createNoticeReport("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of()))
         .isNotEqualTo(
-            createSampleNotice("invalid_url", SeverityLevel.ERROR, 2, ImmutableList.of()));
+            createNoticeReport("invalid_url", SeverityLevel.ERROR, 2, ImmutableList.of()));
   }
 }

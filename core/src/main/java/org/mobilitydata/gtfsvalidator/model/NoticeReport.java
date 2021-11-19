@@ -30,14 +30,14 @@ import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
  * related to the error code and a list of notice contexts (which provides additional information
  * about each notice.
  */
-public class SampleNotice {
+public class NoticeReport {
 
   @Expose() private final String code;
   @Expose() private final SeverityLevel severity;
   @Expose() private final int totalNotices;
   @Expose() private final List<LinkedTreeMap<String, Object>> sampleNotices;
 
-  public SampleNotice(
+  public NoticeReport(
       String code,
       SeverityLevel severity,
       int count,
@@ -73,12 +73,12 @@ public class SampleNotice {
     if (this == other) {
       return true;
     }
-    if (other instanceof SampleNotice) {
-      SampleNotice otherNoticeSummary = (SampleNotice) other;
-      return this.getCode().equals(otherNoticeSummary.getCode())
-          && this.getSeverity().equals(otherNoticeSummary.getSeverity())
-          && this.getTotalNotices() == (otherNoticeSummary.getTotalNotices())
-          && getSampleNotices().equals(otherNoticeSummary.getSampleNotices());
+    if (other instanceof NoticeReport) {
+      NoticeReport otherNoticeReport = (NoticeReport) other;
+      return this.getCode().equals(otherNoticeReport.getCode())
+          && this.getSeverity().equals(otherNoticeReport.getSeverity())
+          && this.getTotalNotices() == (otherNoticeReport.getTotalNotices())
+          && getSampleNotices().equals(otherNoticeReport.getSampleNotices());
     }
     return false;
   }
