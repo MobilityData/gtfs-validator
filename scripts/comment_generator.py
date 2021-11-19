@@ -63,11 +63,11 @@ if __name__ == "__main__":
 
     acceptance_test_report = load_content(args.acceptance_test_report_path)
     urls_map = load_content(args.path_to_urls)
-    comment = "Thanks for this contribution."
+    comment = "Thank you for this contribution."
 
     if len(list(acceptance_test_report[NEW_ERRORS])) != 0:
         comment = comment + " Due to changes in this pull request, the " \
-                            "following validation rules trigger errors:\n"
+                            "following validation rules trigger new errors:\n"
 
         for notice_sample in acceptance_test_report[NEW_ERRORS]:
             notice_code = list(notice_sample.keys())[0]
