@@ -78,6 +78,8 @@ if __name__ == "__main__":
                         f"[`{source_id}`]({get_url(source_id, args.path_to_urls)}), "
                     )
             comment = comment + notice_info[:-2] + ")\n"
+    else:
+        comment = comment + " The changes in this pull request did not trigger any new errors on known GTFS datasets from the [MobilityDatabase](http://mobilitydatabase.org/wiki/Main_Page)."
     comment = (
         comment
         + f"\nDownload the full acceptance test report for commit {args.commit_id} [here](https://github.com/MobilityData/gtfs-validator/actions/runs/{args.run_id}) (report will disappear after 90 days)."
