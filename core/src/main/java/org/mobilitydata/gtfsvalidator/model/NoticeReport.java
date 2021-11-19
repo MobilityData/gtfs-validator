@@ -60,7 +60,7 @@ public class NoticeReport {
     return code;
   }
 
-  public List<Map<String, Object>> getSampleNotices() {
+  public List<LinkedTreeMap<String, Object>> getSampleNotices() {
     return Collections.unmodifiableList(sampleNotices);
   }
 
