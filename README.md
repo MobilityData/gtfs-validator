@@ -76,11 +76,7 @@ Instructions to build the project from the command-line using [Gradle](https://g
 # Architecture
 The architecture of the `gtfs-validator` is described on our [Architecture page](/docs/ARCHITECTURE.md).
 
-# Tests
-## JUnit
-This project leverages JUnit4 for unit tests.
-
-## Acceptance tests
+# Acceptance tests
 In order to avoid sudden changes in the validation output that might declare previously valid datasets invalid, all code changes in pull requests are tested against GTFS datasets in the [MobilityDatabase](http://mobilitydatabase.org/wiki/Main_Page). The acceptance test process is described in [ACCEPTANCE_TESTS.md](docs/ACCEPTANCE_TESTS.md).
 
 # License
