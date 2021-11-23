@@ -25,7 +25,7 @@ import java.util.Objects;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 
 /**
- * Used to deserialize a validation report. It is used to store information about one type of notice
+ * Used to deserialize a JSON validation report. It is used to store information about one type of notice
  * encountered in a validation report: error code, severity level, the total number of notices
  * related to the error code and a list of notice contexts (which provides additional information
  * about each notice.

@@ -41,7 +41,7 @@ import org.mobilitydata.gtfsvalidator.notice.Notice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 
 /**
- * Used to deserialize a validation report. This represents a validation report as a list of {@code
+ * Used to deserialize a JSON validation report. This represents a validation report as a list of {@code
  * NoticeReport} which provides information about each notice generated during a GTFS dataset
  * validation.
  */
