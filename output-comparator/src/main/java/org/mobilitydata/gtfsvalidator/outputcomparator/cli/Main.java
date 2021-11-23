@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-import org.mobilitydata.gtfsvalidator.notice.NoticeContainer.ValidationReport;
+import org.mobilitydata.gtfsvalidator.model.ValidationReport;
 import org.mobilitydata.gtfsvalidator.outputcomparator.io.NoticeStat;
 
 public class Main {

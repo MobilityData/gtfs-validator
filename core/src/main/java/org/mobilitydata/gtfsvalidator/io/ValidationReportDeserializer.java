@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import org.mobilitydata.gtfsvalidator.model.NoticeReport;
-import org.mobilitydata.gtfsvalidator.notice.NoticeContainer.ValidationReport;
+import org.mobilitydata.gtfsvalidator.model.ValidationReport;
 
 /**
  * Used to deserialize a validation report. This represents a validation report as a list of {@code
