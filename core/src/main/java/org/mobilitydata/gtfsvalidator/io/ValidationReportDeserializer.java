@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.model;
+package org.mobilitydata.gtfsvalidator.io;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
@@ -28,6 +28,7 @@ import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import org.mobilitydata.gtfsvalidator.model.NoticeReport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer.ValidationReport;
 
 /**

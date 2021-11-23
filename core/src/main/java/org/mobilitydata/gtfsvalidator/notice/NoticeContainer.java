@@ -43,7 +43,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import org.mobilitydata.gtfsvalidator.model.NoticeReport;
-import org.mobilitydata.gtfsvalidator.model.ValidationReportDeserializer;
+import org.mobilitydata.gtfsvalidator.io.ValidationReportDeserializer;
 
 /**
  * Container for validation notices (errors and warnings).
