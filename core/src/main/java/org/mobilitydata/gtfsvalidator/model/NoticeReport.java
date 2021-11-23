@@ -17,10 +17,10 @@
 package org.mobilitydata.gtfsvalidator.model;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.google.gson.internal.LinkedTreeMap;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 
@@ -35,7 +35,8 @@ public class NoticeReport {
   @Expose() private final String code;
   @Expose() private final SeverityLevel severity;
   @Expose() private final int totalNotices;
-  @Expose() private final List<LinkedTreeMap<String, Object>> sampleNotices;
+  @SerializedName("sampleNotices")
+  @Expose() private final List<LinkedTreeMap<String, Object>> contexts;
 
   public NoticeReport(
       String code,
@@ -45,7 +46,7 @@ public class NoticeReport {
     this.code = code;
     this.severity = severity;
     this.totalNotices = count;
-    this.sampleNotices = contexts;
+    this.contexts = contexts;
   }
 
   public int getTotalNotices() {
@@ -60,8 +61,8 @@ public class NoticeReport {
     return code;
   }
 
-  public List<LinkedTreeMap<String, Object>> getSampleNotices() {
-    return Collections.unmodifiableList(sampleNotices);
+  public List<LinkedTreeMap<String, Object>> getContexts() {
+    return Collections.unmodifiableList(contexts);
   }
 
   public boolean isError() {
@@ -78,7 +79,7 @@ public class NoticeReport {
       return this.getCode().equals(otherNoticeReport.getCode())
           && this.getSeverity().equals(otherNoticeReport.getSeverity())
           && this.getTotalNotices() == (otherNoticeReport.getTotalNotices())
-          && getSampleNotices().equals(otherNoticeReport.getSampleNotices());
+          && getContexts().equals(otherNoticeReport.getContexts());
     }
     return false;
   }
