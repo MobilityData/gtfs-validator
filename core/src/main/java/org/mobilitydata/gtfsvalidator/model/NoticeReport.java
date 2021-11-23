@@ -35,8 +35,10 @@ public class NoticeReport {
   @Expose() private final String code;
   @Expose() private final SeverityLevel severity;
   @Expose() private final int totalNotices;
+
   @SerializedName("sampleNotices")
-  @Expose() private final List<LinkedTreeMap<String, Object>> contexts;
+  @Expose()
+  private final List<LinkedTreeMap<String, Object>> contexts;
 
   public NoticeReport(
       String code,

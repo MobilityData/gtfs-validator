@@ -40,13 +40,13 @@ public class NoticeContainerTest {
     assertThat(new Gson().toJson(container.exportValidationNotices()))
         .isEqualTo(
             "{\"notices\":[{\"code\":\"missing_required_file\",\"severity\":\"ERROR\","
-                + "\"totalNotices\":2,\"contexts\":[{\"filename\":\"stops.txt"
+                + "\"totalNotices\":2,\"sampleNotices\":[{\"filename\":\"stops.txt"
                 + "\"},{\"filename\":\"agency.txt\"}]}]}");
     assertThat(new Gson().toJson(container.exportSystemErrors()))
         .isEqualTo(
             ""
                 + "{\"notices\":[{\"code\":\"runtime_exception_in_validator_error\",\"severity\":"
-                + "\"ERROR\",\"totalNotices\":1,\"contexts\":[{\"validator\":"
+                + "\"ERROR\",\"totalNotices\":1,\"sampleNotices\":[{\"validator\":"
                 + "\"FaultyValidator\",\"exception\":\"java.lang.IndexOutOfBoundsException\","
                 + "\"message\":\"Index 0 out of bounds\"}]}]}");
   }
@@ -59,7 +59,7 @@ public class NoticeContainerTest {
     assertThat(new Gson().toJson(container.exportValidationNotices()))
         .isEqualTo(
             "{\"notices\":[{\"code\":\"double_field\",\"severity\":\"ERROR\","
-                + "\"totalNotices\":1,\"contexts\":[{\"doubleField\":Infinity}]}]}");
+                + "\"totalNotices\":1,\"sampleNotices\":[{\"doubleField\":Infinity}]}]}");
   }
 
   @Test
@@ -72,10 +72,10 @@ public class NoticeContainerTest {
     assertThat(new Gson().toJson(container.exportValidationNotices()))
         .isEqualTo(
             "{\"notices\":[{\"code\":\"double_field\",\"severity\":\"ERROR\","
-                + "\"totalNotices\":1,\"contexts\":[{\"doubleField\":2.0}]},{\"code\":"
-                + "\"string_field\",\"severity\":\"INFO\",\"totalNotices\":1,\"contexts\":[{"
+                + "\"totalNotices\":1,\"sampleNotices\":[{\"doubleField\":2.0}]},{\"code\":"
+                + "\"string_field\",\"severity\":\"INFO\",\"totalNotices\":1,\"sampleNotices\":[{"
                 + "\"someField\":\"3\"}]},{\"code\":\"string_field\",\"severity\":\"ERROR\","
-                + "\"totalNotices\":1,\"contexts\":[{\"someField\":\"1\"}]}]}");
+                + "\"totalNotices\":1,\"sampleNotices\":[{\"someField\":\"1\"}]}]}");
   }
 
   @Test
@@ -112,8 +112,8 @@ public class NoticeContainerTest {
     assertThat(new Gson().toJson(c1.exportValidationNotices()))
         .isEqualTo(
             "{\"notices\":[{\"code\":\"missing_required_file\",\"severity\":\"ERROR\","
-                + "\"totalNotices\":1,\"contexts\":[{\"filename\":\"stops.txt\"}]},{\"code\":"
-                + "\"unknown_file\",\"severity\":\"INFO\",\"totalNotices\":1,\"contexts\":[{"
+                + "\"totalNotices\":1,\"sampleNotices\":[{\"filename\":\"stops.txt\"}]},{\"code\":"
+                + "\"unknown_file\",\"severity\":\"INFO\",\"totalNotices\":1,\"sampleNotices\":[{"
                 + "\"filename\":\"unknown.txt\"}]}]}");
   }
 
@@ -178,11 +178,11 @@ public class NoticeContainerTest {
     assertThat(new Gson().toJson(container.exportValidationNotices()))
         .isEqualTo(
             "{\"notices\":[{\"code\":\"double_field\",\"severity\":\"ERROR\","
-                + "\"totalNotices\":55,\"contexts\":[{\"doubleField\":2.0},{\"doubleField"
+                + "\"totalNotices\":55,\"sampleNotices\":[{\"doubleField\":2.0},{\"doubleField"
                 + "\":2.0},{\"doubleField\":2.0}]},{\"code\":\"string_field\",\"severity\":\"INFO"
-                + "\",\"totalNotices\":55,\"contexts\":[{\"someField\":\"3\"},{\"someField\":"
+                + "\",\"totalNotices\":55,\"sampleNotices\":[{\"someField\":\"3\"},{\"someField\":"
                 + "\"3\"},{\"someField\":\"3\"}]},{\"code\":\"string_field\",\"severity\":\"ERROR"
-                + "\",\"totalNotices\":55,\"contexts\":[{\"someField\":\"1\"},{\"someField"
+                + "\",\"totalNotices\":55,\"sampleNotices\":[{\"someField\":\"1\"},{\"someField"
                 + "\":\"1\"},{\"someField\":\"1\"}]}]}");
   }
 }

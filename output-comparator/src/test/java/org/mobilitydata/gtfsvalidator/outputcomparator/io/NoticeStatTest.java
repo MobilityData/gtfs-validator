@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mobilitydata.gtfsvalidator.outputcomparator.io.NoticeStat.URL_PATTERN;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -32,9 +31,8 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class NoticeStatTest {
   private static final String URLS =
-      String.format(
-          "%s %s",
-          String.format(URL_PATTERN, "source-id-1"), String.format(URL_PATTERN, "source-id-2"));
+      "https://storage.googleapis.com/storage/v1/b/source-id-1_archives_2021-12-04/o/1234.zip?alt=media "
+          + "https://storage.googleapis.com/storage/v1/b/source-id-2_archives_2021-12-04/o/1234.zip?alt=media";
 
   @Test
   public void update_shouldUpdateAllFields() {
@@ -72,9 +70,13 @@ public class NoticeStatTest {
     JsonArray affectedSourcesJsonArray = new JsonArray();
 
     JsonObject firstSourceInfo = new JsonObject();
-    firstSourceInfo.addProperty("source-id-1", String.format(URL_PATTERN, "source-id-1"));
+    firstSourceInfo.addProperty(
+        "source-id-1",
+        "https://storage.googleapis.com/storage/v1/b/source-id-1_archives_2021-12-04/o/1234.zip?alt=media");
     JsonObject secondSourceInfo = new JsonObject();
-    secondSourceInfo.addProperty("source-id-2", String.format(URL_PATTERN, "source-id-2"));
+    secondSourceInfo.addProperty(
+        "source-id-2",
+        "https://storage.googleapis.com/storage/v1/b/source-id-2_archives_2021-12-04/o/1234.zip?alt=media");
 
     affectedSourcesJsonArray.add(firstSourceInfo);
     affectedSourcesJsonArray.add(secondSourceInfo);

@@ -18,7 +18,6 @@ package org.mobilitydata.gtfsvalidator.outputcomparator.cli;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mobilitydata.gtfsvalidator.outputcomparator.cli.Main.generateAcceptanceTestReport;
-import static org.mobilitydata.gtfsvalidator.outputcomparator.io.NoticeStat.URL_PATTERN;
 
 import com.google.common.collect.ImmutableSortedMap;
 import com.google.gson.Gson;
@@ -40,7 +39,11 @@ public class MainTest {
   private static NoticeStat createNoticeStat(SortedMap<String, Integer> countPerSource) {
     SortedMap<String, String> affectedSources = new TreeMap<>();
     for (String sourceId : countPerSource.keySet()) {
-      affectedSources.put(sourceId, String.format(URL_PATTERN, sourceId));
+      affectedSources.put(
+          sourceId,
+          String.format(
+              "https://storage.googleapis.com/storage/v1/b/%s_archives_2021-12-04/o/1234.zip?alt=media",
+              sourceId));
     }
     int affectedSourcesCount = countPerSource.size();
     return new NoticeStat(affectedSourcesCount, affectedSources, countPerSource);
@@ -71,21 +74,21 @@ public class MainTest {
         .isEqualTo(
             "{\"newErrors\":[{\"first_notice_code\":{\"affectedSourcesCount\":2,"
                 + "\"affectedSources\":[{\"source-id-1\":\"https://storage.googleapis.com"
-                + "/storage/v1/b/source-id-1_latest/o/1234.zip?alt=media\"},{\"source-id-2\":"
-                + "\"https://storage.googleapis.com/storage/v1/b/source-id-2_latest/o/1234.zip"
+                + "/storage/v1/b/source-id-1_archives_2021-12-04/o/1234.zip?alt=media\"},{\"source-id-2\":"
+                + "\"https://storage.googleapis.com/storage/v1/b/source-id-2_archives_2021-12-04/o/1234.zip"
                 + "?alt=media\"}],\"countPerSource\":[{\"source-id-1\":4},{\"source-id-2"
                 + "\":6}]}},{\"fourth_notice_code\":{\"affectedSourcesCount\":1,\"affectedSources"
                 + "\":[{\"source-id-5\":\"https://storage.googleapis.com/storage/v1/b/"
-                + "source-id-5_latest/o/1234.zip?alt=media\"}],\"countPerSource\":[{"
+                + "source-id-5_archives_2021-12-04/o/1234.zip?alt=media\"}],\"countPerSource\":[{"
                 + "\"source-id-5\":5}]}},{\"second_notice_code\":{\"affectedSourcesCount\":1,"
                 + "\"affectedSources\":[{\"source-id-2\":\"https://storage.googleapis.com/"
-                + "storage/v1/b/source-id-2_latest/o/1234.zip?alt=media\"}],\"countPerSource"
+                + "storage/v1/b/source-id-2_archives_2021-12-04/o/1234.zip?alt=media\"}],\"countPerSource"
                 + "\":[{\"source-id-2\":40}]}},{\"third_notice_code\":{\"affectedSourcesCount"
                 + "\":3,\"affectedSources\":[{\"source-id-1\":\"https://storage.googleapis.com"
-                + "/storage/v1/b/source-id-1_latest/o/1234.zip?alt=media\"},{\"source-id-3\":"
-                + "\"https://storage.googleapis.com/storage/v1/b/source-id-3_latest/o/1234.zip"
+                + "/storage/v1/b/source-id-1_archives_2021-12-04/o/1234.zip?alt=media\"},{\"source-id-3\":"
+                + "\"https://storage.googleapis.com/storage/v1/b/source-id-3_archives_2021-12-04/o/1234.zip"
                 + "?alt=media\"},{\"source-id-5\":\"https://storage.googleapis.com/storage/v1/b/"
-                + "source-id-5_latest/o/1234.zip?alt=media\"}],\"countPerSource\":["
+                + "source-id-5_archives_2021-12-04/o/1234.zip?alt=media\"}],\"countPerSource\":["
                 + "{\"source-id-1\":40},{\"source-id-3\":15},{\"source-id-5\":2}]}}]}");
   }
 }
