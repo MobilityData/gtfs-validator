@@ -17,26 +17,16 @@
 package org.mobilitydata.gtfsvalidator.model;
 
 import com.google.common.collect.Sets;
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.internal.LinkedTreeMap;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import org.mobilitydata.gtfsvalidator.io.ValidationReportDeserializer;
-import org.mobilitydata.gtfsvalidator.notice.Notice;
-import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 
 /**
  * Used to (de)serialize a {@code NoticeContainer}. This represents a validation report as a list of
@@ -97,39 +87,6 @@ public class ValidationReport {
     return GSON.fromJson(jsonString, ValidationReport.class);
   }
 
-  public static <T extends Notice> ValidationReport fromNoticeCollection(
-      List<T> notices,
-      int maxExportsPerNoticeTypeAndSeverity,
-      Map<String, Integer> noticesCountPerTypeAndSeverity) {
-    Set<NoticeReport> noticeReports = new LinkedHashSet<>();
-    Gson gson = new Gson();
-    Set<String> errorCodes = new TreeSet<>();
-    Type contextType = new TypeToken<Map<String, Object>>() {}.getType();
-    for (Collection<T> noticesOfType :
-        NoticeContainer.groupNoticesByTypeAndSeverity(notices).asMap().values()) {
-      T firstNotice = noticesOfType.iterator().next();
-      if (firstNotice.isError()) {
-        errorCodes.add(firstNotice.getCode());
-      }
-      List<LinkedTreeMap<String, Object>> contexts = new ArrayList<>();
-      int i = 0;
-      for (T notice : noticesOfType) {
-        ++i;
-        if (i > maxExportsPerNoticeTypeAndSeverity) {
-          // Do not export too many notices for this type.
-          break;
-        }
-        contexts.add(gson.fromJson(notice.getContext(), contextType));
-      }
-      noticeReports.add(
-          new NoticeReport(
-              firstNotice.getCode(),
-              firstNotice.getSeverityLevel(),
-              noticesCountPerTypeAndSeverity.get(firstNotice.getMappingKey()),
-              contexts));
-    }
-    return new ValidationReport(noticeReports, errorCodes);
-  }
   /**
    * Returns the list of {@code NoticeReport} of this {@code ValidationReport}.
    *

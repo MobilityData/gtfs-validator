@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.mobilitydata.gtfsvalidator.model.ValidationReport;
+import org.mobilitydata.gtfsvalidator.io.ValidationReportDeserializer;
 
 /**
  * Container for validation notices (errors and warnings).
@@ -166,7 +166,7 @@ public class NoticeContainer {
 
   public <T extends Notice> JsonObject exportJson(List<T> notices) {
     return GSON.toJsonTree(
-            ValidationReport.fromNoticeCollection(
+            ValidationReportDeserializer.serialize(
                 notices, maxExportsPerNoticeTypeAndSeverity, noticesCountPerTypeAndSeverity))
         .getAsJsonObject();
   }
