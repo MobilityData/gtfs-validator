@@ -30,7 +30,7 @@
 Sample usage:
 
 ``` 
-java -jar gtfs-validator-v2.0.jar --input relative/path/to/dataset.zip --output relative/output/path --feed_name <name_of_the_feed> --threads <number_of_threads_to_use> 
+java -jar gtfs-validator-v2.0.jar --input relative/path/to/dataset.zip --output relative/output/path --country_code <country_code> --threads <number_of_threads_to_use> 
 ```
 
 ...which will:
@@ -44,7 +44,7 @@ java -jar gtfs-validator-v2.0.jar --input relative/path/to/dataset.zip --output 
 Sample usage:
 
 ``` 
-java -jar gtfs-validator-v2.0.jar --url https://url/to/dataset.zip --output relative/output/path --feed_name <name_of_the_feed> --threads <number_of_threads_to_use> --storage_directory input.zip
+java -jar gtfs-validator-v2.0.jar --url https://url/to/dataset.zip --output relative/output/path --country_code <country_code> --threads <number_of_threads_to_use> --storage_directory input.zip
 ```
 
 ...which will:
