@@ -1,5 +1,5 @@
 # Instructions to run the application locally
-*The below instructions are for the `v3.0.0`(https://github.com/MobilityData/gtfs-validator/releases/tag/v3.0.0) release.*
+*The below instructions are for the [`v3.0.0`](https://github.com/MobilityData/gtfs-validator/releases/tag/v3.0.0) release.*
 
 1. Install [Java 8 or higher](https://www.oracle.com/java/technologies/javase-downloads.html).
 1. Download the [v3.0.0 release jar](https://github.com/MobilityData/gtfs-validator/suites/4467368246/artifacts/118793764) of the validator.
