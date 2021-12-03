@@ -16,7 +16,7 @@ This is a command-line tool written in Java that performs the following steps:
 ### Run it
 To validate a GTFS dataset on your computer:
 
-`java -jar output-validator-v3.0.0.jar --report_directory /path/to/validation/reports --new_error_threshold 1 --percent_invalid_datasets_threshold 40 --reference_report_name report.json --latest_report_name latest.json --output_base --source_urls /path/to/source/urls` 
+`java -jar output-validator-v3.0.0.jar --report_directory /path/to/validation/reports --new_error_threshold 1 --percent_invalid_datasets_threshold 40 --reference_report_name report.json --latest_report_name latest.json --output_base path/to/output/directory --source_urls /path/to/source/urls` 
 
 where:
 * *(Required)* `--report_directory` or `-d`: path to the validation reports     

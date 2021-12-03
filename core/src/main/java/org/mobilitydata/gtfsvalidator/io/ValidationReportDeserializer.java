@@ -16,7 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.io;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,12 +28,10 @@ import com.google.gson.internal.LinkedTreeMap;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import org.mobilitydata.gtfsvalidator.model.NoticeReport;
 import org.mobilitydata.gtfsvalidator.model.ValidationReport;
 import org.mobilitydata.gtfsvalidator.notice.Notice;
@@ -51,21 +48,6 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
       new GsonBuilder().serializeNulls().serializeSpecialFloatingPointValues().create();
   private static final String NOTICES_MEMBER_NAME = "notices";
 
-  /**
-   * Return the sorted set of error codes from a list of {@code NoticeReport}.
-   *
-   * @return the sorted set of error codes from a list of {@code NoticeReport}.
-   */
-  private static ImmutableSet<String> extractErrorCodes(Set<NoticeReport> notices) {
-    ImmutableSet.Builder<String> errorCodesSetBuilder = new ImmutableSet.Builder<>();
-    for (NoticeReport noticeReport : notices) {
-      if (noticeReport.isError()) {
-        errorCodesSetBuilder.add(noticeReport.getCode());
-      }
-    }
-    return errorCodesSetBuilder.build();
-  }
-
   @Override
   public ValidationReport deserialize(
       JsonElement json, Type typoOfT, JsonDeserializationContext context) {
@@ -75,7 +57,7 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
     for (JsonElement childObject : noticesArray) {
       notices.add(GSON.fromJson(childObject, NoticeReport.class));
     }
-    return new ValidationReport(Collections.unmodifiableSet(notices), extractErrorCodes(notices));
+    return new ValidationReport(notices);
   }
 
   public static <T extends Notice> ValidationReport serialize(
@@ -84,14 +66,10 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
       Map<String, Integer> noticesCountPerTypeAndSeverity) {
     Set<NoticeReport> noticeReports = new LinkedHashSet<>();
     Gson gson = new Gson();
-    Set<String> errorCodes = new TreeSet<>();
     Type contextType = new TypeToken<Map<String, Object>>() {}.getType();
     for (Collection<T> noticesOfType :
         NoticeContainer.groupNoticesByTypeAndSeverity(notices).asMap().values()) {
       T firstNotice = noticesOfType.iterator().next();
-      if (firstNotice.isError()) {
-        errorCodes.add(firstNotice.getCode());
-      }
       List<LinkedTreeMap<String, Object>> contexts = new ArrayList<>();
       int i = 0;
       for (T notice : noticesOfType) {
@@ -109,6 +87,6 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
               noticesCountPerTypeAndSeverity.get(firstNotice.getMappingKey()),
               contexts));
     }
-    return new ValidationReport(noticeReports, errorCodes);
+    return new ValidationReport(noticeReports);
   }
 }

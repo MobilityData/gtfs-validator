@@ -17,7 +17,11 @@ import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.internal.LinkedTreeMap;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import org.checkerframework.checker.units.qual.A;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -34,57 +38,58 @@ public class NoticeReportTest {
     return new NoticeReport(code, severityLevel, totalNotices, notices);
   }
 
+  private static List<LinkedTreeMap<String, Object>> createNoticeMaps(){
+    List<LinkedTreeMap<String, Object>> toReturn = new ArrayList<>();
+    LinkedTreeMap<String, Object> firstMap = new LinkedTreeMap();
+    firstMap.put("filename", "stops.txt");
+    firstMap.put("csvRowNumber", 163);
+    firstMap.put("fieldName", "stop_url");
+    firstMap.put("fieldValue", "erroneous url");
+    toReturn.add(firstMap);
+
+    LinkedTreeMap<String, Object> secondMap = new LinkedTreeMap();
+    secondMap.put("filename", "stops.txt");
+    secondMap.put("csvRowNumber", 163);
+    secondMap.put("fieldName", "stop_url");
+    secondMap.put("fieldValue", "erroneous url");
+    toReturn.add(secondMap);
+
+    LinkedTreeMap<String, Object> thirdMap = new LinkedTreeMap();
+    thirdMap.put("filename", "stops.txt");
+    thirdMap.put("csvRowNumber", 163);
+    thirdMap.put("fieldName", "other_url_field");
+    thirdMap.put("fieldValue", "erroneous url");
+    toReturn.add(thirdMap);
+
+    return toReturn;
+  }
+
+  private static final List<LinkedTreeMap<String, Object>> noticeMaps = createNoticeMaps();
+
   @Test
   public void equals_sameNotices_true() {
-    LinkedTreeMap<String, Object> noticeMap = new LinkedTreeMap();
-    noticeMap.put("filename", "stops.txt");
-    noticeMap.put("csvRowNumber", 163);
-    noticeMap.put("fieldName", "stop_url");
-    noticeMap.put("fieldValue", "erroneous url");
-
     assertThat(
-            createNoticeReport("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(noticeMap)))
+            createNoticeReport(
+                "invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(noticeMaps.get(0))))
         .isEqualTo(
-            createNoticeReport("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(noticeMap)));
+            createNoticeReport(
+                "invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(noticeMaps.get(1))));
   }
 
   @Test
   public void equals_sameNotices_differentOrder_true() {
-    LinkedTreeMap<String, Object> firstMap = new LinkedTreeMap();
-    firstMap.put("filename", "stops.txt");
-    firstMap.put("csvRowNumber", 163);
-    firstMap.put("fieldName", "stop_url");
-    firstMap.put("fieldValue", "erroneous url");
-
-    LinkedTreeMap<String, Object> otherMap = new LinkedTreeMap();
-    otherMap.put("filename", "stops.txt");
-    otherMap.put("csvRowNumber", 163);
-    otherMap.put("fieldValue", "erroneous url");
-    otherMap.put("fieldName", "stop_url");
-
     assertThat(
-            createNoticeReport("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(firstMap)))
+            createNoticeReport("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(noticeMaps.get(0))))
         .isEqualTo(
-            createNoticeReport("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(otherMap)));
+            createNoticeReport("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(noticeMaps.get(1))));
   }
 
   @Test
   public void equals_differentNotices_false() {
-    LinkedTreeMap<String, Object> firstMap = new LinkedTreeMap();
-    firstMap.put("filename", "stops.txt");
-    firstMap.put("csvRowNumber", 163);
-    firstMap.put("fieldName", "stop_url");
-    firstMap.put("fieldValue", "erroneous url");
-
-    LinkedTreeMap<String, Object> otherMap = new LinkedTreeMap();
-    otherMap.put("filename", "stops.txt");
-    otherMap.put("csvRowNumber", 163);
-    otherMap.put("fieldValue", "erroneous url");
-    otherMap.put("fieldName", "other_url_field");
     assertThat(
-            createNoticeReport("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(firstMap)))
+            createNoticeReport("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(noticeMaps.get(0))))
         .isNotEqualTo(
-            createNoticeReport("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(otherMap)));
+            createNoticeReport("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(noticeMaps.get(2))));
   }
 
   @Test
@@ -96,16 +101,10 @@ public class NoticeReportTest {
 
   @Test
   public void equals_differentSeverity_false() {
-    LinkedTreeMap<String, Object> noticeMap = new LinkedTreeMap();
-    noticeMap.put("filename", "stops.txt");
-    noticeMap.put("csvRowNumber", 163);
-    noticeMap.put("fieldName", "stop_url");
-    noticeMap.put("fieldValue", "erroneous url");
-
     assertThat(
-            createNoticeReport("invalid_url", SeverityLevel.INFO, 2, ImmutableList.of(noticeMap)))
+            createNoticeReport("invalid_url", SeverityLevel.INFO, 2, ImmutableList.of(noticeMaps.get(0))))
         .isNotEqualTo(
-            createNoticeReport("invalid_url", SeverityLevel.ERROR, 2, ImmutableList.of(noticeMap)));
+            createNoticeReport("invalid_url", SeverityLevel.ERROR, 2, ImmutableList.of(noticeMaps.get(0))));
   }
 
   @Test

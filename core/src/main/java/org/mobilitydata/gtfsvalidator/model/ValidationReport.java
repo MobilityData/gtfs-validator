@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.model;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -23,17 +24,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nullable;
 import org.mobilitydata.gtfsvalidator.io.ValidationReportDeserializer;
 
 /**
  * Used to (de)serialize a {@code NoticeContainer}. This represents a validation report as a list of
- * {@code NoticeReport} which provides information about each notice generated during a GTFS dataset
- * validation. This objects stores both notices and error codes from a list of {@code NoticeReport}.
- * Error codes are cached at construction in this object in order to facilitate quick comparison
- * between reports.
+ * {@code NoticeReport}. This {@code ValidationReport} stores both notices and error codes from a
+ * list of {@code NoticeReport}. Error codes are cached at construction in this {@code
+ * ValidationReport} in order to facilitate quick comparison between reports.
  */
 public class ValidationReport {
 
@@ -45,22 +47,36 @@ public class ValidationReport {
           .create();
   private final Set<NoticeReport> notices;
   private final transient Map<String, NoticeReport> noticesMap;
-  private final transient Set<String> errorCodes;
+  private final transient ImmutableSet<String> errorCodes;
 
   /**
    * Public constructor needed for deserialization by {@code ValidationReportDeserializer}
    *
-   * @param notices set of {@code Notice}s
-   * @param errorCodes set of error codes
+   * @param noticeReports set of {@code NoticeReport}s
    */
-  public ValidationReport(Set<NoticeReport> notices, Set<String> errorCodes) {
-    this.notices = notices;
-    this.errorCodes = errorCodes;
+  public ValidationReport(Set<NoticeReport> noticeReports) {
+    this.notices = Collections.unmodifiableSet(noticeReports);
+    this.errorCodes = extractErrorCodes(noticeReports);
     Map<String, NoticeReport> noticesMap = new HashMap<>();
-    for (NoticeReport noticeReport : notices) {
+    for (NoticeReport noticeReport : noticeReports) {
       noticesMap.put(noticeReport.getCode(), noticeReport);
     }
     this.noticesMap = noticesMap;
+  }
+
+  /**
+   * Return the sorted set of error codes from a list of {@code NoticeReport}.
+   *
+   * @return the sorted set of error codes from a list of {@code NoticeReport}.
+   */
+  private static ImmutableSet<String> extractErrorCodes(Set<NoticeReport> notices) {
+    ImmutableSet.Builder<String> errorCodesSetBuilder = new ImmutableSet.Builder<>();
+    for (NoticeReport noticeReport : notices) {
+      if (noticeReport.isError()) {
+        errorCodesSetBuilder.add(noticeReport.getCode());
+      }
+    }
+    return errorCodesSetBuilder.build();
   }
 
   /**
@@ -76,27 +92,20 @@ public class ValidationReport {
     }
   }
 
-  /**
-   * Creates a {@code ValidationReport} from a json string. Used for deserialization in tests.
-   *
-   * @param jsonString the json string
-   * @return the {@code ValidationReport} that contains the {@code ValidationReport} related to the
-   *     json string passed as parameter.
-   */
-  public static ValidationReport fromJsonString(String jsonString) {
-    return GSON.fromJson(jsonString, ValidationReport.class);
-  }
-
-  /**
-   * Returns the list of {@code NoticeReport} of this {@code ValidationReport}.
-   *
-   * @return the list of {@code NoticeReport} of this {@code ValidationReport}.
-   */
+  /** Returns all notice reports {@code NoticeReport} of this {@code ValidationReport}. */
   public Set<NoticeReport> getNotices() {
-    return notices;
+    return Collections.unmodifiableSet(notices);
   }
 
-  public NoticeReport getNoticeByCode(String noticeCode) {
+  /**
+   * Returns the {@code NoticeReport} related to the {@code Notice} whose notice code has been
+   * provided as parameter. If the requested notice code is not present in this {@code
+   * ValidationReport}, null is returned.
+   *
+   * @param noticeCode the notice code related to the {@code NoticeReport} to be returned
+   */
+  @Nullable
+  public NoticeReport getNoticeReportByNoticeCode(String noticeCode) {
     return noticesMap.get(noticeCode);
   }
 
@@ -105,7 +114,7 @@ public class ValidationReport {
    *
    * @return the immutable and ordered set of error codes contained in this {@code ValidationReport}
    */
-  public Set<String> getErrorCodes() {
+  public ImmutableSet<String> getErrorCodes() {
     return errorCodes;
   }
 
@@ -118,35 +127,6 @@ public class ValidationReport {
    */
   public boolean hasSameErrorCodes(ValidationReport otherValidationReport) {
     return getErrorCodes().equals(otherValidationReport.getErrorCodes());
-  }
-
-  /**
-   * Returns the number of new error codes introduced by the other {@code ValidationReport} passed
-   * as parameter, e.g. if this {@code ValidationReport} has the following error codes:
-   *
-   * <ul>
-   *   <li>invalid_phone_number;
-   *   <li>number_out_of_range;
-   * </ul>
-   *
-   * <p>and the other {@code ValidationReport} has the following error codes:
-   *
-   * <ul>
-   *   <li>invalid_phone_number;
-   *   <li>number_out_of_range;
-   *   <li>invalid_email_address;
-   *   <li>invalid_url;
-   * </ul>
-   *
-   * <p>then this methods returns 2 as it contains two new errors codes (invalid_email_address,
-   * invalid_url) not present in this {@code ValidationReport}
-   *
-   * @param other the other {@code ValidationReport}
-   * @return the number of new error codes introduced by the other {@code ValidationReport} passed
-   *     as parameter.
-   */
-  public int getNewErrorCount(ValidationReport other) {
-    return getNewErrorsListing(other).size();
   }
 
   /**

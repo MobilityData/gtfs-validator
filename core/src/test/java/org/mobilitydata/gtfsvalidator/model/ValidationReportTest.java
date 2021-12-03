@@ -18,18 +18,32 @@ package org.mobilitydata.gtfsvalidator.model;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 public class ValidationReportTest {
+  @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
 
-  private static ValidationReport createValidationReportFromJsonString(String jsonString) {
-    return ValidationReport.fromJsonString(jsonString);
+  private ValidationReport createValidationReportFromPath(String filename, String jsonString)
+      throws IOException {
+    if (!Files.exists(tmpDir.getRoot().toPath().resolve("reports"))) {
+      tmpDir.newFolder("reports");
+    }
+    File validationReportFile = tmpDir.newFile(filename);
+    Files.write(validationReportFile.toPath(), jsonString.getBytes(StandardCharsets.UTF_8));
+    return ValidationReport.fromPath(validationReportFile.toPath());
   }
 
   @Test
-  public void equals_sameReports_true() {
+  public void equals_sameReports_true() throws IOException {
     assertThat(
-            createValidationReportFromJsonString(
+            createValidationReportFromPath(
+                "first_report.json",
                 "{\n"
                     + "  \"notices\": [\n"
                     + "    {\n"
@@ -60,7 +74,8 @@ public class ValidationReportTest {
                     + "  ]\n"
                     + "}"))
         .isEqualTo(
-            createValidationReportFromJsonString(
+            createValidationReportFromPath(
+                "other_report.json",
                 "{\n"
                     + "  \"notices\": [\n"
                     + "    {\n"
@@ -93,9 +108,10 @@ public class ValidationReportTest {
   }
 
   @Test
-  public void equals_differentFieldsOrder_true() {
+  public void equals_differentFieldsOrder_true() throws IOException {
     assertThat(
-            createValidationReportFromJsonString(
+            createValidationReportFromPath(
+                "first_report.json",
                 "{\n"
                     + "  \"notices\": [\n"
                     + "    {\n"
@@ -126,7 +142,8 @@ public class ValidationReportTest {
                     + "  ]\n"
                     + "}"))
         .isEqualTo(
-            createValidationReportFromJsonString(
+            createValidationReportFromPath(
+                "other_report.json",
                 "{\n"
                     + "  \"notices\": [\n"
                     + "    {\n"
@@ -159,9 +176,10 @@ public class ValidationReportTest {
   }
 
   @Test
-  public void equals_differentReports_false() {
+  public void equals_differentReports_false() throws IOException {
     assertThat(
-            createValidationReportFromJsonString(
+            createValidationReportFromPath(
+                "first_report.json",
                 "{\n"
                     + "  \"notices\": [\n"
                     + "    {\n"
@@ -192,7 +210,8 @@ public class ValidationReportTest {
                     + "  ]\n"
                     + "}"))
         .isNotEqualTo(
-            createValidationReportFromJsonString(
+            createValidationReportFromPath(
+                "other_report.json",
                 "{\n"
                     + "  \"notices\": [\n"
                     + "    {\n"
@@ -225,9 +244,10 @@ public class ValidationReportTest {
   }
 
   @Test
-  public void getErrorCodes_errorsInReport_nonEmptySet() {
+  public void getErrorCodes_errorsInReport_nonEmptySet() throws IOException {
     assertThat(
-            createValidationReportFromJsonString(
+            createValidationReportFromPath(
+                    "report.json",
                     "{\n"
                         + "  \"notices\": [\n"
                         + "    {\n"
@@ -262,17 +282,18 @@ public class ValidationReportTest {
   }
 
   @Test
-  public void getErrorCode_emptyReport_emptySet() {
+  public void getErrorCode_emptyReport_emptySet() throws IOException {
     assertThat(
-            createValidationReportFromJsonString("{\n" + "  \"notices\": []\n" + "}")
+            createValidationReportFromPath("report.json", "{\n" + "  \"notices\": []\n" + "}")
                 .getErrorCodes())
         .isEmpty();
   }
 
   @Test
-  public void getErrorCodes_noError_emptySet() {
+  public void getErrorCodes_noError_emptySet() throws IOException {
     assertThat(
-            createValidationReportFromJsonString(
+            createValidationReportFromPath(
+                    "report.json",
                     "{\n"
                         + "  \"notices\": [\n"
                         + "    {\n"
@@ -307,9 +328,10 @@ public class ValidationReportTest {
   }
 
   @Test
-  public void hasSameErrorCodes_sameErrorsInReports_true() {
+  public void hasSameErrorCodes_sameErrorsInReports_true() throws IOException {
     assertThat(
-            createValidationReportFromJsonString(
+            createValidationReportFromPath(
+                    "first_report.json",
                     "{\n"
                         + "  \"notices\": [\n"
                         + "    {\n"
@@ -340,7 +362,8 @@ public class ValidationReportTest {
                         + "  ]\n"
                         + "}")
                 .hasSameErrorCodes(
-                    createValidationReportFromJsonString(
+                    createValidationReportFromPath(
+                        "other_report.json",
                         "{\n"
                             + "  \"notices\": [\n"
                             + "    {\n"
@@ -374,9 +397,10 @@ public class ValidationReportTest {
   }
 
   @Test
-  public void hasSameErrorCodes_differentErrorsInReport_false() {
+  public void hasSameErrorCodes_differentErrorsInReport_false() throws IOException {
     assertThat(
-            createValidationReportFromJsonString(
+            createValidationReportFromPath(
+                    "first_report.json",
                     "{\n"
                         + "  \"notices\": [\n"
                         + "    {\n"
@@ -407,7 +431,8 @@ public class ValidationReportTest {
                         + "  ]\n"
                         + "}")
                 .hasSameErrorCodes(
-                    createValidationReportFromJsonString(
+                    createValidationReportFromPath(
+                        "other_report.json",
                         "{\n"
                             + "  \"notices\": [\n"
                             + "    {\n"
@@ -429,9 +454,10 @@ public class ValidationReportTest {
   }
 
   @Test
-  public void getNewErrorCount_sameErrorsInReports_zero() {
+  public void newErrorCount_sameErrorsInReports_zero() throws IOException {
     assertThat(
-            createValidationReportFromJsonString(
+            createValidationReportFromPath(
+                    "first_report.json",
                     "{\n"
                         + "  \"notices\": [\n"
                         + "    {\n"
@@ -449,8 +475,9 @@ public class ValidationReportTest {
                         + "    }"
                         + "  ]\n"
                         + "}")
-                .getNewErrorCount(
-                    createValidationReportFromJsonString(
+                .getNewErrorsListing(
+                    createValidationReportFromPath(
+                        "other_report.json",
                         "{\n"
                             + "  \"notices\": [\n"
                             + "    {\n"
@@ -467,14 +494,16 @@ public class ValidationReportTest {
                             + "      ]\n"
                             + "    }"
                             + "  ]\n"
-                            + "}")))
+                            + "}"))
+                .size())
         .isEqualTo(0);
   }
 
   @Test
-  public void getNewErrorCount_noNewErrorInReport_zero() {
+  public void newErrorCount_noNewErrorInReport_zero() throws IOException {
     assertThat(
-            createValidationReportFromJsonString(
+            createValidationReportFromPath(
+                    "first_report.json",
                     "{\n"
                         + "  \"notices\": [\n"
                         + "    {\n"
@@ -492,8 +521,9 @@ public class ValidationReportTest {
                         + "    }"
                         + "  ]\n"
                         + "}")
-                .getNewErrorCount(
-                    createValidationReportFromJsonString(
+                .getNewErrorsListing(
+                    createValidationReportFromPath(
+                        "other_report.json",
                         "{\n"
                             + "  \"notices\": [\n"
                             + "    {\n"
@@ -510,14 +540,16 @@ public class ValidationReportTest {
                             + "      ]\n"
                             + "    }"
                             + "  ]\n"
-                            + "}")))
+                            + "}"))
+                .size())
         .isEqualTo(0);
   }
 
   @Test
-  public void getNewErrorCount_twoNewErrorsInNewReport_two() {
+  public void newErrorCount_twoNewErrorsInNewReport_two() throws IOException {
     assertThat(
-            createValidationReportFromJsonString(
+            createValidationReportFromPath(
+                    "first_report.json",
                     "{\n"
                         + "  \"notices\": [\n"
                         + "    {\n"
@@ -535,8 +567,9 @@ public class ValidationReportTest {
                         + "    }"
                         + "  ]\n"
                         + "}")
-                .getNewErrorCount(
-                    createValidationReportFromJsonString(
+                .getNewErrorsListing(
+                    createValidationReportFromPath(
+                        "other_report.json",
                         "{\n"
                             + "  \"notices\": [\n"
                             + "    {\n"
@@ -589,7 +622,8 @@ public class ValidationReportTest {
                             + "      ]\n"
                             + "    }\n"
                             + "  ]\n"
-                            + "}")))
+                            + "}"))
+                .size())
         .isEqualTo(2);
   }
 }

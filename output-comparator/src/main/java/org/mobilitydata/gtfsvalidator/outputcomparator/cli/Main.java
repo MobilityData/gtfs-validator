@@ -67,11 +67,8 @@ public class Main {
       return;
     }
     int badDatasetCount = 0;
-
     List<File> reportDirs =
         reportDirectory.stream().filter(File::isDirectory).collect(Collectors.toList());
-
-    int totalDatasetCount = reportDirs.size();
     Map<String, NoticeStat> acceptanceTestReportMap = new TreeMap<>();
 
     try {
@@ -79,11 +76,10 @@ public class Main {
       for (File file : reportDirs) {
         Path referenceReportPath = file.toPath().resolve(args.getReferenceValidationReportName());
         Path latestReportPath = file.toPath().resolve(args.getLatestValidationReportName());
-        if (!new File(referenceReportPath.toString()).isFile()
-            || !new File(latestReportPath.toString()).isFile()) {
+        if (!Path.of(referenceReportPath.toString()).toFile().isFile()
+            || Path.of(latestReportPath.toString()).toFile().isFile()){
           continue;
         }
-        int newErrorCount;
         ValidationReport referenceReport = ValidationReport.fromPath(referenceReportPath);
         ValidationReport latestReport = ValidationReport.fromPath(latestReportPath);
         if (referenceReport.hasSameErrorCodes(latestReport)) {
@@ -96,18 +92,19 @@ public class Main {
           acceptanceTestReportMap.putIfAbsent(noticeCode, noticeStat);
           noticeStat.update(
               file.getName(),
-              latestReport.getNoticeByCode(noticeCode).getTotalNotices(),
+              latestReport.getNoticeReportByNoticeCode(noticeCode).getTotalNotices(),
               urlsAsString);
         }
 
-        newErrorCount = referenceReport.getNewErrorCount(latestReport);
-        if (newErrorCount >= args.getNewErrorThreshold()) {
+        if (referenceReport.getNewErrorsListing(latestReport).size()
+            >= args.getNewErrorThreshold()) {
           ++badDatasetCount;
         }
       }
-      exportAcceptanceTestReport(generateAcceptanceTestReport(acceptanceTestReportMap), args);
+      exportAcceptanceTestReport(
+          generateAcceptanceTestReport(acceptanceTestReportMap), args.getOutputBase());
       checkRuleValidity(
-          badDatasetCount, totalDatasetCount, args.getPercentInvalidDatasetsThreshold());
+          badDatasetCount, reportDirs.size(), args.getPercentInvalidDatasetsThreshold());
     } catch (IOException e) {
       logger.atSevere().withCause(e);
       System.exit(IO_EXCEPTION_EXIT_CODE);
@@ -139,14 +136,14 @@ public class Main {
    * Exports acceptance test reports.
    *
    * @param acceptanceTestReportData the JSON representation of the acceptance test report
-   * @param arguments the {@code Arguments} used to retrieve the path to save files
+   * @param outputBase the name of the directory used to save files
    */
   private static void exportAcceptanceTestReport(
-      JsonObject acceptanceTestReportData, Arguments arguments) {
-    new File(arguments.getOutputBase()).mkdirs();
+      JsonObject acceptanceTestReportData, String outputBase) {
+    new File(outputBase).mkdirs();
     try {
       Files.write(
-          Paths.get(arguments.getOutputBase(), ACCEPTANCE_REPORT_JSON),
+          Paths.get(outputBase, ACCEPTANCE_REPORT_JSON),
           GSON.toJson(acceptanceTestReportData).getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store acceptance test report file");
