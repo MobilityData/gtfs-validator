@@ -59,7 +59,7 @@ public class NoticeContainer {
   private final List<ValidationNotice> validationNotices = new ArrayList<>();
   private final List<SystemError> systemErrors = new ArrayList<>();
   private final Map<String, Integer> noticesCountPerTypeAndSeverity = new HashMap<>();
-  private transient boolean hasValidationErrors = false;
+  private boolean hasValidationErrors = false;
 
   /**
    * Used to specify limits on amount of notices in this {@code NoticeContainer}.

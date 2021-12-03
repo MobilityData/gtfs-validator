@@ -24,7 +24,7 @@ import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 
 @RunWith(JUnit4.class)
-public class NoticeSummaryTest {
+public class NoticeReportTest {
 
   private static NoticeReport createNoticeReport(
       String code,

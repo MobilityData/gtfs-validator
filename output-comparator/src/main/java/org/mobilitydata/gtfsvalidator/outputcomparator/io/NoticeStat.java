@@ -89,8 +89,8 @@ public class NoticeStat {
    * @param sourceId the id of the source to update
    * @param newCount the new value for {@code NoticeStat#count}
    */
-  private void updateCountPerSource(String sourceId, Integer newCount) {
-    Integer currentCount = this.countPerSource.getOrDefault(sourceId, 0);
+  private void updateCountPerSource(String sourceId, int newCount) {
+    int currentCount = this.countPerSource.getOrDefault(sourceId, 0);
     this.countPerSource.put(sourceId, currentCount + newCount);
   }
 

@@ -30,7 +30,9 @@ public class Arguments {
 
   @Parameter(
       names = {"-n", "--new_error_threshold"},
-      description = "Number of new errors per datasets",
+      description =
+          "Number of new errors per datasets. A dataset is considered newly invalid if "
+              + "the number of new errors exceeds this threshold.",
       required = true)
   private int newErrorThreshold;
 

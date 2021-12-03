@@ -154,8 +154,9 @@ public class Main {
   }
 
   /**
-   * Exits on non-zero code 2 if the ratio badDatasetCount/totalDatasetCount is greater than or
-   * equal to the threshold defined as acceptance criteria.
+   * Exits on non-zero code {@code Main#INVALID_NEW_RULE_EXIT_CODE} if the ratio
+   * badDatasetCount/totalDatasetCount is greater than or equal to the threshold defined as
+   * acceptance criteria.
    *
    * @param badDatasetCount the number of new invalid datasets
    * @param totalDatasetCount the number of datasets to be tested
