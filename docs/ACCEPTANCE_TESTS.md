@@ -41,10 +41,12 @@ Sample output:
         "affectedSourcesCount": 2,
         "affectedSources": [
           {
-            "source-id-1": "url to the latest version of the dataset issued by source-id-1"
+            "source_id": "source-id-1",
+            "source_url": "url to the latest version of the dataset issued by source-id-1"
           },
           {
-            "source-id-2": "url to the latest version of the dataset issued by source-id-2"
+            "source_id": "source-id-2",
+            "source_url": "url to the latest version of the dataset issued by source-id-2"
           }
         ],
         "countPerSource": [
@@ -62,7 +64,8 @@ Sample output:
         "affectedSourcesCount": 1,
         "affectedSources": [
           {
-            "source-id-5": "url to the latest version of the dataset issued by source-id-5"
+            "source_id": "source-id-5",
+            "source_url": "url to the latest version of the dataset issued by source-id-5"
           }
         ],
         "countPerSource": [
@@ -77,7 +80,8 @@ Sample output:
         "affectedSourcesCount": 1,
         "affectedSources": [
           {
-            "source-id-2": "url to the latest version of the dataset issued by source-id-2"
+            "source_id": "source-id-2",
+            "source_url": "url to the latest version of the dataset issued by source-id-2"
           }
         ],
         "countPerSource": [
@@ -92,13 +96,16 @@ Sample output:
         "affectedSourcesCount": 3,
         "affectedSources": [
           {
-            "source-id-1": "url to the latest version of the dataset issued by source-id-1"
+            "source_id": "source-id-1",
+            "source_url": "url to the latest version of the dataset issued by source-id-1"
           },
           {
-            "source-id-3": "url to the latest version of the dataset issued by source-id-3"
+            "source_id": "source-id-3",
+            "source_url": "url to the latest version of the dataset issued by source-id-3"
           },
           {
-            "source-id-5": "url to the latest version of the dataset issued by source-id-5"
+            "source_id": "source-id-5",
+            "source_url": "url to the latest version of the dataset issued by source-id-5"
           }
         ],
         "countPerSource": [

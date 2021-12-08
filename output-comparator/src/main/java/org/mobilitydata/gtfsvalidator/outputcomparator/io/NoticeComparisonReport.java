@@ -23,8 +23,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.mobilitydata.gtfsvalidator.outputcomparator.model.SourceUrlContainer;
 
 /**
  * Used to store details about a particular {@code ValidationNotice}. For one {@code
@@ -37,28 +36,23 @@ import java.util.regex.Pattern;
  *   <li>the total number of this {@code ValidationNotice} in each source concerned
  * </ul>
  */
-public class NoticeStat {
+public class NoticeComparisonReport {
 
   protected static final String AFFECTED_SOURCES_COUNT = "affectedSourcesCount";
   protected static final String AFFECTED_SOURCES = "affectedSources";
   protected static final String COUNT_PER_SOURCE = "countPerSource";
-  public static final String URL_PATTERN =
-      "https://storage.googleapis.com/storage/v1/b/%s_archives_\\d{4}-\\d{2}-\\d{2}/o/\\w+.zip\\?alt=media";
+
   private final SortedMap<String, String> affectedSources;
   private final SortedMap<String, Integer> countPerSource;
-  private int affectedSourcesCount;
 
-  public NoticeStat(
-      int affectedSourcesCount,
-      SortedMap<String, String> affectedSourced,
-      SortedMap<String, Integer> countPerSource) {
-    this.affectedSourcesCount = affectedSourcesCount;
-    this.affectedSources = affectedSourced;
+  public NoticeComparisonReport(
+      SortedMap<String, String> affectedSources, SortedMap<String, Integer> countPerSource) {
+    this.affectedSources = affectedSources;
     this.countPerSource = countPerSource;
   }
 
-  public NoticeStat() {
-    this(0, new TreeMap<>(), new TreeMap<>());
+  public NoticeComparisonReport() {
+    this(new TreeMap<>(), new TreeMap<>());
   }
 
   @VisibleForTesting
@@ -71,23 +65,11 @@ public class NoticeStat {
     return countPerSource;
   }
 
-  @VisibleForTesting
-  public int getAffectedSourcesCount() {
-    return affectedSourcesCount;
-  }
-
-  public static String retrieveSourceUrl(String urlAsString, String sourceId) {
-    Pattern pattern = Pattern.compile(String.format(URL_PATTERN, sourceId));
-    Matcher matcher = pattern.matcher(urlAsString);
-    matcher.find();
-    return matcher.group();
-  }
-
   /**
    * Updates field countPerSource for a given sourceId
    *
    * @param sourceId the id of the source to update
-   * @param newCount the new value for {@code NoticeStat#count}
+   * @param newCount the new value for {@code NoticeComparisonReport#count}
    */
   private void updateCountPerSource(String sourceId, int newCount) {
     int currentCount = this.countPerSource.getOrDefault(sourceId, 0);
@@ -95,38 +77,38 @@ public class NoticeStat {
   }
 
   /**
-   * Updates all fields of this {@code NoticeStat}.
+   * Updates all fields of this {@code NoticeComparisonReport}.
    *
    * @param sourceId the id of the source
    * @param noticeCount the number of notices raised by the latest dataset version from a given
    *     source identified by its id
    */
-  public void update(String sourceId, int noticeCount, String urls) {
-    this.affectedSources.put(sourceId, retrieveSourceUrl(urls, sourceId));
+  public void update(String sourceId, int noticeCount, SourceUrlContainer urlContainer) {
+    this.affectedSources.put(sourceId, urlContainer.getUrlForSourceId(sourceId));
     updateCountPerSource(sourceId, noticeCount);
-    this.affectedSourcesCount = this.affectedSources.size();
   }
 
   /**
-   * Transforms this {@code NoticeStat} into a {@code JsonObject} for export.
+   * Transforms this {@code NoticeComparisonReport} into a {@code JsonObject} for export.
    *
-   * @return the {@code JsonObject} representation of this {@code NoticeStat}
+   * @return the {@code JsonObject} representation of this {@code NoticeComparisonReport}
    */
   public JsonObject toJson() {
     JsonObject root = new JsonObject();
     JsonArray affectedSourcesJsonArray = new JsonArray();
-    JsonArray statsJsonArray = new JsonArray();
-    root.addProperty(AFFECTED_SOURCES_COUNT, affectedSourcesCount);
+    JsonArray noticeComparisonReportJsonArray = new JsonArray();
+    root.addProperty(AFFECTED_SOURCES_COUNT, this.affectedSources.size());
     root.add(AFFECTED_SOURCES, affectedSourcesJsonArray);
-    root.add(COUNT_PER_SOURCE, statsJsonArray);
+    root.add(COUNT_PER_SOURCE, noticeComparisonReportJsonArray);
 
     for (Entry<String, String> entry : affectedSources.entrySet()) {
       JsonObject sourceInfo = new JsonObject();
-      sourceInfo.addProperty(entry.getKey(), entry.getValue());
+      sourceInfo.addProperty("source_id", entry.getKey());
+      sourceInfo.addProperty("source_url", entry.getValue());
       affectedSourcesJsonArray.add(sourceInfo);
-      JsonObject statJson = new JsonObject();
-      statsJsonArray.add(statJson);
-      statJson.addProperty(entry.getKey(), countPerSource.get(entry.getKey()));
+      JsonObject noticeComparisonReportJson = new JsonObject();
+      noticeComparisonReportJsonArray.add(noticeComparisonReportJson);
+      noticeComparisonReportJson.addProperty(entry.getKey(), countPerSource.get(entry.getKey()));
     }
     return root;
   }

@@ -26,17 +26,22 @@ import com.google.gson.JsonObject;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.outputcomparator.io.NoticeStat;
+import org.mobilitydata.gtfsvalidator.outputcomparator.io.NoticeComparisonReport;
 
 @RunWith(JUnit4.class)
 public class MainTest {
   private static final Gson GSON =
       new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
 
-  private static NoticeStat createNoticeStat(SortedMap<String, Integer> countPerSource) {
+  @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
+
+  private static NoticeComparisonReport createNoticeComparisonReport(
+      SortedMap<String, Integer> countPerSource) {
     SortedMap<String, String> affectedSources = new TreeMap<>();
     for (String sourceId : countPerSource.keySet()) {
       affectedSources.put(
@@ -45,8 +50,7 @@ public class MainTest {
               "https://storage.googleapis.com/storage/v1/b/%s_archives_2021-12-04/o/1234.zip?alt=media",
               sourceId));
     }
-    int affectedSourcesCount = countPerSource.size();
-    return new NoticeStat(affectedSourcesCount, affectedSources, countPerSource);
+    return new NoticeComparisonReport(affectedSources, countPerSource);
   }
 
   @Test
@@ -57,38 +61,44 @@ public class MainTest {
 
   @Test
   public void newNotices_generatesReport() {
-    Map<String, NoticeStat> reportData = new TreeMap<>();
-    NoticeStat firstNoticeStat =
-        createNoticeStat(ImmutableSortedMap.of("source-id-1", 4, "source-id-2", 6));
-    NoticeStat secondNoticeStat = createNoticeStat(ImmutableSortedMap.of("source-id-2", 40));
-    NoticeStat thirdNoticeStat =
-        createNoticeStat(
+    Map<String, NoticeComparisonReport> reportData = new TreeMap<>();
+    NoticeComparisonReport firstNoticeComparisonReport =
+        createNoticeComparisonReport(ImmutableSortedMap.of("source-id-1", 4, "source-id-2", 6));
+    NoticeComparisonReport secondNoticeComparisonReport =
+        createNoticeComparisonReport(ImmutableSortedMap.of("source-id-2", 40));
+    NoticeComparisonReport thirdNoticeComparisonReport =
+        createNoticeComparisonReport(
             ImmutableSortedMap.of("source-id-1", 40, "source-id-3", 15, "source-id-5", 2));
-    NoticeStat fourthNoticeStat = createNoticeStat(ImmutableSortedMap.of("source-id-5", 5));
-    reportData.put("first_notice_code", firstNoticeStat);
-    reportData.put("second_notice_code", secondNoticeStat);
-    reportData.put("third_notice_code", thirdNoticeStat);
-    reportData.put("fourth_notice_code", fourthNoticeStat);
+    NoticeComparisonReport fourthNoticeComparisonReport =
+        createNoticeComparisonReport(ImmutableSortedMap.of("source-id-5", 5));
+    reportData.put("first_notice_code", firstNoticeComparisonReport);
+    reportData.put("second_notice_code", secondNoticeComparisonReport);
+    reportData.put("third_notice_code", thirdNoticeComparisonReport);
+    reportData.put("fourth_notice_code", fourthNoticeComparisonReport);
     JsonObject acceptanceTestReportJson = generateAcceptanceTestReport(reportData);
     assertThat(GSON.toJson(acceptanceTestReportJson))
         .isEqualTo(
             "{\"newErrors\":[{\"first_notice_code\":{\"affectedSourcesCount\":2,"
-                + "\"affectedSources\":[{\"source-id-1\":\"https://storage.googleapis.com"
-                + "/storage/v1/b/source-id-1_archives_2021-12-04/o/1234.zip?alt=media\"},{\"source-id-2\":"
-                + "\"https://storage.googleapis.com/storage/v1/b/source-id-2_archives_2021-12-04/o/1234.zip"
-                + "?alt=media\"}],\"countPerSource\":[{\"source-id-1\":4},{\"source-id-2"
-                + "\":6}]}},{\"fourth_notice_code\":{\"affectedSourcesCount\":1,\"affectedSources"
-                + "\":[{\"source-id-5\":\"https://storage.googleapis.com/storage/v1/b/"
-                + "source-id-5_archives_2021-12-04/o/1234.zip?alt=media\"}],\"countPerSource\":[{"
-                + "\"source-id-5\":5}]}},{\"second_notice_code\":{\"affectedSourcesCount\":1,"
-                + "\"affectedSources\":[{\"source-id-2\":\"https://storage.googleapis.com/"
-                + "storage/v1/b/source-id-2_archives_2021-12-04/o/1234.zip?alt=media\"}],\"countPerSource"
-                + "\":[{\"source-id-2\":40}]}},{\"third_notice_code\":{\"affectedSourcesCount"
-                + "\":3,\"affectedSources\":[{\"source-id-1\":\"https://storage.googleapis.com"
-                + "/storage/v1/b/source-id-1_archives_2021-12-04/o/1234.zip?alt=media\"},{\"source-id-3\":"
-                + "\"https://storage.googleapis.com/storage/v1/b/source-id-3_archives_2021-12-04/o/1234.zip"
-                + "?alt=media\"},{\"source-id-5\":\"https://storage.googleapis.com/storage/v1/b/"
-                + "source-id-5_archives_2021-12-04/o/1234.zip?alt=media\"}],\"countPerSource\":["
-                + "{\"source-id-1\":40},{\"source-id-3\":15},{\"source-id-5\":2}]}}]}");
+                + "\"affectedSources\":[{\"source_id\":\"source-id-1\",\"source_url\":"
+                + "\"https://storage.googleapis.com/storage/v1/b/source-id-1_archives_2021-12-04/"
+                + "o/1234.zip?alt=media\"},{\"source_id\":\"source-id-2\",\"source_url\":"
+                + "\"https://storage.googleapis.com/storage/v1/b/source-id-2_archives_2021-12-04"
+                + "/o/1234.zip?alt=media\"}],\"countPerSource\":[{\"source-id-1\":4},"
+                + "{\"source-id-2\":6}]}},{\"fourth_notice_code\":{\"affectedSourcesCount\":1,"
+                + "\"affectedSources\":[{\"source_id\":\"source-id-5\",\"source_url\":"
+                + "\"https://storage.googleapis.com/storage/v1/b/source-id-5_archives_2021-12-04"
+                + "/o/1234.zip?alt=media\"}],\"countPerSource\":[{\"source-id-5\":5}]}},"
+                + "{\"second_notice_code\":{\"affectedSourcesCount\":1,\"affectedSources\":[{"
+                + "\"source_id\":\"source-id-2\",\"source_url\":\"https://storage.googleapis.com"
+                + "/storage/v1/b/source-id-2_archives_2021-12-04/o/1234.zip?alt=media\"}],"
+                + "\"countPerSource\":[{\"source-id-2\":40}]}},{\"third_notice_code\":"
+                + "{\"affectedSourcesCount\":3,\"affectedSources\":[{\"source_id\":\"source-id-1\","
+                + "\"source_url\":\"https://storage.googleapis.com/storage/v1/b/source-id-1_"
+                + "archives_2021-12-04/o/1234.zip?alt=media\"},{\"source_id\":\"source-id-3\","
+                + "\"source_url\":\"https://storage.googleapis.com/storage/v1/b/source-id-3"
+                + "_archives_2021-12-04/o/1234.zip?alt=media\"},{\"source_id\":\"source-id-5\","
+                + "\"source_url\":\"https://storage.googleapis.com/storage/v1/b/source-id-5_a"
+                + "rchives_2021-12-04/o/1234.zip?alt=media\"}],\"countPerSource\":[{\"source-id-1"
+                + "\":40},{\"source-id-3\":15},{\"source-id-5\":2}]}}]}");
   }
 }

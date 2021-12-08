@@ -21,6 +21,7 @@ import json
 NEW_ERRORS = "newErrors"
 AFFECTED_SOURCES = "affectedSources"
 AFFECTED_SOURCES_COUNT = "affectedSourcesCount"
+SOURCE_ID_KEY = "source_id"
 
 
 def load_content(data_path):
@@ -66,20 +67,25 @@ if __name__ == "__main__":
     comment = "Thank you for this contribution."
 
     if len(list(acceptance_test_report[NEW_ERRORS])) != 0:
-        comment = comment + " Due to changes in this pull request, the " \
-                            "following validation rules trigger new errors:\n"
+        comment = (
+            comment + " Due to changes in this pull request, the "
+            "following validation rules trigger new errors:\n"
+        )
 
         for notice_sample in acceptance_test_report[NEW_ERRORS]:
             notice_code = list(notice_sample.keys())[0]
             notice_info = f"- `{notice_code}`: {notice_sample[notice_code][AFFECTED_SOURCES_COUNT]} datasets (including "
             for source_ids in notice_sample[notice_code][AFFECTED_SOURCES]:
-                for source_id in list(source_ids.keys()):
-                    notice_info += (
-                        f"[`{source_id}`]({get_url(source_id, args.path_to_urls)}), "
-                    )
+                source_id = source_ids.get(SOURCE_ID_KEY)
+                notice_info += (
+                    f"[`{source_id}`]({get_url(source_id, args.path_to_urls)}), "
+                )
             comment = comment + notice_info[:-2] + ")\n"
     else:
-        comment = comment + " The changes in this pull request did not trigger any new errors on known GTFS datasets from the [MobilityDatabase](http://mobilitydatabase.org/wiki/Main_Page)."
+        comment = (
+            comment
+            + " The changes in this pull request did not trigger any new errors on known GTFS datasets from the [MobilityDatabase](http://mobilitydatabase.org/wiki/Main_Page)."
+        )
     comment = (
         comment
         + f"\nDownload the full acceptance test report for commit {args.commit_id} [here](https://github.com/MobilityData/gtfs-validator/actions/runs/{args.run_id}) (report will disappear after 90 days)."

@@ -16,6 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.io;
 
+import static org.mobilitydata.gtfsvalidator.notice.Notice.GSON;
+
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -60,7 +62,7 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
     return new ValidationReport(notices);
   }
 
-  public static <T extends Notice> ValidationReport serialize(
+  public static <T extends Notice> JsonObject serialize(
       List<T> notices,
       int maxExportsPerNoticeTypeAndSeverity,
       Map<String, Integer> noticesCountPerTypeAndSeverity) {
@@ -87,6 +89,6 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
               noticesCountPerTypeAndSeverity.get(firstNotice.getMappingKey()),
               contexts));
     }
-    return new ValidationReport(noticeReports);
+    return GSON.toJsonTree(new ValidationReport(noticeReports)).getAsJsonObject();
   }
 }

@@ -94,7 +94,7 @@ public class ValidationReport {
 
   /** Returns all notice reports {@code NoticeReport} of this {@code ValidationReport}. */
   public Set<NoticeReport> getNotices() {
-    return Collections.unmodifiableSet(notices);
+    return notices;
   }
 
   /**

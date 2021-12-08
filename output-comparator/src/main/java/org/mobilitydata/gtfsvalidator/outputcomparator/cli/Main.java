@@ -34,7 +34,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.model.ValidationReport;
-import org.mobilitydata.gtfsvalidator.outputcomparator.io.NoticeStat;
+import org.mobilitydata.gtfsvalidator.outputcomparator.io.NoticeComparisonReport;
+import org.mobilitydata.gtfsvalidator.outputcomparator.model.SourceUrlContainer;
 
 public class Main {
 
@@ -54,61 +55,64 @@ public class Main {
           Files.list(Paths.get(args.getReportDirectory()))
               .map(Path::toFile)
               .collect(Collectors.toList());
+      if (reportDirectory.isEmpty()) {
+        logger.atSevere().log(
+            "Specified directory is empty, cannot generate acceptance tests report.");
+        return;
+      }
     } catch (IOException ioException) {
-      ioException.printStackTrace();
-    }
-    if (reportDirectory == null) {
-      logger.atSevere().log("Specified output is not a directory, or an I/O error occurred");
-      return;
-    }
-    if (reportDirectory.isEmpty()) {
-      logger.atSevere().log(
-          "Specified directory is empty, cannot generate acceptance tests report.");
-      return;
+      logger.atSevere().withCause(ioException);
+      System.exit(IO_EXCEPTION_EXIT_CODE);
     }
     int badDatasetCount = 0;
     List<File> reportDirs =
         reportDirectory.stream().filter(File::isDirectory).collect(Collectors.toList());
-    Map<String, NoticeStat> acceptanceTestReportMap = new TreeMap<>();
+    Map<String, NoticeComparisonReport> acceptanceTestReportMap = new TreeMap<>();
 
+    SourceUrlContainer sourceUrlContainer = null;
     try {
-      String urlsAsString = Files.readString(args.getSourceUrlPath());
-      for (File file : reportDirs) {
-        Path referenceReportPath = file.toPath().resolve(args.getReferenceValidationReportName());
-        Path latestReportPath = file.toPath().resolve(args.getLatestValidationReportName());
-        if (!Path.of(referenceReportPath.toString()).toFile().isFile()
-            || Path.of(latestReportPath.toString()).toFile().isFile()){
-          continue;
-        }
-        ValidationReport referenceReport = ValidationReport.fromPath(referenceReportPath);
-        ValidationReport latestReport = ValidationReport.fromPath(latestReportPath);
-        if (referenceReport.hasSameErrorCodes(latestReport)) {
-          continue;
-        }
-
-        for (String noticeCode : referenceReport.getNewErrorsListing(latestReport)) {
-          NoticeStat noticeStat =
-              acceptanceTestReportMap.getOrDefault(noticeCode, new NoticeStat());
-          acceptanceTestReportMap.putIfAbsent(noticeCode, noticeStat);
-          noticeStat.update(
-              file.getName(),
-              latestReport.getNoticeReportByNoticeCode(noticeCode).getTotalNotices(),
-              urlsAsString);
-        }
-
-        if (referenceReport.getNewErrorsListing(latestReport).size()
-            >= args.getNewErrorThreshold()) {
-          ++badDatasetCount;
-        }
-      }
-      exportAcceptanceTestReport(
-          generateAcceptanceTestReport(acceptanceTestReportMap), args.getOutputBase());
-      checkRuleValidity(
-          badDatasetCount, reportDirs.size(), args.getPercentInvalidDatasetsThreshold());
-    } catch (IOException e) {
-      logger.atSevere().withCause(e);
+      sourceUrlContainer = new SourceUrlContainer(args.getSourceUrlPath());
+    } catch (IOException ioException) {
+      logger.atSevere().withCause(ioException);
       System.exit(IO_EXCEPTION_EXIT_CODE);
     }
+
+    for (File file : reportDirs) {
+      Path referenceReportPath = file.toPath().resolve(args.getReferenceValidationReportName());
+      Path latestReportPath = file.toPath().resolve(args.getLatestValidationReportName());
+      if (!Path.of(referenceReportPath.toString()).toFile().isFile()
+          || Path.of(latestReportPath.toString()).toFile().isFile()) {
+        continue;
+      }
+      ValidationReport referenceReport;
+      ValidationReport latestReport;
+      try {
+        referenceReport = ValidationReport.fromPath(referenceReportPath);
+        latestReport = ValidationReport.fromPath(latestReportPath);
+      } catch (IOException ioException) {
+        logger.atSevere().withCause(ioException);
+        continue;
+      }
+      if (referenceReport.hasSameErrorCodes(latestReport)) {
+        continue;
+      }
+      for (String noticeCode : referenceReport.getNewErrorsListing(latestReport)) {
+        NoticeComparisonReport noticeComparisonReport =
+            acceptanceTestReportMap.getOrDefault(noticeCode, new NoticeComparisonReport());
+        acceptanceTestReportMap.putIfAbsent(noticeCode, noticeComparisonReport);
+        noticeComparisonReport.update(
+            file.getName(),
+            latestReport.getNoticeReportByNoticeCode(noticeCode).getTotalNotices(),
+            sourceUrlContainer);
+      }
+      if (referenceReport.getNewErrorsListing(latestReport).size() >= args.getNewErrorThreshold()) {
+        ++badDatasetCount;
+      }
+    }
+    exportAcceptanceTestReport(
+        generateAcceptanceTestReport(acceptanceTestReportMap), args.getOutputBase());
+    checkRuleValidity(
+        badDatasetCount, reportDirs.size(), args.getPercentInvalidDatasetsThreshold());
   }
 
   /**
@@ -119,7 +123,7 @@ public class Main {
    */
   @VisibleForTesting
   public static JsonObject generateAcceptanceTestReport(
-      Map<String, NoticeStat> acceptanceTestReportData) {
+      Map<String, NoticeComparisonReport> acceptanceTestReportData) {
     JsonObject root = new JsonObject();
     JsonArray jsonNotices = new JsonArray();
     root.add("newErrors", jsonNotices);

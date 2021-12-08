@@ -18,10 +18,7 @@ import static com.google.common.truth.Truth.assertThat;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.internal.LinkedTreeMap;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import org.checkerframework.checker.units.qual.A;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -38,7 +35,7 @@ public class NoticeReportTest {
     return new NoticeReport(code, severityLevel, totalNotices, notices);
   }
 
-  private static List<LinkedTreeMap<String, Object>> createNoticeMaps(){
+  private static List<LinkedTreeMap<String, Object>> createNoticeMaps() {
     List<LinkedTreeMap<String, Object>> toReturn = new ArrayList<>();
     LinkedTreeMap<String, Object> firstMap = new LinkedTreeMap();
     firstMap.put("filename", "stops.txt");
@@ -79,17 +76,21 @@ public class NoticeReportTest {
   @Test
   public void equals_sameNotices_differentOrder_true() {
     assertThat(
-            createNoticeReport("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(noticeMaps.get(0))))
+            createNoticeReport(
+                "invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(noticeMaps.get(0))))
         .isEqualTo(
-            createNoticeReport("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(noticeMaps.get(1))));
+            createNoticeReport(
+                "invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(noticeMaps.get(1))));
   }
 
   @Test
   public void equals_differentNotices_false() {
     assertThat(
-            createNoticeReport("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(noticeMaps.get(0))))
+            createNoticeReport(
+                "invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(noticeMaps.get(0))))
         .isNotEqualTo(
-            createNoticeReport("invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(noticeMaps.get(2))));
+            createNoticeReport(
+                "invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(noticeMaps.get(2))));
   }
 
   @Test
@@ -102,9 +103,11 @@ public class NoticeReportTest {
   @Test
   public void equals_differentSeverity_false() {
     assertThat(
-            createNoticeReport("invalid_url", SeverityLevel.INFO, 2, ImmutableList.of(noticeMaps.get(0))))
+            createNoticeReport(
+                "invalid_url", SeverityLevel.INFO, 2, ImmutableList.of(noticeMaps.get(0))))
         .isNotEqualTo(
-            createNoticeReport("invalid_url", SeverityLevel.ERROR, 2, ImmutableList.of(noticeMaps.get(0))));
+            createNoticeReport(
+                "invalid_url", SeverityLevel.ERROR, 2, ImmutableList.of(noticeMaps.get(0))));
   }
 
   @Test

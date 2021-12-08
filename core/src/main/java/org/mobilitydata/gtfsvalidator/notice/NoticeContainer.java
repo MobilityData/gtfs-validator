@@ -16,8 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import static org.mobilitydata.gtfsvalidator.notice.Notice.GSON;
-
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
 import com.google.gson.JsonObject;
@@ -165,10 +163,8 @@ public class NoticeContainer {
   }
 
   public <T extends Notice> JsonObject exportJson(List<T> notices) {
-    return GSON.toJsonTree(
-            ValidationReportDeserializer.serialize(
-                notices, maxExportsPerNoticeTypeAndSeverity, noticesCountPerTypeAndSeverity))
-        .getAsJsonObject();
+    return ValidationReportDeserializer.serialize(
+        notices, maxExportsPerNoticeTypeAndSeverity, noticesCountPerTypeAndSeverity);
   }
 
   public static <T extends Notice> ListMultimap<String, T> groupNoticesByTypeAndSeverity(
