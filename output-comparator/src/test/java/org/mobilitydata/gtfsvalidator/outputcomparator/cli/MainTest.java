@@ -21,7 +21,6 @@ import static com.google.common.truth.Truth.assertThat;
 import com.github.stefanbirkner.systemlambda.SystemLambda;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.io.File;
 import java.io.IOException;
@@ -44,9 +43,7 @@ import org.mobilitydata.gtfsvalidator.notice.PointNearPoleNotice;
 
 @RunWith(JUnit4.class)
 public class MainTest {
-  @Rule
-  public final TemporaryFolder tmpDir = new TemporaryFolder();
-
+  @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
 
   private static final Gson GSON =
       new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
@@ -188,6 +185,7 @@ public class MainTest {
     JsonObject reportData = new JsonObject();
     reportData.addProperty("newErrors", "sample string value");
     Main.exportAcceptanceTestReport(reportData, tmpDir.getRoot().toString());
-    assertThat(tmpDir.getRoot().toPath().resolve("acceptance_report.json").toFile().exists()).isTrue();
+    assertThat(tmpDir.getRoot().toPath().resolve("acceptance_report.json").toFile().exists())
+        .isTrue();
   }
 }
