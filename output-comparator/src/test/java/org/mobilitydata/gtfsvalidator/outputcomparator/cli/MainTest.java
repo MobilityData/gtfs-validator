@@ -21,6 +21,7 @@ import static com.google.common.truth.Truth.assertThat;
 import com.github.stefanbirkner.systemlambda.SystemLambda;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +29,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyNotice;
@@ -41,6 +44,10 @@ import org.mobilitydata.gtfsvalidator.notice.PointNearPoleNotice;
 
 @RunWith(JUnit4.class)
 public class MainTest {
+  @Rule
+  public final TemporaryFolder tmpDir = new TemporaryFolder();
+
+
   private static final Gson GSON =
       new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
 
@@ -174,5 +181,13 @@ public class MainTest {
                 + "\":1}]}},{\"point_near_pole\":{\"affectedSourcesCount\":1,\"affectedSources\":[{"
                 + "\"source_id\":\"source-id-3\",\"source_url\":\"url3\"}],\"countPerSource\":[{"
                 + "\"source-id-3\":1}]}}]}");
+  }
+
+  @Test
+  public void acceptanceReportTestShouldBeExported() {
+    JsonObject reportData = new JsonObject();
+    reportData.addProperty("newErrors", "sample string value");
+    Main.exportAcceptanceTestReport(reportData, tmpDir.getRoot().toString());
+    assertThat(tmpDir.getRoot().toPath().resolve("acceptance_report.json").toFile().exists()).isTrue();
   }
 }

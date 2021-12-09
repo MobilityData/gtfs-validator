@@ -142,7 +142,8 @@ public class Main {
    * @param acceptanceTestReportData the JSON representation of the acceptance test report
    * @param outputBase the name of the directory used to save files
    */
-  private static void exportAcceptanceTestReport(
+  @VisibleForTesting
+  public static void exportAcceptanceTestReport(
       JsonObject acceptanceTestReportData, String outputBase) {
     new File(outputBase).mkdirs();
     try {
