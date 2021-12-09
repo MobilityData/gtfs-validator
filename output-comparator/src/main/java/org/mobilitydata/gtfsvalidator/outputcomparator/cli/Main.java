@@ -81,7 +81,7 @@ public class Main {
       Path referenceReportPath = file.toPath().resolve(args.getReferenceValidationReportName());
       Path latestReportPath = file.toPath().resolve(args.getLatestValidationReportName());
       if (!Path.of(referenceReportPath.toString()).toFile().isFile()
-          || Path.of(latestReportPath.toString()).toFile().isFile()) {
+          || !Path.of(latestReportPath.toString()).toFile().isFile()) {
         continue;
       }
       ValidationReport referenceReport;

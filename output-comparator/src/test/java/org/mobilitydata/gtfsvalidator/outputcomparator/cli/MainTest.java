@@ -17,88 +17,162 @@
 package org.mobilitydata.gtfsvalidator.outputcomparator.cli;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mobilitydata.gtfsvalidator.outputcomparator.cli.Main.generateAcceptanceTestReport;
 
-import com.google.common.collect.ImmutableSortedMap;
+import com.github.stefanbirkner.systemlambda.SystemLambda;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import org.junit.Rule;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.outputcomparator.io.NoticeComparisonReport;
+import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyNotice;
+import org.mobilitydata.gtfsvalidator.notice.EmptyColumnNameNotice;
+import org.mobilitydata.gtfsvalidator.notice.InvalidCurrencyNotice;
+import org.mobilitydata.gtfsvalidator.notice.InvalidEmailNotice;
+import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileNotice;
+import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.PointNearPoleNotice;
 
 @RunWith(JUnit4.class)
 public class MainTest {
   private static final Gson GSON =
       new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
 
-  @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
+  private static void writeFile(JsonObject fileData, String outputBase, String filename)
+      throws IOException {
+    new File(outputBase).mkdirs();
+    Files.write(
+        Paths.get(outputBase, filename), GSON.toJson(fileData).getBytes(StandardCharsets.UTF_8));
+  }
 
-  private static NoticeComparisonReport createNoticeComparisonReport(
-      SortedMap<String, Integer> countPerSource) {
-    SortedMap<String, String> affectedSources = new TreeMap<>();
-    for (String sourceId : countPerSource.keySet()) {
-      affectedSources.put(
-          sourceId,
-          String.format(
-              "https://storage.googleapis.com/storage/v1/b/%s_archives_2021-12-04/o/1234.zip?alt=media",
-              sourceId));
-    }
-    return new NoticeComparisonReport(affectedSources, countPerSource);
+  private static String retrieveAcceptanceReportString(Path path) throws IOException {
+    return Files.readString(path);
   }
 
   @Test
-  public void noNewNotice_generatesEmptyReport() {
-    JsonObject acceptanceTestReportJson = generateAcceptanceTestReport(new TreeMap<>());
-    assertThat(acceptanceTestReportJson.get("newNotices")).isNull();
+  public void noNewNoticeType_generatesEmptyReport() throws IOException {
+    NoticeContainer referenceNoticeContainer = new NoticeContainer();
+    referenceNoticeContainer.addValidationNotice(new MissingRequiredFileNotice("some file"));
+    referenceNoticeContainer.addValidationNotice(new EmptyColumnNameNotice("other file", 4));
+
+    NoticeContainer latestNoticeContainer = new NoticeContainer();
+    latestNoticeContainer.addValidationNotice(new MissingRequiredFileNotice("sample file"));
+    latestNoticeContainer.addValidationNotice(new MissingRequiredFileNotice("other file"));
+    latestNoticeContainer.addValidationNotice(new EmptyColumnNameNotice("filename", 5));
+
+    writeFile(
+        latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
+        "src/test/resources/reports/no-new-notices/source-id-1",
+        "latest.json");
+    writeFile(
+        referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
+        "src/test/resources/reports/no-new-notices/source-id-1",
+        "reference.json");
+
+    String[] argv = {
+      "--report_directory", "src/test/resources/reports/no-new-notices",
+      "--new_error_threshold", "1",
+      "--reference_report_name", "reference.json",
+      "--latest_report_name", "latest.json",
+      "--percent_invalid_datasets_threshold", "1",
+      "--output_base", "src/test/resources/output/no-new-notices/acceptance-test-report",
+      "--source_urls", "src/test/resources/gtfs_latest_versions.json"
+    };
+    Main.main(argv);
+    assertThat(
+            retrieveAcceptanceReportString(
+                Path.of(
+                    "src/test/resources/output/no-new-notices/acceptance-test-report/acceptance_report.json")))
+        .isEqualTo("{\"newErrors\":[]}");
   }
 
   @Test
-  public void newNotices_generatesReport() {
-    Map<String, NoticeComparisonReport> reportData = new TreeMap<>();
-    NoticeComparisonReport firstNoticeComparisonReport =
-        createNoticeComparisonReport(ImmutableSortedMap.of("source-id-1", 4, "source-id-2", 6));
-    NoticeComparisonReport secondNoticeComparisonReport =
-        createNoticeComparisonReport(ImmutableSortedMap.of("source-id-2", 40));
-    NoticeComparisonReport thirdNoticeComparisonReport =
-        createNoticeComparisonReport(
-            ImmutableSortedMap.of("source-id-1", 40, "source-id-3", 15, "source-id-5", 2));
-    NoticeComparisonReport fourthNoticeComparisonReport =
-        createNoticeComparisonReport(ImmutableSortedMap.of("source-id-5", 5));
-    reportData.put("first_notice_code", firstNoticeComparisonReport);
-    reportData.put("second_notice_code", secondNoticeComparisonReport);
-    reportData.put("third_notice_code", thirdNoticeComparisonReport);
-    reportData.put("fourth_notice_code", fourthNoticeComparisonReport);
-    JsonObject acceptanceTestReportJson = generateAcceptanceTestReport(reportData);
-    assertThat(GSON.toJson(acceptanceTestReportJson))
+  public void newNoticeTypes_generatesNonEmptyReport() throws Exception {
+    NoticeContainer referenceNoticeContainer = new NoticeContainer();
+    referenceNoticeContainer.addValidationNotice(new MissingRequiredFileNotice("some file"));
+    referenceNoticeContainer.addValidationNotice(new EmptyColumnNameNotice("other file", 4));
+
+    NoticeContainer latestNoticeContainer = new NoticeContainer();
+    latestNoticeContainer.addValidationNotice(new MissingRequiredFileNotice("sample file"));
+    latestNoticeContainer.addValidationNotice(new MissingRequiredFileNotice("other file"));
+    latestNoticeContainer.addValidationNotice(new EmptyColumnNameNotice("filename", 5));
+
+    writeFile(
+        latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
+        "src/test/resources/reports/new-notices-type/source-id-1",
+        "latest.json");
+    writeFile(
+        referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
+        "src/test/resources/reports/new-notices-type/source-id-1",
+        "reference.json");
+
+    latestNoticeContainer.addValidationNotice(
+        new InvalidEmailNotice("filename", 4, "field name", "field value"));
+    latestNoticeContainer.addValidationNotice(
+        new DuplicateKeyNotice("filename", 8, 10, "field name 1", "field value1"));
+
+    writeFile(
+        latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
+        "src/test/resources/reports/new-notices-type/source-id-2",
+        "latest.json");
+    writeFile(
+        referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
+        "src/test/resources/reports/new-notices-type/source-id-2",
+        "reference.json");
+
+    latestNoticeContainer.addValidationNotice(
+        new InvalidCurrencyNotice("filename", 4, "field name", "field value"));
+    latestNoticeContainer.addValidationNotice(
+        new PointNearPoleNotice(
+            "filename",
+            1L,
+            "entity id value",
+            "latitude field name",
+            0,
+            "longitude field name",
+            0));
+
+    writeFile(
+        latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
+        "src/test/resources/reports/new-notices-type/source-id-3",
+        "latest.json");
+    writeFile(
+        referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
+        "src/test/resources/reports/new-notices-type/source-id-3",
+        "reference.json");
+
+    String[] argv = {
+      "--report_directory", "src/test/resources/reports/new-notices-type",
+      "--new_error_threshold", "1",
+      "--reference_report_name", "reference.json",
+      "--latest_report_name", "latest.json",
+      "--percent_invalid_datasets_threshold", "1",
+      "--output_base", "src/test/resources/output/new-notices-type/acceptance-test-report",
+      "--source_urls", "src/test/resources/gtfs_latest_versions.json"
+    };
+    SystemLambda.catchSystemExit(() -> Main.main(argv));
+    assertThat(
+            retrieveAcceptanceReportString(
+                Path.of(
+                    "src/test/resources/output/new-notices-type/acceptance-test-report/acceptance_report.json")))
         .isEqualTo(
-            "{\"newErrors\":[{\"first_notice_code\":{\"affectedSourcesCount\":2,"
-                + "\"affectedSources\":[{\"source_id\":\"source-id-1\",\"source_url\":"
-                + "\"https://storage.googleapis.com/storage/v1/b/source-id-1_archives_2021-12-04/"
-                + "o/1234.zip?alt=media\"},{\"source_id\":\"source-id-2\",\"source_url\":"
-                + "\"https://storage.googleapis.com/storage/v1/b/source-id-2_archives_2021-12-04"
-                + "/o/1234.zip?alt=media\"}],\"countPerSource\":[{\"source-id-1\":4},"
-                + "{\"source-id-2\":6}]}},{\"fourth_notice_code\":{\"affectedSourcesCount\":1,"
-                + "\"affectedSources\":[{\"source_id\":\"source-id-5\",\"source_url\":"
-                + "\"https://storage.googleapis.com/storage/v1/b/source-id-5_archives_2021-12-04"
-                + "/o/1234.zip?alt=media\"}],\"countPerSource\":[{\"source-id-5\":5}]}},"
-                + "{\"second_notice_code\":{\"affectedSourcesCount\":1,\"affectedSources\":[{"
-                + "\"source_id\":\"source-id-2\",\"source_url\":\"https://storage.googleapis.com"
-                + "/storage/v1/b/source-id-2_archives_2021-12-04/o/1234.zip?alt=media\"}],"
-                + "\"countPerSource\":[{\"source-id-2\":40}]}},{\"third_notice_code\":"
-                + "{\"affectedSourcesCount\":3,\"affectedSources\":[{\"source_id\":\"source-id-1\","
-                + "\"source_url\":\"https://storage.googleapis.com/storage/v1/b/source-id-1_"
-                + "archives_2021-12-04/o/1234.zip?alt=media\"},{\"source_id\":\"source-id-3\","
-                + "\"source_url\":\"https://storage.googleapis.com/storage/v1/b/source-id-3"
-                + "_archives_2021-12-04/o/1234.zip?alt=media\"},{\"source_id\":\"source-id-5\","
-                + "\"source_url\":\"https://storage.googleapis.com/storage/v1/b/source-id-5_a"
-                + "rchives_2021-12-04/o/1234.zip?alt=media\"}],\"countPerSource\":[{\"source-id-1"
-                + "\":40},{\"source-id-3\":15},{\"source-id-5\":2}]}}]}");
+            "{\"newErrors\":[{\"duplicate_key\":{\"affectedSourcesCount\":2,"
+                + "\"affectedSources\":[{\"source_id\":\"source-id-2\",\"source_url\":\"url2\"},{"
+                + "\"source_id\":\"source-id-3\",\"source_url\":\"url3\"}],\"countPerSource\":[{"
+                + "\"source-id-2\":1},{\"source-id-3\":1}]}},{\"invalid_currency\":{"
+                + "\"affectedSourcesCount\":1,\"affectedSources\":[{\"source_id\":\"source-id-3\","
+                + "\"source_url\":\"url3\"}],\"countPerSource\":[{\"source-id-3\":1}]}},{"
+                + "\"invalid_email\":{\"affectedSourcesCount\":2,\"affectedSources\":[{\"source_id\":"
+                + "\"source-id-2\",\"source_url\":\"url2\"},{\"source_id\":\"source-id-3\","
+                + "\"source_url\":\"url3\"}],\"countPerSource\":[{\"source-id-2\":1},{\"source-id-3"
+                + "\":1}]}},{\"point_near_pole\":{\"affectedSourcesCount\":1,\"affectedSources\":[{"
+                + "\"source_id\":\"source-id-3\",\"source_url\":\"url3\"}],\"countPerSource\":[{"
+                + "\"source-id-3\":1}]}}]}");
   }
 }
