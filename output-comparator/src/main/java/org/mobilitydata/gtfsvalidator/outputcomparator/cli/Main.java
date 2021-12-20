@@ -45,6 +45,10 @@ public class Main {
   private static final int INVALID_NEW_RULE_EXIT_CODE = 2;
   private static final Gson GSON =
       new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
+  private static final String NOTICE_CODE = "noticeCode";
+  private static final String AFFECTED_SOURCES_COUNT = "affectedSourcesCount";
+  private static final String AFFECTED_SOURCES = "affectedSources";
+  private static final String NEW_ERRORS = "newErrors";
 
   public static void main(String[] argv) {
     Arguments args = new Arguments();
@@ -80,8 +84,7 @@ public class Main {
     for (File file : reportDirs) {
       Path referenceReportPath = file.toPath().resolve(args.getReferenceValidationReportName());
       Path latestReportPath = file.toPath().resolve(args.getLatestValidationReportName());
-      if (!Path.of(referenceReportPath.toString()).toFile().isFile()
-          || !Path.of(latestReportPath.toString()).toFile().isFile()) {
+      if (!(referenceReportPath.toFile().isFile() && latestReportPath.toFile().isFile())) {
         continue;
       }
       ValidationReport referenceReport;
@@ -126,12 +129,15 @@ public class Main {
       Map<String, NoticeComparisonReport> acceptanceTestReportData) {
     JsonObject root = new JsonObject();
     JsonArray jsonNotices = new JsonArray();
-    root.add("newErrors", jsonNotices);
+    root.add(NEW_ERRORS, jsonNotices);
 
     for (String noticeCode : acceptanceTestReportData.keySet()) {
       JsonObject noticeStatJson = new JsonObject();
       jsonNotices.add(noticeStatJson);
-      noticeStatJson.add(noticeCode, acceptanceTestReportData.get(noticeCode).toJson());
+      JsonObject noticeContext = acceptanceTestReportData.get(noticeCode).toJson();
+      noticeStatJson.addProperty(NOTICE_CODE, noticeCode);
+      noticeStatJson.add(AFFECTED_SOURCES_COUNT, noticeContext.get(AFFECTED_SOURCES_COUNT));
+      noticeStatJson.add(AFFECTED_SOURCES, noticeContext.get(AFFECTED_SOURCES));
     }
     return root;
   }

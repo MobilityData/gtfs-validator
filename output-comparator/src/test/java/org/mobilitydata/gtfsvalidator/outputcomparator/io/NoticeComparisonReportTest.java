@@ -96,13 +96,13 @@ public class NoticeComparisonReportTest {
     JsonArray affectedSourcesJsonArray = new JsonArray();
 
     JsonObject firstSourceInfo = new JsonObject();
-    firstSourceInfo.addProperty("source_id", "source-id-1");
+    firstSourceInfo.addProperty("sourceId", "source-id-1");
     firstSourceInfo.addProperty(
-        "source_url", "url to the latest version of the dataset issued by source-id-1");
+        "sourceUrl", "url to the latest version of the dataset issued by source-id-1");
     JsonObject secondSourceInfo = new JsonObject();
-    secondSourceInfo.addProperty("source_id", "source-id-2");
+    secondSourceInfo.addProperty("sourceId", "source-id-2");
     secondSourceInfo.addProperty(
-        "source_url", "url to the latest version of the dataset issued by source-id-2");
+        "sourceUrl", "url to the latest version of the dataset issued by source-id-2");
 
     affectedSourcesJsonArray.add(firstSourceInfo);
     affectedSourcesJsonArray.add(secondSourceInfo);

@@ -31,9 +31,6 @@ public class ValidationReportTest {
 
   private ValidationReport createValidationReportFromPath(String filename, String jsonString)
       throws IOException {
-    if (!Files.exists(tmpDir.getRoot().toPath().resolve("reports"))) {
-      tmpDir.newFolder("reports");
-    }
     File validationReportFile = tmpDir.newFile(filename);
     Files.write(validationReportFile.toPath(), jsonString.getBytes(StandardCharsets.UTF_8));
     return ValidationReport.fromPath(validationReportFile.toPath());

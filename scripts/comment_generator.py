@@ -21,18 +21,13 @@ import json
 NEW_ERRORS = "newErrors"
 AFFECTED_SOURCES = "affectedSources"
 AFFECTED_SOURCES_COUNT = "affectedSourcesCount"
-SOURCE_ID_KEY = "source_id"
+SOURCE_ID_KEY = "sourceId"
 
 
 def load_content(data_path):
     with open(data_path, "r") as f:
         content = json.load(f)
     return content
-
-
-def get_url(archive_id, path_to_urls):
-    urls = load_content(path_to_urls)
-    return urls[archive_id]
 
 
 if __name__ == "__main__":
@@ -73,13 +68,11 @@ if __name__ == "__main__":
         )
 
         for notice_sample in acceptance_test_report[NEW_ERRORS]:
-            notice_code = list(notice_sample.keys())[0]
-            notice_info = f"- `{notice_code}`: {notice_sample[notice_code][AFFECTED_SOURCES_COUNT]} datasets (including "
-            for source_ids in notice_sample[notice_code][AFFECTED_SOURCES]:
-                source_id = source_ids.get(SOURCE_ID_KEY)
-                notice_info += (
-                    f"[`{source_id}`]({get_url(source_id, args.path_to_urls)}), "
-                )
+            notice_code = notice_sample["noticeCode"]
+            notice_info = f"- `{notice_code}`: {notice_sample[AFFECTED_SOURCES_COUNT]} datasets (including "
+            for source_infos in notice_sample[AFFECTED_SOURCES]:
+                source_id = source_infos[SOURCE_ID_KEY]
+                notice_info += f"[`{source_id}`]({urls_map.get(source_id)}), "
             comment = comment + notice_info[:-2] + ")\n"
     else:
         comment = (

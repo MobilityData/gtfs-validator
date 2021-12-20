@@ -22,12 +22,10 @@ import com.github.stefanbirkner.systemlambda.SystemLambda;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -43,16 +41,28 @@ import org.mobilitydata.gtfsvalidator.notice.PointNearPoleNotice;
 
 @RunWith(JUnit4.class)
 public class MainTest {
+
+  private static final String NEW_NOTICES_TYPE_FOLDER_NAME = "new-notices-type";
+  private static final String REFERENCE_JSON = "reference.json";
+  private static final String LATEST_JSON = "latest.json";
+  private static final String ACCEPTANCE_REPORT_JSON = "acceptance_report.json";
+  private static final String NO_NEW_NOTICE_FOLDER_NAME = "no-new-notice";
+  private static final String GTFS_LATEST_VERSIONS_JSON = "gtfs_latest_versions.json";
+  private static final String ACCEPTANCE_TEST_REPORT_FOLDER_NAME = "acceptance-test-report";
+  private static final String SOURCE_INFO_FOLDER_NAME = "source-info";
   @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
 
   private static final Gson GSON =
       new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
 
-  private static void writeFile(JsonObject fileData, String outputBase, String filename)
+  private void writeFile(JsonObject fileData, String folderName, String sourceInfo, String filename)
       throws IOException {
-    new File(outputBase).mkdirs();
+    if (!Files.exists(tmpDir.getRoot().toPath().resolve(folderName).resolve(sourceInfo))) {
+      tmpDir.newFolder(folderName, sourceInfo);
+    }
     Files.write(
-        Paths.get(outputBase, filename), GSON.toJson(fileData).getBytes(StandardCharsets.UTF_8));
+        tmpDir.getRoot().toPath().resolve(folderName).resolve(sourceInfo).resolve(filename),
+        GSON.toJson(fileData).getBytes(StandardCharsets.UTF_8));
   }
 
   private static String retrieveAcceptanceReportString(Path path) throws IOException {
@@ -72,27 +82,57 @@ public class MainTest {
 
     writeFile(
         latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
-        "src/test/resources/reports/no-new-notices/source-id-1",
-        "latest.json");
+        NO_NEW_NOTICE_FOLDER_NAME,
+        "source-id-1",
+        LATEST_JSON);
     writeFile(
         referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
-        "src/test/resources/reports/no-new-notices/source-id-1",
-        "reference.json");
+        NO_NEW_NOTICE_FOLDER_NAME,
+        "source-id-1",
+        REFERENCE_JSON);
+
+    JsonObject sourceUrlJsonObject = new JsonObject();
+    sourceUrlJsonObject.addProperty("source-id-1", "url1");
+    sourceUrlJsonObject.addProperty("source-id-2", "url2");
+    sourceUrlJsonObject.addProperty("source-id-3", "url3");
+    writeFile(sourceUrlJsonObject, SOURCE_INFO_FOLDER_NAME, "all", GTFS_LATEST_VERSIONS_JSON);
 
     String[] argv = {
-      "--report_directory", "src/test/resources/reports/no-new-notices",
-      "--new_error_threshold", "1",
-      "--reference_report_name", "reference.json",
-      "--latest_report_name", "latest.json",
-      "--percent_invalid_datasets_threshold", "1",
-      "--output_base", "src/test/resources/output/no-new-notices/acceptance-test-report",
-      "--source_urls", "src/test/resources/gtfs_latest_versions.json"
+      "--report_directory",
+      tmpDir.getRoot().toPath().resolve(NO_NEW_NOTICE_FOLDER_NAME).toString(),
+      "--new_error_threshold",
+      "1",
+      "--reference_report_name",
+      REFERENCE_JSON,
+      "--latest_report_name",
+      LATEST_JSON,
+      "--percent_invalid_datasets_threshold",
+      "1",
+      "--output_base",
+      tmpDir
+          .getRoot()
+          .toPath()
+          .resolve(NO_NEW_NOTICE_FOLDER_NAME)
+          .resolve(ACCEPTANCE_TEST_REPORT_FOLDER_NAME)
+          .toString(),
+      "--source_urls",
+      tmpDir
+          .getRoot()
+          .toPath()
+          .resolve(SOURCE_INFO_FOLDER_NAME)
+          .resolve("all")
+          .resolve(GTFS_LATEST_VERSIONS_JSON)
+          .toString(),
     };
     Main.main(argv);
     assertThat(
             retrieveAcceptanceReportString(
-                Path.of(
-                    "src/test/resources/output/no-new-notices/acceptance-test-report/acceptance_report.json")))
+                tmpDir
+                    .getRoot()
+                    .toPath()
+                    .resolve(NO_NEW_NOTICE_FOLDER_NAME)
+                    .resolve(ACCEPTANCE_TEST_REPORT_FOLDER_NAME)
+                    .resolve(ACCEPTANCE_REPORT_JSON)))
         .isEqualTo("{\"newErrors\":[]}");
   }
 
@@ -109,12 +149,14 @@ public class MainTest {
 
     writeFile(
         latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
-        "src/test/resources/reports/new-notices-type/source-id-1",
-        "latest.json");
+        NEW_NOTICES_TYPE_FOLDER_NAME,
+        "source-id-1",
+        LATEST_JSON);
     writeFile(
         referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
-        "src/test/resources/reports/new-notices-type/source-id-1",
-        "reference.json");
+        NEW_NOTICES_TYPE_FOLDER_NAME,
+        "source-id-1",
+        REFERENCE_JSON);
 
     latestNoticeContainer.addValidationNotice(
         new InvalidEmailNotice("filename", 4, "field name", "field value"));
@@ -123,12 +165,14 @@ public class MainTest {
 
     writeFile(
         latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
-        "src/test/resources/reports/new-notices-type/source-id-2",
-        "latest.json");
+        NEW_NOTICES_TYPE_FOLDER_NAME,
+        "source-id-2",
+        LATEST_JSON);
     writeFile(
         referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
-        "src/test/resources/reports/new-notices-type/source-id-2",
-        "reference.json");
+        NEW_NOTICES_TYPE_FOLDER_NAME,
+        "source-id-2",
+        REFERENCE_JSON);
 
     latestNoticeContainer.addValidationNotice(
         new InvalidCurrencyNotice("filename", 4, "field name", "field value"));
@@ -144,40 +188,70 @@ public class MainTest {
 
     writeFile(
         latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
-        "src/test/resources/reports/new-notices-type/source-id-3",
-        "latest.json");
+        NEW_NOTICES_TYPE_FOLDER_NAME,
+        "source-id-3",
+        LATEST_JSON);
     writeFile(
         referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
-        "src/test/resources/reports/new-notices-type/source-id-3",
-        "reference.json");
+        NEW_NOTICES_TYPE_FOLDER_NAME,
+        "source-id-3",
+        REFERENCE_JSON);
+
+    JsonObject sourceUrlJsonObject = new JsonObject();
+    sourceUrlJsonObject.addProperty("source-id-1", "url1");
+    sourceUrlJsonObject.addProperty("source-id-2", "url2");
+    sourceUrlJsonObject.addProperty("source-id-3", "url3");
+    writeFile(sourceUrlJsonObject, SOURCE_INFO_FOLDER_NAME, "all", GTFS_LATEST_VERSIONS_JSON);
 
     String[] argv = {
-      "--report_directory", "src/test/resources/reports/new-notices-type",
-      "--new_error_threshold", "1",
-      "--reference_report_name", "reference.json",
-      "--latest_report_name", "latest.json",
-      "--percent_invalid_datasets_threshold", "1",
-      "--output_base", "src/test/resources/output/new-notices-type/acceptance-test-report",
-      "--source_urls", "src/test/resources/gtfs_latest_versions.json"
+      "--report_directory",
+      tmpDir.getRoot().toPath().resolve(NEW_NOTICES_TYPE_FOLDER_NAME).toString(),
+      "--new_error_threshold",
+      "1",
+      "--reference_report_name",
+      REFERENCE_JSON,
+      "--latest_report_name",
+      LATEST_JSON,
+      "--percent_invalid_datasets_threshold",
+      "1",
+      "--output_base",
+      tmpDir
+          .getRoot()
+          .toPath()
+          .resolve(NEW_NOTICES_TYPE_FOLDER_NAME)
+          .resolve(ACCEPTANCE_TEST_REPORT_FOLDER_NAME)
+          .toString(),
+      "--source_urls",
+      tmpDir
+          .getRoot()
+          .toPath()
+          .resolve(SOURCE_INFO_FOLDER_NAME)
+          .resolve("all")
+          .resolve(GTFS_LATEST_VERSIONS_JSON)
+          .toString(),
     };
+
     SystemLambda.catchSystemExit(() -> Main.main(argv));
+
     assertThat(
             retrieveAcceptanceReportString(
-                Path.of(
-                    "src/test/resources/output/new-notices-type/acceptance-test-report/acceptance_report.json")))
+                tmpDir
+                    .getRoot()
+                    .toPath()
+                    .resolve(NEW_NOTICES_TYPE_FOLDER_NAME)
+                    .resolve(ACCEPTANCE_TEST_REPORT_FOLDER_NAME)
+                    .resolve(ACCEPTANCE_REPORT_JSON)))
         .isEqualTo(
-            "{\"newErrors\":[{\"duplicate_key\":{\"affectedSourcesCount\":2,"
-                + "\"affectedSources\":[{\"source_id\":\"source-id-2\",\"source_url\":\"url2\"},{"
-                + "\"source_id\":\"source-id-3\",\"source_url\":\"url3\"}],\"countPerSource\":[{"
-                + "\"source-id-2\":1},{\"source-id-3\":1}]}},{\"invalid_currency\":{"
-                + "\"affectedSourcesCount\":1,\"affectedSources\":[{\"source_id\":\"source-id-3\","
-                + "\"source_url\":\"url3\"}],\"countPerSource\":[{\"source-id-3\":1}]}},{"
-                + "\"invalid_email\":{\"affectedSourcesCount\":2,\"affectedSources\":[{\"source_id\":"
-                + "\"source-id-2\",\"source_url\":\"url2\"},{\"source_id\":\"source-id-3\","
-                + "\"source_url\":\"url3\"}],\"countPerSource\":[{\"source-id-2\":1},{\"source-id-3"
-                + "\":1}]}},{\"point_near_pole\":{\"affectedSourcesCount\":1,\"affectedSources\":[{"
-                + "\"source_id\":\"source-id-3\",\"source_url\":\"url3\"}],\"countPerSource\":[{"
-                + "\"source-id-3\":1}]}}]}");
+            "{\"newErrors\":[{\"noticeCode\":\"duplicate_key\",\"affectedSourcesCount"
+                + "\":2,\"affectedSources\":[{\"sourceId\":\"source-id-2\",\"sourceUrl\":\"url2"
+                + "\"},{\"sourceId\":\"source-id-3\",\"sourceUrl\":\"url3\"}]},{\"noticeCode\":"
+                + "\"invalid_currency\",\"affectedSourcesCount\":1,\"affectedSources\":[{"
+                + "\"sourceId\":\"source-id-3\",\"sourceUrl\":\"url3\"}]},{\"noticeCode\":"
+                + "\"invalid_email\",\"affectedSourcesCount\":2,\"affectedSources\":[{\"sourceId"
+                + "\":\"source-id-2\",\"sourceUrl\":\"url2\"},{\"sourceId\":\"source-id-3\","
+                + "\"sourceUrl\":\"url3\"}]},{\"noticeCode\":\"point_near_pole\","
+                + "\"affectedSourcesCount\":1,\"affectedSources\":[{\"sourceId\":\"source-id-3\","
+                + "\"sourceUrl\":\"url3\"}]}]}");
   }
 
   @Test
@@ -185,7 +259,7 @@ public class MainTest {
     JsonObject reportData = new JsonObject();
     reportData.addProperty("newErrors", "sample string value");
     Main.exportAcceptanceTestReport(reportData, tmpDir.getRoot().toString());
-    assertThat(tmpDir.getRoot().toPath().resolve("acceptance_report.json").toFile().exists())
+    assertThat(tmpDir.getRoot().toPath().resolve(ACCEPTANCE_REPORT_JSON).toFile().exists())
         .isTrue();
   }
 }

@@ -37,16 +37,16 @@ Sample output:
 {
   "newErrors": [
     {
-      "first_notice_code": {
+      "noticeCode": "first_notice_code",
         "affectedSourcesCount": 2,
         "affectedSources": [
           {
-            "source_id": "source-id-1",
-            "source_url": "url to the latest version of the dataset issued by source-id-1"
+            "sourceId": "source-id-1",
+            "sourceUrl": "url to the latest version of the dataset issued by source-id-1"
           },
           {
-            "source_id": "source-id-2",
-            "source_url": "url to the latest version of the dataset issued by source-id-2"
+            "sourceId": "source-id-2",
+            "sourceUrl": "url to the latest version of the dataset issued by source-id-2"
           }
         ],
         "countPerSource": [
@@ -57,15 +57,14 @@ Sample output:
             "source-id-2": 6
           }
         ]
-      }
     },
     {
-      "fourth_notice_code": {
+      "noticeCode": "fourth_notice_code",
         "affectedSourcesCount": 1,
         "affectedSources": [
           {
-            "source_id": "source-id-5",
-            "source_url": "url to the latest version of the dataset issued by source-id-5"
+            "sourceId": "source-id-5",
+            "sourceUrl": "url to the latest version of the dataset issued by source-id-5"
           }
         ],
         "countPerSource": [
@@ -73,15 +72,14 @@ Sample output:
             "source-id-5": 5
           }
         ]
-      }
     },
     {
-      "second_notice_code": {
+      "noticeCode": "second_notice_code",
         "affectedSourcesCount": 1,
         "affectedSources": [
           {
-            "source_id": "source-id-2",
-            "source_url": "url to the latest version of the dataset issued by source-id-2"
+            "sourceId": "source-id-2",
+            "sourceUrl": "url to the latest version of the dataset issued by source-id-2"
           }
         ],
         "countPerSource": [
@@ -89,23 +87,22 @@ Sample output:
             "source-id-2": 40
           }
         ]
-      }
     },
     {
-      "third_notice_code": {
+      "noticeCode": "third_notice_code",
         "affectedSourcesCount": 3,
         "affectedSources": [
           {
-            "source_id": "source-id-1",
-            "source_url": "url to the latest version of the dataset issued by source-id-1"
+            "sourceId": "source-id-1",
+            "sourceUrl": "url to the latest version of the dataset issued by source-id-1"
           },
           {
-            "source_id": "source-id-3",
-            "source_url": "url to the latest version of the dataset issued by source-id-3"
+            "sourceId": "source-id-3",
+            "sourceUrl": "url to the latest version of the dataset issued by source-id-3"
           },
           {
-            "source_id": "source-id-5",
-            "source_url": "url to the latest version of the dataset issued by source-id-5"
+            "sourceId": "source-id-5",
+            "sourceUrl": "url to the latest version of the dataset issued by source-id-5"
           }
         ],
         "countPerSource": [
@@ -119,7 +116,6 @@ Sample output:
             "source-id-5": 2
           }
         ]
-      }
     }
   ]
 }

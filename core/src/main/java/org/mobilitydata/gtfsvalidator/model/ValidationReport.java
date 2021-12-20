@@ -50,33 +50,24 @@ public class ValidationReport {
   private final transient ImmutableSet<String> errorCodes;
 
   /**
-   * Public constructor needed for deserialization by {@code ValidationReportDeserializer}
+   * Public constructor needed for deserialization by {@code ValidationReportDeserializer}. Only
+   * stores information for error {@code NoticeReport}.
    *
    * @param noticeReports set of {@code NoticeReport}s
    */
   public ValidationReport(Set<NoticeReport> noticeReports) {
+    ImmutableSet.Builder<String> errorCodesSetBuilder = new ImmutableSet.Builder<>();
+
     this.notices = Collections.unmodifiableSet(noticeReports);
-    this.errorCodes = extractErrorCodes(noticeReports);
     Map<String, NoticeReport> noticesMap = new HashMap<>();
     for (NoticeReport noticeReport : noticeReports) {
-      noticesMap.put(noticeReport.getCode(), noticeReport);
-    }
-    this.noticesMap = noticesMap;
-  }
-
-  /**
-   * Return the sorted set of error codes from a list of {@code NoticeReport}.
-   *
-   * @return the sorted set of error codes from a list of {@code NoticeReport}.
-   */
-  private static ImmutableSet<String> extractErrorCodes(Set<NoticeReport> notices) {
-    ImmutableSet.Builder<String> errorCodesSetBuilder = new ImmutableSet.Builder<>();
-    for (NoticeReport noticeReport : notices) {
       if (noticeReport.isError()) {
+        noticesMap.put(noticeReport.getCode(), noticeReport);
         errorCodesSetBuilder.add(noticeReport.getCode());
       }
     }
-    return errorCodesSetBuilder.build();
+    this.errorCodes = errorCodesSetBuilder.build();
+    this.noticesMap = noticesMap;
   }
 
   /**

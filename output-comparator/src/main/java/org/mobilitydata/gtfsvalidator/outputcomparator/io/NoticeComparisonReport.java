@@ -103,8 +103,8 @@ public class NoticeComparisonReport {
 
     for (Entry<String, String> entry : affectedSources.entrySet()) {
       JsonObject sourceInfo = new JsonObject();
-      sourceInfo.addProperty("source_id", entry.getKey());
-      sourceInfo.addProperty("source_url", entry.getValue());
+      sourceInfo.addProperty("sourceId", entry.getKey());
+      sourceInfo.addProperty("sourceUrl", entry.getValue());
       affectedSourcesJsonArray.add(sourceInfo);
       JsonObject noticeComparisonReportJson = new JsonObject();
       noticeComparisonReportJsonArray.add(noticeComparisonReportJson);
