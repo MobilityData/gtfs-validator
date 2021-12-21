@@ -607,7 +607,7 @@ Missing `stop_time.arrival_time` or `stop_time.departure_time`
 
 #### StopWithoutZoneIdNotice
 
-If `fare_rules.txt` is provided, then all stops and platforms (location_type = 0) must have `stops.zone_id` assigned.
+If `fare_rules.txt` is provided, and `fare_rules.txt` uses at least one column among `origin_id`, `destination_id`, and `contains_id`, then all stops and platforms (location_type = 0) must have `stops.zone_id` assigned. 
 
 ##### References:
 * [GTFS stops.txt specification](https://gtfs.org/reference/static#stopstxt)

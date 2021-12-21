@@ -21,6 +21,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.table.GtfsFareRule;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareRuleTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
@@ -49,11 +50,34 @@ public class StopZoneIdValidator extends FileValidator {
     if (fareRuleTable.getEntities().isEmpty()) {
       return;
     }
+    if (!hasFareZoneStructure(fareRuleTable)) {
+      return;
+    }
     for (GtfsStop stop : stopTable.getEntities()) {
-      if (stop.locationType().equals(GtfsLocationType.STOP) && !stop.hasZoneId()) {
+      if (!stop.locationType().equals(GtfsLocationType.STOP)) {
+        continue;
+      }
+      if (!stop.hasZoneId()) {
         noticeContainer.addValidationNotice(new StopWithoutZoneIdNotice(stop));
       }
     }
+  }
+
+  /**
+   * Checks if the {@code GtfsFareRuleTableContainer} provided as parameter has a fare structure
+   * that uses zones.
+   *
+   * @param fareRuleTable the {@code GtfsFareRuleTableContainer} to be checked
+   * @return true if the {@code GtfsFareRuleTableContainer} provided as parameter has a fare
+   *     structure that uses zones; false otherwise.
+   */
+  private static boolean hasFareZoneStructure(GtfsFareRuleTableContainer fareRuleTable) {
+    for (GtfsFareRule fareRule : fareRuleTable.getEntities()) {
+      if (fareRule.hasContainsId() || fareRule.hasDestinationId() || fareRule.hasOriginId()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
