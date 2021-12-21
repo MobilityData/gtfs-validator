@@ -31,10 +31,6 @@ import java.util.Map;
  * retrieve a {@code String} URL from a source id value.
  */
 public class SourceUrlContainer {
-  // The value of serialVersionUID of this class should be increased whenever there is a change that
-  // adds/updates/removes a field. Otherwise, we may encounter exceptions during the deserialization
-  // process for objects which were saved before this change.
-  private static final long serialVersionUID = 1;
   private final Map<String, String> urlsByArchiveId;
   private static final transient Gson GSON = new GsonBuilder().serializeNulls().create();
 
@@ -45,5 +41,9 @@ public class SourceUrlContainer {
 
   public String getUrlForSourceId(String sourceId) {
     return urlsByArchiveId.get(sourceId);
+  }
+
+  public boolean hasSourceId(String sourceId) {
+    return urlsByArchiveId.containsKey(sourceId);
   }
 }

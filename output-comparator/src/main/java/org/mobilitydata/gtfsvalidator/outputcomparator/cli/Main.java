@@ -29,6 +29,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -43,6 +44,7 @@ public class Main {
   private static final String ACCEPTANCE_REPORT_JSON = "acceptance_report.json";
   private static final int IO_EXCEPTION_EXIT_CODE = 1;
   private static final int INVALID_NEW_RULE_EXIT_CODE = 2;
+  static final int TOO_MANY_CORRUPTED_SOURCES_EXIT_CODE = 3;
   private static final Gson GSON =
       new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
   private static final String NOTICE_CODE = "noticeCode";
@@ -69,6 +71,7 @@ public class Main {
       System.exit(IO_EXCEPTION_EXIT_CODE);
     }
     int badDatasetCount = 0;
+    List<String> corruptedSources = new ArrayList<>();
     List<File> reportDirs =
         reportDirectory.stream().filter(File::isDirectory).collect(Collectors.toList());
     Map<String, NoticeComparisonReport> acceptanceTestReportMap = new TreeMap<>();
@@ -82,9 +85,17 @@ public class Main {
     }
 
     for (File file : reportDirs) {
+      // check if file.getName is sourceId aka check that we do not iterate over a directory created
+      // by github
+      if (!sourceUrlContainer.hasSourceId(file.getName())) {
+        continue;
+      }
       Path referenceReportPath = file.toPath().resolve(args.getReferenceValidationReportName());
       Path latestReportPath = file.toPath().resolve(args.getLatestValidationReportName());
-      if (!(referenceReportPath.toFile().isFile() && latestReportPath.toFile().isFile())) {
+      // in case a validation report does not exist for a sourceId we add the sourceId to
+      // the list of corrupted sources
+      if (!(referenceReportPath.toFile().exists() && latestReportPath.toFile().exists())) {
+        corruptedSources.add(file.getName());
         continue;
       }
       ValidationReport referenceReport;
@@ -94,6 +105,8 @@ public class Main {
         latestReport = ValidationReport.fromPath(latestReportPath);
       } catch (IOException ioException) {
         logger.atSevere().withCause(ioException);
+        // in case a file is corrupted, add the sourceId to the list of corrupted sources
+        corruptedSources.add(file.getName());
         continue;
       }
       if (referenceReport.hasSameErrorCodes(latestReport)) {
@@ -115,7 +128,11 @@ public class Main {
     exportAcceptanceTestReport(
         generateAcceptanceTestReport(acceptanceTestReportMap), args.getOutputBase());
     checkRuleValidity(
-        badDatasetCount, reportDirs.size(), args.getPercentInvalidDatasetsThreshold());
+        corruptedSources,
+        badDatasetCount,
+        reportDirs.size(),
+        args.getPercentInvalidDatasetsThreshold(),
+        args.getPercentCorruptedSourcesThreshold());
   }
 
   /**
@@ -164,16 +181,38 @@ public class Main {
   /**
    * Exits on non-zero code {@code Main#INVALID_NEW_RULE_EXIT_CODE} if the ratio
    * badDatasetCount/totalDatasetCount is greater than or equal to the threshold defined as
-   * acceptance criteria.
+   * acceptance criteria; or if the number of corrupted files is greater or equal to the limit set
+   * by the user.
    *
+   * @param corruptedSources corrupted source ids
    * @param badDatasetCount the number of new invalid datasets
    * @param totalDatasetCount the number of datasets to be tested
    * @param threshold the acceptance criteria
+   * @param percentCorruptedSourcesThreshold the maximum percentage of corrupted source ids
    */
   private static void checkRuleValidity(
-      int badDatasetCount, int totalDatasetCount, double threshold) {
+      List<String> corruptedSources,
+      int badDatasetCount,
+      int totalDatasetCount,
+      double threshold,
+      double percentCorruptedSourcesThreshold) {
     double invalidDatasetRatio = 100.0 * badDatasetCount / totalDatasetCount;
+    double corruptedFilesRatio = 100.0 * corruptedSources.size() / totalDatasetCount;
     StringBuilder builder = new StringBuilder();
+    if (corruptedFilesRatio >= percentCorruptedSourcesThreshold) {
+      builder.append(
+          String.format(
+              " ❌ Invalid acceptance test. %d out of %d sources (~%.2f %%) are corrupted, which "
+                  + "is greater than or equal to the provided threshold of %.2f. Details about"
+                  + " the corrupted sources: %s.",
+              corruptedSources.size(),
+              totalDatasetCount,
+              corruptedFilesRatio,
+              percentCorruptedSourcesThreshold,
+              corruptedSources));
+      System.out.println(builder);
+      System.exit(TOO_MANY_CORRUPTED_SOURCES_EXIT_CODE);
+    }
     builder.append(
         String.format(
             "%d out of %d datasets (~%.2f %%) are invalid due to code change, ",
@@ -190,7 +229,7 @@ public class Main {
     builder.append(
         String.format(
             "which is less than the provided threshold of %.2f %%.%n"
-                + "✅ Rule acceptance tests passed.",
+                + "✅ Rule acceptance tests passed",
             threshold));
     System.out.println(builder);
   }

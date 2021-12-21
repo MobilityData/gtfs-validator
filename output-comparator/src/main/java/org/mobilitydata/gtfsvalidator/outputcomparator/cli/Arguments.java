@@ -38,12 +38,12 @@ public class Arguments {
 
   @Parameter(
       names = {"-r", "--reference_report_name"},
-      description = "Name of the reference validation report")
+      description = "Name of the reference validation report.")
   private String referenceValidationReportName;
 
   @Parameter(
       names = {"-l", "--latest_report_name"},
-      description = "Name of the latest validation report")
+      description = "Name of the latest validation report.")
   private String latestValidationReportName;
 
   @Parameter(
@@ -54,15 +54,21 @@ public class Arguments {
 
   @Parameter(
       names = {"-o", "--output_base"},
-      description = "Base directory to store the outputs",
+      description = "Base directory to store the outputs.",
       required = true)
   private String outputBase;
 
   @Parameter(
       names = {"-s", "--source_urls"},
-      description = "Path to source urls",
+      description = "Path to source urls.",
       required = true)
   private String sourceUrlPath;
+
+  @Parameter(
+      names = {"-c", "--percent_corrupted_sources"},
+      description = "Maximum percentage of corrupted sources.",
+      required = true)
+  private double percentCorruptedSourcesThreshold;
 
   public String getReportDirectory() {
     return reportDirectory;
@@ -90,5 +96,9 @@ public class Arguments {
 
   public Path getSourceUrlPath() {
     return Path.of(sourceUrlPath);
+  }
+
+  public double getPercentCorruptedSourcesThreshold() {
+    return percentCorruptedSourcesThreshold;
   }
 }
