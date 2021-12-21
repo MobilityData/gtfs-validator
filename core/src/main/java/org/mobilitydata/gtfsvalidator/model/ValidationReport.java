@@ -83,20 +83,20 @@ public class ValidationReport {
     }
   }
 
-  /** Returns all notice reports {@code NoticeReport} of this {@code ValidationReport}. */
-  public Set<NoticeReport> getNotices() {
+  /** Returns all error notice reports {@code NoticeReport} of this {@code ValidationReport}. */
+  public Set<NoticeReport> getErrorNotices() {
     return notices;
   }
 
   /**
-   * Returns the {@code NoticeReport} related to the {@code Notice} whose notice code has been
+   * Returns the error {@code NoticeReport} related to the {@code Notice} whose notice code has been
    * provided as parameter. If the requested notice code is not present in this {@code
    * ValidationReport}, null is returned.
    *
    * @param noticeCode the notice code related to the {@code NoticeReport} to be returned
    */
   @Nullable
-  public NoticeReport getNoticeReportByNoticeCode(String noticeCode) {
+  public NoticeReport getErrorNoticeReportByNoticeCode(String noticeCode) {
     return noticesMap.get(noticeCode);
   }
 
@@ -164,7 +164,7 @@ public class ValidationReport {
     }
     if (other instanceof ValidationReport) {
       ValidationReport otherReport = (ValidationReport) other;
-      return getNotices().equals(otherReport.getNotices());
+      return getErrorNotices().equals(otherReport.getErrorNotices());
     }
     return false;
   }

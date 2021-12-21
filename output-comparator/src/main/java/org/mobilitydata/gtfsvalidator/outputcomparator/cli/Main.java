@@ -118,7 +118,7 @@ public class Main {
         acceptanceTestReportMap.putIfAbsent(noticeCode, noticeComparisonReport);
         noticeComparisonReport.update(
             file.getName(),
-            latestReport.getNoticeReportByNoticeCode(noticeCode).getTotalNotices(),
+            latestReport.getErrorNoticeReportByNoticeCode(noticeCode).getTotalNotices(),
             sourceUrlContainer);
       }
       if (referenceReport.getNewErrorsListing(latestReport).size() >= args.getNewErrorThreshold()) {
