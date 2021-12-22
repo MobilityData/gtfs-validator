@@ -30,9 +30,10 @@ import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
  * Validates that shape_dist_traveled along a shape in "shapes.txt" are increasing.
  *
  * <p>Generated notice:
+ *
  * <ul>
- *   <li><{@link DecreasingShapeDistanceNotice}</li>
- *   <li><{@link EqualShapeDistanceNotice}</li>
+ *   <li>{@link DecreasingShapeDistanceNotice}
+ *   <li>{@link EqualShapeDistanceNotice}
  * </ul>
  */
 @GtfsValidator

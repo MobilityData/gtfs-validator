@@ -106,11 +106,7 @@ public class ShapeIncreasingDistanceValidatorTest {
     assertThat(
             generateNotices(
                 ImmutableList.of(
-                    createShapePoint(1, "first shape", 30.0d, 45, 1, 10.0d),
-                    previous,
-                    current)))
-        .containsExactly(
-            new EqualShapeDistanceNotice(
-                previous, current, SeverityLevel.WARNING));
+                    createShapePoint(1, "first shape", 30.0d, 45, 1, 10.0d), previous, current)))
+        .containsExactly(new EqualShapeDistanceNotice(previous, current, SeverityLevel.WARNING));
   }
 }
