@@ -226,7 +226,7 @@ jobs:
         id: generate-comment
         if: always()
         run: |
-          python3 scripts/comment_generator.py -u gtfs_latest_versions.json -a acceptance-test-output/acceptance_report.json -c ${{ github.sha }} -r ${{github.run_id}} > pr_comment.txt
+          python3 scripts/comment_generator.py -u gtfs_latest_versions.json -a acceptance-test-output/acceptance_report.json -c ${{ github.sha }} -r ${{github.run_id}} -x sources_corruption_report.json > pr_comment.txt
           PR_COMMENT=$(<pr_comment.txt)
           echo "PR_COMMENT<<EOF" >> $GITHUB_ENV
           echo "$PR_COMMENT" >> $GITHUB_ENV
