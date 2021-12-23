@@ -268,7 +268,7 @@ Empty csv file found in the archive: file does not have any headers, or is a req
 
 <a name="EqualShapeDistanceNotice"/>
 
-When sorted by `shape.shape_pt_sequence`, two consecutive shape points must not have equal values for `shape_dist_traveled` if their GPS coordinates are the same.
+When sorted by `shape.shape_pt_sequence`, two consecutive shape points must not have equal values for `shape_dist_traveled` if their GPS coordinates are more than 1 meter away .
 
 ##### References:
 * [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)
@@ -700,7 +700,7 @@ A row in the input file has only spaces.
 
 <a name="EqualShapeDistanceNotice"/>
 
-When sorted by `shape.shape_pt_sequence`, two consecutive shape points should not have equal values for `shape_dist_traveled`. An exception is made if their GPS coordinates are the same.
+When sorted by `shape.shape_pt_sequence`, two consecutive shape points should not have equal values for `shape_dist_traveled`. An exception is made if the shape points are less than 1 meter away.
 
 ##### References:
 * [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)

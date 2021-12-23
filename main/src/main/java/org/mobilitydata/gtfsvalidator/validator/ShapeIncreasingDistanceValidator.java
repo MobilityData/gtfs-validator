@@ -16,6 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.util.S2Earth.getDistanceMeters;
+
 import com.google.common.collect.Multimaps;
 import java.util.List;
 import javax.inject.Inject;
@@ -62,7 +64,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
         if (prev.shapeDistTraveled() != curr.shapeDistTraveled()) {
           continue;
         }
-        if (sameGpsCoordinates(curr, prev)) {
+        if (areClose(curr, prev)) {
           noticeContainer.addValidationNotice(
               new EqualShapeDistanceNotice(prev, curr, SeverityLevel.WARNING));
           continue;
@@ -74,15 +76,14 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
   }
 
   /**
-   * Checks if two {@code GtfsShape} have the same GPS coordinates.
+   * Checks if two {@code GtfsShape} are less than 1 meter away.
    *
    * @param shape the first {@code GtfsShape}
    * @param otherShape the other {@code GtfsShape}
-   * @return true if both {@code GtfsShape} have the same GPS coordinates, false otherwise.
+   * @return true if both {@code GtfsShape} are less than 1 meter away, false otherwise.
    */
-  private static boolean sameGpsCoordinates(GtfsShape shape, GtfsShape otherShape) {
-    return shape.shapePtLon() == otherShape.shapePtLon()
-        && shape.shapePtLat() == otherShape.shapePtLat();
+  private static boolean areClose(GtfsShape shape, GtfsShape otherShape) {
+    return getDistanceMeters(shape.shapePtLatLon(), otherShape.shapePtLatLon()) < 1;
   }
 
   /**
