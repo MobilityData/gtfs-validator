@@ -19,6 +19,7 @@ import json
 ###############################################################################
 ACCEPTANCE_TEST_STATUS = "status"
 NOTICE_CODE = "noticeCode"
+CORRUPTED_SOURCES_COUNT = "corruptedSourcesCount"
 NEW_ERRORS = "newErrors"
 AFFECTED_SOURCES = "affectedSources"
 AFFECTED_SOURCES_COUNT = "affectedSourcesCount"
@@ -68,8 +69,8 @@ if __name__ == "__main__":
     corrupted_sources_report = load_content(args.corrupted_sources_report_path)
     urls_map = load_content(args.path_to_urls)
     comment = (
-        "Thank you for this contribution. \n\n"
-        "## Information about source "
+        "Thank you for this contribution! 🍰✨🦄 \n\n"
+        "### Information about source "
         "corruption \n\n"
         f"{corrupted_sources_report['corruptedSourcesCount']} out of "
         f"{corrupted_sources_report['sourceIdCount']}"
@@ -80,10 +81,11 @@ if __name__ == "__main__":
             comment + " Hence the results of this acceptance test "
             "execution are not reliable."
         )
-    comment = comment + "\nThe following sources are corrupted: \n"
+    if corrupted_sources_report[CORRUPTED_SOURCES_COUNT] != 0:
+        comment = comment + "\nThe following sources are corrupted: \n"
     for source_id in corrupted_sources_report["corruptedSources"]:
         comment = comment + f"- [`{source_id}`]({urls_map.get(source_id)})"
-    comment = comment + "\n\n## Acceptance test details\n"
+    comment = comment + "\n\n### Acceptance test details\n"
     if len(list(acceptance_test_report[NEW_ERRORS])) != 0:
         comment = (
             comment + "\nDue to changes in this pull request, the "
@@ -100,7 +102,7 @@ if __name__ == "__main__":
     else:
         comment = (
             comment
-            + " Also, the changes in this pull request did not trigger any new errors on known GTFS datasets from the [MobilityDatabase](http://mobilitydatabase.org/wiki/Main_Page)."
+            + " The changes in this pull request did not trigger any new errors on known GTFS datasets from the [MobilityDatabase](http://mobilitydatabase.org/wiki/Main_Page)."
         )
     comment = (
         comment
