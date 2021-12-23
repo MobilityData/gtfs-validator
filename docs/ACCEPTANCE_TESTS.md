@@ -30,9 +30,14 @@ On each of these urls:
 1. the proposed version of the validator is executed and the validation report is output as JSON (under `latest.json`).
 
 At the end of execution of the two aforementioned steps for every url in the matrix, all the validation reports are gathered in a single folder (`output`) and compared - the percentage of newly invalid datasets is output to the console.
-The final acceptance test report is saved by as a workflow artifact (under `acceptance_report.json`). This file keeps the count of new error types introduced by the proposed version for each agency/dataset. To finish with, a comment that sums up the acceptance test result is issued on the PR. 
+Two reports are saved as a workflow artifact: 
+- the final acceptance test report (under `acceptance_report.json`): this file keeps the count of new error types introduced by the proposed version for each agency/dataset. 
+- the corrupted sources report  (under `corrupted_sources_report.json`): this file keeps track of sources that could not be taken into account while generating the acceptance test report because of I/O errors, or missing file.  
 
-Sample output:
+To finish with, a comment that sums up the acceptance test result is issued on the PR.
+
+Sample outputs:
+- `acceptance_report.json`
 ```json
 {
   "newErrors": [
@@ -99,6 +104,30 @@ Sample output:
 }
 ```
 
+- ` corrupted_sources_report.json`
+```json
+{
+  "corruptedSources": [
+    "source-id-1",
+    "source-id-2"
+  ],
+  "sourceIdCount": 1245,
+  "status": "valid",
+  "corruptedSourcesCount": 2,
+  "maxPercentageCorruptedSources": 2
+} 
+```
 Where each source id value come from the MobilityDatabase: they are a unique [property](http://mobilitydatabase.org/wiki/Property:P33) used to identify each source of data.
 
 The source id can be used to find all datasets versions of a source on the [MobilityDatabase](http://mobilitydatabase.org/wiki/Main_Page) for the sakes of debugging or exploration.
+
+## Instructions to run the pipeline
+
+1. Provide code changes by creating a new PR on the [GitHub repository](https://github.com/MobilityData/gtfs-validator);
+2. The acceptance test pipeline will run each time code is pushed on the newly created branch; **except if** the keyword `[acceptance test skip]` is included in the commit message.
+
+## Instructions to verify the execution of the pipeline
+
+1. Download all validation reports from the artifact listed for the specific GitHub run;
+2. One can verify that the count of validation report (1 per source) matches the number of sources announced by the GitHub PR comment
+3. Select a sample of validation reports and compare them manually. MobilityData uses an internal tool to do so. We will open source it in the future.
