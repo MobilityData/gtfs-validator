@@ -41,7 +41,8 @@ import org.mobilitydata.gtfsvalidator.outputcomparator.model.SourceUrlContainer;
 public class Main {
 
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-  private static final String ACCEPTANCE_REPORT_JSON = "acceptance_report.json";
+  static final String ACCEPTANCE_REPORT_JSON = "acceptance_report.json";
+  static final String SOURCES_CORRUPTION_REPORT_JSON = "sources_corruption_report.json";
   private static final int IO_EXCEPTION_EXIT_CODE = 1;
   private static final int INVALID_NEW_RULE_EXIT_CODE = 2;
   static final int TOO_MANY_CORRUPTED_SOURCES_EXIT_CODE = 3;
@@ -51,6 +52,13 @@ public class Main {
   private static final String AFFECTED_SOURCES_COUNT = "affectedSourcesCount";
   private static final String AFFECTED_SOURCES = "affectedSources";
   private static final String NEW_ERRORS = "newErrors";
+  private static final String CORRUPTED_SOURCES = "corruptedSources";
+  private static final String TEST_STATUS = "status";
+  private static final String CORRUPTED_SOURCES_COUNT = "corruptedSourcesCount";
+  private static final String MAX_PERCENTAGE_CORRUPTED_SOURCES = "maxPercentageCorruptedSources";
+  private static final String VALID = "valid";
+  private static final String INVALID = "invalid";
+  private static final String SOURCE_ID_COUNT = "sourceIdCount";
 
   public static void main(String[] argv) {
     Arguments args = new Arguments();
@@ -71,6 +79,7 @@ public class Main {
       System.exit(IO_EXCEPTION_EXIT_CODE);
     }
     int badDatasetCount = 0;
+    int sourceIdCount = 0;
     List<String> corruptedSources = new ArrayList<>();
     List<File> reportDirs =
         reportDirectory.stream().filter(File::isDirectory).collect(Collectors.toList());
@@ -85,17 +94,19 @@ public class Main {
     }
 
     for (File file : reportDirs) {
+      String sourceId = file.getName();
       // check if file.getName is sourceId aka check that we do not iterate over a directory created
       // by github
-      if (!sourceUrlContainer.hasSourceId(file.getName())) {
+      if (!sourceUrlContainer.hasSourceId(sourceId)) {
         continue;
       }
+      sourceIdCount++;
       Path referenceReportPath = file.toPath().resolve(args.getReferenceValidationReportName());
       Path latestReportPath = file.toPath().resolve(args.getLatestValidationReportName());
       // in case a validation report does not exist for a sourceId we add the sourceId to
       // the list of corrupted sources
       if (!(referenceReportPath.toFile().exists() && latestReportPath.toFile().exists())) {
-        corruptedSources.add(file.getName());
+        corruptedSources.add(sourceId);
         continue;
       }
       ValidationReport referenceReport;
@@ -106,7 +117,7 @@ public class Main {
       } catch (IOException ioException) {
         logger.atSevere().withCause(ioException);
         // in case a file is corrupted, add the sourceId to the list of corrupted sources
-        corruptedSources.add(file.getName());
+        corruptedSources.add(sourceId);
         continue;
       }
       if (referenceReport.hasSameErrorCodes(latestReport)) {
@@ -117,7 +128,7 @@ public class Main {
             acceptanceTestReportMap.getOrDefault(noticeCode, new NoticeComparisonReport());
         acceptanceTestReportMap.putIfAbsent(noticeCode, noticeComparisonReport);
         noticeComparisonReport.update(
-            file.getName(),
+            sourceId,
             latestReport.getErrorNoticeReportByNoticeCode(noticeCode).getTotalNotices(),
             sourceUrlContainer);
       }
@@ -125,14 +136,18 @@ public class Main {
         ++badDatasetCount;
       }
     }
-    exportAcceptanceTestReport(
-        generateAcceptanceTestReport(acceptanceTestReportMap), args.getOutputBase());
+    exportReport(
+        generateAcceptanceTestReport(acceptanceTestReportMap),
+        args.getOutputBase(),
+        ACCEPTANCE_REPORT_JSON);
     checkRuleValidity(
         corruptedSources,
         badDatasetCount,
-        reportDirs.size(),
+        sourceIdCount,
         args.getPercentInvalidDatasetsThreshold(),
-        args.getPercentCorruptedSourcesThreshold());
+        args.getPercentCorruptedSourcesThreshold(),
+        args.getOutputBase(),
+        sourceIdCount);
   }
 
   /**
@@ -141,7 +156,6 @@ public class Main {
    * @param acceptanceTestReportData acceptance test data (mapped by sourceId, {@code NoticeStat})
    * @return the {@code JsonObject} representation of the acceptance test report
    */
-  @VisibleForTesting
   public static JsonObject generateAcceptanceTestReport(
       Map<String, NoticeComparisonReport> acceptanceTestReportData) {
     JsonObject root = new JsonObject();
@@ -160,19 +174,33 @@ public class Main {
   }
 
   /**
+   * Generates file corruption report.
+   *
+   * @param corruptedSources list of corrupted sourceIds
+   * @return the {@code JsonObject} representation of the file corruption report
+   */
+  private static JsonObject generateFileCorruptionReport(List<String> corruptedSources) {
+    JsonObject root = new JsonObject();
+    JsonArray jsonCorruptedSources = new JsonArray();
+    root.add(CORRUPTED_SOURCES, jsonCorruptedSources);
+    for (String sourceId : corruptedSources) {
+      jsonCorruptedSources.add(sourceId);
+    }
+    return root;
+  }
+
+  /**
    * Exports acceptance test reports.
    *
-   * @param acceptanceTestReportData the JSON representation of the acceptance test report
+   * @param data the JSON representation of the acceptance test report
    * @param outputBase the name of the directory used to save files
    */
   @VisibleForTesting
-  public static void exportAcceptanceTestReport(
-      JsonObject acceptanceTestReportData, String outputBase) {
+  public static void exportReport(JsonObject data, String outputBase, String filename) {
     new File(outputBase).mkdirs();
     try {
       Files.write(
-          Paths.get(outputBase, ACCEPTANCE_REPORT_JSON),
-          GSON.toJson(acceptanceTestReportData).getBytes(StandardCharsets.UTF_8));
+          Paths.get(outputBase, filename), GSON.toJson(data).getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store acceptance test report file");
     }
@@ -195,10 +223,14 @@ public class Main {
       int badDatasetCount,
       int totalDatasetCount,
       double threshold,
-      double percentCorruptedSourcesThreshold) {
+      float percentCorruptedSourcesThreshold,
+      String outputBase,
+      int sourceIdCount) {
     double invalidDatasetRatio = 100.0 * badDatasetCount / totalDatasetCount;
     double corruptedFilesRatio = 100.0 * corruptedSources.size() / totalDatasetCount;
     StringBuilder builder = new StringBuilder();
+    JsonObject jsonCorruptedSources = generateFileCorruptionReport(corruptedSources);
+    jsonCorruptedSources.addProperty(SOURCE_ID_COUNT, sourceIdCount);
     if (corruptedFilesRatio >= percentCorruptedSourcesThreshold) {
       builder.append(
           String.format(
@@ -210,6 +242,11 @@ public class Main {
               corruptedFilesRatio,
               percentCorruptedSourcesThreshold,
               corruptedSources));
+      jsonCorruptedSources.addProperty(TEST_STATUS, INVALID);
+      jsonCorruptedSources.addProperty(CORRUPTED_SOURCES_COUNT, corruptedSources.size());
+      jsonCorruptedSources.addProperty(
+          MAX_PERCENTAGE_CORRUPTED_SOURCES, percentCorruptedSourcesThreshold);
+      exportReport(jsonCorruptedSources, outputBase, SOURCES_CORRUPTION_REPORT_JSON);
       System.out.println(builder);
       System.exit(TOO_MANY_CORRUPTED_SOURCES_EXIT_CODE);
     }
@@ -217,6 +254,11 @@ public class Main {
         String.format(
             "%d out of %d datasets (~%.2f %%) are invalid due to code change, ",
             badDatasetCount, totalDatasetCount, invalidDatasetRatio));
+    jsonCorruptedSources.addProperty(TEST_STATUS, VALID);
+    jsonCorruptedSources.addProperty(CORRUPTED_SOURCES_COUNT, corruptedSources.size());
+    jsonCorruptedSources.addProperty(
+        MAX_PERCENTAGE_CORRUPTED_SOURCES, percentCorruptedSourcesThreshold);
+    exportReport(jsonCorruptedSources, outputBase, SOURCES_CORRUPTION_REPORT_JSON);
     if (invalidDatasetRatio >= threshold) {
       builder.append(
           String.format(

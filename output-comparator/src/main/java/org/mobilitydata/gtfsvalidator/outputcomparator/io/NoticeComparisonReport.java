@@ -40,7 +40,6 @@ public class NoticeComparisonReport {
 
   protected static final String AFFECTED_SOURCES_COUNT = "affectedSourcesCount";
   protected static final String AFFECTED_SOURCES = "affectedSources";
-  protected static final String COUNT_PER_SOURCE = "countPerSource";
 
   private final SortedMap<String, String> affectedSources;
   private final SortedMap<String, Integer> countPerSource;
@@ -99,16 +98,15 @@ public class NoticeComparisonReport {
     JsonArray noticeComparisonReportJsonArray = new JsonArray();
     root.addProperty(AFFECTED_SOURCES_COUNT, this.affectedSources.size());
     root.add(AFFECTED_SOURCES, affectedSourcesJsonArray);
-    root.add(COUNT_PER_SOURCE, noticeComparisonReportJsonArray);
 
     for (Entry<String, String> entry : affectedSources.entrySet()) {
       JsonObject sourceInfo = new JsonObject();
       sourceInfo.addProperty("sourceId", entry.getKey());
       sourceInfo.addProperty("sourceUrl", entry.getValue());
+      sourceInfo.addProperty("count", countPerSource.get(entry.getKey()));
       affectedSourcesJsonArray.add(sourceInfo);
       JsonObject noticeComparisonReportJson = new JsonObject();
       noticeComparisonReportJsonArray.add(noticeComparisonReportJson);
-      noticeComparisonReportJson.addProperty(entry.getKey(), countPerSource.get(entry.getKey()));
     }
     return root;
   }

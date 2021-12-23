@@ -46,8 +46,7 @@ public class ValidationReport {
           .serializeSpecialFloatingPointValues()
           .create();
   private final Set<NoticeReport> notices;
-  private final transient Map<String, NoticeReport> noticesMap;
-  private final transient ImmutableSet<String> errorCodes;
+  private final transient Map<String, NoticeReport> errorNoticeByCode;
 
   /**
    * Public constructor needed for deserialization by {@code ValidationReportDeserializer}. Only
@@ -59,15 +58,14 @@ public class ValidationReport {
     ImmutableSet.Builder<String> errorCodesSetBuilder = new ImmutableSet.Builder<>();
 
     this.notices = Collections.unmodifiableSet(noticeReports);
-    Map<String, NoticeReport> noticesMap = new HashMap<>();
+    Map<String, NoticeReport> errorNoticeByCode = new HashMap<>();
     for (NoticeReport noticeReport : noticeReports) {
       if (noticeReport.isError()) {
-        noticesMap.put(noticeReport.getCode(), noticeReport);
+        errorNoticeByCode.put(noticeReport.getCode(), noticeReport);
         errorCodesSetBuilder.add(noticeReport.getCode());
       }
     }
-    this.errorCodes = errorCodesSetBuilder.build();
-    this.noticesMap = noticesMap;
+    this.errorNoticeByCode = errorNoticeByCode;
   }
 
   /**
@@ -97,16 +95,7 @@ public class ValidationReport {
    */
   @Nullable
   public NoticeReport getErrorNoticeReportByNoticeCode(String noticeCode) {
-    return noticesMap.get(noticeCode);
-  }
-
-  /**
-   * Returns the immutable and ordered set of error codes contained in this {@code ValidationReport}
-   *
-   * @return the immutable and ordered set of error codes contained in this {@code ValidationReport}
-   */
-  public ImmutableSet<String> getErrorCodes() {
-    return errorCodes;
+    return errorNoticeByCode.get(noticeCode);
   }
 
   /**
@@ -117,7 +106,7 @@ public class ValidationReport {
    *     otherwise.
    */
   public boolean hasSameErrorCodes(ValidationReport otherValidationReport) {
-    return getErrorCodes().equals(otherValidationReport.getErrorCodes());
+    return this.errorNoticeByCode.keySet().equals(otherValidationReport.errorNoticeByCode.keySet());
   }
 
   /**
@@ -146,7 +135,7 @@ public class ValidationReport {
    *     as parameter.
    */
   public Set<String> getNewErrorsListing(ValidationReport other) {
-    return Sets.difference(other.getErrorCodes(), getErrorCodes());
+    return Sets.difference(other.errorNoticeByCode.keySet(), this.errorNoticeByCode.keySet());
   }
 
   /**

@@ -76,8 +76,6 @@ public class NoticeComparisonReportTest {
         .isEqualTo(new JsonArray());
     assertThat(noticeComparisonReportJson.get(NoticeComparisonReport.AFFECTED_SOURCES_COUNT))
         .isEqualTo(new JsonPrimitive(0));
-    assertThat(noticeComparisonReportJson.get(NoticeComparisonReport.COUNT_PER_SOURCE))
-        .isEqualTo(new JsonArray());
   }
 
   @Test
@@ -99,10 +97,12 @@ public class NoticeComparisonReportTest {
     firstSourceInfo.addProperty("sourceId", "source-id-1");
     firstSourceInfo.addProperty(
         "sourceUrl", "url to the latest version of the dataset issued by source-id-1");
+    firstSourceInfo.addProperty("count", 44);
     JsonObject secondSourceInfo = new JsonObject();
     secondSourceInfo.addProperty("sourceId", "source-id-2");
     secondSourceInfo.addProperty(
         "sourceUrl", "url to the latest version of the dataset issued by source-id-2");
+    secondSourceInfo.addProperty("count", 6);
 
     affectedSourcesJsonArray.add(firstSourceInfo);
     affectedSourcesJsonArray.add(secondSourceInfo);
@@ -119,7 +119,5 @@ public class NoticeComparisonReportTest {
         .isEqualTo(affectedSourcesJsonArray);
     assertThat(noticeComparisonReportJson.get(NoticeComparisonReport.AFFECTED_SOURCES_COUNT))
         .isEqualTo(new JsonPrimitive(2));
-    assertThat(noticeComparisonReportJson.get(NoticeComparisonReport.COUNT_PER_SOURCE))
-        .isEqualTo(countPerSourceJsonArray);
   }
 }

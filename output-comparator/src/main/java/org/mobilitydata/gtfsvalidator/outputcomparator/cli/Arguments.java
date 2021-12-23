@@ -48,7 +48,9 @@ public class Arguments {
 
   @Parameter(
       names = {"-p", "--percent_invalid_datasets_threshold"},
-      description = "Maximum percentage of new invalid datasets.",
+      description =
+          "Maximum percentage of new invalid datasets. Passing a '10' value would mean that no "
+              + "more than 10% of datasets should generate new error types.",
       required = true)
   private double percentInvalidDatasetsThreshold;
 
@@ -66,9 +68,9 @@ public class Arguments {
 
   @Parameter(
       names = {"-c", "--percent_corrupted_sources"},
-      description = "Maximum percentage of corrupted sources.",
+      description = "Maximum percentage of corrupted sources. ",
       required = true)
-  private double percentCorruptedSourcesThreshold;
+  private float percentCorruptedSourcesThreshold;
 
   public String getReportDirectory() {
     return reportDirectory;
@@ -98,7 +100,7 @@ public class Arguments {
     return Path.of(sourceUrlPath);
   }
 
-  public double getPercentCorruptedSourcesThreshold() {
+  public float getPercentCorruptedSourcesThreshold() {
     return percentCorruptedSourcesThreshold;
   }
 }

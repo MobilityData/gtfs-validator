@@ -30,7 +30,7 @@ On each of these urls:
 1. the proposed version of the validator is executed and the validation report is output as JSON (under `latest.json`).
 
 At the end of execution of the two aforementioned steps for every url in the matrix, all the validation reports are gathered in a single folder (`output`) and compared - the percentage of newly invalid datasets is output to the console.
-The final acceptance test report is saved by as a workflow artifact (under `acceptance_report.json`). This file keeps the count of new error types introduced by the proposed version for each agency/dataset.
+The final acceptance test report is saved by as a workflow artifact (under `acceptance_report.json`). This file keeps the count of new error types introduced by the proposed version for each agency/dataset. To finish with, a comment that sums up the acceptance test result is issued on the PR. 
 
 Sample output:
 ```json
@@ -38,84 +38,62 @@ Sample output:
   "newErrors": [
     {
       "noticeCode": "first_notice_code",
-        "affectedSourcesCount": 2,
-        "affectedSources": [
-          {
-            "sourceId": "source-id-1",
-            "sourceUrl": "url to the latest version of the dataset issued by source-id-1"
-          },
-          {
-            "sourceId": "source-id-2",
-            "sourceUrl": "url to the latest version of the dataset issued by source-id-2"
-          }
-        ],
-        "countPerSource": [
-          {
-            "source-id-1": 4
-          },
-          {
-            "source-id-2": 6
-          }
-        ]
+      "affectedSourcesCount": 2,
+      "affectedSources": [
+        {
+          "sourceId": "source-id-1",
+          "sourceUrl": "url to the latest version of the dataset issued by source-id-1",
+          "count": 4
+        },
+        {
+          "sourceId": "source-id-2",
+          "sourceUrl": "url to the latest version of the dataset issued by source-id-2",
+          "count": 6
+        }
+      ]
     },
     {
       "noticeCode": "fourth_notice_code",
-        "affectedSourcesCount": 1,
-        "affectedSources": [
-          {
-            "sourceId": "source-id-5",
-            "sourceUrl": "url to the latest version of the dataset issued by source-id-5"
-          }
-        ],
-        "countPerSource": [
-          {
-            "source-id-5": 5
-          }
-        ]
+      "affectedSourcesCount": 1,
+      "affectedSources": [
+        {
+          "sourceId": "source-id-5",
+          "sourceUrl": "url to the latest version of the dataset issued by source-id-5",
+          "count": 5
+        }
+      ]
     },
     {
       "noticeCode": "second_notice_code",
-        "affectedSourcesCount": 1,
-        "affectedSources": [
-          {
-            "sourceId": "source-id-2",
-            "sourceUrl": "url to the latest version of the dataset issued by source-id-2"
-          }
-        ],
-        "countPerSource": [
-          {
-            "source-id-2": 40
-          }
-        ]
+      "affectedSourcesCount": 1,
+      "affectedSources": [
+        {
+          "sourceId": "source-id-2",
+          "sourceUrl": "url to the latest version of the dataset issued by source-id-2",
+          "count": 40
+        }
+      ]
     },
     {
       "noticeCode": "third_notice_code",
-        "affectedSourcesCount": 3,
-        "affectedSources": [
-          {
-            "sourceId": "source-id-1",
-            "sourceUrl": "url to the latest version of the dataset issued by source-id-1"
-          },
-          {
-            "sourceId": "source-id-3",
-            "sourceUrl": "url to the latest version of the dataset issued by source-id-3"
-          },
-          {
-            "sourceId": "source-id-5",
-            "sourceUrl": "url to the latest version of the dataset issued by source-id-5"
-          }
-        ],
-        "countPerSource": [
-          {
-            "source-id-1": 40
-          },
-          {
-            "source-id-3": 15
-          },
-          {
-            "source-id-5": 2
-          }
-        ]
+      "affectedSourcesCount": 3,
+      "affectedSources": [
+        {
+          "sourceId": "source-id-1",
+          "sourceUrl": "url to the latest version of the dataset issued by source-id-1",
+          "count": 40
+        },
+        {
+          "sourceId": "source-id-3",
+          "sourceUrl": "url to the latest version of the dataset issued by source-id-3",
+          "count": 15
+        },
+        {
+          "sourceId": "source-id-5",
+          "sourceUrl": "url to the latest version of the dataset issued by source-id-5",
+          "count": 2
+        }
+      ]
     }
   ]
 }
