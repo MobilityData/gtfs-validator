@@ -78,7 +78,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`DuplicateKeyNotice`](#DuplicateKeyNotice)                                                                     | Duplicated entity.                                                                                                                                     |
 | [`EmptyColumnNameNotice`](#EmptyColumnNameNotice)                                                            	  | A column name is empty.                                                                                                                                |
 | [`EmptyFileNotice`](#EmptyFileNotice)                                                                           | A CSV file is empty.                                                                                                                                   |
-| [`EqualShapeDistanceNotice`](#EqualShapeDistanceNotice)                                                         | Equal `shape_dist_traveled` in `shapes.txt`.                                                                                                           |
+| [`EqualShapeDistanceDiffCoordinatesNotice`](#EqualShapeDistanceDiffCoordinatesNotice)                           | Equal `shape_dist_traveled` in `shapes.txt`.                                                                                                           |
 | [`ForeignKeyViolationNotice`](#ForeignKeyViolationNotice)                                                       | Wrong foreign key.                                                                                                                                     |
 | [`InconsistentAgencyTimezoneNotice`](#InconsistentAgencyTimezoneNotice)                                         | Inconsistent Timezone among agencies.                                                                                                                  |
 | [`InvalidColorNotice`](#InvalidColorNotice)                                                                     | A field contains an invalid color value.                                                                                                               |
@@ -264,11 +264,11 @@ Empty csv file found in the archive: file does not have any headers, or is a req
 ##### References:
 * [GTFS files requirements](https://gtfs.org/reference/static#file-requirements)
 
-#### EqualShapeDistanceNotice
+#### EqualShapeDistanceDiffCoordinatesNotice
 
-<a name="EqualShapeDistanceNotice"/>
+<a name="EqualShapeDistanceDiffCoordinatesNotice"/>
 
-When sorted by `shape.shape_pt_sequence`, two consecutive shape points must not have equal values for `shape_dist_traveled` if their GPS coordinates are more than 1 meter away .
+When sorted by `shape.shape_pt_sequence`, two consecutive shape points must not have equal values for `shape_dist_traveled` if their GPS coordinates are more than 1.11 meter away .
 
 ##### References:
 * [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)
@@ -696,11 +696,11 @@ A row in the input file has only spaces.
 ##### References:
 * [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
 
-#### EqualShapeDistanceNotice
+#### EqualShapeDistanceSameCoordinatesNotice
 
-<a name="EqualShapeDistanceNotice"/>
+<a name="EqualShapeDistanceSameCoordinatesNotice"/>
 
-When sorted by `shape.shape_pt_sequence`, two consecutive shape points should not have equal values for `shape_dist_traveled`. An exception is made if the shape points are less than 1 meter away.
+When sorted by `shape.shape_pt_sequence`, two consecutive and close shape points (aka shape points that are less than 1.11 meters away) should not have equal values for `shape_dist_traveled`.
 
 ##### References:
 * [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)

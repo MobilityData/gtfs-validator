@@ -35,11 +35,14 @@ import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
  *
  * <ul>
  *   <li>{@link DecreasingShapeDistanceNotice}
- *   <li>{@link EqualShapeDistanceNotice}
+ *   <li>{@link EqualShapeDistanceSameCoordinatesNotice}
+ *   <li>{@link EqualShapeDistanceDiffCoordinatesNotice}
  * </ul>
  */
 @GtfsValidator
 public class ShapeIncreasingDistanceValidator extends FileValidator {
+
+  private static final float MAX_DISTANCE_SHAPEPOINTS = 1.11f;
   private final GtfsShapeTableContainer table;
 
   @Inject
@@ -64,30 +67,32 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
         if (prev.shapeDistTraveled() != curr.shapeDistTraveled()) {
           continue;
         }
-        if (areClose(curr, prev)) {
+        if (areClose(curr, prev, MAX_DISTANCE_SHAPEPOINTS)) {
           noticeContainer.addValidationNotice(
-              new EqualShapeDistanceNotice(prev, curr, SeverityLevel.WARNING));
+              new EqualShapeDistanceSameCoordinatesNotice(prev, curr));
           continue;
         }
         noticeContainer.addValidationNotice(
-            new EqualShapeDistanceNotice(prev, curr, SeverityLevel.ERROR));
+            new EqualShapeDistanceDiffCoordinatesNotice(prev, curr));
       }
     }
   }
 
   /**
-   * Checks if two {@code GtfsShape} are less than 1 meter away.
+   * Checks if two {@code GtfsShape} are less than 1.11 meter away.
    *
    * @param shape the first {@code GtfsShape}
    * @param otherShape the other {@code GtfsShape}
-   * @return true if both {@code GtfsShape} are less than 1 meter away, false otherwise.
+   * @param maxDistance the maximum distance between two shape points
+   * @return true if both {@code GtfsShape} are closer than the maximum distance provided as
+   *     parameter, false otherwise.
    */
-  private static boolean areClose(GtfsShape shape, GtfsShape otherShape) {
-    return getDistanceMeters(shape.shapePtLatLon(), otherShape.shapePtLatLon()) < 1;
+  private static boolean areClose(GtfsShape shape, GtfsShape otherShape, float maxDistance) {
+    return getDistanceMeters(shape.shapePtLatLon(), otherShape.shapePtLatLon()) <= maxDistance;
   }
 
   /**
-   * When sorted on `shapes.shape_pt_sequence` key, shape points should have strictly increasing
+   * When sorted on {@code shapes.shape_pt_sequence} key, shape points must have strictly increasing
    * values for `shapes.shape_dist_traveled`
    *
    * <p>"Values must increase along with shape_pt_sequence."
@@ -116,7 +121,16 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
     }
   }
 
-  static class EqualShapeDistanceNotice extends ValidationNotice {
+  /**
+   * When sorted on {@code shapes.shape_pt_sequence} key, close shape points should not have equal
+   * values for {@code shapes.shape_dist_traveled}
+   *
+   * <p>"Values must increase along with shape_pt_sequence."
+   * (http://gtfs.org/reference/static/#shapestxt)
+   *
+   * <p>Severity: {@code SeverityLevel.WARNING}
+   */
+  static class EqualShapeDistanceSameCoordinatesNotice extends ValidationNotice {
     private final String shapeId;
     private final long csvRowNumber;
     private final double shapeDistTraveled;
@@ -125,8 +139,38 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
     private final double prevShapeDistTraveled;
     private final int prevShapePtSequence;
 
-    EqualShapeDistanceNotice(GtfsShape previous, GtfsShape current, SeverityLevel severityLevel) {
-      super(severityLevel);
+    EqualShapeDistanceSameCoordinatesNotice(GtfsShape previous, GtfsShape current) {
+      super(SeverityLevel.WARNING);
+      this.shapeId = current.shapeId();
+      this.csvRowNumber = current.csvRowNumber();
+      this.shapeDistTraveled = current.shapeDistTraveled();
+      this.shapePtSequence = current.shapePtSequence();
+      this.prevCsvRowNumber = previous.csvRowNumber();
+      this.prevShapeDistTraveled = previous.shapeDistTraveled();
+      this.prevShapePtSequence = previous.shapePtSequence();
+    }
+  }
+
+  /**
+   * When sorted on {@code shapes.shape_pt_sequence} key, distant shape points must not have equal
+   * values for {@code shapes.shape_dist_traveled}
+   *
+   * <p>"Values must increase along with shape_pt_sequence."
+   * (http://gtfs.org/reference/static/#shapestxt)
+   *
+   * <p>Severity: {@code SeverityLevel.ERROR}
+   */
+  static class EqualShapeDistanceDiffCoordinatesNotice extends ValidationNotice {
+    private final String shapeId;
+    private final long csvRowNumber;
+    private final double shapeDistTraveled;
+    private final int shapePtSequence;
+    private final long prevCsvRowNumber;
+    private final double prevShapeDistTraveled;
+    private final int prevShapePtSequence;
+
+    EqualShapeDistanceDiffCoordinatesNotice(GtfsShape previous, GtfsShape current) {
+      super(SeverityLevel.ERROR);
       this.shapeId = current.shapeId();
       this.csvRowNumber = current.csvRowNumber();
       this.shapeDistTraveled = current.shapeDistTraveled();

@@ -22,12 +22,12 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 import org.mobilitydata.gtfsvalidator.validator.ShapeIncreasingDistanceValidator.DecreasingShapeDistanceNotice;
-import org.mobilitydata.gtfsvalidator.validator.ShapeIncreasingDistanceValidator.EqualShapeDistanceNotice;
+import org.mobilitydata.gtfsvalidator.validator.ShapeIncreasingDistanceValidator.EqualShapeDistanceDiffCoordinatesNotice;
+import org.mobilitydata.gtfsvalidator.validator.ShapeIncreasingDistanceValidator.EqualShapeDistanceSameCoordinatesNotice;
 
 public class ShapeIncreasingDistanceValidatorTest {
   public static GtfsShape createShapePoint(
@@ -96,7 +96,7 @@ public class ShapeIncreasingDistanceValidatorTest {
             generateNotices(
                 ImmutableList.of(
                     createShapePoint(1, "first shape", 30.0d, 45, 1, 10.0d), previous, current)))
-        .containsExactly(new EqualShapeDistanceNotice(previous, current, SeverityLevel.ERROR));
+        .containsExactly(new EqualShapeDistanceDiffCoordinatesNotice(previous, current));
   }
 
   @Test
@@ -107,7 +107,7 @@ public class ShapeIncreasingDistanceValidatorTest {
             generateNotices(
                 ImmutableList.of(
                     createShapePoint(1, "first shape", 30.0d, 45, 1, 10.0d), previous, current)))
-        .containsExactly(new EqualShapeDistanceNotice(previous, current, SeverityLevel.WARNING));
+        .containsExactly(new EqualShapeDistanceSameCoordinatesNotice(previous, current));
   }
 
   @Test
@@ -118,6 +118,6 @@ public class ShapeIncreasingDistanceValidatorTest {
             generateNotices(
                 ImmutableList.of(
                     createShapePoint(1, "first shape", 30.0d, 45, 1, 10.0d), previous, current)))
-        .containsExactly(new EqualShapeDistanceNotice(previous, current, SeverityLevel.ERROR));
+        .containsExactly(new EqualShapeDistanceDiffCoordinatesNotice(previous, current));
   }
 }
