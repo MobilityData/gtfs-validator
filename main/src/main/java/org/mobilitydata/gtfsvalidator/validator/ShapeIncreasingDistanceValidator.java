@@ -67,13 +67,17 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
         if (prev.shapeDistTraveled() != curr.shapeDistTraveled()) {
           continue;
         }
-        // equal distance and different coordinates
-        if (!areCloseWithDifferentCoordinates(curr, prev)) {
-          noticeContainer.addValidationNotice(
-              new EqualShapeDistanceDiffCoordinatesNotice(prev, curr));
+        // equal shape_dist_traveled and different coordinates
+        if (curr.shapePtLat() != prev.shapePtLat() || curr.shapePtLon() != prev.shapePtLon()) {
+          // check if shape points are more than 1.11 meters away
+          if (MAX_DISTANCE_SHAPEPOINTS_METERS
+              < getDistanceMeters(curr.shapePtLatLon(), prev.shapePtLatLon())) {
+            noticeContainer.addValidationNotice(
+                new EqualShapeDistanceDiffCoordinatesNotice(prev, curr));
+          }
         } else if (curr.shapePtLat() == prev.shapePtLat()
             && curr.shapePtLon() == prev.shapePtLon()) {
-          // equal distance and same coordinates
+          // equal shape_dist_traveled and same coordinates
           noticeContainer.addValidationNotice(
               new EqualShapeDistanceSameCoordinatesNotice(prev, curr));
         }
@@ -91,11 +95,11 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
    *     separates them is less or equal than {@code
    *     ShapeIncreasingDistanceValidator#MAX_DISTANCE_SHAPEPOINTS}; false otherwise.
    */
-  private static boolean areCloseWithDifferentCoordinates(GtfsShape shape, GtfsShape otherShape) {
+  private static boolean areFarWithDifferentCoordinates(GtfsShape shape, GtfsShape otherShape) {
     return shape.shapePtLon() != otherShape.shapePtLon()
         && shape.shapePtLat() != otherShape.shapePtLat()
-        && getDistanceMeters(shape.shapePtLatLon(), otherShape.shapePtLatLon())
-            <= MAX_DISTANCE_SHAPEPOINTS_METERS;
+        && MAX_DISTANCE_SHAPEPOINTS_METERS
+            < getDistanceMeters(shape.shapePtLatLon(), otherShape.shapePtLatLon());
   }
 
   /**
