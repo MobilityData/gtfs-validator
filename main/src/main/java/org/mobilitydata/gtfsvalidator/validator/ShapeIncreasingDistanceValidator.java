@@ -86,23 +86,6 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
   }
 
   /**
-   * Checks if two {@code GtfsShape} have different coordinates and are farther than {@code
-   * ShapeIncreasingDistanceValidator#MAX_DISTANCE_SHAPEPOINTS}.
-   *
-   * @param shape the first {@code GtfsShape}
-   * @param otherShape the other {@code GtfsShape}
-   * @return true the two {@code GtfsShape} have distinct coordinates and if the distance that
-   *     separates them is less or equal than {@code
-   *     ShapeIncreasingDistanceValidator#MAX_DISTANCE_SHAPEPOINTS}; false otherwise.
-   */
-  private static boolean areFarWithDifferentCoordinates(GtfsShape shape, GtfsShape otherShape) {
-    return shape.shapePtLon() != otherShape.shapePtLon()
-        && shape.shapePtLat() != otherShape.shapePtLat()
-        && MAX_DISTANCE_SHAPEPOINTS_METERS
-            < getDistanceMeters(shape.shapePtLatLon(), otherShape.shapePtLatLon());
-  }
-
-  /**
    * When sorted on {@code shapes.shape_pt_sequence} key, shape points must have strictly increasing
    * values for `shapes.shape_dist_traveled`
    *
