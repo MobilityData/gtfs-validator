@@ -57,7 +57,6 @@ public class StopZoneIdValidatorTest {
     return new GtfsFareRule.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setFareId(toFareRuleId(csvRowNumber))
-        .setFareId(toFareRuleId(csvRowNumber))
         .setRouteId("route id value")
         .build();
   }
@@ -81,14 +80,14 @@ public class StopZoneIdValidatorTest {
   }
 
   @Test
-  public void stop_zoneIdNotProvided_zoneStruncture_yieldsNotice() {
+  public void stop_zoneIdNotProvided_zoneStructure_yieldsNotice() {
     ImmutableList<GtfsStop> stops = ImmutableList.of(createStop(3, GtfsLocationType.STOP, null));
     assertThat(generateNotices(stops, ImmutableList.of(createFareRuleWithZoneStructure(5))))
         .containsExactly(new StopWithoutZoneIdNotice(stops.get(0)));
   }
 
   @Test
-  public void stop_zoneIdNotProvided_nozZneStruncture_yieldsNotice() {
+  public void stop_zoneIdNotProvided_noZoneStructure_yieldsNotice() {
     ImmutableList<GtfsStop> stops = ImmutableList.of(createStop(3, GtfsLocationType.STOP, null));
     assertThat(generateNotices(stops, ImmutableList.of(createFareRuleWithoutZoneStructure(5))))
         .isEmpty();

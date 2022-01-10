@@ -28,8 +28,15 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 
 /**
- * Check that if {@code fare_rules.txt} is provided, then all stops and platforms (location_type =
- * 0) have {@code stops.zone_id} assigned.
+ * Checks that all stops and platforms (location_type = 0) have {@code stops.zone_id} assigned.
+ * assigned if {@code fare_rules.txt} is provided and at least one of the following fields is
+ * provided:
+ *
+ * <ul>
+ *   <li>{@code fare_rules.origin_id}
+ *   <li>{@code fare_rules.contains_id}
+ *   <li>{@code fare_rules.destination_id}
+ * </ul>
  *
  * <p>Generated notice: {@link StopWithoutZoneIdNotice}.
  */
