@@ -16,7 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.model;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
