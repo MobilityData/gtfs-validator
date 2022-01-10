@@ -168,7 +168,7 @@ public class NoticeContainerTest {
   }
 
   @Test
-  public void exportNotices_shouldReflectTheTotalNumberOfNoticesAndSampleNotices() {
+  public void exportNotices_shouldReflectTheTotalNumberOfNoticesAndContexts() {
     NoticeContainer container = new NoticeContainer(26, 8, 3);
     for (int i = 0; i < 55; i++) {
       container.addValidationNotice(new StringFieldNotice("1", SeverityLevel.ERROR));

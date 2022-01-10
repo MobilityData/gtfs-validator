@@ -16,18 +16,16 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import org.mobilitydata.gtfsvalidator.io.ValidationReportDeserializer;
 
 /**
  * Container for validation notices (errors and warnings).
@@ -164,41 +162,13 @@ public class NoticeContainer {
     return exportJson(systemErrors);
   }
 
-  /**
-   * Exports notices as JSON.
-   *
-   * <p>Up to {@link #maxExportsPerNoticeTypeAndSeverity} is exported per each type+severity.
-   */
-  private <T extends Notice> JsonObject exportJson(List<T> notices) {
-    JsonObject root = new JsonObject();
-    JsonArray jsonNotices = new JsonArray();
-    root.add("notices", jsonNotices);
-
-    for (Collection<T> noticesOfType : groupNoticesByTypeAndSeverity(notices).asMap().values()) {
-      JsonObject noticesOfTypeJson = new JsonObject();
-      jsonNotices.add(noticesOfTypeJson);
-      T firstNotice = noticesOfType.iterator().next();
-      noticesOfTypeJson.addProperty("code", firstNotice.getCode());
-      noticesOfTypeJson.addProperty("severity", firstNotice.getSeverityLevel().toString());
-      noticesOfTypeJson.addProperty(
-          "totalNotices", noticesCountPerTypeAndSeverity.get(firstNotice.getMappingKey()));
-      JsonArray noticesArrayJson = new JsonArray();
-      noticesOfTypeJson.add("sampleNotices", noticesArrayJson);
-      int i = 0;
-      for (T notice : noticesOfType) {
-        ++i;
-        if (i > maxExportsPerNoticeTypeAndSeverity) {
-          // Do not export too many notices for this type.
-          break;
-        }
-        noticesArrayJson.add(notice.getContext());
-      }
-    }
-    return root;
+  public <T extends Notice> JsonObject exportJson(List<T> notices) {
+    return ValidationReportDeserializer.serialize(
+        notices, maxExportsPerNoticeTypeAndSeverity, noticesCountPerTypeAndSeverity);
   }
 
-  @VisibleForTesting
-  static <T extends Notice> ListMultimap<String, T> groupNoticesByTypeAndSeverity(List<T> notices) {
+  public static <T extends Notice> ListMultimap<String, T> groupNoticesByTypeAndSeverity(
+      List<T> notices) {
     ListMultimap<String, T> noticesByType = MultimapBuilder.treeKeys().arrayListValues().build();
     for (T notice : notices) {
       noticesByType.put(notice.getMappingKey(), notice);
