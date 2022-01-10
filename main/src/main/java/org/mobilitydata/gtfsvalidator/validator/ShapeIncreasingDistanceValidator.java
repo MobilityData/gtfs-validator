@@ -42,7 +42,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 @GtfsValidator
 public class ShapeIncreasingDistanceValidator extends FileValidator {
 
-  private static final float MAX_DISTANCE_SHAPEPOINTS = 1.11f;
+  private static final float MAX_DISTANCE_SHAPEPOINTS_METERS = 1.11f;
   private final GtfsShapeTableContainer table;
 
   @Inject
@@ -67,28 +67,35 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
         if (prev.shapeDistTraveled() != curr.shapeDistTraveled()) {
           continue;
         }
-        if (areClose(curr, prev, MAX_DISTANCE_SHAPEPOINTS)) {
+        // equal distance and different coordinates
+        if (!areCloseWithDifferentCoordinates(curr, prev)) {
+          noticeContainer.addValidationNotice(
+              new EqualShapeDistanceDiffCoordinatesNotice(prev, curr));
+        } else if (curr.shapePtLat() == prev.shapePtLat()
+            && curr.shapePtLon() == prev.shapePtLon()) {
+          // equal distance and same coordinates
           noticeContainer.addValidationNotice(
               new EqualShapeDistanceSameCoordinatesNotice(prev, curr));
-          continue;
         }
-        noticeContainer.addValidationNotice(
-            new EqualShapeDistanceDiffCoordinatesNotice(prev, curr));
       }
     }
   }
 
   /**
-   * Checks if two {@code GtfsShape} are less than 1.11 meter away.
+   * Checks if two {@code GtfsShape} have different coordinates and are farther than {@code
+   * ShapeIncreasingDistanceValidator#MAX_DISTANCE_SHAPEPOINTS}.
    *
    * @param shape the first {@code GtfsShape}
    * @param otherShape the other {@code GtfsShape}
-   * @param maxDistance the maximum distance between two shape points
-   * @return true if both {@code GtfsShape} are closer than the maximum distance provided as
-   *     parameter, false otherwise.
+   * @return true the two {@code GtfsShape} have distinct coordinates and if the distance that
+   *     separates them is less or equal than {@code
+   *     ShapeIncreasingDistanceValidator#MAX_DISTANCE_SHAPEPOINTS}; false otherwise.
    */
-  private static boolean areClose(GtfsShape shape, GtfsShape otherShape, float maxDistance) {
-    return getDistanceMeters(shape.shapePtLatLon(), otherShape.shapePtLatLon()) <= maxDistance;
+  private static boolean areCloseWithDifferentCoordinates(GtfsShape shape, GtfsShape otherShape) {
+    return shape.shapePtLon() != otherShape.shapePtLon()
+        && shape.shapePtLat() != otherShape.shapePtLat()
+        && getDistanceMeters(shape.shapePtLatLon(), otherShape.shapePtLatLon())
+            <= MAX_DISTANCE_SHAPEPOINTS_METERS;
   }
 
   /**

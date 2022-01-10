@@ -27,7 +27,6 @@ import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 import org.mobilitydata.gtfsvalidator.validator.ShapeIncreasingDistanceValidator.DecreasingShapeDistanceNotice;
 import org.mobilitydata.gtfsvalidator.validator.ShapeIncreasingDistanceValidator.EqualShapeDistanceDiffCoordinatesNotice;
-import org.mobilitydata.gtfsvalidator.validator.ShapeIncreasingDistanceValidator.EqualShapeDistanceSameCoordinatesNotice;
 
 public class ShapeIncreasingDistanceValidatorTest {
   public static GtfsShape createShapePoint(
@@ -107,7 +106,7 @@ public class ShapeIncreasingDistanceValidatorTest {
             generateNotices(
                 ImmutableList.of(
                     createShapePoint(1, "first shape", 30.0d, 45, 1, 10.0d), previous, current)))
-        .containsExactly(new EqualShapeDistanceSameCoordinatesNotice(previous, current));
+        .containsExactly(new EqualShapeDistanceDiffCoordinatesNotice(previous, current));
   }
 
   @Test
