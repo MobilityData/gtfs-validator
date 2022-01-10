@@ -155,7 +155,7 @@ def load_content(data_path, filename):
 def apply_github_matrix_formatting(json_data):
     latest_versions_data = []
 
-    jobs = np.array_split(list(json_data.keys()), MAX_JOB_NUMBER)
+    jobs = np.array_split(list(json_data.keys()), min(MAX_JOB_NUMBER, len(list(json_data.keys()))))
     jobs = [list(job_archives_ids) for job_archives_ids in jobs]
     for job_archives_ids in jobs:
         latest_version_data_string = ""

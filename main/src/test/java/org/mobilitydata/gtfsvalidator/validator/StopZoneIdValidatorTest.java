@@ -45,10 +45,19 @@ public class StopZoneIdValidatorTest {
         .build();
   }
 
-  private static GtfsFareRule createFareRule(long csvRowNumber) {
+  private static GtfsFareRule createFareRuleWithZoneStructure(long csvRowNumber) {
     return new GtfsFareRule.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setFareId(toFareRuleId(csvRowNumber))
+        .setOriginId("origin id")
+        .build();
+  }
+
+  private static GtfsFareRule createFareRuleWithoutZoneStructure(long csvRowNumber) {
+    return new GtfsFareRule.Builder()
+        .setCsvRowNumber(csvRowNumber)
+        .setFareId(toFareRuleId(csvRowNumber))
+        .setRouteId("route id value")
         .build();
   }
 
@@ -71,10 +80,17 @@ public class StopZoneIdValidatorTest {
   }
 
   @Test
-  public void stop_zoneIdNotProvided_yieldsNotice() {
+  public void stop_zoneIdNotProvided_zoneStructure_yieldsNotice() {
     ImmutableList<GtfsStop> stops = ImmutableList.of(createStop(3, GtfsLocationType.STOP, null));
-    assertThat(generateNotices(stops, ImmutableList.of(createFareRule(5))))
+    assertThat(generateNotices(stops, ImmutableList.of(createFareRuleWithZoneStructure(5))))
         .containsExactly(new StopWithoutZoneIdNotice(stops.get(0)));
+  }
+
+  @Test
+  public void stop_zoneIdNotProvided_noZoneStructure_yieldsNotice() {
+    ImmutableList<GtfsStop> stops = ImmutableList.of(createStop(3, GtfsLocationType.STOP, null));
+    assertThat(generateNotices(stops, ImmutableList.of(createFareRuleWithoutZoneStructure(5))))
+        .isEmpty();
   }
 
   @Test
@@ -82,7 +98,7 @@ public class StopZoneIdValidatorTest {
     assertThat(
             generateNotices(
                 ImmutableList.of(createStop(3, GtfsLocationType.STOP, "zone id value")),
-                ImmutableList.of(createFareRule(5))))
+                ImmutableList.of(createFareRuleWithZoneStructure(5))))
         .isEmpty();
   }
 
@@ -91,7 +107,7 @@ public class StopZoneIdValidatorTest {
     assertThat(
             generateNotices(
                 ImmutableList.of(createStop(3, GtfsLocationType.STATION, null)),
-                ImmutableList.of(createFareRule(5))))
+                ImmutableList.of(createFareRuleWithZoneStructure(5))))
         .isEmpty();
   }
 
@@ -100,7 +116,7 @@ public class StopZoneIdValidatorTest {
     assertThat(
             generateNotices(
                 ImmutableList.of(createStop(3, GtfsLocationType.STATION, "zone id value")),
-                ImmutableList.of(createFareRule(5))))
+                ImmutableList.of(createFareRuleWithZoneStructure(5))))
         .isEmpty();
   }
 
@@ -109,7 +125,7 @@ public class StopZoneIdValidatorTest {
     assertThat(
             generateNotices(
                 ImmutableList.of(createStop(3, GtfsLocationType.ENTRANCE, null)),
-                ImmutableList.of(createFareRule(5))))
+                ImmutableList.of(createFareRuleWithZoneStructure(5))))
         .isEmpty();
   }
 
@@ -118,7 +134,7 @@ public class StopZoneIdValidatorTest {
     assertThat(
             generateNotices(
                 ImmutableList.of(createStop(3, GtfsLocationType.ENTRANCE, "zone id value")),
-                ImmutableList.of(createFareRule(5))))
+                ImmutableList.of(createFareRuleWithZoneStructure(5))))
         .isEmpty();
   }
 
@@ -127,7 +143,7 @@ public class StopZoneIdValidatorTest {
     assertThat(
             generateNotices(
                 ImmutableList.of(createStop(3, GtfsLocationType.GENERIC_NODE, null)),
-                ImmutableList.of(createFareRule(5))))
+                ImmutableList.of(createFareRuleWithZoneStructure(5))))
         .isEmpty();
   }
 
@@ -136,7 +152,7 @@ public class StopZoneIdValidatorTest {
     assertThat(
             generateNotices(
                 ImmutableList.of(createStop(3, GtfsLocationType.GENERIC_NODE, "zone id value")),
-                ImmutableList.of(createFareRule(5))))
+                ImmutableList.of(createFareRuleWithZoneStructure(5))))
         .isEmpty();
   }
 
@@ -145,7 +161,7 @@ public class StopZoneIdValidatorTest {
     assertThat(
             generateNotices(
                 ImmutableList.of(createStop(3, GtfsLocationType.BOARDING_AREA, null)),
-                ImmutableList.of(createFareRule(5))))
+                ImmutableList.of(createFareRuleWithZoneStructure(5))))
         .isEmpty();
   }
 
@@ -154,7 +170,7 @@ public class StopZoneIdValidatorTest {
     assertThat(
             generateNotices(
                 ImmutableList.of(createStop(3, GtfsLocationType.BOARDING_AREA, "zone id value")),
-                ImmutableList.of(createFareRule(5))))
+                ImmutableList.of(createFareRuleWithZoneStructure(5))))
         .isEmpty();
   }
 

@@ -21,14 +21,22 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.table.GtfsFareRule;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareRuleTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 
 /**
- * Check that if {@code fare_rules.txt} is provided, then all stops and platforms (location_type =
- * 0) have {@code stops.zone_id} assigned.
+ * Checks that all stops and platforms (location_type = 0) have {@code stops.zone_id} assigned.
+ * assigned if {@code fare_rules.txt} is provided and at least one of the following fields is
+ * provided:
+ *
+ * <ul>
+ *   <li>{@code fare_rules.origin_id}
+ *   <li>{@code fare_rules.contains_id}
+ *   <li>{@code fare_rules.destination_id}
+ * </ul>
  *
  * <p>Generated notice: {@link StopWithoutZoneIdNotice}.
  */
@@ -49,11 +57,34 @@ public class StopZoneIdValidator extends FileValidator {
     if (fareRuleTable.getEntities().isEmpty()) {
       return;
     }
+    if (!hasFareZoneStructure(fareRuleTable)) {
+      return;
+    }
     for (GtfsStop stop : stopTable.getEntities()) {
-      if (stop.locationType().equals(GtfsLocationType.STOP) && !stop.hasZoneId()) {
+      if (!stop.locationType().equals(GtfsLocationType.STOP)) {
+        continue;
+      }
+      if (!stop.hasZoneId()) {
         noticeContainer.addValidationNotice(new StopWithoutZoneIdNotice(stop));
       }
     }
+  }
+
+  /**
+   * Checks if the {@code GtfsFareRuleTableContainer} provided as parameter has a fare structure
+   * that uses zones.
+   *
+   * @param fareRuleTable the {@code GtfsFareRuleTableContainer} to be checked
+   * @return true if the {@code GtfsFareRuleTableContainer} provided as parameter has a fare
+   *     structure that uses zones; false otherwise.
+   */
+  private static boolean hasFareZoneStructure(GtfsFareRuleTableContainer fareRuleTable) {
+    for (GtfsFareRule fareRule : fareRuleTable.getEntities()) {
+      if (fareRule.hasContainsId() || fareRule.hasDestinationId() || fareRule.hasOriginId()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
