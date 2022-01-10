@@ -55,14 +55,11 @@ public class ValidationReport {
    * @param noticeReports set of {@code NoticeReport}s
    */
   public ValidationReport(Set<NoticeReport> noticeReports) {
-    ImmutableSet.Builder<String> errorCodesSetBuilder = new ImmutableSet.Builder<>();
-
     this.notices = Collections.unmodifiableSet(noticeReports);
     Map<String, NoticeReport> errorNoticeByCode = new HashMap<>();
     for (NoticeReport noticeReport : noticeReports) {
       if (noticeReport.isError()) {
         errorNoticeByCode.put(noticeReport.getCode(), noticeReport);
-        errorCodesSetBuilder.add(noticeReport.getCode());
       }
     }
     this.errorNoticeByCode = errorNoticeByCode;
