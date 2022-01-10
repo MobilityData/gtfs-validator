@@ -68,7 +68,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
           continue;
         }
         // equal shape_dist_traveled and different coordinates
-        if (curr.shapePtLat() != prev.shapePtLat() || curr.shapePtLon() != prev.shapePtLon()) {
+        if (!(curr.shapePtLon() == prev.shapePtLon() && curr.shapePtLat() == prev.shapePtLat())) {
           // check if shape points are more than 1.11 meters away
           if (MAX_DISTANCE_SHAPEPOINTS_METERS
               < getDistanceMeters(curr.shapePtLatLon(), prev.shapePtLatLon())) {
