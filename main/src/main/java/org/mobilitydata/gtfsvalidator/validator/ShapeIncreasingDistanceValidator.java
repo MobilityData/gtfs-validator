@@ -42,7 +42,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 @GtfsValidator
 public class ShapeIncreasingDistanceValidator extends FileValidator {
 
-  private static final float MAX_DISTANCE_SHAPEPOINTS_METERS = 1.11f;
+  private static final float MAX_DISTANCE_SHAPEPOINTS_METERS = 11.1f;
   private final GtfsShapeTableContainer table;
 
   @Inject
