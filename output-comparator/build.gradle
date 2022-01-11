@@ -1,5 +1,5 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '5.2.0'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'java'
     id 'application'
 }
@@ -28,6 +28,7 @@ dependencies {
 }
 
 jar {
+    dependsOn(shadowJar)
     // Add the manifest within the JAR, using comparator as the title
     manifest {
         attributes('Implementation-Title': 'output-comparator',
