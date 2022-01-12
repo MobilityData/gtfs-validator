@@ -42,7 +42,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 @GtfsValidator
 public class ShapeIncreasingDistanceValidator extends FileValidator {
 
-  private static final float MAX_DISTANCE_SHAPEPOINTS_METERS = 11.1f;
+  private static final float MAX_DISTANCE_SHAPEPOINTS_METERS = 0;
   private final GtfsShapeTableContainer table;
 
   @Inject
@@ -162,6 +162,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
     private final long prevCsvRowNumber;
     private final double prevShapeDistTraveled;
     private final int prevShapePtSequence;
+    private final double actualDistanceBertweenShapePoints;
 
     EqualShapeDistanceDiffCoordinatesNotice(GtfsShape previous, GtfsShape current) {
       super(SeverityLevel.ERROR);
@@ -172,6 +173,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
       this.prevCsvRowNumber = previous.csvRowNumber();
       this.prevShapeDistTraveled = previous.shapeDistTraveled();
       this.prevShapePtSequence = previous.shapePtSequence();
+      this.actualDistanceBertweenShapePoints = getDistanceMeters(current.shapePtLatLon(), previous.shapePtLatLon());
     }
   }
 }
