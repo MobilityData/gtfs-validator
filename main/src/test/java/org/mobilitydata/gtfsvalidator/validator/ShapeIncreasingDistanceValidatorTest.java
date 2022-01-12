@@ -99,16 +99,16 @@ public class ShapeIncreasingDistanceValidatorTest {
         .containsExactly(new EqualShapeDistanceDiffCoordinatesNotice(previous, current));
   }
 
-  @Test
-  public void shapeWithEqualDistance_closeGpsCoordinates_shouldNotGenerateNotice() {
-    GtfsShape previous = createShapePoint(2, "first shape", 31.0d, 42, 2, 45.0d);
-    GtfsShape current = createShapePoint(3, "first shape", 31.0d, 42.00001, 4, 45.0d);
-    assertThat(
-            generateNotices(
-                ImmutableList.of(
-                    createShapePoint(1, "first shape", 31.0d, 45, 1, 10.0d), previous, current)))
-        .isEmpty();
-  }
+//  @Test
+//  public void shapeWithEqualDistance_closeGpsCoordinates_shouldNotGenerateNotice() {
+//    GtfsShape previous = createShapePoint(2, "first shape", 31.0d, 42, 2, 45.0d);
+//    GtfsShape current = createShapePoint(3, "first shape", 31.0d, 42.00001, 4, 45.0d);
+//    assertThat(
+//            generateNotices(
+//                ImmutableList.of(
+//                    createShapePoint(1, "first shape", 31.0d, 45, 1, 10.0d), previous, current)))
+//        .isEmpty();
+//  }
 
   @Test
   public void shapeWithEqualDistance_farGpsCoordinates_shouldGenerateErrorNotice() {
