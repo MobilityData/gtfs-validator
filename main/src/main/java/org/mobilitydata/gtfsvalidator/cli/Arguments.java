@@ -121,6 +121,13 @@ public class Arguments {
     }
     return validationReportName;
   }
+  
+  public String getHTMLValidationReportName() {
+    if (validationReportName == null) {
+      return "report.json.html";
+    }
+    return validationReportName + ".html";
+  }
 
   public String getSystemErrorsReportName() {
     if (systemErrorsReportName == null) {
@@ -128,6 +135,7 @@ public class Arguments {
     }
     return systemErrorsReportName;
   }
+
 
   public boolean getHelp() {
     return help;

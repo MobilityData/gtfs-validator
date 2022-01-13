@@ -226,8 +226,12 @@ public class Main {
           Paths.get(args.getOutputBase(), args.getValidationReportName()),
           gson.toJson(noticeContainer.exportValidationNotices()).getBytes(StandardCharsets.UTF_8));
       Files.write(
+          Paths.get(args.getOutputBase(), args.getHTMLValidationReportName()),
+          gson.toJson(noticeContainer.exportValidationNotices()).getBytes(StandardCharsets.UTF_8));
+      Files.write(
           Paths.get(args.getOutputBase(), args.getSystemErrorsReportName()),
           gson.toJson(noticeContainer.exportSystemErrors()).getBytes(StandardCharsets.UTF_8));
+
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store report files");
     }
