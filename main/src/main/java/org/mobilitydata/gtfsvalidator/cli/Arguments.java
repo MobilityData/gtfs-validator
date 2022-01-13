@@ -115,6 +115,9 @@ public class Arguments {
     return storageDirectory;
   }
 
+  /**
+   * Output json report file name.
+   */
   public String getValidationReportName() {
     if (validationReportName == null) {
       return "report.json";
@@ -122,13 +125,19 @@ public class Arguments {
     return validationReportName;
   }
   
-  public String getHTMLValidationReportName() {
+  /**
+   * Output html report file name.
+   */
+  public String getHtmlValidationReportName() {
     if (validationReportName == null) {
       return "report.json.html";
     }
     return validationReportName + ".html";
   }
 
+  /**
+   * Output error file name.
+   */
   public String getSystemErrorsReportName() {
     if (systemErrorsReportName == null) {
       return "system_errors.json";
