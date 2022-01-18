@@ -75,7 +75,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
           noticeContainer.addValidationNotice(
               new EqualShapeDistanceSameCoordinatesNotice(prev, curr));
         }
-        }
+      }
     }
   }
 
@@ -167,7 +167,8 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
       this.prevCsvRowNumber = previous.csvRowNumber();
       this.prevShapeDistTraveled = previous.shapeDistTraveled();
       this.prevShapePtSequence = previous.shapePtSequence();
-      this.actualDistanceBetweenShapePoints = getDistanceMeters(current.shapePtLatLon(), previous.shapePtLatLon());
+      this.actualDistanceBetweenShapePoints =
+          getDistanceMeters(current.shapePtLatLon(), previous.shapePtLatLon());
     }
   }
 }
