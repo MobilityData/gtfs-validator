@@ -42,7 +42,6 @@ import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 @GtfsValidator
 public class ShapeIncreasingDistanceValidator extends FileValidator {
 
-  private static final float MAX_DISTANCE_SHAPEPOINTS_METERS = 0;
   private final GtfsShapeTableContainer table;
 
   @Inject
@@ -69,19 +68,14 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
         }
         // equal shape_dist_traveled and different coordinates
         if (!(curr.shapePtLon() == prev.shapePtLon() && curr.shapePtLat() == prev.shapePtLat())) {
-          // check if shape points are more than 1.11 meters away
-          if (MAX_DISTANCE_SHAPEPOINTS_METERS
-              < getDistanceMeters(curr.shapePtLatLon(), prev.shapePtLatLon())) {
-            noticeContainer.addValidationNotice(
-                new EqualShapeDistanceDiffCoordinatesNotice(prev, curr));
-          }
-        } else if (curr.shapePtLat() == prev.shapePtLat()
-            && curr.shapePtLon() == prev.shapePtLon()) {
+          noticeContainer.addValidationNotice(
+              new EqualShapeDistanceDiffCoordinatesNotice(prev, curr));
+        } else {
           // equal shape_dist_traveled and same coordinates
           noticeContainer.addValidationNotice(
               new EqualShapeDistanceSameCoordinatesNotice(prev, curr));
         }
-      }
+        }
     }
   }
 
