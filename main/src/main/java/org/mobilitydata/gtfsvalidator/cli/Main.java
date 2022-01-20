@@ -43,15 +43,16 @@ import org.mobilitydata.gtfsvalidator.validator.DefaultValidatorProvider;
 import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
+import org.mobilitydata.gtfsvalidator.viewer.ViewerIndex;
 
 /** The main entry point for GTFS Validator CLI. */
 public class Main {
-
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private static final String GTFS_ZIP_FILENAME = "gtfs.zip";
   private static final String NOTICE_SCHEMA_JSON = "notice_schema.json";
 
   public static void main(String[] argv) {
+
     Arguments args = parseArguments(argv);
     if (args == null) {
       System.exit(1);
@@ -221,13 +222,18 @@ public class Main {
   public static void exportReport(final NoticeContainer noticeContainer, final Arguments args) {
     new File(args.getOutputBase()).mkdirs();
     Gson gson = createGson(args.getPretty());
+    Gson prettyGson = createGson(true);
     try {
       Files.write(
           Paths.get(args.getOutputBase(), args.getValidationReportName()),
           gson.toJson(noticeContainer.exportValidationNotices()).getBytes(StandardCharsets.UTF_8));
       Files.write(
           Paths.get(args.getOutputBase(), args.getHtmlValidationReportName()),
-          gson.toJson(noticeContainer.exportValidationNotices()).getBytes(StandardCharsets.UTF_8));
+          ViewerIndex.IndexHtmlAll(
+                  "var report = "
+                      + prettyGson.toJson(noticeContainer.exportValidationNotices())
+                      + ";")
+              .getBytes(StandardCharsets.UTF_8));
       Files.write(
           Paths.get(args.getOutputBase(), args.getSystemErrorsReportName()),
           gson.toJson(noticeContainer.exportSystemErrors()).getBytes(StandardCharsets.UTF_8));

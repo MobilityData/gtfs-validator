@@ -17,3 +17,10 @@ To build the application simply click the hammer in the header section
 ```
 $ ./gradlew test
 ```
+
+## Generating frontend viewer assets
+If there have been changes to the html, css, or javascript files for the
+viewer, run `./gradlew generateViewerAssets` from the command line at the root
+of the project to regenerate ViewerAssets.java with the new contents of those
+files.
+

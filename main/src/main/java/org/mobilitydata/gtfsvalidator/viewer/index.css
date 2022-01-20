@@ -1,0 +1,17 @@
+.severity-error {
+    background: #f00;
+}
+
+.severity-warning {
+    background: #c80;
+}
+
+.severity-info {
+    background: #ccc;
+}
+
+.severity-unknown {
+    background: #fff;
+}
+
+pre { background: #ddd; }
