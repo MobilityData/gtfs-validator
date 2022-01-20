@@ -62,7 +62,7 @@ ReportView = {
             // Initialize vnode to the empty DOM element on our first call.
             ReportView.vnode = ReportView.container
         }
-        newVnode = ReportView.view()
+        let newVnode = ReportView.view()
         ReportView.patch(ReportView.vnode, newVnode);
         ReportView.vnode = newVnode
     }
