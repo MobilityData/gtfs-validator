@@ -36,7 +36,7 @@ public class ShapeIncreasingDistanceValidatorTest {
       double shapePtLat,
       double shapePtLon,
       int shapePtSequence,
-      double shapeDistTraveled) {
+      Double shapeDistTraveled) {
     return new GtfsShape.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setShapeId(shapeId)
@@ -108,5 +108,16 @@ public class ShapeIncreasingDistanceValidatorTest {
                 ImmutableList.of(
                     createShapePoint(1, "first shape", 30.0d, 45, 1, 10.0d), previous, current)))
         .containsExactly(new EqualShapeDistanceSameCoordinatesNotice(previous, current));
+  }
+
+  @Test
+  public void noShapeDistTravelled_shouldNotGenerateNotice() {
+    GtfsShape previous = createShapePoint(2, "first shape", 31.0d, 42, 2, null);
+    GtfsShape current = createShapePoint(3, "first shape", 31.0d, 42, 4, 45.0d);
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createShapePoint(1, "first shape", 30.0d, 45, 1, 10.0d), previous, current)))
+        .isEmpty();
   }
 }
