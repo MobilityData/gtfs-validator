@@ -205,7 +205,7 @@ Parsing of a CSV file failed. One common case of the problem is when a cell valu
 
 #### DecreasingShapeDistanceNotice
 
-When sorted by `shape.shape_pt_sequence`, two consecutive shape points must have strictly increasing values for `shape_dist_traveled`.  
+When sorted by `shape.shape_pt_sequence`, two consecutive shape points must not have decreasing values for `shape_dist_traveled`.  
 
 ##### References:
 * [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)
@@ -268,7 +268,7 @@ Empty csv file found in the archive: file does not have any headers, or is a req
 
 <a name="EqualShapeDistanceDiffCoordinatesNotice"/>
 
-When sorted by `shape.shape_pt_sequence`, two consecutive shape points must not have equal values for `shape_dist_traveled`.
+When sorted by `shape.shape_pt_sequence`, two consecutive shape points with different coordinates must not have equal values for `shape_dist_traveled`.
 
 ##### References:
 * [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)
@@ -700,7 +700,7 @@ A row in the input file has only spaces.
 
 <a name="EqualShapeDistanceSameCoordinatesNotice"/>
 
-When sorted by `shape.shape_pt_sequence`, two consecutive should not have equal values for `shape_dist_traveled`.
+When sorted by `shape.shape_pt_sequence`, two consecutive shape points should not have equal values for `shape_dist_traveled`.
 
 ##### References:
 * [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)
