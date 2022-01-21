@@ -56,7 +56,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
       for (int i = 1; i < shapeList.size(); ++i) {
         GtfsShape prev = shapeList.get(i - 1);
         GtfsShape curr = shapeList.get(i);
-        if (!(prev.hasShapeDistTraveled() || curr.hasShapeDistTraveled())) {
+        if (!(prev.hasShapeDistTraveled() && curr.hasShapeDistTraveled())) {
           continue;
         }
         if (prev.shapeDistTraveled() > curr.shapeDistTraveled()) {
@@ -110,7 +110,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
   }
 
   /**
-   * When sorted on {@code shapes.shape_pt_sequence} key, close shape points should not have equal
+   * When sorted on {@code shapes.shape_pt_sequence} key, shape points should not have equal
    * values for {@code shapes.shape_dist_traveled}
    *
    * <p>"Values must increase along with shape_pt_sequence."
