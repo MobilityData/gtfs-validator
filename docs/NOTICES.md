@@ -89,7 +89,7 @@
 ##### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-#### [`DecreasingOrEqualShapeDistanceNotice`](/RULES.md#DecreasingOrEqualShapeDistanceNotice)
+#### [`DecreasingShapeDistanceNotice`](/RULES.md#DecreasingShapeDistanceNotice)
 ##### Fields description
 
 | Field name            	  | Description                                                                                    	  | Type    	|

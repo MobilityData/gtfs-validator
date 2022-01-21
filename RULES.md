@@ -201,7 +201,7 @@ Trips with the same block id have overlapping stop times.
 
 Parsing of a CSV file failed. One common case of the problem is when a cell value contains more than 4096 characters.
 
-<a name="DecreasingOrEqualShapeDistanceNotice"/>
+<a name="DecreasingShapeDistanceNotice"/>
 
 #### DecreasingShapeDistanceNotice
 

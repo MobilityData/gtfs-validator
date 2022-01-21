@@ -110,8 +110,8 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
   }
 
   /**
-   * When sorted on {@code shapes.shape_pt_sequence} key, shape points should not have equal
-   * values for {@code shapes.shape_dist_traveled}
+   * When sorted on {@code shapes.shape_pt_sequence} key, shape points should not have equal values
+   * for {@code shapes.shape_dist_traveled}
    *
    * <p>"Values must increase along with shape_pt_sequence."
    * (http://gtfs.org/reference/static/#shapestxt)
