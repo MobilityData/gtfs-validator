@@ -77,6 +77,11 @@ public class Arguments {
   private String systemErrorsReportName;
 
   @Parameter(
+      names = {"-w", "--web_server"},
+      description = "Run the embedded server.")
+  private boolean runWebServer = false;
+
+  @Parameter(
       names = {"-h", "--help"},
       description = "Print help",
       help = true)
@@ -152,6 +157,10 @@ public class Arguments {
     return pretty;
   }
 
+  public boolean getRunWebServer() {
+    return runWebServer;
+  }
+
   public boolean getExportNoticeSchema() {
     return exportNoticeSchema;
   }
@@ -162,6 +171,7 @@ public class Arguments {
         && url == null
         && storageDirectory == null
         && validationReportName == null
-        && systemErrorsReportName == null;
+        && systemErrorsReportName == null
+        && runWebServer == false;
   }
 }
