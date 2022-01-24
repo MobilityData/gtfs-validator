@@ -1,13 +1,22 @@
+h2 {
+    width:50%;
+    margin:20px auto;
+    padding:30px;
+    position:relative;
+    border-radius:5px;
+    box-shadow:0 0 15px 5px #ccc;
+}
+
 .severity-error {
-    background: #f00;
+    background: #f7a7a3;
 }
 
 .severity-warning {
-    background: #c80;
+    background: #ffd48a;
 }
 
 .severity-info {
-    background: #ccc;
+    background: #ebebeb;
 }
 
 .severity-unknown {
