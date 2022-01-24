@@ -106,10 +106,13 @@ var NoticeDetails = {
         // Functions indexed by notice code. See gtfs-validator/docs/NOTICES.md.
         //
         
-        attribution_without_role: n => h("ul",
+        attribution_without_role: n => h("div", [
+            h("p", "Validates that an attribution has at least one role: is_producer, is_operator, or is_authority."),
+            h("ul",
             n.sampleNotices.map(y => h("li", 
                 `attribution_id: ${y.attributionId} (attributions.txt:${y.csvRowNumber}) `,
-            ))),
+            )))
+        ]),
         
         block_trips_with_overlapping_stop_times: n => {
             let filename = "trips.txt"
