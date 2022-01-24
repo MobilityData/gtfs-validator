@@ -29,7 +29,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 
 /**
- * Validates that shape_dist_traveled along a shape in "shapes.txt" are increasing.
+ * Validates that the shape_dist_traveled along a shape in "shapes.txt" is increasing.
  *
  * <p>Generated notice:
  *
@@ -140,8 +140,8 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
   }
 
   /**
-   * When sorted on {@code shapes.shape_pt_sequence} key, distant shape points must not have equal
-   * values for {@code shapes.shape_dist_traveled}
+   * When sorted on {@code shapes.shape_pt_sequence} key, shape points with different coordinates
+   * must not have equal values for {@code shapes.shape_dist_traveled}
    *
    * <p>"Values must increase along with shape_pt_sequence."
    * (http://gtfs.org/reference/static/#shapestxt)
