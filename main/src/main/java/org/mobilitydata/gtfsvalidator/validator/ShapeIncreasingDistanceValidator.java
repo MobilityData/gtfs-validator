@@ -80,8 +80,9 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
   }
 
   /**
-   * When sorted on {@code shapes.shape_pt_sequence} key, shape points must not have strictly
-   * decreasing values for `shapes.shape_dist_traveled`
+   * When sorted by {@code shape.shape_pt_sequence}, the values for {@code shape_dist_traveled} must
+   * increase along a shape. Two consecutive points with equal values for {@code
+   * shape_dist_traveled} and different coordinates indicate an error.
    *
    * <p>"Values must increase along with shape_pt_sequence."
    * (http://gtfs.org/reference/static/#shapestxt)
@@ -110,8 +111,9 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
   }
 
   /**
-   * When sorted on {@code shapes.shape_pt_sequence} key, shape points should not have equal values
-   * for {@code shapes.shape_dist_traveled}
+   * When sorted by {@code shape.shape_pt_sequence}, the values for {@code shape_dist_traveled} must
+   * increase along a shape. Two consecutive points with equal values for {@code
+   * shape_dist_traveled} and the same coordinates indicate a duplicative shape point.
    *
    * <p>"Values must increase along with shape_pt_sequence."
    * (http://gtfs.org/reference/static/#shapestxt)

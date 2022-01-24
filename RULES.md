@@ -78,7 +78,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`DuplicateKeyNotice`](#DuplicateKeyNotice)                                                                     | Duplicated entity.                                                                                                                                     |
 | [`EmptyColumnNameNotice`](#EmptyColumnNameNotice)                                                            	  | A column name is empty.                                                                                                                                |
 | [`EmptyFileNotice`](#EmptyFileNotice)                                                                           | A CSV file is empty.                                                                                                                                   |
-| [`EqualShapeDistanceDiffCoordinatesNotice`](#EqualShapeDistanceDiffCoordinatesNotice)                           | Equal `shape_dist_traveled` in `shapes.txt`.                                                                                                           |
+| [`EqualShapeDistanceDiffCoordinatesNotice`](#EqualShapeDistanceDiffCoordinatesNotice)                           | Two consecutive points have equal `shape_dist_traveled` and different lat/lon coordinates in `shapes.txt`.                                             |
 | [`ForeignKeyViolationNotice`](#ForeignKeyViolationNotice)                                                       | Wrong foreign key.                                                                                                                                     |
 | [`InconsistentAgencyTimezoneNotice`](#InconsistentAgencyTimezoneNotice)                                         | Inconsistent Timezone among agencies.                                                                                                                  |
 | [`InvalidColorNotice`](#InvalidColorNotice)                                                                     | A field contains an invalid color value.                                                                                                               |
@@ -129,7 +129,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`AttributionWithoutRoleNotice`](#AttributionWithoutRoleNotice)                   	| Attribution with no role.                                                                                                                                   	|
 | [`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)                           	| Two distinct routes have either the same `route_short_name`, the same `route_long_name`, or the same combination of `route_short_name` and `route_long_name`. | 
 | [`EmptyRowNotice`](#EmptyRowNotice)                                               	| A row in the input file has only spaces.                                                                                                                      |
-| [`EqualShapeDistanceSameCoordinatesNotice`](#EqualShapeDistanceSameCoordinatesNotice) | Equal `shape_dist_traveled` in `shapes.txt`.                                                                                                                  |
+| [`EqualShapeDistanceSameCoordinatesNotice`](#EqualShapeDistanceSameCoordinatesNotice) | Two consecutive points have equal `shape_dist_traveled` and the same lat/lon coordinates in `shapes.txt`.                                                     |
 | [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsecutiveStopsNotice) | A transit vehicle moves too fast between two consecutive stops.                                                                            	                |
 | [`FastTravelBetweenFarStopsNotice`](#FastTravelBetweenFarStopsNotice)                 | A transit vehicle moves too fast between two far stops.                                                                            	                        |
 | [`FeedExpirationDateNotice`](#FeedExpirationDateNotice)                           	| Dataset should be valid for at least the next 7 days. Dataset should cover at least the next 30 days of service.                                            	|
@@ -268,7 +268,7 @@ Empty csv file found in the archive: file does not have any headers, or is a req
 
 <a name="EqualShapeDistanceDiffCoordinatesNotice"/>
 
-When sorted by `shape.shape_pt_sequence`, two consecutive shape points with different coordinates must not have equal values for `shape_dist_traveled`.
+When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` must increase along a shape. Two consecutive points with equal values for `shape_dist_traveled` and different coordinates indicate an error.
 
 ##### References:
 * [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)
@@ -700,7 +700,7 @@ A row in the input file has only spaces.
 
 <a name="EqualShapeDistanceSameCoordinatesNotice"/>
 
-When sorted by `shape.shape_pt_sequence`, two consecutive shape points should not have equal values for `shape_dist_traveled`.
+When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` must increase along a shape. Two consecutive points with equal values for `shape_dist_traveled` and the same coordinates indicate a duplicative shape point.
 
 ##### References:
 * [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)
