@@ -211,13 +211,19 @@ var NoticeDetails = {
                 "${y.fieldValue}" (${y.parentFilename}:${y.csvRowNumber} @ ${y.parentFieldName}) -> 
                 (${y.childFilename} @ ${y.childFieldName})`))), 
 
-        inconsistent_agency_lang: n => h("ul",
-            n.sampleNotices.map((y) => h("li",
-                 `Language ${y.actual}" was expected to be "${y.expected}" (agency.txt:${y.csvRowNumber})`))),
+        inconsistent_agency_lang: n => h("div", [
+            h("p", "Inconsistent language among agencies."),
+            h("ul",
+                n.sampleNotices.map((y) => h("li",
+                    `Language ${y.actual}" was expected to be "${y.expected}" (agency.txt:${y.csvRowNumber})`)))
+        ]),
 
-        inconsistent_agency_timezone: n => h("ul",
+        inconsistent_agency_timezone: n => h("div", [
+            h("p", "Inconsistent timezone among agencies."),
+            h("ul",
             n.sampleNotices.map((y) => h("li",
-                 `Time zone "${y.actual}" was expected to be "${y.expected}" (agency.txt:${y.csvRowNumber})`))),
+                 `Time zone "${y.actual}" was expected to be "${y.expected}" (agency.txt:${y.csvRowNumber})`)))
+        ]),
 
         invalid_color: NoticeDetailsGenericFieldValueCodeView,
         invalid_currency: NoticeDetailsGenericFieldValueCodeView,
