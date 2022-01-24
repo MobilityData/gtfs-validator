@@ -501,10 +501,13 @@ var NoticeDetails = {
         unknown_file: n => h("ul",
             n.sampleNotices.map((y) => h("li", `"${y.filename}"`))), 
 
-        unusable_trip: n => h("ul",
-            n.sampleNotices.map(y => h("li", 
-                `trip_id: ${y.tripId} (trips.txt:${y.csvRowNumber})`,
-            ))), 
+        unusable_trip: n => h("div", [
+            h("p", "A {@code GtfsTrip} should be referred to by at least two {@code GtfsStopTime}"),
+            h("ul",
+                n.sampleNotices.map(y => h("li",
+                `trip_id: ${y.tripId} (trips.txt:${y.csvRowNumber})`
+                )))
+            ]),
 
         unused_shape: n => h("ul",
             n.sampleNotices.map(y => h("li", 
