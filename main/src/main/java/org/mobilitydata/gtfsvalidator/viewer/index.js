@@ -113,16 +113,18 @@ var NoticeDetails = {
                 `attribution_id: ${y.attributionId} (attributions.txt:${y.csvRowNumber}) `,
             )))
         ]),
-        
+
         block_trips_with_overlapping_stop_times: n => {
             let filename = "trips.txt"
-            return h("ul",
-                n.sampleNotices.map(y => h("li", `
-                    block ${y.blockId} used by trip_id ${y.tripIdA} (${y.filename}:${y.csvRowNumberA}) 
-                    overlaps on ${y.intersection} with
-                    use by trip_id ${y.tripIdB} (${y.filename}:${y.csvRowNumberB}) 
-                    `))) 
-
+            return h("div", [
+                h("p", "Describes two trips with the same block id that have overlapping stop times."),
+                h("ul",
+                    n.sampleNotices.map(y => h("li", `
+                        block ${y.blockId} used by trip_id ${y.tripIdA} (${y.filename}:${y.csvRowNumberA}) 
+                        overlaps on ${y.intersection} with
+                        use by trip_id ${y.tripIdB} (${y.filename}:${y.csvRowNumberB}) 
+                        `)))
+            ])
         },
 
         csv_parsing_failed: n => h("ul",
