@@ -208,10 +208,13 @@ var NoticeDetails = {
                 a distance of ${y.distance}km with a speed of ${y.speedKph}km/h.`,
             ))), 
 
-        feed_expiration_date: n => h("ul",
+        feed_expiration_date: n => h("div", [
+            h("p", "Validates a feed's expiration date: 1) At any time, the published GTFS dataset should be valid for at least the next 7 days 2) If possible, the GTFS dataset should cover at least the next 30 days of service."),
+            h("ul",
             n.sampleNotices.map(y => h("li", `
                 Feed ended ${y.feedEndDate}, suggested end date ${y.suggestedExpirationDate}
-                (feed_info.txt:#${y.csvRowNumber})`))),
+                (feed_info.txt:#${y.csvRowNumber})`)))
+        ]),
 
         feed_info_lang_and_agency_mismatch: n => h("ul",
             n.sampleNotices.map((y) => h("li",
