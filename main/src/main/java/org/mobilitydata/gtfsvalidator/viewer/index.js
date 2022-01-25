@@ -133,13 +133,17 @@ var NoticeDetails = {
 
         decreasing_or_equal_shape_distance: n=> {
             let filename = "shapes.txt"
-            return h("ul",
+            return h("div", [
+                h("p", "When sorted on `shapes.shape_pt_sequence` key, shape points should have strictly increasing values for `shapes.shape_dist_traveled"),
+                h("p", "Values must increase along with shape_pt_sequence."),
+                h("a", "http://gtfs.org/reference/static/#shapestxt")
+                h("ul",
                 n.sampleNotices.map(y => h("li", 
                     `shape_id: ${y.shapeId} shape_pt_sequence=${y.shapePtSequence} (${y.filename}:${y.csvRowNumber})
                     distance ${y.shapeDistTraveled} is <= ${y.prevShapeDistTraveled} 
-                    at shape_pt_sequence=${y.prevShapePtSequence} (${y.filename}:${y.prevCsvRowNumber})`,
-                ))) 
-
+                    at shape_pt_sequence=${y.prevShapePtSequence} (${y.filename}:${y.prevCsvRowNumber})`
+                )))
+            ])
         },
 
         decreasing_or_equal_stop_time_distance: n => {
