@@ -135,8 +135,7 @@ var NoticeDetails = {
             let filename = "shapes.txt"
             return h("div", [
                 h("p", "When sorted on `shapes.shape_pt_sequence` key, shape points should have strictly increasing values for `shapes.shape_dist_traveled"),
-                h("p", "Values must increase along with shape_pt_sequence."),
-                h("a", "http://gtfs.org/reference/static/#shapestxt")
+                h("p", "Values must increase along with shape_pt_sequence. For more information, please vist http://gtfs.org/reference/static/#shapestxt."),
                 h("ul",
                 n.sampleNotices.map(y => h("li", 
                     `shape_id: ${y.shapeId} shape_pt_sequence=${y.shapePtSequence} (${y.filename}:${y.csvRowNumber})
@@ -148,12 +147,17 @@ var NoticeDetails = {
 
         decreasing_or_equal_stop_time_distance: n => {
             let filename = "stop_times.txt"
-            return h("ul",
+            return h("div", [
+                h("p", "When sorted on `stops.stop_sequence` key, stop times should have strictly increasing values for `stops.shape_dist_traveled`"),
+                h("p", "Values used for shape_dist_traveled must increase along with stop_sequence. For more information, please vist http://gtfs.org/reference/static/#stoptimestxt."),
+                h("ul",
                 n.sampleNotices.map(y => h("li", `
                     trip_id: ${y.tripId} stop_sequence=${y.stopSequence} (stop_times.txt:${y.csvRowNumber})
                     distance ${y.shapeDistTraveled} is <= ${y.prevStopTimeDistTraveled} 
                     at stop_sequence=${y.prevStopSequence} (stop_times.txt:${y.prevCsvRowNumber})`,
-                ))) 
+                )))
+            ])
+             
         },
 
         duplicated_column: n => h("ul",
