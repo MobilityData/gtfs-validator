@@ -216,11 +216,14 @@ var NoticeDetails = {
                 (feed_info.txt:#${y.csvRowNumber})`)))
         ]),
 
-        feed_info_lang_and_agency_mismatch: n => h("ul",
+        feed_info_lang_and_agency_mismatch: n => h("div", [
+            h("p", "{@code agency.agency_lang} and {@code feed_info.feed_lang} do not match."),
+            h("ul",
             n.sampleNotices.map((y) => h("li",
                  `Agency ${y.agencyId} language "${y.agencyLang}" was expected to match 
-                feed language "${y.feedLang}" (agency.txt:${y.csvRowNumber})`))),
-
+                feed language "${y.feedLang}" (agency.txt:${y.csvRowNumber})`)))
+        ]),
+        
         foreign_key_violation: n => h("ul",
             n.sampleNotices.map((y) => h("li", `
                 "${y.fieldValue}" (${y.parentFilename}:${y.csvRowNumber} @ ${y.parentFieldName}) -> 
