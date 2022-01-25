@@ -417,8 +417,11 @@ var NoticeDetails = {
                 `validator "${y.validator}" exception: "${y.exception}" message: "${y.message}"`,
             ))),
         
-        same_name_and_description_for_route: n => h("ul", 
-            n.sampleNotices.map(y => h("li", `route_id: ${y.routeId} ${y.specifiedField} (routes.txt:${y.csvRowNumber}) `))), 
+        same_name_and_description_for_route: n => h("div", [
+            h("p", "A single route has identical values for {@code routes.route_desc} and {@code route_long_name} or {@code route_short_name}."),
+            h("ul", 
+            n.sampleNotices.map(y => h("li", `route_id: ${y.routeId} ${y.specifiedField} (routes.txt:${y.csvRowNumber}) `)))
+        ]),
 
         same_name_and_description_for_stop: n => h("ul", 
             n.sampleNotices.map(y => h("li", `stop_id: ${y.stopId} "${y.stopDesc}" (stops.txt:${y.csvRowNumber}) `))), 
