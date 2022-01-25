@@ -291,8 +291,12 @@ var NoticeDetails = {
             )))
         ]),
 
-        missing_level_id: n => h("ul",
-            n.sampleNotices.map(y => h("li", `stop_id: ${y.stopId} (levels.txt:${y.csvRowNumber})`))),
+        missing_level_id: n => h("div", [
+            h("p", "A row from stops.txt is linked to a row from pathways.txt with {@code pathways.pathway_mode=5} but has no value for {@code stops.level_id}."),
+            h("ul",
+            n.sampleNotices.map(y => h("li", `stop_id: ${y.stopId} (levels.txt:${y.csvRowNumber})`)))
+        ]), 
+        
 
         missing_required_column: n => h("ul",
             n.sampleNotices.map(y => h("li", 
