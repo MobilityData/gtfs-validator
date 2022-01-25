@@ -427,9 +427,12 @@ var NoticeDetails = {
             n.sampleNotices.map(y => h("li", 
                 `route_id: ${y.routeId} (routes.txt:${y.routeCsvRowNumber}) agency_id: ${y.agencyId} (agency.txt:${y.agencyCsvRowNumber}) `))), 
 
-        same_stop_and_agency_url: n => h("ul", 
+        same_stop_and_agency_url: n => h("div", [
+            h("p", "A {@code GtfsStop} has the same value for {@code stops.stop_url} as a record from \"agency.txt\""),
+            h("ul", 
             n.sampleNotices.map(y => h("li", 
-                `stop_id: ${y.stopId} (stops.txt:${y.stopCsvRowNumber}) agency_id: ${y.agencyId} (agency.txt:${y.agencyCsvRowNumber}) `))), 
+                `stop_id: ${y.stopId} (stops.txt:${y.stopCsvRowNumber}) agency_id: ${y.agencyId} (agency.txt:${y.agencyCsvRowNumber}) `))) 
+            ]),
 
         same_stop_and_route_url: n => h("ul", 
             n.sampleNotices.map(y => h("li", 
