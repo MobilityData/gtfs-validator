@@ -515,10 +515,13 @@ var NoticeDetails = {
 
         stop_without_zone_id: n => {
             let filename = "stops.txt"
-            return h("ul",
+            return h("div", [
+                h("p", "A {@code GtfsShape} should be referred to at least once in {@code GtfsTripTableContainer} station)."),
+                h("ul",
                 n.sampleNotices.map(y => h("li", 
                     `stop_id: ${y.stopId} "${y.stopName}" (${y.filename}:${y.csvRowNumber}) `,
                 )))
+            ])
         },
 
         thread_excecution_error: n => h("ul",
