@@ -559,10 +559,13 @@ var NoticeDetails = {
                 `shape_id: ${y.shapeId} (shapes.txt:${y.csvRowNumber})`,
             ))), 
 
-        unused_trip: n => h("ul",
+        unused_trip: n => h("div", [
+            h("p", "A {@code GtfsTrip} should be referred to at least once in {@code GtfsStopTimeTableContainer} station)."),
+            h("ul",
             n.sampleNotices.map(y => h("li", 
-                `trip_id: ${y.tripId} (trips.txt:${y.csvRowNumber})`,
-            ))), 
+                `trip_id: ${y.tripId} (trips.txt:${y.csvRowNumber})`
+            )))
+        ]),
 
         u_r_i_syntax_error: n => h("ul",
             n.sampleNotices.map(y => h("li", 
