@@ -277,10 +277,13 @@ var NoticeDetails = {
 
         missing_calendar_and_calendar_date_files: n => h("p", "Both the calendar.txt and calendar_dates.txt files are missing."),
 
-        missing_feed_info_date: n => h("ul",
+        missing_feed_info_date: n => h("div", [
+            h("p", "Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one field is provided the second one should also be provided."),
+            h("ul",
             n.sampleNotices.map(y => h("li", 
                 `column: ${y.fieldName} (feed_info.txt:${y.csvRowNumber}) `,
-            ))),
+            )))
+        ]),
 
         missing_level_id: n => h("ul",
             n.sampleNotices.map(y => h("li", `stop_id: ${y.stopId} (levels.txt:${y.csvRowNumber})`))),
