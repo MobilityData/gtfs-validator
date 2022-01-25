@@ -208,13 +208,17 @@ var NoticeDetails = {
                 a distance of ${y.distance}km with a speed of ${y.speedKph}km/h.`,
             ))), 
 
-        fast_travel_between_far_stops: n => h("ul",
+        fast_travel_between_far_stops: n => h("div", [
+            h("p", "Describes a trip where the transit vehicle moves too fast between two far stops."),
+            h("p", "This normally indicates a more serious problem than too fast travel between consecutive stops."),
+            h("ul",
             n.sampleNotices.map(y => h("li", 
                 `trip_id: ${y.tripId} route ${y.routeId} (trips.txt:${y.tripCsvRowNumber}) 
                 stop_id ${y.stopId1} "${y.stopName1}" stop_sequence=${y.stopSequence1} lat/lon ${y.match1} departed ${y.departureTime1} (stop_times.txt:${y.csvRowNumber1})
                 arrived ${y.arrivalTime2} stop_id ${y.stopId2} "${y.stopName2}" stop_sequence=${y.stopSequence2} lat/lon ${y.match2} (stop_times.txt:${y.csvRowNumber2})
                 a distance of ${y.distance}km with a speed of ${y.speedKph}km/h.`,
-            ))), 
+            ))) 
+        ]), 
 
         feed_expiration_date: n => h("div", [
             h("p", "Validates a feed's expiration date: 1) At any time, the published GTFS dataset should be valid for at least the next 7 days 2) If possible, the GTFS dataset should cover at least the next 30 days of service."),
