@@ -501,10 +501,13 @@ var NoticeDetails = {
 
         stop_without_stop_time: n => {
             let filename = "stop_times.txt"
-            return h("ul",
+            return h("div", [
+                h("p", "Describes a stop that does not have any stop time associated."),
+                h("ul",
                 n.sampleNotices.map(y => h("li", 
-                    `stop_id: ${y.stopId} "${y.stopName}" (${y.filename}:${y.csvRowNumber}) `,
+                    `stop_id: ${y.stopId} "${y.stopName}" (${y.filename}:${y.csvRowNumber}) `
                 )))
+            ])
         },
         
         // too_fast_travel: 
