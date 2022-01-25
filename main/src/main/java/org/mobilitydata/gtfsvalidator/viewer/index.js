@@ -155,13 +155,17 @@ var NoticeDetails = {
         duplicated_column: n => h("ul",
             n.sampleNotices.map(y => h("li", `"${y.fieldName}" (${y.filename} #${y.firstIndex} is duplicate to #${y.secondIndex})`))),
 
+
+
         duplicate_fare_rule_zone_id_fields: n => {
             let filename = "fare_rules.txt"
-            return h("ul",
+            return h("div", [
+                h("p", "Rows from \"fare_rules.txtn\" must be unique based on \"fare_rules.route_idn\", \"fare_rules.origin_id\", \"fare_rules.contains_id\" and \"fare_rules.destination_id\""),
+                h("ul",
                 n.sampleNotices.map(y => h("li", `
-                    fare_id: ${y.fareId} (${y.filename}:${y.csvRowNumber}) has 
-                    duplicate zones to fare_id: ${y.previousFareId} (${y.filename}:${y.previousCsvRowNumber})`,
-                )))
+                fare_id: ${y.fareId} (${y.filename}:${y.csvRowNumber}) has 
+                duplicate zones to fare_id: ${y.previousFareId} (${y.filename}:${y.previousCsvRowNumber})`)))
+            ])
         },
 
         duplicate_key: n => h("ul",
@@ -169,12 +173,15 @@ var NoticeDetails = {
                 ${y.fieldName1} ${y.fieldValue1} (${y.filename}:${y.oldCsvRowNumber}) is duplicate to
                 ${y.fieldName2} ${y.fieldValue2} (${y.filename}:${y.newCsvRowNumber})`))),
 
-        duplicate_route_name: n => h("ul",
-            n.sampleNotices.map(y => h("li", 
-                `route_id ${y.routeId1} "${y.routeLongName1}" (routes.txt:${y.csvRowNumber1}) 
-                has a duplicate id, short name or long name of
-                route_id ${y.routeId2} "${y.routeLongName2}" (routes.txt:${y.csvRowNumber2})`,
-            ))), 
+        duplicate_route_name: n => h("div", [
+            h("p", "Describes two routes that have the same long and short names, route type and belong to the same agency."),
+            h("ul",
+                n.sampleNotices.map(y => h("li", 
+                    `route_id ${y.routeId1} "${y.routeLongName1}" (routes.txt:${y.csvRowNumber1}) 
+                    has a duplicate id, short name or long name of
+                    route_id ${y.routeId2} "${y.routeLongName2}" (routes.txt:${y.csvRowNumber2})`,
+                )))
+        ]), 
 
         empty_column_name: n => h("ul",
             n.sampleNotices.map(y => h("li", `"No column name for (${y.filename} #${y.index})`))),
