@@ -265,10 +265,13 @@ var NoticeDetails = {
 
         leading_or_trailing_whitespaces: NoticeDetailsGenericFieldValueCodeView,
 
-        location_with_unexpected_stop_time: n => h("ul",
+        location_with_unexpected_stop_time: n => h("div", [
+            h("p", "Describes a location in {@code stops.txt} that is not a stop but has a stop time associated."),
+            h("ul",
             n.sampleNotices.map(y => h("li", 
                 `stop_id: ${y.stopId} "${y.stopName}" (stops.txt:${y.csvRowNumber}) and (stop_times.txt${y.stopTimeCsvRowNumber})`,
-            ))),
+            )))
+        ]),
 
         location_without_parent_station: n => h("ul",
             n.sampleNotices.map(y => h("li", 
