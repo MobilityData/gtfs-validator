@@ -551,11 +551,14 @@ var NoticeDetails = {
                 `exception: "${y.exception}" message: "${y.message}"`,
             ))),
 
-        wrong_parent_location_type: n => h("ul",
+        wrong_parent_location_type: n => h("div", [
+            h("p", "A platform has no `parent_station` field set."),
+            h("ul",
             n.sampleNotices.map(y => h("li", 
                 `stop_id: ${y.stopId} "${y.stopName}" type ${y.locationType} (stops.txt:${y.csvRowNumber}) 
                 parent stop_id: ${y.parentStation} "${y.parentStopName}" type ${y.parentLocationType} (stops.txt:${y.parentCsvRowNumber})`,
-            ))),
+            )))
+        ]),
 
         wrong_stop_time_stop_location_type: n => h("ul",
             n.sampleNotices.map(y => h("li", `trip_id ${y.tripId} stop_sequence=${y.stopSequence} 
