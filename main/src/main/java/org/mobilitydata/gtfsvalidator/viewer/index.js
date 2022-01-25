@@ -342,11 +342,15 @@ var NoticeDetails = {
 
         overlapping_frequency: n => {
             let filename = "frequencies.txt"
-            return h("ul",
+            return  h("div", [
+                h("p", "Two frequency entries referring to the same trip may not have an overlapping time range."),
+                h("p", "Two entries X and Y are considered to directly overlap if <i>X.start_time &lt;= Y.start_time</i> and <i>Y.start_time &lt;X.end_time</i>"),
+                h("ul",
                 n.sampleNotices.map(y => h("li", `
                     trip_id: ${y.tripId} start time ${y.currStartTime} (${y.filename}:${y.currCsvRowNumber}) 
                     overlaps with end time ${y.prevEndTime} (${y.filename}:${y.prevCsvRowNumber}) 
                     `))) 
+            ])
         },
 
         pathway_dangling_generic_node: n => h("ul",
