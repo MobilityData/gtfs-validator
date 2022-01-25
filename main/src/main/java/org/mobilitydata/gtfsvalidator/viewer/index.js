@@ -319,10 +319,14 @@ var NoticeDetails = {
         missing_timepoint_value: n => h("ul",
             n.sampleNotices.map(y => h("li", `trip_id ${y.tripId} stop_sequence=${y.stopSequence} (stop_times.txt:${y.csvRowNumber})`,))),
 
-        missing_trip_edge: n => h("ul",
+        missing_trip_edge: n => h("div", [
+            h("p", "First and last stop of a trip must define both `arrival_time` and `departure_time` fields."),
+            h("p", "If there are not separate times for arrival and departure at a stop, enter the same value for arrival_time and departure_time."),
+            h("ul",
             n.sampleNotices.map(y => h("li", 
                 `trip_id: ${y.tripId} stop_sequence=${y.stopSequence} (${y.filename}:${y.csvRowNumber})`,
-            ))), 
+            )))
+        ]), 
 
         more_than_one_entity: n => h("ul",
             n.sampleNotices.map(y => h("li", `Found ${y.entityCount} entities in (${y.filename})`,))), 
