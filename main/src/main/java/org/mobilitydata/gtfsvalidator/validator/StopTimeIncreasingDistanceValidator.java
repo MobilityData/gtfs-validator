@@ -25,12 +25,11 @@ import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
-import org.mobilitydata.gtfsvalidator.validator.ShapeIncreasingDistanceValidator.DecreasingOrEqualShapeDistanceNotice;
 
 /**
  * Validates: stop times of a trip have increasing distance (stops.shape_dist_traveled)
  *
- * <p>Generated notice: {@link DecreasingOrEqualShapeDistanceNotice}.
+ * <p>Generated notice: {@link DecreasingOrEqualStopTimeDistanceNotice}.
  */
 @GtfsValidator
 public class StopTimeIncreasingDistanceValidator extends FileValidator {
