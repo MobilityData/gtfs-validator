@@ -17,7 +17,7 @@ import javax.servlet.http.Part;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
-import org.mobilitydata.gtfsvalidator.cli.Main;
+import org.mobilitydata.gtfsvalidator.cli.Main; // For loadAndValidate().
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
@@ -94,14 +94,11 @@ public class ValidatorWebServer {
           tempFile.deleteOnExit();
           filePart.write(tempFile.getName());
           try (InputStream inputStream = filePart.getInputStream();
-              // var tempFileNIO = new java.nio.file.File.(tempFile.getName());
-              // var seekableByteChannel = tempFile.getChannel();
               var seekableByteChannel =
                   Files.newByteChannel(Paths.get(tempFile.getPath()), StandardOpenOption.READ);
               ZipArchiveInputStream zis = new ZipArchiveInputStream(inputStream)) {
             if (validZipArchiveInputStream(zis)) {
               System.out.println("Zip file upload is valid.");
-              // return validationReport(req, res, zis);
               return validationReport(req, res, seekableByteChannel);
 
             } else {
@@ -132,8 +129,11 @@ public class ValidatorWebServer {
     try {
       validatorLoader = new ValidatorLoader();
     } catch (ValidatorLoaderException e) {
-      // logger.atSevere().withCause(e).log("Cannot load validator classes");
-      // System.exit(1);
+      logger.atSevere().withCause(e).log("Cannot load validator classes.");
+      res.status(500);
+      // TODO show a better error page so the user isn't confused, give them
+      // instructions on how to diagnose or get support.
+      return "Server error.";
     }
     GtfsFeedLoader feedLoader = new GtfsFeedLoader();
     GtfsInput gtfsInput = null;
@@ -146,18 +146,18 @@ public class ValidatorWebServer {
               validatorLoader, feedLoader, noticeContainer, gtfsInput, validationContext);
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("IO Exception during Validation");
-      return "";
+      res.status(500);
+      return "Server error.";
+
     } catch (InterruptedException e) {
       logger.atSevere().withCause(e).log("Validation was interrupted");
-      // logger.atSevere().withCause(e).log("Validation was interrupted");
-      // System.exit(1);
-      return "";
+      res.status(500);
+      return "Server error.";
     }
 
     return ViewerIndex.IndexHtmlAll(
         "var report = "
             + prettyGson.toJson(noticeContainer.exportValidationNotices())
-            // + "{ notices: [] }" // TBD
             + ";");
   }
 
