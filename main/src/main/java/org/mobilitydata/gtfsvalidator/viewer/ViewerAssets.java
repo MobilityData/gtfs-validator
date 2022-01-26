@@ -1915,7 +1915,7 @@ public class ViewerAssets {
         + "        <title>GTFS Validator</title>\n"
         + "        <link rel=\"stylesheet\" href=\"index.css\" type=\"text/css\" />\n"
         + "    </head>\n"
-        + "    <body onload=\"ReportView.render()\">\n"
+        + "    <body>\n"
         + "        <h1>GTFS Validator</h1>\n"
         + "        <form class=\"table-like\" method=post action=\"./validate\" enctype=\"multipart/form-data\">\n"
         + "            <div> \n"
