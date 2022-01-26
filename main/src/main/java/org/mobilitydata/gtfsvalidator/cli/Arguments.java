@@ -78,7 +78,7 @@ public class Arguments {
 
   @Parameter(
       names = {"-w", "--web_server"},
-      description = "Run the embedded server.")
+      description = "Run the embedded web server on http://0.0.0.0:6888/")
   private boolean runWebServer = false;
 
   @Parameter(
