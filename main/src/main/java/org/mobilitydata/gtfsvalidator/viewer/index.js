@@ -135,12 +135,16 @@ var NoticeDetails = {
             let filename = "shapes.txt"
             return h("div", [
                 h("p", "When sorted on `shapes.shape_pt_sequence` key, shape points should have strictly increasing values for `shapes.shape_dist_traveled"),
-                h("p", "Values must increase along with shape_pt_sequence. For more information, please vist http://gtfs.org/reference/static/#shapestxt."),
-                h("ul",
-                n.sampleNotices.map(y => h("li", 
-                    `shape_id: ${y.shapeId} shape_pt_sequence=${y.shapePtSequence} (${y.filename}:${y.csvRowNumber})
-                    distance ${y.shapeDistTraveled} is <= ${y.prevShapeDistTraveled} 
-                    at shape_pt_sequence=${y.prevShapePtSequence} (${y.filename}:${y.prevCsvRowNumber})`
+                h("p", "Values must increase along with shape_pt_sequence. For more information, please vist:"),
+                h("a", { props: { href: "http://gtfs.org/reference/static/#shapestxt." } }, "http://gtfs.org/reference/static/#shapestxt."),
+                h("p",
+                    n.sampleNotices.map(y => h("", [
+                        h("p", { style: { fontWeight: "bold"} }, `shape_id: ${y.shapeId}`),
+                        h("ul", [
+                            h("li", ` shape_pt_sequence=${y.shapePtSequence} (${y.filename}:${y.csvRowNumber})`),
+                            h("li", `distance ${y.shapeDistTraveled} is <= ${y.prevShapeDistTraveled} at shape_pt_sequence=${y.prevShapePtSequence} (${y.filename}:${y.prevCsvRowNumber})`)
+                        ])
+                    ]
                 )))
             ])
         },
@@ -149,15 +153,18 @@ var NoticeDetails = {
             let filename = "stop_times.txt"
             return h("div", [
                 h("p", "When sorted on `stops.stop_sequence` key, stop times should have strictly increasing values for `stops.shape_dist_traveled`"),
-                h("p", "Values used for shape_dist_traveled must increase along with stop_sequence. For more information, please vist http://gtfs.org/reference/static/#stoptimestxt."),
-                h("ul",
-                n.sampleNotices.map(y => h("li", `
-                    trip_id: ${y.tripId} stop_sequence=${y.stopSequence} (stop_times.txt:${y.csvRowNumber})
-                    distance ${y.shapeDistTraveled} is <= ${y.prevStopTimeDistTraveled} 
-                    at stop_sequence=${y.prevStopSequence} (stop_times.txt:${y.prevCsvRowNumber})`,
+                h("p", "Values used for shape_dist_traveled must increase along with stop_sequence. For more information, please vist:"),
+                h("a", { props: { href: "http://gtfs.org/reference/static/#stoptimestxt" } }, "http://gtfs.org/reference/static/#stoptimestxt"),
+                h("p",
+                    n.sampleNotices.map(y => h("p", [
+                        h("p", { style: { fontWeight: "bold"} }, `trip_id: ${y.tripId}`),
+                        h("ul", [
+                            h("li", ` stop_sequence=${y.stopSequence} (stop_times.txt:${y.csvRowNumber})`),
+                            h("li", `distance ${y.shapeDistTraveled} is <= ${y.prevStopTimeDistTraveled} at stop_sequence=${y.prevStopSequence} (stop_times.txt:${y.prevCsvRowNumber})`)
+                        ]) 
+                    ]
                 )))
             ])
-             
         },
 
         duplicated_column: n => h("ul",
@@ -171,23 +178,19 @@ var NoticeDetails = {
                 h("p", "Rows from \"fare_rules.txtn\" must be unique based on \"fare_rules.route_idn\", \"fare_rules.origin_id\", \"fare_rules.contains_id\" and \"fare_rules.destination_id\""),
                 h("ul",
                 n.sampleNotices.map(y => h("li", `
-                fare_id: ${y.fareId} (${y.filename}:${y.csvRowNumber}) has 
-                duplicate zones to fare_id: ${y.previousFareId} (${y.filename}:${y.previousCsvRowNumber})`)))
+                fare_id: ${y.fareId} (${y.filename}:${y.csvRowNumber}) has duplicate zones to fare_id: ${y.previousFareId} (${y.filename}:${y.previousCsvRowNumber})`)))
             ])
         },
 
         duplicate_key: n => h("ul",
             n.sampleNotices.map(y => h("li", `
-                ${y.fieldName1} ${y.fieldValue1} (${y.filename}:${y.oldCsvRowNumber}) is duplicate to
-                ${y.fieldName2} ${y.fieldValue2} (${y.filename}:${y.newCsvRowNumber})`))),
+                ${y.fieldName1} ${y.fieldValue1} (${y.filename}:${y.oldCsvRowNumber}) is duplicate to ${y.fieldName2} ${y.fieldValue2} (${y.filename}:${y.newCsvRowNumber})`))),
 
         duplicate_route_name: n => h("div", [
             h("p", "Describes two routes that have the same long and short names, route type and belong to the same agency."),
             h("ul",
                 n.sampleNotices.map(y => h("li", 
-                    `route_id ${y.routeId1} "${y.routeLongName1}" (routes.txt:${y.csvRowNumber1}) 
-                    has a duplicate id, short name or long name of
-                    route_id ${y.routeId2} "${y.routeLongName2}" (routes.txt:${y.csvRowNumber2})`,
+                    `route_id ${y.routeId1} "${y.routeLongName1}" (routes.txt:${y.csvRowNumber1}) has a duplicate id, short name or long name of route_id ${y.routeId2} "${y.routeLongName2}" (routes.txt:${y.csvRowNumber2})`,
                 )))
         ]), 
 
@@ -201,11 +204,14 @@ var NoticeDetails = {
             n.sampleNotices.map((y) => h("li", `"${y.filename}"`))), 
 
         fast_travel_between_consecutive_stops: n => h("ul",
-            n.sampleNotices.map(y => h("li", 
-                `trip_id: ${y.tripId} route ${y.routeId} (trips.txt:${y.tripCsvRowNumber}) 
-                stop_id ${y.stopId1} "${y.stopName1}" stop_sequence=${y.stopSequence1} lat/lon ${y.match1} departed ${y.departureTime1} (stop_times.txt:${y.csvRowNumber1})
-                arrived ${y.arrivalTime2} stop_id ${y.stopId2} "${y.stopName2}" stop_sequence=${y.stopSequence2} lat/lon ${y.match2} (stop_times.txt:${y.csvRowNumber2})
-                a distance of ${y.distance}km with a speed of ${y.speedKph}km/h.`,
+                n.sampleNotices.map(y => h("li", [
+                    h("p", [
+                        h("text", `trip_id: ${y.tripId} route ${y.routeId} (trips.txt:${y.tripCsvRowNumber})`),
+                        h("text", `stop_id ${y.stopId1} "${y.stopName1}" stop_sequence=${y.stopSequence1} lat/lon ${y.match1} departed ${y.departureTime1} (stop_times.txt:${y.csvRowNumber1})`),
+                        h("text", `arrived ${y.arrivalTime2} stop_id ${y.stopId2} "${y.stopName2}" stop_sequence=${y.stopSequence2} lat/lon ${y.match2} (stop_times.txt:${y.csvRowNumber2})`),
+                        h("text", `a distance of ${y.distance}km with a speed of ${y.speedKph}km/h.`)
+                    ])
+                ]
             ))), 
 
         fast_travel_between_far_stops: n => h("div", [
@@ -347,7 +353,7 @@ var NoticeDetails = {
             h("p", "If there are not separate times for arrival and departure at a stop, enter the same value for arrival_time and departure_time."),
             h("ul",
             n.sampleNotices.map(y => h("li", 
-                `trip_id: ${y.tripId} stop_sequence=${y.stopSequence} (${y.filename}:${y.csvRowNumber})`,
+                `trip_id: ${y.tripId}, stop_sequence=${y.stopSequence} (${y.filename}:${y.csvRowNumber})`,
             )))
         ]), 
 
@@ -439,7 +445,8 @@ var NoticeDetails = {
             ]), 
 
         route_color_contrast: n => h("div", [
-            h("p", "The color difference between route_color and route_text_color should provide sufficient contrast when viewed on a black and white screen. (http://gtfs.org/best-practices/#routestxt)"),
+            h("p", "The color difference between route_color and route_text_color should provide sufficient contrast when viewed on a black and white screen. For more information, please visit:"),
+            h("a", { props: { href: "http://gtfs.org/best-practices/#routestxt" } }, "http://gtfs.org/best-practices/#routestxt"),
             h("ul", 
             n.sampleNotices.map(y => h("li", `route_id: ${y.routeId} text color "${y.routeTextColor}" color "${y.routeColor}" (routes.txt:${y.csvRowNumber}) `)))
             ]), 
@@ -451,7 +458,8 @@ var NoticeDetails = {
             ]),
 
         route_short_name_too_long: n => h("div", [
-            h("p", "Short name of a single route is too long (more than 12 characters (https://gtfs.org/best-practices/#routestxt)."),
+            h("p", "Short name of a single route is too long (more than 12 characters. For more information, please visit:"),
+            h("a", { props: { href: "http://gtfs.org/best-practices/#routestxt" } }, "http://gtfs.org/best-practices/#routestxt"),
             h("ul", 
             n.sampleNotices.map(y => h("li", `route_id: ${y.routeId} (routes.txt:${y.csvRowNumber}) `)))
             ]), 
@@ -475,7 +483,8 @@ var NoticeDetails = {
 
         same_name_and_description_for_stop: n => h("div", [
             h("p", "A {@code GtfsStop} has identical value for {@code stops.route_desc} and {@code stops.stop_name}."),
-            h("p", "Do not simply duplicate the name of the location. (http://gtfs.org/reference/static#stopstxt)"),
+            h("p", "Do not simply duplicate the name of the location. For more informantion, please visit:"),
+            h("a", { props: { href: "http://gtfs.org/reference/static#stopstxt" } }, "http://gtfs.org/reference/static#stopstxt"),
             h("ul", 
             n.sampleNotices.map(y => h("li", `stop_id: ${y.stopId} "${y.stopDesc}" (stops.txt:${y.csvRowNumber}) `)))
             ]), 
@@ -547,11 +556,14 @@ var NoticeDetails = {
 
         stop_time_with_arrival_before_previous_departure_time: n => h("div", [
             h("p", "Two {@code GtfsTime} are out of order."),
-            h("ul",
-            n.sampleNotices.map(y => h("li", `
-                trip_id: ${y.tripId} stop_sequence=${y.stopSequence} arrival ${y.arrivalTime} (stop_times.txt:${y.csvRowNumber})
-                is before previous departure ${y.departureTime} (stop_times.txt:${y.prevCsvRowNumber})
-                    `,
+            h("p",
+                n.sampleNotices.map(y => h("p", [
+                    h("p", { style: { fontWeight: "bold"} }, `trip_id: ${y.tripId}`),
+                    h("ul", [
+                        h("li", `stop_sequence=${y.stopSequence}`),
+                        h("li", `arrival ${y.arrivalTime} (stop_times.txt:${y.csvRowNumber})\nis before previous departure ${y.departureTime} (stop_times.txt:${y.prevCsvRowNumber})`)
+                    ])
+                ]
             )))
         ]),
 
