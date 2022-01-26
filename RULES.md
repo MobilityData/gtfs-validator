@@ -71,13 +71,14 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 |-----------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`BlockTripsWithOverlappingStopTimesNotice`](#BlockTripsWithOverlappingStopTimesNotice)                         | Block trips with overlapping stop times.                                                                                                               |
 | [`CsvParsingFailedNotice`](#CsvParsingFailedNotice)                                                             | Parsing of a CSV file failed.                                                                                                                          |
-| [`DecreasingOrEqualShapeDistanceNotice`](#DecreasingOrEqualShapeDistanceNotice)                                 | Decreasing or equal `shape_dist_traveled` in `shapes.txt`.                                                                                             |
+| [`DecreasingShapeDistanceNotice`](#DecreasingShapeDistanceNotice)                                               | Decreasing `shape_dist_traveled` in `shapes.txt`.                                                                                                      |
 | [`DecreasingOrEqualStopTimeDistanceNotice`](#DecreasingOrEqualStopTimeDistanceNotice)                           | Decreasing or equal `shape_dist_traveled` in `stop_times.txt`.                                                                                         |
 | [`DuplicatedColumnNotice`](#DuplicatedColumnNotice)                                                             | Duplicated column in CSV.                                                                                                                              |
 | [`DuplicateFareRuleZoneIdFieldsNotice`](#DuplicateFareRuleZoneIdFieldsNotice)                                   | Duplicate rows from `fare_rules.txt` based on `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.contains_id` and `fare_rules.destination_id`. |
 | [`DuplicateKeyNotice`](#DuplicateKeyNotice)                                                                     | Duplicated entity.                                                                                                                                     |
 | [`EmptyColumnNameNotice`](#EmptyColumnNameNotice)                                                            	  | A column name is empty.                                                                                                                                |
 | [`EmptyFileNotice`](#EmptyFileNotice)                                                                           | A CSV file is empty.                                                                                                                                   |
+| [`EqualShapeDistanceDiffCoordinatesNotice`](#EqualShapeDistanceDiffCoordinatesNotice)                           | Two consecutive points have equal `shape_dist_traveled` and different lat/lon coordinates in `shapes.txt`.                                             |
 | [`ForeignKeyViolationNotice`](#ForeignKeyViolationNotice)                                                       | Wrong foreign key.                                                                                                                                     |
 | [`InconsistentAgencyTimezoneNotice`](#InconsistentAgencyTimezoneNotice)                                         | Inconsistent Timezone among agencies.                                                                                                                  |
 | [`InvalidColorNotice`](#InvalidColorNotice)                                                                     | A field contains an invalid color value.                                                                                                               |
@@ -128,6 +129,7 @@ Additional details regarding the notices' context is provided in [`NOTICES.md`](
 | [`AttributionWithoutRoleNotice`](#AttributionWithoutRoleNotice)                   	| Attribution with no role.                                                                                                                                   	|
 | [`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)                           	| Two distinct routes have either the same `route_short_name`, the same `route_long_name`, or the same combination of `route_short_name` and `route_long_name`. | 
 | [`EmptyRowNotice`](#EmptyRowNotice)                                               	| A row in the input file has only spaces.                                                                                                                      |
+| [`EqualShapeDistanceSameCoordinatesNotice`](#EqualShapeDistanceSameCoordinatesNotice) | Two consecutive points have equal `shape_dist_traveled` and the same lat/lon coordinates in `shapes.txt`.                                                     |
 | [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsecutiveStopsNotice) | A transit vehicle moves too fast between two consecutive stops.                                                                            	                |
 | [`FastTravelBetweenFarStopsNotice`](#FastTravelBetweenFarStopsNotice)                 | A transit vehicle moves too fast between two far stops.                                                                            	                        |
 | [`FeedExpirationDateNotice`](#FeedExpirationDateNotice)                           	| Dataset should be valid for at least the next 7 days. Dataset should cover at least the next 30 days of service.                                            	|
@@ -199,11 +201,11 @@ Trips with the same block id have overlapping stop times.
 
 Parsing of a CSV file failed. One common case of the problem is when a cell value contains more than 4096 characters.
 
-<a name="DecreasingOrEqualShapeDistanceNotice"/>
+<a name="DecreasingShapeDistanceNotice"/>
 
-#### DecreasingOrEqualShapeDistanceNotice
+#### DecreasingShapeDistanceNotice
 
-When sorted by `shape.shape_pt_sequence`, two consecutive shape points should have increasing values for `shape_dist_traveled`. If the values are equal, this is considered as an error.  
+When sorted by `shape.shape_pt_sequence`, two consecutive shape points must not have decreasing values for `shape_dist_traveled`.  
 
 ##### References:
 * [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)
@@ -261,6 +263,15 @@ Empty csv file found in the archive: file does not have any headers, or is a req
 
 ##### References:
 * [GTFS files requirements](https://gtfs.org/reference/static#file-requirements)
+
+#### EqualShapeDistanceDiffCoordinatesNotice
+
+<a name="EqualShapeDistanceDiffCoordinatesNotice"/>
+
+When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` must increase along a shape. Two consecutive points with equal values for `shape_dist_traveled` and different coordinates indicate an error.
+
+##### References:
+* [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)
 
 <a name="ForeignKeyViolationNotice"/>
 
@@ -684,6 +695,15 @@ A row in the input file has only spaces.
 
 ##### References:
 * [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
+
+#### EqualShapeDistanceSameCoordinatesNotice
+
+<a name="EqualShapeDistanceSameCoordinatesNotice"/>
+
+When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` must increase along a shape. Two consecutive points with equal values for `shape_dist_traveled` and the same coordinates indicate a duplicative shape point.
+
+##### References:
+* [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)
 
 <a name="FastTravelBetweenConsecutiveStopsNotice"/>
 
