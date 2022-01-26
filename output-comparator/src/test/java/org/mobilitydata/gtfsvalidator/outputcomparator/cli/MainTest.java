@@ -20,7 +20,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mobilitydata.gtfsvalidator.outputcomparator.cli.Main.ACCEPTANCE_REPORT_JSON;
 import static org.mobilitydata.gtfsvalidator.outputcomparator.cli.Main.SOURCES_CORRUPTION_REPORT_JSON;
 
-import com.github.stefanbirkner.systemlambda.SystemLambda;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -40,6 +39,7 @@ import org.mobilitydata.gtfsvalidator.notice.InvalidEmailNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.PointNearPoleNotice;
+import uk.org.webcompere.systemstubs.SystemStubs; // catchSystemExit() for JDK 16 and newer.
 
 @RunWith(JUnit4.class)
 public class MainTest {
@@ -217,7 +217,7 @@ public class MainTest {
       resolve(SOURCE_INFO_FOLDER_NAME, "all", GTFS_LATEST_VERSIONS_JSON).toString(),
     };
 
-    SystemLambda.catchSystemExit(() -> Main.main(argv));
+    SystemStubs.catchSystemExit(() -> Main.main(argv));
 
     assertThat(
             retrieveReportString(
@@ -344,7 +344,7 @@ public class MainTest {
         latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-5", "latest.json"));
 
-    int exitCode = SystemLambda.catchSystemExit(() -> Main.main(argv));
+    int exitCode = SystemStubs.catchSystemExit(() -> Main.main(argv));
 
     assertThat(exitCode).isEqualTo(Main.TOO_MANY_CORRUPTED_SOURCES_EXIT_CODE);
     assertThat(
