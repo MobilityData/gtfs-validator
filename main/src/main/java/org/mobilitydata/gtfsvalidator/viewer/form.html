@@ -1,0 +1,24 @@
+<html lang=en>
+    <head>
+        <meta charset="utf-8" />
+        <title>GTFS Validator</title>
+        <link rel="stylesheet" href="index.css" type="text/css" />
+    </head>
+    <body onload="ReportView.render()">
+        <h1>GTFS Validator</h1>
+        <form class="table-like" method=post action="./validate" enctype="multipart/form-data">
+            <div> 
+                <p>Robot test. Please name a mass transit vehicle type, i.e. not a car.</p>
+                <div class="row-like">
+                    <label for="vehicle">Mass transit vehicle:</label>
+                    <input name=vehicle id=vehicle type=text></input>
+                </div>
+                <div class="row-like">
+                    <label for="file">GTFS ZIP file:</label>
+                    <input name=file id=file type=file></input>
+                </div>
+            </div>
+            <button type=submit>Validate</button>
+        </form>
+    </body>
+</html>

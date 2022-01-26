@@ -43,6 +43,7 @@ import org.mobilitydata.gtfsvalidator.validator.DefaultValidatorProvider;
 import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
+import org.mobilitydata.gtfsvalidator.viewer.ValidatorWebServer;
 import org.mobilitydata.gtfsvalidator.viewer.ViewerIndex;
 
 /** The main entry point for GTFS Validator CLI. */
@@ -52,10 +53,15 @@ public class Main {
   private static final String NOTICE_SCHEMA_JSON = "notice_schema.json";
 
   public static void main(String[] argv) {
-
     Arguments args = parseArguments(argv);
     if (args == null) {
       System.exit(1);
+    }
+
+    if (args.getRunWebServer()) {
+      System.out.println("Running embedded web server.");
+      ValidatorWebServer.runServer();
+      System.exit(0);
     }
 
     ValidatorLoader validatorLoader = null;

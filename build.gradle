@@ -131,6 +131,9 @@ task generateViewerAssets {
         viewerAssets.println ""
         FileToLiteralString.generateMethod(viewerAssets, viewerDir + 'snabbdom.browser.js', "SnabbdomBrowserJs")
 
+        viewerAssets.println ""
+        FileToLiteralString.generateMethod(viewerAssets, viewerDir + 'form.html', "FormHtml")
+
         viewerAssets.println "}" // Final closing brace.
         viewerAssets.close()
     }

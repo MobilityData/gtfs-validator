@@ -62,6 +62,7 @@ dependencies {
     annotationProcessor project(':processor')
     compileOnly project(':processor')
     implementation project(':core')
+    implementation 'org.apache.commons:commons-compress:1.20'
     implementation 'org.apache.httpcomponents.client5:httpclient5:5.0.3'
     implementation 'com.beust:jcommander:1.48'
     implementation 'javax.inject:javax.inject:1'
