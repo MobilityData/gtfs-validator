@@ -1,3 +1,5 @@
+/* Validator  */
+
 h2 {
     width:50%;
     margin:20px auto;
@@ -24,3 +26,31 @@ h2 {
 }
 
 pre { background: #ddd; }
+
+/* Form */
+h1 {
+    width:50%;
+    margin:20px auto;
+    padding:30px;
+    position:relative;
+    border-radius:5px;
+    box-shadow:0 0 15px 5px #ccc;
+}
+
+form.table-like {
+    display: table;
+}
+
+div.row-like {
+    display: table-row;
+}
+
+label, input {
+    display: table-cell;
+    margin-bottom: 10px;
+}
+
+label {
+    padding-right: 10px;
+}
+

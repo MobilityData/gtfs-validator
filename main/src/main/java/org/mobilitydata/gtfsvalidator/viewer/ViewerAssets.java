@@ -44,7 +44,9 @@ package org.mobilitydata.gtfsvalidator.viewer;
 
 public class ViewerAssets {
   public static String IndexCss() {
-    return "h2 {\n"
+    return "/* Validator  */\n"
+        + "\n"
+        + "h2 {\n"
         + "    width:50%;\n"
         + "    margin:20px auto;\n"
         + "    padding:30px;\n"
@@ -69,7 +71,35 @@ public class ViewerAssets {
         + "    background: #fff;\n"
         + "}\n"
         + "\n"
-        + "pre { background: #ddd; }\n";
+        + "pre { background: #ddd; }\n"
+        + "\n"
+        + "/* Form */\n"
+        + "h1 {\n"
+        + "    width:50%;\n"
+        + "    margin:20px auto;\n"
+        + "    padding:30px;\n"
+        + "    position:relative;\n"
+        + "    border-radius:5px;\n"
+        + "    box-shadow:0 0 15px 5px #ccc;\n"
+        + "}\n"
+        + "\n"
+        + "form.table-like {\n"
+        + "    display: table;\n"
+        + "}\n"
+        + "\n"
+        + "div.row-like {\n"
+        + "    display: table-row;\n"
+        + "}\n"
+        + "\n"
+        + "label, input {\n"
+        + "    display: table-cell;\n"
+        + "    margin-bottom: 10px;\n"
+        + "}\n"
+        + "\n"
+        + "label {\n"
+        + "    padding-right: 10px;\n"
+        + "}\n"
+        + "\n";
   }
 
   public static String IndexJs() {
@@ -1704,5 +1734,32 @@ public class ViewerAssets {
         + "    Object.defineProperty(exports, '__esModule', { value: true });\n"
         + "\n"
         + "}));\n";
+  }
+
+  public static String FormHtml() {
+    return "<html lang=en>\n"
+        + "    <head>\n"
+        + "        <meta charset=\"utf-8\" />\n"
+        + "        <title>GTFS Validator</title>\n"
+        + "        <link rel=\"stylesheet\" href=\"index.css\" type=\"text/css\" />\n"
+        + "    </head>\n"
+        + "    <body onload=\"ReportView.render()\">\n"
+        + "        <h1>GTFS Validator</h1>\n"
+        + "        <form class=\"table-like\" method=post action=\"./validate\" enctype=\"multipart/form-data\">\n"
+        + "            <div> \n"
+        + "                <p>Robot test. Please name a mass transit vehicle type, i.e. not a car.</p>\n"
+        + "                <div class=\"row-like\">\n"
+        + "                    <label for=\"vehicle\">Mass transit vehicle:</label>\n"
+        + "                    <input name=vehicle id=vehicle type=text></input>\n"
+        + "                </div>\n"
+        + "                <div class=\"row-like\">\n"
+        + "                    <label for=\"file\">GTFS ZIP file:</label>\n"
+        + "                    <input name=file id=file type=file></input>\n"
+        + "                </div>\n"
+        + "            </div>\n"
+        + "            <button type=submit>Validate</button>\n"
+        + "        </form>\n"
+        + "    </body>\n"
+        + "</html>\n";
   }
 }
