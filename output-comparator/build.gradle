@@ -38,6 +38,9 @@ jar {
     }
 }
 
+startShadowScripts {
+    dependsOn(jar)
+}
 
 shadowJar {
     // Change the JAR name from cli-app to comparator
