@@ -198,14 +198,19 @@ public class ValidatorWebServer {
           System.out.printf("Entry name looks like it could be a directory, aborting.\n");
           return false;
         }
-        if (ze.getSize() < 1) {
-          System.out.printf("Entry is smaller than 1 byte, aborting.\n");
-          return false;
-        }
-        if (ze.getSize() > MaxZipEntrySize) {
-          System.out.printf(
-              "Entry is larger than maximum size of %d, aborting.\n", MaxZipEntrySize);
-          return false;
+
+        /* Many files give -1 entry sizes on otherwise good GTFS, don't know
+         * why, but disabling size checks until we do know. */
+        if (false) {
+          if (ze.getSize() < 1) {
+            System.out.printf("Entry is smaller than 1 byte, aborting.\n");
+            return false;
+          }
+          if (ze.getSize() > MaxZipEntrySize) {
+            System.out.printf(
+                "Entry is larger than maximum size of %d, aborting.\n", MaxZipEntrySize);
+            return false;
+          }
         }
       }
       if (entriesCount > MaxZipFileEntries) {
