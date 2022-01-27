@@ -107,20 +107,20 @@ ext {
 }
 
 task installSnabbdom(type: Exec) {
-  inputs.file "$projectDir/js/snabbdom-ujs/package.json"
-  outputs.dir "$projectDir/js/snabbdom-ujs/build"
+  inputs.file "$projectDir/js/snabbdom-umd/package.json"
+  outputs.dir "$projectDir/js/snabbdom-umd/build"
 
-  workingDir "$projectDir/js/snabbdom-ujs"
+  workingDir "$projectDir/js/snabbdom-umd"
   executable 'npm'
   args 'install'
 }
 
 task rollupSnabbdomUjs(type: Exec) {
   dependsOn installSnabbdom
-  inputs.file "$projectDir/js/snabbdom-ujs/package.json"
-  outputs.file "$projectDir/js/snabbdom-ujs/build/snabbdom.browser.js"
+  inputs.file "$projectDir/js/snabbdom-umd/package.json"
+  outputs.file "$projectDir/js/snabbdom-umd/build/snabbdom.browser.js"
 
-  workingDir "$projectDir/js/snabbdom-ujs"
+  workingDir "$projectDir/js/snabbdom-umd"
   executable './node_modules/.bin/rollup'
   args './node_modules/snabbdom/build/index.js', '--format', 'umd', '--name', 'snabbdom', '--file', './build/snabbdom.browser.js'
 }
