@@ -433,9 +433,11 @@ var NoticeDetails = {
 
         point_near_origin: n => h("ul",
             n.sampleNotices.map(y => {
-                return h("li", 
-                    `Latitude ${y.lonFieldName} ${y.lonFieldValue}, Longitude ${y.latFieldName} ${y.latFieldValue} (${y.filename}:${y.csvRowNumber})`,
-                )
+                return h("p", [
+                    h("li", `Latitude ${y.lonFieldName} ${y.lonFieldValue}`),
+                    h("li", `Longitude ${y.latFieldName} ${y.latFieldValue} `),
+                    h("li", `(${y.filename}:${y.csvRowNumber})`)
+                ])
             })), 
 
         route_both_short_and_long_name_missing: n => h("div", [
