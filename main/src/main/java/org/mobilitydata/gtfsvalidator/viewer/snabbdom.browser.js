@@ -1,4 +1,3 @@
-/* UJS built from snabbdom 3.3.0. */
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
     typeof define === 'function' && define.amd ? define(['exports'], factory) :
@@ -454,9 +453,12 @@
         data.ns = "http://www.w3.org/2000/svg";
         if (sel !== "foreignObject" && children !== undefined) {
             for (let i = 0; i < children.length; ++i) {
-                const childData = children[i].data;
+                const child = children[i];
+                if (typeof child === "string")
+                    continue;
+                const childData = child.data;
                 if (childData !== undefined) {
-                    addNS(childData, children[i].children, children[i].sel);
+                    addNS(childData, child.children, child.sel);
                 }
             }
         }
@@ -533,12 +535,16 @@
     }
 
     function copyToThunk(vnode, thunk) {
+        var _a;
+        const ns = (_a = thunk.data) === null || _a === void 0 ? void 0 : _a.ns;
         vnode.data.fn = thunk.data.fn;
         vnode.data.args = thunk.data.args;
         thunk.data = vnode.data;
         thunk.children = vnode.children;
         thunk.text = vnode.text;
         thunk.elm = vnode.elm;
+        if (ns)
+            addNS(thunk.data, thunk.children, thunk.sel);
     }
     function init(thunk) {
         const cur = thunk.data;
@@ -646,7 +652,14 @@
             for (i = 0, n = elmChildren.length; i < n; i++) {
                 children.push(toVNode(elmChildren[i], domApi));
             }
-            return vnode(sel, { attrs }, children, undefined, node);
+            const data = { attrs };
+            if (sel[0] === "s" &&
+                sel[1] === "v" &&
+                sel[2] === "g" &&
+                (sel.length === 3 || sel[3] === "." || sel[3] === "#")) {
+                addNS(data, children, sel);
+            }
+            return vnode(sel, data, children, undefined, node);
         }
         else if (api.isText(node)) {
             text = api.getTextContent(node);
