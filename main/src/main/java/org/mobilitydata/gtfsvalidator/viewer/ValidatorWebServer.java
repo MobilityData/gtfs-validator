@@ -15,7 +15,6 @@ import java.time.ZonedDateTime;
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.mobilitydata.gtfsvalidator.cli.Main; // For loadAndValidate().
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
@@ -92,15 +91,18 @@ public class ValidatorWebServer {
           Part filePart = req.raw().getPart("file");
           var tempFile = java.io.File.createTempFile("validatorWebServer.", ".upload.zip");
           tempFile.deleteOnExit();
+          // FIXME. Jetty's filePart.write() seems like it could fail if for no
+          // other reason than a full filesystem.  However I don't see where it
+          // returns an error code or could throw an exception.
           filePart.write(tempFile.getName());
           try (InputStream inputStream = filePart.getInputStream();
               var seekableByteChannel =
                   Files.newByteChannel(Paths.get(tempFile.getPath()), StandardOpenOption.READ);
-              ZipArchiveInputStream zis = new ZipArchiveInputStream(inputStream)) {
-            if (validZipArchiveInputStream(zis)) {
-              System.out.println("Zip file upload is valid.");
+              ZipFile zf = new ZipFile(seekableByteChannel))
+          {
+            if (saneZipArchive(zf)) {
+              System.out.println("Zip file upload is sane.");
               return validationReport(req, res, seekableByteChannel);
-
             } else {
               System.out.println("Zip file upload does not look like GTFS, or it is too large.");
               return "Zip file upload does not look like GTFS, or it is too large.";
@@ -177,21 +179,31 @@ public class ValidatorWebServer {
 
   // Sanity-check parameters.
   //
-  // Maximum zip file size, 512 MB. Largest I've seen in wild is 190M.
+  // Maximum uncompressed size for any file within the zip file, 512 MB.
+  // Largest I've seen in wild is 190M (stop_times.txt).
   public static int MaxZipEntrySize = 512 * 1024 * 1024;
-  // Maximum zip file size, 128 MB. Largest I've seen in wild is 33M (stop_times.txt).
+  // Maximum zip file size, 128 MB. Largest I've seen in wild is 33M.
   public static int MaxZipFileSize = 128 * 1024 * 1024;
   // Maximum number of zip file entries.
   public static int MaxZipFileEntries = 128;
 
-  public static boolean validZipArchiveInputStream(ZipArchiveInputStream zis) {
-    System.out.printf("ZipArchiveInputStream is %s\n", zis);
+  public static boolean saneZipArchive(ZipFile zf) {
+    // Sanity-check a zip file before we pass it to the GTFS validator.
+    System.out.printf("ZipFile is %s\n", zf);
     ZipArchiveEntry ze;
     int entriesCount = 0;
     try {
-      while ((ze = zis.getNextZipEntry()) != null) {
-        entriesCount++;
-        System.out.printf("Found ZipEntry %s size %d.\n", ze.getName(), ze.getSize());
+      for (var e = zf.getEntries(); e.hasMoreElements(); ) {
+        ze = e.nextElement();
+
+        if (entriesCount++ > MaxZipFileEntries) {
+          System.out.printf(
+              "Found %d entries; more than the maximum %d, aborting.\n",
+              entriesCount, MaxZipFileEntries);
+          return false;
+        }
+
+        System.out.printf("Found ZipEntry %s.\n", ze.getName());
         if (ze.getName().contains("\\")
             || ze.getName().contains("/")
             || ze.getName().contains("..")) {
@@ -199,25 +211,24 @@ public class ValidatorWebServer {
           return false;
         }
 
-        /* Many files give -1 entry sizes on otherwise good GTFS, don't know
-         * why, but disabling size checks until we do know. */
-        if (false) {
-          if (ze.getSize() < 1) {
-            System.out.printf("Entry is smaller than 1 byte, aborting.\n");
-            return false;
+        try (InputStream zei = zf.getInputStream(ze)) {
+          // Zip headers don't always indicate the size, and when they do
+          // they're not always accurate.
+          //
+          // Since the goal here is to reject huge files before passing them to
+          // the validator, verify a file's size by reading its uncompressed
+          // contents.
+          long fileSize = 0;
+          while (zei.read() != -1) {
+            if (fileSize++ > MaxZipEntrySize) {
+              System.out.printf(
+                  "Entry uncompressed size is larger than the maximum of %d, aborting.\n",
+                  MaxZipEntrySize);
+              return false;
+            }
           }
-          if (ze.getSize() > MaxZipEntrySize) {
-            System.out.printf(
-                "Entry is larger than maximum size of %d, aborting.\n", MaxZipEntrySize);
-            return false;
-          }
+          System.out.printf("Read %d bytes from file, header says it should have %d bytes.\n", fileSize, ze.getSize());
         }
-      }
-      if (entriesCount > MaxZipFileEntries) {
-        System.out.printf(
-            "Found %d entries; more than the maxiumum %d, aborting.\n",
-            entriesCount, MaxZipEntrySize);
-        return false;
       }
     } catch (IOException e) {
       System.out.println("IO exception when reading zip.");
