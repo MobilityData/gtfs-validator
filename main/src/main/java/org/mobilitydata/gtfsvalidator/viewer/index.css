@@ -7,7 +7,16 @@ h2 {
     width:100%;
     padding:15px;
     position:relative;
-    border-radius:5px;
+}
+
+button {
+    color: #fff;
+    background-color: #909090;
+    border: none;
+    padding: 8px 16px;
+    vertical-align: middle;
+    text-align: center;
+    cursor: pointer
 }
 
 .severity-error {
@@ -27,6 +36,12 @@ h2 {
 }
 
 pre { background: #ddd; }
+
+.trip-id {
+    font-weight: bold;
+    list-style-type: none;
+    padding-left: 0;
+}
 
 /* Form */
 h1 {

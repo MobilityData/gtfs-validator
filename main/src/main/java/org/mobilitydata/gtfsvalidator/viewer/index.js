@@ -353,7 +353,7 @@ var NoticeDetails = {
             h("p", "If there are not separate times for arrival and departure at a stop, enter the same value for arrival_time and departure_time."),
             h("ul",
             n.sampleNotices.map(y => h("li", 
-                `trip_id: ${y.tripId}, stop_sequence=${y.stopSequence} (${y.filename}:${y.csvRowNumber})`,
+                `trip_id: ${y.tripId} - stop_sequence=${y.stopSequence} (${y.filename}:${y.csvRowNumber})`,
             )))
         ]), 
 
@@ -448,7 +448,11 @@ var NoticeDetails = {
             h("p", "The color difference between route_color and route_text_color should provide sufficient contrast when viewed on a black and white screen. For more information, please visit:"),
             h("a", { props: { href: "http://gtfs.org/best-practices/#routestxt" } }, "http://gtfs.org/best-practices/#routestxt"),
             h("ul", 
-            n.sampleNotices.map(y => h("li", `route_id: ${y.routeId} text color "${y.routeTextColor}" color "${y.routeColor}" (routes.txt:${y.csvRowNumber}) `)))
+                n.sampleNotices.map(y => h("p", [
+                    h("li", `route_id: ${y.routeId}`),
+                    h("li", `text color "${y.routeTextColor}" & color "${y.routeColor}" (routes.txt:${y.csvRowNumber}) `)
+                ])
+            ))
             ]), 
 
         route_short_and_long_name_equal: n => h("div", [
@@ -549,9 +553,11 @@ var NoticeDetails = {
         stop_time_timepoint_without_times: n => h("div", [
             h("p", "Timepoint without time."),
             h("ul",
-            n.sampleNotices.map(y => h("li", 
-                `trip_id: ${y.tripId} stop_sequence=${y.stopSequence} missing ${y.specifiedField} (stop_times.txt:${y.csvRowNumber})`,
-            )))
+                n.sampleNotices.map(y => h("p", [
+                    h("li", { style: { fontWeight: "bold", listStyleType: "none", paddingLeft: 0} }, `trip_id: ${y.tripId}`),
+                    h("li", { style: { listStyleType: "none"} }, `stop_sequence=${y.stopSequence} missing ${y.specifiedField} (stop_times.txt:${y.csvRowNumber})`)
+                ]))
+            )    
         ]), 
 
         stop_time_with_arrival_before_previous_departure_time: n => h("div", [
@@ -571,7 +577,7 @@ var NoticeDetails = {
             h("p", "Missing `stop_times.arrival_time` or `stop_times.departure_time`"),
             h("ul",
             n.sampleNotices.map(y => h("li", 
-                `trip_id: ${y.tripId} stop_sequence=${y.stopSequence} has only ${y.specifiedField} (stop_times.txt:${y.csvRowNumber})`,
+                `trip_id: ${y.tripId} - stop_sequence=${y.stopSequence} has only ${y.specifiedField} (stop_times.txt:${y.csvRowNumber})`,
             )))
             ]),
 
@@ -699,7 +705,7 @@ var NoticeDetails = {
         ]),
 
         wrong_stop_time_stop_location_type: n => h("ul",
-            n.sampleNotices.map(y => h("li", `trip_id ${y.tripId} stop_sequence=${y.stopSequence} 
+            n.sampleNotices.map(y => h("li", `trip_id ${y.tripId} - stop_sequence=${y.stopSequence} 
                 stop_id: ${y.stopId} type ${y.locationType} (stop_times.txt:${y.csvRowNumber})`,))) 
 
     },
