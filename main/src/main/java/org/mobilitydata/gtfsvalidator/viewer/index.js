@@ -40,10 +40,11 @@ ReportView = {
         // by the index.html page.
         report.notices.map((x,i) => {
             let severity_class = "severity-unknown"
-            let header_text = x.code + " (" + x.severity.toLowerCase() + ")"
+            let header_text = x.code 
             if (x.severity != null) {
                 // Apply a corresponding CSS class for this severity.
                 severity_class = "severity-" + x.severity.toLowerCase()
+                header_text = x.code + " (" + x.severity.toLowerCase() + ")"
             }
             return h("div", [
                 h(`h2.${severity_class}`, header_text),
@@ -87,9 +88,9 @@ var NoticeDetails = {
 
     genericCodeView: (notice) => h("div", {}, [
         h("ul",
-            notice.sampleNotices.map((sample) => {
-                let filename = sample.filename
-                let csvRowNumber = sample.csvRowNumber
+            notice.sampleNotices.map((y) => {
+                let filename = y.filename
+                let csvRowNumber = y.csvRowNumber
                 if (filename == null) {
                     filename = 'unspecified filename'
                 }
