@@ -236,7 +236,7 @@ var NoticeDetails = {
         ]),
 
         feed_info_lang_and_agency_mismatch: n => h("div", [
-            h("p", "{@code agency.agency_lang} and {@code feed_info.feed_lang} do not match."),
+            h("p", "agency.agency_lang and feed_info.feed_lang do not match."),
             h("ul",
             n.sampleNotices.map((y) => h("li",
                  `Agency ${y.agencyId} language "${y.agencyLang}" was expected to match 
@@ -291,7 +291,7 @@ var NoticeDetails = {
         leading_or_trailing_whitespaces: NoticeDetailsGenericFieldValueCodeView,
 
         location_with_unexpected_stop_time: n => h("div", [
-            h("p", "Describes a location in {@code stops.txt} that is not a stop but has a stop time associated."),
+            h("p", "Describes a location in stops.txt that is not a stop but has a stop time associated."),
             h("ul",
             n.sampleNotices.map(y => h("li", 
                 `stop_id: ${y.stopId} "${y.stopName}" (stops.txt:${y.csvRowNumber}) and (stop_times.txt${y.stopTimeCsvRowNumber})`,
@@ -319,7 +319,7 @@ var NoticeDetails = {
         ]),
 
         missing_level_id: n => h("div", [
-            h("p", "A row from stops.txt is linked to a row from pathways.txt with {@code pathways.pathway_mode=5} but has no value for {@code stops.level_id}."),
+            h("p", "A row from stops.txt is linked to a row from pathways.txt with pathways.pathway_mode=5 but has no value for stops.level_id."),
             h("ul",
             n.sampleNotices.map(y => h("li", `stop_id: ${y.stopId} (levels.txt:${y.csvRowNumber})`)))
         ]), 
@@ -341,7 +341,7 @@ var NoticeDetails = {
             ))), 
 
         missing_timepoint_column: n => h("div", [
-            h("p", "Column {@code stop_times.timepoint} is missing."),
+            h("p", "Column stop_times.timepoint is missing."),
             h("ul",
             n.sampleNotices.map(y => h("li", `${y.filename}`,)))
         ]),
@@ -423,8 +423,8 @@ var NoticeDetails = {
         ]),
 
         platform_without_parent_station: n => h("div", [
-            h("p", "A platform has no `parent_station` field set."),
-            h("p", "This is different from {@code LocationWithoutParentStationNotice} since it is less severe."),
+            h("p", "A platform has no parent_station field set."),
+            h("p", "This is different from LocationWithoutParentStationNotice since it is less severe."),
             h("ul",
             n.sampleNotices.map(y => h("li", 
                 `stop_id: ${y.stopId} "${y.stopName}" location_type: ${y.locationType} (stops.txt:${y.csvRowNumber})`,
@@ -482,14 +482,14 @@ var NoticeDetails = {
             ))),
 
         same_name_and_description_for_route: n => h("div", [
-            h("p", "A single route has identical values for {@code routes.route_desc} and {@code route_long_name} or {@code route_short_name}."),
+            h("p", "A single route has identical values for routes.route_desc and route_long_name or route_short_name."),
             h("ul",
             n.sampleNotices.map(y => h("li", `route_id: ${y.routeId} ${y.specifiedField} (routes.txt:${y.csvRowNumber}) `
             )))
         ]),
 
         same_name_and_description_for_stop: n => h("div", [
-            h("p", "A {@code GtfsStop} has identical value for {@code stops.route_desc} and {@code stops.stop_name}."),
+            h("p", "A stop has an identical value in stops.route_desc and stops.stop_name."),
             h("p", "Do not simply duplicate the name of the location. For more informantion, please visit:"),
             h("a", { props: { href: "http://gtfs.org/reference/static#stopstxt" } }, "http://gtfs.org/reference/static#stopstxt"),
             h("ul", 
@@ -497,21 +497,21 @@ var NoticeDetails = {
             ]), 
 
         same_route_and_agency_url: n => h("div", [
-            h("p", "A {@code GtfsRoute} has the same value for {@code routes.route_url} as a record from \"agency.txt\"."),
+            h("p", "A Route uses the same URL in routes.route_url as has the Agency in agency.txt."),
             h("ul", 
             n.sampleNotices.map(y => h("li", 
                 `route_id: ${y.routeId} (routes.txt:${y.routeCsvRowNumber}) agency_id: ${y.agencyId} (agency.txt:${y.agencyCsvRowNumber}) `)))
         ]), 
 
         same_stop_and_agency_url: n => h("div", [
-            h("p", "A {@code GtfsStop} has the same value for {@code stops.stop_url} as a record from \"agency.txt\""),
+            h("p", "A Stop uses the same URL in stops.stop_url as uses an Agency in agency.txt."),
             h("ul", 
             n.sampleNotices.map(y => h("li", 
                 `stop_id: ${y.stopId} (stops.txt:${y.stopCsvRowNumber}) agency_id: ${y.agencyId} (agency.txt:${y.agencyCsvRowNumber}) `))) 
             ]),
 
         same_stop_and_route_url: n => h("div", [
-            h("p", "A {@code GtfsStop} has the same value for {@code stops.stop_url} as a record from \"routes.txt\"."),
+            h("p", "A Stop uses the same URL for stops.stop_url as uses a Route in routes.txt."),
             h("ul", 
             n.sampleNotices.map(y => h("li", 
                 `stop_id: ${y.stopId} (stops.txt:${y.stopCsvRowNumber}) route_id: ${y.routeId} (route.txt:${y.routeCsvRowNumber}) `)))
@@ -534,7 +534,7 @@ var NoticeDetails = {
             ]),
 
         stop_has_too_many_matches_for_shape: n => h("div", [
-            h("p", "Describes a stop entry that has many potential matches to the trip's path of travel, as defined by the shape entry in {@code shapes.txt}."),
+            h("p", "Describes a stop entry that has many potential matches to the trip's path of travel, as defined by the shape entry in shapes.txt."),
             h("ul",
             n.sampleNotices.map(y => h("li", 
                 `trip_id: ${y.tripId} shape_id ${y.shapeId} (trips.txt:${y.tripCsvRowNumber}) 
@@ -543,7 +543,7 @@ var NoticeDetails = {
         ]),
 
         stops_match_shape_out_of_order: n => h("div", [
-            h("p", "Describes two stop entries in {@code stop_times.txt} that are different than their arrival-departure order as defined by the shape in the {@code shapes.txt} file."),
+            h("p", "Two stop entries in stop_times.txt appear in a different orderering than their shape would indicate in the shapes.txt file."),
             h("p", "This could indicate a problem with the location of the stops, the path of the shape, or the sequence of the stops for their trip."),
             h("ul",
             n.sampleNotices.map(y => h("li", 
@@ -554,7 +554,7 @@ var NoticeDetails = {
             ]), 
 
         stop_time_timepoint_without_times: n => h("div", [
-            h("p", "Timepoint without time."),
+            h("p", "Timepoint without a departure time or arrival time."),
             h("ul",
                 n.sampleNotices.map(y => h("p", [
                     h("li", { style: { fontWeight: "bold", listStyleType: "none", paddingLeft: 0} }, `trip_id: ${y.tripId}`),
@@ -564,7 +564,7 @@ var NoticeDetails = {
         ]), 
 
         stop_time_with_arrival_before_previous_departure_time: n => h("div", [
-            h("p", "Two {@code GtfsTime} are out of order."),
+            h("p", "Two stop times are out of order."),
             h("p",
                 n.sampleNotices.map(y => h("p", [
                     h("p", { style: { fontWeight: "bold"} }, `trip_id: ${y.tripId}`),
@@ -577,7 +577,7 @@ var NoticeDetails = {
         ]),
 
         stop_time_with_only_arrival_or_departure_time: n =>  h("div", [
-            h("p", "Missing `stop_times.arrival_time` or `stop_times.departure_time`"),
+            h("p", "Missing stop_times.arrival_time or stop_times.departure_time"),
             h("ul",
             n.sampleNotices.map(y => h("li", 
                 `trip_id: ${y.tripId} - stop_sequence=${y.stopSequence} has only ${y.specifiedField} (stop_times.txt:${y.csvRowNumber})`,
@@ -588,8 +588,8 @@ var NoticeDetails = {
         // Notices.md has this but it's been deprecated per MIGRATION_V2_V3.md
 
         stop_too_far_from_shape_using_user_distance: n => h("div", [
-            h("p", "Describes a stop time entry that is a large distance away from the location of the shape in @code shapes.txt} as defined by {@code shape_dist_traveled} values."),
-            h("p", "This potentially indicates a problem with the location of the stop or the use of {@code shape_dist_traveled} values."),
+            h("p", "Describes a stop time entry that is a large distance away from the location of the shape in shapes.txt as defined by shape_dist_traveled values."),
+            h("p", "This potentially indicates a problem with the location of the stop or the use of shape_dist_traveled values."),
             h("ul",
             n.sampleNotices.map(y => h("li", 
                 `trip_id: ${y.tripId} shape_id ${y.shapeId} (trips.txt:${y.tripCsvRowNumber}) 
@@ -598,7 +598,7 @@ var NoticeDetails = {
         ]), 
 
         stop_too_far_from_shape: n => h("div", [
-            h("p", "Describes a stop time entry that is a large distance away from the trip's path of travel, as defined by the shape entry in {@code shapes.txt}."),
+            h("p", "Describes a stop time entry that is a large distance away from the trip's path of travel, as defined by the shape entry in shapes.txt."),
             h("p", "This potentially indicates a problem with the location of the stop or the path of the shape."),
             h("ul",
             n.sampleNotices.map(y => h("li", 
@@ -624,7 +624,7 @@ var NoticeDetails = {
         stop_without_zone_id: n => {
             let filename = "stops.txt"
             return h("div", [
-                h("p", "A {@code GtfsShape} should be referred to at least once in {@code GtfsTripTableContainer} station)."),
+                h("p", "All all stops and platforms (location_type = 0) should have stops.zone_id assigned."),
                 h("ul",
                 n.sampleNotices.map(y => h("li", 
                     `stop_id: ${y.stopId} "${y.stopName}" (${y.filename}:${y.csvRowNumber}) `,
@@ -638,7 +638,7 @@ var NoticeDetails = {
             ))),
 
         translation_foreign_key_violation: n => h("div", [
-            h("p", "An entity with the given {@code record_id, record_sub_id} cannot be found in the referenced table."),
+            h("p", "An entity with the given (record_id, record_sub_id) cannot be found in the referenced table."),
             h("ul",
             n.sampleNotices.map(y => h("li", 
                 `table ${y.tableName} record_id ${y.recordId} record_sub_id ${y.recordSubId} (translations.txt:${y.csvRowNumber}) `,
@@ -673,7 +673,7 @@ var NoticeDetails = {
             n.sampleNotices.map((y) => h("li", `"${y.filename}"`))), 
 
         unusable_trip: n => h("div", [
-            h("p", "A {@code GtfsTrip} should be referred to by at least two {@code GtfsStopTime}"),
+            h("p", "A Trip should be referred to by at least two Stop Times."),
             h("ul",
                 n.sampleNotices.map(y => h("li",
                 `trip_id: ${y.tripId} (trips.txt:${y.csvRowNumber})`
@@ -686,7 +686,7 @@ var NoticeDetails = {
             ))), 
 
         unused_trip: n => h("div", [
-            h("p", "A {@code GtfsTrip} should be referred to at least once in {@code GtfsStopTimeTableContainer} station)."),
+            h("p", "Every Trip in trips.txt should be used by some Stop Time in stop_times.txt"),
             h("ul",
             n.sampleNotices.map(y => h("li", 
                 `trip_id: ${y.tripId} (trips.txt:${y.csvRowNumber})`
