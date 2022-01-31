@@ -98,8 +98,7 @@ public class ValidatorWebServer {
           try (InputStream inputStream = filePart.getInputStream();
               var seekableByteChannel =
                   Files.newByteChannel(Paths.get(tempFile.getPath()), StandardOpenOption.READ);
-              ZipFile zf = new ZipFile(seekableByteChannel))
-          {
+              ZipFile zf = new ZipFile(seekableByteChannel)) {
             if (saneZipArchive(zf)) {
               System.out.println("Zip file upload is sane.");
               return validationReport(req, res, seekableByteChannel);
@@ -158,9 +157,7 @@ public class ValidatorWebServer {
     }
 
     return ViewerIndex.IndexHtmlAll(
-        "var report = "
-            + prettyGson.toJson(noticeContainer.exportValidationNotices())
-            + ";");
+        "var report = " + prettyGson.toJson(noticeContainer.exportValidationNotices()) + ";");
   }
 
   public static boolean validVehicleNameString(String s) {
@@ -227,7 +224,9 @@ public class ValidatorWebServer {
               return false;
             }
           }
-          System.out.printf("Read %d bytes from file, header says it should have %d bytes.\n", fileSize, ze.getSize());
+          System.out.printf(
+              "Read %d bytes from file, header says it should have %d bytes.\n",
+              fileSize, ze.getSize());
         }
       }
     } catch (IOException e) {

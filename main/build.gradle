@@ -18,7 +18,31 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'application'
     id 'java'
+    id "com.diffplug.spotless" // Version provided in ../build.gradle.
 }
+
+spotless {
+  // Copied and modified from the readme at
+  // https://github.com/diffplug/spotless/tree/main/plugin-gradle#google-java-format
+
+  format 'misc', {
+    // define the files to apply `misc` to
+    // target '*.gradle', '*.md', '.gitignore'
+    target '*.gradle', '.gitignore'
+
+    // define the steps to apply to those files
+    trimTrailingWhitespace()
+    indentWithSpaces(2) // or spaces. Takes an integer argument if you don't like 4
+    endWithNewline()
+  }
+  java {
+    // don't need to set target, it is inferred from java
+
+    // apply a specific flavor of google-java-format
+    googleJavaFormat('1.13.0')
+  }
+}
+
 
 applicationDefaultJvmArgs = [ "-Xmx8G" ]
 
@@ -77,6 +101,10 @@ dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.13'
     testImplementation 'com.google.truth:truth:1.0.1'
     testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'
+}
+
+spotlessJava {
+    dependsOn "generateViewerAssets"
 }
 
 test {
@@ -197,4 +225,3 @@ build {
 compileJava {
     dependsOn generateViewerAssets
 }
-

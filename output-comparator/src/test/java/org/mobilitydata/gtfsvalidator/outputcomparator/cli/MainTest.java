@@ -27,13 +27,13 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.hamcrest.Matchers;
-import org.hamcrest.MatcherAssert;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyNotice;
 import org.mobilitydata.gtfsvalidator.notice.EmptyColumnNameNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidCurrencyNotice;
@@ -351,18 +351,18 @@ public class MainTest {
     assertThat(exitCode).isEqualTo(Main.TOO_MANY_CORRUPTED_SOURCES_EXIT_CODE);
     MatcherAssert.assertThat(
         retrieveReportString(
-          resolve(
-            NEW_NOTICES_TYPE_FOLDER_NAME,
-            ACCEPTANCE_TEST_REPORT_FOLDER_NAME,
-            SOURCES_CORRUPTION_REPORT_JSON)),
+            resolve(
+                NEW_NOTICES_TYPE_FOLDER_NAME,
+                ACCEPTANCE_TEST_REPORT_FOLDER_NAME,
+                SOURCES_CORRUPTION_REPORT_JSON)),
         Matchers.anyOf(
-          Matchers.is(
-            "{\"corruptedSources\":[\"source-id-5\",\"source-id-4\"],\"sourceIdCount\":5,"
-            + "\"status\":\"invalid\",\"corruptedSourcesCount\":2,"
-            + "\"maxPercentageCorruptedSources\":2.0}"),
-          Matchers.is(
-            "{\"corruptedSources\":[\"source-id-4\",\"source-id-5\"],\"sourceIdCount\":5,"
-            + "\"status\":\"invalid\",\"corruptedSourcesCount\":2,"
-            + "\"maxPercentageCorruptedSources\":2.0}")));
+            Matchers.is(
+                "{\"corruptedSources\":[\"source-id-5\",\"source-id-4\"],\"sourceIdCount\":5,"
+                    + "\"status\":\"invalid\",\"corruptedSourcesCount\":2,"
+                    + "\"maxPercentageCorruptedSources\":2.0}"),
+            Matchers.is(
+                "{\"corruptedSources\":[\"source-id-4\",\"source-id-5\"],\"sourceIdCount\":5,"
+                    + "\"status\":\"invalid\",\"corruptedSourcesCount\":2,"
+                    + "\"maxPercentageCorruptedSources\":2.0}")));
   }
 }
