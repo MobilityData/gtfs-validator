@@ -7,7 +7,16 @@ h2 {
     width:100%;
     padding:15px;
     position:relative;
-    border-radius:5px;
+}
+
+button {
+    color: #fff;
+    background-color: #909090;
+    border: none;
+    padding: 8px 16px;
+    vertical-align: middle;
+    text-align: center;
+    cursor: pointer
 }
 
 .severity-error {
@@ -28,14 +37,12 @@ h2 {
 
 pre { background: #ddd; }
 
+
 /* Form */
 h1 {
-    width:50%;
     margin:20px auto;
     padding:30px;
-    position:relative;
-    border-radius:5px;
-    box-shadow:0 0 15px 5px #ccc;
+    text-align: center;
 }
 
 form.table-like {
