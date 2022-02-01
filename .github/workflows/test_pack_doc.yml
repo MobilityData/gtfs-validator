@@ -41,7 +41,7 @@ jobs:
             VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
           fi
           echo ::set-output name=versionTag::${VERSION_TAG}
-      - name: Set up JDK
+      - name: Set up JDK ${{ matrix.java_version }}
         uses: actions/setup-java@v2
         with:
           java-version: ${{ matrix.java_version }}
@@ -61,13 +61,13 @@ jobs:
       - name: Persist **Passing** Java tests merged report
         uses: actions/upload-artifact@v2
         with:
-          name: Test report - Java -- ${{ steps.prep.outputs.versionTag }}
+          name: Test report - Java ${{ matrix.java_version }}-- ${{ steps.prep.outputs.versionTag }}
           path: build/reports/allTests/
       - name: Persist **Failing** Java tests unmerged reports
         if: ${{ failure() }}
         uses: actions/upload-artifact@v2
         with:
-          name: Test report - Java -- ${{ steps.prep.outputs.versionTag }}
+          name: Test report - Java ${{ matrix.java_version }} -- ${{ steps.prep.outputs.versionTag }}
           path: |
             core/build/reports/tests/
             main/build/reports/tests/
