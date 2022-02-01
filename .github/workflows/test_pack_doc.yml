@@ -21,6 +21,9 @@ jobs:
   test:
     needs: [ validate_gradle_wrapper ]
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java_version: [11, 17]
     steps:
       - uses: actions/checkout@v1
       - name: Prepare version name
@@ -38,10 +41,10 @@ jobs:
             VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
           fi
           echo ::set-output name=versionTag::${VERSION_TAG}
-      - name: Set up JDK 11
+      - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          java-version: '11'
+          java-version: ${{ matrix.java_version }}
           distribution: 'adopt'
       - name: Cache Gradle packages
         uses: actions/cache@v2
