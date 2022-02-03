@@ -59,6 +59,18 @@ repositories {
     mavenCentral()
 }
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'org.mobilitydata'
+            artifactId = 'application'
+            version = "${System.getenv("versionTag")}"
+
+            from components.java
+        }
+    }
+}
+
 dependencies {
     annotationProcessor project(':processor')
     compileOnly project(':processor')
