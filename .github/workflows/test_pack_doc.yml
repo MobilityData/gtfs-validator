@@ -18,13 +18,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: gradle/wrapper-validation-action@v1
-  test:
-    needs: [ validate_gradle_wrapper ]
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        java_version: [ 11, 17 ]
-        os: [ ubuntu-latest, windows-latest, ubuntu-20.04 ]
+  prepare-version-name:
+    runs-on: ubuntu-latest
+    outputs:
+      versionTag: ${{ steps.prep.outputs.versionTag }}
     steps:
       - uses: actions/checkout@v1
       - name: Prepare version name
@@ -42,6 +39,15 @@ jobs:
             VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
           fi
           echo ::set-output name=versionTag::${VERSION_TAG}
+  test:
+    needs: [ validate_gradle_wrapper, prepare-version-name ]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        java_version: [ 11, 17 ]
+        os: [ ubuntu-latest, windows-latest, ubuntu-20.04 ]
+    steps:
+      - uses: actions/checkout@v1
       - name: Set up JDK ${{ matrix.java_version }}
         uses: actions/setup-java@v2
         with:
@@ -56,19 +62,19 @@ jobs:
       - name: Run tests on Java ${{ matrix.java_version }}
         uses: eskatos/gradle-command-action@v1
         env:
-          versionTag: ${{ steps.prep.outputs.versionTag }}
+          versionTag: ${{ needs.prepare-version-name.outputs.versionTag }}
         with:
           arguments: testReport
       - name: Persist **Passing** Java  ${{ matrix.java_version }} tests merged report
         uses: actions/upload-artifact@v2
         with:
-          name: Test report - Java ${{ matrix.java_version }}-- ${{ steps.prep.outputs.versionTag }}
+          name: Test report - Java ${{ matrix.java_version }}-- ${{ needs.prepare-version-name.outputs.versionTag }}
           path: build/reports/allTests/
       - name: Persist **Failing** Java  ${{ matrix.java_version }} tests unmerged reports
         if: ${{ failure() }}
         uses: actions/upload-artifact@v2
         with:
-          name: Test report - Java ${{ matrix.java_version }} -- ${{ steps.prep.outputs.versionTag }}
+          name: Test report - Java ${{ matrix.java_version }} -- ${{ needs.prepare-version-name.outputs.versionTag }}
           path: |
             core/build/reports/tests/
             main/build/reports/tests/
@@ -82,21 +88,6 @@ jobs:
         java_version: [ 11, 17 ]
     steps:
       - uses: actions/checkout@v1
-      - name: Prepare version name
-        id: prep
-        run: |
-          VERSION_TAG=edge
-          if [[ $GITHUB_REF == refs/tags/* ]]; then
-            VERSION_TAG=${GITHUB_REF#refs/tags/}
-          elif [[ $GITHUB_REF == refs/heads/* ]]; then
-            VERSION_TAG=-$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
-          elif [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION_TAG=-pr-${{ github.event.number }}
-          fi
-          if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
-            VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
-          fi
-          echo ::set-output name=versionTag::${VERSION_TAG}
       - name: Set up JDK ${{ matrix.java_version }}
         uses: actions/setup-java@v2
         with:
@@ -111,14 +102,14 @@ jobs:
       - name: Package cli app jar with Gradle
         uses: eskatos/gradle-command-action@v1
         env:
-          versionTag: ${{ steps.prep.outputs.versionTag }}
+          versionTag: ${{ needs.prepare-version-name.outputs.versionTag }}
         with:
           arguments: shadowJar
       - name: Persist cli app jar
         uses: actions/upload-artifact@v2
         with:
-          name: Application - cli executable - Java ${{ matrix.java_version }}.jar -- ${{ steps.prep.outputs.versionTag }}
-          path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
+          name: Application - cli executable - Java ${{ matrix.java_version }}.jar -- ${{ needs.prepare-version-name.outputs.versionTag }}
+          path: main/build/libs/gtfs-validator-${{ needs.prepare-version-name.outputs.versionTag }}_cli.jar
   doc:
     needs: [test]
     runs-on: ubuntu-latest
@@ -127,21 +118,6 @@ jobs:
         java_version: [ 11, 17 ]
     steps:
       - uses: actions/checkout@v1
-      - name: Prepare version name
-        id: prep
-        run: |
-          VERSION_TAG=edge
-          if [[ $GITHUB_REF == refs/tags/* ]]; then
-            VERSION_TAG=${GITHUB_REF#refs/tags/}
-          elif [[ $GITHUB_REF == refs/heads/* ]]; then
-            VERSION_TAG=-$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
-          elif [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION_TAG=-pr-${{ github.event.number }}
-          fi
-          if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
-            VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
-          fi
-          echo ::set-output name=versionTag::${VERSION_TAG}
       - name: Set up JDK ${{ matrix.java_version }}
         uses: actions/setup-java@v2
         with:
@@ -156,12 +132,12 @@ jobs:
       - name: Build Javadoc
         uses: eskatos/gradle-command-action@v1
         env:
-          versionTag: ${{ steps.prep.outputs.versionTag }}
+          versionTag: ${{ needs.prepare-version-name.outputs.versionTag }}
         with:
           arguments: aggregateJavadocs
       - name: Persist javadoc
         uses: actions/upload-artifact@v2
         with:
-          name: Documentation - javadoc -- ${{ steps.prep.outputs.versionTag }} - Java ${{ matrix.java_version }}
+          name: Documentation - javadoc -- ${{ needs.prepare-version-name.outputs.versionTag }} - Java ${{ matrix.java_version }}
           path: build/docs/javadoc/
 
