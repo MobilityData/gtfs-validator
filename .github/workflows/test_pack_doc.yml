@@ -76,11 +76,10 @@ jobs:
 
   pack:
     needs: [test]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         java_version: [ 11, 17 ]
-        os: [ ubuntu-latest, windows-latest, ubuntu-20.04 ]
     steps:
       - uses: actions/checkout@v1
       - name: Prepare version name
@@ -122,11 +121,10 @@ jobs:
           path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
   doc:
     needs: [test]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         java_version: [ 11, 17 ]
-        os: [ ubuntu-latest, windows-latest, ubuntu-20.04 ]
     steps:
       - uses: actions/checkout@v1
       - name: Prepare version name
