@@ -15,7 +15,7 @@
  */
 
 plugins {
-    id 'com.github.johnrengelman.shadow' version '5.2.1'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'application'
     id 'java'
     id 'maven-publish'
