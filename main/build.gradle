@@ -18,7 +18,6 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'application'
     id 'java'
-    id 'maven-publish'
 }
 
 applicationDefaultJvmArgs = [ "-Xmx8G" ]
@@ -49,6 +48,10 @@ shadowJar {
     archiveClassifier = null
     // Add "v" to version to match previous releases
     archiveVersion = project.version
+}
+
+artifacts {
+    archives shadowJar
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
