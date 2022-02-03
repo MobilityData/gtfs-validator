@@ -112,10 +112,11 @@ jobs:
           path: main/build/libs/gtfs-validator-${{ needs.prepare-version-name.outputs.versionTag }}_cli.jar
   doc:
     needs: [test]
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         java_version: [ 11, 17 ]
+        os: [ ubuntu-latest, windows-latest, ubuntu-20.04 ]
     steps:
       - uses: actions/checkout@v1
       - name: Set up JDK ${{ matrix.java_version }}
