@@ -193,8 +193,9 @@ public class Main {
     jCommander.parse(argv);
     if (args.getHelp()) {
       jCommander.usage();
+      String warningEmojiCode = "\u26A0";
       System.out.println(
-          "⚠️ Note that parameters marked with an asterisk (*) in the help menu are mandatory.");
+          warningEmojiCode + " Note that parameters marked with an asterisk (*) in the help menu are mandatory.");
       return null;
     }
     if (args.getExportNoticeSchema()) {
