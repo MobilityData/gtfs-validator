@@ -80,8 +80,8 @@ jobs:
             main/build/reports/tests/
             processor/build/reports/tests/
 
-  pack:
-    needs: [test]
+  package:
+    needs: [test, prepare-version-name]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -112,7 +112,7 @@ jobs:
           name: Application - CLI executable - Java ${{ matrix.java_version }} JAR file -- ${{ needs.prepare-version-name.outputs.versionTag }} -- ${{ matrix.os }}
           path: main/build/libs/gtfs-validator-${{ needs.prepare-version-name.outputs.versionTag }}_cli.jar
   doc:
-    needs: [test]
+    needs: [test, prepare-version-name]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
