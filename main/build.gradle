@@ -22,11 +22,12 @@ plugins {
 }
 
 applicationDefaultJvmArgs = [ "-Xmx8G" ]
+def groupName = 'org.mobilitydata'
 
-group 'org.mobilitydata'
+group groupName
 version "${System.getenv("versionTag")}"
 
-group 'org.mobilitydata'
+group groupName
 version "${System.getenv("versionTag")}_cli"
 
 jar {
@@ -62,8 +63,8 @@ repositories {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            groupId = 'org.mobilitydata'
-            artifactId = 'application'
+            groupId = groupName
+            artifactId = rootProject.name
             version = "${System.getenv("versionTag")}"
 
             from components.java
