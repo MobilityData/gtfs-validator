@@ -49,3 +49,4 @@ shadowJar {
 
 mainClassName = 'org.mobilitydata.gtfsvalidator.outputcomparator.cli.Main'
 compileJava.options.encoding = "UTF-8"
+
