@@ -98,3 +98,7 @@ configurations {
         outgoing.artifact(test.binaryResultsDirectory)
     }
 }
+
+javadoc {
+    options.encoding = 'UTF-8'
+}
