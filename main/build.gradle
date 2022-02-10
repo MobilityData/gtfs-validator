@@ -80,7 +80,7 @@ dependencies {
     implementation 'com.beust:jcommander:1.48'
     implementation 'javax.inject:javax.inject:1'
     implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'com.google.guava:guava:29.0-jre'
+    implementation 'com.google.guava:guava:31.0.1-jre'
     implementation 'com.google.flogger:flogger:0.6'
     implementation 'com.google.flogger:flogger-system-backend:0.6'
     implementation 'com.univocity:univocity-parsers:2.9.0'
