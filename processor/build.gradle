@@ -20,7 +20,7 @@ dependencies {
     implementation 'javax.inject:javax.inject:1'
     implementation 'com.squareup:javapoet:1.13.0'
     implementation 'org.apache.commons:commons-lang3:3.6'
-    implementation 'com.google.guava:guava:29.0-jre'
+    implementation 'com.google.guava:guava:31.0.1-jre'
     implementation 'com.google.flogger:flogger:0.6'
     implementation 'com.univocity:univocity-parsers:2.9.0'
     implementation 'com.google.geometry:s2-geometry:2.0.0'
