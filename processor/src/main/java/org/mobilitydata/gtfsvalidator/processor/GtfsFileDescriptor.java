@@ -105,7 +105,7 @@ public abstract class GtfsFileDescriptor {
           indicesBuilder.add(field);
         }
       }
-      ImmutableMap<String, GtfsFieldDescriptor> fieldsMap = fieldsMapBuilder.build();
+      ImmutableMap<String, GtfsFieldDescriptor> fieldsMap = fieldsMapBuilder.buildOrThrow();
       ImmutableList.Builder<LatLonDescriptor> latLonBuilder = ImmutableList.builder();
       for (GtfsFieldDescriptor field : fields()) {
         if (!field.type().equals(FieldTypeEnum.LATITUDE)) {

@@ -9,13 +9,14 @@
 |--------------------------------------------------------	|-----------------------------------------------------------------------------------------------------------------	|
 | `block_trips_with_overlapping_stop_times`               | [`BlockTripsWithOverlappingStopTimesNotice`](#BlockTripsWithOverlappingStopTimesNotice)                         	|
 | `csv_parsing_failed`                                   	| [`CsvParsingFailedNotice`](#CsvParsingFailedNotice)                                                             	|
-| `decreasing_or_equal_shape_distance`                   	| [`DecreasingOrEqualShapeDistanceNotice`](#DecreasingOrEqualShapeDistanceNotice)                                 	|
+| `decreasing_shape_distance`                            	| [`DecreasingShapeDistanceNotice`](#DecreasingShapeDistanceNotice)                                               	|
 | `decreasing_or_equal_stop_time_distance`                | [`DecreasingOrEqualStopTimeDistanceNotice`](#DecreasingOrEqualStopTimeDistanceNotice)                           	|
 | `duplicated_column`                                    	| [`DuplicatedColumnNotice`](#DuplicatedColumnNotice)                                                             	|
 | `duplicate_fare_rule_zone_id_fields`                   	| [`DuplicateFareRuleZoneIdFieldsNotice`](#DuplicateFareRuleZoneIdFieldsNotice)                                   	|
 | `duplicate_key`                                        	| [`DuplicateKeyNotice`](#DuplicateKeyNotice)                                                                     	|
 | `empty_column_name`                                   	| [`EmptyColumnNameNotice`](#EmptyColumnNameNotice)                                         	                    |
 | `empty_file`                                           	| [`EmptyFileNotice`](#EmptyFileNotice)                                                                           	|
+| `equal_shape_distance_diff_coordinates`                   | [`EqualShapeDistanceDiffCoordinatesNotice`](#EqualShapeDistanceDiffCoordinatesNotice)                             |
 | `foreign_key_violation`                                	| [`ForeignKeyViolationNotice`](#ForeignKeyViolationNotice)                                                       	|
 | `inconsistent_agency_timezone`                         	| [`InconsistentAgencyTimezoneNotice`](#InconsistentAgencyTimezoneNotice)                                         	|
 | `invalid_color`                                        	| [`InvalidColorNotice`](#InvalidColorNotice)                                                                     	|
@@ -88,7 +89,7 @@
 ##### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-#### [`DecreasingOrEqualShapeDistanceNotice`](/RULES.md#DecreasingOrEqualShapeDistanceNotice)
+#### [`DecreasingShapeDistanceNotice`](/RULES.md#DecreasingShapeDistanceNotice)
 ##### Fields description
 
 | Field name            	  | Description                                                                                    	  | Type    	|
@@ -182,6 +183,23 @@
 
 ##### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
+
+#### [`EqualShapeDistanceDiffCoordinatesNotice`](/RULES.md#EqualShapeDistanceDiffCoordinatesNotice)
+##### Fields description
+
+| Field name            	  | Description                                                                                    	  | Type    	|
+|-----------------------	  |-------------------------------------------------------------------------------------------------	|---------	|
+| `shapeId`               	| The id of the faulty shape.                                                                      	| String  	|
+| `csvRowNumber`          	| The row number from `shapes.txt`.                                                                	| Long    	|
+| `shapeDistTraveled`     	| Actual distance traveled along the shape from the first shape point to the faulty record.        	| Double  	|
+| `shapePtSequence`       	| The faulty record's `shapes.shape_pt_sequence`.                                                  	| Integer 	|
+| `prevCsvRowNumber`      	| The row number from `shapes.txt` of the previous shape point.                                    	| Long    	|
+| `prevShapeDistTraveled` 	| Actual distance traveled along the shape from the first shape point to the previous shape point. 	| Double  	|
+| `prevShapePtSequence`   	| The previous record's `shapes.shape_pt_sequence`.                                                	| Integer 	|
+
+##### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+* [`shapes.txt`](http://gtfs.org/reference/static#shapestxt)
 
 #### [`ForeignKeyViolationNotice`](/RULES.md#ForeignKeyViolationNotice)
 ##### Fields description
@@ -731,6 +749,7 @@
 | `attribution_without_role`           	      | [`AttributionWithoutRoleNotice`](#AttributionWithoutRoleNotice)                   	|
 | `duplicate_route_name`                      | [`DuplicateRouteNameNotice`](#DuplicateRouteNameNotice)                           	|
 | `empty_row`                                	| [`EmptyRowNotice`](#EmptyRowNotice)                                               	|
+| `equal_shape_distance_same_coordinates`       | [`EqualShapeDistanceSameCoordinatesNotice`](#EqualShapeDistanceSameCoordinatesNotice) |
 | `fast_travel_between_consecutive_stops`      	| [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsecutiveStopsNotice) |
 | `fast_travel_between_far_stops`               | [`FastTravelBetweenFarStopsNotice`](#FastTravelBetweenFarStopsNotice)                 |
 | `feed_expiration_date`                     	| [`FeedExpirationDateNotice`](#FeedExpirationDateNotice)                           	|
@@ -804,6 +823,24 @@
 
 ##### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
+
+
+#### [EqualShapeDistanceSameCoordinatesNotice](/RULES.md#EqualShapeDistanceSameCoordinatesNotice)
+##### Fields description
+
+| Field name            	  | Description                                                                                    	  | Type    	|
+|-----------------------	  |-------------------------------------------------------------------------------------------------	|---------	|
+| `shapeId`               	| The id of the faulty shape.                                                                      	| String  	|
+| `csvRowNumber`          	| The row number from `shapes.txt`.                                                                	| Long    	|
+| `shapeDistTraveled`     	| Actual distance traveled along the shape from the first shape point to the faulty record.        	| Double  	|
+| `shapePtSequence`       	| The faulty record's `shapes.shape_pt_sequence`.                                                  	| Integer 	|
+| `prevCsvRowNumber`      	| The row number from `shapes.txt` of the previous shape point.                                    	| Long    	|
+| `prevShapeDistTraveled` 	| Actual distance traveled along the shape from the first shape point to the previous shape point. 	| Double  	|
+| `prevShapePtSequence`   	| The previous record's `shapes.shape_pt_sequence`.                                                	| Integer 	|
+
+##### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+* [`shapes.txt`](http://gtfs.org/reference/static#shapestxt)
 
 #### [FeedExpirationDateNotice](/RULES.md#FeedExpirationDateNotice)
 ##### Fields description

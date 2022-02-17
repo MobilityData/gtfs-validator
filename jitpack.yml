@@ -1,0 +1,3 @@
+# To override the build commands see docs: https://jitpack.io/docs/BUILDING/
+jdk:
+  - openjdk11
