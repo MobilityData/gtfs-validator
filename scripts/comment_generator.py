@@ -102,7 +102,7 @@ if __name__ == "__main__":
     else:
         comment = (
             comment
-            + " The changes in this pull request did not trigger any new errors on known GTFS datasets from the [MobilityDatabase](http://mobilitydatabase.org/wiki/Main_Page)."
+            + " The changes in this pull request did not trigger any new errors on known GTFS datasets from the [MobilityDatabase](http://old.mobilitydatabase.org/wiki/Main_Page)."
         )
     comment = (
         comment
