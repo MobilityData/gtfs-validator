@@ -19,6 +19,7 @@ plugins {
     id 'application'
     id 'java'
     id "com.diffplug.spotless" // Version provided in ../build.gradle.
+    id 'maven-publish'
 }
 
 spotless {
@@ -45,11 +46,12 @@ spotless {
 
 
 applicationDefaultJvmArgs = [ "-Xmx8G" ]
+def groupName = 'org.mobilitydata'
 
-group 'org.mobilitydata'
+group groupName
 version "${System.getenv("versionTag")}"
 
-group 'org.mobilitydata'
+group groupName
 version "${System.getenv("versionTag")}_cli"
 
 jar {
@@ -82,6 +84,18 @@ repositories {
     mavenCentral()
 }
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = groupName
+            artifactId = rootProject.name
+            version = "${System.getenv("versionTag")}"
+
+            from components.java
+        }
+    }
+}
+
 dependencies {
     annotationProcessor project(':processor')
     compileOnly project(':processor')
@@ -91,7 +105,7 @@ dependencies {
     implementation 'com.beust:jcommander:1.48'
     implementation 'javax.inject:javax.inject:1'
     implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'com.google.guava:guava:29.0-jre'
+    implementation 'com.google.guava:guava:31.0.1-jre'
     implementation 'com.google.flogger:flogger:0.6'
     implementation 'com.google.flogger:flogger-system-backend:0.6'
     implementation 'com.univocity:univocity-parsers:2.9.0'
