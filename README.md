@@ -15,7 +15,7 @@ This is a command-line tool written in Java that performs the following steps:
 # Run the app via command line
 ### Setup
 1. Install [Java 11 or higher](https://www.oracle.com/java/technologies/javase-downloads.html)
-1. Download the [v3.0.0 release jar](https://github.com/MobilityData/gtfs-validator/suites/4467368246/artifacts/118793764) of the validator.
+1. Download the [v3.0.0 release jar](https://github.com/MobilityData/gtfs-validator/releases/download/v3.0.0/gtfs-validator-v3.0.0_cli.jar) of the validator.
    
 ### Run it
 To validate a GTFS dataset on your computer:
