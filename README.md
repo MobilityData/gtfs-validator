@@ -24,11 +24,11 @@ See detailed instructions [here](/docs/DOWNLOAD_SNAPSHOT_JAR.md).
 ### Run it
 You can run this validator using a GTFS dataset on your computer, or from a URL. 
 - To validate a GTFS dataset on your computer, run the following command in the terminal, replacing the text in brackets:
-  - `java -jar [name of the jar file] -i [path to the GTFS file] -o [name of the output directory that will be created]`
+  - `java -jar {name of the jar file} -i {path to the GTFS file} -o {name of the output directory that will be created}`
   - here is an example of what the command could look like:  `java -jar gtfs-validator-v-snapshot_cli.jar -i /myDirectory/gtfs.zip -o output`
 
 - To validate a GTFS dataset from a URL, run the following command in the terminal, replacing the text in brackets:
-  - `java -jar [name of the jar file] -u [URL to the GTFS file] -o [name of the output directory that will be created]`
+  - `java -jar {name of the jar file} -u {URL to the GTFS file} -o {name of the output directory that will be created}`
   - here is an example of what the command could look like: `java -jar gtfs-validator-v-snapshot_cli.jar -u https://www.abc.com/gtfs.zip -o output`
 
 More detailed instructions with all the parameters that exists are available on our ["Usage"](/docs/USAGE.md) page.
