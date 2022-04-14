@@ -31,9 +31,9 @@ public class CliParametersAnalyzer {
    * @return true if CLI parameter combination is legal, otherwise return false
    */
   public static boolean isValid(Arguments args) {
-    if (args.getRunWebServer() == false && args.getInput() == null && args.getUrl() == null) {
+    if (args.getInput() == null && args.getUrl() == null) {
       logger.atSevere().log(
-          "One of the three following CLI parameter must be provided: '--input', '--url', or '--run_web_server'");
+          "One of the following CLI parameter must be provided: '--input' or '--url'");
       return false;
     }
     if (args.getInput() != null && args.getUrl() != null) {
