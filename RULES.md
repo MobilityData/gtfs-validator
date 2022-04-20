@@ -277,7 +277,7 @@ When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` m
 
 #### ForeignKeyViolationNotice
 
-The values of the given key and rows of one table cannot be found a values of the given key in another table.
+The values of the given key and rows of one table cannot be found a values of the given key in another table. The Foreign keys are defined in the specification under "Type" for each file.
 
 ##### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
@@ -359,7 +359,7 @@ Value of field with type `language` is not valid. Language codes must follow <a 
 
 #### InvalidPhoneNumberNotice
 
-Value of field with type `phone number` is not valid.
+Value of field with type `phone number` is not valid. This rule uses the [PhoneNumberUtil](https://www.javadoc.io/doc/com.googlecode.libphonenumber/libphonenumber/8.4.1/com/google/i18n/phonenumbers/PhoneNumberUtil.html) class to validate a phone number based on a country code. If no country code is provided in the parameters used to run the validator, this notice won't be emitted. 
 
 ##### References:
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)

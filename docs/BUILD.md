@@ -24,3 +24,18 @@ viewer, run `./gradlew generateViewerAssets` from the command line at the root
 of the project to regenerate ViewerAssets.java with the new contents of those
 files.
 
+## Packaging JAR with all dependencies
+
+To build a JAR that can run stand-alone without any additional classes on the classpath (sometimes called an "uber" or "fat" JAR), run:
+
+```
+$ ./gradlew shadowJar
+```
+
+## Generating Javadocs
+
+To generate Javadocs for the project, run:
+
+```
+$ ./gradlew aggregateJavadocs
+```

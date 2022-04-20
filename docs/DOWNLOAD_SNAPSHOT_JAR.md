@@ -11,11 +11,12 @@ The application jar is named as "Application - cli executable.jar --v-master-sha
 See the following instructions to download the artifact:
 
 1. Access the actions listing on the project's main page
-1. Select `Test Package Document` in the `Workflows` column
-1. Select `master` branch
+2. Select `Test Package Document` in the `Workflows` column
+3. Select `master` branch
 ![access actions](https://user-images.githubusercontent.com/35747326/122930141-b351a100-d339-11eb-9484-16201bbea5c0.png)
 These three aforementioned steps can be skipped if you directly go to the following url: [Test Package Document workflow executions on master branch](https://github.com/MobilityData/gtfs-validator/actions/workflows/test_pack_doc.yml?query=branch%3Amaster)
 
-1. Select the first item in the list: it is the latest iteration of the workflow that was run on the master branch
-1. Click on the artifact's name that is needed to start download 
+4. Select the first item in the list that has a green check: it is the latest iteration of the workflow that was run on the master branch
+5. Click on the artifact's name that is needed to start download 
 ![download artifacts](https://user-images.githubusercontent.com/35747326/122931339-cb75f000-d33a-11eb-8089-a7640966a1ef.png)
+6. Unzip the downloaded file: it contains the latest snapshot jar needed to run the validator
