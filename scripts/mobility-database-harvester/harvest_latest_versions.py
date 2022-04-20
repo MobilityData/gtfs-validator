@@ -26,7 +26,7 @@ from tqdm import tqdm
 ###############################################################################
 
 # API constants
-API_URL = "http://mobilitydatabase.org/w/api.php?"
+API_URL = "http://old.mobilitydatabase.org/w/api.php?"
 ACTION = "action"
 ARCHIVES_ID_PROPERTY = "P33"
 CLAIMS = "claims"

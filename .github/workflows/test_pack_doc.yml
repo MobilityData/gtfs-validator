@@ -52,7 +52,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: ${{ matrix.java_version }}
-          distribution: 'adopt'
+          distribution: 'temurin'
       - name: Cache Gradle packages
         uses: actions/cache@v2
         with:
@@ -93,7 +93,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: ${{ matrix.java_version }}
-          distribution: 'adopt'
+          distribution: 'temurin'
       - name: Cache Gradle packages
         uses: actions/cache@v2
         with:
@@ -124,7 +124,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: ${{ matrix.java_version }}
-          distribution: 'adopt'
+          distribution: 'temurin'
       - name: Cache Gradle packages
         uses: actions/cache@v2
         with:

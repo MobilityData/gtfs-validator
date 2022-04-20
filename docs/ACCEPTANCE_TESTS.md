@@ -12,7 +12,7 @@ If this step is skipped, newly declared invalid datasets could be rejected by GT
    
 ## Process description
 
-For the latest version of all GTFS datasets from the [MobilityDatabase](http://mobilitydatabase.org/wiki/Main_Page), the validation report from both the proposed and the reference validator are compared. An acceptance test report is generated: it quantifies for each agency/dataset the number of new errors (as defined [here](https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#definitions)) that have been introduced.
+For the latest version of all GTFS datasets from the [MobilityDatabase](http://old.mobilitydatabase.org/wiki/Main_Page), the validation report from both the proposed and the reference validator are compared. An acceptance test report is generated: it quantifies for each agency/dataset the number of new errors (as defined [here](https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#definitions)) that have been introduced.
 ![steps](https://user-images.githubusercontent.com/35747326/139877746-fd047437-38b3-44fa-aeb8-37d925c289e8.png)
 
 ## Github Actions
@@ -23,7 +23,7 @@ This workflow:
 1. packages the `output-comparator` module;
 1. packages the proposed version of the validator;
 1. downloads the version of the reference validator that is on the [`master` branch](https://github.com/MobilityData/gtfs-validator/tree/master);
-1. defines a matrix of urls (fetched from the [MobilityDatabase](http://mobilitydatabase.org/wiki/Main_Page)) that will be used in the further validation process; 
+1. defines a matrix of urls (fetched from the [MobilityDatabase](http://old.mobilitydatabase.org/wiki/Main_Page)) that will be used in the further validation process; 
 
 On each of these urls:
 1. the reference version of the validator is executed and the validation report is output as JSON (under `reference.json`);
@@ -117,9 +117,9 @@ Sample outputs:
   "maxPercentageCorruptedSources": 2
 } 
 ```
-Where each source id value come from the MobilityDatabase: they are a unique [property](http://mobilitydatabase.org/wiki/Property:P33) used to identify each source of data.
+Where each source id value come from the MobilityDatabase: they are a unique [property](http://old.mobilitydatabase.org/wiki/Property:P33) used to identify each source of data.
 
-The source id can be used to find all datasets versions of a source on the [MobilityDatabase](http://mobilitydatabase.org/wiki/Main_Page) for the sakes of debugging or exploration.
+The source id can be used to find all datasets versions of a source on the [MobilityDatabase](http://old.mobilitydatabase.org/wiki/Main_Page) for the sakes of debugging or exploration.
 
 ## Instructions to run the pipeline
 
