@@ -5,7 +5,7 @@ WORKDIR /build
 
 ARG VERSION_TAG
 ENV versionTag=$VERSION_TAG
-RUN gradle build --no-daemon
+RUN gradle shadowJar --no-daemon
 
 
 FROM openjdk:11
