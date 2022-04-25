@@ -2,7 +2,7 @@
 
 A GTFS Schedule (static) [General Transit Feed Specification (GTFS)](https://gtfs.mobilitydata.org/spec/gtfs-schedule) feed validator
 
-This README contains information for the latest version of the project, which is under active development.  You can find the current version of the validator application on the [Releases page](https://github.com/MobilityData/gtfs-validator/releases). 
+This README contains information for the latest version of the project, which is under active development.  You can find the current version of the validator application on the [Releases page](https://github.com/MobilityData/gtfs-validator/releases).
 
 # Introduction
 This is a cross-platform application written in Java that performs the following steps:
@@ -26,7 +26,7 @@ Once installed, run the application and you will see the following screen:
 
 There are two primary options to set:
 
-* `GTFS Input`: Use this to specify the GTFS feed to validate.  You can specify a URL, ZIP file, or a directory containing the individual `.txt` files of a feed.  You can paste the input location directly into the input field or use the `Choose Local File...` button to open a file-chooser dialog to select a file on your local system.  
+* `GTFS Input`: Use this to specify the GTFS feed to validate.  You can specify a URL, ZIP file, or a directory containing the individual `.txt` files of a feed.  You can paste the input location directly into the input field or use the `Choose Local File...` button to open a file-chooser dialog to select a file on your local system.
 * `Output Directory`: This is the directory where the validation reports will be written.
 
 With these two options set, click the "Validate" button to begin validation.
@@ -45,13 +45,13 @@ Before running validation, tap the `Advanced` button to configure other aspects 
 
 # Run the app via command line
 ### Setup
-1. Install [Java 11 or higher](https://www.oracle.com/java/technologies/javase-downloads.html). To check which version of Java is installed on your computer, type the following command in the terminal: `java --version`. 
-2. Navigate to the [Releases page](https://github.com/MobilityData/gtfs-validator/releases) and download the latest `Gtfs Validator` CLI jar (not OS-specific). It is located in the **Assets** section of the release, and it looks like `gtfs-validator-vX.X.X_cli.jar` 
+1. Install [Java 11 or higher](https://www.oracle.com/java/technologies/javase-downloads.html). To check which version of Java is installed on your computer, type the following command in the terminal: `java --version`.
+2. Navigate to the [Releases page](https://github.com/MobilityData/gtfs-validator/releases) and download the latest `Gtfs Validator` CLI jar (not OS-specific). It is located in the **Assets** section of the release, and it looks like `gtfs-validator-vX.X.X_cli.jar`
 3. Open the terminal on your computer
-4. Navigate to the directory containing the jar file. You can do this by typing the following command in the terminal:`cd {directory path}`, where {directory path} is the absolute or relative path to the directory. You can then make sure you're in the right directory by typing `pwd` in the terminal (this stands for *present working directory*). You can also make sure the jar file is there by typing `ls` in the terminal (this stands for *list* and will display the list of files in this directory). More about commands to navigate file and directories [here](https://help.ubuntu.com/community/UsingTheTerminal#File_.26_Directory_Commands). 
+4. Navigate to the directory containing the jar file. You can do this by typing the following command in the terminal:`cd {directory path}`, where {directory path} is the absolute or relative path to the directory. You can then make sure you're in the right directory by typing `pwd` in the terminal (this stands for *present working directory*). You can also make sure the jar file is there by typing `ls` in the terminal (this stands for *list* and will display the list of files in this directory). More about commands to navigate file and directories [here](https://help.ubuntu.com/community/UsingTheTerminal#File_.26_Directory_Commands).
 
 ### Run it
-You can run this validator using a GTFS dataset on your computer, or from a URL. 
+You can run this validator using a GTFS dataset on your computer, or from a URL.
 - To validate a GTFS dataset on your computer, run the following command in the terminal, replacing the text in brackets:
   - `java -jar {name of the jar file} -i {path to the GTFS file} -o {name of the output directory that will be created}`
   - here is an example of what the command could look like:  `java -jar gtfs-validator-cli.jar -i /myDirectory/gtfs.zip -o output`
@@ -86,6 +86,20 @@ where:
 `... c:/myDirectory:/theContainerDirectory ...`
 
 The validator can then be executed via bash commands. See the [preceeding instructions for command line usage](#run-the-app-via-command-line).
+
+### Build Docker container locally
+
+To build a Docker image locally from source (e.g. to test an unmerged branch):
+
+```bash
+docker build . --build-arg=VERSION_TAG=v3 -t gtfs-validator:latest
+```
+
+The locally-built image could then be run via the local `gtfs-validator:latest` assigned above:
+
+```bash
+docker run --rm gtfs-validator:latest --help
+```
 
 ### Visualize the results
 In the output directory, the reports will be created as described [here](#visualize-the-results).
@@ -123,4 +137,4 @@ In order to avoid sudden changes in the validation output that might declare pre
 Code licensed under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0).
 
 # Contributing
-We welcome contributions to the project! Please check out our [Contribution guidelines](/docs/CONTRIBUTING.md) for details. 
+We welcome contributions to the project! Please check out our [Contribution guidelines](/docs/CONTRIBUTING.md) for details.
