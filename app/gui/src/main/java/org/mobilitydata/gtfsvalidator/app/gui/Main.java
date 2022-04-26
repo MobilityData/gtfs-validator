@@ -8,10 +8,22 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The main entry point for the GUI application.
+ *
+ * Compared to the CLI jar, this entry point is designed to be packaged as a
+ * native application to be run directly by the user.
+ *
+ * TODO(bdferris): Follow up work will add a minimal UI for selecting the input
+ * GTFS and potentially the output directory.
+ */
 public class Main {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
   public static void main(String[] args) {
+    // On Windows, if you drag a file onto the application shortcut, it will
+    // execute the app with the file as the first command-line argument.  This
+    // doesn't appear to work on Mac OS.
     if (args.length != 1) {
       System.exit(-1);
     }
