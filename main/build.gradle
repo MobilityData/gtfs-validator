@@ -20,6 +20,7 @@ plugins {
     id 'java'
     id "com.diffplug.spotless" // Version provided in ../build.gradle.
     id 'maven-publish'
+    id "com.github.node-gradle.node" version "3.2.1"
 }
 
 spotless {
@@ -147,24 +148,32 @@ ext {
     viewerDir = "$projectDir/src/main/java/org/mobilitydata/gtfsvalidator/viewer/"
 }
 
-task installSnabbdom(type: Exec) {
-  inputs.file "$projectDir/js/snabbdom-umd/package.json"
-  outputs.dir "$projectDir/js/snabbdom-umd/node_modules"
-
-  workingDir "$projectDir/js/snabbdom-umd"
-  executable 'npm'
-  args 'install'
+node {
+  nodeProjectDir = file("$projectDir/js/snabbdom-umd")
 }
 
-task rollupSnabbdomUmd(type: Exec) {
+task installSnabbdom(type: NpmTask) {
+  inputs.file "$projectDir/js/snabbdom-umd/package.json"
+  outputs.dir "$projectDir/js/snabbdom-umd/node_modules"
+  args = ['install']
+}
+
+task rollupSnabbdomUmd(type: NodeTask) {
   dependsOn installSnabbdom
   inputs.file "$projectDir/js/snabbdom-umd/package.json"
   inputs.dir "$projectDir/js/snabbdom-umd/node_modules"
   outputs.file "$viewerDir/snabbdom.browser.js"
 
-  workingDir "$projectDir/js/snabbdom-umd"
-  executable './node_modules/.bin/rollup'
-  args './node_modules/snabbdom/build/index.js', '--format', 'umd', '--name', 'snabbdom', '--file', "$viewerDir/snabbdom.browser.js"
+  // The workingDir from node { nodeProjectDir} does not carry over to
+  // NodeTasks, so I'm using fully qualified paths below.
+
+  script = file("$projectDir/js/snabbdom-umd/node_modules/.bin/rollup")
+  args = [
+    "$projectDir/js/snabbdom-umd/node_modules/snabbdom/build/index.js", 
+    '--format', 'umd', 
+    '--name', 'snabbdom', 
+    '--file', "$viewerDir/snabbdom.browser.js" 
+  ]
 }
 
 // Utility class for generateViewerAssets task.
