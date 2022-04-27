@@ -168,8 +168,7 @@ jobs:
       - name: Check for secrets needed to upload validation reports to GCP Cloud Storage
         id: check-secrets
         run: |
-          if [ -n "${{ secrets.VALIDATOR_SA_KEY }}" ]
-          then
+          if [ "${{ secrets.VALIDATOR_SA_KEY }}" == "" ]; then
             echo "Secrets to upload validations reports to Google Cloud are configured in the repo."
             echo "::set-output name=ok::true"
           else
