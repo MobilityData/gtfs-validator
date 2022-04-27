@@ -169,10 +169,10 @@ task rollupSnabbdomUmd(type: NodeTask) {
 
   script = file("$projectDir/js/snabbdom-umd/node_modules/.bin/rollup")
   args = [
-    "$projectDir/js/snabbdom-umd/node_modules/snabbdom/build/index.js", 
-    '--format', 'umd', 
-    '--name', 'snabbdom', 
-    '--file', "$viewerDir/snabbdom.browser.js" 
+    "$projectDir/js/snabbdom-umd/node_modules/snabbdom/build/index.js",
+    '--format', 'umd',
+    '--name', 'snabbdom',
+    '--file', "$viewerDir/snabbdom.browser.js"
   ]
 }
 
