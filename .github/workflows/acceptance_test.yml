@@ -168,6 +168,7 @@ jobs:
       - name: Check for secrets needed to upload validation reports to GCP Cloud Storage
         id: check-secrets
         run: |
+          # FIXME: The below IF statement always returns false and therefore skips uploads even on branches from this repo. See https://github.com/MobilityData/gtfs-validator/issues/1128
           if [ "${{ secrets.VALIDATOR_SA_KEY }}" != "" ]; then
             echo "Secrets to upload validations reports to Google Cloud are configured in the repo."
             echo "::set-output name=ok::true"
