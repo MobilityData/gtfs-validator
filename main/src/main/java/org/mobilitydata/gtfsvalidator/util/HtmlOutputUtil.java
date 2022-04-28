@@ -3,14 +3,15 @@ package org.mobilitydata.gtfsvalidator.util;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
-import org.mobilitydata.gtfsvalidator.resources.HtmlOutputResources;
 
 public class HtmlOutputUtil {
+  private static final String JQUERY_FILE = "META-INF/resources/webjars/jquery/3.6.0/jquery.min.js";
+  private static final String STYLE_CSS = "style.css";
+  private static final String SCRIPT_JS = "script.js";
   private static final String ERROR = SeverityLevel.ERROR.name();
   private static final String WARNING = SeverityLevel.WARNING.name();
   private static final String INFO = SeverityLevel.INFO.name();
@@ -72,14 +73,118 @@ public class HtmlOutputUtil {
       String sampleColumns = noticeColumnsBuilder(noticeFields);
       String sampleRows = noticeRowsBuilder(noticeFields, sampleNotices);
       notices.append(
-          HtmlOutputResources.noticeFrame(
-              noticeCode, noticeSeverity, totalNotices, sampleColumns, sampleRows));
+          noticeFrame(noticeCode, noticeSeverity, totalNotices, sampleColumns, sampleRows));
     }
-    return HtmlOutputResources.outputFrame(
+    return outputFrame(
         (noticesQty.get(ERROR) + noticesQty.get(WARNING) + noticesQty.get(INFO)),
         noticesQty.get(ERROR),
         noticesQty.get(WARNING),
         noticesQty.get(INFO),
         notices.toString());
+  }
+
+  public static String resourceLoader(String resourcePath) {
+    String content = "";
+    try (InputStream stream =
+        HtmlOutputUtil.class.getClassLoader().getResourceAsStream(resourcePath)) {
+      Scanner scanner = new Scanner(stream).useDelimiter("\\A");
+      content = scanner.hasNext() ? scanner.next() : "";
+    } catch (IOException e) {
+      System.out.println("The resource was not found at \"" + resourcePath + "\".");
+    }
+    return content;
+  }
+
+  public static String outputHeader(int total, int errors, int warnings, int infos) {
+    return "<h1>VALIDATION REPORT</h1>\n"
+        + "<h2>"
+        + total
+        + " notices reported ("
+        + errors
+        + " errors, "
+        + warnings
+        + " warnings, "
+        + infos
+        + " infos)"
+        + "</h2>\n"
+        + "<p>Please visit <a href=\"https://github.com/MobilityData/gtfs-validator/blob/master/docs/NOTICES.md\">NOTICES.md</a> and <a href=\"https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md\">RULES.md</a>.</p>\n"
+        + "<table class=\"accordion\">\n"
+        + "  <thead>\n"
+        + "    <tr>\n"
+        + "      <th>Code</th><th>Severity</th><th>Total</th>\n"
+        + "    </tr>\n"
+        + "  </thead>\n"
+        + "  <tbody>\n";
+  }
+
+  public static String outputFooter() {
+    return "  </tbody>\n"
+        + "</table>\n"
+        + "<p>This validation report was generated using the <a href=\"https://github.com/MobilityData/gtfs-validator\">GTFS Schedule validator</a>.</p>\n";
+  }
+
+  public static String outputFrame(
+      int totalQty, int totalErrors, int totalWarnings, int totalInfos, String outputNotices) {
+    return "<!DOCTYPE html>\n"
+        + "<html>\n"
+        + "<head>\n"
+        + "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
+        + "<script>\n"
+        + resourceLoader(JQUERY_FILE)
+        + "</script>\n"
+        + "<style>\n"
+        + resourceLoader(STYLE_CSS)
+        + "</style>\n"
+        + "</head>\n"
+        + "<body>\n"
+        + outputHeader(totalQty, totalErrors, totalWarnings, totalInfos)
+        + outputNotices
+        + outputFooter()
+        + "<script>\n"
+        + resourceLoader(SCRIPT_JS)
+        + "</script>\n"
+        + "</body>\n"
+        + "</html>\n";
+  }
+
+  public static String noticeFrame(
+      String noticeCode,
+      String noticeSeverity,
+      int totalNotices,
+      String sampleColumns,
+      String sampleRows) {
+    return "    <tr class=\"notice\">\n"
+        + "      <td>"
+        + noticeCode
+        + "</td>\n"
+        + "      <td class=\""
+        + noticeSeverity.toLowerCase()
+        + "\">"
+        + noticeSeverity
+        + "</td>\n"
+        + "      <td>"
+        + totalNotices
+        + "</td>\n"
+        + "    </tr>\n"
+        + "    <tr class=\"description\">\n"
+        + "      <td colspan=\"3\">\n"
+        + "        <div class=\"desc-content\">\n"
+        + "          <h3>"
+        + noticeCode
+        + "</h3>\n"
+        + "          <table>\n"
+        + "            <thead>\n"
+        + "              <tr>\n"
+        + sampleColumns
+        + "              </tr>\n"
+        + "            </thead>\n"
+        + "            <tbody>\n"
+        + "              <tr>\n"
+        + sampleRows
+        + "            </tbody>\n"
+        + "          </table>\n"
+        + "        </div>\n"
+        + "      </td>\n"
+        + "    </tr>\n";
   }
 }

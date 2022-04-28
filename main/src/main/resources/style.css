@@ -1,0 +1,80 @@
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  min-width: 800px;
+}
+
+.error:before {
+  content: "\1F534  ";
+}
+
+.warning:before {
+  content: "\1F7E0  ";
+}
+
+.info:before {
+  content: "\26AA  ";
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  padding: 1em 2em;
+}
+
+table {
+  width: 100%;
+}
+table th {
+  text-align: left;
+  border-bottom: 2px solid #000;
+  padding: 0.5em;
+}
+table td {
+  border-bottom: 1px solid #ddd;
+  padding: 0.5em;
+}
+
+table.accordion > tbody > tr.notice td, table.accordion > tbody > tr.view th {
+  cursor: auto;
+}
+table.accordion > tbody > tr.notice td:first-child,
+table.accordion > tbody > tr.notice th:first-child {
+  position: relative;
+  padding-left: 20px;
+}
+table.accordion > tbody > tr.notice td:first-child:before,
+table.accordion > tbody > tr.notice th:first-child:before {
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  width: 9px;
+  height: 16px;
+  margin-top: -8px;
+  color: #000;
+  content: "+";
+}
+table.accordion > tbody > tr.notice:hover {
+  background: #ddd;
+}
+table.accordion > tbody > tr.notice.open {
+  background: #ddd;
+  color: black;
+}
+table.accordion > tbody > tr.description {
+  display: none;
+}
+table.accordion > tbody > tr.description.open {
+  display: table-row;
+}
+
+.desc-content {
+  padding: 0.5em;
+  border-bottom: 5px solid #000;
+  border-top: 5px solid #000
+}
+.desc-content h3 {
+  margin-top: 0;
+}
