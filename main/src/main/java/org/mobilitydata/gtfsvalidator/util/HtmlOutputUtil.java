@@ -38,7 +38,7 @@ public class HtmlOutputUtil {
       for (String field : noticeFields) {
         rows.append("                <td>")
             .append(noticeJson.get(field).toString())
-            .append("</td>");
+            .append("</td>\n");
       }
       rows.append("              </tr>\n");
     }
