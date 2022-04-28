@@ -38,6 +38,7 @@ public class ArgumentsTest {
     assertThat(underTest.getCountryCode()).matches("au");
     assertThat(underTest.getNumThreads()).isEqualTo(4);
     assertThat(underTest.getValidationReportName()).matches("report.json");
+    assertThat(underTest.getHtmlReportName()).matches("report.html");
     assertThat(underTest.getSystemErrorsReportName()).matches("system_errors.json");
 
     // same test using -u, -s, -v and -e command line options
@@ -49,6 +50,7 @@ public class ArgumentsTest {
           "-u", "url value",
           "-s", "storage value",
           "-v", "validation_report.json",
+          "-H", "validation_report.html",
           "-e", "errors.json",
         };
 
@@ -59,6 +61,7 @@ public class ArgumentsTest {
     assertThat(underTest.getUrl()).matches("url value");
     assertThat(underTest.getStorageDirectory()).matches("storage value");
     assertThat(underTest.getValidationReportName()).matches("validation_report.json");
+    assertThat(underTest.getHtmlReportName()).matches("validation_report.html");
     assertThat(underTest.getSystemErrorsReportName()).matches("errors.json");
   }
 
@@ -77,6 +80,7 @@ public class ArgumentsTest {
     assertThat(underTest.getCountryCode()).matches("ca");
     assertThat(underTest.getNumThreads()).isEqualTo(4);
     assertThat(underTest.getValidationReportName()).matches("report.json");
+    assertThat(underTest.getHtmlReportName()).matches("report.html");
     assertThat(underTest.getSystemErrorsReportName()).matches("system_errors.json");
 
     // same test using -u, -s, -v and -e command line options
@@ -94,6 +98,8 @@ public class ArgumentsTest {
           "storage value",
           "--validation_report_name",
           "validation_report.json",
+          "--html_report_name",
+          "validation_report.html",
           "--system_errors_report_name",
           "errors.json",
         };
@@ -105,6 +111,7 @@ public class ArgumentsTest {
     assertThat(underTest.getUrl()).matches("url value");
     assertThat(underTest.getStorageDirectory()).matches("storage value");
     assertThat(underTest.getValidationReportName()).matches("validation_report.json");
+    assertThat(underTest.getHtmlReportName()).matches("validation_report.html");
     assertThat(underTest.getSystemErrorsReportName()).matches("errors.json");
   }
 
