@@ -34,10 +34,11 @@ java -jar gtfs-validator-v2.0.jar -i relative/path/to/dataset.zip -o relative/ou
 
 ...which will:
  1. Search for a GTFS dataset located at `relative/path/to/dataset.zip`
- 1. Validate the GTFS data and output the results to the directory located at `relative/output/path`. 
- 1. Export both validation and system errors reports to JSON by default. This folder will contain the `.json` file with information related to the validation process. The validation report will (by default) be named as `report.json` and the system errors report can be found under the name of `system_errors.json`.
+ 2. Validate the GTFS data and output the results to the directory located at `relative/output/path`. 
+ 3. Export validation and system errors reports to JSON by default. This folder will contain the `.json` file with information related to the validation process. The validation report will (by default) be named as `report.json` and the system errors report can be found under the name of `system_errors.json`.
+ 4. Export the HTML validation report, which is a standalone HTML file that can be opened in a web browser. This folder will contain the `.html` file with information related to the validation process. The HTML validation report will (by default) be named as `report.html`.
  
-  ⚠️ Note that the name of the validation report can be overridden by providing values to `-v` and/or `-e` CLI arguments. These **should** include `.json` extension.
+  ⚠️ Note that the name of the reports can be overridden by providing values to the respective CLI arguments mentioned above. These **should** include the correct extension, either `.json` or `.html`.
 
 ### on a hosted GTFS zip file at a URL
 Sample usage:
