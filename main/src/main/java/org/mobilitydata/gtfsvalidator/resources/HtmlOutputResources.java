@@ -168,7 +168,6 @@ public class HtmlOutputResources {
       int totalNotices,
       String sampleColumns,
       String sampleRows) {
-
     return "    <tr class=\"notice\">\n"
         + "      <td>"
         + noticeCode
