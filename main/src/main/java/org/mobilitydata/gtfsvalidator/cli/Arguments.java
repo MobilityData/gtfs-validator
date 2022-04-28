@@ -67,6 +67,11 @@ public class Arguments {
   private String validationReportName;
 
   @Parameter(
+      names = {"-H", "--html_report_name"},
+      description = "The name of the validation report including .html extension.")
+  private String htmlReportName;
+
+  @Parameter(
       names = {"-e", "--system_errors_report_name"},
       description = "The name of the system errors report including .json extension.")
   private String systemErrorsReportName;
@@ -120,6 +125,13 @@ public class Arguments {
       return "report.json";
     }
     return validationReportName;
+  }
+
+  public String getHtmlReportName() {
+    if (htmlReportName == null) {
+      return "report.html";
+    }
+    return htmlReportName;
   }
 
   public String getSystemErrorsReportName() {

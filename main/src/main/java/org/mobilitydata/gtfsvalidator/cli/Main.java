@@ -228,7 +228,7 @@ public class Main {
           Paths.get(args.getOutputBase(), args.getValidationReportName()),
           gson.toJson(noticeContainer.exportValidationNotices()).getBytes(StandardCharsets.UTF_8));
       Files.write(
-          Paths.get(args.getOutputBase(), "report.html"),
+          Paths.get(args.getOutputBase(), args.getHtmlReportName()),
           HtmlOutputUtil.outputBuilder(noticeContainer.exportValidationNotices())
               .getBytes(StandardCharsets.UTF_8));
       Files.write(
