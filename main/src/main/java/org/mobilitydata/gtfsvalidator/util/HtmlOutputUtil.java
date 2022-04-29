@@ -9,9 +9,9 @@ import java.util.*;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 
 public class HtmlOutputUtil {
-  private static final String JQUERY_FILE = "META-INF/resources/webjars/jquery/3.6.0/jquery.min.js";
-  private static final String STYLE_CSS = "style.css";
-  private static final String SCRIPT_JS = "script.js";
+  public static final String JQUERY_FILE = "META-INF/resources/webjars/jquery/3.6.0/jquery.min.js";
+  public static final String STYLE_CSS = "style.css";
+  public static final String SCRIPT_JS = "script.js";
   private static final String ERROR = SeverityLevel.ERROR.name();
   private static final String WARNING = SeverityLevel.WARNING.name();
   private static final String INFO = SeverityLevel.INFO.name();
@@ -21,31 +21,8 @@ public class HtmlOutputUtil {
   private static final String TOTAL_NOTICES = "totalNotices";
   private static final String SAMPLE_NOTICES = "sampleNotices";
 
-  public static String noticeColumnsBuilder(ArrayList<String> noticeFields) {
-    StringBuilder columns = new StringBuilder("                ");
-    for (String field : noticeFields) {
-      columns.append("<th>").append(field).append("</th>");
-    }
-    columns.append("\n");
-    return columns.toString();
-  }
-
-  public static String noticeRowsBuilder(ArrayList<String> noticeFields, JsonArray sampleNotices) {
-    StringBuilder rows = new StringBuilder();
-    for (JsonElement notice : sampleNotices) {
-      JsonObject noticeJson = notice.getAsJsonObject();
-      rows.append("              <tr>\n");
-      for (String field : noticeFields) {
-        rows.append("                <td>")
-            .append(noticeJson.get(field).toString())
-            .append("</td>\n");
-      }
-      rows.append("              </tr>\n");
-    }
-    return rows.toString();
-  }
-
-  public static String outputBuilder(JsonObject noticesJson) {
+  public static String outputBuilder(
+      JsonObject noticesJson, String jqueryDependency, String styleCss, String scriptJs) {
     StringBuilder notices = new StringBuilder();
     HashMap<String, Integer> noticesQty =
         new HashMap<>() {
@@ -75,12 +52,14 @@ public class HtmlOutputUtil {
       notices.append(
           noticeFrame(noticeCode, noticeSeverity, totalNotices, sampleColumns, sampleRows));
     }
+    String outputHeader =
+        outputHeader(
+            (noticesQty.get(ERROR) + noticesQty.get(WARNING) + noticesQty.get(INFO)),
+            noticesQty.get(ERROR),
+            noticesQty.get(WARNING),
+            noticesQty.get(INFO));
     return outputFrame(
-        (noticesQty.get(ERROR) + noticesQty.get(WARNING) + noticesQty.get(INFO)),
-        noticesQty.get(ERROR),
-        noticesQty.get(WARNING),
-        noticesQty.get(INFO),
-        notices.toString());
+        jqueryDependency, styleCss, scriptJs, outputHeader, notices.toString(), outputFooter());
   }
 
   public static String resourceLoader(String resourcePath) {
@@ -95,7 +74,32 @@ public class HtmlOutputUtil {
     return content;
   }
 
-  public static String outputHeader(int total, int errors, int warnings, int infos) {
+  protected static String noticeColumnsBuilder(ArrayList<String> noticeFields) {
+    StringBuilder columns = new StringBuilder("                ");
+    for (String field : noticeFields) {
+      columns.append("<th>").append(field).append("</th>");
+    }
+    columns.append("\n");
+    return columns.toString();
+  }
+
+  protected static String noticeRowsBuilder(
+      ArrayList<String> noticeFields, JsonArray sampleNotices) {
+    StringBuilder rows = new StringBuilder();
+    for (JsonElement notice : sampleNotices) {
+      JsonObject noticeJson = notice.getAsJsonObject();
+      rows.append("              <tr>\n");
+      for (String field : noticeFields) {
+        rows.append("                <td>")
+            .append(noticeJson.get(field).toString())
+            .append("</td>\n");
+      }
+      rows.append("              </tr>\n");
+    }
+    return rows.toString();
+  }
+
+  protected static String outputHeader(int total, int errors, int warnings, int infos) {
     return "<h1>VALIDATION REPORT</h1>\n"
         + "<h2>"
         + total
@@ -117,37 +121,42 @@ public class HtmlOutputUtil {
         + "  <tbody>\n";
   }
 
-  public static String outputFooter() {
+  protected static String outputFooter() {
     return "  </tbody>\n"
         + "</table>\n"
         + "<p>This validation report was generated using the <a href=\"https://github.com/MobilityData/gtfs-validator\">GTFS Schedule validator</a>.</p>\n";
   }
 
-  public static String outputFrame(
-      int totalQty, int totalErrors, int totalWarnings, int totalInfos, String outputNotices) {
+  protected static String outputFrame(
+      String jqueryDependency,
+      String styleCss,
+      String scriptJs,
+      String outputHeader,
+      String outputNotices,
+      String outputFooter) {
     return "<!DOCTYPE html>\n"
         + "<html>\n"
         + "<head>\n"
         + "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
         + "<script>\n"
-        + resourceLoader(JQUERY_FILE)
+        + jqueryDependency
         + "</script>\n"
         + "<style>\n"
-        + resourceLoader(STYLE_CSS)
+        + styleCss
         + "</style>\n"
         + "</head>\n"
         + "<body>\n"
-        + outputHeader(totalQty, totalErrors, totalWarnings, totalInfos)
+        + outputHeader
         + outputNotices
-        + outputFooter()
+        + outputFooter
         + "<script>\n"
-        + resourceLoader(SCRIPT_JS)
+        + scriptJs
         + "</script>\n"
         + "</body>\n"
         + "</html>\n";
   }
 
-  public static String noticeFrame(
+  protected static String noticeFrame(
       String noticeCode,
       String noticeSeverity,
       int totalNotices,

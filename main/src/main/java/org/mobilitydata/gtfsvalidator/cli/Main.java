@@ -228,7 +228,11 @@ public class Main {
           gson.toJson(noticeContainer.exportValidationNotices()).getBytes(StandardCharsets.UTF_8));
       Files.write(
           Paths.get(args.getOutputBase(), args.getHtmlReportName()),
-          HtmlOutputUtil.outputBuilder(noticeContainer.exportValidationNotices())
+          HtmlOutputUtil.outputBuilder(
+                  noticeContainer.exportValidationNotices(),
+                  HtmlOutputUtil.resourceLoader(HtmlOutputUtil.JQUERY_FILE),
+                  HtmlOutputUtil.resourceLoader(HtmlOutputUtil.STYLE_CSS),
+                  HtmlOutputUtil.resourceLoader(HtmlOutputUtil.SCRIPT_JS))
               .getBytes(StandardCharsets.UTF_8));
       Files.write(
           Paths.get(args.getOutputBase(), args.getSystemErrorsReportName()),
