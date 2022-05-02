@@ -64,6 +64,10 @@
             color: #000;
             content: "+";
         }
+        table.accordion > tbody > tr.notice.open td:first-child:before,
+        table.accordion > tbody > tr.notice.open th:first-child:before {
+            content: "\2013";
+        }
         table.accordion > tbody > tr.notice:hover {
             background: #ddd;
         }
