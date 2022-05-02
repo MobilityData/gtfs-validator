@@ -67,8 +67,8 @@ public class Arguments {
   private String validationReportName;
 
   @Parameter(
-      names = {"-H", "--html_report_name"},
-      description = "The name of the validation report including .html extension.")
+      names = {"-r", "--html_report_name"},
+      description = "The name of the HTML validation report including .html extension.")
   private String htmlReportName;
 
   @Parameter(

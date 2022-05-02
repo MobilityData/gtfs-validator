@@ -27,6 +27,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -37,9 +38,9 @@ import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.NoticeSchemaGenerator;
 import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
+import org.mobilitydata.gtfsvalidator.report.HtmlReportGenerator;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
-import org.mobilitydata.gtfsvalidator.util.HtmlOutputUtil;
 import org.mobilitydata.gtfsvalidator.validator.DefaultValidatorProvider;
 import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
@@ -222,14 +223,13 @@ public class Main {
   public static void exportReport(final NoticeContainer noticeContainer, final Arguments args) {
     new File(args.getOutputBase()).mkdirs();
     Gson gson = createGson(args.getPretty());
+    HtmlReportGenerator generator = new HtmlReportGenerator();
     try {
       Files.write(
           Paths.get(args.getOutputBase(), args.getValidationReportName()),
           gson.toJson(noticeContainer.exportValidationNotices()).getBytes(StandardCharsets.UTF_8));
-      Files.write(
-          Paths.get(args.getOutputBase(), args.getHtmlReportName()),
-          HtmlOutputUtil.outputBuilder(noticeContainer.exportValidationNotices())
-              .getBytes(StandardCharsets.UTF_8));
+      generator.generateReport(
+          noticeContainer, Path.of(args.getOutputBase(), args.getHtmlReportName()));
       Files.write(
           Paths.get(args.getOutputBase(), args.getSystemErrorsReportName()),
           gson.toJson(noticeContainer.exportSystemErrors()).getBytes(StandardCharsets.UTF_8));
