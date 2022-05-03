@@ -47,10 +47,10 @@ public class ReportSummary {
   }
 
   /**
-   * Returns the notices grouped by SeverityLevel and notice code.
-   * The notices are returned as a map of maps.
-   * The SeverityLevel map is implemented with a LinkedHashMap to preserve the original order of severity levels.
-   * The notice code map is implemented with a TreeMap to sort the notices alphabetically.
+   * Returns the notices grouped by SeverityLevel and notice code. The notices are returned as a map
+   * of maps. The SeverityLevel map is implemented with a LinkedHashMap to preserve the original
+   * order of severity levels. The notice code map is implemented with a TreeMap to sort the notices
+   * alphabetically.
    *
    * @return the notices as a map of maps.
    */

@@ -29,9 +29,7 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 /** HtmlReportGenerator is the class generating the HTML report. */
 public class HtmlReportGenerator {
 
-  /**
-   * Generate the HTML report using the class ReportSummary and the notice container.
-   */
+  /** Generate the HTML report using the class ReportSummary and the notice container. */
   public void generateReport(NoticeContainer noticeContainer, Path reportPath) throws IOException {
     TemplateEngine templateEngine = new TemplateEngine();
     ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
