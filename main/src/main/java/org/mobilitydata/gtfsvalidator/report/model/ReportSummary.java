@@ -26,6 +26,7 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 
+/** ReportSummary is the class containing the summary methods for the HTML report. */
 public class ReportSummary {
   private final NoticeContainer container;
   private final Map<SeverityLevel, Long> severityCounts;
@@ -45,22 +46,50 @@ public class ReportSummary {
                     Collectors.groupingBy(Notice::getCode, TreeMap::new, Collectors.toList())));
   }
 
+  /**
+   * Returns the notices grouped by SeverityLevel and notice code.
+   * The notices are returned as a map of maps.
+   * The SeverityLevel map is implemented with a LinkedHashMap to preserve the original order of severity levels.
+   * The notice code map is implemented with a TreeMap to sort the notices alphabetically.
+   *
+   * @return the notices as a map of maps.
+   */
   public Map<SeverityLevel, Map<String, List<ValidationNotice>>> getNoticesMap() {
     return noticesMap;
   }
 
+  /**
+   * Returns the total count of notices in the validation report.
+   *
+   * @return the total count of notices.
+   */
   public int getNoticeCount() {
     return container.getValidationNotices().size();
   }
 
+  /**
+   * Returns the count of notices with SeverityLevel.ERROR.
+   *
+   * @return the count of error notices.
+   */
   public long getErrorCount() {
     return severityCounts.getOrDefault(SeverityLevel.ERROR, 0L);
   }
 
+  /**
+   * Returns the count of notices with SeverityLevel.WARNING.
+   *
+   * @return the count of warning notices.
+   */
   public long getWarningCount() {
     return severityCounts.getOrDefault(SeverityLevel.WARNING, 0L);
   }
 
+  /**
+   * Returns the count of notices with SeverityLevel.INFO.
+   *
+   * @return the count of info notices.
+   */
   public long getInfoCount() {
     return severityCounts.getOrDefault(SeverityLevel.INFO, 0L);
   }
