@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.report;
 
+import com.jcabi.manifests.Manifests;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -39,10 +40,12 @@ public class HtmlReportGenerator {
     templateEngine.setTemplateResolver(templateResolver);
 
     ReportSummary summary = new ReportSummary(noticeContainer);
+    String version = Manifests.read("Validator-Version");
 
     Context context = new Context();
     context.setVariable("summary", summary);
     context.setVariable("args", args);
+    context.setVariable("version", version);
 
     try (FileWriter writer = new FileWriter(reportPath.toFile())) {
       templateEngine.process("report.html", context, writer);
