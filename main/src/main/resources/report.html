@@ -103,7 +103,7 @@
 <table class="accordion">
     <thead>
     <tr>
-    <th>Code</th><th>Name</th><th>Severity</th><th>Total</th>
+    <th>Notice Code</th><th>Notice Name</th><th>Severity</th><th>Total</th>
     </tr>
     </thead>
     <tbody>
@@ -145,7 +145,77 @@
     </span>
     </tbody>
 </table>
-<p>This validation report was generated using the <a href="https://github.com/MobilityData/gtfs-validator">GTFS Schedule validator</a>.</p>
+<H2>Settings and version</H2>
+<p>This validation report was generated using the <a href="https://github.com/MobilityData/gtfs-validator">GTFS Schedule validator</a> using the following arguments.</p>
+<table>
+    <thead>
+    <tr>
+        <th>Argument Description</th><th>Argument Short Name</th><th>Value</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Country code</td>
+        <td>-c</td>
+        <td th:text="${args.getCountryCode() != null} ? ${args.getCountryCode()} : 'null'" />
+    </tr>
+    <tr>
+        <td>Input</td>
+        <td>-i</td>
+        <td th:text="${args.getInput() != null} ? ${args.getInput()} : 'null'" />
+    </tr>
+    <tr>
+        <td>URL</td>
+        <td>-u</td>
+        <td th:text="${args.getUrl() != null} ? ${args.getUrl()} : 'null'" />
+    </tr>
+    <tr>
+        <td>Output</td>
+        <td>-o</td>
+        <td th:text="${args.getOutputBase()}" />
+    </tr>
+    <tr>
+        <td>Storage directory</td>
+        <td>-s</td>
+        <td th:text="${args.getStorageDirectory() != null} ? ${args.getStorageDirectory()} : 'null'" />
+    </tr>
+    <tr>
+        <td>Threads</td>
+        <td>-t</td>
+        <td th:text="${args.getNumThreads()}" />
+    </tr>
+    <tr>
+        <td>Validation report name</td>
+        <td>-v</td>
+        <td th:text="${args.getValidationReportName()}" />
+    </tr>
+    <tr>
+        <td>HTML report name</td>
+        <td>-r</td>
+        <td th:text="${args.getHtmlReportName()}" />
+    </tr>
+    <tr>
+        <td>System errors report name</td>
+        <td>-e</td>
+        <td th:text="${args.getSystemErrorsReportName()}" />
+    </tr>
+    <tr>
+        <td>Export notices schema</td>
+        <td>-n</td>
+        <td th:text="${args.getExportNoticeSchema()}" />
+    </tr>
+    <tr>
+        <td>Pretty JSON output</td>
+        <td>-p</td>
+        <td th:text="${args.getPretty()}" />
+    </tr>
+    <tr>
+        <td>Help</td>
+        <td>-h</td>
+        <td th:text="${args.getHelp()}" />
+    </tr>
+    </tbody>
+</table>
 </body>
 <script>
     $(function(){

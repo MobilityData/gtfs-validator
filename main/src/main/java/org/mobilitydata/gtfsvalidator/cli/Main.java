@@ -229,7 +229,7 @@ public class Main {
           Paths.get(args.getOutputBase(), args.getValidationReportName()),
           gson.toJson(noticeContainer.exportValidationNotices()).getBytes(StandardCharsets.UTF_8));
       generator.generateReport(
-          noticeContainer, Path.of(args.getOutputBase(), args.getHtmlReportName()));
+          noticeContainer, args, Path.of(args.getOutputBase(), args.getHtmlReportName()));
       Files.write(
           Paths.get(args.getOutputBase(), args.getSystemErrorsReportName()),
           gson.toJson(noticeContainer.exportSystemErrors()).getBytes(StandardCharsets.UTF_8));

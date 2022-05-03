@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.report;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import org.mobilitydata.gtfsvalidator.cli.Arguments;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.report.model.ReportSummary;
 import org.thymeleaf.TemplateEngine;
@@ -30,7 +31,8 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 public class HtmlReportGenerator {
 
   /** Generate the HTML report using the class ReportSummary and the notice container. */
-  public void generateReport(NoticeContainer noticeContainer, Path reportPath) throws IOException {
+  public void generateReport(NoticeContainer noticeContainer, Arguments args, Path reportPath)
+      throws IOException {
     TemplateEngine templateEngine = new TemplateEngine();
     ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
     templateResolver.setTemplateMode(TemplateMode.HTML);
@@ -40,6 +42,7 @@ public class HtmlReportGenerator {
 
     Context context = new Context();
     context.setVariable("summary", summary);
+    context.setVariable("args", args);
 
     try (FileWriter writer = new FileWriter(reportPath.toFile())) {
       templateEngine.process("report.html", context, writer);
