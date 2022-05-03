@@ -20,6 +20,8 @@ import com.jcabi.manifests.Manifests;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.mobilitydata.gtfsvalidator.cli.Arguments;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.report.model.ReportSummary;
@@ -42,10 +44,15 @@ public class HtmlReportGenerator {
     ReportSummary summary = new ReportSummary(noticeContainer);
     String version = Manifests.read("Validator-Version");
 
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
+    Date now = new Date(System.currentTimeMillis());
+    String date = formatter.format(now);
+
     Context context = new Context();
     context.setVariable("summary", summary);
     context.setVariable("args", args);
     context.setVariable("version", version);
+    context.setVariable("date", date);
 
     try (FileWriter writer = new FileWriter(reportPath.toFile())) {
       templateEngine.process("report.html", context, writer);
