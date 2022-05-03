@@ -1,6 +1,9 @@
 # Adding new rules
 
 We will want to add new rules to this validator as the static [GTFS specification](http://gtfs.org/reference/static) evolves. This page outlines the process of adding new rules to this tool.
+Note that:
+- Notices related to file parsing and data types are defined in the [core](/core/src/main/java/org/mobilitydata/gtfsvalidator/notice)
+- Notices related to GTFS semantics/business logic are encapsulated within the related validation rule class. See the example below in [`TripUsageValidator`](/main/src/main/java/org/mobilitydata/gtfsvalidator/validator/TripUsageValidator.java):
 
 ## 0. Prepare for implementation 
 
@@ -8,6 +11,7 @@ We will want to add new rules to this validator as the static [GTFS specificatio
 - Check the [list of possible future rules](https://github.com/MobilityData/gtfs-validator/issues?q=is%3Aopen+is%3Aissue+label%3A%22new+rule%22) to see if an issue already exists for the proposed rule.
   - If no existing issue exists, open [a new issue](https://github.com/MobilityData/gtfs-validator/issues/new/choose).
 - Discuss the rule with the community via the Github issue and come to a consensus on the exact logic, and if it should be an `ERROR` or a `WARNING`. See [definitions for ERROR and WARNING](../RULES.md#definitions).
+- Please note that [`ValidationNotices`](core/src/main/java/org/mobilitydata/gtfsvalidator/notice/ValidationNotice.java) should be distinguished from [`SystemErrors`](core/src/main/java/org/mobilitydata/gtfsvalidator/notice/SystemError.java): while `ValidationNotices` give information about the data quality, `SystemErrors` are not semantic errors, they give information about things that may have gone wrong during the validation process such as an impossibility to unzip a GTFS archive.
 - Implement new rule using the process below
 
 ## 1. Implement the new rule

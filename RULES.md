@@ -1,73 +1,36 @@
 # Implemented rules
-- Notices related to file parsing and data types are defined in the [core](/core/src/main/java/org/mobilitydata/gtfsvalidator/notice) 
-- Notices related to GTFS semantics/business logic are encapsulated within the related validation rule class see the following example in [`TripUsageValidator`](/main/src/main/java/org/mobilitydata/gtfsvalidator/validator/TripUsageValidator.java):
-```java
-/**
- * Validates that every trip in "trips.txt" is used by some stop from "stop_times.txt"
- *
- * <p>Generated notice: {@link UnusedTripNotice}.
- */
-@GtfsValidator
-public class TripUsageValidator extends FileValidator {
-  private final GtfsTripTableContainer tripTable;
-  private final GtfsStopTimeTableContainer stopTimeTable;
-
-  @Inject
-  TripUsageValidator(GtfsTripTableContainer tripTable, GtfsStopTimeTableContainer stopTimeTable) {
-    this.tripTable = tripTable;
-    this.stopTimeTable = stopTimeTable;
-  }
-
-  @Override
-  public void validate(NoticeContainer noticeContainer) {
-    // Do not report the same trip_id multiple times.
-    Set<String> reportedTrips = new HashSet<>();
-    for (GtfsTrip trip : tripTable.getEntities()) {
-      String tripId = trip.tripId();
-      if (reportedTrips.add(tripId) && stopTimeTable.byTripId(tripId).isEmpty()) {
-        noticeContainer.addValidationNotice(new UnusedTripNotice(tripId, trip.csvRowNumber()));
-      }
-    }
-  }
-  /**
-   * A {@code GtfsTrip} should be referred to at least once in {@code GtfsStopTimeTableContainer}
-   * station).
-   *
-   * <p>Severity: {@code SeverityLevel.WARNING}
-   */
-  static class UnusedTripNotice extends ValidationNotice {
-    UnusedTripNotice(String tripId, long csvRowNumber) {
-      super(
-          ImmutableMap.of(
-              "tripId", tripId,
-              "csvRowNumber", csvRowNumber),
-          SeverityLevel.WARNING);
-    }
-  }
-}
-```  
- 
-Note that the notice ID naming conventions changed in `v2` to make contributions of new rules easier by reducing the likelihood of conflicting IDs during parallel development. Please refer to [MIGRATION_V1_V2.md](/docs/MIGRATION_V1_V2.md) for a mapping between v1 and v2 rules.
+This document lists all the notices that are emitted by this validator.
+Note that the notice naming conventions changed in `v2` to make contributions of new rules easier by reducing the likelihood of conflicting IDs during parallel development. Please refer to [MIGRATION_V1_V2.md](/docs/MIGRATION_V1_V2.md) for a mapping between v1 and v2 rules.
 
 <a name="definitions"/>
 
 ## Definitions
-Notices are split into three categories: `INFO`, `WARNING`, `ERROR`.
+### A Rule
+A part of the specification that is translated into code in the validator. A Rule will describe if a set of conditions is met or not.
+- For example:
+  - In the specification: the stops.txt file, the field zone_id is required if providing fare information using fare_rules.txt (source)
+  - In the validator: this is translated into code in the file StopZoneIdValidator.java (link to the file).
+
+### A Notice
+What the Rule outputs if the conditions aren’t met. It is what the user will see in the validation report.
+- For example, the output of  StopZoneIdValidator.java Rule is the Notice StopWithoutZoneIdNotice. It appears in the validation report in the form stop_without_zone_id for readability purposes. More information can be found in the NOTICES.md file.
+
+### The Severity of a Notice
+
+Each Notice is associated with a severity:: `INFO`, `WARNING`, `ERROR`.
 
 * `ERROR` notices are for items that the [GTFS reference specification](https://github.com/google/transit/tree/master/gtfs/spec/en) explicitly requires or prohibits (e.g., using the language "must"). The validator uses [RFC2119](https://tools.ietf.org/html/rfc2119) to interpret the language in the GTFS spec.
-  * ⚠️ for this particular level of severity, [`ValidationNotices`](core/src/main/java/org/mobilitydata/gtfsvalidator/notice/ValidationNotice.java) should be distinguished from [`SystemErrors`](core/src/main/java/org/mobilitydata/gtfsvalidator/notice/SystemError.java): while `ValidationNotices` give information about the data quality, `SystemErrors` are not semantic errors, they give information about things that may have gone wrong during the validation process such as an impossibility to unzip a GTFS archive. 
+  * ⚠️ Please note that this validator also generates `System Errors` that give information about things that may have gone wrong during the validation process such as impossibility to unzip a GTFS file. These are generated in a second report `system_errors.json`.
 * `WARNING` notices are for items that will affect the quality of GTFS datasets but the GTFS spec does expressly require or prohibit. For example, these might be items recommended using the language "should" or "should not" in the GTFS spec, or items recommended in the MobilityData [GTFS Best Practices](https://gtfs.org/best-practices/).
 * `INFO` notices are for items that do not affect the feed's quality, such as unknown files or unknown fields.
-
-Additional details regarding the notices' context is provided in [`NOTICES.md`](/docs/NOTICES.md).
 
 <!--suppress ALL -->
 
 <a name="ERRORS"/>
 
-## Table of errors
+## Table of ERRORS
 
-| Name                                                                                                            | Description                                                                                                                                            |
+| Notice Name                                                                                                            | Description                                                                                                                                            |
 |-----------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`BlockTripsWithOverlappingStopTimesNotice`](#BlockTripsWithOverlappingStopTimesNotice)                         | Block trips with overlapping stop times.                                                                                                               |
 | [`CsvParsingFailedNotice`](#CsvParsingFailedNotice)                                                             | Parsing of a CSV file failed.                                                                                                                          |
