@@ -92,8 +92,8 @@
 #### [`DecreasingShapeDistanceNotice`](/RULES.md#DecreasingShapeDistanceNotice)
 ##### Fields description
 
-| Field name            	  | Description                                                                                    	  | Type    	|
-|-----------------------	  |-------------------------------------------------------------------------------------------------	|---------	|
+| Field name            	  | Description                                                                                    	| Type    	|
+|-----------------------	  |-------------------------------------------------------------------------------------------------|---------	|
 | `shapeId`               	| The id of the faulty shape.                                                                      	| String  	|
 | `csvRowNumber`          	| The row number from `shapes.txt`.                                                                	| Long    	|
 | `shapeDistTraveled`     	| Actual distance traveled along the shape from the first shape point to the faulty record.        	| Double  	|
