@@ -495,8 +495,6 @@
 | Field name   	| Description                    	| Type   	|
 |--------------	|--------------------------------	|--------	|
 | `filename`   	| The name of the faulty file.   	| String 	|
-| `csvRowNumber`| The row of the faulty record.  	| Long   	|
-| `fieldName`  	| The name of the missing field. 	| String 	|
 
 ##### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
