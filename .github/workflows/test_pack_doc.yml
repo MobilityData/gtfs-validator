@@ -136,7 +136,7 @@ jobs:
         env:
           versionTag: ${{ needs.prepare-version-name.outputs.versionTag }}
         with:
-          arguments: aggregateJavadocs
+          arguments: aggregateJavadoc
       - name: Persist javadoc
         uses: actions/upload-artifact@v2
         with:

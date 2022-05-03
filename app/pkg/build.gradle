@@ -99,3 +99,12 @@ jlink {
     }
 }
 
+javadoc {
+    // Our complex use of a shadow jar dependency bundled as a Java Module
+    // (see above) causes problems for the Javadoc compiler, especially when
+    // run in aggregate mode over the entire project.  As such, we disable
+    // Javadoc for this sub-project to avoid issues.  Since there isn't much
+    // real source-code in the :pkg project, it's no big loss.
+    enabled = false
+}
+
