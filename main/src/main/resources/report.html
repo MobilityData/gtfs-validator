@@ -103,7 +103,7 @@
 <table class="accordion">
     <thead>
     <tr>
-    <th>Code</th><th>Severity</th><th>Total</th>
+    <th>Code</th><th>Name</th><th>Severity</th><th>Total</th>
     </tr>
     </thead>
     <tbody>
@@ -111,27 +111,28 @@
         <span th:each="noticeByCode: ${noticesBySeverityLevel.value}">
             <tr class="notice">
                 <td th:text="${noticeByCode.key}" />
+                <td th:text="${noticeByCode.value.get(0).getName()}" />
                 <td th:class="${noticesBySeverityLevel.key.toString().toLowerCase()}" th:text="${noticesBySeverityLevel.key}" />
                 <td th:text="${noticeByCode.value.size()}" />
             </tr>
             <tr class="description">
-                <td colspan="3">
+                <td colspan="4">
                     <div class="desc-content">
-                        <h3 th:text="${noticeByCode.key}" />
-                        <p> Please find this notice description <a th:href="@{'https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#' + ${noticeByCode.key.replaceAll('_', '')} + 'notice'}">here</a>.</p>
+                        <h3 th:text="${noticeByCode.value.get(0).getName()}" />
+                        <p> Please find this notice description <a th:href="@{'https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#' + ${noticeByCode.value.get(0).getName()}}">here</a>.</p>
                         <table>
                             <thead>
                                 <tr>
-                                    <th:block th:each="entry: ${noticeByCode.value.get(0).getContext().getAsJsonObject().entrySet()}" >
-                                        <th th:text="${entry.key}" />
+                                    <th:block th:each="field: ${noticeByCode.value.get(0).getFields()}" >
+                                        <th th:text="${field.getName()}" />
                                     </th:block>
                                 </tr>
                             </thead>
                             <span th:each="notice: ${noticeByCode.value}">
                                 <tbody>
                                 <tr>
-                                <th:block th:each="entry: ${notice.getContext().getAsJsonObject().entrySet()}">
-                                        <td th:text="${entry.value}" />
+                                <th:block th:each="field: ${notice.getFields()}">
+                                        <td th:text="${notice.getContext().getAsJsonObject().get(field.getName())}" />
                                 </th:block>
                                 </tr>
                                 </tbody>
