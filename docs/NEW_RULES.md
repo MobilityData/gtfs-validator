@@ -225,7 +225,7 @@ Add the rule to [`RULES.md`](../RULES.md) keeping the alphabetical order of the 
 ```markdown
 | [NewRuleRelatedToStops](#NewRuleRelatedToStops) | new rule short description | 
 ```
-...and add a definition of that rule, the notice field descriptions, the affected filed and the reference to any additional documentation material in the errors or warnings section (still keeping the alphabetical order).
+...and add a definition of that rule, the notice fields description, the affected files and the reference to any additional documentation material in the errors or warnings section (maintaining alphabetical order).
 
 ```markdown
 <a name="NewRuleRelatedToStops"/>
