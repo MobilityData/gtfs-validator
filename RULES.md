@@ -19,7 +19,7 @@ What the Rule outputs if the conditions aren’t met. It is what the user will s
 Each Notice is associated with a severity:: `INFO`, `WARNING`, `ERROR`.
 
 * `ERROR` notices are for items that the [GTFS reference specification](https://github.com/google/transit/tree/master/gtfs/spec/en) explicitly requires or prohibits (e.g., using the language "must"). The validator uses [RFC2119](https://tools.ietf.org/html/rfc2119) to interpret the language in the GTFS spec.
-  * ⚠️ Please note that this validator also generates `System Errors` that give information about things that may have gone wrong during the validation process such as impossibility to unzip a GTFS file. These are generated in a second report `system_errors.json`.
+  * ⚠️ Please note that this validator also generates `System Errors` that give information about things that may have gone wrong during the validation process such as the inability to unzip a GTFS file. These are generated in a second report `system_errors.json`.
 * `WARNING` notices are for items that will affect the quality of GTFS datasets but the GTFS spec does expressly require or prohibit. For example, these might be items recommended using the language "should" or "should not" in the GTFS spec, or items recommended in the MobilityData [GTFS Best Practices](https://gtfs.org/best-practices/).
 * `INFO` notices are for items that do not affect the feed's quality, such as unknown files or unknown fields.
 
