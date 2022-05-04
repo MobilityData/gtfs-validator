@@ -160,24 +160,8 @@ jobs:
           path: scripts/mobility-database-harvester/datasets_metadata
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
-  secrets-gate:
-    runs-on: ubuntu-latest
-    outputs:
-      ok: ${{ steps.check-secrets.outputs.ok }}
-    steps:
-      - name: Check for secrets needed to upload validation reports to GCP Cloud Storage
-        id: check-secrets
-        run: |
-          # FIXME: The below IF statement always returns false and therefore skips uploads even on branches from this repo. See https://github.com/MobilityData/gtfs-validator/issues/1128
-          if [ "${{ secrets.VALIDATOR_SA_KEY }}" != "" ]; then
-            echo "Secrets to upload validations reports to Google Cloud are configured in the repo."
-            echo "::set-output name=ok::true"
-          else
-            echo "Secrets are NOT configured to upload validation reports to Google Cloud - skipping upload. This is expected for pull requests from forks."
-            echo "::set-output name=ok::false"
-          fi
   get-reports:
-    needs: [ fetch-urls, pack-master, pack-snapshot, secrets-gate ]
+    needs: [ fetch-urls, pack-master, pack-snapshot ]
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
@@ -202,18 +186,6 @@ jobs:
         with:
           name: reports_all
           path: ${{ github.sha }}/output
-      - name: Set up and authorize Cloud
-        uses: google-github-actions/auth@v0
-        if: needs.secrets-gate.outputs.ok == 'true'
-        with:
-          credentials_json: ${{ secrets.VALIDATOR_SA_KEY }}
-      - name: Upload reports to Google Cloud Storage
-        id: upload-files
-        uses: google-github-actions/upload-cloud-storage@main
-        if: needs.secrets-gate.outputs.ok == 'true'
-        with:
-          path: ${{ github.sha }}/output
-          destination: gtfs-validator-reports
   compare-outputs:
     needs: [ get-reports ]
     runs-on: ubuntu-latest
