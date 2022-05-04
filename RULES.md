@@ -6,14 +6,13 @@ Note that some severities were modified in `v3` to solve discrepancies with the 
 
 ## Definitions
 ### A Rule
-A part of the specification that is translated into code in the validator. A Rule will describe if a set of conditions is met or not.
-- For example:
-  - In the specification: the stops.txt file, the field zone_id is required if providing fare information using fare_rules.txt (source)
-  - In the validator: this is translated into code in the file StopZoneIdValidator.java (link to the file).
+A part of the specification that is translated into code in the validator. A Rule will describe if a set of conditions is met or not.For example:
+  - In the specification: the `stops.txt` file, the field `zone_id` is required if providing fare information using `fare_rules.txt` ([source in the spec](https://gtfs.org/schedule/reference/#stopstxt)).
+  - In the validator: this is translated into code in the file `StopZoneIdValidator.java` ([link to the validator file](https://github.com/MobilityData/gtfs-validator/blob/master/main/src/main/java/org/mobilitydata/gtfsvalidator/validator/StopZoneIdValidator.java)).
 
 ### A Notice
 What the Rule outputs if the conditions aren’t met. It is what the user will see in the validation report.
-- For example, the output of  StopZoneIdValidator.java Rule is the Notice StopWithoutZoneIdNotice. It appears in the validation report in the form stop_without_zone_id for readability purposes. More information can be found in the NOTICES.md file.
+- For example, the output of  `StopZoneIdValidator.java` Rule is the Notice `StopWithoutZoneIdNotice`, and it has the notice code `stop_without_zone_id`. 
 
 ### The Severity of a Notice
 
