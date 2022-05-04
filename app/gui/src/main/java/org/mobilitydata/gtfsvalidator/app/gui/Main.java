@@ -32,7 +32,7 @@ import java.util.logging.Logger;
  * <p>Compared to the CLI jar, this entry point is designed to be packaged as a native application
  * to be run directly by the user.
  *
- * <p>TODO(bdferris): Follow up work will add a minimal UI for selecting the input GTFS and
+ * <p>TODO(#1134): Follow up work will add a minimal UI for selecting the input GTFS and
  * potentially the output directory.
  */
 public class Main {
@@ -64,7 +64,8 @@ public class Main {
   }
 
   private static void run(String path) {
-
+    // TODO(#1135): Refactor this code to call GTFS validation code directly
+    // instead of constructing artifical command-line args and calling cli.Main.
     Path workingDirectory = null;
     try {
       workingDirectory = Files.createTempDirectory("GtfsValidator");
