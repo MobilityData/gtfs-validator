@@ -2,7 +2,7 @@
 
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>GTFS Validation Report</title>
+    <title>GTFS Schedule Validation Report</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8; width=device-width, initial-scale=1" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
@@ -94,12 +94,13 @@
 </head>
 
 <body>
-<h1>VALIDATION REPORT</h1>
+<h1>GTFS Schedule Validation Report</h1>
 <h2><span th:text="${summary.noticeCount}">X</span> notices reported
     (<span th:text="${summary.errorCount}">0</span> errors,
     <span th:text="${summary.warningCount}">0</span> warnings,
     <span th:text="${summary.infoCount}">0</span> infos)</h2>
-<p>Please visit <a href="https://github.com/MobilityData/gtfs-validator/blob/master/docs/NOTICES.md">NOTICES.md</a> and <a href="https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md">RULES.md</a>.</p>
+<p>This validation report was generated using the <a href="https://github.com/MobilityData/gtfs-validator">Canonical GTFS Schedule validator</a></p>
+<p>Use this report alongside the <a href="https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md">RULES.md</a> file to get more details about the validation issues.</p>
 <table class="accordion">
     <thead>
     <tr>
@@ -111,28 +112,28 @@
         <span th:each="noticeByCode: ${noticesBySeverityLevel.value}">
             <tr class="notice">
                 <td th:text="${noticeByCode.key}" />
-                <td th:text="${noticeByCode.value.get(0).getName()}" />
+                <td th:text="${noticeByCode.value[0].name}" />
                 <td th:class="${noticesBySeverityLevel.key.toString().toLowerCase()}" th:text="${noticesBySeverityLevel.key}" />
-                <td th:text="${noticeByCode.value.size()}" />
+                <td th:text="${noticeByCode.value.size}" />
             </tr>
             <tr class="description">
                 <td colspan="4">
                     <div class="desc-content">
-                        <h3 th:text="${noticeByCode.value.get(0).getName()}" />
-                        <p> Please find this notice description <a th:href="@{'https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#' + ${noticeByCode.value.get(0).getName()}}">here</a>.</p>
+                        <h3 th:text="${noticeByCode.value[0].name}" />
+                        <p> Please find this notice description <a th:href="@{'https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#' + ${noticeByCode.value[0].name}}">here</a>.</p>
                         <table>
                             <thead>
                                 <tr>
-                                    <th:block th:each="field: ${noticeByCode.value.get(0).getFields()}" >
-                                        <th th:text="${field.getName()}" />
+                                    <th:block th:each="field: ${noticeByCode.value[0].fields}" >
+                                        <th th:text="${field.name}" />
                                     </th:block>
                                 </tr>
                             </thead>
                             <span th:each="notice: ${noticeByCode.value}">
                                 <tbody>
                                 <tr>
-                                <th:block th:each="field: ${notice.getFields()}">
-                                        <td th:text="${notice.getContext().getAsJsonObject().get(field.getName())}" />
+                                <th:block th:each="field: ${notice.fields}">
+                                        <td th:text="${notice.context.getAsJsonObject().get(field.name)}" />
                                 </th:block>
                                 </tr>
                                 </tbody>
@@ -148,7 +149,7 @@
 <H2>Settings and version</H2>
 <p th:text="'Validator version: ' + ${version}">
 <p th:text="'Validation date and time: ' + ${date}">
-<p>This validation report was generated using the <a href="https://github.com/MobilityData/gtfs-validator">GTFS Schedule validator</a> using the following arguments.</p>
+<p>Parameters used (more about the available parameters in <a href="https://github.com/MobilityData/gtfs-validator/blob/master/docs/USAGE.md">USAGE.md</a>):</p>
 <table>
     <thead>
     <tr>
@@ -159,65 +160,69 @@
     <tr>
         <td>Country code</td>
         <td>-c</td>
-        <td th:text="${args.getCountryCode() != null} ? ${args.getCountryCode()} : 'null'" />
+        <td th:text="${args.countryCode != null} ? ${args.countryCode} : 'null'" />
     </tr>
     <tr>
         <td>Input</td>
         <td>-i</td>
-        <td th:text="${args.getInput() != null} ? ${args.getInput()} : 'null'" />
+        <td th:text="${args.input != null} ? ${args.input} : 'null'" />
     </tr>
     <tr>
         <td>URL</td>
         <td>-u</td>
-        <td th:text="${args.getUrl() != null} ? ${args.getUrl()} : 'null'" />
+        <td th:text="${args.url != null} ? ${args.url} : 'null'" />
     </tr>
     <tr>
         <td>Output</td>
         <td>-o</td>
-        <td th:text="${args.getOutputBase()}" />
+        <td th:text="${args.outputBase}" />
     </tr>
     <tr>
         <td>Storage directory</td>
         <td>-s</td>
-        <td th:text="${args.getStorageDirectory() != null} ? ${args.getStorageDirectory()} : 'null'" />
+        <td th:text="${args.storageDirectory != null} ? ${args.storageDirectory} : 'null'" />
     </tr>
     <tr>
         <td>Threads</td>
         <td>-t</td>
-        <td th:text="${args.getNumThreads()}" />
+        <td th:text="${args.numThreads}" />
     </tr>
     <tr>
         <td>Validation report name</td>
         <td>-v</td>
-        <td th:text="${args.getValidationReportName()}" />
+        <td th:text="${args.validationReportName}" />
     </tr>
     <tr>
         <td>HTML report name</td>
         <td>-r</td>
-        <td th:text="${args.getHtmlReportName()}" />
+        <td th:text="${args.htmlReportName}" />
     </tr>
     <tr>
         <td>System errors report name</td>
         <td>-e</td>
-        <td th:text="${args.getSystemErrorsReportName()}" />
+        <td th:text="${args.systemErrorsReportName}" />
     </tr>
     <tr>
         <td>Export notices schema</td>
         <td>-n</td>
-        <td th:text="${args.getExportNoticeSchema()}" />
+        <td th:text="${args.exportNoticeSchema}" />
     </tr>
     <tr>
         <td>Pretty JSON output</td>
         <td>-p</td>
-        <td th:text="${args.getPretty()}" />
+        <td th:text="${args.pretty}" />
     </tr>
     <tr>
         <td>Help</td>
         <td>-h</td>
-        <td th:text="${args.getHelp()}" />
+        <td th:text="${args.help}" />
     </tr>
     </tbody>
 </table>
+<br>
+<footer class="footer text-center text-muted mt-5">
+    Made with ♥ by <a href="https://mobilitydata.org/">MobilityData</a>
+</footer>
 </body>
 <script>
     $(function(){
