@@ -23,7 +23,7 @@ $ ./gradlew test
 To build a JAR that can run stand-alone without any additional classes on the classpath (sometimes called an "uber" or "fat" JAR), run:
 
 ```
-$ ./gradlew shadowJar
+$ ./gradlew shadowJar 
 ```
 
 ## Generating Javadocs
