@@ -12,7 +12,7 @@ A part of the specification that is translated into code in the validator. A Rul
 
 ### A Notice
 What the Rule outputs if the conditions aren’t met. It is what the user will see in the validation report.
-- For example, the output of  `StopZoneIdValidator.java` Rule is the Notice `StopWithoutZoneIdNotice`, and it has the notice code `stop_without_zone_id`. 
+- For example, the output of `StopZoneIdValidator.java` Rule is the Notice `StopWithoutZoneIdNotice`, and it has the notice code `stop_without_zone_id`. 
 
 ### The Severity of a Notice
 
