@@ -154,7 +154,6 @@ Each Notice is associated with a severity:: `INFO`, `WARNING`, `ERROR`.
 
 Trips with the same block id have overlapping stop times.
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name      	| Description                               	            | Type   	|
@@ -183,7 +182,6 @@ Trips with the same block id have overlapping stop times.
 Parsing of a CSV file failed. One common case of the problem is when a cell value contains more than 4096 characters.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name    	| Description                                                                             	| Type    	|
@@ -206,7 +204,6 @@ Parsing of a CSV file failed. One common case of the problem is when a cell valu
 When sorted by `shape.shape_pt_sequence`, two consecutive shape points must not have decreasing values for `shape_dist_traveled`.  
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name            	  | Description                                                                                    	| Type    	|
@@ -234,7 +231,6 @@ When sorted by `shape.shape_pt_sequence`, two consecutive shape points must not 
 When sorted by `stop_times.stop_pt_sequence`, two consecutive stop times in a trip should have increasing distance. If the values are equal, this is considered as an error.  
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name               	| Description                                                                                    	| Type    	|
@@ -261,7 +257,6 @@ When sorted by `stop_times.stop_pt_sequence`, two consecutive stop times in a tr
 The input file CSV header has the same column name repeated.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name  	| Description                   	| Type    	|
@@ -285,7 +280,6 @@ The input file CSV header has the same column name repeated.
 The combination of `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.contains_id` and `fare_rules.destination_id` fields should be unique in GTFS file `fare_rules.txt`.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name           	| Description                     	| Type    	|
@@ -309,7 +303,6 @@ The combination of `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.co
 The values of the given key and rows are duplicates.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name      	| Description                        	| Type   	|
@@ -336,7 +329,6 @@ The values of the given key and rows are duplicates.
 A column name has not been provided. Such columns are skipped by the validator.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name 	| Description                    	  | Type    	|
@@ -358,7 +350,6 @@ A column name has not been provided. Such columns are skipped by the validator.
 Empty csv file found in the archive: file does not have any headers, or is a required file and does not have any data. The GTFS specification requires the first line of each file to contain field names and required files must have data.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name 	| Description                 	| Type   	|
@@ -379,7 +370,6 @@ Empty csv file found in the archive: file does not have any headers, or is a req
 When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` must increase along a shape. Two consecutive points with equal values for `shape_dist_traveled` and different coordinates indicate an error.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name            	  | Description                                                                                    	  | Type    	|
@@ -407,7 +397,6 @@ When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` m
 The values of the given key and rows of one table cannot be found a values of the given key in another table. The Foreign keys are defined in the specification under "Type" for each file.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name      	| Description                                        	| Type   	|
@@ -442,7 +431,6 @@ The values of the given key and rows of one table cannot be found a values of th
 Agencies from GTFS `agency.txt` have been found to have different timezones.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
@@ -465,7 +453,6 @@ Agencies from GTFS `agency.txt` have been found to have different timezones.
 Value of field with type `color` is not valid. A color must be encoded as a six-digit hexadecimal number. The leading "#" is not included.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
@@ -489,7 +476,6 @@ Value of field with type `color` is not valid. A color must be encoded as a six-
 Value of field with type `currency` is not valid. Currency code must follow <a href="https://en.wikipedia.org/wiki/ISO_4217#Active_codes">ISO 4217</a>
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
@@ -513,7 +499,6 @@ Value of field with type `currency` is not valid. Currency code must follow <a h
 Value of field with type `date` is not valid. Dates must have the YYYYMMDD format.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
@@ -539,7 +524,6 @@ Value of field with type `date` is not valid. Dates must have the YYYYMMDD forma
 Value of field with type `email` is not valid. Definitions for valid emails are quite vague. We perform strict validation in the upstream using the Apache Commons EmailValidator.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
@@ -567,7 +551,6 @@ Value of field with type `email` is not valid. Definitions for valid emails are 
 Value of field with type `float` is not valid. 
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
@@ -595,7 +578,6 @@ Value of field with type `float` is not valid.
 Value of field with type `integer` is not valid. 
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
@@ -625,7 +607,6 @@ Value of field with type `integer` is not valid.
 Value of field with type `language` is not valid. Language codes must follow <a href="http://www.rfc-editor.org/rfc/bcp/bcp47.txt">IETF BCP 47</a>.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
@@ -651,7 +632,6 @@ Value of field with type `language` is not valid. Language codes must follow <a 
 Value of field with type `phone number` is not valid. This rule uses the [PhoneNumberUtil](https://www.javadoc.io/doc/com.googlecode.libphonenumber/libphonenumber/8.4.1/com/google/i18n/phonenumbers/PhoneNumberUtil.html) class to validate a phone number based on a country code. If no country code is provided in the parameters used to run the validator, this notice won't be emitted. 
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
@@ -677,7 +657,6 @@ Value of field with type `phone number` is not valid. This rule uses the [PhoneN
 A row in the input file has a different number of values than specified by the CSV header.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name   	| Description                              	| Type   	|
@@ -701,7 +680,6 @@ A row in the input file has a different number of values than specified by the C
 Value of field with type `time` is not valid. Time must be in the `H:MM:SS`, `HH:MM:SS` or `HHH:MM:SS` format.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
@@ -726,7 +704,6 @@ Value of field with type `time` is not valid. Time must be in the `H:MM:SS`, `HH
 Value of field with type `timezone` is not valid.Timezones are defined at <a href="https://www.iana.org/time-zones">www.iana.org</a>. Timezone names never contain the space character but may contain an underscore. Refer to <a href="http://en.wikipedia.org/wiki/List_of_tz_zones">Wikipedia</a> for a list of valid values.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
@@ -751,7 +728,6 @@ Value of field with type `timezone` is not valid.Timezones are defined at <a hre
 Value of field with type `url` is not valid. Definitions for valid URLs are quite vague. We perform strict validation in the upstream using the Apache Commons UrlValidator.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
@@ -780,7 +756,6 @@ Value of field with type `url` is not valid. Definitions for valid URLs are quit
 A location that must have `parent_station` field does not have it. The following location types must have `parent_station`: entrance, generic node, boarding_area.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name   	| Description                                     	| Type    	|
@@ -804,7 +779,6 @@ A location that must have `parent_station` field does not have it. The following
 Referenced locations (using `stop_times.stop_id`) must be stops/platforms, i.e. their `stops.location_type` value must be 0 or empty.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name             	| Description                                                	| Type   	|
@@ -829,7 +803,6 @@ Referenced locations (using `stop_times.stop_id`) must be stops/platforms, i.e. 
 Both files calendar_dates.txt and calendar.txt are missing from the GTFS archive. At least one of the files must be provided.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name 	| Description 	| Type 	|
@@ -852,7 +825,6 @@ Both files calendar_dates.txt and calendar.txt are missing from the GTFS archive
 GTFS file `levels.txt` is required for elevator (`pathway_mode=5`). A row from `stops.txt` linked to an elevator pathway has no value for `stops.level_id`.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name    	| Description                                                      	 | Type   	|
@@ -874,7 +846,6 @@ GTFS file `levels.txt` is required for elevator (`pathway_mode=5`). A row from `
 A required column is missing in the input file.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name 	  | Description                     | Type   	|
@@ -896,7 +867,6 @@ A required column is missing in the input file.
 The given field has no value in some input row, even though values are required.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name   	| Description                    	| Type   	|
@@ -919,7 +889,6 @@ The given field has no value in some input row, even though values are required.
 A required file is missing.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name   	| Description                    	| Type   	|
@@ -940,7 +909,6 @@ A required file is missing.
 First and last stop of a trip must define both `arrival_time` and `departure_time` fields.
 
 <details>
-<summary>More details</summary>
 
 #### Notice fields description
 | Field name     	  | Description                                 | Type    	|
@@ -963,7 +931,7 @@ First and last stop of a trip must define both `arrival_time` and `departure_tim
 A value in CSV file has a new line or carriage return.
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name   	| Description                   	| Type    	|
@@ -987,7 +955,7 @@ A value in CSV file has a new line or carriage return.
 The values in the given column of the input rows are out of range.
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name   	| Description                   	| Type    	|
@@ -1014,7 +982,7 @@ The values in the given column of the input rows are out of range.
 Trip frequencies must not overlap in time
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name       	| Description                                    	| Type   	|
@@ -1041,7 +1009,7 @@ areas is treated as a parent object, not a point. In such cases, the platform mu
 assigned - instead, pathways must be assigned to its boarding areas.
 
 <details>
-<summary>More details</summary>
+
 
 ##### References
 * [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
@@ -1055,7 +1023,7 @@ A pathway has an endpoint that is a station. Pathways endpoints must be platform
 entrances/exits, generic nodes or boarding areas.
 
 <details>
-<summary>More details</summary>
+
 
 ##### References
 * [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
@@ -1075,7 +1043,7 @@ Notices are not reported for platforms that have boarding areas since such platf
 have incident pathways. Instead, notices are reported for the boarding areas.
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name   	 | Description                                         | Type    	|
@@ -1103,7 +1071,7 @@ have incident pathways. Instead, notices are reported for the boarding areas.
 A point is too close to origin `(0, 0)`.
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name      	| Description                                      	| Type    	|
@@ -1128,7 +1096,7 @@ A point is too close to origin `(0, 0)`.
 Both short_name and long_name are missing for a route.
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name     	| Description                          	| Type   	|
@@ -1150,7 +1118,7 @@ Both short_name and long_name are missing for a route.
 The fields `frequencies.start_date` and `frequencies.end_date` have been found equal in `frequencies.txt`. The GTFS spec is currently unclear how this case should be handled (e.g., is it a trip that circulates once?). It is recommended to use a trip not defined via frequencies.txt for this case.
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name     	  | Description                          	| Type   	|
@@ -1175,7 +1143,7 @@ The fields `frequencies.start_date` and `frequencies.end_date` have been found e
 Date or time fields have been found out of order in `calendar.txt`, `feed_info.txt` and `stop_times.txt`.
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name     	  | Description                          	| Type   	|
@@ -1205,7 +1173,7 @@ Date or time fields have been found out of order in `calendar.txt`, `feed_info.t
 Field `parent_station` must be empty when `location_type` is 1.
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name    	| Description                               	  | Type   	|
@@ -1229,7 +1197,7 @@ Field `parent_station` must be empty when `location_type` is 1.
 Any records with `stop_times.timepoint` set to 1 must define a value for `stop_times.arrival_time` and `stop_times.departure_time` fields.
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name     	  | Description                                	| Type   	|
@@ -1253,7 +1221,7 @@ Any records with `stop_times.timepoint` set to 1 must define a value for `stop_t
 For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must not precede the `departure_time` of n-th stoptime in sequence in `stop_times.txt`.
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name       	| Description                                  	| Type   	|
@@ -1278,7 +1246,7 @@ For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must 
 Missing `stop_time.arrival_time` or `stop_time.departure_time`
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name      	| Description                                  	| Type    	|
@@ -1302,7 +1270,7 @@ Missing `stop_time.arrival_time` or `stop_time.departure_time`
 If `fare_rules.txt` is provided, and `fare_rules.txt` uses at least one column among `origin_id`, `destination_id`, and `contains_id`, then all stops and platforms (location_type = 0) must have `stops.zone_id` assigned. 
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name               	| Description                                	| Type   	|
@@ -1326,7 +1294,7 @@ If `fare_rules.txt` is provided, and `fare_rules.txt` uses at least one column a
 An entity with the given `record_id` and `record_sub_id` cannot be found in the referenced table.
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name       | Description                            | Type    	|
@@ -1350,7 +1318,7 @@ An entity with the given `record_id` and `record_sub_id` cannot be found in the 
 A field in a translations row has value but must be empty.
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name        | Description                                  	            | Type    	|
@@ -1381,7 +1349,7 @@ According to spec
 Any other combination raise this error.
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name           	| Description                                      	| Type    	|
@@ -1412,7 +1380,7 @@ Any other combination raise this error.
 At least one of the fields `is_producer`, `is_operator`, or `is_authority` should be set to 1.
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name    	| Description                          	  | Type   	|
@@ -1442,7 +1410,7 @@ Example of bad data:
 | route2     	| U1                 	| Southern          	|
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name     	| Description                             	| Type   	|
@@ -1471,7 +1439,7 @@ Example of bad data:
 A row in the input file has only spaces.
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name   	| Description                          	| Type    	|
@@ -1493,7 +1461,7 @@ A row in the input file has only spaces.
 When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` must increase along a shape. Two consecutive points with equal values for `shape_dist_traveled` and the same coordinates indicate a duplicative shape point.
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name            	  | Description                                                                                    	  | Type    	|
@@ -1537,7 +1505,7 @@ A transit vehicle moves too fast between two consecutive stops. The speed thresh
 | -          | Unknown     | 200             |
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name        	| Description                             | Type   	|
@@ -1579,7 +1547,7 @@ The speed threshold depends on route type.
 Same as for [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsecutiveStopsNotice).
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name        	| Description                             | Type   	|
@@ -1618,7 +1586,7 @@ At any time, the published GTFS dataset should be valid for at least the next 7 
 If possible, the GTFS dataset should cover at least the next 30 days of service.
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name              	| Description                                  	| Type   	|
@@ -1645,7 +1613,7 @@ If possible, the GTFS dataset should cover at least the next 30 days of service.
   * If `feed_lang` is `mul` and there isn't more than one `agency_lang`, that's an error
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name   	| Description                               	| Type   	|
@@ -1672,7 +1640,7 @@ If possible, the GTFS dataset should cover at least the next 30 days of service.
 Agencies from GTFS `agency.txt` have been found to have different languages.
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name     	| Description                   	| Type   	|
@@ -1695,7 +1663,7 @@ Agencies from GTFS `agency.txt` have been found to have different languages.
 The value in CSV file has leading or trailing whitespaces.
 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
@@ -1718,7 +1686,7 @@ The value in CSV file has leading or trailing whitespaces.
 
 Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one field is provided the second one should also be provided.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name     	| Description                                 	| Type   	|
@@ -1740,7 +1708,7 @@ Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one
 
 Even though the column `timepoint` is optional in `stop_times.txt` according to the specification, `stop_times.timepoint` should not be empty when provided. 
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name     	| Description                                     	| Type   	|
@@ -1762,7 +1730,7 @@ Even though the column `timepoint` is optional in `stop_times.txt` according to 
 
 The `timepoint` column should be provided.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name     	| Description                                     	| Type   	|
@@ -1782,7 +1750,7 @@ The `timepoint` column should be provided.
 
 The file is expected to have a single entity but has more (e.g., "feed_info.txt").
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name    	| Description              	| Type   	|
@@ -1803,7 +1771,7 @@ The file is expected to have a single entity but has more (e.g., "feed_info.txt"
 
 A value of a field with type `id` contains non ASCII or non printable characters. This is not recommended.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name   	| Description                                  	| Type   	|
@@ -1827,7 +1795,7 @@ A value of a field with type `id` contains non ASCII or non printable characters
 A generic node has only one incident location in a pathway graph. Such generic node is useless
 because there is no benefit in visiting it.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name     | Description                                         | Type    	|
@@ -1851,7 +1819,7 @@ because there is no benefit in visiting it.
 
 A pathway should not have same values for `from_stop_id` and `to_stop_id`.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name     	| Description                                                                                 	| Type   	|
@@ -1870,7 +1838,7 @@ A pathway should not have same values for `from_stop_id` and `to_stop_id`.
 
 A platform has no `parent_station` field set.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name   	| Description                             	| Type    	|
@@ -1893,7 +1861,7 @@ A platform has no `parent_station` field set.
 
 A route's color and `route_text_color` should be contrasting.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name     	| Description                                	  | Type   	|
@@ -1923,7 +1891,7 @@ Example of bad data:
 |------------	|--------------------	|-------------------	|
 | route1     	| L1                 	| L1                	|
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name     	| Description                             	  | Type   	|
@@ -1946,7 +1914,7 @@ Example of bad data:
 
 Short name of a route is too long (more than 12 characters).
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name     	| Description                             	  | Type   	|
@@ -1972,7 +1940,7 @@ The GTFS spec defines `routes.txt` [route_desc](https://gtfs.org/reference/stati
 
 See the GTFS and GTFS Best Practices links below for more examples of how to populate the `route_short_name`, `route_long_name`, and `route_desc` fields.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name     	| Description                                    	| Type   	|
@@ -1998,7 +1966,7 @@ The GTFS spec defines `stops.txt` [stop_description](https://gtfs.org/reference/
 
 > Description of the location that provides useful, quality information. Do not simply duplicate the name of the location.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name     	| Description                             	| Type   	|
@@ -2020,7 +1988,7 @@ The GTFS spec defines `stops.txt` [stop_description](https://gtfs.org/reference/
 
 A route should not have the same `routes.route_url` as a record from `agency.txt`.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name     	| Description                                	| Type   	|
@@ -2045,7 +2013,7 @@ A route should not have the same `routes.route_url` as a record from `agency.txt
 
 A stop should not have the same `stops.stop_url` as a record from `agency.txt`.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name     	| Description                                            	| Type   	|
@@ -2070,7 +2038,7 @@ A stop should not have the same `stops.stop_url` as a record from `agency.txt`.
 
 A stop should not have the same `stop.stop_url` as a record from `routes.txt`.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name          	| Description                                            	| Type   	|
@@ -2095,7 +2063,7 @@ A stop should not have the same `stop.stop_url` as a record from `routes.txt`.
 
 A stop entry that has many potential matches to the trip's path of travel, as defined  by the shape entry in `shapes.txt`.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name             	| Description                                                	| Type    	|
@@ -2121,7 +2089,7 @@ A stop entry that has many potential matches to the trip's path of travel, as de
 
 Two stop entries in `stop_times.txt` are different than their arrival-departure order as defined by the shape in the `shapes.txt` file.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name              	| Description                                                       	| Type   	|
@@ -2150,7 +2118,7 @@ Two stop entries in `stop_times.txt` are different than their arrival-departure 
 
 Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100 meters of stop locations which a trip serves.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name             	| Description                                                	| Type   	|
@@ -2179,7 +2147,7 @@ Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100
 
 A stop time entry that is a large distance away from the location of the shape in `shapes.txt` as defined by `shape_dist_traveled` values.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name             	| Description                                                	| Type   	|
@@ -2213,7 +2181,7 @@ Such stops normally do not provide user value. This notice may indicate a typo i
 
 A translation references an unknown or missing GTFS table.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name       | Description                            | Type    	|
@@ -2233,7 +2201,7 @@ A translation references an unknown or missing GTFS table.
 
 An enum has an unexpected value.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name   	| Description                                     	| Type    	|
@@ -2268,7 +2236,7 @@ An enum has an unexpected value.
 
 A trip must visit more than one stop in stop_times.txt to be usable by passengers for boarding and alighting.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name   	| Description                          	| Type   	|
@@ -2290,7 +2258,7 @@ A trip must visit more than one stop in stop_times.txt to be usable by passenger
 
 All records defined by GTFS `shapes.txt` should be used in `trips.txt`.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name   	| Description                          	| Type   	|
@@ -2312,7 +2280,7 @@ All records defined by GTFS `shapes.txt` should be used in `trips.txt`.
 
 Trips should be referred to at least once in `stop_times.txt`.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name   	| Description                          	| Type   	|
@@ -2336,7 +2304,7 @@ Trips should be referred to at least once in `stop_times.txt`.
 
 A column is unknown.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name 	  | Description                     	| Type    	|
@@ -2358,7 +2326,7 @@ A column is unknown.
 
 A file is unknown.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name 	  | Description                     	| Type    |
@@ -2376,7 +2344,7 @@ A file is unknown.
 
 Error in IO operation.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name 	  | Description                                                   	| Type    |
@@ -2390,7 +2358,7 @@ Error in IO operation.
 
 A [RuntimeException](https://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html) occurred while loading a table. This normally indicates a bug in validator.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name 	  | Description                                                   	| Type    |
@@ -2409,7 +2377,7 @@ A [RuntimeException](https://docs.oracle.com/javase/8/docs/api/java/lang/Runtime
 
 A [RuntimeException](https://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html) occurred during validation. This normally indicates a bug in validator code, e.g., in a custom validator class.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name 	| Description                                                   	| Type    |
@@ -2425,7 +2393,7 @@ A [RuntimeException](https://docs.oracle.com/javase/8/docs/api/java/lang/Runtime
 
 An [ExecutionException](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutionException.html) occurred during multithreaded validation.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name 	  | Description                                                   	| Type    |
@@ -2440,7 +2408,7 @@ An [ExecutionException](https://docs.oracle.com/javase/8/docs/api/java/util/conc
 
 A string could not be parsed as a URI reference.
 <details>
-<summary>More details</summary>
+
 
 #### Notice fields description
 | Field name 	  | Description                                                   	| Type    |
