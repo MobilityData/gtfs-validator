@@ -10,8 +10,12 @@ Note that:
 - Check the [current rules](../RULES.md) to make sure the rule doesn't already exist.
 - Check the [list of possible future rules](https://github.com/MobilityData/gtfs-validator/issues?q=is%3Aopen+is%3Aissue+label%3A%22new+rule%22) to see if an issue already exists for the proposed rule.
   - If no existing issue exists, open [a new issue](https://github.com/MobilityData/gtfs-validator/issues/new/choose).
+
 - Discuss the rule with the community via the Github issue and come to a consensus on the exact logic, and if it should be an `ERROR`, a `WARNING` or an `INFO`. See [definitions for severities](../RULES.md#the-severity-of-a-notice).
 - Please note that [`ValidationNotices`](core/src/main/java/org/mobilitydata/gtfsvalidator/notice/ValidationNotice.java) should be distinguished from [`SystemErrors`](core/src/main/java/org/mobilitydata/gtfsvalidator/notice/SystemError.java): while `ValidationNotices` give information about the data quality, `SystemErrors` are not semantic errors, they give information about things that may have gone wrong during the validation process such as an impossibility to unzip a GTFS archive.
+- Discuss the rule with the community via the Github issue and come to a consensus on the exact logic, and if it should be an `ERROR` or a `WARNING` or an `INFO`. See [definitions for ERROR and WARNING](../RULES.md#definitions).
+- Please note that [`ValidationNotices`](core/src/main/java/org/mobilitydata/gtfsvalidator/notice/ValidationNotice.java) should be distinguished from [`SystemErrors`](core/src/main/java/org/mobilitydata/gtfsvalidator/notice/SystemError.java): while `ValidationNotices` give information about the data quality, `SystemErrors` are not semantic errors, they give information about things that may have gone wrong during the validation process such as the inability to unzip a GTFS archive.
+
 - Implement new rule using the process below
 
 ## 1. Implement the new rule
@@ -225,7 +229,7 @@ Add the rule to [`RULES.md`](../RULES.md) keeping the alphabetical order of the 
 ```markdown
 | [NewRuleRelatedToStops](#NewRuleRelatedToStops) | new rule short description | new_rule_related_to_stops | 
 ```
-...and add a definition of that rule, the notice field descriptions, the affected filed and the reference to any additional documentation material in the errors or warnings section (still keeping the alphabetical order).
+...and add a definition of that rule, the notice fields description, the affected files and the reference to any additional documentation material in the errors or warnings section (maintaining alphabetical order).
 
 ```markdown
 <a name="NewRuleRelatedToStops"/>
