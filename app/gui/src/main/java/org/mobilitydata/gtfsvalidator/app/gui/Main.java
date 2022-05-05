@@ -69,12 +69,32 @@ public class Main {
     // doesn't appear to work on Mac OS.
     if (args.length != 1) {
       logger.atSevere().log("No GTFS input specified - args=%d", args.length);
-      System.exit(-1);
+      javax.swing.SwingUtilities.invokeLater(
+          new Runnable() {
+            public void run() {
+              createAndShowGUI();
+            }
+          });
     } else {
       run(args[0]);
     }
 
     logger.atInfo().log("gtfs-validator: exit");
+  }
+
+  private static void createAndShowGUI() {
+    try {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    } catch (Exception e) {
+      logger.atSevere().withCause(e).log("Error setting system look-and-feel");
+    }
+
+    GtfsValidatorApp app = new GtfsValidatorApp();
+    app.constructUI();
+    app.pack();
+    // This causes the application window to center in the screen.
+    app.setLocationRelativeTo(null);
+    app.setVisible(true);
   }
 
   private static void run(String path) {
