@@ -1,25 +1,25 @@
 # Implemented rules
 This document lists all the notices that are emitted by this validator.\
-Note that the notice naming conventions changed in `v2` to make contributions of new rules easier by reducing the likelihood of conflicting IDs during parallel development. Please refer to [MIGRATION_V1_V2.md](/docs/MIGRATION_V1_V2.md) for a mapping between v1 and v2 notices.\
+Note that the notice naming convention changed in `v2` to make contributions of new rules easier by reducing the likelihood of conflicting IDs during parallel development. Please refer to [MIGRATION_V1_V2.md](/docs/MIGRATION_V1_V2.md) for a mapping between v1 and v2 notices.\
 Note that some severities were modified in `v3` to solve discrepancies with the specification. Please refer to [MIGRATION_V2_V3.md](/docs/MIGRATION_V2_V3.md) for a mapping between v2 and v3 notices.
 <a name="definitions"/>
 
 ## Definitions
 ### A Rule
-A part of the specification that is translated into code in the validator. A Rule will describe if a set of conditions is met or not.For example:
-  - In the specification: the `stops.txt` file, the field `zone_id` is required if providing fare information using `fare_rules.txt` ([source in the spec](https://gtfs.org/schedule/reference/#stopstxt)).
+A part of the specification that is translated into code in the validator. A Rule will describe if a set of conditions is met or not. For example:
+  - In the specification: in the `stops.txt` file, the field `zone_id` is required if providing fare information using `fare_rules.txt` ([source in the spec](https://gtfs.org/schedule/reference/#stopstxt)).
   - In the validator: this is translated into code in the file `StopZoneIdValidator.java` ([link to the validator file](https://github.com/MobilityData/gtfs-validator/blob/master/main/src/main/java/org/mobilitydata/gtfsvalidator/validator/StopZoneIdValidator.java)).
 
 ### A Notice
 What the Rule outputs if the conditions aren’t met. It is what the user will see in the validation report.
-- For example, the output of  `StopZoneIdValidator.java` Rule is the Notice `StopWithoutZoneIdNotice`, and it has the notice code `stop_without_zone_id`. 
+- For example, the output of `StopZoneIdValidator.java` Rule is the Notice `StopWithoutZoneIdNotice`, and it has the notice code `stop_without_zone_id`. 
 
 ### The Severity of a Notice
 
 Each Notice is associated with a severity:: `INFO`, `WARNING`, `ERROR`.
 
 * `ERROR` notices are for items that the [GTFS reference specification](https://github.com/google/transit/tree/master/gtfs/spec/en) explicitly requires or prohibits (e.g., using the language "must"). The validator uses [RFC2119](https://tools.ietf.org/html/rfc2119) to interpret the language in the GTFS spec.
-  * ⚠️ Please note that this validator also generates `System Errors` that give information about things that may have gone wrong during the validation process such as impossibility to unzip a GTFS file. These are generated in a second report `system_errors.json`.
+  * ⚠️ Please note that this validator also generates `System Errors` that give information about things that may have gone wrong during the validation process such as the inability to unzip a GTFS file. These are generated in a second report `system_errors.json`.
 * `WARNING` notices are for items that will affect the quality of GTFS datasets but the GTFS spec does expressly require or prohibit. For example, these might be items recommended using the language "should" or "should not" in the GTFS spec, or items recommended in the MobilityData [GTFS Best Practices](https://gtfs.org/best-practices/).
 * `INFO` notices are for items that do not affect the feed's quality, such as unknown files or unknown fields.
 
@@ -75,7 +75,7 @@ Each Notice is associated with a severity:: `INFO`, `WARNING`, `ERROR`.
 | [`StartAndEndRangeOutOfOrderNotice`](#StartAndEndRangeOutOfOrderNotice)                                         | Two date or time fields are out of order.                                                                                                              | start_and_end_range_out_of_order                      |
 | [`StationWithParentStationNotice`](#StationWithParentStationNotice)                                             | A station has `parent_station` field set.                                                                                                              | station_with_parent_station                           |
 | [`StopTimeTimepointWithoutTimesNotice`](#StopTimeTimepointWithoutTimesNotice)     	                          | `arrival_time` or `departure_time` not specified for timepoint.                                                                                        | stop_time_timepoint_without_times                     |
-| [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](#StopTimeWithArrivalBeforePreviousDepartureTimeNotice) | Backwards time travel between stops in `stop_times.txt`                                                                                                | stop_time_wit_arrival_before_previous_departure_time  |
+| [`StopTimeWithArrivalBeforePreviousDepartureTimeNotice`](#StopTimeWithArrivalBeforePreviousDepartureTimeNotice) | Backwards time travel between stops in `stop_times.txt`                                                                                                | stop_time_with_arrival_before_previous_departure_time  |
 | [`StopTimeWithOnlyArrivalOrDepartureTimeNotice`](#StopTimeWithOnlyArrivalOrDepartureTimeNotice)                 | Missing `stop_times.arrival_time` or `stop_times.departure_time`.                                                                                      | stop_time_with_only_arrival_or_departure_time         |
 | [`StopWithoutZoneIdNotice`](#StopWithoutZoneIdNotice)                                                           | Stop without value for `stops.zone_id`.                                                                                                                | stop_without_zone_id                                  |
 | [`TranslationForeignKeyViolationNotice`](#TranslationForeignKeyViolationNotice)                                 | An entity with the given `record_id` and `record_sub_id` cannot be found in the referenced table.                                                      | translation_foreign_key_violation                     |
