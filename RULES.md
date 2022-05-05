@@ -167,11 +167,11 @@ Trips with the same block id have overlapping stop times.
 | `blockId`       	| The `trips.block_id` of the overlapping trip.	            | String 	|
 | `intersection`  	| The overlapping period.                      	            | Date   	|
 
-##### Affected files
+#### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 
-##### References
+#### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
 
@@ -193,7 +193,7 @@ Parsing of a CSV file failed. One common case of the problem is when a cell valu
 | `message`     	| The detailed message describing the error, and the internal state of the parser/writer. 	| String  	|
 | `content`     	| The record number when the exception occurred.                                          	| String  	|
 
-##### Affected files
+#### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 </details>
 
@@ -216,10 +216,10 @@ When sorted by `shape.shape_pt_sequence`, two consecutive shape points must not 
 | `prevShapeDistTraveled` 	| Actual distance traveled along the shape from the first shape point to the previous shape point. 	| Double  	|
 | `prevShapePtSequence`   	| The previous record's `shapes.shape_pt_sequence`.                                                	| Integer 	|
 
-##### Affected files
+#### Affected files
 * [`shapes.txt`](http://gtfs.org/reference/static#shapestxt)
 
-##### References
+#### References
 * [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)
 
 </details>
@@ -243,10 +243,10 @@ When sorted by `stop_times.stop_pt_sequence`, two consecutive stop times in a tr
 | `prevStopTimeDistTraveled`| Actual distance traveled along the shape from the first shape point to the previous stop time. 	| Double  	|
 | `prevStopSequence`        | The previous record's `stop_times.stop_sequence`.                                              	| Integer 	|
 
-##### Affected files
+#### Affected files
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-##### References
+#### References
 * [stops.txt specification](https://gtfs.org/reference/static#stopstxt)
 </details>
 
@@ -266,10 +266,10 @@ The input file CSV header has the same column name repeated.
 | `firstIndex`  | Index of the first occurrence. 	| Integer 	|
 | `secondIndex` | Index of the other occurrence. 	| Integer 	|
 
-##### Affected files
+#### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-##### References
+#### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
 
@@ -289,10 +289,10 @@ The combination of `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.co
 | `previousCsvRowNumber`| The row of the other occurrence. 	| Long   	  |
 | `previousFareId`     	| The id of the other occurrence.  	| Integer 	|
 
-##### Affected files
+#### Affected files
 * [fare_rules.txt](http://gtfs.org/reference/static/#fare_rulestxt)
 
-##### References
+#### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
 
@@ -315,10 +315,10 @@ The values of the given key and rows are duplicates.
 | `fieldName2`     	| Composite key's second field name. 	| String 	|
 | `fieldValue2`    	| Composite key's second value.      	| Object 	|
 
-##### Affected files
+#### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-##### References
+#### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
 
@@ -336,10 +336,10 @@ A column name has not been provided. Such columns are skipped by the validator.
 | `filename`   	| The name of the faulty file.   	| String   	|
 | `index`      	| The index of the empty column. 	| Integer 	|
 
-##### Affected files
+#### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-##### References
+#### References
 * [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
 </details>
 
@@ -356,10 +356,10 @@ Empty csv file found in the archive: file does not have any headers, or is a req
 |------------	|-----------------------------	|--------	|
 | `filename`  | The name of the faulty file   | String 	|
 
-##### Affected files
+#### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-##### References
+#### References
 * [GTFS files requirements](https://gtfs.org/reference/static#file-requirements)
 </details>
 
@@ -382,11 +382,11 @@ When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` m
 | `prevShapeDistTraveled` 	| Actual distance traveled along the shape from the first shape point to the previous shape point. 	| Double  	|
 | `prevShapePtSequence`   	| The previous record's `shapes.shape_pt_sequence`.                                                	| Integer 	|
 
-##### Affected files
+#### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`shapes.txt`](http://gtfs.org/reference/static#shapestxt)
 
-##### References
+#### References
 * [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)
 </details>
 
@@ -408,7 +408,7 @@ The values of the given key and rows of one table cannot be found a values of th
 | `fieldValue`     	| The faulty record's value.                         	| String 	|
 | `csvRowNumber`   	| The row of the faulty record.                      	| Long   	|
 
-##### Affected files
+#### Affected files
 * [`attributions.txt`](http://gtfs.org/reference/static#attributionstxt)
 * [`fare_attributes.txt`](http://gtfs.org/reference/static#fare_attributestxt)
 * [`fare_rules.txt`](http://gtfs.org/reference/static#fare_rulestxt)
@@ -420,7 +420,7 @@ The values of the given key and rows of one table cannot be found a values of th
 * [`tranfers.txt`](http://gtfs.org/reference/static#tranferstxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 
-##### References
+#### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
 
@@ -439,10 +439,10 @@ Agencies from GTFS `agency.txt` have been found to have different timezones.
 | `expected`   	| Expected timezone.            	| String 	|
 | `actual`     	| Faulty record's timezone.     	| String 	|
 
-##### Affected files
+#### Affected files
 * [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
 
-##### References
+#### References
 * [GTFS agency.txt specification](https://gtfs.org/reference/static/#agencytxt)
 </details>
 
@@ -462,10 +462,10 @@ Value of field with type `color` is not valid. A color must be encoded as a six-
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
 
-##### Affected files
+#### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-##### References
+#### References
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 </details>
 
@@ -485,10 +485,10 @@ Value of field with type `currency` is not valid. Currency code must follow <a h
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
 
-##### Affected files
+#### Affected files
 * [`fare_attributes.txt`](http://gtfs.org/reference/static#fare_attributestxt)
 
-##### References
+#### References
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 </details>
 
@@ -508,12 +508,12 @@ Value of field with type `date` is not valid. Dates must have the YYYYMMDD forma
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
 
-##### Affected files
+#### Affected files
 * [`calendar.txt`](http://gtfs.org/reference/static#calendartxt)
 * [`calendar_dates.txt`](http://gtfs.org/reference/static#calendar_datestxt)
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
 
-##### References
+#### References
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 </details>
 
@@ -533,13 +533,13 @@ Value of field with type `email` is not valid. Definitions for valid emails are 
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
 
-##### Affected files
+#### Affected files
 * [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
 * [`attributions.txt`](http://gtfs.org/reference/static#attributionstxt)
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
 * [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 
-##### References
+#### References
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 * [Apache Commons EmailValidator](https://commons.apache.org/proper/commons-validator/apidocs/org/apache/commons/validator/routines/EmailValidator.html)
  </details>
@@ -560,14 +560,14 @@ Value of field with type `float` is not valid.
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
 
-##### Affected files
+#### Affected files
 * [`fare_attributes.txt`](http://gtfs.org/reference/static#fare_attributestxt)
 * [`levels.txt`](http://gtfs.org/reference/static#levelstxt)
 * [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
 * [`shapes.txt`](http://gtfs.org/reference/static#shapestxt)
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-##### References
+#### References
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 </details>
  
@@ -587,7 +587,7 @@ Value of field with type `integer` is not valid.
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
 
-##### Affected files
+#### Affected files
 * [`fare_attributes.txt`](http://gtfs.org/reference/static#fare_attributestxt)
 * [`frequencies.txt`](http://gtfs.org/reference/static#frequenciestxt)
 * [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
@@ -596,7 +596,7 @@ Value of field with type `integer` is not valid.
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 * [`transfers.txt`](http://gtfs.org/reference/static#transferstxt)
 
-##### References
+#### References
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 </details>
 
@@ -616,12 +616,12 @@ Value of field with type `language` is not valid. Language codes must follow <a 
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
 
-##### Affected files
+#### Affected files
 * [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
 * [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 
-##### References
+#### References
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 </details>
 
@@ -641,12 +641,12 @@ Value of field with type `phone number` is not valid. This rule uses the [PhoneN
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
 
-##### Affected files
+#### Affected files
 * [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
 * [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 
-##### References
+#### References
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 </details>
 
@@ -666,10 +666,10 @@ A row in the input file has a different number of values than specified by the C
 | `rowLength`  	| The length of the faulty record.         	| Integer |
 | `headerCount`	| The number of column in the faulty file. 	| Intege 	|
 
-##### Affected files
+#### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-##### References
+#### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
 
@@ -689,11 +689,11 @@ Value of field with type `time` is not valid. Time must be in the `H:MM:SS`, `HH
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
 
-##### Affected files
+#### Affected files
 * [`frequencies.txt`](http://gtfs.org/reference/static#frequenciestxt)
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-##### References
+#### References
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 </details>
 
@@ -713,11 +713,11 @@ Value of field with type `timezone` is not valid.Timezones are defined at <a hre
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
 
-##### Affected files
+#### Affected files
 * [`agency.txt`](http://gtfs.org/reference/static#frequenciestxt)
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-##### References
+#### References
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 </details>
 
@@ -737,14 +737,14 @@ Value of field with type `url` is not valid. Definitions for valid URLs are quit
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
 
-##### Affected files
+#### Affected files
 * [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 
-##### References
+#### References
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 * [Apache Commons UrlValidator](https://commons.apache.org/proper/commons-validator/apidocs/org/apache/commons/validator/routines/UrlValidator.html)
 </details>
@@ -765,10 +765,10 @@ A location that must have `parent_station` field does not have it. The following
 | `stopName`   	| The `stops.stop_name` of the faulty record.     	| String  	|
 | `locationType`| The `stops.location_type` of the faulty record. 	| Integer 	|
 
-##### Affected files
+#### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
-##### References
+#### References
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 </details>
 
@@ -788,11 +788,11 @@ Referenced locations (using `stop_times.stop_id`) must be stops/platforms, i.e. 
 | `stopName`             	| The `stops.stop_name` of the faulty record.                	| String 	|
 | `stopTimeCsvRowNumber` 	| The row number of the faulty record from `stop_times.txt`. 	| Long   	|
 
-##### Affected files
+#### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-##### References
+#### References
 * [stop_times.txt GTFS specification](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stoptimestxt)
 </details>
 
@@ -809,11 +809,11 @@ Both files calendar_dates.txt and calendar.txt are missing from the GTFS archive
 |------------	|-------------	|------	|
 | N/A          	| N/A           | N/A  	|
 
-##### Affected files
+#### Affected files
 * [`calendar.txt`](http://gtfs.org/reference/static#calendartxt)
 * [`calendar_dates.txt`](http://gtfs.org/reference/static#calendar_datestxt)
 
-##### References
+#### References
 * [calendar.txt specification](http://gtfs.org/reference/static/#calendartxt)
 * [calendar_dates.txt specification](http://gtfs.org/reference/static/#calendar_datestxt)
 </details>
@@ -832,10 +832,10 @@ GTFS file `levels.txt` is required for elevator (`pathway_mode=5`). A row from `
 | `csvRowNumber`  | The row number of the faulty record. 	                             | Long   	|
 | `stopId`   	  | The id of the faulty from `stops.txt`.                               | String   |
 
-##### Affected files
+#### Affected files
 * [`levels.txt`](http://gtfs.org/reference/static#levelstxt)
 
-##### References
+#### References
 * [levels.txt specification](http://gtfs.org/reference/static/#levelstxt)
 </details>
 
@@ -853,10 +853,10 @@ A required column is missing in the input file.
 | `filename`   	| The name of the faulty file.    | String 	|
 | `fieldName`  	| The name of the missing column. | String 	|
 
-##### Affected files
+#### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-##### References
+#### References
 * [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
 </details>
 
@@ -875,10 +875,10 @@ The given field has no value in some input row, even though values are required.
 | `csvRowNumber`| The row of the faulty record.  	| Long   	|
 | `fieldName`  	| The name of the missing field. 	| String 	|
 
-##### Affected files
+#### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-##### References
+#### References
 * [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
 </details>
 
@@ -895,10 +895,10 @@ A required file is missing.
 |--------------	|--------------------------------	|--------	|
 | `filename`   	| The name of the faulty file.   	| String 	|
 
-##### Affected files
+#### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-##### References
+#### References
 * [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
 </details>
 
@@ -920,7 +920,7 @@ First and last stop of a trip must define both `arrival_time` and `departure_tim
 
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 
-##### References
+#### References
 * [stop_times.txt specification](https://gtfs.org/reference/static/#stop_timestxt)
 </details>
 
@@ -941,10 +941,10 @@ A value in CSV file has a new line or carriage return.
 | `fieldName`  	| The name of the faulty field. 	| String  	|
 | `fieldValue` 	| Faulty value.                 	| String  	|
 
-##### Affected files
+#### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-##### References
+#### References
 * [GTFS file requirements](https://gtfs.org/reference/static/#file-requirements)
 </details>
 
@@ -966,10 +966,10 @@ The values in the given column of the input rows are out of range.
 | `fieldType`  	| The type of the faulty field. 	| String  	|
 | `fieldValue` 	| Faulty value.                 	| Object  	|
 
-##### Affected files
+#### Affected files
 * [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-##### References
+#### References
 * [GTFS file requirements](https://gtfs.org/reference/static/#file-requirements)
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 * [GTFS field types](http://gtfs.org/reference/static/#field-types)
@@ -993,10 +993,10 @@ Trip frequencies must not overlap in time
 | `currStartTime`   | The overlapping frequency's start time.        	| String 	|
 | `tripId`          | The trip id associated to the first frequency. 	| String 	|
 
-##### Affected files
+#### Affected files
 * [`frequencies.txt`](http://gtfs.org/reference/static#frequenciestxt)
 
-##### References
+#### References
 * [frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
 </details>
 
@@ -1011,7 +1011,7 @@ assigned - instead, pathways must be assigned to its boarding areas.
 <details>
 
 
-##### References
+#### References
 * [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
 </details>
 
@@ -1025,7 +1025,7 @@ entrances/exits, generic nodes or boarding areas.
 <details>
 
 
-##### References
+#### References
 * [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
 </details>
 
@@ -1056,11 +1056,11 @@ have incident pathways. Instead, notices are reported for the boarding areas.
 | `hasEntrance`  | Whether the location is reachable from entrances.   | String 	|
 | `hasExit`      | Whether some exit can be reached from the location. | String 	|
 
-##### Affected files
+#### Affected files
 * [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
-##### References
+#### References
 * [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
  </details>
 
@@ -1083,11 +1083,11 @@ A point is too close to origin `(0, 0)`.
 | `lonFieldName`  	| The name of the field that uses longitude value. 	| String  	|
 | `lonFieldValue` 	| The longitude of the faulty row                  	| Double  	|
 
-##### Affected files
+#### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`shapes.txt`](http://gtfs.org/reference/static#shapestxt)
 
-##### References
+#### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
 
@@ -1104,10 +1104,10 @@ Both short_name and long_name are missing for a route.
 | `routeId`      	| The id of the faulty record.         	| String 	|
 | `csvRowNumber` 	| The row number of the faulty record. 	| Long   	|
 
-##### Affected files
+#### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-##### References
+#### References
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 </details>
 
@@ -1129,10 +1129,10 @@ The fields `frequencies.start_date` and `frequencies.end_date` have been found e
 | `endFieldName`   	| The end value's field name.          	| String 	|
 | `value`          	| The faulty value.                    	| String 	|
 
-##### Affected files
+#### Affected files
 * [`frequencies.txt`](http://gtfs.org/reference/static#frequenciestxt)
 
-##### References
+#### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
 
@@ -1156,13 +1156,13 @@ Date or time fields have been found out of order in `calendar.txt`, `feed_info.t
 | `endFieldName`   	| The end value's field name.          	| String 	|
 | `endValue`       	| The end value.                       	| String 	|
 
-##### Affected files
+#### Affected files
 * [`calendar.txt`](http://gtfs.org/reference/static#calendartxt)
 * [`calendar_dates.txt`](http://gtfs.org/reference/static#calendar_datestxt)
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-##### References
+#### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
 
@@ -1183,10 +1183,10 @@ Field `parent_station` must be empty when `location_type` is 1.
 | `csvRowNumber`  	| The row number of the faulty record.      	| Long  	|
 | `parentStation` 	| Parent station's id.                        | String 	|
 
-##### Affected files
+#### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
-##### References
+#### References
 [stop.txt](http://gtfs.org/reference/static/#stopstxt)
 </details>
 
@@ -1207,10 +1207,10 @@ Any records with `stop_times.timepoint` set to 1 must define a value for `stop_t
 | `stopSequence`   	| The faulty record's `stops.stop_sequence`. 	| String 	|
 | `specifiedField` 	| Either `departure_time` or `arrival_time`. 	| String 	|
 
-##### Affected files
+#### Affected files
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-##### References
+#### References
 * [GTFS stop_times.txt specification](https://gtfs.org/reference/static#stoptimestxt)
 </details>
 
@@ -1232,10 +1232,10 @@ For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must 
 | `departureTime`  	| Departure time at the previous stop time.    	| String 	|
 | `arrivalTime`    	| Arrival time at the faulty record.           	| String 	|
 
-##### Affected files
+#### Affected files
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-##### References
+#### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
 
@@ -1256,10 +1256,10 @@ Missing `stop_time.arrival_time` or `stop_time.departure_time`
 | `stopSequence`   	| The sequence of the faulty stop.             	| Integer 	|
 | `specifiedField` 	| Either `arrival_time` or `departure_time`    	| String  	|
 
-##### Affected files
+#### Affected files
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-##### References
+#### References
 * [stop_times.txt specification](http://gtfs.org/reference/static/#stop_timestxt)
 </details>
 
@@ -1279,11 +1279,11 @@ If `fare_rules.txt` is provided, and `fare_rules.txt` uses at least one column a
 | `stopName`                | The faulty record's `stops.stop_name`.       	| String 	|
 | `csvRowNumber`        	| The row number of the faulty record.       	| Long   	|
 
-##### Affected files
+#### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`fare_rules.txt`](http://gtfs.org/reference/static#farerulestxt)
 
-##### References
+#### References
 * [GTFS stops.txt specification](https://gtfs.org/reference/static#stopstxt)
 </details>
 
@@ -1304,10 +1304,10 @@ An entity with the given `record_id` and `record_sub_id` cannot be found in the 
 | `recordId`       | `record_id` of the faulty record.      | String  	|
 | `recordSubId`    | `record_sub_id` of the faulty record.  | String  	|
 
-##### Affected files
+#### Affected files
 * [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 
-##### References
+#### References
 * [translations.txt specification](http://gtfs.org/reference/static/#translationstxt)
 </details>
 
@@ -1327,10 +1327,10 @@ A field in a translations row has value but must be empty.
 | `fieldName`       | The name of the field that was expected to be empty.      | String  	|
 | `fieldValue`      | Actual value of the field that was expected to be empty.  | String 	|
 
-##### Affected files
+#### Affected files
 * [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 
-##### References
+#### References
 * [translations.txt specification](http://gtfs.org/reference/static/#translationstxt)
 </details>
 
@@ -1364,10 +1364,10 @@ Any other combination raise this error.
 | `parentLocationType` 	| The location type of the faulty record's parent. 	| Integer 	|
 | `expectedLocationType`| The expected location type of the faulty record. 	| Integer 	|
 
-##### Affected files
+#### Affected files
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-##### References
+#### References
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 </details>
 
@@ -1388,10 +1388,10 @@ At least one of the fields `is_producer`, `is_operator`, or `is_authority` shoul
 | `csvRowNumber`  	| The row number of the faulty record. 	| Long   	|
 | `attributionId` 	| The id of the faulty record.         	| String 	|
 
-##### Affected files
+#### Affected files
 * [`attributions.txt`](http://gtfs.org/reference/static#attributionstxt)
 
-##### References
+#### References
 * [attributions.txt specification](https://gtfs.org/reference/static#attributionstxt)
 </details>
 
@@ -1424,10 +1424,10 @@ Example of bad data:
 | routeType      	| Common `routes.route_type`.             	| String 	|
 | agencyId       	| Common `routes.agency_id`.              	| String 	|
 
-##### Affected files
+#### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-##### References
+#### References
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 * [routes.txt best practices](http://gtfs.org/best-practices/#routestxt)
 
@@ -1447,10 +1447,10 @@ A row in the input file has only spaces.
 | `filename`   	| The name of the faulty file.         	| String  	|
 | `csvRowNumber`| The row number of the faulty record. 	| Long 	    |
 
-##### Affected files
+#### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-##### References
+#### References
 * [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
 </details>
 
@@ -1474,11 +1474,11 @@ When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` m
 | `prevShapeDistTraveled` 	| Actual distance traveled along the shape from the first shape point to the previous shape point. 	| Double  	|
 | `prevShapePtSequence`   	| The previous record's `shapes.shape_pt_sequence`.                                                	| Integer 	|
 
-##### Affected files
+#### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`shapes.txt`](http://gtfs.org/reference/static#shapestxt)
 
-##### References
+#### References
 * [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)
 </details>
 
@@ -1526,13 +1526,13 @@ A transit vehicle moves too fast between two consecutive stops. The speed thresh
 | `stopName2`           | `stop_name` of the second stop.         | String 	|
 | `arrivalTime2`        | `arrival_time` of the second stop.      | Time 	|
 
-##### Affected files
+#### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 
-##### References
+#### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
 
@@ -1568,13 +1568,13 @@ Same as for [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsec
 | `stopName2`           | `stop_name` of the second stop.         | String 	|
 | `arrivalTime2`        | `arrival_time` of the second stop.      | Time 	|
 
-##### Affected files
+#### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 
-##### References
+#### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
 
@@ -1596,10 +1596,10 @@ If possible, the GTFS dataset should cover at least the next 30 days of service.
 | `feedEndDate`            	| Feed end date (YYYYMMDD format).             	| String 	|
 | `suggestedExpirationDate`	| Suggested expiration date (YYYYMMDD format). 	| String 	|
 
-##### Affected files
+#### Affected files
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
 
-##### References
+#### References
 * [General Publishing & General Practices](https://gtfs.org/best-practices/#dataset-publishing--general-practices)
 </details>
 
@@ -1624,11 +1624,11 @@ If possible, the GTFS dataset should cover at least the next 30 days of service.
 | `agencyLang` 	| The agency language of the faulty record. 	| String 	|
 | `feedLang`   	| The feed language of the faulty record.   	| String 	|
 
-##### Affected files
+#### Affected files
 * [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
 
-##### References
+#### References
 * [GTFS feed_info.txt specification](http://gtfs.org/reference/static/#feed_infotxt)
 * [GTFS agency.txt specification](http://gtfs.org/reference/static/#agencytxt)
 <details>
@@ -1649,10 +1649,10 @@ Agencies from GTFS `agency.txt` have been found to have different languages.
 | `expected`     	| Expected language.            	| String 	|
 | `actual`       	| Faulty record's language.     	| String 	|
 
-##### Affected files
+#### Affected files
 * [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
 
-##### References
+#### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 <details>
 
@@ -1673,10 +1673,10 @@ The value in CSV file has leading or trailing whitespaces.
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
 
-##### Affected files
+#### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-##### References
+#### References
 * [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
 <details>
 
@@ -1694,11 +1694,11 @@ Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one
 | `fieldName`    	| Either `feed_end_date` or `feed_start_date` 	| String 	|
 | `csvRowNumber` 	| The row number of the faulty record.        	| Long   	|
 
-##### Affected files
+#### Affected files
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
 #### Notice fields description
 
-##### References
+#### References
 * [feed_info.txt Best practices](http://gtfs.org/best-practices/#feed_infotxt)
  <details>
 
@@ -1717,10 +1717,10 @@ Even though the column `timepoint` is optional in `stop_times.txt` according to 
 | `tripId`       	| The faulty record's `stop_times.trip_id`.         | String 	|
 | `stopSequence` 	| The faulty record's `stop_times.stop_sequence`. 	| String 	|
 
-##### Affected files
+#### Affected files
 * [`stop_times.txt`](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stop_timestxt)
 
-##### References
+#### References
 * [stop_times.txt specification](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stop_timestxt)
 <details>
 
@@ -1737,10 +1737,10 @@ The `timepoint` column should be provided.
 |----------------	|-------------------------------------------------	|--------	|
 | `filename`    	| The name of the affected file.                  	| String   	|
 
-##### Affected files
+#### Affected files
 * [`stop_times.txt`](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stop_timestxt)
 
-##### References
+#### References
 * [stop_times.txt bets practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/stop_times.md)
 <details>
 
@@ -1758,10 +1758,10 @@ The file is expected to have a single entity but has more (e.g., "feed_info.txt"
 | `filename`    	| Name of the faulty file. 	| String 	|
 | `entityCount` 	| Number of occurrences.   	| Long   	|
 
-##### Affected files
+#### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-##### References
+#### References
 * [GTFS field definition](http://gtfs.org/reference/static#field-definitions)
 <details>
 
@@ -1781,10 +1781,10 @@ A value of a field with type `id` contains non ASCII or non printable characters
 | `columnName` 	| Name of the column where the error occurred. 	| String 	|
 | `fieldValue` 	| Faulty value.                                	| String 	|
 
-##### Affected files
+#### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-##### References
+#### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 <details>
 
@@ -1805,11 +1805,11 @@ because there is no benefit in visiting it.
 | `stopName`     | The stop name of the dangling generic node.         | String  	|
 | `parentStation`| The parent station of the dangling generic node.    | String 	|
 
-##### Affected files
+#### Affected files
 * [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
-##### References
+#### References
 * [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
 <details>
 
@@ -1828,7 +1828,7 @@ A pathway should not have same values for `from_stop_id` and `to_stop_id`.
 | `pathwayId`    	| The id of the faulty record.                                                                	| String 	|
 | `stopId`       	| The `pathway.stop_id` that is repeated in `pathways.from_stop_id` and `pathways.to_stop_id`. 	| String 	|
 
-##### Affected files
+#### Affected files
 * [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
 <details>
 
@@ -1848,10 +1848,10 @@ A platform has no `parent_station` field set.
 | `stopName`   	| The stop name of the faulty record.     	| String  	|
 | `locationType`| The location type of the faulty record. 	| Integer 	|
 
-##### Affected files
+#### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
-##### References
+#### References
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 <details>
 
@@ -1871,10 +1871,10 @@ A route's color and `route_text_color` should be contrasting.
 | `routeColor`     	| The faulty record's HTML route color.      	| String 	|
 | `routeTextColor` 	| The faulty record's HTML route text color. 	| String 	|
 
-##### Affected files
+#### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-##### References
+#### References
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 <details>
@@ -1901,10 +1901,10 @@ Example of bad data:
 | `routeShortName` 	| The faulty record's `route_short_name`. 	| String 	|
 | `routeLongName`  	| The faulty record's `route_long_name`.  	| String 	|
 
-##### Affected files
+#### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-##### References
+#### References
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 <details>
 
@@ -1923,10 +1923,10 @@ Short name of a route is too long (more than 12 characters).
 | `csvRowNumber`   	| The row number of the faulty record.    	| Long 	  |
 | `routeShortName` 	| The faulty record's `route_short_name`. 	| String 	|
 
-##### Affected files
+#### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-##### References
+#### References
 * [routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
 <details>
 
@@ -1951,10 +1951,10 @@ See the GTFS and GTFS Best Practices links below for more examples of how to pop
 | `routeDesc`     | The `routes.routes_desc` of the faulty record. 	| String 	|
 | `specifiedField`| Either `route_short_name` or `route_long_name`. | String 	|
 
-##### Affected files
+#### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-##### References
+#### References
 [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 [routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
 
@@ -1975,10 +1975,10 @@ The GTFS spec defines `stops.txt` [stop_description](https://gtfs.org/reference/
 | `stopId`        | The id of the faulty record.              | String  |
 | `stopDesc`    	| The faulty record's `stop_desc`.         	| String 	|
 
-##### Affected files
+#### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
-##### References
+#### References
 [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 <details>
 
@@ -1999,11 +1999,11 @@ A route should not have the same `routes.route_url` as a record from `agency.txt
 | `routeUrl`     	| The duplicate URL value                    	| String 	|
 | `agencyCsvRowNumber`    | The row number of the faulty record from `agency.txt`.       	| Long   	|
 
-##### Affected files
+#### Affected files
 * [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-##### References
+#### References
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 <details>
 
@@ -2024,11 +2024,11 @@ A stop should not have the same `stops.stop_url` as a record from `agency.txt`.
 | `stopUrl`      	| The duplicate URL value.                                  | String 	|
 | `agencyCsvRowNumber` 	| The row number of the faulty record from `agency.txt`.|  Long   	|
 
-##### Affected files
+#### Affected files
 * [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
-##### References
+#### References
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 <details>
 
@@ -2049,11 +2049,11 @@ A stop should not have the same `stop.stop_url` as a record from `routes.txt`.
 | `routeId`           	| The faulty record's id from `routes.txt.               	| String 	|
 | `routeCsvRowNumber` 	| The row number of the faulty record from `routes.txt`. 	| Long   	|
 
-##### Affected files
+#### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
-##### References
+#### References
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
  <details>
 
@@ -2077,7 +2077,7 @@ A stop entry that has many potential matches to the trip's path of travel, as de
 | `match`                	| Latitude and longitude pair of the location.               	| Object  	|
 | `matchCount`           	| The number of matches for the stop that is referred to.    	| Integer 	|
 
-##### Affected files
+#### Affected files
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 * [`stops_times.txt`](http://gtfs.org/reference/static#stopstimestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
@@ -2106,7 +2106,7 @@ Two stop entries in `stop_times.txt` are different than their arrival-departure 
 | `stopName2`             	| The name of the second stop that is referred to.                  	| String 	|
 | `match2`                	| Latitude and longitude pair of the second matching location.      	| Object 	|
 
-##### Affected files
+#### Affected files
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 * [`stops_times.txt`](http://gtfs.org/reference/static#stopstimestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
@@ -2132,12 +2132,12 @@ Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100
 | `match`                	| Latitude and longitude pair of the location.               	| Object 	|
 | `geoDistanceToShape`   	| Distance from stop to shape.                               	| Double 	|
 
-##### Affected files
+#### Affected files
 * [`stop_times.txt`](http://gtfs.org/reference/static#stoptimestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 
-##### References
+#### References
 * [GTFS Best Practices shapes.txt](https://gtfs.org/best-practices/#shapestxt)
  <details>
 
@@ -2161,7 +2161,7 @@ A stop time entry that is a large distance away from the location of the shape i
 | `match`                	| Latitude and longitude pair of the location.               	| Object 	|
 | `geoDistanceToShape`   	| Distance from stop to shape.                               	| Double 	|
 
-##### Affected files
+#### Affected files
 * [`stop_times.txt`](http://gtfs.org/reference/static#stoptimestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
@@ -2189,10 +2189,10 @@ A translation references an unknown or missing GTFS table.
 | `csvRowNumber`   | The row number of the faulty record.   | Long    	|
 | `tableName`      | `table_name` of the faulty record.     | String  	|
 
-##### Affected files
+#### Affected files
 * [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 
-##### References
+#### References
 * [translations.txt specification](http://gtfs.org/reference/static/#translationstxt)
 <details>
 <a name="UnexpectedEnumValueNotice"/>
@@ -2211,7 +2211,7 @@ An enum has an unexpected value.
 | `fieldName`  	| The name of the field where the error occurred. 	| String  	|
 | `fieldValue` 	| Faulty value.                                   	| Integer 	|
 
-##### Affected files
+#### Affected files
 * [`attributions.txt`](http://gtfs.org/reference/static#attributionstxt)
 * [`calendar.txt`](http://gtfs.org/reference/static#calendartxt)
 * [`calendar_dates.txt`](http://gtfs.org/reference/static#calendar_datestxt)
@@ -2226,7 +2226,7 @@ An enum has an unexpected value.
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 * [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
 
-##### References
+#### References
 * [GTFs field definitions](http://gtfs.org/reference/static/#field-definitions)
 <details>
 
@@ -2244,11 +2244,11 @@ A trip must visit more than one stop in stop_times.txt to be usable by passenger
 | `csvRowNumber`| The row number of the faulty record. 	| Long   	|
 | `tripId`     	| The faulty record's id.              	| String 	|
 
-##### Affected files
+#### Affected files
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 
-##### References:
+#### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 <details>
 
@@ -2266,11 +2266,11 @@ All records defined by GTFS `shapes.txt` should be used in `trips.txt`.
 | `csvRowNumber`| The row number of the faulty record. 	| Long   	|
 | `shapeId     	| The faulty record's id.              	| String 	|
 
-##### Affected files
+#### Affected files
 * [`shapes.txt`](http://gtfs.org/reference/static#shapestxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 
-##### References:
+#### References:
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 <details>
 
@@ -2288,11 +2288,11 @@ Trips should be referred to at least once in `stop_times.txt`.
 | `csvRowNumber`| The row number of the faulty record. 	| Long   	|
 | `tripId`     	| The faulty record's id.              	| String 	|
 
-##### Affected files
+#### Affected files
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-##### References
+#### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 <details>
 
@@ -2313,10 +2313,10 @@ A column is unknown.
 | `fieldName`  	| The name of the unknown column. 	| String  	|
 | `index`      	| The index of the faulty column. 	| Integer 	|
 
-##### Affected files
+#### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-##### References
+#### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 <details>
 
@@ -2333,7 +2333,7 @@ A file is unknown.
 |-------------	|---------------------------------	|---------|
 | `filename`   	| The name of the unknown file.    	| String 	|
 
-##### References
+#### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
 <details>
 ## System errors
@@ -2367,7 +2367,7 @@ A [RuntimeException](https://docs.oracle.com/javase/8/docs/api/java/lang/Runtime
 | `exception`  	| The name of the exception.                                    	| String 	|
 | `message`    	| The error message that explains the reason for the exception. 	| String  |
 
-##### Affected files
+#### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 <details>
 
