@@ -157,30 +157,30 @@
     </tr>
     </thead>
     <tbody>
-    <tr>
+    <tr th:if="${args.countryCode != null}" >
         <td>Country code</td>
         <td>-c</td>
-        <td th:text="${args.countryCode != null} ? ${args.countryCode} : 'null'" />
+        <td th:text="${args.countryCode}" />
     </tr>
-    <tr>
+    <tr th:if="${args.input}">
         <td>Input</td>
         <td>-i</td>
-        <td th:text="${args.input != null} ? ${args.input} : 'null'" />
+        <td th:text="${args.input}" />
     </tr>
-    <tr>
+    <tr th:if="${args.url != null}">
         <td>URL</td>
         <td>-u</td>
-        <td th:text="${args.url != null} ? ${args.url} : 'null'" />
+        <td th:text="${args.url}" />
     </tr>
     <tr>
         <td>Output</td>
         <td>-o</td>
         <td th:text="${args.outputBase}" />
     </tr>
-    <tr>
+    <tr th:if="${args.storageDirectory != null}">
         <td>Storage directory</td>
         <td>-s</td>
-        <td th:text="${args.storageDirectory != null} ? ${args.storageDirectory} : 'null'" />
+        <td th:text="${args.storageDirectory}" />
     </tr>
     <tr>
         <td>Threads</td>
