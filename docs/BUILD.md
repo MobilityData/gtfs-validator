@@ -26,6 +26,28 @@ To build a JAR that can run stand-alone without any additional classes on the cl
 $ ./gradlew shadowJar
 ```
 
+## Packaging as Installable Application
+
+To build an installable application package appropriate for your operating system
+(e.g. Windows, Mac OS, Linux), first make sure you have a recent version of the
+JDK installed (ver >= 15) that includes `jlink` and `jpackage`.  If you intend
+to redistribute the built application publicly, make sure it's an OpenJDK
+distribution (likely a recent build linked from https://openjdk.java.net/install/,
+ok if it's built by Oracle) and *NOT* an Oracle *commercial* JDK, where license
+and redistribution terms are murkier.
+
+To build the app and installer, run:
+
+```
+$ ./gradlew clean jpackage
+```
+
+and look for the resulting application artifacts in:
+
+```
+./app/pkg/build/jpackage/
+```
+
 ## Generating Javadocs
 
 To generate Javadocs for the project, run:
