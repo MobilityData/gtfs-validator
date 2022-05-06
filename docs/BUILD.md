@@ -17,3 +17,19 @@ To build the application simply click the hammer in the header section
 ```
 $ ./gradlew test
 ```
+
+## Packaging JAR with all dependencies
+
+To build a JAR that can run stand-alone without any additional classes on the classpath (sometimes called an "uber" or "fat" JAR), run:
+
+```
+$ ./gradlew shadowJar
+```
+
+## Generating Javadocs
+
+To generate Javadocs for the project, run:
+
+```
+$ ./gradlew aggregateJavadocs
+```

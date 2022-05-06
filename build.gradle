@@ -33,7 +33,11 @@ repositories {
     mavenCentral()
 }
 
+// Setup and configure Javadoc plugin
 apply plugin: 'nebula-aggregate-javadocs'
+allprojects {
+    tasks.withType(Javadoc) { options.encoding = 'UTF-8' }
+}
 
 // A resolvable configuration to collect test reports data
 configurations {

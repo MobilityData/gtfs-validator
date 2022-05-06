@@ -1,36 +1,34 @@
 # Instructions to run the application locally
 *If you're running a [`v1.x` release JAR file](https://github.com/MobilityData/gtfs-validator/releases) you'll need Java 11, and can follow [these instructions](https://github.com/MobilityData/gtfs-validator/tree/v1.4.0#via-java-on-your-local-computer). The below instructions are for the master branch, which will be v2.0.*
 
-1. Install [Java 8 or higher](https://www.oracle.com/java/technologies/javase-downloads.html).
+1. Install [Java 11 or higher](https://www.oracle.com/java/technologies/javase-downloads.html).
 1. Download the latest gtfs-validator JAR file from our [Releases page](https://github.com/MobilityData/gtfs-validator/releases) or snapshot artifact from [GitHub Actions](https://github.com/MobilityData/gtfs-validator/actions?query=branch%3Amaster).
 
 ## via cli-app
 **Full list of command line parameters available**
 
-| Short name 	| Long name                     	| required? 	| Description                                                                                                               	|
-|------------	|-------------------------------	|-----------	|---------------------------------------------------------------------------------------------------------------------------	|
-| `-i`       	| `--input`                     	| Optional  	| Location of the input GTFS ZIP or unarchived directory.                                                                   	|
-| `-c`       	| `--country_code`                 	| Optional  	| Country code of the feed, e.g., `nl`. It must be a two-letter country code (ISO 3166-1 alpha-2).                           	|
-| `-h`       	| `--help`                 	        | Optional  	| Print help menu.                                                                                                              |
-| `-o`       	| `--output`                    	| Optional  	| Base directory to store the outputs.                                                                                      	|
-| `-s`       	| `--storage_directory`         	| Optional  	| Target path where to store the GTFS archive. Downloaded from network (if not provided, the ZIP will be stored in memory). 	|
-| `-t`       	| `--threads`                   	| Optional  	| Number of threads to use.                                                                                                 	|
-| `-u`       	| `--url`                       	| Optional  	| Fully qualified URL to download GTFS archive.                                                                             	|
-| `-v`       	| `--validation_report_name`    	| Optional  	| Name of the validation report (including `.json` extension).                                                              	|
-| `-e`       	| `--system_errors_report_name` 	| Optional  	| Name of the system errors report (including `.json` extension).                                                             	|
-| `-n`       	| `--export_notices_schema`       	| Optional  	| Export notice schema as a json file.                                                                                           |
+| Short name | Long name                     | required?              | Description                                                                                                                                                                                                                                                                              |
+| ---------- | ----------------------------- | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `-i`       | `--input`                     | Conditionally required | The path to the GTFS file (e.g., `/myDirectory/gtfs.zip`). Required if `-u` or `--url` is not provided.                                                                                                                                                                                  |
+| `-u`       | `--url`                       | Conditionally Required | `--url` or `-u`: the fully qualified URL to the GTFS file (e.g., `https://www.abc.com/gtfs.zip`). Required if `-i` or `--input` is not provided.                                                                                                                                         |
+| `-o`       | `--output`                    | Required               | Path to where the validation report will be stored (e.g., `output`)                                                                                                                                                                                                                         |
+| `-s`       | `--storage_directory`         | Optional               | Target path where to store the GTFS archive. Downloaded from network (if not provided, the ZIP will be stored in memory).                                                                                                                                                                |
+| `-c`       | `--country_code`              | Optional               | Country code of the feed, e.g., `nl`. It must be a two-letter country code (ISO 3166-1 alpha-2). (e.g., `ca`, `us`). It can be either lower or upper case (e.g. `FR` or `GP`). If the country code is provided, phone numbers will be validated based on it.                             |
+| `-h`       | `--help`                      | Optional               | Print help menu.                                                                                                                                                                                                                                                                         |
+| `-t`       | `--threads`                   | Optional               | Number of threads to be used by Java to run the validator.                                                                                                                                                                                                                                                           |
+| `-v`       | `--validation_report_name`    | Optional               | Name of the validation report (including `.json` extension).                                                                                                                                                                                                                             |
+| `-e`       | `--system_errors_report_name` | Optional               | Name of the system errors report (including `.json` extension).                                                                                                                                                                                                                          |
+| `-n`       | `--export_notices_schema`     | Optional               | Export notice schema as a json file.                                                                                                                                                                                                                                                     |
 
 ⚠️ Note that exactly one of the following options must be provided: `--url` or `--input`.
 
 ⚠️ Note that `--storage_directory` must not be provided if `--url` is not provided.
 
-⚠️ Note that parameters marked with an asterisk (*) in the help menu are mandatory.
-
 ### on a local GTFS zip file
 Sample usage:
 
 ``` 
-java -jar gtfs-validator-v2.0.jar --input relative/path/to/dataset.zip --output relative/output/path --country_code <country_code> --threads <number_of_threads_to_use> 
+java -jar gtfs-validator-v2.0.jar -i relative/path/to/dataset.zip -o relative/output/path -c ca -t <number_of_threads_to_use> 
 ```
 
 ...which will:
@@ -38,14 +36,15 @@ java -jar gtfs-validator-v2.0.jar --input relative/path/to/dataset.zip --output 
  1. Validate the GTFS data and output the results to the directory located at `relative/output/path`. 
  1. Export both validation and system errors reports to JSON by default. This folder will contain the `.json` file with information related to the validation process. The validation report will (by default) be named as `report.json` and the system errors report can be found under the name of `system_errors.json`.
  
-  ⚠️ Note that reports naming can be overridden by providing values to `-v` and/or `-e` CLI arguments. These **should** include `.json` extension.
+  ⚠️ Note that the name of the validation report can be overridden by providing values to `-v` and/or `-e` CLI arguments. These **should** include `.json` extension.
 
 ### on a hosted GTFS zip file at a URL
 Sample usage:
 
 ``` 
-java -jar gtfs-validator-v2.0.jar --url https://url/to/dataset.zip --output relative/output/path --country_code <country_code> --threads <number_of_threads_to_use> --storage_directory input.zip
+java -jar gtfs-validator-v2.0.jar -u https://url/to/dataset.zip -o relative/output/path -c ca -t <number_of_threads_to_use> --storage_directory input.zip
 ```
+
 
 ...which will:
  1. Download the GTFS feed at the URL `https://url/to/dataset.zip` and name it `input.zip`  
