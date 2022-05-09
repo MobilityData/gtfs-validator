@@ -125,7 +125,7 @@
                             <thead>
                                 <tr>
                                     <th:block th:each="field: ${noticeByCode.value[0].fields}" >
-                                        <th th:text="${field.name}" />
+                                        <th th:text="${field}" />
                                     </th:block>
                                 </tr>
                             </thead>
@@ -133,7 +133,7 @@
                                 <tbody>
                                 <tr>
                                 <th:block th:each="field: ${notice.fields}">
-                                        <td th:text="${notice.context.getAsJsonObject().get(field.name)}" />
+                                        <td th:text="${notice.getValueForField(field)}" />
                                 </th:block>
                                 </tr>
                                 </tbody>

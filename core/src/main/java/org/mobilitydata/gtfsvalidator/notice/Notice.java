@@ -27,7 +27,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
@@ -61,24 +60,6 @@ public abstract class Notice {
 
   public SeverityLevel getSeverityLevel() {
     return this.severityLevel;
-  }
-
-  /**
-   * Returns the name of the notice based on the class simple name.
-   *
-   * @return notice class simple name, e.g., "ForeignKeyViolationNotice".
-   */
-  public String getName() {
-    return getClass().getSimpleName();
-  }
-
-  /**
-   * Returns the fields of the notice as an array based on the class declared fields.
-   *
-   * @return fields of the notice as an array.
-   */
-  public Field[] getFields() {
-    return getClass().getDeclaredFields();
   }
 
   /**

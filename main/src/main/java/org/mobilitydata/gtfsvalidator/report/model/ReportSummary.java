@@ -24,13 +24,12 @@ import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.notice.Notice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
-import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 
 /** ReportSummary is the class containing the summary methods for the HTML report. */
 public class ReportSummary {
   private final NoticeContainer container;
   private final Map<SeverityLevel, Long> severityCounts;
-  private final Map<SeverityLevel, Map<String, List<ValidationNotice>>> noticesMap;
+  private final Map<SeverityLevel, Map<String, List<NoticeView>>> noticesMap;
 
   public ReportSummary(NoticeContainer container) {
     this.container = container;
@@ -39,11 +38,14 @@ public class ReportSummary {
             .collect(Collectors.groupingBy(Notice::getSeverityLevel, Collectors.counting()));
     this.noticesMap =
         container.getValidationNotices().stream()
+            .map(NoticeView::new)
+            .collect(Collectors.toList())
+            .stream()
             .collect(
                 Collectors.groupingBy(
-                    Notice::getSeverityLevel,
+                    NoticeView::getSeverityLevel,
                     LinkedHashMap::new,
-                    Collectors.groupingBy(Notice::getCode, TreeMap::new, Collectors.toList())));
+                    Collectors.groupingBy(NoticeView::getCode, TreeMap::new, Collectors.toList())));
   }
 
   /**
@@ -54,7 +56,7 @@ public class ReportSummary {
    *
    * @return the notices as a map of maps.
    */
-  public Map<SeverityLevel, Map<String, List<ValidationNotice>>> getNoticesMap() {
+  public Map<SeverityLevel, Map<String, List<NoticeView>>> getNoticesMap() {
     return noticesMap;
   }
 
