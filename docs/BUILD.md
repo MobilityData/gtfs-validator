@@ -15,7 +15,7 @@ To build the application simply click the hammer in the header section
 ## Running unit tests
 1. Run the following command at the root of the project to run Java tests:
 ```
-$ ./gradlew test
+./gradlew test
 ```
 
 ## Packaging JAR with all dependencies
@@ -23,7 +23,7 @@ $ ./gradlew test
 To build a JAR that can run stand-alone without any additional classes on the classpath (sometimes called an "uber" or "fat" JAR), run:
 
 ```
-$ ./gradlew shadowJar
+./gradlew shadowJar
 ```
 
 ## Generating Javadocs
@@ -31,5 +31,5 @@ $ ./gradlew shadowJar
 To generate Javadocs for the project, run:
 
 ```
-$ ./gradlew aggregateJavadocs
+./gradlew aggregateJavadocs
 ```
