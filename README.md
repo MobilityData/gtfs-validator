@@ -34,7 +34,7 @@ You can run this validator using a GTFS dataset on your computer, or from a URL.
 
 More detailed instructions with all the parameters that exists are available on our ["Usage"](/docs/USAGE.md) page.
 
-### Visualize the results
+### <a name="visualize-results"></a>Visualize the results
 In the output directory, the following files will be created:
 - `report.html`: the validation report in HTML format. It can be opened in a browser.
 - `report.json`: the validation report in JSON format.
@@ -63,10 +63,7 @@ where:
 The validator can then be executed via bash commands. See the [preceeding instructions for command line usage](#run-the-app-via-command-line).
 
 ### Visualize the results
-In the output directory, the following files will be created:
-- `report.html`: the validation report in HTML format. It can be opened in a browser.
-- `report.json`: the validation report in JSON format.
-- `system_errors.json`: this file will be created every-time the validator is run. If no system errors were encountered, this file will be empty.
+In the output directory, the reports will be created as described [here](#visualize-results).
 
 # Validation rules
 * [Implemented rules](/RULES.md)
