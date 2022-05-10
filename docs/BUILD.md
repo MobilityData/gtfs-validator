@@ -39,7 +39,7 @@ and redistribution terms are murkier.
 To build the app and installer, run:
 
 ```
-$ ./gradlew clean jpackage
+./gradlew clean jpackage
 ```
 
 and look for the resulting application artifacts in:
