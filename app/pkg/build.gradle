@@ -1,0 +1,110 @@
+/*
+ * Copyright 2022 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+plugins {
+    id 'java'
+    id "de.jjohannes.extra-java-module-info" version "0.11"
+    id "org.beryx.jlink" version "2.24.1"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Note that we depend on the :app:gui shadow jar, which bundles the gui
+    // application and all its dependencies into a single uber jar.
+    implementation project(path: ':app:gui', configuration: 'shadow')
+}
+
+extraJavaModuleInfo {
+    // JPackage (below) requires that we package our application as a Java
+    // Module.  Instead of attempting to modularize the entire gtfs-validator
+    // project, we instead make this project a module and moduarlize our single
+    // :app:gui uber-jar dependency by injecting a module-info.class entry into
+    // the jar with its native dependencies.
+    //
+    // See additional discussion in https://bit.ly/gtfs-validator-packaged-exe and
+    // https://docs.gradle.org/current/samples/sample_java_modules_with_transform.html
+    module('gui-all.jar', 'org.mobilitydata.gtfsvalidator.app.gui', project.version) {
+        exports('org.mobilitydata.gtfsvalidator.app.gui')
+
+        // This is the set of core Java modules that our application depends on.
+        // This list was hand-curated by looking at the output of `jdeps -s` on
+        // the full application jar, which produces some false positives given
+        // that not all code-paths in our dependencies are actually used.  I
+        // have also run the app with no module dependencies to see what kind
+        // of exceptions we get.
+        requires('java.compiler')
+        requires('java.desktop')
+        requires('java.logging')
+        requires('java.naming')
+        requires('java.security.jgss')
+        requires('java.sql')
+  }
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+compileJava.options.encoding = "UTF-8"
+
+java {
+    modularity.inferModulePath = true
+}
+
+application {
+    mainClass = 'org.mobilitydata.gtfsvalidator.app.pkg.Main'
+    mainModule = 'org.mobilitydata.gtfsvalidator.app.pkg'
+}
+
+jar {
+    // Add the manifest within the JAR, using gtfs-validator as the title
+    manifest {
+        attributes('Implementation-Title': rootProject.name,
+                'Implementation-Version': project.version)
+    }
+}
+
+// Debugging tips:
+// If you ever get an error when running the `jpackage` task like:
+//   Error reading module: app/pkg/build/jlinkbase/jlinkjars/pkg.jar
+// (and not much else), rerun the Gradle task with --debug specified and look
+// for the full command-line executed for `jlink` or `jpackage`.  Copy the
+// command-line and run it directly with a `-J-Djlink.debug=true` flag added
+// and you will get more useful information about what went wrong.
+jlink {
+    moduleName = 'org.mobilitydata.gtfsvalidator.app.pkg'
+    launcher {
+        name = 'GTFS Validator'
+    }
+    // Passed to jlink to create an even smaller JRE.
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    jpackage {
+        if (org.gradle.internal.os.OperatingSystem.current().windows) {
+            installerOptions += ['--win-per-user-install', '--win-dir-chooser', '--win-menu', '--win-shortcut']
+            imageOptions += ['--win-console']
+        }
+    }
+}
+
+javadoc {
+    // Our complex use of a shadow jar dependency bundled as a Java Module
+    // (see above) causes problems for the Javadoc compiler, especially when
+    // run in aggregate mode over the entire project.  As such, we disable
+    // Javadoc for this sub-project to avoid issues.  Since there isn't much
+    // real source-code in the :pkg project, it's no big loss.
+    enabled = false
+}
+

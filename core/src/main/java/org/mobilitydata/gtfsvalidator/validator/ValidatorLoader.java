@@ -20,8 +20,9 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ListMultimap;
 import com.google.common.flogger.FluentLogger;
-import com.google.common.reflect.ClassPath;
-import java.io.IOException;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.ScanResult;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -70,16 +71,15 @@ public class ValidatorLoader {
    */
   @SuppressWarnings("unchecked")
   public ValidatorLoader(ImmutableList<String> validatorPackages) throws ValidatorLoaderException {
-    ClassPath classPath;
-    try {
-      classPath = ClassPath.from(ClassLoader.getSystemClassLoader());
-    } catch (IOException exception) {
-      throw new ValidatorLoaderException("Cannot load classes", exception);
-    }
     for (String packageName : validatorPackages) {
-      for (ClassPath.ClassInfo classInfo : classPath.getTopLevelClassesRecursive(packageName)) {
-        Class<?> clazz = classInfo.load();
-        if (clazz.isAnnotationPresent(GtfsValidator.class)) {
+      try (ScanResult scanResult =
+          new ClassGraph()
+              .enableClassInfo()
+              .enableAnnotationInfo()
+              .acceptPackages(packageName)
+              .scan()) {
+        for (ClassInfo classInfo : scanResult.getClassesWithAnnotation(GtfsValidator.class)) {
+          Class<?> clazz = classInfo.loadClass();
           if (SingleEntityValidator.class.isAssignableFrom(clazz)) {
             addSingleEntityValidator((Class<? extends SingleEntityValidator<?>>) clazz);
           } else if (FileValidator.class.isAssignableFrom(clazz)) {
