@@ -28,6 +28,9 @@ To build a JAR that can run stand-alone without any additional classes on the cl
 
 ## Packaging as Installable Application
 
+**NOTE:** The installable application is under active development.  It currently
+works best on Windows.
+
 To build an installable application package appropriate for your operating system
 (e.g. Windows, Mac OS, Linux), first make sure you have a recent version of the
 JDK installed (ver >= 15) that includes `jlink` and `jpackage`.  If you intend
