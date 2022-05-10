@@ -109,27 +109,27 @@
     </thead>
     <tbody>
     <span th:each="noticesBySeverityLevel: ${summary.noticesMap}">
-        <span th:each="noticeByCode: ${noticesBySeverityLevel.value}">
+        <span th:each="noticesByCode: ${noticesBySeverityLevel.value}">
             <tr class="notice">
-                <td th:text="${noticeByCode.key}" />
-                <td th:text="${noticeByCode.value[0].name}" />
+                <td th:text="${noticesByCode.key}" />
+                <td th:text="${noticesByCode.value[0].name}" />
                 <td th:class="${noticesBySeverityLevel.key.toString().toLowerCase()}" th:text="${noticesBySeverityLevel.key}" />
-                <td th:text="${noticeByCode.value.size}" />
+                <td th:text="${noticesByCode.value.size}" />
             </tr>
             <tr class="description">
                 <td colspan="4">
                     <div class="desc-content">
-                        <h3 th:text="${noticeByCode.value[0].name}" />
-                        <p> Please find this notice description <a th:href="@{'https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#' + ${noticeByCode.value[0].name}}">here</a>.</p>
+                        <h3 th:text="${noticesByCode.value[0].name}" />
+                        <p> Please find this notice description <a th:href="@{'https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#' + ${noticesByCode.value[0].name}}">here</a>.</p>
                         <table>
                             <thead>
                                 <tr>
-                                    <th:block th:each="field: ${noticeByCode.value[0].fields}" >
+                                    <th:block th:each="field: ${noticesByCode.value[0].fields}" >
                                         <th th:text="${field}" />
                                     </th:block>
                                 </tr>
                             </thead>
-                            <span th:each="notice: ${noticeByCode.value}">
+                            <span th:each="notice: ${noticesByCode.value}">
                                 <tbody>
                                 <tr>
                                 <th:block th:each="field: ${notice.fields}">
