@@ -1,8 +1,17 @@
 # Architecture description
-`gtfs-validator` counts three principal modules: [`main`](/main), [`processor`](/processor) and [`core`](/core). These modules dependencies are illustrated in the following diagram:
-![architecture schema](https://user-images.githubusercontent.com/35747326/101182386-610e9400-3624-11eb-84b9-ec935e44aa2b.png)
+`gtfs-validator` is composed from a number modules, as shown in the following dependency diagram:
 
-This new architecture leverages `AutoValue` and annotations to auto-generate the following classes used for loading and validation:
+```mermaid
+graph BT;
+  core
+    main-->core;
+    main-->processor;
+    processor-->core;
+    app:gui-->main;
+    app:pkg-->app:gui;
+```
+
+The architecture leverages `AutoValue` and annotations to auto-generate the following classes used for loading and validation:
 * all classes used to internally represent GTFS data (such as `GtfsStopTime.java`) 
 * `*Schema.java` (such as `GtfsAgencySchema.java`)
 * `*Enum.java` (such as `GtfsFrequencyExactTimeEnum.java`)
@@ -42,6 +51,16 @@ _Depends on: nothing_
 - GTFS data type definitions such as `GtfsTime`, `GtfsDate`, or `GtfsColor`
 - `GtfsFeedLoader` to load for a whole GTFS feed with all its CSV files
 - GTFS feed's name
+
+## App:Gui
+_Depends on: `main`_
+
+A [GUI-based application](/app/gui/src/main/java/org/mobilitydata/gtfsvalidator/app/gui) for running the validator as a desktop application.
+
+## App:Pkg
+_Depends on: `app:gui`_
+
+A [minimal wrapper]((/app/pkg/src/main/java/org/mobilitydata/gtfsvalidator/app/pkg)) around `app:gui` designed to facilitate packaging the GUI application as a Java Module and producing standalone executables and installers for various platforms.
 
 ## Data pipeline 📥➡️♨➡️📤
 
