@@ -23,6 +23,7 @@ dependencies {
     implementation 'com.beust:jcommander:1.48'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.github.stefanbirkner:system-lambda:1.2.0'
+    implementation 'uk.org.webcompere:system-stubs-core:2.0.0'
     testImplementation "com.google.truth:truth:1.0.1"
     testImplementation group: 'junit', name: 'junit', version: '4.9'
 }
