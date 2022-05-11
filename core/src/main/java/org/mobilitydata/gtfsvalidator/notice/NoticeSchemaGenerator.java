@@ -19,11 +19,13 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.geometry.S2LatLng;
-import com.google.common.reflect.ClassPath;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.ScanResult;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -33,8 +35,6 @@ import java.util.TreeMap;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
-import org.mobilitydata.gtfsvalidator.validator.FileValidator;
-import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
 
 /** Exports schema describing all possible notices and their contexts. */
 public class NoticeSchemaGenerator {
@@ -144,27 +144,6 @@ public class NoticeSchemaGenerator {
     return !child.equals(parent) && parent.isAssignableFrom(child);
   }
 
-  @SuppressWarnings("unchecked")
-  private static void maybeAddNoticeClass(Class<?> clazz, List<Class<Notice>> notices) {
-    if (isSubclassOf(Notice.class, clazz)) {
-      notices.add((Class<Notice>) clazz);
-    }
-  }
-
-  private static boolean belongsToAnyPackage(ClassPath.ClassInfo classInfo, List<String> packages) {
-    for (String packageName : packages) {
-      if (classInfo.getName().startsWith(packageName)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private static boolean isValidatorClass(Class<?> clazz) {
-    return isSubclassOf(FileValidator.class, clazz)
-        || isSubclassOf(SingleEntityValidator.class, clazz);
-  }
-
   /**
    * Finds all subclasses of {@link Notice} that belong to the given packages.
    *
@@ -172,19 +151,21 @@ public class NoticeSchemaGenerator {
    */
   @VisibleForTesting
   static List<Class<Notice>> findNoticeSubclasses(List<String> packages) throws IOException {
+    String[] packagesAsArray = packages.toArray(new String[] {});
     List<Class<Notice>> notices = new ArrayList<>();
-    for (ClassPath.ClassInfo classInfo :
-        ClassPath.from(ClassLoader.getSystemClassLoader()).getTopLevelClasses()) {
-      if (!belongsToAnyPackage(classInfo, packages)) {
-        continue;
-      }
-      Class<?> clazz = classInfo.load();
-      maybeAddNoticeClass(clazz, notices);
-      if (isValidatorClass(clazz)) {
-        // Validator classes often have notice classes inside.
-        for (Class<?> innerClass : clazz.getDeclaredClasses()) {
-          maybeAddNoticeClass(innerClass, notices);
+    ClassGraph classGraph =
+        new ClassGraph()
+            .enableClassInfo()
+            .acceptPackages(packagesAsArray)
+            .ignoreClassVisibility()
+            .verbose();
+    try (ScanResult scanResult = classGraph.scan()) {
+      for (ClassInfo classInfo : scanResult.getSubclasses(Notice.class)) {
+        if (classInfo.isAbstract()) {
+          continue;
         }
+        Class<?> clazz = classInfo.loadClass();
+        notices.add((Class<Notice>) clazz);
       }
     }
     return notices;

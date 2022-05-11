@@ -1,4 +1,6 @@
 rootProject.name = 'gtfs-validator'
+include 'app:gui'
+include 'app:pkg'
 include 'core'
 include 'processor'
 include 'main'
