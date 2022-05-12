@@ -46,8 +46,15 @@ public class ValidationRunner {
   private static final String GTFS_ZIP_FILENAME = "gtfs.zip";
 
   public enum Status {
+    // Indicates validation successfully completed, but doesn't imply the
+    // feed itself is valid.
     SUCCESS,
-    FAILURE
+    // Indicates validation did not successfully complete, with exceptions
+    // caught and written to the system errors JSON output.
+    SYSTEM_ERRORS,
+    // Indicates validation did not successfully complete, with exceptions
+    // caught and written only to console logging.
+    EXCEPTION
   }
 
   public Status run(ValidationRunnerConfig config) {
@@ -56,7 +63,7 @@ public class ValidationRunner {
       validatorLoader = new ValidatorLoader();
     } catch (ValidatorLoaderException e) {
       logger.atSevere().withCause(e).log("Cannot load validator classes");
-      return Status.FAILURE;
+      return Status.EXCEPTION;
     }
     GtfsFeedLoader feedLoader = new GtfsFeedLoader();
 
@@ -80,7 +87,11 @@ public class ValidationRunner {
     }
     if (gtfsInput == null) {
       exportReport(noticeContainer, config);
-      return Status.FAILURE;
+      if (!noticeContainer.getSystemErrors().isEmpty()) {
+        return Status.SYSTEM_ERRORS;
+      } else {
+        return Status.EXCEPTION;
+      }
     }
     ValidationContext validationContext =
         ValidationContext.builder()
@@ -93,7 +104,7 @@ public class ValidationRunner {
               validatorLoader, feedLoader, noticeContainer, gtfsInput, validationContext);
     } catch (InterruptedException e) {
       logger.atSevere().withCause(e).log("Validation was interrupted");
-      return Status.FAILURE;
+      return Status.EXCEPTION;
     }
     closeGtfsInput(gtfsInput, noticeContainer);
 

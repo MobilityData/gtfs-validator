@@ -27,6 +27,8 @@ import java.util.logging.Logger;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunner;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 
+import javax.swing.*;
+
 /**
  * The main entry point for the GUI application.
  *
@@ -77,8 +79,6 @@ public class Main {
   }
 
   private static void run(String path) {
-    // TODO(#1135): Refactor this code to call GTFS validation code directly
-    // instead of constructing artifical command-line args and calling cli.Main.
     Path workingDirectory = getDefaultOutputDirectory();
 
     ValidationRunnerConfig config =
@@ -89,9 +89,20 @@ public class Main {
             .build();
 
     ValidationRunner runner = new ValidationRunner();
-    runner.run(config);
+    ValidationRunner.Status status = runner.run(config);
+
+    if (status == ValidationRunner.Status.EXCEPTION) {
+      JOptionPane.showMessageDialog(null,
+              "A non-recoverable error occurred during validation.",
+              "ERROR",
+              JOptionPane.ERROR_MESSAGE);
+      System.exit(-1);
+    }
 
     Path reportPath = workingDirectory.resolve(config.validationReportFileName());
+    if (status == ValidationRunner.Status.SYSTEM_ERRORS) {
+      reportPath = workingDirectory.resolve(config.systemErrorsReportFileName());
+    }
 
     try {
       Desktop.getDesktop().browse(reportPath.toUri());
