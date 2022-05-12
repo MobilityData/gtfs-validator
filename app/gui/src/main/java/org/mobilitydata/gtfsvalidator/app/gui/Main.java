@@ -24,10 +24,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunner;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
-
-import javax.swing.*;
 
 /**
  * The main entry point for the GUI application.
@@ -92,10 +91,11 @@ public class Main {
     ValidationRunner.Status status = runner.run(config);
 
     if (status == ValidationRunner.Status.EXCEPTION) {
-      JOptionPane.showMessageDialog(null,
-              "A non-recoverable error occurred during validation.",
-              "ERROR",
-              JOptionPane.ERROR_MESSAGE);
+      JOptionPane.showMessageDialog(
+          null,
+          "A non-recoverable error occurred during validation.",
+          "ERROR",
+          JOptionPane.ERROR_MESSAGE);
       System.exit(-1);
     }
 
