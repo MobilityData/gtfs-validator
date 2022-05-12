@@ -22,10 +22,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import org.mobilitydata.gtfsvalidator.runner.ValidationRunner;
+import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 
 /**
  * The main entry point for the GUI application.
@@ -81,16 +81,17 @@ public class Main {
     // instead of constructing artifical command-line args and calling cli.Main.
     Path workingDirectory = getDefaultOutputDirectory();
 
-    List<String> cliArgs = new ArrayList<>();
-    cliArgs.add("-i");
-    cliArgs.add(path);
-    cliArgs.add("-o");
-    cliArgs.add(workingDirectory.toString());
-    cliArgs.add("--pretty");
+    ValidationRunnerConfig config =
+        ValidationRunnerConfig.builder()
+            .setGtfsSource(Path.of(path).toUri())
+            .setOutputDirectory(workingDirectory)
+            .setPrettyJson(true)
+            .build();
 
-    org.mobilitydata.gtfsvalidator.cli.Main.main(cliArgs.toArray(new String[] {}));
+    ValidationRunner runner = new ValidationRunner();
+    runner.run(config);
 
-    Path reportPath = workingDirectory.resolve("report.json");
+    Path reportPath = workingDirectory.resolve(config.validationReportFileName());
 
     try {
       Desktop.getDesktop().browse(reportPath.toUri());

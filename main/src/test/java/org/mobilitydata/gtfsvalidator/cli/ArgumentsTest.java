@@ -17,109 +17,220 @@
 package org.mobilitydata.gtfsvalidator.cli;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth8.assertThat;
+import static org.junit.Assert.assertThrows;
 
 import com.beust.jcommander.JCommander;
+import com.beust.jcommander.ParameterException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
 import org.junit.Test;
+import org.mobilitydata.gtfsvalidator.input.CountryCode;
+import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 
 public class ArgumentsTest {
 
   @Test
-  public void shortNameShouldInitializeArguments() {
+  public void shortNameShouldInitializeArguments() throws URISyntaxException {
     String[] commandLineArgumentAsStringArray = {
-      "-i", "input value",
-      "-o", "output value",
+      "-i", "/tmp/gtfs.zip",
+      "-o", "/tmp/output",
       "-c", "au",
       "-t", "4"
     };
+
     Arguments underTest = new Arguments();
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
-    assertThat(underTest.getInput()).matches("input value");
-    assertThat(underTest.getOutputBase()).matches("output value");
-    assertThat(underTest.getCountryCode()).matches("au");
-    assertThat(underTest.getNumThreads()).isEqualTo(4);
-    assertThat(underTest.getValidationReportName()).matches("report.json");
-    assertThat(underTest.getSystemErrorsReportName()).matches("system_errors.json");
+    ValidationRunnerConfig config = underTest.toConfig();
+    assertThat(config.gtfsSource()).isEqualTo(new URI("file:/tmp/gtfs.zip"));
+    assertThat((Object) config.outputDirectory()).isEqualTo(Path.of("/tmp/output"));
+    assertThat(config.countryCode()).isEqualTo(CountryCode.forStringOrUnknown("au"));
+    assertThat(config.numThreads()).isEqualTo(4);
+    assertThat(config.validationReportFileName()).matches("report.json");
+    assertThat(config.systemErrorsReportFileName()).matches("system_errors.json");
+  }
 
+  @Test
+  public void shortNameShouldInitializeArguments_url() throws URISyntaxException {
     // same test using -u, -s, -v and -e command line options
-    commandLineArgumentAsStringArray =
+    String[] commandLineArgumentAsStringArray =
         new String[] {
-          "-o", "output value",
+          "-o", "/tmp/output",
           "-c", "au",
           "-t", "4",
-          "-u", "url value",
-          "-s", "storage value",
+          "-u", "http://host/gtfs.zip",
+          "-s", "/tmp/storage",
           "-v", "validation_report.json",
           "-e", "errors.json",
         };
 
+    Arguments underTest = new Arguments();
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
-    assertThat(underTest.getOutputBase()).matches("output value");
-    assertThat(underTest.getCountryCode()).matches("au");
-    assertThat(underTest.getNumThreads()).isEqualTo(4);
-    assertThat(underTest.getUrl()).matches("url value");
-    assertThat(underTest.getStorageDirectory()).matches("storage value");
-    assertThat(underTest.getValidationReportName()).matches("validation_report.json");
-    assertThat(underTest.getSystemErrorsReportName()).matches("errors.json");
+    ValidationRunnerConfig config = underTest.toConfig();
+    assertThat(config.gtfsSource()).isEqualTo(new URI("http://host/gtfs.zip"));
+    assertThat((Object) config.outputDirectory()).isEqualTo(Path.of("/tmp/output"));
+    assertThat(config.countryCode()).isEqualTo(CountryCode.forStringOrUnknown("au"));
+    assertThat(config.numThreads()).isEqualTo(4);
+    assertThat(config.storageDirectory()).hasValue(Path.of("/tmp/storage"));
+    assertThat(config.validationReportFileName()).matches("validation_report.json");
+    assertThat(config.systemErrorsReportFileName()).matches("errors.json");
   }
 
   @Test
-  public void longNameShouldInitializeArguments() {
+  public void longNameShouldInitializeArguments() throws URISyntaxException {
     String[] commandLineArgumentAsStringArray = {
-      "--input", "input value",
-      "--output_base", "output value",
+      "--input", "/tmp/gtfs.zip",
+      "--output_base", "/tmp/output",
       "--country_code", "ca",
       "--threads", "4"
     };
+
     Arguments underTest = new Arguments();
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
-    assertThat(underTest.getInput()).matches("input value");
-    assertThat(underTest.getOutputBase()).matches("output value");
-    assertThat(underTest.getCountryCode()).matches("ca");
-    assertThat(underTest.getNumThreads()).isEqualTo(4);
-    assertThat(underTest.getValidationReportName()).matches("report.json");
-    assertThat(underTest.getSystemErrorsReportName()).matches("system_errors.json");
+    ValidationRunnerConfig config = underTest.toConfig();
+    assertThat(config.gtfsSource()).isEqualTo(new URI("file:/tmp/gtfs.zip"));
+    assertThat((Object) config.outputDirectory()).isEqualTo(Path.of("/tmp/output"));
+    assertThat(config.countryCode()).isEqualTo(CountryCode.forStringOrUnknown("ca"));
+    assertThat(config.numThreads()).isEqualTo(4);
+    assertThat(config.validationReportFileName()).matches("report.json");
+    assertThat(config.systemErrorsReportFileName()).matches("system_errors.json");
+  }
 
+  @Test
+  public void longNameShouldInitializeArguments_url() throws URISyntaxException {
     // same test using -u, -s, -v and -e command line options
-    commandLineArgumentAsStringArray =
+    String[] commandLineArgumentAsStringArray =
         new String[] {
           "--output_base",
-          "output value",
+          "/tmp/output",
           "--country_code",
           "ca",
           "--threads",
           "4",
           "--url",
-          "url value",
+          "http://host/gtfs.zip",
           "--storage_directory",
-          "storage value",
+          "/tmp/storage",
           "--validation_report_name",
           "validation_report.json",
           "--system_errors_report_name",
           "errors.json",
         };
 
+    Arguments underTest = new Arguments();
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
-    assertThat(underTest.getOutputBase()).matches("output value");
-    assertThat(underTest.getCountryCode()).matches("ca");
-    assertThat(underTest.getNumThreads()).isEqualTo(4);
-    assertThat(underTest.getUrl()).matches("url value");
-    assertThat(underTest.getStorageDirectory()).matches("storage value");
-    assertThat(underTest.getValidationReportName()).matches("validation_report.json");
-    assertThat(underTest.getSystemErrorsReportName()).matches("errors.json");
+    ValidationRunnerConfig config = underTest.toConfig();
+    assertThat(config.gtfsSource()).isEqualTo(new URI("http://host/gtfs.zip"));
+    assertThat((Object) config.outputDirectory()).isEqualTo(Path.of("/tmp/output"));
+    assertThat(config.countryCode()).isEqualTo(CountryCode.forStringOrUnknown("ca"));
+    assertThat(config.numThreads()).isEqualTo(4);
+    assertThat(config.storageDirectory()).hasValue(Path.of("/tmp/storage"));
+    assertThat(config.validationReportFileName()).matches("validation_report.json");
+    assertThat(config.systemErrorsReportFileName()).matches("errors.json");
   }
 
   @Test
-  public void numThreadsShouldHaveDefaultValueIfNotProvided() {
+  public void numThreadsShouldHaveDefaultValueIfNotProvided() throws URISyntaxException {
     String[] commandLineArgumentAsStringArray = {
-      "--input", "input value",
-      "--output_base", "output value",
+      "--input", "/tmp/gtfs.zip",
+      "--output_base", "/tmp/output",
       "--country_code", "ca",
     };
+
     Arguments underTest = new Arguments();
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
-    assertThat(underTest.getInput()).matches("input value");
-    assertThat(underTest.getOutputBase()).matches("output value");
-    assertThat(underTest.getCountryCode()).matches("ca");
-    assertThat(underTest.getNumThreads()).isEqualTo(1);
+    ValidationRunnerConfig config = underTest.toConfig();
+    assertThat(config.gtfsSource()).isEqualTo(new URI("file:/tmp/gtfs.zip"));
+    assertThat((Object) config.outputDirectory()).isEqualTo(Path.of("/tmp/output"));
+    assertThat(config.countryCode()).isEqualTo(CountryCode.forStringOrUnknown("ca"));
+    assertThat(config.numThreads()).isEqualTo(1);
+  }
+
+  private static boolean validateArguments(String[] cliArguments) {
+    Arguments args = new Arguments();
+    new JCommander(args).parse(cliArguments);
+    return args.isValid();
+  }
+
+  @Test
+  public void noUrlNoInput_long_isNotValid() {
+    assertThat(
+            validateArguments(
+                new String[] {
+                  "--output_base", "output value",
+                  "--threads", "4"
+                }))
+        .isFalse();
+  }
+
+  @Test
+  public void noArguments_isNotValid() {
+    assertThrows(ParameterException.class, () -> validateArguments(new String[] {}));
+  }
+
+  @Test
+  public void urlAndInput_long_isNotValid() {
+    assertThat(
+            validateArguments(
+                new String[] {
+                  "--url", "url value",
+                  "--input", "input value",
+                  "--output_base", "output value",
+                  "--threads", "4"
+                }))
+        .isFalse();
+  }
+
+  @Test
+  public void storageDirectoryNoUrl_long_isNotValid() {
+    assertThat(
+            validateArguments(
+                new String[] {
+                  "--storage_directory", "storage directory value",
+                  "--input", "input value",
+                  "--output_base", "output value",
+                  "--threads", "4"
+                }))
+        .isFalse();
+  }
+
+  @Test
+  public void urlNoStorageDirectory_long_isValid() {
+    assertThat(
+            validateArguments(
+                new String[] {
+                  "--url", "url value",
+                  "--output_base", "output value",
+                  "--threads", "4"
+                }))
+        .isTrue();
+  }
+
+  @Test
+  public void storageDirectoryNoInput_long_isValid() {
+    assertThat(
+            validateArguments(
+                new String[] {
+                  "--url", "url value",
+                  "--storage_directory", "storage directory value",
+                  "--output_base", "output value",
+                  "--threads", "4"
+                }))
+        .isTrue();
+  }
+
+  @Test
+  public void feedName_long_isNotValid() {
+    assertThat(
+            validateArguments(
+                new String[] {
+                  "--input", "input value",
+                  "--output_base", "output value",
+                  "--country_code", "ca",
+                  "--threads", "4",
+                  "--feed_name", "feed name"
+                }))
+        .isFalse();
   }
 }
