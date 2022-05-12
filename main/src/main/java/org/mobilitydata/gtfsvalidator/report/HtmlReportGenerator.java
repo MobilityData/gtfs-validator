@@ -42,7 +42,7 @@ public class HtmlReportGenerator {
     templateEngine.setTemplateResolver(templateResolver);
 
     ReportSummary summary = new ReportSummary(noticeContainer);
-    String version = Manifests.read("Validator-Version");
+    String version = Manifests.read("Implementation-Version");
 
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
     Date now = new Date(System.currentTimeMillis());

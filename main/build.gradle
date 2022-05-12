@@ -35,7 +35,6 @@ jar {
     manifest {
         attributes('Implementation-Title': rootProject.name,
                 'Implementation-Version': project.version,
-                'Validator-Version': "${System.getenv("versionTag")}",
                 'Main-Class': 'org.mobilitydata.gtfsvalidator.cli.Main',
                 'Multi-Release': 'true')
     }
