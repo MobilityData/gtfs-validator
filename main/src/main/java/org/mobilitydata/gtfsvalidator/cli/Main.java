@@ -79,17 +79,15 @@ public class Main {
     return args;
   }
 
-  private static Gson createGson(boolean pretty) {
-    GsonBuilder builder = new GsonBuilder();
-    if (pretty) {
-      builder.setPrettyPrinting();
-    }
-    return builder.create();
-  }
-
   private static void exportNoticeSchema(final Arguments args) {
     new File(args.getOutputBase()).mkdirs();
-    Gson gson = createGson(args.getPretty());
+
+    GsonBuilder gsonBuilder = new GsonBuilder();
+    if (args.getPretty()) {
+      gsonBuilder.setPrettyPrinting();
+    }
+    Gson gson = gsonBuilder.create();
+
     try {
       Files.write(
           Paths.get(args.getOutputBase(), NOTICE_SCHEMA_JSON),
