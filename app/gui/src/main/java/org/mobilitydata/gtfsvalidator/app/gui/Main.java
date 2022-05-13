@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunner;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 
@@ -69,12 +70,7 @@ public class Main {
     // doesn't appear to work on Mac OS.
     if (args.length != 1) {
       logger.atSevere().log("No GTFS input specified - args=%d", args.length);
-      javax.swing.SwingUtilities.invokeLater(
-          new Runnable() {
-            public void run() {
-              createAndShowGUI();
-            }
-          });
+      javax.swing.SwingUtilities.invokeLater(() -> createAndShowGUI());
     } else {
       run(args[0]);
     }
