@@ -22,6 +22,7 @@ import static org.junit.Assert.assertThrows;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
@@ -43,7 +44,7 @@ public class ArgumentsTest {
     Arguments underTest = new Arguments();
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
     ValidationRunnerConfig config = underTest.toConfig();
-    assertThat(config.gtfsSource()).isEqualTo(new URI("file:/tmp/gtfs.zip"));
+    assertThat(config.gtfsSource()).isEqualTo(toFileUri("/tmp/gtfs.zip"));
     assertThat((Object) config.outputDirectory()).isEqualTo(Path.of("/tmp/output"));
     assertThat(config.countryCode()).isEqualTo(CountryCode.forStringOrUnknown("au"));
     assertThat(config.numThreads()).isEqualTo(4);
@@ -89,7 +90,7 @@ public class ArgumentsTest {
     Arguments underTest = new Arguments();
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
     ValidationRunnerConfig config = underTest.toConfig();
-    assertThat(config.gtfsSource()).isEqualTo(new URI("file:/tmp/gtfs.zip"));
+    assertThat(config.gtfsSource()).isEqualTo(toFileUri("/tmp/gtfs.zip"));
     assertThat((Object) config.outputDirectory()).isEqualTo(Path.of("/tmp/output"));
     assertThat(config.countryCode()).isEqualTo(CountryCode.forStringOrUnknown("ca"));
     assertThat(config.numThreads()).isEqualTo(4);
@@ -141,10 +142,16 @@ public class ArgumentsTest {
     Arguments underTest = new Arguments();
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
     ValidationRunnerConfig config = underTest.toConfig();
-    assertThat(config.gtfsSource()).isEqualTo(new URI("file:/tmp/gtfs.zip"));
+    assertThat(config.gtfsSource()).isEqualTo(toFileUri("/tmp/gtfs.zip"));
     assertThat((Object) config.outputDirectory()).isEqualTo(Path.of("/tmp/output"));
     assertThat(config.countryCode()).isEqualTo(CountryCode.forStringOrUnknown("ca"));
     assertThat(config.numThreads()).isEqualTo(1);
+  }
+
+  private static URI toFileUri(String path) {
+    // Ideally we would just hardcode the URI value for each test, but URI path
+    // generation is OS-specific, so it breaks on different test environments.
+    return new File(path).toURI();
   }
 
   private static boolean validateArguments(String[] cliArguments) {
