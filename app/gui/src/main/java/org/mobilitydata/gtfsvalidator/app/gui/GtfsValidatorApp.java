@@ -17,8 +17,14 @@ package org.mobilitydata.gtfsvalidator.app.gui;
 
 import java.awt.*;
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
+import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 
 /**
  * A Swing-based GUI application for configuring the inputs and configuration options of the
@@ -32,10 +38,26 @@ public class GtfsValidatorApp extends JFrame {
   private final JTextField gtfsInputField = new JTextField();
   private final JTextField outputDirectoryField = new JTextField();
 
+  private final JButton validateButton = new JButton();
+
   private final JPanel advancedOptionsPanel = new JPanel();
 
-  public GtfsValidatorApp() {
+  private final MonitoredValidationRunner validationRunner;
+  private final ValidationDisplay validationDisplay;
+
+  public GtfsValidatorApp(
+      MonitoredValidationRunner validationRunner, ValidationDisplay validationDisplay) {
     super("GTFS Schedule Validator");
+    this.validationRunner = validationRunner;
+    this.validationDisplay = validationDisplay;
+  }
+
+  public void setGtfsSource(String source) {
+    gtfsInputField.setText(source);
+  }
+
+  public void setOutputDirectory(Path outputDirectory) {
+    outputDirectoryField.setText(outputDirectory.toString());
   }
 
   void constructUI() {
@@ -63,7 +85,12 @@ public class GtfsValidatorApp extends JFrame {
   private void constructGtfsInputSection(JPanel parent) {
     // GTFS Input Section
     parent.add(createLabelWithFont("GTFS Input:", BOLD_FONT));
+
+    gtfsInputField
+        .getDocument()
+        .addDocumentListener(documentChangeListener(this::updateValidationButtonStatus));
     parent.add(gtfsInputField);
+
     JButton chooseGtfsInputButton = new JButton("Choose Local File...");
     parent.add(chooseGtfsInputButton);
     chooseGtfsInputButton.addActionListener(
@@ -99,7 +126,12 @@ public class GtfsValidatorApp extends JFrame {
   private void constructOutputDirectorySection(JPanel parent) {
     // Output Directory Section
     parent.add(createLabelWithFont("Output Directory:", BOLD_FONT));
+
+    outputDirectoryField
+        .getDocument()
+        .addDocumentListener(documentChangeListener(this::updateValidationButtonStatus));
     parent.add(outputDirectoryField);
+
     JButton chooseOutputDirectoryButton = new JButton("Choose Output Directory...");
     chooseOutputDirectoryButton.addActionListener(
         (e) -> {
@@ -146,8 +178,54 @@ public class GtfsValidatorApp extends JFrame {
 
     validateButtonPanel.add(Box.createHorizontalGlue());
 
-    JButton validateButton = new JButton("Validate");
+    validateButton.setText("Validate");
+    updateValidationButtonStatus();
+    validateButton.addActionListener((e) -> runValidation());
     validateButtonPanel.add(validateButton);
+  }
+
+  private void updateValidationButtonStatus() {
+    validateButton.setEnabled(isValidationReadyToRun());
+  }
+
+  private boolean isValidationReadyToRun() {
+    if (gtfsInputField.getText().isBlank()) {
+      return false;
+    }
+    if (outputDirectoryField.getText().isBlank()) {
+      return false;
+    }
+    return true;
+  }
+
+  private void runValidation() {
+    try {
+      ValidationRunnerConfig config = buildConfig();
+      validationRunner.run(config, this);
+    } catch (Throwable ex) {
+      validationDisplay.handleError(ex);
+    }
+  }
+
+  private ValidationRunnerConfig buildConfig() throws URISyntaxException {
+    ValidationRunnerConfig.Builder config = ValidationRunnerConfig.builder();
+    config.setPrettyJson(true);
+
+    String gtfsInput = gtfsInputField.getText();
+    if (!gtfsInput.isBlank()) {
+      if (gtfsInput.startsWith("http")) {
+        config.setGtfsSource(new URI(gtfsInput));
+      } else {
+        config.setGtfsSource(Path.of(gtfsInput).toUri());
+      }
+    }
+
+    String outputDirectory = outputDirectoryField.getText();
+    if (!outputDirectory.isBlank()) {
+      config.setOutputDirectory(Path.of(outputDirectory));
+    }
+
+    return config.build();
   }
 
   private static Font createBoldFont() {
@@ -160,5 +238,28 @@ public class GtfsValidatorApp extends JFrame {
     JLabel l = new JLabel(labelText);
     l.setFont(font);
     return l;
+  }
+
+  JButton getValidateButtonForTesting() {
+    return validateButton;
+  }
+
+  private DocumentListener documentChangeListener(Runnable action) {
+    return new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e) {
+        action.run();
+      }
+
+      @Override
+      public void removeUpdate(DocumentEvent e) {
+        action.run();
+      }
+
+      @Override
+      public void changedUpdate(DocumentEvent e) {
+        action.run();
+      }
+    };
   }
 }
