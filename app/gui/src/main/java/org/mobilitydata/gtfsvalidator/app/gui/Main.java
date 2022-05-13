@@ -22,10 +22,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import org.mobilitydata.gtfsvalidator.runner.ValidationRunner;
+import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 
 /**
  * The main entry point for the GUI application.
@@ -77,20 +78,31 @@ public class Main {
   }
 
   private static void run(String path) {
-    // TODO(#1135): Refactor this code to call GTFS validation code directly
-    // instead of constructing artifical command-line args and calling cli.Main.
     Path workingDirectory = getDefaultOutputDirectory();
 
-    List<String> cliArgs = new ArrayList<>();
-    cliArgs.add("-i");
-    cliArgs.add(path);
-    cliArgs.add("-o");
-    cliArgs.add(workingDirectory.toString());
-    cliArgs.add("--pretty");
+    ValidationRunnerConfig config =
+        ValidationRunnerConfig.builder()
+            .setGtfsSource(Path.of(path).toUri())
+            .setOutputDirectory(workingDirectory)
+            .setPrettyJson(true)
+            .build();
 
-    org.mobilitydata.gtfsvalidator.cli.Main.main(cliArgs.toArray(new String[] {}));
+    ValidationRunner runner = new ValidationRunner();
+    ValidationRunner.Status status = runner.run(config);
 
-    Path reportPath = workingDirectory.resolve("report.json");
+    if (status == ValidationRunner.Status.EXCEPTION) {
+      JOptionPane.showMessageDialog(
+          null,
+          "A non-recoverable error occurred during validation.",
+          "ERROR",
+          JOptionPane.ERROR_MESSAGE);
+      System.exit(-1);
+    }
+
+    Path reportPath = workingDirectory.resolve(config.validationReportFileName());
+    if (status == ValidationRunner.Status.SYSTEM_ERRORS) {
+      reportPath = workingDirectory.resolve(config.systemErrorsReportFileName());
+    }
 
     try {
       Desktop.getDesktop().browse(reportPath.toUri());
