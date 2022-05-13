@@ -29,6 +29,7 @@ repositories {
 }
 
 dependencies {
+    implementation project(':core')
     implementation project(':main')
     implementation 'com.google.flogger:flogger:0.6'
     implementation 'com.google.flogger:flogger-system-backend:0.6'

@@ -15,6 +15,7 @@
  */
 package org.mobilitydata.gtfsvalidator.app.gui;
 
+import com.google.common.flogger.FluentLogger;
 import java.awt.*;
 import java.io.File;
 import java.net.URI;
@@ -24,6 +25,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
+import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 
 /**
@@ -31,6 +33,8 @@ import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
  * validator.
  */
 public class GtfsValidatorApp extends JFrame {
+  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
   private static final Dimension VERTICAL_GAP = new Dimension(0, 40);
 
   private static final Font BOLD_FONT = createBoldFont();
@@ -41,6 +45,9 @@ public class GtfsValidatorApp extends JFrame {
   private final JButton validateButton = new JButton();
 
   private final JPanel advancedOptionsPanel = new JPanel();
+
+  private final JSpinner numThreadsSpinner = new JSpinner();
+  private final JTextField countryCodeField = new JTextField("", 3);
 
   private final MonitoredValidationRunner validationRunner;
   private final ValidationDisplay validationDisplay;
@@ -58,6 +65,14 @@ public class GtfsValidatorApp extends JFrame {
 
   public void setOutputDirectory(Path outputDirectory) {
     outputDirectoryField.setText(outputDirectory.toString());
+  }
+
+  public void setNumThreads(int numThreads) {
+    numThreadsSpinner.setValue(numThreads);
+  }
+
+  public void setCountryCode(String countryCode) {
+    countryCodeField.setText(countryCode);
   }
 
   void constructUI() {
@@ -158,7 +173,31 @@ public class GtfsValidatorApp extends JFrame {
             BorderFactory.createTitledBorder("Advanced Options")));
     parent.add(advancedOptionsPanel);
 
-    advancedOptionsPanel.add(new JLabel("Number of threads:"));
+    JPanel panel = new JPanel();
+    panel.setLayout(new GridBagLayout());
+    advancedOptionsPanel.add(panel);
+
+    GridBagConstraints labelConstraints = new GridBagConstraints();
+    labelConstraints.gridx = 0;
+    labelConstraints.anchor = GridBagConstraints.NORTHWEST;
+    labelConstraints.ipadx = 10;
+
+    GridBagConstraints fieldConstraints = new GridBagConstraints();
+    fieldConstraints.gridx = 1;
+    fieldConstraints.anchor = GridBagConstraints.NORTHEAST;
+
+    labelConstraints.gridy = 0;
+    panel.add(new JLabel("Number of threads:"), labelConstraints);
+
+    fieldConstraints.gridy = 0;
+    panel.add(numThreadsSpinner, fieldConstraints);
+    numThreadsSpinner.setValue(1);
+
+    labelConstraints.gridy = 1;
+    panel.add(new JLabel("Country Code:"), labelConstraints);
+
+    fieldConstraints.gridy = 1;
+    panel.add(countryCodeField, fieldConstraints);
 
     advancedOptionsPanel.setVisible(false);
   }
@@ -223,6 +262,16 @@ public class GtfsValidatorApp extends JFrame {
     String outputDirectory = outputDirectoryField.getText();
     if (!outputDirectory.isBlank()) {
       config.setOutputDirectory(Path.of(outputDirectory));
+    }
+
+    Object numThreads = numThreadsSpinner.getValue();
+    if (numThreads instanceof Integer) {
+      config.setNumThreads((Integer) numThreads);
+    }
+
+    String countryCode = countryCodeField.getText();
+    if (!countryCode.isBlank()) {
+      config.setCountryCode(CountryCode.forStringOrUnknown(countryCode));
     }
 
     return config.build();
