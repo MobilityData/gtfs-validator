@@ -18,6 +18,7 @@ plugins {
     id 'java'
     id 'com.github.sherter.google-java-format' version '0.9'
     id "io.freefair.aggregate-javadoc-jar" version "6.4.3"
+    id "pl.allegro.tech.build.axion-release" version "1.13.6"
 }
 
 repositories {
@@ -26,7 +27,14 @@ repositories {
 
 // Setup and configure Javadoc plugin
 allprojects {
-    tasks.withType(Javadoc) { options.encoding = 'UTF-8' }
+    group 'org.mobilitydata'
+    // Per the axion-release plugin, this computes the project version based
+    // on the most recent tag in the repo.
+    version scmVersion.version
+
+    tasks.withType(Javadoc) {
+        options.encoding = 'UTF-8'
+    }
 }
 
 // A resolvable configuration to collect test reports data

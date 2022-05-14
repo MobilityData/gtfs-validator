@@ -22,13 +22,6 @@ plugins {
 }
 
 applicationDefaultJvmArgs = [ "-Xmx8G" ]
-def groupName = 'org.mobilitydata'
-
-group groupName
-version "${System.getenv("versionTag")}"
-
-group groupName
-version "${System.getenv("versionTag")}_cli"
 
 jar {
     // Add the manifest within the JAR, using gtfs-validator as the title
@@ -63,9 +56,7 @@ repositories {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            groupId = groupName
-            artifactId = rootProject.name
-            version = "${System.getenv("versionTag")}"
+            artifactId = 'gtfs-validator-main'
 
             from components.java
         }
