@@ -45,8 +45,6 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle
       - name: Run Java tests
         uses: eskatos/gradle-command-action@v1
-        env:
-          versionTag: ${{ steps.prep.outputs.versionTag }}
         with:
           arguments: testReport
       - name: Persist **Passing** Java tests merged report
