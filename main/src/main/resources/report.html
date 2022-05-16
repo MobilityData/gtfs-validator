@@ -152,54 +152,37 @@
 <table>
     <thead>
     <tr>
-        <th>Argument Description</th><th>Argument Short Name</th><th>Value</th>
+        <th>Argument Description</th><th>Value</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:if="${!config.countryCode.isUnknown()}" >
-        <td>Country code</td>
-        <td>-c</td>
-        <td th:text="${config.countryCode}" />
-    </tr>
-    <tr th:if="${config.gtfsSource.getScheme() == 'file'}">
-        <td>Input</td>
-        <td>-i</td>
-        <td th:text="${config.gtfsSource.getPath()}" />
-    </tr>
-    <tr th:if="${config.gtfsSource.getScheme() != 'file'}">
-        <td>URL</td>
-        <td>-u</td>
+    <tr>
+        <td>GTFS input (ZIP file, directory or URL)</td>
         <td th:text="${config.gtfsSource}" />
     </tr>
     <tr>
-        <td>Output</td>
-        <td>-o</td>
+        <td>Output directory</td>
         <td th:text="${config.outputDirectory}" />
     </tr>
-    <tr th:if="${config.storageDirectory.isPresent()}">
-        <td>Storage directory</td>
-        <td>-s</td>
-        <td th:text="${config.storageDirectory}" />
-    </tr>
     <tr>
-        <td>Threads</td>
-        <td>-t</td>
+        <td>Number of threads used to run the validator</td>
         <td th:text="${config.numThreads}" />
     </tr>
     <tr>
+        <td>Country code (for phone validation)</td>
+        <td th:text="${config.countryCode.isUnknown()} ? 'The country code was not valid or was not provided.' : ${config.countryCode}" />
+    </tr>
+    <tr>
         <td>Validation report name</td>
-        <td>-v</td>
         <td th:text="${config.validationReportFileName}" />
     </tr>
     <tr>
-        <td>HTML report name</td>
-        <td>-r</td>
-        <td th:text="${config.htmlReportFileName}" />
+        <td>System errors report name</td>
+        <td th:text="${config.systemErrorsReportFileName}" />
     </tr>
     <tr>
-        <td>System errors report name</td>
-        <td>-e</td>
-        <td th:text="${config.systemErrorsReportFileName}" />
+        <td>HTML report name</td>
+        <td th:text="${config.htmlReportFileName}" />
     </tr>
     </tbody>
 </table>
