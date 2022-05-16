@@ -104,7 +104,7 @@
 <table class="accordion">
     <thead>
     <tr>
-    <th>Notice Code</th><th>Notice Name</th><th>Severity</th><th>Total</th>
+    <th>Notice Code</th><th>Severity</th><th>Total</th>
     </tr>
     </thead>
     <tbody>
@@ -112,14 +112,13 @@
         <span th:each="noticesByCode: ${noticesBySeverityLevel.value}">
             <tr class="notice">
                 <td th:text="${noticesByCode.key}" />
-                <td th:text="${noticesByCode.value[0].name}" />
                 <td th:class="${noticesBySeverityLevel.key.toString().toLowerCase()}" th:text="${noticesBySeverityLevel.key}" />
                 <td th:text="${noticesByCode.value.size}" />
             </tr>
             <tr class="description">
                 <td colspan="4">
                     <div class="desc-content">
-                        <h3 th:text="${noticesByCode.value[0].name}" />
+                        <h3 th:text="${noticesByCode.key}" />
                         <p> Please find this notice description <a th:href="@{'https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#' + ${noticesByCode.value[0].name}}">here</a>.</p>
                         <table>
                             <thead>
