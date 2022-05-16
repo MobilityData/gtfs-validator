@@ -39,8 +39,6 @@ public class ReportSummary {
     this.noticesMap =
         container.getValidationNotices().stream()
             .map(NoticeView::new)
-            .collect(Collectors.toList())
-            .stream()
             .collect(
                 Collectors.groupingBy(
                     NoticeView::getSeverityLevel,
