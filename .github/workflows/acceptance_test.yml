@@ -159,10 +159,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: gtfs-validator-master
+          path: gtfs-validator-master
       - name: Download latest changes .jar file from previous job
         uses: actions/download-artifact@v2
         with:
           name: gtfs-validator-snapshot
+          path: gtfs-validator-snapshot
       - name: Run validators on queued URLs
         run: |
           queue="${{ matrix.data }}"
