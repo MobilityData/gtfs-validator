@@ -45,6 +45,7 @@ import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsLoader;
 import org.mobilitydata.gtfsvalidator.notice.CsvParsingFailedNotice;
 import org.mobilitydata.gtfsvalidator.notice.EmptyFileNotice;
+import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvFile;
@@ -446,6 +447,11 @@ public class TableLoaderGenerator {
                 classNames.tableContainerTypeName(),
                 classNames.tableContainerTypeName(),
                 TableStatus.class)
+            .beginControlFlow("if (isRecommended())")
+            .addStatement(
+                "noticeContainer.addValidationNotice(new $T(gtfsFilename()))",
+                MissingRecommendedFileNotice.class)
+            .endControlFlow()
             .beginControlFlow("if (isRequired())")
             .addStatement(
                 "noticeContainer.addValidationNotice(new $T(gtfsFilename()))",
