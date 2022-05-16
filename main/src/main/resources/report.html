@@ -157,65 +157,55 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:if="${args.countryCode != null}" >
+    <tr th:if="${!config.countryCode.isUnknown()}" >
         <td>Country code</td>
         <td>-c</td>
-        <td th:text="${args.countryCode}" />
+        <td th:text="${config.countryCode}" />
     </tr>
-    <tr th:if="${args.input}">
+    <tr th:if="${config.gtfsSource.getScheme() == 'file'}">
         <td>Input</td>
         <td>-i</td>
-        <td th:text="${args.input}" />
+        <td th:text="${config.gtfsSource.getPath()}" />
     </tr>
-    <tr th:if="${args.url != null}">
+    <tr th:if="${config.gtfsSource.getScheme() != 'file'}">
         <td>URL</td>
         <td>-u</td>
-        <td th:text="${args.url}" />
+        <td th:text="${config.gtfsSource}" />
     </tr>
     <tr>
         <td>Output</td>
         <td>-o</td>
-        <td th:text="${args.outputBase}" />
+        <td th:text="${config.outputDirectory}" />
     </tr>
-    <tr th:if="${args.storageDirectory != null}">
+    <tr th:if="${config.storageDirectory.isPresent()}">
         <td>Storage directory</td>
         <td>-s</td>
-        <td th:text="${args.storageDirectory}" />
+        <td th:text="${config.storageDirectory}" />
     </tr>
     <tr>
         <td>Threads</td>
         <td>-t</td>
-        <td th:text="${args.numThreads}" />
+        <td th:text="${config.numThreads}" />
     </tr>
     <tr>
         <td>Validation report name</td>
         <td>-v</td>
-        <td th:text="${args.validationReportName}" />
+        <td th:text="${config.validationReportFileName}" />
     </tr>
     <tr>
         <td>HTML report name</td>
         <td>-r</td>
-        <td th:text="${args.htmlReportName}" />
+        <td th:text="${config.htmlReportFileName}" />
     </tr>
     <tr>
         <td>System errors report name</td>
         <td>-e</td>
-        <td th:text="${args.systemErrorsReportName}" />
-    </tr>
-    <tr>
-        <td>Export notices schema</td>
-        <td>-n</td>
-        <td th:text="${args.exportNoticeSchema}" />
+        <td th:text="${config.systemErrorsReportFileName}" />
     </tr>
     <tr>
         <td>Pretty JSON output</td>
         <td>-p</td>
-        <td th:text="${args.pretty}" />
-    </tr>
-    <tr>
-        <td>Help</td>
-        <td>-h</td>
-        <td th:text="${args.help}" />
+        <td th:text="${config.prettyJson}" />
     </tr>
     </tbody>
 </table>

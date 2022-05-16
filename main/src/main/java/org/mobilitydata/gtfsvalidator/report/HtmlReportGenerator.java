@@ -22,9 +22,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import org.mobilitydata.gtfsvalidator.cli.Arguments;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.report.model.ReportSummary;
+import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -34,7 +34,8 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 public class HtmlReportGenerator {
 
   /** Generate the HTML report using the class ReportSummary and the notice container. */
-  public void generateReport(NoticeContainer noticeContainer, Arguments args, Path reportPath)
+  public void generateReport(
+      NoticeContainer noticeContainer, ValidationRunnerConfig config, Path reportPath)
       throws IOException {
     TemplateEngine templateEngine = new TemplateEngine();
     ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
@@ -50,7 +51,7 @@ public class HtmlReportGenerator {
 
     Context context = new Context();
     context.setVariable("summary", summary);
-    context.setVariable("args", args);
+    context.setVariable("config", config);
     context.setVariable("version", version);
     context.setVariable("date", date);
 
