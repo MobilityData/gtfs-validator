@@ -45,6 +45,7 @@ import org.mobilitydata.gtfsvalidator.annotation.NonNegative;
 import org.mobilitydata.gtfsvalidator.annotation.NonZero;
 import org.mobilitydata.gtfsvalidator.annotation.Positive;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
+import org.mobilitydata.gtfsvalidator.annotation.Recommended;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
 import org.mobilitydata.gtfsvalidator.annotation.SequenceKey;
 import org.mobilitydata.gtfsvalidator.parsing.RowParser.NumberBounds;
@@ -70,6 +71,7 @@ public class Analyser {
     fileBuilder.setSingleRow(gtfsFileAnnotation.singleRow());
     fileBuilder.interfacesBuilder().add(type.asType());
     fileBuilder.setClassName(entityImplementationSimpleName(type.getSimpleName().toString()));
+    fileBuilder.setRecommended(type.getAnnotation(Recommended.class) != null);
     fileBuilder.setRequired(type.getAnnotation(Required.class) != null);
     for (ExecutableElement method : methodsIn(type.getEnclosedElements())) {
       GtfsFieldDescriptor.Builder fieldBuilder = GtfsFieldDescriptor.builder();
