@@ -330,7 +330,7 @@ public class TableLoaderGenerator {
               gtfsTypeToParserMethod(field.type()),
               fieldColumnIndex(field.name()),
               RowParser.class,
-              field.required() ? "REQUIRED" : "OPTIONAL",
+              field.required() ? "REQUIRED" : (field.recommended() ? "RECOMMENDED" : "OPTIONAL") ,
               field.numberBounds().isPresent()
                   ? ", RowParser.NumberBounds." + field.numberBounds().get()
                   : field.type() == FieldTypeEnum.ENUM

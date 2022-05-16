@@ -22,6 +22,7 @@ import java.util.Currency;
 import java.util.Locale;
 import java.util.function.Function;
 import javax.annotation.Nullable;
+import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
 import org.mobilitydata.gtfsvalidator.notice.EmptyRowNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidColorNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidCurrencyNotice;
@@ -32,6 +33,7 @@ import org.mobilitydata.gtfsvalidator.notice.InvalidLanguageCodeNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidRowLengthNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidTimeNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidTimezoneNotice;
+import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.NumberOutOfRangeNotice;
@@ -52,8 +54,9 @@ import org.mobilitydata.gtfsvalidator.validator.GtfsFieldValidator;
  */
 public class RowParser {
 
-  public static final boolean REQUIRED = true;
-  public static final boolean OPTIONAL = false;
+  public static final FieldLevelEnum OPTIONAL = FieldLevelEnum.OPTIONAL;
+  public static final FieldLevelEnum RECOMMENDED = FieldLevelEnum.RECOMMENDED;
+  public static final FieldLevelEnum REQUIRED = FieldLevelEnum.REQUIRED;
   private final String fileName;
   private final CsvHeader header;
   private final GtfsFieldValidator fieldValidator;
@@ -107,11 +110,15 @@ public class RowParser {
   }
 
   @Nullable
-  public String asString(int columnIndex, boolean required) {
+  public String asString(int columnIndex, FieldLevelEnum level) {
     String s = row.asString(columnIndex);
-    if (required && s == null) {
+    if (level == FieldLevelEnum.REQUIRED && s == null) {
       noticeContainer.addValidationNotice(
           new MissingRequiredFieldNotice(
+              fileName, row.getRowNumber(), header.getColumnName(columnIndex)));
+    } else if (level == FieldLevelEnum.RECOMMENDED && s == null) {
+      noticeContainer.addValidationNotice(
+          new MissingRecommendedFieldNotice(
               fileName, row.getRowNumber(), header.getColumnName(columnIndex)));
     }
     if (s != null) {
@@ -126,23 +133,23 @@ public class RowParser {
   }
 
   @Nullable
-  public String asText(int columnIndex, boolean required) {
-    return asString(columnIndex, required);
+  public String asText(int columnIndex, FieldLevelEnum level) {
+    return asString(columnIndex, level);
   }
 
   @Nullable
-  public String asId(int columnIndex, boolean required) {
-    return asValidatedString(columnIndex, required, fieldValidator::validateId);
+  public String asId(int columnIndex, FieldLevelEnum level) {
+    return asValidatedString(columnIndex, level, fieldValidator::validateId);
   }
 
   @Nullable
-  public String asUrl(int columnIndex, boolean required) {
-    return asValidatedString(columnIndex, required, fieldValidator::validateUrl);
+  public String asUrl(int columnIndex, FieldLevelEnum level) {
+    return asValidatedString(columnIndex, level, fieldValidator::validateUrl);
   }
 
   @Nullable
-  public String asEmail(int columnIndex, boolean required) {
-    return asValidatedString(columnIndex, required, fieldValidator::validateEmail);
+  public String asEmail(int columnIndex, FieldLevelEnum level) {
+    return asValidatedString(columnIndex, level, fieldValidator::validateEmail);
   }
 
   /**
@@ -157,39 +164,38 @@ public class RowParser {
    *     unknown, only phone number starting by "+" are validated.
    */
   @Nullable
-  public String asPhoneNumber(int columnIndex, boolean required) {
-    return asValidatedString(columnIndex, required, fieldValidator::validatePhoneNumber);
+  public String asPhoneNumber(int columnIndex, FieldLevelEnum level) {
+    return asValidatedString(columnIndex, level, fieldValidator::validatePhoneNumber);
   }
 
   @Nullable
-  public Locale asLanguageCode(int columnIndex, boolean required) {
-    return parseAsType(
-        columnIndex, required, Locale::forLanguageTag, InvalidLanguageCodeNotice::new);
+  public Locale asLanguageCode(int columnIndex, FieldLevelEnum level) {
+    return parseAsType(columnIndex, level, Locale::forLanguageTag, InvalidLanguageCodeNotice::new);
   }
 
   @Nullable
-  public ZoneId asTimezone(int columnIndex, boolean required) {
-    return parseAsType(columnIndex, required, ZoneId::of, InvalidTimezoneNotice::new);
+  public ZoneId asTimezone(int columnIndex, FieldLevelEnum level) {
+    return parseAsType(columnIndex, level, ZoneId::of, InvalidTimezoneNotice::new);
   }
 
   @Nullable
-  public Currency asCurrencyCode(int columnIndex, boolean required) {
-    return parseAsType(columnIndex, required, Currency::getInstance, InvalidCurrencyNotice::new);
+  public Currency asCurrencyCode(int columnIndex, FieldLevelEnum level) {
+    return parseAsType(columnIndex, level, Currency::getInstance, InvalidCurrencyNotice::new);
   }
 
   @Nullable
-  public Double asFloat(int columnIndex, boolean required) {
-    return parseAsType(columnIndex, required, Double::parseDouble, InvalidFloatNotice::new);
+  public Double asFloat(int columnIndex, FieldLevelEnum level) {
+    return parseAsType(columnIndex, level, Double::parseDouble, InvalidFloatNotice::new);
   }
 
   @Nullable
-  public Double asFloat(int columnIndex, boolean required, NumberBounds bounds) {
-    return checkBounds(asFloat(columnIndex, required), 0.0, columnIndex, "float", bounds);
+  public Double asFloat(int columnIndex, FieldLevelEnum level, NumberBounds bounds) {
+    return checkBounds(asFloat(columnIndex, level), 0.0, columnIndex, "float", bounds);
   }
 
   @Nullable
-  public Double asLatitude(int columnIndex, boolean required) {
-    Double value = asFloat(columnIndex, required);
+  public Double asLatitude(int columnIndex, FieldLevelEnum level) {
+    Double value = asFloat(columnIndex, level);
     if (value != null && !(-90 <= value && value <= 90)) {
       noticeContainer.addValidationNotice(
           new NumberOutOfRangeNotice(
@@ -204,8 +210,8 @@ public class RowParser {
   }
 
   @Nullable
-  public Double asLongitude(int columnIndex, boolean required) {
-    Double value = asFloat(columnIndex, required);
+  public Double asLongitude(int columnIndex, FieldLevelEnum level) {
+    Double value = asFloat(columnIndex, level);
     if (value != null && !(-180 <= value && value <= 180)) {
       noticeContainer.addValidationNotice(
           new NumberOutOfRangeNotice(
@@ -220,24 +226,24 @@ public class RowParser {
   }
 
   @Nullable
-  public Integer asInteger(int columnIndex, boolean required) {
-    return parseAsType(columnIndex, required, Integer::parseInt, InvalidIntegerNotice::new);
+  public Integer asInteger(int columnIndex, FieldLevelEnum level) {
+    return parseAsType(columnIndex, level, Integer::parseInt, InvalidIntegerNotice::new);
   }
 
   @Nullable
-  public Integer asInteger(int columnIndex, boolean required, NumberBounds bounds) {
-    return checkBounds(asInteger(columnIndex, required), 0, columnIndex, "integer", bounds);
+  public Integer asInteger(int columnIndex, FieldLevelEnum level, NumberBounds bounds) {
+    return checkBounds(asInteger(columnIndex, level), 0, columnIndex, "integer", bounds);
   }
 
   @Nullable
-  public BigDecimal asDecimal(int columnIndex, boolean required) {
-    return parseAsType(columnIndex, required, BigDecimal::new, InvalidFloatNotice::new);
+  public BigDecimal asDecimal(int columnIndex, FieldLevelEnum level) {
+    return parseAsType(columnIndex, level, BigDecimal::new, InvalidFloatNotice::new);
   }
 
   @Nullable
-  public BigDecimal asDecimal(int columnIndex, boolean required, NumberBounds bounds) {
+  public BigDecimal asDecimal(int columnIndex, FieldLevelEnum level, NumberBounds bounds) {
     return checkBounds(
-        asDecimal(columnIndex, required), new BigDecimal(0), columnIndex, "decimal", bounds);
+        asDecimal(columnIndex, level), new BigDecimal(0), columnIndex, "decimal", bounds);
   }
 
   /**
@@ -296,13 +302,13 @@ public class RowParser {
   }
 
   @Nullable
-  public GtfsColor asColor(int columnIndex, boolean required) {
-    return parseAsType(columnIndex, required, GtfsColor::fromString, InvalidColorNotice::new);
+  public GtfsColor asColor(int columnIndex, FieldLevelEnum level) {
+    return parseAsType(columnIndex, level, GtfsColor::fromString, InvalidColorNotice::new);
   }
 
   @Nullable
-  public <E> Integer asEnum(int columnIndex, boolean required, EnumCreator<E> enumCreator) {
-    Integer i = asInteger(columnIndex, required);
+  public <E> Integer asEnum(int columnIndex, FieldLevelEnum level, EnumCreator<E> enumCreator) {
+    Integer i = asInteger(columnIndex, level);
     if (i == null) {
       return null;
     }
@@ -315,13 +321,13 @@ public class RowParser {
   }
 
   @Nullable
-  public GtfsTime asTime(int columnIndex, boolean required) {
-    return parseAsType(columnIndex, required, GtfsTime::fromString, InvalidTimeNotice::new);
+  public GtfsTime asTime(int columnIndex, FieldLevelEnum level) {
+    return parseAsType(columnIndex, level, GtfsTime::fromString, InvalidTimeNotice::new);
   }
 
   @Nullable
-  public GtfsDate asDate(int columnIndex, boolean required) {
-    return parseAsType(columnIndex, required, GtfsDate::fromString, InvalidDateNotice::new);
+  public GtfsDate asDate(int columnIndex, FieldLevelEnum level) {
+    return parseAsType(columnIndex, level, GtfsDate::fromString, InvalidDateNotice::new);
   }
 
   public enum NumberBounds {
@@ -341,7 +347,7 @@ public class RowParser {
    * parsing failed.
    *
    * @param columnIndex index of the column to parse
-   * @param required whether the value is required according to GTFS
+   * @param level whether the value is required or recommended according to GTFS
    * @param parsingFunction function that converts string to an object to return
    * @param noticingFunction function to create a notice about parse errors
    * @param <T> the type to return
@@ -350,10 +356,10 @@ public class RowParser {
   @Nullable
   private <T> T parseAsType(
       int columnIndex,
-      boolean required,
+      FieldLevelEnum level,
       Function<String, T> parsingFunction,
       NoticingFunction noticingFunction) {
-    String s = asString(columnIndex, required);
+    String s = asString(columnIndex, level);
     if (s == null) {
       return null;
     }
@@ -376,14 +382,14 @@ public class RowParser {
    * error is emitted, the value is considered invalid.
    *
    * @param columnIndex index of the column to parse
-   * @param required whether the value is required according to GTFS
+   * @param level whether the value is required or recommended according to GTFS
    * @param validatingFunction the predicate to validate a given string
    * @return the cell value at the given column or null if the value is missing
    */
   @Nullable
   private String asValidatedString(
-      int columnIndex, boolean required, FieldValidatingFunction validatingFunction) {
-    String s = asString(columnIndex, required);
+      int columnIndex, FieldLevelEnum level, FieldValidatingFunction validatingFunction) {
+    String s = asString(columnIndex, level);
     if (s == null) {
       return null;
     }
