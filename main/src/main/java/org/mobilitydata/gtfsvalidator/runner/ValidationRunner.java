@@ -32,6 +32,7 @@ import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
+import org.mobilitydata.gtfsvalidator.report.HtmlReportGenerator;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
 import org.mobilitydata.gtfsvalidator.validator.DefaultValidatorProvider;
@@ -200,10 +201,13 @@ public class ValidationRunner {
       }
     }
     Gson gson = createGson(config.prettyJson());
+    HtmlReportGenerator generator = new HtmlReportGenerator();
     try {
       Files.write(
           config.outputDirectory().resolve(config.validationReportFileName()),
           gson.toJson(noticeContainer.exportValidationNotices()).getBytes(StandardCharsets.UTF_8));
+      generator.generateReport(
+          noticeContainer, config, config.outputDirectory().resolve(config.htmlReportFileName()));
       Files.write(
           config.outputDirectory().resolve(config.systemErrorsReportFileName()),
           gson.toJson(noticeContainer.exportSystemErrors()).getBytes(StandardCharsets.UTF_8));

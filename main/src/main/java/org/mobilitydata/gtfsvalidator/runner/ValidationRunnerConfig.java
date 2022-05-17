@@ -36,6 +36,8 @@ public abstract class ValidationRunnerConfig {
 
   public abstract String validationReportFileName();
 
+  public abstract String htmlReportFileName();
+
   public abstract String systemErrorsReportFileName();
 
   // Determines the number of parallel threads of execution used during
@@ -53,6 +55,7 @@ public abstract class ValidationRunnerConfig {
     // Set reasonable defaults where appropriate.
     return new AutoValue_ValidationRunnerConfig.Builder()
         .setValidationReportFileName("report.json")
+        .setHtmlReportFileName("report.html")
         .setSystemErrorsReportFileName("system_errors.json")
         .setNumThreads(1)
         .setPrettyJson(false)
@@ -68,6 +71,8 @@ public abstract class ValidationRunnerConfig {
     public abstract Builder setStorageDirectory(Path storageDirectory);
 
     public abstract Builder setValidationReportFileName(String validationReportFileName);
+
+    public abstract Builder setHtmlReportFileName(String htmlReportFileName);
 
     public abstract Builder setSystemErrorsReportFileName(String systemErrorsReportFileName);
 
