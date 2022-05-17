@@ -3,7 +3,7 @@
 We will want to add new rules to this validator as the static [GTFS specification](http://gtfs.org/reference/static) evolves. This page outlines the process of adding new rules to this tool.
 Note that:
 - Notices related to file parsing and data types are defined in the [core](/core/src/main/java/org/mobilitydata/gtfsvalidator/notice)
-- Notices related to GTFS semantics/business logic are encapsulated within the related validation rule class. See the example below in [`TripUsageValidator`](/main/src/main/java/org/mobilitydata/gtfsvalidator/validator/TripUsageValidator.java):
+- Notices related to GTFS semantics/business logic are encapsulated within the related validation rule class. See the example below in [`TripUsageValidator`](/main/src/main/java/org/mobilitydata/gtfsvalidator/validator/TripUsageValidator.java)
 
 ## 0. Prepare for implementation 
 
