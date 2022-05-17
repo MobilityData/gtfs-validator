@@ -738,7 +738,7 @@ Value of field with type `timezone` is not valid.Timezones are defined at <a hre
 
 ### invalid_url
 
-Value of field with type `url` is not valid. Definitions for valid URLs are quite vague. We perform strict validation in the upstream using the Apache Commons UrlValidator.
+Value of field with type `url` is not valid. Definitions for valid URLs are quite vague. We perform strict validation using the Apache Commons UrlValidator.
 
 #### References
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
