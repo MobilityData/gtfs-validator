@@ -24,7 +24,6 @@ To build a JAR that can run stand-alone without any additional classes on the cl
 
 ```
 $ ./gradlew shadowJar 
-=======
 ./gradlew shadowJar
 ```
 
