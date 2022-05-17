@@ -532,7 +532,7 @@ Value of field with type `date` is not valid. Dates must have the YYYYMMDD forma
 
 ### invalid_email
 
-Value of field with type `email` is not valid. Definitions for valid emails are quite vague. We perform strict validation in the upstream using the Apache Commons EmailValidator.
+Value of field with type `email` is not valid. Definitions for valid emails are quite vague. We perform strict validation using the Apache Commons EmailValidator.
 
 #### References
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
