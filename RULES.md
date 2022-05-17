@@ -16,7 +16,7 @@ What the Rule outputs if the conditions aren’t met. It is what the user will s
 
 ### The Severity of a Notice
 
-Each Notice is associated with a severity:: `INFO`, `WARNING`, `ERROR`.
+Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 
 * `ERROR` notices are for items that the [GTFS reference specification](https://github.com/google/transit/tree/master/gtfs/spec/en) explicitly requires or prohibits (e.g., using the language "must"). The validator uses [RFC2119](https://tools.ietf.org/html/rfc2119) to interpret the language in the GTFS spec.
   * ⚠️ Please note that this validator also generates `System Errors` that give information about things that may have gone wrong during the validation process such as the inability to unzip a GTFS file. These are generated in a second report `system_errors.json`.
@@ -153,6 +153,12 @@ Each Notice is associated with a severity:: `INFO`, `WARNING`, `ERROR`.
 ### BlockTripsWithOverlappingStopTimesNotice
 
 Trips with the same block id have overlapping stop times.
+
+#### References
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+* [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
+
 <details>
 
 #### Notice fields description
@@ -168,11 +174,9 @@ Trips with the same block id have overlapping stop times.
 | `intersection`  	| The overlapping period.                      	            | Date   	|
 
 #### Affected files
-* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
-* [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
+* [stops.txt specification](http://gtfs.org/reference/static#stopstxt)
+* [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
 
-#### References
-* [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
 
 <a name="CsvParsingFailedNotice"/>
@@ -203,6 +207,9 @@ Parsing of a CSV file failed. One common case of the problem is when a cell valu
 
 When sorted by `shape.shape_pt_sequence`, two consecutive shape points must not have decreasing values for `shape_dist_traveled`.  
 
+#### References
+* [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)
+
 <details>
 
 #### Notice fields description
@@ -219,9 +226,6 @@ When sorted by `shape.shape_pt_sequence`, two consecutive shape points must not 
 #### Affected files
 * [`shapes.txt`](http://gtfs.org/reference/static#shapestxt)
 
-#### References
-* [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)
-
 </details>
 
 <a name="DecreasingOrEqualStopTimeDistanceNotice"/>
@@ -229,6 +233,9 @@ When sorted by `shape.shape_pt_sequence`, two consecutive shape points must not 
 ### decreasing_or_equal_stop_time_distance
 
 When sorted by `stop_times.stop_pt_sequence`, two consecutive stop times in a trip should have increasing distance. If the values are equal, this is considered as an error.  
+
+#### References
+* [stops.txt specification](https://gtfs.org/reference/static#stopstxt)
 
 <details>
 
@@ -246,8 +253,6 @@ When sorted by `stop_times.stop_pt_sequence`, two consecutive stop times in a tr
 #### Affected files
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-#### References
-* [stops.txt specification](https://gtfs.org/reference/static#stopstxt)
 </details>
 
 <a name="DuplicatedColumnNotice"/>
@@ -256,6 +261,9 @@ When sorted by `stop_times.stop_pt_sequence`, two consecutive stop times in a tr
 
 The input file CSV header has the same column name repeated.
 
+#### References
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+* [Dataset files requirements](http://gtfs.org/reference/static#file-requirements)
 <details>
 
 #### Notice fields description
@@ -269,8 +277,6 @@ The input file CSV header has the same column name repeated.
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-#### References
-* [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
 
 <a name="DuplicateFareRuleZoneIdFieldsNotice"/>
@@ -279,6 +285,9 @@ The input file CSV header has the same column name repeated.
 
 The combination of `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.contains_id` and `fare_rules.destination_id` fields should be unique in GTFS file `fare_rules.txt`.
 
+#### References
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+* [fare_rules.txt specification](http://gtfs.org/reference/static/#fare_rulestxt)
 <details>
 
 #### Notice fields description
@@ -292,8 +301,6 @@ The combination of `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.co
 #### Affected files
 * [fare_rules.txt](http://gtfs.org/reference/static/#fare_rulestxt)
 
-#### References
-* [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
 
 <a name="DuplicateKeyNotice"/>
@@ -302,6 +309,9 @@ The combination of `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.co
 
 The values of the given key and rows are duplicates.
 
+#### References
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+* [Dataset files requirements](http://gtfs.org/reference/static#file-requirements)
 <details>
 
 #### Notice fields description
@@ -318,8 +328,6 @@ The values of the given key and rows are duplicates.
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-#### References
-* [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
 
 <a name="EmptyColumnNameNotice"/>
@@ -328,6 +336,8 @@ The values of the given key and rows are duplicates.
 
 A column name has not been provided. Such columns are skipped by the validator.
 
+#### References
+* [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
 <details>
 
 #### Notice fields description
@@ -339,8 +349,6 @@ A column name has not been provided. Such columns are skipped by the validator.
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-#### References
-* [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
 </details>
 
 <a name="EmptyFileNotice"/>
@@ -348,6 +356,8 @@ A column name has not been provided. Such columns are skipped by the validator.
 ### empty_file
 
 Empty csv file found in the archive: file does not have any headers, or is a required file and does not have any data. The GTFS specification requires the first line of each file to contain field names and required files must have data.
+#### References
+* [GTFS files requirements](https://gtfs.org/reference/static#file-requirements)
 
 <details>
 
@@ -359,8 +369,6 @@ Empty csv file found in the archive: file does not have any headers, or is a req
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-#### References
-* [GTFS files requirements](https://gtfs.org/reference/static#file-requirements)
 </details>
 
 ### equal_shape_distance_diff_coordinates
@@ -369,6 +377,8 @@ Empty csv file found in the archive: file does not have any headers, or is a req
 
 When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` must increase along a shape. Two consecutive points with equal values for `shape_dist_traveled` and different coordinates indicate an error.
 
+#### References
+* [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)
 <details>
 
 #### Notice fields description
@@ -386,8 +396,6 @@ When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` m
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`shapes.txt`](http://gtfs.org/reference/static#shapestxt)
 
-#### References
-* [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)
 </details>
 
 <a name="ForeignKeyViolationNotice"/>
@@ -395,6 +403,10 @@ When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` m
 ### foreign_key_violation
 
 The values of the given key and rows of one table cannot be found a values of the given key in another table. The Foreign keys are defined in the specification under "Type" for each file.
+
+#### References
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+* [GTFS files requirements](https://gtfs.org/reference/static#file-requirements)
 
 <details>
 
@@ -420,8 +432,6 @@ The values of the given key and rows of one table cannot be found a values of th
 * [`tranfers.txt`](http://gtfs.org/reference/static#tranferstxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 
-#### References
-* [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
 
 <a name="InconsistentAgencyTimezoneNotice"/>
@@ -430,6 +440,8 @@ The values of the given key and rows of one table cannot be found a values of th
 
 Agencies from GTFS `agency.txt` have been found to have different timezones.
 
+#### References
+* [GTFS agency.txt specification](https://gtfs.org/reference/static/#agencytxt)
 <details>
 
 #### Notice fields description
@@ -442,8 +454,6 @@ Agencies from GTFS `agency.txt` have been found to have different timezones.
 #### Affected files
 * [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
 
-#### References
-* [GTFS agency.txt specification](https://gtfs.org/reference/static/#agencytxt)
 </details>
 
 <a name="InvalidColorNotice"/>
@@ -452,6 +462,8 @@ Agencies from GTFS `agency.txt` have been found to have different timezones.
 
 Value of field with type `color` is not valid. A color must be encoded as a six-digit hexadecimal number. The leading "#" is not included.
 
+#### References
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
 <details>
 
 #### Notice fields description
@@ -465,8 +477,6 @@ Value of field with type `color` is not valid. A color must be encoded as a six-
 #### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-#### References
-* [Field Types Description](http://gtfs.org/reference/static/#field-types)
 </details>
 
 <a name="InvalidCurrencyNotice"/>
@@ -475,6 +485,8 @@ Value of field with type `color` is not valid. A color must be encoded as a six-
 
 Value of field with type `currency` is not valid. Currency code must follow <a href="https://en.wikipedia.org/wiki/ISO_4217#Active_codes">ISO 4217</a>
 
+#### References
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
 <details>
 
 #### Notice fields description
@@ -488,8 +500,6 @@ Value of field with type `currency` is not valid. Currency code must follow <a h
 #### Affected files
 * [`fare_attributes.txt`](http://gtfs.org/reference/static#fare_attributestxt)
 
-#### References
-* [Field Types Description](http://gtfs.org/reference/static/#field-types)
 </details>
 
 <a name="InvalidDateNotice"/>
@@ -498,6 +508,8 @@ Value of field with type `currency` is not valid. Currency code must follow <a h
 
 Value of field with type `date` is not valid. Dates must have the YYYYMMDD format.
 
+#### References
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
 <details>
 
 #### Notice fields description
@@ -513,8 +525,6 @@ Value of field with type `date` is not valid. Dates must have the YYYYMMDD forma
 * [`calendar_dates.txt`](http://gtfs.org/reference/static#calendar_datestxt)
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
 
-#### References
-* [Field Types Description](http://gtfs.org/reference/static/#field-types)
 </details>
 
 <a name="InvalidEmailNotice"/>
@@ -523,6 +533,9 @@ Value of field with type `date` is not valid. Dates must have the YYYYMMDD forma
 
 Value of field with type `email` is not valid. Definitions for valid emails are quite vague. We perform strict validation in the upstream using the Apache Commons EmailValidator.
 
+#### References
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
+* [Apache Commons EmailValidator](https://commons.apache.org/proper/commons-validator/apidocs/org/apache/commons/validator/routines/EmailValidator.html)
 <details>
 
 #### Notice fields description
@@ -539,9 +552,6 @@ Value of field with type `email` is not valid. Definitions for valid emails are 
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
 * [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 
-#### References
-* [Field Types Description](http://gtfs.org/reference/static/#field-types)
-* [Apache Commons EmailValidator](https://commons.apache.org/proper/commons-validator/apidocs/org/apache/commons/validator/routines/EmailValidator.html)
  </details>
 
 <a name="InvalidFloatNotice"/>
@@ -550,6 +560,8 @@ Value of field with type `email` is not valid. Definitions for valid emails are 
 
 Value of field with type `float` is not valid. 
 
+#### References
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
 <details>
 
 #### Notice fields description
@@ -567,8 +579,6 @@ Value of field with type `float` is not valid.
 * [`shapes.txt`](http://gtfs.org/reference/static#shapestxt)
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-#### References
-* [Field Types Description](http://gtfs.org/reference/static/#field-types)
 </details>
  
 <a name="InvalidIntegerNotice"/>
@@ -577,6 +587,8 @@ Value of field with type `float` is not valid.
 
 Value of field with type `integer` is not valid. 
 
+#### References
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
 <details>
 
 #### Notice fields description
@@ -596,8 +608,6 @@ Value of field with type `integer` is not valid.
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 * [`transfers.txt`](http://gtfs.org/reference/static#transferstxt)
 
-#### References
-* [Field Types Description](http://gtfs.org/reference/static/#field-types)
 </details>
 
 <a name="InvalidLanguageCodeNotice"/>
@@ -606,6 +616,8 @@ Value of field with type `integer` is not valid.
 
 Value of field with type `language` is not valid. Language codes must follow <a href="http://www.rfc-editor.org/rfc/bcp/bcp47.txt">IETF BCP 47</a>.
 
+#### References
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
 <details>
 
 #### Notice fields description
@@ -621,8 +633,6 @@ Value of field with type `language` is not valid. Language codes must follow <a 
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
 * [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 
-#### References
-* [Field Types Description](http://gtfs.org/reference/static/#field-types)
 </details>
 
 <a name="InvalidPhoneNumberNotice"/>
@@ -631,6 +641,8 @@ Value of field with type `language` is not valid. Language codes must follow <a 
 
 Value of field with type `phone number` is not valid. This rule uses the [PhoneNumberUtil](https://www.javadoc.io/doc/com.googlecode.libphonenumber/libphonenumber/8.4.1/com/google/i18n/phonenumbers/PhoneNumberUtil.html) class to validate a phone number based on a country code. If no country code is provided in the parameters used to run the validator, this notice won't be emitted. 
 
+#### References
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
 <details>
 
 #### Notice fields description
@@ -646,8 +658,6 @@ Value of field with type `phone number` is not valid. This rule uses the [PhoneN
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
 * [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 
-#### References
-* [Field Types Description](http://gtfs.org/reference/static/#field-types)
 </details>
 
 <a name="InvalidRowLengthNotice"/>
@@ -655,6 +665,10 @@ Value of field with type `phone number` is not valid. This rule uses the [PhoneN
 ### invalid_row_length
 
 A row in the input file has a different number of values than specified by the CSV header.
+
+#### References
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+* [GTFS files requirements](https://gtfs.org/reference/static#file-requirements)
 
 <details>
 
@@ -669,8 +683,6 @@ A row in the input file has a different number of values than specified by the C
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-#### References
-* [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
 
 <a name="InvalidTimeNotice"/>
@@ -679,6 +691,8 @@ A row in the input file has a different number of values than specified by the C
 
 Value of field with type `time` is not valid. Time must be in the `H:MM:SS`, `HH:MM:SS` or `HHH:MM:SS` format.
 
+#### References
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
 <details>
 
 #### Notice fields description
@@ -693,8 +707,6 @@ Value of field with type `time` is not valid. Time must be in the `H:MM:SS`, `HH
 * [`frequencies.txt`](http://gtfs.org/reference/static#frequenciestxt)
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-#### References
-* [Field Types Description](http://gtfs.org/reference/static/#field-types)
 </details>
 
 <a name="InvalidTimezoneNotice"/>
@@ -703,6 +715,8 @@ Value of field with type `time` is not valid. Time must be in the `H:MM:SS`, `HH
 
 Value of field with type `timezone` is not valid.Timezones are defined at <a href="https://www.iana.org/time-zones">www.iana.org</a>. Timezone names never contain the space character but may contain an underscore. Refer to <a href="http://en.wikipedia.org/wiki/List_of_tz_zones">Wikipedia</a> for a list of valid values.
 
+#### References
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
 <details>
 
 #### Notice fields description
@@ -717,8 +731,6 @@ Value of field with type `timezone` is not valid.Timezones are defined at <a hre
 * [`agency.txt`](http://gtfs.org/reference/static#frequenciestxt)
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-#### References
-* [Field Types Description](http://gtfs.org/reference/static/#field-types)
 </details>
 
 <a name="InvalidUrlNotice"/>
@@ -727,6 +739,9 @@ Value of field with type `timezone` is not valid.Timezones are defined at <a hre
 
 Value of field with type `url` is not valid. Definitions for valid URLs are quite vague. We perform strict validation in the upstream using the Apache Commons UrlValidator.
 
+#### References
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
+* [Apache Commons UrlValidator](https://commons.apache.org/proper/commons-validator/apidocs/org/apache/commons/validator/routines/UrlValidator.html)
 <details>
 
 #### Notice fields description
@@ -744,9 +759,6 @@ Value of field with type `url` is not valid. Definitions for valid URLs are quit
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 
-#### References
-* [Field Types Description](http://gtfs.org/reference/static/#field-types)
-* [Apache Commons UrlValidator](https://commons.apache.org/proper/commons-validator/apidocs/org/apache/commons/validator/routines/UrlValidator.html)
 </details>
 
 <a name="LocationWithoutParentStationNotice"/>
@@ -755,6 +767,8 @@ Value of field with type `url` is not valid. Definitions for valid URLs are quit
 
 A location that must have `parent_station` field does not have it. The following location types must have `parent_station`: entrance, generic node, boarding_area.
 
+#### References
+* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 <details>
 
 #### Notice fields description
@@ -768,8 +782,6 @@ A location that must have `parent_station` field does not have it. The following
 #### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
-#### References
-* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 </details>
 
 <a name="LocationWithUnexpectedStopTimeNotice"/>
@@ -778,6 +790,8 @@ A location that must have `parent_station` field does not have it. The following
 
 Referenced locations (using `stop_times.stop_id`) must be stops/platforms, i.e. their `stops.location_type` value must be 0 or empty.
 
+#### References
+* [stop_times.txt GTFS specification](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stoptimestxt)
 <details>
 
 #### Notice fields description
@@ -792,8 +806,6 @@ Referenced locations (using `stop_times.stop_id`) must be stops/platforms, i.e. 
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-#### References
-* [stop_times.txt GTFS specification](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stoptimestxt)
 </details>
 
 <a name="MissingCalendarAndCalendarDateFilesNotice"/>
@@ -802,6 +814,9 @@ Referenced locations (using `stop_times.stop_id`) must be stops/platforms, i.e. 
 
 Both files calendar_dates.txt and calendar.txt are missing from the GTFS archive. At least one of the files must be provided.
 
+#### References
+* [calendar.txt specification](http://gtfs.org/reference/static/#calendartxt)
+* [calendar_dates.txt specification](http://gtfs.org/reference/static/#calendar_datestxt)
 <details>
 
 #### Notice fields description
@@ -813,9 +828,6 @@ Both files calendar_dates.txt and calendar.txt are missing from the GTFS archive
 * [`calendar.txt`](http://gtfs.org/reference/static#calendartxt)
 * [`calendar_dates.txt`](http://gtfs.org/reference/static#calendar_datestxt)
 
-#### References
-* [calendar.txt specification](http://gtfs.org/reference/static/#calendartxt)
-* [calendar_dates.txt specification](http://gtfs.org/reference/static/#calendar_datestxt)
 </details>
 
 <a name="MissingLevelIdNotice"/>
@@ -824,6 +836,8 @@ Both files calendar_dates.txt and calendar.txt are missing from the GTFS archive
 
 GTFS file `levels.txt` is required for elevator (`pathway_mode=5`). A row from `stops.txt` linked to an elevator pathway has no value for `stops.level_id`.
 
+#### References
+* [levels.txt specification](http://gtfs.org/reference/static/#levelstxt)
 <details>
 
 #### Notice fields description
@@ -835,8 +849,6 @@ GTFS file `levels.txt` is required for elevator (`pathway_mode=5`). A row from `
 #### Affected files
 * [`levels.txt`](http://gtfs.org/reference/static#levelstxt)
 
-#### References
-* [levels.txt specification](http://gtfs.org/reference/static/#levelstxt)
 </details>
 
 <a name="MissingRequiredColumnNotice"/>
@@ -845,6 +857,8 @@ GTFS file `levels.txt` is required for elevator (`pathway_mode=5`). A row from `
 
 A required column is missing in the input file.
 
+#### References
+* [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
 <details>
 
 #### Notice fields description
@@ -856,8 +870,6 @@ A required column is missing in the input file.
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-#### References
-* [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
 </details>
 
 <a name="MissingRequiredFieldNotice"/>
@@ -866,6 +878,8 @@ A required column is missing in the input file.
 
 The given field has no value in some input row, even though values are required.
 
+#### References
+* [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
 <details>
 
 #### Notice fields description
@@ -878,8 +892,6 @@ The given field has no value in some input row, even though values are required.
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-#### References
-* [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
 </details>
 
 <a name="MissingRequiredFileNotice"/>
@@ -888,6 +900,8 @@ The given field has no value in some input row, even though values are required.
 
 A required file is missing.
 
+#### References
+* [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
 <details>
 
 #### Notice fields description
@@ -898,8 +912,6 @@ A required file is missing.
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-#### References
-* [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
 </details>
 
 <a name="MissingTripEdgeNotice"/>
@@ -908,6 +920,8 @@ A required file is missing.
 
 First and last stop of a trip must define both `arrival_time` and `departure_time` fields.
 
+#### References
+* [stop_times.txt specification](https://gtfs.org/reference/static/#stop_timestxt)
 <details>
 
 #### Notice fields description
@@ -920,8 +934,6 @@ First and last stop of a trip must define both `arrival_time` and `departure_tim
 
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 
-#### References
-* [stop_times.txt specification](https://gtfs.org/reference/static/#stop_timestxt)
 </details>
 
 <a name="NewLineInValueNotice"/>
@@ -930,6 +942,8 @@ First and last stop of a trip must define both `arrival_time` and `departure_tim
 
 A value in CSV file has a new line or carriage return.
 
+#### References
+* [GTFS file requirements](https://gtfs.org/reference/static/#file-requirements)
 <details>
 
 
@@ -944,8 +958,6 @@ A value in CSV file has a new line or carriage return.
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-#### References
-* [GTFS file requirements](https://gtfs.org/reference/static/#file-requirements)
 </details>
 
 <a name="NumberOutOfRangeNotice"/>
@@ -954,6 +966,10 @@ A value in CSV file has a new line or carriage return.
 
 The values in the given column of the input rows are out of range.
 
+#### References
+* [GTFS file requirements](https://gtfs.org/reference/static/#file-requirements)
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+* [GTFS field types](http://gtfs.org/reference/static/#field-types)
 <details>
 
 
@@ -969,10 +985,6 @@ The values in the given column of the input rows are out of range.
 #### Affected files
 * [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-#### References
-* [GTFS file requirements](https://gtfs.org/reference/static/#file-requirements)
-* [Original Python validator implementation](https://github.com/google/transitfeed)
-* [GTFS field types](http://gtfs.org/reference/static/#field-types)
 </details>
 
 <a name="OverlappingFrequencyNotice"/>
@@ -981,6 +993,8 @@ The values in the given column of the input rows are out of range.
 
 Trip frequencies must not overlap in time
 
+#### References
+* [frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
 <details>
 
 
@@ -996,8 +1010,6 @@ Trip frequencies must not overlap in time
 #### Affected files
 * [`frequencies.txt`](http://gtfs.org/reference/static#frequenciestxt)
 
-#### References
-* [frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
 </details>
 
 <a name="PathwayToPlatformWithBoardingAreasNotice"/>
@@ -1008,12 +1020,8 @@ A pathway has an endpoint that is a platform which has boarding areas. A platfor
 areas is treated as a parent object, not a point. In such cases, the platform must not have pathways
 assigned - instead, pathways must be assigned to its boarding areas.
 
-<details>
-
-
 #### References
 * [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
-</details>
 
 <a name="PathwayToWrongLocationTypeNotice"/>
 
@@ -1022,12 +1030,8 @@ assigned - instead, pathways must be assigned to its boarding areas.
 A pathway has an endpoint that is a station. Pathways endpoints must be platforms (stops),
 entrances/exits, generic nodes or boarding areas.
 
-<details>
-
-
 #### References
 * [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
-</details>
 
 <a name="PathwayUnreachableLocationNotice"/>
 
@@ -1042,8 +1046,9 @@ stations.
 Notices are not reported for platforms that have boarding areas since such platforms may not
 have incident pathways. Instead, notices are reported for the boarding areas.
 
+#### References
+* [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
 <details>
-
 
 #### Notice fields description
 | Field name   	 | Description                                         | Type    	|
@@ -1060,8 +1065,6 @@ have incident pathways. Instead, notices are reported for the boarding areas.
 * [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
-#### References
-* [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
  </details>
 
 <a name="PointNearOriginNotice"/>
@@ -1070,8 +1073,9 @@ have incident pathways. Instead, notices are reported for the boarding areas.
 
 A point is too close to origin `(0, 0)`.
 
+#### References
+* [Original Python validator implementation](https://github.com/google/transitfeed)
 <details>
-
 
 #### Notice fields description
 | Field name      	| Description                                      	| Type    	|
@@ -1087,16 +1091,17 @@ A point is too close to origin `(0, 0)`.
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`shapes.txt`](http://gtfs.org/reference/static#shapestxt)
 
-#### References
-* [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
+
+<a name="RouteBothShortAndLongNameMissingNotice"/>
 
 ### route_both_short_and_long_name_missing
 
 Both short_name and long_name are missing for a route.
 
+#### References
+* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 <details>
-
 
 #### Notice fields description
 | Field name     	| Description                          	| Type   	|
@@ -1107,8 +1112,6 @@ Both short_name and long_name are missing for a route.
 #### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-#### References
-* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 </details>
 
 <a name="StartAndEndRangeEqualNotice"/>
@@ -1117,8 +1120,10 @@ Both short_name and long_name are missing for a route.
 
 The fields `frequencies.start_date` and `frequencies.end_date` have been found equal in `frequencies.txt`. The GTFS spec is currently unclear how this case should be handled (e.g., is it a trip that circulates once?). It is recommended to use a trip not defined via frequencies.txt for this case.
 
+#### References
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+[frequencies.txt specification](http://gtfs.org/reference/static#frequenciestxt)
 <details>
-
 
 #### Notice fields description
 | Field name     	  | Description                          	| Type   	|
@@ -1132,8 +1137,6 @@ The fields `frequencies.start_date` and `frequencies.end_date` have been found e
 #### Affected files
 * [`frequencies.txt`](http://gtfs.org/reference/static#frequenciestxt)
 
-#### References
-* [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
 
 <a name="StartAndEndRangeOutOfOrderNotice"/>
@@ -1142,8 +1145,13 @@ The fields `frequencies.start_date` and `frequencies.end_date` have been found e
 
 Date or time fields have been found out of order in `calendar.txt`, `feed_info.txt` and `stop_times.txt`.
 
+#### References
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+* [calendar.txt specification](http://gtfs.org/reference/static#calendartxt)
+* [calendar_dates.txt specification](http://gtfs.org/reference/static#calendar_datestxt)
+* [feed_info.txt specification](http://gtfs.org/reference/static#feed_infotxt)
+* [stop_times.txt specification](http://gtfs.org/reference/static#stop_timestxt)
 <details>
-
 
 #### Notice fields description
 | Field name     	  | Description                          	| Type   	|
@@ -1162,8 +1170,6 @@ Date or time fields have been found out of order in `calendar.txt`, `feed_info.t
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-#### References
-* [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
 
 <a name="StationWithParentStationNotice"/>
@@ -1172,8 +1178,9 @@ Date or time fields have been found out of order in `calendar.txt`, `feed_info.t
 
 Field `parent_station` must be empty when `location_type` is 1.
 
+#### References
+[stop.txt](http://gtfs.org/reference/static/#stopstxt)
 <details>
-
 
 #### Notice fields description
 | Field name    	| Description                               	  | Type   	|
@@ -1186,8 +1193,6 @@ Field `parent_station` must be empty when `location_type` is 1.
 #### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
-#### References
-[stop.txt](http://gtfs.org/reference/static/#stopstxt)
 </details>
 
 <a name="StopTimeTimepointWithoutTimesNotice"/>
@@ -1196,8 +1201,9 @@ Field `parent_station` must be empty when `location_type` is 1.
 
 Any records with `stop_times.timepoint` set to 1 must define a value for `stop_times.arrival_time` and `stop_times.departure_time` fields.
 
+#### References
+* [GTFS stop_times.txt specification](https://gtfs.org/reference/static#stoptimestxt)
 <details>
-
 
 #### Notice fields description
 | Field name     	  | Description                                	| Type   	|
@@ -1210,8 +1216,6 @@ Any records with `stop_times.timepoint` set to 1 must define a value for `stop_t
 #### Affected files
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-#### References
-* [GTFS stop_times.txt specification](https://gtfs.org/reference/static#stoptimestxt)
 </details>
 
 <a name="StopTimeWithArrivalBeforePreviousDepartureTimeNotice"/>
@@ -1220,8 +1224,10 @@ Any records with `stop_times.timepoint` set to 1 must define a value for `stop_t
 
 For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must not precede the `departure_time` of n-th stoptime in sequence in `stop_times.txt`.
 
+#### References
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+* [stop_times.txt specification](http://gtfs.org/reference/static#stop_timestxt)
 <details>
-
 
 #### Notice fields description
 | Field name       	| Description                                  	| Type   	|
@@ -1235,8 +1241,6 @@ For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must 
 #### Affected files
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-#### References
-* [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
 
 <a name="StopTimeWithOnlyArrivalOrDepartureTimeNotice"/>
@@ -1245,8 +1249,9 @@ For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must 
 
 Missing `stop_time.arrival_time` or `stop_time.departure_time`
 
+#### References
+* [stop_times.txt specification](http://gtfs.org/reference/static/#stop_timestxt)
 <details>
-
 
 #### Notice fields description
 | Field name      	| Description                                  	| Type    	|
@@ -1259,8 +1264,6 @@ Missing `stop_time.arrival_time` or `stop_time.departure_time`
 #### Affected files
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-#### References
-* [stop_times.txt specification](http://gtfs.org/reference/static/#stop_timestxt)
 </details>
 
 <a name="StopWithoutZoneIdNotice"/>
@@ -1269,8 +1272,9 @@ Missing `stop_time.arrival_time` or `stop_time.departure_time`
 
 If `fare_rules.txt` is provided, and `fare_rules.txt` uses at least one column among `origin_id`, `destination_id`, and `contains_id`, then all stops and platforms (location_type = 0) must have `stops.zone_id` assigned. 
 
+#### References
+* [GTFS stops.txt specification](https://gtfs.org/reference/static#stopstxt)
 <details>
-
 
 #### Notice fields description
 | Field name               	| Description                                	| Type   	|
@@ -1283,8 +1287,6 @@ If `fare_rules.txt` is provided, and `fare_rules.txt` uses at least one column a
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`fare_rules.txt`](http://gtfs.org/reference/static#farerulestxt)
 
-#### References
-* [GTFS stops.txt specification](https://gtfs.org/reference/static#stopstxt)
 </details>
 
 <a name="TranslationForeignKeyViolationNotice"/>
@@ -1293,8 +1295,9 @@ If `fare_rules.txt` is provided, and `fare_rules.txt` uses at least one column a
 
 An entity with the given `record_id` and `record_sub_id` cannot be found in the referenced table.
 
+#### References
+* [translations.txt specification](http://gtfs.org/reference/static/#translationstxt)
 <details>
-
 
 #### Notice fields description
 | Field name       | Description                            | Type    	|
@@ -1307,8 +1310,6 @@ An entity with the given `record_id` and `record_sub_id` cannot be found in the 
 #### Affected files
 * [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 
-#### References
-* [translations.txt specification](http://gtfs.org/reference/static/#translationstxt)
 </details>
 
 <a name="TranslationUnexpectedValueNotice"/>
@@ -1317,8 +1318,9 @@ An entity with the given `record_id` and `record_sub_id` cannot be found in the 
 
 A field in a translations row has value but must be empty.
 
+#### References
+* [translations.txt specification](http://gtfs.org/reference/static/#translationstxt)
 <details>
-
 
 #### Notice fields description
 | Field name        | Description                                  	            | Type    	|
@@ -1330,8 +1332,6 @@ A field in a translations row has value but must be empty.
 #### Affected files
 * [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 
-#### References
-* [translations.txt specification](http://gtfs.org/reference/static/#translationstxt)
 </details>
 
 <a name="WrongParentLocationTypeNotice"/>
@@ -1348,8 +1348,9 @@ According to spec
 
 Any other combination raise this error.
 
+#### References
+* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 <details>
-
 
 #### Notice fields description
 | Field name           	| Description                                      	| Type    	|
@@ -1367,8 +1368,6 @@ Any other combination raise this error.
 #### Affected files
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-#### References
-* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 </details>
 
 ## Warnings
@@ -1379,8 +1378,9 @@ Any other combination raise this error.
 
 At least one of the fields `is_producer`, `is_operator`, or `is_authority` should be set to 1.
 
+#### References
+* [attributions.txt specification](https://gtfs.org/reference/static#attributionstxt)
 <details>
-
 
 #### Notice fields description
 | Field name    	| Description                          	  | Type   	|
@@ -1391,8 +1391,6 @@ At least one of the fields `is_producer`, `is_operator`, or `is_authority` shoul
 #### Affected files
 * [`attributions.txt`](http://gtfs.org/reference/static#attributionstxt)
 
-#### References
-* [attributions.txt specification](https://gtfs.org/reference/static#attributionstxt)
 </details>
 
 <a name="DuplicateRouteNameNotice"/>
@@ -1409,8 +1407,10 @@ Example of bad data:
 | route1     	| U1                 	| Southern          	|
 | route2     	| U1                 	| Southern          	|
 
+#### References
+* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
+* [routes.txt best practices](http://gtfs.org/best-practices/#routestxt)
 <details>
-
 
 #### Notice fields description
 | Field name     	| Description                             	| Type   	|
@@ -1427,9 +1427,6 @@ Example of bad data:
 #### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-#### References
-* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
-* [routes.txt best practices](http://gtfs.org/best-practices/#routestxt)
 
 <a name="EmptyRowNotice"/>
 </details>
@@ -1438,8 +1435,9 @@ Example of bad data:
 
 A row in the input file has only spaces.
 
+#### References
+* [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
 <details>
-
 
 #### Notice fields description
 | Field name   	| Description                          	| Type    	|
@@ -1450,8 +1448,6 @@ A row in the input file has only spaces.
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-#### References
-* [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
 </details>
 
 ### equal_shape_distance_same_coordinates
@@ -1460,8 +1456,9 @@ A row in the input file has only spaces.
 
 When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` must increase along a shape. Two consecutive points with equal values for `shape_dist_traveled` and the same coordinates indicate a duplicative shape point.
 
+#### References
+* [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)
 <details>
-
 
 #### Notice fields description
 | Field name            	  | Description                                                                                    	  | Type    	|
@@ -1478,8 +1475,6 @@ When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` m
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`shapes.txt`](http://gtfs.org/reference/static#shapestxt)
 
-#### References
-* [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)
 </details>
 
 <a name="FastTravelBetweenConsecutiveStopsNotice"/>
@@ -1504,8 +1499,9 @@ A transit vehicle moves too fast between two consecutive stops. The speed thresh
 | 12         | Monorail    | 150             |
 | -          | Unknown     | 200             |
 
+#### References
+* [Original Python validator implementation](https://github.com/google/transitfeed)
 <details>
-
 
 #### Notice fields description
 | Field name        	| Description                             | Type   	|
@@ -1532,10 +1528,9 @@ A transit vehicle moves too fast between two consecutive stops. The speed thresh
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 
-#### References
-* [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
 
+<a name="FastTravelBetweenFarStopsNotice"/>
 ### fast_travel_between_far_stops
 
 A transit vehicle moves too fast between far consecutive stops (more than in 10 km apart). 
@@ -1546,8 +1541,9 @@ The speed threshold depends on route type.
 
 Same as for [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsecutiveStopsNotice).
 
+#### References
+* [Original Python validator implementation](https://github.com/google/transitfeed)
 <details>
-
 
 #### Notice fields description
 | Field name        	| Description                             | Type   	|
@@ -1574,8 +1570,6 @@ Same as for [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsec
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 
-#### References
-* [Original Python validator implementation](https://github.com/google/transitfeed)
 </details>
 
 <a name="FeedExpirationDateNotice"/>
@@ -1585,8 +1579,9 @@ Same as for [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsec
 At any time, the published GTFS dataset should be valid for at least the next 7 days, and ideally for as long as the operator is confident that the schedule will continue to be operated.
 If possible, the GTFS dataset should cover at least the next 30 days of service.
 
+#### References
+* [General Publishing & General Practices](https://gtfs.org/best-practices/#dataset-publishing--general-practices)
 <details>
-
 
 #### Notice fields description
 | Field name              	| Description                                  	| Type   	|
@@ -1599,8 +1594,6 @@ If possible, the GTFS dataset should cover at least the next 30 days of service.
 #### Affected files
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
 
-#### References
-* [General Publishing & General Practices](https://gtfs.org/best-practices/#dataset-publishing--general-practices)
 </details>
 
 <a name="FeedInfoLangAndAgencyLangMismatchNotice"/>
@@ -1612,8 +1605,10 @@ If possible, the GTFS dataset should cover at least the next 30 days of service.
   * If there is more than one `agency_lang` and `feed_lang` isn't `mul`, that's an error
   * If `feed_lang` is `mul` and there isn't more than one `agency_lang`, that's an error
 
+#### References
+* [GTFS feed_info.txt specification](http://gtfs.org/reference/static/#feed_infotxt)
+* [GTFS agency.txt specification](http://gtfs.org/reference/static/#agencytxt)
 <details>
-
 
 #### Notice fields description
 | Field name   	| Description                               	| Type   	|
@@ -1628,9 +1623,6 @@ If possible, the GTFS dataset should cover at least the next 30 days of service.
 * [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
 
-#### References
-* [GTFS feed_info.txt specification](http://gtfs.org/reference/static/#feed_infotxt)
-* [GTFS agency.txt specification](http://gtfs.org/reference/static/#agencytxt)
 <details>
 
 <a name="InconsistentAgencyLangNotice"/>
@@ -1639,8 +1631,9 @@ If possible, the GTFS dataset should cover at least the next 30 days of service.
 
 Agencies from GTFS `agency.txt` have been found to have different languages.
 
+#### References
+* [Original Python validator implementation](https://github.com/google/transitfeed)
 <details>
-
 
 #### Notice fields description
 | Field name     	| Description                   	| Type   	|
@@ -1652,8 +1645,6 @@ Agencies from GTFS `agency.txt` have been found to have different languages.
 #### Affected files
 * [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
 
-#### References
-* [Original Python validator implementation](https://github.com/google/transitfeed)
 <details>
 
 <a name="LeadingOrTrailingWhitespacesNotice"/>
@@ -1662,8 +1653,9 @@ Agencies from GTFS `agency.txt` have been found to have different languages.
 
 The value in CSV file has leading or trailing whitespaces.
 
+#### References
+* [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
 <details>
-
 
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
@@ -1676,8 +1668,6 @@ The value in CSV file has leading or trailing whitespaces.
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-#### References
-* [GTFS file requirements](http://gtfs.org/reference/static/#file-requirements)
 <details>
 
 <a name="MissingFeedInfoDateNotice"/>
@@ -1685,8 +1675,10 @@ The value in CSV file has leading or trailing whitespaces.
 ### missing_feed_info_date
 
 Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one field is provided the second one should also be provided.
-<details>
 
+#### References
+* [feed_info.txt Best practices](http://gtfs.org/best-practices/#feed_infotxt)
+<details>
 
 #### Notice fields description
 | Field name     	| Description                                 	| Type   	|
@@ -1698,8 +1690,6 @@ Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
 #### Notice fields description
 
-#### References
-* [feed_info.txt Best practices](http://gtfs.org/best-practices/#feed_infotxt)
  <details>
 
 <a name="MissingTimepointColumnNotice"/>
@@ -1707,8 +1697,10 @@ Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one
 ### missing_timepoint_column
 
 The `timepoint` column should be provided.
-<details>
 
+#### References
+* [stop_times.txt bets practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/stop_times.md)
+<details>
 
 #### Notice fields description
 | Field name     	| Description                                     	| Type   	|
@@ -1718,8 +1710,6 @@ The `timepoint` column should be provided.
 #### Affected files
 * [`stop_times.txt`](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stop_timestxt)
 
-#### References
-* [stop_times.txt bets practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/stop_times.md)
 <details>
 
 <a name="MissingTimepointValueNotice"/>
@@ -1727,6 +1717,9 @@ The `timepoint` column should be provided.
 #### missing_timepoint_value
 
 Even though the column `timepoint` is optional in `stop_times.txt` according to the specification, `stop_times.timepoint` should not be empty when provided. 
+
+#### References
+* [stop_times.txt specification](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stop_timestxt)
 <details>
 
 
@@ -1740,8 +1733,6 @@ Even though the column `timepoint` is optional in `stop_times.txt` according to 
 #### Affected files
 * [`stop_times.txt`](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stop_timestxt)
 
-#### References
-* [stop_times.txt specification](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stop_timestxt)
 <details>
 
 <a name="MoreThanOneEntityNotice"/>
@@ -1749,8 +1740,10 @@ Even though the column `timepoint` is optional in `stop_times.txt` according to 
 #### more_than_one_entity
 
 The file is expected to have a single entity but has more (e.g., "feed_info.txt").
-<details>
 
+#### References
+* [GTFS field definition](http://gtfs.org/reference/static#field-definitions)
+<details>
 
 #### Notice fields description
 | Field name    	| Description              	| Type   	|
@@ -1761,8 +1754,6 @@ The file is expected to have a single entity but has more (e.g., "feed_info.txt"
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-#### References
-* [GTFS field definition](http://gtfs.org/reference/static#field-definitions)
 <details>
 
 <a name="NonAsciiOrNonPrintableCharNotice"/>
@@ -1770,8 +1761,10 @@ The file is expected to have a single entity but has more (e.g., "feed_info.txt"
 ### non_ascii_or_non_printable_char
 
 A value of a field with type `id` contains non ASCII or non printable characters. This is not recommended.
-<details>
 
+#### References
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+<details>
 
 #### Notice fields description
 | Field name   	| Description                                  	| Type   	|
@@ -1784,8 +1777,6 @@ A value of a field with type `id` contains non ASCII or non printable characters
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-#### References
-* [Original Python validator implementation](https://github.com/google/transitfeed)
 <details>
 
 <a name="PathwayDanglingGenericNodeNotice"/>
@@ -1794,8 +1785,10 @@ A value of a field with type `id` contains non ASCII or non printable characters
 
 A generic node has only one incident location in a pathway graph. Such generic node is useless
 because there is no benefit in visiting it.
-<details>
 
+#### References
+* [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
+<details>
 
 #### Notice fields description
 | Field name     | Description                                         | Type    	|
@@ -1809,8 +1802,6 @@ because there is no benefit in visiting it.
 * [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
-#### References
-* [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
 <details>
 
 <a name="PathwayLoopNotice"/>
@@ -1818,8 +1809,10 @@ because there is no benefit in visiting it.
 ### pathway_loop
 
 A pathway should not have same values for `from_stop_id` and `to_stop_id`.
-<details>
 
+#### References
+* [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
+<details>
 
 #### Notice fields description
 | Field name     	| Description                                                                                 	| Type   	|
@@ -1837,8 +1830,10 @@ A pathway should not have same values for `from_stop_id` and `to_stop_id`.
 ### platform_without_parent_station
 
 A platform has no `parent_station` field set.
-<details>
 
+#### References
+* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+<details>
 
 #### Notice fields description
 | Field name   	| Description                             	| Type    	|
@@ -1851,8 +1846,6 @@ A platform has no `parent_station` field set.
 #### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
-#### References
-* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 <details>
 
 <a name="RouteColorContrastNotice"/>
@@ -1860,8 +1853,11 @@ A platform has no `parent_station` field set.
 #### route_color_contrast
 
 A route's color and `route_text_color` should be contrasting.
-<details>
 
+#### References
+* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+<details>
 
 #### Notice fields description
 | Field name     	| Description                                	  | Type   	|
@@ -1874,9 +1870,6 @@ A route's color and `route_text_color` should be contrasting.
 #### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-#### References
-* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
-* [Original Python validator implementation](https://github.com/google/transitfeed)
 <details>
 
 <a name="RouteShortAndLongNameEqualNotice"/>
@@ -1890,8 +1883,10 @@ Example of bad data:
 | `route_id` 	| `route_short_name` 	| `route_long_name` 	|
 |------------	|--------------------	|-------------------	|
 | route1     	| L1                 	| L1                	|
-<details>
 
+#### References
+* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
+<details>
 
 #### Notice fields description
 | Field name     	| Description                             	  | Type   	|
@@ -1904,8 +1899,6 @@ Example of bad data:
 #### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-#### References
-* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 <details>
 
 <a name="RouteShortNameTooLongNotice"/>
@@ -1913,8 +1906,10 @@ Example of bad data:
 ### route_short_name_too_long
 
 Short name of a route is too long (more than 12 characters).
-<details>
 
+#### References
+* [routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
+<details>
 
 #### Notice fields description
 | Field name     	| Description                             	  | Type   	|
@@ -1926,8 +1921,6 @@ Short name of a route is too long (more than 12 characters).
 #### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-#### References
-* [routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
 <details>
 
 <a name="SameNameAndDescriptionForRouteNotice"/>
@@ -1939,8 +1932,11 @@ The GTFS spec defines `routes.txt` [route_desc](https://gtfs.org/reference/stati
 > Description of a route that provides useful, quality information. Do not simply duplicate the name of the route.
 
 See the GTFS and GTFS Best Practices links below for more examples of how to populate the `route_short_name`, `route_long_name`, and `route_desc` fields.
-<details>
 
+#### References
+[routes.txt specification](http://gtfs.org/reference/static/#routestxt)
+[routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
+<details>
 
 #### Notice fields description
 | Field name     	| Description                                    	| Type   	|
@@ -1954,9 +1950,6 @@ See the GTFS and GTFS Best Practices links below for more examples of how to pop
 #### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-#### References
-[routes.txt specification](http://gtfs.org/reference/static/#routestxt)
-[routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
 <details>
 
 <a name="SameNameAndDescriptionForStopNotice"/>
@@ -1966,8 +1959,10 @@ See the GTFS and GTFS Best Practices links below for more examples of how to pop
 The GTFS spec defines `stops.txt` [stop_description](https://gtfs.org/reference/static/#stopstxt) as:
 
 > Description of the location that provides useful, quality information. Do not simply duplicate the name of the location.
-<details>
 
+#### References
+[stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+<details>
 
 #### Notice fields description
 | Field name     	| Description                             	| Type   	|
@@ -1979,8 +1974,6 @@ The GTFS spec defines `stops.txt` [stop_description](https://gtfs.org/reference/
 #### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
-#### References
-[stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 <details>
 
 <a name="SameRouteAndAgencyUrlNotice"/>
@@ -1988,8 +1981,10 @@ The GTFS spec defines `stops.txt` [stop_description](https://gtfs.org/reference/
 ### same_route_and_agency_url
 
 A route should not have the same `routes.route_url` as a record from `agency.txt`.
-<details>
 
+#### References
+* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
+<details>
 
 #### Notice fields description
 | Field name     	| Description                                	| Type   	|
@@ -2004,8 +1999,6 @@ A route should not have the same `routes.route_url` as a record from `agency.txt
 * [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-#### References
-* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
 <details>
 
 <a name="SameStopAndAgencyUrlNotice"/>
@@ -2013,8 +2006,10 @@ A route should not have the same `routes.route_url` as a record from `agency.txt
 ### same_stop_and_agency_url
 
 A stop should not have the same `stops.stop_url` as a record from `agency.txt`.
-<details>
 
+#### References
+* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+<details>
 
 #### Notice fields description
 | Field name     	| Description                                            	| Type   	|
@@ -2029,8 +2024,6 @@ A stop should not have the same `stops.stop_url` as a record from `agency.txt`.
 * [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
-#### References
-* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 <details>
 
 <a name="SameStopAndRouteUrlNotice"/>
@@ -2038,8 +2031,10 @@ A stop should not have the same `stops.stop_url` as a record from `agency.txt`.
 ### same_stop_and_route_url
 
 A stop should not have the same `stop.stop_url` as a record from `routes.txt`.
-<details>
 
+#### References
+* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+<details>
 
 #### Notice fields description
 | Field name          	| Description                                            	| Type   	|
@@ -2054,8 +2049,6 @@ A stop should not have the same `stop.stop_url` as a record from `routes.txt`.
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
-#### References
-* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
  <details>
 
 <a name="StopHasTooManyMatchesForShapeNotice"/>
@@ -2063,8 +2056,12 @@ A stop should not have the same `stop.stop_url` as a record from `routes.txt`.
 ### stop_has_too_many_matches_for_shape
 
 A stop entry that has many potential matches to the trip's path of travel, as defined  by the shape entry in `shapes.txt`.
-<details>
 
+#### References
+* [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
+* [stops_times.txt specification](http://gtfs.org/reference/static#stopstimestxt)
+* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+<details>
 
 #### Notice fields description
 | Field name             	| Description                                                	| Type    	|
@@ -2089,8 +2086,12 @@ A stop entry that has many potential matches to the trip's path of travel, as de
 ### stops_match_shape_out_of_order
 
 Two stop entries in `stop_times.txt` are different than their arrival-departure order as defined by the shape in the `shapes.txt` file.
-<details>
 
+#### References
+* [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
+* [stops_times.txt specification](http://gtfs.org/reference/static#stopstimestxt)
+* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+<details>
 
 #### Notice fields description
 | Field name              	| Description                                                       	| Type   	|
@@ -2118,8 +2119,10 @@ Two stop entries in `stop_times.txt` are different than their arrival-departure 
 ### stop_too_far_from_shape
 
 Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100 meters of stop locations which a trip serves.
-<details>
 
+#### References
+* [GTFS Best Practices shapes.txt](https://gtfs.org/best-practices/#shapestxt)
+<details>
 
 #### Notice fields description
 | Field name             	| Description                                                	| Type   	|
@@ -2138,8 +2141,6 @@ Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 
-#### References
-* [GTFS Best Practices shapes.txt](https://gtfs.org/best-practices/#shapestxt)
  <details>
 
 <a name="StopTooFarFromShapeUsingUserDistanceNotice"/>
@@ -2147,8 +2148,12 @@ Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100
 ### stop_too_far_from_shape_using_user_distance
 
 A stop time entry that is a large distance away from the location of the shape in `shapes.txt` as defined by `shape_dist_traveled` values.
-<details>
 
+#### References
+* [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
+* [stops_times.txt specification](http://gtfs.org/reference/static#stopstimestxt)
+* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+<details>
 
 #### Notice fields description
 | Field name             	| Description                                                	| Type   	|
@@ -2176,13 +2181,19 @@ A stop time entry that is a large distance away from the location of the shape i
 A stop in `stops.txt` is not referenced by any `stop_times.stop_id`, so it is not used by any trip.
 Such stops normally do not provide user value. This notice may indicate a typo in `stop_times.txt`.
 
+#### References
+* [stops_times.txt specification](http://gtfs.org/reference/static#stopstimestxt)
+* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+
 <a name="TranslationUnknownTableNameNotice"/>
 
 ### translation_unknown_table_name
 
 A translation references an unknown or missing GTFS table.
-<details>
 
+#### References
+* [translations.txt specification](http://gtfs.org/reference/static/#translationstxt)
+<details>
 
 #### Notice fields description
 | Field name       | Description                            | Type    	|
@@ -2193,16 +2204,16 @@ A translation references an unknown or missing GTFS table.
 #### Affected files
 * [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 
-#### References
-* [translations.txt specification](http://gtfs.org/reference/static/#translationstxt)
 <details>
 <a name="UnexpectedEnumValueNotice"/>
 
 ### unexpected_enum_value
 
 An enum has an unexpected value.
-<details>
 
+#### References
+* [GTFs field definitions](http://gtfs.org/reference/static/#field-definitions)
+<details>
 
 #### Notice fields description
 | Field name   	| Description                                     	| Type    	|
@@ -2227,8 +2238,6 @@ An enum has an unexpected value.
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 * [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
 
-#### References
-* [GTFs field definitions](http://gtfs.org/reference/static/#field-definitions)
 <details>
 
 <a name="UnusableTripNotice"/>
@@ -2236,8 +2245,10 @@ An enum has an unexpected value.
 ### unusable_trip
 
 A trip must visit more than one stop in stop_times.txt to be usable by passengers for boarding and alighting.
-<details>
 
+#### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+<details>
 
 #### Notice fields description
 | Field name   	| Description                          	| Type   	|
@@ -2249,8 +2260,6 @@ A trip must visit more than one stop in stop_times.txt to be usable by passenger
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 
-#### References:
-* [Original Python validator implementation](https://github.com/google/transitfeed)
 <details>
 
 <a name="UnusedShapeNotice"/>
@@ -2258,8 +2267,12 @@ A trip must visit more than one stop in stop_times.txt to be usable by passenger
 ### unused_shape
 
 All records defined by GTFS `shapes.txt` should be used in `trips.txt`.
-<details>
 
+#### References:
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+* [shapes.txt specification](http://gtfs.org/reference/static#shapestxt)
+* [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
+<details>
 
 #### Notice fields description
 | Field name   	| Description                          	| Type   	|
@@ -2271,8 +2284,6 @@ All records defined by GTFS `shapes.txt` should be used in `trips.txt`.
 * [`shapes.txt`](http://gtfs.org/reference/static#shapestxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 
-#### References:
-* [Original Python validator implementation](https://github.com/google/transitfeed)
 <details>
 
 <a name="UnusedTripNotice"/>
@@ -2280,8 +2291,13 @@ All records defined by GTFS `shapes.txt` should be used in `trips.txt`.
 ### unused_trip
 
 Trips should be referred to at least once in `stop_times.txt`.
-<details>
 
+#### References
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+* [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
+* [stop_times.txt specification](http://gtfs.org/reference/static#stop_timestxt)
+
+<details>
 
 #### Notice fields description
 | Field name   	| Description                          	| Type   	|
@@ -2293,8 +2309,6 @@ Trips should be referred to at least once in `stop_times.txt`.
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-#### References
-* [Original Python validator implementation](https://github.com/google/transitfeed)
 <details>
 
 ## Infos
@@ -2304,8 +2318,10 @@ Trips should be referred to at least once in `stop_times.txt`.
 ### unknown_column
 
 A column is unknown.
-<details>
 
+#### References
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+<details>
 
 #### Notice fields description
 | Field name 	  | Description                     	| Type    	|
@@ -2317,8 +2333,6 @@ A column is unknown.
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-#### References
-* [Original Python validator implementation](https://github.com/google/transitfeed)
 <details>
 
 <a name="UnknownFileNotice"/>
@@ -2326,16 +2340,16 @@ A column is unknown.
 ### unknown_file
 
 A file is unknown.
-<details>
 
+#### References
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+<details>
 
 #### Notice fields description
 | Field name 	  | Description                     	| Type    |
 |-------------	|---------------------------------	|---------|
 | `filename`   	| The name of the unknown file.    	| String 	|
 
-#### References
-* [Original Python validator implementation](https://github.com/google/transitfeed)
 <details>
 ## System errors
 
@@ -2345,7 +2359,6 @@ A file is unknown.
 
 Error in IO operation.
 <details>
-
 
 #### Notice fields description
 | Field name 	  | Description                                                   	| Type    |
