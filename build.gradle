@@ -14,19 +14,10 @@
  * limitations under the License.
  */
 
-// so we can aggregate all Javadocs in one
-// see: https://github.com/nebula-plugins/gradle-aggregate-javadocs-plugin
-buildscript {
-    repositories { mavenCentral() }
-
-    dependencies {
-        classpath 'com.netflix.nebula:gradle-aggregate-javadocs-plugin:3.0.1'
-    }
-}
-
 plugins {
     id 'java'
     id 'com.github.sherter.google-java-format' version '0.9'
+    id "io.freefair.aggregate-javadoc-jar" version "6.4.3"
 }
 
 repositories {
@@ -34,7 +25,6 @@ repositories {
 }
 
 // Setup and configure Javadoc plugin
-apply plugin: 'nebula-aggregate-javadocs'
 allprojects {
     tasks.withType(Javadoc) { options.encoding = 'UTF-8' }
 }

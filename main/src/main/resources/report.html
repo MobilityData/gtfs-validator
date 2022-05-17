@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>GTFS Schedule Validation Report</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8; width=device-width, initial-scale=1" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            min-width: 800px;
+        }
+
+        .error:before {
+            content: "\1F534  ";
+        }
+
+        .warning:before {
+            content: "\1F7E0  ";
+        }
+
+        .info:before {
+            content: "\26AA  ";
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 1em 2em;
+        }
+
+        table {
+            width: 100%;
+        }
+        table th {
+            text-align: left;
+            border-bottom: 2px solid #000;
+            padding: 0.5em;
+        }
+        table td {
+            border-bottom: 1px solid #ddd;
+            padding: 0.5em;
+        }
+
+        table.accordion > tbody > tr.notice td, table.accordion > tbody > tr.view th {
+            cursor: auto;
+        }
+        table.accordion > tbody > tr.notice td:first-child,
+        table.accordion > tbody > tr.notice th:first-child {
+            position: relative;
+            padding-left: 20px;
+        }
+        table.accordion > tbody > tr.notice td:first-child:before,
+        table.accordion > tbody > tr.notice th:first-child:before {
+            position: absolute;
+            top: 50%;
+            left: 5px;
+            width: 9px;
+            height: 16px;
+            margin-top: -8px;
+            color: #000;
+            content: "+";
+        }
+        table.accordion > tbody > tr.notice.open td:first-child:before,
+        table.accordion > tbody > tr.notice.open th:first-child:before {
+            content: "\2013";
+        }
+        table.accordion > tbody > tr.notice:hover {
+            background: #ddd;
+        }
+        table.accordion > tbody > tr.notice.open {
+            background: #ddd;
+            color: black;
+        }
+        table.accordion > tbody > tr.description {
+            display: none;
+        }
+        table.accordion > tbody > tr.description.open {
+            display: table-row;
+        }
+
+        .desc-content {
+            padding: 0.5em;
+            border-bottom: 5px solid #000;
+            border-top: 5px solid #000
+        }
+        .desc-content h3 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+
+<body>
+<h1>GTFS Schedule Validation Report</h1>
+<h2><span th:text="${summary.noticeCount}">X</span> notices reported
+    (<span th:text="${summary.errorCount}">0</span> errors,
+    <span th:text="${summary.warningCount}">0</span> warnings,
+    <span th:text="${summary.infoCount}">0</span> infos)</h2>
+<p>This validation report was generated using the <a href="https://github.com/MobilityData/gtfs-validator">Canonical GTFS Schedule validator</a></p>
+<p>Use this report alongside the <a href="https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md">RULES.md</a> file to get more details about the validation issues.</p>
+<table class="accordion">
+    <thead>
+    <tr>
+    <th>Notice Code</th><th>Severity</th><th>Total</th>
+    </tr>
+    </thead>
+    <tbody>
+    <span th:each="noticesBySeverityLevel: ${summary.noticesMap}">
+        <span th:each="noticesByCode: ${noticesBySeverityLevel.value}">
+            <tr class="notice">
+                <td th:text="${noticesByCode.key}" />
+                <td th:class="${noticesBySeverityLevel.key.toString().toLowerCase()}" th:text="${noticesBySeverityLevel.key}" />
+                <td th:text="${noticesByCode.value.size}" />
+            </tr>
+            <tr class="description">
+                <td colspan="4">
+                    <div class="desc-content">
+                        <h3 th:text="${noticesByCode.key}" />
+                        <p> Please find this notice description <a th:href="@{'https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#' + ${noticesByCode.value[0].name}}">here</a>.</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th:block th:each="field: ${noticesByCode.value[0].fields}" >
+                                        <th th:text="${field}" />
+                                    </th:block>
+                                </tr>
+                            </thead>
+                            <span th:each="notice: ${noticesByCode.value}">
+                                <tbody>
+                                <tr>
+                                <th:block th:each="field: ${notice.fields}">
+                                        <td th:text="${notice.getValueForField(field)}" />
+                                </th:block>
+                                </tr>
+                                </tbody>
+                            </span>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </span>
+    </span>
+    </tbody>
+</table>
+<H2>Settings and version</H2>
+<p th:text="'Validator version: ' + ${version}">
+<p th:text="'Validation date and time: ' + ${date}">
+<p>Parameters used (more about the available parameters in <a href="https://github.com/MobilityData/gtfs-validator/blob/master/docs/USAGE.md">USAGE.md</a>):</p>
+<table>
+    <thead>
+    <tr>
+        <th>Parameter description</th><th>Value</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>GTFS input (ZIP file, directory or URL)</td>
+        <td th:text="${config.gtfsSource}" />
+    </tr>
+    <tr>
+        <td>Output directory</td>
+        <td th:text="${config.outputDirectory}" />
+    </tr>
+    <tr>
+        <td>Number of threads used to run the validator</td>
+        <td th:text="${config.numThreads}" />
+    </tr>
+    <tr>
+        <td>Country code (for phone validation)</td>
+        <td th:text="${config.countryCode.isUnknown()} ? 'The country code was not valid or was not provided.' : ${config.countryCode}" />
+    </tr>
+    <tr>
+        <td>Validation report name</td>
+        <td th:text="${config.validationReportFileName}" />
+    </tr>
+    <tr>
+        <td>System errors report name</td>
+        <td th:text="${config.systemErrorsReportFileName}" />
+    </tr>
+    <tr>
+        <td>HTML report name</td>
+        <td th:text="${config.htmlReportFileName}" />
+    </tr>
+    </tbody>
+</table>
+<br>
+<footer class="footer text-center text-muted mt-5">
+    Made with ♥ by <a href="https://mobilitydata.org/">MobilityData</a>
+</footer>
+</body>
+<script>
+    $(function(){
+        $(".accordion tr.notice").on("click", function(){
+            $(this).toggleClass("open").next(".description").toggleClass("open");
+        });
+    });
+</script>
+</html>

@@ -16,7 +16,8 @@
 | `-c`       | `--country_code`              | Optional               | Country code of the feed, e.g., `nl`. It must be a two-letter country code (ISO 3166-1 alpha-2). (e.g., `ca`, `us`). It can be either lower or upper case (e.g. `FR` or `GP`). If the country code is provided, phone numbers will be validated based on it.                             |
 | `-h`       | `--help`                      | Optional               | Print help menu.                                                                                                                                                                                                                                                                         |
 | `-t`       | `--threads`                   | Optional               | Number of threads to be used by Java to run the validator.                                                                                                                                                                                                                                                           |
-| `-v`       | `--validation_report_name`    | Optional               | Name of the validation report (including `.json` extension).                                                                                                                                                                                                                             |
+| `-v`       | `--validation_report_name`    | Optional               | Name of the validation report (including `.json` extension).
+| `-r`       | `--html_report_name`          | Optional               | Name of the HTML validation report (including `.html` extension).
 | `-e`       | `--system_errors_report_name` | Optional               | Name of the system errors report (including `.json` extension).                                                                                                                                                                                                                          |
 | `-n`       | `--export_notices_schema`     | Optional               | Export notice schema as a json file.                                                                                                                                                                                                                                                     |
 
@@ -33,10 +34,11 @@ java -jar gtfs-validator-v2.0.jar -i relative/path/to/dataset.zip -o relative/ou
 
 ...which will:
  1. Search for a GTFS dataset located at `relative/path/to/dataset.zip`
- 1. Validate the GTFS data and output the results to the directory located at `relative/output/path`. 
- 1. Export both validation and system errors reports to JSON by default. This folder will contain the `.json` file with information related to the validation process. The validation report will (by default) be named as `report.json` and the system errors report can be found under the name of `system_errors.json`.
+ 2. Validate the GTFS data and output the results to the directory located at `relative/output/path`. 
+ 3. Export validation and system errors reports to JSON by default. This folder will contain the `.json` file with information related to the validation process. The validation report will (by default) be named as `report.json` and the system errors report can be found under the name of `system_errors.json`.
+ 4. Export the HTML validation report, which is a standalone HTML file that can be opened in a web browser. This folder will contain the `.html` file with information related to the validation process. The HTML validation report will (by default) be named as `report.html`.
  
-  ⚠️ Note that the name of the validation report can be overridden by providing values to `-v` and/or `-e` CLI arguments. These **should** include `.json` extension.
+  ⚠️ Note that the name of the reports can be overridden by providing values to the respective CLI arguments mentioned above. These **should** include the correct extension, either `.json` or `.html`.
 
 ### on a hosted GTFS zip file at a URL
 Sample usage:

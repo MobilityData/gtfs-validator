@@ -17,9 +17,17 @@
 package org.mobilitydata.gtfsvalidator.cli;
 
 import com.beust.jcommander.Parameter;
+import com.google.common.flogger.FluentLogger;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import org.mobilitydata.gtfsvalidator.input.CountryCode;
+import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 
 /** Command-line arguments for GTFS Validator CLI. */
 public class Arguments {
+
+  private FluentLogger logger = FluentLogger.forEnclosingClass();
 
   @Parameter(
       names = {"-i", "--input"},
@@ -67,6 +75,11 @@ public class Arguments {
   private String validationReportName;
 
   @Parameter(
+      names = {"-r", "--html_report_name"},
+      description = "The name of the HTML validation report including .html extension.")
+  private String htmlReportName;
+
+  @Parameter(
       names = {"-e", "--system_errors_report_name"},
       description = "The name of the system errors report including .json extension.")
   private String systemErrorsReportName;
@@ -87,46 +100,38 @@ public class Arguments {
       description = "Export notices schema")
   private boolean exportNoticeSchema = false;
 
-  public String getFeedName() {
-    return feedName;
-  }
-
-  public String getInput() {
-    return input;
+  ValidationRunnerConfig toConfig() throws URISyntaxException {
+    ValidationRunnerConfig.Builder builder = ValidationRunnerConfig.builder();
+    if (input != null) {
+      builder.setGtfsSource(Path.of(input).toUri());
+    } else if (url != null) {
+      builder.setGtfsSource(new URI(url));
+      if (storageDirectory != null) {
+        builder.setStorageDirectory(Path.of(storageDirectory));
+      }
+    }
+    if (outputBase != null) {
+      builder.setOutputDirectory(Path.of(outputBase));
+    }
+    if (countryCode != null) {
+      builder.setCountryCode(CountryCode.forStringOrUnknown(countryCode));
+    }
+    if (validationReportName != null) {
+      builder.setValidationReportFileName(validationReportName);
+    }
+    if (htmlReportName != null) {
+      builder.setHtmlReportFileName(htmlReportName);
+    }
+    if (systemErrorsReportName != null) {
+      builder.setSystemErrorsReportFileName(systemErrorsReportName);
+    }
+    builder.setNumThreads(numThreads);
+    builder.setPrettyJson(pretty);
+    return builder.build();
   }
 
   public String getOutputBase() {
     return outputBase;
-  }
-
-  public int getNumThreads() {
-    return numThreads;
-  }
-
-  public String getCountryCode() {
-    return countryCode;
-  }
-
-  public String getUrl() {
-    return url;
-  }
-
-  public String getStorageDirectory() {
-    return storageDirectory;
-  }
-
-  public String getValidationReportName() {
-    if (validationReportName == null) {
-      return "report.json";
-    }
-    return validationReportName;
-  }
-
-  public String getSystemErrorsReportName() {
-    if (systemErrorsReportName == null) {
-      return "system_errors.json";
-    }
-    return systemErrorsReportName;
   }
 
   public boolean getHelp() {
@@ -139,6 +144,33 @@ public class Arguments {
 
   public boolean getExportNoticeSchema() {
     return exportNoticeSchema;
+  }
+
+  /** @return true if CLI parameter combination is legal, otherwise return false */
+  public boolean isValid() {
+    if (input == null && url == null) {
+      logger.atSevere().log(
+          "One of the two following CLI parameter must be provided: '--input' and '--url'");
+      return false;
+    }
+    if (input != null && url != null) {
+      logger.atSevere().log(
+          "The two following CLI parameters cannot be provided at the same time:"
+              + " '--input' and '--url'");
+      return false;
+    }
+    if (storageDirectory != null && url == null) {
+      logger.atSevere().log(
+          "CLI parameter '--storage_directory' must not be provided if '--url' is not provided");
+      return false;
+    }
+    if (feedName != null) {
+      logger.atSevere().log(
+          " '-f' or '--feed_name is no longer supported. Please use '-c' or '--country_code'"
+              + " instead.");
+      return false;
+    }
+    return true;
   }
 
   public boolean abortAfterNoticeSchemaExport() {
