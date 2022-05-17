@@ -119,8 +119,8 @@ public class GtfsValidatorApp extends JFrame {
     JFileChooser chooser = new JFileChooser();
     chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
     chooser.setFileFilter(new GtfsZipsAndDirectoriesFileFilter());
-    int rc = chooser.showOpenDialog(this);
-    if (rc == JFileChooser.APPROVE_OPTION) {
+    int result = chooser.showOpenDialog(this);
+    if (result == JFileChooser.APPROVE_OPTION) {
       File selectedFile = chooser.getSelectedFile();
       gtfsInputField.setText(selectedFile.toString());
     }
@@ -159,8 +159,8 @@ public class GtfsValidatorApp extends JFrame {
   private void showOutputDirectoryChooser() {
     JFileChooser chooser = new JFileChooser();
     chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-    int rc = chooser.showOpenDialog(this);
-    if (rc == JFileChooser.APPROVE_OPTION) {
+    int result = chooser.showOpenDialog(this);
+    if (result == JFileChooser.APPROVE_OPTION) {
       File selectedFile = chooser.getSelectedFile();
       outputDirectoryField.setText(selectedFile.toString());
     }
@@ -279,14 +279,14 @@ public class GtfsValidatorApp extends JFrame {
 
   private static Font createBoldFont() {
     JLabel label = new JLabel();
-    Font f = label.getFont();
-    return f.deriveFont(f.getStyle() | Font.BOLD);
+    Font baseFont = label.getFont();
+    return baseFont.deriveFont(baseFont.getStyle() | Font.BOLD);
   }
 
   private JLabel createLabelWithFont(String labelText, Font font) {
-    JLabel l = new JLabel(labelText);
-    l.setFont(font);
-    return l;
+    JLabel label = new JLabel(labelText);
+    label.setFont(font);
+    return label;
   }
 
   JButton getValidateButtonForTesting() {
