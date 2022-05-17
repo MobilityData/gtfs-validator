@@ -146,11 +146,11 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`thread_execution_error`](#thread_execution_error)                             | ExecutionException during multithreaded validation     |
 | [`u_r_i_syntax_error`](#u_r_i_syntax_error)                                     | A string could not be parsed as a URI reference.       |
 
-## Errors
+# Errors
 
 <a name="BlockTripsWithOverlappingStopTimesNotice"/>
 
-### BlockTripsWithOverlappingStopTimesNotice
+### block_trips_with_overlapping_sto_times
 
 Trips with the same block id have overlapping stop times.
 
@@ -1370,7 +1370,7 @@ Any other combination raise this error.
 
 </details>
 
-## Warnings
+# Warnings
 
 <a name="AttributionWithoutRoleNotice"/>
 
@@ -1623,7 +1623,7 @@ If possible, the GTFS dataset should cover at least the next 30 days of service.
 * [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
 
-<details>
+</details>
 
 <a name="InconsistentAgencyLangNotice"/>
 
@@ -1645,7 +1645,7 @@ Agencies from GTFS `agency.txt` have been found to have different languages.
 #### Affected files
 * [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
 
-<details>
+</details>
 
 <a name="LeadingOrTrailingWhitespacesNotice"/>
 
@@ -1668,7 +1668,7 @@ The value in CSV file has leading or trailing whitespaces.
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-<details>
+</details>
 
 <a name="MissingFeedInfoDateNotice"/>
 
@@ -1690,7 +1690,7 @@ Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
 #### Notice fields description
 
- <details>
+</details>
 
 <a name="MissingTimepointColumnNotice"/>
 
@@ -1710,7 +1710,7 @@ The `timepoint` column should be provided.
 #### Affected files
 * [`stop_times.txt`](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stop_timestxt)
 
-<details>
+</details>
 
 <a name="MissingTimepointValueNotice"/>
 
@@ -1733,7 +1733,7 @@ Even though the column `timepoint` is optional in `stop_times.txt` according to 
 #### Affected files
 * [`stop_times.txt`](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stop_timestxt)
 
-<details>
+</details>
 
 <a name="MoreThanOneEntityNotice"/>
 
@@ -1754,7 +1754,7 @@ The file is expected to have a single entity but has more (e.g., "feed_info.txt"
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-<details>
+</details>
 
 <a name="NonAsciiOrNonPrintableCharNotice"/>
 
@@ -1777,7 +1777,7 @@ A value of a field with type `id` contains non ASCII or non printable characters
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-<details>
+</details>
 
 <a name="PathwayDanglingGenericNodeNotice"/>
 
@@ -1802,7 +1802,7 @@ because there is no benefit in visiting it.
 * [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
-<details>
+</details>
 
 <a name="PathwayLoopNotice"/>
 
@@ -1823,7 +1823,7 @@ A pathway should not have same values for `from_stop_id` and `to_stop_id`.
 
 #### Affected files
 * [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
-<details>
+</details>
 
 <a name="PlatformWithoutParentStationNotice"/>
 
@@ -1846,7 +1846,7 @@ A platform has no `parent_station` field set.
 #### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
-<details>
+</details>
 
 <a name="RouteColorContrastNotice"/>
 
@@ -1870,7 +1870,7 @@ A route's color and `route_text_color` should be contrasting.
 #### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-<details>
+</details>
 
 <a name="RouteShortAndLongNameEqualNotice"/>
 
@@ -1899,7 +1899,7 @@ Example of bad data:
 #### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-<details>
+</details>
 
 <a name="RouteShortNameTooLongNotice"/>
 
@@ -1921,7 +1921,7 @@ Short name of a route is too long (more than 12 characters).
 #### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-<details>
+</details>
 
 <a name="SameNameAndDescriptionForRouteNotice"/>
 
@@ -1950,7 +1950,7 @@ See the GTFS and GTFS Best Practices links below for more examples of how to pop
 #### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-<details>
+</details>
 
 <a name="SameNameAndDescriptionForStopNotice"/>
 
@@ -1974,7 +1974,7 @@ The GTFS spec defines `stops.txt` [stop_description](https://gtfs.org/reference/
 #### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
-<details>
+</details>
 
 <a name="SameRouteAndAgencyUrlNotice"/>
 
@@ -1999,7 +1999,7 @@ A route should not have the same `routes.route_url` as a record from `agency.txt
 * [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
-<details>
+</details>
 
 <a name="SameStopAndAgencyUrlNotice"/>
 
@@ -2024,7 +2024,7 @@ A stop should not have the same `stops.stop_url` as a record from `agency.txt`.
 * [`agency.txt`](http://gtfs.org/reference/static#agencytxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
-<details>
+</details>
 
 <a name="SameStopAndRouteUrlNotice"/>
 
@@ -2049,7 +2049,7 @@ A stop should not have the same `stop.stop_url` as a record from `routes.txt`.
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
- <details>
+ </details>
 
 <a name="StopHasTooManyMatchesForShapeNotice"/>
 
@@ -2079,7 +2079,7 @@ A stop entry that has many potential matches to the trip's path of travel, as de
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 * [`stops_times.txt`](http://gtfs.org/reference/static#stopstimestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
- <details>
+ </details>
 
 <a name="StopsMatchShapeOutOfOrderNotice"/>
 
@@ -2112,7 +2112,7 @@ Two stop entries in `stop_times.txt` are different than their arrival-departure 
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 * [`stops_times.txt`](http://gtfs.org/reference/static#stopstimestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
-<details>
+</details>
 
 <a name="StopTooFarFromShapeNotice"/>
 
@@ -2141,7 +2141,7 @@ Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 
- <details>
+ </details>
 
 <a name="StopTooFarFromShapeUsingUserDistanceNotice"/>
 
@@ -2172,7 +2172,7 @@ A stop time entry that is a large distance away from the location of the shape i
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
   A stop time entry that is a large distance away from the location of the shape in `shapes.txt` as defined by `shape_dist_traveled` values.
-<details>
+</details>
 
 <a name="StopWithoutStopTimeNotice"/>
 
@@ -2204,7 +2204,7 @@ A translation references an unknown or missing GTFS table.
 #### Affected files
 * [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 
-<details>
+</details>
 <a name="UnexpectedEnumValueNotice"/>
 
 ### unexpected_enum_value
@@ -2238,7 +2238,7 @@ An enum has an unexpected value.
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 * [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
 
-<details>
+</details>
 
 <a name="UnusableTripNotice"/>
 
@@ -2260,7 +2260,7 @@ A trip must visit more than one stop in stop_times.txt to be usable by passenger
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 
-<details>
+</details>
 
 <a name="UnusedShapeNotice"/>
 
@@ -2284,7 +2284,7 @@ All records defined by GTFS `shapes.txt` should be used in `trips.txt`.
 * [`shapes.txt`](http://gtfs.org/reference/static#shapestxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 
-<details>
+</details>
 
 <a name="UnusedTripNotice"/>
 
@@ -2309,9 +2309,9 @@ Trips should be referred to at least once in `stop_times.txt`.
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
 
-<details>
+</details>
 
-## Infos
+# Infos
 
 <a name="UnknownColumnNotice"/>
 
@@ -2333,7 +2333,7 @@ A column is unknown.
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
-<details>
+</details>
 
 <a name="UnknownFileNotice"/>
 
@@ -2350,8 +2350,8 @@ A file is unknown.
 |-------------	|---------------------------------	|---------|
 | `filename`   	| The name of the unknown file.    	| String 	|
 
-<details>
-## System errors
+</details>
+# System errors
 
 <a name="IOError"/>
 
@@ -2365,7 +2365,7 @@ Error in IO operation.
 |-------------	|---------------------------------------------------------------	|---------|
 | `exception`  	| The name of the exception.                                    	| String 	|
 | `message`    	| The error message that explains the reason for the exception. 	| String  |
-<details>
+</details>
 <a name="RuntimeExceptionInLoaderError"/>
 
 ### runtime_exception_in_loader_error
@@ -2383,7 +2383,7 @@ A [RuntimeException](https://docs.oracle.com/javase/8/docs/api/java/lang/Runtime
 
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
-<details>
+</details>
 
 <a name="RuntimeExceptionInValidatorError"/>
 
@@ -2392,14 +2392,13 @@ A [RuntimeException](https://docs.oracle.com/javase/8/docs/api/java/lang/Runtime
 A [RuntimeException](https://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html) occurred during validation. This normally indicates a bug in validator code, e.g., in a custom validator class.
 <details>
 
-
 #### Notice fields description
 | Field name 	| Description                                                   	| Type    |
 |------------	|---------------------------------------------------------------	|---------|
 | `validator` | The name of the validator that caused the exception.            | String 	|
 | `exception` | The name of the exception.                                    	| String 	|
 | `message`   | The error message that explains the reason for the exception. 	| String  |
-<details>
+</details>
 
 <a name="ThreadExecutionError"/>
 
@@ -2414,7 +2413,7 @@ An [ExecutionException](https://docs.oracle.com/javase/8/docs/api/java/util/conc
 |-------------	|---------------------------------------------------------------	|---------|
 | `exception`  	| The name of the exception.                                    	| String 	|
 | `message`    	| The error message that explains the reason for the exception. 	| String  |
-<details>
+</details>
 
 <a name="URISyntaxError"/>
 
@@ -2429,4 +2428,4 @@ A string could not be parsed as a URI reference.
 |-------------	|---------------------------------------------------------------	|---------|
 | `exception`  	| The name of the exception.                                    	| String 	|
 | `message`    	| The error message that explains the reason for the exception. 	| String  |
-<details>
+</details>
