@@ -224,16 +224,19 @@ Note that we don't need to define the GTFS tables as local variables and we can 
 
 Add the rule to [`RULES.md`](../RULES.md) keeping the alphabetical order of the table: 
 ```markdown
-| [NewRuleRelatedToStops](#NewRuleRelatedToStops) | new rule short description | new_rule_related_to_stops | 
+| [new_rue_related_to_stops](#new_rule_related_to_stops) | new rule short description | new_rule_related_to_stops | 
 ```
 ...and add a definition of that rule, the notice fields description, the affected files and the reference to any additional documentation material in the errors or warnings section (maintaining alphabetical order).
 
 ```markdown
 <a name="NewRuleRelatedToStops"/>
 
-### NewRuleRelatedToStops
+### new_rule_related_to_stops
 
 Longer description of the new rule
+
+##### References
+* [stops.txt specification](http://gtfs.org/reference/static#stopstxt)
 
 <details>
 
@@ -245,9 +248,6 @@ Longer description of the new rule
 
 ##### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
-
-##### References
-* [stops.txt specification](http://gtfs.org/reference/static#stopstxt)
 
 </details>
 ```
