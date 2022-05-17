@@ -24,6 +24,44 @@ To build a JAR that can run stand-alone without any additional classes on the cl
 
 ```
 $ ./gradlew shadowJar 
+=======
+./gradlew shadowJar
+```
+
+## Packaging as Installable Application
+
+**NOTE:** The installable application is under active development.  It currently
+works best on Windows.
+
+To build an installable application package appropriate for your operating system
+(e.g. Windows, Mac OS, Linux), first make sure you have a recent version of the
+JDK installed (ver >= 15) that includes `jlink` and `jpackage`.  If you intend
+to redistribute the built application publicly, make sure it's an OpenJDK
+distribution (likely a recent build linked from https://openjdk.java.net/install/,
+ok if it's built by Oracle) and *NOT* an Oracle *commercial* JDK, where license
+and redistribution terms are murkier.
+
+If building on Windows, have https://wixtoolset.org/ installed on your path for
+Windows Installer support.  When installing WiX, if you get an error like:
+
+```
+WiX Toolset requires .NET Framework 3.5.1...
+```
+
+you can navigate to "Control Panel > All Control Panel Items > Programs and Features"
+and enable the Windows Features for .NET framework
+([stackoverflow](https://stackoverflow.com/a/57820594/937715)).
+
+To build the app and installer, run:
+
+```
+./gradlew clean jpackage
+```
+
+and look for the resulting application artifacts in:
+
+```
+./app/pkg/build/jpackage/
 ```
 
 ## Generating Javadocs
