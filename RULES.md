@@ -151,7 +151,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 
 <a name="BlockTripsWithOverlappingStopTimesNotice"/>
 
-### block_trips_with_overlapping_sto_times
+### block_trips_with_overlapping_stop_times
 
 Trips with the same block id have overlapping stop times.
 
