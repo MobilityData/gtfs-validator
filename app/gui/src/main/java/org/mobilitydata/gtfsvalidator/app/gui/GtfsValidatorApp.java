@@ -251,18 +251,20 @@ public class GtfsValidatorApp extends JFrame {
     config.setPrettyJson(true);
 
     String gtfsInput = gtfsInputField.getText();
-    if (!gtfsInput.isBlank()) {
-      if (gtfsInput.startsWith("http")) {
-        config.setGtfsSource(new URI(gtfsInput));
-      } else {
-        config.setGtfsSource(Path.of(gtfsInput).toUri());
-      }
+    if (gtfsInput.isBlank()) {
+      throw new IllegalStateException("gtfsInputField is blank");
+    }
+    if (gtfsInput.startsWith("http")) {
+      config.setGtfsSource(new URI(gtfsInput));
+    } else {
+      config.setGtfsSource(Path.of(gtfsInput).toUri());
     }
 
     String outputDirectory = outputDirectoryField.getText();
-    if (!outputDirectory.isBlank()) {
-      config.setOutputDirectory(Path.of(outputDirectory));
+    if (outputDirectory.isBlank()) {
+      throw new IllegalStateException("outputDirectoryField is blank");
     }
+    config.setOutputDirectory(Path.of(outputDirectory));
 
     Object numThreads = numThreadsSpinner.getValue();
     if (numThreads instanceof Integer) {
