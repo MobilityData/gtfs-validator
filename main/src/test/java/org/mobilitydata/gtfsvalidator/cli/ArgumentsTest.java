@@ -49,6 +49,7 @@ public class ArgumentsTest {
     assertThat(config.countryCode()).isEqualTo(CountryCode.forStringOrUnknown("au"));
     assertThat(config.numThreads()).isEqualTo(4);
     assertThat(config.validationReportFileName()).matches("report.json");
+    assertThat(config.htmlReportFileName()).matches("report.html");
     assertThat(config.systemErrorsReportFileName()).matches("system_errors.json");
   }
 
@@ -63,6 +64,7 @@ public class ArgumentsTest {
           "-u", "http://host/gtfs.zip",
           "-s", "/tmp/storage",
           "-v", "validation_report.json",
+          "-r", "validation_report.html",
           "-e", "errors.json",
         };
 
@@ -75,6 +77,7 @@ public class ArgumentsTest {
     assertThat(config.numThreads()).isEqualTo(4);
     assertThat(config.storageDirectory()).hasValue(Path.of("/tmp/storage"));
     assertThat(config.validationReportFileName()).matches("validation_report.json");
+    assertThat(config.htmlReportFileName()).matches("validation_report.html");
     assertThat(config.systemErrorsReportFileName()).matches("errors.json");
   }
 
@@ -95,6 +98,7 @@ public class ArgumentsTest {
     assertThat(config.countryCode()).isEqualTo(CountryCode.forStringOrUnknown("ca"));
     assertThat(config.numThreads()).isEqualTo(4);
     assertThat(config.validationReportFileName()).matches("report.json");
+    assertThat(config.htmlReportFileName()).matches("report.html");
     assertThat(config.systemErrorsReportFileName()).matches("system_errors.json");
   }
 
@@ -115,6 +119,8 @@ public class ArgumentsTest {
           "/tmp/storage",
           "--validation_report_name",
           "validation_report.json",
+          "--html_report_name",
+          "validation_report.html",
           "--system_errors_report_name",
           "errors.json",
         };
@@ -128,6 +134,7 @@ public class ArgumentsTest {
     assertThat(config.numThreads()).isEqualTo(4);
     assertThat(config.storageDirectory()).hasValue(Path.of("/tmp/storage"));
     assertThat(config.validationReportFileName()).matches("validation_report.json");
+    assertThat(config.htmlReportFileName()).matches("validation_report.html");
     assertThat(config.systemErrorsReportFileName()).matches("errors.json");
   }
 

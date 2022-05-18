@@ -75,6 +75,11 @@ public class Arguments {
   private String validationReportName;
 
   @Parameter(
+      names = {"-r", "--html_report_name"},
+      description = "The name of the HTML validation report including .html extension.")
+  private String htmlReportName;
+
+  @Parameter(
       names = {"-e", "--system_errors_report_name"},
       description = "The name of the system errors report including .json extension.")
   private String systemErrorsReportName;
@@ -113,6 +118,9 @@ public class Arguments {
     }
     if (validationReportName != null) {
       builder.setValidationReportFileName(validationReportName);
+    }
+    if (htmlReportName != null) {
+      builder.setHtmlReportFileName(htmlReportName);
     }
     if (systemErrorsReportName != null) {
       builder.setSystemErrorsReportFileName(systemErrorsReportName);
