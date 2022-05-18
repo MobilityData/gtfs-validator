@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunner;
 
@@ -58,7 +59,7 @@ public class Main {
 
   public static void main(String[] args) {
     logger.atInfo().log("gtfs-validator: start");
-    javax.swing.SwingUtilities.invokeLater(() -> createAndShowGUI(args));
+    SwingUtilities.invokeLater(() -> createAndShowGUI(args));
     logger.atInfo().log("gtfs-validator: exit");
   }
 
