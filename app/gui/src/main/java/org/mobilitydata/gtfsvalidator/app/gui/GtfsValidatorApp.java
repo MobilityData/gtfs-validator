@@ -25,6 +25,7 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -65,12 +66,14 @@ public class GtfsValidatorApp extends JFrame {
 
   private final MonitoredValidationRunner validationRunner;
   private final ValidationDisplay validationDisplay;
+  private final ResourceBundle bundle;
 
   public GtfsValidatorApp(
       MonitoredValidationRunner validationRunner, ValidationDisplay validationDisplay) {
     super("GTFS Schedule Validator");
     this.validationRunner = validationRunner;
     this.validationDisplay = validationDisplay;
+    this.bundle = ResourceBundle.getBundle(GtfsValidatorApp.class.getName());
   }
 
   public void setGtfsSource(String source) {
@@ -113,20 +116,20 @@ public class GtfsValidatorApp extends JFrame {
 
   private void constructGtfsInputSection(JPanel parent) {
     // GTFS Input Section
-    parent.add(createLabelWithFont("GTFS Input:", BOLD_FONT));
+    parent.add(createLabelWithFont(bundle.getString("gtfs_input"), BOLD_FONT));
 
     gtfsInputField
         .getDocument()
         .addDocumentListener(documentChangeListener(this::updateValidationButtonStatus));
     parent.add(gtfsInputField);
 
-    JButton chooseGtfsInputButton = new JButton("Choose Local File...");
+    JButton chooseGtfsInputButton = new JButton(bundle.getString("choose_local_file"));
     parent.add(chooseGtfsInputButton);
     chooseGtfsInputButton.addActionListener(
         (e) -> {
           showGtfsInputFileChooser();
         });
-    parent.add(new JLabel("You can select a ZIP file, a directory, or a URL."));
+    parent.add(new JLabel(bundle.getString("gtfs_input_description")));
   }
 
   private void showGtfsInputFileChooser() {
@@ -140,7 +143,7 @@ public class GtfsValidatorApp extends JFrame {
     }
   }
 
-  private static class GtfsZipsAndDirectoriesFileFilter extends FileFilter {
+  private class GtfsZipsAndDirectoriesFileFilter extends FileFilter {
     @Override
     public boolean accept(File f) {
       return f.isDirectory() || f.getName().endsWith(".zip");
@@ -148,26 +151,26 @@ public class GtfsValidatorApp extends JFrame {
 
     @Override
     public String getDescription() {
-      return "GTFS ZIPs and Directories";
+      return bundle.getString("gtfs_zips_and_directories");
     }
   }
 
   private void constructOutputDirectorySection(JPanel parent) {
     // Output Directory Section
-    parent.add(createLabelWithFont("Output Directory:", BOLD_FONT));
+    parent.add(createLabelWithFont(bundle.getString("output_directory"), BOLD_FONT));
 
     outputDirectoryField
         .getDocument()
         .addDocumentListener(documentChangeListener(this::updateValidationButtonStatus));
     parent.add(outputDirectoryField);
 
-    JButton chooseOutputDirectoryButton = new JButton("Choose Output Directory...");
+    JButton chooseOutputDirectoryButton = new JButton(bundle.getString("choose_output_directory"));
     chooseOutputDirectoryButton.addActionListener(
         (e) -> {
           showOutputDirectoryChooser();
         });
     parent.add(chooseOutputDirectoryButton);
-    parent.add(new JLabel("The validation report will be written here."));
+    parent.add(new JLabel(bundle.getString("output_directory_description")));
   }
 
   private void showOutputDirectoryChooser() {
@@ -184,7 +187,7 @@ public class GtfsValidatorApp extends JFrame {
     advancedOptionsPanel.setBorder(
         BorderFactory.createCompoundBorder(
             BorderFactory.createEmptyBorder(0, 0, 20, 0),
-            BorderFactory.createTitledBorder("Advanced Options")));
+            BorderFactory.createTitledBorder(bundle.getString("advanced_options"))));
     parent.add(advancedOptionsPanel);
 
     JPanel panel = new JPanel();
@@ -201,14 +204,14 @@ public class GtfsValidatorApp extends JFrame {
     fieldConstraints.anchor = GridBagConstraints.NORTHEAST;
 
     labelConstraints.gridy = 0;
-    panel.add(new JLabel("Number of threads:"), labelConstraints);
+    panel.add(new JLabel(bundle.getString("number_of_threads")), labelConstraints);
 
     fieldConstraints.gridy = 0;
     panel.add(numThreadsSpinner, fieldConstraints);
     numThreadsSpinner.setValue(1);
 
     labelConstraints.gridy = 1;
-    panel.add(new JLabel("Country Code:"), labelConstraints);
+    panel.add(new JLabel(bundle.getString("country_code")), labelConstraints);
 
     fieldConstraints.gridy = 1;
     panel.add(countryCodeField, fieldConstraints);
@@ -221,7 +224,7 @@ public class GtfsValidatorApp extends JFrame {
     validateButtonPanel.setLayout(new BoxLayout(validateButtonPanel, BoxLayout.LINE_AXIS));
     panel.add(validateButtonPanel);
 
-    JButton advancedButton = new JButton("Advanced");
+    JButton advancedButton = new JButton(bundle.getString("advanced"));
     advancedButton.addActionListener(
         (e) -> {
           advancedOptionsPanel.setVisible(!advancedOptionsPanel.isVisible());
@@ -231,7 +234,7 @@ public class GtfsValidatorApp extends JFrame {
 
     validateButtonPanel.add(Box.createHorizontalGlue());
 
-    validateButton.setText("Validate");
+    validateButton.setText(bundle.getString("validate"));
     updateValidationButtonStatus();
     validateButton.addActionListener((e) -> runValidation());
     validateButtonPanel.add(validateButton);

@@ -1,6 +1,7 @@
 package org.mobilitydata.gtfsvalidator.app.gui;
 
 import com.google.common.flogger.FluentLogger;
+import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import javax.swing.*;
@@ -20,10 +21,12 @@ class MonitoredValidationRunner {
 
   private final ValidationRunner runner;
   private final ValidationDisplay display;
+  private final ResourceBundle bundle;
 
   MonitoredValidationRunner(ValidationRunner runner, ValidationDisplay display) {
     this.runner = runner;
     this.display = display;
+    this.bundle = ResourceBundle.getBundle(MonitoredValidationRunner.class.getName());
   }
 
   void run(ValidationRunnerConfig config, JFrame parentFrame) {
@@ -55,13 +58,13 @@ class MonitoredValidationRunner {
   }
 
   private JDialog createProgressDialog(JFrame parent) {
-    JDialog dialog = new JDialog(parent, "Validation");
+    JDialog dialog = new JDialog(parent, bundle.getString("validation"));
 
     JPanel panel = new JPanel();
     panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
     dialog.add(panel);
 
-    JLabel label = new JLabel("Validation is running...");
+    JLabel label = new JLabel(bundle.getString("validation_is_running"));
     label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     panel.add(label);
 
