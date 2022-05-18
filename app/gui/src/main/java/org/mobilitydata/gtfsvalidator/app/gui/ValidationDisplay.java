@@ -17,10 +17,9 @@ class ValidationDisplay {
       handleError();
     }
 
-    Path outputDirectory = config.outputDirectory();
-    Path reportPath = outputDirectory.resolve(config.validationReportFileName());
+    Path reportPath = config.htmlReportPath();
     if (status == ValidationRunner.Status.SYSTEM_ERRORS) {
-      reportPath = outputDirectory.resolve(config.systemErrorsReportFileName());
+      reportPath = config.systemErrorsReportPath();
     }
 
     try {
