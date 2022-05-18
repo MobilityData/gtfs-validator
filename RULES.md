@@ -1450,9 +1450,9 @@ A row in the input file has only spaces.
 
 </details>
 
-### equal_shape_distance_same_coordinates
-
 <a name="EqualShapeDistanceSameCoordinatesNotice"/>
+
+### equal_shape_distance_same_coordinates
 
 When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` must increase along a shape. Two consecutive points with equal values for `shape_dist_traveled` and the same coordinates indicate a duplicative shape point.
 
