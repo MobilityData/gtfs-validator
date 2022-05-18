@@ -1428,8 +1428,9 @@ Example of bad data:
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
 
 
-<a name="EmptyRowNotice"/>
 </details>
+
+<a name="EmptyRowNotice"/>
 
 ### empty_row
 
