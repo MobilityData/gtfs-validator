@@ -16,7 +16,6 @@
 package org.mobilitydata.gtfsvalidator.app.gui;
 
 import com.google.common.flogger.FluentLogger;
-import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,18 +23,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunner;
-import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 
 /**
  * The main entry point for the GUI application.
  *
  * <p>Compared to the CLI jar, this entry point is designed to be packaged as a native application
  * to be run directly by the user.
- *
- * <p>TODO(#1134): Follow up work will add a minimal UI for selecting the input GTFS and potentially
- * the output directory.
  */
 public class Main {
   // We use `~/GtfsValidator` as the default output directory for reports and
@@ -63,53 +59,36 @@ public class Main {
 
   public static void main(String[] args) {
     logger.atInfo().log("gtfs-validator: start");
+    SwingUtilities.invokeLater(() -> createAndShowGUI(args));
+    logger.atInfo().log("gtfs-validator: exit");
+  }
+
+  private static void createAndShowGUI(String[] args) {
+    try {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    } catch (Exception e) {
+      logger.atSevere().withCause(e).log("Error setting system look-and-feel");
+    }
+
+    ValidationDisplay display = new ValidationDisplay();
+    MonitoredValidationRunner runner =
+        new MonitoredValidationRunner(new ValidationRunner(), display);
+    GtfsValidatorApp app = new GtfsValidatorApp(runner, display);
+    app.constructUI();
 
     // On Windows, if you drag a file onto the application shortcut, it will
     // execute the app with the file as the first command-line argument.  This
     // doesn't appear to work on Mac OS.
-    if (args.length != 1) {
-      logger.atSevere().log("No GTFS input specified - args=%d", args.length);
-      System.exit(-1);
-    } else {
-      run(args[0]);
+    if (args.length == 1) {
+      app.setGtfsSource(args[0]);
     }
 
-    logger.atInfo().log("gtfs-validator: exit");
-  }
+    app.setOutputDirectory(getDefaultOutputDirectory());
 
-  private static void run(String path) {
-    Path workingDirectory = getDefaultOutputDirectory();
-
-    ValidationRunnerConfig config =
-        ValidationRunnerConfig.builder()
-            .setGtfsSource(Path.of(path).toUri())
-            .setOutputDirectory(workingDirectory)
-            .setPrettyJson(true)
-            .build();
-
-    ValidationRunner runner = new ValidationRunner();
-    ValidationRunner.Status status = runner.run(config);
-
-    if (status == ValidationRunner.Status.EXCEPTION) {
-      JOptionPane.showMessageDialog(
-          null,
-          "A non-recoverable error occurred during validation.",
-          "ERROR",
-          JOptionPane.ERROR_MESSAGE);
-      System.exit(-1);
-    }
-
-    Path reportPath = workingDirectory.resolve(config.validationReportFileName());
-    if (status == ValidationRunner.Status.SYSTEM_ERRORS) {
-      reportPath = workingDirectory.resolve(config.systemErrorsReportFileName());
-    }
-
-    try {
-      Desktop.getDesktop().browse(reportPath.toUri());
-    } catch (IOException ex) {
-      logger.atSevere().withCause(ex).log("Error opening browser");
-      System.exit(-1);
-    }
+    app.pack();
+    // This causes the application window to center in the screen.
+    app.setLocationRelativeTo(null);
+    app.setVisible(true);
   }
 
   /**

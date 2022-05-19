@@ -38,7 +38,15 @@ public abstract class ValidationRunnerConfig {
 
   public abstract String htmlReportFileName();
 
+  public Path htmlReportPath() {
+    return outputDirectory().resolve(htmlReportFileName());
+  }
+
   public abstract String systemErrorsReportFileName();
+
+  public Path systemErrorsReportPath() {
+    return outputDirectory().resolve(systemErrorsReportFileName());
+  }
 
   // Determines the number of parallel threads of execution used during
   // validation.
