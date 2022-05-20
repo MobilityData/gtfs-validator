@@ -108,6 +108,15 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
   }
 
   /**
+   * Tells if the file is recommended according to GTFS.
+   *
+   * <p>Note that a recommended file may be empty.
+   *
+   * @return true if the file is recommended, false otherwise
+   */
+  public abstract boolean isRecommended();
+
+  /**
    * Tells if the file is required according to GTFS.
    *
    * <p>Note that a required file may be empty.

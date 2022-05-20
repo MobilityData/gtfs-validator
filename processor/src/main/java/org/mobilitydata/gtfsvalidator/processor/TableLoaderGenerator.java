@@ -158,6 +158,7 @@ public class TableLoaderGenerator {
 
     typeSpec.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).build());
     typeSpec.addMethod(generateGtfsFilenameMethod());
+    typeSpec.addMethod(generateIsRecommendedMethod());
     typeSpec.addMethod(generateIsRequiredMethod());
     typeSpec.addMethod(generateLoadMethod());
     typeSpec.addMethod(generateLoadMissingFileMethod());
@@ -409,6 +410,15 @@ public class TableLoaderGenerator {
         .addModifiers(Modifier.PUBLIC)
         .returns(String.class)
         .addStatement("return FILENAME")
+        .build();
+  }
+
+  private MethodSpec generateIsRecommendedMethod() {
+    return MethodSpec.methodBuilder("isRecommended")
+        .addModifiers(Modifier.PUBLIC)
+        .returns(boolean.class)
+        .addAnnotation(Override.class)
+        .addStatement("return $L", fileDescriptor.recommended())
         .build();
   }
 
