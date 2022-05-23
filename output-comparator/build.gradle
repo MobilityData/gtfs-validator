@@ -4,9 +4,6 @@ plugins {
     id 'application'
 }
 
-group 'org.mobilitydata'
-version "${System.getenv("versionTag")}_cli"
-
 sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
@@ -39,12 +36,8 @@ jar {
 
 
 shadowJar {
-    // Change the JAR name from cli-app to comparator
-    archiveBaseName = 'output-comparator'
-    // Remove "-all" from the end of the JAR file name
-    archiveClassifier = null
-    // Add "v" to version to match previous releases
-    archiveVersion = project.version
+    // Change the JAR suffix from 'all' to 'cli'
+    archiveClassifier = 'cli'
 }
 
 mainClassName = 'org.mobilitydata.gtfsvalidator.outputcomparator.cli.Main'
