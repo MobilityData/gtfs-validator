@@ -2,9 +2,6 @@ plugins {
     id 'java'
 }
 
-group 'org.mobilitydata'
-version "${System.getenv("versionTag")}"
-
 sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {

@@ -22,13 +22,6 @@ plugins {
 }
 
 applicationDefaultJvmArgs = [ "-Xmx8G" ]
-def groupName = 'org.mobilitydata'
-
-group groupName
-version "${System.getenv("versionTag")}"
-
-group groupName
-version "${System.getenv("versionTag")}_cli"
 
 jar {
     // Add the manifest within the JAR, using gtfs-validator as the title
@@ -44,12 +37,10 @@ shadowJar {
     minimize {
         exclude(dependency('org.apache.httpcomponents:httpclient'))
     }
-    // Change the JAR name from cli-app to gtfs-validator
+    // Change the JAR name from 'main' to 'gtfs-validator'
     archiveBaseName = rootProject.name
-    // Remove "-all" from the end of the JAR file name
-    archiveClassifier = null
-    // Add "v" to version to match previous releases
-    archiveVersion = project.version
+    // Change the JAR suffix from 'all' to 'cli'
+    archiveClassifier = 'cli'
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -63,9 +54,7 @@ repositories {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            groupId = groupName
-            artifactId = rootProject.name
-            version = "${System.getenv("versionTag")}"
+            artifactId = 'gtfs-validator-main'
 
             from components.java
         }
