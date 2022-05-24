@@ -21,7 +21,11 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.notice.*;
+import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
+import org.mobilitydata.gtfsvalidator.notice.NonAsciiOrNonPrintableCharNotice;
+import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.UnknownColumnNotice;
 
 @RunWith(JUnit4.class)
 public class ReportSummaryTest {

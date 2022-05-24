@@ -1,7 +1,7 @@
 package org.mobilitydata.gtfsvalidator.app.gui;
 
 import com.google.common.flogger.FluentLogger;
-import java.awt.*;
+import java.awt.Desktop;
 import java.io.IOException;
 import java.nio.file.Path;
 import javax.swing.JOptionPane;
