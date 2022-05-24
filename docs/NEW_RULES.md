@@ -1,13 +1,18 @@
 # Adding new rules
 
 We will want to add new rules to this validator as the static [GTFS specification](http://gtfs.org/reference/static) evolves. This page outlines the process of adding new rules to this tool.
+Note that:
+- Notices related to file parsing and data types are defined in the [core](/core/src/main/java/org/mobilitydata/gtfsvalidator/notice)
+- Notices related to GTFS semantics/business logic are encapsulated within the related validation rule class. See the example below in [`TripUsageValidator`](/main/src/main/java/org/mobilitydata/gtfsvalidator/validator/TripUsageValidator.java)
 
 ## 0. Prepare for implementation 
 
 - Check the [current rules](../RULES.md) to make sure the rule doesn't already exist.
 - Check the [list of possible future rules](https://github.com/MobilityData/gtfs-validator/issues?q=is%3Aopen+is%3Aissue+label%3A%22new+rule%22) to see if an issue already exists for the proposed rule.
   - If no existing issue exists, open [a new issue](https://github.com/MobilityData/gtfs-validator/issues/new/choose).
-- Discuss the rule with the community via the Github issue and come to a consensus on the exact logic, and if it should be an `ERROR` or a `WARNING`. See [definitions for ERROR and WARNING](../RULES.md#definitions).
+- Discuss the rule with the community via the Github issue and come to a consensus on the exact logic, and if it should be an `ERROR`, a `WARNING` or an `INFO`. See [definitions for severities](../RULES.md#the-severity-of-a-notice).
+- Please note that [`ValidationNotices`](core/src/main/java/org/mobilitydata/gtfsvalidator/notice/ValidationNotice.java) should be distinguished from [`SystemErrors`](core/src/main/java/org/mobilitydata/gtfsvalidator/notice/SystemError.java): while `ValidationNotices` give information about the data quality, `SystemErrors` are not semantic errors, they give information about things that may have gone wrong during the validation process such as an impossibility to unzip a GTFS archive.
+
 - Implement new rule using the process below
 
 ## 1. Implement the new rule
@@ -215,25 +220,36 @@ The `validate()` now takes an additional parameters now:
 
 Note that we don't need to define the GTFS tables as local variables and we can also omit the constructor. The notice subclass is declared the same as before.
 
-## 2. Document the new rule in [`RULES.md`](../RULES.md) and [`NOTICES.md](/docs/NOTICES.md).
+## 2. Document the new rule in [`RULES.md`](../RULES.md).
 
 Add the rule to [`RULES.md`](../RULES.md) keeping the alphabetical order of the table: 
 ```markdown
-| [NewRuleRelatedToStops](#NewRuleRelatedToStops) | new rule short description | 
+| [new_rule_related_to_stops](#new_rule_related_to_stops) | new rule short description | new_rule_related_to_stops | 
 ```
-...and add a definition of that rule in the errors or warnings section (still keeping the alphabetical order).
-
-Repeat the same process in [`NOTICES.md`](/docs/NOTICES.md) to provide more details about the new notices' fields description.
+...and add a definition of that rule, the notice fields description, the affected files and the reference to any additional documentation material in the errors or warnings section (maintaining alphabetical order).
 
 ```markdown
 <a name="NewRuleRelatedToStops"/>
 
-### NewRuleRelatedToStops
+### new_rule_related_to_stops
 
-New rule long description
+Longer description of the new rule
 
-#### References:
+##### References
 * [stops.txt specification](http://gtfs.org/reference/static#stopstxt)
+
+<details>
+
+#### Notice fields description
+| Field name                | Description                            	| Type    	|
+|-----------------------	|-------------------------------------------|---------	|
+| `FieldName1`              | The id of the faulty shape.               | String  	|
+| `FieldName2`          	| The row number from `shapes.txt`.      	| Long    	|
+
+##### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+
+</details>
 ```
 
 Users will be directed here when looking at error reports (e.g., from a web interface), so any information that might help a data producer or consumer fix the problem should be included here.

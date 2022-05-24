@@ -10,8 +10,9 @@ This README contains information for the master branch of this project, which is
 # Introduction
 This is a command-line tool written in Java that performs the following steps:
 1. Loads input GTFS zip file from a URL or disk
-1. Checks file integrity, numeric type parsing and ranges as well as string format according to the [GTFS Schedule specification](https://gtfs.mobilitydata.org/spec/gtfs-schedule#h.hc443y62gb8c)
-1. Performs GTFS [business rule validation](/RULES.md)
+2. Checks file integrity, numeric type parsing and ranges as well as string format according to the [GTFS Schedule specification](https://gtfs.mobilitydata.org/spec/gtfs-schedule#h.hc443y62gb8c)
+3. Performs GTFS [business rule validation](/RULES.md)
+4. Provides an easy-to-use validation report in HTML format that can be opened in the browser and shared with other parties. The report is also available in JSON format that can be used for parsing and running additional analyses.
 
 # Run the app via command line
 ### Setup
@@ -32,6 +33,12 @@ You can run this validator using a GTFS dataset on your computer, or from a URL.
   - here is an example of what the command could look like: `java -jar gtfs-validator-v-snapshot_cli.jar -u https://www.abc.com/gtfs.zip -o output`
 
 More detailed instructions with all the parameters that exists are available on our ["Usage"](/docs/USAGE.md) page.
+
+### Visualize the results
+In the output directory, the following files will be created:
+- `report.html`: the validation report in HTML format. It can be opened in a browser.
+- `report.json`: the validation report in JSON format.
+- `system_errors.json`: this file will be created every-time the validator is run. If no system errors were encountered, this file will be empty.
 
 # Run the app using Docker
 ### Setup
@@ -54,6 +61,9 @@ where:
 `... c:/myDirectory:/theContainerDirectory ...`
 
 The validator can then be executed via bash commands. See the [preceeding instructions for command line usage](#run-the-app-via-command-line).
+
+### Visualize the results
+In the output directory, the reports will be created as described [here](#visualize-the-results).
 
 # Validation rules
 * [Implemented rules](/RULES.md)
