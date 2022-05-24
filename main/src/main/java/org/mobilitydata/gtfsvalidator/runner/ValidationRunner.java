@@ -228,7 +228,7 @@ public class ValidationRunner {
       throws IOException, URISyntaxException {
     URI source = config.gtfsSource();
     if (source.getScheme().equals("file")) {
-      return GtfsInput.createFromPath(Paths.get(source));
+      return GtfsInput.createFromPath(Paths.get(source.getPath()));
     }
 
     if (config.storageDirectory().isEmpty()) {
