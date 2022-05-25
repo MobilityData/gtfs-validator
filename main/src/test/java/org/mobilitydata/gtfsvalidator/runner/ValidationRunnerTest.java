@@ -36,6 +36,7 @@ public class ValidationRunnerTest {
     @Test
     public void createGtfsInput_LinuxPath_valid() throws IOException, URISyntaxException {
         ValidationRunnerConfig config = buildConfig("/Users/me/gtfs-validator/non-existent-file.zip");
+        
         // We are testing path parsing here only. We expect a FileNotFoundException but NOT a InvalidPathException.
         assertThrows(FileNotFoundException.class, () -> ValidationRunner.createGtfsInput(config));
     }
