@@ -3,6 +3,10 @@ name: Package Application
 on:
   push:
     branches: [ master ]
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'package_app.yml'
   release:
     types: [ prereleased, released ]
   workflow_dispatch:
@@ -38,15 +42,10 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: jpackage
-      - name: Upload Windows Installer
+      - name: Upload Installer
         uses: actions/upload-artifact@v2
-        if: matrix.os == 'windows-latest'
         with:
-          name: Windows Installer
-          path: app/pkg/build/jpackage/*.msi
-      - name: Upload MacOS Installer
-        uses: actions/upload-artifact@v2
-        if: matrix.os == 'macos-latest'
-        with:
-          name: MacOS Installer
-          path: app/pkg/build/jpackage/*.dmg
+          name: Installer - ${{matrix.os}}
+          path: |
+            app/pkg/build/jpackage/*.msi
+            app/pkg/build/jpackage/*.dmg
