@@ -7,7 +7,7 @@ on:
     branches: [ master ]
   release:
     types: [ prereleased, released ]
-  workflow_dispatch
+  workflow_dispatch:
 
 jobs:
   validate_gradle_wrapper:
