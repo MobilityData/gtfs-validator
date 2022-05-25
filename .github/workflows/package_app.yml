@@ -30,14 +30,8 @@ jobs:
         with:
           java-version: '17'
           distribution: 'zulu'
-      - name: Cache Gradle packages
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle
       - name: Package GUI app installer with Gradle
-        uses: eskatos/gradle-command-action@v1
+        uses: gradle/gradle-build-action@v2
         with:
           arguments: jpackage
       - name: Upload Windows Installer
