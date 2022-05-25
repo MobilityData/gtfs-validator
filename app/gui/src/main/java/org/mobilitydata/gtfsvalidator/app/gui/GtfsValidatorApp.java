@@ -25,6 +25,8 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -68,6 +70,8 @@ public class GtfsValidatorApp extends JFrame {
   private final ValidationDisplay validationDisplay;
   private final ResourceBundle bundle;
 
+  private final List<Runnable> preValidationCallbacks = new ArrayList<>();
+
   public GtfsValidatorApp(
       MonitoredValidationRunner validationRunner, ValidationDisplay validationDisplay) {
     super("GTFS Schedule Validator");
@@ -80,16 +84,40 @@ public class GtfsValidatorApp extends JFrame {
     gtfsInputField.setText(source);
   }
 
+  public String getGtfsSource() {
+    return gtfsInputField.getText();
+  }
+
   public void setOutputDirectory(Path outputDirectory) {
     outputDirectoryField.setText(outputDirectory.toString());
+  }
+
+  public String getOutputDirectory() {
+    return outputDirectoryField.getText();
   }
 
   public void setNumThreads(int numThreads) {
     numThreadsSpinner.setValue(numThreads);
   }
 
+  public int getNumThreads() {
+    Object value = numThreadsSpinner.getValue();
+    if (value instanceof Integer) {
+      return (Integer) value;
+    }
+    return 0;
+  }
+
   public void setCountryCode(String countryCode) {
     countryCodeField.setText(countryCode);
+  }
+
+  public String getCountryCode() {
+    return countryCodeField.getText();
+  }
+
+  void addPreValidationCallback(Runnable callback) {
+    preValidationCallbacks.add(callback);
   }
 
   void constructUI() {
@@ -255,6 +283,10 @@ public class GtfsValidatorApp extends JFrame {
   }
 
   private void runValidation() {
+    for (Runnable r : preValidationCallbacks) {
+      r.run();
+    }
+
     try {
       ValidationRunnerConfig config = buildConfig();
       validationRunner.run(config, this);

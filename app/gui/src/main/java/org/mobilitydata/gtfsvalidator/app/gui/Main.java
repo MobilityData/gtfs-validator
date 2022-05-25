@@ -76,6 +76,14 @@ public class Main {
     GtfsValidatorApp app = new GtfsValidatorApp(runner, display);
     app.constructUI();
 
+    GtfsValidatorPreferences prefs = new GtfsValidatorPreferences();
+    prefs.loadPreferences(app);
+    // We save preferences each time validation is run.
+    app.addPreValidationCallback(
+        () -> {
+          prefs.savePreferences(app);
+        });
+
     // On Windows, if you drag a file onto the application shortcut, it will
     // execute the app with the file as the first command-line argument.  This
     // doesn't appear to work on Mac OS.
@@ -83,7 +91,11 @@ public class Main {
       app.setGtfsSource(args[0]);
     }
 
-    app.setOutputDirectory(getDefaultOutputDirectory());
+    // We set a default output directory as a fallback if the user didn't
+    // have one previously set.
+    if (app.getOutputDirectory().isBlank()) {
+      app.setOutputDirectory(getDefaultOutputDirectory());
+    }
 
     app.pack();
     // This causes the application window to center in the screen.
