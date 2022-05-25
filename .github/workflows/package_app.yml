@@ -3,8 +3,6 @@ name: Package Application
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
   release:
     types: [ prereleased, released ]
   workflow_dispatch:
@@ -22,15 +20,19 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ macos-latest, windows-latest ]
+        os: [ macos-latest, windows-latest, ubuntu-latest ]
     steps:
       - uses: actions/checkout@v2
         with:
+          # We need to download all tags so that the axion-release-plugin
+          # can resolve the most recent version tag.
           fetch-depth: 0
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
+          # We need a recent version of Java with jpackage included.
           java-version: '17'
+          # We use the zulu distribution, which is an OpenJDK distro.
           distribution: 'zulu'
       - name: Package GUI app installer with Gradle
         uses: gradle/gradle-build-action@v2
