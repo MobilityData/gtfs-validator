@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ master ]
     paths:
-      - 'package_app.yml'
+      - '**/package_app.yml'
   release:
     types: [ prereleased, released ]
   workflow_dispatch:
