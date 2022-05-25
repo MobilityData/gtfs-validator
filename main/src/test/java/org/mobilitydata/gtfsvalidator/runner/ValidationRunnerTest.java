@@ -29,7 +29,7 @@ public class ValidationRunnerTest {
         buildConfig("C:\\projects\\gtfs-validator\\non-existent-file.zip");
 
     // We are testing path parsing here only. We expect a FileNotFoundException but NOT a
-    // InvalidPathException.
+    // InvalidPathException. This should catch issues such as #1158.
     assertThrows(FileNotFoundException.class, () -> ValidationRunner.createGtfsInput(config));
   }
 
@@ -38,7 +38,7 @@ public class ValidationRunnerTest {
     ValidationRunnerConfig config = buildConfig("/Users/me/gtfs-validator/non-existent-file.zip");
 
     // We are testing path parsing here only. We expect a FileNotFoundException but NOT a
-    // InvalidPathException.
+    // InvalidPathException. This should catch issues such as #1158.
     assertThrows(FileNotFoundException.class, () -> ValidationRunner.createGtfsInput(config));
   }
 }
