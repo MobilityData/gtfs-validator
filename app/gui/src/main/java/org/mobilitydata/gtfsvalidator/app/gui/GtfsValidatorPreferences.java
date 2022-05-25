@@ -19,11 +19,7 @@ public class GtfsValidatorPreferences {
   private final Preferences prefs;
 
   public GtfsValidatorPreferences() {
-    this(Preferences.userNodeForPackage(GtfsValidatorPreferences.class));
-  }
-
-  GtfsValidatorPreferences(Preferences prefs) {
-    this.prefs = prefs;
+    this.prefs = Preferences.userNodeForPackage(GtfsValidatorPreferences.class);
   }
 
   public void loadPreferences(GtfsValidatorApp app) {

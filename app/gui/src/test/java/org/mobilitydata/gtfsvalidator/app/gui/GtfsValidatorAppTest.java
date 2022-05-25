@@ -82,4 +82,17 @@ public class GtfsValidatorAppTest {
     assertThat(config.numThreads()).isEqualTo(5);
     assertThat(config.countryCode().getCountryCode()).isEqualTo("US");
   }
+
+  @Test
+  public void testPreValidationCallback() throws URISyntaxException {
+    app.setGtfsSource("http://transit/gtfs.zip");
+    app.setOutputDirectory(Path.of("/path/to/output"));
+
+    Runnable callback = Mockito.mock(Runnable.class);
+    app.addPreValidationCallback(callback);
+
+    app.getValidateButtonForTesting().doClick();
+
+    verify(callback).run();
+  }
 }
