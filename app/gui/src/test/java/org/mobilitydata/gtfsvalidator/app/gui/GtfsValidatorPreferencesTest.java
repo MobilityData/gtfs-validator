@@ -5,11 +5,14 @@ import static com.google.common.truth.Truth.assertThat;
 import java.nio.file.Path;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.mockito.quality.Strictness;
 
+@RunWith(JUnit4.class)
 public class GtfsValidatorPreferencesTest {
 
   @Rule public MockitoRule rule = MockitoJUnit.rule().strictness(Strictness.STRICT_STUBS);
