@@ -1,4 +1,4 @@
-name: Package Application
+name: Package Installers
 
 on:
   push:
