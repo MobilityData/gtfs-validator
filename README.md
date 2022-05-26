@@ -16,7 +16,7 @@ This is a cross-platform application written in Java that performs the following
 
 # Running the app
 ### Setup
-1. Navigate to the [Releases page](https://github.com/MobilityData/gtfs-validator/releases) and download the `Gtfs Validator` installer for your operating system:
+1. Navigate to the [Releases page](https://github.com/MobilityData/gtfs-validator/releases) and download the latest `Gtfs Validator` installer for your operating system:
     * Windows => `.msi`
     * Mac OS => `.dmg`
     * Linux => `.deb`
@@ -29,23 +29,22 @@ Once installed, run the application and you will see the following screen:
 
 There are two primary options to set:
 
-*   `GTFS Input`: Use this to specify the GTFS feed to validate.  You can specify a URL, ZIP file, or a directory containing the individual `.txt` files of a feed.  You can paste the input location directly into the input field or use the `Choose Local File...` button to open a file-chooser dialog to select a file on your local system.  
-*   `Output Directory`: This is the directory where the validation reports will be written.
+* `GTFS Input`: Use this to specify the GTFS feed to validate.  You can specify a URL, ZIP file, or a directory containing the individual `.txt` files of a feed.  You can paste the input location directly into the input field or use the `Choose Local File...` button to open a file-chooser dialog to select a file on your local system.  
+* `Output Directory`: This is the directory where the validation reports will be written.
 
 With these two options set, click the "Validate" button to begin validation.
 
 ### Visualize the results
 
 When validation is complete, the application will automatically open the HTML validation report in your local browser.  In addition, the application creates the following files in the output directory:
-- `report.html`: the validation report in HTML format. It can be opened in a browser.
-- `report.json`: the validation report in JSON format.
-- `system_errors.json`: this file will be created every-time the validator is run. If no system errors were encountered, this file will be empty.
+* `report.html`: the validation report in HTML format. It can be opened in a browser.
+* `report.json`: the validation report in JSON format.
+* `system_errors.json`: this file will be created every-time the validator is run. If no system errors were encountered, this file will be empty.
 
 ### Advanced Options
 Before running validation, tap the `Advanced` button to configure other aspects of the application, including:
 * Number of threads used to run the validator.
 * The country code used for phone number validation.
-
 
 # Run the app via command line
 ### Setup
