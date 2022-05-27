@@ -51,21 +51,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Prepare version name
-        id: prep
-        run: |
-          VERSION_TAG=edge
-          if [[ $GITHUB_REF == refs/tags/* ]]; then
-            VERSION_TAG=${GITHUB_REF#refs/tags/}
-          elif [[ $GITHUB_REF == refs/heads/* ]]; then
-            VERSION_TAG=-$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
-          elif [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION_TAG=-pr-${{ github.event.number }}
-          fi
-          if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
-            VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
-          fi
-          echo ::set-output name=versionTag::${VERSION_TAG}
       - name: Set up JDK 11
         uses: actions/setup-java@v2
         with:
@@ -79,20 +64,18 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle
       - name: Package cli app jar with Gradle
         uses: eskatos/gradle-command-action@v1
-        env:
-          versionTag: ${{ steps.prep.outputs.versionTag }}
         with:
           arguments: shadowJar
       - name: Persist gtfs-validator snapshot jar
         uses: actions/upload-artifact@v2
         with:
           name: gtfs-validator-snapshot
-          path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
+          path: main/build/libs/gtfs-validator-*-cli.jar
       - name: Persist comparator snapshot jar
         uses: actions/upload-artifact@v2
         with:
           name: comparator-snapshot
-          path: output-comparator/build/libs/output-comparator-${{ steps.prep.outputs.versionTag }}_cli.jar
+          path: output-comparator/build/libs/output-comparator-*-cli.jar
   pack-master:
     needs: [ validate-gradle-wrapper ]
     runs-on: ubuntu-latest
@@ -100,21 +83,6 @@ jobs:
       - uses: actions/checkout@v1
         with:
           ref: master
-      - name: Prepare version name
-        id: prep
-        run: |
-          VERSION_TAG=edge
-          if [[ $GITHUB_REF == refs/tags/* ]]; then
-            VERSION_TAG=${GITHUB_REF#refs/tags/}
-          elif [[ $GITHUB_REF == refs/heads/* ]]; then
-            VERSION_TAG=-$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
-          elif [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION_TAG=-pr-${{ github.event.number }}
-          fi
-          if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
-            VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-MASTER
-          fi
-          echo ::set-output name=versionTag::${VERSION_TAG}
       - name: Set up JDK 11
         uses: actions/setup-java@v2
         with:
@@ -128,15 +96,13 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle
       - name: Package cli app jar with Gradle
         uses: eskatos/gradle-command-action@v1
-        env:
-          versionTag: ${{ steps.prep.outputs.versionTag }}
         with:
           arguments: shadowJar
       - name: Persist gtfs-validator jar from master branch
         uses: actions/upload-artifact@v2
         with:
           name: gtfs-validator-master
-          path: main/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
+          path: main/build/libs/gtfs-validator-*-cli.jar
   fetch-urls:
     if: "!contains(needs.pre_ci.outputs.commit_message, '[acceptance test skip]')"
     needs: pre_ci
@@ -173,10 +139,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: gtfs-validator-master
+          path: gtfs-validator-master
       - name: Download latest changes .jar file from previous job
         uses: actions/download-artifact@v2
         with:
           name: gtfs-validator-snapshot
+          path: gtfs-validator-snapshot
       - name: Run validators on queued URLs
         run: |
           queue="${{ matrix.data }}"

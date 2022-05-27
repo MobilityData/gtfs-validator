@@ -1,0 +1,54 @@
+name: Package Installers
+
+on:
+  push:
+    branches: [ master ]
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    branches: [ master ]
+    paths-ignore:
+      - '**.md'
+  release:
+    types: [ prereleased, released ]
+  workflow_dispatch:
+
+jobs:
+  validate_gradle_wrapper:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: gradle/wrapper-validation-action@v1
+
+  build_push:
+    needs: [ validate_gradle_wrapper ]
+    name: Build and upload packaged app
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ macos-latest, windows-latest, ubuntu-latest ]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # We need to download all tags so that the axion-release-plugin
+          # can resolve the most recent version tag.
+          fetch-depth: 0
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          # We need a recent version of Java with jpackage included.
+          java-version: '17'
+          # We use the zulu distribution, which is an OpenJDK distro.
+          distribution: 'zulu'
+      - name: Package GUI app installer with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: jpackage
+      - name: Upload Installer
+        uses: actions/upload-artifact@v2
+        with:
+          name: Installer - ${{matrix.os}}
+          path: |
+            app/pkg/build/jpackage/*.msi
+            app/pkg/build/jpackage/*.dmg
+            app/pkg/build/jpackage/*.deb
