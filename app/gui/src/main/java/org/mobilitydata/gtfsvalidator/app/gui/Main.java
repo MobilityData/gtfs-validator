@@ -58,12 +58,16 @@ public class Main {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
   public static void main(String[] args) {
+    Thread.setDefaultUncaughtExceptionHandler(new LogUncaughtExceptionHandler());
+
     logger.atInfo().log("gtfs-validator: start");
     SwingUtilities.invokeLater(() -> createAndShowGUI(args));
     logger.atInfo().log("gtfs-validator: exit");
   }
 
   private static void createAndShowGUI(String[] args) {
+    Thread.currentThread().setUncaughtExceptionHandler(new LogUncaughtExceptionHandler());
+
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     } catch (Exception e) {
@@ -127,5 +131,15 @@ public class Main {
       System.exit(-1);
     }
     return workingDirectory;
+  }
+
+  /**
+   * We introduce a catch-all for uncaught exceptions to make sure they make it into our application
+   * logs.
+   */
+  public static class LogUncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
+    public void uncaughtException(Thread thread, Throwable thrown) {
+      logger.atSevere().withCause(thrown).log("Uncaught application exception");
+    }
   }
 }
