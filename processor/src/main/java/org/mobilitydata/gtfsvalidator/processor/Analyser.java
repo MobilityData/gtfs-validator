@@ -82,6 +82,7 @@ public class Analyser {
           fieldTypeAnnotation != null
               ? fieldTypeAnnotation.value()
               : javaTypeToGtfsType(method.getReturnType()));
+      fieldBuilder.setRecommended(method.getAnnotation(Recommended.class) != null);
       fieldBuilder.setRequired(method.getAnnotation(Required.class) != null);
       fieldBuilder.setPrimaryKey(method.getAnnotation(PrimaryKey.class) != null);
       fieldBuilder.setFirstKey(method.getAnnotation(FirstKey.class) != null);
