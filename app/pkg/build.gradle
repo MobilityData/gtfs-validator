@@ -52,6 +52,7 @@ extraJavaModuleInfo {
         requires('java.desktop')
         requires('java.logging')
         requires('java.naming')
+        requires('java.prefs')
         requires('java.security.jgss')
         requires('java.sql')
   }
