@@ -58,12 +58,16 @@ public class Main {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
   public static void main(String[] args) {
+    Thread.setDefaultUncaughtExceptionHandler(new LogUncaughtExceptionHandler());
+
     logger.atInfo().log("gtfs-validator: start");
     SwingUtilities.invokeLater(() -> createAndShowGUI(args));
     logger.atInfo().log("gtfs-validator: exit");
   }
 
   private static void createAndShowGUI(String[] args) {
+    Thread.currentThread().setUncaughtExceptionHandler(new LogUncaughtExceptionHandler());
+
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     } catch (Exception e) {
@@ -76,6 +80,14 @@ public class Main {
     GtfsValidatorApp app = new GtfsValidatorApp(runner, display);
     app.constructUI();
 
+    GtfsValidatorPreferences prefs = new GtfsValidatorPreferences();
+    prefs.loadPreferences(app);
+    // We save preferences each time validation is run.
+    app.addPreValidationCallback(
+        () -> {
+          prefs.savePreferences(app);
+        });
+
     // On Windows, if you drag a file onto the application shortcut, it will
     // execute the app with the file as the first command-line argument.  This
     // doesn't appear to work on Mac OS.
@@ -83,7 +95,11 @@ public class Main {
       app.setGtfsSource(args[0]);
     }
 
-    app.setOutputDirectory(getDefaultOutputDirectory());
+    // We set a default output directory as a fallback if the user didn't
+    // have one previously set.
+    if (app.getOutputDirectory().isBlank()) {
+      app.setOutputDirectory(getDefaultOutputDirectory());
+    }
 
     app.pack();
     // This causes the application window to center in the screen.
@@ -115,5 +131,15 @@ public class Main {
       System.exit(-1);
     }
     return workingDirectory;
+  }
+
+  /**
+   * We introduce a catch-all for uncaught exceptions to make sure they make it into our application
+   * logs.
+   */
+  public static class LogUncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
+    public void uncaughtException(Thread thread, Throwable thrown) {
+      logger.atSevere().withCause(thrown).log("Uncaught application exception");
+    }
   }
 }
