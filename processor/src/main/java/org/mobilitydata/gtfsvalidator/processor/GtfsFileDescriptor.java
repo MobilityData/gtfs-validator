@@ -35,6 +35,8 @@ public abstract class GtfsFileDescriptor {
 
   public abstract String className();
 
+  public abstract boolean recommended();
+
   public abstract boolean required();
 
   public abstract boolean singleRow();
@@ -64,6 +66,8 @@ public abstract class GtfsFileDescriptor {
     public abstract Builder setFilename(String value);
 
     public abstract Builder setClassName(String value);
+
+    public abstract Builder setRecommended(boolean value);
 
     public abstract Builder setRequired(boolean value);
 
