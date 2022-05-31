@@ -102,13 +102,13 @@ public class VersionResolver {
    * be multiple MANIFEST.MF entries (different jars on the classpath can provide there own), so we
    * look for the `gtfs-validator-core` MANIFEST.MF, since the shadow jar won't be present.
    *
-   * <p>There return value os Optional because it's possible no version info is found.
+   * <p>The return value is Optional because it's possible no version info is found.
    *
    * @throws IOException
    */
   private Optional<String> resolveCurrentVersion() throws IOException {
     ScanResult scan = new ClassGraph().scan();
-    Optional<String> gtfsValidatorCore = Optional.empty();
+    Optional<String> gtfsValidatorCoreVersion = Optional.empty();
     for (Resource resource : scan.getResourcesWithPath("META-INF/MANIFEST.MF")) {
       Manifest m = new Manifest();
       m.read(resource.open());
@@ -127,11 +127,11 @@ public class VersionResolver {
         // we find gtfs-validator instead.
         String version = m.getMainAttributes().getValue("Implementation-Version");
         if (version != null && !version.isBlank()) {
-          gtfsValidatorCore = Optional.of(version);
+          gtfsValidatorCoreVersion = Optional.of(version);
         }
       }
     }
-    return gtfsValidatorCore;
+    return gtfsValidatorCoreVersion;
   }
 
   private Optional<String> resolveLatestReleaseVersion() throws IOException {

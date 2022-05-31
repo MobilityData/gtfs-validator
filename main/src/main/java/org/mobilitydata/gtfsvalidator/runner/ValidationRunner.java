@@ -206,9 +206,7 @@ public class ValidationRunner {
 
   /** Generates and exports reports for both validation notices and system errors reports. */
   public static void exportReport(
-      final NoticeContainer noticeContainer,
-      final ValidationRunnerConfig config,
-      VersionInfo versionInfo) {
+      NoticeContainer noticeContainer, ValidationRunnerConfig config, VersionInfo versionInfo) {
     if (!Files.exists(config.outputDirectory())) {
       try {
         Files.createDirectories(config.outputDirectory());

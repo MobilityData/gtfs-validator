@@ -155,7 +155,7 @@
     </tbody>
 </table>
 <H2>Settings and version</H2>
-<p th:text="'Validator version: ' + ${version}">
+<p th:if="summary.version != null" th:text="'Validator version: ' + ${summary.version}">
 <p th:text="'Validation date and time: ' + ${date}">
 <p>Parameters used (more about the available parameters in <a href="https://github.com/MobilityData/gtfs-validator/blob/master/docs/USAGE.md">USAGE.md</a>):</p>
 <table>

@@ -17,6 +17,12 @@ public class VersionInfoTest {
   }
 
   @Test
+  public void testUpdateAvailable_currentVersionMissing() {
+    VersionInfo info = VersionInfo.create(Optional.empty(), Optional.of("1.2.3"));
+    assertThat(info.updateAvailable()).isFalse();
+  }
+
+  @Test
   public void testUpdateAvailable_latestReleaseMissing() {
     VersionInfo info = VersionInfo.create(Optional.of("1.2.3"), Optional.empty());
     assertThat(info.updateAvailable()).isFalse();

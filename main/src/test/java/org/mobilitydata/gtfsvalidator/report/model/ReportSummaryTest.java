@@ -17,7 +17,11 @@
 package org.mobilitydata.gtfsvalidator.report.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
+import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -26,6 +30,7 @@ import org.mobilitydata.gtfsvalidator.notice.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.UnknownColumnNotice;
+import org.mobilitydata.gtfsvalidator.util.VersionInfo;
 
 @RunWith(JUnit4.class)
 public class ReportSummaryTest {
@@ -42,7 +47,7 @@ public class ReportSummaryTest {
     noticeContainer.addValidationNotice(
         new NonAsciiOrNonPrintableCharNotice("test.txt", 1, "column", "value"));
     noticeContainer.addValidationNotice(new UnknownColumnNotice("test.txt", "unknown", 2));
-    ReportSummary reportSummary = new ReportSummary(noticeContainer, false);
+    ReportSummary reportSummary = new ReportSummary(noticeContainer, VersionInfo.empty());
     return reportSummary;
   }
 
@@ -93,5 +98,23 @@ public class ReportSummaryTest {
             .get(UNKNOWN_COLUMN_NOTICE_CODE)
             .size(),
         1);
+  }
+
+  @Test
+  public void testVersionPresent() {
+    VersionInfo versionInfo = VersionInfo.create(Optional.of("1.2.3"), Optional.of("1.2.4"));
+    ReportSummary reportSummary = new ReportSummary(new NoticeContainer(), versionInfo);
+
+    assertEquals("1.2.3", reportSummary.getVersion());
+    assertTrue(reportSummary.isNewVersionOfValidatorAvailable());
+  }
+
+  @Test
+  public void testVersionMissing() {
+    VersionInfo versionInfo = VersionInfo.empty();
+    ReportSummary reportSummary = new ReportSummary(new NoticeContainer(), versionInfo);
+
+    assertNull(reportSummary.getVersion());
+    assertFalse(reportSummary.isNewVersionOfValidatorAvailable());
   }
 }

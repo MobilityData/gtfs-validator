@@ -64,7 +64,7 @@ public class GtfsValidatorApp extends JFrame {
   private final JTextField gtfsInputField = new JTextField();
   private final JTextField outputDirectoryField = new JTextField();
 
-  private final JPanel newVersionAvaiablePanel = new JPanel();
+  private final JPanel newVersionAvailablePanel = new JPanel();
 
   private final JButton validateButton = new JButton();
 
@@ -128,7 +128,7 @@ public class GtfsValidatorApp extends JFrame {
   }
 
   public void showNewVersionAvailable() {
-    newVersionAvaiablePanel.setVisible(true);
+    newVersionAvailablePanel.setVisible(true);
     pack();
   }
 
@@ -262,13 +262,14 @@ public class GtfsValidatorApp extends JFrame {
 
   private void constructNewVersionAvailablePanel(JPanel parent) {
     // Panel is initially not shown.
-    newVersionAvaiablePanel.setVisible(false);
-    newVersionAvaiablePanel.setLayout(new BoxLayout(newVersionAvaiablePanel, BoxLayout.PAGE_AXIS));
-    parent.add(newVersionAvaiablePanel);
+    newVersionAvailablePanel.setVisible(false);
+    newVersionAvailablePanel.setLayout(
+        new BoxLayout(newVersionAvailablePanel, BoxLayout.PAGE_AXIS));
+    parent.add(newVersionAvailablePanel);
 
-    newVersionAvaiablePanel.add(
+    newVersionAvailablePanel.add(
         createLabelWithFont(bundle.getString("new_version_available"), BOLD_FONT));
-    newVersionAvaiablePanel.add(Box.createRigidArea(TEXT_GAP));
+    newVersionAvailablePanel.add(Box.createRigidArea(TEXT_GAP));
 
     JLabel download_link = new JLabel(bundle.getString("download_here"));
     download_link.setForeground(Color.BLUE.darker());
@@ -280,9 +281,9 @@ public class GtfsValidatorApp extends JFrame {
             validationDisplay.handleBrowseToHomepage();
           }
         });
-    newVersionAvaiablePanel.add(download_link);
+    newVersionAvailablePanel.add(download_link);
 
-    newVersionAvaiablePanel.add(Box.createRigidArea(VERTICAL_GAP));
+    newVersionAvailablePanel.add(Box.createRigidArea(VERTICAL_GAP));
   }
 
   private void constructValidateButton(JPanel panel) {

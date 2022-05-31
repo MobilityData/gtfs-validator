@@ -45,7 +45,7 @@ public class HtmlReportGenerator {
     templateResolver.setTemplateMode(TemplateMode.HTML);
     templateEngine.setTemplateResolver(templateResolver);
 
-    ReportSummary summary = new ReportSummary(noticeContainer, versionInfo.updateAvailable());
+    ReportSummary summary = new ReportSummary(noticeContainer, versionInfo);
 
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
     Date now = new Date(System.currentTimeMillis());
@@ -55,9 +55,6 @@ public class HtmlReportGenerator {
     context.setVariable("summary", summary);
     context.setVariable("config", config);
     context.setVariable("date", date);
-    if (versionInfo.currentVersion().isPresent()) {
-      context.setVariable("version", versionInfo.currentVersion().get());
-    }
 
     try (FileWriter writer = new FileWriter(reportPath.toFile())) {
       templateEngine.process("report.html", context, writer);

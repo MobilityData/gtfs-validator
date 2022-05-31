@@ -38,7 +38,7 @@ public class VersionResolverTest {
   }
 
   @Test
-  public void testResolveLatestVersion() throws IOException {
+  public void testResolveLatestReleaseVersion() throws IOException {
     StringBuilder b = new StringBuilder();
     b.append("Version Information from the wiki\n");
     b.append("```\n");
@@ -53,7 +53,7 @@ public class VersionResolverTest {
   }
 
   @Test
-  public void testVersionNotFound() throws IOException {
+  public void testLatestReleaseVersionNotFound() throws IOException {
     StringBuilder b = new StringBuilder();
     b.append("Page not found");
     mockStreamHandler.setContent(b.toString());

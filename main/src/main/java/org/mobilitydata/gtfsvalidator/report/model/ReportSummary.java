@@ -24,15 +24,16 @@ import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.notice.Notice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.util.VersionInfo;
 
 /** ReportSummary is the class containing the summary methods for the HTML report. */
 public class ReportSummary {
   private final NoticeContainer container;
   private final Map<SeverityLevel, Long> severityCounts;
   private final Map<SeverityLevel, Map<String, List<NoticeView>>> noticesMap;
-  private final boolean newVersionOfValidatorAvailable;
+  private final VersionInfo versionInfo;
 
-  public ReportSummary(NoticeContainer container, boolean newVersionOfValidatorAvailable) {
+  public ReportSummary(NoticeContainer container, VersionInfo versionInfo) {
     this.container = container;
     this.severityCounts =
         container.getValidationNotices().stream()
@@ -45,7 +46,7 @@ public class ReportSummary {
                     NoticeView::getSeverityLevel,
                     LinkedHashMap::new,
                     Collectors.groupingBy(NoticeView::getCode, TreeMap::new, Collectors.toList())));
-    this.newVersionOfValidatorAvailable = newVersionOfValidatorAvailable;
+    this.versionInfo = versionInfo;
   }
 
   /**
@@ -96,7 +97,11 @@ public class ReportSummary {
     return severityCounts.getOrDefault(SeverityLevel.INFO, 0L);
   }
 
+  public String getVersion() {
+    return versionInfo.currentVersion().orElse(null);
+  }
+
   public boolean isNewVersionOfValidatorAvailable() {
-    return newVersionOfValidatorAvailable;
+    return versionInfo.updateAvailable();
   }
 }
