@@ -42,7 +42,7 @@ public class ReportSummaryTest {
     noticeContainer.addValidationNotice(
         new NonAsciiOrNonPrintableCharNotice("test.txt", 1, "column", "value"));
     noticeContainer.addValidationNotice(new UnknownColumnNotice("test.txt", "unknown", 2));
-    ReportSummary reportSummary = new ReportSummary(noticeContainer);
+    ReportSummary reportSummary = new ReportSummary(noticeContainer, false);
     return reportSummary;
   }
 

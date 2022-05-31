@@ -3,6 +3,7 @@ package org.mobilitydata.gtfsvalidator.app.gui;
 import com.google.common.flogger.FluentLogger;
 import java.awt.Desktop;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Path;
 import javax.swing.JOptionPane;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunner;
@@ -42,5 +43,13 @@ class ValidationDisplay {
         "ERROR",
         JOptionPane.ERROR_MESSAGE);
     System.exit(-1);
+  }
+
+  void handleBrowseToHomepage() {
+    try {
+      Desktop.getDesktop().browse(URI.create("https://github.com/MobilityData/gtfs-validator"));
+    } catch (IOException ex) {
+      logger.atSevere().withCause(ex).log("Error opening webpage");
+    }
   }
 }

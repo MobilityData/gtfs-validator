@@ -78,9 +78,11 @@ dependencies {
     implementation 'com.google.geometry:s2-geometry:2.0.0'
     implementation 'org.thymeleaf:thymeleaf:3.0.15.RELEASE'
     implementation 'com.jcabi:jcabi-manifests:1.1'
+    implementation 'io.github.classgraph:classgraph:4.8.146'
     testImplementation group: 'junit', name: 'junit', version: '4.13'
     testImplementation 'com.google.truth:truth:1.0.1'
     testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'
+    testImplementation 'org.mockito:mockito-core:4.5.1'
 }
 
 test {
@@ -91,6 +93,8 @@ test {
     testLogging {
         events "passed", "skipped", "failed"
     }
+
+    systemProperty 'gtfsValidatorVersionForTest', project.version
 }
 
 // Share the test report data to be aggregated for the whole project

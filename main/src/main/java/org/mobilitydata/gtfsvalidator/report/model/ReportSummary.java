@@ -30,8 +30,9 @@ public class ReportSummary {
   private final NoticeContainer container;
   private final Map<SeverityLevel, Long> severityCounts;
   private final Map<SeverityLevel, Map<String, List<NoticeView>>> noticesMap;
+  private final boolean newVersionOfValidatorAvailable;
 
-  public ReportSummary(NoticeContainer container) {
+  public ReportSummary(NoticeContainer container, boolean newVersionOfValidatorAvailable) {
     this.container = container;
     this.severityCounts =
         container.getValidationNotices().stream()
@@ -44,6 +45,7 @@ public class ReportSummary {
                     NoticeView::getSeverityLevel,
                     LinkedHashMap::new,
                     Collectors.groupingBy(NoticeView::getCode, TreeMap::new, Collectors.toList())));
+    this.newVersionOfValidatorAvailable = newVersionOfValidatorAvailable;
   }
 
   /**
@@ -92,5 +94,9 @@ public class ReportSummary {
    */
   public long getInfoCount() {
     return severityCounts.getOrDefault(SeverityLevel.INFO, 0L);
+  }
+
+  public boolean isNewVersionOfValidatorAvailable() {
+    return newVersionOfValidatorAvailable;
   }
 }

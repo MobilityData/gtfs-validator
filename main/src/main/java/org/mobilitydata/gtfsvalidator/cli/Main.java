@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.mobilitydata.gtfsvalidator.notice.NoticeSchemaGenerator;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunner;
+import org.mobilitydata.gtfsvalidator.util.VersionResolver;
 
 /** The main entry point for GTFS Validator CLI. */
 public class Main {
@@ -41,7 +42,7 @@ public class Main {
     }
 
     try {
-      ValidationRunner runner = new ValidationRunner();
+      ValidationRunner runner = new ValidationRunner(new VersionResolver());
       if (runner.run(args.toConfig()) != ValidationRunner.Status.SUCCESS) {
         System.exit(-1);
       }
@@ -49,6 +50,8 @@ public class Main {
       logger.atSevere().withCause(ex).log("Error running validation");
       System.exit(-1);
     }
+
+    System.exit(0);
   }
 
   /**

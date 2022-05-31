@@ -32,6 +32,11 @@
             padding: 1em 2em;
         }
 
+        .version-update {
+          font-weight: bold;
+          color: red;
+        }
+
         table {
             width: 100%;
         }
@@ -90,16 +95,20 @@
         .desc-content h3 {
             margin-top: 0;
         }
+
     </style>
 </head>
 
 <body>
 <h1>GTFS Schedule Validation Report</h1>
+
+<p class="version-update" th:if="${summary.newVersionOfValidatorAvailable}">A new version of the <a href="https://github.com/MobilityData/gtfs-validator">Canonical GTFS Schedule validator</a> is available!  Please update to get the latest/best validation results.</p>
+
 <h2><span th:text="${summary.noticeCount}">X</span> notices reported
     (<span th:text="${summary.errorCount}">0</span> errors,
     <span th:text="${summary.warningCount}">0</span> warnings,
     <span th:text="${summary.infoCount}">0</span> infos)</h2>
-<p>This validation report was generated using the <a href="https://github.com/MobilityData/gtfs-validator">Canonical GTFS Schedule validator</a></p>
+<p>This validation report was generated using the <a href="https://github.com/MobilityData/gtfs-validator">Canonical GTFS Schedule validator</a>.</p>
 <p>Use this report alongside the <a href="https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md">RULES.md</a> file to get more details about the validation issues.</p>
 <table class="accordion">
     <thead>

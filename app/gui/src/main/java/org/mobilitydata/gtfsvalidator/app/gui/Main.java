@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunner;
+import org.mobilitydata.gtfsvalidator.util.VersionResolver;
 
 /**
  * The main entry point for the GUI application.
@@ -74,9 +75,10 @@ public class Main {
       logger.atSevere().withCause(e).log("Error setting system look-and-feel");
     }
 
+    VersionResolver resolver = new VersionResolver();
     ValidationDisplay display = new ValidationDisplay();
     MonitoredValidationRunner runner =
-        new MonitoredValidationRunner(new ValidationRunner(), display);
+        new MonitoredValidationRunner(new ValidationRunner(resolver), display);
     GtfsValidatorApp app = new GtfsValidatorApp(runner, display);
     app.constructUI();
 
@@ -86,6 +88,14 @@ public class Main {
     app.addPreValidationCallback(
         () -> {
           prefs.savePreferences(app);
+        });
+
+    // Check to see if there is a new version of the app available.
+    resolver.addCallback(
+        (versionInfo) -> {
+          if (versionInfo.updateAvailable()) {
+            SwingUtilities.invokeLater(() -> app.showNewVersionAvailable());
+          }
         });
 
     // On Windows, if you drag a file onto the application shortcut, it will
