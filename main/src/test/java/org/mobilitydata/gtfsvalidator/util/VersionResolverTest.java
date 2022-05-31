@@ -34,7 +34,7 @@ public class VersionResolverTest {
 
   private static final MockStreamHandler mockStreamHandler = new MockStreamHandler();
 
-  private static final Duration TIMEOUT = Duration.ofSeconds(5);
+  private static final Duration TIMEOUT = Duration.ofSeconds(20);
 
   @Mock private Consumer<VersionInfo> callback;
 
