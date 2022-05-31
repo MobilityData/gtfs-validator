@@ -3,7 +3,6 @@ package org.mobilitydata.gtfsvalidator.util;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
@@ -14,31 +13,21 @@ import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
-import org.mockito.quality.Strictness;
 
 @RunWith(JUnit4.class)
 public class VersionResolverTest {
 
-  @Rule public MockitoRule rule = MockitoJUnit.rule().strictness(Strictness.STRICT_STUBS);
-
   private static final MockStreamHandler mockStreamHandler = new MockStreamHandler();
 
-  private static final Duration TIMEOUT = Duration.ofSeconds(20);
-
-  @Mock private Consumer<VersionInfo> callback;
-
-  @Captor private ArgumentCaptor<VersionInfo> versionInfoCaptor;
+  private static final Duration TIMEOUT = Duration.ofSeconds(5);
 
   @BeforeClass
   public static void beforeClass() throws IOException {
@@ -88,19 +77,28 @@ public class VersionResolverTest {
   }
 
   @Test
-  public void testVersionCallback() throws IOException {
+  public void testVersionCallback() throws IOException, InterruptedException {
     StringBuilder b = new StringBuilder();
     b.append("version=10.0.5\n");
     mockStreamHandler.setContent(b.toString());
 
+    // A dummy callback that captures the updated version info and triggers a countdown latch
+    // that our test can wait for.
+    AtomicReference<VersionInfo> versionInfo = new AtomicReference<>(VersionInfo.empty());
+    CountDownLatch callbackLatch = new CountDownLatch(1);
+    Consumer<VersionInfo> callback =
+        (updatedVersionInfo) -> {
+          versionInfo.set(updatedVersionInfo);
+          callbackLatch.countDown();
+        };
+
     VersionResolver checker = new VersionResolver();
     checker.addCallback(callback);
 
-    checker.getVersionInfoWithTimeout(TIMEOUT);
+    // Wait until the callback is actually triggered.
+    callbackLatch.await(TIMEOUT.toMillis(), TimeUnit.MILLISECONDS);
 
-    verify(callback).accept(versionInfoCaptor.capture());
-    VersionInfo versionInfo = versionInfoCaptor.getValue();
-    assertThat(versionInfo.latestReleaseVersion()).hasValue("10.0.5");
+    assertThat(versionInfo.get().latestReleaseVersion()).hasValue("10.0.5");
   }
 
   private static class MockStreamHandler extends URLStreamHandler {
