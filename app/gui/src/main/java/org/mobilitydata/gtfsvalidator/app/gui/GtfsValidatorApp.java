@@ -149,8 +149,10 @@ public class GtfsValidatorApp extends JFrame {
   private void setApplicationIcon() {
     Toolkit toolkit = Toolkit.getDefaultToolkit();
     URL resource = getClass().getResource("icon.png");
-    Image image = toolkit.createImage(resource);
-    setIconImage(image);
+    if (resource != null) {
+      Image image = toolkit.createImage(resource);
+      setIconImage(image);
+    }
   }
 
   private void constructGtfsInputSection(JPanel parent) {
