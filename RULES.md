@@ -1532,6 +1532,7 @@ A transit vehicle moves too fast between two consecutive stops. The speed thresh
 </details>
 
 <a name="FastTravelBetweenFarStopsNotice"/>
+
 ### fast_travel_between_far_stops
 
 A transit vehicle moves too fast between far consecutive stops (more than in 10 km apart). 
@@ -2352,6 +2353,7 @@ A file is unknown.
 | `filename`   	| The name of the unknown file.    	| String 	|
 
 </details>
+
 # System errors
 
 <a name="IOError"/>
