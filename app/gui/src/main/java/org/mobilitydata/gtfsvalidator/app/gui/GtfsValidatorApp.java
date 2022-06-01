@@ -21,9 +21,12 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,6 +125,7 @@ public class GtfsValidatorApp extends JFrame {
 
   void constructUI() {
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setApplicationIcon();
 
     JPanel panel = new JPanel();
     panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
@@ -140,6 +144,13 @@ public class GtfsValidatorApp extends JFrame {
       JComponent j = (JComponent) c;
       j.setAlignmentX(Component.LEFT_ALIGNMENT);
     }
+  }
+
+  private void setApplicationIcon() {
+    Toolkit toolkit = Toolkit.getDefaultToolkit();
+    URL resource = getClass().getResource("icon.png");
+    Image image = toolkit.createImage(resource);
+    setIconImage(image);
   }
 
   private void constructGtfsInputSection(JPanel parent) {
