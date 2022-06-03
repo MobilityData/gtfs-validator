@@ -12,6 +12,8 @@ ICO_DIR=$BASEDIR/Icon.ico_dir
 CONFIGS="
 icon_16x16.png,16x16
 icon_32x32.png,32x32
+icon_48x48.png,48x48
+icon_64x64.png,64x64
 icon_128x128.png,128x128
 icon_256x256.png,256x256
 "
