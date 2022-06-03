@@ -170,7 +170,7 @@ public class GtfsValidatorApp extends JFrame {
         Image image = toolkit.createImage(resource);
         iconImages.add(image);
       } else {
-        logger.atWarning().log("Icon image not foound: %s", iconFileName);
+        logger.atWarning().log("Icon image not found: %s", iconFileName);
       }
     }
     if (!iconImages.isEmpty()) {
