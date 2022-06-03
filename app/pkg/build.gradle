@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import org.gradle.internal.os.OperatingSystem
+
 plugins {
     id 'java'
     id "de.jjohannes.extra-java-module-info" version "0.11"
@@ -96,9 +98,16 @@ jlink {
         // Some platforms (e.g. Mac OS) need a pure x.y.z version number.
         // So strip any -SNAPSHOT suffix if present.
         appVersion = project.version.toString().replace('-SNAPSHOT', '')
-        if (org.gradle.internal.os.OperatingSystem.current().windows) {
+        if (OperatingSystem.current().isWindows()) {
             installerOptions += ['--win-per-user-install', '--win-dir-chooser', '--win-menu', '--win-shortcut']
-            imageOptions += ['--win-console']
+            imageOptions = [
+                    '--icon', "${projectDir}/src/main/icons/Icon.ico", '--win-console'
+            ]
+        }
+        if (OperatingSystem.current().isMacOsX()) {
+            imageOptions = [
+                    '--icon', "${projectDir}/src/main/icons/Icon.icns"
+            ]
         }
     }
 }

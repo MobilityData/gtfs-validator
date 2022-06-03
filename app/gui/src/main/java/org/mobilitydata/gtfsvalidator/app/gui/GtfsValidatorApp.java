@@ -23,13 +23,17 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
@@ -134,6 +138,7 @@ public class GtfsValidatorApp extends JFrame {
 
   void constructUI() {
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setApplicationIcon();
 
     JPanel panel = new JPanel();
     panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
@@ -152,6 +157,25 @@ public class GtfsValidatorApp extends JFrame {
     for (Component c : panel.getComponents()) {
       JComponent j = (JComponent) c;
       j.setAlignmentX(Component.LEFT_ALIGNMENT);
+    }
+  }
+
+  private void setApplicationIcon() {
+    Toolkit toolkit = Toolkit.getDefaultToolkit();
+    List<String> iconFileNames =
+        Arrays.asList("icon_16x16.png", "icon_32x32.png", "icon_48x48.png");
+    List<Image> iconImages = new ArrayList<>();
+    for (String iconFileName : iconFileNames) {
+      URL resource = getClass().getResource(iconFileName);
+      if (resource != null) {
+        Image image = toolkit.createImage(resource);
+        iconImages.add(image);
+      } else {
+        logger.atWarning().log("Icon image not found: %s", iconFileName);
+      }
+    }
+    if (!iconImages.isEmpty()) {
+      setIconImages(iconImages);
     }
   }
 
