@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Helper script for constructing a Windows icon bundle.  Requires
+# Helper script for constructing Java in-app icon resources.  Requires
 # install of ImageMagik for `convert` command.
 
 set -e
