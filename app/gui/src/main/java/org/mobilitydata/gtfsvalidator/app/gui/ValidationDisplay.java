@@ -47,7 +47,8 @@ class ValidationDisplay {
 
   void handleBrowseToHomepage() {
     try {
-      Desktop.getDesktop().browse(URI.create("https://github.com/MobilityData/gtfs-validator/releases"));
+      Desktop.getDesktop()
+          .browse(URI.create("https://github.com/MobilityData/gtfs-validator/releases"));
     } catch (IOException ex) {
       logger.atSevere().withCause(ex).log("Error opening webpage");
     }
