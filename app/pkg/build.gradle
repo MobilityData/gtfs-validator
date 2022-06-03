@@ -106,7 +106,7 @@ jlink {
         }
         if (OperatingSystem.current().isMacOsX()) {
             imageOptions = [
-                    '--icon', "${projectDir}/src/main/icons/GtfsValidator.icns"
+                    '--icon', "${projectDir}/src/main/icons/Icon.icns"
             ]
         }
     }
