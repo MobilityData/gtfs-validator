@@ -162,7 +162,8 @@ public class GtfsValidatorApp extends JFrame {
 
   private void setApplicationIcon() {
     Toolkit toolkit = Toolkit.getDefaultToolkit();
-    List<String> iconFileNames = Arrays.asList("icon_16x16.png", "icon_32x32.png", "icon_48x48.png");
+    List<String> iconFileNames =
+        Arrays.asList("icon_16x16.png", "icon_32x32.png", "icon_48x48.png");
     List<Image> iconImages = new ArrayList<>();
     for (String iconFileName : iconFileNames) {
       URL resource = getClass().getResource(iconFileName);
