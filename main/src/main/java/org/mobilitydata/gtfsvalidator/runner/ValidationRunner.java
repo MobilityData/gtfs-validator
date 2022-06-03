@@ -25,6 +25,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
@@ -35,6 +36,8 @@ import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
 import org.mobilitydata.gtfsvalidator.report.HtmlReportGenerator;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
+import org.mobilitydata.gtfsvalidator.util.VersionInfo;
+import org.mobilitydata.gtfsvalidator.util.VersionResolver;
 import org.mobilitydata.gtfsvalidator.validator.DefaultValidatorProvider;
 import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
@@ -45,6 +48,8 @@ public class ValidationRunner {
 
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private static final String GTFS_ZIP_FILENAME = "gtfs.zip";
+
+  private final VersionResolver versionResolver;
 
   public enum Status {
     // Indicates validation successfully completed, but doesn't imply the
@@ -58,7 +63,17 @@ public class ValidationRunner {
     EXCEPTION
   }
 
+  public ValidationRunner(VersionResolver versionResolver) {
+    this.versionResolver = versionResolver;
+  }
+
   public Status run(ValidationRunnerConfig config) {
+    VersionInfo versionInfo = versionResolver.getVersionInfoWithTimeout(Duration.ofSeconds(5));
+    logger.atInfo().log("VersionInfo: %s", versionInfo);
+    if (versionInfo.updateAvailable()) {
+      logger.atInfo().log("A new version of the validator is available!");
+    }
+
     ValidatorLoader validatorLoader = null;
     try {
       validatorLoader = new ValidatorLoader();
@@ -87,7 +102,7 @@ public class ValidationRunner {
       noticeContainer.addSystemError(new URISyntaxError(e));
     }
     if (gtfsInput == null) {
-      exportReport(noticeContainer, config);
+      exportReport(noticeContainer, config, versionInfo);
       if (!noticeContainer.getSystemErrors().isEmpty()) {
         return Status.SYSTEM_ERRORS;
       } else {
@@ -110,7 +125,7 @@ public class ValidationRunner {
     closeGtfsInput(gtfsInput, noticeContainer);
 
     // Output
-    exportReport(noticeContainer, config);
+    exportReport(noticeContainer, config, versionInfo);
     printSummary(startNanos, feedContainer);
     return Status.SUCCESS;
   }
@@ -191,7 +206,7 @@ public class ValidationRunner {
 
   /** Generates and exports reports for both validation notices and system errors reports. */
   public static void exportReport(
-      final NoticeContainer noticeContainer, final ValidationRunnerConfig config) {
+      NoticeContainer noticeContainer, ValidationRunnerConfig config, VersionInfo versionInfo) {
     if (!Files.exists(config.outputDirectory())) {
       try {
         Files.createDirectories(config.outputDirectory());
@@ -207,7 +222,10 @@ public class ValidationRunner {
           config.outputDirectory().resolve(config.validationReportFileName()),
           gson.toJson(noticeContainer.exportValidationNotices()).getBytes(StandardCharsets.UTF_8));
       generator.generateReport(
-          noticeContainer, config, config.outputDirectory().resolve(config.htmlReportFileName()));
+          noticeContainer,
+          config,
+          versionInfo,
+          config.outputDirectory().resolve(config.htmlReportFileName()));
       Files.write(
           config.outputDirectory().resolve(config.systemErrorsReportFileName()),
           gson.toJson(noticeContainer.exportSystemErrors()).getBytes(StandardCharsets.UTF_8));

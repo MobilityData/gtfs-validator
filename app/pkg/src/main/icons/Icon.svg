@@ -8,35 +8,34 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    inkscape:version="1.0 (4035a4f, 2020-05-01)"
-   height="73.900002"
-   width="73.900002"
-   sodipodi:docname="Validator_Icon_Reversed.svg"
-   id="svg17"
+   height="84.699997"
+   width="84.699997"
+   sodipodi:docname="Validator_Icon_WhiteBackground.svg"
+   id="svg79"
    xml:space="preserve"
-   viewBox="0 0 73.900002 73.900002"
+   viewBox="0 0 84.699998 84.699998"
    y="0px"
    x="0px"
    version="1.1"><metadata
-   id="metadata23"><rdf:RDF><cc:Work
+   id="metadata85"><rdf:RDF><cc:Work
        rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
          rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
-   id="defs21" /><sodipodi:namedview
-   units="px"
-   inkscape:current-layer="svg17"
+   id="defs83" /><sodipodi:namedview
+   inkscape:current-layer="svg79"
    inkscape:window-maximized="0"
-   inkscape:window-y="25"
-   inkscape:window-x="0"
-   inkscape:cy="169.03283"
-   inkscape:cx="39.259132"
-   inkscape:zoom="1.3769612"
+   inkscape:window-y="325"
+   inkscape:window-x="301"
+   inkscape:cy="42.35"
+   inkscape:cx="42.35"
+   inkscape:zoom="5.0371594"
    fit-margin-bottom="0"
    fit-margin-right="0"
    fit-margin-left="0"
    fit-margin-top="0"
    showgrid="false"
-   id="namedview19"
-   inkscape:window-height="818"
-   inkscape:window-width="1102"
+   id="namedview81"
+   inkscape:window-height="860"
+   inkscape:window-width="1118"
    inkscape:pageshadow="2"
    inkscape:pageopacity="0"
    guidetolerance="10"
@@ -46,25 +45,37 @@
    bordercolor="#666666"
    pagecolor="#ffffff" />
 <style
-   id="style10"
+   id="style67"
    type="text/css">
 	.st0{fill:#170A2E;}
-	.st1{fill:#FFFFFF;}
+	.st1{fill:#F8F8F8;}
+	.st2{fill:#FFFFFF;}
 </style>
 <g
-   transform="matrix(1,0,0,1.0040761,-23.6,-23.897011)"
+   transform="translate(-18.2,-18.2)"
    id="Reversed">
-	<path
-   id="path12"
-   d="m 97.5,30.3 c 0,-3.6 -2.9,-6.5 -6.5,-6.5 -3.3,0 -6,2.5 -6.4,5.7 H 61 V 60 H 72.5 L 72,61 H 61 v 23.3 c 0,0 -0.1,0 -0.1,0 -0.2,0 -0.2,0 -0.5,0 -0.1,0 -0.3,0 -0.4,0 V 61.1 H 36.6 c 0,-0.1 0,-0.3 0,-0.4 0,-0.2 0,-0.4 0,-0.6 H 60 V 29.5 H 29.5 v 24.7 c -3.3,0.3 -5.9,3.1 -5.9,6.5 0,3.4 2.6,6.2 5.9,6.5 v 24.5 h 24.7 c 0.4,3.2 3.1,5.7 6.4,5.7 3.3,0 6.1,-2.5 6.5,-5.7 H 91.6 V 61.1 H 80.4 l 0.5,-1 H 91.6 V 36.8 c 3.3,-0.3 5.9,-3.1 5.9,-6.5 z M 55.1,87.5 33,66.5 c 1.4,-0.7 2.5,-1.8 3.1,-3.3 0,0 0,0 0,0 l 22.5,21.4 v 0 c -1.5,0.5 -2.7,1.5 -3.5,2.9 z m 24.1,-27.4 -0.5,1 -12.6,26.2 C 65.3,86 64,85 62.5,84.6 c 0,0 0,0 0,0 l 11.3,-23.5 0.5,-1 12.1,-25.2 c 1,1.1 2.5,1.8 4,2 z M 94.5,30.3 c 0,1.9 -1.6,3.5 -3.5,3.5 -1.9,0 -3.5,-1.6 -3.5,-3.5 0,-1.9 1.6,-3.5 3.5,-3.5 1.9,0 3.5,1.6 3.5,3.5 z M 64.1,90.8 c 0,1.9 -1.6,3.5 -3.5,3.5 -1.9,0 -3.5,-1.6 -3.5,-3.5 0,-1.9 1.6,-3.5 3.5,-3.5 2,0 3.5,1.6 3.5,3.5 z M 33.6,60.7 c 0,1.9 -1.6,3.5 -3.5,3.5 -1.9,0 -3.5,-1.6 -3.5,-3.5 0,-1.9 1.6,-3.5 3.5,-3.5 1.9,0 3.5,1.5 3.5,3.5 z"
-   class="st0" />
 </g>
 <g
-   transform="matrix(1,0,0,1.0040761,-23.6,-23.897011)"
+   transform="translate(-18.2,-18.2)"
+   id="White_x5F_Backgound">
+	<g
+   id="g74">
+		<path
+   id="path70"
+   d="M 92.3,102.9 H 28.8 c -5.9,0 -10.6,-4.8 -10.6,-10.6 V 28.8 c 0,-5.9 4.8,-10.6 10.6,-10.6 h 63.5 c 5.9,0 10.6,4.8 10.6,10.6 v 63.5 c 0,5.8 -4.8,10.6 -10.6,10.6 z"
+   class="st1" />
+		<path
+   id="path72"
+   d="m 97.5,30.3 c 0,-3.6 -2.9,-6.5 -6.5,-6.5 -3.3,0 -6,2.5 -6.4,5.7 H 61.1 V 60 h 11.5 l -0.5,1 h -11 v 23.3 c 0,0 -0.1,0 -0.1,0 -0.2,0 -0.2,0 -0.5,0 -0.1,0 -0.3,0 -0.4,0 V 61 H 36.6 c 0,-0.1 0,-0.3 0,-0.4 0,-0.2 0,-0.4 0,-0.6 H 60.1 V 29.5 H 29.5 v 24.7 c -3.3,0.3 -5.9,3.1 -5.9,6.5 0,3.4 2.6,6.2 5.9,6.5 v 24.5 h 24.7 c 0.4,3.2 3.1,5.7 6.4,5.7 3.3,0 6.1,-2.5 6.5,-5.7 H 91.6 V 61 H 80.4 l 0.5,-1 H 91.6 V 36.8 c 3.3,-0.3 5.9,-3.1 5.9,-6.5 z M 55.1,87.5 33,66.5 c 1.4,-0.7 2.5,-1.8 3.1,-3.3 0,0 0,0 0,0 l 22.5,21.4 v 0 c -1.5,0.5 -2.7,1.5 -3.5,2.9 z M 79.2,60 78.7,61 66.2,87.3 C 65.3,86 64,85 62.5,84.6 c 0,0 0,0 0,0 L 73.7,61 74.2,60 86.3,34.8 c 1,1.1 2.5,1.8 4,2 z M 94.5,30.3 c 0,1.9 -1.6,3.5 -3.5,3.5 -1.9,0 -3.5,-1.6 -3.5,-3.5 0,-1.9 1.6,-3.5 3.5,-3.5 1.9,0 3.5,1.6 3.5,3.5 z M 64.2,90.8 c 0,1.9 -1.6,3.5 -3.5,3.5 -1.9,0 -3.5,-1.6 -3.5,-3.5 0,-1.9 1.6,-3.5 3.5,-3.5 1.9,0 3.5,1.6 3.5,3.5 z M 33.6,60.6 c 0,1.9 -1.6,3.5 -3.5,3.5 -1.9,0 -3.5,-1.6 -3.5,-3.5 0,-1.9 1.6,-3.5 3.5,-3.5 1.9,0 3.5,1.6 3.5,3.5 z"
+   class="st0" />
+	</g>
+</g>
+<g
+   transform="translate(-18.2,-18.2)"
    id="Original">
 </g>
 <g
-   transform="matrix(1,0,0,1.0040761,-23.6,-23.897011)"
+   transform="translate(-18.2,-18.2)"
    id="White">
 </g>
 </svg>
