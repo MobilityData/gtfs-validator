@@ -29,6 +29,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
@@ -148,10 +149,19 @@ public class GtfsValidatorApp extends JFrame {
 
   private void setApplicationIcon() {
     Toolkit toolkit = Toolkit.getDefaultToolkit();
-    URL resource = getClass().getResource("icon.png");
-    if (resource != null) {
-      Image image = toolkit.createImage(resource);
-      setIconImage(image);
+    List<String> iconFileNames = Arrays.asList("icon_16x16.png", "icon_32x32.png", "icon_48x48.png");
+    List<Image> iconImages = new ArrayList<>();
+    for (String iconFileName : iconFileNames) {
+      URL resource = getClass().getResource(iconFileName);
+      if (resource != null) {
+        Image image = toolkit.createImage(resource);
+        iconImages.add(image);
+      } else {
+        logger.atWarning().log("Icon image not foound: %s", iconFileName);
+      }
+    }
+    if (!iconImages.isEmpty()) {
+      setIconImages(iconImages);
     }
   }
 
