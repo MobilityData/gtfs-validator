@@ -48,6 +48,13 @@ dependencies {
     testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'
 }
 
+jar {
+    manifest {
+        attributes('Implementation-Title': 'gtfs-validator-core',
+                'Implementation-Version': project.version)
+    }
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {

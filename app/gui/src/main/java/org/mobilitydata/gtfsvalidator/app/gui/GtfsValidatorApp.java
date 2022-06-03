@@ -16,11 +16,15 @@
 package org.mobilitydata.gtfsvalidator.app.gui;
 
 import com.google.common.flogger.FluentLogger;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -53,11 +57,14 @@ public class GtfsValidatorApp extends JFrame {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
   private static final Dimension VERTICAL_GAP = new Dimension(0, 40);
+  private static final Dimension TEXT_GAP = new Dimension(0, 10);
 
   private static final Font BOLD_FONT = createBoldFont();
 
   private final JTextField gtfsInputField = new JTextField();
   private final JTextField outputDirectoryField = new JTextField();
+
+  private final JPanel newVersionAvailablePanel = new JPanel();
 
   private final JButton validateButton = new JButton();
 
@@ -120,6 +127,11 @@ public class GtfsValidatorApp extends JFrame {
     preValidationCallbacks.add(callback);
   }
 
+  public void showNewVersionAvailable() {
+    newVersionAvailablePanel.setVisible(true);
+    pack();
+  }
+
   void constructUI() {
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -133,6 +145,7 @@ public class GtfsValidatorApp extends JFrame {
     constructOutputDirectorySection(panel);
     panel.add(Box.createRigidArea(VERTICAL_GAP));
     constructAdvancedOptionsPanel(panel);
+    constructNewVersionAvailablePanel(panel);
     constructValidateButton(panel);
 
     // Ensure everything is left-aligned in the main application panel.
@@ -245,6 +258,32 @@ public class GtfsValidatorApp extends JFrame {
     panel.add(countryCodeField, fieldConstraints);
 
     advancedOptionsPanel.setVisible(false);
+  }
+
+  private void constructNewVersionAvailablePanel(JPanel parent) {
+    // Panel is initially not shown.
+    newVersionAvailablePanel.setVisible(false);
+    newVersionAvailablePanel.setLayout(
+        new BoxLayout(newVersionAvailablePanel, BoxLayout.PAGE_AXIS));
+    parent.add(newVersionAvailablePanel);
+
+    newVersionAvailablePanel.add(
+        createLabelWithFont(bundle.getString("new_version_available"), BOLD_FONT));
+    newVersionAvailablePanel.add(Box.createRigidArea(TEXT_GAP));
+
+    JLabel download_link = new JLabel(bundle.getString("download_here"));
+    download_link.setForeground(Color.BLUE.darker());
+    download_link.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    download_link.addMouseListener(
+        new MouseAdapter() {
+          @Override
+          public void mouseClicked(MouseEvent e) {
+            validationDisplay.handleBrowseToHomepage();
+          }
+        });
+    newVersionAvailablePanel.add(download_link);
+
+    newVersionAvailablePanel.add(Box.createRigidArea(VERTICAL_GAP));
   }
 
   private void constructValidateButton(JPanel panel) {
