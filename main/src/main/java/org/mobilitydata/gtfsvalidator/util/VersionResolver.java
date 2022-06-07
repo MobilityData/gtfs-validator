@@ -86,11 +86,16 @@ public class VersionResolver {
 
     executor.submit(
         () -> {
-          Optional<String> currentVersion = resolveCurrentVersion();
-          Optional<String> latestReleaseVersion = resolveLatestReleaseVersion();
-          VersionInfo info = VersionInfo.create(currentVersion, latestReleaseVersion);
-          resolvedVersionInfo.set(info);
-          return info;
+          try {
+            Optional<String> currentVersion = resolveCurrentVersion();
+            Optional<String> latestReleaseVersion = resolveLatestReleaseVersion();
+            VersionInfo info = VersionInfo.create(currentVersion, latestReleaseVersion);
+            resolvedVersionInfo.set(info);
+            return info;
+          } catch (Throwable ex) {
+            logger.atSevere().withCause(ex).log("Error resolving version info");
+          }
+          return VersionInfo.empty();
         });
   }
 
