@@ -51,4 +51,5 @@ jobs:
           path: |
             app/pkg/build/jpackage/*.msi
             app/pkg/build/jpackage/*.dmg
+            app/pkg/build/jpackage/*.app
             app/pkg/build/jpackage/*.deb
