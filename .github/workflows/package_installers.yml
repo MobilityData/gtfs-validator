@@ -44,6 +44,14 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: jpackage
+      - name:
+        if: matrix.os == 'macos-latest'
+        shell: bash
+        run: |
+          codesign --remove-signature app/pkg/build/jpackage/GTFS\ Validator.app
+          appVersion=$(./gradlew cV -q -Prelease.quiet)
+          appVersion=${appVersion//-SNAPSHOT/}
+          jpackage --type dmg --name 'GTFS Validator' --app-version ${appVersion} --app-image app/pkg/build/jpackage/GTFS\ Validator.app --dest app/pkg/build/jpackage
       - name: Upload Installer
         uses: actions/upload-artifact@v2
         with:
