@@ -39,7 +39,7 @@ jobs:
           # We need a recent version of Java with jpackage included.
           java-version: '17'
           # We use the zulu distribution, which is an OpenJDK distro.
-          distribution: 'temurin'
+          distribution: 'zulu'
       - name: Package GUI app installer with Gradle
         uses: gradle/gradle-build-action@v2
         with:
