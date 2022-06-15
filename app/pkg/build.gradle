@@ -57,6 +57,9 @@ extraJavaModuleInfo {
         requires('java.prefs')
         requires('java.security.jgss')
         requires('java.sql')
+        // Need for SSL support for network connections.
+        requires('jdk.crypto.ec')
+        requires('jdk.crypto.cryptoki')
   }
 }
 
