@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.processor;
 
+import static org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum.*;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldColumnIndex;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldNameField;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.gtfsColumnName;
@@ -40,6 +41,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.lang.model.element.Modifier;
+import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsLoader;
@@ -158,6 +160,7 @@ public class TableLoaderGenerator {
 
     typeSpec.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).build());
     typeSpec.addMethod(generateGtfsFilenameMethod());
+    typeSpec.addMethod(generateIsRecommendedMethod());
     typeSpec.addMethod(generateIsRequiredMethod());
     typeSpec.addMethod(generateLoadMethod());
     typeSpec.addMethod(generateLoadMissingFileMethod());
@@ -327,8 +330,10 @@ public class TableLoaderGenerator {
               "rowParser.$L($L, $T.$L$L)",
               gtfsTypeToParserMethod(field.type()),
               fieldColumnIndex(field.name()),
-              RowParser.class,
-              field.required() ? "REQUIRED" : "OPTIONAL",
+              FieldLevelEnum.class,
+              field.required()
+                  ? REQUIRED.name()
+                  : (field.recommended() ? RECOMMENDED.name() : OPTIONAL.name()),
               field.numberBounds().isPresent()
                   ? ", RowParser.NumberBounds." + field.numberBounds().get()
                   : field.type() == FieldTypeEnum.ENUM
@@ -409,6 +414,15 @@ public class TableLoaderGenerator {
         .addModifiers(Modifier.PUBLIC)
         .returns(String.class)
         .addStatement("return FILENAME")
+        .build();
+  }
+
+  private MethodSpec generateIsRecommendedMethod() {
+    return MethodSpec.methodBuilder("isRecommended")
+        .addModifiers(Modifier.PUBLIC)
+        .returns(boolean.class)
+        .addAnnotation(Override.class)
+        .addStatement("return $L", fileDescriptor.recommended())
         .build();
   }
 

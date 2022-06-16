@@ -58,4 +58,9 @@ public class GtfsStopTableContainer extends GtfsTableContainer<GtfsStop> {
   public boolean isRequired() {
     return true;
   }
+
+  @Override
+  public boolean isRecommended() {
+    return true;
+  }
 }
