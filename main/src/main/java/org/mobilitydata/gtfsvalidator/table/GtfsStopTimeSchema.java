@@ -22,20 +22,20 @@ import org.mobilitydata.gtfsvalidator.annotation.DefaultValue;
 import org.mobilitydata.gtfsvalidator.annotation.EndRange;
 import org.mobilitydata.gtfsvalidator.annotation.FieldType;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
-import org.mobilitydata.gtfsvalidator.annotation.FirstKey;
 import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.Index;
 import org.mobilitydata.gtfsvalidator.annotation.NonNegative;
+import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
-import org.mobilitydata.gtfsvalidator.annotation.SequenceKey;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 @GtfsTable("stop_times.txt")
 @Required
 public interface GtfsStopTimeSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
-  @FirstKey
+  @PrimaryKey
+  @Index
   @Required
   @ForeignKey(table = "trips.txt", field = "trip_id")
   String tripId();
@@ -53,7 +53,7 @@ public interface GtfsStopTimeSchema extends GtfsEntity {
   @ForeignKey(table = "stops.txt", field = "stop_id")
   String stopId();
 
-  @SequenceKey
+  @PrimaryKey(isSequence = true)
   @Required
   @NonNegative
   int stopSequence();

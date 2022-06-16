@@ -41,7 +41,11 @@ import java.lang.annotation.Target;
  *   }
  * </pre>
  *
- * <p>This also adds a method to the container class to find an entity by its primary key.
+ * <p>The {@pcode PrimaryKey} annotation can be specified for multiple fields if the file has a
+ * multi-column key.
+ *
+ * <p>For single-field primary keys, a lookup method will be added to the container class to find an
+ * entity by its primary key.
  *
  * <pre>
  *   {@literal @}Generated
@@ -51,7 +55,20 @@ import java.lang.annotation.Target;
  *       }
  *   }
  * </pre>
+ *
+ * <p>A lookup method will not automatically be generated for multi-field primary keys. Instead, use
+ * the {@code @Index} annotation to specify which individual fields should have lookup methods.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.SOURCE)
-public @interface PrimaryKey {}
+public @interface PrimaryKey {
+
+  /**
+   * Typically used in a multi-column primary key situation. When true, if an index is generated for
+   * other primary key fields in the file, the associated list of values will be sorted by the
+   * sequence field. Classic examples include stop_times.txt, where the primary key is (trip_id,
+   * stop_sequence) and a byTripId(...) method returns a list of stop-times that are sorted by their
+   * `stop_sequence` value.
+   */
+  boolean isSequence() default false;
+}

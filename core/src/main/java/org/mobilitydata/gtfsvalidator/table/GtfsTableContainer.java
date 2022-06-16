@@ -66,15 +66,9 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
   /**
    * Returns names of the columns that are keys in that table.
    *
-   * <p>A table may have one, two or no primary keys, so the returned list contains from 0 to 2
-   * items.
-   *
-   * <p>The first returned key (if present) is annotated with {@link
-   * org.mobilitydata.gtfsvalidator.annotation.PrimaryKey} or {@link
-   * org.mobilitydata.gtfsvalidator.annotation.FirstKey}.
-   *
-   * <p>The second returned key (if present) is annotated with {@link
-   * org.mobilitydata.gtfsvalidator.annotation.SequenceKey}.
+   * <p>A table may have zero, one, or multiple primary keys, so the returned list contains from 0
+   * to N items. Keys are columns annotated with {@link
+   * org.mobilitydata.gtfsvalidator.annotation.PrimaryKey}.
    */
   public abstract ImmutableList<String> getKeyColumnNames();
 
@@ -92,11 +86,10 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
    * Note that all keys must be passed as strings, so a key for {@code stop_times.txt} will look
    * like {"stop1", "0"}.
    *
-   * @param id primary key or first part of the composite key, if needed
-   * @param subId second part of the composite key, if needed
+   * @param ids primary key or first part of the composite key, if needed
    * @return entity with the given primary key, if any
    */
-  public abstract Optional<T> byPrimaryKey(String id, String subId);
+  public abstract Optional<T> byPrimaryKey(ImmutableList<String> ids);
 
   /**
    * Tells if the file is missing.

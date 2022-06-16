@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,38 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.mobilitydata.gtfsvalidator.processor.tests;
 
-package org.mobilitydata.gtfsvalidator.table;
-
-import org.mobilitydata.gtfsvalidator.annotation.FieldType;
-import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.Index;
-import org.mobilitydata.gtfsvalidator.annotation.NonNegative;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
 
-@GtfsTable("shapes.txt")
-public interface GtfsShapeSchema extends GtfsEntity {
-  @FieldType(FieldTypeEnum.ID)
-  @Required
+@GtfsTable("multi_column_primary_key.txt")
+public interface MultiColumnPrimaryKeySchema {
   @PrimaryKey
   @Index
-  String shapeId();
+  String idA();
 
-  @FieldType(FieldTypeEnum.LATITUDE)
-  @Required
-  double shapePtLat();
+  @PrimaryKey
+  String idB();
 
-  @FieldType(FieldTypeEnum.LONGITUDE)
-  @Required
-  double shapePtLon();
+  @PrimaryKey
+  String idC();
 
-  @Required
-  @NonNegative
-  @PrimaryKey(isSequence = true)
-  int shapePtSequence();
-
-  @NonNegative
-  double shapeDistTraveled();
+  String fruit();
 }

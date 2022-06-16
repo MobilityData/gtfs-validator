@@ -142,11 +142,11 @@ public class ForeignKeyValidatorGenerator {
             .returns(boolean.class)
             .addParameter(String.class, "key")
             .addParameter(parentClasses.tableContainerTypeName(), "parentContainer");
-    if (parentField.primaryKey()) {
+    if (parentFile.hasSingleColumnPrimaryKey() && parentField.primaryKey()) {
       hasReferencedKeyMethod.addStatement(
           "return parentContainer.$L(key).isPresent()",
           FieldNameConverter.byKeyMethodName(parentField.name()));
-    } else if (parentField.firstKey() || parentField.index()) {
+    } else if (parentField.index()) {
       hasReferencedKeyMethod.addStatement(
           "return !parentContainer.$L(key).isEmpty()",
           FieldNameConverter.byKeyMethodName(parentField.name()));
@@ -156,7 +156,7 @@ public class ForeignKeyValidatorGenerator {
               + FieldNameConverter.gtfsColumnName(parentField.name())
               + " in "
               + parentFile.filename()
-              + " must be annotated with @PrimaryKey, @FirstKey or @Index");
+              + " must be annotated with @PrimaryKey or @Index");
     }
     typeSpec.addMethod(hasReferencedKeyMethod.build());
 

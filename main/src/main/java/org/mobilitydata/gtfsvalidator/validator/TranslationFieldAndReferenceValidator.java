@@ -158,7 +158,14 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
             noticeContainer)) {
       return;
     }
-    if (parentTable.byPrimaryKey(translation.recordId(), translation.recordSubId()).isEmpty()) {
+    ImmutableList.Builder<String> ids = ImmutableList.builder();
+    if (keyColumnNames.size() >= 1) {
+      ids.add(translation.recordId());
+      if (keyColumnNames.size() >= 2) {
+        ids.add(translation.recordSubId());
+      }
+    }
+    if (parentTable.byPrimaryKey(ids.build()).isEmpty()) {
       noticeContainer.addValidationNotice(new TranslationForeignKeyViolationNotice(translation));
     }
   }

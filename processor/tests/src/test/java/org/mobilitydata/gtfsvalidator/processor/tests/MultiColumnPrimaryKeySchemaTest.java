@@ -24,52 +24,53 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.table.IdAndSequencePrimaryKey;
-import org.mobilitydata.gtfsvalidator.table.IdAndSequencePrimaryKeyTableContainer;
-import org.mobilitydata.gtfsvalidator.table.IdAndSequencePrimaryKeyTableLoader;
+import org.mobilitydata.gtfsvalidator.table.MultiColumnPrimaryKey;
+import org.mobilitydata.gtfsvalidator.table.MultiColumnPrimaryKeyTableContainer;
+import org.mobilitydata.gtfsvalidator.table.MultiColumnPrimaryKeyTableLoader;
 import org.mobilitydata.gtfsvalidator.testing.LoadingHelper;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 
 @RunWith(JUnit4.class)
-public class IdAndSequencePrimaryKeySchemaTest {
+public class MultiColumnPrimaryKeySchemaTest {
 
-  private IdAndSequencePrimaryKeyTableLoader loader;
+  private MultiColumnPrimaryKeyTableLoader loader;
   private LoadingHelper helper;
 
   @Before
   public void setup() {
-    loader = new IdAndSequencePrimaryKeyTableLoader();
+    loader = new MultiColumnPrimaryKeyTableLoader();
     helper = new LoadingHelper();
   }
 
   @Test
   public void testTableContainer() throws ValidatorLoaderException {
-    IdAndSequencePrimaryKeyTableContainer container =
+    MultiColumnPrimaryKeyTableContainer container =
         helper.load(
-            loader, "id,sequence,fruit", "a,1,apples", "a,2,bananas", "b,2,dates", "b,1,cherries");
+            loader,
+            "id_a,id_b,id_c,fruit",
+            "a1,a2,a3,apples",
+            "a1,a2x,a3x,apricots",
+            "b1,b2,b3,bananas",
+            "c1,c2,c3,cherries");
 
-    assertThat(container.getKeyColumnNames()).containsExactly("id", "sequence");
+    assertThat(container.getKeyColumnNames()).containsExactly("id_a", "id_b", "id_c");
 
-    assertThat(fruits(container.byId("a"))).containsExactly("apples", "bananas").inOrder();
-    assertThat(fruits(container.byId("b"))).containsExactly("cherries", "dates").inOrder();
+    assertThat(fruits(container.byIdA("a1"))).containsExactly("apples", "apricots");
+    assertThat(fruits(container.byIdA("b1"))).containsExactly("bananas");
 
-    assertThat(fruits(container.byIdMap().get("a"))).containsExactly("apples", "bananas").inOrder();
-    assertThat(fruits(container.byIdMap().get("b"))).containsExactly("cherries", "dates").inOrder();
-
-    assertThat(container.byPrimaryKey(ImmutableList.of("a", "1")).get().fruit())
+    assertThat(container.byPrimaryKey(ImmutableList.of("a1", "a2", "a3")).get().fruit())
         .isEqualTo("apples");
   }
 
   @Test
   public void testDuplicates() throws ValidatorLoaderException {
-    IdAndSequencePrimaryKeyTableContainer container =
-        helper.load(loader, "id,sequence,fruit", "a,1,apples", "a,1,bananas");
+    helper.load(loader, "id_a,id_b,id_c,fruit", "a1,a2,a3,apples", "a1,a2,a3,apricots");
 
     assertThat(helper.getValidationNotices()).hasSize(1);
     assertThat(helper.getValidationNotices().get(0).getCode()).isEqualTo("duplicate_key");
   }
 
-  private List<String> fruits(List<IdAndSequencePrimaryKey> objects) {
-    return objects.stream().map(IdAndSequencePrimaryKey::fruit).collect(Collectors.toList());
+  private List<String> fruits(List<MultiColumnPrimaryKey> objects) {
+    return objects.stream().map(MultiColumnPrimaryKey::fruit).collect(Collectors.toList());
   }
 }

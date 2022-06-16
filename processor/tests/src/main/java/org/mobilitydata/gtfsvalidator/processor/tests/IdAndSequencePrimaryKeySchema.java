@@ -15,16 +15,17 @@
  */
 package org.mobilitydata.gtfsvalidator.processor.tests;
 
-import org.mobilitydata.gtfsvalidator.annotation.FirstKey;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.SequenceKey;
+import org.mobilitydata.gtfsvalidator.annotation.Index;
+import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 
 @GtfsTable("id_and_sequence_primary_key.txt")
 public interface IdAndSequencePrimaryKeySchema {
-  @FirstKey
+  @PrimaryKey
+  @Index
   String id();
 
-  @SequenceKey
+  @PrimaryKey(isSequence = true)
   int sequence();
 
   String fruit();

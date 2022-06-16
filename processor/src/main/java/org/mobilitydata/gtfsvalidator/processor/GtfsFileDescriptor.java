@@ -19,7 +19,6 @@ package org.mobilitydata.gtfsvalidator.processor;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import java.util.Optional;
 import javax.lang.model.type.TypeMirror;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 
@@ -49,11 +48,19 @@ public abstract class GtfsFileDescriptor {
 
   public abstract ImmutableList<TypeMirror> interfaces();
 
-  public abstract Optional<GtfsFieldDescriptor> primaryKey();
+  public abstract ImmutableList<GtfsFieldDescriptor> primaryKeys();
 
-  public abstract Optional<GtfsFieldDescriptor> firstKey();
+  public boolean hasSingleColumnPrimaryKey() {
+    return primaryKeys().size() == 1;
+  }
 
-  public abstract Optional<GtfsFieldDescriptor> sequenceKey();
+  public GtfsFieldDescriptor getSingleColumnPrimaryKey() {
+    return primaryKeys().get(0);
+  }
+
+  public boolean hasMultiColumnPrimaryKey() {
+    return primaryKeys().size() > 1;
+  }
 
   public abstract ImmutableList<GtfsFieldDescriptor> indices();
 
@@ -77,11 +84,7 @@ public abstract class GtfsFileDescriptor {
 
     public abstract ImmutableList.Builder<TypeMirror> interfacesBuilder();
 
-    abstract Builder setPrimaryKey(GtfsFieldDescriptor value);
-
-    abstract Builder setFirstKey(GtfsFieldDescriptor value);
-
-    abstract Builder setSequenceKey(GtfsFieldDescriptor value);
+    abstract Builder setPrimaryKeys(ImmutableList<GtfsFieldDescriptor> values);
 
     abstract Builder setIndices(ImmutableList<GtfsFieldDescriptor> value);
 
@@ -92,14 +95,11 @@ public abstract class GtfsFileDescriptor {
     public GtfsFileDescriptor build() {
       ImmutableMap.Builder<String, GtfsFieldDescriptor> fieldsMapBuilder = ImmutableMap.builder();
       ImmutableList.Builder<GtfsFieldDescriptor> indicesBuilder = ImmutableList.builder();
+      ImmutableList.Builder<GtfsFieldDescriptor> primaryKeysBuilder = ImmutableList.builder();
       for (GtfsFieldDescriptor field : fields()) {
         fieldsMapBuilder.put(field.name(), field);
         if (field.primaryKey()) {
-          setPrimaryKey(field);
-        } else if (field.firstKey()) {
-          setFirstKey(field);
-        } else if (field.sequenceKey()) {
-          setSequenceKey(field);
+          primaryKeysBuilder.add(field);
         }
         if (field.index()) {
           indicesBuilder.add(field);
@@ -122,6 +122,7 @@ public abstract class GtfsFileDescriptor {
 
       setFieldByName(fieldsMap);
       setIndices(indicesBuilder.build());
+      setPrimaryKeys(primaryKeysBuilder.build());
       setLatLonFields(latLonBuilder.build());
       return autoBuild();
     }

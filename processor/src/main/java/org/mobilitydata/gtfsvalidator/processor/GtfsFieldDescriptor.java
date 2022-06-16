@@ -39,8 +39,9 @@ public abstract class GtfsFieldDescriptor {
 
   public abstract boolean primaryKey();
 
-  public abstract boolean firstKey();
-
+  /**
+   * Returns true if the field is a primary key that has additionally been marked as `isSequence`.
+   */
   public abstract boolean sequenceKey();
 
   public abstract boolean index();
@@ -66,8 +67,6 @@ public abstract class GtfsFieldDescriptor {
     public abstract Builder setRequired(boolean value);
 
     public abstract Builder setPrimaryKey(boolean value);
-
-    public abstract Builder setFirstKey(boolean value);
 
     public abstract Builder setSequenceKey(boolean value);
 
