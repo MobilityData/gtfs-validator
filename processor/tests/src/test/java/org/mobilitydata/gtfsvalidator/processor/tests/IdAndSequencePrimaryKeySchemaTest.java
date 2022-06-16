@@ -49,11 +49,11 @@ public class IdAndSequencePrimaryKeySchemaTest {
 
     assertThat(container.getKeyColumnNames()).containsExactly("id", "sequence");
 
-    assertThat(fruits(container.byId("a"))).containsExactly("apples", "bananas");
-    assertThat(fruits(container.byId("b"))).containsExactly("cherries", "dates");
+    assertThat(fruits(container.byId("a"))).containsExactly("apples", "bananas").inOrder();
+    assertThat(fruits(container.byId("b"))).containsExactly("cherries", "dates").inOrder();
 
-    assertThat(fruits(container.byIdMap().get("a"))).containsExactly("apples", "bananas");
-    assertThat(fruits(container.byIdMap().get("b"))).containsExactly("cherries", "dates");
+    assertThat(fruits(container.byIdMap().get("a"))).containsExactly("apples", "bananas").inOrder();
+    assertThat(fruits(container.byIdMap().get("b"))).containsExactly("cherries", "dates").inOrder();
 
     assertThat(container.byIdAndSequence("a", 1).fruit()).isEqualTo("apples");
 
