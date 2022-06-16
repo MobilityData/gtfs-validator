@@ -32,6 +32,8 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
 public abstract class GtfsTableLoader<T extends GtfsEntity> {
   public abstract String gtfsFilename();
 
+  public abstract boolean isRecommended();
+
   public abstract boolean isRequired();
 
   public abstract Set<String> getColumnNames();

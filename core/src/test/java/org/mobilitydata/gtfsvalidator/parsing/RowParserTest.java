@@ -29,6 +29,7 @@ import java.util.function.Function;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.notice.EmptyRowNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidEmailNotice;
@@ -89,14 +90,14 @@ public class RowParserTest {
 
   @Test
   public void asUrl_valid() {
-    assertValid("http://google.com", p -> p.asUrl(0, true), "http://google.com");
+    assertValid("http://google.com", p -> p.asUrl(0, FieldLevelEnum.REQUIRED), "http://google.com");
   }
 
   @Test
   public void asUrl_invalid() {
     assertInvalid(
         "invalid",
-        p -> p.asUrl(0, true),
+        p -> p.asUrl(0, FieldLevelEnum.REQUIRED),
         "invalid",
         new InvalidUrlNotice("stops.txt", 8, "column name", "invalid"));
   }
@@ -105,158 +106,179 @@ public class RowParserTest {
   public void asInteger() {
     RowParser parser = createParser("12345");
 
-    assertThat(parser.asInteger(0, true)).isEqualTo(12345);
+    assertThat(parser.asInteger(0, FieldLevelEnum.REQUIRED)).isEqualTo(12345);
     assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
-    assertThat(parser.asInteger(0, true, RowParser.NumberBounds.NON_NEGATIVE)).isEqualTo(12345);
+    assertThat(parser.asInteger(0, FieldLevelEnum.REQUIRED, RowParser.NumberBounds.NON_NEGATIVE))
+        .isEqualTo(12345);
     assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
-    assertThat(parser.asInteger(0, true, RowParser.NumberBounds.NON_ZERO)).isEqualTo(12345);
+    assertThat(parser.asInteger(0, FieldLevelEnum.REQUIRED, RowParser.NumberBounds.NON_ZERO))
+        .isEqualTo(12345);
     assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
-    assertThat(parser.asInteger(0, true, RowParser.NumberBounds.POSITIVE)).isEqualTo(12345);
+    assertThat(parser.asInteger(0, FieldLevelEnum.REQUIRED, RowParser.NumberBounds.POSITIVE))
+        .isEqualTo(12345);
     assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
-    assertThat(createParser("abc").asInteger(0, true)).isNull();
+    assertThat(createParser("abc").asInteger(0, FieldLevelEnum.REQUIRED)).isNull();
   }
 
   @Test
   public void asDecimal() {
     RowParser parser = createParser("123.45");
 
-    assertThat(parser.asDecimal(0, true)).isEqualTo(new BigDecimal("123.45"));
+    assertThat(parser.asDecimal(0, FieldLevelEnum.REQUIRED)).isEqualTo(new BigDecimal("123.45"));
     assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
-    assertThat(parser.asDecimal(0, true, RowParser.NumberBounds.NON_NEGATIVE))
+    assertThat(parser.asDecimal(0, FieldLevelEnum.REQUIRED, RowParser.NumberBounds.NON_NEGATIVE))
         .isEqualTo(new BigDecimal("123.45"));
     assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
-    assertThat(parser.asDecimal(0, true, RowParser.NumberBounds.NON_ZERO))
+    assertThat(parser.asDecimal(0, FieldLevelEnum.REQUIRED, RowParser.NumberBounds.NON_ZERO))
         .isEqualTo(new BigDecimal("123.45"));
     assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
-    assertThat(parser.asDecimal(0, true, RowParser.NumberBounds.POSITIVE))
+    assertThat(parser.asDecimal(0, FieldLevelEnum.REQUIRED, RowParser.NumberBounds.POSITIVE))
         .isEqualTo(new BigDecimal("123.45"));
     assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
-    assertThat(createParser("abc").asDecimal(0, true)).isNull();
+    assertThat(createParser("abc").asDecimal(0, FieldLevelEnum.REQUIRED)).isNull();
   }
 
   @Test
   public void asFloat() {
     RowParser parser = createParser("123.45");
 
-    assertThat(parser.asFloat(0, true)).isEqualTo(123.45);
+    assertThat(parser.asFloat(0, FieldLevelEnum.REQUIRED)).isEqualTo(123.45);
     assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
-    assertThat(parser.asFloat(0, true, RowParser.NumberBounds.NON_NEGATIVE)).isEqualTo(123.45);
+    assertThat(parser.asFloat(0, FieldLevelEnum.REQUIRED, RowParser.NumberBounds.NON_NEGATIVE))
+        .isEqualTo(123.45);
     assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
-    assertThat(parser.asFloat(0, true, RowParser.NumberBounds.NON_ZERO)).isEqualTo(123.45);
+    assertThat(parser.asFloat(0, FieldLevelEnum.REQUIRED, RowParser.NumberBounds.NON_ZERO))
+        .isEqualTo(123.45);
     assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
-    assertThat(parser.asFloat(0, true, RowParser.NumberBounds.POSITIVE)).isEqualTo(123.45);
+    assertThat(parser.asFloat(0, FieldLevelEnum.REQUIRED, RowParser.NumberBounds.POSITIVE))
+        .isEqualTo(123.45);
     assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
-    assertThat(createParser("abc").asFloat(0, true)).isNull();
+    assertThat(createParser("abc").asFloat(0, FieldLevelEnum.REQUIRED)).isNull();
   }
 
   @Test
   public void asEmail_valid() {
-    assertValid("no-reply@google.com", p -> p.asEmail(0, true), "no-reply@google.com");
+    assertValid(
+        "no-reply@google.com", p -> p.asEmail(0, FieldLevelEnum.REQUIRED), "no-reply@google.com");
   }
 
   @Test
   public void asEmail_invalid() {
     assertInvalid(
         "invalid",
-        p -> p.asEmail(0, true),
+        p -> p.asEmail(0, FieldLevelEnum.REQUIRED),
         "invalid",
         new InvalidEmailNotice("stops.txt", 8, "column name", "invalid"));
   }
 
   @Test
   public void asColor() {
-    assertThat(createParser("FFFFFF").asColor(0, true)).isEqualTo(GtfsColor.fromInt(0xffffff));
-    assertThat(createParser("abcdef").asColor(0, true)).isEqualTo(GtfsColor.fromInt(0xabcdef));
-    assertThat(createParser("123456").asColor(0, true)).isEqualTo(GtfsColor.fromInt(0x123456));
+    assertThat(createParser("FFFFFF").asColor(0, FieldLevelEnum.REQUIRED))
+        .isEqualTo(GtfsColor.fromInt(0xffffff));
+    assertThat(createParser("abcdef").asColor(0, FieldLevelEnum.REQUIRED))
+        .isEqualTo(GtfsColor.fromInt(0xabcdef));
+    assertThat(createParser("123456").asColor(0, FieldLevelEnum.REQUIRED))
+        .isEqualTo(GtfsColor.fromInt(0x123456));
 
-    assertThat(createParser("invalid").asColor(0, true)).isNull();
+    assertThat(createParser("invalid").asColor(0, FieldLevelEnum.REQUIRED)).isNull();
   }
 
   @Test
   public void asCurrencyCode() {
-    assertThat(createParser("USD").asCurrencyCode(0, true).getCurrencyCode()).isEqualTo("USD");
-    assertThat(createParser("AUD").asCurrencyCode(0, true).getCurrencyCode()).isEqualTo("AUD");
-    assertThat(createParser("CAD").asCurrencyCode(0, true).getCurrencyCode()).isEqualTo("CAD");
+    assertThat(createParser("USD").asCurrencyCode(0, FieldLevelEnum.REQUIRED).getCurrencyCode())
+        .isEqualTo("USD");
+    assertThat(createParser("AUD").asCurrencyCode(0, FieldLevelEnum.REQUIRED).getCurrencyCode())
+        .isEqualTo("AUD");
+    assertThat(createParser("CAD").asCurrencyCode(0, FieldLevelEnum.REQUIRED).getCurrencyCode())
+        .isEqualTo("CAD");
 
-    assertThat(createParser("invalid").asCurrencyCode(0, true)).isNull();
+    assertThat(createParser("invalid").asCurrencyCode(0, FieldLevelEnum.REQUIRED)).isNull();
   }
 
   @Test
   public void asLanguageCode() {
     // Russian of Russia.
-    assertThat(createParser("ru-RU").asLanguageCode(0, true).toLanguageTag()).isEqualTo("ru-RU");
+    assertThat(createParser("ru-RU").asLanguageCode(0, FieldLevelEnum.REQUIRED).toLanguageTag())
+        .isEqualTo("ru-RU");
     // Zürich German.
-    assertThat(createParser("gsw-u-sd-chzh").asLanguageCode(0, true).toLanguageTag())
+    assertThat(
+            createParser("gsw-u-sd-chzh")
+                .asLanguageCode(0, FieldLevelEnum.REQUIRED)
+                .toLanguageTag())
         .isEqualTo("gsw-u-sd-chzh");
     // Latin American Spanish.
-    assertThat(createParser("es-419").asLanguageCode(0, true).toLanguageTag()).isEqualTo("es-419");
+    assertThat(createParser("es-419").asLanguageCode(0, FieldLevelEnum.REQUIRED).toLanguageTag())
+        .isEqualTo("es-419");
   }
 
   @Test
   public void asPhoneNumber_valid() {
-    assertValid("(650) 253-0000", p -> p.asPhoneNumber(0, true), "(650) 253-0000");
+    assertValid(
+        "(650) 253-0000", p -> p.asPhoneNumber(0, FieldLevelEnum.REQUIRED), "(650) 253-0000");
   }
 
   @Test
   public void asPhoneNumber_invalid() {
     assertInvalid(
         "invalid",
-        p -> p.asPhoneNumber(0, true),
+        p -> p.asPhoneNumber(0, FieldLevelEnum.REQUIRED),
         "invalid",
         new InvalidPhoneNumberNotice("stops.txt", 8, "column name", "invalid"));
   }
 
   @Test
   public void asDate() {
-    assertThat(createParser("20200901").asDate(0, true))
+    assertThat(createParser("20200901").asDate(0, FieldLevelEnum.REQUIRED))
         .isEqualTo(GtfsDate.fromLocalDate(LocalDate.of(2020, 9, 1)));
 
-    assertThat(createParser("invalid").asDate(0, true)).isNull();
+    assertThat(createParser("invalid").asDate(0, FieldLevelEnum.REQUIRED)).isNull();
   }
 
   @Test
   public void asTime() {
-    assertThat(createParser("12:20:30").asTime(0, true))
+    assertThat(createParser("12:20:30").asTime(0, FieldLevelEnum.REQUIRED))
         .isEqualTo(GtfsTime.fromHourMinuteSecond(12, 20, 30));
-    assertThat(createParser("24:20:30").asTime(0, true))
+    assertThat(createParser("24:20:30").asTime(0, FieldLevelEnum.REQUIRED))
         .isEqualTo(GtfsTime.fromHourMinuteSecond(24, 20, 30));
 
-    assertThat(createParser("invalid").asTime(0, true)).isNull();
+    assertThat(createParser("invalid").asTime(0, FieldLevelEnum.REQUIRED)).isNull();
   }
 
   @Test
   public void asTimezone_valid() {
-    assertThat(createParser("America/Toronto").asTimezone(0, true))
+    assertThat(createParser("America/Toronto").asTimezone(0, FieldLevelEnum.REQUIRED))
         .isEqualTo(ZoneId.of("America/Toronto"));
   }
 
   @Test
   public void asTimezone_invalid() {
     // ZoneId.of("invalid") throws ZoneRulesException.
-    assertThat(createParser("invalid").asTimezone(0, true)).isNull();
+    assertThat(createParser("invalid").asTimezone(0, FieldLevelEnum.REQUIRED)).isNull();
 
     // ZoneId.of("Latinoamerica/ Argentina") throws DateTimeException.
-    assertThat(createParser("Latinoamerica/ Argentina").asTimezone(0, true)).isNull();
+    assertThat(createParser("Latinoamerica/ Argentina").asTimezone(0, FieldLevelEnum.REQUIRED))
+        .isNull();
   }
 
   @Test
   public void asId() {
-    assertThat(createParser("32tgklu34y3k").asId(0, true)).isEqualTo("32tgklu34y3k");
+    assertThat(createParser("32tgklu34y3k").asId(0, FieldLevelEnum.REQUIRED))
+        .isEqualTo("32tgklu34y3k");
     RowParser parser = createParser("קום");
     // .קום :the .COM equivalent in Hebrew
-    parser.asId(0, true);
+    parser.asId(0, FieldLevelEnum.REQUIRED);
     assertThat(parser.getNoticeContainer().getValidationNotices())
         .containsExactly(
             new NonAsciiOrNonPrintableCharNotice(TEST_FILENAME, 8L, "column name", "קום"));
@@ -266,20 +288,20 @@ public class RowParserTest {
 
   @Test
   public void asLatitude_valid() {
-    assertValid("32.5", p -> p.asLatitude(0, true), 32.5);
+    assertValid("32.5", p -> p.asLatitude(0, FieldLevelEnum.REQUIRED), 32.5);
   }
 
   @Test
   public void asLatitude_outOfRange() {
     assertInvalid(
         "-91",
-        p -> p.asLatitude(0, true),
+        p -> p.asLatitude(0, FieldLevelEnum.REQUIRED),
         -91.0,
         new NumberOutOfRangeNotice(
             "stops.txt", 8, "column name", "latitude within [-90, 90]", -91.0));
     assertInvalid(
         "91",
-        p -> p.asLatitude(0, true),
+        p -> p.asLatitude(0, FieldLevelEnum.REQUIRED),
         91.0,
         new NumberOutOfRangeNotice(
             "stops.txt", 8, "column name", "latitude within [-90, 90]", 91.0));
@@ -289,29 +311,29 @@ public class RowParserTest {
   public void asLatitude_nonParsable() {
     assertInvalid(
         "invalid",
-        p -> p.asLatitude(0, true),
+        p -> p.asLatitude(0, FieldLevelEnum.REQUIRED),
         null,
         new InvalidFloatNotice("stops.txt", 8, "column name", "invalid"));
   }
 
   @Test
   public void asLongitude_valid() {
-    assertValid("-32.5", p -> p.asLongitude(0, true), -32.5);
-    assertValid("-91", p -> p.asLongitude(0, true), -91);
-    assertValid("91", p -> p.asLongitude(0, true), 91);
+    assertValid("-32.5", p -> p.asLongitude(0, FieldLevelEnum.REQUIRED), -32.5);
+    assertValid("-91", p -> p.asLongitude(0, FieldLevelEnum.REQUIRED), -91);
+    assertValid("91", p -> p.asLongitude(0, FieldLevelEnum.REQUIRED), 91);
   }
 
   @Test
   public void asLongitude_outOfRange() {
     assertInvalid(
         "-181",
-        p -> p.asLongitude(0, true),
+        p -> p.asLongitude(0, FieldLevelEnum.REQUIRED),
         -181.0,
         new NumberOutOfRangeNotice(
             "stops.txt", 8, "column name", "longitude within [-180, 180]", -181.0));
     assertInvalid(
         "181",
-        p -> p.asLongitude(0, true),
+        p -> p.asLongitude(0, FieldLevelEnum.REQUIRED),
         181.0,
         new NumberOutOfRangeNotice(
             "stops.txt", 8, "column name", "longitude within [-180, 180]", 181.0));
@@ -321,7 +343,7 @@ public class RowParserTest {
   public void asLongitude_nonParsable() {
     assertInvalid(
         "invalid",
-        p -> p.asLongitude(0, true),
+        p -> p.asLongitude(0, FieldLevelEnum.REQUIRED),
         null,
         new InvalidFloatNotice("stops.txt", 8, "column name", "invalid"));
   }
@@ -330,7 +352,7 @@ public class RowParserTest {
   public void whitespaceInValue() {
     // Protected whitespaces are stripped.
     RowParser parser = createParser(" 1\t");
-    assertThat(parser.asInteger(0, true)).isEqualTo(1);
+    assertThat(parser.asInteger(0, FieldLevelEnum.REQUIRED)).isEqualTo(1);
     LeadingOrTrailingWhitespacesNotice notice =
         new LeadingOrTrailingWhitespacesNotice(TEST_FILENAME, 8, "column name", " 1\t");
     assertThat(parser.getNoticeContainer().hasValidationErrors()).isFalse();
@@ -340,7 +362,7 @@ public class RowParserTest {
   @Test
   public void newLineInValue() {
     RowParser parser = createParser("a\nb");
-    assertThat(parser.asText(0, true)).isEqualTo("a\nb");
+    assertThat(parser.asText(0, FieldLevelEnum.REQUIRED)).isEqualTo("a\nb");
     assertThat(parser.getNoticeContainer().hasValidationErrors()).isTrue();
     assertThat(parser.getNoticeContainer().getValidationNotices())
         .containsExactly(new NewLineInValueNotice(TEST_FILENAME, 8, "column name", "a\nb"));
@@ -349,7 +371,7 @@ public class RowParserTest {
   @Test
   public void carriageReturnInValue() {
     RowParser parser = createParser("a\rb");
-    assertThat(parser.asText(0, true)).isEqualTo("a\rb");
+    assertThat(parser.asText(0, FieldLevelEnum.REQUIRED)).isEqualTo("a\rb");
     assertThat(parser.getNoticeContainer().hasValidationErrors()).isTrue();
     assertThat(parser.getNoticeContainer().getValidationNotices())
         .containsExactly(new NewLineInValueNotice(TEST_FILENAME, 8, "column name", "a\rb"));
