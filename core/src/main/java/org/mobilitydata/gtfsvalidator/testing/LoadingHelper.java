@@ -37,9 +37,7 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
 
-/**
- * Convenience methods for loading files in unit-tests.
- */
+/** Convenience methods for loading files in unit-tests. */
 public class LoadingHelper {
 
   private CountryCode countryCode = CountryCode.forStringOrUnknown("ca");

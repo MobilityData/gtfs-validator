@@ -19,18 +19,12 @@ package org.mobilitydata.gtfsvalidator.table;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.testing.LoadingHelper;
-import org.mobilitydata.gtfsvalidator.validator.DefaultValidatorProvider;
-import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 
 /** Runs GtfsLevelTableContainer on test CSV data. */
@@ -41,8 +35,9 @@ public class GtfsLevelTableLoaderTest {
 
   @Test
   public void validFile() throws IOException, ValidatorLoaderException {
-    GtfsLevelTableContainer tableContainer = helper.load(new GtfsLevelTableLoader(),
-        "level_id,level_name,level_index", "level1,Ground,1");
+    GtfsLevelTableContainer tableContainer =
+        helper.load(
+            new GtfsLevelTableLoader(), "level_id,level_name,level_index", "level1,Ground,1");
 
     assertThat(helper.getValidationNotices()).isEmpty();
     assertThat(tableContainer.entityCount()).isEqualTo(1);
@@ -56,8 +51,8 @@ public class GtfsLevelTableLoaderTest {
 
   @Test
   public void missingRequiredField() throws IOException, ValidatorLoaderException {
-    GtfsLevelTableContainer tableContainer = helper.load(new GtfsLevelTableLoader(),
-        "level_id,level_name,level_index", ",Ground,1");
+    GtfsLevelTableContainer tableContainer =
+        helper.load(new GtfsLevelTableLoader(), "level_id,level_name,level_index", ",Ground,1");
 
     assertThat(helper.getValidationNotices()).isNotEmpty();
     assertThat(tableContainer.entityCount()).isEqualTo(0);
