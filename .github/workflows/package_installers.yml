@@ -44,6 +44,19 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: jpackage
+        # Per discussion in https://github.com/MobilityData/gtfs-validator/issues/1183, there is a
+        # bug with jpackage in Java 17 that caused Mac apps to be left in an ambiguous signing state
+        # that results in them being reported as 'damaged' when run.  As a temporary workaround, we
+        # unsign the app and repackage as a dmg.  This bug could be fixed in the future by upgrading
+        # to Java 18 or by officially signing the app.
+      - name: Unsign and package Mac OS app
+        if: matrix.os == 'macos-latest'
+        shell: bash
+        run: |
+          codesign --remove-signature app/pkg/build/jpackage/GTFS\ Validator.app
+          appVersion=$(./gradlew cV -q -Prelease.quiet)
+          appVersion=${appVersion//-SNAPSHOT/}
+          jpackage --type dmg --name 'GTFS Validator' --app-version ${appVersion} --app-image app/pkg/build/jpackage/GTFS\ Validator.app --dest app/pkg/build/jpackage
       - name: Upload Installer
         uses: actions/upload-artifact@v2
         with:

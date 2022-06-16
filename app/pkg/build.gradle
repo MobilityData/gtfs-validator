@@ -111,6 +111,7 @@ jlink {
             imageOptions = [
                     '--icon', "${projectDir}/src/main/icons/Icon.icns"
             ]
+            skipInstaller = true
         }
     }
 }
