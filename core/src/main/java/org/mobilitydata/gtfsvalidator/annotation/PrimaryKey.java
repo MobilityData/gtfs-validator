@@ -41,7 +41,7 @@ import java.lang.annotation.Target;
  *   }
  * </pre>
  *
- * <p>The {@pcode PrimaryKey} annotation can be specified for multiple fields if the file has a
+ * <p>The {@code PrimaryKey} annotation can be specified for multiple fields if the file has a
  * multi-column key.
  *
  * <p>For single-field primary keys, a lookup method will be added to the container class to find an
