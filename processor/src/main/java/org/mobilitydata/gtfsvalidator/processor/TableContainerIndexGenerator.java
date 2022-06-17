@@ -27,6 +27,8 @@ import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyNotice;
 import org.mobilitydata.gtfsvalidator.notice.MoreThanOneEntityNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.type.GtfsDate;
+import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 /** Generates code in a container class for @Index and @PrimaryKey annotations. */
 class TableContainerIndexGenerator {
@@ -232,6 +234,10 @@ class TableContainerIndexGenerator {
         if (field.type() == FieldTypeEnum.INTEGER) {
           accessor =
               CodeBlock.of("$T.parseInt($L)", TypeName.get(field.javaType()).box(), accessor);
+        } else if (field.type() == FieldTypeEnum.DATE) {
+          accessor = CodeBlock.of("$T.fromString($L)", TypeName.get(GtfsDate.class), accessor);
+        } else if (field.type() == FieldTypeEnum.TIME) {
+          accessor = CodeBlock.of("$T.fromString($L)", TypeName.get(GtfsTime.class), accessor);
         }
         accessors.add(accessor);
       }
@@ -242,6 +248,8 @@ class TableContainerIndexGenerator {
               BY_COMPOSITE_KEY_MAP_FIELD_NAME,
               CodeBlock.join(accessors, ", "))
           .nextControlFlow("catch (NumberFormatException e)")
+          .addStatement("return Optional.empty()")
+          .nextControlFlow("catch (IllegalArgumentException e)")
           .addStatement("return Optional.empty()")
           .endControlFlow();
     } else if (fileDescriptor.singleRow()) {

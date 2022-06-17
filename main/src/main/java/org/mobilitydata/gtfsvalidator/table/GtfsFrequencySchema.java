@@ -21,6 +21,7 @@ import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.Index;
 import org.mobilitydata.gtfsvalidator.annotation.Positive;
+import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
@@ -28,10 +29,12 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 public interface GtfsFrequencySchema extends GtfsEntity {
   @Required
   @ForeignKey(table = "trips.txt", field = "trip_id")
+  @PrimaryKey
   @Index
   String tripId();
 
   @Required
+  @PrimaryKey
   @EndRange(field = "end_time", allowEqual = false)
   GtfsTime startTime();
 

@@ -7,6 +7,7 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFrequency;
@@ -89,6 +90,7 @@ public class OverlappingFrequencyValidatorTest {
                 createFrequency(2, "t0", "05:00:00", "07:00:00", 600),
                 createFrequency(3, "t0", "05:00:00", "06:30:00", 300)))
         .containsExactly(
+            new DuplicateKeyNotice("frequencies.txt", 3, 2, "trip_id,start_time", "t0,05:00:00"),
             new OverlappingFrequencyNotice(
                 3, GtfsTime.fromString("06:30:00"), 2, GtfsTime.fromString("05:00:00"), "t0"));
   }
@@ -123,6 +125,7 @@ public class OverlappingFrequencyValidatorTest {
                 createFrequency(3, "t0", "05:00:00", "05:15:00", 300),
                 createFrequency(4, "t0", "05:20:00", "05:40:00", 300)))
         .containsExactly(
+            new DuplicateKeyNotice("frequencies.txt", 3, 2, "trip_id,start_time", "t0,05:00:00"),
             new OverlappingFrequencyNotice(
                 3, GtfsTime.fromString("05:15:00"), 2, GtfsTime.fromString("05:00:00"), "t0"),
             new OverlappingFrequencyNotice(
