@@ -68,38 +68,43 @@ In the output directory, the reports will be created as described [here](#visual
 # Run the app using Docker
 ### Setup
 1. Download and install [Docker](https://docs.docker.com/get-started/)
-1. Pull the [latest Docker image for this project](https://github.com/orgs/MobilityData/packages/container/package/gtfs-validator). For example, `docker pull ghcr.io/mobilitydata/gtfs-validator` for the latest snapshot version of the validator.
+1. To obtain a validator Docker container image, you have two options:
+    * Pull [a published Docker container image from GitHub](https://github.com/orgs/MobilityData/packages/container/package/gtfs-validator). For example, to pull the latest build of the `master` branch:
+
+        ```bash
+        docker pull ghcr.io/mobilitydata/gtfs-validator:latest
+        ```
+
+    * Build a Docker container image locally from any branch or working tree:
+
+        ```bash
+        docker build . -t ghcr.io/mobilitydata/gtfs-validator:latest
+        ```
 
 ### Run it
 
 #### For Mac and Linux
 
-To run the Docker image in a new container:
+To verify you can run the Docker image in a new container and see the help text:
 
-`docker run -v /myDirectory:/theContainerDirectory -it ghcr.io/mobilitydata/gtfs-validator:latest`
+```bash
+docker run --rm ghcr.io/mobilitydata/gtfs-validator:latest --help
+```
+
+In order to pass files in and out of the validator, you'll need to use a volume mount to share a directory between your host computer and the Docker container:
+
+```bash
+docker run --rm -v /myDirectory:/work ghcr.io/mobilitydata/gtfs-validator:latest -i /work/gtfs.zip -o /work/output
+```
 
 where:
-* `-v /myDirectory:/theContainerDirectory`: syntax to share directories and data between the container and the host (your computer). With the above command, any files that you place in `/myDirectory` on the host will show up in `/theContainerDirectory` inside the container and vice versa.
+* `-v /myDirectory:/work`: syntax to share directories and data between the container and the host (your computer). With the above command, any files that you place in `/myDirectory` on the host will show up in `/work` inside the container and vice versa.
 
 ***NOTE:*** On Windows, you must provide the local volume (e.g., `c:`) as well:
 
-`... c:/myDirectory:/theContainerDirectory ...`
+`... c:/myDirectory:/work ...`
 
 The validator can then be executed via bash commands. See the [preceeding instructions for command line usage](#run-the-app-via-command-line).
-
-### Build Docker container locally
-
-To build a Docker image locally from source (e.g. to test an unmerged branch):
-
-```bash
-docker build . --build-arg=VERSION_TAG=v3 -t gtfs-validator:latest
-```
-
-The locally-built image could then be run via the local `gtfs-validator:latest` assigned above:
-
-```bash
-docker run --rm gtfs-validator:latest --help
-```
 
 ### Visualize the results
 In the output directory, the reports will be created as described [here](#visualize-the-results).
