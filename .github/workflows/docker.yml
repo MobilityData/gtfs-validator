@@ -95,8 +95,6 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          build-args: |
-            VERSION_TAG=${{ steps.prep.outputs.gradleVersionTag }}
           push: true
           tags: ${{ steps.prep.outputs.tags }}
           labels: |
