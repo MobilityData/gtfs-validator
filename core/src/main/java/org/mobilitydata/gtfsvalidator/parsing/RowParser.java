@@ -33,6 +33,7 @@ import org.mobilitydata.gtfsvalidator.notice.InvalidLanguageCodeNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidRowLengthNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidTimeNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidTimezoneNotice;
+import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.NumberOutOfRangeNotice;
@@ -111,6 +112,14 @@ public class RowParser {
     if (level == FieldLevelEnum.REQUIRED && s == null) {
       noticeContainer.addValidationNotice(
           new MissingRequiredFieldNotice(
+              fileName, row.getRowNumber(), header.getColumnName(columnIndex)));
+    } else if (level == FieldLevelEnum.RECOMMENDED && s == null) {
+      noticeContainer.addValidationNotice(
+          new MissingRecommendedFieldNotice(
+              fileName, row.getRowNumber(), header.getColumnName(columnIndex)));
+    } else if (level == FieldLevelEnum.RECOMMENDED && s == null) {
+      noticeContainer.addValidationNotice(
+          new MissingRecommendedFieldNotice(
               fileName, row.getRowNumber(), header.getColumnName(columnIndex)));
     }
     if (s != null) {
