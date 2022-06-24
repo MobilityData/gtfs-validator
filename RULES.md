@@ -99,6 +99,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`inconsistent_agency_lang`](#inconsistent_agency_lang)                                       | Inconsistent language among agencies.                                                                                                                         |
 | [`leading_or_trailing_whitespaces`](#leading_or_trailing_whitespaces)                         | The value in CSV file has leading or trailing whitespaces.                                                                                                    |
 | [`missing_feed_info_date`](#missing_feed_info_date)                                           | `feed_end_date` should be provided if `feed_start_date` is provided. `feed_start_date` should be provided if `feed_end_date` is provided.                     |
+| [`missing_recommended_file`](#missing_recommended_file)                                       | A recommended file is missing.                     |
 | [`missing_timepoint_column`](#missing_timepoint_column)                                       | `timepoint` column is missing for a dataset.                                                                                                                  |
 | [`missing_timepoint_value`](#missing_timepoint_value)                                         | `stop_times.timepoint` value is missing for a record.                                                                                                         |
 | [`more_than_one_entity`](#more_than_one_entity)                                               | More than one row in CSV.                                                                                                                                     |
@@ -1695,6 +1696,24 @@ Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one
 </details>
 
 <a name="MissingTimepointColumnNotice"/>
+
+### missing_recommended_file
+
+A recommended file is missing.
+
+#### References
+* [feed_info.txt bets practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/best-practices.md#feed_infotxt)
+<details>
+
+#### Notice fields description
+| Field name   	| Description                    	| Type   	|
+|--------------	|--------------------------------	|--------	|
+| `filename`   	| The name of the faulty file.   	| String 	|
+
+#### Affected files
+* [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
+
+</details>
 
 ### missing_timepoint_column
 
