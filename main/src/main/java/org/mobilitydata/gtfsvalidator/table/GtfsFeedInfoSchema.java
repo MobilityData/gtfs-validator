@@ -25,7 +25,6 @@ import org.mobilitydata.gtfsvalidator.annotation.Recommended;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
-@Recommended
 @GtfsTable(value = "feed_info.txt", singleRow = true)
 @Recommended
 public interface GtfsFeedInfoSchema extends GtfsEntity {
