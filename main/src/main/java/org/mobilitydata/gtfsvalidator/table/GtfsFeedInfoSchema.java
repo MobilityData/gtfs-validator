@@ -40,16 +40,21 @@ public interface GtfsFeedInfoSchema extends GtfsEntity {
 
   Locale defaultLang();
 
+  @Recommended
   @EndRange(field = "feed_end_date", allowEqual = true)
   GtfsDate feedStartDate();
 
+  @Recommended
   GtfsDate feedEndDate();
 
+  @Recommended
   String feedVersion();
 
+  @Recommended
   @FieldType(FieldTypeEnum.EMAIL)
   String feedContactEmail();
 
+  @Recommended
   @FieldType(FieldTypeEnum.URL)
   String feedContactUrl();
 }
