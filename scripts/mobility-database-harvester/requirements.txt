@@ -20,6 +20,6 @@ requests==2.26.0
 rsa==4.7.2
 six==1.16.0
 urllib3==1.26.6
-numpy==1.21.2
+numpy==1.22.0
 tqdm==4.62.3
 google==3.0.0
