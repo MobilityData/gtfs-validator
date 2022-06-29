@@ -38,6 +38,8 @@ import org.mobilitydata.gtfsvalidator.notice.InvalidPhoneNumberNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidRowLengthNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidUrlNotice;
 import org.mobilitydata.gtfsvalidator.notice.LeadingOrTrailingWhitespacesNotice;
+import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFieldNotice;
+import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NewLineInValueNotice;
 import org.mobilitydata.gtfsvalidator.notice.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -100,6 +102,44 @@ public class RowParserTest {
         p -> p.asUrl(0, FieldLevelEnum.REQUIRED),
         "invalid",
         new InvalidUrlNotice("stops.txt", 8, "column name", "invalid"));
+  }
+
+  @Test
+  public void asString_recommended_valid() {
+    RowParser parser = createParser("ABCDE");
+
+    assertThat(parser.asString(0, FieldLevelEnum.RECOMMENDED)).isEqualTo("ABCDE");
+    assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
+  }
+
+  @Test
+  public void asString_required_valid() {
+    RowParser parser = createParser("ABCDE");
+
+    assertThat(parser.asString(0, FieldLevelEnum.REQUIRED)).isEqualTo("ABCDE");
+    assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
+  }
+
+  @Test
+  public void asString_recommended_missing() {
+    RowParser parser = createParser(null);
+
+    assertThat(parser.asString(0, FieldLevelEnum.RECOMMENDED)).isEqualTo(null);
+    MissingRecommendedFieldNotice notice =
+        new MissingRecommendedFieldNotice(TEST_FILENAME, 8, "column name");
+    assertThat(parser.getNoticeContainer().getValidationNotices()).containsExactly(notice);
+    assertThat(parser.getNoticeContainer().hasValidationErrors()).isFalse();
+  }
+
+  @Test
+  public void asString_required_missing() {
+    RowParser parser = createParser(null);
+
+    assertThat(parser.asString(0, FieldLevelEnum.REQUIRED)).isEqualTo(null);
+    MissingRequiredFieldNotice notice =
+        new MissingRequiredFieldNotice(TEST_FILENAME, 8, "column name");
+    assertThat(parser.getNoticeContainer().getValidationNotices()).containsExactly(notice);
+    assertThat(parser.getNoticeContainer().hasValidationErrors()).isTrue();
   }
 
   @Test
