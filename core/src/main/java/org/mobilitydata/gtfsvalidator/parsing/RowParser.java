@@ -117,10 +117,6 @@ public class RowParser {
       noticeContainer.addValidationNotice(
           new MissingRecommendedFieldNotice(
               fileName, row.getRowNumber(), header.getColumnName(columnIndex)));
-    } else if (level == FieldLevelEnum.RECOMMENDED && s == null) {
-      noticeContainer.addValidationNotice(
-          new MissingRecommendedFieldNotice(
-              fileName, row.getRowNumber(), header.getColumnName(columnIndex)));
     }
     if (s != null) {
       s =
