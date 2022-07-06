@@ -93,8 +93,6 @@ if __name__ == "__main__":
         help="Data path.",
     )
     args = parser.parse_args()
-
-    latest_versions_file = args.latest_versions_file
     data_path = args.data_path
 
     if not path.isdir(data_path) and path.exists(data_path):
