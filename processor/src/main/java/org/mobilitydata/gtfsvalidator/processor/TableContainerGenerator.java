@@ -79,6 +79,14 @@ public class TableContainerGenerator {
             .build());
 
     typeSpec.addMethod(
+        MethodSpec.methodBuilder("isRecommended")
+            .addAnnotation(Override.class)
+            .addModifiers(Modifier.PUBLIC)
+            .returns(boolean.class)
+            .addStatement("return $L", fileDescriptor.recommended())
+            .build());
+
+    typeSpec.addMethod(
         MethodSpec.methodBuilder("isRequired")
             .addAnnotation(Override.class)
             .addModifiers(Modifier.PUBLIC)

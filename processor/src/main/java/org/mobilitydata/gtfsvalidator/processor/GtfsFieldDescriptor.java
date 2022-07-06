@@ -35,6 +35,8 @@ public abstract class GtfsFieldDescriptor {
 
   public abstract TypeMirror javaType();
 
+  public abstract boolean recommended();
+
   public abstract boolean required();
 
   public abstract boolean primaryKey();
@@ -63,6 +65,8 @@ public abstract class GtfsFieldDescriptor {
     public abstract Builder setType(FieldTypeEnum value);
 
     public abstract Builder setJavaType(TypeMirror value);
+
+    public abstract Builder setRecommended(boolean value);
 
     public abstract Builder setRequired(boolean value);
 

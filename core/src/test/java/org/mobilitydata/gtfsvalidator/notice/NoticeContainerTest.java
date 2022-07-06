@@ -52,6 +52,18 @@ public class NoticeContainerTest {
   }
 
   @Test
+  public void exportRecommendedFileNotices() {
+    NoticeContainer container = new NoticeContainer();
+    container.addValidationNotice(new MissingRecommendedFileNotice("feed_info.txt"));
+
+    assertThat(new Gson().toJson(container.exportValidationNotices()))
+        .isEqualTo(
+            "{\"notices\":[{\"code\":\"missing_recommended_file\",\"severity\":\"WARNING\","
+                + "\"totalNotices\":1,\"sampleNotices\":[{\"filename\":\"feed_info.txt"
+                + "\"}]}]}");
+  }
+
+  @Test
   public void exportInfinityInContext() {
     NoticeContainer container = new NoticeContainer();
     container.addValidationNotice(
