@@ -90,7 +90,7 @@ if __name__ == "__main__":
         "-d",
         "--data-path",
         action="store",
-        default="./",
+        default=".",
         help="Data path.",
     )
     args = parser.parse_args()
