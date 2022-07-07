@@ -10,12 +10,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
 import json
 import pandas as pd
 import numpy as np
-import os
-from os import path
 
 #####################################################################################
 # This script harvests the latest dataset versions on the Mobility Database Catalogs.
@@ -23,10 +20,13 @@ from os import path
 #####################################################################################
 
 # Mobility Database Catalogs constants
-CATALOGS_CSV = "https://bit.ly/catalogs-csv"
-LATEST = "urls.latest"
+CATALOGS_CSV = "https://storage.googleapis.com/storage/v1/b/mdb-csv/o/sources.csv"
+LATEST_URL = "urls.latest"
 DATA_TYPE = "data_type"
 GTFS = "gtfs"
+
+# Sources to exclude because they are too big for the workflow.
+SOURCES_TO_EXCLUDE = ["de-unknown-rursee-schifffahrt-kg-gtfs-784"]
 
 # Google Cloud constants
 URL_PREFIX = "https://storage.googleapis.com/storage/v1/b/mdb-latest/o/"
@@ -45,35 +45,40 @@ DATA = "data"
 ID = "id"
 
 
-def save_content_to_file(content, data_path, filename):
-    file_path = path.join(data_path, filename)
-    with open(file_path, "w") as f:
-        json.dump(content, f)
-
-
 def harvest_latest_versions():
+    """Harvests the latest URLs from the Mobility Database catalogs.
+    :return: The dictionary of the latest URLs with the format {Name: Url}.
+    """
     catalogs = pd.read_csv(CATALOGS_CSV)
     latest_versions = {}
 
-    latest_urls = catalogs[LATEST].loc[catalogs[DATA_TYPE] == GTFS]
+    latest_urls = catalogs[LATEST_URL].loc[catalogs[DATA_TYPE] == GTFS]
     for index, value in latest_urls.items():
         latest_url = value
         source_file_name = latest_url.replace(URL_PREFIX, "").replace(URL_SUFFIX, "")
         latest_versions[source_file_name] = latest_url
 
+    # Some sources/datasets are too big for the workflow so we are excluding them.
+    for source in SOURCES_TO_EXCLUDE:
+        del latest_versions[source]
+
     return latest_versions
 
 
-def apply_github_matrix_formatting(json_data):
+def apply_github_matrix_formatting(latest_urls):
+    """Transforms the dictionary of latest URLs to a GitHub matrix.
+    :param latest_urls: The dictionary of the latest URLs with the format {Name: Url}.
+    :return: The GitHub matrix of latest URLs for the workflow jobs.
+    """
     latest_versions_data = []
 
-    jobs = np.array_split(list(json_data.keys()), min(MAX_JOB_NUMBER, len(list(json_data.keys()))))
+    jobs = np.array_split(list(latest_urls.keys()), min(MAX_JOB_NUMBER, len(list(latest_urls.keys()))))
     jobs = [list(job_ids) for job_ids in jobs]
     for job_ids in jobs:
         latest_version_data_string = ""
         while len(job_ids) > 0:
             job_id = job_ids.pop()
-            dataset_information = {ID: job_id, URL_KEY: json_data[job_id]}
+            dataset_information = {ID: job_id, URL_KEY: latest_urls[job_id]}
             latest_version_data_string = latest_version_data_string + json.dumps(
                 dataset_information, separators=(",", ":")
             )
@@ -83,30 +88,8 @@ def apply_github_matrix_formatting(json_data):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Script to harvest the latest dataset versions on the Mobility Database Catalogs. Python 3.9."
-    )
-    parser.add_argument(
-        "-d",
-        "--data-path",
-        action="store",
-        default=".",
-        help="Data path.",
-    )
-    args = parser.parse_args()
-    data_path = args.data_path
-
-    if not path.isdir(data_path) and path.exists(data_path):
-        raise Exception("Data path must be a directory if existing.")
-    elif not path.isdir(data_path):
-        os.mkdir(data_path)
-
     latest_versions = harvest_latest_versions()
     github_formatted_latest_versions = apply_github_matrix_formatting(
         latest_versions
     )
-    save_content_to_file(
-        github_formatted_latest_versions,
-        data_path,
-        GITHUB_FORMATTED_LATEST_VERSIONS_JSON,
-    )
+    print(github_formatted_latest_versions)
