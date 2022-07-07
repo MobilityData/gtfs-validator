@@ -10,9 +10,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import argparse
 import json
 import pandas as pd
 import numpy as np
+import os
+from os import path
 
 #####################################################################################
 # This script harvests the latest dataset versions on the Mobility Database Catalogs.
@@ -32,9 +35,6 @@ SOURCES_TO_EXCLUDE = ["de-unknown-rursee-schifffahrt-kg-gtfs-784"]
 URL_PREFIX = "https://storage.googleapis.com/storage/v1/b/mdb-latest/o/"
 URL_SUFFIX = ".zip?alt=media"
 
-# Script constants
-GITHUB_FORMATTED_LATEST_VERSIONS_JSON = "latest_versions.json"
-
 # Github constants
 MAX_JOB_NUMBER = 256
 
@@ -43,6 +43,17 @@ ROOT = "include"
 URL_KEY = "url"
 DATA = "data"
 ID = "id"
+
+
+def save_content_to_file(content, data_path, filename):
+    """Saves content to JSON file.
+    :param content: The content to save.
+    :param data_path: The path to the folder where to save the content.
+    :param filename: The file name for the JSON file.
+    """
+    file_path = path.join(data_path, filename)
+    with open(file_path, "w") as f:
+        json.dump(content, f)
 
 
 def harvest_latest_versions():
@@ -88,8 +99,40 @@ def apply_github_matrix_formatting(latest_urls):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Script to harvest the latest dataset versions on the Mobility Database Catalogs. Python 3.9."
+    )
+    parser.add_argument(
+        "-l",
+        "--latest-versions-file",
+        action="store",
+        help="Name of the latest urls file. If the file exists, it will be overwritten.",
+    )
+    parser.add_argument(
+        "-d",
+        "--data-path",
+        action="store",
+        default=".",
+        help="Data path.",
+    )
+    args = parser.parse_args()
+    
+    latest_versions_file = args.latest_versions_file
+    data_path = args.data_path
+
+    if not path.isdir(data_path) and path.exists(data_path):
+        raise Exception("Data path must be a directory if existing.")
+    elif not path.isdir(data_path):
+        os.mkdir(data_path)
+
     latest_versions = harvest_latest_versions()
     github_formatted_latest_versions = apply_github_matrix_formatting(
         latest_versions
+    )
+    # We save the latest versions because it is used later in the "compare-outputs" job of the workflow.
+    save_content_to_file(
+        github_formatted_latest_versions,
+        data_path,
+        latest_versions_file,
     )
     print(github_formatted_latest_versions)

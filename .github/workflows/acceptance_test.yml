@@ -116,7 +116,7 @@ jobs:
       - name: Set URL matrix
         id: set-matrix
         run: |
-          DATASETS=$(python3 scripts/mobility-database-harvester/harvest_latest_versions.py)
+          DATASETS=$(python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d scripts/mobility-database-harvester/datasets_metadata -l gtfs_latest_versions.json)
           echo $DATASETS
           echo "::set-output name=matrix::$DATASETS"
       - name: Persist metadata
