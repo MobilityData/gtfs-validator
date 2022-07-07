@@ -126,13 +126,13 @@ if __name__ == "__main__":
         os.mkdir(data_path)
 
     latest_versions = harvest_latest_versions()
-    github_formatted_latest_versions = apply_github_matrix_formatting(
-        latest_versions
-    )
-    # We save the latest versions because it is used later in the "compare-outputs" job of the workflow.
+    # We save the latest versions as a JSON file because it is used later in the "compare-outputs" job of the workflow.
     save_content_to_file(
-        github_formatted_latest_versions,
+        latest_versions,
         data_path,
         latest_versions_file,
+    )
+    github_formatted_latest_versions = apply_github_matrix_formatting(
+        latest_versions
     )
     print(github_formatted_latest_versions)
