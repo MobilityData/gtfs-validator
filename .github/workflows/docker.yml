@@ -61,6 +61,7 @@ jobs:
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             VERSION=${GITHUB_REF#refs/tags/}
             VERSION=${VERSION#v}
+            echo ::set-output name=gradleVersionTag::${VERSION}
           elif [[ $GITHUB_REF == refs/heads/* ]]; then
             VERSION=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
           elif [[ $GITHUB_REF == refs/pull/* ]]; then
@@ -70,7 +71,6 @@ jobs:
           if [ "${{ github.event_name }}" = "push" ]; then
             TAGS="${DOCKER_IMAGE}:latest"
           fi
-          echo ::set-output name=gradleVersionTag::${VERSION}
           echo ::set-output name=tags::${TAGS}
           echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
       - name: Set up JDK 11
