@@ -10,11 +10,9 @@ RUN ./gradlew shadowJar \
 
 
 FROM openjdk:11
-COPY --from=build /build/main/build/libs/*.jar /
+COPY --from=build /build/main/build/libs/gtfs-validator-*-cli.jar /gtfs-validator-cli.jar
 WORKDIR /
 
 ARG VERSION_TAG
 ENV VERSION_TAG=$VERSION_TAG
-RUN echo "#!/bin/bash\nexec java -jar /gtfs-validator-${VERSION_TAG}-SNAPSHOT-cli.jar \"\$@\"" > /entrypoint.sh \
-    && chmod +x /entrypoint.sh
-ENTRYPOINT [ "/entrypoint.sh" ]
+ENTRYPOINT [ "java", "-jar", "gtfs-validator-cli.jar" ]
