@@ -17,7 +17,6 @@ package org.mobilitydata.gtfsvalidator.processor.tests;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import com.google.common.collect.ImmutableList;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,7 +48,7 @@ public class SingleColumnPrimaryKeySchemaTest {
     assertThat(container.byId("a").get().fruit()).isEqualTo("apples");
     assertThat(container.byId("b").get().fruit()).isEqualTo("bananas");
 
-    assertThat(container.byPrimaryKey(ImmutableList.of("a")).get().fruit()).isEqualTo("apples");
+    assertThat(container.byPrimaryKey("a").get().fruit()).isEqualTo("apples");
   }
 
   @Test

@@ -53,7 +53,7 @@ public interface GtfsStopTimeSchema extends GtfsEntity {
   @ForeignKey(table = "stops.txt", field = "stop_id")
   String stopId();
 
-  @PrimaryKey(isSequence = true)
+  @PrimaryKey(isSequenceUsedForSorting = true)
   @Required
   @NonNegative
   int stopSequence();

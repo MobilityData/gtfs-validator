@@ -16,19 +16,18 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import javax.lang.model.element.Modifier;
-import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyNotice;
 import org.mobilitydata.gtfsvalidator.notice.MoreThanOneEntityNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.type.GtfsDate;
-import org.mobilitydata.gtfsvalidator.type.GtfsTime;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableContainerWithMultiColumnPrimaryKey;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableContainerWithMultiColumnPrimaryKey.MulitColumnKey;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableContainerWithSingleColumnPrimaryKey;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableContainerWithSingleRow;
 
 /** Generates code in a container class for @Index and @PrimaryKey annotations. */
 class TableContainerIndexGenerator {
@@ -47,21 +46,44 @@ class TableContainerIndexGenerator {
 
   void generateMethods(TypeSpec.Builder typeSpec) {
     if (fileDescriptor.singleRow()) {
+      typeSpec.addSuperinterface(
+          ParameterizedTypeName.get(
+              ClassName.get(GtfsTableContainerWithSingleRow.class),
+              classNames.entityImplementationTypeName()));
+    } else if (fileDescriptor.hasSingleColumnPrimaryKey()) {
+      typeSpec.addSuperinterface(
+          ParameterizedTypeName.get(
+              ClassName.get(GtfsTableContainerWithSingleColumnPrimaryKey.class),
+              classNames.entityImplementationTypeName()));
+    } else if (fileDescriptor.hasMultiColumnPrimaryKey()) {
+      typeSpec.addSuperinterface(
+          ParameterizedTypeName.get(
+              ClassName.get(GtfsTableContainerWithMultiColumnPrimaryKey.class),
+              classNames.entityImplementationTypeName(),
+              ClassName.get("", classNames.tableContainerSimpleName() + ".CompositeKey")));
+    }
+
+    if (fileDescriptor.singleRow()) {
       typeSpec.addMethod(
           MethodSpec.methodBuilder("getSingleEntity")
               .addModifiers(Modifier.PUBLIC)
-              .returns(classNames.entityImplementationTypeName())
-              .addStatement("return entities.isEmpty() ? null : entities.get(0)")
+              .addAnnotation(Override.class)
+              .returns(
+                  ParameterizedTypeName.get(
+                      ClassName.get(Optional.class), classNames.entityImplementationTypeName()))
+              .addStatement(
+                  "return entities.isEmpty() ? Optional.empty() : Optional.of(entities.get(0))")
               .build());
-    } else if (fileDescriptor.hasMultiColumnPrimaryKey()) {
-      addMapByCompositeKey(
-          typeSpec, fileDescriptor.primaryKeys(), classNames.entityImplementationTypeName());
     } else if (fileDescriptor.hasSingleColumnPrimaryKey()) {
       addMapWithGetter(
           typeSpec,
           fileDescriptor.getSingleColumnPrimaryKey(),
           classNames.entityImplementationTypeName());
+    } else if (fileDescriptor.hasMultiColumnPrimaryKey()) {
+      addMapByCompositeKey(
+          typeSpec, fileDescriptor.primaryKeys(), classNames.entityImplementationTypeName());
     }
+
     for (GtfsFieldDescriptor indexField : fileDescriptor.indices()) {
       addListMultimapWithGetters(
           typeSpec,
@@ -70,9 +92,10 @@ class TableContainerIndexGenerator {
           classNames.entityImplementationTypeName());
     }
 
+    generateByPrimaryKey(typeSpec);
+
     typeSpec.addField(generateKeyColumnNames());
     typeSpec.addMethod(generateGetKeyColumnNames());
-    typeSpec.addMethod(generateByPrimaryKey());
     typeSpec.addMethod(generateSetupIndicesMethod());
 
     if (fileDescriptor.hasMultiColumnPrimaryKey()) {
@@ -162,22 +185,6 @@ class TableContainerIndexGenerator {
         FieldSpec.builder(keyMapType, BY_COMPOSITE_KEY_MAP_FIELD_NAME, Modifier.PRIVATE)
             .initializer("new $T<>()", ParameterizedTypeName.get(HashMap.class))
             .build());
-
-    // Method: byCompositeKey(TypeA paramA, TypeB paramB, ...) { }
-    String methodName = "byCompositeKey";
-    MethodSpec.Builder m = MethodSpec.methodBuilder(methodName).addModifiers(Modifier.PUBLIC);
-    String paramNames =
-        keys.stream().map(GtfsFieldDescriptor::name).collect(Collectors.joining(", "));
-    for (GtfsFieldDescriptor keyField : keys) {
-      m.addParameter(TypeName.get(keyField.javaType()), keyField.name());
-    }
-    typeSpec.addMethod(
-        m.returns(entityTypeName)
-            .addStatement(
-                "return $L.get(CompositeKey.create($L))",
-                BY_COMPOSITE_KEY_MAP_FIELD_NAME,
-                paramNames)
-            .build());
   }
 
   private FieldSpec generateKeyColumnNames() {
@@ -209,56 +216,34 @@ class TableContainerIndexGenerator {
         .build();
   }
 
-  private MethodSpec generateByPrimaryKey() {
-    MethodSpec.Builder method =
-        MethodSpec.methodBuilder("byPrimaryKey")
-            .addAnnotation(Override.class)
-            .addModifiers(Modifier.PUBLIC)
-            .returns(
-                ParameterizedTypeName.get(
-                    ClassName.get(Optional.class), classNames.entityImplementationTypeName()))
-            .addParameter(
-                ParameterizedTypeName.get(
-                    ClassName.get(ImmutableList.class), ClassName.get(String.class)),
-                "ids");
+  private void generateByPrimaryKey(TypeSpec.Builder typeSpec) {
     if (fileDescriptor.hasSingleColumnPrimaryKey()) {
-      method.addStatement(
-          "return Optional.ofNullable($L.getOrDefault(ids.get(0), null))",
-          byKeyMapName(fileDescriptor.getSingleColumnPrimaryKey().name()));
+      typeSpec.addMethod(
+          MethodSpec.methodBuilder("byPrimaryKey")
+              .addAnnotation(Override.class)
+              .addModifiers(Modifier.PUBLIC)
+              .returns(
+                  ParameterizedTypeName.get(
+                      ClassName.get(Optional.class), classNames.entityImplementationTypeName()))
+              .addParameter(String.class, "id")
+              .addStatement(
+                  "return Optional.ofNullable($L.getOrDefault(id, null))",
+                  byKeyMapName(fileDescriptor.getSingleColumnPrimaryKey().name()))
+              .build());
     } else if (fileDescriptor.hasMultiColumnPrimaryKey()) {
-      // We potentially need to perform type conversion on the input ids.
-      List<CodeBlock> accessors = new ArrayList<>();
-      for (int i = 0; i < fileDescriptor.primaryKeys().size(); ++i) {
-        GtfsFieldDescriptor field = fileDescriptor.primaryKeys().get(i);
-        CodeBlock accessor = CodeBlock.of("ids.get($L)", i);
-        if (field.type() == FieldTypeEnum.INTEGER) {
-          accessor =
-              CodeBlock.of("$T.parseInt($L)", TypeName.get(field.javaType()).box(), accessor);
-        } else if (field.type() == FieldTypeEnum.DATE) {
-          accessor = CodeBlock.of("$T.fromString($L)", TypeName.get(GtfsDate.class), accessor);
-        } else if (field.type() == FieldTypeEnum.TIME) {
-          accessor = CodeBlock.of("$T.fromString($L)", TypeName.get(GtfsTime.class), accessor);
-        }
-        accessors.add(accessor);
-      }
-      method
-          .beginControlFlow("try")
-          .addStatement(
-              "return Optional.ofNullable($L.getOrDefault(CompositeKey.create($L), null))",
-              BY_COMPOSITE_KEY_MAP_FIELD_NAME,
-              CodeBlock.join(accessors, ", "))
-          .nextControlFlow("catch (NumberFormatException e)")
-          .addStatement("return Optional.empty()")
-          .nextControlFlow("catch (IllegalArgumentException e)")
-          .addStatement("return Optional.empty()")
-          .endControlFlow();
-    } else if (fileDescriptor.singleRow()) {
-      method.addStatement(
-          "return entities.isEmpty() ? Optional.empty() : Optional.of(entities.get(0))");
-    } else {
-      method.addStatement("return Optional.empty()");
+      typeSpec.addMethod(
+          MethodSpec.methodBuilder("byPrimaryKey")
+              .addAnnotation(Override.class)
+              .addModifiers(Modifier.PUBLIC)
+              .returns(
+                  ParameterizedTypeName.get(
+                      ClassName.get(Optional.class), classNames.entityImplementationTypeName()))
+              .addParameter(ClassName.get("", "CompositeKey"), "key")
+              .addStatement(
+                  "return Optional.ofNullable($L.getOrDefault(key, null))",
+                  BY_COMPOSITE_KEY_MAP_FIELD_NAME)
+              .build());
     }
-    return method.build();
   }
 
   private MethodSpec generateSetupIndicesMethod() {
@@ -281,10 +266,15 @@ class TableContainerIndexGenerator {
       method
           .beginControlFlow("for ($T newEntity : entities)", gtfsEntityType)
           .addStatement(
-              "CompositeKey key = CompositeKey.create($L)",
+              "CompositeKey key = CompositeKey.builder()$L.build()",
               fileDescriptor.primaryKeys().stream()
-                  .map((field) -> CodeBlock.of("newEntity.$L()", field.name()))
-                  .collect(CodeBlock.joining(", ")))
+                  .map(
+                      (field) ->
+                          CodeBlock.of(
+                              ".$L(newEntity.$L())",
+                              FieldNameConverter.setterMethodName(field.name()),
+                              field.name()))
+                  .collect(CodeBlock.joining("")))
           .addStatement(
               "$T oldEntity = $L.getOrDefault(key, null)",
               classNames.entityImplementationTypeName(),
@@ -366,35 +356,47 @@ class TableContainerIndexGenerator {
     // generates equals() and hashCode() methods.
     TypeSpec.Builder keySpec =
         TypeSpec.classBuilder("CompositeKey")
-            .addModifiers(Modifier.STATIC, Modifier.ABSTRACT)
-            .addAnnotation(ClassName.get("com.google.auto.value", "AutoValue"));
+            .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.ABSTRACT)
+            .addAnnotation(ClassName.get("com.google.auto.value", "AutoValue"))
+            .addSuperinterface(ClassName.get(MulitColumnKey.class));
 
     // Getters for each field.
     for (GtfsFieldDescriptor keyField : fileDescriptor.primaryKeys()) {
       keySpec.addMethod(
           MethodSpec.methodBuilder(keyField.name())
-              .addModifiers(Modifier.ABSTRACT)
+              .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
               .returns(TypeName.get(keyField.javaType()))
               .build());
     }
 
-    // The create() method.
-    MethodSpec.Builder m =
-        MethodSpec.methodBuilder("create")
-            .addModifiers(Modifier.STATIC)
-            .returns(ClassName.get("", "CompositeKey"));
+    TypeSpec.Builder valueBuilderTypeSpec =
+        TypeSpec.classBuilder("Builder")
+            .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.ABSTRACT)
+            .addAnnotation(ClassName.get("com.google.auto.value", "AutoValue.Builder"));
     for (GtfsFieldDescriptor keyField : fileDescriptor.primaryKeys()) {
-      m.addParameter(TypeName.get(keyField.javaType()), keyField.name());
+      valueBuilderTypeSpec.addMethod(
+          MethodSpec.methodBuilder(FieldNameConverter.setterMethodName(keyField.name()))
+              .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+              .addParameter(TypeName.get(keyField.javaType()), keyField.name())
+              .returns(ClassName.get("", "CompositeKey.Builder"))
+              .build());
     }
-    String paramNames =
-        fileDescriptor.primaryKeys().stream()
-            .map(GtfsFieldDescriptor::name)
-            .collect(Collectors.joining(", "));
-    m.addStatement(
-        "return new AutoValue_$L_CompositeKey($L)",
-        classNames.tableContainerSimpleName(),
-        paramNames);
-    keySpec.addMethod(m.build());
+    valueBuilderTypeSpec.addMethod(
+        MethodSpec.methodBuilder("build")
+            .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+            .returns(ClassName.get("", "CompositeKey"))
+            .build());
+    keySpec.addType(valueBuilderTypeSpec.build());
+
+    // The builder() method.
+    keySpec.addMethod(
+        MethodSpec.methodBuilder("builder")
+            .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+            .returns(ClassName.get("", "Builder"))
+            .addStatement(
+                "return new AutoValue_$L_CompositeKey.Builder()",
+                classNames.tableContainerSimpleName())
+            .build());
 
     return keySpec.build();
   }

@@ -24,11 +24,20 @@ import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsFrequencyTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableContainerWithMultiColumnPrimaryKey;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableContainerWithSingleColumnPrimaryKey;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableContainerWithSingleRow;
 import org.mobilitydata.gtfsvalidator.table.GtfsTranslation;
 import org.mobilitydata.gtfsvalidator.table.GtfsTranslationTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTranslationTableLoader;
+import org.mobilitydata.gtfsvalidator.type.GtfsDate;
+import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 /**
  * Validates that translations are provided in accordance with GTFS Specification.
@@ -158,14 +167,9 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
             noticeContainer)) {
       return;
     }
-    ImmutableList.Builder<String> ids = ImmutableList.builder();
-    if (keyColumnNames.size() >= 1) {
-      ids.add(translation.recordId());
-      if (keyColumnNames.size() >= 2) {
-        ids.add(translation.recordSubId());
-      }
-    }
-    if (parentTable.byPrimaryKey(ids.build()).isEmpty()) {
+
+    Optional<?> entity = resolveRecord(translation, parentTable);
+    if (entity.isEmpty()) {
       noticeContainer.addValidationNotice(new TranslationForeignKeyViolationNotice(translation));
     }
   }
@@ -194,6 +198,52 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
               GtfsTranslationTableLoader.FILENAME, translation.csvRowNumber(), fieldName));
     }
     return true;
+  }
+
+  private Optional<?> resolveRecord(
+      GtfsTranslation translation, GtfsTableContainer<?> parentTable) {
+    if (parentTable instanceof GtfsTableContainerWithSingleRow) {
+      return ((GtfsTableContainerWithSingleRow) parentTable).getSingleEntity();
+    }
+    if (parentTable instanceof GtfsTableContainerWithSingleColumnPrimaryKey) {
+      GtfsTableContainerWithSingleColumnPrimaryKey<?> singleColumnTable =
+          (GtfsTableContainerWithSingleColumnPrimaryKey<?>) parentTable;
+      return singleColumnTable.byPrimaryKey(translation.recordId());
+    } else if (parentTable instanceof GtfsTableContainerWithMultiColumnPrimaryKey) {
+      try {
+        if (parentTable instanceof GtfsStopTimeTableContainer) {
+          return ((GtfsStopTimeTableContainer) parentTable)
+              .byPrimaryKey(
+                  GtfsStopTimeTableContainer.CompositeKey.builder()
+                      .setTripId(translation.recordId())
+                      .setStopSequence(Integer.parseInt(translation.recordSubId()))
+                      .build());
+        } else if (parentTable instanceof GtfsShapeTableContainer) {
+          return ((GtfsShapeTableContainer) parentTable)
+              .byPrimaryKey(
+                  GtfsShapeTableContainer.CompositeKey.builder()
+                      .setShapeId(translation.recordId())
+                      .setShapePtSequence(Integer.parseInt(translation.recordSubId()))
+                      .build());
+        } else if (parentTable instanceof GtfsCalendarDateTableContainer) {
+          return ((GtfsCalendarDateTableContainer) parentTable)
+              .byPrimaryKey(
+                  GtfsCalendarDateTableContainer.CompositeKey.builder()
+                      .setServiceId(translation.recordId())
+                      .setDate(GtfsDate.fromString(translation.recordSubId()))
+                      .build());
+        } else if (parentTable instanceof GtfsFrequencyTableContainer) {
+          return ((GtfsFrequencyTableContainer) parentTable)
+              .byPrimaryKey(
+                  GtfsFrequencyTableContainer.CompositeKey.builder()
+                      .setTripId(translation.recordId())
+                      .setStartTime(GtfsTime.fromString(translation.recordSubId()))
+                      .build());
+        }
+      } catch (NumberFormatException ex) {
+      }
+    }
+    return Optional.empty();
   }
 
   /** A field in a translations row has value but must be empty. */

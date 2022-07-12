@@ -42,7 +42,7 @@ public interface GtfsShapeSchema extends GtfsEntity {
 
   @Required
   @NonNegative
-  @PrimaryKey(isSequence = true)
+  @PrimaryKey(isSequenceUsedForSorting = true)
   int shapePtSequence();
 
   @NonNegative

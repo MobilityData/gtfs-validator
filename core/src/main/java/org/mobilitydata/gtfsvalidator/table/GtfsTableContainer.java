@@ -18,7 +18,6 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;
-import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 
 /**
@@ -71,25 +70,6 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
    * org.mobilitydata.gtfsvalidator.annotation.PrimaryKey}.
    */
   public abstract ImmutableList<String> getKeyColumnNames();
-
-  /**
-   * Finds an entity with the given primary key.
-   *
-   * <p>Depending on table, a primary key may contain:
-   *
-   * <ul>
-   *   <li>no items, e.g., {@code feed_info.txt} has a single entity;
-   *   <li>one item, e.g., {@code stops.txt} has primary key {@code stop_id};
-   *   <li>two items, e.g., {@code stop_times.txt} has composite key {@code trip_id, stop_sequence}.
-   * </ul>
-   *
-   * Note that all keys must be passed as strings, so a key for {@code stop_times.txt} will look
-   * like {"stop1", "0"}.
-   *
-   * @param ids primary key or first part of the composite key, if needed
-   * @return entity with the given primary key, if any
-   */
-  public abstract Optional<T> byPrimaryKey(ImmutableList<String> ids);
 
   /**
    * Tells if the file is missing.

@@ -25,7 +25,7 @@ public interface IdAndSequencePrimaryKeySchema {
   @Index
   String id();
 
-  @PrimaryKey(isSequence = true)
+  @PrimaryKey(isSequenceUsedForSorting = true)
   int sequence();
 
   String fruit();

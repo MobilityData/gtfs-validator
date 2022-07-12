@@ -70,5 +70,5 @@ public @interface PrimaryKey {
    * stop_sequence) and a byTripId(...) method returns a list of stop-times that are sorted by their
    * `stop_sequence` value.
    */
-  boolean isSequence() default false;
+  boolean isSequenceUsedForSorting() default false;
 }

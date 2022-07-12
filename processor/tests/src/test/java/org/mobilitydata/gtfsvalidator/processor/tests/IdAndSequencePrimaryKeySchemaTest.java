@@ -17,7 +17,6 @@ package org.mobilitydata.gtfsvalidator.processor.tests;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.Before;
@@ -56,8 +55,12 @@ public class IdAndSequencePrimaryKeySchemaTest {
     assertThat(fruits(container.byIdMap().get("a"))).containsExactly("apples", "bananas").inOrder();
     assertThat(fruits(container.byIdMap().get("b"))).containsExactly("cherries", "dates").inOrder();
 
-    assertThat(container.byPrimaryKey(ImmutableList.of("a", "1")).get().fruit())
-        .isEqualTo("apples");
+    IdAndSequencePrimaryKeyTableContainer.CompositeKey key =
+        IdAndSequencePrimaryKeyTableContainer.CompositeKey.builder()
+            .setId("a")
+            .setSequence(1)
+            .build();
+    assertThat(container.byPrimaryKey(key).get().fruit()).isEqualTo("apples");
   }
 
   @Test

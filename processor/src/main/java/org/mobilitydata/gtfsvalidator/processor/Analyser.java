@@ -85,7 +85,7 @@ public class Analyser {
       PrimaryKey primaryKey = method.getAnnotation(PrimaryKey.class);
       if (primaryKey != null) {
         fieldBuilder.setPrimaryKey(true);
-        fieldBuilder.setSequenceKey(primaryKey.isSequence());
+        fieldBuilder.setSequenceKey(primaryKey.isSequenceUsedForSorting());
       } else {
         fieldBuilder.setPrimaryKey(false);
         fieldBuilder.setSequenceKey(false);
