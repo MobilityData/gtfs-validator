@@ -108,7 +108,7 @@ jobs:
           push: true
           tags: ${{ steps.prep.outputs.tags }}
           labels: |
-            org.opencontainers.image.source=https://github.com/mobilitydata/gtfs-validator.git
+            org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY,,}.git
             org.opencontainers.image.created=${{ steps.prep.outputs.created }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.version=${{ steps.prep.outputs.version }}
