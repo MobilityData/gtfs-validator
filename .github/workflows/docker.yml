@@ -53,25 +53,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Prepare
+      - name: Initialize Gradle
+        run: |
+          # The first time gradlew is invoked it downloads gradle and outputs progress about that to STDOUT.
+          # This "dummy" invokation gets that out of the way so future gradlew commands have clean output
+          ./gradlew --version
+      - name: Prepare version metadata
         id: prep
         run: |
+          # ghcr.io path should match current repo but be all lowercase
           DOCKER_IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}
-          VERSION=edge
-          if [[ $GITHUB_REF == refs/tags/* ]]; then
-            VERSION=${GITHUB_REF#refs/tags/}
-            VERSION=${VERSION#v}
-            echo ::set-output name=gradleVersionTag::${VERSION}
-          elif [[ $GITHUB_REF == refs/heads/* ]]; then
-            VERSION=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
-          elif [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION=pr-${{ github.event.number }}
+
+          # delegate to axion-release-plugin to generate version string from Git repository state
+          AXION_VERSION="$(./gradlew currentVersion -q -Prelease.quiet)"
+
+          # determine docker tags
+          if [[ "${GITHUB_EVENT_NAME}" == "release" ]]; then
+            # tag releases with version determined by axion-release-plugin
+            DOCKER_TAGS="${DOCKER_IMAGE}:${AXION_VERSION}"
+          else
+            # tag pushes to master as "latest"
+            DOCKER_TAGS="${DOCKER_IMAGE}:latest"
           fi
-          TAGS="${DOCKER_IMAGE}:${VERSION}"
-          if [ "${{ github.event_name }}" = "push" ]; then
-            TAGS="${DOCKER_IMAGE}:latest"
-          fi
-          echo ::set-output name=tags::${TAGS}
+
+          echo ::set-output name=version::${AXION_VERSION}
+          echo ::set-output name=tags::${DOCKER_TAGS}
           echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
       - name: Set up JDK 11
         uses: actions/setup-java@v2
@@ -98,11 +104,12 @@ jobs:
           context: .
           file: ./Dockerfile
           build-args: |
-            VERSION_TAG=${{ steps.prep.outputs.gradleVersionTag }}
+            VERSION_TAG=${{ steps.prep.outputs.version }}
           push: true
           tags: ${{ steps.prep.outputs.tags }}
           labels: |
             org.opencontainers.image.source=https://github.com/mobilitydata/gtfs-validator.git
             org.opencontainers.image.created=${{ steps.prep.outputs.created }}
             org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.version=${{ steps.prep.outputs.version }}
 # should be org.opencontainers.image.source=${{ github.event.repository.clone_url }} but caps in MobilityData seem to break something
