@@ -51,7 +51,7 @@ public class LoadingHelper {
 
   public <X extends GtfsEntity, Y extends GtfsTableContainer<X>> Y load(
       GtfsTableLoader<X> loader, String... lines) throws ValidatorLoaderException {
-    String content = Arrays.asList(lines).stream().collect(Collectors.joining("\n"));
+    String content = Arrays.stream(lines).collect(Collectors.joining("\n"));
     InputStream in = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
 
     ValidationContext context =
@@ -59,6 +59,10 @@ public class LoadingHelper {
             .setCountryCode(countryCode)
             .setCurrentDateTime(new CurrentDateTime(currentTime))
             .build();
+    // We explicitly do not scan and load all validators, because we want to keep the set of
+    // validators used in unit-tests minimal and stable.  If unit-tests do need more validators
+    // loaded, consider adding methods for specifying specific validators, as opposed to loading
+    // all.
     ValidatorLoader validatorLoader = new ValidatorLoader(ImmutableList.of());
     ValidatorProvider provider = new DefaultValidatorProvider(context, validatorLoader);
     return (Y) loader.load(in, provider, noticeContainer);
