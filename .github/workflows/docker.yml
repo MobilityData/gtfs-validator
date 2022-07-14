@@ -118,4 +118,3 @@ jobs:
             org.opencontainers.image.created=${{ steps.prep.outputs.created }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.version=${{ steps.prep.outputs.version }}
-# should be org.opencontainers.image.source=${{ github.event.repository.clone_url }} but caps in MobilityData seem to break something
