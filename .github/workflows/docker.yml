@@ -63,9 +63,12 @@ jobs:
         run: |
           # ghcr.io path should match current repo but be all lowercase
           DOCKER_IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}
+          echo "Set DOCKER_IMAGE=${DOCKER_IMAGE}"
 
           # delegate to axion-release-plugin to generate version string from Git repository state
+          echo "Detecting version with ./gradlew currentVersion"
           AXION_VERSION="$(./gradlew currentVersion -q -Prelease.quiet)"
+          echo "Set AXION_VERSION=${AXION_VERSION}"
 
           # determine docker tags
           if [[ "${GITHUB_EVENT_NAME}" == "release" ]]; then
@@ -75,6 +78,7 @@ jobs:
             # tag pushes to master as "latest"
             DOCKER_TAGS="${DOCKER_IMAGE}:latest"
           fi
+          echo "Set DOCKER_TAGS=${DOCKER_TAGS}"
 
           echo ::set-output name=version::${AXION_VERSION}
           echo ::set-output name=tags::${DOCKER_TAGS}
