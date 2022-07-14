@@ -6,7 +6,7 @@ WORKDIR /build
 ARG VERSION_TAG
 RUN ./gradlew shadowJar \
     --no-daemon \
-    -Prelease.forceVersion=$VERSION_TAG
+    -Prelease.forceVersion="${VERSION_TAG%-SNAPSHOT}"
 
 
 FROM openjdk:11
