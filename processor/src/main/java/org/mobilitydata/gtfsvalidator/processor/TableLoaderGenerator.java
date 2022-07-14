@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.processor;
 
+import static org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum.*;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldColumnIndex;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldNameField;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.gtfsColumnName;
@@ -40,11 +41,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.lang.model.element.Modifier;
+import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsLoader;
 import org.mobilitydata.gtfsvalidator.notice.CsvParsingFailedNotice;
 import org.mobilitydata.gtfsvalidator.notice.EmptyFileNotice;
+import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvFile;
@@ -158,6 +161,7 @@ public class TableLoaderGenerator {
 
     typeSpec.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).build());
     typeSpec.addMethod(generateGtfsFilenameMethod());
+    typeSpec.addMethod(generateIsRecommendedMethod());
     typeSpec.addMethod(generateIsRequiredMethod());
     typeSpec.addMethod(generateLoadMethod());
     typeSpec.addMethod(generateLoadMissingFileMethod());
@@ -327,8 +331,10 @@ public class TableLoaderGenerator {
               "rowParser.$L($L, $T.$L$L)",
               gtfsTypeToParserMethod(field.type()),
               fieldColumnIndex(field.name()),
-              RowParser.class,
-              field.required() ? "REQUIRED" : "OPTIONAL",
+              FieldLevelEnum.class,
+              field.required()
+                  ? REQUIRED.name()
+                  : (field.recommended() ? RECOMMENDED.name() : OPTIONAL.name()),
               field.numberBounds().isPresent()
                   ? ", RowParser.NumberBounds." + field.numberBounds().get()
                   : field.type() == FieldTypeEnum.ENUM
@@ -412,6 +418,15 @@ public class TableLoaderGenerator {
         .build();
   }
 
+  private MethodSpec generateIsRecommendedMethod() {
+    return MethodSpec.methodBuilder("isRecommended")
+        .addModifiers(Modifier.PUBLIC)
+        .returns(boolean.class)
+        .addAnnotation(Override.class)
+        .addStatement("return $L", fileDescriptor.recommended())
+        .build();
+  }
+
   private MethodSpec generateIsRequiredMethod() {
     return MethodSpec.methodBuilder("isRequired")
         .addModifiers(Modifier.PUBLIC)
@@ -436,6 +451,11 @@ public class TableLoaderGenerator {
                 classNames.tableContainerTypeName(),
                 classNames.tableContainerTypeName(),
                 TableStatus.class)
+            .beginControlFlow("if (isRecommended())")
+            .addStatement(
+                "noticeContainer.addValidationNotice(new $T(gtfsFilename()))",
+                MissingRecommendedFileNotice.class)
+            .endControlFlow()
             .beginControlFlow("if (isRequired())")
             .addStatement(
                 "noticeContainer.addValidationNotice(new $T(gtfsFilename()))",

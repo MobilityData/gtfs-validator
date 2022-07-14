@@ -40,4 +40,20 @@ public interface GtfsTransferSchema extends GtfsEntity {
 
   @NonNegative
   int minTransferTime();
+
+  @FieldType(FieldTypeEnum.ID)
+  @ForeignKey(table = "trips.txt", field = "trip_id")
+  String fromTripId();
+
+  @FieldType(FieldTypeEnum.ID)
+  @ForeignKey(table = "trips.txt", field = "trip_id")
+  String toTripId();
+
+  @FieldType(FieldTypeEnum.ID)
+  @ForeignKey(table = "routes.txt", field = "route_id")
+  String fromRouteId();
+
+  @FieldType(FieldTypeEnum.ID)
+  @ForeignKey(table = "routes.txt", field = "route_id")
+  String toRouteId();
 }
