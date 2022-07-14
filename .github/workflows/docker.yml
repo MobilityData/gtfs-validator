@@ -53,6 +53,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # need full clone so ./grade
       - name: Initialize Gradle
         run: |
           # The first time gradlew is invoked it downloads gradle and outputs progress about that to STDOUT.
