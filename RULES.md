@@ -1703,7 +1703,7 @@ Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one
 A recommended file is missing.
 
 #### References
-* [feed_info.txt bets practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/best-practices.md#feed_infotxt)
+* [feed_info.txt best practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/best-practices.md#feed_infotxt)
 <details>
 
 #### Notice fields description
@@ -1721,7 +1721,7 @@ A recommended file is missing.
 The given field has no value in some input row, even though values are recommended.
 
 #### References
-* [feed_info.txt bets practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/best-practices.md#feed_infotxt)
+* [feed_info.txt best practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/best-practices.md#feed_infotxt)
 <details>
 
 #### Notice fields description
@@ -1741,7 +1741,7 @@ The given field has no value in some input row, even though values are recommend
 The `timepoint` column should be provided.
 
 #### References
-* [stop_times.txt bets practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/stop_times.md)
+* [stop_times.txt best practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/stop_times.md)
 <details>
 
 #### Notice fields description
