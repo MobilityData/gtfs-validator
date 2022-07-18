@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.processor;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import javax.lang.model.type.TypeMirror;
@@ -57,6 +58,7 @@ public abstract class GtfsFileDescriptor {
   }
 
   public GtfsFieldDescriptor getSingleColumnPrimaryKey() {
+    Preconditions.checkState(hasSingleColumnPrimaryKey());
     return primaryKeys().get(0);
   }
 
