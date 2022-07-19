@@ -3,5 +3,8 @@ include 'app:gui'
 include 'app:pkg'
 include 'core'
 include 'processor'
+include 'processor:tests'
 include 'main'
 include 'output-comparator'
+include 'tests'
+
