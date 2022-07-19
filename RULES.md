@@ -70,6 +70,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`pathway_to_wrong_location_type`](#pathway_to_wrong_location_type)                                               | A pathway has an endpoint that is a station.                                                                                                           |
 | [`pathway_unreachable_location`](#pathway_unreachable_location)                                                   | A location is not reachable at least in one direction: from the entrances or to the exits.                                                             |
 | [`point_near_origin`](#point_near_origin)                                                                         | A point is too close to origin `(0, 0)`.                                                                                                               |
+| [`point_near_pole`](#point_near_pole)                                                                             | A point is too close to the North or South Pole.                                                                                                       |
 | [`route_both_short_and_long_name_missing`](#route_both_short_and_long_name_missing)                               | Missing route short name and long name.                                                                                                                |
 | [`start_and_end_range_equal`](#start_and_end_range_equal)                                                         | Two date or time fields are equal.                                                                                                                     |
 | [`start_and_end_range_out_of_order`](#start_and_end_range_out_of_order)                                           | Two date or time fields are out of order.                                                                                                              |
@@ -1074,6 +1075,32 @@ have incident pathways. Instead, notices are reported for the boarding areas.
 ### point_near_origin
 
 A point is too close to origin `(0, 0)`.
+
+#### References
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+<details>
+
+#### Notice fields description
+| Field name      	| Description                                      	| Type    	|
+|-----------------	|--------------------------------------------------	|---------	|
+| `filename`      	| The name of the affected GTFS file.              	| String  	|
+| `csvRowNumber`  	| The row of the faulty row.                       	| Integer 	|
+| `latFieldName`  	| The name of the field that uses latitude value.  	| String  	|
+| `latFieldValue` 	| The latitude of the faulty row.                  	| Double  	|
+| `lonFieldName`  	| The name of the field that uses longitude value. 	| String  	|
+| `lonFieldValue` 	| The longitude of the faulty row                  	| Double  	|
+
+#### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+* [`shapes.txt`](http://gtfs.org/reference/static#shapestxt)
+
+</details>
+
+<a name="PointNearPoleNotice"/>
+
+### point_near_pole
+
+A point is too close to the North or South Pole.
 
 #### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
