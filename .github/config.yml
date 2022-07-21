@@ -1,0 +1,34 @@
+# Configuration for welcome - https://github.com/behaviorbot/welcome
+
+# Configuration for new-issue-welcome - https://github.com/behaviorbot/new-issue-welcome
+
+# Comment to be posted to on first time issues
+newIssueWelcomeComment: >
+  Thanks for opening your first issue in this project! If you haven't already, you can [join our slack](https://docs.google.com/forms/d/e/1FAIpQLSczZbZB9ql_Xl-1uBtmvYmA0fwfm1UX92SyWAdkuMEDfxac5w/viewform) and join the #gtfs-validators channel to meet our awesome community. Come say hi :wave:!
+  <br><br> Welcome to the community and thank you for your engagement in open source! :tada:
+  <br> ![](https://feross.net/x/cats/6.gif)
+
+# Configuration for new-pr-welcome - https://github.com/behaviorbot/new-pr-welcome
+
+# Comment to be posted to on PRs from first time contributors in your repository
+newPRWelcomeComment: >
+  Thanks for opening this pull request! You're awesome.
+  We use [semantic commit messages](https://github.com/electron/electron/blob/main/docs/development/pull-requests.md#commit-message-guidelines) to streamline the release process. Before your pull request can be merged, you should **update your pull request title** to start with a semantic prefix.
+  Examples of commit messages with semantic prefixes:
+    - `fix: fix: Bug with ssl network connections + Java module permissions.`
+    - `feat: feat: Initial support for multiple @PrimaryKey annotations.
+    - `docs: update RELEASE.md with new process`
+  To get this PR to the finish line, please do the following:
+    - Read our [Contribution Guidelines](https://github.com/MobilityData/gtfs-validator/blob/master/docs/CONTRIBUTING.md)
+    - Follow [Google Java style](https://google.github.io/styleguide/javaguide.html) coding standards
+    - Include tests when adding/changing behavior
+    - Include screenshots
+
+# Configuration for first-pr-merge - https://github.com/behaviorbot/first-pr-merge
+
+# Comment to be posted to on pull requests merged by a first time user
+firstPRMergeComment: >
+  :partying_face: Congrats on merging your first pull request!
+  <br><br> ![](https://feross.net/x/cats/29.gif)
+
+# It is recommend to include as many gifs and emojis as possible
