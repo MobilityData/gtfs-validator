@@ -6,7 +6,7 @@
 newIssueWelcomeComment: >
   Thanks for opening your first issue in this project! If you haven't already, you can [join our slack](https://docs.google.com/forms/d/e/1FAIpQLSczZbZB9ql_Xl-1uBtmvYmA0fwfm1UX92SyWAdkuMEDfxac5w/viewform) and join the #gtfs-validators channel to meet our awesome community. Come say hi :wave:!
   <br><br> Welcome to the community and thank you for your engagement in open source! :tada:
-  <br> ![](https://feross.net/x/cats/6.gif)
+  <br><br> ![](https://feross.net/x/cats/6.gif)
 
 # Configuration for new-pr-welcome - https://github.com/behaviorbot/new-pr-welcome
 
@@ -18,6 +18,7 @@ newPRWelcomeComment: >
     - `fix: fix: Bug with ssl network connections + Java module permissions.`
     - `feat: feat: Initial support for multiple @PrimaryKey annotations.
     - `docs: update RELEASE.md with new process`
+
   To get this PR to the finish line, please do the following:
     - Read our [Contribution Guidelines](https://github.com/MobilityData/gtfs-validator/blob/master/docs/CONTRIBUTING.md)
     - Follow [Google Java style](https://google.github.io/styleguide/javaguide.html) coding standards
@@ -28,7 +29,7 @@ newPRWelcomeComment: >
 
 # Comment to be posted to on pull requests merged by a first time user
 firstPRMergeComment: >
-  :partying_face: Congrats on merging your first pull request!
+  :partying_face: :partying_face: :partying_face:Congrats on getting your first pull request merged!
   <br><br> ![](https://feross.net/x/cats/29.gif)
 
 # It is recommend to include as many gifs and emojis as possible
