@@ -6,7 +6,7 @@
 newIssueWelcomeComment: >
   Thanks for opening your first issue in this project! If you haven't already, you can [join our slack](https://docs.google.com/forms/d/e/1FAIpQLSczZbZB9ql_Xl-1uBtmvYmA0fwfm1UX92SyWAdkuMEDfxac5w/viewform) and join the #gtfs-validators channel to meet our awesome community. Come say hi :wave:!
   <br><br> Welcome to the community and thank you for your engagement in open source! :tada:
-  <br> ![](https://feross.net/x/cats/6.gif)
+  <br><br> ![](https://feross.net/x/cats/6.gif)
 
 # Configuration for new-pr-welcome - https://github.com/behaviorbot/new-pr-welcome
 
@@ -28,7 +28,7 @@ newPRWelcomeComment: >
 
 # Comment to be posted to on pull requests merged by a first time user
 firstPRMergeComment: >
-  :partying_face: Congrats on merging your first pull request!
+  :partying_face: Congrats on getting your first pull request merged!
   <br><br> ![](https://feross.net/x/cats/29.gif)
 
 # It is recommend to include as many gifs and emojis as possible
