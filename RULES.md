@@ -1783,7 +1783,7 @@ The `timepoint` column should be provided.
 
 <a name="MissingTimepointValueNotice"/>
 
-#### missing_timepoint_value
+### missing_timepoint_value
 
 Even though the column `timepoint` is optional in `stop_times.txt` according to the specification, `stop_times.timepoint` should not be empty when provided. 
 
@@ -1806,7 +1806,7 @@ Even though the column `timepoint` is optional in `stop_times.txt` according to 
 
 <a name="MoreThanOneEntityNotice"/>
 
-#### more_than_one_entity
+### more_than_one_entity
 
 The file is expected to have a single entity but has more (e.g., "feed_info.txt").
 
