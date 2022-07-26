@@ -70,6 +70,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`pathway_to_wrong_location_type`](#pathway_to_wrong_location_type)                                               | A pathway has an endpoint that is a station.                                                                                                           |
 | [`pathway_unreachable_location`](#pathway_unreachable_location)                                                   | A location is not reachable at least in one direction: from the entrances or to the exits.                                                             |
 | [`point_near_origin`](#point_near_origin)                                                                         | A point is too close to origin `(0, 0)`.                                                                                                               |
+| [`point_near_pole`](#point_near_pole)                                                                             | A point is too close to the North or South Pole.                                                                                                       |
 | [`route_both_short_and_long_name_missing`](#route_both_short_and_long_name_missing)                               | Missing route short name and long name.                                                                                                                |
 | [`start_and_end_range_equal`](#start_and_end_range_equal)                                                         | Two date or time fields are equal.                                                                                                                     |
 | [`start_and_end_range_out_of_order`](#start_and_end_range_out_of_order)                                           | Two date or time fields are out of order.                                                                                                              |
@@ -1095,6 +1096,32 @@ A point is too close to origin `(0, 0)`.
 
 </details>
 
+<a name="PointNearPoleNotice"/>
+
+### point_near_pole
+
+A point is too close to the North or South Pole.
+
+#### References
+* [Original Python validator implementation](https://github.com/google/transitfeed)
+<details>
+
+#### Notice fields description
+| Field name      	| Description                                      	| Type    	|
+|-----------------	|--------------------------------------------------	|---------	|
+| `filename`      	| The name of the affected GTFS file.              	| String  	|
+| `csvRowNumber`  	| The row of the faulty row.                       	| Integer 	|
+| `latFieldName`  	| The name of the field that uses latitude value.  	| String  	|
+| `latFieldValue` 	| The latitude of the faulty row.                  	| Double  	|
+| `lonFieldName`  	| The name of the field that uses longitude value. 	| String  	|
+| `lonFieldValue` 	| The longitude of the faulty row                  	| Double  	|
+
+#### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+* [`shapes.txt`](http://gtfs.org/reference/static#shapestxt)
+
+</details>
+
 <a name="RouteBothShortAndLongNameMissingNotice"/>
 
 ### route_both_short_and_long_name_missing
@@ -1703,7 +1730,7 @@ Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one
 A recommended file is missing.
 
 #### References
-* [feed_info.txt bets practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/best-practices.md#feed_infotxt)
+* [feed_info.txt best practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/best-practices.md#feed_infotxt)
 <details>
 
 #### Notice fields description
@@ -1721,7 +1748,7 @@ A recommended file is missing.
 The given field has no value in some input row, even though values are recommended.
 
 #### References
-* [feed_info.txt bets practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/best-practices.md#feed_infotxt)
+* [feed_info.txt best practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/best-practices.md#feed_infotxt)
 <details>
 
 #### Notice fields description
@@ -1741,7 +1768,7 @@ The given field has no value in some input row, even though values are recommend
 The `timepoint` column should be provided.
 
 #### References
-* [stop_times.txt bets practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/stop_times.md)
+* [stop_times.txt best practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/stop_times.md)
 <details>
 
 #### Notice fields description
@@ -1756,7 +1783,7 @@ The `timepoint` column should be provided.
 
 <a name="MissingTimepointValueNotice"/>
 
-#### missing_timepoint_value
+### missing_timepoint_value
 
 Even though the column `timepoint` is optional in `stop_times.txt` according to the specification, `stop_times.timepoint` should not be empty when provided. 
 
@@ -1779,7 +1806,7 @@ Even though the column `timepoint` is optional in `stop_times.txt` according to 
 
 <a name="MoreThanOneEntityNotice"/>
 
-#### more_than_one_entity
+### more_than_one_entity
 
 The file is expected to have a single entity but has more (e.g., "feed_info.txt").
 
