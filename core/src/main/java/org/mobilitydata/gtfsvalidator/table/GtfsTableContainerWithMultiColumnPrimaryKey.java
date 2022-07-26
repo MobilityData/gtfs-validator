@@ -1,7 +1,7 @@
 package org.mobilitydata.gtfsvalidator.table;
 
 import java.util.Optional;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableContainerWithMultiColumnPrimaryKey.MulitColumnKey;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableContainerWithMultiColumnPrimaryKey.MultiColumnKey;
 
 /**
  * {@link GtfsTableContainer} implementations that contain an entity with a multi-column {@link
@@ -9,13 +9,13 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTableContainerWithMultiColumnPri
  *
  * @param <T> the GTFS entity type for this container
  */
-public interface GtfsTableContainerWithMultiColumnPrimaryKey<T, K extends MulitColumnKey> {
+public interface GtfsTableContainerWithMultiColumnPrimaryKey<T, K extends MultiColumnKey> {
 
   /**
    * Marker interface for all composite key implementation classes used by multi-column primary key
    * table containers.
    */
-  interface MulitColumnKey {}
+  interface MultiColumnKey {}
 
   /**
    * Finds an entity with the given primary key.

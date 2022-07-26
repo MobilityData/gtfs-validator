@@ -25,7 +25,7 @@ import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyNotice;
 import org.mobilitydata.gtfsvalidator.notice.MoreThanOneEntityNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainerWithMultiColumnPrimaryKey;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableContainerWithMultiColumnPrimaryKey.MulitColumnKey;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableContainerWithMultiColumnPrimaryKey.MultiColumnKey;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainerWithSingleColumnPrimaryKey;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainerWithSingleRow;
 
@@ -177,7 +177,7 @@ class TableContainerIndexGenerator {
   private static void addMapByCompositeKey(
       TypeSpec.Builder typeSpec, ImmutableList<GtfsFieldDescriptor> keys, TypeName entityTypeName) {
 
-    // Field: Map<CompsiteKey, EntityType?> byCompositeKeyMap;
+    // Field: Map<CompositeKey, EntityType?> byCompositeKeyMap;
     TypeName keyMapType =
         ParameterizedTypeName.get(
             ClassName.get(Map.class), ClassName.get("", "CompositeKey"), entityTypeName);
@@ -358,7 +358,7 @@ class TableContainerIndexGenerator {
         TypeSpec.classBuilder("CompositeKey")
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.ABSTRACT)
             .addAnnotation(ClassName.get("com.google.auto.value", "AutoValue"))
-            .addSuperinterface(ClassName.get(MulitColumnKey.class));
+            .addSuperinterface(ClassName.get(MultiColumnKey.class));
 
     // Getters for each field.
     for (GtfsFieldDescriptor keyField : fileDescriptor.primaryKeys()) {
