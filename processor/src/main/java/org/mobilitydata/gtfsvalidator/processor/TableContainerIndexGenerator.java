@@ -13,6 +13,7 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
@@ -20,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyNotice;
 import org.mobilitydata.gtfsvalidator.notice.MoreThanOneEntityNotice;
@@ -362,11 +364,14 @@ class TableContainerIndexGenerator {
 
     // Getters for each field.
     for (GtfsFieldDescriptor keyField : fileDescriptor.primaryKeys()) {
-      keySpec.addMethod(
+      MethodSpec.Builder getter =
           MethodSpec.methodBuilder(keyField.name())
               .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-              .returns(TypeName.get(keyField.javaType()))
-              .build());
+              .returns(TypeName.get(keyField.javaType()));
+      if (isKeyTypeNullable(keyField)) {
+        getter.addAnnotation(Nullable.class);
+      }
+      keySpec.addMethod(getter.build());
     }
 
     TypeSpec.Builder valueBuilderTypeSpec =
@@ -374,10 +379,15 @@ class TableContainerIndexGenerator {
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.ABSTRACT)
             .addAnnotation(ClassName.get("com.google.auto.value", "AutoValue.Builder"));
     for (GtfsFieldDescriptor keyField : fileDescriptor.primaryKeys()) {
+      ParameterSpec.Builder param =
+          ParameterSpec.builder(TypeName.get(keyField.javaType()), keyField.name());
+      if (isKeyTypeNullable(keyField)) {
+        param.addAnnotation(Nullable.class);
+      }
       valueBuilderTypeSpec.addMethod(
           MethodSpec.methodBuilder(FieldNameConverter.setterMethodName(keyField.name()))
               .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-              .addParameter(TypeName.get(keyField.javaType()), keyField.name())
+              .addParameter(param.build())
               .returns(ClassName.get("", "CompositeKey.Builder"))
               .build());
     }
@@ -399,5 +409,15 @@ class TableContainerIndexGenerator {
             .build());
 
     return keySpec.build();
+  }
+
+  /**
+   * When generating the CompositeKey type, @AutoValue expects non-primitive fields to be non-null
+   * by default. However, in practice, field values can be null if a feed doesn't specify a value.
+   * While these feeds may ultimately fail validation for missing a required value, we still want to
+   * be able to construct a valid CompositeKey that accepts null values.
+   */
+  private static boolean isKeyTypeNullable(GtfsFieldDescriptor field) {
+    return !field.javaType().getKind().isPrimitive();
   }
 }
