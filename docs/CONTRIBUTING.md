@@ -50,8 +50,7 @@ The  Steering committee currently consists of [Isabelle de Robert](https://githu
 @TODO how to join the steering committee.
 
 ## Overview of the contribution process
-
-[Contribution process](https://github.com/MobilityData/gtfs-validator/files/9233712/Public.Contribution.Guidelines.work.in.progress.pdf)
+![contribution process](https://user-images.githubusercontent.com/63653518/182148793-55bbe40d-19ec-474b-9174-f55f848ef4d9.jpg)
 
 ## Submitting a feature request or a bug report
 We use the [GitHub issue tracker](https://github.com/MobilityData/gtfs-validator/issues) to capture bugs, new feature ideas and improvements. First, look at the list of open issues. If you see an issue that is relevant to you, give a thumbs up or comment. If no open issue is relevant to your case, [open a new issue](https://github.com/MobilityData/gtfs-validator/issues/new/choose). 
