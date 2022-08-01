@@ -13,8 +13,9 @@
  
 A GTFS Schedule (static) [General Transit Feed Specification (GTFS)](https://gtfs.mobilitydata.org/spec/gtfs-schedule) feed validator.
 
-https://user-images.githubusercontent.com/63653518/182135478-f844cbfd-7037-4d02-bd65-f196cabaddeb.mp4
 
+<video src="https://user-images.githubusercontent.com/63653518/182135478-f844cbfd-7037-4d02-bd65-f196cabaddeb.mp4" controls="controls" style="max-width: 730px;">
+</video>
 
 This README contains information for the latest version of the project, which is under active development.  You can find the latest version of the validator application on the [Releases page](https://github.com/MobilityData/gtfs-validator/releases).
 
