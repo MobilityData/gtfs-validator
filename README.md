@@ -6,10 +6,15 @@
 ●
 <a href="#run-the-app-via-command-line">using the command line</a>
 ●
-<a href="#gtfs-validator#run-the-app-using-docker">using Docker</a>
+<a href="#run-the-app-using-docker">using Docker</a>
 </p>
 
+---
+ 
 A GTFS Schedule (static) [General Transit Feed Specification (GTFS)](https://gtfs.mobilitydata.org/spec/gtfs-schedule) feed validator.
+
+https://user-images.githubusercontent.com/63653518/182135478-f844cbfd-7037-4d02-bd65-f196cabaddeb.mp4
+
 
 This README contains information for the latest version of the project, which is under active development.  You can find the latest version of the validator application on the [Releases page](https://github.com/MobilityData/gtfs-validator/releases).
 
