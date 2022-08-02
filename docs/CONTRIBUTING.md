@@ -92,7 +92,7 @@ Below are a few questions that need to be considered during a Pull Request revie
 - Would this functionality be easy to extend? Does its design make sense?
 - Is this new feature easily maintainable by other developers?
 - Is the code consistent with the validator architecture?
-- Does this new functionality have dependencies with other parts of the validator? Or have external dependencies that could compromise security (outdated libraries, etc)?
+- Does this new functionality have dependencies with other parts of the validator? Or have external dependencies that could compromise security (outdated libraries, etc.)?
 - Are the tests appropriate to validate the additional code? Is there a case that is not being tested?
 - Is all the necessary documentation for this new functionality available?
 - Is the user facing documentation easy to understand? Is it including terms that casual users would be confused by?
