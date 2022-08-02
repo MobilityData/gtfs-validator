@@ -82,17 +82,21 @@ public class TableLoaderGenerator {
     return "as" + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, typeEnum.toString());
   }
 
-  private static boolean cachingEnabled(final GtfsFieldDescriptor field) {
+  private boolean cachingEnabled(final GtfsFieldDescriptor field) {
     // FIXME: Add a way to disable all caching with a command-line flag.
     if (field.cached()) {
       return true;
     }
     if (field.primaryKey().isPresent()) {
-      // Primary keys are not cached because caches are per-table, and primary keys are unique to
-      // each row within
-      // the table, so by definition they won't be used more than once and won't benefit from being
-      // cached.
-      return false;
+      // Single-column primary keys are not cached because caches are per-table, and primary keys
+      // are unique to each row within so by definition they won't be used more than once and won't
+      // benefit from being cached.
+      if (fileDescriptor.hasSingleColumnPrimaryKey()) {
+        return false;
+      }
+
+      // By comparison, multi-column primary keys are cacheable, since single columns of the key
+      // are likely duplicated across rows (e.g. shape_id in shapes.txt, trip_id in stop_times.txt).
     }
     // Caching is enabled by default for certain field types.
     return field.type() == FieldTypeEnum.COLOR
