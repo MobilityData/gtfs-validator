@@ -83,7 +83,7 @@ Reviewing Pull Requests is a great way to get familiar with the code & architect
 
 A Pull Request is a gift to the community: please start a review with a positive comment, and ask the high level questions before diving into a line-by-line review. Take your time during the process: reviews are a critical step of every Pull Request and they can take a while. Often during reviews, we have discussions that lead to re-framing the problem and solution, we find a new approach to a problem, we notice other issues, etc. 
 
-If you have a suggestion that the author could ignore, use the prefix nit” in your comment (for example nit: removed whitespace).
+If you have a suggestion that the author could ignore, use the prefix nit in your comment (for example nit: removed whitespace).
 
 Below are a few questions that need to be considered during a Pull Request review.
 - Is the code easy to read and understand?
