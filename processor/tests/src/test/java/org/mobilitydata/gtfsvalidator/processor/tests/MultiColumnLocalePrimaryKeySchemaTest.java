@@ -50,6 +50,6 @@ public class MultiColumnLocalePrimaryKeySchemaTest {
 
     MultiColumnLocalePrimaryKeyTableContainer.CompositeKey key =
         MultiColumnLocalePrimaryKeyTableContainer.CompositeKey.builder().setId("a1").build();
-    assertThat(container.byPrimaryKey(key).get().translation()).isEqualTo("apples");
+    assertThat(container.byTranslationKey("a1", "").get().translation()).isEqualTo("apples");
   }
 }

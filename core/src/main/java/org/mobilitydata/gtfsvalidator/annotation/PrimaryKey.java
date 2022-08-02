@@ -71,4 +71,23 @@ public @interface PrimaryKey {
    * `stop_sequence` value.
    */
   boolean isSequenceUsedForSorting() default false;
+
+  /**
+   * Specifies how the primary key corresponds to the record id fields of <code>translations.txt
+   * </code>. The record type information will be used to auto-generate a <code>byTranslationKey
+   * </code> method in the table container for looking up entities for the purpose of translation.
+   *
+   * <p>For single-column primary keys, leaving the default is typically appropriate. For two-column
+   * primary keys, indicating which field is the <code>RECORD_SUB_ID</code> is appropriate.
+   *
+   * <p>For files with more than two primary keys, it will be necessary to mark some keys as <code>
+   * UNSUPPORTED</code>, indicating that the field is not used for translation lookup. This can
+   * potentially include ALL the primary keys of a file if the file has primary keys but no
+   * translation support. It might also to be used for a subset of unsupported fields if a file
+   * supports translation lookup via a subset of its primary keys (e.g. <code>transfers.txt</code>).
+   *
+   * <p>It is an error to specify more than one key with type <code>RECORD_ID</code> or more than
+   * one key with type <code>RECORD_SUB_ID</code>.
+   */
+  TranslationRecordIdType translationRecordIdType() default TranslationRecordIdType.RECORD_ID;
 }

@@ -15,6 +15,8 @@
  */
 package org.mobilitydata.gtfsvalidator.processor.tests;
 
+import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.RECORD_SUB_ID;
+
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.Index;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
@@ -25,7 +27,7 @@ public interface IdAndSequencePrimaryKeySchema {
   @Index
   String id();
 
-  @PrimaryKey(isSequenceUsedForSorting = true)
+  @PrimaryKey(isSequenceUsedForSorting = true, translationRecordIdType = RECORD_SUB_ID)
   int sequence();
 
   String fruit();

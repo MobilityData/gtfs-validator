@@ -1,12 +1,16 @@
 package org.mobilitydata.gtfsvalidator.processor;
 
+import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.RECORD_ID;
+import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.RECORD_SUB_ID;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.byKeyMapName;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.byKeyMethodName;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldNameField;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.hasMethodName;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
 import com.squareup.javapoet.ClassName;
@@ -17,19 +21,20 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
+import org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyNotice;
 import org.mobilitydata.gtfsvalidator.notice.MoreThanOneEntityNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableContainerWithMultiColumnPrimaryKey;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableContainerWithMultiColumnPrimaryKey.MultiColumnKey;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableContainerWithSingleColumnPrimaryKey;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableContainerWithSingleRow;
+import org.mobilitydata.gtfsvalidator.type.GtfsDate;
+import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 /** Generates code in a container class for @Index and @PrimaryKey annotations. */
 class TableContainerIndexGenerator {
@@ -48,28 +53,9 @@ class TableContainerIndexGenerator {
 
   void generateMethods(TypeSpec.Builder typeSpec) {
     if (fileDescriptor.singleRow()) {
-      typeSpec.addSuperinterface(
-          ParameterizedTypeName.get(
-              ClassName.get(GtfsTableContainerWithSingleRow.class),
-              classNames.entityImplementationTypeName()));
-    } else if (fileDescriptor.hasSingleColumnPrimaryKey()) {
-      typeSpec.addSuperinterface(
-          ParameterizedTypeName.get(
-              ClassName.get(GtfsTableContainerWithSingleColumnPrimaryKey.class),
-              classNames.entityImplementationTypeName()));
-    } else if (fileDescriptor.hasMultiColumnPrimaryKey()) {
-      typeSpec.addSuperinterface(
-          ParameterizedTypeName.get(
-              ClassName.get(GtfsTableContainerWithMultiColumnPrimaryKey.class),
-              classNames.entityImplementationTypeName(),
-              ClassName.get("", classNames.tableContainerSimpleName() + ".CompositeKey")));
-    }
-
-    if (fileDescriptor.singleRow()) {
       typeSpec.addMethod(
           MethodSpec.methodBuilder("getSingleEntity")
               .addModifiers(Modifier.PUBLIC)
-              .addAnnotation(Override.class)
               .returns(
                   ParameterizedTypeName.get(
                       ClassName.get(Optional.class), classNames.entityImplementationTypeName()))
@@ -94,7 +80,7 @@ class TableContainerIndexGenerator {
           classNames.entityImplementationTypeName());
     }
 
-    generateByPrimaryKey(typeSpec);
+    typeSpec.addMethod(generateByTranslationKeyMethod());
 
     typeSpec.addField(generateKeyColumnNames());
     typeSpec.addMethod(generateGetKeyColumnNames());
@@ -106,9 +92,11 @@ class TableContainerIndexGenerator {
   }
 
   private Optional<GtfsFieldDescriptor> resolveSequenceField(GtfsFieldDescriptor indexField) {
-    if (indexField.primaryKey()) {
+    if (indexField.primaryKey().isPresent()) {
       for (GtfsFieldDescriptor field : fileDescriptor.primaryKeys()) {
-        if (field != indexField && field.sequenceKey()) {
+        if (field != indexField
+            && field.primaryKey().isPresent()
+            && field.primaryKey().get().isSequenceUsedForSorting()) {
           return Optional.of(field);
         }
       }
@@ -218,33 +206,79 @@ class TableContainerIndexGenerator {
         .build();
   }
 
-  private void generateByPrimaryKey(TypeSpec.Builder typeSpec) {
+  private MethodSpec generateByTranslationKeyMethod() {
+    MethodSpec.Builder method =
+        MethodSpec.methodBuilder("byTranslationKey")
+            .addAnnotation(Override.class)
+            .addModifiers(Modifier.PUBLIC)
+            .returns(
+                ParameterizedTypeName.get(
+                    ClassName.get(Optional.class), classNames.entityImplementationTypeName()))
+            .addParameter(String.class, "recordId")
+            .addParameter(String.class, "recordSubId");
     if (fileDescriptor.hasSingleColumnPrimaryKey()) {
-      typeSpec.addMethod(
-          MethodSpec.methodBuilder("byPrimaryKey")
-              .addAnnotation(Override.class)
-              .addModifiers(Modifier.PUBLIC)
-              .returns(
-                  ParameterizedTypeName.get(
-                      ClassName.get(Optional.class), classNames.entityImplementationTypeName()))
-              .addParameter(String.class, "id")
-              .addStatement(
-                  "return Optional.ofNullable($L.getOrDefault(id, null))",
-                  byKeyMapName(fileDescriptor.getSingleColumnPrimaryKey().name()))
-              .build());
+      method.addStatement(
+          "return Optional.ofNullable($L.getOrDefault(recordId, null))",
+          byKeyMapName(fileDescriptor.getSingleColumnPrimaryKey().name()));
     } else if (fileDescriptor.hasMultiColumnPrimaryKey()) {
-      typeSpec.addMethod(
-          MethodSpec.methodBuilder("byPrimaryKey")
-              .addAnnotation(Override.class)
-              .addModifiers(Modifier.PUBLIC)
-              .returns(
-                  ParameterizedTypeName.get(
-                      ClassName.get(Optional.class), classNames.entityImplementationTypeName()))
-              .addParameter(ClassName.get("", "CompositeKey"), "key")
-              .addStatement(
-                  "return Optional.ofNullable($L.getOrDefault(key, null))",
-                  BY_COMPOSITE_KEY_MAP_FIELD_NAME)
-              .build());
+      ImmutableMap<TranslationRecordIdType, String> recordIdTypes =
+          ImmutableMap.of(RECORD_ID, "recordId", RECORD_SUB_ID, "recordSubId");
+      List<CodeBlock> keyBuilderSetters = new ArrayList<>();
+      for (GtfsFieldDescriptor field : fileDescriptor.primaryKeys()) {
+        // Currently, translations.txt only supports lookup of entities with at most two primary
+        // keys via record_id and record_sub_id, even if those entities technically have more than
+        // two primary keys (e.g. transfers.txt).  To support this use case, we need to be careful
+        // about the construction of the CompositeKey.  In the "setupIndices" method, CompositeKey
+        // is built with a value for each key field of an entity, even if the entity returns a
+        // default value.  We need to follow that same behavior here, using entity default values
+        // for fields that aren't filled directly from `record_id` or `record_sub_id`.
+        CodeBlock accessor = EntityImplementationGenerator.getDefaultValue(field);
+        String parameterName =
+            recordIdTypes.get(field.primaryKey().get().translationRecordIdType());
+        if (parameterName != null) {
+          accessor =
+              CodeBlock.of(
+                  // We also use the entity default value if the record id is empty.
+                  "$T.isNullOrEmpty($L) ? $L : $L",
+                  ClassName.get(Strings.class),
+                  parameterName,
+                  accessor,
+                  wrapStringAccessorWithTypeConversion(field, CodeBlock.of(parameterName)));
+        }
+        keyBuilderSetters.add(
+            CodeBlock.of(".$L($L)", FieldNameConverter.setterMethodName(field.name()), accessor));
+      }
+      method
+          .beginControlFlow("try")
+          .addStatement(
+              "return Optional.ofNullable($L.getOrDefault(CompositeKey.builder()$L.build(), null))",
+              BY_COMPOSITE_KEY_MAP_FIELD_NAME,
+              CodeBlock.join(keyBuilderSetters, ""))
+          .nextControlFlow("catch (NumberFormatException ex)")
+          .addStatement("return Optional.empty()")
+          .endControlFlow();
+    } else if (fileDescriptor.singleRow()) {
+      method.addStatement(
+          "return entities.isEmpty() ? Optional.empty() : Optional.of(entities.get(0))");
+    } else {
+      method.addStatement("return Optional.empty()");
+    }
+    return method.build();
+  }
+
+  private CodeBlock wrapStringAccessorWithTypeConversion(
+      GtfsFieldDescriptor field, CodeBlock accessor) {
+    switch (field.type()) {
+      case INTEGER:
+        return CodeBlock.of("$T.parseInt($L)", TypeName.get(field.javaType()).box(), accessor);
+      case DATE:
+        return CodeBlock.of("$T.fromString($L)", ClassName.get(GtfsDate.class), accessor);
+      case TIME:
+        return CodeBlock.of("$T.fromString($L)", ClassName.get(GtfsTime.class), accessor);
+      case LANGUAGE_CODE:
+        return CodeBlock.of("$T.forLanguageTag($L)", ClassName.get(Locale.class), accessor);
+      default:
+        return accessor;
     }
   }
 
@@ -359,8 +393,7 @@ class TableContainerIndexGenerator {
     TypeSpec.Builder keySpec =
         TypeSpec.classBuilder("CompositeKey")
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.ABSTRACT)
-            .addAnnotation(ClassName.get("com.google.auto.value", "AutoValue"))
-            .addSuperinterface(ClassName.get(MultiColumnKey.class));
+            .addAnnotation(ClassName.get("com.google.auto.value", "AutoValue"));
 
     // Getters for each field.
     for (GtfsFieldDescriptor keyField : fileDescriptor.primaryKeys()) {

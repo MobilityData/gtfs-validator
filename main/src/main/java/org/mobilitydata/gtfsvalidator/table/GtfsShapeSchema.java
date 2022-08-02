@@ -16,6 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.RECORD_SUB_ID;
+
 import org.mobilitydata.gtfsvalidator.annotation.FieldType;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
@@ -42,7 +44,7 @@ public interface GtfsShapeSchema extends GtfsEntity {
 
   @Required
   @NonNegative
-  @PrimaryKey(isSequenceUsedForSorting = true)
+  @PrimaryKey(isSequenceUsedForSorting = true, translationRecordIdType = RECORD_SUB_ID)
   int shapePtSequence();
 
   @NonNegative

@@ -16,6 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.RECORD_SUB_ID;
+
 import org.mobilitydata.gtfsvalidator.annotation.CachedField;
 import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
 import org.mobilitydata.gtfsvalidator.annotation.DefaultValue;
@@ -53,7 +55,7 @@ public interface GtfsStopTimeSchema extends GtfsEntity {
   @ForeignKey(table = "stops.txt", field = "stop_id")
   String stopId();
 
-  @PrimaryKey(isSequenceUsedForSorting = true)
+  @PrimaryKey(isSequenceUsedForSorting = true, translationRecordIdType = RECORD_SUB_ID)
   @Required
   @NonNegative
   int stopSequence();

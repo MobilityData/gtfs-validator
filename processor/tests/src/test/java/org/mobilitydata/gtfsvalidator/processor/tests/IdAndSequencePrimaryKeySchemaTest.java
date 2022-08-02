@@ -55,12 +55,7 @@ public class IdAndSequencePrimaryKeySchemaTest {
     assertThat(fruits(container.byIdMap().get("a"))).containsExactly("apples", "bananas").inOrder();
     assertThat(fruits(container.byIdMap().get("b"))).containsExactly("cherries", "dates").inOrder();
 
-    IdAndSequencePrimaryKeyTableContainer.CompositeKey key =
-        IdAndSequencePrimaryKeyTableContainer.CompositeKey.builder()
-            .setId("a")
-            .setSequence(1)
-            .build();
-    assertThat(container.byPrimaryKey(key).get().fruit()).isEqualTo("apples");
+    assertThat(container.byTranslationKey("a", "1").get().fruit()).isEqualTo("apples");
   }
 
   @Test

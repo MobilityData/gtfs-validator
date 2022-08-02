@@ -15,6 +15,9 @@
  */
 package org.mobilitydata.gtfsvalidator.processor.tests;
 
+import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.RECORD_SUB_ID;
+import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.UNSUPPORTED;
+
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.Index;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
@@ -25,10 +28,10 @@ public interface MultiColumnPrimaryKeySchema {
   @Index
   String idA();
 
-  @PrimaryKey
+  @PrimaryKey(translationRecordIdType = RECORD_SUB_ID)
   String idB();
 
-  @PrimaryKey
+  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
   String idC();
 
   String fruit();

@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;
+import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 
 /**
@@ -70,6 +71,8 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
    * org.mobilitydata.gtfsvalidator.annotation.PrimaryKey}.
    */
   public abstract ImmutableList<String> getKeyColumnNames();
+
+  public abstract Optional<T> byTranslationKey(String recordId, String recordSubId);
 
   /**
    * Tells if the file is missing.

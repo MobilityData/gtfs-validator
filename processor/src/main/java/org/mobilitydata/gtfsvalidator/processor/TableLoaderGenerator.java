@@ -87,7 +87,7 @@ public class TableLoaderGenerator {
     if (field.cached()) {
       return true;
     }
-    if (field.primaryKey()) {
+    if (field.primaryKey().isPresent()) {
       // Primary keys are not cached because caches are per-table, and primary keys are unique to
       // each row within
       // the table, so by definition they won't be used more than once and won't benefit from being

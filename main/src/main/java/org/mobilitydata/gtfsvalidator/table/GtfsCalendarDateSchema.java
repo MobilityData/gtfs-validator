@@ -16,6 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.RECORD_SUB_ID;
+
 import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
 import org.mobilitydata.gtfsvalidator.annotation.FieldType;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
@@ -35,7 +37,7 @@ public interface GtfsCalendarDateSchema extends GtfsEntity {
   String serviceId();
 
   @Required
-  @PrimaryKey
+  @PrimaryKey(translationRecordIdType = RECORD_SUB_ID)
   GtfsDate date();
 
   @Required

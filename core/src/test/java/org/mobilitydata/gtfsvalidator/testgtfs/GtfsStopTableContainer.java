@@ -21,11 +21,9 @@ import java.util.List;
 import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableContainerWithSingleColumnPrimaryKey;
 
 /** Test class to avoid dependency on the real GtfsStopTableContainer and annotation processor. */
-public class GtfsStopTableContainer extends GtfsTableContainer<GtfsStop>
-    implements GtfsTableContainerWithSingleColumnPrimaryKey<GtfsStop> {
+public class GtfsStopTableContainer extends GtfsTableContainer<GtfsStop> {
 
   public GtfsStopTableContainer(TableStatus tableStatus, CsvHeader header) {
     super(tableStatus, header);
@@ -52,7 +50,7 @@ public class GtfsStopTableContainer extends GtfsTableContainer<GtfsStop>
   }
 
   @Override
-  public Optional<GtfsStop> byPrimaryKey(String id) {
+  public Optional<GtfsStop> byTranslationKey(String recordId, String recordSubId) {
     return Optional.empty();
   }
 

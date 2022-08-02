@@ -20,6 +20,7 @@ import com.google.auto.value.AutoValue;
 import java.util.Optional;
 import javax.lang.model.type.TypeMirror;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
+import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.parsing.RowParser;
 
 /** Describes a field in a GTFS table, e.g., stop_id in "stops.txt". */
@@ -39,12 +40,7 @@ public abstract class GtfsFieldDescriptor {
 
   public abstract boolean required();
 
-  public abstract boolean primaryKey();
-
-  /**
-   * Returns true if the field is a primary key that has additionally been marked as `isSequence`.
-   */
-  public abstract boolean sequenceKey();
+  public abstract Optional<PrimaryKey> primaryKey();
 
   public abstract boolean index();
 
@@ -70,9 +66,7 @@ public abstract class GtfsFieldDescriptor {
 
     public abstract Builder setRequired(boolean value);
 
-    public abstract Builder setPrimaryKey(boolean value);
-
-    public abstract Builder setSequenceKey(boolean value);
+    public abstract Builder setPrimaryKey(PrimaryKey annotation);
 
     public abstract Builder setIndex(boolean value);
 

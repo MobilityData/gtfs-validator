@@ -142,7 +142,7 @@ public class ForeignKeyValidatorGenerator {
             .returns(boolean.class)
             .addParameter(String.class, "key")
             .addParameter(parentClasses.tableContainerTypeName(), "parentContainer");
-    if (parentFile.hasSingleColumnPrimaryKey() && parentField.primaryKey()) {
+    if (parentFile.hasSingleColumnPrimaryKey() && parentField.primaryKey().isPresent()) {
       hasReferencedKeyMethod.addStatement(
           "return parentContainer.$L(key).isPresent()",
           FieldNameConverter.byKeyMethodName(parentField.name()));

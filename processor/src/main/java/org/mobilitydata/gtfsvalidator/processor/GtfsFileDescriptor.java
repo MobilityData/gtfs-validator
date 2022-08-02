@@ -20,8 +20,13 @@ import com.google.auto.value.AutoValue;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.lang.model.type.TypeMirror;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
+import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
+import org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType;
 
 /** Describes a GTFS file (CSV table), e.g., "stops.txt". */
 @AutoValue
@@ -74,6 +79,8 @@ public abstract class GtfsFileDescriptor {
   public abstract static class Builder {
     public abstract Builder setFilename(String value);
 
+    public abstract String filename();
+
     public abstract Builder setClassName(String value);
 
     public abstract Builder setRecommended(boolean value);
@@ -104,7 +111,7 @@ public abstract class GtfsFileDescriptor {
       ImmutableList.Builder<GtfsFieldDescriptor> primaryKeysBuilder = ImmutableList.builder();
       for (GtfsFieldDescriptor field : fields()) {
         fieldsMapBuilder.put(field.name(), field);
-        if (field.primaryKey()) {
+        if (field.primaryKey().isPresent()) {
           primaryKeysBuilder.add(field);
         }
         if (field.index()) {
@@ -130,7 +137,40 @@ public abstract class GtfsFileDescriptor {
       setIndices(indicesBuilder.build());
       setPrimaryKeys(primaryKeysBuilder.build());
       setLatLonFields(latLonBuilder.build());
+
+      validateTranslationRecordTypeAnnotations();
+
       return autoBuild();
+    }
+
+    private void validateTranslationRecordTypeAnnotations() {
+      Map<TranslationRecordIdType, Long> translationRecordTypeCounts =
+          fields().stream()
+              .map(GtfsFieldDescriptor::primaryKey)
+              .flatMap(Optional::stream)
+              .collect(
+                  Collectors.groupingBy(
+                      PrimaryKey::translationRecordIdType, Collectors.counting()));
+      long recordIdCount =
+          translationRecordTypeCounts.getOrDefault(TranslationRecordIdType.RECORD_ID, 0L);
+      long recordSubIdCount =
+          translationRecordTypeCounts.getOrDefault(TranslationRecordIdType.RECORD_SUB_ID, 0L);
+
+      if (recordIdCount > 1) {
+        throw new IllegalArgumentException(
+            filename()
+                + ": At most one field can be annotated with TranslationRecordIdType.RECORD_ID");
+      }
+      if (recordSubIdCount > 1) {
+        throw new IllegalArgumentException(
+            filename()
+                + ": At most one field can be annotated with TranslationRecordIdType.RECORD_SUB_ID");
+      }
+      if (recordIdCount == 0 && recordSubIdCount == 1) {
+        throw new IllegalArgumentException(
+            filename()
+                + ": Field annotated with TranslationRecordIdType.RECORD_SUB_ID without an existing TranslationRecordIdType.RECORD_ID field");
+      }
     }
   }
 }

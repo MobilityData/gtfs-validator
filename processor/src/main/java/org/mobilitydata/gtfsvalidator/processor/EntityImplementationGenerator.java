@@ -108,7 +108,7 @@ public class EntityImplementationGenerator {
     return "0x" + Integer.toHexString(1 << (fieldNumber % 32));
   }
 
-  private static CodeBlock getDefaultValue(GtfsFieldDescriptor field) {
+  static CodeBlock getDefaultValue(GtfsFieldDescriptor field) {
     if (field.defaultValue().isPresent()) {
       String valueString = field.defaultValue().get();
       switch (field.type()) {

@@ -84,11 +84,7 @@ public class Analyser {
       fieldBuilder.setRequired(method.getAnnotation(Required.class) != null);
       PrimaryKey primaryKey = method.getAnnotation(PrimaryKey.class);
       if (primaryKey != null) {
-        fieldBuilder.setPrimaryKey(true);
-        fieldBuilder.setSequenceKey(primaryKey.isSequenceUsedForSorting());
-      } else {
-        fieldBuilder.setPrimaryKey(false);
-        fieldBuilder.setSequenceKey(false);
+        fieldBuilder.setPrimaryKey(primaryKey);
       }
       fieldBuilder.setIndex(method.getAnnotation(Index.class) != null);
       fieldBuilder.setCached(method.getAnnotation(CachedField.class) != null);

@@ -15,6 +15,8 @@
  */
 package org.mobilitydata.gtfsvalidator.processor.tests;
 
+import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.RECORD_SUB_ID;
+
 import java.util.Locale;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
@@ -24,7 +26,7 @@ public interface MultiColumnLocalePrimaryKeySchema {
   @PrimaryKey
   String id();
 
-  @PrimaryKey
+  @PrimaryKey(translationRecordIdType = RECORD_SUB_ID)
   Locale language();
 
   String translation();

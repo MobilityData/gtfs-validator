@@ -16,6 +16,7 @@
 package org.mobilitydata.gtfsvalidator.processor.tests;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth8.assertThat;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,20 +51,16 @@ public class MultiColumnPrimaryKeySchemaTest {
             "a1,a2,a3,apples",
             "a1,a2x,a3x,apricots",
             "b1,b2,b3,bananas",
-            "c1,c2,c3,cherries");
+            "c1,c2,c3,cherries",
+            "d1,d2,,dates");
 
     assertThat(container.getKeyColumnNames()).containsExactly("id_a", "id_b", "id_c");
 
     assertThat(fruits(container.byIdA("a1"))).containsExactly("apples", "apricots");
     assertThat(fruits(container.byIdA("b1"))).containsExactly("bananas");
 
-    MultiColumnPrimaryKeyTableContainer.CompositeKey key =
-        MultiColumnPrimaryKeyTableContainer.CompositeKey.builder()
-            .setIdA("a1")
-            .setIdB("a2")
-            .setIdC("a3")
-            .build();
-    assertThat(container.byPrimaryKey(key).get().fruit()).isEqualTo("apples");
+    assertThat(container.byTranslationKey("a1", "a2")).isEmpty();
+    assertThat(container.byTranslationKey("d1", "d2").get().fruit()).isEqualTo("dates");
   }
 
   @Test
