@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.table;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Optional;
+import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 
 /**
@@ -72,6 +73,18 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
    */
   public abstract ImmutableList<String> getKeyColumnNames();
 
+  /**
+   * Finds an entity with the given translation record ids.
+   *
+   * <p>The mapping between translation record ids and primary key columns is table-specific. See
+   * {@link PrimaryKey#translationRecordIdType()} for details on configuration. An internal method
+   * is generated to construct the proper entity key from the specified String record ids. For
+   * single-column primary keys, the <code>recordSubId</code> will be ignored.
+   *
+   * @param recordId corresponds to translations.txt record_id field.
+   * @param recordSubId corresponds translations.txt record_sub_id field.
+   * @return entity with the given translation record id, if any
+   */
   public abstract Optional<T> byTranslationKey(String recordId, String recordSubId);
 
   /**
