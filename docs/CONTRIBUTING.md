@@ -89,7 +89,7 @@ Below are a few questions that need to be considered during a Pull Request revie
 - Is the code easy to read and understand?
 - Is the code well documented?
 - Is the code following the conventions of the programming language used?
-- Would this functionality be easy to extend? Does it design make sense?
+- Would this functionality be easy to extend? Does its design make sense?
 - Is this new feature easily maintainable by other developers?
 - Is the code consistent with the validator architecture?
 - Does this new functionality have dependencies with other parts of the validator? Or have external dependencies that could compromise security (outdated libraries, etc)?
