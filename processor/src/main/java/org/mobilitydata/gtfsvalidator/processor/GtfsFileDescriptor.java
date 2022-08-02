@@ -138,9 +138,24 @@ public abstract class GtfsFileDescriptor {
       setPrimaryKeys(primaryKeysBuilder.build());
       setLatLonFields(latLonBuilder.build());
 
+      validateIsSequenceUsedForSortingAnnotation();
       validateTranslationRecordTypeAnnotations();
 
       return autoBuild();
+    }
+
+    private void validateIsSequenceUsedForSortingAnnotation() {
+      long count =
+          fields().stream()
+              .map(GtfsFieldDescriptor::primaryKey)
+              .flatMap(Optional::stream)
+              .filter(PrimaryKey::isSequenceUsedForSorting)
+              .count();
+      if (count > 1) {
+        throw new IllegalArgumentException(
+            filename()
+                + ": At most one field can be annotated with @PrimarKey.isSequenceUsedForSorting = true");
+      }
     }
 
     private void validateTranslationRecordTypeAnnotations() {
