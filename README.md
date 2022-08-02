@@ -1,15 +1,30 @@
-# gtfs-validator [![Test Package Document](https://github.com/MobilityData/gtfs-validator/workflows/Test%20Package%20Document/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions?query=workflow%3A%22Test+Package+Document%22) ![End to end](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end/badge.svg) ![End to end big](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end%20big/badge.svg) ![End to end 100](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end%20100/badge.svg) [![Rule acceptance tests](https://github.com/MobilityData/gtfs-validator/actions/workflows/acceptance_test.yml/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions/workflows/acceptance_test.yml) ![Docker image](https://github.com/MobilityData/gtfs-validator/actions/workflows/docker.yml/badge.svg) [![Join the gtfs-validator chat](https://badgen.net/badge/slack/%20/green?icon=slack)](https://bit.ly/mobilitydata-slack)
+# Canonical GTFS Schedule Validator
+[![Test Package Document](https://github.com/MobilityData/gtfs-validator/workflows/Test%20Package%20Document/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions?query=workflow%3A%22Test+Package+Document%22) ![End to end](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end/badge.svg) ![End to end big](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end%20big/badge.svg) ![End to end 100](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end%20100/badge.svg) [![Rule acceptance tests](https://github.com/MobilityData/gtfs-validator/actions/workflows/acceptance_test.yml/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions/workflows/acceptance_test.yml) ![Docker image](https://github.com/MobilityData/gtfs-validator/actions/workflows/docker.yml/badge.svg) [![Join the gtfs-validator chat](https://badgen.net/badge/slack/%20/green?icon=slack)](https://bit.ly/mobilitydata-slack)
 
-A GTFS Schedule (static) [General Transit Feed Specification (GTFS)](https://gtfs.mobilitydata.org/spec/gtfs-schedule) feed validator
+<p align="center">
+<a href="#running-the-app">using the Desktop app</a>
+●
+<a href="#run-the-app-via-command-line">using the command line</a>
+●
+<a href="#run-the-app-using-docker">using Docker</a>
+</p>
 
-This README contains information for the latest version of the project, which is under active development.  You can find the current version of the validator application on the [Releases page](https://github.com/MobilityData/gtfs-validator/releases).
+---
+ 
+A GTFS Schedule (static) [General Transit Feed Specification (GTFS)](https://gtfs.mobilitydata.org/spec/gtfs-schedule) feed validator, maintained by [MobilityData](www.mobilitydata.org).
+
+
+<video src="https://user-images.githubusercontent.com/63653518/182135478-f844cbfd-7037-4d02-bd65-f196cabaddeb.mp4" controls="controls" style="max-width: 730px;">
+</video>
+
+This README contains information for the latest version of the project, which is under active development.  You can find the latest version of the validator application on the [Releases page](https://github.com/MobilityData/gtfs-validator/releases).
 
 # Introduction
 This is a cross-platform application written in Java that performs the following steps:
 1. Loads input GTFS zip file from a URL or disk.
 2. Checks file integrity, numeric type parsing and ranges as well as string format according to the [GTFS Schedule specification](https://gtfs.mobilitydata.org/spec/gtfs-schedule#h.hc443y62gb8c).
 3. Performs GTFS [business rule validation](/RULES.md).
-4. Provides an easy-to-use validation report in HTML format that can be opened in the browser and shared with other parties. The report is also available in JSON format that can be used for parsing and running additional analyses.
+4. Provides an easy-to-use validation report in HTML format that can be opened in the browser and shared with other parties. See an [example of a valdiation report](https://htmlpreview.github.io/?https://github.com/MobilityData/gtfs-validator/blob/master/docs/report.html). The report is also available in JSON format that can be used for parsing and running additional analyses.
 
 # Running the app
 ### Setup
@@ -109,13 +124,16 @@ The validator can then be executed via bash commands. See the [preceeding instru
 ### Visualize the results
 In the output directory, the reports will be created as described [here](#visualize-the-results).
 
-# Snapshot Builds, Previous Releases, and Documentation
+# Previous Releases, Snapshot Builds, and Documentation
 * If you'd like to run the bleeding-edge pre-release Snapshot of the application, see the [access instructions](/docs/DOWNLOAD_SNAPSHOT_JAR.md).
 * If you are looking for older releases, see the [Releases page](https://github.com/MobilityData/gtfs-validator/releases).
 * If you'd like to view documentation for past releases of the project, see:
   * [v1.4.0](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0-docs/README.md)
   * [v2.0.0](https://github.com/MobilityData/gtfs-validator/blob/v2.0.0-docs/README.md)
   * [v3.0.0](https://github.com/MobilityData/gtfs-validator/blob/docs/v3.0.0/README.md)
+* If you'd like to map notice names between two validator versions, see:
+  * [v1 to v2 notice mapping](https://github.com/MobilityData/gtfs-validator/blob/master/docs/MIGRATION_V1_V2.md)
+  * [v2 to v3 notice mapping](https://github.com/MobilityData/gtfs-validator/blob/master/docs/MIGRATION_V2_V3.md)
 
 # Validation rules
 * [Implemented rules](/RULES.md)
