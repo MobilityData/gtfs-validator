@@ -45,7 +45,7 @@ Contributors who actively push to the project. They can perform code reviews, re
 @TODO how to become a core developer
 
 **Technical committee**
-The technical committee is composed of core developers and the product manager, who have additional responsibilities to ensure the project runs smoothly and the progress is in line with the big picture vision: they discuss considerable changes to the project, perform strateguc planning, and approve changes to the governance model. 
+The technical committee is composed of core developers and the product manager, who have additional responsibilities to ensure the project runs smoothly and the progress is in line with the big picture vision: they discuss considerable changes to the project, perform strategic planning, and approve changes to the governance model. 
 The  Steering committee currently consists of [Isabelle de Robert](https://github.com/isabelle-dr), [Maxime Armstrong](https://github.com/maximearmstrong), and [Brian Ferriss](https://github.com/bdferris-v2).
 @TODO how to join the steering committee.
 
