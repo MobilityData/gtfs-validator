@@ -35,7 +35,6 @@ import org.mobilitydata.gtfsvalidator.annotation.DefaultValue;
 import org.mobilitydata.gtfsvalidator.annotation.EndRange;
 import org.mobilitydata.gtfsvalidator.annotation.FieldType;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
-import org.mobilitydata.gtfsvalidator.annotation.FirstKey;
 import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValue;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValues;
@@ -47,7 +46,6 @@ import org.mobilitydata.gtfsvalidator.annotation.Positive;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Recommended;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
-import org.mobilitydata.gtfsvalidator.annotation.SequenceKey;
 import org.mobilitydata.gtfsvalidator.parsing.RowParser.NumberBounds;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
@@ -84,9 +82,10 @@ public class Analyser {
               : javaTypeToGtfsType(method.getReturnType()));
       fieldBuilder.setRecommended(method.getAnnotation(Recommended.class) != null);
       fieldBuilder.setRequired(method.getAnnotation(Required.class) != null);
-      fieldBuilder.setPrimaryKey(method.getAnnotation(PrimaryKey.class) != null);
-      fieldBuilder.setFirstKey(method.getAnnotation(FirstKey.class) != null);
-      fieldBuilder.setSequenceKey(method.getAnnotation(SequenceKey.class) != null);
+      PrimaryKey primaryKey = method.getAnnotation(PrimaryKey.class);
+      if (primaryKey != null) {
+        fieldBuilder.setPrimaryKey(primaryKey);
+      }
       fieldBuilder.setIndex(method.getAnnotation(Index.class) != null);
       fieldBuilder.setCached(method.getAnnotation(CachedField.class) != null);
 

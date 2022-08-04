@@ -158,7 +158,10 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
             noticeContainer)) {
       return;
     }
-    if (parentTable.byPrimaryKey(translation.recordId(), translation.recordSubId()).isEmpty()) {
+
+    Optional<?> entity =
+        parentTable.byTranslationKey(translation.recordId(), translation.recordSubId());
+    if (entity.isEmpty()) {
       noticeContainer.addValidationNotice(new TranslationForeignKeyViolationNotice(translation));
     }
   }

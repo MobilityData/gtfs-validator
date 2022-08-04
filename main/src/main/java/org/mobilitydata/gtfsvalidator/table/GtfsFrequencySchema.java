@@ -16,11 +16,14 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.RECORD_SUB_ID;
+
 import org.mobilitydata.gtfsvalidator.annotation.EndRange;
 import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.Index;
 import org.mobilitydata.gtfsvalidator.annotation.Positive;
+import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
@@ -28,10 +31,12 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 public interface GtfsFrequencySchema extends GtfsEntity {
   @Required
   @ForeignKey(table = "trips.txt", field = "trip_id")
+  @PrimaryKey
   @Index
   String tripId();
 
   @Required
+  @PrimaryKey(translationRecordIdType = RECORD_SUB_ID)
   @EndRange(field = "end_time", allowEqual = false)
   GtfsTime startTime();
 

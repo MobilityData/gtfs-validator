@@ -48,7 +48,7 @@ public class SingleColumnPrimaryKeySchemaTest {
     assertThat(container.byId("a").get().fruit()).isEqualTo("apples");
     assertThat(container.byId("b").get().fruit()).isEqualTo("bananas");
 
-    assertThat(container.byPrimaryKey("a", null).get().fruit()).isEqualTo("apples");
+    assertThat(container.byTranslationKey("a", "").get().fruit()).isEqualTo("apples");
   }
 
   @Test

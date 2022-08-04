@@ -64,10 +64,10 @@ public class MatchingFeedAndAgencyLangValidator extends FileValidator {
   public void validate(NoticeContainer noticeContainer) {
     // If there are no feed info entries or if no feed lang has been specified, we don't do any
     // validation.
-    if (feedInfoTable.entityCount() == 0 || !feedInfoTable.getSingleEntity().hasFeedLang()) {
+    if (feedInfoTable.entityCount() == 0 || !feedInfoTable.getSingleEntity().get().hasFeedLang()) {
       return;
     }
-    final Locale feedLang = feedInfoTable.getSingleEntity().feedLang();
+    final Locale feedLang = feedInfoTable.getSingleEntity().get().feedLang();
     if (feedLang.equals(Locale.forLanguageTag("mul"))) {
       // A multilanguage feed may have different agency_lang.
       return;
