@@ -24,11 +24,11 @@ import org.mobilitydata.gtfsvalidator.annotation.Required;
 
 @GtfsTable(
     value = "areas.txt",
-    // We specify a very large value here to support the experimental 'wkt' column, which encodes
+    // We specify no limit (-1) here to support the experimental 'wkt' column, which encodes
     // an area polygon as a WKT string, which can grow quite large.  While this column has not yet
     // been added to the spec, it is present in many feeds (e.g. those produced by Trillium), which
     // can cause issues for the CSV parser.
-    maxCharsPerColumn = 200000)
+    maxCharsPerColumn = -1)
 public interface GtfsAreaSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
   @Required
