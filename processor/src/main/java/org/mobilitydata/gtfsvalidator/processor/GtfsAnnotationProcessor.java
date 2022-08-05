@@ -48,6 +48,10 @@ public class GtfsAnnotationProcessor extends AbstractProcessor {
 
   private final Analyser analyser = new Analyser();
 
+  public GtfsAnnotationProcessor() {
+    System.err.println("Here?");
+  }
+
   /**
    * Sanitizes the result of {@link RoundEnvironment#getElementsAnnotatedWith}, which otherwise can
    * contain elements annotated with annotations of ERROR type.

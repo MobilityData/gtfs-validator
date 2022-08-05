@@ -67,6 +67,9 @@ public class Analyser {
     GtfsTable gtfsFileAnnotation = type.getAnnotation(GtfsTable.class);
     fileBuilder.setFilename(gtfsFileAnnotation.value().toLowerCase());
     fileBuilder.setSingleRow(gtfsFileAnnotation.singleRow());
+    if (gtfsFileAnnotation.maxCharsPerColumn() > 0) {
+      fileBuilder.setMaxCharsPerColumn(gtfsFileAnnotation.maxCharsPerColumn());
+    }
     fileBuilder.interfacesBuilder().add(type.asType());
     fileBuilder.setClassName(entityImplementationSimpleName(type.getSimpleName().toString()));
     fileBuilder.setRecommended(type.getAnnotation(Recommended.class) != null);

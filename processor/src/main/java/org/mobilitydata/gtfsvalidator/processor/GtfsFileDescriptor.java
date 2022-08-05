@@ -46,6 +46,8 @@ public abstract class GtfsFileDescriptor {
 
   public abstract boolean singleRow();
 
+  public abstract Optional<Integer> maxCharsPerColumn();
+
   public abstract ImmutableList<GtfsFieldDescriptor> fields();
 
   public abstract ImmutableMap<String, GtfsFieldDescriptor> fieldByName();
@@ -88,6 +90,8 @@ public abstract class GtfsFileDescriptor {
     public abstract Builder setRequired(boolean value);
 
     public abstract Builder setSingleRow(boolean value);
+
+    public abstract Builder setMaxCharsPerColumn(int maxCharsPerColumn);
 
     public abstract ImmutableList.Builder<GtfsFieldDescriptor> fieldsBuilder();
 

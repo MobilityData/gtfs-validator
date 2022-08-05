@@ -40,7 +40,22 @@ public class CsvFile implements Iterable<CsvRow> {
   private final CsvHeader headers;
   private final String filename;
 
+  public static CsvParserSettings createDefaultParserSettings() {
+    CsvParserSettings settings = new CsvParserSettings();
+    settings.getFormat().setLineSeparator("\n");
+    settings.getFormat().setDelimiter(',');
+    settings.setHeaderExtractionEnabled(true);
+    // Explicitly disable trimming of whitespaces because we will emit notices for them.
+    settings.setIgnoreLeadingWhitespacesInQuotes(false);
+    settings.setIgnoreTrailingWhitespacesInQuotes(false);
+    return settings;
+  }
+
   public CsvFile(InputStream inputStream, String filename) {
+    this(inputStream, filename, createDefaultParserSettings());
+  }
+
+  public CsvFile(InputStream inputStream, String filename, CsvParserSettings settings) {
     this.filename = filename;
 
     // Only UTF-8 is supported according to GTFS reference. We may add optional support for other
@@ -54,13 +69,6 @@ public class CsvFile implements Iterable<CsvRow> {
     final BufferedReader reader =
         new BufferedReader(new InputStreamReader(bomInputStream, decoder));
 
-    CsvParserSettings settings = new CsvParserSettings();
-    settings.getFormat().setLineSeparator("\n");
-    settings.getFormat().setDelimiter(',');
-    settings.setHeaderExtractionEnabled(true);
-    // Explicitly disable trimming of whitespaces because we will emit notices for them.
-    settings.setIgnoreLeadingWhitespacesInQuotes(false);
-    settings.setIgnoreTrailingWhitespacesInQuotes(false);
     parser = new CsvParser(settings);
     parser.beginParsing(reader);
 
