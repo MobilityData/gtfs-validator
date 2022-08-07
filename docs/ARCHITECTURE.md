@@ -4,9 +4,10 @@
 ```mermaid
 graph BT;
   core
+    processor-->core;
     main-->core;
     main-->processor;
-    processor-->core;
+    cli-->main;
     app:gui-->main;
     app:pkg-->app:gui;
 ```
@@ -25,7 +26,7 @@ _Depends on: `processor` and `core`_
 If you're looking to add new GTFS fields or rules, you'll want to look at this module.
 
 Contains:
-- The [command-line (CLI) app](/main/src/main/java/org/mobilitydata/gtfsvalidator/cli) - The main application that uses the `processor` and `core` modules to read and validate a GTFS feed.
+- The [command-line (CLI) app](/cli/src/main/java/org/mobilitydata/gtfsvalidator/cli) - The main application that uses the `processor` and `core` modules to read and validate a GTFS feed.
 - GTFS [table schemas](/main/src/main/java/org/mobilitydata/gtfsvalidator/table) - Defines how GTFS files (e.g., `trips.txt`) and the fields contained within that file (e.g., `trip_id`) are represented in the validator. You can add new GTFS files and fields here. 
 - Business logic [validation rules](/main/src/main/java/org/mobilitydata/gtfsvalidator/validator) - Code that validates GTFS field values. You can add new validation rules here.
 - Error [notices](/main/src/main/java/org/mobilitydata/gtfsvalidator/notice) - Containers for information about errors discovered during validation. You can add new notices here when implementing new validation rules.
@@ -51,6 +52,11 @@ _Depends on: nothing_
 - GTFS data type definitions such as `GtfsTime`, `GtfsDate`, or `GtfsColor`
 - `GtfsFeedLoader` to load for a whole GTFS feed with all its CSV files
 - GTFS feed's name
+
+## CLI
+_Depends on: `main`_
+
+A [command-line-based application](/cli/src/main/java/org/mobilitydata/gtfsvalidator/cli) for running the validator.
 
 ## App:Gui
 _Depends on: `main`_
