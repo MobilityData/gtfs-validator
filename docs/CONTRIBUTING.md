@@ -1,6 +1,7 @@
 # Contribution guidelines 
 
 If you’re reading this section, you are probably interested in contributing to the Canonical GTFS Schedule Validator. First, thank you for your interest, and welcome to the community! This document describes the different ways you can contribute to this project, and what the processes look like. 
+
 This project is a community effort, and anyone interested in this project can join the community, participate in decision-making and help advance this project in different ways. There are many different ways to contribute: sharing your idea for a new feature, improving the documentation, teaching others how to use it, interacting on Pull Requests, helping answer questions, etc. We welcome and value any type of contribution, and yes: you do have something to contribute to this validator! If you are not on the [MobilityData Slack](https://docs.google.com/forms/d/e/1FAIpQLSczZbZB9ql_Xl-1uBtmvYmA0fwfm1UX92SyWAdkuMEDfxac5w/viewform) already, please join the channel #gtfs-validators to introduce yourself and share what area of the project you’re interested in working on.
 
 We value discussions, respect, and openness in our community. All experiences are welcome, regardless of the technical knowledge. We particularly encourage people from underrepresented backgrounds in Open Source to participate. 
@@ -46,7 +47,7 @@ Contributors who actively push to the project. They can perform code reviews, re
 
 **Technical committee**
 The technical committee is composed of core developers and the product manager, who have additional responsibilities to ensure the project runs smoothly and the progress is in line with the big picture vision: they discuss considerable changes to the project, perform strategic planning, and approve changes to the governance model. 
-The Steering committee currently consists of [Isabelle de Robert](https://github.com/isabelle-dr), [Maxime Armstrong](https://github.com/maximearmstrong), and [Brian Ferriss](https://github.com/bdferris-v2).
+The Steering committee currently consists of [Isabelle de Robert](https://github.com/isabelle-dr), [Maxime Armstrong](https://github.com/maximearmstrong), and [Brian Ferris](https://github.com/bdferris-v2).
 @TODO how to join the steering committee.
 
 ## Overview of the contribution process
