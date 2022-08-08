@@ -123,8 +123,8 @@ public class LatLonValidatorGenerator {
     TypeName tableLoaderTypeName = new GtfsEntityClasses(fileDescriptor).tableLoaderTypeName();
     CodeBlock.Builder block =
         CodeBlock.builder().add("$T.FILENAME, entity.csvRowNumber(), ", tableLoaderTypeName);
-    if (fileDescriptor.primaryKey().isPresent()) {
-      block.add("entity.$L(), ", fileDescriptor.primaryKey().get().name());
+    if (fileDescriptor.hasSingleColumnPrimaryKey()) {
+      block.add("entity.$L(), ", fileDescriptor.getSingleColumnPrimaryKey().name());
     }
     block.add(
         "$T.$L, entity.$L(), $T.$L, entity.$L()",

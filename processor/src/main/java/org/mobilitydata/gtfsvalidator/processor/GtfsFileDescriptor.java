@@ -17,11 +17,16 @@
 package org.mobilitydata.gtfsvalidator.processor;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.lang.model.type.TypeMirror;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
+import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
+import org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType;
 
 /** Describes a GTFS file (CSV table), e.g., "stops.txt". */
 @AutoValue
@@ -51,11 +56,20 @@ public abstract class GtfsFileDescriptor {
 
   public abstract ImmutableList<TypeMirror> interfaces();
 
-  public abstract Optional<GtfsFieldDescriptor> primaryKey();
+  public abstract ImmutableList<GtfsFieldDescriptor> primaryKeys();
 
-  public abstract Optional<GtfsFieldDescriptor> firstKey();
+  public boolean hasSingleColumnPrimaryKey() {
+    return primaryKeys().size() == 1;
+  }
 
-  public abstract Optional<GtfsFieldDescriptor> sequenceKey();
+  public GtfsFieldDescriptor getSingleColumnPrimaryKey() {
+    Preconditions.checkState(hasSingleColumnPrimaryKey());
+    return primaryKeys().get(0);
+  }
+
+  public boolean hasMultiColumnPrimaryKey() {
+    return primaryKeys().size() > 1;
+  }
 
   public abstract ImmutableList<GtfsFieldDescriptor> indices();
 
@@ -64,6 +78,8 @@ public abstract class GtfsFileDescriptor {
   @AutoValue.Builder
   public abstract static class Builder {
     public abstract Builder setFilename(String value);
+
+    public abstract String filename();
 
     public abstract Builder setClassName(String value);
 
@@ -81,11 +97,7 @@ public abstract class GtfsFileDescriptor {
 
     public abstract ImmutableList.Builder<TypeMirror> interfacesBuilder();
 
-    abstract Builder setPrimaryKey(GtfsFieldDescriptor value);
-
-    abstract Builder setFirstKey(GtfsFieldDescriptor value);
-
-    abstract Builder setSequenceKey(GtfsFieldDescriptor value);
+    abstract Builder setPrimaryKeys(ImmutableList<GtfsFieldDescriptor> values);
 
     abstract Builder setIndices(ImmutableList<GtfsFieldDescriptor> value);
 
@@ -96,14 +108,11 @@ public abstract class GtfsFileDescriptor {
     public GtfsFileDescriptor build() {
       ImmutableMap.Builder<String, GtfsFieldDescriptor> fieldsMapBuilder = ImmutableMap.builder();
       ImmutableList.Builder<GtfsFieldDescriptor> indicesBuilder = ImmutableList.builder();
+      ImmutableList.Builder<GtfsFieldDescriptor> primaryKeysBuilder = ImmutableList.builder();
       for (GtfsFieldDescriptor field : fields()) {
         fieldsMapBuilder.put(field.name(), field);
-        if (field.primaryKey()) {
-          setPrimaryKey(field);
-        } else if (field.firstKey()) {
-          setFirstKey(field);
-        } else if (field.sequenceKey()) {
-          setSequenceKey(field);
+        if (field.primaryKey().isPresent()) {
+          primaryKeysBuilder.add(field);
         }
         if (field.index()) {
           indicesBuilder.add(field);
@@ -126,8 +135,57 @@ public abstract class GtfsFileDescriptor {
 
       setFieldByName(fieldsMap);
       setIndices(indicesBuilder.build());
+      setPrimaryKeys(primaryKeysBuilder.build());
       setLatLonFields(latLonBuilder.build());
+
+      validateIsSequenceUsedForSortingAnnotation();
+      validateTranslationRecordTypeAnnotations();
+
       return autoBuild();
+    }
+
+    private void validateIsSequenceUsedForSortingAnnotation() {
+      long count =
+          fields().stream()
+              .map(GtfsFieldDescriptor::primaryKey)
+              .flatMap(Optional::stream)
+              .filter(PrimaryKey::isSequenceUsedForSorting)
+              .count();
+      if (count > 1) {
+        throw new IllegalArgumentException(
+            filename()
+                + ": At most one field can be annotated with @PrimarKey.isSequenceUsedForSorting = true");
+      }
+    }
+
+    private void validateTranslationRecordTypeAnnotations() {
+      Map<TranslationRecordIdType, Long> translationRecordTypeCounts =
+          fields().stream()
+              .map(GtfsFieldDescriptor::primaryKey)
+              .flatMap(Optional::stream)
+              .collect(
+                  Collectors.groupingBy(
+                      PrimaryKey::translationRecordIdType, Collectors.counting()));
+      long recordIdCount =
+          translationRecordTypeCounts.getOrDefault(TranslationRecordIdType.RECORD_ID, 0L);
+      long recordSubIdCount =
+          translationRecordTypeCounts.getOrDefault(TranslationRecordIdType.RECORD_SUB_ID, 0L);
+
+      if (recordIdCount > 1) {
+        throw new IllegalArgumentException(
+            filename()
+                + ": At most one field can be annotated with TranslationRecordIdType.RECORD_ID");
+      }
+      if (recordSubIdCount > 1) {
+        throw new IllegalArgumentException(
+            filename()
+                + ": At most one field can be annotated with TranslationRecordIdType.RECORD_SUB_ID");
+      }
+      if (recordIdCount == 0 && recordSubIdCount == 1) {
+        throw new IllegalArgumentException(
+            filename()
+                + ": Field annotated with TranslationRecordIdType.RECORD_SUB_ID without an existing TranslationRecordIdType.RECORD_ID field");
+      }
     }
   }
 }

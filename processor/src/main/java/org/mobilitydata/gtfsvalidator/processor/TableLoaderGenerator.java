@@ -23,7 +23,6 @@ import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.gtfsCo
 import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_PACKAGE_NAME;
 
 import com.google.common.base.CaseFormat;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.flogger.FluentLogger;
 import com.squareup.javapoet.ClassName;
@@ -83,17 +82,21 @@ public class TableLoaderGenerator {
     return "as" + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, typeEnum.toString());
   }
 
-  private static boolean cachingEnabled(final GtfsFieldDescriptor field) {
+  private boolean cachingEnabled(final GtfsFieldDescriptor field) {
     // FIXME: Add a way to disable all caching with a command-line flag.
     if (field.cached()) {
       return true;
     }
-    if (field.primaryKey()) {
-      // Primary keys are not cached because caches are per-table, and primary keys are unique to
-      // each row within
-      // the table, so by definition they won't be used more than once and won't benefit from being
-      // cached.
-      return false;
+    if (field.primaryKey().isPresent()) {
+      // Single-column primary keys are not cached because caches are per-table, and primary keys
+      // are unique to each row within so by definition they won't be used more than once and won't
+      // benefit from being cached.
+      if (fileDescriptor.hasSingleColumnPrimaryKey()) {
+        return false;
+      }
+
+      // By comparison, multi-column primary keys are cacheable, since single columns of the key
+      // are likely duplicated across rows (e.g. shape_id in shapes.txt, trip_id in stop_times.txt).
     }
     // Caching is enabled by default for certain field types.
     return field.type() == FieldTypeEnum.COLOR
@@ -157,7 +160,6 @@ public class TableLoaderGenerator {
               .initializer("$S", gtfsColumnName(field.name()))
               .build());
     }
-    typeSpec.addField(generateKeyColumnNames());
 
     typeSpec.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).build());
     typeSpec.addMethod(generateGtfsFilenameMethod());
@@ -169,28 +171,6 @@ public class TableLoaderGenerator {
     typeSpec.addMethod(generateGetRequiredColumnNamesMethod());
 
     return typeSpec.build();
-  }
-
-  private FieldSpec generateKeyColumnNames() {
-    FieldSpec.Builder field =
-        FieldSpec.builder(
-            ParameterizedTypeName.get(ImmutableList.class, String.class),
-            "KEY_COLUMN_NAMES",
-            Modifier.PUBLIC,
-            Modifier.STATIC,
-            Modifier.FINAL);
-    if (fileDescriptor.primaryKey().isPresent()) {
-      field.initializer(
-          "ImmutableList.of($L)", fieldNameField(fileDescriptor.primaryKey().get().name()));
-    } else if (fileDescriptor.sequenceKey().isPresent() && fileDescriptor.firstKey().isPresent()) {
-      field.initializer(
-          "ImmutableList.of($L, $L)",
-          fieldNameField(fileDescriptor.firstKey().get().name()),
-          fieldNameField(fileDescriptor.sequenceKey().get().name()));
-    } else {
-      field.initializer("ImmutableList.of()");
-    }
-    return field.build();
   }
 
   private MethodSpec generateGetColumnNamesMethod() {

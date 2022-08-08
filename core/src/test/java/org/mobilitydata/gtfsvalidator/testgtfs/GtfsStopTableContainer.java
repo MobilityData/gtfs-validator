@@ -50,7 +50,7 @@ public class GtfsStopTableContainer extends GtfsTableContainer<GtfsStop> {
   }
 
   @Override
-  public Optional<GtfsStop> byPrimaryKey(String id, String subId) {
+  public Optional<GtfsStop> byTranslationKey(String recordId, String recordSubId) {
     return Optional.empty();
   }
 

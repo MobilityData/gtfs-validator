@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,33 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package org.mobilitydata.gtfsvalidator.table;
+package org.mobilitydata.gtfsvalidator.processor.tests;
 
 import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.RECORD_SUB_ID;
+import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.UNSUPPORTED;
 
-import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
-import org.mobilitydata.gtfsvalidator.annotation.FieldType;
-import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.Index;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
-import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
-@GtfsTable("calendar_dates.txt")
-@ConditionallyRequired
-public interface GtfsCalendarDateSchema extends GtfsEntity {
-  @FieldType(FieldTypeEnum.ID)
-  @Required
+@GtfsTable("multi_column_primary_key.txt")
+public interface MultiColumnPrimaryKeySchema {
   @PrimaryKey
   @Index
-  String serviceId();
+  String idA();
 
-  @Required
   @PrimaryKey(translationRecordIdType = RECORD_SUB_ID)
-  GtfsDate date();
+  String idB();
 
-  @Required
-  GtfsCalendarDateExceptionType exceptionType();
+  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
+  String idC();
+
+  String fruit();
 }

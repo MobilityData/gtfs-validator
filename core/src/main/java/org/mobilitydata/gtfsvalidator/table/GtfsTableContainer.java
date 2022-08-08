@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.table;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Optional;
+import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 
 /**
@@ -66,37 +67,25 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
   /**
    * Returns names of the columns that are keys in that table.
    *
-   * <p>A table may have one, two or no primary keys, so the returned list contains from 0 to 2
-   * items.
-   *
-   * <p>The first returned key (if present) is annotated with {@link
-   * org.mobilitydata.gtfsvalidator.annotation.PrimaryKey} or {@link
-   * org.mobilitydata.gtfsvalidator.annotation.FirstKey}.
-   *
-   * <p>The second returned key (if present) is annotated with {@link
-   * org.mobilitydata.gtfsvalidator.annotation.SequenceKey}.
+   * <p>A table may have zero, one, or multiple primary keys, so the returned list contains from 0
+   * to N items. Keys are columns annotated with {@link
+   * org.mobilitydata.gtfsvalidator.annotation.PrimaryKey}.
    */
   public abstract ImmutableList<String> getKeyColumnNames();
 
   /**
-   * Finds an entity with the given primary key.
+   * Finds an entity with the given translation record ids.
    *
-   * <p>Depending on table, a primary key may contain:
+   * <p>The mapping between translation record ids and primary key columns is table-specific. See
+   * {@link PrimaryKey#translationRecordIdType()} for details on configuration. An internal method
+   * is generated to construct the proper entity key from the specified String record ids. For
+   * single-column primary keys, the <code>recordSubId</code> will be ignored.
    *
-   * <ul>
-   *   <li>no items, e.g., {@code feed_info.txt} has a single entity;
-   *   <li>one item, e.g., {@code stops.txt} has primary key {@code stop_id};
-   *   <li>two items, e.g., {@code stop_times.txt} has composite key {@code trip_id, stop_sequence}.
-   * </ul>
-   *
-   * Note that all keys must be passed as strings, so a key for {@code stop_times.txt} will look
-   * like {"stop1", "0"}.
-   *
-   * @param id primary key or first part of the composite key, if needed
-   * @param subId second part of the composite key, if needed
-   * @return entity with the given primary key, if any
+   * @param recordId corresponds to translations.txt record_id field.
+   * @param recordSubId corresponds translations.txt record_sub_id field.
+   * @return entity with the given translation record id, if any
    */
-  public abstract Optional<T> byPrimaryKey(String id, String subId);
+  public abstract Optional<T> byTranslationKey(String recordId, String recordSubId);
 
   /**
    * Tells if the file is missing.
