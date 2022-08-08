@@ -1,6 +1,6 @@
 # Contribution guidelines 
 
-If you’re reading this section, you are probably interested in contributing to the Canonical GTFS Schedule Validator. First, thank you for your interest, and welcome to the community! This document describes the different ways you can contribute to this project, and what the processes look like.  
+If you’re reading this section, you are probably interested in contributing to the Canonical GTFS Schedule Validator. First, thank you for your interest, and welcome to the community! This document describes the different ways you can contribute to this project, and what the processes looks like.  
 
 This project is a community effort, and anyone interested in this project can join the community, participate in decision-making and help advance this project in different ways. There are many different ways to contribute: sharing your idea for a new feature, improving the documentation, teaching others how to use it, interacting on Pull Requests, helping answer questions, etc. We welcome and value any type of contribution, and yes: you do have something to contribute to this validator! If you are not on the [MobilityData Slack](#MobilityData-slack) already, please join the channel #gtfs-validators to introduce yourself and share what area of the project you’re interested in working on.
 
