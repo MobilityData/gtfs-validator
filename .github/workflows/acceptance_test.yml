@@ -70,7 +70,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: gtfs-validator-snapshot
-          path: main/build/libs/gtfs-validator-*-cli.jar
+          path: cli/build/libs/gtfs-validator-*-cli.jar
       - name: Persist comparator snapshot jar
         uses: actions/upload-artifact@v2
         with:
@@ -102,6 +102,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: gtfs-validator-master
+          # TODO(#118): s/main/cli/ once PR #1188 goes in
           path: main/build/libs/gtfs-validator-*-cli.jar
   fetch-urls:
     if: "!contains(needs.pre_ci.outputs.commit_message, '[acceptance test skip]')"

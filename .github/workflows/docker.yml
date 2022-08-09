@@ -43,6 +43,7 @@ jobs:
         with:
           name: Test report - Java
           path: |
+            cli/build/reports/tests/
             core/build/reports/tests/
             main/build/reports/tests/
             processor/build/reports/tests/
