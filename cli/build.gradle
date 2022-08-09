@@ -34,6 +34,9 @@ jar {
 
 shadowJar {
     minimize {
+        // Validator classes are loaded dynamically from the main project, so we exclude the project
+        // from minimization.
+        exclude(project(':main'))
         exclude(dependency('org.apache.httpcomponents:httpclient'))
     }
     // Change the JAR name from 'main' to 'gtfs-validator'
