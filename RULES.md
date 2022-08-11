@@ -1768,7 +1768,7 @@ The given field has no value in some input row, even though values are recommend
 The `timepoint` column should be provided.
 
 #### References
-* [stop_times.txt best practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/stop_times.md)
+* [stop_times.txt best practices](https://gtfs.org/schedule/reference/#stop_timestxt)
 <details>
 
 #### Notice fields description
