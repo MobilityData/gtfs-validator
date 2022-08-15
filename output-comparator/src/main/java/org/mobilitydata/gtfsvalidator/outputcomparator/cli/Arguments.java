@@ -52,7 +52,7 @@ public class Arguments {
           "Maximum percentage of new invalid datasets. Passing a '10' value would mean that no "
               + "more than 10% of datasets should generate new error types.",
       required = true)
-  private double percentInvalidDatasetsThreshold;
+  private float percentInvalidDatasetsThreshold;
 
   @Parameter(
       names = {"-o", "--output_base"},
@@ -88,7 +88,7 @@ public class Arguments {
     return latestValidationReportName;
   }
 
-  public double getPercentInvalidDatasetsThreshold() {
+  public float getPercentInvalidDatasetsThreshold() {
     return percentInvalidDatasetsThreshold;
   }
 

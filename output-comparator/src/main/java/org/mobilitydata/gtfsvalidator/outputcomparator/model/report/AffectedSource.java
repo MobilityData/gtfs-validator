@@ -1,0 +1,26 @@
+package org.mobilitydata.gtfsvalidator.outputcomparator.model.report;
+
+import com.google.auto.value.AutoValue;
+
+/**
+ * A dataset source that had a different number of validation errors of a particular type in the
+ * comparison set.
+ */
+@AutoValue
+public abstract class AffectedSource {
+
+  public abstract String sourceId();
+
+  public abstract String sourceUrl();
+
+  /**
+   * The number of notices of a particular type.
+   *
+   * @return
+   */
+  public abstract int count();
+
+  public static AffectedSource create(String sourceId, String sourceUrl, int totalNotices) {
+    return new AutoValue_AffectedSource(sourceId, sourceUrl, totalNotices);
+  }
+}
