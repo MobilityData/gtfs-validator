@@ -10,7 +10,7 @@ RUN ./gradlew shadowJar \
 
 
 FROM openjdk:11-slim
-COPY --from=build /build/main/build/libs/gtfs-validator-*-cli.jar /gtfs-validator-cli.jar
+COPY --from=build /build/cli/build/libs/gtfs-validator-*-cli.jar /gtfs-validator-cli.jar
 WORKDIR /
 
 ARG VERSION_TAG
