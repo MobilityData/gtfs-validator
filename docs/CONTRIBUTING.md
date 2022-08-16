@@ -76,8 +76,8 @@ To open a Pull Request, please do the following:
 
 We use [semantic commit messages](https://github.com/electron/electron/blob/main/docs/development/pull-requests.md#commit-message-guidelines) to streamline the release process. Before your Pull request can be merged, you should update your Pull request title to start with a semantic prefix.
   Examples of Pull Request titles with semantic prefixes:
-- `fix: fix: Bug with ssl network connections + Java module permissions.`
-- `feat: feat: Initial support for multiple @PrimaryKey annotations.`
+- `fix: Bug with ssl network connections + Java module permissions.`
+- `feat: Initial support for multiple @PrimaryKey annotations.`
 - `docs: update RELEASE.md with new process`
 
 This process is described in more detail in the GitHub documentation [**Contributing to projects**](https://docs.github.com/en/get-started/quickstart/contributing-to-projects). We encourage contributors to format pull requests commits following the [Conventional Commit Specification](https://www.conventionalcommits.org/en/v1.0.0/).
