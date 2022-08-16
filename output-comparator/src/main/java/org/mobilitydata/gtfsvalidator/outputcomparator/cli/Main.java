@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.outputcomparator.cli;
 
 import com.beust.jcommander.JCommander;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -28,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.model.ValidationReport;
 import org.mobilitydata.gtfsvalidator.outputcomparator.io.ChangedNoticesCollector;
@@ -39,6 +39,7 @@ public class Main {
 
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   static final String ACCEPTANCE_REPORT_JSON = "acceptance_report.json";
+  static final String ACCEPTANCE_REPORT_SUMMARY_TXT = "acceptance_report_summary.txt";
   private static final int IO_EXCEPTION_EXIT_CODE = 1;
   private static final int COMPARISON_FAILURE_EXIT_CODE = 2;
   private static final Gson GSON =
@@ -115,18 +116,27 @@ public class Main {
       droppedErrors.compareValidationReports(sourceId, sourceUrl, latestReport, referenceReport);
     }
 
+    if (!(new File(args.getOutputBase()).mkdirs())) {
+      logger.atSevere().log("Error creating output base directory: " + args.getOutputBase());
+    }
+
     AcceptanceReport report =
         AcceptanceReport.create(
             newErrors.getChangedNotices(),
             droppedErrors.getChangedNotices(),
             corruptedSources.toReport());
-    exportReport(report, args.getOutputBase(), ACCEPTANCE_REPORT_JSON);
+    exportAcceptanceReport(report, args.getOutputBase());
 
     boolean failure =
         newErrors.isAboveThreshold()
             || droppedErrors.isAboveThreshold()
             || corruptedSources.isAboveThreshold();
-    System.out.print(generateLogString(failure, newErrors, droppedErrors, corruptedSources));
+
+    String reportSummaryString =
+        generateReportSummaryString(
+            failure, newErrors, droppedErrors, corruptedSources, args.getRunId());
+    System.out.print(reportSummaryString);
+    exportReportSummary(reportSummaryString, args.getOutputBase());
 
     if (failure) {
       System.exit(COMPARISON_FAILURE_EXIT_CODE);
@@ -139,12 +149,11 @@ public class Main {
    * @param report the acceptance test report
    * @param outputBase the name of the directory used to save files
    */
-  @VisibleForTesting
-  public static void exportReport(AcceptanceReport report, String outputBase, String filename) {
-    new File(outputBase).mkdirs();
+  private static void exportAcceptanceReport(AcceptanceReport report, String outputBase) {
     try {
       Files.write(
-          Paths.get(outputBase, filename), GSON.toJson(report).getBytes(StandardCharsets.UTF_8));
+          Paths.get(outputBase, ACCEPTANCE_REPORT_JSON),
+          GSON.toJson(report).getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store acceptance test report file");
     }
@@ -157,19 +166,43 @@ public class Main {
    * by the user.
    *
    * @param corruptedSources corrupted source ids
+   * @param runId
    */
-  private static String generateLogString(
+  private static String generateReportSummaryString(
       boolean failure,
       ChangedNoticesCollector newErrors,
       ChangedNoticesCollector droppedErrors,
-      CorruptedSourcesCollector corruptedSources) {
+      CorruptedSourcesCollector corruptedSources,
+      Optional<String> runId) {
     StringBuilder b = new StringBuilder();
     String status = failure ? "❌ Invalid acceptance test." : "✅ Rule acceptance tests passed.";
     b.append(status).append('\n');
     b.append("New Errors: ").append(newErrors.generateLogString()).append('\n');
     b.append("Dropped Errors: ").append(droppedErrors.generateLogString()).append('\n');
     b.append(corruptedSources.generateLogString()).append("\n");
+    if (runId.isPresent()) {
+      b.append(
+          String.format(
+              "Download the full acceptance test report [here](https://github.com/MobilityData/gtfs-validator/actions/runs/%s) (report will disappear after 90 days).",
+              runId.get()));
+    }
     b.append(status).append('\n');
     return b.toString();
+  }
+
+  /**
+   * Exports acceptance test report summary text.
+   *
+   * @param reportSummary the acceptance test report summary string
+   * @param outputBase the name of the directory used to save files
+   */
+  private static void exportReportSummary(String reportSummary, String outputBase) {
+    try {
+      Files.write(
+          Paths.get(outputBase, ACCEPTANCE_REPORT_SUMMARY_TXT),
+          reportSummary.getBytes(StandardCharsets.UTF_8));
+    } catch (IOException e) {
+      logger.atSevere().withCause(e).log("Cannot store acceptance test report summary file");
+    }
   }
 }

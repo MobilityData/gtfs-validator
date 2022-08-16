@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.outputcomparator.cli;
 
 import com.beust.jcommander.Parameter;
 import java.nio.file.Path;
+import java.util.Optional;
 
 /** Command-line arguments for output-comparator CLI. */
 public class Arguments {
@@ -72,6 +73,12 @@ public class Arguments {
       required = true)
   private float percentCorruptedSourcesThreshold;
 
+  @Parameter(
+      names = {"--run_id"},
+      description = "Id of the run from GitHub workflow.",
+      required = false)
+  private String runId;
+
   public String getReportDirectory() {
     return reportDirectory;
   }
@@ -102,5 +109,9 @@ public class Arguments {
 
   public float getPercentCorruptedSourcesThreshold() {
     return percentCorruptedSourcesThreshold;
+  }
+
+  public Optional<String> getRunId() {
+    return Optional.ofNullable(runId);
   }
 }
