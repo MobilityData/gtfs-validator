@@ -68,7 +68,7 @@ public class Main {
       jCommander.usage();
       System.out.println(
           "⚠️ Note that parameters marked with an asterisk (*) in the help menu are mandatory.");
-      return null;
+      System.exit(0);
     }
     if (args.getExportNoticeSchema()) {
       exportNoticeSchema(args);
