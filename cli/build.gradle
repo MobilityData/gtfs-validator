@@ -15,43 +15,53 @@
  */
 
 plugins {
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
+    id 'application'
     id 'java'
-    id 'maven-publish'
+}
+
+applicationDefaultJvmArgs = [ "-Xmx8G" ]
+
+jar {
+    // Add the manifest within the JAR, using gtfs-validator as the title
+    manifest {
+        attributes('Implementation-Title': rootProject.name,
+                'Implementation-Version': project.version,
+                'Main-Class': 'org.mobilitydata.gtfsvalidator.cli.Main',
+                'Multi-Release': 'true')
+    }
+}
+
+shadowJar {
+    minimize {
+        // Validator classes are loaded dynamically from the main project, so we exclude the project
+        // from minimization.
+        exclude(project(':main'))
+        exclude(dependency('org.apache.httpcomponents:httpclient'))
+    }
+    // Change the JAR name from 'main' to 'gtfs-validator'
+    archiveBaseName = rootProject.name
+    // Change the JAR suffix from 'all' to 'cli'
+    archiveClassifier = 'cli'
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
+mainClassName = 'org.mobilitydata.gtfsvalidator.cli.Main'
 compileJava.options.encoding = "UTF-8"
 
 repositories {
     mavenCentral()
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId = 'gtfs-validator-main'
-
-            from components.java
-        }
-    }
-}
-
 dependencies {
-    annotationProcessor project(':processor')
-    compileOnly project(':processor')
     implementation project(':core')
-    annotationProcessor 'com.google.auto.value:auto-value:1.7.4'
-    compileOnly 'com.google.auto.value:auto-value-annotations:1.7.4'
-    implementation 'org.apache.httpcomponents.client5:httpclient5:5.0.3'
-    implementation 'javax.inject:javax.inject:1'
+    implementation project(':main')
+    implementation 'com.beust:jcommander:1.48'
     implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'com.google.guava:guava:31.0.1-jre'
     implementation 'com.google.flogger:flogger:0.6'
     implementation 'com.google.flogger:flogger-system-backend:0.6'
-    implementation 'com.univocity:univocity-parsers:2.9.0'
-    implementation 'com.google.geometry:s2-geometry:2.0.0'
-    implementation 'org.thymeleaf:thymeleaf:3.0.15.RELEASE'
-    implementation 'io.github.classgraph:classgraph:4.8.146'
+    implementation 'com.google.guava:guava:31.0.1-jre'
+
     testImplementation group: 'junit', name: 'junit', version: '4.13'
     testImplementation 'com.google.truth:truth:1.0.1'
     testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'

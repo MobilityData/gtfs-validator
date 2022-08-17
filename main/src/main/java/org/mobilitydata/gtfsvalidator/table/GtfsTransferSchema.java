@@ -16,11 +16,14 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.*;
+
 import org.mobilitydata.gtfsvalidator.annotation.FieldType;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.NonNegative;
+import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
 
 @GtfsTable("transfers.txt")
@@ -28,11 +31,13 @@ public interface GtfsTransferSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
   @Required
   @ForeignKey(table = "stops.txt", field = "stop_id")
+  @PrimaryKey(translationRecordIdType = RECORD_ID)
   String fromStopId();
 
   @FieldType(FieldTypeEnum.ID)
   @Required
   @ForeignKey(table = "stops.txt", field = "stop_id")
+  @PrimaryKey(translationRecordIdType = RECORD_SUB_ID)
   String toStopId();
 
   @Required
@@ -43,17 +48,21 @@ public interface GtfsTransferSchema extends GtfsEntity {
 
   @FieldType(FieldTypeEnum.ID)
   @ForeignKey(table = "trips.txt", field = "trip_id")
+  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
   String fromTripId();
 
   @FieldType(FieldTypeEnum.ID)
   @ForeignKey(table = "trips.txt", field = "trip_id")
+  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
   String toTripId();
 
   @FieldType(FieldTypeEnum.ID)
   @ForeignKey(table = "routes.txt", field = "route_id")
+  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
   String fromRouteId();
 
   @FieldType(FieldTypeEnum.ID)
   @ForeignKey(table = "routes.txt", field = "route_id")
+  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
   String toRouteId();
 }
