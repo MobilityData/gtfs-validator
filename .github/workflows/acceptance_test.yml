@@ -184,7 +184,7 @@ jobs:
            --latest_report_name latest.json \
            --output_base acceptance-test-output \
            --run_id ${{github.run_id}}
-        - name: Persist acceptance test reports
+      - name: Persist acceptance test reports
         if: always()
         uses: actions/upload-artifact@v2
         with:
