@@ -183,8 +183,8 @@ public class Main {
     if (runId.isPresent()) {
       b.append(
           String.format(
-              "Download the full acceptance test report [here](https://github.com/MobilityData/gtfs-validator/actions/runs/%s) (report will disappear after 90 days).",
-              runId.get()));
+              "Download the full acceptance test report [here](%s/%s) (report will disappear after 90 days).\n",
+              "https://github.com/MobilityData/gtfs-validator/actions/runs", runId.get()));
     }
     b.append(status).append('\n');
     return b.toString();
