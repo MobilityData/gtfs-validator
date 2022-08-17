@@ -183,6 +183,7 @@ jobs:
            --reference_report_name reference.json \
            --latest_report_name latest.json \
            --output_base acceptance-test-output \
+           --commit_sha ${{ github.sha }} \
            --run_id ${{github.run_id}}
       - name: Persist acceptance test reports
         if: always()

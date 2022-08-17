@@ -79,6 +79,12 @@ public class Arguments {
       required = false)
   private String runId;
 
+  @Parameter(
+      names = {"--commit_sha"},
+      description = "SHA fingerprint of the GitHub commit.",
+      required = false)
+  private String commitSha;
+
   public String getReportDirectory() {
     return reportDirectory;
   }
@@ -113,5 +119,9 @@ public class Arguments {
 
   public Optional<String> getRunId() {
     return Optional.ofNullable(runId);
+  }
+
+  public Optional<String> getCommitSha() {
+    return Optional.ofNullable(commitSha);
   }
 }

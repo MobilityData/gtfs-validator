@@ -27,7 +27,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.model.ValidationReport;
 import org.mobilitydata.gtfsvalidator.outputcomparator.io.ChangedNoticesCollector;
@@ -133,8 +132,7 @@ public class Main {
             || corruptedSources.isAboveThreshold();
 
     String reportSummaryString =
-        generateReportSummaryString(
-            failure, newErrors, droppedErrors, corruptedSources, args.getRunId());
+        generateReportSummaryString(failure, newErrors, droppedErrors, corruptedSources, args);
     System.out.print(reportSummaryString);
     exportReportSummary(reportSummaryString, args.getOutputBase());
 
@@ -160,31 +158,30 @@ public class Main {
   }
 
   /**
-   * Exits on non-zero code {@code Main#INVALID_NEW_RULE_EXIT_CODE} if the ratio
-   * badDatasetCount/totalDatasetCount is greater than or equal to the threshold defined as
-   * acceptance criteria; or if the number of corrupted files is greater or equal to the limit set
-   * by the user.
-   *
-   * @param corruptedSources corrupted source ids
-   * @param runId
+   * Generates a textual string summary of the acceptance report, approprirate for display to a
+   * user.
    */
   private static String generateReportSummaryString(
       boolean failure,
       ChangedNoticesCollector newErrors,
       ChangedNoticesCollector droppedErrors,
       CorruptedSourcesCollector corruptedSources,
-      Optional<String> runId) {
+      Arguments args) {
     StringBuilder b = new StringBuilder();
     String status = failure ? "❌ Invalid acceptance test." : "✅ Rule acceptance tests passed.";
     b.append(status).append('\n');
     b.append("New Errors: ").append(newErrors.generateLogString()).append('\n');
     b.append("Dropped Errors: ").append(droppedErrors.generateLogString()).append('\n');
     b.append(corruptedSources.generateLogString()).append("\n");
-    if (runId.isPresent()) {
+    if (args.getCommitSha().isPresent()) {
+      b.append("Commit: ").append(args.getCommitSha().get()).append("\n");
+    }
+    if (args.getRunId().isPresent()) {
       b.append(
           String.format(
               "Download the full acceptance test report [here](%s/%s) (report will disappear after 90 days).\n",
-              "https://github.com/MobilityData/gtfs-validator/actions/runs", runId.get()));
+              "https://github.com/MobilityData/gtfs-validator/actions/runs",
+              args.getRunId().get()));
     }
     b.append(status).append('\n');
     return b.toString();
