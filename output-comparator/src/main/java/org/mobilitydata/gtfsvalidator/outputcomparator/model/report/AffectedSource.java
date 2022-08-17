@@ -14,13 +14,12 @@ public abstract class AffectedSource {
   public abstract String sourceUrl();
 
   /**
-   * The number of notices of a particular type.
-   *
-   * @return
+   * The number of validation errors of the parent's {@link ChangedNotice} notice type for this
+   * dataset source.
    */
-  public abstract int count();
+  public abstract int noticeCount();
 
-  public static AffectedSource create(String sourceId, String sourceUrl, int totalNotices) {
-    return new AutoValue_AffectedSource(sourceId, sourceUrl, totalNotices);
+  public static AffectedSource create(String sourceId, String sourceUrl, int noticeCount) {
+    return new AutoValue_AffectedSource(sourceId, sourceUrl, noticeCount);
   }
 }

@@ -223,7 +223,7 @@ public class MainTest {
                     ACCEPTANCE_TEST_REPORT_FOLDER_NAME,
                     ACCEPTANCE_REPORT_JSON)))
         .isEqualTo(
-            "{\"newErrors\":[{\"noticeCode\":\"duplicate_key\",\"affectedSourcesCount\":2,\"affectedSources\":[{\"sourceId\":\"source-id-2\",\"sourceUrl\":\"url2\",\"count\":2},{\"sourceId\":\"source-id-3\",\"sourceUrl\":\"url3\",\"count\":3}]},{\"noticeCode\":\"invalid_currency\",\"affectedSourcesCount\":1,\"affectedSources\":[{\"sourceId\":\"source-id-3\",\"sourceUrl\":\"url3\",\"count\":1}]},{\"noticeCode\":\"invalid_email\",\"affectedSourcesCount\":2,\"affectedSources\":[{\"sourceId\":\"source-id-2\",\"sourceUrl\":\"url2\",\"count\":1},{\"sourceId\":\"source-id-3\",\"sourceUrl\":\"url3\",\"count\":1}]},{\"noticeCode\":\"point_near_pole\",\"affectedSourcesCount\":1,\"affectedSources\":[{\"sourceId\":\"source-id-3\",\"sourceUrl\":\"url3\",\"count\":1}]}],\"droppedErrors\":[],\"corruptedSources\":{\"sourceIdCount\":3,\"corruptedSourcesCount\":0,\"corruptedSources\":[],\"percentCorruptedSourcesThreshold\":5.0,\"aboveThreshold\":false}}");
+            "{\"newErrors\":[{\"noticeCode\":\"duplicate_key\",\"affectedSourcesCount\":2,\"affectedSources\":[{\"sourceId\":\"source-id-2\",\"sourceUrl\":\"url2\",\"noticeCount\":2},{\"sourceId\":\"source-id-3\",\"sourceUrl\":\"url3\",\"noticeCount\":3}]},{\"noticeCode\":\"invalid_currency\",\"affectedSourcesCount\":1,\"affectedSources\":[{\"sourceId\":\"source-id-3\",\"sourceUrl\":\"url3\",\"noticeCount\":1}]},{\"noticeCode\":\"invalid_email\",\"affectedSourcesCount\":2,\"affectedSources\":[{\"sourceId\":\"source-id-2\",\"sourceUrl\":\"url2\",\"noticeCount\":1},{\"sourceId\":\"source-id-3\",\"sourceUrl\":\"url3\",\"noticeCount\":1}]},{\"noticeCode\":\"point_near_pole\",\"affectedSourcesCount\":1,\"affectedSources\":[{\"sourceId\":\"source-id-3\",\"sourceUrl\":\"url3\",\"noticeCount\":1}]}],\"droppedErrors\":[],\"corruptedSources\":{\"sourceIdCount\":3,\"corruptedSourcesCount\":0,\"corruptedSources\":[],\"percentCorruptedSourcesThreshold\":5.0,\"aboveThreshold\":false}}");
   }
 
   @Test
@@ -289,7 +289,7 @@ public class MainTest {
                     ACCEPTANCE_TEST_REPORT_FOLDER_NAME,
                     ACCEPTANCE_REPORT_JSON)))
         .isEqualTo(
-            "{\"newErrors\":[],\"droppedErrors\":[{\"noticeCode\":\"duplicate_key\",\"affectedSourcesCount\":1,\"affectedSources\":[{\"sourceId\":\"source-id-2\",\"sourceUrl\":\"url2\",\"count\":1}]}],\"corruptedSources\":{\"sourceIdCount\":2,\"corruptedSourcesCount\":0,\"corruptedSources\":[],\"percentCorruptedSourcesThreshold\":5.0,\"aboveThreshold\":false}}");
+            "{\"newErrors\":[],\"droppedErrors\":[{\"noticeCode\":\"duplicate_key\",\"affectedSourcesCount\":1,\"affectedSources\":[{\"sourceId\":\"source-id-2\",\"sourceUrl\":\"url2\",\"noticeCount\":1}]}],\"corruptedSources\":{\"sourceIdCount\":2,\"corruptedSourcesCount\":0,\"corruptedSources\":[],\"percentCorruptedSourcesThreshold\":5.0,\"aboveThreshold\":false}}");
   }
 
   @Test
