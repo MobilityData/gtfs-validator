@@ -147,7 +147,7 @@ jobs:
       - name: Run validators on queued URLs
         run: |
           queue="${{ matrix.data }}"
-          bash ./scripts/queue_runner.sh $queue
+          bash ./scripts/queue_runner.sh true $queue
         env:
           OUTPUT_BASE: ${{ github.sha }}
       - name: Persist reports

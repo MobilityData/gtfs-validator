@@ -16,6 +16,7 @@ import pandas as pd
 import numpy as np
 import os
 from os import path
+import random
 
 #####################################################################################
 # This script harvests the latest dataset versions on the Mobility Database Catalogs.
@@ -27,6 +28,8 @@ CATALOGS_CSV = "https://storage.googleapis.com/storage/v1/b/mdb-csv/o/sources.cs
 LATEST_URL = "urls.latest"
 DATA_TYPE = "data_type"
 GTFS = "gtfs"
+AUTHENTICATION_TYPE = "urls.authentication_type"
+MDB_SOURCE_ID = "mdb_source_id"
 
 # Sources to exclude because they are too big for the workflow.
 SOURCES_TO_EXCLUDE = ["de-unknown-rursee-schifffahrt-kg-gtfs-784"]
@@ -44,6 +47,10 @@ URL_KEY = "url"
 DATA = "data"
 ID = "id"
 
+# Sampling constants
+
+sampling_ratio = 0.05
+
 
 def save_content_to_file(content, data_path, filename):
     """Saves content to JSON file.
@@ -56,16 +63,23 @@ def save_content_to_file(content, data_path, filename):
         json.dump(content, f)
 
 
-def harvest_latest_versions():
+def harvest_latest_versions(to_sample):
     """Harvests the latest URLs from the Mobility Database catalogs.
+    :param to_sample: Boolean flag. Sample the sources in the CSV if True.
     :return: The dictionary of the latest URLs with the format {Name: Url}.
     """
     catalogs = pd.read_csv(CATALOGS_CSV)
     latest_versions = {}
 
-    latest_urls = catalogs[LATEST_URL].loc[catalogs[DATA_TYPE] == GTFS]
-    for index, value in latest_urls.items():
-        latest_url = value
+    catalogs_gtfs = catalogs[catalogs[DATA_TYPE] == GTFS]
+
+    if to_sample:
+        catalogs_gtfs = catalogs_gtfs[~catalogs_gtfs[AUTHENTICATION_TYPE].isin([1, 2])]
+        n_sampling = len(catalogs_gtfs) * sampling_ratio
+        samples = random.sample(catalogs_gtfs[MDB_SOURCE_ID], n_sampling)
+        catalogs_gtfs = catalogs_gtfs[catalogs_gtfs[MDB_SOURCE_ID].isin(samples)]
+
+    for index, latest_url in catalogs_gtfs[LATEST_URL].items():
         source_file_name = latest_url.replace(URL_PREFIX, "").replace(URL_SUFFIX, "")
         latest_versions[source_file_name] = latest_url
 
@@ -115,17 +129,24 @@ if __name__ == "__main__":
         default=".",
         help="Data path.",
     )
+    parser.add_argument(
+        "-s",
+        "--sample",
+        action="store_true",
+        help="Boolean flag to sample or not the data.",
+    )
     args = parser.parse_args()
     
     latest_versions_file = args.latest_versions_file
     data_path = args.data_path
+    to_sample = args.sample
 
     if not path.isdir(data_path) and path.exists(data_path):
         raise Exception("Data path must be a directory if existing.")
     elif not path.isdir(data_path):
         os.mkdir(data_path)
 
-    latest_versions = harvest_latest_versions()
+    latest_versions = harvest_latest_versions(to_sample)
     # We save the latest versions as a JSON file because it is used later in the "compare-outputs" job of the workflow.
     save_content_to_file(
         latest_versions,
