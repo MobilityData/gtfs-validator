@@ -85,7 +85,8 @@ def harvest_latest_versions(to_sample):
 
     # Some sources/datasets are too big for the workflow so we are excluding them.
     for source in SOURCES_TO_EXCLUDE:
-        del latest_versions[source]
+        if source in latest_versions:
+            del latest_versions[source]
 
     return latest_versions
 
