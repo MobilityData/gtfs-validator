@@ -13,8 +13,6 @@ on:
       - 'test_pack_dock.yml'
       - 'triage.yml'
       - 'end_to_end.yml'
-      - 'end_to_end_big.yml'
-      - 'end_to_end_100.yml'
 concurrency:
   group: ${{ github.head_ref }}
   cancel-in-progress: true
