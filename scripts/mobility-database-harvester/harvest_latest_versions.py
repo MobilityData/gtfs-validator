@@ -76,7 +76,7 @@ def harvest_latest_versions(to_sample):
     if to_sample:
         catalogs_gtfs = catalogs_gtfs[~catalogs_gtfs[AUTHENTICATION_TYPE].isin([1, 2])]
         n_sampling = len(catalogs_gtfs) * sampling_ratio
-        samples = random.sample(catalogs_gtfs[MDB_SOURCE_ID], n_sampling)
+        samples = random.sample(catalogs_gtfs[MDB_SOURCE_ID].tolist(), n_sampling)
         catalogs_gtfs = catalogs_gtfs[catalogs_gtfs[MDB_SOURCE_ID].isin(samples)]
 
     for index, latest_url in catalogs_gtfs[LATEST_URL].items():
