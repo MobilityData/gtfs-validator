@@ -1,4 +1,7 @@
 .git/
+.github/
+docs/
 Dockerfile
 build/
 config/
+scripts/
