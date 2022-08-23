@@ -4,11 +4,11 @@ I created a Keychain file just for development named mobilitydata.
 $ security find-identity
 Policy: X.509 Basic
   Matching identities
-  1) 02E2E5C2E035C4AEB7DEA380CEC56C1F2A5DADA4 "Developer ID Application: The International Data Organization For Transport (BF2U75HN4D)"
+  1) XYZ "Developer ID Application: The International Data Organization For Transport (BF2U75HN4D)"
      X identities found
 
   Valid identities only
-  1) 02E2E5C2E035C4AEB7DEA380CEC56C1F2A5DADA4 "Developer ID Application: The International Data Organization For Transport (BF2U75HN4D)"
+  1) XYZ "Developer ID Application: The International Data Organization For Transport (BF2U75HN4D)"
      X valid identities found
 ```
 
