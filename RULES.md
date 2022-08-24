@@ -1603,12 +1603,17 @@ Same as for [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsec
 
 </details>
 
-<a name="FeedExpirationDateNotice"/>
+<a name="FeedExpirationDateNotice6Days"/>
 
-### feed_expiration_date
+### feed_expiration_date_6_days
 
 At any time, the published GTFS dataset should be valid for at least the next 7 days, and ideally for as long as the operator is confident that the schedule will continue to be operated.
-If possible, the GTFS dataset should cover at least the next 30 days of service.
+
+<a name="FeedExpirationDateNotice30Days"/>
+
+### feed_expiration_date_30_days
+
+At any time, the GTFS dataset should cover at least the next 30 days of service, and ideally for as long as the operator is confident that the schedule will continue to be operated.
 
 #### References
 * [General Publishing & General Practices](https://gtfs.org/best-practices/#dataset-publishing--general-practices)

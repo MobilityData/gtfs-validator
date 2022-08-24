@@ -34,7 +34,8 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
  * <p>Generated notice:
  *
  * <ul>
- *   <li>{@link FeedExpirationDateNotice}
+ *   <li>{@link FeedExpirationDateNotice7Days}
+ *   <li>{@link FeedExpirationDateNotice30Days}
  * </ul>
  */
 @GtfsValidator
@@ -55,7 +56,7 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
       GtfsDate currentDatePlusThirtyDays = GtfsDate.fromLocalDate(now.plusDays(30));
       if (entity.feedEndDate().isBefore(currentDatePlusSevenDays)) {
         noticeContainer.addValidationNotice(
-            new FeedExpirationDateNotice(
+            new FeedExpirationDateNotice7Days(
                 entity.csvRowNumber(),
                 currentDate,
                 entity.feedEndDate(),
@@ -64,7 +65,7 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
       }
       if (entity.feedEndDate().compareTo(currentDatePlusThirtyDays) <= 0) {
         noticeContainer.addValidationNotice(
-            new FeedExpirationDateNotice(
+            new FeedExpirationDateNotice30Days(
                 entity.csvRowNumber(),
                 currentDate,
                 entity.feedEndDate(),
@@ -73,13 +74,32 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
     }
   }
 
-  static class FeedExpirationDateNotice extends ValidationNotice {
+  static class FeedExpirationDateNotice7Days extends ValidationNotice {
     private final long csvRowNumber;
     private final GtfsDate currentDate;
     private final GtfsDate feedEndDate;
     private final GtfsDate suggestedExpirationDate;
 
-    FeedExpirationDateNotice(
+    FeedExpirationDateNotice7Days(
+        long csvRowNumber,
+        GtfsDate currentDate,
+        GtfsDate feedEndDate,
+        GtfsDate suggestedExpirationDate) {
+      super(SeverityLevel.WARNING);
+      this.csvRowNumber = csvRowNumber;
+      this.currentDate = currentDate;
+      this.feedEndDate = feedEndDate;
+      this.suggestedExpirationDate = suggestedExpirationDate;
+    }
+  }
+
+  static class FeedExpirationDateNotice30Days extends ValidationNotice {
+    private final long csvRowNumber;
+    private final GtfsDate currentDate;
+    private final GtfsDate feedEndDate;
+    private final GtfsDate suggestedExpirationDate;
+
+    FeedExpirationDateNotice30Days(
         long csvRowNumber,
         GtfsDate currentDate,
         GtfsDate feedEndDate,
