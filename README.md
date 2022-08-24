@@ -9,6 +9,15 @@
 <a href="#run-the-app-using-docker">using Docker</a>
 </p>
 
+
+<p align="center">
+<a href="https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md">☑️ list of rules implemented</a>
+</p>
+
+<p align="center">
+<a href="https://github.com/MobilityData/gtfs-validator/blob/master/docs/CONTRIBUTING.md"> 🤝 contribute to the project</a>
+</p>
+
 ---
  
 A GTFS Schedule (static) [General Transit Feed Specification (GTFS)](https://gtfs.mobilitydata.org/spec/gtfs-schedule) feed validator, maintained by [MobilityData](www.mobilitydata.org).
