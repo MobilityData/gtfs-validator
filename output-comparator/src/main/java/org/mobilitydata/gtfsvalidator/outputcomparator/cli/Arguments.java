@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.outputcomparator.cli;
 
 import com.beust.jcommander.Parameter;
 import java.nio.file.Path;
+import java.util.Optional;
 
 /** Command-line arguments for output-comparator CLI. */
 public class Arguments {
@@ -52,7 +53,7 @@ public class Arguments {
           "Maximum percentage of new invalid datasets. Passing a '10' value would mean that no "
               + "more than 10% of datasets should generate new error types.",
       required = true)
-  private double percentInvalidDatasetsThreshold;
+  private float percentInvalidDatasetsThreshold;
 
   @Parameter(
       names = {"-o", "--output_base"},
@@ -72,6 +73,18 @@ public class Arguments {
       required = true)
   private float percentCorruptedSourcesThreshold;
 
+  @Parameter(
+      names = {"--run_id"},
+      description = "Id of the run from GitHub workflow.",
+      required = false)
+  private String runId;
+
+  @Parameter(
+      names = {"--commit_sha"},
+      description = "SHA fingerprint of the GitHub commit.",
+      required = false)
+  private String commitSha;
+
   public String getReportDirectory() {
     return reportDirectory;
   }
@@ -88,7 +101,7 @@ public class Arguments {
     return latestValidationReportName;
   }
 
-  public double getPercentInvalidDatasetsThreshold() {
+  public float getPercentInvalidDatasetsThreshold() {
     return percentInvalidDatasetsThreshold;
   }
 
@@ -102,5 +115,13 @@ public class Arguments {
 
   public float getPercentCorruptedSourcesThreshold() {
     return percentCorruptedSourcesThreshold;
+  }
+
+  public Optional<String> getRunId() {
+    return Optional.ofNullable(runId);
+  }
+
+  public Optional<String> getCommitSha() {
+    return Optional.ofNullable(commitSha);
   }
 }
