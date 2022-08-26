@@ -33,6 +33,7 @@ jobs:
           # We need to download all tags so that the axion-release-plugin
           # can resolve the most recent version tag.
           fetch-depth: 0
+
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
@@ -40,6 +41,9 @@ jobs:
           java-version: '17'
           # We use the zulu distribution, which is an OpenJDK distro.
           distribution: 'zulu'
+
+      # We create a code-signing keychain on MacOS before building and packaging the app, as the
+      # app will be signed as part of the jpackage build phase.
       - name: "MacOS - Import Certificate: Developer ID Application"
         if: matrix.os == 'macos-latest'
         uses: devbotsxyz/import-signing-certificate@main
@@ -47,10 +51,15 @@ jobs:
           certificate-data: ${{ secrets.DEVELOPER_ID_APPLICATION_CERTIFICATE_P12_BASE64 }}
           certificate-passphrase: ${{ secrets.DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD }}
           keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
+
       - name: "Package GUI app installer with Gradle"
         uses: gradle/gradle-build-action@v2
         with:
           arguments: jpackage
+
+      # On MacOS, we now submit the app for "notarization", where Apple will scan the app for
+      # malware and other issues.  This step can take a few minutes or more; the action will wait
+      # until the report is available.
       - name: "MacOS - Notarize Release Build"
         if: matrix.os == 'macos-latest'
         uses: devbotsxyz/xcode-notarize@v1
@@ -58,11 +67,15 @@ jobs:
           product-path: "app/pkg/build/jpackage/GTFS Validator.app"
           appstore-connect-username: ${{ secrets.NOTARIZATION_USERNAME }}
           appstore-connect-password: ${{ secrets.NOTARIZATION_PASSWORD }}
+
+      # Now that we have a notarization report, we attach it to the app binary.
       - name: "Mac OS - Staple Release Build"
         if: matrix.os == 'macos-latest'
         uses: devbotsxyz/xcode-staple@v1
         with:
           product-path: "app/pkg/build/jpackage/GTFS Validator.app"
+
+      # Now that we have a notarized app, we can package it.
       - name: "Mac OS - Package the app"
         if: matrix.os == 'macos-latest'
         shell: bash
@@ -75,11 +88,19 @@ jobs:
            --app-version ${appVersion} \
            --app-image app/pkg/build/jpackage/GTFS\ Validator.app \
            --dest app/pkg/build/jpackage
-      - name: Upload Installer
+          jpackage \
+           --type pkg \
+           --name 'GTFS Validator' \
+           --app-version ${appVersion} \
+           --app-image app/pkg/build/jpackage/GTFS\ Validator.app \
+           --dest app/pkg/build/jpackage
+
+      - name: "Upload Installer"
         uses: actions/upload-artifact@v2
         with:
           name: Installer - ${{matrix.os}}
           path: |
             app/pkg/build/jpackage/*.msi
             app/pkg/build/jpackage/*.dmg
+            app/pkg/build/jpackage/*.pkg
             app/pkg/build/jpackage/*.deb

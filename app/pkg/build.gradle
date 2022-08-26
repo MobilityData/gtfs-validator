@@ -113,11 +113,14 @@ jlink {
                     '--mac-sign',
                     '--mac-signing-key-user-name',
                     'The International Data Organization For Transport (BF2U75HN4D)',
+                    // Entitlements are required for notarization of the app.
                     '--mac-entitlements',
                     "${projectDir}/src/main/mac-resources/entitlements.plist",
                     
             ]
-            // We skip creating a dmg/pkg installer
+            // We skip creating a dmg/pkg installer here because we need to notarize the app before
+            // packaging, which jpackage does not currently support.  See `package_installers.yml`
+            // for actual packaging.
             skipInstaller = true
         }
     }
