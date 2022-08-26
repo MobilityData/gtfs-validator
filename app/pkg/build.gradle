@@ -111,6 +111,13 @@ jlink {
             imageOptions = [
                     '--icon', "${projectDir}/src/main/icons/Icon.icns",
                     '--mac-sign',
+                    // jpackage is expecting to use a "Developer ID Application" certificate for
+                    // signing the app, so make sure your keychain contains this certificate, along
+                    // with the corresponding private key, if you wish to sign.  The certificate
+                    // should have a full name of:
+                    // 'Developer ID Application: The International Data Organization For Transport (BF2U75HN4D)'
+                    // jpackage will supply the 'Developer ID Application: ' prefix when calling the
+                    // codesign tool.
                     '--mac-signing-key-user-name',
                     'The International Data Organization For Transport (BF2U75HN4D)',
                     // Entitlements are required for notarization of the app.

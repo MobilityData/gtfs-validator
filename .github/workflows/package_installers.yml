@@ -48,8 +48,13 @@ jobs:
         if: matrix.os == 'macos-latest'
         uses: devbotsxyz/import-signing-certificate@main
         with:
+          # This should be a certificate + private key, exported as a p12 file and base64 encoded as
+          # a GitHub secret.  The certificate should be the:
+          # 'Developer ID Application: The International Data Organization For Transport (BF2U75HN4D)'
+          # certificate, locked with the specified passphrase.
           certificate-data: ${{ secrets.DEVELOPER_ID_APPLICATION_CERTIFICATE_P12_BASE64 }}
           certificate-passphrase: ${{ secrets.DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD }}
+          # The resulting keychain will be locked with this separate password.
           keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
 
       - name: "Package GUI app installer with Gradle"
@@ -65,7 +70,11 @@ jobs:
         uses: devbotsxyz/xcode-notarize@v1
         with:
           product-path: "app/pkg/build/jpackage/GTFS Validator.app"
+          # The Apple developer account used to run notarization.  This account will receive an
+          # email every time notarization is run.
           appstore-connect-username: ${{ secrets.NOTARIZATION_USERNAME }}
+          # The app-specific password configured for the Apple developer account that will be used
+          # for authentication (different from the main password for the dev account).
           appstore-connect-password: ${{ secrets.NOTARIZATION_PASSWORD }}
 
       # Now that we have a notarization report, we attach it to the app binary.
