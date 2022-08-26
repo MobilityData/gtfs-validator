@@ -117,10 +117,8 @@ jlink {
                     "${projectDir}/src/main/mac-resources/entitlements.plist",
                     
             ]
+            // We skip creating a dmg/pkg installer
             skipInstaller = true
-            installerOptions = [
-                    '--resource-dir', "${projectDir}/src/main/mac-resources"
-            ]
         }
     }
 }

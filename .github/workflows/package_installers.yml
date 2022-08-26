@@ -40,18 +40,30 @@ jobs:
           java-version: '17'
           # We use the zulu distribution, which is an OpenJDK distro.
           distribution: 'zulu'
-      - name: "Import MacOS Certificate: Developer ID Application"
+      - name: "MacOS - Import Certificate: Developer ID Application"
         if: matrix.os == 'macos-latest'
         uses: devbotsxyz/import-signing-certificate@main
         with:
           certificate-data: ${{ secrets.DEVELOPER_ID_APPLICATION_CERTIFICATE_P12_BASE64 }}
           certificate-passphrase: ${{ secrets.DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD }}
           keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
-      - name: Package GUI app installer with Gradle
+      - name: "Package GUI app installer with Gradle"
         uses: gradle/gradle-build-action@v2
         with:
           arguments: jpackage
-      - name: Package Mac OS app
+      - name: "MacOS - Notarize Release Build"
+        if: matrix.os == 'macos-latest'
+        uses: devbotsxyz/xcode-notarize@v1
+        with:
+          product-path: "app/pkg/build/jpackage/GTFS Validator.app"
+          appstore-connect-username: ${{ secrets.NOTARIZATION_USERNAME }}
+          appstore-connect-password: ${{ secrets.NOTARIZATION_PASSWORD }}
+      - name: "Mac OS - Staple Release Build"
+        if: matrix.os == 'macos-latest'
+        uses: devbotsxyz/xcode-staple@v1
+        with:
+          product-path: "app/pkg/build/jpackage/GTFS Validator.app"
+      - name: "Mac OS - Package the app"
         if: matrix.os == 'macos-latest'
         shell: bash
         run: |
