@@ -138,5 +138,5 @@ Documentation is written in Markdown, you can see the complete syntax in the [Ma
 - Leverage the rich [Markdown syntax](https://www.markdownguide.org/cheat-sheet/): code blocks, tables, bold, etc. 
 - Use [collapsable sections](https://gist.github.com/pierrejoubert73/902cc94d79424356a8d20be2b382e1ab) for long documents.
 
-**Credits**
+## Credits
 This contribution guideline was inspired by the [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/index.html) and [SKLearn](https://scikit-learn.org/stable/developers/contributing.html#) open source projects.
