@@ -109,9 +109,18 @@ jlink {
         }
         if (OperatingSystem.current().isMacOsX()) {
             imageOptions = [
-                    '--icon', "${projectDir}/src/main/icons/Icon.icns"
+                    '--icon', "${projectDir}/src/main/icons/Icon.icns",
+                    '--mac-sign',
+                    '--mac-signing-key-user-name',
+                    'The International Data Organization For Transport (BF2U75HN4D)',
+                    '--mac-entitlements',
+                    "${projectDir}/src/main/mac-resources/entitlements.plist",
+                    
             ]
             skipInstaller = true
+            installerOptions = [
+                    '--resource-dir', "${projectDir}/src/main/mac-resources"
+            ]
         }
     }
 }
