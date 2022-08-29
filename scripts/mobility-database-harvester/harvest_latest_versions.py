@@ -16,7 +16,6 @@ import pandas as pd
 import numpy as np
 import os
 from os import path
-import random
 
 #####################################################################################
 # This script harvests the latest dataset versions on the Mobility Database Catalogs.
