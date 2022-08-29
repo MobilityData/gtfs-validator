@@ -29,10 +29,12 @@ On each of these urls:
 1. the reference version of the validator is executed and the validation report is output as JSON (under `reference.json`);
 1. the proposed version of the validator is executed and the validation report is output as JSON (under `latest.json`).
 
-At the end of execution of the two aforementioned steps for every url in the matrix, all the validation reports are gathered in a single folder (`output`) and compared - the percentage of newly invalid datasets is output to the console.
-Two reports are saved as a workflow artifact: 
-- the final acceptance test report (under `acceptance_report.json`): this file keeps the count of new error types introduced by the proposed version for each agency/dataset. 
-- the corrupted sources report  (under `corrupted_sources_report.json`): this file keeps track of sources that could not be taken into account while generating the acceptance test report because of I/O errors, or missing file.  
+At the end of execution of the two aforementioned steps for every url in the matrix, all the validation
+reports are gathered in a single folder (`output`) and compared - the percentage of newly invalid datasets
+is output to the console.  The final acceptance test report is output at `acceptance_report.json`.
+It includes a summary of both new error types and dropped error types.  It also contains a list of
+"corrupted" sources: sources that could not be taken into account while generating the acceptance test 
+report because of I/O errors, or missing file.  
 
 To finish with, a comment that sums up the acceptance test result is issued on the PR.
 
@@ -48,12 +50,12 @@ Sample outputs:
         {
           "sourceId": "source-id-1",
           "sourceUrl": "url to the latest version of the dataset issued by source-id-1",
-          "count": 4
+          "noticeCount": 4
         },
         {
           "sourceId": "source-id-2",
           "sourceUrl": "url to the latest version of the dataset issued by source-id-2",
-          "count": 6
+          "noticeCount": 6
         }
       ]
     },
@@ -64,7 +66,7 @@ Sample outputs:
         {
           "sourceId": "source-id-5",
           "sourceUrl": "url to the latest version of the dataset issued by source-id-5",
-          "count": 5
+          "noticeCount": 5
         }
       ]
     },
@@ -75,7 +77,7 @@ Sample outputs:
         {
           "sourceId": "source-id-2",
           "sourceUrl": "url to the latest version of the dataset issued by source-id-2",
-          "count": 40
+          "noticeCount": 40
         }
       ]
     },
@@ -86,37 +88,37 @@ Sample outputs:
         {
           "sourceId": "source-id-1",
           "sourceUrl": "url to the latest version of the dataset issued by source-id-1",
-          "count": 40
+          "noticeCount": 40
         },
         {
           "sourceId": "source-id-3",
           "sourceUrl": "url to the latest version of the dataset issued by source-id-3",
-          "count": 15
+          "noticeCount": 15
         },
         {
           "sourceId": "source-id-5",
           "sourceUrl": "url to the latest version of the dataset issued by source-id-5",
-          "count": 2
+          "noticeCount": 2
         }
       ]
     }
-  ]
+  ],
+  "droppedErrors": [
+    # Same schema as `newErrors`
+  ],
+  "corruptedSources": {
+    "corruptedSources": [
+      "source-id-1",
+      "source-id-2"
+    ],
+    "sourceIdCount": 1245,
+    "aboveThreshold": false,
+    "corruptedSourcesCount": 2,
+    "maxPercentageCorruptedSources": 2
+  }
 }
 ```
 
-- ` corrupted_sources_report.json`
-```json
-{
-  "corruptedSources": [
-    "source-id-1",
-    "source-id-2"
-  ],
-  "sourceIdCount": 1245,
-  "status": "valid",
-  "corruptedSourcesCount": 2,
-  "maxPercentageCorruptedSources": 2
-} 
-```
 Where each source id value come from the MobilityDatabase: they are a unique [property](http://old.mobilitydatabase.org/wiki/Property:P33) used to identify each source of data.
 
 The source id can be used to find all datasets versions of a source on the [MobilityDatabase](http://old.mobilitydatabase.org/wiki/Main_Page) for the sakes of debugging or exploration.
