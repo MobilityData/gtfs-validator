@@ -18,7 +18,6 @@ package org.mobilitydata.gtfsvalidator.outputcomparator.cli;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mobilitydata.gtfsvalidator.outputcomparator.cli.Main.ACCEPTANCE_REPORT_JSON;
-import static org.mobilitydata.gtfsvalidator.outputcomparator.cli.Main.SOURCES_CORRUPTION_REPORT_JSON;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -27,6 +26,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -39,6 +40,7 @@ import org.mobilitydata.gtfsvalidator.notice.InvalidEmailNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.PointNearPoleNotice;
+import org.mobilitydata.gtfsvalidator.outputcomparator.model.report.ChangedNotice;
 import uk.org.webcompere.systemstubs.SystemStubs; // catchSystemExit() for JDK 16 and newer.
 
 @RunWith(JUnit4.class)
@@ -51,6 +53,7 @@ public class MainTest {
   private static final String GTFS_LATEST_VERSIONS_JSON = "gtfs_latest_versions.json";
   private static final String ACCEPTANCE_TEST_REPORT_FOLDER_NAME = "acceptance-test-report";
   private static final String SOURCE_INFO_FOLDER_NAME = "source-info";
+  private static final List<ChangedNotice> NO_CHANGES = new ArrayList<>();
   @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
 
   private static final Gson GSON =
@@ -120,22 +123,15 @@ public class MainTest {
       resolve(SOURCE_INFO_FOLDER_NAME, "all", GTFS_LATEST_VERSIONS_JSON).toString(),
     };
     Main.main(argv);
+
     assertThat(
             retrieveReportString(
                 resolve(
                     NO_NEW_NOTICE_FOLDER_NAME,
                     ACCEPTANCE_TEST_REPORT_FOLDER_NAME,
                     ACCEPTANCE_REPORT_JSON)))
-        .isEqualTo("{\"newErrors\":[]}");
-    assertThat(
-            retrieveReportString(
-                resolve(
-                    NO_NEW_NOTICE_FOLDER_NAME,
-                    ACCEPTANCE_TEST_REPORT_FOLDER_NAME,
-                    SOURCES_CORRUPTION_REPORT_JSON)))
         .isEqualTo(
-            "{\"corruptedSources\":[],\"sourceIdCount\":1,\"status\":\"valid\",\"corruptedSourcesCount\":0,"
-                + "\"maxPercentageCorruptedSources\":5.0}");
+            "{\"newErrors\":[],\"droppedErrors\":[],\"corruptedSources\":{\"sourceIdCount\":1,\"corruptedSourcesCount\":0,\"corruptedSources\":[],\"percentCorruptedSourcesThreshold\":5.0,\"aboveThreshold\":false}}");
   }
 
   @Test
@@ -217,8 +213,9 @@ public class MainTest {
       resolve(SOURCE_INFO_FOLDER_NAME, "all", GTFS_LATEST_VERSIONS_JSON).toString(),
     };
 
-    SystemStubs.catchSystemExit(() -> Main.main(argv));
+    int exitCode = SystemStubs.catchSystemExit(() -> Main.main(argv));
 
+    assertThat(exitCode).isNotEqualTo(0);
     assertThat(
             retrieveReportString(
                 resolve(
@@ -226,44 +223,16 @@ public class MainTest {
                     ACCEPTANCE_TEST_REPORT_FOLDER_NAME,
                     ACCEPTANCE_REPORT_JSON)))
         .isEqualTo(
-            "{\"newErrors\":[{\"noticeCode\":\"duplicate_key\",\"affectedSourcesCount"
-                + "\":2,\"affectedSources\":[{\"sourceId\":\"source-id-2\",\"sourceUrl\":\"url2"
-                + "\",\"count\":2},{\"sourceId\":\"source-id-3\",\"sourceUrl\":\"url3\",\"count"
-                + "\":3}]},{\"noticeCode\":\"invalid_currency\",\"affectedSourcesCount\":1,"
-                + "\"affectedSources\":[{\"sourceId\":\"source-id-3\",\"sourceUrl\":\"url3\","
-                + "\"count\":1}]},{\"noticeCode\":\"invalid_email\",\"affectedSourcesCount\":2,"
-                + "\"affectedSources\":[{\"sourceId\":\"source-id-2\",\"sourceUrl\":\"url2\","
-                + "\"count\":1},{\"sourceId\":\"source-id-3\",\"sourceUrl\":\"url3\",\"count"
-                + "\":1}]},{\"noticeCode\":\"point_near_pole\",\"affectedSourcesCount\":1,"
-                + "\"affectedSources\":[{\"sourceId\":\"source-id-3\",\"sourceUrl\":\"url3\","
-                + "\"count\":1}]}]}");
-    assertThat(
-            retrieveReportString(
-                resolve(
-                    NEW_NOTICES_TYPE_FOLDER_NAME,
-                    ACCEPTANCE_TEST_REPORT_FOLDER_NAME,
-                    SOURCES_CORRUPTION_REPORT_JSON)))
-        .isEqualTo(
-            "{\"corruptedSources\":[],\"sourceIdCount\":3,\"status\":\"valid\",\"corruptedSourcesCount\":0,"
-                + "\"maxPercentageCorruptedSources\":5.0}");
+            "{\"newErrors\":[{\"noticeCode\":\"duplicate_key\",\"affectedSourcesCount\":2,\"affectedSources\":[{\"sourceId\":\"source-id-2\",\"sourceUrl\":\"url2\",\"noticeCount\":2},{\"sourceId\":\"source-id-3\",\"sourceUrl\":\"url3\",\"noticeCount\":3}]},{\"noticeCode\":\"invalid_currency\",\"affectedSourcesCount\":1,\"affectedSources\":[{\"sourceId\":\"source-id-3\",\"sourceUrl\":\"url3\",\"noticeCount\":1}]},{\"noticeCode\":\"invalid_email\",\"affectedSourcesCount\":2,\"affectedSources\":[{\"sourceId\":\"source-id-2\",\"sourceUrl\":\"url2\",\"noticeCount\":1},{\"sourceId\":\"source-id-3\",\"sourceUrl\":\"url3\",\"noticeCount\":1}]},{\"noticeCode\":\"point_near_pole\",\"affectedSourcesCount\":1,\"affectedSources\":[{\"sourceId\":\"source-id-3\",\"sourceUrl\":\"url3\",\"noticeCount\":1}]}],\"droppedErrors\":[],\"corruptedSources\":{\"sourceIdCount\":3,\"corruptedSourcesCount\":0,\"corruptedSources\":[],\"percentCorruptedSourcesThreshold\":5.0,\"aboveThreshold\":false}}");
   }
 
   @Test
-  public void acceptanceReportTestShouldBeExported() {
-    JsonObject reportData = new JsonObject();
-    reportData.addProperty("newErrors", "sample string value");
-    Main.exportReport(reportData, tmpDir.getRoot().toString(), ACCEPTANCE_REPORT_JSON);
-    assertThat(resolve(ACCEPTANCE_REPORT_JSON).toFile().exists()).isTrue();
-  }
-
-  @Test
-  public void tooManyCorruptedSource_invalidTest() throws Exception {
+  public void droppedNoticeTypes_generatesNonEmptyReport() throws Exception {
     NoticeContainer referenceNoticeContainer = new NoticeContainer();
     referenceNoticeContainer.addValidationNotice(new MissingRequiredFileNotice("some file"));
     referenceNoticeContainer.addValidationNotice(new EmptyColumnNameNotice("other file", 4));
 
     NoticeContainer latestNoticeContainer = new NoticeContainer();
-    latestNoticeContainer.addValidationNotice(new MissingRequiredFileNotice("sample file"));
     latestNoticeContainer.addValidationNotice(new MissingRequiredFileNotice("other file"));
     latestNoticeContainer.addValidationNotice(new EmptyColumnNameNotice("filename", 5));
 
@@ -274,9 +243,8 @@ public class MainTest {
         referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-1", REFERENCE_JSON));
 
-    latestNoticeContainer.addValidationNotice(
-        new InvalidEmailNotice("filename", 4, "field name", "field value"));
-    latestNoticeContainer.addValidationNotice(
+    // A notice present only in the reference report.
+    referenceNoticeContainer.addValidationNotice(
         new DuplicateKeyNotice("filename", 8, 10, "field name 1", "field value1"));
 
     writeFile(
@@ -286,23 +254,69 @@ public class MainTest {
         referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-2", REFERENCE_JSON));
 
-    latestNoticeContainer.addValidationNotice(
-        new InvalidCurrencyNotice("filename", 4, "field name", "field value"));
-    latestNoticeContainer.addValidationNotice(
-        new PointNearPoleNotice(
-            "filename",
-            1L,
-            "entity id value",
-            "latitude field name",
-            0,
-            "longitude field name",
-            0));
+    JsonObject sourceUrlJsonObject = new JsonObject();
+    sourceUrlJsonObject.addProperty("source-id-1", "url1");
+    sourceUrlJsonObject.addProperty("source-id-2", "url2");
+    writeFile(
+        sourceUrlJsonObject, resolve(SOURCE_INFO_FOLDER_NAME, "all", GTFS_LATEST_VERSIONS_JSON));
+
+    String[] argv = {
+      "--percent_corrupted_sources",
+      "5",
+      "--report_directory",
+      resolve(NEW_NOTICES_TYPE_FOLDER_NAME).toString(),
+      "--new_error_threshold",
+      "1",
+      "--reference_report_name",
+      REFERENCE_JSON,
+      "--latest_report_name",
+      LATEST_JSON,
+      "--percent_invalid_datasets_threshold",
+      "1",
+      "--output_base",
+      resolve(NEW_NOTICES_TYPE_FOLDER_NAME, ACCEPTANCE_TEST_REPORT_FOLDER_NAME).toString(),
+      "--source_urls",
+      resolve(SOURCE_INFO_FOLDER_NAME, "all", GTFS_LATEST_VERSIONS_JSON).toString(),
+    };
+
+    int exitCode = SystemStubs.catchSystemExit(() -> Main.main(argv));
+
+    assertThat(exitCode).isNotEqualTo(0);
+    assertThat(
+            retrieveReportString(
+                resolve(
+                    NEW_NOTICES_TYPE_FOLDER_NAME,
+                    ACCEPTANCE_TEST_REPORT_FOLDER_NAME,
+                    ACCEPTANCE_REPORT_JSON)))
+        .isEqualTo(
+            "{\"newErrors\":[],\"droppedErrors\":[{\"noticeCode\":\"duplicate_key\",\"affectedSourcesCount\":1,\"affectedSources\":[{\"sourceId\":\"source-id-2\",\"sourceUrl\":\"url2\",\"noticeCount\":1}]}],\"corruptedSources\":{\"sourceIdCount\":2,\"corruptedSourcesCount\":0,\"corruptedSources\":[],\"percentCorruptedSourcesThreshold\":5.0,\"aboveThreshold\":false}}");
+  }
+
+  @Test
+  public void tooManyCorruptedSource_invalidTest() throws Exception {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    noticeContainer.addValidationNotice(new MissingRequiredFileNotice("some file"));
+    noticeContainer.addValidationNotice(new EmptyColumnNameNotice("other file", 4));
 
     writeFile(
-        latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
+        noticeContainer.exportJson(noticeContainer.getValidationNotices()),
+        resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-1", LATEST_JSON));
+    writeFile(
+        noticeContainer.exportJson(noticeContainer.getValidationNotices()),
+        resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-1", REFERENCE_JSON));
+
+    writeFile(
+        noticeContainer.exportJson(noticeContainer.getValidationNotices()),
+        resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-2", LATEST_JSON));
+    writeFile(
+        noticeContainer.exportJson(noticeContainer.getValidationNotices()),
+        resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-2", REFERENCE_JSON));
+
+    writeFile(
+        noticeContainer.exportJson(noticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-3", LATEST_JSON));
     writeFile(
-        referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
+        noticeContainer.exportJson(noticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-3", REFERENCE_JSON));
 
     JsonObject sourceUrlJsonObject = new JsonObject();
@@ -334,28 +348,26 @@ public class MainTest {
     };
 
     writeFile(
-        latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
+        noticeContainer.exportJson(noticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-4", "invalid_latest.json"));
     writeFile(
-        referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
+        noticeContainer.exportJson(noticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-4", "invalid_reference.json"));
 
     writeFile(
-        latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
+        noticeContainer.exportJson(noticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-5", "latest.json"));
 
     int exitCode = SystemStubs.catchSystemExit(() -> Main.main(argv));
 
-    assertThat(exitCode).isEqualTo(Main.TOO_MANY_CORRUPTED_SOURCES_EXIT_CODE);
+    assertThat(exitCode).isNotEqualTo(0);
     assertThat(
             retrieveReportString(
                 resolve(
                     NEW_NOTICES_TYPE_FOLDER_NAME,
                     ACCEPTANCE_TEST_REPORT_FOLDER_NAME,
-                    SOURCES_CORRUPTION_REPORT_JSON)))
+                    ACCEPTANCE_REPORT_JSON)))
         .isEqualTo(
-            "{\"corruptedSources\":[\"source-id-5\",\"source-id-4\"],\"sourceIdCount\":5,"
-                + "\"status\":\"invalid\",\"corruptedSourcesCount\":2,"
-                + "\"maxPercentageCorruptedSources\":2.0}");
+            "{\"newErrors\":[],\"droppedErrors\":[],\"corruptedSources\":{\"sourceIdCount\":5,\"corruptedSourcesCount\":2,\"corruptedSources\":[\"source-id-4\",\"source-id-5\"],\"percentCorruptedSourcesThreshold\":2.0,\"aboveThreshold\":true}}");
   }
 }
