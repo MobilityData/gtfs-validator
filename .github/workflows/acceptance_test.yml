@@ -13,8 +13,6 @@ on:
       - 'test_pack_dock.yml'
       - 'triage.yml'
       - 'end_to_end.yml'
-      - 'end_to_end_big.yml'
-      - 'end_to_end_100.yml'
 concurrency:
   group: ${{ github.head_ref }}
   cancel-in-progress: true
@@ -147,7 +145,7 @@ jobs:
       - name: Run validators on queued URLs
         run: |
           queue="${{ matrix.data }}"
-          bash ./scripts/queue_runner.sh $queue
+          bash ./scripts/queue_runner.sh --include-master $queue
         env:
           OUTPUT_BASE: ${{ github.sha }}
       - name: Persist reports
