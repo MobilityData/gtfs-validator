@@ -2,7 +2,7 @@ name: Package Installers
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, issue/1200/sign-mac-os ]
     paths-ignore:
       - '**.md'
   pull_request:
@@ -45,7 +45,7 @@ jobs:
       # We create a code-signing keychain on MacOS before building and packaging the app, as the
       # app will be signed as part of the jpackage build phase.
       - name: "MacOS - Import Certificate: Developer ID Application"
-        if: matrix.os == 'macos-latest'
+        if: matrix.os == 'macos-latest' && (github.event_name == 'push' || github.event_name == 'release')
         uses: devbotsxyz/import-signing-certificate@main
         with:
           # This should be a certificate + private key, exported as a p12 file and base64 encoded as
@@ -62,11 +62,24 @@ jobs:
         with:
           arguments: jpackage
 
+      - name: "MacOS - Sign Application"
+        if: matrix.os == 'macos-latest' && (github.event_name == 'push' || github.event_name == 'release')
+        shell: bash
+        run: |
+          codesign \
+           --timestamp \
+           --options runtime \
+           --force \
+           -s "Developer ID Application: The International Data Organization For Transport (BF2U75HN4D)" \
+           --prefix org.mobilitydata.gtfsvalidator.app.pkg \
+           -vvvv \
+           "app/pkg/build/jpackage/GTFS Validator.app/Contents/runtime"
+
       # On MacOS, we now submit the app for "notarization", where Apple will scan the app for
       # malware and other issues.  This step can take a few minutes or more; the action will wait
       # until the report is available.
       - name: "MacOS - Notarize Release Build"
-        if: matrix.os == 'macos-latest'
+        if: matrix.os == 'macos-latest' && (github.event_name == 'push' || github.event_name == 'release')
         uses: devbotsxyz/xcode-notarize@v1
         with:
           product-path: "app/pkg/build/jpackage/GTFS Validator.app"
@@ -79,7 +92,7 @@ jobs:
 
       # Now that we have a notarization report, we attach it to the app binary.
       - name: "Mac OS - Staple Release Build"
-        if: matrix.os == 'macos-latest'
+        if: matrix.os == 'macos-latest' && (github.event_name == 'push' || github.event_name == 'release')
         uses: devbotsxyz/xcode-staple@v1
         with:
           product-path: "app/pkg/build/jpackage/GTFS Validator.app"
