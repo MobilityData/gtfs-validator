@@ -108,13 +108,26 @@ jlink {
             ]
         }
         if (OperatingSystem.current().isMacOsX()) {
-            imageOptions = [
-                    '--icon', "${projectDir}/src/main/icons/Icon.icns",
-                    // Entitlements are required for eventual notarization of the app.
-                    '--mac-entitlements',
-                    "${projectDir}/src/main/mac-resources/entitlements.plist",
-                    
+            imageOptions += [
+                    '--icon', "${projectDir}/src/main/icons/Icon.icns"
             ]
+            if (project.hasProperty('sign-app')) {
+                imageOptions += [
+                        '--mac-sign',
+                        // jpackage is expecting to use a "Developer ID Application" certificate for
+                        // signing the app, so make sure your keychain contains this certificate, along
+                        // with the corresponding private key, if you wish to sign.  The certificate
+                        // should have a full name of:
+                        // 'Developer ID Application: The International Data Organization For Transport (BF2U75HN4D)'
+                        // jpackage will supply the 'Developer ID Application: ' prefix when calling the
+                        // codesign tool.
+                        '--mac-signing-key-user-name',
+                        'The International Data Organization For Transport (BF2U75HN4D)',
+                        // Entitlements are required for eventual notarization of the app.
+                        '--mac-entitlements',
+                        "${projectDir}/src/main/mac-resources/entitlements.plist"
+                ]
+            }
             // We skip creating a dmg/pkg installer here because we need to notarize the app before
             // packaging, which jpackage does not currently support.  See `package_installers.yml`
             // for actual packaging.

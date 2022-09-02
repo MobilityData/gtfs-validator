@@ -60,20 +60,7 @@ jobs:
       - name: "Package GUI app installer with Gradle"
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: jpackage
-
-      - name: "MacOS - Sign Application"
-        if: matrix.os == 'macos-latest' && (github.event_name == 'push' || github.event_name == 'release')
-        shell: bash
-        run: |
-          codesign \
-           --timestamp \
-           --options runtime \
-           --force \
-           -s "Developer ID Application: The International Data Organization For Transport (BF2U75HN4D)" \
-           --prefix org.mobilitydata.gtfsvalidator.app.pkg \
-           -vvvv \
-           "app/pkg/build/jpackage/GTFS Validator.app/Contents/runtime"
+          arguments: jpackage -Psign-app=true
 
       # On MacOS, we now submit the app for "notarization", where Apple will scan the app for
       # malware and other issues.  This step can take a few minutes or more; the action will wait
