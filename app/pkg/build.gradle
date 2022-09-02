@@ -111,7 +111,7 @@ jlink {
             imageOptions += [
                     '--icon', "${projectDir}/src/main/icons/Icon.icns"
             ]
-            if (project.hasProperty('sign-app')) {
+            if (project.hasProperty('sign-app') && project.property('sign-app') == 'true') {
                 imageOptions += [
                         '--mac-sign',
                         // jpackage is expecting to use a "Developer ID Application" certificate for
