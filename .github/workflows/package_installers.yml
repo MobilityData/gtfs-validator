@@ -60,8 +60,9 @@ jobs:
       - name: "Package GUI app installer with Gradle"
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: jpackage
-          arguments: -Psign-app=${{github.event_name == 'push' || github.event_name == 'release'}}
+          arguments: |
+            jpackage
+            -Psign-app=${{github.event_name == 'push' || github.event_name == 'release'}}
 
       # On MacOS, we now submit the app for "notarization", where Apple will scan the app for
       # malware and other issues.  This step can take a few minutes or more; the action will wait
