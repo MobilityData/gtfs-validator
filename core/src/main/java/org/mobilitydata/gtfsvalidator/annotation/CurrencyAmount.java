@@ -23,7 +23,7 @@ package org.mobilitydata.gtfsvalidator.annotation;
  * <p>Example.
  *
  * <pre>
- *   {@literal @}GtfsTable("stop_times.txt")
+ *   {@literal @}GtfsTable("fare_products.txt")
  *   public interface GtfsExampleFaresSchema extends GtfsEntity {
  *       {@literal @}CurrencyAmount(currencyField="currency")
  *       BigDecimal amount();
