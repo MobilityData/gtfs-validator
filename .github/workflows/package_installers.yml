@@ -2,7 +2,7 @@ name: Package Installers
 
 on:
   push:
-    branches: [ master, issue/1200/sign-mac-os ]
+    branches: [ master ]
     paths-ignore:
       - '**.md'
   pull_request:
