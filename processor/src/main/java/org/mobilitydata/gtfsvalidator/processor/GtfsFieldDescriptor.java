@@ -54,6 +54,8 @@ public abstract class GtfsFieldDescriptor {
 
   public abstract Optional<EndRangeDescriptor> endRange();
 
+  public abstract Optional<String> currencyFieldReference();
+
   @AutoValue.Builder
   public abstract static class Builder {
     public abstract Builder setName(String value);
@@ -87,6 +89,8 @@ public abstract class GtfsFieldDescriptor {
     public abstract Builder setEndRange(Optional<EndRangeDescriptor> value);
 
     public abstract Builder setEndRange(EndRangeDescriptor value);
+
+    public abstract Builder setCurrencyFieldReference(String currencyField);
 
     public abstract GtfsFieldDescriptor build();
   }
