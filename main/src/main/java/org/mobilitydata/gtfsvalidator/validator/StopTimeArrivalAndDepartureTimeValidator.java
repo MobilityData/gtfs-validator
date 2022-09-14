@@ -25,7 +25,6 @@ import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 /**
@@ -64,8 +63,8 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
                   stopTime.tripId(),
                   stopTime.stopSequence(),
                   hasArrival
-                      ? GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME
-                      : GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME));
+                      ? GtfsStopTime.ARRIVAL_TIME_FIELD_NAME
+                      : GtfsStopTime.DEPARTURE_TIME_FIELD_NAME));
         }
         if (hasArrival
             && previousDepartureRow != -1

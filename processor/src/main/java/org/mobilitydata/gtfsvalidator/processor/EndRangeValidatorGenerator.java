@@ -144,19 +144,20 @@ public class EndRangeValidatorGenerator {
       GtfsFieldDescriptor startField,
       GtfsFieldDescriptor endField,
       StartEndRangeNoticeType noticeType) {
-    TypeName tableLoaderTypeName = new GtfsEntityClasses(fileDescriptor).tableLoaderTypeName();
+    TypeName gtfsEntityTypeName =
+        new GtfsEntityClasses(fileDescriptor).entityImplementationTypeName();
     CodeBlock.Builder block =
-        CodeBlock.builder().add("$T.FILENAME, entity.csvRowNumber(), ", tableLoaderTypeName);
+        CodeBlock.builder().add("$T.FILENAME, entity.csvRowNumber(), ", gtfsEntityTypeName);
     if (fileDescriptor.hasSingleColumnPrimaryKey()) {
       block.add("entity.$L(), ", fileDescriptor.getSingleColumnPrimaryKey().name());
     }
-    block.add("$T.$L, ", tableLoaderTypeName, FieldNameConverter.fieldNameField(startField.name()));
+    block.add("$T.$L, ", gtfsEntityTypeName, FieldNameConverter.fieldNameField(startField.name()));
     if (noticeType.equals(StartEndRangeNoticeType.OUT_OF_ORDER)) {
       block.add("entity.$L().toString(), ", startField.name());
     }
     block.add(
         "$T.$L, entity.$L().toString()",
-        tableLoaderTypeName,
+        gtfsEntityTypeName,
         FieldNameConverter.fieldNameField(endField.name()),
         endField.name());
     return block.build();

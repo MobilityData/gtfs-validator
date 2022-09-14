@@ -18,8 +18,10 @@ package org.mobilitydata.gtfsvalidator.processor;
 
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.clearMethodName;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldDefaultName;
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldNameField;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.getValueMethodName;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.getterMethodName;
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.gtfsColumnName;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.hasMethodName;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.setterMethodName;
 import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_PACKAGE_NAME;
@@ -218,6 +220,7 @@ public class EntityImplementationGenerator {
             .addJavadoc("Use {@link Builder} class to construct an object.")
             .build());
 
+    generateFilenameAndFieldNameConstants(typeSpec);
     addEntityOrBuilderFields(typeSpec);
     addDefaultValueFields(typeSpec);
 
@@ -244,6 +247,25 @@ public class EntityImplementationGenerator {
     typeSpec.addType(generateGtfsEntityBuilderClass());
 
     return typeSpec.build();
+  }
+
+  private void generateFilenameAndFieldNameConstants(TypeSpec.Builder typeSpec) {
+    typeSpec.addField(
+        FieldSpec.builder(
+                String.class, "FILENAME", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+            .initializer("$S", fileDescriptor.filename())
+            .build());
+    for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
+      typeSpec.addField(
+          FieldSpec.builder(
+                  String.class,
+                  fieldNameField(field.name()),
+                  Modifier.PUBLIC,
+                  Modifier.STATIC,
+                  Modifier.FINAL)
+              .initializer("$S", gtfsColumnName(field.name()))
+              .build());
+    }
   }
 
   private MethodSpec generateGetterMethod(GtfsFieldDescriptor field, ClassContext classContext) {

@@ -26,7 +26,6 @@ import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableLoader;
 
 /**
  * Validates that all agencies have the same timezone and language and that agency_id field is set
@@ -63,7 +62,7 @@ public class AgencyConsistencyValidator extends FileValidator {
             new MissingRequiredFieldNotice(
                 agencyTable.gtfsFilename(),
                 agency.csvRowNumber(),
-                GtfsAgencyTableLoader.AGENCY_ID_FIELD_NAME));
+                GtfsAgency.AGENCY_ID_FIELD_NAME));
       }
     }
 
