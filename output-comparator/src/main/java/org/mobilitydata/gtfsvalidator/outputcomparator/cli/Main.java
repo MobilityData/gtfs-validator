@@ -17,48 +17,32 @@
 package org.mobilitydata.gtfsvalidator.outputcomparator.cli;
 
 import com.beust.jcommander.JCommander;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.model.ValidationReport;
-import org.mobilitydata.gtfsvalidator.outputcomparator.io.NoticeComparisonReport;
+import org.mobilitydata.gtfsvalidator.outputcomparator.io.ChangedNoticesCollector;
+import org.mobilitydata.gtfsvalidator.outputcomparator.io.CorruptedSourcesCollector;
 import org.mobilitydata.gtfsvalidator.outputcomparator.model.SourceUrlContainer;
+import org.mobilitydata.gtfsvalidator.outputcomparator.model.report.AcceptanceReport;
 
 public class Main {
 
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   static final String ACCEPTANCE_REPORT_JSON = "acceptance_report.json";
-  static final String SOURCES_CORRUPTION_REPORT_JSON = "sources_corruption_report.json";
+  static final String ACCEPTANCE_REPORT_SUMMARY_TXT = "acceptance_report_summary.txt";
   private static final int IO_EXCEPTION_EXIT_CODE = 1;
-  private static final int INVALID_NEW_RULE_EXIT_CODE = 2;
-  static final int TOO_MANY_CORRUPTED_SOURCES_EXIT_CODE = 3;
+  private static final int COMPARISON_FAILURE_EXIT_CODE = 2;
   private static final Gson GSON =
       new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
-  private static final String NOTICE_CODE = "noticeCode";
-  private static final String AFFECTED_SOURCES_COUNT = "affectedSourcesCount";
-  private static final String AFFECTED_SOURCES = "affectedSources";
-  private static final String NEW_ERRORS = "newErrors";
-  private static final String CORRUPTED_SOURCES = "corruptedSources";
-  private static final String TEST_STATUS = "status";
-  private static final String CORRUPTED_SOURCES_COUNT = "corruptedSourcesCount";
-  private static final String MAX_PERCENTAGE_CORRUPTED_SOURCES = "maxPercentageCorruptedSources";
-  private static final String VALID = "valid";
-  private static final String INVALID = "invalid";
-  private static final String SOURCE_ID_COUNT = "sourceIdCount";
 
   public static void main(String[] argv) {
     Arguments args = new Arguments();
@@ -75,23 +59,28 @@ public class Main {
         return;
       }
     } catch (IOException ioException) {
-      logger.atSevere().withCause(ioException);
+      logger.atSevere().withCause(ioException).log("Error reading report directory");
       System.exit(IO_EXCEPTION_EXIT_CODE);
     }
-    int badDatasetCount = 0;
-    int sourceIdCount = 0;
-    List<String> corruptedSources = new ArrayList<>();
     List<File> reportDirs =
         reportDirectory.stream().filter(File::isDirectory).collect(Collectors.toList());
-    Map<String, NoticeComparisonReport> acceptanceTestReportMap = new TreeMap<>();
 
     SourceUrlContainer sourceUrlContainer = null;
     try {
       sourceUrlContainer = new SourceUrlContainer(args.getSourceUrlPath());
     } catch (IOException ioException) {
-      logger.atSevere().withCause(ioException);
+      logger.atSevere().withCause(ioException).log("Error loading source url container");
       System.exit(IO_EXCEPTION_EXIT_CODE);
     }
+
+    ChangedNoticesCollector newErrors =
+        new ChangedNoticesCollector(
+            args.getNewErrorThreshold(), args.getPercentInvalidDatasetsThreshold());
+    ChangedNoticesCollector droppedErrors =
+        new ChangedNoticesCollector(
+            args.getNewErrorThreshold(), args.getPercentInvalidDatasetsThreshold());
+    CorruptedSourcesCollector corruptedSources =
+        new CorruptedSourcesCollector(args.getPercentCorruptedSourcesThreshold());
 
     for (File file : reportDirs) {
       String sourceId = file.getName();
@@ -100,13 +89,15 @@ public class Main {
       if (!sourceUrlContainer.hasSourceId(sourceId)) {
         continue;
       }
-      sourceIdCount++;
+      corruptedSources.addSource();
+      String sourceUrl = sourceUrlContainer.getUrlForSourceId(sourceId);
+
       Path referenceReportPath = file.toPath().resolve(args.getReferenceValidationReportName());
       Path latestReportPath = file.toPath().resolve(args.getLatestValidationReportName());
       // in case a validation report does not exist for a sourceId we add the sourceId to
       // the list of corrupted sources
       if (!(referenceReportPath.toFile().exists() && latestReportPath.toFile().exists())) {
-        corruptedSources.add(sourceId);
+        corruptedSources.addCorruptedSource(sourceId);
         continue;
       }
       ValidationReport referenceReport;
@@ -115,164 +106,100 @@ public class Main {
         referenceReport = ValidationReport.fromPath(referenceReportPath);
         latestReport = ValidationReport.fromPath(latestReportPath);
       } catch (IOException ioException) {
-        logger.atSevere().withCause(ioException);
+        logger.atSevere().withCause(ioException).log("Error reading validation reports");
         // in case a file is corrupted, add the sourceId to the list of corrupted sources
-        corruptedSources.add(sourceId);
+        corruptedSources.addCorruptedSource(sourceId);
         continue;
       }
-      if (referenceReport.hasSameErrorCodes(latestReport)) {
-        continue;
-      }
-      for (String noticeCode : referenceReport.getNewErrorsListing(latestReport)) {
-        NoticeComparisonReport noticeComparisonReport =
-            acceptanceTestReportMap.getOrDefault(noticeCode, new NoticeComparisonReport());
-        acceptanceTestReportMap.putIfAbsent(noticeCode, noticeComparisonReport);
-        noticeComparisonReport.update(
-            sourceId,
-            latestReport.getErrorNoticeReportByNoticeCode(noticeCode).getTotalNotices(),
-            sourceUrlContainer);
-      }
-      if (referenceReport.getNewErrorsListing(latestReport).size() >= args.getNewErrorThreshold()) {
-        ++badDatasetCount;
-      }
+      newErrors.compareValidationReports(sourceId, sourceUrl, referenceReport, latestReport);
+      droppedErrors.compareValidationReports(sourceId, sourceUrl, latestReport, referenceReport);
     }
-    exportReport(
-        generateAcceptanceTestReport(acceptanceTestReportMap),
-        args.getOutputBase(),
-        ACCEPTANCE_REPORT_JSON);
-    checkRuleValidity(
-        corruptedSources,
-        badDatasetCount,
-        sourceIdCount,
-        args.getPercentInvalidDatasetsThreshold(),
-        args.getPercentCorruptedSourcesThreshold(),
-        args.getOutputBase(),
-        sourceIdCount);
-  }
 
-  /**
-   * Generates acceptance test report.
-   *
-   * @param acceptanceTestReportData acceptance test data (mapped by sourceId, {@code NoticeStat})
-   * @return the {@code JsonObject} representation of the acceptance test report
-   */
-  public static JsonObject generateAcceptanceTestReport(
-      Map<String, NoticeComparisonReport> acceptanceTestReportData) {
-    JsonObject root = new JsonObject();
-    JsonArray jsonNotices = new JsonArray();
-    root.add(NEW_ERRORS, jsonNotices);
-
-    for (String noticeCode : acceptanceTestReportData.keySet()) {
-      JsonObject noticeStatJson = new JsonObject();
-      jsonNotices.add(noticeStatJson);
-      JsonObject noticeContext = acceptanceTestReportData.get(noticeCode).toJson();
-      noticeStatJson.addProperty(NOTICE_CODE, noticeCode);
-      noticeStatJson.add(AFFECTED_SOURCES_COUNT, noticeContext.get(AFFECTED_SOURCES_COUNT));
-      noticeStatJson.add(AFFECTED_SOURCES, noticeContext.get(AFFECTED_SOURCES));
+    if (!(new File(args.getOutputBase()).mkdirs())) {
+      logger.atSevere().log("Error creating output base directory: " + args.getOutputBase());
     }
-    return root;
-  }
 
-  /**
-   * Generates file corruption report.
-   *
-   * @param corruptedSources list of corrupted sourceIds
-   * @return the {@code JsonObject} representation of the file corruption report
-   */
-  private static JsonObject generateFileCorruptionReport(List<String> corruptedSources) {
-    JsonObject root = new JsonObject();
-    JsonArray jsonCorruptedSources = new JsonArray();
-    root.add(CORRUPTED_SOURCES, jsonCorruptedSources);
-    for (String sourceId : corruptedSources) {
-      jsonCorruptedSources.add(sourceId);
+    AcceptanceReport report =
+        AcceptanceReport.create(
+            newErrors.getChangedNotices(),
+            droppedErrors.getChangedNotices(),
+            corruptedSources.toReport());
+    exportAcceptanceReport(report, args.getOutputBase());
+
+    boolean failure =
+        newErrors.isAboveThreshold()
+            || droppedErrors.isAboveThreshold()
+            || corruptedSources.isAboveThreshold();
+
+    String reportSummaryString =
+        generateReportSummaryString(failure, newErrors, droppedErrors, corruptedSources, args);
+    System.out.print(reportSummaryString);
+    exportReportSummary(reportSummaryString, args.getOutputBase());
+
+    if (failure) {
+      System.exit(COMPARISON_FAILURE_EXIT_CODE);
     }
-    return root;
   }
 
   /**
    * Exports acceptance test reports.
    *
-   * @param data the JSON representation of the acceptance test report
+   * @param report the acceptance test report
    * @param outputBase the name of the directory used to save files
    */
-  @VisibleForTesting
-  public static void exportReport(JsonObject data, String outputBase, String filename) {
-    new File(outputBase).mkdirs();
+  private static void exportAcceptanceReport(AcceptanceReport report, String outputBase) {
     try {
       Files.write(
-          Paths.get(outputBase, filename), GSON.toJson(data).getBytes(StandardCharsets.UTF_8));
+          Paths.get(outputBase, ACCEPTANCE_REPORT_JSON),
+          GSON.toJson(report).getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store acceptance test report file");
     }
   }
 
   /**
-   * Exits on non-zero code {@code Main#INVALID_NEW_RULE_EXIT_CODE} if the ratio
-   * badDatasetCount/totalDatasetCount is greater than or equal to the threshold defined as
-   * acceptance criteria; or if the number of corrupted files is greater or equal to the limit set
-   * by the user.
-   *
-   * @param corruptedSources corrupted source ids
-   * @param badDatasetCount the number of new invalid datasets
-   * @param totalDatasetCount the number of datasets to be tested
-   * @param threshold the acceptance criteria
-   * @param percentCorruptedSourcesThreshold the maximum percentage of corrupted source ids
+   * Generates a textual string summary of the acceptance report, approprirate for display to a
+   * user.
    */
-  private static void checkRuleValidity(
-      List<String> corruptedSources,
-      int badDatasetCount,
-      int totalDatasetCount,
-      double threshold,
-      float percentCorruptedSourcesThreshold,
-      String outputBase,
-      int sourceIdCount) {
-    double invalidDatasetRatio = 100.0 * badDatasetCount / totalDatasetCount;
-    double corruptedFilesRatio = 100.0 * corruptedSources.size() / totalDatasetCount;
-    StringBuilder builder = new StringBuilder();
-    JsonObject jsonCorruptedSources = generateFileCorruptionReport(corruptedSources);
-    jsonCorruptedSources.addProperty(SOURCE_ID_COUNT, sourceIdCount);
-    if (corruptedFilesRatio >= percentCorruptedSourcesThreshold) {
-      builder.append(
-          String.format(
-              " ❌ Invalid acceptance test. %d out of %d sources (~%.2f %%) are corrupted, which "
-                  + "is greater than or equal to the provided threshold of %.2f. Details about"
-                  + " the corrupted sources: %s.",
-              corruptedSources.size(),
-              totalDatasetCount,
-              corruptedFilesRatio,
-              percentCorruptedSourcesThreshold,
-              corruptedSources));
-      jsonCorruptedSources.addProperty(TEST_STATUS, INVALID);
-      jsonCorruptedSources.addProperty(CORRUPTED_SOURCES_COUNT, corruptedSources.size());
-      jsonCorruptedSources.addProperty(
-          MAX_PERCENTAGE_CORRUPTED_SOURCES, percentCorruptedSourcesThreshold);
-      exportReport(jsonCorruptedSources, outputBase, SOURCES_CORRUPTION_REPORT_JSON);
-      System.out.println(builder);
-      System.exit(TOO_MANY_CORRUPTED_SOURCES_EXIT_CODE);
+  private static String generateReportSummaryString(
+      boolean failure,
+      ChangedNoticesCollector newErrors,
+      ChangedNoticesCollector droppedErrors,
+      CorruptedSourcesCollector corruptedSources,
+      Arguments args) {
+    StringBuilder b = new StringBuilder();
+    String status = failure ? "❌ Invalid acceptance test." : "✅ Rule acceptance tests passed.";
+    b.append(status).append('\n');
+    b.append("New Errors: ").append(newErrors.generateLogString()).append('\n');
+    b.append("Dropped Errors: ").append(droppedErrors.generateLogString()).append('\n');
+    b.append(corruptedSources.generateLogString()).append("\n");
+    if (args.getCommitSha().isPresent()) {
+      b.append("Commit: ").append(args.getCommitSha().get()).append("\n");
     }
-    builder.append(
-        String.format(
-            "%d out of %d datasets (~%.2f %%) are invalid due to code change, ",
-            badDatasetCount, totalDatasetCount, invalidDatasetRatio));
-    jsonCorruptedSources.addProperty(TEST_STATUS, VALID);
-    jsonCorruptedSources.addProperty(CORRUPTED_SOURCES_COUNT, corruptedSources.size());
-    jsonCorruptedSources.addProperty(
-        MAX_PERCENTAGE_CORRUPTED_SOURCES, percentCorruptedSourcesThreshold);
-    exportReport(jsonCorruptedSources, outputBase, SOURCES_CORRUPTION_REPORT_JSON);
-    if (invalidDatasetRatio >= threshold) {
-      builder.append(
+    if (args.getRunId().isPresent()) {
+      b.append(
           String.format(
-              "which is greater than or equal to the provided threshold of %.2f %%.%n"
-                  + "❌ Rule acceptance tests failed.%n",
-              threshold));
-      System.out.println(builder);
-      System.exit(INVALID_NEW_RULE_EXIT_CODE);
+              "Download the full acceptance test report [here](%s/%s) (report will disappear after 90 days).\n",
+              "https://github.com/MobilityData/gtfs-validator/actions/runs",
+              args.getRunId().get()));
     }
-    builder.append(
-        String.format(
-            "which is less than the provided threshold of %.2f %%.%n"
-                + "✅ Rule acceptance tests passed",
-            threshold));
-    System.out.println(builder);
+    b.append(status).append('\n');
+    return b.toString();
+  }
+
+  /**
+   * Exports acceptance test report summary text.
+   *
+   * @param reportSummary the acceptance test report summary string
+   * @param outputBase the name of the directory used to save files
+   */
+  private static void exportReportSummary(String reportSummary, String outputBase) {
+    try {
+      Files.write(
+          Paths.get(outputBase, ACCEPTANCE_REPORT_SUMMARY_TXT),
+          reportSummary.getBytes(StandardCharsets.UTF_8));
+    } catch (IOException e) {
+      logger.atSevere().withCause(e).log("Cannot store acceptance test report summary file");
+    }
   }
 }

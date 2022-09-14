@@ -60,8 +60,8 @@ public class ValidatorLoader {
   private final List<Class<? extends FileValidator>> multiFileValidators = new ArrayList<>();
 
   /** Loads validator classes from the default package path. */
-  public ValidatorLoader() throws ValidatorLoaderException {
-    this(ImmutableList.of(DEFAULT_VALIDATOR_PACKAGE));
+  public static ValidatorLoader createForDefaultPackage() throws ValidatorLoaderException {
+    return createForPackages(ImmutableList.of(DEFAULT_VALIDATOR_PACKAGE));
   }
 
   /**
@@ -69,8 +69,9 @@ public class ValidatorLoader {
    *
    * @param validatorPackages list of package names for locating validator classes
    */
-  @SuppressWarnings("unchecked")
-  public ValidatorLoader(ImmutableList<String> validatorPackages) throws ValidatorLoaderException {
+  public static ValidatorLoader createForPackages(ImmutableList<String> validatorPackages)
+      throws ValidatorLoaderException {
+    ImmutableList.Builder<Class<?>> validatorClasses = ImmutableList.builder();
     for (String packageName : validatorPackages) {
       try (ScanResult scanResult =
           new ClassGraph()
@@ -80,15 +81,36 @@ public class ValidatorLoader {
               .scan()) {
         for (ClassInfo classInfo : scanResult.getClassesWithAnnotation(GtfsValidator.class)) {
           Class<?> clazz = classInfo.loadClass();
-          if (SingleEntityValidator.class.isAssignableFrom(clazz)) {
-            addSingleEntityValidator((Class<? extends SingleEntityValidator<?>>) clazz);
-          } else if (FileValidator.class.isAssignableFrom(clazz)) {
-            addFileValidator((Class<? extends FileValidator>) clazz);
+          if (SingleEntityValidator.class.isAssignableFrom(clazz)
+              || FileValidator.class.isAssignableFrom(clazz)) {
+            validatorClasses.add(clazz);
           }
         }
       }
     }
+    return createForClasses(validatorClasses.build());
   }
+
+  /** Create a validator with the specified validator classes loaded. */
+  public static ValidatorLoader createForClasses(ImmutableList<Class<?>> validatorClasses)
+      throws ValidatorLoaderException {
+    ValidatorLoader loader = new ValidatorLoader();
+    for (Class<?> clazz : validatorClasses) {
+      if (SingleEntityValidator.class.isAssignableFrom(clazz)) {
+        loader.addSingleEntityValidator((Class<? extends SingleEntityValidator<?>>) clazz);
+      } else if (FileValidator.class.isAssignableFrom(clazz)) {
+        loader.addFileValidator((Class<? extends FileValidator>) clazz);
+      }
+    }
+    return loader;
+  }
+
+  /** Create an empty loader with no validators loaded. */
+  public static ValidatorLoader createEmpty() {
+    return new ValidatorLoader();
+  }
+
+  private ValidatorLoader() {}
 
   /** Loaded {@code SingleEntityValidator} classes keyed by entity class. */
   public ListMultimap<Class<? extends GtfsEntity>, Class<? extends SingleEntityValidator<?>>>

@@ -24,7 +24,7 @@ This is a cross-platform application written in Java that performs the following
 1. Loads input GTFS zip file from a URL or disk.
 2. Checks file integrity, numeric type parsing and ranges as well as string format according to the [GTFS Schedule specification](https://gtfs.mobilitydata.org/spec/gtfs-schedule#h.hc443y62gb8c).
 3. Performs GTFS [business rule validation](/RULES.md).
-4. Provides an easy-to-use validation report in HTML format that can be opened in the browser and shared with other parties. See an [example of a valdiation report](https://htmlpreview.github.io/?https://github.com/MobilityData/gtfs-validator/blob/master/docs/report.html). The report is also available in JSON format that can be used for parsing and running additional analyses.
+4. Provides an easy-to-use validation report in HTML format that can be opened in the browser and shared with other parties. See an [example of a validation report](https://htmlpreview.github.io/?https://github.com/MobilityData/gtfs-validator/blob/master/docs/report.html). The report is also available in JSON format that can be used for parsing and running additional analyses.
 
 # Running the app
 ### Setup

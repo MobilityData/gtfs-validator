@@ -76,7 +76,7 @@ public class ValidationRunner {
 
     ValidatorLoader validatorLoader = null;
     try {
-      validatorLoader = new ValidatorLoader();
+      validatorLoader = ValidatorLoader.createForDefaultPackage();
     } catch (ValidatorLoaderException e) {
       logger.atSevere().withCause(e).log("Cannot load validator classes");
       return Status.EXCEPTION;

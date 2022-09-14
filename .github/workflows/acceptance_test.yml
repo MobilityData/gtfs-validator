@@ -13,8 +13,6 @@ on:
       - 'test_pack_dock.yml'
       - 'triage.yml'
       - 'end_to_end.yml'
-      - 'end_to_end_big.yml'
-      - 'end_to_end_100.yml'
 concurrency:
   group: ${{ github.head_ref }}
   cancel-in-progress: true
@@ -147,7 +145,7 @@ jobs:
       - name: Run validators on queued URLs
         run: |
           queue="${{ matrix.data }}"
-          bash ./scripts/queue_runner.sh $queue
+          bash ./scripts/queue_runner.sh --include-master $queue
         env:
           OUTPUT_BASE: ${{ github.sha }}
       - name: Persist reports
@@ -174,7 +172,17 @@ jobs:
           name: datasets_metadata
       - name: Generate acceptance report test
         run: |
-          java -jar output-comparator*.jar --report_directory . --new_error_threshold 1 --reference_report_name reference.json --latest_report_name latest.json --percent_invalid_datasets_threshold 1 --output_base acceptance-test-output --source_urls gtfs_latest_versions.json --percent_corrupted_sources 2
+          java -jar output-comparator*.jar \
+           --report_directory . \
+           --source_urls gtfs_latest_versions.json \
+           --new_error_threshold 1 \
+           --percent_invalid_datasets_threshold 1 \
+           --percent_corrupted_sources 2 \
+           --reference_report_name reference.json \
+           --latest_report_name latest.json \
+           --output_base acceptance-test-output \
+           --commit_sha ${{ github.sha }} \
+           --run_id ${{github.run_id}}
       - name: Persist acceptance test reports
         if: always()
         uses: actions/upload-artifact@v2
@@ -185,8 +193,7 @@ jobs:
         id: generate-comment
         if: always()
         run: |
-          python3 scripts/comment_generator.py -u gtfs_latest_versions.json -a acceptance-test-output/acceptance_report.json -c ${{ github.sha }} -r ${{github.run_id}} -x acceptance-test-output/sources_corruption_report.json > pr_comment.txt
-          PR_COMMENT=$(<pr_comment.txt)
+          PR_COMMENT=$(< acceptance-test-output/acceptance_report_summary.txt)
           echo "PR_COMMENT<<EOF" >> $GITHUB_ENV
           echo "$PR_COMMENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
