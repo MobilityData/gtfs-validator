@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import java.math.BigDecimal;
 import java.util.Currency;
+import org.mobilitydata.gtfsvalidator.annotation.CurrencyAmount;
 import org.mobilitydata.gtfsvalidator.annotation.FieldType;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
@@ -36,6 +37,7 @@ public interface GtfsFareProductSchema extends GtfsEntity {
 
   @Required
   @NonNegative
+  @CurrencyAmount(currencyField = "currency")
   BigDecimal amount();
 
   @Required
