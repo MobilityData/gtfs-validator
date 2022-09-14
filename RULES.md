@@ -566,7 +566,7 @@ A currency amount field has a value that does not match the format (e.g. expecte
 | `filename`   	| The row of the faulty record. 	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
-| `amount` 	| Faulty currenc amount value.		| String 	|
+| `amount` 	| Faulty currency amount value.		| String 	|
 
 #### Affected files
 * [`fare_products.txt`](http://gtfs.org/reference/static#fare_productstxt)
