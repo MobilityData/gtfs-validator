@@ -1,4 +1,4 @@
-# Implemented rules
+#U Implemented rules
 This document lists all the notices that are emitted by this validator.\
 Note that the notice naming convention changed in `v2` to make contributions of new rules easier by reducing the likelihood of conflicting IDs during parallel development. Please refer to [MIGRATION_V1_V2.md](/docs/MIGRATION_V1_V2.md) for a mapping between v1 and v2 notices.\
 Note that some severities were modified in `v3` to solve discrepancies with the specification. Please refer to [MIGRATION_V2_V3.md](/docs/MIGRATION_V2_V3.md) for a mapping between v2 and v3 notices.
@@ -41,6 +41,8 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`empty_column_name`](#empty_column_name)                                                                         | A column name is empty.                                                                                                                                |
 | [`empty_file`](#empty_file)                                                                                       | A CSV file is empty.                                                                                                                                   |
 | [`equal_shape_distance_diff_coordinates`](#equal_shape_distance_diff_coordinates)                                 | Two consecutive points have equal `shape_dist_traveled` and different lat/lon coordinates in `shapes.txt`.                                             |
+| [`fare_transfer_rule_missing_transfer_count`](#fare_transfer_rule_missing_transfer_count)                         | A row from `fare_transfer_rules.txt` has `from_leg_group_id` equal to `to_leg_group_id`, but has no `transfer_count` specified.                        |
+| [`fare_transfer_rule_with_forbidden_transfer_count`](#fare_transfer_rule_with_forbidden_transfer_count)           | A row from `fare_transfer_rules.txt` has `from_leg_group_id` not equal to `to_leg_group_id`, but has `transfer_count` specified.                       |
 | [`foreign_key_violation`](#foreign_key_violation)                                                                 | Wrong foreign key.                                                                                                                                     |
 | [`inconsistent_agency_timezone`](#inconsistent_agency_timezone)                                                   | Inconsistent Timezone among agencies.                                                                                                                  |
 | [`invalid_color`](#invalid_color)                                                                                 | A field contains an invalid color value.                                                                                                               |
@@ -398,6 +400,48 @@ When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` m
 #### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`shapes.txt`](http://gtfs.org/reference/static#shapestxt)
+
+</details>
+
+<a name="FareTransferRuleMissingTransferCountNotice"/>
+
+### fare_transfer_rule_missing_transfer_count
+
+A row from GTFS file `fare_transfer_rules.txt` has `from_leg_group_id` equal to `to_leg_group_id`, but has no `transfer_count` specified.  Per the spec, `transfer_count` is required if the two leg group ids are equal.
+
+#### References
+* [GTFS fare_transfer_rules.txt](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+<details>
+
+#### Notice fields description
+| Field name      	| Description                                        	| Type   	|
+|-----------------	|----------------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row of the faulty record.                      	| Long   	|
+
+#### Affected files
+* [`fare_transfer_rules.txt`](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+</details>
+
+<a name="FareTransferRuleWithForbiddenTransferCountNotice"/>
+
+### fare_transfer_rule_with_forbidden_transfer_count
+
+A row from GTFS file `fare_transfer_rules.txt` has `from_leg_group_id` not equal to `to_leg_group_id`, but has `transfer_count` specified.  Per the spec, `transfer_count` is forbidden if the two leg group ids are not equal.
+
+#### References
+* [GTFS fare_transfer_rules.txt](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+<details>
+
+#### Notice fields description
+| Field name      	| Description                                        	| Type   	|
+|-----------------	|----------------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row of the faulty record.                      	| Long   	|
+
+#### Affected files
+* [`fare_transfer_rules.txt`](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
 
 </details>
 
