@@ -23,9 +23,9 @@ body:
     placeholder: |
       Example:
       - Open the terminal 
-      - Navigate to the directory containing the JAR file and the GTFS dataset using the following command `cd Data/Unvalidated`
-      - Run the following command in the terminal `java -jar gtfs-validator-3.1.2-SNAPSHOT-cli.jar -i datasets/montreal.zip -o output -t`
-      - Open the `report.json` file
+      - Navigate to the directory containing the JAR file and the GTFS dataset using the following command: cd Data/Unvalidated
+      - Run the following command in the terminal: java -jar gtfs-validator-3.1.2-SNAPSHOT-cli.jar -i datasets/montreal.zip -o output -t
+      - Open the report.json file
   validations:
     required: true
     
