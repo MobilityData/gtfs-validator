@@ -235,10 +235,10 @@ When sorted by `shape.shape_pt_sequence`, two consecutive shape points must not 
 
 ### decreasing_or_equal_stop_time_distance
 
-When sorted by `stop_times.stop_pt_sequence`, two consecutive stop times in a trip should have increasing distance. If the values are equal, this is considered as an error.  
+When sorted by `stop_times.stop_sequence`, two consecutive stop times in a trip should have increasing distance. If the values are equal, this is considered as an error.  
 
 #### References
-* [stops.txt specification](https://gtfs.org/reference/static#stopstxt)
+* [stops_times.txt specification](https://gtfs.org/reference/static#stop_timestxt)
 
 <details>
 
