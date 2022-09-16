@@ -6,7 +6,7 @@ This project is a community effort, and anyone interested in this project can jo
 
 We value discussions, respect, and openness in our community. All experiences are welcome, regardless of the technical knowledge. We particularly encourage people from underrepresented backgrounds in Open Source to participate. 
 
-Please read our [Contributor Code of Conduct](https://github.com/MobilityData/gtfs-validator/blob/master/CODE_OF_CONDUCT.md) before contributing to this project.
+Please read our [Contributor Code of Conduct](/CODE_OF_CONDUCT.md) before contributing to this project.
 
 ## Ways to contribute
 
@@ -65,7 +65,6 @@ Additional labels can be assigned to the issue to provide additional information
 After an issue is open, someone with triage permissions will read it, ask for additional information if needed, assign additional labels and assign the issue to a milestone when it is ready to be worked on.
 
 ## Submitting a Pull Request contribution
-**Overview**
 An issue should be opened describing the piece of work proposed and the problems it solves before a Pull Request is open. This is because it lets the community members participate in the design discussion. We recommend that each Pull Request encapsulates one specific new functionality or fix. For example, if you find the solution to a bug as you’re working on a new feature, open a second Pull Request to fix it. This helps troubleshooting in the future. 
 We recommend you open the Pull Request even if your work is not completed and have it labeled as Draft until it is ready to be reviewed, in order to let the community members participate and help.
 
@@ -84,6 +83,7 @@ We use [semantic commit messages](https://github.com/electron/electron/blob/main
 This process is described in more detail in the GitHub documentation [**Contributing to projects**](https://docs.github.com/en/get-started/quickstart/contributing-to-projects). We encourage contributors to format pull requests commits following the [Conventional Commit Specification](https://www.conventionalcommits.org/en/v1.0.0/).
 
 **Tests in the Pull Requests**
+This image shows the tests implemented in the Pull Request process.
 ![Pull-Request-process](/docs/Pull-Request-process.jpg)
 
 ## Pull Request comments and reviews
@@ -109,7 +109,7 @@ Below are a few questions that need to be considered during a Pull Request revie
 - Does the pull request pass all the required GitHub Action continuous integration tests? If not, why is something failing?
 
 ## Code contributions
-Before starting a code contribution, take the time to familiarize yourself with the current architecture of the validator (described in [ARCHITECTURE.md](https://github.com/MobilityData/gtfs-validator/blob/master/docs/ARCHITECTURE.md)) and the current code base. We encourage those that are new to our code base to implement the issues labeled [Good first issue](https://github.com/MobilityData/gtfs-validator/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) or [Help wanted](https://github.com/MobilityData/gtfs-validator/labels/help%20wanted).
+Before starting a code contribution, take the time to familiarize yourself with the current architecture of the validator (described in [ARCHITECTURE.md](/docs/ARCHITECTURE.md)) and the current code base. We encourage those that are new to our code base to implement the issues labeled [Good first issue](https://github.com/MobilityData/gtfs-validator/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) or [Help wanted](https://github.com/MobilityData/gtfs-validator/labels/help%20wanted).
 
 **Coding style**
 
@@ -117,14 +117,15 @@ Sticking to a single consistent and documented coding style for this project is 
 
 **How do I add a new validation rule?**
 
-The [NEW_RULES.md](https://github.com/MobilityData/gtfs-validator/blob/master/docs/NEW_RULES.md) document includes step-by-step instructions for adding new validation rules to the validator.
+The [NEW_RULES.md](/docs/NEW_RULES.md) document includes step-by-step instructions for adding new validation rules to the validator.
 
 **Have you encountered an error?**
 
-A critical step in troubleshooting is being able to reproduce the problem. Instructions to publicly reproduce errors using GitHub Actions can be found in our [guide to reproduce errors](https://github.com/MobilityData/gtfs-validator/blob/master/docs/REPRODUCE_ERRORS.md).
+A critical step in troubleshooting is being able to reproduce the problem. Instructions to publicly reproduce errors using GitHub Actions can be found in our [guide to reproduce errors](/docs/REPRODUCE_ERRORS.md).
 
-**What to do with the acceptance test results**
-![Acceptance-test-process](/docs/Acceptance-test-process.jpg)
+**What to do with the acceptance test results?**
+The acceptance test is a key part of the Pull Request process. More information about this test is available in the [ACCEPTANCE_TEST.md](/docs/ACCEPTANCE_TESTS.md) file
+<img src="/docs/Acceptance-test-process.jpg" width="700">
 
 **How to run tests locally?**
 
