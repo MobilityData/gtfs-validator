@@ -47,7 +47,7 @@ Remove the Needs triage label and replace it with the appropriate status label (
 
 **Core developers**
 
-Contributors who actively push to the project. They can perform code reviews, request changes, approve and merge Pull Requests. Core developers have Write permissions to the repository.
+Contributors who actively push to the project. They can perform code reviews, request changes, approve and merge Pull Requests. Core developers have Write permissions to the repository. The current core developers for this project are [Maxime Armstrong](https://github.com/maximearmstrong) and [Brian Ferris](https://github.com/bdferris-v2).
 @TODO how to become a core developer
 
 **Technical committee**
@@ -83,8 +83,10 @@ We use [semantic commit messages](https://github.com/electron/electron/blob/main
 This process is described in more detail in the GitHub documentation [**Contributing to projects**](https://docs.github.com/en/get-started/quickstart/contributing-to-projects). We encourage contributors to format pull requests commits following the [Conventional Commit Specification](https://www.conventionalcommits.org/en/v1.0.0/).
 
 **Tests in the Pull Requests**
+
 This image shows the tests implemented in the Pull Request process.
-![Pull-Request-process](/docs/Pull-Request-process.jpg)
+
+<img src="/docs/Pull-Request-process.jpg" width="750">
 
 ## Pull Request comments and reviews
 Reviewing Pull Requests is a great way to get familiar with the code & architecture of this tool, and to make sure a functionality meets your needs. Each Pull Request has to be approved by at least one one core developer, but having community members helping with this process is significant for the MobilityData team. Additionally, having the eyes of people from different expertise and backgrounds on a contribution makes it higher quality (nobody can think of everything!).
