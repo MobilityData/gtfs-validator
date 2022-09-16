@@ -23,7 +23,7 @@ body:
     placeholder: |
       Example: 
       If:
-        [`stop_lat` OR `stop_lon` = ''] AND [location_type = [0 OR 1 OR 2]]: 
+        [stop_lat OR stop_lon = ''] AND [location_type = [0 OR 1 OR 2]]: 
             trigger a `missing_stop_coordinates` notice
   validations:
     required: true
