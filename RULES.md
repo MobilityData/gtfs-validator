@@ -1607,7 +1607,24 @@ Same as for [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsec
 
 ### feed_expiration_date_6_days
 
-At any time, the published GTFS dataset should be valid for at least the next 7 days, and ideally for as long as the operator is confident that the schedule will continue to be operated.
+The dataset expiration date defined in `feed_info.txt` is in seven days or less. At any time, the published GTFS dataset should be valid for at least the next 7 days.
+
+### References
+* [General Publishing & General Practices](https://gtfs.org/best-practices/#dataset-publishing--general-practices)
+
+<details>
+#### Notice fields description
+| Field name              	        | Description                                                                     	| Type   	|
+|-------------------------	|----------------------------------------------	        |--------	|
+| `csvRowNumber`           	| The row number of the faulty record.         	                 | Long   	|
+| `currentDate`            	        | Current date (YYYYMMDD format).              	        | String 	|
+| `feedEndDate`            	        | Feed end date (YYYYMMDD format).             	        | String 	|
+| `suggestedExpirationDate`	| Suggested expiration date (YYYYMMDD format). 	| String 	|
+
+#### Affected files
+* [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
+</details>
+
 
 <a name="FeedExpirationDateNotice30Days"/>
 
