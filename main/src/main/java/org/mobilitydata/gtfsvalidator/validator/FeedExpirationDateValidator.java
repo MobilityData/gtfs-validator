@@ -34,7 +34,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
  * <p>Generated notice:
  *
  * <ul>
- *   <li>{@link FeedExpirationDateNotice7Days}
+ *   <li>{@link FeedExpirationDate7DaysNotice}
  *   <li>{@link FeedExpirationDateNotice30Days}
  * </ul>
  */
