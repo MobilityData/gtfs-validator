@@ -21,7 +21,6 @@ body:
     description: |
       Please add the steps that can reproduce the problem. We acknowledge that this step requires some effort on your side, but it really helps the project maintainers quickly reproduce the bug and understand the problem. More precise bug report tends to be solved more quickly because it avoids back-and-forth discussion between the maintainers and the reporter. 
       Example:
-
       - Open the terminal 
       - Navigate to the directory containing the JAR file and the GTFS dataset using the following command `cd Data/Unvalidated`
       - Run the following command in the terminal `java -jar gtfs-validator-3.1.2-SNAPSHOT-cli.jar -i datasets/montreal.zip -o output -t`
