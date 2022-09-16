@@ -1603,7 +1603,7 @@ Same as for [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsec
 
 </details>
 
-<a name="FeedExpirationDateNotice6Days"/>
+<a name="FeedExpirationDateNotice7Days"/>
 
 ### feed_expiration_date_6_days
 
