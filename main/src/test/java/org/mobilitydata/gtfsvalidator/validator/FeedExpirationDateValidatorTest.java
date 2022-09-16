@@ -57,7 +57,7 @@ public class FeedExpirationDateValidatorTest {
             validateFeedInfo(
                 createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(3)))))
         .containsExactly(
-            new FeedExpirationDateNotice7Days(
+            new FeedExpirationDate7DaysNotice(
                 1,
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()),
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(3)),
