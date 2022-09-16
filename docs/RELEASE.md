@@ -22,9 +22,12 @@ is:pr is:closed merged:>2020-07-28 base:master sort:updated-desc
 ```
 2. When the CI is done, drag and drop the artifacts in the pre release assets section. You'll need to manually rename some of the assets for now (see below).
 
-‼️ **TODO**: The CI `.yml` files should be updated so that the output artifact names don't contain spaces and don't have to be manualy reworked when attached to a release (all space characters are replaced by . characters by GitHub).
+3. Rename the artefacts so the names to stay consistent with previous releases. **It is important that the installers artefacts always have exactly the same name**, in order to have stable URL's that point to the latest installer. The installers should be named as follow:
+- Installer.windows.zip
+- Installer.ubuntu.zip
+- Installer.macos.zip
 
-3. Once everything is ready, simply uncheck the `pre release` box and publish again ✅
+4. Once everything is ready, simply uncheck the `pre release` box and publish again ✅
 ![publish](https://user-images.githubusercontent.com/35747326/99821105-99d84480-2b1f-11eb-9661-493966904a11.png)
 
 💡 For more details on versioning, see [Understanding Maven Version Numbers](https://docs.oracle.com/middleware/1212/core/MAVEN/maven_version.htm#MAVEN8855).
@@ -35,3 +38,6 @@ is:pr is:closed merged:>2020-07-28 base:master sort:updated-desc
 ![grhc preview](https://user-images.githubusercontent.com/35747326/100006687-e1b5d080-2d98-11eb-846d-af12fbd7ca9f.png)
 **⚠️ Note: this manipulation can only be done by someone whose GitHub account has `Admin` access rights over the `gtfs-validator` package.** 
 
+### 3. Update the release number in the wiki
+By updating the version number in the project's wiki, users of the app will be advised to upgrade if their local version does not match.
+Update [this page](https://github.com/MobilityData/gtfs-validator/wiki/Current-Version) with the new version.
