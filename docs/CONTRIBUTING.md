@@ -65,6 +65,7 @@ Additional labels can be assigned to the issue to provide additional information
 After an issue is open, someone with triage permissions will read it, ask for additional information if needed, assign additional labels and assign the issue to a milestone when it is ready to be worked on.
 
 ## Submitting a Pull Request contribution
+**Overview**
 An issue should be opened describing the piece of work proposed and the problems it solves before a Pull Request is open. This is because it lets the community members participate in the design discussion. We recommend that each Pull Request encapsulates one specific new functionality or fix. For example, if you find the solution to a bug as you’re working on a new feature, open a second Pull Request to fix it. This helps troubleshooting in the future. 
 We recommend you open the Pull Request even if your work is not completed and have it labeled as Draft until it is ready to be reviewed, in order to let the community members participate and help.
 
@@ -72,15 +73,18 @@ To open a Pull Request, please do the following:
 - [Create an account on GitHub](https://github.com/join) if you do not already have one
 - [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this repository
 - Create a new branch, and
-- Propose your changes by opening a [new pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests).
+- Propose your changes by opening a [new pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests)
 
 We use [semantic commit messages](https://github.com/electron/electron/blob/main/docs/development/pull-requests.md#commit-message-guidelines) to streamline the release process. Before your Pull request can be merged, you should update your Pull request title to start with a semantic prefix.
   Examples of Pull Request titles with semantic prefixes:
-- `fix: Bug with ssl network connections + Java module permissions.`
-- `feat: Initial support for multiple @PrimaryKey annotations.`
+- `fix: Bug with ssl network connections + Java module permissions`
+- `feat: Initial support for multiple @PrimaryKey annotations`
 - `docs: update RELEASE.md with new process`
 
 This process is described in more detail in the GitHub documentation [**Contributing to projects**](https://docs.github.com/en/get-started/quickstart/contributing-to-projects). We encourage contributors to format pull requests commits following the [Conventional Commit Specification](https://www.conventionalcommits.org/en/v1.0.0/).
+
+**Tests in the Pull Requests**
+![Pull-Request-process](/docs/Pull-Request-process.jpg)
 
 ## Pull Request comments and reviews
 Reviewing Pull Requests is a great way to get familiar with the code & architecture of this tool, and to make sure a functionality meets your needs. Each Pull Request has to be approved by at least one one core developer, but having community members helping with this process is significant for the MobilityData team. Additionally, having the eyes of people from different expertise and backgrounds on a contribution makes it higher quality (nobody can think of everything!).
@@ -118,6 +122,9 @@ The [NEW_RULES.md](https://github.com/MobilityData/gtfs-validator/blob/master/do
 **Have you encountered an error?**
 
 A critical step in troubleshooting is being able to reproduce the problem. Instructions to publicly reproduce errors using GitHub Actions can be found in our [guide to reproduce errors](https://github.com/MobilityData/gtfs-validator/blob/master/docs/REPRODUCE_ERRORS.md).
+
+**What to do with the acceptance test results**
+![Acceptance-test-process](/docs/Acceptance-test-process.jpg)
 
 **How to run tests locally?**
 
