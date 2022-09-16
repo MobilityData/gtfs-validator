@@ -1,23 +1,40 @@
----
 name: Feature request
-about: Suggest an idea for this project
-title: ""
-labels: 'enhancement'
-assignees: ''
+description: Suggest an idea for this project
+labels: ['enhancement', 'status: Needs triage']
 
----
+body:
+- type: markdown
+  attributes:
+    value: >
+      #### Before submitting a new feature idea, please make sure there isn't already an [existing issue open](https://github.com/MobilityData/gtfs-validator/issues).
+- type: textarea
+  attributes:
+    label: Describe the problem.
+    description: >
+      Describe what you are trying to achieve, and how this tool makes it more difficult. Describe the other means you currently use to get the job done or to have the information you need.
+  validations:
+    required: true
 
-## **Feature request**
-Note: We are happy to provide support to the entire community, however our [members and sponsors](https://mobilitydata.org/members/) have their issues prioritized as a benefit of their membership. MobilityData staff is aware of all issues opened, therefore there is no need for you to tag us directly. 
+- type: textarea
+  attributes:
+    label: Proposed solution.
+    description: >
+      A clear and concise description of what you want to happen.
+  validations:
+    required: true
+    
+- type: textarea
+  attributes:
+    label: Alternatives you've considered.
+    description: >
+      If relevant, describe any alternatives you've considered.
+  validations:
+    required: false
 
-**Is your feature request related to a problem? Please describe.**
-Provide a clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
-
-**Proposed solution**
-A clear and concise description of what you want to happen.
-
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
-
-**Additional context**
-Add any other context or screenshots about the feature request that can help us better understand your needs.
+- type: textarea
+  attributes:
+    label: Additional context.
+    description: >
+      Additional context that can help us better understand your need.
+  validations:
+    required: false
