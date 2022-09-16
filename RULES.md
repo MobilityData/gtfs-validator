@@ -1603,7 +1603,7 @@ Same as for [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsec
 
 </details>
 
-<a name="FeedExpirationDateNotice7Days"/>
+<a name="FeedExpirationDate7DaysNotice"/>
 
 ### feed_expiration_date_6_days
 
@@ -1626,7 +1626,7 @@ The dataset expiration date defined in `feed_info.txt` is in seven days or less.
 </details>
 
 
-<a name="FeedExpirationDateNotice30Days"/>
+<a name="FeedExpirationDate30DaysNotice"/>
 
 ### feed_expiration_date_30_days
 

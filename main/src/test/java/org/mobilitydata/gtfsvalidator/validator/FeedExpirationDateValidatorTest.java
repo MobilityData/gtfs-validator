@@ -28,8 +28,8 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
-import org.mobilitydata.gtfsvalidator.validator.FeedExpirationDateValidator.FeedExpirationDateNotice30Days;
-import org.mobilitydata.gtfsvalidator.validator.FeedExpirationDateValidator.FeedExpirationDateNotice7Days;
+import org.mobilitydata.gtfsvalidator.validator.FeedExpirationDateValidator.FeedExpirationDate30DaysNotice;
+import org.mobilitydata.gtfsvalidator.validator.FeedExpirationDateValidator.FeedExpirationDate7DaysNotice;
 
 public class FeedExpirationDateValidatorTest {
   private static final ZonedDateTime TEST_NOW =
@@ -70,7 +70,7 @@ public class FeedExpirationDateValidatorTest {
             validateFeedInfo(
                 createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(7)))))
         .containsExactly(
-            new FeedExpirationDateNotice30Days(
+            new FeedExpirationDate30DaysNotice(
                 1,
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()),
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(7)),
