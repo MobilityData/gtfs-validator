@@ -405,7 +405,7 @@ When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` m
 
 ### foreign_key_violation
 
-The values of the given key and rows of one table cannot be found a values of the given key in another table. The Foreign keys are defined in the specification under "Type" for each file.
+A foreign key references the primary key of another file. A foreign key violation means that the foreign key referenced from a given row (the child file) cannot be found in the corresponding file (the parent file). The Foreign keys are defined in the specification under "Type" for each file.
 
 #### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
