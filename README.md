@@ -30,7 +30,7 @@ This README contains information for the latest version of the project, which is
 This is a cross-platform application written in Java that performs the following steps:
 1. Loads input GTFS zip file from a URL or disk.
 2. Checks file integrity, numeric type parsing and ranges.
-3. Performs complete validation against the [GTFS Schedule standard](https://gtfs.mobilitydata.org/spec/gtfs-schedule#h.hc443y62gb8c).
+3. Performs complete validation against the [GTFS Schedule standard](https://gtfs.org/schedule/reference/#h.hc443y62gb8c).
 4. Provides an easy-to-use validation report in HTML format that can be opened in the browser and shared with other parties. See an [example of a validation report](https://htmlpreview.github.io/?https://github.com/MobilityData/gtfs-validator/blob/master/docs/report.html). The report is also available in JSON format that can be used for parsing and running additional analyses.
 
 <video src="https://user-images.githubusercontent.com/63653518/182135478-f844cbfd-7037-4d02-bd65-f196cabaddeb.mp4" controls="controls" style="max-width: 730px;">
@@ -82,7 +82,7 @@ You can run this validator using a GTFS dataset on your computer, or from a URL.
   - here is an example of what the command could look like:  `java -jar gtfs-validator-cli.jar -i /myDirectory/gtfs.zip -o output`
 
 - To validate a GTFS dataset from a URL, run the following command in the terminal, replacing the text in brackets:
-  - `java -jar {name of the jar file} -i {URL to the GTFS file} -o {name of the output directory that will be created}`
+  - `java -jar {name of the jar file} -i {input to the GTFS file} -o {name of the output directory that will be created}`
   - here is an example of what the command could look like: `java -jar gtfs-validator-cli.jar -u https://www.abc.com/gtfs.zip -o output`
 
 More detailed instructions with all the parameters that exists are available on our ["Usage"](/docs/USAGE.md) page.
