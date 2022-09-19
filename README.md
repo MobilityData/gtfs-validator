@@ -6,20 +6,20 @@ A GTFS Schedule (static) [General Transit Feed Specification (GTFS)](https://gtf
 
 ---
 <p align="center">
-<a href="#running-the-app">using the Desktop app</a>
+<a href="#running-the-app">Using the Desktop app</a>
 ●
-<a href="#run-the-app-via-command-line">using the command line</a>
+<a href="#run-the-app-via-command-line">Using the command line</a>
 ●
-<a href="#run-the-app-using-docker">using Docker</a>
+<a href="#run-the-app-using-docker">Using Docker</a>
 </p>
 
 
 <p align="center">
-<a href="https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md">☑️ list of rules implemented</a>
+<a href="https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md">☑️ List of rules implemented</a>
 </p>
 
 <p align="center">
-<a href="https://github.com/MobilityData/gtfs-validator/blob/master/docs/CONTRIBUTING.md"> 🤝 contribute to the project</a>
+<a href="https://github.com/MobilityData/gtfs-validator/blob/master/docs/CONTRIBUTING.md"> 🤝 Contribute to the project</a>
 </p>
 
 ---
