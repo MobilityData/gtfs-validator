@@ -1,4 +1,7 @@
 contact_links:
   - name: Slack channel
     url: https://docs.google.com/forms/d/e/1FAIpQLSczZbZB9ql_Xl-1uBtmvYmA0fwfm1UX92SyWAdkuMEDfxac5w/viewform
-    about: Join the MobilityData slack to discuss with other community members in the gtfs-validators channel.
+    about: Join the gtfs-validators channel to discuss with other community members, and receive updates.
+  - name: Discussions
+    url: https://github.com/MobilityData/gtfs-validator/discussions/new
+    about: Ask questions to other users and developers.
