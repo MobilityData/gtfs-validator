@@ -161,7 +161,7 @@ We suggest using [IntelliJ](https://www.jetbrains.com/idea/download/) to [import
 Instructions to build the project from the command-line using [Gradle](https://gradle.org/) are available in our [Build documentation](/docs/BUILD.md).
 
 # Architecture
-The architecture of the `gtfs-validator` is described on our [Architecture page](/docs/ARCHITECTURE.md).
+The architecture of the `gtfs-validator` is described on our [Architecture page](/docs/ARCHITECTURE.md). 
 
 # Acceptance tests
 In order to avoid sudden changes in the validation output that might declare previously valid datasets invalid, all code changes in pull requests are tested against GTFS datasets in the [MobilityDatabase](http://old.mobilitydatabase.org/wiki/Main_Page). The acceptance test process is described in [ACCEPTANCE_TESTS.md](docs/ACCEPTANCE_TESTS.md).
