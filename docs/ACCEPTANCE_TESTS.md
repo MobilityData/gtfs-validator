@@ -60,7 +60,7 @@ Sample outputs:
       ]
     },
     {
-      "noticeCode": "fourth_notice_code",
+      "noticeCode": "second_notice_code",
       "affectedSourcesCount": 1,
       "affectedSources": [
         {
@@ -71,7 +71,7 @@ Sample outputs:
       ]
     },
     {
-      "noticeCode": "second_notice_code",
+      "noticeCode": "third_notice_code",
       "affectedSourcesCount": 1,
       "affectedSources": [
         {
@@ -82,7 +82,7 @@ Sample outputs:
       ]
     },
     {
-      "noticeCode": "third_notice_code",
+      "noticeCode": "fourth_notice_code",
       "affectedSourcesCount": 3,
       "affectedSources": [
         {

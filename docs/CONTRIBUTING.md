@@ -2,11 +2,11 @@
 
 If you’re reading this section, you are probably interested in contributing to the Canonical GTFS Schedule Validator. First, thank you for your interest, and welcome to the community! This document describes the different ways you can contribute to this project, and what the processes look like.  
 
-This project is a community effort, and anyone interested in this project can join the community, participate in decision-making and help advance this project in different ways. There are many different ways to contribute: sharing your idea for a new feature, improving the documentation, teaching others how to use it, interacting on Pull Requests, helping answer questions, etc. We welcome and value any type of contribution, and yes: you do have something to contribute to this validator! If you are not on the [MobilityData Slack](#MobilityData-slack) already, please join the channel #gtfs-validators to introduce yourself and share what area of the project you’re interested in working on.
+This project is a community effort, and anyone interested in this project can join the community, participate in decision-making and help advance it in different ways. There are many different ways to contribute: sharing your idea for a new feature, improving the documentation, teaching others how to use it, interacting on Pull Requests, helping answer questions, etc. We welcome and value any type of contribution, and yes: you do have something to contribute to this validator! If you are not on the [MobilityData Slack](#MobilityData-slack) already, please join the channel #gtfs-validators to introduce yourself and share what area of the project you’re interested in working on.
 
 We value discussions, respect, and openness in our community. All experiences are welcome, regardless of the technical knowledge. We particularly encourage people from underrepresented backgrounds in Open Source to participate. 
 
-Please read our [Contributor Code of Conduct](https://github.com/MobilityData/gtfs-validator/blob/master/CODE_OF_CONDUCT.md) before contributing to this project.
+Please read our [Contributor Code of Conduct](/CODE_OF_CONDUCT.md) before contributing to this project.
 
 ## Ways to contribute
 
@@ -47,7 +47,7 @@ Remove the Needs triage label and replace it with the appropriate status label (
 
 **Core developers**
 
-Contributors who actively push to the project. They can perform code reviews, request changes, approve and merge Pull Requests. Core developers have Write permissions to the repository.
+Contributors who actively push to the project. They can perform code reviews, request changes, approve and merge Pull Requests. Core developers have Write permissions to the repository. The current core developers for this project are [Maxime Armstrong](https://github.com/maximearmstrong) and [Brian Ferris](https://github.com/bdferris-v2).
 @TODO how to become a core developer
 
 **Technical committee**
@@ -72,15 +72,21 @@ To open a Pull Request, please do the following:
 - [Create an account on GitHub](https://github.com/join) if you do not already have one
 - [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this repository
 - Create a new branch, and
-- Propose your changes by opening a [new pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests).
+- Propose your changes by opening a [new pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests)
 
 We use [semantic commit messages](https://github.com/electron/electron/blob/main/docs/development/pull-requests.md#commit-message-guidelines) to streamline the release process. Before your Pull request can be merged, you should update your Pull request title to start with a semantic prefix.
   Examples of Pull Request titles with semantic prefixes:
-- `fix: Bug with ssl network connections + Java module permissions.`
-- `feat: Initial support for multiple @PrimaryKey annotations.`
+- `fix: Bug with ssl network connections + Java module permissions`
+- `feat: Initial support for multiple @PrimaryKey annotations`
 - `docs: update RELEASE.md with new process`
 
 This process is described in more detail in the GitHub documentation [**Contributing to projects**](https://docs.github.com/en/get-started/quickstart/contributing-to-projects). We encourage contributors to format pull requests commits following the [Conventional Commit Specification](https://www.conventionalcommits.org/en/v1.0.0/).
+
+**Tests in the Pull Requests**
+
+This image shows the tests implemented in the Pull Request process.
+
+<img src="/docs/Pull-Request-process.jpg" width="750">
 
 ## Pull Request comments and reviews
 Reviewing Pull Requests is a great way to get familiar with the code & architecture of this tool, and to make sure a functionality meets your needs. Each Pull Request has to be approved by at least one one core developer, but having community members helping with this process is significant for the MobilityData team. Additionally, having the eyes of people from different expertise and backgrounds on a contribution makes it higher quality (nobody can think of everything!).
@@ -105,7 +111,7 @@ Below are a few questions that need to be considered during a Pull Request revie
 - Does the pull request pass all the required GitHub Action continuous integration tests? If not, why is something failing?
 
 ## Code contributions
-Before starting a code contribution, take the time to familiarize yourself with the current architecture of the validator (described in [ARCHITECTURE.md](https://github.com/MobilityData/gtfs-validator/blob/master/docs/ARCHITECTURE.md)) and the current code base. We encourage those that are new to our code base to implement the issues labeled [Good first issue](https://github.com/MobilityData/gtfs-validator/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) or [Help wanted](https://github.com/MobilityData/gtfs-validator/labels/help%20wanted).
+Before starting a code contribution, take the time to familiarize yourself with the current architecture of the validator (described in [ARCHITECTURE.md](/docs/ARCHITECTURE.md)) and the current code base. We encourage those that are new to our code base to implement the issues labeled [Good first issue](https://github.com/MobilityData/gtfs-validator/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) or [Help wanted](https://github.com/MobilityData/gtfs-validator/labels/help%20wanted).
 
 **Coding style**
 
@@ -113,11 +119,15 @@ Sticking to a single consistent and documented coding style for this project is 
 
 **How do I add a new validation rule?**
 
-The [NEW_RULES.md](https://github.com/MobilityData/gtfs-validator/blob/master/docs/NEW_RULES.md) document includes step-by-step instructions for adding new validation rules to the validator.
+The [NEW_RULES.md](/docs/NEW_RULES.md) document includes step-by-step instructions for adding new validation rules to the validator.
 
 **Have you encountered an error?**
 
-A critical step in troubleshooting is being able to reproduce the problem. Instructions to publicly reproduce errors using GitHub Actions can be found in our [guide to reproduce errors](https://github.com/MobilityData/gtfs-validator/blob/master/docs/REPRODUCE_ERRORS.md).
+A critical step in troubleshooting is being able to reproduce the problem. Instructions to publicly reproduce errors using GitHub Actions can be found in our [guide to reproduce errors](/docs/REPRODUCE_ERRORS.md).
+
+**What to do with the acceptance test results?**
+The acceptance test is a key part of the Pull Request process. More information about this test is available in the [ACCEPTANCE_TEST.md](/docs/ACCEPTANCE_TESTS.md) file
+<img src="/docs/Acceptance-test-process.jpg" width="700">
 
 **How to run tests locally?**
 
@@ -138,5 +148,5 @@ Documentation is written in Markdown, you can see the complete syntax in the [Ma
 - Leverage the rich [Markdown syntax](https://www.markdownguide.org/cheat-sheet/): code blocks, tables, bold, etc. 
 - Use [collapsable sections](https://gist.github.com/pierrejoubert73/902cc94d79424356a8d20be2b382e1ab) for long documents.
 
-**Credits**
+## Credits
 This contribution guideline was inspired by the [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/index.html) and [SKLearn](https://scikit-learn.org/stable/developers/contributing.html#) open source projects.
