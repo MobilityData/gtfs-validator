@@ -1,0 +1,24 @@
+name: Documentation improvement
+description: Signal a problem or an improvement idea with our documentation
+labels: ['documentation','status: Needs triage']
+
+body:
+- type: markdown
+  attributes:
+    value: >
+      #### Before submitting this issue, please make sure there isn't already an [existing issue open](https://github.com/MobilityData/gtfs-validator/issues?q=is%3Aopen+is%3Aissue+label%3Adocumentation).
+- type: textarea
+  attributes:
+    label: Describe the problem
+    description: >
+      What is the confusion or the problem with the documentation?
+  validations:
+    required: true
+    
+- type: textarea
+  attributes:
+    label: Suggest a fix or an alternative
+    description: |
+      How can we improve our documentation in this regard?
+  validations:
+    required: false

@@ -33,6 +33,7 @@ jobs:
           # We need to download all tags so that the axion-release-plugin
           # can resolve the most recent version tag.
           fetch-depth: 0
+
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
@@ -40,28 +41,77 @@ jobs:
           java-version: '17'
           # We use the zulu distribution, which is an OpenJDK distro.
           distribution: 'zulu'
-      - name: Package GUI app installer with Gradle
+
+      # We create a code-signing keychain on MacOS before building and packaging the app, as the
+      # app will be signed as part of the jpackage build phase.
+      - name: "MacOS - Import Certificate: Developer ID Application"
+        if: matrix.os == 'macos-latest' && (github.event_name == 'push' || github.event_name == 'release')
+        uses: devbotsxyz/import-signing-certificate@v1
+        with:
+          # This should be a certificate + private key, exported as a p12 file and base64 encoded as
+          # a GitHub secret.  The certificate should be the:
+          # 'Developer ID Application: The International Data Organization For Transport (BF2U75HN4D)'
+          # certificate, locked with the specified passphrase.
+          certificate-data: ${{ secrets.MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE_P12_BASE64 }}
+          certificate-passphrase: ${{ secrets.MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD }}
+          # The resulting keychain will be locked with this separate password.
+          keychain-password: ${{ secrets.MACOS_KEYCHAIN_PASSWORD }}
+
+      - name: "Package GUI app installer with Gradle"
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: jpackage
-        # Per discussion in https://github.com/MobilityData/gtfs-validator/issues/1183, there is a
-        # bug with jpackage in Java 17 that caused Mac apps to be left in an ambiguous signing state
-        # that results in them being reported as 'damaged' when run.  As a temporary workaround, we
-        # unsign the app and repackage as a dmg.  This bug could be fixed in the future by upgrading
-        # to Java 18 or by officially signing the app.
-      - name: Unsign and package Mac OS app
+          arguments: |
+            jpackage
+            -Psign-app=${{github.event_name == 'push' || github.event_name == 'release'}}
+
+      # On MacOS, we now submit the app for "notarization", where Apple will scan the app for
+      # malware and other issues.  This step can take a few minutes or more; the action will wait
+      # until the report is available.
+      - name: "MacOS - Notarize Release Build"
+        if: matrix.os == 'macos-latest' && (github.event_name == 'push' || github.event_name == 'release')
+        uses: devbotsxyz/xcode-notarize@v1
+        with:
+          product-path: "app/pkg/build/jpackage/GTFS Validator.app"
+          # The Apple developer account used to run notarization.  This account will receive an
+          # email every time notarization is run.
+          appstore-connect-username: ${{ secrets.MACOS_NOTARIZATION_USERNAME }}
+          # The app-specific password configured for the Apple developer account that will be used
+          # for authentication (different from the main password for the dev account).
+          appstore-connect-password: ${{ secrets.MACOS_NOTARIZATION_PASSWORD }}
+
+      # Now that we have a notarization report, we attach it to the app binary.
+      - name: "Mac OS - Staple Release Build"
+        if: matrix.os == 'macos-latest' && (github.event_name == 'push' || github.event_name == 'release')
+        uses: devbotsxyz/xcode-staple@v1
+        with:
+          product-path: "app/pkg/build/jpackage/GTFS Validator.app"
+
+      # Now that we have a notarized app, we can package it.
+      - name: "Mac OS - Package the app"
         if: matrix.os == 'macos-latest'
         shell: bash
         run: |
-          codesign --remove-signature app/pkg/build/jpackage/GTFS\ Validator.app
           appVersion=$(./gradlew cV -q -Prelease.quiet)
           appVersion=${appVersion//-SNAPSHOT/}
-          jpackage --type dmg --name 'GTFS Validator' --app-version ${appVersion} --app-image app/pkg/build/jpackage/GTFS\ Validator.app --dest app/pkg/build/jpackage
-      - name: Upload Installer
+          jpackage \
+           --type dmg \
+           --name 'GTFS Validator' \
+           --app-version ${appVersion} \
+           --app-image app/pkg/build/jpackage/GTFS\ Validator.app \
+           --dest app/pkg/build/jpackage
+          jpackage \
+           --type pkg \
+           --name 'GTFS Validator' \
+           --app-version ${appVersion} \
+           --app-image app/pkg/build/jpackage/GTFS\ Validator.app \
+           --dest app/pkg/build/jpackage
+
+      - name: "Upload Installer"
         uses: actions/upload-artifact@v2
         with:
           name: Installer - ${{matrix.os}}
           path: |
             app/pkg/build/jpackage/*.msi
             app/pkg/build/jpackage/*.dmg
+            app/pkg/build/jpackage/*.pkg
             app/pkg/build/jpackage/*.deb

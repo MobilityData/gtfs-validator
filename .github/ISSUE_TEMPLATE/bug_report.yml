@@ -1,0 +1,108 @@
+name: Bug Report
+description: Submit a bug report
+labels: ['bug','status: Needs triage']
+
+body:
+- type: markdown
+  attributes:
+    value: >
+      #### Before submitting a bug, please make sure there isn't already an [existing issue open](https://github.com/MobilityData/gtfs-validator/issues?q=is%3Aopen+is%3Aissue+label%3Abug).
+- type: textarea
+  attributes:
+    label: Describe the bug
+    description: >
+      A clear and concise description of what the bug is.
+  validations:
+    required: true
+    
+- type: textarea
+  attributes:
+    label: Steps/Code to Reproduce
+    description: |
+      Please add the steps that can reproduce the problem. More precise bug report tends to be solved more quickly because it avoids back-and-forth discussion between the maintainers and the reporter. 
+    placeholder: |
+      Example:
+      - Open the terminal 
+      - Navigate to the directory containing the JAR file and the GTFS dataset using the following command: cd Data/Unvalidated
+      - Run the following command in the terminal: java -jar gtfs-validator-3.1.2-SNAPSHOT-cli.jar -i datasets/montreal.zip -o output -t
+      - Open the report.json file
+  validations:
+    required: true
+    
+- type: textarea
+  attributes:
+    label: Expected Results
+    description: >
+      Please describe the expected results.
+    placeholder: >
+      Example: The file shows the list of validation problems.
+  validations:
+    required: true
+    
+- type: textarea
+  attributes:
+    label: Actual Results
+    description: |
+      Please paste or describe the results you observe instead of the expected results. 
+    placeholder: >
+      Example: The file is blank.
+  validations:
+    required: true
+    
+- type: textarea
+  attributes:
+    label: Screenshots
+    description: |
+      Visual examples can help us better understand the issue. You can drag-and-drop the image in this box to upload it.
+  validations:
+    required: false
+    
+- type: textarea
+  attributes:
+    label: Files used
+    description: |
+      Please provide any relevant file. You can drag-and-drop the file in this box to upload it.
+  validations:
+    required: false
+    
+- type: input
+  attributes:
+    label: Validator version
+    description: |
+      Which validator version are you using? The validator version is written in the HTML output, and it is included in the JAR file name.
+  validations:
+    required: true
+    
+- type: input
+  attributes:
+    label: Operating system
+    description: |
+      Which Operating System are you using?
+    placeholder: >
+      Example: MacOS, Apple M1
+  validations:
+    required: true
+    
+- type: input
+  attributes:
+    label: Java version
+    description: |
+      Which version of Java are you using? Type the following command in the terminal to know what your Java version is.
+      ```
+      java -version
+      ```
+  validations:
+    required: false
+    
+- type: textarea
+  attributes:
+    label: Additional notes
+    description: >
+      Anything else to add?
+  validations:
+    required: false
+
+- type: markdown
+  attributes:
+    value: >
+      Thanks for contributing 🎉!

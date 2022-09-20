@@ -1,0 +1,51 @@
+name: New validation rule
+description: Suggest a new GTFS validation rule
+labels: ['new rule', 'status: Needs triage']
+
+body:
+- type: markdown
+  attributes:
+    value: >
+      #### Before submitting a new rule idea, please make sure there isn't already an [existing issue open](https://github.com/MobilityData/gtfs-validator/issues?q=is%3Aopen+is%3Aissue+label%3A%22new+rule%22).
+- type: textarea
+  attributes:
+    label: Describe the problem
+    description: >
+      What problem in GTFS datasets does this new rule address? Please describe.
+  validations:
+    required: true
+
+- type: textarea
+  attributes:
+    label: Describe the new validation rule
+    description: >
+      How would you like the new validation rule to work? If possible, describe the new logic, or provide pseudo code for how this rule would work.
+    placeholder: |
+      Example: 
+      If:
+        [stop_lat OR stop_lon = ''] AND [location_type = [0 OR 1 OR 2]]: 
+            trigger a `missing_stop_coordinates` notice
+  validations:
+    required: true
+    
+- type: textarea
+  attributes:
+    label: Sample GTFS datasets
+    description: >
+      Provide relevant sample GTFS datasets. You can drag-and-drop the file in this box to upload it.
+  validations:
+    required: false
+
+- type: textarea
+  attributes:
+    label: Severity
+    description: >
+      What should be the severity of this rule? See the definition for rule severities in [RULES.md](https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#the-severity-of-a-notice).
+  validations:
+    required: false
+
+- type: textarea
+  attributes:
+    label: Additional context
+  validations:
+    required: false

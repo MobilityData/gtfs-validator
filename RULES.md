@@ -235,10 +235,10 @@ When sorted by `shape.shape_pt_sequence`, two consecutive shape points must not 
 
 ### decreasing_or_equal_stop_time_distance
 
-When sorted by `stop_times.stop_pt_sequence`, two consecutive stop times in a trip should have increasing distance. If the values are equal, this is considered as an error.  
+When sorted by `stop_times.stop_sequence`, two consecutive entries in `stop_times.txt` should have increasing distance, based on the field `shape_dist_traveled`. If the values are equal, this is considered as an error.  
 
 #### References
-* [stops.txt specification](https://gtfs.org/reference/static#stopstxt)
+* [stops_times.txt specification](https://gtfs.org/reference/static#stop_timestxt)
 
 <details>
 
@@ -405,7 +405,7 @@ When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` m
 
 ### foreign_key_violation
 
-The values of the given key and rows of one table cannot be found a values of the given key in another table. The Foreign keys are defined in the specification under "Type" for each file.
+A foreign key references the primary key of another file. A foreign key violation means that the foreign key referenced from a given row (the child file) cannot be found in the corresponding file (the parent file). The Foreign keys are defined in the specification under "Type" for each file.
 
 #### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)

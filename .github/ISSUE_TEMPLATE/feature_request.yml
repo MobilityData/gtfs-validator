@@ -1,0 +1,40 @@
+name: Feature request
+description: Suggest an idea for this project
+labels: ['enhancement', 'status: Needs triage']
+
+body:
+- type: markdown
+  attributes:
+    value: >
+      #### Before submitting a new feature idea, please make sure there isn't already an [existing issue open](https://github.com/MobilityData/gtfs-validator/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement+).
+- type: textarea
+  attributes:
+    label: Describe the problem
+    description: >
+      Describe what you are trying to achieve, and how this tool makes it more difficult. Describe the other means you currently use to get the job done or to have the information you need.
+  validations:
+    required: true
+
+- type: textarea
+  attributes:
+    label: Proposed solution
+    description: >
+      A clear and concise description of what you want to happen.
+  validations:
+    required: true
+    
+- type: textarea
+  attributes:
+    label: Alternatives you've considered
+    description: >
+      If relevant, describe any alternatives you've considered.
+  validations:
+    required: false
+
+- type: textarea
+  attributes:
+    label: Additional context
+    description: >
+      Additional context that can help us better understand your need.
+  validations:
+    required: false
