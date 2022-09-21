@@ -1,30 +1,40 @@
 # Canonical GTFS Schedule Validator
 [![Test Package Document](https://github.com/MobilityData/gtfs-validator/workflows/Test%20Package%20Document/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions?query=workflow%3A%22Test+Package+Document%22) ![End to end](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end/badge.svg) ![End to end big](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end%20big/badge.svg) ![End to end 100](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end%20100/badge.svg) [![Rule acceptance tests](https://github.com/MobilityData/gtfs-validator/actions/workflows/acceptance_test.yml/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions/workflows/acceptance_test.yml) ![Docker image](https://github.com/MobilityData/gtfs-validator/actions/workflows/docker.yml/badge.svg) [![Join the gtfs-validator chat](https://badgen.net/badge/slack/%20/green?icon=slack)](https://bit.ly/mobilitydata-slack)
 
+
+A [General Transit Feed Specification (GTFS) Schedule](https://gtfs.mobilitydata.org/spec/gtfs-schedule) (static) feed validator, maintained by [MobilityData](www.mobilitydata.org).
+
+---
 <p align="center">
-<a href="#running-the-app">using the Desktop app</a>
+<a href="#running-the-app">Using the Desktop app</a>
 ●
-<a href="#run-the-app-via-command-line">using the command line</a>
+<a href="#run-the-app-via-command-line">Using the command line</a>
 ●
-<a href="#run-the-app-using-docker">using Docker</a>
+<a href="#run-the-app-using-docker">Using Docker</a>
+</p>
+
+
+<p align="center">
+<a href="https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md">☑️ List of rules implemented</a>
+</p>
+
+<p align="center">
+<a href="https://github.com/MobilityData/gtfs-validator/blob/master/docs/CONTRIBUTING.md"> 🤝 Contribute to the project</a>
 </p>
 
 ---
- 
-A GTFS Schedule (static) [General Transit Feed Specification (GTFS)](https://gtfs.mobilitydata.org/spec/gtfs-schedule) feed validator, maintained by [MobilityData](www.mobilitydata.org).
-
-
-<video src="https://user-images.githubusercontent.com/63653518/182135478-f844cbfd-7037-4d02-bd65-f196cabaddeb.mp4" controls="controls" style="max-width: 730px;">
-</video>
 
 This README contains information for the latest version of the project, which is under active development.  You can find the latest version of the validator application on the [Releases page](https://github.com/MobilityData/gtfs-validator/releases).
 
 # Introduction
 This is a cross-platform application written in Java that performs the following steps:
 1. Loads input GTFS zip file from a URL or disk.
-2. Checks file integrity, numeric type parsing and ranges as well as string format according to the [GTFS Schedule specification](https://gtfs.mobilitydata.org/spec/gtfs-schedule#h.hc443y62gb8c).
-3. Performs GTFS [business rule validation](/RULES.md).
+2. Checks file integrity, numeric type parsing and ranges.
+3. Performs complete validation against the [GTFS Schedule standard](https://gtfs.org/schedule/reference/#h.hc443y62gb8c).
 4. Provides an easy-to-use validation report in HTML format that can be opened in the browser and shared with other parties. See an [example of a validation report](https://htmlpreview.github.io/?https://github.com/MobilityData/gtfs-validator/blob/master/docs/report.html). The report is also available in JSON format that can be used for parsing and running additional analyses.
+
+<video src="https://user-images.githubusercontent.com/63653518/191132078-5cd1e34c-bc99-4193-b4da-74ccdc2d35b6.mp4" controls="controls" style="max-width: 730px;">
+</video>
 
 # Running the app
 ### Setup
@@ -72,7 +82,7 @@ You can run this validator using a GTFS dataset on your computer, or from a URL.
   - here is an example of what the command could look like:  `java -jar gtfs-validator-cli.jar -i /myDirectory/gtfs.zip -o output`
 
 - To validate a GTFS dataset from a URL, run the following command in the terminal, replacing the text in brackets:
-  - `java -jar {name of the jar file} -u {URL to the GTFS file} -o {name of the output directory that will be created}`
+  - `java -jar {name of the jar file} -i {input to the GTFS file} -o {name of the output directory that will be created}`
   - here is an example of what the command could look like: `java -jar gtfs-validator-cli.jar -u https://www.abc.com/gtfs.zip -o output`
 
 More detailed instructions with all the parameters that exists are available on our ["Usage"](/docs/USAGE.md) page.
@@ -151,10 +161,13 @@ We suggest using [IntelliJ](https://www.jetbrains.com/idea/download/) to [import
 Instructions to build the project from the command-line using [Gradle](https://gradle.org/) are available in our [Build documentation](/docs/BUILD.md).
 
 # Architecture
-The architecture of the `gtfs-validator` is described on our [Architecture page](/docs/ARCHITECTURE.md).
+The architecture of the `gtfs-validator` is described on our [Architecture page](/docs/ARCHITECTURE.md). 
 
 # Acceptance tests
 In order to avoid sudden changes in the validation output that might declare previously valid datasets invalid, all code changes in pull requests are tested against GTFS datasets in the [MobilityDatabase](http://old.mobilitydatabase.org/wiki/Main_Page). The acceptance test process is described in [ACCEPTANCE_TESTS.md](docs/ACCEPTANCE_TESTS.md).
+
+# Projects based on this validator
+[CalTrans California Integrated Travel Project (Cal-ITP) GTFS Validator API](https://github.com/cal-itp/gtfs-validator-api) - A thin wrapper around MobilityData/gtfs-validator.
 
 # License
 Code licensed under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0).
