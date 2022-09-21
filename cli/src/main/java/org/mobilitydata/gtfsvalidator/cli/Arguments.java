@@ -147,7 +147,11 @@ public class Arguments {
   }
 
   /** @return true if CLI parameter combination is legal, otherwise return false */
-  public boolean isValid() {
+  public boolean validate() {
+    if (getExportNoticeSchema() && abortAfterNoticeSchemaExport()) {
+      return true;
+    }
+
     if (input == null && url == null) {
       logger.atSevere().log(
           "One of the two following CLI parameter must be provided: '--input' and '--url'");
@@ -174,11 +178,6 @@ public class Arguments {
   }
 
   public boolean abortAfterNoticeSchemaExport() {
-    return input == null
-        && countryCode == null
-        && url == null
-        && storageDirectory == null
-        && validationReportName == null
-        && systemErrorsReportName == null;
+    return input == null && url == null;
   }
 }
