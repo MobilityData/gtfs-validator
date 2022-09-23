@@ -1613,6 +1613,7 @@ The dataset expiration date defined in `feed_info.txt` is in seven days or less.
 * [General Publishing & General Practices](https://gtfs.org/best-practices/#dataset-publishing--general-practices)
 
 <details>
+
 #### Notice fields description
 | Field name              	        | Description                                                                     	| Type   	|
 |-------------------------	|----------------------------------------------	        |--------	|
