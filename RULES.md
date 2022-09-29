@@ -45,8 +45,6 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`fare_transfer_rule_duration_limit_without_type`](#fare_transfer_rule_duration_limit_without_type)               | A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit` field but no `duration_limit_type` specified.                            |
 | [`fare_transfer_rule_missing_transfer_count`](#fare_transfer_rule_missing_transfer_count)                         | A row from `fare_transfer_rules.txt` has `from_leg_group_id` equal to `to_leg_group_id`, but has no `transfer_count` specified.                        |
 | [`fare_transfer_rule_with_forbidden_transfer_count`](#fare_transfer_rule_with_forbidden_transfer_count)           | A row from `fare_transfer_rules.txt` has `from_leg_group_id` not equal to `to_leg_group_id`, but has `transfer_count` specified.                       |
-
-
 | [`foreign_key_violation`](#foreign_key_violation)                                                                 | Wrong foreign key.                                                                                                                                     |
 | [`inconsistent_agency_timezone`](#inconsistent_agency_timezone)                                                   | Inconsistent Timezone among agencies.                                                                                                                  |
 | [`invalid_color`](#invalid_color)                                                                                 | A field contains an invalid color value.                                                                                                               |
