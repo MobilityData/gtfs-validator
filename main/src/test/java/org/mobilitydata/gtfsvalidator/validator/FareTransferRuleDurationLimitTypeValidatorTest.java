@@ -10,6 +10,7 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsDurationLimitType;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareTransferRule;
+import org.mobilitydata.gtfsvalidator.validator.FareTransferRuleDurationLimitTypeValidator.FareTransferRuleDurationLimitTypeWithoutDurationLimitNotice;
 import org.mobilitydata.gtfsvalidator.validator.FareTransferRuleDurationLimitTypeValidator.FareTransferRuleDurationLimitWithoutTypeNotice;
 
 @RunWith(JUnit4.class)
@@ -31,6 +32,17 @@ public class FareTransferRuleDurationLimitTypeValidatorTest {
                     .setDurationLimit(120)
                     .build()))
         .containsExactly(new FareTransferRuleDurationLimitWithoutTypeNotice(2));
+  }
+
+  @Test
+  public void durationLimitTypeWithoutDurationLimitShouldGenerateNotice() {
+    assertThat(
+            generateNotices(
+                new GtfsFareTransferRule.Builder()
+                    .setCsvRowNumber(2)
+                    .setDurationLimitType(GtfsDurationLimitType.ARRIVAL_TO_ARRIVAL)
+                    .build()))
+        .containsExactly(new FareTransferRuleDurationLimitTypeWithoutDurationLimitNotice(2));
   }
 
   @Test

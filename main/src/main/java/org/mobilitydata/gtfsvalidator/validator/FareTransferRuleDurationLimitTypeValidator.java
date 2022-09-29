@@ -16,6 +16,10 @@ public class FareTransferRuleDurationLimitTypeValidator
       noticeContainer.addValidationNotice(
           new FareTransferRuleDurationLimitWithoutTypeNotice(rule.csvRowNumber()));
     }
+    if (!rule.hasDurationLimit() && rule.hasDurationLimitType()) {
+      noticeContainer.addValidationNotice(
+          new FareTransferRuleDurationLimitTypeWithoutDurationLimitNotice(rule.csvRowNumber()));
+    }
   }
 
   /**
@@ -28,6 +32,22 @@ public class FareTransferRuleDurationLimitTypeValidator
     private final long csvRowNumber;
 
     FareTransferRuleDurationLimitWithoutTypeNotice(long csvRowNumber) {
+      super(SeverityLevel.ERROR);
+      this.csvRowNumber = csvRowNumber;
+    }
+  }
+
+  /**
+   * A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit_type` field but no
+   * `duration_limit` specified.
+   *
+   * <p>Severity: {@code SeverityLevel.ERROR}
+   */
+  static class FareTransferRuleDurationLimitTypeWithoutDurationLimitNotice
+      extends ValidationNotice {
+    private final long csvRowNumber;
+
+    FareTransferRuleDurationLimitTypeWithoutDurationLimitNotice(long csvRowNumber) {
       super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
     }
