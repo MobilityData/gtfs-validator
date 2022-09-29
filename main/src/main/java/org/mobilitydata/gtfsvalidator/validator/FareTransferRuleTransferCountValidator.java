@@ -42,12 +42,12 @@ public class FareTransferRuleTransferCountValidator
    */
   static class InvalidFareTransferRuleTransferCountNotice extends ValidationNotice {
     private final long csvRowNumber;
-    private final int transfer_count;
+    private final int transferCount;
 
-    InvalidFareTransferRuleTransferCountNotice(long csvRowNumber, int transfer_count) {
+    InvalidFareTransferRuleTransferCountNotice(long csvRowNumber, int transferCount) {
       super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
-      this.transfer_count = transfer_count;
+      this.transferCount = transferCount;
     }
   }
 
