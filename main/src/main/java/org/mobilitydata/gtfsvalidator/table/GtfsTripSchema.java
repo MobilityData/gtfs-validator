@@ -39,6 +39,7 @@ public interface GtfsTripSchema extends GtfsEntity {
   String routeId();
 
   @FieldType(FieldTypeEnum.ID)
+  @Index
   @Required
   String serviceId();
 
