@@ -1606,7 +1606,7 @@ Same as for [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsec
 
 <a name="FeedExpirationDate7DaysNotice"/>
 
-### feed_expiration_date_6_days
+### feed_expiration_date_7_days
 
 The dataset expiration date defined in `feed_info.txt` is in seven days or less. At any time, the published GTFS dataset should be valid for at least the next 7 days.
 
