@@ -466,6 +466,7 @@ A row from GTFS file `fare_transfer_rules.txt` has a defined `transfer_count` wi
 | Field name      	| Description                                        	| Type   	|
 |-----------------	|----------------------------------------------------	|--------	|
 | `csvRowNumber`   	| The row of the faulty record.                      	| Long   	|
+| `transferCount`   	| The transfer count value of the faulty record.      	| Integer	|
 
 #### Affected files
 * [`fare_transfer_rules.txt`](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
