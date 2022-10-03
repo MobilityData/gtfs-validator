@@ -101,13 +101,14 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`equal_shape_distance_same_coordinates`](#equal_shape_distance_same_coordinates)             | Two consecutive points have equal `shape_dist_traveled` and the same lat/lon coordinates in `shapes.txt`.                                                     |
 | [`fast_travel_between_consecutive_stops`](#fast_travel_between_consecutive_stops)             | A transit vehicle moves too fast between two consecutive stops.                                                                                               |
 | [`fast_travel_between_far_stops`](#fast_travel_between_far_stops)                             | A transit vehicle moves too fast between two far stops.                                                                                                       |
-| [`feed_expiration_date`](#feed_expiration_date)                                               | Dataset should be valid for at least the next 7 days. Dataset should cover at least the next 30 days of service.                                              |
+| [`feed_expiration_date_7_days`](#feed_expiration_date_7_days)                                 | Dataset should be valid for at least the next 7 days.                                                                                                         |
+| [`feed_expiration_date_30_days`](#feed_expiration_date_30_days)                               | Dataset should cover at least the next 30 days of service.                                                                                                    |
 | [`feed_info_lang_and_agency_mismatch`](#feed_info_lang_and_agency_mismatch)                   | Mismatching feed and agency language fields.                                                                                                                  |
 | [`inconsistent_agency_lang`](#inconsistent_agency_lang)                                       | Inconsistent language among agencies.                                                                                                                         |
 | [`leading_or_trailing_whitespaces`](#leading_or_trailing_whitespaces)                         | The value in CSV file has leading or trailing whitespaces.                                                                                                    |
 | [`missing_feed_info_date`](#missing_feed_info_date)                                           | `feed_end_date` should be provided if `feed_start_date` is provided. `feed_start_date` should be provided if `feed_end_date` is provided.                     |
-| [`missing_recommended_file`](#missing_recommended_file)                                       | A recommended file is missing.                     |
-| [`missing_recommended_field`](#missing_recommended_field)                                        | A recommended field is missing.                     |
+| [`missing_recommended_file`](#missing_recommended_file)                                       | A recommended file is missing.                                                                                                                                |
+| [`missing_recommended_field`](#missing_recommended_field)                                     | A recommended field is missing.                                                                                                                               |
 | [`missing_timepoint_column`](#missing_timepoint_column)                                       | `timepoint` column is missing for a dataset.                                                                                                                  |
 | [`missing_timepoint_value`](#missing_timepoint_value)                                         | `stop_times.timepoint` value is missing for a record.                                                                                                         |
 | [`more_than_one_entity`](#more_than_one_entity)                                               | More than one row in CSV.                                                                                                                                     |
@@ -133,6 +134,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`unusable_trip`](#unusable_trip)                                                             | Trips must have more than one stop to be usable.                                                                                                              |
 | [`unused_shape`](#unused_shape)                                                               | Shape is not used in GTFS file `trips.txt`.                                                                                                                   |
 | [`unused_trip`](#unused_trip)                                                                 | Trip is not be used in `stop_times.txt`                                                                                                                       |
+|                                                                                               |                                                                                                                                                               |
 
 <a name="INFOS"/>
 
@@ -1737,12 +1739,35 @@ Same as for [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsec
 
 </details>
 
-<a name="FeedExpirationDateNotice"/>
+<a name="FeedExpirationDate7DaysNotice"/>
 
-### feed_expiration_date
+### feed_expiration_date_7_days
 
-At any time, the published GTFS dataset should be valid for at least the next 7 days, and ideally for as long as the operator is confident that the schedule will continue to be operated.
-If possible, the GTFS dataset should cover at least the next 30 days of service.
+The dataset expiration date defined in `feed_info.txt` is in seven days or less. At any time, the published GTFS dataset should be valid for at least the next 7 days.
+
+### References
+* [General Publishing & General Practices](https://gtfs.org/best-practices/#dataset-publishing--general-practices)
+
+<details>
+
+#### Notice fields description
+| Field name              	        | Description                                                                     	| Type   	|
+|-------------------------	|----------------------------------------------	        |--------	|
+| `csvRowNumber`           	| The row number of the faulty record.         	                 | Long   	|
+| `currentDate`            	        | Current date (YYYYMMDD format).              	        | String 	|
+| `feedEndDate`            	        | Feed end date (YYYYMMDD format).             	        | String 	|
+| `suggestedExpirationDate`	| Suggested expiration date (YYYYMMDD format). 	| String 	|
+
+#### Affected files
+* [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
+</details>
+
+
+<a name="FeedExpirationDate30DaysNotice"/>
+
+### feed_expiration_date_30_days
+
+At any time, the GTFS dataset should cover at least the next 30 days of service, and ideally for as long as the operator is confident that the schedule will continue to be operated.
 
 #### References
 * [General Publishing & General Practices](https://gtfs.org/best-practices/#dataset-publishing--general-practices)
