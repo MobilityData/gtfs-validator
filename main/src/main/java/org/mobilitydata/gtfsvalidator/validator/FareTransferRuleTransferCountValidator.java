@@ -19,7 +19,7 @@ public class FareTransferRuleTransferCountValidator
       if (rule.hasTransferCount()) {
         if (rule.transferCount() < -1 || rule.transferCount() == 0) {
           noticeContainer.addValidationNotice(
-              new InvalidFareTransferRuleTransferCountNotice(
+              new FareTransferRuleInvalidTransferCountNotice(
                   rule.csvRowNumber(), rule.transferCount()));
         }
       } else {
@@ -40,11 +40,11 @@ public class FareTransferRuleTransferCountValidator
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
-  static class InvalidFareTransferRuleTransferCountNotice extends ValidationNotice {
+  static class FareTransferRuleInvalidTransferCountNotice extends ValidationNotice {
     private final long csvRowNumber;
     private final int transferCount;
 
-    InvalidFareTransferRuleTransferCountNotice(long csvRowNumber, int transferCount) {
+    FareTransferRuleInvalidTransferCountNotice(long csvRowNumber, int transferCount) {
       super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
       this.transferCount = transferCount;

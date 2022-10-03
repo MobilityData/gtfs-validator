@@ -7,9 +7,9 @@ import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareTransferRule;
+import org.mobilitydata.gtfsvalidator.validator.FareTransferRuleTransferCountValidator.FareTransferRuleInvalidTransferCountNotice;
 import org.mobilitydata.gtfsvalidator.validator.FareTransferRuleTransferCountValidator.FareTransferRuleMissingTransferCountNotice;
 import org.mobilitydata.gtfsvalidator.validator.FareTransferRuleTransferCountValidator.FareTransferRuleWithForbiddenTransferCountNotice;
-import org.mobilitydata.gtfsvalidator.validator.FareTransferRuleTransferCountValidator.InvalidFareTransferRuleTransferCountNotice;
 
 public class FareTransferRuleTransferCountValidatorTest {
   private static List<ValidationNotice> generateNotices(GtfsFareTransferRule rule) {
@@ -52,7 +52,7 @@ public class FareTransferRuleTransferCountValidatorTest {
                     .setToLegGroupId("a")
                     .setTransferCount(0)
                     .build()))
-        .containsExactly(new InvalidFareTransferRuleTransferCountNotice(2, 0));
+        .containsExactly(new FareTransferRuleInvalidTransferCountNotice(2, 0));
   }
 
   @Test
@@ -65,7 +65,7 @@ public class FareTransferRuleTransferCountValidatorTest {
                     .setToLegGroupId("a")
                     .setTransferCount(-2)
                     .build()))
-        .containsExactly(new InvalidFareTransferRuleTransferCountNotice(2, -2));
+        .containsExactly(new FareTransferRuleInvalidTransferCountNotice(2, -2));
   }
 
   @Test

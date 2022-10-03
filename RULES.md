@@ -43,6 +43,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`equal_shape_distance_diff_coordinates`](#equal_shape_distance_diff_coordinates)                                 | Two consecutive points have equal `shape_dist_traveled` and different lat/lon coordinates in `shapes.txt`.                                             |
 | [`fare_transfer_rule_duration_limit_type_without_duration_limit`](#fare_transfer_rule_duration_limit_type_without_duration_limit) | A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit_type` field but no `duration_limit` specified.            |
 | [`fare_transfer_rule_duration_limit_without_type`](#fare_transfer_rule_duration_limit_without_type)               | A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit` field but no `duration_limit_type` specified.                            |
+| [`fare_transfer_rule_invalid_transfer_count`](#fare_transfer_rule_invalid_transfer_count)                         | A row from GTFS file `fare_transfer_rules.txt` has a defined `transfer_count` with an invalid value.                                                   |
 | [`fare_transfer_rule_missing_transfer_count`](#fare_transfer_rule_missing_transfer_count)                         | A row from `fare_transfer_rules.txt` has `from_leg_group_id` equal to `to_leg_group_id`, but has no `transfer_count` specified.                        |
 | [`fare_transfer_rule_with_forbidden_transfer_count`](#fare_transfer_rule_with_forbidden_transfer_count)           | A row from `fare_transfer_rules.txt` has `from_leg_group_id` not equal to `to_leg_group_id`, but has `transfer_count` specified.                       |
 | [`foreign_key_violation`](#foreign_key_violation)                                                                 | Wrong foreign key.                                                                                                                                     |
@@ -432,6 +433,27 @@ A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit_typ
 ### fare_transfer_rule_duration_limit_without_type 
 
 A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit` field but no `duration_limit_type` specified.
+
+#### References
+* [GTFS fare_transfer_rules.txt](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+<details>
+
+#### Notice fields description
+| Field name      	| Description                                        	| Type   	|
+|-----------------	|----------------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row of the faulty record.                      	| Long   	|
+
+#### Affected files
+* [`fare_transfer_rules.txt`](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+</details>
+
+<a name="FareTransferRuleInvalidTransferCountNotice"/>
+
+### fare_transfer_rule_invalid_transfer_count
+
+A row from GTFS file `fare_transfer_rules.txt` has a defined `transfer_count` with an invalid value.
 
 #### References
 * [GTFS fare_transfer_rules.txt](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
