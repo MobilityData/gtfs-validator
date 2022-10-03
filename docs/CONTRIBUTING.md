@@ -126,8 +126,9 @@ The [NEW_RULES.md](/docs/NEW_RULES.md) document includes step-by-step instructio
 A critical step in troubleshooting is being able to reproduce the problem. Instructions to publicly reproduce errors using GitHub Actions can be found in our [guide to reproduce errors](/docs/REPRODUCE_ERRORS.md).
 
 **What to do with the acceptance test results?**
+
 The acceptance test is a key part of the Pull Request process. More information about this test is available in the [ACCEPTANCE_TEST.md](/docs/ACCEPTANCE_TESTS.md) file
-<img src="/docs/Acceptance-test-process.jpg" width="700">
+<img src="/docs/Acceptance-test-process.jpg" width="600">
 
 **How to run tests locally?**
 
