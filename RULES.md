@@ -32,6 +32,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | Notice code                                                                                                       | Description                                                                                                                                            |
 |-------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`block_trips_with_overlapping_stop_times`](#block_trips_with_overlapping_stop_times)                             | Block trips with overlapping stop times.                                                                                                               |
+| [`conditionally_forbidden_file`](#conditionally_forbidden_file)                                                   | A conditionally forbidden file is present in the feed.                                                                                                 |
 | [`csv_parsing_failed`](#csv_parsing_failed)                                                                       | Parsing of a CSV file failed.                                                                                                                          |
 | [`decreasing_shape_distance`](#decreasing_shape_distance)                                                         | Decreasing `shape_dist_traveled` in `shapes.txt`.                                                                                                      |
 | [`decreasing_or_equal_stop_time_distance`](#decreasing_or_equal_stop_time_distance)                               | Decreasing or equal `shape_dist_traveled` in `stop_times.txt`.                                                                                         |
@@ -181,6 +182,26 @@ Trips with the same block id have overlapping stop times.
 #### Affected files
 * [stops.txt specification](http://gtfs.org/reference/static#stopstxt)
 * [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
+
+</details>
+
+<a name="ConditionallyForbiddenFileNotice"/>
+
+### conditionally_forbidden_file
+
+A conditionally forbidden file is present in the feed.
+
+#### References
+* [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
+<details>
+
+#### Notice fields description
+| Field name   	| Description                    	| Type   	|
+|--------------	|--------------------------------	|--------	|
+| `filename`   	| The name of the forbidden file.   	| String 	|
+
+#### Affected files
+[All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
 </details>
 
