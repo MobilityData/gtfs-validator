@@ -34,6 +34,7 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.univocity.parsers.common.TextParsingException;
+import com.univocity.parsers.csv.CsvParserSettings;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -220,33 +221,42 @@ public class TableLoaderGenerator {
             .addParameter(ValidatorProvider.class, "validatorProvider")
             .addParameter(NoticeContainer.class, "noticeContainer")
             .returns(
-                ParameterizedTypeName.get(ClassName.get(GtfsTableContainer.class), gtfsEntityType))
-            .addStatement("$T csvFile", CsvFile.class)
-            .beginControlFlow("try")
-            .addStatement("csvFile = new $T(inputStream, FILENAME)", CsvFile.class)
-            .nextControlFlow("catch ($T e)", TextParsingException.class)
-            .addStatement(
-                "noticeContainer.addValidationNotice(new $T(FILENAME, e))",
-                CsvParsingFailedNotice.class)
-            .addStatement(
-                "return new $T($T.INVALID_HEADERS)", tableContainerTypeName, TableStatus.class)
-            .endControlFlow()
-            .beginControlFlow("if (csvFile.isEmpty())")
-            .addStatement(
-                "noticeContainer.addValidationNotice(new $T(FILENAME))", EmptyFileNotice.class)
-            .addStatement("return new $T($T.EMPTY_FILE)", tableContainerTypeName, TableStatus.class)
-            .endControlFlow()
-            .addStatement("$T header = csvFile.getHeader()", CsvHeader.class)
-            .addStatement(
-                "$T headerNotices = new $T()", NoticeContainer.class, NoticeContainer.class)
-            .addStatement(
-                "validatorProvider.getTableHeaderValidator().validate(FILENAME, header, "
-                    + "getColumnNames(), getRequiredColumnNames(), headerNotices)")
-            .addStatement("noticeContainer.addAll(headerNotices)")
-            .beginControlFlow("if (headerNotices.hasValidationErrors())")
-            .addStatement(
-                "return new $T($T.INVALID_HEADERS)", tableContainerTypeName, TableStatus.class)
-            .endControlFlow();
+                ParameterizedTypeName.get(ClassName.get(GtfsTableContainer.class), gtfsEntityType));
+    method
+        .addStatement("$T csvFile", CsvFile.class)
+        .beginControlFlow("try")
+        .addStatement(
+            "$T settings = $T.createDefaultParserSettings()",
+            CsvParserSettings.class,
+            CsvFile.class);
+    if (fileDescriptor.maxCharsPerColumn().isPresent()) {
+      method.addStatement(
+          "settings.setMaxCharsPerColumn($L)", fileDescriptor.maxCharsPerColumn().get());
+    }
+    method
+        .addStatement("csvFile = new $T(inputStream, FILENAME, settings)", CsvFile.class)
+        .nextControlFlow("catch ($T e)", TextParsingException.class)
+        .addStatement(
+            "noticeContainer.addValidationNotice(new $T(FILENAME, e))",
+            CsvParsingFailedNotice.class)
+        .addStatement(
+            "return new $T($T.INVALID_HEADERS)", tableContainerTypeName, TableStatus.class)
+        .endControlFlow()
+        .beginControlFlow("if (csvFile.isEmpty())")
+        .addStatement(
+            "noticeContainer.addValidationNotice(new $T(FILENAME))", EmptyFileNotice.class)
+        .addStatement("return new $T($T.EMPTY_FILE)", tableContainerTypeName, TableStatus.class)
+        .endControlFlow()
+        .addStatement("$T header = csvFile.getHeader()", CsvHeader.class)
+        .addStatement("$T headerNotices = new $T()", NoticeContainer.class, NoticeContainer.class)
+        .addStatement(
+            "validatorProvider.getTableHeaderValidator().validate(FILENAME, header, "
+                + "getColumnNames(), getRequiredColumnNames(), headerNotices)")
+        .addStatement("noticeContainer.addAll(headerNotices)")
+        .beginControlFlow("if (headerNotices.hasValidationErrors())")
+        .addStatement(
+            "return new $T($T.INVALID_HEADERS)", tableContainerTypeName, TableStatus.class)
+        .endControlFlow();
 
     for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
       method.addStatement(
