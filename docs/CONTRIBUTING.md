@@ -128,7 +128,7 @@ A critical step in troubleshooting is being able to reproduce the problem. Instr
 **What to do with the acceptance test results?**
 
 The acceptance test is a key part of the Pull Request process. More information about this test is available in the [ACCEPTANCE_TEST.md](/docs/ACCEPTANCE_TESTS.md) file
-<img src="/docs/Acceptance-test-process.jpg" width="600">
+<img src="/docs/Acceptance-test-process.png" width="600">
 
 **How to run tests locally?**
 
