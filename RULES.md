@@ -46,7 +46,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`fare_transfer_rule_invalid_transfer_count`](#fare_transfer_rule_invalid_transfer_count)                         | A row from GTFS file `fare_transfer_rules.txt` has a defined `transfer_count` with an invalid value.                                                   |
 | [`fare_transfer_rule_missing_transfer_count`](#fare_transfer_rule_missing_transfer_count)                         | A row from `fare_transfer_rules.txt` has `from_leg_group_id` equal to `to_leg_group_id`, but has no `transfer_count` specified.                        |
 | [`fare_transfer_rule_with_forbidden_transfer_count`](#fare_transfer_rule_with_forbidden_transfer_count)           | A row from `fare_transfer_rules.txt` has `from_leg_group_id` not equal to `to_leg_group_id`, but has `transfer_count` specified.                       |
-| [`forbidden_file`](#forbidden_file)                                                                               | A conditionally forbidden file is present in the feed.                                                                                                 |
+| [`forbidden_file`](#forbidden_file)                                                                               | A forbidden file is present in the feed.                                                                                                 |
 | [`foreign_key_violation`](#foreign_key_violation)                                                                 | Wrong foreign key.                                                                                                                                     |
 | [`inconsistent_agency_timezone`](#inconsistent_agency_timezone)                                                   | Inconsistent Timezone among agencies.                                                                                                                  |
 | [`invalid_color`](#invalid_color)                                                                                 | A field contains an invalid color value.                                                                                                               |
@@ -195,7 +195,7 @@ Trips with the same block id have overlapping stop times.
 
 ### forbidden_file
 
-A conditionally forbidden file is present in the feed.
+A forbidden file is present in the feed.
 
 #### References
 * [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)

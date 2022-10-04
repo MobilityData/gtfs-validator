@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 /**
- * A conditionally forbidden file is present in the feed.
+ * A forbidden file is present in the feed.
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
