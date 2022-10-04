@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.*;
 
+import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
 import org.mobilitydata.gtfsvalidator.annotation.FieldType;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
@@ -29,13 +30,13 @@ import org.mobilitydata.gtfsvalidator.annotation.Required;
 @GtfsTable("transfers.txt")
 public interface GtfsTransferSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
-  @Required
+  @ConditionallyRequired
   @ForeignKey(table = "stops.txt", field = "stop_id")
   @PrimaryKey(translationRecordIdType = RECORD_ID)
   String fromStopId();
 
   @FieldType(FieldTypeEnum.ID)
-  @Required
+  @ConditionallyRequired
   @ForeignKey(table = "stops.txt", field = "stop_id")
   @PrimaryKey(translationRecordIdType = RECORD_SUB_ID)
   String toStopId();
@@ -47,11 +48,13 @@ public interface GtfsTransferSchema extends GtfsEntity {
   int minTransferTime();
 
   @FieldType(FieldTypeEnum.ID)
+  @ConditionallyRequired
   @ForeignKey(table = "trips.txt", field = "trip_id")
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)
   String fromTripId();
 
   @FieldType(FieldTypeEnum.ID)
+  @ConditionallyRequired
   @ForeignKey(table = "trips.txt", field = "trip_id")
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)
   String toTripId();

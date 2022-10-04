@@ -14,14 +14,22 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.table;
+package org.mobilitydata.gtfsvalidator.notice;
 
-import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValue;
+/**
+ * The given field has a value in some input row, even though the value is forbidden.
+ *
+ * <p>Severity: {@code SeverityLevel.ERROR}
+ */
+public class ForbiddenFieldNotice extends ValidationNotice {
+  private final String filename;
+  private final long csvRowNumber;
+  private final String fieldName;
 
-@GtfsEnumValue(name = "RECOMMENDED", value = 0)
-@GtfsEnumValue(name = "TIMED", value = 1)
-@GtfsEnumValue(name = "MINIMUM_TIME", value = 2)
-@GtfsEnumValue(name = "IMPOSSIBLE", value = 3)
-@GtfsEnumValue(name = "IN_SEAT_TRANSFER_ALLOWED", value = 4)
-@GtfsEnumValue(name = "IN_SEAT_TRANSFER_NOT_ALLOWED", value = 5)
-public interface GtfsTransferTypeEnum {}
+  public ForbiddenFieldNotice(String filename, long csvRowNumber, String fieldName) {
+    super(SeverityLevel.ERROR);
+    this.filename = filename;
+    this.csvRowNumber = csvRowNumber;
+    this.fieldName = fieldName;
+  }
+}

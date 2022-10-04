@@ -47,6 +47,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`fare_transfer_rule_missing_transfer_count`](#fare_transfer_rule_missing_transfer_count)                         | A row from `fare_transfer_rules.txt` has `from_leg_group_id` equal to `to_leg_group_id`, but has no `transfer_count` specified.                        |
 | [`fare_transfer_rule_with_forbidden_transfer_count`](#fare_transfer_rule_with_forbidden_transfer_count)           | A row from `fare_transfer_rules.txt` has `from_leg_group_id` not equal to `to_leg_group_id`, but has `transfer_count` specified.                       |
 | [`foreign_key_violation`](#foreign_key_violation)                                                                 | Wrong foreign key.                                                                                                                                     |
+| [`forbidden_field`](#forbidden_field)                                                                             | A field has specified a value, but it is not allowed.                                                                                                  |
 | [`inconsistent_agency_timezone`](#inconsistent_agency_timezone)                                                   | Inconsistent Timezone among agencies.                                                                                                                  |
 | [`invalid_color`](#invalid_color)                                                                                 | A field contains an invalid color value.                                                                                                               |
 | [`invalid_currency`](#invalid_currency)                                                                           | A field contains a wrong currency code.                                                                                                                |
@@ -512,6 +513,28 @@ A row from GTFS file `fare_transfer_rules.txt` has `from_leg_group_id` not equal
 
 #### Affected files
 * [`fare_transfer_rules.txt`](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+</details>
+
+<a name="ForbiddenFieldNotice"/>
+
+### forbidden_field
+
+The given field has a value in some input row, even though the value is forbidden.
+
+#### References
+* [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
+<details>
+
+#### Notice fields description
+| Field name   	| Description                    	| Type   	|
+|--------------	|--------------------------------	|--------	|
+| `filename`   	| The name of the faulty file.   	| String 	|
+| `csvRowNumber`| The row of the faulty record.  	| Long   	|
+| `fieldName`  	| The name of the forbidden field. 	| String 	|
+
+#### Affected files
+[All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
 
 </details>
 
