@@ -1,12 +1,14 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.ForbiddenFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareAttributeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareRuleTableContainer;
 
+@GtfsValidator
 public class FaresV1FileValidator extends FileValidator {
 
   private final GtfsFareAttributeTableContainer fareAttributeTable;
