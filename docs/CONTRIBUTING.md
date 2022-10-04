@@ -47,12 +47,12 @@ Remove the Needs triage label and replace it with the appropriate status label (
 
 **Core developers**
 
-Contributors who actively push to the project. They can perform code reviews, request changes, approve and merge Pull Requests. Core developers have Write permissions to the repository. The current core developers for this project are [Maxime Armstrong](https://github.com/maximearmstrong) and [Brian Ferris](https://github.com/bdferris-v2).
+Contributors who actively push to the project. They can perform code reviews, request changes, approve and merge Pull Requests. Core developers have Write permissions to the repository. The current core developers for this project are [Maxime Armstrong](https://github.com/maximearmstrong) and [Brian Ferris](https://github.com/bdferris-v2), and [Kevin Clough](https://github.com/KClough).
 @TODO how to become a core developer
 
-**Technical committee**
-The technical committee is composed of core developers and the product manager, who have additional responsibilities to ensure the project runs smoothly and the progress is in line with the big picture vision: they discuss considerable changes to the project, perform strategic planning, and approve changes to the governance model. 
-The Steering committee currently consists of [Isabelle de Robert](https://github.com/isabelle-dr), [Maxime Armstrong](https://github.com/maximearmstrong), and [Brian Ferris](https://github.com/bdferris-v2).
+**Steering committee**
+The steering committee is composed of core developers and the product manager, who have additional responsibilities to ensure the project runs smoothly and the progress is in line with the big picture vision: they discuss considerable changes to the project, perform strategic planning, and approve changes to the governance model. 
+The Steering committee currently consists of [Isabelle de Robert](https://github.com/isabelle-dr) and [Brian Ferris](https://github.com/bdferris-v2).
 @TODO how to join the steering committee.
 
 ## Overview of the contribution process
@@ -86,7 +86,7 @@ This process is described in more detail in the GitHub documentation [**Contribu
 
 This image shows the tests implemented in the Pull Request process.
 
-<img src="/docs/Pull-Request-process.jpg" width="750">
+<img src="/docs/Pull-Request-process.jpg" width="700">
 
 ## Pull Request comments and reviews
 Reviewing Pull Requests is a great way to get familiar with the code & architecture of this tool, and to make sure a functionality meets your needs. Each Pull Request has to be approved by at least one one core developer, but having community members helping with this process is significant for the MobilityData team. Additionally, having the eyes of people from different expertise and backgrounds on a contribution makes it higher quality (nobody can think of everything!).
@@ -126,10 +126,8 @@ The [NEW_RULES.md](/docs/NEW_RULES.md) document includes step-by-step instructio
 A critical step in troubleshooting is being able to reproduce the problem. Instructions to publicly reproduce errors using GitHub Actions can be found in our [guide to reproduce errors](/docs/REPRODUCE_ERRORS.md).
 
 **What to do with the acceptance test results?**
-
-The acceptance test is a key part of the Pull Request process. More information about this test is available in the [ACCEPTANCE_TEST.md](/docs/ACCEPTANCE_TESTS.md) file.
-
-<img src="/docs/Acceptance-test-process.png" width="600">
+The acceptance test is a key part of the Pull Request process. More information about this test is available in the [ACCEPTANCE_TEST.md](/docs/ACCEPTANCE_TESTS.md) file
+<img src="/docs/Acceptance-test-process.jpg" width="700">
 
 **How to run tests locally?**
 
