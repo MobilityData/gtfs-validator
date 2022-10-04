@@ -32,7 +32,6 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | Notice code                                                                                                       | Description                                                                                                                                            |
 |-------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`block_trips_with_overlapping_stop_times`](#block_trips_with_overlapping_stop_times)                             | Block trips with overlapping stop times.                                                                                                               |
-| [`conditionally_forbidden_file`](#conditionally_forbidden_file)                                                   | A conditionally forbidden file is present in the feed.                                                                                                 |
 | [`csv_parsing_failed`](#csv_parsing_failed)                                                                       | Parsing of a CSV file failed.                                                                                                                          |
 | [`decreasing_shape_distance`](#decreasing_shape_distance)                                                         | Decreasing `shape_dist_traveled` in `shapes.txt`.                                                                                                      |
 | [`decreasing_or_equal_stop_time_distance`](#decreasing_or_equal_stop_time_distance)                               | Decreasing or equal `shape_dist_traveled` in `stop_times.txt`.                                                                                         |
@@ -42,6 +41,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`empty_column_name`](#empty_column_name)                                                                         | A column name is empty.                                                                                                                                |
 | [`empty_file`](#empty_file)                                                                                       | A CSV file is empty.                                                                                                                                   |
 | [`equal_shape_distance_diff_coordinates`](#equal_shape_distance_diff_coordinates)                                 | Two consecutive points have equal `shape_dist_traveled` and different lat/lon coordinates in `shapes.txt`.                                             |
+| [`forbidden_file`](#forbidden_file)                                                                               | A conditionally forbidden file is present in the feed.                                                                                                 |
 | [`foreign_key_violation`](#foreign_key_violation)                                                                 | Wrong foreign key.                                                                                                                                     |
 | [`inconsistent_agency_timezone`](#inconsistent_agency_timezone)                                                   | Inconsistent Timezone among agencies.                                                                                                                  |
 | [`invalid_color`](#invalid_color)                                                                                 | A field contains an invalid color value.                                                                                                               |
@@ -185,9 +185,9 @@ Trips with the same block id have overlapping stop times.
 
 </details>
 
-<a name="ConditionallyForbiddenFileNotice"/>
+<a name="ForbiddenFileNotice"/>
 
-### conditionally_forbidden_file
+### forbidden_file
 
 A conditionally forbidden file is present in the feed.
 

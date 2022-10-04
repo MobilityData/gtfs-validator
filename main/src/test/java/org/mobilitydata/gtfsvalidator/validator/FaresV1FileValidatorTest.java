@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 import junit.framework.TestCase;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.notice.ConditionallyForbiddenFileNotice;
+import org.mobilitydata.gtfsvalidator.notice.ForbiddenFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareAttributeTableContainer;
@@ -60,6 +60,6 @@ public class FaresV1FileValidatorTest extends TestCase {
             new GtfsFareRuleTableContainer(TableStatus.PARSABLE_HEADERS_AND_ROWS))
         .validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new ConditionallyForbiddenFileNotice("fare_rules.txt"));
+        .containsExactly(new ForbiddenFileNotice("fare_rules.txt"));
   }
 }

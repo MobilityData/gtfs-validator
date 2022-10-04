@@ -1,7 +1,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import javax.inject.Inject;
-import org.mobilitydata.gtfsvalidator.notice.ConditionallyForbiddenFileNotice;
+import org.mobilitydata.gtfsvalidator.notice.ForbiddenFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareAttributeTableContainer;
@@ -26,8 +26,7 @@ public class FaresV1FileValidator extends FileValidator {
       noticeContainer.addValidationNotice(
           new MissingRequiredFileNotice(fareRuleTable.gtfsFilename()));
     } else if (fareAttributeTable.isMissingFile() && !fareRuleTable.isMissingFile()) {
-      noticeContainer.addValidationNotice(
-          new ConditionallyForbiddenFileNotice(fareRuleTable.gtfsFilename()));
+      noticeContainer.addValidationNotice(new ForbiddenFileNotice(fareRuleTable.gtfsFilename()));
     }
   }
 }

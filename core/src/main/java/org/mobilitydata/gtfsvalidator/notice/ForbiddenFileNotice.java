@@ -21,10 +21,10 @@ package org.mobilitydata.gtfsvalidator.notice;
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class ConditionallyForbiddenFileNotice extends ValidationNotice {
+public class ForbiddenFileNotice extends ValidationNotice {
   private final String filename;
 
-  public ConditionallyForbiddenFileNotice(String filename) {
+  public ForbiddenFileNotice(String filename) {
     super(SeverityLevel.ERROR);
     this.filename = filename;
   }
