@@ -19,7 +19,6 @@ package org.mobilitydata.gtfsvalidator.table;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
 
-import java.io.IOException;
 import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,10 +33,10 @@ public class GtfsLevelTableLoaderTest {
   private LoadingHelper helper = new LoadingHelper();
 
   @Test
-  public void validFile() throws IOException, ValidatorLoaderException {
+  public void validFile() throws ValidatorLoaderException {
     GtfsLevelTableContainer tableContainer =
         helper.load(
-            new GtfsLevelTableLoader(), "level_id,level_name,level_index", "level1,Ground,1");
+            new GtfsLevelTableDescriptor(), "level_id,level_name,level_index", "level1,Ground,1");
 
     assertThat(helper.getValidationNotices()).isEmpty();
     assertThat(tableContainer.entityCount()).isEqualTo(1);
@@ -50,17 +49,17 @@ public class GtfsLevelTableLoaderTest {
   }
 
   @Test
-  public void missingRequiredField() throws IOException, ValidatorLoaderException {
+  public void missingRequiredField() throws ValidatorLoaderException {
     GtfsLevelTableContainer tableContainer =
-        helper.load(new GtfsLevelTableLoader(), "level_id,level_name,level_index", ",Ground,1");
+        helper.load(new GtfsLevelTableDescriptor(), "level_id,level_name,level_index", ",Ground,1");
 
     assertThat(helper.getValidationNotices()).isNotEmpty();
     assertThat(tableContainer.entityCount()).isEqualTo(0);
   }
 
   @Test
-  public void emptyFile() throws IOException, ValidatorLoaderException {
-    helper.load(new GtfsLevelTableLoader());
+  public void emptyFile() throws ValidatorLoaderException {
+    helper.load(new GtfsLevelTableDescriptor());
 
     assertThat(helper.getValidationNotices()).isNotEmpty();
     assertThat(helper.getValidationNotices().get(0).getClass().getSimpleName())

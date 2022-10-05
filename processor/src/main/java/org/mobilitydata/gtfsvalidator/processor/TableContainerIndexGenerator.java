@@ -286,7 +286,6 @@ class TableContainerIndexGenerator {
 
   private MethodSpec generateSetupIndicesMethod() {
     TypeName gtfsEntityType = classNames.entityImplementationTypeName();
-    TypeName loaderType = classNames.tableLoaderTypeName();
     MethodSpec.Builder method =
         MethodSpec.methodBuilder("setupIndices")
             .addModifiers(Modifier.PRIVATE)

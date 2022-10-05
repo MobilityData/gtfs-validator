@@ -13,7 +13,7 @@ import com.squareup.javapoet.WildcardTypeName;
 import java.util.List;
 import javax.lang.model.element.Modifier;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableLoader;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableDescriptor;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableRegistry;
 
 public class TableRegistryGenerator {
@@ -32,20 +32,19 @@ public class TableRegistryGenerator {
         .addModifiers(Modifier.PUBLIC)
         .addAnnotation(Generated.class)
         .addSuperinterface(GtfsTableRegistry.class)
-        .addMethod(generateGetTableLoadersMethod())
+        .addMethod(generateGetTableDescriptorsMethod())
         .build();
   }
 
-  private MethodSpec generateGetTableLoadersMethod() {
+  private MethodSpec generateGetTableDescriptorsMethod() {
     TypeName loaderType =
         ParameterizedTypeName.get(
-            ClassName.get(GtfsTableLoader.class), WildcardTypeName.subtypeOf(Object.class));
+            ClassName.get(GtfsTableDescriptor.class), WildcardTypeName.subtypeOf(Object.class));
     MethodSpec.Builder method =
-        MethodSpec.methodBuilder("getTableLoaders")
+        MethodSpec.methodBuilder("getTableDescriptors")
             .addModifiers(Modifier.PUBLIC)
             .addAnnotation(Override.class)
             .returns(ParameterizedTypeName.get(ClassName.get(ImmutableList.class), loaderType));
-
     method.addStatement(
         "$T.Builder<$T> builder = $T.builder()",
         ImmutableList.class,
@@ -53,7 +52,7 @@ public class TableRegistryGenerator {
         ImmutableList.class);
     for (GtfsFileDescriptor fileDescriptor : fileDescriptors) {
       method.addStatement(
-          "builder.add(new $T())", new GtfsEntityClasses(fileDescriptor).tableLoaderTypeName());
+          "builder.add(new $T())", new GtfsEntityClasses(fileDescriptor).tableDescriptorTypeName());
     }
     method.addStatement("return builder.build()");
     return method.build();
