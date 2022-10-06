@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,62 +16,45 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.UNSUPPORTED;
+
 import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
-import org.mobilitydata.gtfsvalidator.annotation.DefaultValue;
 import org.mobilitydata.gtfsvalidator.annotation.FieldType;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.Index;
-import org.mobilitydata.gtfsvalidator.annotation.NonNegative;
+import org.mobilitydata.gtfsvalidator.annotation.Positive;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
-import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 
-@GtfsTable("routes.txt")
-@Required
-public interface GtfsRouteSchema extends GtfsEntity {
+@GtfsTable("fare_transfer_rules.txt")
+public interface GtfsFareTransferRuleSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
-  @PrimaryKey
-  @Required
-  String routeId();
+  @ForeignKey(table = "fare_leg_rules.txt", field = "leg_group_id")
+  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
+  String fromLegGroupId();
 
   @FieldType(FieldTypeEnum.ID)
-  @ForeignKey(table = "agency.txt", field = "agency_id")
-  @ConditionallyRequired
-  String agencyId();
+  @ForeignKey(table = "fare_leg_rules.txt", field = "leg_group_id")
+  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
+  String toLegGroupId();
+
+  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
+  @Positive
+  int durationLimit();
 
   @ConditionallyRequired
-  String routeShortName();
-
-  @ConditionallyRequired
-  String routeLongName();
-
-  String routeDesc();
+  GtfsDurationLimitType durationLimitType();
 
   @Required
-  GtfsRouteType routeType();
+  GtfsFareTransferType fareTransferType();
 
-  @FieldType(FieldTypeEnum.URL)
-  String routeUrl();
-
-  @DefaultValue("FFFFFF")
-  GtfsColor routeColor();
-
-  @DefaultValue("000000")
-  GtfsColor routeTextColor();
-
-  @NonNegative
-  int routeSortOrder();
-
-  @DefaultValue("1")
-  GtfsContinuousPickupDropOff continuousPickup();
-
-  @DefaultValue("1")
-  GtfsContinuousPickupDropOff continuousDropOff();
+  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
+  @ConditionallyRequired
+  int transferCount();
 
   @FieldType(FieldTypeEnum.ID)
-  @Index
-  @ConditionallyRequired
-  String networkId();
+  @ForeignKey(table = "fare_products.txt", field = "fare_product_id")
+  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
+  String fareProductId();
 }
