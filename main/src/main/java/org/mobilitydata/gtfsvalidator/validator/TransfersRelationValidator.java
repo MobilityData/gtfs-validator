@@ -7,22 +7,32 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransfer;
+import org.mobilitydata.gtfsvalidator.table.GtfsTransferTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransferTableLoader;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 
 @GtfsValidator
-public class TransfersRelationValidator extends SingleEntityValidator<GtfsTransfer> {
+public class TransfersRelationValidator extends FileValidator {
 
+  private final GtfsTransferTableContainer transfersContainer;
   private final GtfsTripTableContainer tripsContainer;
 
   @Inject
-  public TransfersRelationValidator(GtfsTripTableContainer tripsContainer) {
+  public TransfersRelationValidator(
+      GtfsTransferTableContainer transfersContainer, GtfsTripTableContainer tripsContainer) {
+    this.transfersContainer = transfersContainer;
     this.tripsContainer = tripsContainer;
   }
 
   @Override
-  public void validate(GtfsTransfer entity, NoticeContainer noticeContainer) {
+  public void validate(NoticeContainer noticeContainer) {
+    for (GtfsTransfer transfer : transfersContainer.getEntities()) {
+      validateEntity(transfer, noticeContainer);
+    }
+  }
+
+  public void validateEntity(GtfsTransfer entity, NoticeContainer noticeContainer) {
     if (entity.hasFromTripId()) {
       Optional<GtfsTrip> optTrip = tripsContainer.byTripId(entity.fromTripId());
       if (optTrip.isPresent()) {
