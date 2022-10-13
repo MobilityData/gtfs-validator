@@ -41,10 +41,16 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`empty_column_name`](#empty_column_name)                                                                         | A column name is empty.                                                                                                                                |
 | [`empty_file`](#empty_file)                                                                                       | A CSV file is empty.                                                                                                                                   |
 | [`equal_shape_distance_diff_coordinates`](#equal_shape_distance_diff_coordinates)                                 | Two consecutive points have equal `shape_dist_traveled` and different lat/lon coordinates in `shapes.txt`.                                             |
+| [`fare_transfer_rule_duration_limit_type_without_duration_limit`](#fare_transfer_rule_duration_limit_type_without_duration_limit) | A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit_type` field but no `duration_limit` specified.            |
+| [`fare_transfer_rule_duration_limit_without_type`](#fare_transfer_rule_duration_limit_without_type)               | A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit` field but no `duration_limit_type` specified.                            |
+| [`fare_transfer_rule_invalid_transfer_count`](#fare_transfer_rule_invalid_transfer_count)                         | A row from GTFS file `fare_transfer_rules.txt` has a defined `transfer_count` with an invalid value.                                                   |
+| [`fare_transfer_rule_missing_transfer_count`](#fare_transfer_rule_missing_transfer_count)                         | A row from `fare_transfer_rules.txt` has `from_leg_group_id` equal to `to_leg_group_id`, but has no `transfer_count` specified.                        |
+| [`fare_transfer_rule_with_forbidden_transfer_count`](#fare_transfer_rule_with_forbidden_transfer_count)           | A row from `fare_transfer_rules.txt` has `from_leg_group_id` not equal to `to_leg_group_id`, but has `transfer_count` specified.                       |
 | [`foreign_key_violation`](#foreign_key_violation)                                                                 | Wrong foreign key.                                                                                                                                     |
 | [`inconsistent_agency_timezone`](#inconsistent_agency_timezone)                                                   | Inconsistent Timezone among agencies.                                                                                                                  |
 | [`invalid_color`](#invalid_color)                                                                                 | A field contains an invalid color value.                                                                                                               |
 | [`invalid_currency`](#invalid_currency)                                                                           | A field contains a wrong currency code.                                                                                                                |
+| [`invalid_currency_amount`](#invalid_currency_amount)                                                             | A currency amount field has a value that does not match the format of its corresponding currency code field.                                           |
 | [`invalid_date`](#invalid_date)                                                                                   | A field cannot be parsed as date.                                                                                                                      |
 | [`invalid_email`](#invalid_email)                                                                                 | A field contains a malformed email address.                                                                                                            |
 | [`invalid_float`](#invalid_float)                                                                                 | A field cannot be parsed as a floating point number.                                                                                                   |
@@ -95,13 +101,14 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`equal_shape_distance_same_coordinates`](#equal_shape_distance_same_coordinates)             | Two consecutive points have equal `shape_dist_traveled` and the same lat/lon coordinates in `shapes.txt`.                                                     |
 | [`fast_travel_between_consecutive_stops`](#fast_travel_between_consecutive_stops)             | A transit vehicle moves too fast between two consecutive stops.                                                                                               |
 | [`fast_travel_between_far_stops`](#fast_travel_between_far_stops)                             | A transit vehicle moves too fast between two far stops.                                                                                                       |
-| [`feed_expiration_date`](#feed_expiration_date)                                               | Dataset should be valid for at least the next 7 days. Dataset should cover at least the next 30 days of service.                                              |
+| [`feed_expiration_date_7_days`](#feed_expiration_date_7_days)                                 | Dataset should be valid for at least the next 7 days.                                                                                                         |
+| [`feed_expiration_date_30_days`](#feed_expiration_date_30_days)                               | Dataset should cover at least the next 30 days of service.                                                                                                    |
 | [`feed_info_lang_and_agency_mismatch`](#feed_info_lang_and_agency_mismatch)                   | Mismatching feed and agency language fields.                                                                                                                  |
 | [`inconsistent_agency_lang`](#inconsistent_agency_lang)                                       | Inconsistent language among agencies.                                                                                                                         |
 | [`leading_or_trailing_whitespaces`](#leading_or_trailing_whitespaces)                         | The value in CSV file has leading or trailing whitespaces.                                                                                                    |
 | [`missing_feed_info_date`](#missing_feed_info_date)                                           | `feed_end_date` should be provided if `feed_start_date` is provided. `feed_start_date` should be provided if `feed_end_date` is provided.                     |
-| [`missing_recommended_file`](#missing_recommended_file)                                       | A recommended file is missing.                     |
-| [`missing_recommended_field`](#missing_recommended_field)                                        | A recommended field is missing.                     |
+| [`missing_recommended_file`](#missing_recommended_file)                                       | A recommended file is missing.                                                                                                                                |
+| [`missing_recommended_field`](#missing_recommended_field)                                     | A recommended field is missing.                                                                                                                               |
 | [`missing_timepoint_column`](#missing_timepoint_column)                                       | `timepoint` column is missing for a dataset.                                                                                                                  |
 | [`missing_timepoint_value`](#missing_timepoint_value)                                         | `stop_times.timepoint` value is missing for a record.                                                                                                         |
 | [`more_than_one_entity`](#more_than_one_entity)                                               | More than one row in CSV.                                                                                                                                     |
@@ -127,6 +134,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`unusable_trip`](#unusable_trip)                                                             | Trips must have more than one stop to be usable.                                                                                                              |
 | [`unused_shape`](#unused_shape)                                                               | Shape is not used in GTFS file `trips.txt`.                                                                                                                   |
 | [`unused_trip`](#unused_trip)                                                                 | Trip is not be used in `stop_times.txt`                                                                                                                       |
+|                                                                                               |                                                                                                                                                               |
 
 <a name="INFOS"/>
 
@@ -401,6 +409,112 @@ When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` m
 
 </details>
 
+<a name="FareTransferRuleDurationLimitTypeWithoutDurationLimitNotice"/>
+
+### fare_transfer_rule_duration_limit_type_without_duration_limit
+
+A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit_type` field but no `duration_limit` specified.
+
+#### References
+* [GTFS fare_transfer_rules.txt](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+<details>
+
+#### Notice fields description
+| Field name      	| Description                                        	| Type   	|
+|-----------------	|----------------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row of the faulty record.                      	| Long   	|
+
+#### Affected files
+* [`fare_transfer_rules.txt`](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+</details>
+
+<a name="FareTransferRuleDurationLimitWithoutTypeNotice"/>
+
+### fare_transfer_rule_duration_limit_without_type 
+
+A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit` field but no `duration_limit_type` specified.
+
+#### References
+* [GTFS fare_transfer_rules.txt](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+<details>
+
+#### Notice fields description
+| Field name      	| Description                                        	| Type   	|
+|-----------------	|----------------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row of the faulty record.                      	| Long   	|
+
+#### Affected files
+* [`fare_transfer_rules.txt`](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+</details>
+
+<a name="FareTransferRuleInvalidTransferCountNotice"/>
+
+### fare_transfer_rule_invalid_transfer_count
+
+A row from GTFS file `fare_transfer_rules.txt` has a defined `transfer_count` with an invalid value.
+
+#### References
+* [GTFS fare_transfer_rules.txt](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+<details>
+
+#### Notice fields description
+| Field name      	| Description                                        	| Type   	|
+|-----------------	|----------------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row of the faulty record.                      	| Long   	|
+| `transferCount`   	| The transfer count value of the faulty record.      	| Integer	|
+
+#### Affected files
+* [`fare_transfer_rules.txt`](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+</details>
+
+<a name="FareTransferRuleMissingTransferCountNotice"/>
+
+### fare_transfer_rule_missing_transfer_count
+
+A row from GTFS file `fare_transfer_rules.txt` has `from_leg_group_id` equal to `to_leg_group_id`, but has no `transfer_count` specified.  Per the spec, `transfer_count` is required if the two leg group ids are equal.
+
+#### References
+* [GTFS fare_transfer_rules.txt](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+<details>
+
+#### Notice fields description
+| Field name      	| Description                                        	| Type   	|
+|-----------------	|----------------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row of the faulty record.                      	| Long   	|
+
+#### Affected files
+* [`fare_transfer_rules.txt`](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+</details>
+
+<a name="FareTransferRuleWithForbiddenTransferCountNotice"/>
+
+### fare_transfer_rule_with_forbidden_transfer_count
+
+A row from GTFS file `fare_transfer_rules.txt` has `from_leg_group_id` not equal to `to_leg_group_id`, but has `transfer_count` specified.  Per the spec, `transfer_count` is forbidden if the two leg group ids are not equal.
+
+#### References
+* [GTFS fare_transfer_rules.txt](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+<details>
+
+#### Notice fields description
+| Field name      	| Description                                        	| Type   	|
+|-----------------	|----------------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row of the faulty record.                      	| Long   	|
+
+#### Affected files
+* [`fare_transfer_rules.txt`](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+</details>
+
 <a name="ForeignKeyViolationNotice"/>
 
 ### foreign_key_violation
@@ -502,6 +616,29 @@ Value of field with type `currency` is not valid. Currency code must follow <a h
 
 #### Affected files
 * [`fare_attributes.txt`](http://gtfs.org/reference/static#fare_attributestxt)
+
+</details>
+
+<a name="InvalidCurrencyAmountNotice"/>
+
+### invalid_currency_amount
+
+A currency amount field has a value that does not match the format (e.g. expected number of decimal places) of its corresponding currency code field.  The number of decimal places is specified by <a href="https://en.wikipedia.org/wiki/ISO_4217#Active_codes">ISO 4217</a>.
+
+#### References
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
+<details>
+
+#### Notice fields description
+| Field name   	| Description                   	| Type   	|
+|--------------	|-------------------------------	|--------	|
+| `filename`   	| The row of the faulty record. 	| String 	|
+| `csvRowNumber`| The row of the faulty record. 	| Long   	|
+| `fieldName`  	| Faulty record's field name.   	| String 	|
+| `amount` 	| Faulty currency amount value.		| String 	|
+
+#### Affected files
+* [`fare_products.txt`](http://gtfs.org/reference/static#fare_productstxt)
 
 </details>
 
@@ -1603,12 +1740,35 @@ Same as for [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsec
 
 </details>
 
-<a name="FeedExpirationDateNotice"/>
+<a name="FeedExpirationDate7DaysNotice"/>
 
-### feed_expiration_date
+### feed_expiration_date_7_days
 
-At any time, the published GTFS dataset should be valid for at least the next 7 days, and ideally for as long as the operator is confident that the schedule will continue to be operated.
-If possible, the GTFS dataset should cover at least the next 30 days of service.
+The dataset expiration date defined in `feed_info.txt` is in seven days or less. At any time, the published GTFS dataset should be valid for at least the next 7 days.
+
+### References
+* [General Publishing & General Practices](https://gtfs.org/best-practices/#dataset-publishing--general-practices)
+
+<details>
+
+#### Notice fields description
+| Field name              	        | Description                                                                     	| Type   	|
+|-------------------------	|----------------------------------------------	        |--------	|
+| `csvRowNumber`           	| The row number of the faulty record.         	                 | Long   	|
+| `currentDate`            	        | Current date (YYYYMMDD format).              	        | String 	|
+| `feedEndDate`            	        | Feed end date (YYYYMMDD format).             	        | String 	|
+| `suggestedExpirationDate`	| Suggested expiration date (YYYYMMDD format). 	| String 	|
+
+#### Affected files
+* [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
+</details>
+
+
+<a name="FeedExpirationDate30DaysNotice"/>
+
+### feed_expiration_date_30_days
+
+At any time, the GTFS dataset should cover at least the next 30 days of service, and ideally for as long as the operator is confident that the schedule will continue to be operated.
 
 #### References
 * [General Publishing & General Practices](https://gtfs.org/best-practices/#dataset-publishing--general-practices)
