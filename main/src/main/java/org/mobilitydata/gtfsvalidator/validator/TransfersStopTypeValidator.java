@@ -13,6 +13,9 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTransfer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransferTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransferTableLoader;
 
+/**
+ * Validates that {@code transfers.from_stop_id} and {@code to_stop_id} reference stops or stations.
+ */
 @GtfsValidator
 public class TransfersStopTypeValidator extends FileValidator {
   private final GtfsTransferTableContainer transfersContainer;
@@ -53,8 +56,8 @@ public class TransfersStopTypeValidator extends FileValidator {
     GtfsLocationType locationType = optStop.get().locationType();
     if (!isValidTransferStopType(locationType)) {
       noticeContainer.addValidationNotice(
-          new TransfersStopLocationTypeNotice(
-              entity.csvRowNumber(), stopIdFieldName, locationType));
+          new TransferWithInvalidStopLocationTypeNotice(
+              entity.csvRowNumber(), stopIdFieldName, stopId, locationType));
     }
   }
 
@@ -68,17 +71,32 @@ public class TransfersStopTypeValidator extends FileValidator {
     }
   }
 
-  public static final class TransfersStopLocationTypeNotice extends ValidationNotice {
+  /**
+   * A `from_stop_id` or `to_stop_id` field from GTFS file `transfers.txt` references a stop that
+   * has a `location_type` other than 0 or 1 (aka Stop/Platform or Station).
+   *
+   * <p>Severity: {@code SeverityLevel.ERROR}
+   */
+  public static final class TransferWithInvalidStopLocationTypeNotice extends ValidationNotice {
+    // The row number from `transfers.txt` for the faulty entry.
     private final long csvRowNumber;
+    // The name of the stop id field (e.g. `from_stop_id`) referencing the stop.
     private final String stopIdFieldName;
-    private final int locationType;
+    // The referenced stop id.
+    private final String stopId;
+    // The numeric value of the invalid location type.
+    private final int locationTypeValue;
+    // The name of the invalid location type.
+    private String locationTypeName;
 
-    public TransfersStopLocationTypeNotice(
-        long csvRowNumber, String stopIdFieldName, GtfsLocationType locationType) {
+    public TransferWithInvalidStopLocationTypeNotice(
+        long csvRowNumber, String stopIdFieldName, String stopId, GtfsLocationType locationType) {
       super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
       this.stopIdFieldName = stopIdFieldName;
-      this.locationType = locationType.getNumber();
+      this.stopId = stopId;
+      this.locationTypeValue = locationType.getNumber();
+      this.locationTypeName = locationType.toString();
     }
   }
 }

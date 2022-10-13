@@ -19,6 +19,10 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTransferTableLoader;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 
+/**
+ * Validates that if a transfers.txt entry references a trip, then any corresponding route reference
+ * or stop reference for the transfer are actually associated with the trip.
+ */
 @GtfsValidator
 public class TransfersTripReferenceValidator extends FileValidator {
 
@@ -88,8 +92,13 @@ public class TransfersTripReferenceValidator extends FileValidator {
     if (routeId.isPresent()) {
       if (!trip.routeId().equals(routeId.get())) {
         noticeContainer.addValidationNotice(
-            new TransferTripReferenceNotice(
-                entity.csvRowNumber(), tripFieldName, tripId.get(), routeFieldName, routeId.get()));
+            new TransferWithInvalidTripAndRouteNotice(
+                entity.csvRowNumber(),
+                tripFieldName,
+                tripId.get(),
+                routeFieldName,
+                routeId.get(),
+                trip.routeId()));
       }
     }
     if (stopId.isPresent()) {
@@ -117,7 +126,7 @@ public class TransfersTripReferenceValidator extends FileValidator {
     List<GtfsStopTime> stopTimes = stopTimeContainer.byTripId(tripId.get());
     if (!stopTimes.stream().anyMatch((st) -> ids.contains(st.stopId()))) {
       noticeContainer.addValidationNotice(
-          new TransferTripReferenceNotice(
+          new TransferWithInvalidTripAndStopNotice(
               entity.csvRowNumber(), tripFieldName, tripId.get(), stopFieldName, stopId));
     }
   }
@@ -138,25 +147,73 @@ public class TransfersTripReferenceValidator extends FileValidator {
     }
   }
 
-  public static class TransferTripReferenceNotice extends ValidationNotice {
+  /**
+   * A `from_trip_id` or `to_trip_id` field from GTFS file `transfers.txt` references a route that
+   * does not match its `trips.txt` `route_id`.
+   *
+   * <p>Severity: {@code SeverityLevel.ERROR}
+   */
+  public static class TransferWithInvalidTripAndRouteNotice extends ValidationNotice {
+    // The row number from `transfers.txt` for the faulty entry.
     private final long csvRowNumber;
+    // The name of the trip id field (e.g. `from_trip_id`) referencing a trip.
     private final String tripFieldName;
-    private final String tripFieldValue;
-    private final String referenceFieldName;
-    private final String referenceFieldValue;
+    // The referenced trip id.
+    private final String tripId;
+    // The name of the route id field (e.g. `from_route_id`) referencing the route.
+    private final String routeFieldName;
+    // The referenced route id.
+    private final String routeId;
+    // The expected route id from `trips.txt`.
+    private final String expectedRouteId;
 
-    public TransferTripReferenceNotice(
+    public TransferWithInvalidTripAndRouteNotice(
         long csvRowNumber,
         String tripFieldName,
-        String tripFieldValue,
-        String referenceFieldName,
-        String referenceFieldValue) {
+        String tripId,
+        String routeFieldName,
+        String routeId,
+        String expectedRouteId) {
       super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
       this.tripFieldName = tripFieldName;
-      this.tripFieldValue = tripFieldValue;
-      this.referenceFieldName = referenceFieldName;
-      this.referenceFieldValue = referenceFieldValue;
+      this.tripId = tripId;
+      this.routeFieldName = routeFieldName;
+      this.routeId = routeId;
+      this.expectedRouteId = expectedRouteId;
+    }
+  }
+
+  /**
+   * A `from_trip_id` or `to_trip_id` field from GTFS file `transfers.txt` references a stop that is
+   * not included in the referenced trip's stop-times.
+   *
+   * <p>Severity: {@code SeverityLevel.ERROR}
+   */
+  public static class TransferWithInvalidTripAndStopNotice extends ValidationNotice {
+    // The row number from `transfers.txt` for the faulty entry.
+    private final long csvRowNumber;
+    // The name of the trip id field (e.g. `from_trip_id`) referencing a trip.
+    private final String tripFieldName;
+    // The referenced trip id.
+    private final String tripId;
+    // The name of the stop id field (e.g. `stop_route_id`) referencing the stop.
+    private final String stopFieldName;
+    // The referenced stop id.
+    private final String stopId;
+
+    public TransferWithInvalidTripAndStopNotice(
+        long csvRowNumber,
+        String tripFieldName,
+        String tripId,
+        String stopFieldName,
+        String stopId) {
+      super(SeverityLevel.ERROR);
+      this.csvRowNumber = csvRowNumber;
+      this.tripFieldName = tripFieldName;
+      this.tripId = tripId;
+      this.stopFieldName = stopFieldName;
+      this.stopId = stopId;
     }
   }
 }
