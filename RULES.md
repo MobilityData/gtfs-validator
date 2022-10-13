@@ -1468,6 +1468,7 @@ A `from_stop_id` or `to_stop_id` field from GTFS file `transfers.txt` references
 * [transfers.txt specification](http://gtfs.org/reference/static/#transferstxt)
 
 <details>
+
 #### Notice fields description
 | Field name          | Description                                                               | Type   |
 |---------------------|---------------------------------------------------------------------------|--------|
@@ -1476,6 +1477,7 @@ A `from_stop_id` or `to_stop_id` field from GTFS file `transfers.txt` references
 | `stopId`            | The referenced stop id.                                                   | String |
 | `locationTypeValue` | The numeric value of the invalid location type.                           | int    |
 | `locationTypeName`  | The name of the invalid location type.                                    | String |
+
 </details>
 
 <a name="TransferWithInvalidTripAndRouteNotice"/>
@@ -1488,6 +1490,7 @@ A `from_trip_id` or `to_trip_id` field from GTFS file `transfers.txt` references
 * [transfers.txt specification](http://gtfs.org/reference/static/#transferstxt)
 
 <details>
+
 #### Notice fields description
 | Field name        | Description                                                                  | Type   |
 |-------------------|------------------------------------------------------------------------------|--------|
@@ -1497,6 +1500,7 @@ A `from_trip_id` or `to_trip_id` field from GTFS file `transfers.txt` references
 | `routeFieldName`  | The name of the route id field (e.g. `from_route_id`) referencing the route. | String |
 | `routeId`         | The referenced route id.                                                     | String |
 | `expectedRouteId` | The expected route id from `trips.txt`.                                      | String |
+
 </details>
 
 <a name="TransferWithInvalidTripAndStopNotice"/>
@@ -1509,6 +1513,7 @@ A `from_trip_id` or `to_trip_id` field from GTFS file `transfers.txt` references
 * [transfers.txt specification](http://gtfs.org/reference/static/#transferstxt)
 
 <details>
+
 #### Notice fields description
 | Field name      | Description                                                                | Type   |
 |-----------------|----------------------------------------------------------------------------|--------|
@@ -1517,6 +1522,7 @@ A `from_trip_id` or `to_trip_id` field from GTFS file `transfers.txt` references
 | `tripId`        | The referenced trip id.                                                    | String |
 | `stopFieldName` | The name of the stop id field (e.g. `stop_route_id`) referencing the stop. | String |
 | `stopId`        | The referenced stop id.                                                    | String |
+
 </details>
 
 <a name="TranslationForeignKeyViolationNotice"/>
