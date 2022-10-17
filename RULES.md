@@ -85,6 +85,9 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`stop_time_with_arrival_before_previous_departure_time`](#stop_time_with_arrival_before_previous_departure_time) | Backwards time travel between stops in `stop_times.txt`                                                                                                |
 | [`stop_time_with_only_arrival_or_departure_time`](#stop_time_with_only_arrival_or_departure_time)                 | Missing `stop_times.arrival_time` or `stop_times.departure_time`.                                                                                      |
 | [`stop_without_zone_id`](#stop_without_zone_id)                                                                   | Stop without value for `stops.zone_id`.                                                                                                                |
+| [`transfer_with_invalid_stop_location_type`](#transfer_with_invalid_stop_location_type)                           | A stop id field from GTFS file `transfers.txt` references a stop that has a `location_type` other than 0 or 1 (aka Stop/Platform or Station).          |
+| [`transfer_with_invalid_trip_and_route`](#transfer_with_invalid_trip_and_route)                                   | A trip id field from GTFS file `transfers.txt` references a route that does not match its `trips.txt` `route_id`.                                      |
+| [`transfer_with_invalid_trip_and_stop`](#transfer_with_invalid_trip_and_stop)                                     | A trip id field from GTFS file `transfers.txt` references a stop that is not included in the referenced trip's stop-times.                             |
 | [`translation_foreign_key_violation`](#translation_foreign_key_violation)                                         | An entity with the given `record_id` and `record_sub_id` cannot be found in the referenced table.                                                      |
 | [`translation_unexpected_value`](#translation_unexpected_value)                                                   | A field in a translations row has value but must be empty.                                                                                             |
 | [`wrong_parent_location_type`](#wrong_parent_location_type)                                                       | Incorrect type of the parent location.                                                                                                                 |
@@ -1452,6 +1455,73 @@ If `fare_rules.txt` is provided, and `fare_rules.txt` uses at least one column a
 #### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`fare_rules.txt`](http://gtfs.org/reference/static#farerulestxt)
+
+</details>
+
+<a name="TransferWithInvalidStopLocationTypeNotice"/>
+
+### transfer_with_invalid_stop_location_type
+
+A `from_stop_id` or `to_stop_id` field from GTFS file `transfers.txt` references a stop that has a `location_type` other than 0 or 1 (aka Stop/Platform or Station).
+
+#### References
+* [transfers.txt specification](http://gtfs.org/reference/static/#transferstxt)
+
+<details>
+
+#### Notice fields description
+| Field name          | Description                                                               | Type   |
+|---------------------|---------------------------------------------------------------------------|--------|
+| `csvRowNumber`      | The row number from `transfers.txt` for the faulty entry.                 | long   |
+| `stopIdFieldName`   | The name of the stop id field (e.g. `from_stop_id`) referencing the stop. | String |
+| `stopId`            | The referenced stop id.                                                   | String |
+| `locationTypeValue` | The numeric value of the invalid location type.                           | int    |
+| `locationTypeName`  | The name of the invalid location type.                                    | String |
+
+</details>
+
+<a name="TransferWithInvalidTripAndRouteNotice"/>
+
+### transfer_with_invalid_trip_and_route
+
+A `from_trip_id` or `to_trip_id` field from GTFS file `transfers.txt` references a route that does not match its `trips.txt` `route_id`.
+
+#### References
+* [transfers.txt specification](http://gtfs.org/reference/static/#transferstxt)
+
+<details>
+
+#### Notice fields description
+| Field name        | Description                                                                  | Type   |
+|-------------------|------------------------------------------------------------------------------|--------|
+| `csvRowNumber`    | The row number from `transfers.txt` for the faulty entry.                    | long   |
+| `tripFieldName`   | The name of the trip id field (e.g. `from_trip_id`) referencing a trip.      | String |
+| `tripId`          | The referenced trip id.                                                      | String |
+| `routeFieldName`  | The name of the route id field (e.g. `from_route_id`) referencing the route. | String |
+| `routeId`         | The referenced route id.                                                     | String |
+| `expectedRouteId` | The expected route id from `trips.txt`.                                      | String |
+
+</details>
+
+<a name="TransferWithInvalidTripAndStopNotice"/>
+
+### transfer_with_invalid_trip_and_stop
+
+A `from_trip_id` or `to_trip_id` field from GTFS file `transfers.txt` references a stop that is not included in the referenced trip's stop-times.
+
+#### References
+* [transfers.txt specification](http://gtfs.org/reference/static/#transferstxt)
+
+<details>
+
+#### Notice fields description
+| Field name      | Description                                                                | Type   |
+|-----------------|----------------------------------------------------------------------------|--------|
+| `csvRowNumber`  | The row number from `transfers.txt` for the faulty entry.                  | long   |
+| `tripFieldName` | The name of the trip id field (e.g. `from_trip_id`) referencing a trip.    | String |
+| `tripId`        | The referenced trip id.                                                    | String |
+| `stopFieldName` | The name of the stop id field (e.g. `stop_route_id`) referencing the stop. | String |
+| `stopId`        | The referenced stop id.                                                    | String |
 
 </details>
 
