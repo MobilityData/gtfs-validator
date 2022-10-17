@@ -50,8 +50,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 public class ValidatorLoader {
 
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-  private static final String DEFAULT_VALIDATOR_PACKAGE =
-      "org.mobilitydata.gtfsvalidator.validator";
+  public static final String DEFAULT_VALIDATOR_PACKAGE = "org.mobilitydata.gtfsvalidator.validator";
 
   private final ListMultimap<Class<? extends GtfsEntity>, Class<? extends SingleEntityValidator<?>>>
       singleEntityValidators = ArrayListMultimap.create();

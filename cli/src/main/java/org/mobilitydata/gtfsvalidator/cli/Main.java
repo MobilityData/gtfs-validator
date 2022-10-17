@@ -36,12 +36,29 @@ public class Main {
   private static final String NOTICE_SCHEMA_JSON = "notice_schema.json";
 
   public static void main(String[] argv) {
-    Arguments args = parseArguments(argv);
-    if (args == null) {
+    Arguments args = new Arguments();
+    JCommander jCommander = new JCommander(args);
+    jCommander.parse(argv);
+
+    if (args.getHelp()) {
+      jCommander.usage();
+      System.out.println(
+          "⚠️ Note that parameters marked with an asterisk (*) in the help menu are mandatory.");
+      System.exit(0);
+    }
+
+    if (!args.validate()) {
       System.exit(1);
     }
 
     try {
+      if (args.getExportNoticeSchema()) {
+        exportNoticeSchema(args);
+        if (args.abortAfterNoticeSchemaExport()) {
+          System.exit(0);
+        }
+      }
+
       ValidationRunner runner = new ValidationRunner(new VersionResolver());
       if (runner.run(args.toConfig()) != ValidationRunner.Status.SUCCESS) {
         System.exit(-1);
@@ -52,34 +69,6 @@ public class Main {
     }
 
     System.exit(0);
-  }
-
-  /**
-   * Performs parsing and sanity checks on CLI arguments.
-   *
-   * @param argv the CLI arguments
-   * @return the {@code Arguments} generated after parsing the command line
-   */
-  private static Arguments parseArguments(String[] argv) {
-    Arguments args = new Arguments();
-    JCommander jCommander = new JCommander(args);
-    jCommander.parse(argv);
-    if (args.getHelp()) {
-      jCommander.usage();
-      System.out.println(
-          "⚠️ Note that parameters marked with an asterisk (*) in the help menu are mandatory.");
-      System.exit(0);
-    }
-    if (args.getExportNoticeSchema()) {
-      exportNoticeSchema(args);
-    }
-    if (args.abortAfterNoticeSchemaExport()) {
-      return null;
-    }
-    if (!args.isValid()) {
-      return null;
-    }
-    return args;
   }
 
   private static void exportNoticeSchema(final Arguments args) {
