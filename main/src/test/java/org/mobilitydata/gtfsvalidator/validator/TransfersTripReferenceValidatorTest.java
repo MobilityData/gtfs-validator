@@ -20,7 +20,7 @@ import org.mobilitydata.gtfsvalidator.validator.TransfersTripReferenceValidator.
 
 public class TransfersTripReferenceValidatorTest {
 
-  private NoticeContainer noticeContainer = new NoticeContainer();
+  private final NoticeContainer noticeContainer = new NoticeContainer();
 
   @Test
   public void testValidTripReferences() {
@@ -93,22 +93,21 @@ public class TransfersTripReferenceValidatorTest {
                 new GtfsStopTime.Builder().setTripId("t0").setStopId("s0").build(),
                 new GtfsStopTime.Builder().setTripId("t1").setStopId("s1").build()),
             noticeContainer);
+    GtfsTransfer transfer =
+        new GtfsTransfer.Builder()
+            .setCsvRowNumber(2)
+            .setFromStopId("s0")
+            // This is not the expected route id.
+            .setFromRouteId("DNE")
+            .setFromTripId("t0")
+            // This stop is not associated with the trip's stop-times.
+            .setToStopId("s2")
+            .setToRouteId("r1")
+            .setToTripId("t1")
+            .setTransferType(GtfsTransferType.IMPOSSIBLE)
+            .build();
     GtfsTransferTableContainer transfers =
-        GtfsTransferTableContainer.forEntities(
-            ImmutableList.of(
-                new GtfsTransfer.Builder()
-                    .setCsvRowNumber(2)
-                    .setFromStopId("s0")
-                    // This is not the expected route id.
-                    .setFromRouteId("DNE")
-                    .setFromTripId("t0")
-                    // This stop is not associated with the trip's stop-times.
-                    .setToStopId("s2")
-                    .setToRouteId("r1")
-                    .setToTripId("t1")
-                    .setTransferType(GtfsTransferType.IMPOSSIBLE)
-                    .build()),
-            noticeContainer);
+        GtfsTransferTableContainer.forEntities(ImmutableList.of(transfer), noticeContainer);
 
     new TransfersTripReferenceValidator(transfers, trips, stopTimes, stops)
         .validate(noticeContainer);
@@ -116,7 +115,7 @@ public class TransfersTripReferenceValidatorTest {
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
             new TransferWithInvalidTripAndRouteNotice(
-                2, "from_trip_id", "t0", "from_route_id", "DNE", "r0"),
-            new TransferWithInvalidTripAndStopNotice(2, "to_trip_id", "t1", "to_stop_id", "s2"));
+                transfer, TransferDirection.TRANSFER_FROM, "r0"),
+            new TransferWithInvalidTripAndStopNotice(transfer, TransferDirection.TRANSFER_TO));
   }
 }

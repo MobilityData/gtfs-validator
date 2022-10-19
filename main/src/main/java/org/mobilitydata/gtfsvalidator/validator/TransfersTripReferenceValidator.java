@@ -1,5 +1,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.validator.ValidatorReference.validatedElsewhereBy;
+
 import com.google.common.collect.ImmutableSet;
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +17,6 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransfer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransferTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTransferTableLoader;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 
@@ -51,88 +52,55 @@ public class TransfersTripReferenceValidator extends FileValidator {
   }
 
   public void validateEntity(GtfsTransfer entity, NoticeContainer noticeContainer) {
-    validateTripReferences(
-        entity,
-        GtfsTransferTableLoader.FROM_TRIP_ID_FIELD_NAME,
-        optional(entity.hasFromTripId(), entity.fromTripId()),
-        GtfsTransferTableLoader.FROM_ROUTE_ID_FIELD_NAME,
-        optional(entity.hasFromRouteId(), entity.fromRouteId()),
-        GtfsTransferTableLoader.FROM_STOP_ID_FIELD_NAME,
-        optional(entity.hasFromStopId(), entity.fromStopId()),
-        noticeContainer);
-    validateTripReferences(
-        entity,
-        GtfsTransferTableLoader.TO_TRIP_ID_FIELD_NAME,
-        optional(entity.hasToTripId(), entity.toTripId()),
-        GtfsTransferTableLoader.TO_ROUTE_ID_FIELD_NAME,
-        optional(entity.hasToRouteId(), entity.toRouteId()),
-        GtfsTransferTableLoader.TO_STOP_ID_FIELD_NAME,
-        optional(entity.hasToStopId(), entity.toStopId()),
-        noticeContainer);
+    for (TransferDirection transferDirection : TransferDirection.values()) {
+      validateTripReferences(entity, transferDirection, noticeContainer);
+    }
   }
 
   void validateTripReferences(
-      GtfsTransfer entity,
-      String tripFieldName,
-      Optional<String> tripId,
-      String routeFieldName,
-      Optional<String> routeId,
-      String stopFieldName,
-      Optional<String> stopId,
-      NoticeContainer noticeContainer) {
-    if (tripId.isEmpty()) {
+      GtfsTransfer entity, TransferDirection transferDirection, NoticeContainer noticeContainer) {
+    if (!transferDirection.hasTripId(entity)) {
       return;
     }
-    Optional<GtfsTrip> optTrip = tripsContainer.byTripId(tripId.get());
+    Optional<GtfsTrip> optTrip = tripsContainer.byTripId(transferDirection.tripId(entity));
     if (optTrip.isEmpty()) {
-      // The foreign key reference is validated elsewhere.
+      // The foreign key reference is
+      validatedElsewhereBy(
+          GtfsTransferFromTripIdForeignKeyValidator.class,
+          GtfsTransferToTripIdForeignKeyValidator.class);
       return;
     }
     GtfsTrip trip = optTrip.get();
-    if (routeId.isPresent()) {
-      if (!trip.routeId().equals(routeId.get())) {
+    if (transferDirection.hasRouteId(entity)) {
+      if (!trip.routeId().equals(transferDirection.routeId(entity))) {
         noticeContainer.addValidationNotice(
-            new TransferWithInvalidTripAndRouteNotice(
-                entity.csvRowNumber(),
-                tripFieldName,
-                tripId.get(),
-                routeFieldName,
-                routeId.get(),
-                trip.routeId()));
+            new TransferWithInvalidTripAndRouteNotice(entity, transferDirection, trip.routeId()));
       }
     }
-    if (stopId.isPresent()) {
-      validateTripStopReference(
-          entity, tripFieldName, tripId, stopFieldName, stopId.get(), noticeContainer);
+    if (transferDirection.hasStopId(entity)) {
+      validateTripStopReference(entity, transferDirection, noticeContainer);
     }
   }
 
   private void validateTripStopReference(
-      GtfsTransfer entity,
-      String tripFieldName,
-      Optional<String> tripId,
-      String stopFieldName,
-      String stopId,
-      NoticeContainer noticeContainer) {
-    Optional<GtfsStop> optStop = stopsContainer.byStopId(stopId);
+      GtfsTransfer entity, TransferDirection transferDirection, NoticeContainer noticeContainer) {
+    Optional<GtfsStop> optStop = stopsContainer.byStopId(transferDirection.stopId(entity));
     if (optStop.isEmpty()) {
-      // The foreign key reference is validated elsewhere.
+      // The foreign key reference is
+      validatedElsewhereBy(
+          GtfsTransferFromStopIdForeignKeyValidator.class,
+          GtfsTransferToStopIdForeignKeyValidator.class);
       return;
     }
     ImmutableSet<GtfsStop> stops = expandStationIfNeeded(optStop.get());
     ImmutableSet<String> ids =
         stops.stream().map(GtfsStop::stopId).collect(ImmutableSet.toImmutableSet());
 
-    List<GtfsStopTime> stopTimes = stopTimeContainer.byTripId(tripId.get());
+    List<GtfsStopTime> stopTimes = stopTimeContainer.byTripId(transferDirection.tripId(entity));
     if (!stopTimes.stream().anyMatch((st) -> ids.contains(st.stopId()))) {
       noticeContainer.addValidationNotice(
-          new TransferWithInvalidTripAndStopNotice(
-              entity.csvRowNumber(), tripFieldName, tripId.get(), stopFieldName, stopId));
+          new TransferWithInvalidTripAndStopNotice(entity, transferDirection));
     }
-  }
-
-  private static <T> Optional<T> optional(boolean hasValue, T value) {
-    return hasValue ? Optional.of(value) : Optional.empty();
   }
 
   private ImmutableSet<GtfsStop> expandStationIfNeeded(GtfsStop stop) {
@@ -168,18 +136,13 @@ public class TransfersTripReferenceValidator extends FileValidator {
     private final String expectedRouteId;
 
     public TransferWithInvalidTripAndRouteNotice(
-        long csvRowNumber,
-        String tripFieldName,
-        String tripId,
-        String routeFieldName,
-        String routeId,
-        String expectedRouteId) {
+        GtfsTransfer transfer, TransferDirection transferDirection, String expectedRouteId) {
       super(SeverityLevel.ERROR);
-      this.csvRowNumber = csvRowNumber;
-      this.tripFieldName = tripFieldName;
-      this.tripId = tripId;
-      this.routeFieldName = routeFieldName;
-      this.routeId = routeId;
+      this.csvRowNumber = transfer.csvRowNumber();
+      this.tripFieldName = transferDirection.tripIdFieldName();
+      this.tripId = transferDirection.tripId(transfer);
+      this.routeFieldName = transferDirection.routeIdFieldName();
+      this.routeId = transferDirection.routeId(transfer);
       this.expectedRouteId = expectedRouteId;
     }
   }
@@ -203,17 +166,13 @@ public class TransfersTripReferenceValidator extends FileValidator {
     private final String stopId;
 
     public TransferWithInvalidTripAndStopNotice(
-        long csvRowNumber,
-        String tripFieldName,
-        String tripId,
-        String stopFieldName,
-        String stopId) {
+        GtfsTransfer transfer, TransferDirection transferDirection) {
       super(SeverityLevel.ERROR);
-      this.csvRowNumber = csvRowNumber;
-      this.tripFieldName = tripFieldName;
-      this.tripId = tripId;
-      this.stopFieldName = stopFieldName;
-      this.stopId = stopId;
+      this.csvRowNumber = transfer.csvRowNumber();
+      this.tripFieldName = transferDirection.tripIdFieldName();
+      this.tripId = transferDirection.tripId(transfer);
+      this.stopFieldName = transferDirection.stopIdFieldName();
+      this.stopId = transferDirection.stopId(transfer);
     }
   }
 }
