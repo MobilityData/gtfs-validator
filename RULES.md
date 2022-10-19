@@ -132,6 +132,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`stop_too_far_from_shape`](#stop_too_far_from_shape)                                         | Stop too far from trip shape.                                                                                                                                 |
 | [`stop_too_far_from_shape_using_user_distance`](#stop_too_far_from_shape_using_user_distance) | Stop time too far from shape.                                                                                                                                 |
 | [`stop_without_stop_time`](#stop_without_stop_time)                                           | A stop in `stops.txt` is not referenced by any `stop_times.stop_id`.                                                                                          |
+| [`transfer_with_suspicious_mid_trip_in_seat`](#transfer_with_suspicious_mid_trip_in_seat)     | A trip id field from GTFS file `transfers.txt` with an in-seat transfer type references a stop that is not in the expected position in the trip's stop-times. |
 | [`translation_unknown_table_name`](#translation_unknown_table_name)                           | A translation references an unknown or missing GTFS table.                                                                                                    |
 | [`unexpected_enum_value`](#unexpected_enum_value)                                             | An enum has an unexpected value.                                                                                                                              |
 | [`unusable_trip`](#unusable_trip)                                                             | Trips must have more than one stop to be usable.                                                                                                              |
@@ -1522,6 +1523,25 @@ A `from_trip_id` or `to_trip_id` field from GTFS file `transfers.txt` references
 | `tripId`        | The referenced trip id.                                                    | String |
 | `stopFieldName` | The name of the stop id field (e.g. `stop_route_id`) referencing the stop. | String |
 | `stopId`        | The referenced stop id.                                                    | String |
+
+</details>
+
+<a name="TransferWithSuspiciousMidTripInSeatNotice"/>
+
+### transfer_with_suspicious_mid_trip_in_seat
+
+A `from_trip_id` or `to_trip_id` field from GTFS file `transfers.txt` with an in-seat transfer type references a stop that is not in the expected position in the trip's stop-times. For in-seat transfers, we expect the stop to be the last stop-time in the trip sequence for `from_stop_id` and the first stop-time for `to_stop_id`. If you are intentionally using this feature to model mid-trip transfers, you can ignore this warning, but be aware that this functionality is still considered to be partially experimental in some interpretations of the spec.
+
+<details>
+
+#### Notice fields description
+| Field name        | Description                                                               | Type   |
+|-------------------|---------------------------------------------------------------------------|--------|
+| `csvRowNumber`    | The row number from `transfers.txt` for the faulty entry.                 | long   |
+| `tripIdFieldName` | The name of the trip id field (e.g. `from_trip_id`) referencing a trip.   | String |
+| `tripId`          | The referenced trip id.                                                   | String |
+| `stopIdFieldName` | The name of the stop id field (e.g. `from_stop_id`) referencing the stop. | String |
+| `stopId`          | The referenced stop id.                                                   | String |
 
 </details>
 
