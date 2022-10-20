@@ -15,7 +15,7 @@ import org.mobilitydata.gtfsvalidator.validator.TransfersStopTypeValidator.Trans
 
 public class TransfersStopTypeValidatorTest {
 
-  private NoticeContainer noticeContainer = new NoticeContainer();
+  private final NoticeContainer noticeContainer = new NoticeContainer();
 
   @Test
   public void testStopToStationTransfer() {
@@ -53,24 +53,23 @@ public class TransfersStopTypeValidatorTest {
                     .setLocationType(GtfsLocationType.GENERIC_NODE)
                     .build()),
             noticeContainer);
+    GtfsTransfer transfer =
+        new GtfsTransfer.Builder()
+            .setCsvRowNumber(2)
+            .setFromStopId("s0")
+            .setToStopId("s1")
+            .setTransferType(GtfsTransferType.RECOMMENDED)
+            .build();
     GtfsTransferTableContainer transfers =
-        GtfsTransferTableContainer.forEntities(
-            ImmutableList.of(
-                new GtfsTransfer.Builder()
-                    .setCsvRowNumber(2)
-                    .setFromStopId("s0")
-                    .setToStopId("s1")
-                    .setTransferType(GtfsTransferType.RECOMMENDED)
-                    .build()),
-            noticeContainer);
+        GtfsTransferTableContainer.forEntities(ImmutableList.of(transfer), noticeContainer);
 
     new TransfersStopTypeValidator(transfers, stops).validate(noticeContainer);
 
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
             new TransferWithInvalidStopLocationTypeNotice(
-                2, "from_stop_id", "s0", GtfsLocationType.ENTRANCE),
+                transfer, TransferDirection.TRANSFER_FROM, GtfsLocationType.ENTRANCE),
             new TransferWithInvalidStopLocationTypeNotice(
-                2, "to_stop_id", "s1", GtfsLocationType.GENERIC_NODE));
+                transfer, TransferDirection.TRANSFER_TO, GtfsLocationType.GENERIC_NODE));
   }
 }

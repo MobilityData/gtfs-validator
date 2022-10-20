@@ -11,7 +11,6 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransfer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransferTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTransferTableLoader;
 
 /**
  * Validates that {@code transfers.from_stop_id} and {@code to_stop_id} reference stops or stations.
@@ -36,18 +35,13 @@ public class TransfersStopTypeValidator extends FileValidator {
   }
 
   public void validateEntity(GtfsTransfer entity, NoticeContainer noticeContainer) {
-    validateStopType(
-        entity,
-        GtfsTransferTableLoader.FROM_STOP_ID_FIELD_NAME,
-        entity.fromStopId(),
-        noticeContainer);
-    validateStopType(
-        entity, GtfsTransferTableLoader.TO_STOP_ID_FIELD_NAME, entity.toStopId(), noticeContainer);
+    validateStopType(entity, TransferDirection.TRANSFER_FROM, noticeContainer);
+    validateStopType(entity, TransferDirection.TRANSFER_TO, noticeContainer);
   }
 
   private void validateStopType(
-      GtfsTransfer entity, String stopIdFieldName, String stopId, NoticeContainer noticeContainer) {
-    Optional<GtfsStop> optStop = stopsContainer.byStopId(stopId);
+      GtfsTransfer entity, TransferDirection transferDirection, NoticeContainer noticeContainer) {
+    Optional<GtfsStop> optStop = stopsContainer.byStopId(transferDirection.stopId(entity));
     if (optStop.isEmpty()) {
       // Foreign key reference is validated elsewhere.
       return;
@@ -56,8 +50,7 @@ public class TransfersStopTypeValidator extends FileValidator {
     GtfsLocationType locationType = optStop.get().locationType();
     if (!isValidTransferStopType(locationType)) {
       noticeContainer.addValidationNotice(
-          new TransferWithInvalidStopLocationTypeNotice(
-              entity.csvRowNumber(), stopIdFieldName, stopId, locationType));
+          new TransferWithInvalidStopLocationTypeNotice(entity, transferDirection, locationType));
     }
   }
 
@@ -90,11 +83,11 @@ public class TransfersStopTypeValidator extends FileValidator {
     private String locationTypeName;
 
     public TransferWithInvalidStopLocationTypeNotice(
-        long csvRowNumber, String stopIdFieldName, String stopId, GtfsLocationType locationType) {
+        GtfsTransfer transfer, TransferDirection transferDirection, GtfsLocationType locationType) {
       super(SeverityLevel.ERROR);
-      this.csvRowNumber = csvRowNumber;
-      this.stopIdFieldName = stopIdFieldName;
-      this.stopId = stopId;
+      this.csvRowNumber = transfer.csvRowNumber();
+      this.stopIdFieldName = transferDirection.stopIdFieldName();
+      this.stopId = transferDirection.stopId(transfer);
       this.locationTypeValue = locationType.getNumber();
       this.locationTypeName = locationType.toString();
     }
