@@ -164,7 +164,7 @@ public class ArgumentsTest {
   private static boolean validateArguments(String[] cliArguments) {
     Arguments args = new Arguments();
     new JCommander(args).parse(cliArguments);
-    return args.isValid();
+    return args.validate();
   }
 
   @Test
@@ -246,5 +246,29 @@ public class ArgumentsTest {
                   "--feed_name", "feed name"
                 }))
         .isFalse();
+  }
+
+  @Test
+  public void exportNoticesSchema_schemaOnly() {
+    String[] cliArguments = {"--export_notices_schema", "--output_base", "output value"};
+    Arguments args = new Arguments();
+    new JCommander(args).parse(cliArguments);
+
+    assertThat(args.validate()).isTrue();
+    assertThat(args.getExportNoticeSchema()).isTrue();
+    assertThat(args.abortAfterNoticeSchemaExport()).isTrue();
+  }
+
+  @Test
+  public void exportNoticesSchema_schemaAndValidation() {
+    String[] cliArguments = {
+      "--export_notices_schema", "--input", "input value", "--output_base", "output value"
+    };
+    Arguments args = new Arguments();
+    new JCommander(args).parse(cliArguments);
+
+    assertThat(args.validate()).isTrue();
+    assertThat(args.getExportNoticeSchema()).isTrue();
+    assertThat(args.abortAfterNoticeSchemaExport()).isFalse();
   }
 }
