@@ -17,7 +17,6 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransfer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransferTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTransferTableLoader;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransferType;
 import org.mobilitydata.gtfsvalidator.validator.TransfersStopTypeValidator.TransferWithInvalidStopLocationTypeNotice;
 
@@ -65,7 +64,7 @@ public class TransfersInSeatTransferTypeValidator extends FileValidator {
       if (!transferDirection.hasTripId(transfer)) {
         noticeContainer.addValidationNotice(
             new MissingRequiredFieldNotice(
-                GtfsTransferTableLoader.FILENAME,
+                GtfsTransfer.FILENAME,
                 transfer.csvRowNumber(),
                 transferDirection.tripIdFieldName()));
       }

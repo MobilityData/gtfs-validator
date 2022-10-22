@@ -1,7 +1,6 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import org.mobilitydata.gtfsvalidator.table.GtfsTransfer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTransferTableLoader;
 
 /**
  * An enum type, along with various convenience methods, for identifying the direction of transfer
@@ -20,9 +19,7 @@ public enum TransferDirection {
   TRANSFER_TO;
 
   public String stopIdFieldName() {
-    return isFrom()
-        ? GtfsTransferTableLoader.FROM_STOP_ID_FIELD_NAME
-        : GtfsTransferTableLoader.TO_STOP_ID_FIELD_NAME;
+    return isFrom() ? GtfsTransfer.FROM_STOP_ID_FIELD_NAME : GtfsTransfer.TO_STOP_ID_FIELD_NAME;
   }
 
   public String stopId(GtfsTransfer transfer) {
@@ -34,9 +31,7 @@ public enum TransferDirection {
   }
 
   public String routeIdFieldName() {
-    return isFrom()
-        ? GtfsTransferTableLoader.FROM_ROUTE_ID_FIELD_NAME
-        : GtfsTransferTableLoader.TO_ROUTE_ID_FIELD_NAME;
+    return isFrom() ? GtfsTransfer.FROM_ROUTE_ID_FIELD_NAME : GtfsTransfer.TO_ROUTE_ID_FIELD_NAME;
   }
 
   public boolean hasRouteId(GtfsTransfer transfer) {
@@ -48,9 +43,7 @@ public enum TransferDirection {
   }
 
   public String tripIdFieldName() {
-    return isFrom()
-        ? GtfsTransferTableLoader.FROM_TRIP_ID_FIELD_NAME
-        : GtfsTransferTableLoader.TO_TRIP_ID_FIELD_NAME;
+    return isFrom() ? GtfsTransfer.FROM_TRIP_ID_FIELD_NAME : GtfsTransfer.TO_TRIP_ID_FIELD_NAME;
   }
 
   public boolean hasTripId(GtfsTransfer transfer) {
