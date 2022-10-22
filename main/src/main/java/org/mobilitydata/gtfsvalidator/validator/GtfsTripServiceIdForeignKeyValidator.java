@@ -20,13 +20,12 @@ import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.ForeignKeyViolationNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
+import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDate;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableLoader;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableLoader;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTripTableLoader;
 
 /**
  * Validates that service_id field in "trips.txt" references a valid service_id in "calendar.txt" or
@@ -57,10 +56,10 @@ public class GtfsTripServiceIdForeignKeyValidator extends FileValidator {
       if (!hasReferencedKey(childKey, calendarContainer, calendarDateContainer)) {
         noticeContainer.addValidationNotice(
             new ForeignKeyViolationNotice(
-                GtfsTripTableLoader.FILENAME,
-                GtfsTripTableLoader.SERVICE_ID_FIELD_NAME,
-                GtfsCalendarTableLoader.FILENAME + " or " + GtfsCalendarDateTableLoader.FILENAME,
-                GtfsCalendarTableLoader.SERVICE_ID_FIELD_NAME,
+                GtfsTrip.FILENAME,
+                GtfsTrip.SERVICE_ID_FIELD_NAME,
+                GtfsCalendar.FILENAME + " or " + GtfsCalendarDate.FILENAME,
+                GtfsCalendar.SERVICE_ID_FIELD_NAME,
                 childKey,
                 trip.csvRowNumber()));
       }

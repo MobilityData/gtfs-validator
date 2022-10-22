@@ -23,7 +23,6 @@ import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTimepoint;
 
 /**
@@ -49,7 +48,7 @@ public class TimepointTimeValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    if (!stopTimes.hasColumn(GtfsStopTimeTableLoader.TIMEPOINT_FIELD_NAME)) {
+    if (!stopTimes.hasColumn(GtfsStopTime.TIMEPOINT_FIELD_NAME)) {
       // legacy datasets do not use timepoint column in stop_times.txt as a result:
       // - this should be flagged;
       // - but also no notice regarding the absence of arrival_time or departure_time should be
@@ -65,12 +64,12 @@ public class TimepointTimeValidator extends FileValidator {
         if (!stopTime.hasArrivalTime()) {
           noticeContainer.addValidationNotice(
               new StopTimeTimepointWithoutTimesNotice(
-                  stopTime, GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME));
+                  stopTime, GtfsStopTime.ARRIVAL_TIME_FIELD_NAME));
         }
         if (!stopTime.hasDepartureTime()) {
           noticeContainer.addValidationNotice(
               new StopTimeTimepointWithoutTimesNotice(
-                  stopTime, GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME));
+                  stopTime, GtfsStopTime.DEPARTURE_TIME_FIELD_NAME));
         }
       }
     }
@@ -128,7 +127,7 @@ public class TimepointTimeValidator extends FileValidator {
 
     MissingTimepointColumnNotice() {
       super(SeverityLevel.WARNING);
-      this.filename = GtfsStopTimeTableLoader.FILENAME;
+      this.filename = GtfsStopTime.FILENAME;
     }
   }
 }

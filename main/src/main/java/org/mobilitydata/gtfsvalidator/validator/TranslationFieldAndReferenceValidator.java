@@ -28,7 +28,6 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTranslation;
 import org.mobilitydata.gtfsvalidator.table.GtfsTranslationTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTranslationTableLoader;
 
 /**
  * Validates that translations are provided in accordance with GTFS Specification.
@@ -54,7 +53,7 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
   @Override
   public void validate(NoticeContainer noticeContainer) {
     // The legacy Google translation format does not define `translations.table_name` field.
-    if (!translationTable.getHeader().hasColumn(GtfsTranslationTableLoader.TABLE_NAME_FIELD_NAME)) {
+    if (!translationTable.getHeader().hasColumn(GtfsTranslation.TABLE_NAME_FIELD_NAME)) {
       // Skip validation if legacy Google translation format is detected.
       return;
     }
@@ -81,25 +80,25 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
       if (!translation.hasFieldName()) {
         noticeContainer.addValidationNotice(
             new MissingRequiredFieldNotice(
-                GtfsTranslationTableLoader.FILENAME,
+                GtfsTranslation.FILENAME,
                 translation.csvRowNumber(),
-                GtfsTranslationTableLoader.FIELD_NAME_FIELD_NAME));
+                GtfsTranslation.FIELD_NAME_FIELD_NAME));
         isValid = false;
       }
       if (!translation.hasLanguage()) {
         noticeContainer.addValidationNotice(
             new MissingRequiredFieldNotice(
-                GtfsTranslationTableLoader.FILENAME,
+                GtfsTranslation.FILENAME,
                 translation.csvRowNumber(),
-                GtfsTranslationTableLoader.LANGUAGE_FIELD_NAME));
+                GtfsTranslation.LANGUAGE_FIELD_NAME));
         isValid = false;
       }
       if (!translation.hasTableName()) {
         noticeContainer.addValidationNotice(
             new MissingRequiredFieldNotice(
-                GtfsTranslationTableLoader.FILENAME,
+                GtfsTranslation.FILENAME,
                 translation.csvRowNumber(),
-                GtfsTranslationTableLoader.TABLE_NAME_FIELD_NAME));
+                GtfsTranslation.TABLE_NAME_FIELD_NAME));
         isValid = false;
       }
     }
@@ -112,16 +111,12 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
       if (translation.hasRecordId()) {
         noticeContainer.addValidationNotice(
             new TranslationUnexpectedValueNotice(
-                translation,
-                GtfsTranslationTableLoader.RECORD_ID_FIELD_NAME,
-                translation.recordId()));
+                translation, GtfsTranslation.RECORD_ID_FIELD_NAME, translation.recordId()));
       }
       if (translation.hasRecordSubId()) {
         noticeContainer.addValidationNotice(
             new TranslationUnexpectedValueNotice(
-                translation,
-                GtfsTranslationTableLoader.RECORD_SUB_ID_FIELD_NAME,
-                translation.recordSubId()));
+                translation, GtfsTranslation.RECORD_SUB_ID_FIELD_NAME, translation.recordSubId()));
       }
     }
     Optional<GtfsTableContainer<?>> parentTable =
@@ -146,14 +141,14 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
             translation,
             translation.hasRecordId(),
             keyColumnNames.size() >= 1,
-            GtfsTranslationTableLoader.RECORD_ID_FIELD_NAME,
+            GtfsTranslation.RECORD_ID_FIELD_NAME,
             translation.recordId(),
             noticeContainer)
         || isMissingOrUnexpectedField(
             translation,
             translation.hasRecordSubId(),
             keyColumnNames.size() >= 2,
-            GtfsTranslationTableLoader.RECORD_SUB_ID_FIELD_NAME,
+            GtfsTranslation.RECORD_SUB_ID_FIELD_NAME,
             translation.recordSubId(),
             noticeContainer)) {
       return;
@@ -187,7 +182,7 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
     } else {
       noticeContainer.addValidationNotice(
           new MissingRequiredFieldNotice(
-              GtfsTranslationTableLoader.FILENAME, translation.csvRowNumber(), fieldName));
+              GtfsTranslation.FILENAME, translation.csvRowNumber(), fieldName));
     }
     return true;
   }
