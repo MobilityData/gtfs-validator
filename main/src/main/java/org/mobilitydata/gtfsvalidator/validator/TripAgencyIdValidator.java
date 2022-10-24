@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
+import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
@@ -43,15 +44,18 @@ public class TripAgencyIdValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    if (agencyTable.entityCount() < 2) {
-      // routes.agency_id is not required when there is a single agency.
-      return;
-    }
     for (GtfsRoute route : routeTable.getEntities()) {
       if (!route.hasAgencyId()) {
-        noticeContainer.addValidationNotice(
-            new MissingRequiredFieldNotice(
-                routeTable.gtfsFilename(), route.csvRowNumber(), GtfsRoute.AGENCY_ID_FIELD_NAME));
+        // Agency ID is not required when there is a single agency, but it is recommended.
+        if (agencyTable.entityCount() < 2) {
+          noticeContainer.addValidationNotice(
+              new MissingRecommendedFieldNotice(
+                  routeTable.gtfsFilename(), route.csvRowNumber(), GtfsRoute.AGENCY_ID_FIELD_NAME));
+        } else {
+          noticeContainer.addValidationNotice(
+              new MissingRequiredFieldNotice(
+                  routeTable.gtfsFilename(), route.csvRowNumber(), GtfsRoute.AGENCY_ID_FIELD_NAME));
+        }
       }
       // No need to check reference integrity because it is done by a validator generated from
       // @ForeignKey annotation.
