@@ -126,8 +126,7 @@ The source id can be used to find all datasets versions of a source on the [Mobi
 ## What do we do with the results?
 We follow this process:
 
-<img src="/docs/Acceptance-test-process.jpg" width="700">
-
+<img src="/docs/Acceptance-test-process.jpg" width="750">
 
 ## Instructions to run the pipeline
 
