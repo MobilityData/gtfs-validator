@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.processor;
 
+import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_PACKAGE_NAME;
 
@@ -56,6 +57,24 @@ public class EnumGenerator {
     return JavaFile.builder(TABLE_PACKAGE_NAME, generateEnumClass()).build();
   }
 
+  /** Returns the integer value for the special {@code UNRECOGNIZED} constant */
+  static int getMinUnrecognizedValue(GtfsEnumDescriptor enumDescriptor) {
+    int minValue = 0;
+    for (GtfsEnumValueDescriptor enumValue : enumDescriptor.values()) {
+      minValue = min(minValue, enumValue.value());
+    }
+    return minValue - 1;
+  }
+
+  /** Returns the max valid integer value for a GTFS enum. */
+  static int getMaxValue(GtfsEnumDescriptor enumDescriptor) {
+    int maxValue = 0;
+    for (GtfsEnumValueDescriptor enumValue : enumDescriptor.values()) {
+      maxValue = max(maxValue, enumValue.value());
+    }
+    return maxValue;
+  }
+
   private TypeSpec generateEnumClass() {
     TypeSpec.Builder enumType =
         TypeSpec.enumBuilder(enumDescriptor.name())
@@ -63,15 +82,15 @@ public class EnumGenerator {
             .addAnnotation(Generated.class)
             .addSuperinterface(GtfsEnum.class);
 
-    int minValue = 0;
     for (GtfsEnumValueDescriptor enumValue : enumDescriptor.values()) {
       enumType.addEnumConstant(
           enumValue.name(),
           TypeSpec.anonymousClassBuilder(Integer.toString(enumValue.value())).build());
-      minValue = min(minValue, enumValue.value());
     }
     enumType.addEnumConstant(
-        "UNRECOGNIZED", TypeSpec.anonymousClassBuilder(Integer.toString(minValue - 1)).build());
+        "UNRECOGNIZED",
+        TypeSpec.anonymousClassBuilder(Integer.toString(getMinUnrecognizedValue(enumDescriptor)))
+            .build());
 
     enumType.addField(int.class, "value", Modifier.PRIVATE, Modifier.FINAL);
 

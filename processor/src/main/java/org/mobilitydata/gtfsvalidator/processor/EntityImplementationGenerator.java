@@ -83,12 +83,8 @@ public class EntityImplementationGenerator {
   }
 
   static TypeName chooseEnumIntegerFieldType(GtfsEnumDescriptor enumDescriptor) {
-    int minValue = 0;
-    int maxValue = 0;
-    for (GtfsEnumValueDescriptor value : enumDescriptor.values()) {
-      minValue = Math.min(minValue, value.value());
-      maxValue = Math.max(maxValue, value.value());
-    }
+    final int minValue = EnumGenerator.getMinUnrecognizedValue(enumDescriptor);
+    final int maxValue = EnumGenerator.getMaxValue(enumDescriptor);
     if (minValue >= Byte.MIN_VALUE && maxValue <= Byte.MAX_VALUE) {
       return TypeName.BYTE;
     }
@@ -99,7 +95,7 @@ public class EntityImplementationGenerator {
   }
 
   private static int lastBitFieldNumber(int fieldCount) {
-    // All standard GTFS tables have less than 16 fields, so a bitmask fits into short.
+    // Most standard GTFS tables have less than 16 fields, so a bitmask fits into short.
     // However, we want to support enormous tables that may have more than 32 fields.
     // An int bitField has 32 bits. We need bitField0_ to store 1..32 fields,
     // bitField0_ and bitField1_ for 33..64 fields etc.

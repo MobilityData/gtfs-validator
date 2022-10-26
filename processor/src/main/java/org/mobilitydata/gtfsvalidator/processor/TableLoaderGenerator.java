@@ -301,7 +301,7 @@ public class TableLoaderGenerator {
     for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
       CodeBlock fieldValue =
           CodeBlock.of(
-              "rowParser.$L($L, $T.$L$L)",
+              "rowParser.$L(\n$L, $T.$L$L)",
               gtfsTypeToParserMethod(field.type()),
               fieldColumnIndex(field.name()),
               FieldLevelEnum.class,
@@ -311,7 +311,11 @@ public class TableLoaderGenerator {
               field.numberBounds().isPresent()
                   ? ", RowParser.NumberBounds." + field.numberBounds().get()
                   : field.type() == FieldTypeEnum.ENUM
-                      ? ", " + field.javaType().toString() + "::forNumber"
+                      ? ",\n"
+                          + field.javaType().toString()
+                          + "::forNumber, "
+                          + field.javaType().toString()
+                          + ".UNRECOGNIZED"
                       : "");
       if (cachingEnabled(field)) {
         fieldValue = CodeBlock.of("$L.addIfAbsent($L)", fieldColumnCache(field), fieldValue);

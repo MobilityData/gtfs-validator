@@ -39,6 +39,7 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.NumberOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.notice.UnexpectedEnumValueNotice;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.table.GtfsEnum;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
@@ -304,7 +305,8 @@ public class RowParser {
   }
 
   @Nullable
-  public <E> Integer asEnum(int columnIndex, FieldLevelEnum level, EnumCreator<E> enumCreator) {
+  public <E extends GtfsEnum> Integer asEnum(
+      int columnIndex, FieldLevelEnum level, EnumCreator<E> enumCreator, E unrecognized) {
     Integer i = asInteger(columnIndex, level);
     if (i == null) {
       return null;
@@ -313,6 +315,7 @@ public class RowParser {
       noticeContainer.addValidationNotice(
           new UnexpectedEnumValueNotice(
               fileName, row.getRowNumber(), header.getColumnName(columnIndex), i));
+      return unrecognized.getNumber();
     }
     return i;
   }

@@ -19,8 +19,4 @@ public interface ManyFieldsSchema {
   int field7();
 
   int field8();
-
-  int field9();
-
-  int field10();
 }

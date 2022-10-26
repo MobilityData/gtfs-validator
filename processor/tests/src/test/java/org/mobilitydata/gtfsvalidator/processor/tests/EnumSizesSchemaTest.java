@@ -28,18 +28,6 @@ public class EnumSizesSchemaTest {
     EnumSizes enumSizes = new EnumSizes.Builder().setByteEnum(10).build();
     // 10 is not a valid constant for ByteGtfs.
     assertThat(enumSizes.byteEnum()).isEqualTo(ByteGtfs.UNRECOGNIZED);
-    // However, 10 can be still retrieved using byteEnumValue method.
-    assertThat(enumSizes.byteEnumValue()).isEqualTo(10);
-  }
-
-  @Test
-  public void testByteEnumOutOfBounds() {
-    // Short.MIN_VALUE is out of bounds for byte. It cannot be retrieved with byteEnumValue.
-    assertThat(new EnumSizes.Builder().setByteEnum((int) Short.MIN_VALUE).build().byteEnumValue())
-        .isEqualTo(0);
-    // Short.MAX_VALUE is out of bounds for byte. It cannot be retrieved with byteEnumValue.
-    assertThat(new EnumSizes.Builder().setByteEnum((int) Short.MAX_VALUE).build().byteEnumValue())
-        .isEqualTo(-1);
   }
 
   @Test
@@ -57,18 +45,6 @@ public class EnumSizesSchemaTest {
     EnumSizes enumSizes = new EnumSizes.Builder().setShortEnum(10).build();
     // 10 is not a valid constant for ShortGtfs.
     assertThat(enumSizes.shortEnum()).isEqualTo(ShortGtfs.UNRECOGNIZED);
-    // However, 10 can be still retrieved using shortEnumValue method.
-    assertThat(enumSizes.shortEnumValue()).isEqualTo(10);
-  }
-
-  @Test
-  public void testShortEnumOutOfBounds() {
-    // Integer.MIN_VALUE is out of bounds for short. It cannot be retrieved with ShortEnumValue.
-    assertThat(new EnumSizes.Builder().setShortEnum(Integer.MIN_VALUE).build().shortEnumValue())
-        .isEqualTo(0);
-    // Integer.MAX_VALUE is out of bounds for short. It cannot be retrieved with ShortEnumValue.
-    assertThat(new EnumSizes.Builder().setShortEnum(Integer.MAX_VALUE).build().shortEnumValue())
-        .isEqualTo(-1);
   }
 
   @Test
@@ -86,7 +62,5 @@ public class EnumSizesSchemaTest {
     EnumSizes enumSizes = new EnumSizes.Builder().setIntEnum(10).build();
     // 10 is not a valid constant for ShortGtfs.
     assertThat(enumSizes.intEnum()).isEqualTo(IntGtfs.UNRECOGNIZED);
-    // However, 10 can be still retrieved using shortEnumValue method.
-    assertThat(enumSizes.intEnumValue()).isEqualTo(10);
   }
 }
