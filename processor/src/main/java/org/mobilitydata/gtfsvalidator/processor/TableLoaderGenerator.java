@@ -16,10 +16,11 @@
 
 package org.mobilitydata.gtfsvalidator.processor;
 
-import static org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum.*;
+import static org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum.OPTIONAL;
+import static org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum.RECOMMENDED;
+import static org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum.REQUIRED;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldColumnIndex;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldNameField;
-import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.gtfsColumnName;
 import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_PACKAGE_NAME;
 
 import com.google.common.base.CaseFormat;
@@ -145,22 +146,6 @@ public class TableLoaderGenerator {
                 FluentLogger.class, "logger", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
             .initializer("$T.forEnclosingClass()", FluentLogger.class)
             .build());
-    typeSpec.addField(
-        FieldSpec.builder(
-                String.class, "FILENAME", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-            .initializer("$S", fileDescriptor.filename())
-            .build());
-    for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
-      typeSpec.addField(
-          FieldSpec.builder(
-                  String.class,
-                  fieldNameField(field.name()),
-                  Modifier.PUBLIC,
-                  Modifier.STATIC,
-                  Modifier.FINAL)
-              .initializer("$S", gtfsColumnName(field.name()))
-              .build());
-    }
 
     typeSpec.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).build());
     typeSpec.addMethod(generateGtfsFilenameMethod());
@@ -175,39 +160,34 @@ public class TableLoaderGenerator {
   }
 
   private MethodSpec generateGetColumnNamesMethod() {
-    ArrayList<String> fieldNames = new ArrayList<>();
-    fieldNames.ensureCapacity(fileDescriptor.fields().size());
-    for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
-      fieldNames.add(fieldNameField(field.name()));
-    }
-
-    MethodSpec.Builder method =
-        MethodSpec.methodBuilder("getColumnNames")
-            .addAnnotation(Override.class)
-            .addModifiers(Modifier.PUBLIC)
-            .returns(ParameterizedTypeName.get(Set.class, String.class))
-            .addStatement("return $T.of($L)", ImmutableSet.class, String.join(", ", fieldNames));
-
-    return method.build();
+    TypeName gtfsEntityType = classNames.entityImplementationTypeName();
+    return MethodSpec.methodBuilder("getColumnNames")
+        .addAnnotation(Override.class)
+        .addModifiers(Modifier.PUBLIC)
+        .returns(ParameterizedTypeName.get(Set.class, String.class))
+        .addStatement(
+            "return $T.of($L)",
+            ImmutableSet.class,
+            fileDescriptor.fields().stream()
+                .map(field -> CodeBlock.of("$T.$L", gtfsEntityType, fieldNameField(field.name())))
+                .collect(CodeBlock.joining(", ")))
+        .build();
   }
 
   private MethodSpec generateGetRequiredColumnNamesMethod() {
-    ArrayList<String> fieldNames = new ArrayList<>();
-    fieldNames.ensureCapacity(fileDescriptor.fields().size());
-    for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
-      if (field.required()) {
-        fieldNames.add(fieldNameField(field.name()));
-      }
-    }
-
-    MethodSpec.Builder method =
-        MethodSpec.methodBuilder("getRequiredColumnNames")
-            .addAnnotation(Override.class)
-            .addModifiers(Modifier.PUBLIC)
-            .returns(ParameterizedTypeName.get(Set.class, String.class))
-            .addStatement("return $T.of($L)", ImmutableSet.class, String.join(", ", fieldNames));
-
-    return method.build();
+    TypeName gtfsEntityType = classNames.entityImplementationTypeName();
+    return MethodSpec.methodBuilder("getRequiredColumnNames")
+        .addAnnotation(Override.class)
+        .addModifiers(Modifier.PUBLIC)
+        .returns(ParameterizedTypeName.get(Set.class, String.class))
+        .addStatement(
+            "return $T.of($L)",
+            ImmutableSet.class,
+            fileDescriptor.fields().stream()
+                .filter(GtfsFieldDescriptor::required)
+                .map(field -> CodeBlock.of("$T.$L", gtfsEntityType, fieldNameField(field.name())))
+                .collect(CodeBlock.joining(", ")))
+        .build();
   }
 
   private MethodSpec generateLoadMethod() {
@@ -234,23 +214,23 @@ public class TableLoaderGenerator {
           "settings.setMaxCharsPerColumn($L)", fileDescriptor.maxCharsPerColumn().get());
     }
     method
-        .addStatement("csvFile = new $T(inputStream, FILENAME, settings)", CsvFile.class)
+        .addStatement("csvFile = new $T(inputStream, gtfsFilename(), settings)", CsvFile.class)
         .nextControlFlow("catch ($T e)", TextParsingException.class)
         .addStatement(
-            "noticeContainer.addValidationNotice(new $T(FILENAME, e))",
+            "noticeContainer.addValidationNotice(new $T(gtfsFilename(), e))",
             CsvParsingFailedNotice.class)
         .addStatement(
             "return new $T($T.INVALID_HEADERS)", tableContainerTypeName, TableStatus.class)
         .endControlFlow()
         .beginControlFlow("if (csvFile.isEmpty())")
         .addStatement(
-            "noticeContainer.addValidationNotice(new $T(FILENAME))", EmptyFileNotice.class)
+            "noticeContainer.addValidationNotice(new $T(gtfsFilename()))", EmptyFileNotice.class)
         .addStatement("return new $T($T.EMPTY_FILE)", tableContainerTypeName, TableStatus.class)
         .endControlFlow()
         .addStatement("$T header = csvFile.getHeader()", CsvHeader.class)
         .addStatement("$T headerNotices = new $T()", NoticeContainer.class, NoticeContainer.class)
         .addStatement(
-            "validatorProvider.getTableHeaderValidator().validate(FILENAME, header, "
+            "validatorProvider.getTableHeaderValidator().validate(gtfsFilename(), header, "
                 + "getColumnNames(), getRequiredColumnNames(), headerNotices)")
         .addStatement("noticeContainer.addAll(headerNotices)")
         .beginControlFlow("if (headerNotices.hasValidationErrors())")
@@ -260,8 +240,9 @@ public class TableLoaderGenerator {
 
     for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
       method.addStatement(
-          "final int $L = header.getColumnIndex($L)",
+          "final int $L = header.getColumnIndex($T.$L)",
           fieldColumnIndex(field.name()),
+          gtfsEntityType,
           fieldNameField(field.name()));
     }
 
@@ -284,7 +265,8 @@ public class TableLoaderGenerator {
     method
         .addStatement("final $T.Builder builder = new $T.Builder()", gtfsEntityType, gtfsEntityType)
         .addStatement(
-            "final $T rowParser = new $T(FILENAME, header, validatorProvider.getFieldValidator())",
+            "final $T rowParser = new $T(gtfsFilename(), header,"
+                + " validatorProvider.getFieldValidator())",
             RowParser.class,
             RowParser.class)
         .addStatement(
@@ -305,7 +287,8 @@ public class TableLoaderGenerator {
         .beginControlFlow("try")
         .beginControlFlow("for ($T row : csvFile)", CsvRow.class)
         .beginControlFlow("if (row.getRowNumber() % $L == 0)", LOG_EVERY_N_ROWS)
-        .addStatement("logger.atInfo().log($S, FILENAME, row.getRowNumber())", "Reading %s, row %d")
+        .addStatement(
+            "logger.atInfo().log($S, gtfsFilename(), row.getRowNumber())", "Reading %s, row %d")
         .endControlFlow()
         .addStatement("$T rowNotices = new $T()", NoticeContainer.class, NoticeContainer.class)
         .addStatement("rowParser.setRow(row, rowNotices)")
@@ -318,7 +301,7 @@ public class TableLoaderGenerator {
     for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
       CodeBlock fieldValue =
           CodeBlock.of(
-              "rowParser.$L($L, $T.$L$L)",
+              "rowParser.$L(\n$L, $T.$L$L)",
               gtfsTypeToParserMethod(field.type()),
               fieldColumnIndex(field.name()),
               FieldLevelEnum.class,
@@ -328,7 +311,11 @@ public class TableLoaderGenerator {
               field.numberBounds().isPresent()
                   ? ", RowParser.NumberBounds." + field.numberBounds().get()
                   : field.type() == FieldTypeEnum.ENUM
-                      ? ", " + field.javaType().toString() + "::forNumber"
+                      ? ",\n"
+                          + field.javaType().toString()
+                          + "::forNumber, "
+                          + field.javaType().toString()
+                          + ".UNRECOGNIZED"
                       : "");
       if (cachingEnabled(field)) {
         fieldValue = CodeBlock.of("$L.addIfAbsent($L)", fieldColumnCache(field), fieldValue);
@@ -354,7 +341,7 @@ public class TableLoaderGenerator {
         .endControlFlow() // end for (row)
         .nextControlFlow("catch ($T e)", TextParsingException.class)
         .addStatement(
-            "noticeContainer.addValidationNotice(new $T(FILENAME, e))",
+            "noticeContainer.addValidationNotice(new $T(gtfsFilename(), e))",
             CsvParsingFailedNotice.class)
         .addStatement(
             "return new $T($T.UNPARSABLE_ROWS)", tableContainerTypeName, TableStatus.class)
@@ -366,9 +353,10 @@ public class TableLoaderGenerator {
         final String cacheName = fieldColumnCache(field);
         method.addStatement(
             "logger.atInfo().log("
-                + "$S, gtfsFilename(), $L, $L.getCacheSize(), $L.getLookupCount(), "
+                + "$S, gtfsFilename(), $T.$L, $L.getCacheSize(), $L.getLookupCount(), "
                 + "$L.getHitRatio() * 100.0, $L.getMissRatio() * 100.0)",
             "Cache for %s %s: size = %d, lookup count = %d, hits = %.2f%%, misses = %.2f%%",
+            gtfsEntityType,
             fieldNameField(field.name()),
             cacheName,
             cacheName,
@@ -381,7 +369,8 @@ public class TableLoaderGenerator {
 
     method
         .beginControlFlow("if (hasUnparsableRows)")
-        .addStatement("logger.atSevere().log($S, FILENAME)", "Failed to parse some rows in %s")
+        .addStatement(
+            "logger.atSevere().log($S, gtfsFilename())", "Failed to parse some rows in %s")
         .addStatement(
             "return new $T($T.UNPARSABLE_ROWS)", tableContainerTypeName, TableStatus.class)
         .nextControlFlow("else")
@@ -404,7 +393,7 @@ public class TableLoaderGenerator {
         .addAnnotation(Override.class)
         .addModifiers(Modifier.PUBLIC)
         .returns(String.class)
-        .addStatement("return FILENAME")
+        .addStatement("return $T.FILENAME", classNames.entityImplementationTypeName())
         .build();
   }
 

@@ -96,7 +96,9 @@ public class GtfsAnnotationProcessor extends AbstractProcessor {
       fileDescriptors.add(analyser.analyzeGtfsFileType(type));
     }
     for (GtfsFileDescriptor fileDescriptor : fileDescriptors) {
-      writeJavaFile(new EntityImplementationGenerator(fileDescriptor).generateGtfsEntityJavaFile());
+      writeJavaFile(
+          new EntityImplementationGenerator(fileDescriptor, enumDescriptors)
+              .generateGtfsEntityJavaFile());
       writeJavaFile(new TableLoaderGenerator(fileDescriptor).generateGtfsTableLoaderJavaFile());
       writeJavaFile(new TableContainerGenerator(fileDescriptor).generateGtfsContainerJavaFile());
     }
