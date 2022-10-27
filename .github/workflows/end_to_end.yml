@@ -31,30 +31,30 @@ jobs:
   validate_gradle_wrapper:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: gradle/wrapper-validation-action@v1
   pack-snapshot:
     needs: validate_gradle_wrapper
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - name: Set up JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: '11'
           distribution: 'temurin'
       - name: Cache Gradle packages
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
       - name: Package cli app jar with Gradle
-        uses: eskatos/gradle-command-action@v1
+        uses: gradle/gradle-build-action@v2
         with:
           arguments: shadowJar
       - name: Persist gtfs-validator snapshot jar
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: gtfs-validator-snapshot
           path: cli/build/libs/gtfs-validator-*-cli.jar
@@ -62,7 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository code
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
       - name: Install dependencies
         run: |
           pip install -r scripts/mobility-database-harvester/requirements.txt
@@ -74,7 +74,7 @@ jobs:
           echo "::set-output name=matrix::$DATASETS"
       - name: Persist metadata
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: datasets_metadata
           path: scripts/mobility-database-harvester/datasets_metadata
@@ -86,9 +86,9 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - name: Download latest changes .jar file from previous job
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: gtfs-validator-snapshot
           path: gtfs-validator-snapshot
@@ -99,7 +99,7 @@ jobs:
         env:
           OUTPUT_BASE: ${{ github.sha }}
       - name: Persist reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: reports_snapshot
           path: ${{ github.sha }}/output
