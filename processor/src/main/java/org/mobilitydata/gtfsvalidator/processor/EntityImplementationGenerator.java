@@ -28,11 +28,13 @@ import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_P
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.geometry.S2LatLng;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import java.math.BigDecimal;
@@ -46,6 +48,7 @@ import javax.lang.model.type.TypeMirror;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
+import org.mobilitydata.gtfsvalidator.table.GtfsEntityBuilder;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
@@ -441,7 +444,11 @@ public class EntityImplementationGenerator {
   public TypeSpec generateGtfsEntityBuilderClass() {
     TypeSpec.Builder typeSpec =
         TypeSpec.classBuilder("Builder")
-            .addModifiers(Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC);
+            .addModifiers(Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
+            .addSuperinterface(
+                ParameterizedTypeName.get(
+                    ClassName.get(GtfsEntityBuilder.class),
+                    classNames.entityImplementationTypeName()));
 
     typeSpec.addMethod(
         MethodSpec.constructorBuilder()
@@ -455,12 +462,14 @@ public class EntityImplementationGenerator {
     typeSpec.addMethod(
         MethodSpec.methodBuilder(getterMethodName(CSV_ROW_NUMBER))
             .addModifiers(Modifier.PUBLIC)
+            .addAnnotation(Override.class)
             .returns(long.class)
             .addStatement("return $L", CSV_ROW_NUMBER)
             .build());
     typeSpec.addMethod(
         MethodSpec.methodBuilder(setterMethodName(CSV_ROW_NUMBER))
             .addModifiers(Modifier.PUBLIC)
+            .addAnnotation(Override.class)
             .returns(classNames.entityBuilderTypeName())
             .addParameter(long.class, "value")
             .addStatement("$L = value", CSV_ROW_NUMBER)
@@ -491,6 +500,7 @@ public class EntityImplementationGenerator {
     MethodSpec.Builder buildMethod =
         MethodSpec.methodBuilder("build")
             .addModifiers(Modifier.PUBLIC)
+            .addAnnotation(Override.class)
             .returns(gtfsEntityType)
             .addStatement("$T entity = new $T()", gtfsEntityType, gtfsEntityType)
             .addStatement("entity.$L = this.$L", CSV_ROW_NUMBER, CSV_ROW_NUMBER);
@@ -509,6 +519,7 @@ public class EntityImplementationGenerator {
     MethodSpec.Builder buildMethod =
         MethodSpec.methodBuilder("clear")
             .addModifiers(Modifier.PUBLIC)
+            .addAnnotation(Override.class)
             .returns(void.class)
             .addStatement("$L = 0", CSV_ROW_NUMBER);
     for (int i = 0; i <= lastBitFieldNumber(fileDescriptor.fields().size()); ++i) {
