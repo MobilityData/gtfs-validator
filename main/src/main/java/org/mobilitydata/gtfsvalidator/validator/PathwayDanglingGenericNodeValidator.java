@@ -75,7 +75,7 @@ public class PathwayDanglingGenericNodeValidator extends FileValidator {
    * Describes a dangling generic node, i.e. that has only one incident location in a pathway graph.
    */
   static class PathwayDanglingGenericNodeNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String stopId;
     private final String stopName;
     private final String parentStation;

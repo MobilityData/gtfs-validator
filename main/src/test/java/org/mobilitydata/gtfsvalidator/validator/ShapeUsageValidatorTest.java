@@ -32,7 +32,7 @@ import org.mobilitydata.gtfsvalidator.validator.ShapeUsageValidator.UnusedShapeN
 public class ShapeUsageValidatorTest {
 
   public static GtfsShape createShapePoint(
-      long csvRowNumber,
+      int csvRowNumber,
       String shapeId,
       double shapePtLat,
       double shapePtLon,
@@ -49,7 +49,7 @@ public class ShapeUsageValidatorTest {
   }
 
   public static GtfsTrip createTrip(
-      long csvRowNumber, String routeId, String serviceId, String tripId, String shapeId) {
+      int csvRowNumber, String routeId, String serviceId, String tripId, String shapeId) {
     return new GtfsTrip.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setRouteId(routeId)

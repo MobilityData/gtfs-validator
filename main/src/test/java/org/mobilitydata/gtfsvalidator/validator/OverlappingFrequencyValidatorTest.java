@@ -18,7 +18,7 @@ import org.mobilitydata.gtfsvalidator.validator.OverlappingFrequencyValidator.Ov
 @RunWith(JUnit4.class)
 public class OverlappingFrequencyValidatorTest {
   private GtfsFrequency createFrequency(
-      long csvRowNumber, String tripId, String startTime, String endTime, int headwaySecs) {
+      int csvRowNumber, String tripId, String startTime, String endTime, int headwaySecs) {
     return new GtfsFrequency.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setTripId(tripId)

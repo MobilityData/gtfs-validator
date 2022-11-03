@@ -72,7 +72,7 @@ public class TransfersStopTypeValidator extends FileValidator {
    */
   public static final class TransferWithInvalidStopLocationTypeNotice extends ValidationNotice {
     // The row number from `transfers.txt` for the faulty entry.
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     // The name of the stop id field (e.g. `from_stop_id`) referencing the stop.
     private final String stopIdFieldName;
     // The referenced stop id.

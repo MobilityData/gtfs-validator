@@ -31,7 +31,7 @@ import org.mobilitydata.gtfsvalidator.validator.MissingTripEdgeValidator.Missing
 
 public class MissingTripEdgeValidatorTest {
   public static GtfsStopTime createStopTime(
-      long csvRowNumber,
+      int csvRowNumber,
       String tripId,
       GtfsTime arrivalTime,
       GtfsTime departureTime,
@@ -46,7 +46,7 @@ public class MissingTripEdgeValidatorTest {
         .build();
   }
 
-  public static GtfsTrip createTrip(long csvRowNumber, String tripId) {
+  public static GtfsTrip createTrip(int csvRowNumber, String tripId) {
     return new GtfsTrip.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setRouteId("route id value")

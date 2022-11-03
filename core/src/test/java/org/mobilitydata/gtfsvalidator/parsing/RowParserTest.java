@@ -321,7 +321,7 @@ public class RowParserTest {
     parser.asId(0, FieldLevelEnum.REQUIRED);
     assertThat(parser.getNoticeContainer().getValidationNotices())
         .containsExactly(
-            new NonAsciiOrNonPrintableCharNotice(TEST_FILENAME, 8L, "column name", "קום"));
+            new NonAsciiOrNonPrintableCharNotice(TEST_FILENAME, 8, "column name", "קום"));
     // Non-ASCII characters in ID are not an error. Validation may continue.
     assertThat(parser.getNoticeContainer().hasValidationErrors()).isFalse();
   }

@@ -58,10 +58,10 @@ public class TripUsabilityValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class UnusableTripNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String tripId;
 
-    UnusableTripNotice(long csvRowNumber, String tripId) {
+    UnusableTripNotice(int csvRowNumber, String tripId) {
       super(SeverityLevel.WARNING);
       this.csvRowNumber = csvRowNumber;
       this.tripId = tripId;

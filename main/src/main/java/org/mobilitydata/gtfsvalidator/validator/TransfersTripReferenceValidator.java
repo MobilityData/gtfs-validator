@@ -123,7 +123,7 @@ public class TransfersTripReferenceValidator extends FileValidator {
    */
   public static class TransferWithInvalidTripAndRouteNotice extends ValidationNotice {
     // The row number from `transfers.txt` for the faulty entry.
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     // The name of the trip id field (e.g. `from_trip_id`) referencing a trip.
     private final String tripFieldName;
     // The referenced trip id.
@@ -155,7 +155,7 @@ public class TransfersTripReferenceValidator extends FileValidator {
    */
   public static class TransferWithInvalidTripAndStopNotice extends ValidationNotice {
     // The row number from `transfers.txt` for the faulty entry.
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     // The name of the trip id field (e.g. `from_trip_id`) referencing a trip.
     private final String tripFieldName;
     // The referenced trip id.

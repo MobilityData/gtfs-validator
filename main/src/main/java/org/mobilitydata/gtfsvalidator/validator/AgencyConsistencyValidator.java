@@ -104,11 +104,11 @@ public class AgencyConsistencyValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class InconsistentAgencyLangNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String expected;
     private final String actual;
 
-    InconsistentAgencyLangNotice(long csvRowNumber, String expected, String actual) {
+    InconsistentAgencyLangNotice(int csvRowNumber, String expected, String actual) {
       super(SeverityLevel.WARNING);
       this.csvRowNumber = csvRowNumber;
       this.expected = expected;
@@ -122,11 +122,11 @@ public class AgencyConsistencyValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class InconsistentAgencyTimezoneNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String expected;
     private final String actual;
 
-    InconsistentAgencyTimezoneNotice(long csvRowNumber, String expected, String actual) {
+    InconsistentAgencyTimezoneNotice(int csvRowNumber, String expected, String actual) {
       super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
       this.expected = expected;

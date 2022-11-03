@@ -36,7 +36,7 @@ public class PathwayLoopValidator extends SingleEntityValidator<GtfsPathway> {
   }
 
   static class PathwayLoopNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String pathwayId;
     private final String stopId;
 
