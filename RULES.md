@@ -41,10 +41,16 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`empty_column_name`](#empty_column_name)                                                                         | A column name is empty.                                                                                                                                |
 | [`empty_file`](#empty_file)                                                                                       | A CSV file is empty.                                                                                                                                   |
 | [`equal_shape_distance_diff_coordinates`](#equal_shape_distance_diff_coordinates)                                 | Two consecutive points have equal `shape_dist_traveled` and different lat/lon coordinates in `shapes.txt`.                                             |
+| [`fare_transfer_rule_duration_limit_type_without_duration_limit`](#fare_transfer_rule_duration_limit_type_without_duration_limit) | A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit_type` field but no `duration_limit` specified.            |
+| [`fare_transfer_rule_duration_limit_without_type`](#fare_transfer_rule_duration_limit_without_type)               | A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit` field but no `duration_limit_type` specified.                            |
+| [`fare_transfer_rule_invalid_transfer_count`](#fare_transfer_rule_invalid_transfer_count)                         | A row from GTFS file `fare_transfer_rules.txt` has a defined `transfer_count` with an invalid value.                                                   |
+| [`fare_transfer_rule_missing_transfer_count`](#fare_transfer_rule_missing_transfer_count)                         | A row from `fare_transfer_rules.txt` has `from_leg_group_id` equal to `to_leg_group_id`, but has no `transfer_count` specified.                        |
+| [`fare_transfer_rule_with_forbidden_transfer_count`](#fare_transfer_rule_with_forbidden_transfer_count)           | A row from `fare_transfer_rules.txt` has `from_leg_group_id` not equal to `to_leg_group_id`, but has `transfer_count` specified.                       |
 | [`foreign_key_violation`](#foreign_key_violation)                                                                 | Wrong foreign key.                                                                                                                                     |
 | [`inconsistent_agency_timezone`](#inconsistent_agency_timezone)                                                   | Inconsistent Timezone among agencies.                                                                                                                  |
 | [`invalid_color`](#invalid_color)                                                                                 | A field contains an invalid color value.                                                                                                               |
 | [`invalid_currency`](#invalid_currency)                                                                           | A field contains a wrong currency code.                                                                                                                |
+| [`invalid_currency_amount`](#invalid_currency_amount)                                                             | A currency amount field has a value that does not match the format of its corresponding currency code field.                                           |
 | [`invalid_date`](#invalid_date)                                                                                   | A field cannot be parsed as date.                                                                                                                      |
 | [`invalid_email`](#invalid_email)                                                                                 | A field contains a malformed email address.                                                                                                            |
 | [`invalid_float`](#invalid_float)                                                                                 | A field cannot be parsed as a floating point number.                                                                                                   |
@@ -79,6 +85,9 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`stop_time_with_arrival_before_previous_departure_time`](#stop_time_with_arrival_before_previous_departure_time) | Backwards time travel between stops in `stop_times.txt`                                                                                                |
 | [`stop_time_with_only_arrival_or_departure_time`](#stop_time_with_only_arrival_or_departure_time)                 | Missing `stop_times.arrival_time` or `stop_times.departure_time`.                                                                                      |
 | [`stop_without_zone_id`](#stop_without_zone_id)                                                                   | Stop without value for `stops.zone_id`.                                                                                                                |
+| [`transfer_with_invalid_stop_location_type`](#transfer_with_invalid_stop_location_type)                           | A stop id field from GTFS file `transfers.txt` references a stop that has a `location_type` other than 0 or 1 (aka Stop/Platform or Station).          |
+| [`transfer_with_invalid_trip_and_route`](#transfer_with_invalid_trip_and_route)                                   | A trip id field from GTFS file `transfers.txt` references a route that does not match its `trips.txt` `route_id`.                                      |
+| [`transfer_with_invalid_trip_and_stop`](#transfer_with_invalid_trip_and_stop)                                     | A trip id field from GTFS file `transfers.txt` references a stop that is not included in the referenced trip's stop-times.                             |
 | [`translation_foreign_key_violation`](#translation_foreign_key_violation)                                         | An entity with the given `record_id` and `record_sub_id` cannot be found in the referenced table.                                                      |
 | [`translation_unexpected_value`](#translation_unexpected_value)                                                   | A field in a translations row has value but must be empty.                                                                                             |
 | [`wrong_parent_location_type`](#wrong_parent_location_type)                                                       | Incorrect type of the parent location.                                                                                                                 |
@@ -123,6 +132,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`stop_too_far_from_shape`](#stop_too_far_from_shape)                                         | Stop too far from trip shape.                                                                                                                                 |
 | [`stop_too_far_from_shape_using_user_distance`](#stop_too_far_from_shape_using_user_distance) | Stop time too far from shape.                                                                                                                                 |
 | [`stop_without_stop_time`](#stop_without_stop_time)                                           | A stop in `stops.txt` is not referenced by any `stop_times.stop_id`.                                                                                          |
+| [`transfer_with_suspicious_mid_trip_in_seat`](#transfer_with_suspicious_mid_trip_in_seat)     | A trip id field from GTFS file `transfers.txt` with an in-seat transfer type references a stop that is not in the expected position in the trip's stop-times. |
 | [`translation_unknown_table_name`](#translation_unknown_table_name)                           | A translation references an unknown or missing GTFS table.                                                                                                    |
 | [`unexpected_enum_value`](#unexpected_enum_value)                                             | An enum has an unexpected value.                                                                                                                              |
 | [`unusable_trip`](#unusable_trip)                                                             | Trips must have more than one stop to be usable.                                                                                                              |
@@ -403,6 +413,112 @@ When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` m
 
 </details>
 
+<a name="FareTransferRuleDurationLimitTypeWithoutDurationLimitNotice"/>
+
+### fare_transfer_rule_duration_limit_type_without_duration_limit
+
+A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit_type` field but no `duration_limit` specified.
+
+#### References
+* [GTFS fare_transfer_rules.txt](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+<details>
+
+#### Notice fields description
+| Field name      	| Description                                        	| Type   	|
+|-----------------	|----------------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row of the faulty record.                      	| Long   	|
+
+#### Affected files
+* [`fare_transfer_rules.txt`](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+</details>
+
+<a name="FareTransferRuleDurationLimitWithoutTypeNotice"/>
+
+### fare_transfer_rule_duration_limit_without_type 
+
+A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit` field but no `duration_limit_type` specified.
+
+#### References
+* [GTFS fare_transfer_rules.txt](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+<details>
+
+#### Notice fields description
+| Field name      	| Description                                        	| Type   	|
+|-----------------	|----------------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row of the faulty record.                      	| Long   	|
+
+#### Affected files
+* [`fare_transfer_rules.txt`](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+</details>
+
+<a name="FareTransferRuleInvalidTransferCountNotice"/>
+
+### fare_transfer_rule_invalid_transfer_count
+
+A row from GTFS file `fare_transfer_rules.txt` has a defined `transfer_count` with an invalid value.
+
+#### References
+* [GTFS fare_transfer_rules.txt](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+<details>
+
+#### Notice fields description
+| Field name      	| Description                                        	| Type   	|
+|-----------------	|----------------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row of the faulty record.                      	| Long   	|
+| `transferCount`   	| The transfer count value of the faulty record.      	| Integer	|
+
+#### Affected files
+* [`fare_transfer_rules.txt`](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+</details>
+
+<a name="FareTransferRuleMissingTransferCountNotice"/>
+
+### fare_transfer_rule_missing_transfer_count
+
+A row from GTFS file `fare_transfer_rules.txt` has `from_leg_group_id` equal to `to_leg_group_id`, but has no `transfer_count` specified.  Per the spec, `transfer_count` is required if the two leg group ids are equal.
+
+#### References
+* [GTFS fare_transfer_rules.txt](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+<details>
+
+#### Notice fields description
+| Field name      	| Description                                        	| Type   	|
+|-----------------	|----------------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row of the faulty record.                      	| Long   	|
+
+#### Affected files
+* [`fare_transfer_rules.txt`](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+</details>
+
+<a name="FareTransferRuleWithForbiddenTransferCountNotice"/>
+
+### fare_transfer_rule_with_forbidden_transfer_count
+
+A row from GTFS file `fare_transfer_rules.txt` has `from_leg_group_id` not equal to `to_leg_group_id`, but has `transfer_count` specified.  Per the spec, `transfer_count` is forbidden if the two leg group ids are not equal.
+
+#### References
+* [GTFS fare_transfer_rules.txt](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+<details>
+
+#### Notice fields description
+| Field name      	| Description                                        	| Type   	|
+|-----------------	|----------------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row of the faulty record.                      	| Long   	|
+
+#### Affected files
+* [`fare_transfer_rules.txt`](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+</details>
+
 <a name="ForeignKeyViolationNotice"/>
 
 ### foreign_key_violation
@@ -504,6 +620,29 @@ Value of field with type `currency` is not valid. Currency code must follow <a h
 
 #### Affected files
 * [`fare_attributes.txt`](http://gtfs.org/reference/static#fare_attributestxt)
+
+</details>
+
+<a name="InvalidCurrencyAmountNotice"/>
+
+### invalid_currency_amount
+
+A currency amount field has a value that does not match the format (e.g. expected number of decimal places) of its corresponding currency code field.  The number of decimal places is specified by <a href="https://en.wikipedia.org/wiki/ISO_4217#Active_codes">ISO 4217</a>.
+
+#### References
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
+<details>
+
+#### Notice fields description
+| Field name   	| Description                   	| Type   	|
+|--------------	|-------------------------------	|--------	|
+| `filename`   	| The row of the faulty record. 	| String 	|
+| `csvRowNumber`| The row of the faulty record. 	| Long   	|
+| `fieldName`  	| Faulty record's field name.   	| String 	|
+| `amount` 	| Faulty currency amount value.		| String 	|
+
+#### Affected files
+* [`fare_products.txt`](http://gtfs.org/reference/static#fare_productstxt)
 
 </details>
 
@@ -1317,6 +1456,92 @@ If `fare_rules.txt` is provided, and `fare_rules.txt` uses at least one column a
 #### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`fare_rules.txt`](http://gtfs.org/reference/static#farerulestxt)
+
+</details>
+
+<a name="TransferWithInvalidStopLocationTypeNotice"/>
+
+### transfer_with_invalid_stop_location_type
+
+A `from_stop_id` or `to_stop_id` field from GTFS file `transfers.txt` references a stop that has a `location_type` other than 0 or 1 (aka Stop/Platform or Station).
+
+#### References
+* [transfers.txt specification](http://gtfs.org/reference/static/#transferstxt)
+
+<details>
+
+#### Notice fields description
+| Field name          | Description                                                               | Type   |
+|---------------------|---------------------------------------------------------------------------|--------|
+| `csvRowNumber`      | The row number from `transfers.txt` for the faulty entry.                 | long   |
+| `stopIdFieldName`   | The name of the stop id field (e.g. `from_stop_id`) referencing the stop. | String |
+| `stopId`            | The referenced stop id.                                                   | String |
+| `locationTypeValue` | The numeric value of the invalid location type.                           | int    |
+| `locationTypeName`  | The name of the invalid location type.                                    | String |
+
+</details>
+
+<a name="TransferWithInvalidTripAndRouteNotice"/>
+
+### transfer_with_invalid_trip_and_route
+
+A `from_trip_id` or `to_trip_id` field from GTFS file `transfers.txt` references a route that does not match its `trips.txt` `route_id`.
+
+#### References
+* [transfers.txt specification](http://gtfs.org/reference/static/#transferstxt)
+
+<details>
+
+#### Notice fields description
+| Field name        | Description                                                                  | Type   |
+|-------------------|------------------------------------------------------------------------------|--------|
+| `csvRowNumber`    | The row number from `transfers.txt` for the faulty entry.                    | long   |
+| `tripFieldName`   | The name of the trip id field (e.g. `from_trip_id`) referencing a trip.      | String |
+| `tripId`          | The referenced trip id.                                                      | String |
+| `routeFieldName`  | The name of the route id field (e.g. `from_route_id`) referencing the route. | String |
+| `routeId`         | The referenced route id.                                                     | String |
+| `expectedRouteId` | The expected route id from `trips.txt`.                                      | String |
+
+</details>
+
+<a name="TransferWithInvalidTripAndStopNotice"/>
+
+### transfer_with_invalid_trip_and_stop
+
+A `from_trip_id` or `to_trip_id` field from GTFS file `transfers.txt` references a stop that is not included in the referenced trip's stop-times.
+
+#### References
+* [transfers.txt specification](http://gtfs.org/reference/static/#transferstxt)
+
+<details>
+
+#### Notice fields description
+| Field name      | Description                                                                | Type   |
+|-----------------|----------------------------------------------------------------------------|--------|
+| `csvRowNumber`  | The row number from `transfers.txt` for the faulty entry.                  | long   |
+| `tripFieldName` | The name of the trip id field (e.g. `from_trip_id`) referencing a trip.    | String |
+| `tripId`        | The referenced trip id.                                                    | String |
+| `stopFieldName` | The name of the stop id field (e.g. `stop_route_id`) referencing the stop. | String |
+| `stopId`        | The referenced stop id.                                                    | String |
+
+</details>
+
+<a name="TransferWithSuspiciousMidTripInSeatNotice"/>
+
+### transfer_with_suspicious_mid_trip_in_seat
+
+A `from_trip_id` or `to_trip_id` field from GTFS file `transfers.txt` with an in-seat transfer type references a stop that is not in the expected position in the trip's stop-times. For in-seat transfers, we expect the stop to be the last stop-time in the trip sequence for `from_stop_id` and the first stop-time for `to_stop_id`. If you are intentionally using this feature to model mid-trip transfers, you can ignore this warning, but be aware that this functionality is still considered to be partially experimental in some interpretations of the spec.
+
+<details>
+
+#### Notice fields description
+| Field name        | Description                                                               | Type   |
+|-------------------|---------------------------------------------------------------------------|--------|
+| `csvRowNumber`    | The row number from `transfers.txt` for the faulty entry.                 | long   |
+| `tripIdFieldName` | The name of the trip id field (e.g. `from_trip_id`) referencing a trip.   | String |
+| `tripId`          | The referenced trip id.                                                   | String |
+| `stopIdFieldName` | The name of the stop id field (e.g. `from_stop_id`) referencing the stop. | String |
+| `stopId`          | The referenced stop id.                                                   | String |
 
 </details>
 

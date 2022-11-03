@@ -191,7 +191,9 @@ class TableContainerIndexGenerator {
             .map(
                 (f) ->
                     CodeBlock.of(
-                        "$T.$L", classNames.tableLoaderTypeName(), fieldNameField(f.name())))
+                        "$T.$L",
+                        classNames.entityImplementationTypeName(),
+                        fieldNameField(f.name())))
             .collect(CodeBlock.joining(", ")));
     return field.build();
   }
@@ -323,7 +325,9 @@ class TableContainerIndexGenerator {
                   + "$L, $L))",
               DuplicateKeyNotice.class,
               fileDescriptor.primaryKeys().stream()
-                  .map((field) -> CodeBlock.of("$T.$L", loaderType, fieldNameField(field.name())))
+                  .map(
+                      (field) ->
+                          CodeBlock.of("$T.$L", gtfsEntityType, fieldNameField(field.name())))
                   .collect(CodeBlock.joining(" + \",\" + ")),
               fileDescriptor.primaryKeys().stream()
                   .map((field) -> CodeBlock.of("oldEntity.$L()", field.name()))
@@ -350,7 +354,7 @@ class TableContainerIndexGenerator {
               "noticeContainer.addValidationNotice(new $T(gtfsFilename(),"
                   + " newEntity.csvRowNumber(), oldEntity.csvRowNumber(), $T.$L, newEntity.$L()))",
               DuplicateKeyNotice.class,
-              loaderType,
+              gtfsEntityType,
               fieldNameField(primaryKey.name()),
               primaryKey.name())
           .nextControlFlow("else")

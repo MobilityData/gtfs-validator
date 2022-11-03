@@ -18,29 +18,37 @@ package org.mobilitydata.gtfsvalidator.processor;
 
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.clearMethodName;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldDefaultName;
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldNameField;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.getValueMethodName;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.getterMethodName;
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.gtfsColumnName;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.hasMethodName;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.setterMethodName;
 import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_PACKAGE_NAME;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.geometry.S2LatLng;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import java.math.BigDecimal;
 import java.time.ZoneId;
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
+import org.mobilitydata.gtfsvalidator.table.GtfsEntityBuilder;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
@@ -59,14 +67,40 @@ public class EntityImplementationGenerator {
   private static final String CSV_ROW_NUMBER = "csvRowNumber";
   private final GtfsFileDescriptor fileDescriptor;
   private final GtfsEntityClasses classNames;
+  private final ImmutableMap<String, TypeName> enumIntegerFieldTypes;
 
-  public EntityImplementationGenerator(GtfsFileDescriptor fileDescriptor) {
+  public EntityImplementationGenerator(
+      GtfsFileDescriptor fileDescriptor, List<GtfsEnumDescriptor> enumDescriptors) {
     this.fileDescriptor = fileDescriptor;
     this.classNames = new GtfsEntityClasses(fileDescriptor);
+    this.enumIntegerFieldTypes = createEnumIntegerFieldTypesMap(enumDescriptors);
+  }
+
+  static ImmutableMap<String, TypeName> createEnumIntegerFieldTypesMap(
+      List<GtfsEnumDescriptor> enumDescriptors) {
+    return enumDescriptors.stream()
+        .collect(
+            ImmutableMap.toImmutableMap(
+                GtfsEnumDescriptor::name,
+                EntityImplementationGenerator::chooseEnumIntegerFieldType));
+  }
+
+  static TypeName chooseEnumIntegerFieldType(GtfsEnumDescriptor enumDescriptor) {
+    final int minValue = EnumGenerator.getMinUnrecognizedValue(enumDescriptor);
+    final int maxValue = EnumGenerator.getMaxValue(enumDescriptor);
+    if (minValue >= Byte.MIN_VALUE && maxValue <= Byte.MAX_VALUE) {
+      return TypeName.BYTE;
+    }
+    if (minValue >= Short.MIN_VALUE && maxValue <= Short.MAX_VALUE) {
+      return TypeName.SHORT;
+    }
+    return TypeName.INT;
   }
 
   private static int lastBitFieldNumber(int fieldCount) {
-    // Each bitField has 32 bits. We need bitField0_ to store 1..32 fields,
+    // Most standard GTFS tables have less than 16 fields, so a bitmask fits into short.
+    // However, we want to support enormous tables that may have more than 32 fields.
+    // An int bitField has 32 bits. We need bitField0_ to store 1..32 fields,
     // bitField0_ and bitField1_ for 33..64 fields etc.
     return (fieldCount - 1) / 32;
   }
@@ -165,9 +199,10 @@ public class EntityImplementationGenerator {
     return getDefaultValue(field).toString().equals("null") ? Nullable.class : Nonnull.class;
   }
 
-  private static TypeName getClassFieldType(GtfsFieldDescriptor field) {
+  private TypeName getClassFieldType(GtfsFieldDescriptor field) {
     if (field.type() == FieldTypeEnum.ENUM) {
-      return TypeName.INT;
+      return enumIntegerFieldTypes.getOrDefault(
+          ((DeclaredType) field.javaType()).asElement().getSimpleName().toString(), TypeName.INT);
     }
     return TypeName.get(field.javaType());
   }
@@ -181,9 +216,20 @@ public class EntityImplementationGenerator {
     for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
       typeSpec.addField(getClassFieldType(field), field.name(), Modifier.PRIVATE);
     }
-    for (int i = 0; i <= lastBitFieldNumber(fileDescriptor.fields().size()); ++i) {
+    if (fileDescriptor.fields().size() <= 32) {
       typeSpec.addField(
-          FieldSpec.builder(int.class, "bitField" + i + "_", Modifier.PRIVATE).build());
+          FieldSpec.builder(
+                  fileDescriptor.fields().size() <= 8
+                      ? byte.class
+                      : fileDescriptor.fields().size() <= 16 ? short.class : int.class,
+                  "bitField0_",
+                  Modifier.PRIVATE)
+              .build());
+    } else {
+      for (int i = 0; i <= lastBitFieldNumber(fileDescriptor.fields().size()); ++i) {
+        typeSpec.addField(
+            FieldSpec.builder(int.class, "bitField" + i + "_", Modifier.PRIVATE).build());
+      }
     }
   }
 
@@ -218,6 +264,7 @@ public class EntityImplementationGenerator {
             .addJavadoc("Use {@link Builder} class to construct an object.")
             .build());
 
+    generateFilenameAndFieldNameConstants(typeSpec);
     addEntityOrBuilderFields(typeSpec);
     addDefaultValueFields(typeSpec);
 
@@ -244,6 +291,25 @@ public class EntityImplementationGenerator {
     typeSpec.addType(generateGtfsEntityBuilderClass());
 
     return typeSpec.build();
+  }
+
+  private void generateFilenameAndFieldNameConstants(TypeSpec.Builder typeSpec) {
+    typeSpec.addField(
+        FieldSpec.builder(
+                String.class, "FILENAME", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+            .initializer("$S", fileDescriptor.filename())
+            .build());
+    for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
+      typeSpec.addField(
+          FieldSpec.builder(
+                  String.class,
+                  fieldNameField(field.name()),
+                  Modifier.PUBLIC,
+                  Modifier.STATIC,
+                  Modifier.FINAL)
+              .initializer("$S", gtfsColumnName(field.name()))
+              .build());
+    }
   }
 
   private MethodSpec generateGetterMethod(GtfsFieldDescriptor field, ClassContext classContext) {
@@ -302,18 +368,30 @@ public class EntityImplementationGenerator {
   }
 
   private MethodSpec generateSetterMethod(GtfsFieldDescriptor field, int fieldNumber) {
-    return MethodSpec.methodBuilder(setterMethodName(field.name()))
-        .addModifiers(Modifier.PUBLIC)
-        .returns(classNames.entityBuilderTypeName())
-        .addAnnotation(Nonnull.class)
-        .addParameter(
-            ParameterSpec.builder(getClassFieldType(field).box(), "value")
-                .addAnnotation(Nullable.class)
-                .build())
-        .beginControlFlow("if (value == null)")
-        .addStatement("return $L()", clearMethodName(field.name()))
-        .endControlFlow()
-        .addStatement("$L = value", field.name())
+    TypeName fieldType = getClassFieldType(field);
+    MethodSpec.Builder method =
+        MethodSpec.methodBuilder(setterMethodName(field.name()))
+            .addModifiers(Modifier.PUBLIC)
+            .returns(classNames.entityBuilderTypeName())
+            .addAnnotation(Nonnull.class)
+            .addParameter(
+                ParameterSpec.builder(
+                        (field.type() == FieldTypeEnum.ENUM ? TypeName.INT : fieldType).box(),
+                        "value")
+                    .addAnnotation(Nullable.class)
+                    .build())
+            .beginControlFlow("if (value == null)")
+            .addStatement("return $L()", clearMethodName(field.name()))
+            .endControlFlow();
+
+    if (field.type() == FieldTypeEnum.ENUM) {
+      // Enums are usually cast to a smaller integer type using Integer.byteValue() or
+      // Integer.shortValue().
+      method.addStatement("$L = value.$LValue()", field.name(), fieldType.toString());
+    } else {
+      method.addStatement("$L = value", field.name());
+    }
+    return method
         .addStatement(
             "$L |= $L", bitFieldForFieldNumber(fieldNumber), maskForFieldNumber(fieldNumber))
         .addStatement("return this")
@@ -366,7 +444,11 @@ public class EntityImplementationGenerator {
   public TypeSpec generateGtfsEntityBuilderClass() {
     TypeSpec.Builder typeSpec =
         TypeSpec.classBuilder("Builder")
-            .addModifiers(Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC);
+            .addModifiers(Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
+            .addSuperinterface(
+                ParameterizedTypeName.get(
+                    ClassName.get(GtfsEntityBuilder.class),
+                    classNames.entityImplementationTypeName()));
 
     typeSpec.addMethod(
         MethodSpec.constructorBuilder()
@@ -380,12 +462,14 @@ public class EntityImplementationGenerator {
     typeSpec.addMethod(
         MethodSpec.methodBuilder(getterMethodName(CSV_ROW_NUMBER))
             .addModifiers(Modifier.PUBLIC)
+            .addAnnotation(Override.class)
             .returns(long.class)
             .addStatement("return $L", CSV_ROW_NUMBER)
             .build());
     typeSpec.addMethod(
         MethodSpec.methodBuilder(setterMethodName(CSV_ROW_NUMBER))
             .addModifiers(Modifier.PUBLIC)
+            .addAnnotation(Override.class)
             .returns(classNames.entityBuilderTypeName())
             .addParameter(long.class, "value")
             .addStatement("$L = value", CSV_ROW_NUMBER)
@@ -416,6 +500,7 @@ public class EntityImplementationGenerator {
     MethodSpec.Builder buildMethod =
         MethodSpec.methodBuilder("build")
             .addModifiers(Modifier.PUBLIC)
+            .addAnnotation(Override.class)
             .returns(gtfsEntityType)
             .addStatement("$T entity = new $T()", gtfsEntityType, gtfsEntityType)
             .addStatement("entity.$L = this.$L", CSV_ROW_NUMBER, CSV_ROW_NUMBER);
@@ -434,6 +519,7 @@ public class EntityImplementationGenerator {
     MethodSpec.Builder buildMethod =
         MethodSpec.methodBuilder("clear")
             .addModifiers(Modifier.PUBLIC)
+            .addAnnotation(Override.class)
             .returns(void.class)
             .addStatement("$L = 0", CSV_ROW_NUMBER);
     for (int i = 0; i <= lastBitFieldNumber(fileDescriptor.fields().size()); ++i) {

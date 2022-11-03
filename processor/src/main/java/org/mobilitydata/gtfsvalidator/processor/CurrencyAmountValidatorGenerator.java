@@ -96,7 +96,8 @@ public class CurrencyAmountValidatorGenerator {
           .addStatement("$T currency = entity.$L()", Currency.class, currencyField.name())
           .beginControlFlow("if (amount.scale() != currency.getDefaultFractionDigits())")
           .addStatement(
-              "noticeContainer.addValidationNotice(new $T(\"$L\", \"$L\", entity.csvRowNumber(), amount))",
+              "noticeContainer.addValidationNotice(new $T(\"$L\", \"$L\", entity.csvRowNumber(),"
+                  + " amount))",
               InvalidCurrencyAmountNotice.class,
               fileDescriptor.filename(),
               amountField.name())

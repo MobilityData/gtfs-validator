@@ -120,18 +120,19 @@ public class LatLonValidatorGenerator {
 
   private static CodeBlock generateNoticeContext(
       GtfsFileDescriptor fileDescriptor, LatLonDescriptor latLonDescriptor) {
-    TypeName tableLoaderTypeName = new GtfsEntityClasses(fileDescriptor).tableLoaderTypeName();
+    TypeName gtfsEntityTypeName =
+        new GtfsEntityClasses(fileDescriptor).entityImplementationTypeName();
     CodeBlock.Builder block =
-        CodeBlock.builder().add("$T.FILENAME, entity.csvRowNumber(), ", tableLoaderTypeName);
+        CodeBlock.builder().add("$T.FILENAME, entity.csvRowNumber(), ", gtfsEntityTypeName);
     if (fileDescriptor.hasSingleColumnPrimaryKey()) {
       block.add("entity.$L(), ", fileDescriptor.getSingleColumnPrimaryKey().name());
     }
     block.add(
         "$T.$L, entity.$L(), $T.$L, entity.$L()",
-        tableLoaderTypeName,
+        gtfsEntityTypeName,
         FieldNameConverter.fieldNameField(latLonDescriptor.latField()),
         latLonDescriptor.latField(),
-        tableLoaderTypeName,
+        gtfsEntityTypeName,
         FieldNameConverter.fieldNameField(latLonDescriptor.lonField()),
         latLonDescriptor.lonField());
     return block.build();

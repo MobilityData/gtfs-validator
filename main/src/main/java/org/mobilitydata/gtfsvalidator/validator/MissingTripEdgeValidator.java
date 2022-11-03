@@ -16,8 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME;
-import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTime.ARRIVAL_TIME_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTime.DEPARTURE_TIME_FIELD_NAME;
 
 import com.google.common.collect.Multimaps;
 import java.util.List;
