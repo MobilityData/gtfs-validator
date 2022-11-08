@@ -71,9 +71,9 @@ public class DuplicateRouteNameValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class DuplicateRouteNameNotice extends ValidationNotice {
-    private final long csvRowNumber1;
+    private final int csvRowNumber1;
     private final String routeId1;
-    private final long csvRowNumber2;
+    private final int csvRowNumber2;
     private final String routeId2;
     private final String routeShortName;
     private final String routeLongName;

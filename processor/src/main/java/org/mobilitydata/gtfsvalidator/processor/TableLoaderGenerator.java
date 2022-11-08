@@ -292,11 +292,16 @@ public class TableLoaderGenerator {
         .endControlFlow()
         .addStatement("$T rowNotices = new $T()", NoticeContainer.class, NoticeContainer.class)
         .addStatement("rowParser.setRow(row, rowNotices)")
+        .beginControlFlow("if (!rowParser.checkRowNumber())")
+        .addStatement("hasUnparsableRows = true")
+        .addStatement("break")
+        .endControlFlow()
         .addStatement("final boolean validRowLength = rowParser.checkRowLength()")
         .beginControlFlow("if (validRowLength)")
         .addStatement("builder.clear()")
         .addStatement(
-            "builder.$L(row.getRowNumber())", FieldNameConverter.setterMethodName("csvRowNumber"));
+            "builder.$L(rowParser.getRowNumber())",
+            FieldNameConverter.setterMethodName("csvRowNumber"));
 
     for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
       CodeBlock fieldValue =

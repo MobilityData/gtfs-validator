@@ -30,7 +30,7 @@ import org.mobilitydata.gtfsvalidator.validator.DuplicateFareRuleZoneIdFieldsVal
 public class DuplicateFareRuleZoneIdFieldsValidatorTest {
 
   public static GtfsFareRule createFareRule(
-      long csvRowNumber,
+      int csvRowNumber,
       String fareId,
       String routeId,
       String originId,

@@ -51,7 +51,7 @@ public class MissingCalendarAndCalendarDateValidatorTest {
   }
 
   public static GtfsCalendarDate createCalendarDate(
-      long csvRowNumber, String serviceId, GtfsDate date, int exceptionType) {
+      int csvRowNumber, String serviceId, GtfsDate date, int exceptionType) {
     return new GtfsCalendarDate.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setServiceId(serviceId)

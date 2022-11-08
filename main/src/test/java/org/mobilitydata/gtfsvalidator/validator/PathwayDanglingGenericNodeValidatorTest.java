@@ -49,16 +49,16 @@ public final class PathwayDanglingGenericNodeValidatorTest {
     return noticeContainer.getValidationNotices();
   }
 
-  static String rowToStopId(long csvRowNumber) {
+  static String rowToStopId(int csvRowNumber) {
     return "stop" + csvRowNumber;
   }
 
-  static String rowToPathwayId(long csvRowNumber) {
+  static String rowToPathwayId(int csvRowNumber) {
     return "pathway" + csvRowNumber;
   }
 
-  static GtfsPathway createPathway(long fromStopRow, long toStopRow) {
-    long row = fromStopRow * 1000 + toStopRow;
+  static GtfsPathway createPathway(int fromStopRow, int toStopRow) {
+    int row = fromStopRow * 1000 + toStopRow;
     return new GtfsPathway.Builder()
         .setCsvRowNumber(row)
         .setPathwayId(rowToPathwayId(row))
@@ -67,7 +67,7 @@ public final class PathwayDanglingGenericNodeValidatorTest {
         .build();
   }
 
-  static GtfsStop createLocation(long csvRowNumber, GtfsLocationType locationType) {
+  static GtfsStop createLocation(int csvRowNumber, GtfsLocationType locationType) {
     return new GtfsStop.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setStopId(rowToStopId(csvRowNumber))
@@ -76,7 +76,7 @@ public final class PathwayDanglingGenericNodeValidatorTest {
   }
 
   static GtfsStop createChildLocation(
-      long csvRowNumber, GtfsLocationType locationType, long parentRow) {
+      int csvRowNumber, GtfsLocationType locationType, int parentRow) {
     return new GtfsStop.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setStopId(rowToStopId(csvRowNumber))

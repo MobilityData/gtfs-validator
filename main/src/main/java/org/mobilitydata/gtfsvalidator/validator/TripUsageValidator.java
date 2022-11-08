@@ -62,9 +62,9 @@ public class TripUsageValidator extends FileValidator {
    */
   static class UnusedTripNotice extends ValidationNotice {
     private final String tripId;
-    private final long csvRowNumber;
+    private final int csvRowNumber;
 
-    UnusedTripNotice(String tripId, long csvRowNumber) {
+    UnusedTripNotice(String tripId, int csvRowNumber) {
       super(SeverityLevel.WARNING);
       this.tripId = tripId;
       this.csvRowNumber = csvRowNumber;

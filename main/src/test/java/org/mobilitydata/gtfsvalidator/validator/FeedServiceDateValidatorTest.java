@@ -20,7 +20,7 @@ public class FeedServiceDateValidatorTest {
   }
 
   public static GtfsFeedInfo createFeedInfo(
-      long csvRowNumber,
+      int csvRowNumber,
       String feedPublisherName,
       String feedPublisherUrl,
       Locale feedLang,

@@ -50,16 +50,16 @@ public class PathwayEndpointTypeValidatorTest {
     return noticeContainer.getValidationNotices();
   }
 
-  static String rowToStopId(long csvRowNumber) {
+  static String rowToStopId(int csvRowNumber) {
     return "stop" + csvRowNumber;
   }
 
-  static String rowToPathwayId(long csvRowNumber) {
+  static String rowToPathwayId(int csvRowNumber) {
     return "pathway" + csvRowNumber;
   }
 
-  static GtfsPathway createPathway(long fromStopRow, long toStopRow) {
-    long row = fromStopRow * 1000 + toStopRow;
+  static GtfsPathway createPathway(int fromStopRow, int toStopRow) {
+    int row = fromStopRow * 1000 + toStopRow;
     return new GtfsPathway.Builder()
         .setCsvRowNumber(row)
         .setPathwayId(rowToPathwayId(row))
@@ -68,7 +68,7 @@ public class PathwayEndpointTypeValidatorTest {
         .build();
   }
 
-  static GtfsStop createStop(long csvRowNumber, GtfsLocationType locationType) {
+  static GtfsStop createStop(int csvRowNumber, GtfsLocationType locationType) {
     return new GtfsStop.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setStopId(rowToStopId(csvRowNumber))
@@ -76,7 +76,7 @@ public class PathwayEndpointTypeValidatorTest {
         .build();
   }
 
-  static GtfsStop createBoardingArea(long csvRowNumber, long parentRow) {
+  static GtfsStop createBoardingArea(int csvRowNumber, int parentRow) {
     return new GtfsStop.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setStopId(rowToStopId(csvRowNumber))

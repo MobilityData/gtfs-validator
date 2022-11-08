@@ -170,13 +170,7 @@ public class MainTest {
         new InvalidCurrencyNotice("filename", 4, "field name", "field value"));
     latestNoticeContainer.addValidationNotice(
         new PointNearPoleNotice(
-            "filename",
-            1L,
-            "entity id value",
-            "latitude field name",
-            0,
-            "longitude field name",
-            0));
+            "filename", 1, "entity id value", "latitude field name", 0, "longitude field name", 0));
     latestNoticeContainer.addValidationNotice(
         new DuplicateKeyNotice("some filename", 9, 11, "field name 1", "field value1"));
 

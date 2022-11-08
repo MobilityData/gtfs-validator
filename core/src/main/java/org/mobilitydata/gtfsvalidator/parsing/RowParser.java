@@ -37,6 +37,7 @@ import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.NumberOutOfRangeNotice;
+import org.mobilitydata.gtfsvalidator.notice.TooManyRowsNotice;
 import org.mobilitydata.gtfsvalidator.notice.UnexpectedEnumValueNotice;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsEnum;
@@ -60,6 +61,9 @@ public class RowParser {
   private final GtfsFieldValidator fieldValidator;
   private CsvRow row;
 
+  // The largest CSV files contain about 100 M rows (as of 2022). Set the limit to 1 billion.
+  private static final long MAX_ROW_NUMBER = 1000000000;
+
   private NoticeContainer noticeContainer;
 
   public RowParser(String fileName, CsvHeader header, GtfsFieldValidator fieldValidator) {
@@ -77,6 +81,18 @@ public class RowParser {
     return noticeContainer;
   }
 
+  public int getRowNumber() {
+    return (int) row.getRowNumber();
+  }
+
+  public boolean checkRowNumber() {
+    if (row.getRowNumber() > MAX_ROW_NUMBER) {
+      noticeContainer.addValidationNotice(new TooManyRowsNotice(fileName, row.getRowNumber()));
+      return false;
+    }
+    return true;
+  }
+
   /**
    * Checks whether the row lengths (cell count) is the same as the amount of file headers.
    *
@@ -85,23 +101,24 @@ public class RowParser {
    * @return true if the row length is equal to column count
    */
   public boolean checkRowLength() {
-    if (row.getColumnCount() == 0) {
+    final int rowColumnCount = row.getColumnCount();
+    if (rowColumnCount == 0) {
       // Empty row.
       return false;
     }
 
-    if (row.getColumnCount() == 1 && row.asString(0) == null) {
+    if (rowColumnCount == 1 && row.asString(0) == null) {
       // If the last row has only spaces and does not end with a newline, then Univocity parser
       // interprets it as a non-empty row that has a single column which is empty (sic!). We are
       // unsure if this is a bug or feature in Univocity, so we show a warning.
-      noticeContainer.addValidationNotice(new EmptyRowNotice(fileName, row.getRowNumber()));
+      noticeContainer.addValidationNotice(new EmptyRowNotice(fileName, getRowNumber()));
       return false;
     }
 
-    if (row.getColumnCount() != header.getColumnCount()) {
+    if (rowColumnCount != header.getColumnCount()) {
       noticeContainer.addValidationNotice(
           new InvalidRowLengthNotice(
-              fileName, row.getRowNumber(), row.getColumnCount(), header.getColumnCount()));
+              fileName, getRowNumber(), rowColumnCount, header.getColumnCount()));
       return false;
     }
     return true;
@@ -113,18 +130,17 @@ public class RowParser {
     if (level == FieldLevelEnum.REQUIRED && s == null) {
       noticeContainer.addValidationNotice(
           new MissingRequiredFieldNotice(
-              fileName, row.getRowNumber(), header.getColumnName(columnIndex)));
+              fileName, getRowNumber(), header.getColumnName(columnIndex)));
     } else if (level == FieldLevelEnum.RECOMMENDED && s == null) {
       noticeContainer.addValidationNotice(
           new MissingRecommendedFieldNotice(
-              fileName, row.getRowNumber(), header.getColumnName(columnIndex)));
+              fileName, getRowNumber(), header.getColumnName(columnIndex)));
     }
     if (s != null) {
       s =
           fieldValidator.validateField(
               s,
-              GtfsCellContext.create(
-                  fileName, row.getRowNumber(), header.getColumnName(columnIndex)),
+              GtfsCellContext.create(fileName, getRowNumber(), header.getColumnName(columnIndex)),
               noticeContainer);
     }
     return s;
@@ -198,7 +214,7 @@ public class RowParser {
       noticeContainer.addValidationNotice(
           new NumberOutOfRangeNotice(
               fileName,
-              row.getRowNumber(),
+              getRowNumber(),
               header.getColumnName(columnIndex),
               "latitude within [-90, 90]",
               value));
@@ -214,7 +230,7 @@ public class RowParser {
       noticeContainer.addValidationNotice(
           new NumberOutOfRangeNotice(
               fileName,
-              row.getRowNumber(),
+              getRowNumber(),
               header.getColumnName(columnIndex),
               "longitude within [-180, 180]",
               value));
@@ -267,7 +283,7 @@ public class RowParser {
           noticeContainer.addValidationNotice(
               new NumberOutOfRangeNotice(
                   fileName,
-                  row.getRowNumber(),
+                  getRowNumber(),
                   header.getColumnName(columnIndex),
                   "positive " + typeName,
                   value));
@@ -278,7 +294,7 @@ public class RowParser {
           noticeContainer.addValidationNotice(
               new NumberOutOfRangeNotice(
                   fileName,
-                  row.getRowNumber(),
+                  getRowNumber(),
                   header.getColumnName(columnIndex),
                   "non-negative " + typeName,
                   value));
@@ -289,7 +305,7 @@ public class RowParser {
           noticeContainer.addValidationNotice(
               new NumberOutOfRangeNotice(
                   fileName,
-                  row.getRowNumber(),
+                  getRowNumber(),
                   header.getColumnName(columnIndex),
                   "non-zero " + typeName,
                   value));
@@ -314,7 +330,7 @@ public class RowParser {
     if (enumCreator.convert(i) == null) {
       noticeContainer.addValidationNotice(
           new UnexpectedEnumValueNotice(
-              fileName, row.getRowNumber(), header.getColumnName(columnIndex), i));
+              fileName, getRowNumber(), header.getColumnName(columnIndex), i));
       return unrecognized.getNumber();
     }
     return i;
@@ -369,8 +385,7 @@ public class RowParser {
       // Most parsing functions throw an IllegalArgumentException but ZoneId.of() throws
       // a ZoneRulesException or DateTimeException. Be sure to catch all of them.
       noticeContainer.addValidationNotice(
-          noticingFunction.apply(
-              fileName, row.getRowNumber(), header.getColumnName(columnIndex), s));
+          noticingFunction.apply(fileName, getRowNumber(), header.getColumnName(columnIndex), s));
       return null;
     }
   }
@@ -395,7 +410,7 @@ public class RowParser {
     }
     validatingFunction.apply(
         s,
-        GtfsCellContext.create(fileName, row.getRowNumber(), header.getColumnName(columnIndex)),
+        GtfsCellContext.create(fileName, getRowNumber(), header.getColumnName(columnIndex)),
         noticeContainer);
     return s;
   }
@@ -408,7 +423,7 @@ public class RowParser {
   @FunctionalInterface
   private interface NoticingFunction<T extends ValidationNotice> {
 
-    T apply(String filename, long csvRowNumber, String fieldName, String fieldValue);
+    T apply(String filename, int csvRowNumber, String fieldName, String fieldValue);
   }
 
   /** Validates the given field and adds appropriate notices to the container. */

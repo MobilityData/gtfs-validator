@@ -189,7 +189,7 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
 
   /** A field in a translations row has value but must be empty. */
   static class TranslationUnexpectedValueNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String fieldName;
     private final String fieldValue;
 
@@ -204,7 +204,7 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
 
   /** A translation references an unknown or missing GTFS table. */
   static class TranslationUnknownTableNameNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String tableName;
 
     TranslationUnknownTableNameNotice(GtfsTranslation translation) {
@@ -219,7 +219,7 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
    * table.
    */
   static class TranslationForeignKeyViolationNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String tableName;
     private final String recordId;
     private final String recordSubId;

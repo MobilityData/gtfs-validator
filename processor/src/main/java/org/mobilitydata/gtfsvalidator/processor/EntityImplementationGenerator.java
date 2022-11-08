@@ -65,6 +65,7 @@ public class EntityImplementationGenerator {
   };
 
   private static final String CSV_ROW_NUMBER = "csvRowNumber";
+  private static final Class CSV_ROW_NUMBER_TYPE = int.class;
   private final GtfsFileDescriptor fileDescriptor;
   private final GtfsEntityClasses classNames;
   private final ImmutableMap<String, TypeName> enumIntegerFieldTypes;
@@ -212,7 +213,7 @@ public class EntityImplementationGenerator {
   }
 
   private void addEntityOrBuilderFields(TypeSpec.Builder typeSpec) {
-    typeSpec.addField(long.class, CSV_ROW_NUMBER, Modifier.PRIVATE);
+    typeSpec.addField(CSV_ROW_NUMBER_TYPE, CSV_ROW_NUMBER, Modifier.PRIVATE);
     for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
       typeSpec.addField(getClassFieldType(field), field.name(), Modifier.PRIVATE);
     }
@@ -273,7 +274,7 @@ public class EntityImplementationGenerator {
     typeSpec.addMethod(
         MethodSpec.methodBuilder(getterMethodName(CSV_ROW_NUMBER))
             .addModifiers(Modifier.PUBLIC)
-            .returns(long.class)
+            .returns(CSV_ROW_NUMBER_TYPE)
             .addAnnotation(Override.class)
             .addStatement("return $L", CSV_ROW_NUMBER)
             .build());
@@ -463,7 +464,7 @@ public class EntityImplementationGenerator {
         MethodSpec.methodBuilder(getterMethodName(CSV_ROW_NUMBER))
             .addModifiers(Modifier.PUBLIC)
             .addAnnotation(Override.class)
-            .returns(long.class)
+            .returns(CSV_ROW_NUMBER_TYPE)
             .addStatement("return $L", CSV_ROW_NUMBER)
             .build());
     typeSpec.addMethod(
@@ -471,7 +472,7 @@ public class EntityImplementationGenerator {
             .addModifiers(Modifier.PUBLIC)
             .addAnnotation(Override.class)
             .returns(classNames.entityBuilderTypeName())
-            .addParameter(long.class, "value")
+            .addParameter(CSV_ROW_NUMBER_TYPE, "value")
             .addStatement("$L = value", CSV_ROW_NUMBER)
             .addStatement("return this")
             .build());

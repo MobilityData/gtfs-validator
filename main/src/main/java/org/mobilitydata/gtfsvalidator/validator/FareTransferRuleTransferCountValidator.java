@@ -41,10 +41,10 @@ public class FareTransferRuleTransferCountValidator
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class FareTransferRuleInvalidTransferCountNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final int transferCount;
 
-    FareTransferRuleInvalidTransferCountNotice(long csvRowNumber, int transferCount) {
+    FareTransferRuleInvalidTransferCountNotice(int csvRowNumber, int transferCount) {
       super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
       this.transferCount = transferCount;
@@ -58,9 +58,9 @@ public class FareTransferRuleTransferCountValidator
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class FareTransferRuleMissingTransferCountNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
 
-    FareTransferRuleMissingTransferCountNotice(long csvRowNumber) {
+    FareTransferRuleMissingTransferCountNotice(int csvRowNumber) {
       super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
     }
@@ -73,9 +73,9 @@ public class FareTransferRuleTransferCountValidator
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class FareTransferRuleWithForbiddenTransferCountNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
 
-    FareTransferRuleWithForbiddenTransferCountNotice(long csvRowNumber) {
+    FareTransferRuleWithForbiddenTransferCountNotice(int csvRowNumber) {
       super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
     }

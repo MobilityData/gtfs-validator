@@ -27,12 +27,11 @@ package org.mobilitydata.gtfsvalidator.notice;
  */
 public class InvalidDateNotice extends ValidationNotice {
   private final String filename;
-  private final long csvRowNumber;
+  private final int csvRowNumber;
   private final String fieldName;
   private final String fieldValue;
 
-  public InvalidDateNotice(
-      String filename, long csvRowNumber, String fieldName, String fieldValue) {
+  public InvalidDateNotice(String filename, int csvRowNumber, String fieldName, String fieldValue) {
     super(SeverityLevel.ERROR);
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;

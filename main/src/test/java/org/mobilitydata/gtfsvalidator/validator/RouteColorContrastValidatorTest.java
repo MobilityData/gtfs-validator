@@ -27,7 +27,7 @@ import org.mobilitydata.gtfsvalidator.validator.RouteColorContrastValidator.Rout
 public class RouteColorContrastValidatorTest {
 
   public static GtfsRoute createRoute(
-      long csvRowNumber,
+      int csvRowNumber,
       String routeId,
       String agencyId,
       String routeShortName,

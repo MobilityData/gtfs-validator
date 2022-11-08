@@ -45,7 +45,7 @@ public class AgencyConsistencyValidatorTest {
   }
 
   public static GtfsAgency createAgency(
-      long csvRowNumber,
+      int csvRowNumber,
       String agencyId,
       String agencyName,
       String agencyUrl,

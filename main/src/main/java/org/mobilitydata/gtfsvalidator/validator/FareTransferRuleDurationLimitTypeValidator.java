@@ -29,9 +29,9 @@ public class FareTransferRuleDurationLimitTypeValidator
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class FareTransferRuleDurationLimitWithoutTypeNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
 
-    FareTransferRuleDurationLimitWithoutTypeNotice(long csvRowNumber) {
+    FareTransferRuleDurationLimitWithoutTypeNotice(int csvRowNumber) {
       super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
     }
@@ -45,9 +45,9 @@ public class FareTransferRuleDurationLimitTypeValidator
    */
   static class FareTransferRuleDurationLimitTypeWithoutDurationLimitNotice
       extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
 
-    FareTransferRuleDurationLimitTypeWithoutDurationLimitNotice(long csvRowNumber) {
+    FareTransferRuleDurationLimitTypeWithoutDurationLimitNotice(int csvRowNumber) {
       super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
     }
