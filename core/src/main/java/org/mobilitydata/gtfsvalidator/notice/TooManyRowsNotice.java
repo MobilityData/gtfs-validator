@@ -1,20 +1,20 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 /**
- * Describes a file with too many entries.
+ * Describes a file with too many rows.
  *
  * <p>Feeds with too large files cannot be processed in a reasonable time by GTFS consumers.
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-public class TooManyEntriesNotice extends ValidationNotice {
+public class TooManyRowsNotice extends ValidationNotice {
 
   private final String filename;
-  private final long entryCount;
+  private final long rowNumber;
 
-  public TooManyEntriesNotice(String filename, long entryCount) {
+  public TooManyRowsNotice(String filename, long rowNumber) {
     super(SeverityLevel.ERROR);
     this.filename = filename;
-    this.entryCount = entryCount;
+    this.rowNumber = rowNumber;
   }
 }

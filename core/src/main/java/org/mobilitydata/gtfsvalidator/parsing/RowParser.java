@@ -37,7 +37,7 @@ import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.NumberOutOfRangeNotice;
-import org.mobilitydata.gtfsvalidator.notice.TooManyEntriesNotice;
+import org.mobilitydata.gtfsvalidator.notice.TooManyRowsNotice;
 import org.mobilitydata.gtfsvalidator.notice.UnexpectedEnumValueNotice;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsEnum;
@@ -61,6 +61,9 @@ public class RowParser {
   private final GtfsFieldValidator fieldValidator;
   private CsvRow row;
 
+  // The largest CSV files contain about 100 M rows (as of 2022). Set the limit to 1 billion.
+  private static final long MAX_ROW_NUMBER = 1000000000;
+
   private NoticeContainer noticeContainer;
 
   public RowParser(String fileName, CsvHeader header, GtfsFieldValidator fieldValidator) {
@@ -83,8 +86,8 @@ public class RowParser {
   }
 
   public boolean checkRowNumber() {
-    if (row.getRowNumber() > Integer.MAX_VALUE) {
-      noticeContainer.addValidationNotice(new TooManyEntriesNotice(fileName, row.getRowNumber()));
+    if (row.getRowNumber() > MAX_ROW_NUMBER) {
+      noticeContainer.addValidationNotice(new TooManyRowsNotice(fileName, row.getRowNumber()));
       return false;
     }
     return true;
