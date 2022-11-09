@@ -26,6 +26,8 @@ import com.squareup.javapoet.TypeName;
  */
 public final class GtfsEntityClasses {
   public static final String TABLE_PACKAGE_NAME = "org.mobilitydata.gtfsvalidator.table";
+  public static final String VALIDATOR_PACKAGE_NAME = "org.mobilitydata.gtfsvalidator.validator";
+
   public static final String SCHEMA_SUFFIX = "Schema";
 
   /** Upper camelcase name, e.g., GtfsStopTime. */

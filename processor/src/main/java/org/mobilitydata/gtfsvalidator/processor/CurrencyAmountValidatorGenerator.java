@@ -16,13 +16,12 @@
 
 package org.mobilitydata.gtfsvalidator.processor;
 
+import com.google.common.collect.ImmutableList;
 import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
 import javax.lang.model.element.Modifier;
@@ -40,19 +39,17 @@ import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
  */
 public class CurrencyAmountValidatorGenerator {
 
-  private static final String VALIDATOR_PACKAGE_NAME = "org.mobilitydata.gtfsvalidator.validator";
-
-  public List<JavaFile> generateValidatorFiles(List<GtfsFileDescriptor> fileDescriptors) {
-    List<JavaFile> validators = new ArrayList<>();
+  public ImmutableList<TypeSpec> generateValidator(List<GtfsFileDescriptor> fileDescriptors) {
+    ImmutableList.Builder<TypeSpec> validators = ImmutableList.builder();
     for (GtfsFileDescriptor fileDescriptor : fileDescriptors) {
       if (fileDescriptor.fields().stream().anyMatch(f -> f.currencyFieldReference().isPresent())) {
         validators.add(generateValidator(fileDescriptor));
       }
     }
-    return validators;
+    return validators.build();
   }
 
-  private static JavaFile generateValidator(GtfsFileDescriptor fileDescriptor) {
+  private static TypeSpec generateValidator(GtfsFileDescriptor fileDescriptor) {
     GtfsEntityClasses entityClasses = new GtfsEntityClasses(fileDescriptor);
     TypeSpec.Builder typeSpec =
         TypeSpec.classBuilder(fileDescriptor.className() + "CurrencyAmountValidator")
@@ -107,6 +104,6 @@ public class CurrencyAmountValidatorGenerator {
 
     typeSpec.addMethod(validateMethod.build());
 
-    return JavaFile.builder(VALIDATOR_PACKAGE_NAME, typeSpec.build()).build();
+    return typeSpec.build();
   }
 }
