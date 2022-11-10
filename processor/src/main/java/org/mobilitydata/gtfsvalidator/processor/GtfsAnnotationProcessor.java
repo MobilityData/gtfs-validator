@@ -17,11 +17,14 @@
 package org.mobilitydata.gtfsvalidator.processor;
 
 import static javax.lang.model.util.ElementFilter.typesIn;
+import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.VALIDATOR_PACKAGE_NAME;
 
 import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.TypeSpec;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -38,6 +41,7 @@ import javax.tools.Diagnostic;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValue;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValues;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 
 /**
  * Processor that generates data classes, loaders and validators based on annotations on GTFS schema
@@ -47,6 +51,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 public class GtfsAnnotationProcessor extends AbstractProcessor {
 
   private final Analyser analyser = new Analyser();
+  private boolean registriesGenerated = false;
 
   /**
    * Sanitizes the result of {@link RoundEnvironment#getElementsAnnotatedWith}, which otherwise can
@@ -63,7 +68,10 @@ public class GtfsAnnotationProcessor extends AbstractProcessor {
   @Override
   public Set<String> getSupportedAnnotationTypes() {
     return ImmutableSet.of(
-        GtfsTable.class.getName(), GtfsEnumValues.class.getName(), GtfsEnumValue.class.getName());
+        GtfsTable.class.getName(),
+        GtfsEnumValues.class.getName(),
+        GtfsEnumValue.class.getName(),
+        GtfsValidator.class.getName());
   }
 
   @Override
@@ -102,22 +110,31 @@ public class GtfsAnnotationProcessor extends AbstractProcessor {
       writeJavaFile(new TableLoaderGenerator(fileDescriptor).generateGtfsTableLoaderJavaFile());
       writeJavaFile(new TableContainerGenerator(fileDescriptor).generateGtfsContainerJavaFile());
     }
-    for (JavaFile javaFile :
-        new ForeignKeyValidatorGenerator(fileDescriptors).generateValidatorFiles()) {
-      writeJavaFile(javaFile);
+
+    List<TypeSpec> generatedValidators = new ArrayList<>();
+    generatedValidators.addAll(
+        new ForeignKeyValidatorGenerator(fileDescriptors).generateValidators());
+    generatedValidators.addAll(
+        new EndRangeValidatorGenerator(fileDescriptors).generateValidators());
+    generatedValidators.addAll(new LatLonValidatorGenerator(fileDescriptors).generateValidators());
+    generatedValidators.addAll(
+        new CurrencyAmountValidatorGenerator().generateValidator(fileDescriptors));
+
+    List<ClassName> validatorClasses = new ArrayList<>();
+    for (TypeSpec typeSpec : generatedValidators) {
+      writeJavaFile(JavaFile.builder(VALIDATOR_PACKAGE_NAME, typeSpec).build());
+      validatorClasses.add(ClassName.get(VALIDATOR_PACKAGE_NAME, typeSpec.name));
     }
-    for (JavaFile javaFile :
-        new EndRangeValidatorGenerator(fileDescriptors).generateValidatorFiles()) {
-      writeJavaFile(javaFile);
-    }
-    for (JavaFile javaFile :
-        new LatLonValidatorGenerator(fileDescriptors).generateValidatorFiles()) {
-      writeJavaFile(javaFile);
+    for (TypeElement type : typesIn(annotatedElementsIn(roundEnv, GtfsValidator.class))) {
+      validatorClasses.add(ClassName.get(type));
     }
 
-    for (JavaFile javaFile :
-        new CurrencyAmountValidatorGenerator().generateValidatorFiles(fileDescriptors)) {
-      writeJavaFile(javaFile);
+    if (!registriesGenerated) {
+      // AnnotationProcessor.process method runs multiple times. We generate registries only during
+      // the first round.
+      registriesGenerated = true;
+      writeJavaFile(new TableRegistryGenerator(fileDescriptors).generateRegistry());
+      writeJavaFile(new ValidatorRegistryGenerator(validatorClasses).generateRegistry());
     }
     return false;
   }

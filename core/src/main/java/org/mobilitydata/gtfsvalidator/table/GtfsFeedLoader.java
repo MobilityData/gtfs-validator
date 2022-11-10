@@ -17,16 +17,16 @@
 package org.mobilitydata.gtfsvalidator.table;
 
 import com.google.common.flogger.FluentLogger;
-import io.github.classgraph.ClassGraph;
-import io.github.classgraph.ClassInfo;
-import io.github.classgraph.ScanResult;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.*;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsLoader;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.RuntimeExceptionInLoaderError;
@@ -39,39 +39,17 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorUtil;
 /**
  * Loader for a whole GTFS feed with all its CSV files.
  *
- * <p>The loader creates a {@code GtfsFeedContainer} object. Loaders for particular tables are
- * discovered dynamically based on {@code GtfsLoader} annotation.
+ * <p>The loader creates a {@link GtfsFeedContainer} object. Loaders for particular tables are taken
+ * from an instance of {@link GtfsTableRegistry}.
  */
 public class GtfsFeedLoader {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private final HashMap<String, GtfsTableLoader> tableLoaders = new HashMap<>();
   private int numThreads = 1;
 
-  public GtfsFeedLoader() {
-    try (ScanResult scanResult =
-        new ClassGraph()
-            .enableClassInfo()
-            .enableAnnotationInfo()
-            .acceptPackages("org.mobilitydata.gtfsvalidator.table")
-            .scan()) {
-      for (ClassInfo classInfo : scanResult.getClassesWithAnnotation(GtfsLoader.class)) {
-        Class<?> clazz = classInfo.loadClass();
-
-        if (!GtfsTableLoader.class.isAssignableFrom(clazz)) {
-          continue;
-        }
-        GtfsTableLoader loader;
-        try {
-          loader = clazz.asSubclass(GtfsTableLoader.class).getConstructor().newInstance();
-        } catch (ReflectiveOperationException e) {
-          logger.atSevere().withCause(e).log(
-              "Possible bug in GTFS annotation processor: expected a constructor without parameters"
-                  + " for %s",
-              clazz.getName());
-          continue;
-        }
-        tableLoaders.put(loader.gtfsFilename(), loader);
-      }
+  public GtfsFeedLoader(GtfsTableRegistry tableRegistry) {
+    for (GtfsTableLoader loader : tableRegistry.getTableLoaders()) {
+      tableLoaders.put(loader.gtfsFilename(), loader);
     }
   }
 

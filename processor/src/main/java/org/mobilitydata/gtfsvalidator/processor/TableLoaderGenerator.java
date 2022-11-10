@@ -45,7 +45,6 @@ import javax.lang.model.element.Modifier;
 import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsLoader;
 import org.mobilitydata.gtfsvalidator.notice.CsvParsingFailedNotice;
 import org.mobilitydata.gtfsvalidator.notice.EmptyFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFileNotice;
@@ -137,7 +136,6 @@ public class TableLoaderGenerator {
                 ParameterizedTypeName.get(
                     ClassName.get(GtfsTableLoader.class),
                     classNames.entityImplementationTypeName()))
-            .addAnnotation(GtfsLoader.class)
             .addAnnotation(Generated.class)
             .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
