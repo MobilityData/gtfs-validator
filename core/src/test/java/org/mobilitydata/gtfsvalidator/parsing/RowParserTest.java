@@ -248,6 +248,12 @@ public class RowParserTest {
   }
 
   @Test
+  public void asLanguageCode_invalid() {
+    // Underscore is invalid delimiter.
+    assertThat(createParser("en_EN").asLanguageCode(0, FieldLevelEnum.REQUIRED)).isNull();
+  }
+
+  @Test
   public void asLanguageCode() {
     // Russian of Russia.
     assertThat(createParser("ru-RU").asLanguageCode(0, FieldLevelEnum.REQUIRED).toLanguageTag())
