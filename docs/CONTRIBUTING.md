@@ -14,7 +14,7 @@ There are many ways to contribute to this project: improving code and documentat
 
 | Contribution type                                 | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 |---------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Participate in the community                      | What makes this tool successful is its international & diverse community. One of the best ways to contribute is simply to be part of it! Participate in the discussions, answer on the newly opened issues, help others, attend the community meetings. This is all happening on [Slack](#MobilityData-slack), in the `#gtfs-validators` channel.                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| Participate in the community                      | What makes this tool successful is its international & diverse community. One of the best ways to contribute is simply to be part of it! Participate in the discussions, answer on the newly opened issues, help others, attend the community meetings. We have a dedicated [Slack](#MobilityData-slack) and host monthly [Contributor meetings](#Contributor-meetings).                                                                                                                                                                                                                                                                                                                                   |
 | Comment or vote on issues issues already opened  | We use the [GitHub issue tracker](https://github.com/MobilityData/gtfs-validator/issues) to capture bugs, new feature ideas and improvements.  If you see an issue that is relevant to you, give a thumbs up or comment. This will increase the priority of the issue, and it will be solved earlier as a result!                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | Share your ideas and report issues you’re facing  | Not sure if this is an issue with the tool or something you are doing wrong? We encourage you to still open an issue, even if it is just to ask a question. If something is not working or is unclear to you, chances are you’re not the only one. See the [Submitting a feature request or a bug report](#Submitting-a-feature-request-or-a-bug-report) for more information.                                                                                                                                                                                                                                                                                                                                                        |   |
 | Spread the word                                   | Reference this project in your articles, on your website, or simply mention that you use it. This will help its implementation & improve collaboration in the GTFS ecosystem.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
@@ -25,8 +25,10 @@ There are many ways to contribute to this project: improving code and documentat
 
 ## MobilityData slack
 To join the slack, please fill this ["Request to join"](https://docs.google.com/forms/d/e/1FAIpQLSczZbZB9ql_Xl-1uBtmvYmA0fwfm1UX92SyWAdkuMEDfxac5w/viewform) form. Then, you will receive your invitation via the e-mail provided. 
-After joining, you can add the `gtfs-validators` channel and introduce yourself there. This channel is dedicated to the GTFS Schedule and Realtime validators, and this is where users can ask questions, share their intention to contribute, and receive any news related to these tools, such as release notifications.
-MobilityData also has a private channel to discuss more technical questions, and synchronize efforts among active contributors. You will be offered to join this channel after you have merged a few PRs! 
+After joining, you can add the `gtfs-validators` channel and introduce yourself there. This channel is dedicated to the GTFS Schedule and Realtime validators, and this is where users can ask questions, share their intention to contribute, and receive any important news. 
+
+## Contributor meeting
+We host a monthly contributor meeting to keep track of current projects, discuss requirements, unblock contributors, and organize cross-organization projects. Anybody can join, even if it's just to listen. If you'd like to participate, please reach-out to Isabelle via Slack.
 
 ## Roles and Responsibilities
 **Contributors**
@@ -47,12 +49,12 @@ Remove the Needs triage label and replace it with the appropriate status label (
 
 **Core developers**
 
-Contributors who actively push to the project. They can perform code reviews, request changes, approve and merge Pull Requests. Core developers have Write permissions to the repository. The current core developers for this project are [Maxime Armstrong](https://github.com/maximearmstrong) and [Brian Ferris](https://github.com/bdferris-v2).
+Contributors who actively push to the project. They can perform code reviews, request changes, approve and merge Pull Requests. Core developers have Write permissions to the repository. The current core developers for this project are [Maxime Armstrong](https://github.com/maximearmstrong) and [Brian Ferris](https://github.com/bdferris-v2), [Kevin Clough](https://github.com/KClough), [Alexei Ababilov](https://github.com/aababilov) and [Artur Svechnikov](https://github.com/asvechnikov2).
 @TODO how to become a core developer
 
-**Technical committee**
-The technical committee is composed of core developers and the product manager, who have additional responsibilities to ensure the project runs smoothly and the progress is in line with the big picture vision: they discuss considerable changes to the project, perform strategic planning, and approve changes to the governance model. 
-The Steering committee currently consists of [Isabelle de Robert](https://github.com/isabelle-dr), [Maxime Armstrong](https://github.com/maximearmstrong), and [Brian Ferris](https://github.com/bdferris-v2).
+**Steering committee**
+The steering committee is composed of core developers and the product manager, who have additional responsibilities to ensure the project runs smoothly and the progress is in line with the big picture vision: they discuss considerable changes to the project, perform strategic planning, and approve changes to the governance model. 
+The Steering committee currently consists of [Isabelle de Robert](https://github.com/isabelle-dr) and [Brian Ferris](https://github.com/bdferris-v2).
 @TODO how to join the steering committee.
 
 ## Overview of the contribution process
@@ -86,7 +88,7 @@ This process is described in more detail in the GitHub documentation [**Contribu
 
 This image shows the tests implemented in the Pull Request process.
 
-<img src="/docs/Pull-Request-process.jpg" width="750">
+<img src="/docs/Pull-Request-process.jpg" width="700">
 
 ## Pull Request comments and reviews
 Reviewing Pull Requests is a great way to get familiar with the code & architecture of this tool, and to make sure a functionality meets your needs. Each Pull Request has to be approved by at least one one core developer, but having community members helping with this process is significant for the MobilityData team. Additionally, having the eyes of people from different expertise and backgrounds on a contribution makes it higher quality (nobody can think of everything!).
@@ -126,8 +128,10 @@ The [NEW_RULES.md](/docs/NEW_RULES.md) document includes step-by-step instructio
 A critical step in troubleshooting is being able to reproduce the problem. Instructions to publicly reproduce errors using GitHub Actions can be found in our [guide to reproduce errors](/docs/REPRODUCE_ERRORS.md).
 
 **What to do with the acceptance test results?**
-The acceptance test is a key part of the Pull Request process. More information about this test is available in the [ACCEPTANCE_TEST.md](/docs/ACCEPTANCE_TESTS.md) file
-<img src="/docs/Acceptance-test-process.jpg" width="700">
+
+The acceptance test is a key part of the Pull Request process. More information about this test is available in the [ACCEPTANCE_TEST.md](/docs/ACCEPTANCE_TESTS.md) file.
+
+<img src="/docs/Acceptance-test-process.jpg" width="650">
 
 **How to run tests locally?**
 
