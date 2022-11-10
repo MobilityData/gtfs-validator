@@ -89,7 +89,7 @@ public class ParentLocationTypeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class WrongParentLocationTypeNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String stopId;
     private final String stopName;
     private final int locationType;
@@ -100,7 +100,7 @@ public class ParentLocationTypeValidator extends FileValidator {
     private final int expectedLocationType;
 
     WrongParentLocationTypeNotice(
-        long csvRowNumber,
+        int csvRowNumber,
         String stopId,
         String stopName,
         int locationType,

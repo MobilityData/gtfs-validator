@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 public class StartAndEndRangeEqualNotice extends ValidationNotice {
 
   private final String filename;
-  private final long csvRowNumber;
+  private final int csvRowNumber;
   @Nullable private final String entityId;
   private final String startFieldName;
   private final String endFieldName;
@@ -36,7 +36,7 @@ public class StartAndEndRangeEqualNotice extends ValidationNotice {
 
   public StartAndEndRangeEqualNotice(
       String filename,
-      long csvRowNumber,
+      int csvRowNumber,
       String entityId,
       String startFieldName,
       String endFieldName,
@@ -51,11 +51,7 @@ public class StartAndEndRangeEqualNotice extends ValidationNotice {
   }
 
   public StartAndEndRangeEqualNotice(
-      String filename,
-      long csvRowNumber,
-      String startFieldName,
-      String endFieldName,
-      String value) {
+      String filename, int csvRowNumber, String startFieldName, String endFieldName, String value) {
     super(SeverityLevel.ERROR);
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;

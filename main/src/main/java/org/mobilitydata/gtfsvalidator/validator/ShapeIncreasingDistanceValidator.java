@@ -91,7 +91,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
    */
   static class DecreasingShapeDistanceNotice extends ValidationNotice {
     private final String shapeId;
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final double shapeDistTraveled;
     private final int shapePtSequence;
     private final long prevCsvRowNumber;
@@ -122,7 +122,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
    */
   static class EqualShapeDistanceSameCoordinatesNotice extends ValidationNotice {
     private final String shapeId;
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final double shapeDistTraveled;
     private final int shapePtSequence;
     private final long prevCsvRowNumber;
@@ -152,7 +152,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
    */
   static class EqualShapeDistanceDiffCoordinatesNotice extends ValidationNotice {
     private final String shapeId;
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final double shapeDistTraveled;
     private final int shapePtSequence;
     private final long prevCsvRowNumber;

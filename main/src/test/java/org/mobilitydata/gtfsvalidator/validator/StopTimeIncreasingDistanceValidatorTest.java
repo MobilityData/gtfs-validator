@@ -29,7 +29,7 @@ import org.mobilitydata.gtfsvalidator.validator.StopTimeIncreasingDistanceValida
 
 public class StopTimeIncreasingDistanceValidatorTest {
   public static GtfsStopTime createStopTime(
-      long csvRowNumber, String tripId, String stopId, int stopSequence, double shapeDistTraveled) {
+      int csvRowNumber, String tripId, String stopId, int stopSequence, double shapeDistTraveled) {
     return new GtfsStopTime.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setTripId(tripId)

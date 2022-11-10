@@ -163,7 +163,7 @@ public class PathwayReachableLocationValidator extends FileValidator {
    */
   static class PathwayUnreachableLocationNotice extends ValidationNotice {
 
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String stopId;
     private final String stopName;
     private final int locationType;

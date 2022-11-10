@@ -16,10 +16,9 @@
 
 package org.mobilitydata.gtfsvalidator.processor;
 
-import com.squareup.javapoet.JavaFile;
+import com.google.common.collect.ImmutableList;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,8 +38,6 @@ import org.mobilitydata.gtfsvalidator.validator.FileValidator;
  */
 public class ForeignKeyValidatorGenerator {
 
-  private static final String VALIDATOR_PACKAGE_NAME = "org.mobilitydata.gtfsvalidator.validator";
-
   private final Map<String, GtfsFileDescriptor> fileDescriptors = new HashMap<>();
 
   public ForeignKeyValidatorGenerator(List<GtfsFileDescriptor> fileDescriptors) {
@@ -49,8 +46,8 @@ public class ForeignKeyValidatorGenerator {
     }
   }
 
-  public List<JavaFile> generateValidatorFiles() {
-    List<JavaFile> validators = new ArrayList<>();
+  public ImmutableList<TypeSpec> generateValidators() {
+    ImmutableList.Builder<TypeSpec> validators = ImmutableList.builder();
     for (GtfsFileDescriptor childFile : fileDescriptors.values()) {
       for (GtfsFieldDescriptor childField : childFile.fields()) {
         if (childField.foreignKey().isEmpty()) {
@@ -74,10 +71,10 @@ public class ForeignKeyValidatorGenerator {
         validators.add(generateValidator(childFile, childField, parentFile, parentField));
       }
     }
-    return validators;
+    return validators.build();
   }
 
-  private JavaFile generateValidator(
+  private TypeSpec generateValidator(
       GtfsFileDescriptor childFile,
       GtfsFieldDescriptor childField,
       GtfsFileDescriptor parentFile,
@@ -160,7 +157,7 @@ public class ForeignKeyValidatorGenerator {
     }
     typeSpec.addMethod(hasReferencedKeyMethod.build());
 
-    return JavaFile.builder(VALIDATOR_PACKAGE_NAME, typeSpec.build()).build();
+    return typeSpec.build();
   }
 
   private String validatorName(GtfsFileDescriptor childFile, GtfsFieldDescriptor childField) {

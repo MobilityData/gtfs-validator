@@ -14,8 +14,8 @@ public interface GtfsEntityBuilder<T extends GtfsEntity> {
   void clear();
 
   /** Row number in a CSV file. */
-  long csvRowNumber();
+  int csvRowNumber();
 
   /** Sets row number in a CSV file. Returns self. */
-  GtfsEntityBuilder<T> setCsvRowNumber(long value);
+  GtfsEntityBuilder<T> setCsvRowNumber(int value);
 }

@@ -75,7 +75,7 @@ public class MissingLevelIdValidator extends FileValidator {
    */
   static class MissingLevelIdNotice extends ValidationNotice {
 
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String stopId;
     private final String stopName;
 
