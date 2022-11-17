@@ -7,6 +7,7 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.WildcardTypeName;
 import java.util.List;
@@ -35,18 +36,20 @@ public class ValidatorRegistryGenerator {
   }
 
   private MethodSpec generateGetValidatorClassesMethod() {
+    TypeName validatorType =
+        ParameterizedTypeName.get(
+            ClassName.get(Class.class), WildcardTypeName.subtypeOf(Object.class));
     MethodSpec.Builder method =
         MethodSpec.methodBuilder("getValidatorClasses")
             .addModifiers(Modifier.PUBLIC)
             .addAnnotation(Override.class)
-            .returns(
-                ParameterizedTypeName.get(
-                    ClassName.get(ImmutableList.class),
-                    ParameterizedTypeName.get(
-                        ClassName.get(Class.class), WildcardTypeName.subtypeOf(Object.class))));
+            .returns(ParameterizedTypeName.get(ClassName.get(ImmutableList.class), validatorType));
 
     method.addStatement(
-        "$T.Builder builder = $T.builder()", ImmutableList.class, ImmutableList.class);
+        "$T.Builder<$T> builder = $T.builder()",
+        ImmutableList.class,
+        validatorType,
+        ImmutableList.class);
     for (ClassName validatorClass : validatorClasses) {
       method.addStatement("builder.add($T.class)", validatorClass);
     }

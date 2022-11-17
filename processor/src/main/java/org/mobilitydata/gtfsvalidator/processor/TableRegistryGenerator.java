@@ -7,6 +7,7 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.WildcardTypeName;
 import java.util.List;
@@ -36,19 +37,20 @@ public class TableRegistryGenerator {
   }
 
   private MethodSpec generateGetTableLoadersMethod() {
+    TypeName loaderType =
+        ParameterizedTypeName.get(
+            ClassName.get(GtfsTableLoader.class), WildcardTypeName.subtypeOf(Object.class));
     MethodSpec.Builder method =
         MethodSpec.methodBuilder("getTableLoaders")
             .addModifiers(Modifier.PUBLIC)
             .addAnnotation(Override.class)
-            .returns(
-                ParameterizedTypeName.get(
-                    ClassName.get(ImmutableList.class),
-                    ParameterizedTypeName.get(
-                        ClassName.get(GtfsTableLoader.class),
-                        WildcardTypeName.subtypeOf(Object.class))));
+            .returns(ParameterizedTypeName.get(ClassName.get(ImmutableList.class), loaderType));
 
     method.addStatement(
-        "$T.Builder builder = $T.builder()", ImmutableList.class, ImmutableList.class);
+        "$T.Builder<$T> builder = $T.builder()",
+        ImmutableList.class,
+        loaderType,
+        ImmutableList.class);
     for (GtfsFileDescriptor fileDescriptor : fileDescriptors) {
       method.addStatement(
           "builder.add(new $T())", new GtfsEntityClasses(fileDescriptor).tableLoaderTypeName());
