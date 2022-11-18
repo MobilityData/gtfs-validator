@@ -2038,7 +2038,7 @@ The given field has no value in some input row, even though values are recommend
 The `timepoint` column should be provided.
 
 #### References
-* [stop_times.txt best practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/stop_times.md)
+* [stop_times.txt best practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices)
 <details>
 
 #### Notice fields description
@@ -2398,7 +2398,7 @@ A stop entry that has many potential matches to the trip's path of travel, as de
 
 #### References
 * [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
-* [stops_times.txt specification](http://gtfs.org/reference/static#stopstimestxt)
+* [stops_times.txt specification](https://gtfs.org/schedule/reference/#stop_timestxt)
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 <details>
 
@@ -2428,7 +2428,7 @@ Two stop entries in `stop_times.txt` are different than their arrival-departure 
 
 #### References
 * [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
-* [stops_times.txt specification](http://gtfs.org/reference/static#stopstimestxt)
+* [stops_times.txt specification](https://gtfs.org/schedule/reference/#stop_timestxt)
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 <details>
 
@@ -2490,7 +2490,7 @@ A stop time entry that is a large distance away from the location of the shape i
 
 #### References
 * [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
-* [stops_times.txt specification](http://gtfs.org/reference/static#stopstimestxt)
+* [stops_times.txt specification](https://gtfs.org/schedule/reference/#stop_timestxt)
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 <details>
 
@@ -2521,7 +2521,7 @@ A stop in `stops.txt` is not referenced by any `stop_times.stop_id`, so it is no
 Such stops normally do not provide user value. This notice may indicate a typo in `stop_times.txt`.
 
 #### References
-* [stops_times.txt specification](http://gtfs.org/reference/static#stopstimestxt)
+* [stops_times.txt specification](https://gtfs.org/schedule/reference/#stop_timestxt)
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 
 <a name="TranslationUnknownTableNameNotice"/>
