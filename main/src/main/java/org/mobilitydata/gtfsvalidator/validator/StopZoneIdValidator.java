@@ -96,7 +96,7 @@ public class StopZoneIdValidator extends FileValidator {
   static class StopWithoutZoneIdNotice extends ValidationNotice {
     private final String stopId;
     private final String stopName;
-    private final long csvRowNumber;
+    private final int csvRowNumber;
 
     StopWithoutZoneIdNotice(GtfsStop stop) {
       super(SeverityLevel.ERROR);

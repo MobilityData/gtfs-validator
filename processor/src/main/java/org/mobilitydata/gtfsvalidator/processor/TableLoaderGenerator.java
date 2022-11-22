@@ -45,7 +45,6 @@ import javax.lang.model.element.Modifier;
 import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsLoader;
 import org.mobilitydata.gtfsvalidator.notice.CsvParsingFailedNotice;
 import org.mobilitydata.gtfsvalidator.notice.EmptyFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFileNotice;
@@ -137,7 +136,6 @@ public class TableLoaderGenerator {
                 ParameterizedTypeName.get(
                     ClassName.get(GtfsTableLoader.class),
                     classNames.entityImplementationTypeName()))
-            .addAnnotation(GtfsLoader.class)
             .addAnnotation(Generated.class)
             .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
@@ -292,11 +290,16 @@ public class TableLoaderGenerator {
         .endControlFlow()
         .addStatement("$T rowNotices = new $T()", NoticeContainer.class, NoticeContainer.class)
         .addStatement("rowParser.setRow(row, rowNotices)")
+        .beginControlFlow("if (!rowParser.checkRowNumber())")
+        .addStatement("hasUnparsableRows = true")
+        .addStatement("break")
+        .endControlFlow()
         .addStatement("final boolean validRowLength = rowParser.checkRowLength()")
         .beginControlFlow("if (validRowLength)")
         .addStatement("builder.clear()")
         .addStatement(
-            "builder.$L(row.getRowNumber())", FieldNameConverter.setterMethodName("csvRowNumber"));
+            "builder.$L(rowParser.getRowNumber())",
+            FieldNameConverter.setterMethodName("csvRowNumber"));
 
     for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
       CodeBlock fieldValue =

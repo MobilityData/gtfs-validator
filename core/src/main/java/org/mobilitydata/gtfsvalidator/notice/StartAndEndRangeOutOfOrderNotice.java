@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 public class StartAndEndRangeOutOfOrderNotice extends ValidationNotice {
 
   private final String filename;
-  private final long csvRowNumber;
+  private final int csvRowNumber;
   @Nullable private final String entityId;
   private final String startFieldName;
   private final String startValue;
@@ -37,7 +37,7 @@ public class StartAndEndRangeOutOfOrderNotice extends ValidationNotice {
 
   public StartAndEndRangeOutOfOrderNotice(
       String filename,
-      long csvRowNumber,
+      int csvRowNumber,
       String entityId,
       String startFieldName,
       String startValue,
@@ -55,7 +55,7 @@ public class StartAndEndRangeOutOfOrderNotice extends ValidationNotice {
 
   public StartAndEndRangeOutOfOrderNotice(
       String filename,
-      long csvRowNumber,
+      int csvRowNumber,
       String startFieldName,
       String startValue,
       String endFieldName,

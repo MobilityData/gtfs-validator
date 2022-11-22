@@ -23,10 +23,10 @@ package org.mobilitydata.gtfsvalidator.notice;
  */
 public class MissingRecommendedFieldNotice extends ValidationNotice {
   private final String filename;
-  private final long csvRowNumber;
+  private final int csvRowNumber;
   private final String fieldName;
 
-  public MissingRecommendedFieldNotice(String filename, long csvRowNumber, String fieldName) {
+  public MissingRecommendedFieldNotice(String filename, int csvRowNumber, String fieldName) {
     super(SeverityLevel.WARNING);
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;

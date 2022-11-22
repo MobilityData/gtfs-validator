@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
  */
 public class PointNearOriginNotice extends ValidationNotice {
   private final String filename;
-  private final long csvRowNumber;
+  private final int csvRowNumber;
   @Nullable private final String entityId;
   private final String latFieldName;
   private final double latFieldValue;
@@ -34,7 +34,7 @@ public class PointNearOriginNotice extends ValidationNotice {
 
   public PointNearOriginNotice(
       String filename,
-      long csvRowNumber,
+      int csvRowNumber,
       String entityId,
       String latFieldName,
       double latFieldValue,
@@ -52,7 +52,7 @@ public class PointNearOriginNotice extends ValidationNotice {
 
   public PointNearOriginNotice(
       String filename,
-      long csvRowNumber,
+      int csvRowNumber,
       String latFieldName,
       double latFieldValue,
       String lonFieldName,

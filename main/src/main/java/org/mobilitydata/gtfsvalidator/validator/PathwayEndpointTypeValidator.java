@@ -84,7 +84,7 @@ public class PathwayEndpointTypeValidator extends FileValidator {
 
   /** Describes a pathway which endpoint is a station. */
   static class PathwayToWrongLocationTypeNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String pathwayId;
     private final String fieldName;
     private final String stopId;
@@ -100,7 +100,7 @@ public class PathwayEndpointTypeValidator extends FileValidator {
 
   /** Describes a pathway which endpoint is a platform that has boarding areas. */
   static class PathwayToPlatformWithBoardingAreasNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String pathwayId;
     private final String fieldName;
     private final String stopId;

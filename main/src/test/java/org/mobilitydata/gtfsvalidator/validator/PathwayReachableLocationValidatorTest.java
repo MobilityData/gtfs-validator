@@ -52,17 +52,17 @@ public final class PathwayReachableLocationValidatorTest {
     return noticeContainer.getValidationNotices();
   }
 
-  static String rowToStopId(long csvRowNumber) {
+  static String rowToStopId(int csvRowNumber) {
     return "stop" + csvRowNumber;
   }
 
-  static String rowToPathwayId(long csvRowNumber) {
+  static String rowToPathwayId(int csvRowNumber) {
     return "pathway" + csvRowNumber;
   }
 
   static GtfsPathway createPathway(
-      long fromStopRow, long toStopRow, GtfsPathwayIsBidirectional isBidirectional) {
-    long pathwayRow = fromStopRow * 1000 + toStopRow;
+      int fromStopRow, int toStopRow, GtfsPathwayIsBidirectional isBidirectional) {
+    int pathwayRow = fromStopRow * 1000 + toStopRow;
     return new GtfsPathway.Builder()
         .setCsvRowNumber(pathwayRow)
         .setPathwayId(rowToPathwayId(pathwayRow))
@@ -72,7 +72,7 @@ public final class PathwayReachableLocationValidatorTest {
         .build();
   }
 
-  static GtfsStop createLocation(long csvRowNumber, GtfsLocationType locationType) {
+  static GtfsStop createLocation(int csvRowNumber, GtfsLocationType locationType) {
     return new GtfsStop.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setStopId(rowToStopId(csvRowNumber))
@@ -82,7 +82,7 @@ public final class PathwayReachableLocationValidatorTest {
   }
 
   static GtfsStop createChildLocation(
-      long csvRowNumber, GtfsLocationType locationType, long parentRow) {
+      int csvRowNumber, GtfsLocationType locationType, int parentRow) {
     return new GtfsStop.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setStopId(rowToStopId(csvRowNumber))

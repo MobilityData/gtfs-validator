@@ -31,7 +31,7 @@ import org.mobilitydata.gtfsvalidator.validator.StopTimeArrivalAndDepartureTimeV
 
 public class StopTimeArrivalAndDepartureTimeValidatorTest {
   public static GtfsStopTime createStopTime(
-      long csvRowNumber,
+      int csvRowNumber,
       String tripId,
       GtfsTime arrivalTime,
       GtfsTime departureTime,

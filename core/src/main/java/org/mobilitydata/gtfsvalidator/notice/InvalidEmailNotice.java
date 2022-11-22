@@ -27,7 +27,7 @@ package org.mobilitydata.gtfsvalidator.notice;
  */
 public class InvalidEmailNotice extends ValidationNotice {
   private final String filename;
-  private final long csvRowNumber;
+  private final int csvRowNumber;
   private final String fieldName;
   private final String fieldValue;
 
@@ -37,7 +37,7 @@ public class InvalidEmailNotice extends ValidationNotice {
    */
   public InvalidEmailNotice(
       String filename,
-      long csvRowNumber,
+      int csvRowNumber,
       String fieldName,
       String fieldValue,
       SeverityLevel severityLevel) {
@@ -50,7 +50,7 @@ public class InvalidEmailNotice extends ValidationNotice {
 
   /** Constructs a notice with the default severity {@code ERROR}. */
   public InvalidEmailNotice(
-      String filename, long csvRowNumber, String fieldName, String fieldValue) {
+      String filename, int csvRowNumber, String fieldName, String fieldValue) {
     this(filename, csvRowNumber, fieldName, fieldValue, SeverityLevel.ERROR);
   }
 }
