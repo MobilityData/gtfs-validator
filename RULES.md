@@ -36,7 +36,6 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`decreasing_shape_distance`](#decreasing_shape_distance)                                                                         | Decreasing `shape_dist_traveled` in `shapes.txt`.                                                                                                      |
 | [`decreasing_or_equal_stop_time_distance`](#decreasing_or_equal_stop_time_distance)                                               | Decreasing or equal `shape_dist_traveled` in `stop_times.txt`.                                                                                         |
 | [`duplicated_column`](#duplicated_column)                                                                                         | Duplicated column in CSV.                                                                                                                              |
-| [`duplicate_fare_rule_zone_id_fields`](#duplicate_fare_rule_zone_id_fields)                                                       | Duplicate rows from `fare_rules.txt` based on `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.contains_id` and `fare_rules.destination_id`. |
 | [`duplicate_key`](#duplicate_key)                                                                                                 | Duplicated entity.                                                                                                                                     |
 | [`empty_column_name`](#empty_column_name)                                                                                         | A column name is empty.                                                                                                                                |
 | [`empty_file`](#empty_file)                                                                                                       | A CSV file is empty.                                                                                                                                   |
@@ -292,30 +291,6 @@ The input file CSV header has the same column name repeated.
 
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
-
-</details>
-
-<a name="DuplicateFareRuleZoneIdFieldsNotice"/>
-
-### duplicate_fare_rule_zone_id_fields
-
-The combination of `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.contains_id` and `fare_rules.destination_id` fields should be unique in GTFS file `fare_rules.txt`.
-
-#### References
-* [Original Python validator implementation](https://github.com/google/transitfeed)
-* [fare_rules.txt specification](http://gtfs.org/reference/static/#fare_rulestxt)
-<details>
-
-#### Notice fields description
-| Field name           	| Description                     	| Type    	|
-|----------------------	|---------------------------------	|---------	|
-| `csvRowNumber`       	| The row of the first occurrence. 	| Long  	  |
-| `fareId`             	| The id of the first occurrence.  	| String  	|
-| `previousCsvRowNumber`| The row of the other occurrence. 	| Long   	  |
-| `previousFareId`     	| The id of the other occurrence.  	| Integer 	|
-
-#### Affected files
-* [fare_rules.txt](http://gtfs.org/reference/static/#fare_rulestxt)
 
 </details>
 
