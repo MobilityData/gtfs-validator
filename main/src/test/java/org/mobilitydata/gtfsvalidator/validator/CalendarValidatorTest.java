@@ -71,7 +71,7 @@ public class CalendarValidatorTest {
   }
 
   @Test
-  public void calendarEndDateOneDayFromNowShouldNowGenerateNotice() {
+  public void calendarEndDateOneDayFromNowShouldNotGenerateNotice() {
     assertThat(validateCalendar(createCalendar(TEST_NOW.toLocalDate().plusDays(1)))).isEmpty();
   }
 }
