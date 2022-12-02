@@ -103,7 +103,7 @@ public class DateTripsValidator extends FileValidator {
       final var dates =
           minStartDate
               .getLocalDate()
-              .datesUntil(maxEndDate.getLocalDate())
+              .datesUntil(maxEndDate.getLocalDate().plusDays(1))
               .collect(Collectors.toList());
 
       int maxTripsPerDay = 0;
@@ -112,7 +112,7 @@ public class DateTripsValidator extends FileValidator {
         for (var entry : servicePeriodMap.entrySet()) {
           if (entry.getValue().contains(date)) {
             var trips = tripContainer.byServiceId(entry.getKey());
-            tripsForDate = tripsForDate + trips.size();
+            tripsForDate += trips.size();
           }
         }
         if (tripsForDate > maxTripsPerDay) {
@@ -122,14 +122,13 @@ public class DateTripsValidator extends FileValidator {
       }
 
       for (var entry : tripsPerDate.entrySet()) {
-        if (entry.getValue() >= 0.75 * maxTripsPerDay
-            && (serviceWindowStartDate == null
-                || entry.getKey().isBefore(serviceWindowStartDate))) {
-          serviceWindowStartDate = entry.getKey();
-        }
-        if (entry.getValue() >= 0.75 * maxTripsPerDay
-            && (serviceWindowEndDate == null || entry.getKey().isAfter(serviceWindowEndDate))) {
-          serviceWindowEndDate = entry.getKey();
+        if (entry.getValue() >= 0.75 * maxTripsPerDay) {
+          if (serviceWindowStartDate == null || entry.getKey().isBefore(serviceWindowStartDate)) {
+            serviceWindowStartDate = entry.getKey();
+          }
+          if (serviceWindowEndDate == null || entry.getKey().isAfter(serviceWindowEndDate)) {
+            serviceWindowEndDate = entry.getKey();
+          }
         }
       }
     }
@@ -140,8 +139,8 @@ public class DateTripsValidator extends FileValidator {
       if (serviceWindowStartDate.isAfter(currentDate)
           || serviceWindowEndDate.isBefore(currentDatePlusSevenDays)) {
         noticeContainer.addValidationNotice(
-            new DateTripsValidatorValidForNextSevenDaysNotice(
-                serviceWindowStartDate, serviceWindowStartDate, currentDatePlusSevenDays));
+            new DateTripsValidatorValidForNextSevenDaysNotice(currentDate,
+                serviceWindowStartDate, serviceWindowEndDate));
         return;
       }
     }
