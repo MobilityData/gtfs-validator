@@ -21,6 +21,7 @@ import java.util.Currency;
 import org.mobilitydata.gtfsvalidator.annotation.CurrencyAmount;
 import org.mobilitydata.gtfsvalidator.annotation.FieldType;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
+import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.NonNegative;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
@@ -42,4 +43,8 @@ public interface GtfsFareProductSchema extends GtfsEntity {
 
   @Required
   Currency currency();
+
+  @FieldType(FieldTypeEnum.ID)
+  @ForeignKey(table = "fare_payment_types.txt", field = "fare_payment_type_group_id")
+  String farePaymentTypeGroupId();
 }
