@@ -30,12 +30,12 @@ public final class AnyTableLoader {
   public static GtfsTableContainer load(
       GtfsTableDescriptor tableDescriptor,
       ValidatorProvider validatorProvider,
-      InputStream inputStream,
+      InputStream csvInputStream,
       NoticeContainer noticeContainer) {
     final String gtfsFilename = tableDescriptor.gtfsFilename();
     CsvFile csvFile;
     try {
-      csvFile = new CsvFile(inputStream, gtfsFilename);
+      csvFile = new CsvFile(csvInputStream, gtfsFilename);
     } catch (TextParsingException e) {
       noticeContainer.addValidationNotice(new CsvParsingFailedNotice(gtfsFilename, e));
       return tableDescriptor.createContainerForInvalidStatus(

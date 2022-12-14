@@ -48,8 +48,8 @@ public class GtfsFeedLoader {
   private int numThreads = 1;
 
   public GtfsFeedLoader(GtfsTableRegistry tableRegistry) {
-    for (GtfsTableDescriptor<?> loader : tableRegistry.getTableDescriptors()) {
-      tableDescriptors.put(loader.gtfsFilename(), loader);
+    for (GtfsTableDescriptor<?> tableDescriptor : tableRegistry.getTableDescriptors()) {
+      tableDescriptors.put(tableDescriptor.gtfsFilename(), tableDescriptor);
     }
   }
 

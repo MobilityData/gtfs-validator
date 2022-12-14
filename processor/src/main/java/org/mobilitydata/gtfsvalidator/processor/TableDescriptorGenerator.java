@@ -274,7 +274,7 @@ public class TableDescriptorGenerator {
   }
 
   static FieldLevelEnum getFieldLevel(GtfsFieldDescriptor field) {
-    return field.required() ? REQUIRED : (field.recommended() ? RECOMMENDED : OPTIONAL);
+    return field.required() ? REQUIRED : field.recommended() ? RECOMMENDED : OPTIONAL;
   }
 
   private MethodSpec generateGtfsFilenameMethod() {
