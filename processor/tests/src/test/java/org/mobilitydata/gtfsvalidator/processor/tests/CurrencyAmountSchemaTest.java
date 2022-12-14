@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.InvalidCurrencyAmountNotice;
-import org.mobilitydata.gtfsvalidator.table.CurrencyAmountTableLoader;
+import org.mobilitydata.gtfsvalidator.table.CurrencyAmountTableDescriptor;
 import org.mobilitydata.gtfsvalidator.testing.LoadingHelper;
 import org.mobilitydata.gtfsvalidator.validator.CurrencyAmountCurrencyAmountValidator;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
@@ -33,12 +33,12 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 @RunWith(JUnit4.class)
 public class CurrencyAmountSchemaTest {
 
-  private CurrencyAmountTableLoader loader;
+  private CurrencyAmountTableDescriptor tableDescriptor;
   private LoadingHelper helper;
 
   @Before
   public void setup() throws ValidatorLoaderException {
-    loader = new CurrencyAmountTableLoader();
+    tableDescriptor = new CurrencyAmountTableDescriptor();
     helper = new LoadingHelper();
     helper.setValidatorLoader(
         ValidatorLoader.createForClasses(
@@ -48,14 +48,14 @@ public class CurrencyAmountSchemaTest {
   @Test
   public void testValidCurrencyUSD() throws ValidatorLoaderException {
 
-    helper.load(loader, "amount,currency", "1.50,USD");
+    helper.load(tableDescriptor, "amount,currency", "1.50,USD");
 
     assertThat(helper.getValidationNotices()).isEmpty();
   }
 
   @Test
   public void testInvalidCurrencyUSD() throws ValidatorLoaderException {
-    helper.load(loader, "amount,currency", "1.5,USD");
+    helper.load(tableDescriptor, "amount,currency", "1.5,USD");
 
     assertThat(helper.getValidationNotices())
         .containsExactly(
@@ -66,7 +66,7 @@ public class CurrencyAmountSchemaTest {
   @Test
   public void testValidCurrencyISK() throws ValidatorLoaderException {
     // Icelandic króna expects no digits after decimal separator.
-    helper.load(loader, "amount,currency", "5,ISK");
+    helper.load(tableDescriptor, "amount,currency", "5,ISK");
 
     assertThat(helper.getValidationNotices()).isEmpty();
   }
@@ -74,7 +74,7 @@ public class CurrencyAmountSchemaTest {
   @Test
   public void testInvalidCurrencyISK() throws ValidatorLoaderException {
     // Icelandic króna expects no digits after decimal separator.
-    helper.load(loader, "amount,currency", "5.0,ISK");
+    helper.load(tableDescriptor, "amount,currency", "5.0,ISK");
 
     assertThat(helper.getValidationNotices())
         .containsExactly(

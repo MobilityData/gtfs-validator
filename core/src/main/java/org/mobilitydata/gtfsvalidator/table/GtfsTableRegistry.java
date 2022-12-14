@@ -10,5 +10,5 @@ import com.google.common.collect.ImmutableList;
  */
 public interface GtfsTableRegistry {
   /** Returns a list of loaders for all GTFS tables. */
-  ImmutableList<GtfsTableLoader<?>> getTableLoaders();
+  ImmutableList<GtfsTableDescriptor<?>> getTableDescriptors();
 }

@@ -26,19 +26,19 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.table.MultiColumnPrimaryKey;
 import org.mobilitydata.gtfsvalidator.table.MultiColumnPrimaryKeyTableContainer;
-import org.mobilitydata.gtfsvalidator.table.MultiColumnPrimaryKeyTableLoader;
+import org.mobilitydata.gtfsvalidator.table.MultiColumnPrimaryKeyTableDescriptor;
 import org.mobilitydata.gtfsvalidator.testing.LoadingHelper;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 
 @RunWith(JUnit4.class)
 public class MultiColumnPrimaryKeySchemaTest {
 
-  private MultiColumnPrimaryKeyTableLoader loader;
+  private MultiColumnPrimaryKeyTableDescriptor tableDescriptor;
   private LoadingHelper helper;
 
   @Before
   public void setup() {
-    loader = new MultiColumnPrimaryKeyTableLoader();
+    tableDescriptor = new MultiColumnPrimaryKeyTableDescriptor();
     helper = new LoadingHelper();
   }
 
@@ -46,7 +46,7 @@ public class MultiColumnPrimaryKeySchemaTest {
   public void testTableContainer() throws ValidatorLoaderException {
     MultiColumnPrimaryKeyTableContainer container =
         helper.load(
-            loader,
+            tableDescriptor,
             "id_a,id_b,id_c,fruit",
             "a1,a2,a3,apples",
             "a1,a2x,a3x,apricots",
@@ -65,7 +65,7 @@ public class MultiColumnPrimaryKeySchemaTest {
 
   @Test
   public void testDuplicates() throws ValidatorLoaderException {
-    helper.load(loader, "id_a,id_b,id_c,fruit", "a1,a2,a3,apples", "a1,a2,a3,apricots");
+    helper.load(tableDescriptor, "id_a,id_b,id_c,fruit", "a1,a2,a3,apples", "a1,a2,a3,apricots");
 
     assertThat(helper.getValidationNotices()).hasSize(1);
     assertThat(helper.getValidationNotices().get(0).getCode()).isEqualTo("duplicate_key");
