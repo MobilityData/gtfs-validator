@@ -208,6 +208,11 @@ class TableContainerIndexGenerator {
         .build();
   }
 
+  private boolean hasTranslationRecordId() {
+    return fileDescriptor.primaryKeys().stream()
+        .anyMatch((f) -> f.primaryKey().get().translationRecordIdType() == RECORD_ID);
+  }
+
   private MethodSpec generateByTranslationKeyMethod() {
     MethodSpec.Builder method =
         MethodSpec.methodBuilder("byTranslationKey")
@@ -222,7 +227,7 @@ class TableContainerIndexGenerator {
       method.addStatement(
           "return Optional.ofNullable($L.getOrDefault(recordId, null))",
           byKeyMapName(fileDescriptor.getSingleColumnPrimaryKey().name()));
-    } else if (fileDescriptor.hasMultiColumnPrimaryKey()) {
+    } else if (fileDescriptor.hasMultiColumnPrimaryKey() && hasTranslationRecordId()) {
       ImmutableMap<TranslationRecordIdType, String> recordIdTypes =
           ImmutableMap.of(RECORD_ID, "recordId", RECORD_SUB_ID, "recordSubId");
       List<CodeBlock> keyBuilderSetters = new ArrayList<>();
