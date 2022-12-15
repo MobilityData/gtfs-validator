@@ -121,10 +121,8 @@ public final class AnyTableLoader {
     }
     GtfsTableContainer table =
         tableDescriptor.createContainerForHeaderAndEntities(header, entities, noticeContainer);
-    if (!noticeContainer.hasValidationErrors()) {
-      ValidatorUtil.invokeSingleFileValidators(
-          validatorProvider.createSingleFileValidators(table), noticeContainer);
-    }
+    ValidatorUtil.invokeSingleFileValidators(
+        validatorProvider.createSingleFileValidators(table), noticeContainer);
     return table;
   }
 
