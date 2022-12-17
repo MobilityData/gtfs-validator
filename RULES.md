@@ -161,8 +161,8 @@ Trips with the same block id have overlapping stop times.
 
 #### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
-* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
-* [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
+* [stops.txt specification](http://gtfs.org/reference/static#stopstxt)
+* [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
 
 <details>
 
@@ -179,8 +179,8 @@ Trips with the same block id have overlapping stop times.
 | `intersection`  	| The overlapping period.                      	            | Date   	|
 
 #### Affected files
-* [stops.txt specification](http://gtfs.org/reference/static#stopstxt)
-* [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+* [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 
 </details>
 
