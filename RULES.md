@@ -26,7 +26,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 <a name="ERRORS"/>
 
 ## Table of ERRORS
-#### Provenance: all errors are based on the GTFS Schedule Reference
+#### Source: all errors are based on the GTFS Schedule Reference
 | Notice code                                                                                                       | Description                                                                                                                                            |
 |-------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`block_trips_with_overlapping_stop_times`](#block_trips_with_overlapping_stop_times)                             | Block trips with overlapping stop times.                                                                                                               |
@@ -84,7 +84,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 <a name="WARNINGS"/>
 
 ## Table of WARNINGS
-#### Provenance: GTFS Schedule Reference
+#### Source: GTFS Schedule Reference
 | Notice code                                                                                   | Description                                                                                                                                                   |
 |-----------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`attribution_without_role`](#attribution_without_role)                                       | Attribution with no role.                                                                                                                                     |
@@ -119,7 +119,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`unused_shape`](#unused_shape)                                                               | Shape is not used in GTFS file `trips.txt`.                                                                                                                   |
 | [`unused_trip`](#unused_trip)                                                                 | Trip is not be used in `stop_times.txt`                                                                                                                       |
 
-#### Provenance: GTFS Schedule Best Practices
+#### Source: GTFS Schedule Best Practices
 | Notice code                                                                                   | Description                                                                                                                                                   
 |-----------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`duplicate_route_name`](#duplicate_route_name)                                               | Two distinct routes have either the same `route_short_name`, the same `route_long_name`, or the same combination of `route_short_name` and `route_long_name`. |
