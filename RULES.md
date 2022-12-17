@@ -26,7 +26,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 <a name="ERRORS"/>
 
 ## Table of ERRORS
-#### Provenance: GTFS Schedule Reference for all errors
+#### Provenance: all errors are based on the GTFS Schedule Reference
 | Notice code                                                                                                       | Description                                                                                                                                            |
 |-------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`block_trips_with_overlapping_stop_times`](#block_trips_with_overlapping_stop_times)                             | Block trips with overlapping stop times.                                                                                                               |
