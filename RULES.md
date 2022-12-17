@@ -29,7 +29,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 
 ## Table of ERRORS
 
-| Notice code                                                                                                       | Description                                                                                                                                            | Source&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;             |
+| Notice code                                                                                                       | Description                                                                                                                                            | Source&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
 |-------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------| ----------------------- |
 | [`block_trips_with_overlapping_stop_times`](#block_trips_with_overlapping_stop_times)                             | Block trips with overlapping stop times.                                                                                                               | GTFS Schedule Reference |
 | [`csv_parsing_failed`](#csv_parsing_failed)                                                                       | Parsing of a CSV file failed.                                                                                                                          | GTFS Schedule Reference |
