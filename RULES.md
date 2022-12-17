@@ -87,7 +87,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 
 ## Table of warnings
 
-| Notice code                                                                                   | Description                                                                                                                                                   | Source&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
+| Notice code                                                                                   | Description                                                                                                                                                   | Source&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
 |-----------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------| ----------------------- |
 | [`attribution_without_role`](#attribution_without_role)                                       | Attribution with no role.                                                                                                                                     | GTFS Schedule Reference |
 | [`duplicate_route_name`](#duplicate_route_name)                                               | Two distinct routes have either the same `route_short_name`, the same `route_long_name`, or the same combination of `route_short_name` and `route_long_name`. | GTFS Schedule Best Practices |
