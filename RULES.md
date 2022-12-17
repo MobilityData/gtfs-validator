@@ -18,15 +18,15 @@ The output that the user will see if the conditions aren’t met.
 
 Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 
-* `ERROR` notices are for items that the [GTFS reference specification](https://github.com/google/transit/tree/master/gtfs/spec/en) explicitly requires or prohibits (e.g., using the language "must"). The validator uses [RFC2119](https://tools.ietf.org/html/rfc2119) to interpret the language in the GTFS spec.
+* `ERROR` notices are for items that the [GTFS reference specification](https://gtfs.org/schedule/reference/) explicitly requires or prohibits (using the language "must"). The validator uses [RFC2119](https://tools.ietf.org/html/rfc2119) to interpret the language in the GTFS spec.
   * ⚠️ Please note that this validator also generates `System Errors` that give information about things that may have gone wrong during the validation process such as the inability to unzip a GTFS file. These are generated in a second report `system_errors.json`.
-* `WARNING` notices are for items that will affect the quality of GTFS datasets but the GTFS spec does expressly require or prohibit. For example, these might be items recommended using the language "should" or "should not" in the GTFS spec, or items recommended in the MobilityData [GTFS Best Practices](https://gtfs.org/best-practices/).
-* `INFO` notices are for items that may affect the feed's quality. They are unexpected data points that should be brought to the user's attention. 
+* `WARNING` notices are for items that will affect the quality of GTFS datasets. These are items that the [GTFS reference specification](https://gtfs.org/schedule/reference/) recommends (using the language "should"), or items recommended in the [GTFS Schedule Best Practices](https://gtfs.org/schedule/best-practices/).
+* `INFO` notices are for items that may affect the feed's quality. They are unexpected finds that should be brought to the user's attention. 
 
 <a name="ERRORS"/>
 
 ## Table of ERRORS
-
+#### Provenance: GTFS Schedule Reference for all errors
 | Notice code                                                                                                       | Description                                                                                                                                            |
 |-------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`block_trips_with_overlapping_stop_times`](#block_trips_with_overlapping_stop_times)                             | Block trips with overlapping stop times.                                                                                                               |
@@ -83,8 +83,8 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 
 <a name="WARNINGS"/>
 
-## Table of warnings
-### Provenance: GTFS Schedule Reference
+## Table of WARNINGS
+#### Provenance: GTFS Schedule Reference
 | Notice code                                                                                   | Description                                                                                                                                                   |
 |-----------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`attribution_without_role`](#attribution_without_role)                                       | Attribution with no role.                                                                                                                                     |
@@ -119,7 +119,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`unused_shape`](#unused_shape)                                                               | Shape is not used in GTFS file `trips.txt`.                                                                                                                   |
 | [`unused_trip`](#unused_trip)                                                                 | Trip is not be used in `stop_times.txt`                                                                                                                       |
 
-### Provenance: GTFS Schedule Best Practices
+#### Provenance: GTFS Schedule Best Practices
 | Notice code                                                                                   | Description                                                                                                                                                   
 |-----------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`duplicate_route_name`](#duplicate_route_name)                                               | Two distinct routes have either the same `route_short_name`, the same `route_long_name`, or the same combination of `route_short_name` and `route_long_name`. |
@@ -133,7 +133,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 
 <a name="INFOS"/>
 
-## Table of info
+## Table of INFOS
 
 | Notice code                                       | Description               |
 |---------------------------------------------------|---------------------------|
@@ -142,7 +142,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 
 <a name="SYSTEM_ERRORS"/>
 
-## Table of system errors
+## Table of SYSTEM ERRORS
 
 | System error code                                                               | Description                                            |
 |---------------------------------------------------------------------------------|--------------------------------------------------------|
@@ -152,7 +152,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`thread_execution_error`](#thread_execution_error)                             | ExecutionException during multithreaded validation     |
 | [`u_r_i_syntax_error`](#u_r_i_syntax_error)                                     | A string could not be parsed as a URI reference.       |
 
-# Errors
+# More details - ERRORS
 
 <a name="BlockTripsWithOverlappingStopTimesNotice"/>
 
@@ -1402,7 +1402,7 @@ Any other combination raise this error.
 
 </details>
 
-# Warnings
+# More details - WARNINGS
 
 <a name="AttributionWithoutRoleNotice"/>
 
@@ -2406,7 +2406,7 @@ Trips should be referred to at least once in `stop_times.txt`.
 
 </details>
 
-# Infos
+# More details - INFOS
 
 <a name="UnknownColumnNotice"/>
 
@@ -2447,7 +2447,7 @@ A file is unknown.
 
 </details>
 
-# System errors
+# More details - SYSTEM ERRORS
 
 <a name="IOError"/>
 
