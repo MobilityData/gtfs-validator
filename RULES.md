@@ -23,8 +23,6 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 * `WARNING` notices are for items that will affect the quality of GTFS datasets but the GTFS spec does expressly require or prohibit. For example, these might be items recommended using the language "should" or "should not" in the GTFS spec, or items recommended in the MobilityData [GTFS Best Practices](https://gtfs.org/best-practices/).
 * `INFO` notices are for items that may affect the feed's quality. They are unexpected data points that should be brought to the user's attention. 
 
-<!--suppress ALL -->
-
 <a name="ERRORS"/>
 
 ## Table of ERRORS
@@ -1575,7 +1573,7 @@ The speed threshold depends on route type.
 
 ##### Speed thresholds
 
-Same as for [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsecutiveStopsNotice).
+Same as for [`fast_travel_between_consecutive_stops`](#fast_travel_between_consecutive_stops).
 
 #### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
