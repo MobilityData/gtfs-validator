@@ -8,6 +8,10 @@
   export let handleSubmit;
 </script>
 
-<form class={`${className} ${defaultClass}`} on:submit={handleSubmit}>
+<form
+  class={`${className} ${defaultClass}`}
+  on:submit={handleSubmit}
+  {...$$props}
+>
   <slot />
 </form>

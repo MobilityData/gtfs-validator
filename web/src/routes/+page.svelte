@@ -9,6 +9,11 @@
   import { fly } from 'svelte/transition';
   import { quintOut } from 'svelte/easing';
 
+  import axios from 'axios';
+
+  /** @type {import('./$types').PageData} */
+  export let data;
+
   let allowUrl = false;
   let showDocs = true;
 
@@ -65,6 +70,7 @@
       console.log(errors);
     } else {
       pendingFilename = file?.name;
+      uploadFile(file);
     }
   }
 
@@ -81,8 +87,29 @@
 
   /** @param {SubmitEvent} event */
   function handleSubmit(event) {
+    event.preventDefault();
+
     // @ts-ignore - TODO fix the types here?
     handleFiles(event.target.file.files);
+  }
+
+  /** @param {File} file */
+  async function uploadFile(file) {
+    // TODO fix this up (is FileReader necessary)
+    // TODO resolve CORS issues
+    // TODO improve UX
+    const reader = new FileReader();
+    console.log('uploading', file);
+    reader.readAsBinaryString(file);
+    reader.addEventListener('load', () => {
+      const raw = reader.result;
+      console.log('axios', axios);
+      axios.put(data.upload.url, {
+        headers: { 'Content-Type': 'application/octet-stream' },
+        data: raw,
+      });
+      console.log('data', raw);
+    });
   }
 </script>
 
@@ -93,7 +120,7 @@
 <div class="bg-mobi-light-gray">
   <DropTarget {handleDragOver} {handleDrop}>
     <div class="container">
-      <Form {handleSubmit}>
+      <Form {handleSubmit} action={data.upload.url} method="PUT">
         <h2 class="h3 text-center">
           Check the quality of a file {#if allowUrl}or a feed{/if}
         </h2>

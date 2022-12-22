@@ -47,7 +47,10 @@
   <div class="drop-target-overlay" hidden={!isDragging}>
     <slot name="overlay">
       <i class="fa-regular fa-file fa-4x fa-beat mb-4" />
-      <p class="text-xl">Drop your file here</p>
+      <p class="text-xl text-center">
+        Drop your file here.<br />
+        It will upload immediately.
+      </p>
     </slot>
   </div>
   <div class="drop-target-contents">
