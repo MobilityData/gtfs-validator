@@ -1,4 +1,3 @@
-// import adapter from '@sveltejs/adapter-auto';
 import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/kit/vite';
 
@@ -6,7 +5,9 @@ import { vitePreprocess } from '@sveltejs/kit/vite';
 const config = {
   kit: {
     adapter: adapter({
-      fallback: '200.html',
+      // fallback: '200.html',
+      pages: 'build',
+      trailingSlash: 'always'
     }),
   },
   preprocess: vitePreprocess(),

@@ -8,3 +8,6 @@ export async function load({ fetch }) {
 
   return { upload: data };
 }
+
+export const ssr = false;
+export const csr = true;
