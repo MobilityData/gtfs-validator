@@ -1,0 +1,70 @@
+plugins {
+	id 'java'
+  id 'application'
+	id 'org.springframework.boot' version '2.7.5'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+  id 'com.github.johnrengelman.shadow' version '5.2.0'
+}
+
+jar {
+    // Add the manifest within the JAR, using gtfs-validator as the title
+    manifest {
+        attributes('Implementation-Title': rootProject.name,
+                'Implementation-Version': project.version,
+                'Main-Class': 'org.mobilitydata.gtfsvalidator.webapi.Main',
+                'Multi-Release': 'true')
+    }
+}
+
+shadowJar {
+    minimize {
+        // Validator classes are loaded dynamically from the main project, so we exclude the project
+        // from minimization.
+        exclude(project(':main'))
+        exclude(dependency('org.apache.httpcomponents:httpclient'))
+    }
+    // Change the JAR name from 'main' to 'gtfs-validator'
+    archiveBaseName = rootProject.name
+    // Change the JAR suffix from 'all' to 'web'
+    archiveClassifier = 'web'
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+mainClassName = 'org.mobilitydata.gtfsvalidator.webapi.Main'
+compileJava.options.encoding = "UTF-8"
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set('springCloudGcpVersion', "3.4.0")
+	set('springCloudVersion', "2021.0.5")
+}
+
+dependencies {
+  compileOnly 'org.projectlombok:lombok:1.18.24'
+  annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+  testCompileOnly 'org.projectlombok:lombok:1.18.24'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+  implementation project(':core')
+  implementation project(':main')  
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'com.google.cloud:spring-cloud-gcp-starter'
+	implementation 'com.google.cloud:spring-cloud-gcp-starter-storage'
+  implementation 'org.projectlombok:lombok:1.18.22'
+  implementation 'org.projectlombok:lombok:1.18.22'
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "com.google.cloud:spring-cloud-gcp-dependencies:${springCloudGcpVersion}"
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

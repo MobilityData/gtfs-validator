@@ -8,4 +8,4 @@ include 'processor:tests'
 include 'main'
 include 'output-comparator'
 include 'tests'
-
+include 'web-api'

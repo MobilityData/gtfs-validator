@@ -86,3 +86,6 @@ build/
 */.DS_Store
 .DS_Store
 .nosync
+
+# Web Validator Authentication Credential
+web-api/src/main/resources/web-based-gtfs-validator-3c339fa28589.json
