@@ -9,18 +9,18 @@ import org.mobilitydata.gtfsvalidator.annotation.Index;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
 
-@GtfsTable("fare_payment_types.txt")
-public interface GtfsFarePaymentTypeSchema extends GtfsEntity {
+@GtfsTable("fare_payment_options.txt")
+public interface GtfsFarePaymentOptionSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)
   @Index
   @Required
-  String farePaymentTypeGroupId();
+  String farePaymentOptionGroupId();
 
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)
-  String farePaymentTypeName();
+  String farePaymentOptionName();
 
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)
   @Required
-  GtfsFarePaymentMethod farePaymentType();
+  GtfsFarePaymentOptionType farePaymentOptionType();
 }

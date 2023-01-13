@@ -9,54 +9,54 @@ import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
-import org.mobilitydata.gtfsvalidator.table.GtfsFarePaymentMethod;
-import org.mobilitydata.gtfsvalidator.table.GtfsFarePaymentType;
+import org.mobilitydata.gtfsvalidator.table.GtfsFarePaymentOption;
+import org.mobilitydata.gtfsvalidator.table.GtfsFarePaymentOptionType;
 
 @RunWith(JUnit4.class)
-public class FarePaymentTypeNameValidatorTest {
+public class FarePaymentOptionNameValidatorTest {
 
   @Test
   public void testTransitCard() {
     assertThat(
             validationNoticesFor(
-                new GtfsFarePaymentType.Builder()
+                new GtfsFarePaymentOption.Builder()
                     .setCsvRowNumber(2)
-                    .setFarePaymentTypeName("Go! Pass")
-                    .setFarePaymentType(GtfsFarePaymentMethod.TRANSIT_CARD)
+                    .setFarePaymentOptionName("Go! Pass")
+                    .setFarePaymentOptionType(GtfsFarePaymentOptionType.TRANSIT_CARD)
                     .build()))
         .isEmpty();
     assertThat(
             validationNoticesFor(
-                new GtfsFarePaymentType.Builder()
+                new GtfsFarePaymentOption.Builder()
                     .setCsvRowNumber(2)
-                    .setFarePaymentType(GtfsFarePaymentMethod.TRANSIT_CARD)
+                    .setFarePaymentOptionType(GtfsFarePaymentOptionType.TRANSIT_CARD)
                     .build()))
         .containsExactly(
             new MissingRecommendedFieldNotice(
-                "fare_payment_types.txt", 2, "fare_payment_type_name"));
+                "fare_payment_options.txt", 2, "fare_payment_option_name"));
   }
 
   @Test
   public void testCash() {
     assertThat(
             validationNoticesFor(
-                new GtfsFarePaymentType.Builder()
+                new GtfsFarePaymentOption.Builder()
                     .setCsvRowNumber(2)
-                    .setFarePaymentType(GtfsFarePaymentMethod.CASH)
+                    .setFarePaymentOptionType(GtfsFarePaymentOptionType.CASH)
                     .build()))
         .isEmpty();
     assertThat(
             validationNoticesFor(
-                new GtfsFarePaymentType.Builder()
+                new GtfsFarePaymentOption.Builder()
                     .setCsvRowNumber(2)
-                    .setFarePaymentTypeName("Cash")
-                    .setFarePaymentType(GtfsFarePaymentMethod.CASH)
+                    .setFarePaymentOptionName("Cash")
+                    .setFarePaymentOptionType(GtfsFarePaymentOptionType.CASH)
                     .build()))
         .isEmpty();
   }
 
-  private List<ValidationNotice> validationNoticesFor(GtfsFarePaymentType entity) {
-    FarePaymentTypeNameValidator validator = new FarePaymentTypeNameValidator();
+  private List<ValidationNotice> validationNoticesFor(GtfsFarePaymentOption entity) {
+    FarePaymentOptionNameValidator validator = new FarePaymentOptionNameValidator();
     NoticeContainer noticeContainer = new NoticeContainer();
     validator.validate(entity, noticeContainer);
     return noticeContainer.getValidationNotices();
