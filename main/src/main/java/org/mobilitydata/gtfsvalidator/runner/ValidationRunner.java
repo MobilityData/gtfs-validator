@@ -34,12 +34,11 @@ import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
 import org.mobilitydata.gtfsvalidator.report.HtmlReportGenerator;
-import org.mobilitydata.gtfsvalidator.table.ClassGraphTableDiscoverer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
 import org.mobilitydata.gtfsvalidator.util.VersionInfo;
 import org.mobilitydata.gtfsvalidator.util.VersionResolver;
-import org.mobilitydata.gtfsvalidator.validator.ClassGraphValidatorDiscoverer;
+import org.mobilitydata.gtfsvalidator.validator.ClassGraphDiscovery;
 import org.mobilitydata.gtfsvalidator.validator.DefaultValidatorProvider;
 import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
@@ -78,12 +77,14 @@ public class ValidationRunner {
 
     ValidatorLoader validatorLoader = null;
     try {
-      validatorLoader = ValidatorLoader.createForClasses(ClassGraphValidatorDiscoverer.discoverInDefaultPackage());
+      validatorLoader =
+          ValidatorLoader.createForClasses(
+              ClassGraphDiscovery.discoverValidatorsInDefaultPackage());
     } catch (ValidatorLoaderException e) {
       logger.atSevere().withCause(e).log("Cannot load validator classes");
       return Status.EXCEPTION;
     }
-    GtfsFeedLoader feedLoader = new GtfsFeedLoader(ClassGraphTableDiscoverer.discover());
+    GtfsFeedLoader feedLoader = new GtfsFeedLoader(ClassGraphDiscovery.discoverTables());
 
     logger.atInfo().log("validation config:\n%s", config);
     logger.atInfo().log("validators:\n%s", validatorLoader.listValidators());

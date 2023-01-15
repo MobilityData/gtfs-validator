@@ -44,12 +44,23 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorUtil;
  */
 public class GtfsFeedLoader {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-  private final HashMap<String, GtfsTableDescriptor> tableDescriptors = new HashMap<>();
+  private final HashMap<String, GtfsTableDescriptor<?>> tableDescriptors = new HashMap<>();
   private int numThreads = 1;
 
-  public GtfsFeedLoader(ImmutableList<GtfsTableDescriptor<?>> tableDescriptors) {
-    for (GtfsTableDescriptor<?> tableDescriptor : tableDescriptors) {
-      this.tableDescriptors.put(tableDescriptor.gtfsFilename(), tableDescriptor);
+  public GtfsFeedLoader(
+      ImmutableList<Class<? extends GtfsTableDescriptor<?>>> tableDescriptorClasses) {
+    for (Class<? extends GtfsTableDescriptor<?>> clazz : tableDescriptorClasses) {
+      GtfsTableDescriptor<?> descriptor;
+      try {
+        descriptor = clazz.asSubclass(GtfsTableDescriptor.class).getConstructor().newInstance();
+      } catch (ReflectiveOperationException e) {
+        logger.atSevere().withCause(e).log(
+            "Possible bug in GTFS annotation processor: expected a constructor without parameters"
+                + " for %s",
+            clazz.getName());
+        continue;
+      }
+      tableDescriptors.put(descriptor.gtfsFilename(), descriptor);
     }
   }
 
