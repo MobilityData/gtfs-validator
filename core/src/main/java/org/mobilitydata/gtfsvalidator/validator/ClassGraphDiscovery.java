@@ -7,9 +7,7 @@ import io.github.classgraph.ScanResult;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableDescriptor;
 
-/*
-Discovers GTFS table descriptor and validator classes in the given Java packages.
- */
+/** Discovers GTFS table descriptor and validator classes in the given Java packages. */
 public class ClassGraphDiscovery {
 
   public static final String DEFAULT_VALIDATOR_PACKAGE = "org.mobilitydata.gtfsvalidator.validator";
