@@ -22,7 +22,6 @@ import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.VALIDAT
 import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 import java.io.IOException;
@@ -51,7 +50,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 public class GtfsAnnotationProcessor extends AbstractProcessor {
 
   private final Analyser analyser = new Analyser();
-  private boolean registriesGenerated = false;
 
   /**
    * Sanitizes the result of {@link RoundEnvironment#getElementsAnnotatedWith}, which otherwise can
@@ -120,21 +118,8 @@ public class GtfsAnnotationProcessor extends AbstractProcessor {
     generatedValidators.addAll(
         new CurrencyAmountValidatorGenerator().generateValidator(fileDescriptors));
 
-    List<ClassName> validatorClasses = new ArrayList<>();
     for (TypeSpec typeSpec : generatedValidators) {
       writeJavaFile(JavaFile.builder(VALIDATOR_PACKAGE_NAME, typeSpec).build());
-      validatorClasses.add(ClassName.get(VALIDATOR_PACKAGE_NAME, typeSpec.name));
-    }
-    for (TypeElement type : typesIn(annotatedElementsIn(roundEnv, GtfsValidator.class))) {
-      validatorClasses.add(ClassName.get(type));
-    }
-
-    if (!registriesGenerated) {
-      // AnnotationProcessor.process method runs multiple times. We generate registries only during
-      // the first round.
-      registriesGenerated = true;
-      writeJavaFile(new TableRegistryGenerator(fileDescriptors).generateRegistry());
-      writeJavaFile(new ValidatorRegistryGenerator(validatorClasses).generateRegistry());
     }
     return false;
   }
