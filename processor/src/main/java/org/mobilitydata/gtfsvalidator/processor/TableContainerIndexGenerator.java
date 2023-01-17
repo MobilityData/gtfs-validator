@@ -68,8 +68,7 @@ class TableContainerIndexGenerator {
           fileDescriptor.getSingleColumnPrimaryKey(),
           classNames.entityImplementationTypeName());
     } else if (fileDescriptor.hasMultiColumnPrimaryKey()) {
-      addMapByCompositeKey(
-          typeSpec, fileDescriptor.primaryKeys(), classNames.entityImplementationTypeName());
+      addMapByCompositeKey(typeSpec, classNames.entityImplementationTypeName());
     }
 
     for (GtfsFieldDescriptor indexField : fileDescriptor.indices()) {
@@ -164,9 +163,7 @@ class TableContainerIndexGenerator {
             .build());
   }
 
-  private static void addMapByCompositeKey(
-      TypeSpec.Builder typeSpec, ImmutableList<GtfsFieldDescriptor> keys, TypeName entityTypeName) {
-
+  private static void addMapByCompositeKey(TypeSpec.Builder typeSpec, TypeName entityTypeName) {
     // Field: Map<CompositeKey, EntityType?> byCompositeKeyMap;
     TypeName keyMapType =
         ParameterizedTypeName.get(
