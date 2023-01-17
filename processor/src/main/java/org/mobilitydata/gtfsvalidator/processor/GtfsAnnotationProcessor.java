@@ -83,7 +83,6 @@ public class GtfsAnnotationProcessor extends AbstractProcessor {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     List<GtfsEnumDescriptor> enumDescriptors = new ArrayList<>();
     for (TypeElement type : typesIn(annotatedElementsIn(roundEnv, GtfsEnumValues.class))) {
