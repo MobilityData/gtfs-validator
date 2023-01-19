@@ -41,7 +41,7 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
     if(stop.locationType() == GtfsLocationType.STOP
     || stop.locationType() == GtfsLocationType.STATION
     || stop.locationType() == GtfsLocationType.ENTRANCE){
-      if(stop.stopName() == null || stop.stopName().length() == 0) {
+      if(stop.stopName().isEmpty()) {
         noticeContainer.addValidationNotice(
                 new MissingStopNameNotice(
                         stop.csvRowNumber(), stop.stopId(), stop.locationType(), stop.stopDesc()));
