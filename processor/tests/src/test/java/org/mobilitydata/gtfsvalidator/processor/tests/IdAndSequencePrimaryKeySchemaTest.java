@@ -25,19 +25,19 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.table.IdAndSequencePrimaryKey;
 import org.mobilitydata.gtfsvalidator.table.IdAndSequencePrimaryKeyTableContainer;
-import org.mobilitydata.gtfsvalidator.table.IdAndSequencePrimaryKeyTableLoader;
+import org.mobilitydata.gtfsvalidator.table.IdAndSequencePrimaryKeyTableDescriptor;
 import org.mobilitydata.gtfsvalidator.testing.LoadingHelper;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 
 @RunWith(JUnit4.class)
 public class IdAndSequencePrimaryKeySchemaTest {
 
-  private IdAndSequencePrimaryKeyTableLoader loader;
+  private IdAndSequencePrimaryKeyTableDescriptor tableDescriptor;
   private LoadingHelper helper;
 
   @Before
   public void setup() {
-    loader = new IdAndSequencePrimaryKeyTableLoader();
+    tableDescriptor = new IdAndSequencePrimaryKeyTableDescriptor();
     helper = new LoadingHelper();
   }
 
@@ -45,7 +45,12 @@ public class IdAndSequencePrimaryKeySchemaTest {
   public void testTableContainer() throws ValidatorLoaderException {
     IdAndSequencePrimaryKeyTableContainer container =
         helper.load(
-            loader, "id,sequence,fruit", "a,1,apples", "a,2,bananas", "b,2,dates", "b,1,cherries");
+            tableDescriptor,
+            "id,sequence,fruit",
+            "a,1,apples",
+            "a,2,bananas",
+            "b,2,dates",
+            "b,1,cherries");
 
     assertThat(container.getKeyColumnNames()).containsExactly("id", "sequence");
 
@@ -61,7 +66,7 @@ public class IdAndSequencePrimaryKeySchemaTest {
   @Test
   public void testDuplicates() throws ValidatorLoaderException {
     IdAndSequencePrimaryKeyTableContainer container =
-        helper.load(loader, "id,sequence,fruit", "a,1,apples", "a,1,bananas");
+        helper.load(tableDescriptor, "id,sequence,fruit", "a,1,apples", "a,1,bananas");
 
     assertThat(helper.getValidationNotices()).hasSize(1);
     assertThat(helper.getValidationNotices().get(0).getCode()).isEqualTo("duplicate_key");

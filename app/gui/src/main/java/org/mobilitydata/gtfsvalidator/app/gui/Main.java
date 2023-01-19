@@ -112,6 +112,8 @@ public class Main {
     }
 
     app.pack();
+    app.setMinimumSize(app.getSize());
+
     // This causes the application window to center in the screen.
     app.setLocationRelativeTo(null);
     app.setVisible(true);

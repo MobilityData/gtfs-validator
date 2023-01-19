@@ -86,7 +86,7 @@ public class NoticeSchemaGeneratorTest {
             "childFilename",
             String.class,
             "csvRowNumber",
-            long.class,
+            int.class,
             "fieldValue",
             String.class,
             "parentFieldName",

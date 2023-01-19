@@ -60,7 +60,7 @@ Sample outputs:
       ]
     },
     {
-      "noticeCode": "fourth_notice_code",
+      "noticeCode": "second_notice_code",
       "affectedSourcesCount": 1,
       "affectedSources": [
         {
@@ -71,7 +71,7 @@ Sample outputs:
       ]
     },
     {
-      "noticeCode": "second_notice_code",
+      "noticeCode": "third_notice_code",
       "affectedSourcesCount": 1,
       "affectedSources": [
         {
@@ -82,7 +82,7 @@ Sample outputs:
       ]
     },
     {
-      "noticeCode": "third_notice_code",
+      "noticeCode": "fourth_notice_code",
       "affectedSourcesCount": 3,
       "affectedSources": [
         {
@@ -122,6 +122,11 @@ Sample outputs:
 Where each source id value come from the MobilityDatabase: they are a unique [property](http://old.mobilitydatabase.org/wiki/Property:P33) used to identify each source of data.
 
 The source id can be used to find all datasets versions of a source on the [MobilityDatabase](http://old.mobilitydatabase.org/wiki/Main_Page) for the sakes of debugging or exploration.
+
+## What do we do with the results?
+We follow this process:
+
+<img src="/docs/Acceptance-test-process.jpg" width="750">
 
 ## Instructions to run the pipeline
 

@@ -30,15 +30,12 @@ public abstract class GtfsFieldDescriptor {
     return new AutoValue_GtfsFieldDescriptor.Builder();
   }
 
+  // Static properties.
   public abstract String name();
 
   public abstract FieldTypeEnum type();
 
   public abstract TypeMirror javaType();
-
-  public abstract boolean recommended();
-
-  public abstract boolean required();
 
   public abstract Optional<PrimaryKey> primaryKey();
 
@@ -48,11 +45,18 @@ public abstract class GtfsFieldDescriptor {
 
   public abstract Optional<ForeignKeyDescriptor> foreignKey();
 
-  public abstract Optional<RowParser.NumberBounds> numberBounds();
-
   public abstract Optional<String> defaultValue();
 
   public abstract Optional<EndRangeDescriptor> endRange();
+
+  public abstract Optional<String> currencyFieldReference();
+
+  // Dynamic properties.
+  public abstract boolean recommended();
+
+  public abstract boolean required();
+
+  public abstract Optional<RowParser.NumberBounds> numberBounds();
 
   @AutoValue.Builder
   public abstract static class Builder {
@@ -87,6 +91,8 @@ public abstract class GtfsFieldDescriptor {
     public abstract Builder setEndRange(Optional<EndRangeDescriptor> value);
 
     public abstract Builder setEndRange(EndRangeDescriptor value);
+
+    public abstract Builder setCurrencyFieldReference(String currencyField);
 
     public abstract GtfsFieldDescriptor build();
   }

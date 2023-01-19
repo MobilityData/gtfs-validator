@@ -29,59 +29,68 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 
 ## Table of ERRORS
 
-| Notice code                                                                                                       | Description                                                                                                                                            |
-|-------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`block_trips_with_overlapping_stop_times`](#block_trips_with_overlapping_stop_times)                             | Block trips with overlapping stop times.                                                                                                               |
-| [`csv_parsing_failed`](#csv_parsing_failed)                                                                       | Parsing of a CSV file failed.                                                                                                                          |
-| [`decreasing_shape_distance`](#decreasing_shape_distance)                                                         | Decreasing `shape_dist_traveled` in `shapes.txt`.                                                                                                      |
-| [`decreasing_or_equal_stop_time_distance`](#decreasing_or_equal_stop_time_distance)                               | Decreasing or equal `shape_dist_traveled` in `stop_times.txt`.                                                                                         |
-| [`duplicated_column`](#duplicated_column)                                                                         | Duplicated column in CSV.                                                                                                                              |
-| [`duplicate_fare_rule_zone_id_fields`](#duplicate_fare_rule_zone_id_fields)                                       | Duplicate rows from `fare_rules.txt` based on `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.contains_id` and `fare_rules.destination_id`. |
-| [`duplicate_key`](#duplicate_key)                                                                                 | Duplicated entity.                                                                                                                                     |
-| [`empty_column_name`](#empty_column_name)                                                                         | A column name is empty.                                                                                                                                |
-| [`empty_file`](#empty_file)                                                                                       | A CSV file is empty.                                                                                                                                   |
-| [`equal_shape_distance_diff_coordinates`](#equal_shape_distance_diff_coordinates)                                 | Two consecutive points have equal `shape_dist_traveled` and different lat/lon coordinates in `shapes.txt`.                                             |
-| [`foreign_key_violation`](#foreign_key_violation)                                                                 | Wrong foreign key.                                                                                                                                     |
-| [`inconsistent_agency_timezone`](#inconsistent_agency_timezone)                                                   | Inconsistent Timezone among agencies.                                                                                                                  |
-| [`invalid_color`](#invalid_color)                                                                                 | A field contains an invalid color value.                                                                                                               |
-| [`invalid_currency`](#invalid_currency)                                                                           | A field contains a wrong currency code.                                                                                                                |
-| [`invalid_date`](#invalid_date)                                                                                   | A field cannot be parsed as date.                                                                                                                      |
-| [`invalid_email`](#invalid_email)                                                                                 | A field contains a malformed email address.                                                                                                            |
-| [`invalid_float`](#invalid_float)                                                                                 | A field cannot be parsed as a floating point number.                                                                                                   |
-| [`invalid_integer`](#invalid_integer)                                                                             | A field cannot be parsed as an integer.                                                                                                                |
-| [`invalid_language_code`](#invalid_language_code)                                                                 | A field contains a wrong language code.                                                                                                                |
-| [`invalid_phone_number`](#invalid_phone_number)                                                                   | A field contains a malformed phone number.                                                                                                             |
-| [`invalid_row_length`](#invalid_row_length)                                                                       | Invalid csv row length.                                                                                                                                |
-| [`invalid_time`](#invalid_time)                                                                                   | A field cannot be parsed as time.                                                                                                                      |
-| [`invalid_timezone`](#invalid_timezone)                                                                           | A field cannot be parsed as a timezone.                                                                                                                |
-| [`invalid_url`](#invalid_url)                                                                                     | A field contains a malformed URL.                                                                                                                      |
-| [`location_without_parent_station`](#location_without_parent_station)                                             | A location that must have `parent_station` field does not have it.                                                                                     |
-| [`location_with_unexpected_stop_time`](#location_with_unexpected_stop_time)                                       | A location in `stops.txt` that is not a stop is referenced by some `stop_times.stop_id`.                                                               |
-| [`missing_calendar_and_calendar_date_files`](#missing_calendar_and_calendar_date_files)                           | Missing GTFS files `calendar.txt` and `calendar_dates.txt`.                                                                                            |
-| [`missing_level_id`](#missing_level_id)                                                                           | `stops.level_id` is conditionally required.                                                                                                            |
-| [`missing_required_column`](#missing_required_column)                                                             | A required column is missing in the input file.                                                                                                        |
-| [`missing_required_field`](#missing_required_field)                                                               | A required field is missing.                                                                                                                           |
-| [`missing_required_file`](#missing_required_file)                                                                 | A required file is missing.                                                                                                                            |
-| [`missing_trip_edge`](#missing_trip_edge)                                                                         | Missing trip edge `arrival_time` or `departure_time`.                                                                                                  |
-| [`new_line_in_value`](#new_line_in_value)                                                                         | New line or carriage return in a value in CSV file.                                                                                                    |
-| [`number_out_of_range`](#number_out_of_range)                                                                     | Out of range value.                                                                                                                                    |
-| [`overlapping_frequency`](#overlapping_frequency)                                                                 | Trip frequencies overlap.                                                                                                                              |
-| [`pathway_to_platform_with_boarding_areas`](#pathway_to_platform_with_boarding_areas)                             | A pathway has an endpoint that is a platform which has boarding areas.                                                                                 |
-| [`pathway_to_wrong_location_type`](#pathway_to_wrong_location_type)                                               | A pathway has an endpoint that is a station.                                                                                                           |
-| [`pathway_unreachable_location`](#pathway_unreachable_location)                                                   | A location is not reachable at least in one direction: from the entrances or to the exits.                                                             |
-| [`point_near_origin`](#point_near_origin)                                                                         | A point is too close to origin `(0, 0)`.                                                                                                               |
-| [`point_near_pole`](#point_near_pole)                                                                             | A point is too close to the North or South Pole.                                                                                                       |
-| [`route_both_short_and_long_name_missing`](#route_both_short_and_long_name_missing)                               | Missing route short name and long name.                                                                                                                |
-| [`start_and_end_range_equal`](#start_and_end_range_equal)                                                         | Two date or time fields are equal.                                                                                                                     |
-| [`start_and_end_range_out_of_order`](#start_and_end_range_out_of_order)                                           | Two date or time fields are out of order.                                                                                                              |
-| [`station_with_parent_station`](#station_with_parent_station)                                                     | A station has `parent_station` field set.                                                                                                              |
-| [`stop_time_timepoint_without_times`](#stop_time_timepoint_without_times)                                         | `arrival_time` or `departure_time` not specified for timepoint.                                                                                        |
-| [`stop_time_with_arrival_before_previous_departure_time`](#stop_time_with_arrival_before_previous_departure_time) | Backwards time travel between stops in `stop_times.txt`                                                                                                |
-| [`stop_time_with_only_arrival_or_departure_time`](#stop_time_with_only_arrival_or_departure_time)                 | Missing `stop_times.arrival_time` or `stop_times.departure_time`.                                                                                      |
-| [`stop_without_zone_id`](#stop_without_zone_id)                                                                   | Stop without value for `stops.zone_id`.                                                                                                                |
-| [`translation_foreign_key_violation`](#translation_foreign_key_violation)                                         | An entity with the given `record_id` and `record_sub_id` cannot be found in the referenced table.                                                      |
-| [`translation_unexpected_value`](#translation_unexpected_value)                                                   | A field in a translations row has value but must be empty.                                                                                             |
-| [`wrong_parent_location_type`](#wrong_parent_location_type)                                                       | Incorrect type of the parent location.                                                                                                                 |
+| Notice code                                                                                                                       | Description                                                                                                                                            |
+|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`block_trips_with_overlapping_stop_times`](#block_trips_with_overlapping_stop_times)                                             | Block trips with overlapping stop times.                                                                                                               |
+| [`csv_parsing_failed`](#csv_parsing_failed)                                                                                       | Parsing of a CSV file failed.                                                                                                                          |
+| [`decreasing_shape_distance`](#decreasing_shape_distance)                                                                         | Decreasing `shape_dist_traveled` in `shapes.txt`.                                                                                                      |
+| [`decreasing_or_equal_stop_time_distance`](#decreasing_or_equal_stop_time_distance)                                               | Decreasing or equal `shape_dist_traveled` in `stop_times.txt`.                                                                                         |
+| [`duplicated_column`](#duplicated_column)                                                                                         | Duplicated column in CSV.                                                                                                                              |
+| [`duplicate_key`](#duplicate_key)                                                                                                 | Duplicated entity.                                                                                                                                     |
+| [`empty_column_name`](#empty_column_name)                                                                                         | A column name is empty.                                                                                                                                |
+| [`empty_file`](#empty_file)                                                                                                       | A CSV file is empty.                                                                                                                                   |
+| [`equal_shape_distance_diff_coordinates`](#equal_shape_distance_diff_coordinates)                                                 | Two consecutive points have equal `shape_dist_traveled` and different lat/lon coordinates in `shapes.txt`.                                             |
+| [`fare_transfer_rule_duration_limit_type_without_duration_limit`](#fare_transfer_rule_duration_limit_type_without_duration_limit) | A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit_type` field but no `duration_limit` specified.                            |
+| [`fare_transfer_rule_duration_limit_without_type`](#fare_transfer_rule_duration_limit_without_type)                               | A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit` field but no `duration_limit_type` specified.                            |
+| [`fare_transfer_rule_invalid_transfer_count`](#fare_transfer_rule_invalid_transfer_count)                                         | A row from GTFS file `fare_transfer_rules.txt` has a defined `transfer_count` with an invalid value.                                                   |
+| [`fare_transfer_rule_missing_transfer_count`](#fare_transfer_rule_missing_transfer_count)                                         | A row from `fare_transfer_rules.txt` has `from_leg_group_id` equal to `to_leg_group_id`, but has no `transfer_count` specified.                        |
+| [`fare_transfer_rule_with_forbidden_transfer_count`](#fare_transfer_rule_with_forbidden_transfer_count)                           | A row from `fare_transfer_rules.txt` has `from_leg_group_id` not equal to `to_leg_group_id`, but has `transfer_count` specified.                       |
+| [`foreign_key_violation`](#foreign_key_violation)                                                                                 | Wrong foreign key.                                                                                                                                     |
+| [`inconsistent_agency_timezone`](#inconsistent_agency_timezone)                                                                   | Inconsistent Timezone among agencies.                                                                                                                  |
+| [`invalid_color`](#invalid_color)                                                                                                 | A field contains an invalid color value.                                                                                                               |
+| [`invalid_currency`](#invalid_currency)                                                                                           | A field contains a wrong currency code.                                                                                                                |
+| [`invalid_currency_amount`](#invalid_currency_amount)                                                                             | A currency amount field has a value that does not match the format of its corresponding currency code field.                                           |
+| [`invalid_date`](#invalid_date)                                                                                                   | A field cannot be parsed as date.                                                                                                                      |
+| [`invalid_email`](#invalid_email)                                                                                                 | A field contains a malformed email address.                                                                                                            |
+| [`invalid_float`](#invalid_float)                                                                                                 | A field cannot be parsed as a floating point number.                                                                                                   |
+| [`invalid_integer`](#invalid_integer)                                                                                             | A field cannot be parsed as an integer.                                                                                                                |
+| [`invalid_language_code`](#invalid_language_code)                                                                                 | A field contains a wrong language code.                                                                                                                |
+| [`invalid_phone_number`](#invalid_phone_number)                                                                                   | A field contains a malformed phone number.                                                                                                             |
+| [`invalid_row_length`](#invalid_row_length)                                                                                       | Invalid csv row length.                                                                                                                                |
+| [`invalid_time`](#invalid_time)                                                                                                   | A field cannot be parsed as time.                                                                                                                      |
+| [`invalid_timezone`](#invalid_timezone)                                                                                           | A field cannot be parsed as a timezone.                                                                                                                |
+| [`invalid_url`](#invalid_url)                                                                                                     | A field contains a malformed URL.                                                                                                                      |
+| [`location_without_parent_station`](#location_without_parent_station)                                                             | A location that must have `parent_station` field does not have it.                                                                                     |
+| [`location_with_unexpected_stop_time`](#location_with_unexpected_stop_time)                                                       | A location in `stops.txt` that is not a stop is referenced by some `stop_times.stop_id`.                                                               |
+| [`missing_calendar_and_calendar_date_files`](#missing_calendar_and_calendar_date_files)                                           | Missing GTFS files `calendar.txt` and `calendar_dates.txt`.                                                                                            |
+| [`missing_level_id`](#missing_level_id)                                                                                           | `stops.level_id` is conditionally required.                                                                                                            |
+| [`missing_required_column`](#missing_required_column)                                                                             | A required column is missing in the input file.                                                                                                        |
+| [`missing_required_field`](#missing_required_field)                                                                               | A required field is missing.                                                                                                                           |
+| [`missing_required_file`](#missing_required_file)                                                                                 | A required file is missing.                                                                                                                            |
+| [`missing_trip_edge`](#missing_trip_edge)                                                                                         | Missing trip edge `arrival_time` or `departure_time`.                                                                                                  |
+| [`new_line_in_value`](#new_line_in_value)                                                                                         | New line or carriage return in a value in CSV file.                                                                                                    |
+| [`number_out_of_range`](#number_out_of_range)                                                                                     | Out of range value.                                                                                                                                    |
+| [`overlapping_frequency`](#overlapping_frequency)                                                                                 | Trip frequencies overlap.                                                                                                                              |
+| [`pathway_to_platform_with_boarding_areas`](#pathway_to_platform_with_boarding_areas)                                             | A pathway has an endpoint that is a platform which has boarding areas.                                                                                 |
+| [`pathway_to_wrong_location_type`](#pathway_to_wrong_location_type)                                                               | A pathway has an endpoint that is a station.                                                                                                           |
+| [`pathway_unreachable_location`](#pathway_unreachable_location)                                                                   | A location is not reachable at least in one direction: from the entrances or to the exits.                                                             |
+| [`point_near_origin`](#point_near_origin)                                                                                         | A point is too close to origin `(0, 0)`.                                                                                                               |
+| [`point_near_pole`](#point_near_pole)                                                                                             | A point is too close to the North or South Pole.                                                                                                       |
+| [`route_both_short_and_long_name_missing`](#route_both_short_and_long_name_missing)                                               | Missing route short name and long name.                                                                                                                |
+| [`start_and_end_range_equal`](#start_and_end_range_equal)                                                                         | Two date or time fields are equal.                                                                                                                     |
+| [`start_and_end_range_out_of_order`](#start_and_end_range_out_of_order)                                                           | Two date or time fields are out of order.                                                                                                              |
+| [`station_with_parent_station`](#station_with_parent_station)                                                                     | A station has `parent_station` field set.                                                                                                              |
+| [`stop_time_timepoint_without_times`](#stop_time_timepoint_without_times)                                                         | `arrival_time` or `departure_time` not specified for timepoint.                                                                                        |
+| [`stop_time_with_arrival_before_previous_departure_time`](#stop_time_with_arrival_before_previous_departure_time)                 | Backwards time travel between stops in `stop_times.txt`                                                                                                |
+| [`stop_time_with_only_arrival_or_departure_time`](#stop_time_with_only_arrival_or_departure_time)                                 | Missing `stop_times.arrival_time` or `stop_times.departure_time`.                                                                                      |
+| [`stop_without_zone_id`](#stop_without_zone_id)                                                                                   | Stop without value for `stops.zone_id`.                                                                                                                |
+| [`too_many_rows`](#too_many_rows)                                                                                                 | A CSV file has too many rows.                                                                                                                          |
+| [`transfer_with_invalid_stop_location_type`](#transfer_with_invalid_stop_location_type)                                           | A stop id field from GTFS file `transfers.txt` references a stop that has a `location_type` other than 0 or 1 (aka Stop/Platform or Station).          |
+| [`transfer_with_invalid_trip_and_route`](#transfer_with_invalid_trip_and_route)                                                   | A trip id field from GTFS file `transfers.txt` references a route that does not match its `trips.txt` `route_id`.                                      |
+| [`transfer_with_invalid_trip_and_stop`](#transfer_with_invalid_trip_and_stop)                                                     | A trip id field from GTFS file `transfers.txt` references a stop that is not included in the referenced trip's stop-times.                             |
+| [`translation_foreign_key_violation`](#translation_foreign_key_violation)                                                         | An entity with the given `record_id` and `record_sub_id` cannot be found in the referenced table.                                                      |
+| [`translation_unexpected_value`](#translation_unexpected_value)                                                                   | A field in a translations row has value but must be empty.                                                                                             |
+| [`wrong_parent_location_type`](#wrong_parent_location_type)                                                                       | Incorrect type of the parent location.                                                                                                                 |
 
 <a name="WARNINGS"/>
 
@@ -95,13 +104,14 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`equal_shape_distance_same_coordinates`](#equal_shape_distance_same_coordinates)             | Two consecutive points have equal `shape_dist_traveled` and the same lat/lon coordinates in `shapes.txt`.                                                     |
 | [`fast_travel_between_consecutive_stops`](#fast_travel_between_consecutive_stops)             | A transit vehicle moves too fast between two consecutive stops.                                                                                               |
 | [`fast_travel_between_far_stops`](#fast_travel_between_far_stops)                             | A transit vehicle moves too fast between two far stops.                                                                                                       |
-| [`feed_expiration_date`](#feed_expiration_date)                                               | Dataset should be valid for at least the next 7 days. Dataset should cover at least the next 30 days of service.                                              |
+| [`feed_expiration_date_7_days`](#feed_expiration_date_7_days)                                 | Dataset should be valid for at least the next 7 days.                                                                                                         |
+| [`feed_expiration_date_30_days`](#feed_expiration_date_30_days)                               | Dataset should cover at least the next 30 days of service.                                                                                                    |
 | [`feed_info_lang_and_agency_mismatch`](#feed_info_lang_and_agency_mismatch)                   | Mismatching feed and agency language fields.                                                                                                                  |
 | [`inconsistent_agency_lang`](#inconsistent_agency_lang)                                       | Inconsistent language among agencies.                                                                                                                         |
 | [`leading_or_trailing_whitespaces`](#leading_or_trailing_whitespaces)                         | The value in CSV file has leading or trailing whitespaces.                                                                                                    |
 | [`missing_feed_info_date`](#missing_feed_info_date)                                           | `feed_end_date` should be provided if `feed_start_date` is provided. `feed_start_date` should be provided if `feed_end_date` is provided.                     |
-| [`missing_recommended_file`](#missing_recommended_file)                                       | A recommended file is missing.                     |
-| [`missing_recommended_field`](#missing_recommended_field)                                        | A recommended field is missing.                     |
+| [`missing_recommended_file`](#missing_recommended_file)                                       | A recommended file is missing.                                                                                                                                |
+| [`missing_recommended_field`](#missing_recommended_field)                                     | A recommended field is missing.                                                                                                                               |
 | [`missing_timepoint_column`](#missing_timepoint_column)                                       | `timepoint` column is missing for a dataset.                                                                                                                  |
 | [`missing_timepoint_value`](#missing_timepoint_value)                                         | `stop_times.timepoint` value is missing for a record.                                                                                                         |
 | [`more_than_one_entity`](#more_than_one_entity)                                               | More than one row in CSV.                                                                                                                                     |
@@ -122,11 +132,13 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`stop_too_far_from_shape`](#stop_too_far_from_shape)                                         | Stop too far from trip shape.                                                                                                                                 |
 | [`stop_too_far_from_shape_using_user_distance`](#stop_too_far_from_shape_using_user_distance) | Stop time too far from shape.                                                                                                                                 |
 | [`stop_without_stop_time`](#stop_without_stop_time)                                           | A stop in `stops.txt` is not referenced by any `stop_times.stop_id`.                                                                                          |
+| [`transfer_with_suspicious_mid_trip_in_seat`](#transfer_with_suspicious_mid_trip_in_seat)     | A trip id field from GTFS file `transfers.txt` with an in-seat transfer type references a stop that is not in the expected position in the trip's stop-times. |
 | [`translation_unknown_table_name`](#translation_unknown_table_name)                           | A translation references an unknown or missing GTFS table.                                                                                                    |
 | [`unexpected_enum_value`](#unexpected_enum_value)                                             | An enum has an unexpected value.                                                                                                                              |
 | [`unusable_trip`](#unusable_trip)                                                             | Trips must have more than one stop to be usable.                                                                                                              |
 | [`unused_shape`](#unused_shape)                                                               | Shape is not used in GTFS file `trips.txt`.                                                                                                                   |
 | [`unused_trip`](#unused_trip)                                                                 | Trip is not be used in `stop_times.txt`                                                                                                                       |
+|                                                                                               |                                                                                                                                                               |
 
 <a name="INFOS"/>
 
@@ -235,10 +247,10 @@ When sorted by `shape.shape_pt_sequence`, two consecutive shape points must not 
 
 ### decreasing_or_equal_stop_time_distance
 
-When sorted by `stop_times.stop_pt_sequence`, two consecutive stop times in a trip should have increasing distance. If the values are equal, this is considered as an error.  
+When sorted by `stop_times.stop_sequence`, two consecutive entries in `stop_times.txt` should have increasing distance, based on the field `shape_dist_traveled`. If the values are equal, this is considered as an error.  
 
 #### References
-* [stops.txt specification](https://gtfs.org/reference/static#stopstxt)
+* [stops_times.txt specification](https://gtfs.org/reference/static#stop_timestxt)
 
 <details>
 
@@ -279,30 +291,6 @@ The input file CSV header has the same column name repeated.
 
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
-
-</details>
-
-<a name="DuplicateFareRuleZoneIdFieldsNotice"/>
-
-### duplicate_fare_rule_zone_id_fields
-
-The combination of `fare_rules.route_id`, `fare_rules.origin_id`, `fare_rules.contains_id` and `fare_rules.destination_id` fields should be unique in GTFS file `fare_rules.txt`.
-
-#### References
-* [Original Python validator implementation](https://github.com/google/transitfeed)
-* [fare_rules.txt specification](http://gtfs.org/reference/static/#fare_rulestxt)
-<details>
-
-#### Notice fields description
-| Field name           	| Description                     	| Type    	|
-|----------------------	|---------------------------------	|---------	|
-| `csvRowNumber`       	| The row of the first occurrence. 	| Long  	  |
-| `fareId`             	| The id of the first occurrence.  	| String  	|
-| `previousCsvRowNumber`| The row of the other occurrence. 	| Long   	  |
-| `previousFareId`     	| The id of the other occurrence.  	| Integer 	|
-
-#### Affected files
-* [fare_rules.txt](http://gtfs.org/reference/static/#fare_rulestxt)
 
 </details>
 
@@ -401,11 +389,117 @@ When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` m
 
 </details>
 
+<a name="FareTransferRuleDurationLimitTypeWithoutDurationLimitNotice"/>
+
+### fare_transfer_rule_duration_limit_type_without_duration_limit
+
+A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit_type` field but no `duration_limit` specified.
+
+#### References
+* [GTFS fare_transfer_rules.txt](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+<details>
+
+#### Notice fields description
+| Field name      	| Description                                        	| Type   	|
+|-----------------	|----------------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row of the faulty record.                      	| Long   	|
+
+#### Affected files
+* [`fare_transfer_rules.txt`](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+</details>
+
+<a name="FareTransferRuleDurationLimitWithoutTypeNotice"/>
+
+### fare_transfer_rule_duration_limit_without_type 
+
+A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit` field but no `duration_limit_type` specified.
+
+#### References
+* [GTFS fare_transfer_rules.txt](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+<details>
+
+#### Notice fields description
+| Field name      	| Description                                        	| Type   	|
+|-----------------	|----------------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row of the faulty record.                      	| Long   	|
+
+#### Affected files
+* [`fare_transfer_rules.txt`](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+</details>
+
+<a name="FareTransferRuleInvalidTransferCountNotice"/>
+
+### fare_transfer_rule_invalid_transfer_count
+
+A row from GTFS file `fare_transfer_rules.txt` has a defined `transfer_count` with an invalid value.
+
+#### References
+* [GTFS fare_transfer_rules.txt](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+<details>
+
+#### Notice fields description
+| Field name      	| Description                                        	| Type   	|
+|-----------------	|----------------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row of the faulty record.                      	| Long   	|
+| `transferCount`   	| The transfer count value of the faulty record.      	| Integer	|
+
+#### Affected files
+* [`fare_transfer_rules.txt`](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+</details>
+
+<a name="FareTransferRuleMissingTransferCountNotice"/>
+
+### fare_transfer_rule_missing_transfer_count
+
+A row from GTFS file `fare_transfer_rules.txt` has `from_leg_group_id` equal to `to_leg_group_id`, but has no `transfer_count` specified.  Per the spec, `transfer_count` is required if the two leg group ids are equal.
+
+#### References
+* [GTFS fare_transfer_rules.txt](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+<details>
+
+#### Notice fields description
+| Field name      	| Description                                        	| Type   	|
+|-----------------	|----------------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row of the faulty record.                      	| Long   	|
+
+#### Affected files
+* [`fare_transfer_rules.txt`](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+</details>
+
+<a name="FareTransferRuleWithForbiddenTransferCountNotice"/>
+
+### fare_transfer_rule_with_forbidden_transfer_count
+
+A row from GTFS file `fare_transfer_rules.txt` has `from_leg_group_id` not equal to `to_leg_group_id`, but has `transfer_count` specified.  Per the spec, `transfer_count` is forbidden if the two leg group ids are not equal.
+
+#### References
+* [GTFS fare_transfer_rules.txt](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+<details>
+
+#### Notice fields description
+| Field name      	| Description                                        	| Type   	|
+|-----------------	|----------------------------------------------------	|--------	|
+| `csvRowNumber`   	| The row of the faulty record.                      	| Long   	|
+
+#### Affected files
+* [`fare_transfer_rules.txt`](https://gtfs.org/schedule/reference/#fare_transfer_rulestxt)
+
+</details>
+
 <a name="ForeignKeyViolationNotice"/>
 
 ### foreign_key_violation
 
-The values of the given key and rows of one table cannot be found a values of the given key in another table. The Foreign keys are defined in the specification under "Type" for each file.
+A foreign key references the primary key of another file. A foreign key violation means that the foreign key referenced from a given row (the child file) cannot be found in the corresponding file (the parent file). The Foreign keys are defined in the specification under "Type" for each file.
 
 #### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
@@ -502,6 +596,29 @@ Value of field with type `currency` is not valid. Currency code must follow <a h
 
 #### Affected files
 * [`fare_attributes.txt`](http://gtfs.org/reference/static#fare_attributestxt)
+
+</details>
+
+<a name="InvalidCurrencyAmountNotice"/>
+
+### invalid_currency_amount
+
+A currency amount field has a value that does not match the format (e.g. expected number of decimal places) of its corresponding currency code field.  The number of decimal places is specified by <a href="https://en.wikipedia.org/wiki/ISO_4217#Active_codes">ISO 4217</a>.
+
+#### References
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
+<details>
+
+#### Notice fields description
+| Field name   	| Description                   	| Type   	|
+|--------------	|-------------------------------	|--------	|
+| `filename`   	| The row of the faulty record. 	| String 	|
+| `csvRowNumber`| The row of the faulty record. 	| Long   	|
+| `fieldName`  	| Faulty record's field name.   	| String 	|
+| `amount` 	| Faulty currency amount value.		| String 	|
+
+#### Affected files
+* [`fare_products.txt`](http://gtfs.org/reference/static#fare_productstxt)
 
 </details>
 
@@ -1318,6 +1435,111 @@ If `fare_rules.txt` is provided, and `fare_rules.txt` uses at least one column a
 
 </details>
 
+<a name="TooManyRowsNotice"/>
+
+### too_many_rows
+
+A CSV file has too many rows. Feeds with too large files cannot be processed in a reasonable time by GTFS consumers.
+
+#### References
+None.
+
+<details>
+
+#### Notice fields description
+| Field name          | Description                                   | Type   |
+|---------------------|-----------------------------------------------|--------|
+| `filename`          | Name of the CSV file that has too many rows.  | String |
+| `rowNumber`         | Number of the row when reading was stopped.   | long   |
+
+</details>
+
+<a name="TransferWithInvalidStopLocationTypeNotice"/>
+
+### transfer_with_invalid_stop_location_type
+
+A `from_stop_id` or `to_stop_id` field from GTFS file `transfers.txt` references a stop that has a `location_type` other than 0 or 1 (aka Stop/Platform or Station).
+
+#### References
+* [transfers.txt specification](http://gtfs.org/reference/static/#transferstxt)
+
+<details>
+
+#### Notice fields description
+| Field name          | Description                                                               | Type   |
+|---------------------|---------------------------------------------------------------------------|--------|
+| `csvRowNumber`      | The row number from `transfers.txt` for the faulty entry.                 | long   |
+| `stopIdFieldName`   | The name of the stop id field (e.g. `from_stop_id`) referencing the stop. | String |
+| `stopId`            | The referenced stop id.                                                   | String |
+| `locationTypeValue` | The numeric value of the invalid location type.                           | int    |
+| `locationTypeName`  | The name of the invalid location type.                                    | String |
+
+</details>
+
+<a name="TransferWithInvalidTripAndRouteNotice"/>
+
+### transfer_with_invalid_trip_and_route
+
+A `from_trip_id` or `to_trip_id` field from GTFS file `transfers.txt` references a route that does not match its `trips.txt` `route_id`.
+
+#### References
+* [transfers.txt specification](http://gtfs.org/reference/static/#transferstxt)
+
+<details>
+
+#### Notice fields description
+| Field name        | Description                                                                  | Type   |
+|-------------------|------------------------------------------------------------------------------|--------|
+| `csvRowNumber`    | The row number from `transfers.txt` for the faulty entry.                    | long   |
+| `tripFieldName`   | The name of the trip id field (e.g. `from_trip_id`) referencing a trip.      | String |
+| `tripId`          | The referenced trip id.                                                      | String |
+| `routeFieldName`  | The name of the route id field (e.g. `from_route_id`) referencing the route. | String |
+| `routeId`         | The referenced route id.                                                     | String |
+| `expectedRouteId` | The expected route id from `trips.txt`.                                      | String |
+
+</details>
+
+<a name="TransferWithInvalidTripAndStopNotice"/>
+
+### transfer_with_invalid_trip_and_stop
+
+A `from_trip_id` or `to_trip_id` field from GTFS file `transfers.txt` references a stop that is not included in the referenced trip's stop-times.
+
+#### References
+* [transfers.txt specification](http://gtfs.org/reference/static/#transferstxt)
+
+<details>
+
+#### Notice fields description
+| Field name      | Description                                                                | Type   |
+|-----------------|----------------------------------------------------------------------------|--------|
+| `csvRowNumber`  | The row number from `transfers.txt` for the faulty entry.                  | long   |
+| `tripFieldName` | The name of the trip id field (e.g. `from_trip_id`) referencing a trip.    | String |
+| `tripId`        | The referenced trip id.                                                    | String |
+| `stopFieldName` | The name of the stop id field (e.g. `stop_route_id`) referencing the stop. | String |
+| `stopId`        | The referenced stop id.                                                    | String |
+
+</details>
+
+<a name="TransferWithSuspiciousMidTripInSeatNotice"/>
+
+### transfer_with_suspicious_mid_trip_in_seat
+
+A `from_trip_id` or `to_trip_id` field from GTFS file `transfers.txt` with an in-seat transfer type references a stop that is not in the expected position in the trip's stop-times. For in-seat transfers, we expect the stop to be the last stop-time in the trip sequence for `from_stop_id` and the first stop-time for `to_stop_id`. If you are intentionally using this feature to model mid-trip transfers, you can ignore this warning, but be aware that this functionality is still considered to be partially experimental in some interpretations of the spec.
+
+<details>
+
+#### Notice fields description
+| Field name        | Description                                                               | Type   |
+|-------------------|---------------------------------------------------------------------------|--------|
+| `csvRowNumber`    | The row number from `transfers.txt` for the faulty entry.                 | long   |
+| `tripIdFieldName` | The name of the trip id field (e.g. `from_trip_id`) referencing a trip.   | String |
+| `tripId`          | The referenced trip id.                                                   | String |
+| `stopIdFieldName` | The name of the stop id field (e.g. `from_stop_id`) referencing the stop. | String |
+| `stopId`          | The referenced stop id.                                                   | String |
+
+</details>
+
 <a name="TranslationForeignKeyViolationNotice"/>
 
 ### translation_foreign_key_violation
@@ -1603,12 +1825,35 @@ Same as for [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsec
 
 </details>
 
-<a name="FeedExpirationDateNotice"/>
+<a name="FeedExpirationDate7DaysNotice"/>
 
-### feed_expiration_date
+### feed_expiration_date_7_days
 
-At any time, the published GTFS dataset should be valid for at least the next 7 days, and ideally for as long as the operator is confident that the schedule will continue to be operated.
-If possible, the GTFS dataset should cover at least the next 30 days of service.
+The dataset expiration date defined in `feed_info.txt` is in seven days or less. At any time, the published GTFS dataset should be valid for at least the next 7 days.
+
+### References
+* [General Publishing & General Practices](https://gtfs.org/best-practices/#dataset-publishing--general-practices)
+
+<details>
+
+#### Notice fields description
+| Field name              	        | Description                                                                     	| Type   	|
+|-------------------------	|----------------------------------------------	        |--------	|
+| `csvRowNumber`           	| The row number of the faulty record.         	                 | Long   	|
+| `currentDate`            	        | Current date (YYYYMMDD format).              	        | String 	|
+| `feedEndDate`            	        | Feed end date (YYYYMMDD format).             	        | String 	|
+| `suggestedExpirationDate`	| Suggested expiration date (YYYYMMDD format). 	| String 	|
+
+#### Affected files
+* [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
+</details>
+
+
+<a name="FeedExpirationDate30DaysNotice"/>
+
+### feed_expiration_date_30_days
+
+At any time, the GTFS dataset should cover at least the next 30 days of service, and ideally for as long as the operator is confident that the schedule will continue to be operated.
 
 #### References
 * [General Publishing & General Practices](https://gtfs.org/best-practices/#dataset-publishing--general-practices)

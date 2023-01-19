@@ -22,26 +22,26 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.table.SingleColumnPrimaryKeyTableContainer;
-import org.mobilitydata.gtfsvalidator.table.SingleColumnPrimaryKeyTableLoader;
+import org.mobilitydata.gtfsvalidator.table.SingleColumnPrimaryKeyTableDescriptor;
 import org.mobilitydata.gtfsvalidator.testing.LoadingHelper;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 
 @RunWith(JUnit4.class)
 public class SingleColumnPrimaryKeySchemaTest {
 
-  private SingleColumnPrimaryKeyTableLoader loader;
+  private SingleColumnPrimaryKeyTableDescriptor tableDescriptor;
   private LoadingHelper helper;
 
   @Before
   public void setup() {
-    loader = new SingleColumnPrimaryKeyTableLoader();
+    tableDescriptor = new SingleColumnPrimaryKeyTableDescriptor();
     helper = new LoadingHelper();
   }
 
   @Test
   public void testTableContainer() throws ValidatorLoaderException {
     SingleColumnPrimaryKeyTableContainer container =
-        helper.load(loader, "id,fruit", "a,apples", "b,bananas", "c,cherries");
+        helper.load(tableDescriptor, "id,fruit", "a,apples", "b,bananas", "c,cherries");
 
     assertThat(container.getKeyColumnNames()).containsExactly("id");
 
@@ -54,7 +54,7 @@ public class SingleColumnPrimaryKeySchemaTest {
   @Test
   public void testDuplicates() throws ValidatorLoaderException {
     SingleColumnPrimaryKeyTableContainer container =
-        helper.load(loader, "id,fruit", "a,apples", "a,bananas");
+        helper.load(tableDescriptor, "id,fruit", "a,apples", "a,bananas");
 
     assertThat(helper.getValidationNotices()).hasSize(1);
     assertThat(helper.getValidationNotices().get(0).getCode()).isEqualTo("duplicate_key");

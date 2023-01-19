@@ -15,7 +15,6 @@
  */
 package org.mobilitydata.gtfsvalidator.testing;
 
-import com.google.common.collect.ImmutableList;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -28,9 +27,10 @@ import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.table.AnyTableLoader;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableLoader;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableDescriptor;
 import org.mobilitydata.gtfsvalidator.validator.DefaultValidatorProvider;
 import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
@@ -45,12 +45,22 @@ public class LoadingHelper {
 
   private NoticeContainer noticeContainer = new NoticeContainer();
 
+  /**
+   * We explicitly do not scan and load all validators by default, because we want to keep the set
+   * of validators used in unit-tests minimal and stable.
+   */
+  private ValidatorLoader validatorLoader = ValidatorLoader.createEmpty();
+
   public List<ValidationNotice> getValidationNotices() {
     return noticeContainer.getValidationNotices();
   }
 
+  public void setValidatorLoader(ValidatorLoader validatorLoader) {
+    this.validatorLoader = validatorLoader;
+  }
+
   public <X extends GtfsEntity, Y extends GtfsTableContainer<X>> Y load(
-      GtfsTableLoader<X> loader, String... lines) throws ValidatorLoaderException {
+      GtfsTableDescriptor<X> tableDescriptor, String... lines) throws ValidatorLoaderException {
     String content = Arrays.stream(lines).collect(Collectors.joining("\n"));
     InputStream in = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
 
@@ -59,12 +69,7 @@ public class LoadingHelper {
             .setCountryCode(countryCode)
             .setCurrentDateTime(new CurrentDateTime(currentTime))
             .build();
-    // We explicitly do not scan and load all validators, because we want to keep the set of
-    // validators used in unit-tests minimal and stable.  If unit-tests do need more validators
-    // loaded, consider adding methods for specifying specific validators, as opposed to loading
-    // all.
-    ValidatorLoader validatorLoader = new ValidatorLoader(ImmutableList.of());
     ValidatorProvider provider = new DefaultValidatorProvider(context, validatorLoader);
-    return (Y) loader.load(in, provider, noticeContainer);
+    return (Y) AnyTableLoader.load(tableDescriptor, provider, in, noticeContainer);
   }
 }

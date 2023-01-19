@@ -22,7 +22,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 public class GtfsStop implements GtfsEntity {
 
   @Override
-  public long csvRowNumber() {
+  public int csvRowNumber() {
     return 0;
   }
 }

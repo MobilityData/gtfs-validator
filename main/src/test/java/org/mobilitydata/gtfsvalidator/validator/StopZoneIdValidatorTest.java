@@ -36,7 +36,7 @@ import org.mobilitydata.gtfsvalidator.validator.StopZoneIdValidator.StopWithoutZ
 public class StopZoneIdValidatorTest {
 
   private static GtfsStop createStop(
-      long csvRowNumber, GtfsLocationType locationType, String zoneId) {
+      int csvRowNumber, GtfsLocationType locationType, String zoneId) {
     return new GtfsStop.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setStopId(toLocationId(locationType, csvRowNumber))
@@ -45,7 +45,7 @@ public class StopZoneIdValidatorTest {
         .build();
   }
 
-  private static GtfsFareRule createFareRuleWithZoneStructure(long csvRowNumber) {
+  private static GtfsFareRule createFareRuleWithZoneStructure(int csvRowNumber) {
     return new GtfsFareRule.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setFareId(toFareRuleId(csvRowNumber))
@@ -53,7 +53,7 @@ public class StopZoneIdValidatorTest {
         .build();
   }
 
-  private static GtfsFareRule createFareRuleWithoutZoneStructure(long csvRowNumber) {
+  private static GtfsFareRule createFareRuleWithoutZoneStructure(int csvRowNumber) {
     return new GtfsFareRule.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setFareId(toFareRuleId(csvRowNumber))
@@ -61,11 +61,11 @@ public class StopZoneIdValidatorTest {
         .build();
   }
 
-  private static String toLocationId(GtfsLocationType locationType, long csvRowNumber) {
+  private static String toLocationId(GtfsLocationType locationType, int csvRowNumber) {
     return locationType.toString() + csvRowNumber;
   }
 
-  private static String toFareRuleId(long csvRowNumber) {
+  private static String toFareRuleId(int csvRowNumber) {
     return String.format("fare rule id %s", csvRowNumber);
   }
 

@@ -31,6 +31,7 @@ import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleTypeVisitor8;
 import org.mobilitydata.gtfsvalidator.annotation.CachedField;
+import org.mobilitydata.gtfsvalidator.annotation.CurrencyAmount;
 import org.mobilitydata.gtfsvalidator.annotation.DefaultValue;
 import org.mobilitydata.gtfsvalidator.annotation.EndRange;
 import org.mobilitydata.gtfsvalidator.annotation.FieldType;
@@ -67,6 +68,9 @@ public class Analyser {
     GtfsTable gtfsFileAnnotation = type.getAnnotation(GtfsTable.class);
     fileBuilder.setFilename(gtfsFileAnnotation.value().toLowerCase());
     fileBuilder.setSingleRow(gtfsFileAnnotation.singleRow());
+    if (gtfsFileAnnotation.maxCharsPerColumn() != 0) {
+      fileBuilder.setMaxCharsPerColumn(gtfsFileAnnotation.maxCharsPerColumn());
+    }
     fileBuilder.interfacesBuilder().add(type.asType());
     fileBuilder.setClassName(entityImplementationSimpleName(type.getSimpleName().toString()));
     fileBuilder.setRecommended(type.getAnnotation(Recommended.class) != null);
@@ -114,6 +118,11 @@ public class Analyser {
         fieldBuilder.setEndRange(
             EndRangeDescriptor.create(
                 FieldNameConverter.javaFieldName(endRange.field()), endRange.allowEqual()));
+      }
+
+      CurrencyAmount currencyAmount = method.getAnnotation(CurrencyAmount.class);
+      if (currencyAmount != null) {
+        fieldBuilder.setCurrencyFieldReference(currencyAmount.currencyField());
       }
 
       fileBuilder.fieldsBuilder().add(fieldBuilder.build());

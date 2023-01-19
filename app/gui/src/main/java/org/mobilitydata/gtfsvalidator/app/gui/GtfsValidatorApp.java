@@ -63,10 +63,12 @@ public class GtfsValidatorApp extends JFrame {
   private static final Dimension VERTICAL_GAP = new Dimension(0, 40);
   private static final Dimension TEXT_GAP = new Dimension(0, 10);
 
+  private static final int TEXT_FIELD_COLUMN_WIDTH = 40;
+
   private static final Font BOLD_FONT = createBoldFont();
 
-  private final JTextField gtfsInputField = new JTextField();
-  private final JTextField outputDirectoryField = new JTextField();
+  private final JTextField gtfsInputField = new JTextField(TEXT_FIELD_COLUMN_WIDTH);
+  private final JTextField outputDirectoryField = new JTextField(TEXT_FIELD_COLUMN_WIDTH);
 
   private final JPanel newVersionAvailablePanel = new JPanel();
 
@@ -206,6 +208,10 @@ public class GtfsValidatorApp extends JFrame {
       File selectedFile = chooser.getSelectedFile();
       gtfsInputField.setText(selectedFile.toString());
     }
+    // Per issue #1244, we've seen behavior where the JFileChooser causes the app's font size to
+    // increase, causing app ui elements to move beyond the edge of the current window.  We re-pack
+    // the UI to counteract.
+    pack();
   }
 
   private class GtfsZipsAndDirectoriesFileFilter extends FileFilter {
@@ -246,6 +252,10 @@ public class GtfsValidatorApp extends JFrame {
       File selectedFile = chooser.getSelectedFile();
       outputDirectoryField.setText(selectedFile.toString());
     }
+    // Per issue #1244, we've seen behavior where the JFileChooser causes the app's font size to
+    // increase, causing app ui elements to move beyond the edge of the current window.  We re-pack
+    // the UI to counteract.
+    pack();
   }
 
   private void constructAdvancedOptionsPanel(JPanel parent) {

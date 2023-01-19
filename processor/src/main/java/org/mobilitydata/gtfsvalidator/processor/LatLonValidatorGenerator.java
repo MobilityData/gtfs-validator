@@ -16,14 +16,13 @@
 
 package org.mobilitydata.gtfsvalidator.processor;
 
+import com.google.common.collect.ImmutableList;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
-import java.util.ArrayList;
 import java.util.List;
 import javax.lang.model.element.Modifier;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
@@ -42,25 +41,23 @@ import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
  */
 public class LatLonValidatorGenerator {
 
-  private static final String VALIDATOR_PACKAGE_NAME = "org.mobilitydata.gtfsvalidator.validator";
-
   private final List<GtfsFileDescriptor> fileDescriptors;
 
   public LatLonValidatorGenerator(List<GtfsFileDescriptor> fileDescriptors) {
     this.fileDescriptors = fileDescriptors;
   }
 
-  public List<JavaFile> generateValidatorFiles() {
-    List<JavaFile> validators = new ArrayList<>();
+  public ImmutableList<TypeSpec> generateValidators() {
+    ImmutableList.Builder<TypeSpec> validators = ImmutableList.builder();
     for (GtfsFileDescriptor fileDescriptor : fileDescriptors) {
       if (!fileDescriptor.latLonFields().isEmpty()) {
         validators.add(generateValidator(fileDescriptor));
       }
     }
-    return validators;
+    return validators.build();
   }
 
-  private static JavaFile generateValidator(GtfsFileDescriptor fileDescriptor) {
+  private static TypeSpec generateValidator(GtfsFileDescriptor fileDescriptor) {
     GtfsEntityClasses entityClasses = new GtfsEntityClasses(fileDescriptor);
     TypeSpec.Builder typeSpec =
         TypeSpec.classBuilder(validatorName(fileDescriptor))
@@ -86,7 +83,7 @@ public class LatLonValidatorGenerator {
 
     typeSpec.addMethod(validateMethod.build());
 
-    return JavaFile.builder(VALIDATOR_PACKAGE_NAME, typeSpec.build()).build();
+    return typeSpec.build();
   }
 
   private static void validateLatLon(
@@ -120,18 +117,19 @@ public class LatLonValidatorGenerator {
 
   private static CodeBlock generateNoticeContext(
       GtfsFileDescriptor fileDescriptor, LatLonDescriptor latLonDescriptor) {
-    TypeName tableLoaderTypeName = new GtfsEntityClasses(fileDescriptor).tableLoaderTypeName();
+    TypeName gtfsEntityTypeName =
+        new GtfsEntityClasses(fileDescriptor).entityImplementationTypeName();
     CodeBlock.Builder block =
-        CodeBlock.builder().add("$T.FILENAME, entity.csvRowNumber(), ", tableLoaderTypeName);
+        CodeBlock.builder().add("$T.FILENAME, entity.csvRowNumber(), ", gtfsEntityTypeName);
     if (fileDescriptor.hasSingleColumnPrimaryKey()) {
       block.add("entity.$L(), ", fileDescriptor.getSingleColumnPrimaryKey().name());
     }
     block.add(
         "$T.$L, entity.$L(), $T.$L, entity.$L()",
-        tableLoaderTypeName,
+        gtfsEntityTypeName,
         FieldNameConverter.fieldNameField(latLonDescriptor.latField()),
         latLonDescriptor.latField(),
-        tableLoaderTypeName,
+        gtfsEntityTypeName,
         FieldNameConverter.fieldNameField(latLonDescriptor.lonField()),
         latLonDescriptor.lonField());
     return block.build();

@@ -23,7 +23,6 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableLoader;
 
 /**
  * Checks that agency_id field in "routes.txt" is defined for every row if there is more than 1
@@ -52,9 +51,7 @@ public class TripAgencyIdValidator extends FileValidator {
       if (!route.hasAgencyId()) {
         noticeContainer.addValidationNotice(
             new MissingRequiredFieldNotice(
-                routeTable.gtfsFilename(),
-                route.csvRowNumber(),
-                GtfsRouteTableLoader.AGENCY_ID_FIELD_NAME));
+                routeTable.gtfsFilename(), route.csvRowNumber(), GtfsRoute.AGENCY_ID_FIELD_NAME));
       }
       // No need to check reference integrity because it is done by a validator generated from
       // @ForeignKey annotation.

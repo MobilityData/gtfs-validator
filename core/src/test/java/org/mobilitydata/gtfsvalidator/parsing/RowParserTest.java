@@ -248,6 +248,12 @@ public class RowParserTest {
   }
 
   @Test
+  public void asLanguageCode_invalid() {
+    // Underscore is invalid delimiter.
+    assertThat(createParser("en_EN").asLanguageCode(0, FieldLevelEnum.REQUIRED)).isNull();
+  }
+
+  @Test
   public void asLanguageCode() {
     // Russian of Russia.
     assertThat(createParser("ru-RU").asLanguageCode(0, FieldLevelEnum.REQUIRED).toLanguageTag())
@@ -321,7 +327,7 @@ public class RowParserTest {
     parser.asId(0, FieldLevelEnum.REQUIRED);
     assertThat(parser.getNoticeContainer().getValidationNotices())
         .containsExactly(
-            new NonAsciiOrNonPrintableCharNotice(TEST_FILENAME, 8L, "column name", "קום"));
+            new NonAsciiOrNonPrintableCharNotice(TEST_FILENAME, 8, "column name", "קום"));
     // Non-ASCII characters in ID are not an error. Validation may continue.
     assertThat(parser.getNoticeContainer().hasValidationErrors()).isFalse();
   }

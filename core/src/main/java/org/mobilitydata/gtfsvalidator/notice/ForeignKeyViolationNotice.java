@@ -31,7 +31,7 @@ public class ForeignKeyViolationNotice extends ValidationNotice {
   private final String parentFilename;
   private final String parentFieldName;
   private final String fieldValue;
-  private final long csvRowNumber;
+  private final int csvRowNumber;
 
   public ForeignKeyViolationNotice(
       String childFilename,
@@ -39,7 +39,7 @@ public class ForeignKeyViolationNotice extends ValidationNotice {
       String parentFilename,
       String parentFieldName,
       String fieldValue,
-      long csvRowNumber) {
+      int csvRowNumber) {
     super(SeverityLevel.ERROR);
     this.childFilename = childFilename;
     this.childFieldName = childFieldName;
