@@ -28,6 +28,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
@@ -62,25 +63,45 @@ public class AgencyConsistencyValidatorTest {
   }
 
   @Test
-  public void multipleAgenciesPresentButNoAgencyIdSetShouldGenerateNotice() {
-    assertThat(
-            generateNotices(
-                ImmutableList.of(
-                    createAgency(
-                        0,
-                        "first agency",
-                        "agency name",
-                        "www.mobilitydata.org",
-                        ZoneId.of("America/Montreal"),
-                        Locale.CANADA),
-                    createAgency(
-                        1,
-                        null,
-                        "agency name",
-                        "www.mobilitydata.org",
-                        ZoneId.of("America/Montreal"),
-                        Locale.CANADA))))
+  public void singleAgencyPresentButNoAgencyIdSetShouldGenerateWarningNotice() {
+    List<ValidationNotice> notices =
+        generateNotices(
+            ImmutableList.of(
+                createAgency(
+                    0,
+                    null,
+                    "agency name",
+                    "www.mobilitydata.org",
+                    ZoneId.of("America/Montreal"),
+                    Locale.CANADA)));
+    assertThat(notices)
+        .containsExactly(
+            new AgencyConsistencyValidator.AgencyIdRecommendedForSingleAgency(0, "agency name"));
+    assertThat(notices.get(0).getSeverityLevel()).isEqualTo(SeverityLevel.WARNING);
+  }
+
+  @Test
+  public void multipleAgenciesPresentButNoAgencyIdSetShouldGenerateErrorNotice() {
+    List<ValidationNotice> notices =
+        generateNotices(
+            ImmutableList.of(
+                createAgency(
+                    0,
+                    "first agency",
+                    "agency name",
+                    "www.mobilitydata.org",
+                    ZoneId.of("America/Montreal"),
+                    Locale.CANADA),
+                createAgency(
+                    1,
+                    null,
+                    "agency name",
+                    "www.mobilitydata.org",
+                    ZoneId.of("America/Montreal"),
+                    Locale.CANADA)));
+    assertThat(notices)
         .containsExactly(new MissingRequiredFieldNotice("agency.txt", 1, "agency_id"));
+    assertThat(notices.get(0).getSeverityLevel()).isEqualTo(SeverityLevel.ERROR);
   }
 
   @Test

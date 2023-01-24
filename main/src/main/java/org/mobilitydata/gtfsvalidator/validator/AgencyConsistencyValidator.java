@@ -52,6 +52,13 @@ public class AgencyConsistencyValidator extends FileValidator {
   public void validate(NoticeContainer noticeContainer) {
     final int agencyCount = agencyTable.entityCount();
     if (agencyCount < 2) {
+      GtfsAgency agency = agencyTable.getEntities().get(0);
+      // agency_id is recommended even when there is only 1 agency
+      if (!agency.hasAgencyId()) {
+        noticeContainer.addValidationNotice(
+            new AgencyIdRecommendedForSingleAgency(agency.csvRowNumber(), agency.agencyName()));
+      }
+      // no further validation required
       return;
     }
 
@@ -116,6 +123,21 @@ public class AgencyConsistencyValidator extends FileValidator {
     }
   }
 
+  /**
+   * {@code agency.agencyId } recommended, even for single agency record.
+   *
+   * <p>Severity: {@code SeverityLevel.WARNING}
+   */
+  static class AgencyIdRecommendedForSingleAgency extends ValidationNotice {
+    private final long csvRowNumber;
+    private final String agencyName;
+
+    AgencyIdRecommendedForSingleAgency(long csvRowNumber, String agencyName) {
+      super(SeverityLevel.WARNING);
+      this.csvRowNumber = csvRowNumber;
+      this.agencyName = agencyName;
+    }
+  }
   /**
    * Inconsistent timezone among agencies.
    *
