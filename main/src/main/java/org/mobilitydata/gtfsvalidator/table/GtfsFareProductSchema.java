@@ -49,7 +49,12 @@ public interface GtfsFareProductSchema extends GtfsEntity {
   Currency currency();
 
   @FieldType(FieldTypeEnum.ID)
-  @ForeignKey(table = "fare_payment_options.txt", field = "fare_payment_option_group_id")
+  @ForeignKey(table = "fare_payment_option_groups.txt", field = "fare_payment_option_group_id")
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)
-  String farePaymentTypeGroupId();
+  String farePaymentOptionGroupId();
+
+  @FieldType(FieldTypeEnum.ID)
+  @ForeignKey(table = "fare_payment_options.txt", field = "fare_payment_option_id")
+  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
+  String farePaymentOptionId();
 }
