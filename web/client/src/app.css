@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@600&family=Mulish:wght@500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans;
+    @apply text-mobi-dark-blue;
+  }
+
+  .logo {
+    @apply max-h-8 md:max-h-12 lg:max-h-16;
+    transform: translateX(-3.5%);
+  }
+
+  .h1,
+  .h2,
+  .h3 {
+    @apply mb-4;
+  }
+
+  .h1 {
+    @apply font-mono;
+    @apply text-mobi-light-blue;
+    @apply text-xl md:text-3xl lg:text-4xl;
+  }
+
+  .h2 {
+    @apply font-mono;
+    @apply text-mobi-purple-safe;
+    @apply text-lg md:text-2xl lg:text-3xl;
+  }
+
+  .h3 {
+    @apply text-lg md:text-xl lg:text-2xl;
+  }
+
+  .h4 {
+    @apply font-mono;
+    @apply md:text-lg;
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+}
+
+@layer components {
+  .input-control {
+    @apply bg-white
+      border border-black/60
+      h-12
+      shadow-inner
+      px-3 py-2;
+  }
+}
