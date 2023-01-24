@@ -1,4 +1,4 @@
-package org.mobilitydata.gtfsvalidator.webapi;
+package org.mobilitydata.gtfsvalidator.web.service;
 
 public class UploadFileResponse {
 

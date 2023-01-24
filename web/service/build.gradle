@@ -11,7 +11,7 @@ jar {
     manifest {
         attributes('Implementation-Title': rootProject.name,
                 'Implementation-Version': project.version,
-                'Main-Class': 'org.mobilitydata.gtfsvalidator.webapi.Main',
+                'Main-Class': 'org.mobilitydata.gtfsvalidator.web.service.Main',
                 'Multi-Release': 'true')
     }
 }
@@ -30,7 +30,7 @@ shadowJar {
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
-mainClassName = 'org.mobilitydata.gtfsvalidator.webapi.Main'
+mainClassName = 'org.mobilitydata.gtfsvalidator.web.service.Main'
 compileJava.options.encoding = "UTF-8"
 
 repositories {

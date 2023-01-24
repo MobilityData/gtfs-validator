@@ -1,4 +1,4 @@
-package org.mobilitydata.gtfsvalidator.webapi;
+package org.mobilitydata.gtfsvalidator.web.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

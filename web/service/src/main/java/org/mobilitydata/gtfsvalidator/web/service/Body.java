@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mobilitydata.gtfsvalidator.webapi;
+package org.mobilitydata.gtfsvalidator.web.service;
 
 // Body.Message is the payload of a Pub/Sub event. Please refer to the docs for
 // additional information regarding Pub/Sub events.

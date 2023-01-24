@@ -1,4 +1,4 @@
-package org.mobilitydata.gtfsvalidator.webapi;
+package org.mobilitydata.gtfsvalidator.web.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
