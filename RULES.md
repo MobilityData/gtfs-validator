@@ -1994,6 +1994,8 @@ The given field has no value in some input row, even though values are recommend
 
 #### References
 * [feed_info.txt best practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/best-practices.md#feed_infotxt)
+* [agency.txt best practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/best-practices.md#agencytxt)
+* [fare_attributes.txt best practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/best-practices.md#fare_attributestxt)
 <details>
 
 #### Notice fields description
