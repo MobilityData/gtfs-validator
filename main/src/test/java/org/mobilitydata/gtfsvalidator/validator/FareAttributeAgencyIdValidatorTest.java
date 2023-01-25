@@ -7,18 +7,19 @@ import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.table.*;
+import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
+import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsFareAttribute;
+import org.mobilitydata.gtfsvalidator.table.GtfsFareAttributeTableContainer;
 
-public class RouteAgencyIdValidatorTest {
+public class FareAttributeAgencyIdValidatorTest {
 
-  public static GtfsRoute createRoute(
-      int rowNumber, String routeId, String agencyId, String shortName) {
+  public static GtfsFareAttribute createFare(int rowNumber, String fareId, String agencyId) {
 
-    return new GtfsRoute.Builder()
+    return new GtfsFareAttribute.Builder()
         .setCsvRowNumber(rowNumber)
         .setAgencyId(agencyId)
-        .setRouteId(routeId)
-        .setRouteShortName(shortName)
+        .setFareId(fareId)
         .build();
   }
 
@@ -39,17 +40,15 @@ public class RouteAgencyIdValidatorTest {
             ImmutableList.of(
                 createAgency(0, "Agency 1", "Agency 1"), createAgency(1, "Agency 2", "Agency 2")),
             noticeContainer);
-    GtfsRouteTableContainer routeTable =
-        GtfsRouteTableContainer.forEntities(
-            ImmutableList.of(
-                createRoute(0, "route_0", "agency0", "Route 0"),
-                createRoute(1, "route_1", null, "Route 1")),
+    GtfsFareAttributeTableContainer fareTable =
+        GtfsFareAttributeTableContainer.forEntities(
+            ImmutableList.of(createFare(0, "fare 0", "agency0"), createFare(1, "fare_1", null)),
             noticeContainer);
-    new RouteAgencyIdValidator(agencyTable, routeTable).validate(noticeContainer);
+    new FareAttributeAgencyIdValidator(agencyTable, fareTable).validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
             new MissingRequiredFieldNotice(
-                routeTable.gtfsFilename(), 1, GtfsRoute.AGENCY_ID_FIELD_NAME));
+                fareTable.gtfsFilename(), 1, GtfsFareAttribute.AGENCY_ID_FIELD_NAME));
   }
 
   @Test
@@ -59,13 +58,13 @@ public class RouteAgencyIdValidatorTest {
     GtfsAgencyTableContainer agencyTable =
         GtfsAgencyTableContainer.forEntities(
             ImmutableList.of(createAgency(1, null, "Agency with no ID")), noticeContainer);
-    GtfsRouteTableContainer routeTable =
-        GtfsRouteTableContainer.forEntities(
-            ImmutableList.of(createRoute(0, "route_0", null, "Route 0")), noticeContainer);
-    new RouteAgencyIdValidator(agencyTable, routeTable).validate(noticeContainer);
+    GtfsFareAttributeTableContainer fareTable =
+        GtfsFareAttributeTableContainer.forEntities(
+            ImmutableList.of(createFare(0, "fare_0", null)), noticeContainer);
+    new FareAttributeAgencyIdValidator(agencyTable, fareTable).validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
             new MissingRecommendedFieldNotice(
-                routeTable.gtfsFilename(), 0, GtfsRoute.AGENCY_ID_FIELD_NAME));
+                fareTable.gtfsFilename(), 0, GtfsFareAttribute.AGENCY_ID_FIELD_NAME));
   }
 }

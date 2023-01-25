@@ -22,22 +22,23 @@ import org.mobilitydata.gtfsvalidator.notice.*;
 import org.mobilitydata.gtfsvalidator.table.*;
 
 /**
- * Checks that agency_id field in "routes.txt" is defined for every row if there is more than 1
- * agency in the feed, recommended if only 1 agency.
+ * Checks that agency_id field in "fare_attributes.txt" is defined for every row if there is more
+ * than 1 agency in the feed, recommended if only 1 agency.
  *
  * <p>Generated notice: {@link MissingRequiredFieldNotice}.
  *
  * <p>Generated notice: {@link MissingRecommendedFieldNotice}.
  */
 @GtfsValidator
-public class RouteAgencyIdValidator extends FileValidator {
+public class FareAttributeAgencyIdValidator extends FileValidator {
   private final GtfsAgencyTableContainer agencyTable;
-  private final GtfsRouteTableContainer routeTable;
+  private final GtfsFareAttributeTableContainer attributeTable;
 
   @Inject
-  RouteAgencyIdValidator(GtfsAgencyTableContainer agencyTable, GtfsRouteTableContainer routeTable) {
+  FareAttributeAgencyIdValidator(
+      GtfsAgencyTableContainer agencyTable, GtfsFareAttributeTableContainer attributeTable) {
     this.agencyTable = agencyTable;
-    this.routeTable = routeTable;
+    this.attributeTable = attributeTable;
   }
 
   @Override
@@ -46,18 +47,22 @@ public class RouteAgencyIdValidator extends FileValidator {
     // routes.agency_id is required when there are multiple agencies
     int totalAgencies = agencyTable.entityCount();
 
-    for (GtfsRoute route : routeTable.getEntities()) {
-      if (!route.hasAgencyId()) {
+    for (GtfsFareAttribute fare : attributeTable.getEntities()) {
+      if (!fare.hasAgencyId()) {
         if (totalAgencies > 1) {
           // add error notice if more than one agency
           noticeContainer.addValidationNotice(
               new MissingRequiredFieldNotice(
-                  routeTable.gtfsFilename(), route.csvRowNumber(), GtfsRoute.AGENCY_ID_FIELD_NAME));
+                  attributeTable.gtfsFilename(),
+                  fare.csvRowNumber(),
+                  GtfsFareAttribute.AGENCY_ID_FIELD_NAME));
         } else {
           // add warning notice if only one agency
           noticeContainer.addValidationNotice(
               new MissingRecommendedFieldNotice(
-                  routeTable.gtfsFilename(), route.csvRowNumber(), GtfsRoute.AGENCY_ID_FIELD_NAME));
+                  attributeTable.gtfsFilename(),
+                  fare.csvRowNumber(),
+                  GtfsFareAttribute.AGENCY_ID_FIELD_NAME));
         }
       }
     }
