@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
+import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.*;
@@ -30,7 +31,7 @@ public class RouteAgencyIdValidatorTest {
   }
 
   @Test
-  public void agencyIdRequiredWhenMoreThanOneAgency() {
+  public void agencyIdRequiredErrorWhenMoreThanOneAgency() {
 
     NoticeContainer noticeContainer = new NoticeContainer();
     GtfsAgencyTableContainer agencyTable =
@@ -53,7 +54,7 @@ public class RouteAgencyIdValidatorTest {
   }
 
   @Test
-  public void agencyIdWarningWhenOnlyOneAgencyWithNoAgencyId() {
+  public void agencyIdRecommendedWarningWhenOnlyOneAgency() {
 
     NoticeContainer noticeContainer = new NoticeContainer();
     GtfsAgencyTableContainer agencyTable =
@@ -64,21 +65,8 @@ public class RouteAgencyIdValidatorTest {
             ImmutableList.of(createRoute(0, "route_0", null, "Route 0")), noticeContainer);
     new RouteAgencyIdValidator(agencyTable, routeTable).validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new RouteAgencyIdValidator.AgencyIdRecommendedNotice(0));
-  }
-
-  @Test
-  public void agencyIdWarningWhenOnlyOneAgencyWithAgencyId() {
-
-    NoticeContainer noticeContainer = new NoticeContainer();
-    GtfsAgencyTableContainer agencyTable =
-        GtfsAgencyTableContainer.forEntities(
-            ImmutableList.of(createAgency(1, "agencyId", "Agency with ID")), noticeContainer);
-    GtfsRouteTableContainer routeTable =
-        GtfsRouteTableContainer.forEntities(
-            ImmutableList.of(createRoute(0, "route_0", null, "Route 0")), noticeContainer);
-    new RouteAgencyIdValidator(agencyTable, routeTable).validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new RouteAgencyIdValidator.AgencyIdRecommendedNotice(0));
+        .containsExactly(
+            new MissingRecommendedFieldNotice(
+                routeTable.gtfsFilename(), 0, GtfsRoute.AGENCY_ID_FIELD_NAME));
   }
 }

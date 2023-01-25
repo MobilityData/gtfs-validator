@@ -18,10 +18,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
-import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
-import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.notice.*;
 import org.mobilitydata.gtfsvalidator.table.*;
 
 /**
@@ -30,7 +27,7 @@ import org.mobilitydata.gtfsvalidator.table.*;
  *
  * <p>Generated notice: {@link MissingRequiredFieldNotice}.
  *
- * <p>Generated notice: {@link AgencyIdRecommendedNotice}.
+ * <p>Generated notice: {@link MissingRecommendedFieldNotice}.
  */
 @GtfsValidator
 public class RouteAgencyIdValidator extends FileValidator {
@@ -55,29 +52,16 @@ public class RouteAgencyIdValidator extends FileValidator {
           // add error notice if more than one agency
           noticeContainer.addValidationNotice(
               new MissingRequiredFieldNotice(
-                  routeTable.gtfsFilename(),
-                  route.csvRowNumber(),
-                  GtfsRoute.AGENCY_ID_FIELD_NAME));
+                  routeTable.gtfsFilename(), route.csvRowNumber(), GtfsRoute.AGENCY_ID_FIELD_NAME));
         } else {
           // add warning notice if only one agency
-          noticeContainer.addValidationNotice(new AgencyIdRecommendedNotice(route.csvRowNumber()));
+          noticeContainer.addValidationNotice(
+              new MissingRecommendedFieldNotice(
+                  routeTable.gtfsFilename(), route.csvRowNumber(), GtfsRoute.AGENCY_ID_FIELD_NAME));
         }
       }
     }
     // No need to check reference integrity because it is done by a validator generated from
     // @ForeignKey annotation.
-  }
-  /**
-   * AgencyId field is recommended even if only one agency.
-   *
-   * <p>Severity: {@code SeverityLevel.WARNING}
-   */
-  static class AgencyIdRecommendedNotice extends ValidationNotice {
-    private final long csvRowNumber;
-
-    AgencyIdRecommendedNotice(long csvRowNumber) {
-      super(SeverityLevel.WARNING);
-      this.csvRowNumber = csvRowNumber;
-    }
   }
 }

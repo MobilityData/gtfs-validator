@@ -20,10 +20,7 @@ import java.time.ZoneId;
 import java.util.Locale;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
-import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
-import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.notice.*;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 
@@ -35,6 +32,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
  *
  * <ul>
  *   <li>{@link MissingRequiredFieldNotice} - multiple agencies present but no agency_id set
+ *   <li>{@link MissingRecommendedFieldNotice} - single agency present but no agency_id set
  *   <li>{@link InconsistentAgencyTimezoneNotice} - inconsistent timezone among the agencies
  *   <li>{@link InconsistentAgencyLangNotice} - inconsistent language among the agencies
  * </ul>
@@ -56,7 +54,7 @@ public class AgencyConsistencyValidator extends FileValidator {
       // agency_id is recommended even when there is only 1 agency
       if (!agency.hasAgencyId()) {
         noticeContainer.addValidationNotice(
-            new AgencyIdRecommendedForSingleAgency(agency.csvRowNumber(), agency.agencyName()));
+            new MissingRecommendedFieldNotice(agencyTable.gtfsFilename(), agency.csvRowNumber(), agency.agencyName()));
       }
       // no further validation required
       return;
@@ -123,21 +121,6 @@ public class AgencyConsistencyValidator extends FileValidator {
     }
   }
 
-  /**
-   * {@code agency.agencyId } recommended, even for single agency record.
-   *
-   * <p>Severity: {@code SeverityLevel.WARNING}
-   */
-  static class AgencyIdRecommendedForSingleAgency extends ValidationNotice {
-    private final long csvRowNumber;
-    private final String agencyName;
-
-    AgencyIdRecommendedForSingleAgency(long csvRowNumber, String agencyName) {
-      super(SeverityLevel.WARNING);
-      this.csvRowNumber = csvRowNumber;
-      this.agencyName = agencyName;
-    }
-  }
   /**
    * Inconsistent timezone among agencies.
    *
