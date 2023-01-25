@@ -16,51 +16,42 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import static org.mobilitydata.gtfsvalidator.table.GtfsLocationType.BOARDING_AREA;
 import static org.mobilitydata.gtfsvalidator.table.GtfsLocationType.ENTRANCE;
-import static org.mobilitydata.gtfsvalidator.table.GtfsLocationType.GENERIC_NODE;
+import static org.mobilitydata.gtfsvalidator.table.GtfsLocationType.STATION;
+import static org.mobilitydata.gtfsvalidator.table.GtfsLocationType.STOP;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
-import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
 
 /**
- * Checks that conditionally required fields "stop_lat", "stop_lon" and "stop_name" are set
- * depending on "location_type".
+ * Checks that conditionally required fields {@code stop_lat} and {@code stop_lon} are set depending
+ * on {@code location_type}.
  *
- * <ul>
- *   <li>"stop_name" is optional for entrances, generic nodes and boarding areas and required for
- *       other types
- *   <li>"stop_lat" and "stop_lon" are optional for generic nodes and boarding areas and required
- *       for other types
- * </ul>
- *
+ * <p>{@code stop_lat} and {@code stop_lon} are required for stations ({@code location_type=0}),
+ * stops ({@code location_type=1}) and entrances ({@code location_type=2}) and optional for other
+ * types.
+ * <p>
  * Generated notice: {@code MissingRequiredFieldError}.
  */
 @GtfsValidator
-public class StopNameLatLngRequiredValidator extends SingleEntityValidator<GtfsStop> {
+public class StopLatLngRequiredValidator extends SingleEntityValidator<GtfsStop> {
   @Override
   public void validate(GtfsStop location, NoticeContainer noticeContainer) {
-    if (!(location.locationType().equals(ENTRANCE) || location.locationType().equals(GENERIC_NODE)
-            || location.locationType().equals(BOARDING_AREA))
-        && !location.hasStopName()) {
-      noticeContainer.addValidationNotice(
-          createMissingRequiredFieldNotice(location, GtfsStop.STOP_NAME_FIELD_NAME));
+    GtfsLocationType locationType = location.locationType();
+    if (!(locationType == STOP || locationType == STATION || locationType == ENTRANCE)) {
+      return;
     }
-
-    if (!(location.locationType().equals(GENERIC_NODE)
-            || location.locationType().equals(BOARDING_AREA))) {
-      if (!location.hasStopLat()) {
-        noticeContainer.addValidationNotice(
-            createMissingRequiredFieldNotice(location, GtfsStop.STOP_LAT_FIELD_NAME));
-      }
-      if (!location.hasStopLon()) {
-        noticeContainer.addValidationNotice(
-            createMissingRequiredFieldNotice(location, GtfsStop.STOP_LON_FIELD_NAME));
-      }
+    if (!location.hasStopLat()) {
+      noticeContainer.addValidationNotice(
+          createMissingRequiredFieldNotice(location, GtfsStop.STOP_LAT_FIELD_NAME));
+    }
+    if (!location.hasStopLon()) {
+      noticeContainer.addValidationNotice(
+          createMissingRequiredFieldNotice(location, GtfsStop.STOP_LON_FIELD_NAME));
     }
   }
 

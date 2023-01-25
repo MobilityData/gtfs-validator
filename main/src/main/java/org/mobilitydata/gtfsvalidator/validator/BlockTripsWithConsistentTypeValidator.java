@@ -34,6 +34,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 /**
  * Validates that trips that belong to the same block have consistent route types (e.g., bus does
  * not transfer to rail).
+ *
+ * <p> Generated notice: {@link BlockTripsWithInconsistentRouteTypesNotice}.
  */
 @GtfsValidator
 public class BlockTripsWithConsistentTypeValidator extends FileValidator {
@@ -84,8 +86,8 @@ public class BlockTripsWithConsistentTypeValidator extends FileValidator {
       return true;
     }
 
-    // The difference between rail and subway (metro) may be fuzzy, so we allow transfers between
-    // them.
+    // The difference beservice_datestween rail and subway (metro) may be fuzzy, so we allow
+    // transfers between them.
     return isRailOrSubway(routeType1) && isRailOrSubway(routeType2);
   }
 

@@ -26,11 +26,14 @@ import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
 
 /**
- * Checks that a feed has language defined in either feed_info.feed_lang or agency.agency_lang.
+ * Checks that a feed has language defined in either {@code feed_info.feed_lang} or {@code
+ * agency.agency_lang}.
  *
- * <p>Note that feed_lang is a required field: if there is a feed_info entity, it must have
- * feed_lang set. agency_lang, instead, is optional. The recommended way is to provide feed_lang and
- * omit agency_lang.
+ * <p>Note that {@code feed_lang} is a required field: if there is a {@code feed_info} entity,
+ * it must have{@code feed_lang} set. {@code agency_lang}, instead, is optional.
+ * The recommended way is to provide {@code feed_lang} and omit {@code agency_lang}.
+ *
+ * <p> Generated notice: {@link FeedHasNoLanguageNotice}.
  */
 @GtfsValidator
 public class FeedHasLanguageValidator extends FileValidator {

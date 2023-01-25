@@ -32,40 +32,29 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 
 @RunWith(JUnit4.class)
-public class StopNameLatLngRequiredValidatorTest {
+public class StopLatLngRequiredValidatorTest {
   private static List<ValidationNotice> generateNotices(GtfsStop stop) {
     NoticeContainer noticeContainer = new NoticeContainer();
-    new StopNameLatLngRequiredValidator().validate(stop, noticeContainer);
+    new StopLatLngRequiredValidator().validate(stop, noticeContainer);
     return noticeContainer.getValidationNotices();
   }
 
   @Test
-  public void genericNodeWithoutNameLatLon_yieldsNoNotice() {
-    assertThat(generateNotices(new GtfsStop.Builder()
-                                   .setCsvRowNumber(2)
-                                   .setLocationType(GENERIC_NODE.getNumber())
-                                   .build()))
-        .isEmpty();
+  public void stopWithoutLatLon_yieldsNotices() {
+    assertThat(
+        generateNotices(
+            new GtfsStop.Builder().setCsvRowNumber(2).setLocationType(STOP.getNumber()).build()))
+        .containsExactly(new MissingRequiredFieldNotice("stops.txt", 2, "stop_lat"),
+            new MissingRequiredFieldNotice("stops.txt", 2, "stop_lon"));
   }
 
   @Test
-  public void boardingAreaWithoutNameLatLon_yieldsNoNotice() {
-    assertThat(generateNotices(new GtfsStop.Builder()
-                                   .setCsvRowNumber(2)
-                                   .setLocationType(BOARDING_AREA.getNumber())
-                                   .build()))
-        .isEmpty();
-  }
-
-  @Test
-  public void entranceWithoutName_yieldsNoNotice() {
-    assertThat(generateNotices(new GtfsStop.Builder()
-                                   .setCsvRowNumber(2)
-                                   .setLocationType(ENTRANCE.getNumber())
-                                   .setStopLat(1.0)
-                                   .setStopLon(2.0)
-                                   .build()))
-        .isEmpty();
+  public void stationWithoutLatLon_yieldsNotices() {
+    assertThat(
+        generateNotices(
+            new GtfsStop.Builder().setCsvRowNumber(2).setLocationType(STOP.getNumber()).build()))
+        .containsExactly(new MissingRequiredFieldNotice("stops.txt", 2, "stop_lat"),
+            new MissingRequiredFieldNotice("stops.txt", 2, "stop_lon"));
   }
 
   @Test
@@ -79,22 +68,20 @@ public class StopNameLatLngRequiredValidatorTest {
   }
 
   @Test
-  public void stopWithoutNameLatLon_yieldsNotices() {
-    assertThat(
-        generateNotices(
-            new GtfsStop.Builder().setCsvRowNumber(2).setLocationType(STOP.getNumber()).build()))
-        .containsExactly(new MissingRequiredFieldNotice("stops.txt", 2, "stop_name"),
-            new MissingRequiredFieldNotice("stops.txt", 2, "stop_lat"),
-            new MissingRequiredFieldNotice("stops.txt", 2, "stop_lon"));
+  public void genericNodeWithoutLatLon_yieldsNoNotice() {
+    assertThat(generateNotices(new GtfsStop.Builder()
+                                   .setCsvRowNumber(2)
+                                   .setLocationType(GENERIC_NODE.getNumber())
+                                   .build()))
+        .isEmpty();
   }
 
   @Test
-  public void stationWithoutNameLatLon_yieldsNotices() {
-    assertThat(
-        generateNotices(
-            new GtfsStop.Builder().setCsvRowNumber(2).setLocationType(STOP.getNumber()).build()))
-        .containsExactly(new MissingRequiredFieldNotice("stops.txt", 2, "stop_name"),
-            new MissingRequiredFieldNotice("stops.txt", 2, "stop_lat"),
-            new MissingRequiredFieldNotice("stops.txt", 2, "stop_lon"));
+  public void boardingAreaWithoutLatLon_yieldsNoNotice() {
+    assertThat(generateNotices(new GtfsStop.Builder()
+                                   .setCsvRowNumber(2)
+                                   .setLocationType(BOARDING_AREA.getNumber())
+                                   .build()))
+        .isEmpty();
   }
 }

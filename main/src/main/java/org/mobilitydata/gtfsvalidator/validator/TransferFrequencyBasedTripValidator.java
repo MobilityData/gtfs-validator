@@ -30,7 +30,11 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFrequencyTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransfer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransferTableContainer;
 
-/** Validates that trip-to-trip transfers do not involve frequency-based trips. */
+/**
+ * Validates that trip-to-trip transfers do not involve frequency-based trips.
+ *
+ * <p> Generated notice: {@link TransferForFrequencyBasedTripNotice}.
+ */
 @GtfsValidator
 public class TransferFrequencyBasedTripValidator extends FileValidator {
   private final GtfsTransferTableContainer transferTable;

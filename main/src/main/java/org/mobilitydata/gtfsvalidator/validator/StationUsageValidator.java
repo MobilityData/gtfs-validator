@@ -26,9 +26,13 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 
 /**
- * Check that every station in {@code stops.txt} has child platforms.
+ * Checks that every station ({@code location_type=1}) in {@code stops.txt}
+ * has child platforms ({@code location_type=0}).
  *
- * <p>Note that a station that has child entrances or generic nodes is also reported.
+ * <p>Note that a station that has child entrances ({@code location_type=2})
+ * or generic nodes ({@code location_type=3}) is also reported.
+ *
+ * <p> Generated notice: {@link StationWithoutPlatformsNotice}
  */
 @GtfsValidator
 public class StationUsageValidator extends FileValidator {

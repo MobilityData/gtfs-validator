@@ -30,6 +30,13 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 /**
  * Validates that fields {@code arrival_time}, {@code departure_time} and {@code
  * shape_dist_traveled} are non-decreasing along each trip.
+ *
+ * <p> Generated notices:
+ *  <ul>
+ *    <li> {@link TripWithOutOfOrderArrivalTimeNotice}
+ *    <li> {@link TripWithOutOfOrderDepartureTimeNotice}
+ *    <li> {@link TripWithOutOfOrderShapeDistTraveledNotice}
+ * </ul>
  */
 @GtfsValidator
 public class StopTimeInSequenceOrderValidator extends FileValidator {

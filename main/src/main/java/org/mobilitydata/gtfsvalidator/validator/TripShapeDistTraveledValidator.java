@@ -32,7 +32,17 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 
-/** Validates that trips specify {@code stop_times.shape_dist_traveled} values properly. */
+/**
+ * Validates that trips specify {@code stop_times.shape_dist_traveled} values properly.
+ * Please see generated notices for details.
+ *
+ * <p> Generated notices:
+ * <ul>
+ *   <li> {@link TripWithShapeDistTraveledButNoShapeNotice}
+ *   <li> {@link TripWithShapeDistTraveledButNoShapeDistancesNotice}
+ *   <li> {@link TripWithPartialShapeDistTraveledNotice}
+ * </ul>
+ */
 @GtfsValidator
 public class TripShapeDistTraveledValidator extends FileValidator {
   private final GtfsTripTableContainer tripTable;
