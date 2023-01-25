@@ -54,7 +54,8 @@ public class AgencyConsistencyValidator extends FileValidator {
       // agency_id is recommended even when there is only 1 agency
       if (!agency.hasAgencyId()) {
         noticeContainer.addValidationNotice(
-            new MissingRecommendedFieldNotice(agencyTable.gtfsFilename(), agency.csvRowNumber(), agency.agencyName()));
+            new MissingRecommendedFieldNotice(
+                agencyTable.gtfsFilename(), agency.csvRowNumber(), agency.agencyName()));
       }
       // no further validation required
       return;
