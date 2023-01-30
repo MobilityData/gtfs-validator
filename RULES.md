@@ -18,15 +18,15 @@ The output that the user will see if the conditions aren’t met.
 
 Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 
-* `ERROR` notices are for items that the [GTFS reference specification](https://gtfs.org/schedule/reference/) explicitly requires or prohibits (using the language "must"). The validator uses [RFC2119](https://tools.ietf.org/html/rfc2119) to interpret the language in the GTFS spec.
-  * ⚠️ Please note that this validator also generates `System Errors` that give information about things that may have gone wrong during the validation process such as the inability to unzip a GTFS file. These are generated in a second report `system_errors.json`.
-* `WARNING` notices are for items that will affect the quality of GTFS datasets. These are items that the [GTFS reference specification](https://gtfs.org/schedule/reference/) recommends (using the language "should"), or items recommended in the [GTFS Schedule Best Practices](https://gtfs.org/schedule/best-practices/).
+* `ERROR` notices are for GTFS Schedule Reference violations. These are items that the [GTFS Schedule Reference](https://gtfs.org/schedule/reference/) explicitly requires or prohibits (using the language "must"). 
+* `WARNING` notices are for GTFS Schedule Best Practices. These are items that the [GTFS Schedule Reference](https://gtfs.org/schedule/reference/) explicitly recommends (using the language "should"), or items mentioned in the official [GTFS Schedule Best Practices](https://gtfs.org/schedule/best-practices/).
 * `INFO` notices are for items that may affect the feed's quality. They are unexpected finds that should be brought to the user's attention. 
+
+⚠️ Please note that this validator also generates `System Errors` that give information about things that may have gone wrong during the validation process such as the inability to unzip a GTFS file. These are generated in a second report `system_errors.json`.
 
 <a name="ERRORS"/>
 
 ## Table of ERRORS
-#### Source: all errors are based on the GTFS Schedule Reference
 | Notice code                                                                                                       | Description                                                                                                                                            |
 |-------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`block_trips_with_overlapping_stop_times`](#block_trips_with_overlapping_stop_times)                             | Block trips with overlapping stop times.                                                                                                               |
@@ -84,10 +84,10 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 <a name="WARNINGS"/>
 
 ## Table of WARNINGS
-#### Source: GTFS Schedule Reference
 | Notice code                                                                                   | Description                                                                                                                                                   |
 |-----------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`attribution_without_role`](#attribution_without_role)                                       | Attribution with no role.                                                                                                                                     |
+| [`duplicate_route_name`](#duplicate_route_name)                                               | Two distinct routes have either the same `route_short_name`, the same `route_long_name`, or the same combination of `route_short_name` and `route_long_name`. |
 | [`empty_row`](#empty_row)                                                                     | A row in the input file has only spaces.                                                                                                                      |
 | [`equal_shape_distance_same_coordinates`](#equal_shape_distance_same_coordinates)             | Two consecutive points have equal `shape_dist_traveled` and the same lat/lon coordinates in `shapes.txt`.                                                     |
 | [`fast_travel_between_consecutive_stops`](#fast_travel_between_consecutive_stops)             | A transit vehicle moves too fast between two consecutive stops.                                                                                               |
@@ -97,6 +97,10 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`feed_info_lang_and_agency_mismatch`](#feed_info_lang_and_agency_mismatch)                   | Mismatching feed and agency language fields.                                                                                                                  |
 | [`inconsistent_agency_lang`](#inconsistent_agency_lang)                                       | Inconsistent language among agencies.                                                                                                                         |
 | [`leading_or_trailing_whitespaces`](#leading_or_trailing_whitespaces)                         | The value in CSV file has leading or trailing whitespaces.                                                                                                    |
+| [`missing_feed_info_date`](#missing_feed_info_date)                                           | `feed_end_date` should be provided if `feed_start_date` is provided. `feed_start_date` should be provided if `feed_end_date` is provided.                     |
+| [`missing_recommended_file`](#missing_recommended_file)                                       | A recommended file is missing.                                                                                                                                |
+| [`missing_recommended_field`](#missing_recommended_field)                                     | A recommended field is missing.                                                                                                                               |
+| [`missing_timepoint_column`](#missing_timepoint_column)                                       | `timepoint` column is missing for a dataset.                                                                                                                  |
 | [`missing_timepoint_value`](#missing_timepoint_value)                                         | `stop_times.timepoint` value is missing for a record.                                                                                                         |
 | [`more_than_one_entity`](#more_than_one_entity)                                               | More than one row in CSV.                                                                                                                                     |
 | [`non_ascii_or_non_printable_char`](#non_ascii_or_non_printable_char)                         | Non ascii or non printable char in  `id`.                                                                                                                     |
@@ -105,12 +109,15 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`platform_without_parent_station`](#platform_without_parent_station)                         | A platform has no `parent_station` field set.                                                                                                                 |
 | [`route_color_contrast`](#route_color_contrast)                                               | Insufficient route color contrast.                                                                                                                            |
 | [`route_short_and_long_name_equal`](#route_short_and_long_name_equal)                         | `route_short_name` and `route_long_name` are equal for a single route.                                                                                        |
+| [`route_short_name_too_long`](#route_short_name_too_long)                                     | Short name of a route is too long (more than 12 characters).                                                                                                  |
+| [`same_name_and_description_for_route`](#same_name_and_description_for_route)                 | Same name and description for route.                                                                                                                          |
 | [`same_name_and_description_for_stop`](#same_name_and_description_for_stop)                   | Same name and description for stop.                                                                                                                           |
 | [`same_route_and_agency_url`](#same_route_and_agency_url)                                     | Same `routes.route_url` and `agency.agency_url`.                                                                                                              |
 | [`same_stop_and_agency_url`](#same_stop_and_agency_url)                                       | Same `stops.stop_url` and `agency.agency_url`.                                                                                                                |
 | [`same_stop_and_route_url`](#same_stop_and_route_url)                                         | Same `stops.stop_url` and `routes.route_url`.                                                                                                                 |
 | [`stop_has_too_many_matches_for_shape`](#stop_has_too_many_matches_for_shape)                 | Stop entry that has many potential matches to the trip's path of travel.                                                                                      |
 | [`stops_match_shape_out_of_order`](#stops_match_shape_out_of_order)                           | Two stop entries are different than their arrival-departure order defined by the shapes.txt                                                                   |
+| [`stop_too_far_from_shape`](#stop_too_far_from_shape)                                         | Stop too far from trip shape.                                                                                                                                 |
 | [`stop_too_far_from_shape_using_user_distance`](#stop_too_far_from_shape_using_user_distance) | Stop time too far from shape.                                                                                                                                 |
 | [`stop_without_stop_time`](#stop_without_stop_time)                                           | A stop in `stops.txt` is not referenced by any `stop_times.stop_id`.                                                                                          |
 | [`translation_unknown_table_name`](#translation_unknown_table_name)                           | A translation references an unknown or missing GTFS table.                                                                                                    |
@@ -118,18 +125,6 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`unusable_trip`](#unusable_trip)                                                             | Trips must have more than one stop to be usable.                                                                                                              |
 | [`unused_shape`](#unused_shape)                                                               | Shape is not used in GTFS file `trips.txt`.                                                                                                                   |
 | [`unused_trip`](#unused_trip)                                                                 | Trip is not be used in `stop_times.txt`                                                                                                                       |
-
-#### Source: GTFS Schedule Best Practices
-| Notice code                                                                                   | Description                                                                                                                                                   
-|-----------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`duplicate_route_name`](#duplicate_route_name)                                               | Two distinct routes have either the same `route_short_name`, the same `route_long_name`, or the same combination of `route_short_name` and `route_long_name`. |
-| [`missing_feed_info_date`](#missing_feed_info_date)                                           | `feed_end_date` should be provided if `feed_start_date` is provided. `feed_start_date` should be provided if `feed_end_date` is provided.                     |
-| [`missing_recommended_file`](#missing_recommended_file)                                       | A recommended file is missing.                                                                                                                                |
-| [`missing_recommended_field`](#missing_recommended_field)                                     | A recommended field is missing.                                                                                                                               |
-| [`missing_timepoint_column`](#missing_timepoint_column)                                       | `timepoint` column is missing for a dataset.                                                                                                                  |
-| [`route_short_name_too_long`](#route_short_name_too_long)                                     | Short name of a route is too long (more than 12 characters).                                                                                                  |
-| [`same_name_and_description_for_route`](#same_name_and_description_for_route)                 | Same name and description for route.                                                                                                                          |
-| [`stop_too_far_from_shape`](#stop_too_far_from_shape)                                         | Stop too far from trip shape.                                                                                                                                 |
 
 <a name="INFOS"/>
 
