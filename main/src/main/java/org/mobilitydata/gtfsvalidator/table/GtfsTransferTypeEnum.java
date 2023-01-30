@@ -22,4 +22,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValue;
 @GtfsEnumValue(name = "TIMED", value = 1)
 @GtfsEnumValue(name = "MINIMUM_TIME", value = 2)
 @GtfsEnumValue(name = "IMPOSSIBLE", value = 3)
+@GtfsEnumValue(name = "IN_SEAT_TRANSFER_ALLOWED", value = 4)
+@GtfsEnumValue(name = "IN_SEAT_TRANSFER_NOT_ALLOWED", value = 5)
 public interface GtfsTransferTypeEnum {}

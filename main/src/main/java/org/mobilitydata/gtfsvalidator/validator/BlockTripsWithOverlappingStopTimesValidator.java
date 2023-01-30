@@ -254,10 +254,10 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class BlockTripsWithOverlappingStopTimesNotice extends ValidationNotice {
-    private final long csvRowNumberA;
+    private final int csvRowNumberA;
     private final String tripIdA;
     private final String serviceIdA;
-    private final long csvRowNumberB;
+    private final int csvRowNumberB;
     private final String tripIdB;
     private final String serviceIdB;
     private final String blockId;

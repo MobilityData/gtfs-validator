@@ -57,7 +57,7 @@ public class BlockTripsWithOverlappingStopTimesValidatorTest {
   }
 
   public static GtfsStopTime createStopTime(
-      long csvRowNumber, String tripId, String time, String stopId, int stopSequence) {
+      int csvRowNumber, String tripId, String time, String stopId, int stopSequence) {
     return new GtfsStopTime.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setTripId(tripId)
@@ -69,7 +69,7 @@ public class BlockTripsWithOverlappingStopTimesValidatorTest {
   }
 
   public static GtfsTrip createTrip(
-      long csvRowNumber, String tripId, String serviceId, String blockId) {
+      int csvRowNumber, String tripId, String serviceId, String blockId) {
     return new GtfsTrip.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setTripId(tripId)

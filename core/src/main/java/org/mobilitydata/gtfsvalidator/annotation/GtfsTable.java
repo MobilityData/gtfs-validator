@@ -42,4 +42,10 @@ public @interface GtfsTable {
   String value();
 
   boolean singleRow() default false;
+
+  /**
+   * If a non-zero integer is specified, this will override the default max-chars-per-column setting
+   * for the CSV Parser.
+   */
+  int maxCharsPerColumn() default 0;
 }

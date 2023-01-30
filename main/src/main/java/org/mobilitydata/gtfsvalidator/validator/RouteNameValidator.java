@@ -91,9 +91,9 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    */
   static class RouteBothShortAndLongNameMissingNotice extends ValidationNotice {
     private final String routeId;
-    private final long csvRowNumber;
+    private final int csvRowNumber;
 
-    RouteBothShortAndLongNameMissingNotice(String routeId, long csvRowNumber) {
+    RouteBothShortAndLongNameMissingNotice(String routeId, int csvRowNumber) {
       super(SeverityLevel.ERROR);
       this.routeId = routeId;
       this.csvRowNumber = csvRowNumber;
@@ -107,12 +107,12 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    */
   static class RouteShortAndLongNameEqualNotice extends ValidationNotice {
     private final String routeId;
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String routeShortName;
     private final String routeLongName;
 
     RouteShortAndLongNameEqualNotice(
-        String routeId, long csvRowNumber, String routeShortName, String routeLongName) {
+        String routeId, int csvRowNumber, String routeShortName, String routeLongName) {
       super(SeverityLevel.WARNING);
       this.routeId = routeId;
       this.csvRowNumber = csvRowNumber;
@@ -129,10 +129,10 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    */
   static class RouteShortNameTooLongNotice extends ValidationNotice {
     private final String routeId;
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String routeShortName;
 
-    RouteShortNameTooLongNotice(String routeId, long csvRowNumber, String routeShortName) {
+    RouteShortNameTooLongNotice(String routeId, int csvRowNumber, String routeShortName) {
       super(SeverityLevel.WARNING);
       this.routeId = routeId;
       this.csvRowNumber = csvRowNumber;
@@ -147,13 +147,13 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class SameNameAndDescriptionForRouteNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String routeId;
     private final String routeDesc;
     private final String specifiedField;
 
     SameNameAndDescriptionForRouteNotice(
-        long csvRowNumber, String routeId, String routeDesc, String routeShortOrLongName) {
+        int csvRowNumber, String routeId, String routeDesc, String routeShortOrLongName) {
       super(SeverityLevel.WARNING);
       this.routeId = routeId;
       this.csvRowNumber = csvRowNumber;

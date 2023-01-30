@@ -75,7 +75,7 @@ public class TableContainerGenerator {
             .addAnnotation(Override.class)
             .addModifiers(Modifier.PUBLIC)
             .returns(String.class)
-            .addStatement("return $T.FILENAME", classNames.tableLoaderTypeName())
+            .addStatement("return $T.FILENAME", classNames.entityImplementationTypeName())
             .build());
 
     typeSpec.addMethod(

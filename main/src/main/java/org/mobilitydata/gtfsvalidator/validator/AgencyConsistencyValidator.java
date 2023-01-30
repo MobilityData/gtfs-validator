@@ -26,7 +26,6 @@ import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableLoader;
 
 /**
  * Validates that all agencies have the same timezone and language and that agency_id field is set
@@ -63,7 +62,7 @@ public class AgencyConsistencyValidator extends FileValidator {
             new MissingRequiredFieldNotice(
                 agencyTable.gtfsFilename(),
                 agency.csvRowNumber(),
-                GtfsAgencyTableLoader.AGENCY_ID_FIELD_NAME));
+                GtfsAgency.AGENCY_ID_FIELD_NAME));
       }
     }
 
@@ -105,11 +104,11 @@ public class AgencyConsistencyValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class InconsistentAgencyLangNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String expected;
     private final String actual;
 
-    InconsistentAgencyLangNotice(long csvRowNumber, String expected, String actual) {
+    InconsistentAgencyLangNotice(int csvRowNumber, String expected, String actual) {
       super(SeverityLevel.WARNING);
       this.csvRowNumber = csvRowNumber;
       this.expected = expected;
@@ -123,11 +122,11 @@ public class AgencyConsistencyValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class InconsistentAgencyTimezoneNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String expected;
     private final String actual;
 
-    InconsistentAgencyTimezoneNotice(long csvRowNumber, String expected, String actual) {
+    InconsistentAgencyTimezoneNotice(int csvRowNumber, String expected, String actual) {
       super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
       this.expected = expected;

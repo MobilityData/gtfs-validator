@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,11 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.annotation;
+package org.mobilitydata.gtfsvalidator.table;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValue;
 
-/**
- * This annotation is placed by annotation processor on generated classes that load individual GTFS
- * files, e.g., "stops.txt". This annotation should not be used directly.
- */
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface GtfsLoader {}
+@GtfsEnumValue(name = "A_PLUS_AB", value = 0)
+@GtfsEnumValue(name = "A_PLUS_AB_PLUS_B", value = 1)
+@GtfsEnumValue(name = "AB", value = 2)
+public interface GtfsFareTransferTypeEnum {}

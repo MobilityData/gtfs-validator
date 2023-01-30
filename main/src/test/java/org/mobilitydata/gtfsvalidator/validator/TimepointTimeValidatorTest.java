@@ -17,18 +17,18 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mobilitydata.gtfsvalidator.table.GtfsStopTableLoader.STOP_ID_FIELD_NAME;
-import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME;
-import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.CONTINUOUS_DROP_OFF_FIELD_NAME;
-import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.CONTINUOUS_PICKUP_FIELD_NAME;
-import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME;
-import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.DROP_OFF_TYPE_FIELD_NAME;
-import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.PICKUP_TYPE_FIELD_NAME;
-import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.SHAPE_DIST_TRAVELED_FIELD_NAME;
-import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.STOP_HEADSIGN_FIELD_NAME;
-import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.STOP_SEQUENCE_FIELD_NAME;
-import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.TIMEPOINT_FIELD_NAME;
-import static org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableLoader.TRIP_ID_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStop.STOP_ID_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTime.ARRIVAL_TIME_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTime.CONTINUOUS_DROP_OFF_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTime.CONTINUOUS_PICKUP_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTime.DEPARTURE_TIME_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTime.DROP_OFF_TYPE_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTime.PICKUP_TYPE_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTime.SHAPE_DIST_TRAVELED_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTime.STOP_HEADSIGN_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTime.STOP_SEQUENCE_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTime.TIMEPOINT_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStopTime.TRIP_ID_FIELD_NAME;
 
 import java.util.ArrayList;
 import java.util.List;

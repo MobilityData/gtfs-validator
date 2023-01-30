@@ -16,12 +16,12 @@ public class InvalidCurrencyAmountNotice extends ValidationNotice {
 
   private final String fieldName;
 
-  private final long csvRowNumber;
+  private final int csvRowNumber;
 
   private final String amount;
 
   public InvalidCurrencyAmountNotice(
-      String fileName, String fieldName, long csvRowNumber, BigDecimal amount) {
+      String fileName, String fieldName, int csvRowNumber, BigDecimal amount) {
     super(SeverityLevel.ERROR);
     this.fileName = fileName;
     this.fieldName = fieldName;

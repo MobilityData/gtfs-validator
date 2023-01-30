@@ -45,7 +45,7 @@ public class MissingLevelIdValidatorTest {
     return noticeContainer.getValidationNotices();
   }
 
-  private static GtfsStop createStop(long csvRowNumber, String levelId) {
+  private static GtfsStop createStop(int csvRowNumber, String levelId) {
     return new GtfsStop.Builder()
         .setStopId(toStopId(csvRowNumber))
         .setCsvRowNumber(csvRowNumber)
@@ -53,11 +53,11 @@ public class MissingLevelIdValidatorTest {
         .build();
   }
 
-  private static String toStopId(long csvRowNumber) {
+  private static String toStopId(int csvRowNumber) {
     return String.format("stop %s", 2 * csvRowNumber + 100);
   }
 
-  private static GtfsPathway createPathway(long csvRowNumber, GtfsPathwayMode pathwayMode) {
+  private static GtfsPathway createPathway(int csvRowNumber, GtfsPathwayMode pathwayMode) {
     return new GtfsPathway.Builder()
         .setPathwayId(toPathwayId(pathwayMode, csvRowNumber))
         .setCsvRowNumber(csvRowNumber)
@@ -67,7 +67,7 @@ public class MissingLevelIdValidatorTest {
         .build();
   }
 
-  private static String toPathwayId(GtfsPathwayMode pathwayMode, long csvRowNumber) {
+  private static String toPathwayId(GtfsPathwayMode pathwayMode, int csvRowNumber) {
     return pathwayMode.toString() + csvRowNumber;
   }
 

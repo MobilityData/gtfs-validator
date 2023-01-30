@@ -31,7 +31,7 @@ import org.mobilitydata.gtfsvalidator.validator.ShapeIncreasingDistanceValidator
 
 public class ShapeIncreasingDistanceValidatorTest {
   public static GtfsShape createShapePoint(
-      long csvRowNumber,
+      int csvRowNumber,
       String shapeId,
       double shapePtLat,
       double shapePtLon,

@@ -24,7 +24,6 @@ import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathway;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathwayTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsPathwayTableLoader;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 
@@ -54,15 +53,9 @@ public class PathwayEndpointTypeValidator extends FileValidator {
   public void validate(NoticeContainer noticeContainer) {
     for (GtfsPathway pathway : pathwayTable.getEntities()) {
       checkEndpoint(
-          pathway,
-          GtfsPathwayTableLoader.FROM_STOP_ID_FIELD_NAME,
-          pathway.fromStopId(),
-          noticeContainer);
+          pathway, GtfsPathway.FROM_STOP_ID_FIELD_NAME, pathway.fromStopId(), noticeContainer);
       checkEndpoint(
-          pathway,
-          GtfsPathwayTableLoader.TO_STOP_ID_FIELD_NAME,
-          pathway.toStopId(),
-          noticeContainer);
+          pathway, GtfsPathway.TO_STOP_ID_FIELD_NAME, pathway.toStopId(), noticeContainer);
     }
   }
 
@@ -91,7 +84,7 @@ public class PathwayEndpointTypeValidator extends FileValidator {
 
   /** Describes a pathway which endpoint is a station. */
   static class PathwayToWrongLocationTypeNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String pathwayId;
     private final String fieldName;
     private final String stopId;
@@ -107,7 +100,7 @@ public class PathwayEndpointTypeValidator extends FileValidator {
 
   /** Describes a pathway which endpoint is a platform that has boarding areas. */
   static class PathwayToPlatformWithBoardingAreasNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String pathwayId;
     private final String fieldName;
     private final String stopId;

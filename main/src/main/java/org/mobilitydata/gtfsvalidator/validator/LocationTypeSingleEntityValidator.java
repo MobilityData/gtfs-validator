@@ -73,13 +73,13 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class StationWithParentStationNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String stopId;
     private final String stopName;
     private final String parentStation;
 
     StationWithParentStationNotice(
-        long csvRowNumber, String stopId, String stopName, String parentStation) {
+        int csvRowNumber, String stopId, String stopName, String parentStation) {
       super(SeverityLevel.ERROR);
       this.stopId = stopId;
       this.stopName = stopName;
@@ -97,13 +97,13 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class LocationWithoutParentStationNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String stopId;
     private final String stopName;
     private final int locationType;
 
     LocationWithoutParentStationNotice(
-        long csvRowNumber, String stopId, String stopName, int locationType) {
+        int csvRowNumber, String stopId, String stopName, int locationType) {
       super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
       this.stopId = stopId;
@@ -120,11 +120,11 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class PlatformWithoutParentStationNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String stopId;
     private final String stopName;
 
-    PlatformWithoutParentStationNotice(long csvRowNumber, String stopId, String stopName) {
+    PlatformWithoutParentStationNotice(int csvRowNumber, String stopId, String stopName) {
       super(SeverityLevel.WARNING);
       this.csvRowNumber = csvRowNumber;
       this.stopId = stopId;

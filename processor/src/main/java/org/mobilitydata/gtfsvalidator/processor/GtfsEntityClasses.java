@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.processor;
 
 import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.TypeName;
 
 /**
  * Generates class names for a given GTFS table.
@@ -25,7 +24,10 @@ import com.squareup.javapoet.TypeName;
  * <p>This class is used by multiple code generators.
  */
 public final class GtfsEntityClasses {
+
   public static final String TABLE_PACKAGE_NAME = "org.mobilitydata.gtfsvalidator.table";
+  public static final String VALIDATOR_PACKAGE_NAME = "org.mobilitydata.gtfsvalidator.validator";
+
   public static final String SCHEMA_SUFFIX = "Schema";
 
   /** Upper camelcase name, e.g., GtfsStopTime. */
@@ -50,27 +52,27 @@ public final class GtfsEntityClasses {
     return className;
   }
 
-  public String tableLoaderSimpleName() {
-    return className + "TableLoader";
+  public String tableDescriptorSimpleName() {
+    return className + "TableDescriptor";
   }
 
   public String tableContainerSimpleName() {
     return className + "TableContainer";
   }
 
-  public TypeName entityImplementationTypeName() {
+  public ClassName entityImplementationTypeName() {
     return ClassName.get(TABLE_PACKAGE_NAME, entityImplementationSimpleName());
   }
 
-  public TypeName entityBuilderTypeName() {
+  public ClassName entityBuilderTypeName() {
     return ClassName.get(TABLE_PACKAGE_NAME, entityImplementationSimpleName() + ".Builder");
   }
 
-  public TypeName tableLoaderTypeName() {
-    return ClassName.get(TABLE_PACKAGE_NAME, tableLoaderSimpleName());
+  public ClassName tableDescriptorTypeName() {
+    return ClassName.get(TABLE_PACKAGE_NAME, tableDescriptorSimpleName());
   }
 
-  public TypeName tableContainerTypeName() {
+  public ClassName tableContainerTypeName() {
     return ClassName.get(TABLE_PACKAGE_NAME, tableContainerSimpleName());
   }
 }

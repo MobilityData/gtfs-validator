@@ -16,14 +16,13 @@
 
 package org.mobilitydata.gtfsvalidator.processor;
 
+import com.google.common.collect.ImmutableList;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.lang.model.element.Modifier;
@@ -42,23 +41,21 @@ import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
  */
 public class EndRangeValidatorGenerator {
 
-  private static final String VALIDATOR_PACKAGE_NAME = "org.mobilitydata.gtfsvalidator.validator";
-
   private final List<GtfsFileDescriptor> fileDescriptors;
 
   public EndRangeValidatorGenerator(List<GtfsFileDescriptor> fileDescriptors) {
     this.fileDescriptors = fileDescriptors;
   }
 
-  public List<JavaFile> generateValidatorFiles() {
-    List<JavaFile> validators = new ArrayList<>();
+  public ImmutableList<TypeSpec> generateValidators() {
+    ImmutableList.Builder<TypeSpec> validators = ImmutableList.builder();
     for (GtfsFileDescriptor fileDescriptor : fileDescriptors) {
       generateValidator(fileDescriptor).ifPresent(validators::add);
     }
-    return validators;
+    return validators.build();
   }
 
-  private static Optional<JavaFile> generateValidator(GtfsFileDescriptor fileDescriptor) {
+  private static Optional<TypeSpec> generateValidator(GtfsFileDescriptor fileDescriptor) {
     GtfsEntityClasses entityClasses = new GtfsEntityClasses(fileDescriptor);
     TypeSpec.Builder typeSpec =
         TypeSpec.classBuilder(validatorName(fileDescriptor))
@@ -129,9 +126,7 @@ public class EndRangeValidatorGenerator {
 
     typeSpec.addMethod(validateMethod.build());
 
-    return hasEndRange
-        ? Optional.of(JavaFile.builder(VALIDATOR_PACKAGE_NAME, typeSpec.build()).build())
-        : Optional.empty();
+    return hasEndRange ? Optional.of(typeSpec.build()) : Optional.empty();
   }
 
   enum StartEndRangeNoticeType {
@@ -144,19 +139,20 @@ public class EndRangeValidatorGenerator {
       GtfsFieldDescriptor startField,
       GtfsFieldDescriptor endField,
       StartEndRangeNoticeType noticeType) {
-    TypeName tableLoaderTypeName = new GtfsEntityClasses(fileDescriptor).tableLoaderTypeName();
+    TypeName gtfsEntityTypeName =
+        new GtfsEntityClasses(fileDescriptor).entityImplementationTypeName();
     CodeBlock.Builder block =
-        CodeBlock.builder().add("$T.FILENAME, entity.csvRowNumber(), ", tableLoaderTypeName);
+        CodeBlock.builder().add("$T.FILENAME, entity.csvRowNumber(), ", gtfsEntityTypeName);
     if (fileDescriptor.hasSingleColumnPrimaryKey()) {
       block.add("entity.$L(), ", fileDescriptor.getSingleColumnPrimaryKey().name());
     }
-    block.add("$T.$L, ", tableLoaderTypeName, FieldNameConverter.fieldNameField(startField.name()));
+    block.add("$T.$L, ", gtfsEntityTypeName, FieldNameConverter.fieldNameField(startField.name()));
     if (noticeType.equals(StartEndRangeNoticeType.OUT_OF_ORDER)) {
       block.add("entity.$L().toString(), ", startField.name());
     }
     block.add(
         "$T.$L, entity.$L().toString()",
-        tableLoaderTypeName,
+        gtfsEntityTypeName,
         FieldNameConverter.fieldNameField(endField.name()),
         endField.name());
     return block.build();
