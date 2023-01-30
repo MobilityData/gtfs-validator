@@ -1789,7 +1789,7 @@ The given field has no value in some input row, even though values are recommend
 The `timepoint` column should be provided.
 
 #### References
-* [stop_times.txt best practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/stop_times.md)
+* [stop_times.txt best practices](https://gtfs.org/schedule/best-practices/#stop_timestxt)
 <details>
 
 #### Notice fields description
@@ -1798,8 +1798,7 @@ The `timepoint` column should be provided.
 | `filename`    	| The name of the affected file.                  	| String   	|
 
 #### Affected files
-* [`stop_times.txt`](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stop_timestxt)
-
+* [`stop_times.txt`](https://gtfs.org/schedule/reference/#stop_timestxt)
 </details>
 
 <a name="MissingTimepointValueNotice"/>
@@ -1809,7 +1808,7 @@ The `timepoint` column should be provided.
 Even though the column `timepoint` is optional in `stop_times.txt` according to the specification, `stop_times.timepoint` should not be empty when provided. 
 
 #### References
-* [stop_times.txt specification](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stop_timestxt)
+* [stop_times.txt specification](https://gtfs.org/schedule/reference/#stop_timestxt)
 <details>
 
 
@@ -1821,7 +1820,7 @@ Even though the column `timepoint` is optional in `stop_times.txt` according to 
 | `stopSequence` 	| The faulty record's `stop_times.stop_sequence`. 	| String 	|
 
 #### Affected files
-* [`stop_times.txt`](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stop_timestxt)
+* [`stop_times.txt`](https://gtfs.org/schedule/reference/#stop_timestxt)
 
 </details>
 
@@ -2149,7 +2148,7 @@ A stop entry that has many potential matches to the trip's path of travel, as de
 
 #### References
 * [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
-* [stops_times.txt specification](http://gtfs.org/reference/static#stopstimestxt)
+* [stops_times.txt specification](https://gtfs.org/schedule/reference/#stop_timestxt)
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 <details>
 
@@ -2179,7 +2178,7 @@ Two stop entries in `stop_times.txt` are different than their arrival-departure 
 
 #### References
 * [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
-* [stops_times.txt specification](http://gtfs.org/reference/static#stopstimestxt)
+* [stops_times.txt specification](https://gtfs.org/schedule/reference/#stop_timestxt)
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 <details>
 
@@ -2241,7 +2240,7 @@ A stop time entry that is a large distance away from the location of the shape i
 
 #### References
 * [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
-* [stops_times.txt specification](http://gtfs.org/reference/static#stopstimestxt)
+* [stops_times.txt specification](https://gtfs.org/schedule/reference/#stop_timestxt)
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 <details>
 
@@ -2272,7 +2271,7 @@ A stop in `stops.txt` is not referenced by any `stop_times.stop_id`, so it is no
 Such stops normally do not provide user value. This notice may indicate a typo in `stop_times.txt`.
 
 #### References
-* [stops_times.txt specification](http://gtfs.org/reference/static#stopstimestxt)
+* [stops_times.txt specification](https://gtfs.org/schedule/reference/#stop_timestxt)
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 
 <a name="TranslationUnknownTableNameNotice"/>
