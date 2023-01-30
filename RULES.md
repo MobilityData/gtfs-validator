@@ -899,7 +899,7 @@ The given field has no value in some input row, even though values are required.
 
 ### missing_required_file
 
-A required file is missing.
+A required file is missing. If this notice is triggered for every core file, it might be a problem with the input. To create a zip file from the GTFS `.txt` files: select all the `.txt` files, right-click, and compress. Do not compress the folder containing the files. 
 
 #### References
 * [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
