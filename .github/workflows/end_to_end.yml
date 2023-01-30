@@ -82,10 +82,9 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   run-on-data:
     needs: [ fetch-urls, pack-snapshot ]
-    runs-on: 
-      # We use machines with more memory to run validation, as large feeds
-      # can consume too much heap for default machine instances (see #1304).
-      labels: ubuntu-latest-4-cores
+    # We use machines with more memory to run validation, as large feeds
+    # can consume too much heap for default machine instances (see #1304).
+    runs-on: ubuntu-latest-4-cores
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:
