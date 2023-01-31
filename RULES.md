@@ -11,24 +11,22 @@ A part of the specification that is translated into code in the validator. A Rul
   - In the validator: this is translated into code in the file [`StopZoneIdValidator.java`](https://github.com/MobilityData/gtfs-validator/blob/master/main/src/main/java/org/mobilitydata/gtfsvalidator/validator/StopZoneIdValidator.java).
 
 ### A Notice
-What the Rule outputs if the conditions aren’t met. It is what the user will see in the validation report.
-- For example, the output of `StopZoneIdValidator.java` Rule is the Notice `stop_without_zone_id`. 
+The output that the user will see if the conditions aren’t met.
+- For example, the output of `StopZoneIdValidator.java` is the Notice `stop_without_zone_id`. 
 
 ### The Severity of a Notice
 
 Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 
-* `ERROR` notices are for items that the [GTFS reference specification](https://github.com/google/transit/tree/master/gtfs/spec/en) explicitly requires or prohibits (e.g., using the language "must"). The validator uses [RFC2119](https://tools.ietf.org/html/rfc2119) to interpret the language in the GTFS spec.
-  * ⚠️ Please note that this validator also generates `System Errors` that give information about things that may have gone wrong during the validation process such as the inability to unzip a GTFS file. These are generated in a second report `system_errors.json`.
-* `WARNING` notices are for items that will affect the quality of GTFS datasets but the GTFS spec does expressly require or prohibit. For example, these might be items recommended using the language "should" or "should not" in the GTFS spec, or items recommended in the MobilityData [GTFS Best Practices](https://gtfs.org/best-practices/).
-* `INFO` notices are for items that do not affect the feed's quality, such as unknown files or unknown fields.
+* `ERROR` notices are for GTFS Schedule Reference violations. These are items that the [GTFS Schedule Reference](https://gtfs.org/schedule/reference/) explicitly requires or prohibits (using the language "must"). 
+* `WARNING` notices are for GTFS Schedule Best Practices. These are items that the [GTFS Schedule Reference](https://gtfs.org/schedule/reference/) explicitly recommends (using the language "should"), or items mentioned in the official [GTFS Schedule Best Practices](https://gtfs.org/schedule/best-practices/).
+* `INFO` notices are for items that may affect the feed's quality. They are unexpected finds that should be brought to the user's attention. 
 
-<!--suppress ALL -->
+⚠️ Please note that this validator also generates `System Errors` that give information about things that may have gone wrong during the validation process such as the inability to unzip a GTFS file. These are generated in a second report `system_errors.json`.
 
 <a name="ERRORS"/>
 
 ## Table of ERRORS
-
 | Notice code                                                                                                                       | Description                                                                                                                                            |
 |-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`block_trips_with_overlapping_stop_times`](#block_trips_with_overlapping_stop_times)                                             | Block trips with overlapping stop times.                                                                                                               |
@@ -94,8 +92,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 
 <a name="WARNINGS"/>
 
-## Table of warnings
-
+## Table of WARNINGS
 | Notice code                                                                                   | Description                                                                                                                                                   |
 |-----------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`attribution_without_role`](#attribution_without_role)                                       | Attribution with no role.                                                                                                                                     |
@@ -138,11 +135,10 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`unusable_trip`](#unusable_trip)                                                             | Trips must have more than one stop to be usable.                                                                                                              |
 | [`unused_shape`](#unused_shape)                                                               | Shape is not used in GTFS file `trips.txt`.                                                                                                                   |
 | [`unused_trip`](#unused_trip)                                                                 | Trip is not be used in `stop_times.txt`                                                                                                                       |
-|                                                                                               |                                                                                                                                                               |
 
 <a name="INFOS"/>
 
-## Table of info
+## Table of INFOS
 
 | Notice code                                       | Description               |
 |---------------------------------------------------|---------------------------|
@@ -151,7 +147,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 
 <a name="SYSTEM_ERRORS"/>
 
-## Table of system errors
+## Table of SYSTEM ERRORS
 
 | System error code                                                               | Description                                            |
 |---------------------------------------------------------------------------------|--------------------------------------------------------|
@@ -161,7 +157,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`thread_execution_error`](#thread_execution_error)                             | ExecutionException during multithreaded validation     |
 | [`u_r_i_syntax_error`](#u_r_i_syntax_error)                                     | A string could not be parsed as a URI reference.       |
 
-# Errors
+# More details - ERRORS
 
 <a name="BlockTripsWithOverlappingStopTimesNotice"/>
 
@@ -171,8 +167,8 @@ Trips with the same block id have overlapping stop times.
 
 #### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
-* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
-* [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
+* [stops.txt specification](http://gtfs.org/reference/static#stopstxt)
+* [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
 
 <details>
 
@@ -189,8 +185,8 @@ Trips with the same block id have overlapping stop times.
 | `intersection`  	| The overlapping period.                      	            | Date   	|
 
 #### Affected files
-* [stops.txt specification](http://gtfs.org/reference/static#stopstxt)
-* [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+* [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 
 </details>
 
@@ -1018,7 +1014,7 @@ The given field has no value in some input row, even though values are required.
 
 ### missing_required_file
 
-A required file is missing.
+A required file is missing. If this notice is triggered for every core file, it might be a problem with the input. To create a zip file from the GTFS `.txt` files: select all the `.txt` files, right-click, and compress. Do not compress the folder containing the files. 
 
 #### References
 * [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
@@ -1621,7 +1617,7 @@ Any other combination raise this error.
 
 </details>
 
-# Warnings
+# More details - WARNINGS
 
 <a name="AttributionWithoutRoleNotice"/>
 
@@ -1792,7 +1788,7 @@ The speed threshold depends on route type.
 
 ##### Speed thresholds
 
-Same as for [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsecutiveStopsNotice).
+Same as for [`fast_travel_between_consecutive_stops`](#fast_travel_between_consecutive_stops).
 
 #### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
@@ -1975,7 +1971,7 @@ Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one
 A recommended file is missing.
 
 #### References
-* [feed_info.txt best practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/best-practices.md#feed_infotxt)
+* [feed_info.txt best practices](https://gtfs.org/schedule/best-practices/#feed_infotxt)
 <details>
 
 #### Notice fields description
@@ -1993,7 +1989,7 @@ A recommended file is missing.
 The given field has no value in some input row, even though values are recommended.
 
 #### References
-* [feed_info.txt best practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/best-practices.md#feed_infotxt)
+* [feed_info.txt best practices](https://gtfs.org/schedule/best-practices/#feed_infotxt)
 <details>
 
 #### Notice fields description
@@ -2013,7 +2009,7 @@ The given field has no value in some input row, even though values are recommend
 The `timepoint` column should be provided.
 
 #### References
-* [stop_times.txt best practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/stop_times.md)
+* [stop_times.txt best practices](https://gtfs.org/schedule/best-practices/#stop_timestxt)
 <details>
 
 #### Notice fields description
@@ -2022,8 +2018,7 @@ The `timepoint` column should be provided.
 | `filename`    	| The name of the affected file.                  	| String   	|
 
 #### Affected files
-* [`stop_times.txt`](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stop_timestxt)
-
+* [`stop_times.txt`](https://gtfs.org/schedule/reference/#stop_timestxt)
 </details>
 
 <a name="MissingTimepointValueNotice"/>
@@ -2033,7 +2028,7 @@ The `timepoint` column should be provided.
 Even though the column `timepoint` is optional in `stop_times.txt` according to the specification, `stop_times.timepoint` should not be empty when provided. 
 
 #### References
-* [stop_times.txt specification](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stop_timestxt)
+* [stop_times.txt specification](https://gtfs.org/schedule/reference/#stop_timestxt)
 <details>
 
 
@@ -2045,7 +2040,7 @@ Even though the column `timepoint` is optional in `stop_times.txt` according to 
 | `stopSequence` 	| The faulty record's `stop_times.stop_sequence`. 	| String 	|
 
 #### Affected files
-* [`stop_times.txt`](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stop_timestxt)
+* [`stop_times.txt`](https://gtfs.org/schedule/reference/#stop_timestxt)
 
 </details>
 
@@ -2373,7 +2368,7 @@ A stop entry that has many potential matches to the trip's path of travel, as de
 
 #### References
 * [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
-* [stops_times.txt specification](http://gtfs.org/reference/static#stopstimestxt)
+* [stops_times.txt specification](https://gtfs.org/schedule/reference/#stop_timestxt)
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 <details>
 
@@ -2403,7 +2398,7 @@ Two stop entries in `stop_times.txt` are different than their arrival-departure 
 
 #### References
 * [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
-* [stops_times.txt specification](http://gtfs.org/reference/static#stopstimestxt)
+* [stops_times.txt specification](https://gtfs.org/schedule/reference/#stop_timestxt)
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 <details>
 
@@ -2465,7 +2460,7 @@ A stop time entry that is a large distance away from the location of the shape i
 
 #### References
 * [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
-* [stops_times.txt specification](http://gtfs.org/reference/static#stopstimestxt)
+* [stops_times.txt specification](https://gtfs.org/schedule/reference/#stop_timestxt)
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 <details>
 
@@ -2496,7 +2491,7 @@ A stop in `stops.txt` is not referenced by any `stop_times.stop_id`, so it is no
 Such stops normally do not provide user value. This notice may indicate a typo in `stop_times.txt`.
 
 #### References
-* [stops_times.txt specification](http://gtfs.org/reference/static#stopstimestxt)
+* [stops_times.txt specification](https://gtfs.org/schedule/reference/#stop_timestxt)
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 
 <a name="TranslationUnknownTableNameNotice"/>
@@ -2625,7 +2620,7 @@ Trips should be referred to at least once in `stop_times.txt`.
 
 </details>
 
-# Infos
+# More details - INFOS
 
 <a name="UnknownColumnNotice"/>
 
@@ -2666,7 +2661,7 @@ A file is unknown.
 
 </details>
 
-# System errors
+# More details - SYSTEM ERRORS
 
 <a name="IOError"/>
 
