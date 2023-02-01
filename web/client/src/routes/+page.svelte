@@ -6,15 +6,14 @@
   import DropTarget from '$lib/DropTarget.svelte';
   import FileField from '$lib/forms/FileField.svelte';
   import Form from '$lib/forms/Form.svelte';
+  import languageTags from '$lib/rfc5646-language-tags';
   import TextField from '$lib/forms/TextField.svelte';
+  import SelectField from '$lib/forms/SelectField.svelte';
   import StatusModal from '$lib/StatusModal.svelte';
 
   import { fly } from 'svelte/transition';
-  import { quintOut } from 'svelte/easing';
-
-  import languageTags from '$lib/rfc5646-language-tags';
-  import SelectField from '$lib/forms/SelectField.svelte';
   import { onMount } from 'svelte';
+  import { quintOut } from 'svelte/easing';
 
   let allowUrl = false;
   let showDocs = true;
