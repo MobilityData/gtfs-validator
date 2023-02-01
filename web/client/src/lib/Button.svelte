@@ -16,7 +16,7 @@
   /** @type {string|null} */
   export let target = null;
 
-  /** @type {string} */
+  /** @type {'button'|'submit'|'reset'|null|undefined} */
   export let type = 'button';
 
   /** @type {string} */
@@ -25,6 +25,7 @@
   $: buttonClass = [
     'btn',
     `btn-${variant}`,
+    `focus-ring`,
     disabled ? 'cursor-not-allowed opacity-60' : '',
     'inline-block',
     'font-mono',

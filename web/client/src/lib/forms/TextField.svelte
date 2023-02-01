@@ -13,5 +13,5 @@
 </script>
 
 <LabeledField {id} {label} {hint}>
-  <FieldInput {id} {...$$props} />
+  <FieldInput {id} {...$$restProps} />
 </LabeledField>

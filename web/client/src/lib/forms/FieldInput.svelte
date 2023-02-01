@@ -14,7 +14,9 @@
   /** @type {string} */
   export let type = 'text';
 
-  $: inputClass = [baseClass, 'block w-full', className].join(' ');
+  $: inputClass = [baseClass, 'block focus-ring w-full', className].join(' ');
 </script>
 
-<input {id} {name} {type} {...$$props} class={inputClass} />
+<slot>
+  <input {id} {name} {type} {...$$restProps} class={inputClass} />
+</slot>

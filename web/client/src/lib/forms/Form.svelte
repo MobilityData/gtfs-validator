@@ -11,7 +11,7 @@
 <form
   class={`${className} ${defaultClass}`}
   on:submit={handleSubmit}
-  {...$$props}
+  {...$$restProps}
 >
   <slot />
 </form>

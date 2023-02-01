@@ -6,6 +6,9 @@
   let fileInput;
 
   /** @type {string} */
+  export let buttonText = 'Choose a file\u2026';
+
+  /** @type {string} */
   export let filename;
 
   /** @type {(function(Event):void)|null} */
@@ -23,7 +26,11 @@
   /** @type {string} */
   export let name = id;
 
+  /** @type {string} */
+  export let placeholder = 'No file chosen';
+
   function clickFileInput() {
+    fileInput.focus();
     fileInput.click();
   }
 
@@ -35,25 +42,27 @@
 </script>
 
 <LabeledField {id} {label} {hint}>
-  <input
-    readonly
-    class="input-control block w-full mb-2"
+  <div
+    class="input-control focus-ring mb-2 py-3"
     on:click={clickFileInput}
-    placeholder="No file chosen"
-    value={filename}
-  />
+    on:keypress={clickFileInput}
+  >
+    <div class="text-black/50">
+      {filename ? filename : placeholder}
+    </div>
+
+    <input
+      {id}
+      {name}
+      class="sr-only"
+      type="file"
+      {...$$restProps}
+      bind:this={fileInput}
+      on:input={handleInput}
+    />
+  </div>
 
   <Button type="button" className="py-1" handleClick={clickFileInput}>
-    Choose a file&hellip;
+    {buttonText}
   </Button>
-
-  <input
-    {id}
-    {name}
-    class="sr-only"
-    type="file"
-    {...$$restProps}
-    bind:this={fileInput}
-    on:input={handleInput}
-  />
 </LabeledField>
