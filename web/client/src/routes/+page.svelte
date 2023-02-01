@@ -186,6 +186,14 @@
     } while(!jobComplete)
 
     updateStatus('ready');
+    const form = /** @type {HTMLFormElement} */ (
+      document.getElementById('validator-form')
+    );
+
+    if (form) {
+      form.reset();
+      clearFile();
+    }
   }
 </script>
 
