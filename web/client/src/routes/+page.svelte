@@ -58,7 +58,7 @@
       } else if (files.length > 1) {
         errors.push('Sorry, you must upload only one ZIP file.');
       } else {
-        handleFile(files[0]);
+        handleFile(files[0], true);
       }
     }
   }
@@ -70,8 +70,11 @@
     handleFiles(files);
   }
 
-  /** @param {File} file */
-  function handleFile(file) {
+  /**
+   * @param {File} file
+   * @param {boolean} shouldUpload
+   **/
+  function handleFile(file, shouldUpload = false) {
     console.log('handling file', file.name);
     clearFile();
 
@@ -81,18 +84,20 @@
       console.log(errors);
     } else {
       pendingFilename = file?.name;
-      uploadFile(file);
+      if (shouldUpload) {
+        uploadFile(file);
+      }
     }
   }
 
   /** @param {FileList} files */
-  function handleFiles(files) {
+  function handleFiles(files, shouldUpload = false) {
     console.log('handling files', files);
     clearFile();
     if (files.length > 1) {
       errors.push('Sorry, you must upload only a single ZIP file.');
     } else if (files.length == 1) {
-      handleFile(files[0]);
+      handleFile(files[0], shouldUpload);
     }
   }
 
@@ -101,7 +106,7 @@
     event.preventDefault();
 
     // @ts-ignore - TODO fix the types here?
-    handleFiles(event.target.file.files);
+    uploadFile();
   }
 
   function getUrl() {
