@@ -1,4 +1,6 @@
 <script>
+  import { browser } from '$app/environment';
+
   import Alert from '$lib/Alert.svelte';
   import Button from '$lib/Button.svelte';
   import DropTarget from '$lib/DropTarget.svelte';
@@ -10,10 +12,15 @@
   import { fly } from 'svelte/transition';
   import { quintOut } from 'svelte/easing';
 
-  import { dev } from '$app/environment';
+  import languageTags from '$lib/rfc5646-language-tags';
+  import SelectField from '$lib/forms/SelectField.svelte';
+  import { onMount } from 'svelte';
 
   let allowUrl = false;
   let showDocs = true;
+
+  /** @type {string} */
+  let languageCode;
 
   /** @type {string} */
   let jobId;
@@ -204,6 +211,16 @@
       clearFile();
     }
   }
+
+  onMount(() => {
+    if (browser) {
+      // attempt to detect language automatically
+      const browserLanguage = window?.navigator?.language;
+      if (browserLanguage && browserLanguage in languageTags) {
+        languageCode = navigator.language;
+      }
+    }
+  });
 </script>
 
 <div class="container">
@@ -236,6 +253,15 @@
               type="url"
             />
           {/if}
+
+          <SelectField
+            id="languageCode"
+            name="languageCode"
+            label="Language"
+            bind:value={languageCode}
+            options={languageTags}
+            placeholder="Choose a language"
+          />
         </div>
 
         {#if errors.length > 0}
