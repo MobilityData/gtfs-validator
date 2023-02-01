@@ -16,7 +16,7 @@
   let showDocs = true;
 
   /** @type {string} */
-  let jobId
+  let jobId;
 
   /** @type {string[]} */
   let errors = [];
@@ -117,13 +117,16 @@
         }
       });
 
-      xhr.open('GET', 'https://gtfs-validator-web-mbzoxaljzq-ue.a.run.app/upload-url');
+      xhr.open(
+        'GET',
+        'https://gtfs-validator-web-mbzoxaljzq-ue.a.run.app/upload-url'
+      );
       xhr.send(data);
     });
   }
 
   /** @param {string} newStatus */
-  function updateStatus (newStatus) {
+  function updateStatus(newStatus) {
     status = newStatus;
 
     if (status != null) {
@@ -136,7 +139,7 @@
   /**
    * @param {string} url
    * @param {File} file
-  **/
+   **/
   function putFile(url, file) {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
@@ -145,7 +148,7 @@
       xhr.open('PUT', url);
       xhr.setRequestHeader('Content-Type', 'application/octet-stream');
       xhr.send(file);
-    })
+    });
   }
 
   function reportExists() {
@@ -154,18 +157,18 @@
 
       xhr.addEventListener('readystatechange', function () {
         if (this.readyState === this.DONE) {
-          resolve(xhr.status === 200)
+          resolve(xhr.status === 200);
         }
       });
       xhr.onerror = reject;
-      xhr.open("HEAD", reportUrl);
+      xhr.open('HEAD', reportUrl);
       xhr.send();
     });
   }
 
   /** @param {number} ms */
   function sleep(ms) {
-    return new Promise(res => setTimeout(res, ms));
+    return new Promise((res) => setTimeout(res, ms));
   }
 
   /** @param {File} file */
@@ -177,15 +180,16 @@
     await putFile(result.url, file);
     updateStatus('processing');
 
-    let jobComplete = false
+    let jobComplete = false;
     do {
-      jobComplete = await reportExists()
+      jobComplete = await reportExists();
       if (!jobComplete) {
         await sleep(2500);
       }
-    } while(!jobComplete)
+    } while (!jobComplete);
 
     updateStatus('ready');
+
     const form = /** @type {HTMLFormElement} */ (
       document.getElementById('validator-form')
     );
@@ -198,13 +202,13 @@
 </script>
 
 <div class="container">
-  <h1 class="h1 leading-tight mb-0">Canonical GTFS Schedule Validator</h1>
+  <h1 class="h1 leading-none mb-0">Canonical GTFS Schedule Validator</h1>
 </div>
 
 <div class="bg-mobi-light-gray">
   <DropTarget {handleDragOver} {handleDrop}>
     <div class="container">
-      <Form {handleSubmit}>
+      <Form id="validator-form" {handleSubmit}>
         <h2 class="h3 text-center">
           Check the quality of a file {#if allowUrl}or a feed{/if}
         </h2>
@@ -254,13 +258,13 @@
             </Button>
           {/if}
 
-          <Button disabled={!pendingFilename} type="submit" variant="primary"
-            >Validate</Button
-          >
+          <Button disabled={!pendingFilename} type="submit" variant="primary">
+            Validate
+          </Button>
         </div>
       </Form>
     </div>
   </DropTarget>
 </div>
 
-<StatusModal bind:dialog={statusModal} bind:status reportUrl={reportUrl}></StatusModal>
+<StatusModal bind:dialog={statusModal} bind:status {reportUrl} />

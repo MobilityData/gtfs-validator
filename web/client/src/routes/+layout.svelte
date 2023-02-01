@@ -9,4 +9,27 @@
     </a>
   </div>
 </header>
-<slot />
+
+<div class="flex-1">
+  <slot />
+</div>
+
+<footer>
+  <div class="container my-4">
+    <p class="text-mobi-purple-safe">
+      <span class="inline-block">
+        Made with
+        <i class="fa-regular fa-heart" />
+        <span class="fa-sr-only">"love"</span>
+        by <a href="https://dot.ca.gov/cal-itp">Cal-ITP</a>
+        and&nbsp;<a href="https://jarv.us">Jarvus</a>.
+      </span>
+      <span class="inline-block">
+        Maintained with
+        <i class="fa-regular fa-heart" />
+        <span class="fa-sr-only">"love"</span>
+        by&nbsp;<a href="https://mobilitydata.org/">MobilityData</a>.
+      </span>
+    </p>
+  </div>
+</footer>

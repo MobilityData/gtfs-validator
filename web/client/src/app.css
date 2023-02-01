@@ -45,6 +45,10 @@
   [hidden] {
     display: none !important;
   }
+
+  a:not(button, .btn, input) {
+    @apply underline hover:text-mobi-light-blue;
+  }
 }
 
 @layer components {
