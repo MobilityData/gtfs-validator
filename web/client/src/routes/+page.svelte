@@ -18,6 +18,9 @@
   let allowUrl = false;
   let showDocs = true;
 
+  /** @type {HTMLInputElement} */
+  let fileInput;
+
   /** @type {string} */
   let languageCode;
 
@@ -110,9 +113,11 @@
   /** @param {SubmitEvent} event */
   function handleSubmit(event) {
     event.preventDefault();
+    const file = fileInput?.files?.item(0);
 
-    // @ts-ignore - TODO fix the types here?
-    uploadFile();
+    if (file) {
+      uploadFile(file);
+    }
   }
 
   function getUrl() {
@@ -242,6 +247,7 @@
             accept="application/zip,.zip"
             filename={pendingFilename}
             handleInput={handleFileInput}
+            bind:fileInput
           />
 
           {#if allowUrl}

@@ -2,11 +2,11 @@
   import Button from '$lib/Button.svelte';
   import LabeledField from './LabeledField.svelte';
 
-  /** @type {HTMLInputElement} */
-  let fileInput;
-
   /** @type {string} */
   export let buttonText = 'Choose a file\u2026';
+
+  /** @type {HTMLInputElement} */
+  export let fileInput;
 
   /** @type {string} */
   export let filename;
@@ -47,7 +47,7 @@
     on:click={clickFileInput}
     on:keypress={clickFileInput}
   >
-    <div class="text-black/50">
+    <div class={filename ? null : 'text-black/50'}>
       {filename ? filename : placeholder}
     </div>
 
