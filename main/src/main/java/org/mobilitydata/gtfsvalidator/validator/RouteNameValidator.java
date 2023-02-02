@@ -22,8 +22,20 @@ import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Validates short and long name for a single route.
+ *
+ * <p>References:
+ *
+ * <ul>
+ *   <li>&lt;a href="https://gtfs.org/schedule/reference/#routestxt")"&gt;GTFS routes.txt
+ *       specification&lt;/a&gt;
+ *   <li>&lt;a href="https://gtfs.org/schedule/best-practices/#routestxt"&gt;GTFS routes.txt Best
+ *       Practices&lt;/a&gt;
+ * </ul>
  *
  * <p>Generated notices:
  *
@@ -32,6 +44,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
  *   <li>{@link RouteShortAndLongNameEqualNotice}
  *   <li>{@link RouteShortNameTooLongNotice}
  *   <li>{@link SameNameAndDescriptionForRouteNotice}
+ *   <li>{@link RouteLongNameContainsShortNameNotice}
  * </ul>
  */
 @GtfsValidator
@@ -62,6 +75,22 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
           new RouteShortNameTooLongNotice(
               entity.routeId(), entity.csvRowNumber(), entity.routeShortName()));
     }
+
+    // check if route_long_name begins with route_short_name followed by " ", "-", or "(".
+    // as referenced here
+    // https://github.com/MobilityData/gtfs-validator/pull/501#discussion_r535506016
+    if (hasLongName && hasShortName) {
+      String longName = entity.routeLongName();
+      String shortName = entity.routeShortName();
+      Pattern pattern = Pattern.compile("^" + shortName + "[\\s\\-\\(]");
+      Matcher matcher = pattern.matcher(longName);
+      if(matcher.find()) {
+        noticeContainer.addValidationNotice(
+            new RouteLongNameContainsShortNameNotice(
+                entity.routeId(), entity.csvRowNumber(), shortName, longName));
+      }
+    }
+
     if (entity.hasRouteDesc()) {
       String routeDesc = entity.routeDesc();
       String routeId = entity.routeId();
@@ -97,6 +126,27 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
       super(SeverityLevel.ERROR);
       this.routeId = routeId;
       this.csvRowNumber = csvRowNumber;
+    }
+  }
+
+  /**
+   * Long name can not contain short name for a single route.
+   *
+   * <p>Severity: {@code SeverityLevel.WARNING}
+   */
+  static class RouteLongNameContainsShortNameNotice extends ValidationNotice {
+    private final String routeId;
+    private final int csvRowNumber;
+    private final String routeShortName;
+    private final String routeLongName;
+
+    RouteLongNameContainsShortNameNotice(
+        String routeId, int csvRowNumber, String routeShortName, String routeLongName) {
+      super(SeverityLevel.WARNING);
+      this.routeId = routeId;
+      this.csvRowNumber = csvRowNumber;
+      this.routeShortName = routeShortName;
+      this.routeLongName = routeLongName;
     }
   }
 

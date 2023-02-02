@@ -122,4 +122,22 @@ public class RouteNameValidatorTest {
         .contains(
             new SameNameAndDescriptionForRouteNotice(1, "r1", "duplicate", "route_short_name"));
   }
+
+  // test that notice is thrown if route_long_name begins with route_short_name followed by " ",
+  // "-", or "("
+  @Test
+  public void routeLongNameContainsRouteShortNameShouldGenerateNotice() {
+    assertThat(validateRoute(createRoute("S", "S-Long Name", null)))
+        .containsExactly(
+            new RouteNameValidator.RouteLongNameContainsShortNameNotice(
+                "r1", 1, "S", "S-Long Name"));
+    assertThat(validateRoute(createRoute("S", "S Long Name", null)))
+        .containsExactly(
+            new RouteNameValidator.RouteLongNameContainsShortNameNotice(
+                "r1", 1, "S", "S Long Name"));
+    assertThat(validateRoute(createRoute("S", "S(Long Name)", null)))
+        .containsExactly(
+            new RouteNameValidator.RouteLongNameContainsShortNameNotice(
+                "r1", 1, "S", "S(Long Name)"));
+  }
 }
