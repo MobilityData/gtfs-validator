@@ -27,6 +27,7 @@ on:
       - 'test_pack_dock.yml'
       - 'triage.yml'
       - 'acceptance_test.yml'
+  workflow_dispatch:
 jobs:
   validate_gradle_wrapper:
     runs-on: ubuntu-latest
