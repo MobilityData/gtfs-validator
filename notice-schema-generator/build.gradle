@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'org.mobilitydata'
+version '3.1.2-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+
+dependencies {
+    annotationProcessor 'com.google.auto.value:auto-value:1.7.4'
+    compileOnly 'com.google.auto.value:auto-value-annotations:1.7.4'
+    implementation project(':core')
+    implementation 'com.github.javaparser:java-symbol-solver-core:0.6.3'
+    implementation 'com.beust:jcommander:1.82'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+application {
+    mainClass = 'org.mobilitydata.gtfsvalidator.noticeschemagenerator.Main'
+}

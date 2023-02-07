@@ -7,5 +7,6 @@ include 'processor'
 include 'processor:tests'
 include 'main'
 include 'output-comparator'
+include 'notice-schema-generator'
 include 'tests'
 

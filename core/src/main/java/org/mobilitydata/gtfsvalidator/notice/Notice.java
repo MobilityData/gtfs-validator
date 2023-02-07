@@ -76,7 +76,7 @@ public abstract class Notice {
    *
    * @return notice code, e.g., "foreign_key_violation".
    */
-  static String getCode(String className) {
+  public static String getCode(String className) {
     return CaseFormat.UPPER_CAMEL.to(
         CaseFormat.LOWER_UNDERSCORE, StringUtils.removeEnd(className, NOTICE_SUFFIX));
   }
