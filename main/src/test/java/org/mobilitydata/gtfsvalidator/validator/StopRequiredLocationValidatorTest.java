@@ -3,7 +3,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static com.google.common.truth.Truth.assertThat;
 
 import java.util.List;
-import javax.annotation.Nullable;
+
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -11,20 +11,6 @@ import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 
 public class StopRequiredLocationValidatorTest {
-  private static GtfsStop createStop(
-      int csvRowNumber,
-      String stopId,
-      @Nullable Double lat,
-      @Nullable Double lon,
-      GtfsLocationType type) {
-    return new GtfsStop.Builder()
-        .setCsvRowNumber(csvRowNumber)
-        .setStopId(stopId)
-        .setStopLat(lat)
-        .setStopLon(lon)
-        .setLocationType(type)
-        .build();
-  }
 
   private static List<ValidationNotice> generateNotices(GtfsStop stop) {
     NoticeContainer noticeContainer = new NoticeContainer();
@@ -35,7 +21,12 @@ public class StopRequiredLocationValidatorTest {
   /* Missing Lat & Lon for Stop, Station, Entrance/Exit types should generate errors */
   @Test
   public void missingLatLongForStop_generatesNotice() {
-    assertThat(generateNotices(createStop(4, "stop id value", null, null, GtfsLocationType.STOP)))
+    assertThat(generateNotices(
+            new GtfsStop.Builder()
+                    .setCsvRowNumber(4)
+                    .setStopId("stop id value")
+                    .setLocationType(GtfsLocationType.STOP)
+                    .build()))
         .containsExactly(
             new StopRequiredLocationValidator.LatLonRequiredForStopType(
                 4, "stop id value", GtfsLocationType.STOP));
@@ -44,7 +35,11 @@ public class StopRequiredLocationValidatorTest {
   @Test
   public void missingLatLongForStation_generatesNotice() {
     assertThat(
-            generateNotices(createStop(4, "stop id value", null, null, GtfsLocationType.STATION)))
+            generateNotices(new GtfsStop.Builder()
+                    .setCsvRowNumber(4)
+                    .setStopId("stop id value")
+                    .setLocationType(GtfsLocationType.STATION)
+                    .build()))
         .containsExactly(
             new StopRequiredLocationValidator.LatLonRequiredForStopType(
                 4, "stop id value", GtfsLocationType.STATION));
@@ -53,7 +48,11 @@ public class StopRequiredLocationValidatorTest {
   @Test
   public void missingLatLongForEntrance_generatesNotice() {
     assertThat(
-            generateNotices(createStop(4, "stop id value", null, null, GtfsLocationType.ENTRANCE)))
+            generateNotices(new GtfsStop.Builder()
+                    .setCsvRowNumber(4)
+                    .setStopId("stop id value")
+                    .setLocationType(GtfsLocationType.ENTRANCE)
+                    .build()))
         .containsExactly(
             new StopRequiredLocationValidator.LatLonRequiredForStopType(
                 4, "stop id value", GtfsLocationType.ENTRANCE));
@@ -64,7 +63,11 @@ public class StopRequiredLocationValidatorTest {
   public void missingLatLongForGenericNode_generatesNoNotice() {
     assertThat(
             generateNotices(
-                createStop(4, "stop id value", null, null, GtfsLocationType.GENERIC_NODE)))
+                    new GtfsStop.Builder()
+                            .setCsvRowNumber(4)
+                            .setStopId("stop id value")
+                            .setLocationType(GtfsLocationType.GENERIC_NODE)
+                            .build()))
         .isEmpty();
   }
 
@@ -72,21 +75,37 @@ public class StopRequiredLocationValidatorTest {
   public void missingLatLongForBoardingArea_generatesNoNotice() {
     assertThat(
             generateNotices(
-                createStop(4, "stop id value", null, null, GtfsLocationType.BOARDING_AREA)))
+                    new GtfsStop.Builder()
+                            .setCsvRowNumber(4)
+                            .setStopId("stop id value")
+                            .setLocationType(GtfsLocationType.BOARDING_AREA)
+                            .build()))
         .isEmpty();
   }
 
   /* Supplied Lat & Lon for Stop, Station, Entrance/Exit types should not generate errors */
   @Test
   public void givenLatLongForStop_generatesNoNotice() {
-    assertThat(generateNotices(createStop(4, "stop id value", 25.25, 35.35, GtfsLocationType.STOP)))
+    assertThat(generateNotices(new GtfsStop.Builder()
+            .setCsvRowNumber(4)
+            .setStopId("stop id value")
+            .setStopLat(25.25)
+            .setStopLon(35.35)
+            .setLocationType(GtfsLocationType.STOP)
+            .build()))
         .isEmpty();
   }
 
   @Test
   public void givenLatLongForStation_generatesNoNotice() {
     assertThat(
-            generateNotices(createStop(4, "stop id value", 25.25, 35.35, GtfsLocationType.STATION)))
+            generateNotices(new GtfsStop.Builder()
+                    .setCsvRowNumber(4)
+                    .setStopId("stop id value")
+                    .setStopLat(25.25)
+                    .setStopLon(35.35)
+                    .setLocationType(GtfsLocationType.STATION)
+                    .build()))
         .isEmpty();
   }
 
@@ -94,14 +113,25 @@ public class StopRequiredLocationValidatorTest {
   public void givenLatLongForEntrance_generatesNoNotice() {
     assertThat(
             generateNotices(
-                createStop(4, "stop id value", 25.25, 35.35, GtfsLocationType.ENTRANCE)))
+                    new GtfsStop.Builder()
+                            .setCsvRowNumber(4)
+                            .setStopId("stop id value")
+                            .setStopLat(25.25)
+                            .setStopLon(35.35)
+                            .setLocationType(GtfsLocationType.ENTRANCE)
+                            .build()))
         .isEmpty();
   }
 
   /* Missing Lat OR Lon for Stop, Station, Entrance/Exit types should not generate errors */
   @Test
   public void givenLatButMissingLongForStop_generatesNoNotice() {
-    assertThat(generateNotices(createStop(4, "stop id value", 25.25, null, GtfsLocationType.STOP)))
+    assertThat(generateNotices(new GtfsStop.Builder()
+            .setCsvRowNumber(4)
+            .setStopId("stop id value")
+            .setStopLat(25.25)
+            .setLocationType(GtfsLocationType.STOP)
+            .build()))
         .containsExactly(
             new StopRequiredLocationValidator.LatLonRequiredForStopType(
                 4, "stop id value", GtfsLocationType.STOP));
@@ -109,7 +139,12 @@ public class StopRequiredLocationValidatorTest {
 
   @Test
   public void givenLongButMissingLatForStop_generatesNoNotice() {
-    assertThat(generateNotices(createStop(4, "stop id value", null, 25.25, GtfsLocationType.STOP)))
+    assertThat(generateNotices(new GtfsStop.Builder()
+            .setCsvRowNumber(4)
+            .setStopId("stop id value")
+            .setStopLon(25.25)
+            .setLocationType(GtfsLocationType.STOP)
+            .build()))
         .containsExactly(
             new StopRequiredLocationValidator.LatLonRequiredForStopType(
                 4, "stop id value", GtfsLocationType.STOP));
@@ -118,7 +153,12 @@ public class StopRequiredLocationValidatorTest {
   @Test
   public void givenLatButMissingLongForStation_generatesNoNotice() {
     assertThat(
-            generateNotices(createStop(4, "stop id value", 25.25, null, GtfsLocationType.STATION)))
+            generateNotices(new GtfsStop.Builder()
+                    .setCsvRowNumber(4)
+                    .setStopId("stop id value")
+                    .setStopLat(25.25)
+                    .setLocationType(GtfsLocationType.STATION)
+                    .build()))
         .containsExactly(
             new StopRequiredLocationValidator.LatLonRequiredForStopType(
                 4, "stop id value", GtfsLocationType.STATION));
@@ -127,7 +167,12 @@ public class StopRequiredLocationValidatorTest {
   @Test
   public void givenLongButMissingLatForStation_generatesNoNotice() {
     assertThat(
-            generateNotices(createStop(4, "stop id value", null, 25.25, GtfsLocationType.STATION)))
+            generateNotices(new GtfsStop.Builder()
+                    .setCsvRowNumber(4)
+                    .setStopId("stop id value")
+                    .setStopLon(25.25)
+                    .setLocationType(GtfsLocationType.STATION)
+                    .build()))
         .containsExactly(
             new StopRequiredLocationValidator.LatLonRequiredForStopType(
                 4, "stop id value", GtfsLocationType.STATION));
@@ -136,7 +181,12 @@ public class StopRequiredLocationValidatorTest {
   @Test
   public void givenLatButMissingLongForEntrance_generatesNoNotice() {
     assertThat(
-            generateNotices(createStop(4, "stop id value", 25.25, null, GtfsLocationType.ENTRANCE)))
+            generateNotices(new GtfsStop.Builder()
+                    .setCsvRowNumber(4)
+                    .setStopId("stop id value")
+                    .setStopLat(25.25)
+                    .setLocationType(GtfsLocationType.ENTRANCE)
+                    .build()))
         .containsExactly(
             new StopRequiredLocationValidator.LatLonRequiredForStopType(
                 4, "stop id value", GtfsLocationType.ENTRANCE));
@@ -145,7 +195,12 @@ public class StopRequiredLocationValidatorTest {
   @Test
   public void givenLongButMissingLatForEntrance_generatesNoNotice() {
     assertThat(
-            generateNotices(createStop(4, "stop id value", null, 25.25, GtfsLocationType.ENTRANCE)))
+            generateNotices(new GtfsStop.Builder()
+                    .setCsvRowNumber(4)
+                    .setStopId("stop id value")
+                    .setStopLon(25.25)
+                    .setLocationType(GtfsLocationType.ENTRANCE)
+                    .build()))
         .containsExactly(
             new StopRequiredLocationValidator.LatLonRequiredForStopType(
                 4, "stop id value", GtfsLocationType.ENTRANCE));
