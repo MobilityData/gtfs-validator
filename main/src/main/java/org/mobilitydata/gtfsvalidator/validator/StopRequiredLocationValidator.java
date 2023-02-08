@@ -14,11 +14,11 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStop;
  * <p>Generated notices:
  *
  * <ul>
- *   <li>{@link LatLongRequiredForStopType}
+ *   <li>{@link LatLonRequiredForStopType}
  * </ul>
  */
 @GtfsValidator
-public class StopLatLongValidator extends SingleEntityValidator<GtfsStop> {
+public class StopRequiredLocationValidator extends SingleEntityValidator<GtfsStop> {
 
   @Override
   public void validate(GtfsStop stop, NoticeContainer noticeContainer) {
@@ -27,7 +27,7 @@ public class StopLatLongValidator extends SingleEntityValidator<GtfsStop> {
             || stop.locationType() == GtfsLocationType.ENTRANCE)
         && !stop.hasStopLatLon()) {
       noticeContainer.addValidationNotice(
-          new LatLongRequiredForStopType(stop.csvRowNumber(), stop.stopId(), stop.locationType()));
+          new LatLonRequiredForStopType(stop.csvRowNumber(), stop.stopId(), stop.locationType()));
     }
   }
 
@@ -39,13 +39,13 @@ public class StopLatLongValidator extends SingleEntityValidator<GtfsStop> {
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
-  static class LatLongRequiredForStopType extends ValidationNotice {
+  static class LatLonRequiredForStopType extends ValidationNotice {
 
     private final int csvRowNumber;
     private final GtfsLocationType locationType;
     private final String stopId;
 
-    LatLongRequiredForStopType(int csvRowNumber, String stopId, GtfsLocationType type) {
+    LatLonRequiredForStopType(int csvRowNumber, String stopId, GtfsLocationType type) {
       super(SeverityLevel.ERROR);
       this.stopId = stopId;
       this.csvRowNumber = csvRowNumber;

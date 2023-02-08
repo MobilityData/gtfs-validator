@@ -10,7 +10,7 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 
-public class StopLatLongValidatorTest {
+public class StopRequiredLocationValidatorTest {
   private static GtfsStop createStop(
       int csvRowNumber,
       String stopId,
@@ -28,7 +28,7 @@ public class StopLatLongValidatorTest {
 
   private static List<ValidationNotice> generateNotices(GtfsStop stop) {
     NoticeContainer noticeContainer = new NoticeContainer();
-    new StopLatLongValidator().validate(stop, noticeContainer);
+    new StopRequiredLocationValidator().validate(stop, noticeContainer);
     return noticeContainer.getValidationNotices();
   }
 
@@ -37,7 +37,7 @@ public class StopLatLongValidatorTest {
   public void missingLatLongForStop_generatesNotice() {
     assertThat(generateNotices(createStop(4, "stop id value", null, null, GtfsLocationType.STOP)))
         .containsExactly(
-            new StopLatLongValidator.LatLongRequiredForStopType(
+            new StopRequiredLocationValidator.LatLonRequiredForStopType(
                 4, "stop id value", GtfsLocationType.STOP));
   }
 
@@ -46,7 +46,7 @@ public class StopLatLongValidatorTest {
     assertThat(
             generateNotices(createStop(4, "stop id value", null, null, GtfsLocationType.STATION)))
         .containsExactly(
-            new StopLatLongValidator.LatLongRequiredForStopType(
+            new StopRequiredLocationValidator.LatLonRequiredForStopType(
                 4, "stop id value", GtfsLocationType.STATION));
   }
 
@@ -55,7 +55,7 @@ public class StopLatLongValidatorTest {
     assertThat(
             generateNotices(createStop(4, "stop id value", null, null, GtfsLocationType.ENTRANCE)))
         .containsExactly(
-            new StopLatLongValidator.LatLongRequiredForStopType(
+            new StopRequiredLocationValidator.LatLonRequiredForStopType(
                 4, "stop id value", GtfsLocationType.ENTRANCE));
   }
 
@@ -103,7 +103,7 @@ public class StopLatLongValidatorTest {
   public void givenLatButMissingLongForStop_generatesNoNotice() {
     assertThat(generateNotices(createStop(4, "stop id value", 25.25, null, GtfsLocationType.STOP)))
         .containsExactly(
-            new StopLatLongValidator.LatLongRequiredForStopType(
+            new StopRequiredLocationValidator.LatLonRequiredForStopType(
                 4, "stop id value", GtfsLocationType.STOP));
   }
 
@@ -111,7 +111,7 @@ public class StopLatLongValidatorTest {
   public void givenLongButMissingLatForStop_generatesNoNotice() {
     assertThat(generateNotices(createStop(4, "stop id value", null, 25.25, GtfsLocationType.STOP)))
         .containsExactly(
-            new StopLatLongValidator.LatLongRequiredForStopType(
+            new StopRequiredLocationValidator.LatLonRequiredForStopType(
                 4, "stop id value", GtfsLocationType.STOP));
   }
 
@@ -120,7 +120,7 @@ public class StopLatLongValidatorTest {
     assertThat(
             generateNotices(createStop(4, "stop id value", 25.25, null, GtfsLocationType.STATION)))
         .containsExactly(
-            new StopLatLongValidator.LatLongRequiredForStopType(
+            new StopRequiredLocationValidator.LatLonRequiredForStopType(
                 4, "stop id value", GtfsLocationType.STATION));
   }
 
@@ -129,7 +129,7 @@ public class StopLatLongValidatorTest {
     assertThat(
             generateNotices(createStop(4, "stop id value", null, 25.25, GtfsLocationType.STATION)))
         .containsExactly(
-            new StopLatLongValidator.LatLongRequiredForStopType(
+            new StopRequiredLocationValidator.LatLonRequiredForStopType(
                 4, "stop id value", GtfsLocationType.STATION));
   }
 
@@ -138,7 +138,7 @@ public class StopLatLongValidatorTest {
     assertThat(
             generateNotices(createStop(4, "stop id value", 25.25, null, GtfsLocationType.ENTRANCE)))
         .containsExactly(
-            new StopLatLongValidator.LatLongRequiredForStopType(
+            new StopRequiredLocationValidator.LatLonRequiredForStopType(
                 4, "stop id value", GtfsLocationType.ENTRANCE));
   }
 
@@ -147,7 +147,7 @@ public class StopLatLongValidatorTest {
     assertThat(
             generateNotices(createStop(4, "stop id value", null, 25.25, GtfsLocationType.ENTRANCE)))
         .containsExactly(
-            new StopLatLongValidator.LatLongRequiredForStopType(
+            new StopRequiredLocationValidator.LatLonRequiredForStopType(
                 4, "stop id value", GtfsLocationType.ENTRANCE));
   }
 }
