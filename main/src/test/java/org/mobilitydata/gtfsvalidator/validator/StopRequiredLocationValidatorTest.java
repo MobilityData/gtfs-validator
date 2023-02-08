@@ -19,7 +19,6 @@ public class StopRequiredLocationValidatorTest {
     return noticeContainer.getValidationNotices();
   }
 
-  /* Missing Lat & Lon for Stop, Station, Entrance/Exit types should generate errors */
   @Test
   public void missingLatLongForStop_generatesNotice() {
     assertThat(generateNotices(
