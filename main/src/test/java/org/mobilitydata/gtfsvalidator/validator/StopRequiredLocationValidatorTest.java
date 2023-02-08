@@ -28,7 +28,7 @@ public class StopRequiredLocationValidatorTest {
                     .setLocationType(GtfsLocationType.STOP)
                     .build()))
         .containsExactly(
-            new StopRequiredLocationValidator.LatLonRequiredForStopType(
+            new StopRequiredLocationValidator.StopWithoutLocationNotice(
                 4, "stop id value", GtfsLocationType.STOP));
   }
 
@@ -41,7 +41,7 @@ public class StopRequiredLocationValidatorTest {
                     .setLocationType(GtfsLocationType.STATION)
                     .build()))
         .containsExactly(
-            new StopRequiredLocationValidator.LatLonRequiredForStopType(
+            new StopRequiredLocationValidator.StopWithoutLocationNotice(
                 4, "stop id value", GtfsLocationType.STATION));
   }
 
@@ -54,7 +54,7 @@ public class StopRequiredLocationValidatorTest {
                     .setLocationType(GtfsLocationType.ENTRANCE)
                     .build()))
         .containsExactly(
-            new StopRequiredLocationValidator.LatLonRequiredForStopType(
+            new StopRequiredLocationValidator.StopWithoutLocationNotice(
                 4, "stop id value", GtfsLocationType.ENTRANCE));
   }
 
@@ -133,7 +133,7 @@ public class StopRequiredLocationValidatorTest {
             .setLocationType(GtfsLocationType.STOP)
             .build()))
         .containsExactly(
-            new StopRequiredLocationValidator.LatLonRequiredForStopType(
+            new StopRequiredLocationValidator.StopWithoutLocationNotice(
                 4, "stop id value", GtfsLocationType.STOP));
   }
 
@@ -146,7 +146,7 @@ public class StopRequiredLocationValidatorTest {
             .setLocationType(GtfsLocationType.STOP)
             .build()))
         .containsExactly(
-            new StopRequiredLocationValidator.LatLonRequiredForStopType(
+            new StopRequiredLocationValidator.StopWithoutLocationNotice(
                 4, "stop id value", GtfsLocationType.STOP));
   }
 
@@ -160,7 +160,7 @@ public class StopRequiredLocationValidatorTest {
                     .setLocationType(GtfsLocationType.STATION)
                     .build()))
         .containsExactly(
-            new StopRequiredLocationValidator.LatLonRequiredForStopType(
+            new StopRequiredLocationValidator.StopWithoutLocationNotice(
                 4, "stop id value", GtfsLocationType.STATION));
   }
 
@@ -174,7 +174,7 @@ public class StopRequiredLocationValidatorTest {
                     .setLocationType(GtfsLocationType.STATION)
                     .build()))
         .containsExactly(
-            new StopRequiredLocationValidator.LatLonRequiredForStopType(
+            new StopRequiredLocationValidator.StopWithoutLocationNotice(
                 4, "stop id value", GtfsLocationType.STATION));
   }
 
@@ -188,7 +188,7 @@ public class StopRequiredLocationValidatorTest {
                     .setLocationType(GtfsLocationType.ENTRANCE)
                     .build()))
         .containsExactly(
-            new StopRequiredLocationValidator.LatLonRequiredForStopType(
+            new StopRequiredLocationValidator.StopWithoutLocationNotice(
                 4, "stop id value", GtfsLocationType.ENTRANCE));
   }
 
@@ -202,7 +202,7 @@ public class StopRequiredLocationValidatorTest {
                     .setLocationType(GtfsLocationType.ENTRANCE)
                     .build()))
         .containsExactly(
-            new StopRequiredLocationValidator.LatLonRequiredForStopType(
+            new StopRequiredLocationValidator.StopWithoutLocationNotice(
                 4, "stop id value", GtfsLocationType.ENTRANCE));
   }
 }
