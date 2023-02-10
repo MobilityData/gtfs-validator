@@ -29,7 +29,6 @@ import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
  *
  * <ul>
  *   <li>{@link RouteBothShortAndLongNameMissingNotice}
- *   <li>{@link RouteShortAndLongNameEqualNotice}
  *   <li>{@link RouteShortNameTooLongNotice}
  *   <li>{@link SameNameAndDescriptionForRouteNotice}
  *   <li>{@link RouteLongNameContainsShortNameNotice}
@@ -49,15 +48,6 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
           new RouteBothShortAndLongNameMissingNotice(entity.routeId(), entity.csvRowNumber()));
     }
 
-    if (hasShortName
-        && hasLongName
-        && entity.routeShortName().equalsIgnoreCase(entity.routeLongName())) {
-      noticeContainer.addValidationNotice(
-          new RouteShortAndLongNameEqualNotice(
-              entity.routeId(), entity.csvRowNumber(),
-              entity.routeShortName(), entity.routeLongName()));
-    }
-
     if (hasShortName && entity.routeShortName().length() > MAX_SHORT_NAME_LENGTH) {
       noticeContainer.addValidationNotice(
           new RouteShortNameTooLongNotice(
@@ -70,9 +60,9 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
     if (hasLongName && hasShortName) {
       String longName = entity.routeLongName();
       String shortName = entity.routeShortName();
-      if (longName.startsWith(shortName)) {
+      if (longName.toLowerCase().startsWith(shortName.toLowerCase())) {
         String remainder = longName.substring(shortName.length());
-        if (remainder.matches("^[\\s\\-\\(].*")) {
+        if (remainder.isEmpty() || remainder.matches("^\\s?[\\s\\-\\(\\)].*")) {
           noticeContainer.addValidationNotice(
               new RouteLongNameContainsShortNameNotice(
                   entity.routeId(), entity.csvRowNumber(), shortName, longName));
@@ -130,27 +120,6 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
     private final String routeLongName;
 
     RouteLongNameContainsShortNameNotice(
-        String routeId, int csvRowNumber, String routeShortName, String routeLongName) {
-      super(SeverityLevel.WARNING);
-      this.routeId = routeId;
-      this.csvRowNumber = csvRowNumber;
-      this.routeShortName = routeShortName;
-      this.routeLongName = routeLongName;
-    }
-  }
-
-  /**
-   * Short and long name are equal for a single route.
-   *
-   * <p>Severity: {@code SeverityLevel.WARNING}
-   */
-  static class RouteShortAndLongNameEqualNotice extends ValidationNotice {
-    private final String routeId;
-    private final int csvRowNumber;
-    private final String routeShortName;
-    private final String routeLongName;
-
-    RouteShortAndLongNameEqualNotice(
         String routeId, int csvRowNumber, String routeShortName, String routeLongName) {
       super(SeverityLevel.WARNING);
       this.routeId = routeId;
