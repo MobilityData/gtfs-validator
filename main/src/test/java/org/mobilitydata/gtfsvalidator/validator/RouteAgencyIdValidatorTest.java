@@ -11,25 +11,6 @@ import org.mobilitydata.gtfsvalidator.table.*;
 
 public class RouteAgencyIdValidatorTest {
 
-  public static GtfsRoute createRoute(
-      int rowNumber, String routeId, String agencyId, String shortName) {
-
-    return new GtfsRoute.Builder()
-        .setCsvRowNumber(rowNumber)
-        .setAgencyId(agencyId)
-        .setRouteId(routeId)
-        .setRouteShortName(shortName)
-        .build();
-  }
-
-  public static GtfsAgency createAgency(int csvRowNumber, String agencyId, String agencyName) {
-    return new GtfsAgency.Builder()
-        .setCsvRowNumber(csvRowNumber)
-        .setAgencyId(agencyId)
-        .setAgencyName(agencyName)
-        .build();
-  }
-
   @Test
   public void agencyIdRequiredErrorWhenMoreThanOneAgency() {
 
@@ -37,13 +18,33 @@ public class RouteAgencyIdValidatorTest {
     GtfsAgencyTableContainer agencyTable =
         GtfsAgencyTableContainer.forEntities(
             ImmutableList.of(
-                createAgency(0, "Agency 1", "Agency 1"), createAgency(1, "Agency 2", "Agency 2")),
+                new GtfsAgency.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("Agency 1")
+                    .setAgencyName("Agency 1")
+                    .build(),
+                new GtfsAgency.Builder()
+                    .setCsvRowNumber(1)
+                    .setAgencyId("Agency 2")
+                    .setAgencyName("Agency 2")
+                    .build()),
             noticeContainer);
+
     GtfsRouteTableContainer routeTable =
         GtfsRouteTableContainer.forEntities(
             ImmutableList.of(
-                createRoute(0, "route_0", "agency0", "Route 0"),
-                createRoute(1, "route_1", null, "Route 1")),
+                new GtfsRoute.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("agency0")
+                    .setRouteId("route_0")
+                    .setRouteShortName("Route 0")
+                    .build(),
+                new GtfsRoute.Builder()
+                    .setCsvRowNumber(1)
+                    .setAgencyId(null)
+                    .setRouteId("route_1")
+                    .setRouteShortName("Route 1")
+                    .build()),
             noticeContainer);
     new RouteAgencyIdValidator(agencyTable, routeTable).validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
@@ -58,14 +59,101 @@ public class RouteAgencyIdValidatorTest {
     NoticeContainer noticeContainer = new NoticeContainer();
     GtfsAgencyTableContainer agencyTable =
         GtfsAgencyTableContainer.forEntities(
-            ImmutableList.of(createAgency(1, null, "Agency with no ID")), noticeContainer);
+            ImmutableList.of(
+                new GtfsAgency.Builder()
+                    .setCsvRowNumber(1)
+                    .setAgencyId(null)
+                    .setAgencyName("Agency with no ID")
+                    .build()),
+            noticeContainer);
+
     GtfsRouteTableContainer routeTable =
         GtfsRouteTableContainer.forEntities(
-            ImmutableList.of(createRoute(0, "route_0", null, "Route 0")), noticeContainer);
+            ImmutableList.of(
+                new GtfsRoute.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId(null)
+                    .setRouteId("route_0")
+                    .setRouteShortName("Route 0")
+                    .build()),
+            noticeContainer);
     new RouteAgencyIdValidator(agencyTable, routeTable).validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
             new MissingRecommendedFieldNotice(
                 routeTable.gtfsFilename(), 0, GtfsRoute.AGENCY_ID_FIELD_NAME));
+  }
+
+  @Test
+  public void SingleAgencyAndAgencyIdSpecified_noNotice() {
+
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsAgencyTableContainer agencyTable =
+        GtfsAgencyTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsAgency.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("agency1")
+                    .setAgencyName("Agency 1")
+                    .build()),
+            noticeContainer);
+
+    GtfsRouteTableContainer routeTable =
+        GtfsRouteTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsRoute.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("agency1")
+                    .setRouteId("route_0")
+                    .setRouteShortName("Route 0")
+                    .build(),
+                new GtfsRoute.Builder()
+                    .setCsvRowNumber(1)
+                    .setAgencyId("agency1")
+                    .setRouteId("route_1")
+                    .setRouteShortName("Route 1")
+                    .build()),
+            noticeContainer);
+    new RouteAgencyIdValidator(agencyTable, routeTable).validate(noticeContainer);
+    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+  }
+
+  @Test
+  public void MoreThanOneAgencyAndAgencyIdsSpecified_noNotice() {
+
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsAgencyTableContainer agencyTable =
+        GtfsAgencyTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsAgency.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("agency1")
+                    .setAgencyName("Agency 1")
+                    .build(),
+                new GtfsAgency.Builder()
+                    .setCsvRowNumber(1)
+                    .setAgencyId("agency2")
+                    .setAgencyName("Agency 2")
+                    .build()),
+            noticeContainer);
+
+    GtfsRouteTableContainer routeTable =
+        GtfsRouteTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsRoute.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("agency1")
+                    .setRouteId("route_0")
+                    .setRouteShortName("Route 0")
+                    .build(),
+                new GtfsRoute.Builder()
+                    .setCsvRowNumber(1)
+                    .setAgencyId("agency2")
+                    .setRouteId("route_1")
+                    .setRouteShortName("Route 1")
+                    .build()),
+            noticeContainer);
+    new RouteAgencyIdValidator(agencyTable, routeTable).validate(noticeContainer);
+    assertThat(noticeContainer.getValidationNotices()).isEmpty();
   }
 }
