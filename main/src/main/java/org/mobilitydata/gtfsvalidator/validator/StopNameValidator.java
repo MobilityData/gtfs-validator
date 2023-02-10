@@ -38,15 +38,13 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
 
   @Override
   public void validate(GtfsStop stop, NoticeContainer noticeContainer) {
-    if(stop.locationType() == GtfsLocationType.STOP
-    || stop.locationType() == GtfsLocationType.STATION
-    || stop.locationType() == GtfsLocationType.ENTRANCE){
-      if(stop.stopName().isEmpty()) {
+    if (stop.locationType() == GtfsLocationType.STOP
+        || stop.locationType() == GtfsLocationType.STATION
+        || stop.locationType() == GtfsLocationType.ENTRANCE) {
+      if (stop.stopName().isEmpty()) {
         noticeContainer.addValidationNotice(
-                new MissingStopNameNotice(
-                        stop.csvRowNumber(), stop.stopId(), stop.locationType(), stop.stopDesc()));
+            new MissingStopNameNotice(stop.csvRowNumber(), stop.stopId(), stop.locationType()));
       }
-
     }
     if (!stop.hasStopName() || !stop.hasStopDesc()) {
       return;
@@ -64,7 +62,8 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
   }
 
   /**
-   * {@code stops.stop_name} is required for a {@code GtfsStop} with {@code stops.location_type} of {@code 0}, {@code 1}, or {@code 2}
+   * {@code stops.stop_name} is required for a {@code GtfsStop} with {@code stops.location_type} of
+   * {@code 0}, {@code 1}, or {@code 2}
    *
    * <p>"Please provide a stop name for Stops, Stations, and Entrance/Exits."
    * (http://gtfs.org/reference/static#stopstxt)
@@ -76,14 +75,12 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
     private final long csvRowNumber;
     private GtfsLocationType locationType;
     private final String stopId;
-    private final String routeDesc;
 
-    MissingStopNameNotice(long csvRowNumber, String stopId, GtfsLocationType locationType, String routeDesc) {
+    MissingStopNameNotice(long csvRowNumber, String stopId, GtfsLocationType locationType) {
       super(SeverityLevel.ERROR);
       this.locationType = locationType;
       this.stopId = stopId;
       this.csvRowNumber = csvRowNumber;
-      this.routeDesc = routeDesc;
     }
   }
 

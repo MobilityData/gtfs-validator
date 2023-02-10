@@ -19,7 +19,6 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static com.google.common.truth.Truth.assertThat;
 
 import java.util.List;
-import javax.annotation.Nullable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -32,17 +31,6 @@ import org.mobilitydata.gtfsvalidator.validator.StopNameValidator.SameNameAndDes
 @RunWith(JUnit4.class)
 public class StopNameValidatorTest {
 
-  private static GtfsStop createStop(
-          int csvRowNumber, String stopId, GtfsLocationType locationType, @Nullable String stopName, @Nullable String stopDesc) {
-    return new GtfsStop.Builder()
-        .setCsvRowNumber(csvRowNumber)
-        .setStopId(stopId)
-        .setLocationType(locationType)
-        .setStopName(stopName)
-        .setStopDesc(stopDesc)
-        .build();
-  }
-
   private static List<ValidationNotice> generateNotices(GtfsStop stop) {
     NoticeContainer noticeContainer = new NoticeContainer();
     new StopNameValidator().validate(stop, noticeContainer);
@@ -52,7 +40,14 @@ public class StopNameValidatorTest {
   @Test
   public void sameStopNameAndDesc_generatesNotice() {
     assertThat(
-            generateNotices(createStop(4, "stop id value", GtfsLocationType.STOP, "duplicate value", "duplicate value")))
+            generateNotices(
+                new GtfsStop.Builder()
+                    .setCsvRowNumber(4)
+                    .setStopId("stop id value")
+                    .setLocationType(GtfsLocationType.STOP)
+                    .setStopName("duplicate value")
+                    .setStopDesc("duplicate value")
+                    .build()))
         .containsExactly(
             new SameNameAndDescriptionForStopNotice(4, "stop id value", "duplicate value"));
   }
@@ -60,48 +55,111 @@ public class StopNameValidatorTest {
   @Test
   public void differentStopNameAndDesc_noNotice() {
     assertThat(
-            generateNotices(createStop(4, "stop id value", GtfsLocationType.STOP, "stop name value", "stop desc value")))
+            generateNotices(
+                new GtfsStop.Builder()
+                    .setCsvRowNumber(4)
+                    .setStopId("stop id value")
+                    .setLocationType(GtfsLocationType.STOP)
+                    .setStopName("stop name value")
+                    .setStopDesc("stop desc value")
+                    .build()))
         .isEmpty();
   }
 
   @Test
   public void missingStopNameForStop_generatesNotice() {
     assertThat(
-            generateNotices(createStop(4, "stop id value", GtfsLocationType.STOP, null, "duplicate value")))
-            .containsExactly(
-                    new StopNameValidator.MissingStopNameNotice(4, "stop id value", GtfsLocationType.STOP, "duplicate value"));
-  }
-  @Test
-  public void missingStopNameForStation_generatesNotice() {
-    assertThat(
-            generateNotices(createStop(4, "stop id value", GtfsLocationType.STATION, null, "duplicate value")))
-            .containsExactly(
-                    new StopNameValidator.MissingStopNameNotice(4, "stop id value", GtfsLocationType.STATION, "duplicate value"));
+            generateNotices(
+                new GtfsStop.Builder()
+                    .setCsvRowNumber(4)
+                    .setStopId("stop id value")
+                    .setLocationType(GtfsLocationType.STOP)
+                    .setStopName(null)
+                    .build()))
+        .containsExactly(
+            new StopNameValidator.MissingStopNameNotice(4, "stop id value", GtfsLocationType.STOP));
   }
 
   @Test
-  public void missingStopNameForEntrance() {
+  public void missingStopNameForStation_generatesNotice() {
     assertThat(
-            generateNotices(createStop(4, "stop id value", GtfsLocationType.ENTRANCE, null, "duplicate value")))
-            .containsExactly(
-                    new StopNameValidator.MissingStopNameNotice(4, "stop id value", GtfsLocationType.ENTRANCE, "duplicate value"));
+            generateNotices(
+                new GtfsStop.Builder()
+                    .setCsvRowNumber(4)
+                    .setStopId("stop id value")
+                    .setLocationType(GtfsLocationType.STATION)
+                    .setStopName(null)
+                    .build()))
+        .containsExactly(
+            new StopNameValidator.MissingStopNameNotice(
+                4, "stop id value", GtfsLocationType.STATION));
   }
+
+  @Test
+  public void missingStopNameForEntrance_generatesNotice() {
+    assertThat(
+            generateNotices(
+                new GtfsStop.Builder()
+                    .setCsvRowNumber(4)
+                    .setStopId("stop id value")
+                    .setLocationType(GtfsLocationType.ENTRANCE)
+                    .setStopName(null)
+                    .build()))
+        .containsExactly(
+            new StopNameValidator.MissingStopNameNotice(
+                4, "stop id value", GtfsLocationType.ENTRANCE));
+  }
+
   @Test
   public void missingStopNameForGenericNode_noNotice() {
-    assertThat(generateNotices(createStop(4, "stop id value", GtfsLocationType.GENERIC_NODE, null, "stop desc value"))).isEmpty();
+    assertThat(
+            generateNotices(
+                new GtfsStop.Builder()
+                    .setCsvRowNumber(4)
+                    .setStopId("stop id value")
+                    .setLocationType(GtfsLocationType.GENERIC_NODE)
+                    .setStopName(null)
+                    .build()))
+        .isEmpty();
   }
+
   @Test
   public void missingStopNameForBoardingArea_noNotice() {
-    assertThat(generateNotices(createStop(4, "stop id value", GtfsLocationType.BOARDING_AREA, null, "stop desc value"))).isEmpty();
+    assertThat(
+            generateNotices(
+                new GtfsStop.Builder()
+                    .setCsvRowNumber(4)
+                    .setStopId("stop id value")
+                    .setLocationType(GtfsLocationType.BOARDING_AREA)
+                    .setStopName(null)
+                    .build()))
+        .isEmpty();
   }
 
   @Test
   public void missingStopNameForUnrecognizedLocationType_noNotice() {
-    assertThat(generateNotices(createStop(4, "stop id value", GtfsLocationType.UNRECOGNIZED, null, "stop desc value"))).isEmpty();
+    assertThat(
+            generateNotices(
+                new GtfsStop.Builder()
+                    .setCsvRowNumber(4)
+                    .setStopId("stop id value")
+                    .setLocationType(GtfsLocationType.UNRECOGNIZED)
+                    .setStopName(null)
+                    .build()))
+        .isEmpty();
   }
 
   @Test
   public void missingStopDesc_noNotice() {
-    assertThat(generateNotices(createStop(4, "stop id value", GtfsLocationType.STOP, "stop name value", null))).isEmpty();
+    assertThat(
+            generateNotices(
+                new GtfsStop.Builder()
+                    .setCsvRowNumber(4)
+                    .setStopId("stop id value")
+                    .setLocationType(GtfsLocationType.STOP)
+                    .setStopName("stop name value")
+                    .setStopDesc(null)
+                    .build()))
+        .isEmpty();
   }
 }
