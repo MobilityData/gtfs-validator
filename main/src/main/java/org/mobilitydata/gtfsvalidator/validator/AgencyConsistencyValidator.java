@@ -49,7 +49,7 @@ public class AgencyConsistencyValidator extends FileValidator {
   @Override
   public void validate(NoticeContainer noticeContainer) {
     final int agencyCount = agencyTable.entityCount();
-    if (agencyCount < 2) {
+    if (agencyCount == 1) {
       GtfsAgency agency = agencyTable.getEntities().get(0);
       // agency_id is recommended even when there is only 1 agency
       if (!agency.hasAgencyId()) {
@@ -61,14 +61,16 @@ public class AgencyConsistencyValidator extends FileValidator {
       return;
     }
 
-    for (GtfsAgency agency : agencyTable.getEntities()) {
-      // agency_id is required when there are 2 or more agencies.
-      if (!agency.hasAgencyId()) {
-        noticeContainer.addValidationNotice(
-            new MissingRequiredFieldNotice(
-                agencyTable.gtfsFilename(),
-                agency.csvRowNumber(),
-                GtfsAgency.AGENCY_ID_FIELD_NAME));
+    if(agencyCount > 1) {
+      for (GtfsAgency agency : agencyTable.getEntities()) {
+        // agency_id is required when there are 2 or more agencies.
+        if (!agency.hasAgencyId()) {
+          noticeContainer.addValidationNotice(
+                  new MissingRequiredFieldNotice(
+                          agencyTable.gtfsFilename(),
+                          agency.csvRowNumber(),
+                          GtfsAgency.AGENCY_ID_FIELD_NAME));
+        }
       }
     }
 
