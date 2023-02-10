@@ -16,8 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
@@ -72,12 +70,13 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
     if (hasLongName && hasShortName) {
       String longName = entity.routeLongName();
       String shortName = entity.routeShortName();
-      Pattern pattern = Pattern.compile("^" + shortName + "[\\s\\-\\(]");
-      Matcher matcher = pattern.matcher(longName);
-      if (matcher.find()) {
-        noticeContainer.addValidationNotice(
-            new RouteLongNameContainsShortNameNotice(
-                entity.routeId(), entity.csvRowNumber(), shortName, longName));
+      if (longName.startsWith(shortName)) {
+        String remainder = longName.substring(shortName.length());
+        if (remainder.matches("^[\\s\\-\\(].*")) {
+          noticeContainer.addValidationNotice(
+              new RouteLongNameContainsShortNameNotice(
+                  entity.routeId(), entity.csvRowNumber(), shortName, longName));
+        }
       }
     }
 
