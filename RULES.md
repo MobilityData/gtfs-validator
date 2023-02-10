@@ -2188,6 +2188,24 @@ A route's color and `route_text_color` should be contrasting.
 
 Long name can not contain short name for a single route.
 
+Example of bad data:
+
+| `route_id` 	| `route_short_name` 	| `route_long_name` 	|
+|------------	|--------------------	|-------------------	|
+| route1     	| L1                 	| L1                	|
+| route2     	| L1                 	| L1 Long Name      	|
+| route3     	| L1                 	| L1- Long Name      	|
+| route3     	| L1                 	| L1 - Long Name     	|
+| route4     	| L1                 	| L1 (Long Name)     	|
+| route5     	| L1                 	| L1) Long Name     	|
+
+Example of accetpable data:
+
+| `route_id` 	| `route_short_name` 	| `route_long_name` 	|
+|------------	|--------------------	|-------------------	|
+| route1     	| L1                 	| Long Name          	|
+| route2     	| BANK               	| Bankford          	|
+
 #### References
 * [routes.txt best practices](https://gtfs.org/schedule/best-practices/#routestxt)
 <details>
@@ -2211,11 +2229,6 @@ Long name can not contain short name for a single route.
 
 A single route has the same values for `route_short_name` and `route_long_name`.
 
-Example of bad data:
-
-| `route_id` 	| `route_short_name` 	| `route_long_name` 	|
-|------------	|--------------------	|-------------------	|
-| route1     	| L1                 	| L1                	|
 
 #### References
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
