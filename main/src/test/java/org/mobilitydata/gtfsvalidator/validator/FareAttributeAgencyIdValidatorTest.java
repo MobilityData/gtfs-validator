@@ -23,12 +23,12 @@ public class FareAttributeAgencyIdValidatorTest {
             ImmutableList.of(
                 new GtfsAgency.Builder()
                     .setCsvRowNumber(0)
-                    .setAgencyId("Agency 1")
+                    .setAgencyId("agency1")
                     .setAgencyName("Agency 1")
                     .build(),
                 new GtfsAgency.Builder()
                     .setCsvRowNumber(1)
-                    .setAgencyId("Agency 2")
+                    .setAgencyId("agency2")
                     .setAgencyName("Agency 2")
                     .build()),
             noticeContainer);
@@ -38,7 +38,7 @@ public class FareAttributeAgencyIdValidatorTest {
             ImmutableList.of(
                 new GtfsFareAttribute.Builder()
                     .setCsvRowNumber(0)
-                    .setAgencyId("agency0")
+                    .setAgencyId("agency1")
                     .setFareId("fare 0")
                     .build(),
                 new GtfsFareAttribute.Builder()
@@ -82,5 +82,74 @@ public class FareAttributeAgencyIdValidatorTest {
         .containsExactly(
             new MissingRecommendedFieldNotice(
                 fareTable.gtfsFilename(), 0, GtfsFareAttribute.AGENCY_ID_FIELD_NAME));
+  }
+
+  @Test
+  public void WhenMoreThanOneAgencyAndAgencyIdsSpecified_noNotice() {
+
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsAgencyTableContainer agencyTable =
+        GtfsAgencyTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsAgency.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("agency1")
+                    .setAgencyName("Agency 1")
+                    .build(),
+                new GtfsAgency.Builder()
+                    .setCsvRowNumber(1)
+                    .setAgencyId("Agency 2")
+                    .setAgencyName("Agency 2")
+                    .build()),
+            noticeContainer);
+
+    GtfsFareAttributeTableContainer fareTable =
+        GtfsFareAttributeTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsFareAttribute.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("agency1")
+                    .setFareId("fare 0")
+                    .build(),
+                new GtfsFareAttribute.Builder()
+                    .setCsvRowNumber(1)
+                    .setAgencyId("agency2")
+                    .setFareId("fare_1")
+                    .build()),
+            noticeContainer);
+    new FareAttributeAgencyIdValidator(agencyTable, fareTable).validate(noticeContainer);
+    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+  }
+
+  @Test
+  public void WhenMoreSingleAgencyAndAgencyIdSpecified_noNotice() {
+
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsAgencyTableContainer agencyTable =
+        GtfsAgencyTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsAgency.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("agency1")
+                    .setAgencyName("Agency 1")
+                    .build()),
+            noticeContainer);
+
+    GtfsFareAttributeTableContainer fareTable =
+        GtfsFareAttributeTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsFareAttribute.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("agency1")
+                    .setFareId("fare 0")
+                    .build(),
+                new GtfsFareAttribute.Builder()
+                    .setCsvRowNumber(1)
+                    .setAgencyId("agency1")
+                    .setFareId("fare_1")
+                    .build()),
+            noticeContainer);
+    new FareAttributeAgencyIdValidator(agencyTable, fareTable).validate(noticeContainer);
+    assertThat(noticeContainer.getValidationNotices()).isEmpty();
   }
 }
