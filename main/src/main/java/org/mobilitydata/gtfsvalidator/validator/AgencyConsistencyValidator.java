@@ -61,15 +61,15 @@ public class AgencyConsistencyValidator extends FileValidator {
       return;
     }
 
-    if(agencyCount > 1) {
+    if (agencyCount > 1) {
       for (GtfsAgency agency : agencyTable.getEntities()) {
         // agency_id is required when there are 2 or more agencies.
         if (!agency.hasAgencyId()) {
           noticeContainer.addValidationNotice(
-                  new MissingRequiredFieldNotice(
-                          agencyTable.gtfsFilename(),
-                          agency.csvRowNumber(),
-                          GtfsAgency.AGENCY_ID_FIELD_NAME));
+              new MissingRequiredFieldNotice(
+                  agencyTable.gtfsFilename(),
+                  agency.csvRowNumber(),
+                  GtfsAgency.AGENCY_ID_FIELD_NAME));
         }
       }
     }
