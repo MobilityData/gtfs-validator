@@ -27,15 +27,6 @@ import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 /**
  * Validates short and long name for a single route.
  *
- * <p>References:
- *
- * <ul>
- *   <li>&lt;a href="https://gtfs.org/schedule/reference/#routestxt")"&gt;GTFS routes.txt
- *       specification&lt;/a&gt;
- *   <li>&lt;a href="https://gtfs.org/schedule/best-practices/#routestxt"&gt;GTFS routes.txt Best
- *       Practices&lt;/a&gt;
- * </ul>
- *
  * <p>Generated notices:
  *
  * <ul>
