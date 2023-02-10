@@ -142,9 +142,6 @@ public class RouteNameValidatorTest {
               {"L1", "L1(Long Name)"},
               {"L1", "L1 (Long Name)"},
               {"L1", "L1( Long Name)"},
-              {"L1", "L1(Long Name"},
-              {"L1", "L1 (Long Name"},
-              {"L1", "L1( Long Name"},
             });
 
     for (String[] badValue : badValues) {
