@@ -117,6 +117,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`pathway_loop`](#pathway_loop)                                                               | A pathway starts and ends at the same location.                                                                                                               |
 | [`platform_without_parent_station`](#platform_without_parent_station)                         | A platform has no `parent_station` field set.                                                                                                                 |
 | [`route_color_contrast`](#route_color_contrast)                                               | Insufficient route color contrast.                                                                                                                            |
+| [`route_long_name_contains_short_name`](#route_long_name_contains_short_name)                                               | Long name can not contain short name for a single route.                                                                                                                |
 | [`route_short_and_long_name_equal`](#route_short_and_long_name_equal)                         | `route_short_name` and `route_long_name` are equal for a single route.                                                                                        |
 | [`route_short_name_too_long`](#route_short_name_too_long)                                     | Short name of a route is too long (more than 12 characters).                                                                                                  |
 | [`same_name_and_description_for_route`](#same_name_and_description_for_route)                 | Same name and description for route.                                                                                                                          |
@@ -2175,6 +2176,29 @@ A route's color and `route_text_color` should be contrasting.
 | `csvRowNumber`   	| The row number of the faulty record.       	| Long 	  |
 | `routeColor`     	| The faulty record's HTML route color.      	| String 	|
 | `routeTextColor` 	| The faulty record's HTML route text color. 	| String 	|
+
+#### Affected files
+* [`routes.txt`](http://gtfs.org/reference/static#routestxt)
+
+</details>
+
+<a name="RouteLongNameConainsShortName"/>
+
+### route_long_name_contains_short_name
+
+Long name can not contain short name for a single route.
+
+#### References
+* [routes.txt best practices](https://gtfs.org/schedule/best-practices/#routestxt)
+<details>
+
+#### Notice fields description
+| Field name     	| Description                               | Type   	|
+|-----------------	|---------------------------------------- |--------	|
+| `routeId`       	| The id of the faulty record.           	| String 	|
+| `csvRowNumber`  	| The row number of the faulty record.   	| Long   	|
+| `routeShortName` 	| The `short_name` of the faulty record.  | String 	|
+| `routeLongName` 	| The `long_name` of the faulty record.   | String 	|
 
 #### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
