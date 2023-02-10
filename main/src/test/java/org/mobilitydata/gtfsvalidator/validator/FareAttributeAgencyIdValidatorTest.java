@@ -14,23 +14,6 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFareAttributeTableContainer;
 
 public class FareAttributeAgencyIdValidatorTest {
 
-  public static GtfsFareAttribute createFare(int rowNumber, String fareId, String agencyId) {
-
-    return new GtfsFareAttribute.Builder()
-        .setCsvRowNumber(rowNumber)
-        .setAgencyId(agencyId)
-        .setFareId(fareId)
-        .build();
-  }
-
-  public static GtfsAgency createAgency(int csvRowNumber, String agencyId, String agencyName) {
-    return new GtfsAgency.Builder()
-        .setCsvRowNumber(csvRowNumber)
-        .setAgencyId(agencyId)
-        .setAgencyName(agencyName)
-        .build();
-  }
-
   @Test
   public void agencyIdRequiredErrorWhenMoreThanOneAgency() {
 
@@ -38,11 +21,31 @@ public class FareAttributeAgencyIdValidatorTest {
     GtfsAgencyTableContainer agencyTable =
         GtfsAgencyTableContainer.forEntities(
             ImmutableList.of(
-                createAgency(0, "Agency 1", "Agency 1"), createAgency(1, "Agency 2", "Agency 2")),
+                new GtfsAgency.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("Agency 1")
+                    .setAgencyName("Agency 1")
+                    .build(),
+                new GtfsAgency.Builder()
+                    .setCsvRowNumber(1)
+                    .setAgencyId("Agency 2")
+                    .setAgencyName("Agency 2")
+                    .build()),
             noticeContainer);
+
     GtfsFareAttributeTableContainer fareTable =
         GtfsFareAttributeTableContainer.forEntities(
-            ImmutableList.of(createFare(0, "fare 0", "agency0"), createFare(1, "fare_1", null)),
+            ImmutableList.of(
+                new GtfsFareAttribute.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("agency0")
+                    .setFareId("fare 0")
+                    .build(),
+                new GtfsFareAttribute.Builder()
+                    .setCsvRowNumber(1)
+                    .setAgencyId(null)
+                    .setFareId("fare_1")
+                    .build()),
             noticeContainer);
     new FareAttributeAgencyIdValidator(agencyTable, fareTable).validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
@@ -57,10 +60,23 @@ public class FareAttributeAgencyIdValidatorTest {
     NoticeContainer noticeContainer = new NoticeContainer();
     GtfsAgencyTableContainer agencyTable =
         GtfsAgencyTableContainer.forEntities(
-            ImmutableList.of(createAgency(1, null, "Agency with no ID")), noticeContainer);
+            ImmutableList.of(
+                new GtfsAgency.Builder()
+                    .setCsvRowNumber(1)
+                    .setAgencyId(null)
+                    .setAgencyName("Agency with no ID")
+                    .build()),
+            noticeContainer);
+
     GtfsFareAttributeTableContainer fareTable =
         GtfsFareAttributeTableContainer.forEntities(
-            ImmutableList.of(createFare(0, "fare_0", null)), noticeContainer);
+            ImmutableList.of(
+                new GtfsFareAttribute.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId(null)
+                    .setFareId("fare_0")
+                    .build()),
+            noticeContainer);
     new FareAttributeAgencyIdValidator(agencyTable, fareTable).validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(
