@@ -101,9 +101,9 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`equal_shape_distance_same_coordinates`](#equal_shape_distance_same_coordinates)             | Two consecutive points have equal `shape_dist_traveled` and the same lat/lon coordinates in `shapes.txt`.                                                     |
 | [`fast_travel_between_consecutive_stops`](#fast_travel_between_consecutive_stops)             | A transit vehicle moves too fast between two consecutive stops.                                                                                               |
 | [`fast_travel_between_far_stops`](#fast_travel_between_far_stops)                             | A transit vehicle moves too fast between two far stops.                                                                                                       |
-| [`feed_expiration_date7_days`](#feed_expiration_date7_days)                                 | Dataset should be valid for at least the next 7 days.                                                                                                         |
-| [`feed_expiration_date30_days`](#feed_expiration_date30_days)                               | Dataset should cover at least the next 30 days of service.                                                                                                    |
-| [`feed_info_lang_and_agency_mismatch`](#feed_info_lang_and_agency_mismatch)                   | Mismatching feed and agency language fields.                                                                                                                  |
+| [`feed_expiration_date7_days`](#feed_expiration_date7_days)                                   | Dataset should be valid for at least the next 7 days.                                                                                                         |
+| [`feed_expiration_date30_days`](#feed_expiration_date30_days)                                 | Dataset should cover at least the next 30 days of service.                                                                                                    |
+| [`feed_info_lang_and_agency_lang_mismatch`](#feed_info_lang_and_agency_lang_mismatch)         | Mismatching feed and agency language fields.                                                                                                                  |
 | [`inconsistent_agency_lang`](#inconsistent_agency_lang)                                       | Inconsistent language among agencies.                                                                                                                         |
 | [`leading_or_trailing_whitespaces`](#leading_or_trailing_whitespaces)                         | The value in CSV file has leading or trailing whitespaces.                                                                                                    |
 | [`missing_feed_info_date`](#missing_feed_info_date)                                           | `feed_end_date` should be provided if `feed_start_date` is provided. `feed_start_date` should be provided if `feed_end_date` is provided.                     |
@@ -408,7 +408,7 @@ A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit_typ
 
 <a name="FareTransferRuleDurationLimitWithoutTypeNotice"/>
 
-### fare_transfer_rule_duration_limit_without_type 
+### fare_transfer_rule_duration_limit_without_type
 
 A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit` field but no `duration_limit_type` specified.
 
@@ -1870,7 +1870,7 @@ At any time, the GTFS dataset should cover at least the next 30 days of service,
 
 <a name="FeedInfoLangAndAgencyLangMismatchNotice"/>
 
-### feed_info_lang_and_agency_mismatch
+### feed_info_lang_and_agency_lang_mismatch
 1. Files `agency.txt` and `feed_info.txt` should define matching `agency.agency_lang` and `feed_info.feed_lang`.
   The default language may be multilingual for datasets with the original text in multiple languages. In such cases, the feed_lang field should contain the language code mul defined by the norm ISO 639-2.
   * If `feed_lang` is not `mul` and does not match with `agency_lang`, that's an error
@@ -1964,7 +1964,7 @@ Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one
 
 </details>
 
-<a name="MissingTimepointColumnNotice"/>
+<a name="MissingRecommendedFileNotice"/>
 
 ### missing_recommended_file
 
@@ -1983,6 +1983,8 @@ A recommended file is missing.
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
 
 </details>
+
+<a name="MissingRecommendedFieldNotice"/>
 
 ### missing_recommended_field
 
@@ -2003,6 +2005,8 @@ The given field has no value in some input row, even though values are recommend
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
 
 </details>
+
+<a name="MissingTimepointColumnNotice"/>
 
 ### missing_timepoint_column
 
@@ -2159,7 +2163,7 @@ A platform has no `parent_station` field set.
 
 <a name="RouteColorContrastNotice"/>
 
-#### route_color_contrast
+### route_color_contrast
 
 A route's color and `route_text_color` should be contrasting.
 
@@ -2676,6 +2680,7 @@ Error in IO operation.
 | `exception`  	| The name of the exception.                                    	| String 	|
 | `message`    	| The error message that explains the reason for the exception. 	| String  |
 </details>
+
 <a name="RuntimeExceptionInLoaderError"/>
 
 ### runtime_exception_in_loader_error
