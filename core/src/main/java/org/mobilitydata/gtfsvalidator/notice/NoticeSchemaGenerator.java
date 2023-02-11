@@ -17,31 +17,23 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableList;
 import com.google.common.geometry.S2LatLng;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import io.github.classgraph.ClassGraph;
-import io.github.classgraph.ClassInfo;
-import io.github.classgraph.ScanResult;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
+import org.mobilitydata.gtfsvalidator.validator.ClassGraphDiscovery;
 
 /** Exports schema describing all possible notices and their contexts. */
 public class NoticeSchemaGenerator {
-  /** Default packages to find notices in open-source validator. */
-  public static final ImmutableList<String> DEFAULT_NOTICE_PACKAGES =
-      ImmutableList.of(
-          "org.mobilitydata.gtfsvalidator.notice", "org.mobilitydata.gtfsvalidator.validator");
 
   /**
    * Exports JSON schema for all notices in given packages. This includes notices that are declared
@@ -86,7 +78,7 @@ public class NoticeSchemaGenerator {
    * }</pre>
    *
    * @param packages List of packages where notices are declared. Use {@link
-   *     #DEFAULT_NOTICE_PACKAGES} and add your custom Java packages here, if any
+   *     ClassGraphDiscovery#DEFAULT_NOTICE_PACKAGES} and add your custom Java packages here, if any
    * @return a {@link JsonObject} describing all notices in given packages (see above)
    * @throws IOException
    */
@@ -94,8 +86,7 @@ public class NoticeSchemaGenerator {
     JsonObject schema = new JsonObject();
     for (Map.Entry<String, Map<String, Class<?>>> entry :
         contextFieldsInPackages(packages).entrySet()) {
-      schema.add(
-          Notice.getCode(entry.getKey()), jsonSchemaForNotice(entry.getKey(), entry.getValue()));
+      schema.add(entry.getKey(), jsonSchemaForNotice(entry.getKey(), entry.getValue()));
     }
     return schema;
   }
@@ -123,8 +114,9 @@ public class NoticeSchemaGenerator {
       throws IOException {
     // Return a sorted TreeMap for stable results.
     Map<String, Map<String, Class<?>>> contextFieldsByNotice = new TreeMap<>();
-    for (Class<Notice> noticeClass : findNoticeSubclasses(packages)) {
-      contextFieldsByNotice.put(noticeClass.getSimpleName(), contextFieldsForNotice(noticeClass));
+
+    for (Class<Notice> noticeClass : ClassGraphDiscovery.discoverNoticeSubclasses(packages)) {
+      contextFieldsByNotice.put(Notice.getCode(noticeClass), contextFieldsForNotice(noticeClass));
     }
 
     return contextFieldsByNotice;
@@ -142,33 +134,6 @@ public class NoticeSchemaGenerator {
 
   private static boolean isSubclassOf(Class<?> parent, Class<?> child) {
     return !child.equals(parent) && parent.isAssignableFrom(child);
-  }
-
-  /**
-   * Finds all subclasses of {@link Notice} that belong to the given packages.
-   *
-   * <p>This function also dives into validator classes that may contain inner notice classes.
-   */
-  @VisibleForTesting
-  static List<Class<Notice>> findNoticeSubclasses(List<String> packages) throws IOException {
-    String[] packagesAsArray = packages.toArray(new String[] {});
-    List<Class<Notice>> notices = new ArrayList<>();
-    ClassGraph classGraph =
-        new ClassGraph()
-            .enableClassInfo()
-            .acceptPackages(packagesAsArray)
-            .ignoreClassVisibility()
-            .verbose();
-    try (ScanResult scanResult = classGraph.scan()) {
-      for (ClassInfo classInfo : scanResult.getSubclasses(Notice.class)) {
-        if (classInfo.isAbstract()) {
-          continue;
-        }
-        Class<?> clazz = classInfo.loadClass();
-        notices.add((Class<Notice>) clazz);
-      }
-    }
-    return notices;
   }
 
   private static final class JsonTypes {
