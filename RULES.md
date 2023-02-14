@@ -1413,7 +1413,7 @@ Missing `stop_time.arrival_time` or `stop_time.departure_time`
 
 ### stop_without_location
 
-`stop_lat` and/or `stop_lon` missing for strop with `location_type` of `0`, `1`, or `2`.
+`stop_lat` and/or `stop_lon` are required for locations that are stops (`location_type=0`), stations (`location_type=1`) or entrances/exits (`location_type=2`).
 
 #### References
 * [GTFS stops.txt specification](https://gtfs.org/reference/static#stopstxt)
