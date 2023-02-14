@@ -2199,7 +2199,7 @@ Example of bad data:
 | route4     	| L1                 	| L1 (Long Name)     	|
 | route5     	| L1                 	| L1) Long Name     	|
 
-Example of accetpable data:
+Example of acceptable data:
 
 | `route_id` 	| `route_short_name` 	| `route_long_name` 	|
 |------------	|--------------------	|-------------------	|
