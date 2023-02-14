@@ -2409,7 +2409,7 @@ A stop entry that has many potential matches to the trip's path of travel, as de
 
 #### Affected files
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
-* [`stops_times.txt`](http://gtfs.org/reference/static#stopstimestxt)
+* [`stops_times.txt`](https://gtfs.org/schedule/reference/#stop_timestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
  </details>
 
