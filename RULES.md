@@ -81,6 +81,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`stop_time_timepoint_without_times`](#stop_time_timepoint_without_times)                                                         | `arrival_time` or `departure_time` not specified for timepoint.                                                                                        |
 | [`stop_time_with_arrival_before_previous_departure_time`](#stop_time_with_arrival_before_previous_departure_time)                 | Backwards time travel between stops in `stop_times.txt`                                                                                                |
 | [`stop_time_with_only_arrival_or_departure_time`](#stop_time_with_only_arrival_or_departure_time)                                 | Missing `stop_times.arrival_time` or `stop_times.departure_time`.                                                                                      |
+| [`stop_without_location`](#stop_without_location) | `stop_lat` and/or `stop_lon` is missing for stop with `location_type` equal to`0`, `1`, or `2`
 | [`stop_without_zone_id`](#stop_without_zone_id)                                                                                   | Stop without value for `stops.zone_id`.                                                                                                                |
 | [`too_many_rows`](#too_many_rows)                                                                                                 | A CSV file has too many rows.                                                                                                                          |
 | [`transfer_with_invalid_stop_location_type`](#transfer_with_invalid_stop_location_type)                                           | A stop id field from GTFS file `transfers.txt` references a stop that has a `location_type` other than 0 or 1 (aka Stop/Platform or Station).          |
@@ -1408,6 +1409,28 @@ Missing `stop_time.arrival_time` or `stop_time.departure_time`
 
 </details>
 
+<a name="StopWithoutLocationNotice"/>
+
+### stop_without_location
+
+`stop_lat` and/or `stop_lon` are required for locations that are stops (`location_type=0`), stations (`location_type=1`) or entrances/exits (`location_type=2`).
+
+#### References
+* [GTFS stops.txt specification](https://gtfs.org/reference/static#stopstxt)
+<details>
+
+#### Notice fields description
+| Field name               	| Description                                	| Type   	|
+|--------------------------	|--------------------------------------------	|--------	|
+| `stopId`                 	| The faulty record's id.                    	| String 	|
+| `locationType`            | The faulty record's `stops.location_type`. 	| Integer	|
+| `csvRowNumber`           	| The row number of the faulty record.       	| Long   	|
+
+#### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+
+</details>
+
 <a name="StopWithoutZoneIdNotice"/>
 
 ### stop_without_zone_id
@@ -2390,7 +2413,7 @@ A stop entry that has many potential matches to the trip's path of travel, as de
 
 #### Affected files
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
-* [`stops_times.txt`](http://gtfs.org/reference/static#stopstimestxt)
+* [`stops_times.txt`](https://gtfs.org/schedule/reference/#stop_timestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
  </details>
 
