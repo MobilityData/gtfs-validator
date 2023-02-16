@@ -81,6 +81,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`stop_time_timepoint_without_times`](#stop_time_timepoint_without_times)                                                         | `arrival_time` or `departure_time` not specified for timepoint.                                                                                        |
 | [`stop_time_with_arrival_before_previous_departure_time`](#stop_time_with_arrival_before_previous_departure_time)                 | Backwards time travel between stops in `stop_times.txt`                                                                                                |
 | [`stop_time_with_only_arrival_or_departure_time`](#stop_time_with_only_arrival_or_departure_time)                                 | Missing `stop_times.arrival_time` or `stop_times.departure_time`.                                                                                      |
+| [`stop_without_location`](#stop_without_location) | `stop_lat` and/or `stop_lon` is missing for stop with `location_type` equal to`0`, `1`, or `2`
 | [`stop_without_zone_id`](#stop_without_zone_id)                                                                                   | Stop without value for `stops.zone_id`.                                                                                                                |
 | [`too_many_rows`](#too_many_rows)                                                                                                 | A CSV file has too many rows.                                                                                                                          |
 | [`transfer_with_invalid_stop_location_type`](#transfer_with_invalid_stop_location_type)                                           | A stop id field from GTFS file `transfers.txt` references a stop that has a `location_type` other than 0 or 1 (aka Stop/Platform or Station).          |
@@ -101,8 +102,8 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`equal_shape_distance_same_coordinates`](#equal_shape_distance_same_coordinates)             | Two consecutive points have equal `shape_dist_traveled` and the same lat/lon coordinates in `shapes.txt`.                                                     |
 | [`fast_travel_between_consecutive_stops`](#fast_travel_between_consecutive_stops)             | A transit vehicle moves too fast between two consecutive stops.                                                                                               |
 | [`fast_travel_between_far_stops`](#fast_travel_between_far_stops)                             | A transit vehicle moves too fast between two far stops.                                                                                                       |
-| [`feed_expiration_date7_days`](#feed_expiration_date7_days)                                 | Dataset should be valid for at least the next 7 days.                                                                                                         |
-| [`feed_expiration_date30_days`](#feed_expiration_date30_days)                               | Dataset should cover at least the next 30 days of service.                                                                                                    |
+| [`feed_expiration_date7_days`](#feed_expiration_date7_days)                                   | Dataset should be valid for at least the next 7 days.                                                                                                         |
+| [`feed_expiration_date30_days`](#feed_expiration_date30_days)                                 | Dataset should cover at least the next 30 days of service.                                                                                                    |
 | [`feed_info_lang_and_agency_mismatch`](#feed_info_lang_and_agency_mismatch)                   | Mismatching feed and agency language fields.                                                                                                                  |
 | [`inconsistent_agency_lang`](#inconsistent_agency_lang)                                       | Inconsistent language among agencies.                                                                                                                         |
 | [`leading_or_trailing_whitespaces`](#leading_or_trailing_whitespaces)                         | The value in CSV file has leading or trailing whitespaces.                                                                                                    |
@@ -1405,6 +1406,28 @@ Missing `stop_time.arrival_time` or `stop_time.departure_time`
 
 #### Affected files
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
+
+</details>
+
+<a name="StopWithoutLocationNotice"/>
+
+### stop_without_location
+
+`stop_lat` and/or `stop_lon` are required for locations that are stops (`location_type=0`), stations (`location_type=1`) or entrances/exits (`location_type=2`).
+
+#### References
+* [GTFS stops.txt specification](https://gtfs.org/reference/static#stopstxt)
+<details>
+
+#### Notice fields description
+| Field name               	| Description                                	| Type   	|
+|--------------------------	|--------------------------------------------	|--------	|
+| `stopId`                 	| The faulty record's id.                    	| String 	|
+| `locationType`            | The faulty record's `stops.location_type`. 	| Integer	|
+| `csvRowNumber`           	| The row number of the faulty record.       	| Long   	|
+
+#### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
 </details>
 
