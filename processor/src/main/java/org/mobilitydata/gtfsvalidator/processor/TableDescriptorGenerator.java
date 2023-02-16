@@ -184,11 +184,13 @@ public class TableDescriptorGenerator {
                   "GtfsColumnDescriptor.builder()\n"
                       + ".setColumnName($T.$L)\n"
                       + ".setFieldLevel($T.$L)\n"
+                      + ".setIsMixedCase($L)\n"
                       + ".setIsCached($L)\n",
                   gtfsEntityType,
                   fieldNameField(field.name()),
                   FieldLevelEnum.class,
                   getFieldLevel(field),
+                  field.mixedCase(),
                   cachingEnabled(field));
       field
           .numberBounds()
