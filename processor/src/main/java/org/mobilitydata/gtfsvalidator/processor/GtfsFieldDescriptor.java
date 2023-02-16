@@ -26,6 +26,7 @@ import org.mobilitydata.gtfsvalidator.parsing.RowParser;
 /** Describes a field in a GTFS table, e.g., stop_id in "stops.txt". */
 @AutoValue
 public abstract class GtfsFieldDescriptor {
+
   public static GtfsFieldDescriptor.Builder builder() {
     return new AutoValue_GtfsFieldDescriptor.Builder();
   }
@@ -56,6 +57,8 @@ public abstract class GtfsFieldDescriptor {
 
   public abstract boolean required();
 
+  public abstract boolean mixedCase();
+
   public abstract Optional<RowParser.NumberBounds> numberBounds();
 
   @AutoValue.Builder
@@ -69,6 +72,8 @@ public abstract class GtfsFieldDescriptor {
     public abstract Builder setRecommended(boolean value);
 
     public abstract Builder setRequired(boolean value);
+
+    public abstract Builder setMixedCase(boolean value);
 
     public abstract Builder setPrimaryKey(PrimaryKey annotation);
 
