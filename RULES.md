@@ -2236,30 +2236,6 @@ Example of acceptable data:
 
 </details>
 
-<a name="RouteShortAndLongNameEqualNotice"/>
-
-### route_short_and_long_name_equal
-
-A single route has the same values for `route_short_name` and `route_long_name`.
-
-
-#### References
-* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
-<details>
-
-#### Notice fields description
-| Field name     	| Description                             	  | Type   	|
-|----------------	|-------------------------------------------	|--------	|
-| `routeId`        	| The id of the faulty record.            	| String  |
-| `csvRowNumber`   	| The row number of the faulty record.    	| Long 	  |
-| `routeShortName` 	| The faulty record's `route_short_name`. 	| String 	|
-| `routeLongName`  	| The faulty record's `route_long_name`.  	| String 	|
-
-#### Affected files
-* [`routes.txt`](http://gtfs.org/reference/static#routestxt)
-
-</details>
-
 <a name="RouteShortNameTooLongNotice"/>
 
 ### route_short_name_too_long
