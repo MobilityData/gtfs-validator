@@ -16,6 +16,11 @@
 
 package org.mobilitydata.gtfsvalidator.annotation;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * Generates a validation that a string field is in mixed case.
  *
@@ -29,4 +34,6 @@ package org.mobilitydata.gtfsvalidator.annotation;
  *   }
  * </pre>
  */
+@Target({ElementType.METHOD, ElementType.TYPE})
+@Retention(RetentionPolicy.SOURCE)
 public @interface MixedCase {}

@@ -30,7 +30,7 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
 
 /**
- * Generates validator classes to check the validity of a currency amount value.
+ * Generates validator classes to check that a string field contains mixed case characters.
  *
  * @see org.mobilitydata.gtfsvalidator.annotation.MixedCase
  * @see MixedCaseNotice
@@ -74,7 +74,7 @@ public class MixedCaseValidatorGenerator {
           .beginControlFlow(
               "if (entity.$L())", FieldNameConverter.hasMethodName(mixedCaseField.name()))
           .addStatement("$T value = entity.$L()", String.class, mixedCaseField.name())
-          .beginControlFlow("if (!(value.matches(\"[a-z]\") && value.matches(\"[A-Z]\")))")
+          .beginControlFlow("if (!(value.matches(\".*[a-z].*\") && value.matches(\".*[A-Z].*\")))")
           .addStatement(
               "noticeContainer.addValidationNotice(new $T(\"$L\", \"$L\", entity.csvRowNumber()))",
               MixedCaseNotice.class,
