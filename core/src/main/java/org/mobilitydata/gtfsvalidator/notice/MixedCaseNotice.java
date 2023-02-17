@@ -15,7 +15,7 @@ public class MixedCaseNotice extends ValidationNotice {
   private final int csvRowNumber;
 
   public MixedCaseNotice(String fileName, String fieldName, int csvRowNumber) {
-    super(SeverityLevel.ERROR);
+    super(SeverityLevel.WARNING);
     this.fileName = fileName;
     this.fieldName = fieldName;
     this.csvRowNumber = csvRowNumber;
