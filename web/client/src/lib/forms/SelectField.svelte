@@ -27,17 +27,17 @@
   /** @type {string} */
   export let value;
 
-  /** @type {Array<string>|Object|?} */
-  export let options = {
-    foo: 'bar',
-    baz: 'qux',
-  };
+  /** @type {Array<{
+    value: string;
+    label: string;
+  }>} */
+  export let options = [{
+    value: 'US',
+    label: 'United States',
+  }];
 
   $: inputClass = ['focus-ring', className].join(' ');
 
-  $: optionsArray = Array.isArray(options)
-    ? options.map((item) => [item, item])
-    : Object.entries(options);
 </script>
 
 <LabeledField {id} {label} {hint}>
@@ -46,7 +46,7 @@
       <select {id} {name} bind:value class={inputClass} {...$$restProps}>
         <slot name="options" {options}>
           <option value="" selected disabled>{placeholder}</option>
-          {#each optionsArray as [value, label]}
+          {#each options as {value, label}}
             <option {value}>{label}</option>
           {/each}
         </slot>

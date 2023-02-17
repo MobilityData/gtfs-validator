@@ -15,7 +15,6 @@
   import { onMount } from 'svelte';
   import { quintOut } from 'svelte/easing';
 
-  let allowUrl = false;
   let showDocs = true;
 
   /** @type {HTMLInputElement} */
@@ -113,6 +112,13 @@
   /** @param {SubmitEvent} event */
   function handleSubmit(event) {
     event.preventDefault();
+
+    const formValues = {}
+    const data = new FormData(this);
+    for (const [name,value] of data) {
+      formValues[name] = value;
+    }
+    debugger
     const file = fileInput?.files?.item(0);
 
     if (file) {
@@ -120,7 +126,7 @@
     }
   }
 
-  function getUrl() {
+  function createJob() {
     return new Promise((resolve, reject) => {
       const data = null;
 
@@ -135,7 +141,7 @@
 
       xhr.open(
         'GET',
-        'https://gtfs-validator-web-mbzoxaljzq-ue.a.run.app/upload-url'
+        'https://gtfs-validator-web-mbzoxaljzq-ue.a.run.app/create-job'
       );
       xhr.send(data);
     });
@@ -190,7 +196,7 @@
   /** @param {File} file */
   async function uploadFile(file) {
     updateStatus('authorizing');
-    const result = await getUrl();
+    const result = await createJob();
     updateStatus('uploading');
     jobId = result.jobId;
     await putFile(result.url, file);
@@ -220,8 +226,8 @@
     if (browser) {
       // attempt to detect language automatically
       const browserLanguage = window?.navigator?.language;
-      if (browserLanguage && browserLanguage in languageTags) {
-        languageCode = navigator.language;
+      if (browserLanguage && browserLanguage.split('-').length > 1) {
+        languageCode = navigator.language.split('-')[1];
       }
     }
   });
@@ -236,7 +242,7 @@
     <div class="container">
       <Form id="validator-form" {handleSubmit}>
         <h2 class="h3 text-center">
-          Check the quality of a file {#if allowUrl}or a feed{/if}
+          Check the quality of a file or a feed
         </h2>
 
         <div class="max-w-xl mx-auto">
@@ -250,14 +256,12 @@
             bind:fileInput
           />
 
-          {#if allowUrl}
-            <TextField
-              label="Or load from a URL"
-              id="url"
-              placeholder="https://example.com/feed.zip"
-              type="url"
-            />
-          {/if}
+          <TextField
+            label="Or load from a URL"
+            id="url"
+            placeholder="https://example.com/feed.zip"
+            type="url"
+          />
 
           <SelectField
             id="languageCode"
@@ -294,7 +298,7 @@
             </Button>
           {/if}
 
-          <Button disabled={!pendingFilename} type="submit" variant="primary">
+          <Button type="submit" variant="primary">
             Validate
           </Button>
         </div>
