@@ -98,7 +98,7 @@ public class NoticeSchemaGenerator {
    *
    * <pre>{@code
    * {
-   *   "AttributionWithoutRoleNotice": {
+   *   "attribution_without_role": {
    *     "attributionId": String.class,
    *     "csvRowNumber": Long.class,
    *   }
@@ -106,20 +106,21 @@ public class NoticeSchemaGenerator {
    * }</pre>
    *
    * @param packages List of packages where notices are declared
-   * @return a map describing all notices in given packages (see above)
+   * @return a map describing all notices in given packages, keyed by notice code (see above)
    * @throws IOException
    */
   @VisibleForTesting
   static Map<String, Map<String, Class<?>>> contextFieldsInPackages(List<String> packages)
       throws IOException {
     // Return a sorted TreeMap for stable results.
-    Map<String, Map<String, Class<?>>> contextFieldsByNotice = new TreeMap<>();
+    Map<String, Map<String, Class<?>>> contextFieldsByNoticeCode = new TreeMap<>();
 
     for (Class<Notice> noticeClass : ClassGraphDiscovery.discoverNoticeSubclasses(packages)) {
-      contextFieldsByNotice.put(Notice.getCode(noticeClass), contextFieldsForNotice(noticeClass));
+      contextFieldsByNoticeCode.put(
+          Notice.getCode(noticeClass), contextFieldsForNotice(noticeClass));
     }
 
-    return contextFieldsByNotice;
+    return contextFieldsByNoticeCode;
   }
 
   @VisibleForTesting
