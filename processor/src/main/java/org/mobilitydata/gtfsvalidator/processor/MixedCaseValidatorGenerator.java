@@ -25,7 +25,7 @@ import java.util.List;
 import javax.lang.model.element.Modifier;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.MixedCaseRequiredNotice;
+import org.mobilitydata.gtfsvalidator.notice.MixedCaseNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
 
@@ -33,7 +33,7 @@ import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
  * Generates validator classes to check the validity of a currency amount value.
  *
  * @see org.mobilitydata.gtfsvalidator.annotation.MixedCase
- * @see MixedCaseRequiredNotice
+ * @see MixedCaseNotice
  */
 public class MixedCaseValidatorGenerator {
   public ImmutableList<TypeSpec> generateValidator(List<GtfsFileDescriptor> fileDescriptors) {
@@ -77,7 +77,7 @@ public class MixedCaseValidatorGenerator {
           .beginControlFlow("if (!(value.matches(\"[a-z]\") && value.matches(\"[A-Z]\")))")
           .addStatement(
               "noticeContainer.addValidationNotice(new $T(\"$L\", \"$L\", entity.csvRowNumber()))",
-              MixedCaseRequiredNotice.class,
+              MixedCaseNotice.class,
               fileDescriptor.filename(),
               mixedCaseField.name())
           .endControlFlow()

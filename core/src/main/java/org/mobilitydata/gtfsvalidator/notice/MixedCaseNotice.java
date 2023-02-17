@@ -7,14 +7,14 @@ package org.mobilitydata.gtfsvalidator.notice;
  *
  * @see org.mobilitydata.gtfsvalidator.annotation.MixedCase
  */
-public class MixedCaseRequiredNotice extends ValidationNotice {
+public class MixedCaseNotice extends ValidationNotice {
   private final String fileName;
 
   private final String fieldName;
 
   private final int csvRowNumber;
 
-  public MixedCaseRequiredNotice(String fileName, String fieldName, int csvRowNumber) {
+  public MixedCaseNotice(String fileName, String fieldName, int csvRowNumber) {
     super(SeverityLevel.ERROR);
     this.fileName = fileName;
     this.fieldName = fieldName;
