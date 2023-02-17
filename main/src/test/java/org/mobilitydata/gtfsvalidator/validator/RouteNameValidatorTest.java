@@ -128,26 +128,25 @@ public class RouteNameValidatorTest {
 
   @Test
   public void routeLongNameContainsRouteShortNameShouldGenerateNotice() {
-    List<String[]> badValues =
+    List<String> badValues =
         Arrays.asList(
-            new String[][] {
+            new String[] {
               // shortName, longName
-              {"L1", "L1 Long Name"},
-              {"L1", "L1-Long Name"},
-              {"L1", "L1- Long Name"},
-              {"L1", "L1 - Long Name"},
-              {"L1", "L1)Long Name"},
-              {"L1", "L1) Long Name"},
-              {"L1", "L1 ) Long Name"},
-              {"L1", "L1(Long Name)"},
-              {"L1", "L1 (Long Name)"},
-              {"L1", "L1( Long Name)"},
+              "L1 Long Name",
+              "L1-Long Name",
+              "L1- Long Name",
+              "L1 - Long Name",
+              "L1)Long Name",
+              "L1) Long Name",
+              "L1 ) Long Name",
+              "L1(Long Name)",
+              "L1 (Long Name)",
+              "L1( Long Name)",
             });
 
-    for (String[] badValue : badValues) {
-      assertThat(validateRoute(createRoute(badValue[0], badValue[1], null)))
-          .containsExactly(
-              new RouteLongNameContainsShortNameNotice("r1", 1, badValue[0], badValue[1]));
+    for (String badValue : badValues) {
+      assertThat(validateRoute(createRoute("L1", badValue, null)))
+          .containsExactly(new RouteLongNameContainsShortNameNotice("r1", 1, "L1", badValue));
     }
   }
 
