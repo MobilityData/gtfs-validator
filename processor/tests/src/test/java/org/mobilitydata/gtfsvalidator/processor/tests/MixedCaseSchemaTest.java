@@ -53,9 +53,33 @@ public class MixedCaseSchemaTest {
   }
 
   @Test
-  public void testInvalidMixedCase() throws ValidatorLoaderException {
+  public void testInvalidMixedCases() throws ValidatorLoaderException {
 
     helper.load(tableDescriptor, MixedCase.MIXED_CASE_FIELD_NAME, "lowercase");
+
+    assertThat(helper.getValidationNotices())
+        .containsExactly(
+            new MixedCaseNotice(MixedCase.FILENAME, MixedCase.MIXED_CASE_FIELD_NAME, 2));
+
+    helper.load(tableDescriptor, MixedCase.MIXED_CASE_FIELD_NAME, "UPPERCASE");
+
+    assertThat(helper.getValidationNotices())
+        .containsExactly(
+            new MixedCaseNotice(MixedCase.FILENAME, MixedCase.MIXED_CASE_FIELD_NAME, 2));
+
+    helper.load(tableDescriptor, MixedCase.MIXED_CASE_FIELD_NAME, "snake_case");
+
+    assertThat(helper.getValidationNotices())
+        .containsExactly(
+            new MixedCaseNotice(MixedCase.FILENAME, MixedCase.MIXED_CASE_FIELD_NAME, 2));
+
+    helper.load(tableDescriptor, MixedCase.MIXED_CASE_FIELD_NAME, "kebab-case");
+
+    assertThat(helper.getValidationNotices())
+        .containsExactly(
+            new MixedCaseNotice(MixedCase.FILENAME, MixedCase.MIXED_CASE_FIELD_NAME, 2));
+
+    helper.load(tableDescriptor, MixedCase.MIXED_CASE_FIELD_NAME, "UPPER-CASE");
 
     assertThat(helper.getValidationNotices())
         .containsExactly(
