@@ -28,6 +28,7 @@ import java.nio.file.Paths;
 import org.mobilitydata.gtfsvalidator.notice.NoticeSchemaGenerator;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunner;
 import org.mobilitydata.gtfsvalidator.util.VersionResolver;
+import org.mobilitydata.gtfsvalidator.validator.ClassGraphDiscovery;
 
 /** The main entry point for GTFS Validator CLI. */
 public class Main {
@@ -85,7 +86,7 @@ public class Main {
           Paths.get(args.getOutputBase(), NOTICE_SCHEMA_JSON),
           gson.toJson(
                   NoticeSchemaGenerator.jsonSchemaForPackages(
-                      NoticeSchemaGenerator.DEFAULT_NOTICE_PACKAGES))
+                      ClassGraphDiscovery.DEFAULT_NOTICE_PACKAGES))
               .getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store notice schema file");
