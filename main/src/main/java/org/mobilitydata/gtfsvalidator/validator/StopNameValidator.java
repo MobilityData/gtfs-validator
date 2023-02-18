@@ -63,13 +63,13 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
 
     private final int csvRowNumber;
     private final String stopId;
-    private final String routeDesc;
+    private final String stopDesc;
 
-    SameNameAndDescriptionForStopNotice(int csvRowNumber, String stopId, String routeDesc) {
+    SameNameAndDescriptionForStopNotice(int csvRowNumber, String stopId, String stopDesc) {
       super(SeverityLevel.WARNING);
       this.stopId = stopId;
       this.csvRowNumber = csvRowNumber;
-      this.routeDesc = routeDesc;
+      this.stopDesc = stopDesc;
     }
   }
 }

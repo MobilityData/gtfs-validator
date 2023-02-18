@@ -12,7 +12,7 @@ import java.math.BigDecimal;
  */
 public class InvalidCurrencyAmountNotice extends ValidationNotice {
 
-  private final String fileName;
+  private final String filename;
 
   private final String fieldName;
 
@@ -21,9 +21,9 @@ public class InvalidCurrencyAmountNotice extends ValidationNotice {
   private final String amount;
 
   public InvalidCurrencyAmountNotice(
-      String fileName, String fieldName, int csvRowNumber, BigDecimal amount) {
+      String filename, String fieldName, int csvRowNumber, BigDecimal amount) {
     super(SeverityLevel.ERROR);
-    this.fileName = fileName;
+    this.filename = filename;
     this.fieldName = fieldName;
     this.csvRowNumber = csvRowNumber;
     this.amount = amount.toPlainString();
