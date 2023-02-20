@@ -22,7 +22,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Generates a validation that a string field is in mixed case.
+ * Specifies a string field should have a mixed-case value. A validator will be automatically
+ * generated.
  *
  * <p>Example.
  *

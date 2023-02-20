@@ -8,5 +8,5 @@ import org.mobilitydata.gtfsvalidator.annotation.Required;
 public interface MixedCaseSchema {
   @Required
   @MixedCase
-  String mixedCase();
+  String someField();
 }

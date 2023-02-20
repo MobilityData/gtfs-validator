@@ -47,7 +47,15 @@ public class MixedCaseSchemaTest {
   @Test
   public void testValidMixedCase() throws ValidatorLoaderException {
 
-    helper.load(tableDescriptor, MixedCase.MIXED_CASE_FIELD_NAME, "MixedCase");
+    helper.load(tableDescriptor, MixedCase.SOME_FIELD_FIELD_NAME, "MixedCaseValue");
+
+    assertThat(helper.getValidationNotices()).isEmpty();
+
+    helper.load(tableDescriptor, MixedCase.SOME_FIELD_FIELD_NAME, "Mixed Case Value");
+
+    assertThat(helper.getValidationNotices()).isEmpty();
+
+    helper.load(tableDescriptor, MixedCase.SOME_FIELD_FIELD_NAME, "Another good value");
 
     assertThat(helper.getValidationNotices()).isEmpty();
   }
@@ -55,34 +63,40 @@ public class MixedCaseSchemaTest {
   @Test
   public void testInvalidMixedCases() throws ValidatorLoaderException {
 
-    helper.load(tableDescriptor, MixedCase.MIXED_CASE_FIELD_NAME, "lowercase");
+    helper.load(tableDescriptor, MixedCase.SOME_FIELD_FIELD_NAME, "lowercase");
 
     assertThat(helper.getValidationNotices())
         .containsExactly(
-            new MixedCaseNotice(MixedCase.FILENAME, MixedCase.MIXED_CASE_FIELD_NAME, 2));
+            new MixedCaseNotice(MixedCase.FILENAME, MixedCase.SOME_FIELD_FIELD_NAME, 2));
 
-    helper.load(tableDescriptor, MixedCase.MIXED_CASE_FIELD_NAME, "UPPERCASE");
-
-    assertThat(helper.getValidationNotices())
-        .containsExactly(
-            new MixedCaseNotice(MixedCase.FILENAME, MixedCase.MIXED_CASE_FIELD_NAME, 2));
-
-    helper.load(tableDescriptor, MixedCase.MIXED_CASE_FIELD_NAME, "snake_case");
+    helper.load(tableDescriptor, MixedCase.SOME_FIELD_FIELD_NAME, "UPPERCASE");
 
     assertThat(helper.getValidationNotices())
         .containsExactly(
-            new MixedCaseNotice(MixedCase.FILENAME, MixedCase.MIXED_CASE_FIELD_NAME, 2));
+            new MixedCaseNotice(MixedCase.FILENAME, MixedCase.SOME_FIELD_FIELD_NAME, 2));
 
-    helper.load(tableDescriptor, MixedCase.MIXED_CASE_FIELD_NAME, "kebab-case");
-
-    assertThat(helper.getValidationNotices())
-        .containsExactly(
-            new MixedCaseNotice(MixedCase.FILENAME, MixedCase.MIXED_CASE_FIELD_NAME, 2));
-
-    helper.load(tableDescriptor, MixedCase.MIXED_CASE_FIELD_NAME, "UPPER-CASE");
+    helper.load(tableDescriptor, MixedCase.SOME_FIELD_FIELD_NAME, "snake_case");
 
     assertThat(helper.getValidationNotices())
         .containsExactly(
-            new MixedCaseNotice(MixedCase.FILENAME, MixedCase.MIXED_CASE_FIELD_NAME, 2));
+            new MixedCaseNotice(MixedCase.FILENAME, MixedCase.SOME_FIELD_FIELD_NAME, 2));
+
+    helper.load(tableDescriptor, MixedCase.SOME_FIELD_FIELD_NAME, "kebab-case");
+
+    assertThat(helper.getValidationNotices())
+        .containsExactly(
+            new MixedCaseNotice(MixedCase.FILENAME, MixedCase.SOME_FIELD_FIELD_NAME, 2));
+
+    helper.load(tableDescriptor, MixedCase.SOME_FIELD_FIELD_NAME, "UPPER-CASE");
+
+    assertThat(helper.getValidationNotices())
+        .containsExactly(
+            new MixedCaseNotice(MixedCase.FILENAME, MixedCase.SOME_FIELD_FIELD_NAME, 2));
+
+    helper.load(tableDescriptor, MixedCase.SOME_FIELD_FIELD_NAME, "lower case space");
+
+    assertThat(helper.getValidationNotices())
+        .containsExactly(
+            new MixedCaseNotice(MixedCase.FILENAME, MixedCase.SOME_FIELD_FIELD_NAME, 2));
   }
 }
