@@ -16,7 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.processor;
 
-import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
@@ -80,7 +79,7 @@ public class MixedCaseValidatorGenerator {
               "noticeContainer.addValidationNotice(new $T(\"$L\", \"$L\", entity.csvRowNumber()))",
               MixedCaseNotice.class,
               fileDescriptor.filename(),
-              CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, mixedCaseField.name()))
+              FieldNameConverter.gtfsColumnName(mixedCaseField.name()))
           .endControlFlow()
           .endControlFlow();
     }
