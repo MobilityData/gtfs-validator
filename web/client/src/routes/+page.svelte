@@ -37,6 +37,9 @@
   let region;
 
   /** @type {string} */
+  let sourceUrl = '';
+
+  /** @type {string} */
   let status;
 
   /** @type {HTMLDialogElement} */
@@ -77,9 +80,9 @@
     const files = event.dataTransfer?.files;
     if (files) {
       if (files.length < 1) {
-        errors.push('Sorry, you can only drop a ZIP file here.');
+        addError('Sorry, you can only drop a ZIP file here.');
       } else if (files.length > 1) {
-        errors.push('Sorry, you must upload only one ZIP file.');
+        addError('Sorry, you must upload only one ZIP file.');
       } else {
         handleFile(files[0], true);
       }
@@ -103,7 +106,7 @@
 
     if (file.type != 'application/zip') {
       console.log('file type error', file.type);
-      errors.push('Sorry, only ZIP files are supported at this time.');
+      addError('Sorry, only ZIP files are supported at this time.');
       console.log(errors);
     } else {
       pendingFilename = file?.name;
@@ -118,10 +121,27 @@
     console.log('handling files', files);
     clearFile();
     if (files.length > 1) {
-      errors.push('Sorry, you must upload only a single ZIP file.');
+      addError('Sorry, you must upload only a single ZIP file.');
     } else if (files.length == 1) {
       handleFile(files[0], shouldUpload);
     }
+  }
+
+  /** @param {Event} event */
+  function handleReset(event) {
+    event.preventDefault();
+    console.log('handleReset. region is', region);
+    // store selected region since it's unlikely to change
+    const selectedRegion = region;
+    if (form) form.reset();
+
+    // restore values after native reset
+    setTimeout(() => {
+      console.log('timeout', region);
+      region = selectedRegion;
+      sourceUrl = '';
+      clearFile();
+    }, 0);
   }
 
   /** @param {SubmitEvent} event */
@@ -139,7 +159,11 @@
     const file = fileInput?.files?.item(0);
 
     if (file) {
-      uploadFile(file);
+      handleFile(file, true);
+    } else if (sourceUrl) {
+      // TODO do something with the URL?
+    } else {
+      addError('Please include a file to validate.');
     }
   }
 
@@ -203,6 +227,12 @@
       xhr.open('HEAD', reportUrl);
       xhr.send();
     });
+  }
+
+  /** @param {string} errorText */
+  function addError(errorText) {
+    // use assignment because .push() doesn't always trigger reactivity
+    errors = [...errors, errorText];
   }
 
   /** @param {number} ms */
@@ -269,6 +299,7 @@
             id="url"
             placeholder="https://example.com/feed.zip"
             type="url"
+            bind:value={sourceUrl}
           />
 
           <SelectField
