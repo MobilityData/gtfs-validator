@@ -1,0 +1,57 @@
+body {
+  @apply font-sans;
+  @apply text-mobi-dark-blue;
+}
+
+.logo {
+  @apply max-h-8 md:max-h-12 lg:max-h-16;
+  transform: translateX(-3.5%);
+}
+
+.h1,
+.h2,
+.h3, {
+  @apply mb-4;
+}
+
+.h1,
+.markdown h1 {
+  @apply font-mono;
+  @apply text-mobi-light-blue;
+  @apply text-xl md:text-3xl lg:text-4xl;
+}
+
+.h2,
+.markdown h2 {
+  @apply font-mono;
+  @apply text-mobi-purple-safe;
+  @apply text-lg md:text-2xl lg:text-3xl;
+}
+
+.h3,
+.markdown h3 {
+  @apply text-lg md:text-xl lg:text-2xl;
+}
+
+.h4,
+.markdown h4 {
+  @apply font-mono;
+  @apply md:text-lg;
+  @apply text-mobi-dark-blue/60;
+  @apply tracking-tight;
+}
+
+.h5,
+.markdown h5,
+.h6,
+.markdown h6 {
+  @apply font-bold;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+a[href]:not(button, .btn, input) {
+  @apply underline hover:text-mobi-light-blue;
+}

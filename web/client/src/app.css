@@ -1,71 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@600&family=Mulish:wght@500&display=swap');
+@import 'tailwindcss/base';
+@import 'css/base' layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/components';
+@import 'css/components' layer(components);
 
-@layer base {
-  body {
-    @apply font-sans;
-    @apply text-mobi-dark-blue;
-  }
+@import 'tailwindcss/utilities';
 
-  .logo {
-    @apply max-h-8 md:max-h-12 lg:max-h-16;
-    transform: translateX(-3.5%);
-  }
-
-  .h1,
-  .h2,
-  .h3 {
-    @apply mb-4;
-  }
-
-  .h1 {
-    @apply font-mono;
-    @apply text-mobi-light-blue;
-    @apply text-xl md:text-3xl lg:text-4xl;
-  }
-
-  .h2 {
-    @apply font-mono;
-    @apply text-mobi-purple-safe;
-    @apply text-lg md:text-2xl lg:text-3xl;
-  }
-
-  .h3 {
-    @apply text-lg md:text-xl lg:text-2xl;
-  }
-
-  .h4 {
-    @apply font-mono;
-    @apply md:text-lg;
-  }
-
-  [hidden] {
-    display: none !important;
-  }
-
-  a:not(button, .btn, input) {
-    @apply underline hover:text-mobi-light-blue;
-  }
-}
-
-@layer components {
-  .input-control {
-    @apply bg-white
-      border border-black/60
-      h-12
-      shadow-inner
-      px-3 py-2;
-  }
-
-  .focus-ring {
-    @apply
-      focus-visible:outline-none
-      focus-visible:ring-4
-      focus-within:ring-4
-      active:ring-4
-      ring-mobi-purple/50;
-  }
-}
