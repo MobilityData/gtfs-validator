@@ -1,3 +1,5 @@
+@import 'components/markdown';
+
 .input-control {
   @apply bg-white
     border border-black/60

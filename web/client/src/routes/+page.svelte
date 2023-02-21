@@ -329,13 +329,7 @@
           class="flex flex-col md:flex-row md:justify-end md:w-auto mt-16 gap-4"
         >
           {#if showDocs}
-            <Button
-              href="https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md"
-              target="_blank"
-            >
-              See Documentation
-              <i class="fa-solid fa-xs fa-arrow-up-right-from-square" />
-            </Button>
+            <Button href="/rules">See Documentation</Button>
           {/if}
 
           <Button type="submit" variant="primary">Validate</Button>

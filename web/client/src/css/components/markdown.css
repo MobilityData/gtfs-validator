@@ -1,0 +1,84 @@
+ /* see also heading styles in base.css */
+
+.markdown {
+  @apply break-words;
+
+  h1 {
+    @apply border-b pb-2;
+    @apply mt-16 mb-4;
+
+    &:first-child {
+      @apply mt-0;
+    }
+  }
+
+  h2 {
+    @apply border-b pb-2;
+    @apply mt-8 mb-4;
+  }
+
+  h3 {
+    @apply mt-8 mb-2;
+  }
+
+  h4,
+  h5,
+  h6 {
+    @apply mt-4;
+  }
+
+  code {
+    font-size: .9em;
+    @apply bg-mobi-purple-safe/20;
+    @apply px-1;
+    @apply rounded;
+  }
+
+  ol, ul {
+    @apply my-3;
+    @apply pl-6;
+  }
+
+  ol > li {
+    @apply list-decimal;
+  }
+
+  ul > li {
+    @apply list-disc;
+  }
+
+  table {
+    @apply my-2;
+  }
+
+  th, td {
+    @apply align-baseline;
+    @apply px-3 py-2;
+    @apply text-left;
+  }
+
+  th {
+    @apply font-bold;
+  }
+
+  thead th {
+    @apply border-b-2;
+  }
+
+  thead tr,
+  tbody tr:nth-child(even) {
+    @apply bg-mobi-dark-blue/5;
+  }
+
+  a[href] {
+    @apply text-mobi-light-blue;
+    @apply no-underline hover:underline;
+  }
+
+  details {
+    @apply bg-mobi-light-gray;
+    @apply my-3;
+    @apply px-4 py-2;
+    @apply rounded shadow;
+  }
+}
