@@ -11,9 +11,6 @@
   /** @type {string} */
   export let filename;
 
-  /** @type {(function(Event):void)|null} */
-  export let handleInput = null;
-
   /** @type {string} */
   export let hint = '';
 
@@ -58,11 +55,11 @@
       type="file"
       {...$$restProps}
       bind:this={fileInput}
-      on:input={handleInput}
+      on:input
     />
   </div>
 
-  <Button type="button" className="py-1" handleClick={clickFileInput}>
+  <Button type="button" className="py-1" on:click={clickFileInput}>
     {buttonText}
   </Button>
 </LabeledField>

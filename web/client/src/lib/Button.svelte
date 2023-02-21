@@ -7,9 +7,6 @@
   /** @type {boolean|null} */
   export let disabled = null;
 
-  /** @type {(function():void)|null} */
-  export let handleClick = null;
-
   /** @type {string|null} */
   export let href = null;
 
@@ -40,13 +37,13 @@
 </script>
 
 {#if isLink}
-  <a class={buttonClass} {href} {target} on:click={handleClick}>
+  <a class={buttonClass} {href} {target} on:click>
     <slot name="content">
       <ButtonContent><slot /></ButtonContent>
     </slot>
   </a>
 {:else}
-  <button class={buttonClass} {type} {disabled} on:click={handleClick}>
+  <button class={buttonClass} {type} {disabled} on:click>
     <slot name="content">
       <ButtonContent {disabled}><slot /></ButtonContent>
     </slot>

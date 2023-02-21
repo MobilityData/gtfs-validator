@@ -1,5 +1,4 @@
 <script>
-  import FieldInput from './FieldInput.svelte';
   import LabeledField from './LabeledField.svelte';
 
   /** @type {string} */
@@ -21,42 +20,36 @@
   /** @type {string} */
   export let name = id;
 
+  /** @type {Array<{
+    value: string;
+    label: string;
+  }>} */
+  export let options = [];
+
   /** @type {string} */
   export let placeholder = 'Choose an option';
 
   /** @type {string} */
   export let value;
 
-  /** @type {Array<{
-    value: string;
-    label: string;
-  }>} */
-  export let options = [{
-    value: 'US',
-    label: 'United States',
-  }];
-
   $: inputClass = ['focus-ring', className].join(' ');
-
 </script>
 
 <LabeledField {id} {label} {hint}>
-  <FieldInput {id}>
-    <div class="select-wrapper {baseClass}">
-      <select {id} {name} bind:value class={inputClass} {...$$restProps}>
-        <slot name="options" {options}>
-          <option value="" selected disabled>{placeholder}</option>
-          {#each options as {value, label}}
-            <option {value}>{label}</option>
-          {/each}
-        </slot>
-      </select>
+  <div class="select-wrapper {baseClass}">
+    <select {id} {name} bind:value class={inputClass} {...$$restProps}>
+      <slot name="options" {options}>
+        <option value="" selected disabled>{placeholder}</option>
+        {#each options as { value, label }}
+          <option {value}>{label}</option>
+        {/each}
+      </slot>
+    </select>
 
-      <div class="trigger-icon">
-        <i aria-hidden="true" class="fa-fw fa-solid fa-angle-down" />
-      </div>
+    <div class="trigger-icon">
+      <i aria-hidden="true" class="fa-fw fa-solid fa-angle-down" />
     </div>
-  </FieldInput>
+  </div>
 </LabeledField>
 
 <style lang="postcss">
