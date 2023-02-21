@@ -112,6 +112,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`missing_recommended_field`](#missing_recommended_field)                                     | A recommended field is missing.                                                                                                                               |
 | [`missing_timepoint_column`](#missing_timepoint_column)                                       | `timepoint` column is missing for a dataset.                                                                                                                  |
 | [`missing_timepoint_value`](#missing_timepoint_value)                                         | `stop_times.timepoint` value is missing for a record.                                                                                                         |
+| [`mixed_case_field`](#mixed_case_field)                                                       | This field has customer-facing text and should use Mixed Case (should contain upper and lower case letters.).                                                                                                         |
 | [`more_than_one_entity`](#more_than_one_entity)                                               | More than one row in CSV.                                                                                                                                     |
 | [`non_ascii_or_non_printable_char`](#non_ascii_or_non_printable_char)                         | Non ascii or non printable char in  `id`.                                                                                                                     |
 | [`pathway_dangling_generic_node`](#pathway_dangling_generic_node)                             | A generic node has only one incident location in a pathway graph.                                                                                             |
@@ -2068,6 +2069,39 @@ Even though the column `timepoint` is optional in `stop_times.txt` according to 
 
 #### Affected files
 * [`stop_times.txt`](https://gtfs.org/schedule/reference/#stop_timestxt)
+
+</details>
+
+<a name="MixedCaseFieldNotice"/>
+
+### mixed_case_field
+
+This field has customer-facing text and should use Mixed Case (should contain upper and lower case letters.).
+
+#### References
+* [Best Practices for All Files](https://gtfs.org/schedule/best-practices/#practice-recommendations-organized-by-file)
+<details>
+
+
+#### Notice fields description
+| Field name     	| Description                           	| Type   	|
+|----------------	|---------------------------------------	|--------	|
+| `csvRowNumber` 	| The row number of the faulty record.  	| Long   	|
+| `filename`    	| Name of the faulty file.              	| String 	|
+| `fieldName`    	| Name of the faulty field.              	| String 	|
+
+#### Affected files & fields
+* [`agency.agency_name`](https://gtfs.org/schedule/reference/#agencytxt)
+* [`stops.stop_name`](https://gtfs.org/schedule/reference/#stopstxt)
+* [`stops.stop_desc`](https://gtfs.org/schedule/reference/#stopstxt)
+* [`routes.route_short_name`](https://gtfs.org/schedule/reference/#routestxt)
+* [`routes.route_long_name`](https://gtfs.org/schedule/reference/#routestxt)
+* [`routes.route_desc`](https://gtfs.org/schedule/reference/#routestxt)
+* [`trips.trip_headsign`](https://gtfs.org/schedule/reference/#tripstxt)
+* [`trips.trip_short_name`](https://gtfs.org/schedule/reference/#tripstxt)
+* [`pathways.signposted_as`](https://gtfs.org/schedule/reference/#pathwaystxt)
+* [`pathways.reversed_signposted_as`](https://gtfs.org/schedule/reference/#pathwaystxt)
+* [`levels.level_name`](https://gtfs.org/schedule/reference/#levelstxt)
 
 </details>
 
