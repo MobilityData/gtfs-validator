@@ -6,10 +6,11 @@
   import DropTarget from '$lib/DropTarget.svelte';
   import FileField from '$lib/forms/FileField.svelte';
   import Form from '$lib/forms/Form.svelte';
-  import languageTags from '$lib/rfc5646-language-tags';
   import TextField from '$lib/forms/TextField.svelte';
   import SelectField from '$lib/forms/SelectField.svelte';
   import StatusModal from '$lib/StatusModal.svelte';
+
+  import countryCodes from '$lib/countryCodes';
 
   import { fly } from 'svelte/transition';
   import { onMount } from 'svelte';
@@ -20,8 +21,8 @@
   /** @type {HTMLInputElement} */
   let fileInput;
 
-  /** @type {string} */
-  let languageCode;
+  /** @type {HTMLFormElement|undefined} */
+  let form;
 
   /** @type {string} */
   let jobId;
@@ -31,6 +32,9 @@
 
   /** @type {string} */
   let pendingFilename = '';
+
+  /** @type {string} */
+  let region;
 
   /** @type {string} */
   let status;
@@ -52,6 +56,17 @@
   /** @param {DragEvent} event */
   function handleDragOver(event) {
     event.preventDefault();
+  }
+
+  function detectRegion() {
+    if (browser) {
+      // attempt to detect region automatically
+      const browserLanguage = window?.navigator?.language;
+      if (browserLanguage && browserLanguage.split('-').length > 1) {
+        const code = navigator.language.split('-')[1];
+        region = code;
+      }
+    }
   }
 
   /** @param {DragEvent} event */
@@ -113,12 +128,14 @@
   function handleSubmit(event) {
     event.preventDefault();
 
-    const formValues = {}
-    const data = new FormData(this);
-    for (const [name,value] of data) {
+    const data = new FormData(form);
+
+    /** @type {Object<string, any>} */
+    const formValues = {};
+
+    for (const [name, value] of data) {
       formValues[name] = value;
     }
-    debugger
     const file = fileInput?.files?.item(0);
 
     if (file) {
@@ -212,10 +229,6 @@
 
     updateStatus('ready');
 
-    const form = /** @type {HTMLFormElement} */ (
-      document.getElementById('validator-form')
-    );
-
     if (form) {
       form.reset();
       clearFile();
@@ -223,13 +236,10 @@
   }
 
   onMount(() => {
-    if (browser) {
-      // attempt to detect language automatically
-      const browserLanguage = window?.navigator?.language;
-      if (browserLanguage && browserLanguage.split('-').length > 1) {
-        languageCode = navigator.language.split('-')[1];
-      }
-    }
+    form = /** @type {HTMLFormElement} */ (
+      document.getElementById('validator-form')
+    );
+    detectRegion();
   });
 </script>
 
@@ -240,10 +250,8 @@
 <div class="bg-mobi-light-gray">
   <DropTarget {handleDragOver} {handleDrop}>
     <div class="container">
-      <Form id="validator-form" {handleSubmit}>
-        <h2 class="h3 text-center">
-          Check the quality of a file or a feed
-        </h2>
+      <Form id="validator-form" on:submit={handleSubmit} on:reset={handleReset}>
+        <h2 class="h3 text-center">Check the quality of a file or a feed</h2>
 
         <div class="max-w-xl mx-auto">
           <FileField
@@ -252,7 +260,7 @@
             hint="You can also drag a file here"
             accept="application/zip,.zip"
             filename={pendingFilename}
-            handleInput={handleFileInput}
+            on:input={handleFileInput}
             bind:fileInput
           />
 
@@ -264,12 +272,13 @@
           />
 
           <SelectField
-            id="languageCode"
-            name="languageCode"
-            label="Language"
-            bind:value={languageCode}
-            options={languageTags}
-            placeholder="Choose a language"
+            id="region"
+            name="region"
+            label="Region"
+            hint={region}
+            bind:value={region}
+            options={countryCodes}
+            placeholder="Choose a region"
           />
         </div>
 
@@ -298,9 +307,7 @@
             </Button>
           {/if}
 
-          <Button type="submit" variant="primary">
-            Validate
-          </Button>
+          <Button type="submit" variant="primary">Validate</Button>
         </div>
       </Form>
     </div>
