@@ -2187,7 +2187,21 @@ A route's color and `route_text_color` should be contrasting.
 
 Long name should not contain short name for a single route.
 
-Example of bad data:
+Good examples:
+| route_short_name/route_long_name                                                                | Dataset                                                                                                                                                                |
+| ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ["N"/"Judah"](https://www.sfmta.com/getting-around/transit/routes-stops/n-judah)                | [Muni San Fransisco](https://storage.googleapis.com/storage/v1/b/mdb-latest/o/us-california-san-francisco-municipal-transportation-agency-sfmta-gtfs-50.zip?alt=media) |
+| ["6"/"ML King Jr Blvd"](https://trimet.org/schedules/r006.htm)                                  | [Trimet Portland Streetcar](http://developer.trimet.org/schedule/gtfs.zip)                                                                                             |
+| ["55"/"Boulevard Saint Laurent"](https://www.stm.info/en/info/networks/bus/local/line-55-north) | [STM Montreal](https://storage.googleapis.com/storage/v1/b/mdb-latest/o/ca-quebec-societe-de-transport-de-montreal-gtfs-1221.zip?alt=media)                            |
+| ["1"/"Rangiora/Cashmere"](https://www.metroinfo.co.nz/timetables/1-rangiora-cashmere/)          | [Metro Christchurch](https://storage.googleapis.com/storage/v1/b/mdb-latest/o/nz-christchurch-christchurch-metro-gtfs-1313.zip?alt=media)                              |
+
+Bad examples:
+| route_short_name/route_long_name |
+|-------------------------------------|
+| "604"/"604"                                         |
+| "14"/"Route 14"                                    |
+| "2"/"Route 2: Bellows Falls In-Town" |
+
 
 | `route_id` 	| `route_short_name` 	| `route_long_name` 	|
 |------------	|--------------------	|-------------------	|
