@@ -65,6 +65,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`missing_required_column`](#missing_required_column)                                                                             | A required column is missing in the input file.                                                                                                        |
 | [`missing_required_field`](#missing_required_field)                                                                               | A required field is missing.                                                                                                                           |
 | [`missing_required_file`](#missing_required_file)                                                                                 | A required file is missing.                                                                                                                            |
+| [`missing_stop_name`](#missing_stop_name) | `stops.stop_name` is required for `location_type` equal to `0`, `1`, or `2`. |
 | [`missing_trip_edge`](#missing_trip_edge)                                                                                         | Missing trip edge `arrival_time` or `departure_time`.                                                                                                  |
 | [`new_line_in_value`](#new_line_in_value)                                                                                         | New line or carriage return in a value in CSV file.                                                                                                    |
 | [`number_out_of_range`](#number_out_of_range)                                                                                     | Out of range value.                                                                                                                                    |
@@ -1028,6 +1029,28 @@ A required file is missing. If this notice is triggered for every core file, it 
 
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
+
+</details>
+
+<a name="MissingStopName"/>
+
+### missing_stop_name
+
+`stops.stop_name` is required for locations that are stops (`location_type=0`), stations (`location_type=1`) or entrances/exits (`location_type=2`).
+
+#### References
+* [stops.txt specification](https://gtfs.org/reference/static/#stopstxt)
+<details>
+
+#### Notice fields description
+| Field name     	  | Description                                 | Type    	|
+|-----------------  |-------------------------------------------- |---------	|
+| `csvRowNumber`  	| The row of the faulty record.               | Long    	|
+| `locationType`  	| `stops.location_type` of the faulty record. | Integer 	|
+| `stopId`        	| The `stops.stop_id` of the faulty record.   | String  	|
+
+#### Affected files
+* [stops.txt](https://gtfs.org/reference/static/#stopstxt)
 
 </details>
 
