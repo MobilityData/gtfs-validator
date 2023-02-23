@@ -117,7 +117,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`pathway_loop`](#pathway_loop)                                                               | A pathway starts and ends at the same location.                                                                                                               |
 | [`platform_without_parent_station`](#platform_without_parent_station)                         | A platform has no `parent_station` field set.                                                                                                                 |
 | [`route_color_contrast`](#route_color_contrast)                                               | Insufficient route color contrast.                                                                                                                            |
-| [`route_long_name_contains_short_name`](#route_long_name_contains_short_name)                                               | Long name should not contain short name for a single route.                                                                                                                |
+| [`route_long_name_contains_short_name`](#route_long_name_contains_short_name)                 | Long name should not contain short name for a single route.                                                                                                   |
 | [`route_short_name_too_long`](#route_short_name_too_long)                                     | Short name of a route is too long (more than 12 characters).                                                                                                  |
 | [`same_name_and_description_for_route`](#same_name_and_description_for_route)                 | Same name and description for route.                                                                                                                          |
 | [`same_name_and_description_for_stop`](#same_name_and_description_for_stop)                   | Same name and description for stop.                                                                                                                           |
@@ -2185,10 +2185,10 @@ A route's color and `route_text_color` should be contrasting.
 
 ### route_long_name_contains_short_name
 
-Long name should not contain short name for a single route.
+In routes.txt, `route_long_name` should not contain the value for `route_short_name`, because when both are provided, they are often combined by transit applications. Note that only one of the two fields is required. If there is no short name used for a route, use `route_long_name` only.
 
 Good examples:
-| route_short_name/route_long_name                                                                | Dataset                                                                                                                                                                |
+| `route_short_name`/`route_long_name`                                                                | Dataset                                                                                                                                                                |
 | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | ["N"/"Judah"](https://www.sfmta.com/getting-around/transit/routes-stops/n-judah)                | [Muni San Fransisco](https://storage.googleapis.com/storage/v1/b/mdb-latest/o/us-california-san-francisco-municipal-transportation-agency-sfmta-gtfs-50.zip?alt=media) |
 | ["6"/"ML King Jr Blvd"](https://trimet.org/schedules/r006.htm)                                  | [Trimet Portland Streetcar](http://developer.trimet.org/schedule/gtfs.zip)                                                                                             |
@@ -2196,31 +2196,15 @@ Good examples:
 | ["1"/"Rangiora/Cashmere"](https://www.metroinfo.co.nz/timetables/1-rangiora-cashmere/)          | [Metro Christchurch](https://storage.googleapis.com/storage/v1/b/mdb-latest/o/nz-christchurch-christchurch-metro-gtfs-1313.zip?alt=media)                              |
 
 Bad examples:
-| route_short_name/route_long_name |
-|-------------------------------------|
-| "604"/"604"                                         |
-| "14"/"Route 14"                                    |
-| "2"/"Route 2: Bellows Falls In-Town" |
+| `route_short_name`/`route_long_name` |
+|-------------------------------------------|
+| "604"/"604"                               |
+| "14"/"Route 14"                           |
+| "2"/"Route 2: Bellows Falls In-Town"      |
 
-
-| `route_id` 	| `route_short_name` 	| `route_long_name` 	|
-|------------	|--------------------	|-------------------	|
-| route1     	| L1                 	| L1                	|
-| route2     	| L1                 	| L1 Long Name      	|
-| route3     	| L1                 	| L1- Long Name      	|
-| route3     	| L1                 	| L1 - Long Name     	|
-| route4     	| L1                 	| L1 (Long Name)     	|
-| route5     	| L1                 	| L1) Long Name     	|
-
-Example of acceptable data:
-
-| `route_id` 	| `route_short_name` 	| `route_long_name` 	|
-|------------	|--------------------	|-------------------	|
-| route1     	| L1                 	| Long Name          	|
-| route2     	| BANK               	| Bankford          	|
 
 #### References
-* [routes.txt best practices](https://gtfs.org/schedule/best-practices/#routestxt)
+* [routes.txt Best Practices](https://gtfs.org/schedule/best-practices/#routestxt)
 <details>
 
 #### Notice fields description
