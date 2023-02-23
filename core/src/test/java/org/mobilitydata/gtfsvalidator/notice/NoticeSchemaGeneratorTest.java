@@ -25,11 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import java.io.IOException;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.notice.testnotices.DoubleFieldNotice;
-import org.mobilitydata.gtfsvalidator.notice.testnotices.GtfsTypesValidationNotice;
 import org.mobilitydata.gtfsvalidator.notice.testnotices.S2LatLngNotice;
-import org.mobilitydata.gtfsvalidator.notice.testnotices.StringFieldNotice;
-import org.mobilitydata.gtfsvalidator.notice.testnotices.TestValidator.TestInnerNotice;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
@@ -38,17 +34,6 @@ public class NoticeSchemaGeneratorTest {
   private static final String OPEN_SOURCE_NOTICES_PACKAGE = "org.mobilitydata.gtfsvalidator";
   private static final String TEST_NOTICES_PACKAGE =
       "org.mobilitydata.gtfsvalidator.notice.testnotices";
-
-  @Test
-  public void findNoticeSubclasses() throws IOException {
-    assertThat(NoticeSchemaGenerator.findNoticeSubclasses(ImmutableList.of(TEST_NOTICES_PACKAGE)))
-        .containsExactly(
-            DoubleFieldNotice.class,
-            TestInnerNotice.class,
-            GtfsTypesValidationNotice.class,
-            S2LatLngNotice.class,
-            StringFieldNotice.class);
-  }
 
   @Test
   public void jsonSchemaForPackages_succeeds() throws IOException {
@@ -64,16 +49,16 @@ public class NoticeSchemaGeneratorTest {
             NoticeSchemaGenerator.contextFieldsInPackages(ImmutableList.of(TEST_NOTICES_PACKAGE)))
         .isEqualTo(
             ImmutableMap.of(
-                "DoubleFieldNotice",
+                "double_field",
                 ImmutableMap.of("doubleField", double.class),
-                "TestInnerNotice",
+                "test_inner",
                 ImmutableMap.of("intField", int.class),
-                "GtfsTypesValidationNotice",
+                "gtfs_types_validation",
                 ImmutableMap.of(
                     "color", GtfsColor.class, "date", GtfsDate.class, "time", GtfsTime.class),
-                "S2LatLngNotice",
+                "s2_lat_lng",
                 ImmutableMap.of("point", S2LatLng.class),
-                "StringFieldNotice",
+                "string_field",
                 ImmutableMap.of("someField", String.class)));
   }
 
