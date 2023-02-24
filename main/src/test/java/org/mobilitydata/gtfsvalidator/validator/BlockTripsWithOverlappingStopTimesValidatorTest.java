@@ -27,6 +27,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 import org.mobilitydata.gtfsvalidator.util.CalendarUtilTest;
 import org.mobilitydata.gtfsvalidator.validator.BlockTripsWithOverlappingStopTimesValidator.BlockTripsWithOverlappingStopTimesNotice;
+import org.mobilitydata.gtfsvalidator.validator.BlockTripsWithOverlappingStopTimesValidator.StopTimeTripWithoutTimesNotice;
 
 @RunWith(JUnit4.class)
 public class BlockTripsWithOverlappingStopTimesValidatorTest {
@@ -108,6 +109,23 @@ public class BlockTripsWithOverlappingStopTimesValidatorTest {
     }
 
     return stopTimes;
+  }
+
+  private static GtfsStopTime createStopTime(
+      int csvRowNumber,
+      String tripId,
+      GtfsTime arrivalTime,
+      GtfsTime departureTime,
+      String stopId,
+      int stopSequence) {
+    return new GtfsStopTime.Builder()
+        .setCsvRowNumber(csvRowNumber)
+        .setTripId(tripId)
+        .setArrivalTime(arrivalTime)
+        .setDepartureTime(departureTime)
+        .setStopSequence(stopSequence)
+        .setStopId(stopId)
+        .build();
   }
 
   private static List<ValidationNotice> generateNotices(
@@ -208,5 +226,61 @@ public class BlockTripsWithOverlappingStopTimesValidatorTest {
                     new String[] {"s0"},
                     new String[][] {new String[] {"08:00:00"}})))
         .isEmpty();
+  }
+
+  @Test
+  public void stopTimeMissingArrivalTime() {
+    List<GtfsTrip> trips = createTripTable(new String[] {"t0"}, new String[] {"WEEK"}, "b1");
+
+    List<GtfsStopTime> stopTimes = new ArrayList<>();
+    stopTimes.add(
+        createStopTime(
+            1,
+            "t0",
+            null, // arrival time
+            GtfsTime.fromSecondsSinceMidnight(518), // departure time
+            "s0",
+            1));
+    stopTimes.add(
+        createStopTime(
+            2,
+            "t0",
+            GtfsTime.fromSecondsSinceMidnight(1418), // arrival time
+            GtfsTime.fromSecondsSinceMidnight(1518), // departure time
+            "s1",
+            2));
+
+    assertThat(generateNotices(createCalendarTable(), ImmutableList.of(), trips, stopTimes))
+        .containsExactly(
+            new StopTimeTripWithoutTimesNotice(
+                stopTimes.get(0), GtfsStopTime.ARRIVAL_TIME_FIELD_NAME));
+  }
+
+  @Test
+  public void stopTimeMissingDepartureTime() {
+    List<GtfsTrip> trips = createTripTable(new String[] {"t0"}, new String[] {"WEEK"}, "b1");
+
+    List<GtfsStopTime> stopTimes = new ArrayList<>();
+    stopTimes.add(
+        createStopTime(
+            1,
+            "t0",
+            GtfsTime.fromSecondsSinceMidnight(518), // arrival time
+            null, // Departure Time
+            "s0",
+            1));
+    stopTimes.add(
+        createStopTime(
+            2,
+            "t0",
+            GtfsTime.fromSecondsSinceMidnight(1418), // arrival time
+            GtfsTime.fromSecondsSinceMidnight(1518), // departure time
+            "s1",
+            2));
+
+    assertThat(generateNotices(createCalendarTable(), ImmutableList.of(), trips, stopTimes))
+        .containsExactly(
+            new StopTimeTripWithoutTimesNotice(
+                stopTimes.get(0), GtfsStopTime.DEPARTURE_TIME_FIELD_NAME));
   }
 }
