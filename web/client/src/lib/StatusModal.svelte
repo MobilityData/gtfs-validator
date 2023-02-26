@@ -2,7 +2,7 @@
   import { backOut, circInOut, elasticOut } from 'svelte/easing';
   import { fade, fly, scale, slide } from 'svelte/transition';
 
-  import Button from "./Button.svelte";
+  import Button from './Button.svelte';
 
   /** @type {?HTMLDialogElement} */
   export let dialog = null;
@@ -32,26 +32,24 @@
 
   /** @type {string[]} */
   // TODO some kind of shared enum?
-  const statusSteps = [
-    'authorizing',
-    'uploading',
-    'processing',
-    'ready',
-  ];
+  const statusSteps = ['authorizing', 'uploading', 'processing', 'ready'];
 </script>
 
-<dialog bind:this={dialog} class="backdrop:bg-mobi-light-blue/20 backdrop:backdrop-blur-sm
+<dialog
+  bind:this={dialog}
+  class="backdrop:bg-mobi-light-blue/20 backdrop:backdrop-blur-sm
   rounded-lg shadow-2xl shadow-indigo-800/50
   overflow-hidden
   p-8 w-80
   text-center
   transition-all
-">
+"
+>
   {#if status == 'ready'}
     <form method="dialog" class="flex justify-end -mt-7 -mr-7">
-      <span in:scale>
+      <span in:scale|local>
         <Button type="submit" className="px-4" variant="link">
-          <i class="fa-solid fa-times"></i>
+          <i class="fa-solid fa-times" />
           <div class="sr-only">Dismiss</div>
         </Button>
       </span>
@@ -60,17 +58,28 @@
 
   <div class="grid">
     {#key status}
-      <div style="grid-area: 1/1/1/1" in:fly={{ easing: circInOut, x: 128 }} out:fly={{ easing: circInOut, x: -128 }}>
+      <div
+        style="grid-area: 1/1/1/1"
+        in:fly|local={{ easing: circInOut, x: 128 }}
+        out:fly|local={{ easing: circInOut, x: -128 }}
+      >
         {#if status == 'authorizing'}
-          <i class="fa-solid fa-2x fa-file-lines fa-flip text-mobi-purple"></i>
+          <i class="fa-solid fa-2x fa-file-lines fa-flip text-mobi-purple" />
         {:else if status == 'uploading'}
-          <i class="fa-solid fa-2x fa-cloud-arrow-up fa-beat text-mobi-purple"></i>
+          <i
+            class="fa-solid fa-2x fa-cloud-arrow-up fa-beat text-mobi-purple"
+          />
         {:else if status == 'processing'}
-          <i class="fa-solid fa-2x fa-gear fa-spin text-mobi-purple-safe" style="--fa-animation-duration: 1s"></i>
+          <i
+            class="fa-solid fa-2x fa-gear fa-spin text-mobi-purple-safe"
+            style="--fa-animation-duration: 1s"
+          />
         {:else if status == 'ready'}
           {#key status}
-            <i in:scale={{ delay: 400, duration: 800, easing: elasticOut }}
-              class="fa-solid fa-2x fa-check-circle text-mobi-light-blue"></i>
+            <i
+              in:scale|local={{ delay: 400, duration: 800, easing: elasticOut }}
+              class="fa-solid fa-2x fa-check-circle text-mobi-light-blue"
+            />
           {/key}
         {/if}
       </div>
@@ -78,18 +87,28 @@
   </div>
 
   {#key status}
-    <div class="status-message leading-snug mt-4" in:fade={{ duration: 250 }}>
+    <div
+      class="status-message leading-snug mt-4"
+      in:fade|local={{ duration: 250 }}
+    >
       {statusMessages[status]}
     </div>
   {/key}
 
   {#if status == 'authorizing' || status == 'processing'}
-    <div in:slide={{ delay: 5000 }} out:slide class="opacity-40">This may take a&nbsp;moment</div>
-    <div in:slide={{ delay: 20000 }} out:slide class="opacity-40">Hang tight!</div>
+    <div in:slide|local={{ delay: 5000 }} out:slide|local class="opacity-40">
+      This may take a&nbsp;moment
+    </div>
+    <div in:slide|local={{ delay: 20000 }} out:slide|local class="opacity-40">
+      Hang tight!
+    </div>
   {/if}
 
   {#if isReady && reportUrl}
-    <div transition:slide={{ easing: backOut }} class="mt-8 flex flex-col">
+    <div
+      transition:slide|local={{ easing: backOut }}
+      class="mt-8 flex flex-col"
+    >
       <Button href={reportUrl} target="_blank">
         Open Report
         <i class="fa-solid fa-xs fa-arrow-up-right-from-square" />

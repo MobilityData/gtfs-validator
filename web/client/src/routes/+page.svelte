@@ -314,7 +314,7 @@
         </div>
 
         {#if errors.length > 0}
-          <div transition:fly={{ y: -10, easing: quintOut }}>
+          <div transition:fly|local={{ y: -10, easing: quintOut }}>
             <Alert handleDismiss={clearErrors}>
               <ul>
                 {#each errors as error}
