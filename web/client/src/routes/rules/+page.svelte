@@ -11,12 +11,16 @@
 
     // edit markdown to help with parsing
     // marked does not like some of the formatting in RULES.md
-    let output = md
+    massagedMarkdown = md
       .replace(/<a name=".*"\/>/gm, '') // remove redundant anchors
       .replace(/\t/gm, '    ') // spaceify tabs
       .replace(/(\S)$\n<details>/gm, '$1\n\n<details>'); // ensure blank lines before <details>
 
-    massagedMarkdown = output;
+    // use github as a base url for relative links
+    massagedMarkdown = massagedMarkdown.replace(
+      /\[(.*)\]\(\/(.*)\)/gm,
+      '[$1](https://github.com/MobilityData/gtfs-validator/blob/master/$2)'
+    );
   }
 
   onMount(() => {
