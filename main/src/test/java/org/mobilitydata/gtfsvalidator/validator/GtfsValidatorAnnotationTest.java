@@ -21,7 +21,7 @@ public class GtfsValidatorAnnotationTest {
   @Test
   public void testAllValidatorSubclassesAreAnnotatedWithGtfsValidator() {
     ImmutableList<String> validatorPackages =
-        ImmutableList.of(ValidatorLoader.DEFAULT_VALIDATOR_PACKAGE);
+        ImmutableList.of(ClassGraphDiscovery.DEFAULT_VALIDATOR_PACKAGE);
     ImmutableList<Class> validatorBaseClasses =
         ImmutableList.of(SingleEntityValidator.class, FileValidator.class);
     for (String packageName : validatorPackages) {

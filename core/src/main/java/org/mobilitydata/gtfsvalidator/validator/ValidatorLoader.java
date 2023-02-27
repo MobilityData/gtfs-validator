@@ -19,7 +19,6 @@ package org.mobilitydata.gtfsvalidator.validator;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ListMultimap;
-import com.google.common.flogger.FluentLogger;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -44,21 +43,11 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
  * classes.
  */
 public class ValidatorLoader {
-
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-  public static final String DEFAULT_VALIDATOR_PACKAGE = "org.mobilitydata.gtfsvalidator.validator";
-
   private final ListMultimap<Class<? extends GtfsEntity>, Class<? extends SingleEntityValidator<?>>>
       singleEntityValidators = ArrayListMultimap.create();
   private final ListMultimap<Class<? extends GtfsTableContainer<?>>, Class<? extends FileValidator>>
       singleFileValidators = ArrayListMultimap.create();
   private final List<Class<? extends FileValidator>> multiFileValidators = new ArrayList<>();
-
-  /** Create a validator with the specified validator classes loaded. */
-  public static ValidatorLoader createFromRegistry(GtfsValidatorRegistry registry)
-      throws ValidatorLoaderException {
-    return createForClasses(registry.getValidatorClasses());
-  }
 
   /** Create a validator with the specified validator classes loaded. */
   public static ValidatorLoader createForClasses(ImmutableList<Class<?>> validatorClasses)

@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.flogger.FluentLogger;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -39,17 +40,27 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorUtil;
 /**
  * Loader for a whole GTFS feed with all its CSV files.
  *
- * <p>The loader creates a {@link GtfsFeedContainer} object. Descriptors for particular tables are
- * taken from an instance of {@link GtfsTableRegistry}.
+ * <p>The loader creates a {@link GtfsFeedContainer} object.
  */
 public class GtfsFeedLoader {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-  private final HashMap<String, GtfsTableDescriptor> tableDescriptors = new HashMap<>();
+  private final HashMap<String, GtfsTableDescriptor<?>> tableDescriptors = new HashMap<>();
   private int numThreads = 1;
 
-  public GtfsFeedLoader(GtfsTableRegistry tableRegistry) {
-    for (GtfsTableDescriptor<?> tableDescriptor : tableRegistry.getTableDescriptors()) {
-      tableDescriptors.put(tableDescriptor.gtfsFilename(), tableDescriptor);
+  public GtfsFeedLoader(
+      ImmutableList<Class<? extends GtfsTableDescriptor<?>>> tableDescriptorClasses) {
+    for (Class<? extends GtfsTableDescriptor<?>> clazz : tableDescriptorClasses) {
+      GtfsTableDescriptor<?> descriptor;
+      try {
+        descriptor = clazz.asSubclass(GtfsTableDescriptor.class).getConstructor().newInstance();
+      } catch (ReflectiveOperationException e) {
+        logger.atSevere().withCause(e).log(
+            "Possible bug in GTFS annotation processor: expected a constructor without parameters"
+                + " for %s",
+            clazz.getName());
+        continue;
+      }
+      tableDescriptors.put(descriptor.gtfsFilename(), descriptor);
     }
   }
 

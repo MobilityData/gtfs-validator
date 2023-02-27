@@ -11,24 +11,22 @@ A part of the specification that is translated into code in the validator. A Rul
   - In the validator: this is translated into code in the file [`StopZoneIdValidator.java`](https://github.com/MobilityData/gtfs-validator/blob/master/main/src/main/java/org/mobilitydata/gtfsvalidator/validator/StopZoneIdValidator.java).
 
 ### A Notice
-What the Rule outputs if the conditions aren’t met. It is what the user will see in the validation report.
-- For example, the output of `StopZoneIdValidator.java` Rule is the Notice `stop_without_zone_id`. 
+The output that the user will see if the conditions aren’t met.
+- For example, the output of `StopZoneIdValidator.java` is the Notice `stop_without_zone_id`. 
 
 ### The Severity of a Notice
 
 Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 
-* `ERROR` notices are for items that the [GTFS reference specification](https://github.com/google/transit/tree/master/gtfs/spec/en) explicitly requires or prohibits (e.g., using the language "must"). The validator uses [RFC2119](https://tools.ietf.org/html/rfc2119) to interpret the language in the GTFS spec.
-  * ⚠️ Please note that this validator also generates `System Errors` that give information about things that may have gone wrong during the validation process such as the inability to unzip a GTFS file. These are generated in a second report `system_errors.json`.
-* `WARNING` notices are for items that will affect the quality of GTFS datasets but the GTFS spec does expressly require or prohibit. For example, these might be items recommended using the language "should" or "should not" in the GTFS spec, or items recommended in the MobilityData [GTFS Best Practices](https://gtfs.org/best-practices/).
-* `INFO` notices are for items that do not affect the feed's quality, such as unknown files or unknown fields.
+* `ERROR` notices are for GTFS Schedule Reference violations. These are items that the [GTFS Schedule Reference](https://gtfs.org/schedule/reference/) explicitly requires or prohibits (using the language "must"). 
+* `WARNING` notices are for GTFS Schedule Best Practices. These are items that the [GTFS Schedule Reference](https://gtfs.org/schedule/reference/) explicitly recommends (using the language "should"), or items mentioned in the official [GTFS Schedule Best Practices](https://gtfs.org/schedule/best-practices/).
+* `INFO` notices are for items that may affect the feed's quality. They are unexpected finds that should be brought to the user's attention. 
 
-<!--suppress ALL -->
+⚠️ Please note that this validator also generates `System Errors` that give information about things that may have gone wrong during the validation process such as the inability to unzip a GTFS file. These are generated in a second report `system_errors.json`.
 
 <a name="ERRORS"/>
 
 ## Table of ERRORS
-
 | Notice code                                                                                                                       | Description                                                                                                                                            |
 |-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`block_trips_with_overlapping_stop_times`](#block_trips_with_overlapping_stop_times)                                             | Block trips with overlapping stop times.                                                                                                               |
@@ -67,6 +65,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`missing_required_column`](#missing_required_column)                                                                             | A required column is missing in the input file.                                                                                                        |
 | [`missing_required_field`](#missing_required_field)                                                                               | A required field is missing.                                                                                                                           |
 | [`missing_required_file`](#missing_required_file)                                                                                 | A required file is missing.                                                                                                                            |
+| [`missing_stop_name`](#missing_stop_name)                                                                                         | `stops.stop_name` is required for `location_type` equal to `0`, `1`, or `2`.                                                                          |
 | [`missing_trip_edge`](#missing_trip_edge)                                                                                         | Missing trip edge `arrival_time` or `departure_time`.                                                                                                  |
 | [`new_line_in_value`](#new_line_in_value)                                                                                         | New line or carriage return in a value in CSV file.                                                                                                    |
 | [`number_out_of_range`](#number_out_of_range)                                                                                     | Out of range value.                                                                                                                                    |
@@ -83,6 +82,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`stop_time_timepoint_without_times`](#stop_time_timepoint_without_times)                                                         | `arrival_time` or `departure_time` not specified for timepoint.                                                                                        |
 | [`stop_time_with_arrival_before_previous_departure_time`](#stop_time_with_arrival_before_previous_departure_time)                 | Backwards time travel between stops in `stop_times.txt`                                                                                                |
 | [`stop_time_with_only_arrival_or_departure_time`](#stop_time_with_only_arrival_or_departure_time)                                 | Missing `stop_times.arrival_time` or `stop_times.departure_time`.                                                                                      |
+| [`stop_without_location`](#stop_without_location) | `stop_lat` and/or `stop_lon` is missing for stop with `location_type` equal to`0`, `1`, or `2`
 | [`stop_without_zone_id`](#stop_without_zone_id)                                                                                   | Stop without value for `stops.zone_id`.                                                                                                                |
 | [`too_many_rows`](#too_many_rows)                                                                                                 | A CSV file has too many rows.                                                                                                                          |
 | [`transfer_with_invalid_stop_location_type`](#transfer_with_invalid_stop_location_type)                                           | A stop id field from GTFS file `transfers.txt` references a stop that has a `location_type` other than 0 or 1 (aka Stop/Platform or Station).          |
@@ -94,8 +94,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 
 <a name="WARNINGS"/>
 
-## Table of warnings
-
+## Table of WARNINGS
 | Notice code                                                                                   | Description                                                                                                                                                   |
 |-----------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`attribution_without_role`](#attribution_without_role)                                       | Attribution with no role.                                                                                                                                     |
@@ -104,9 +103,9 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`equal_shape_distance_same_coordinates`](#equal_shape_distance_same_coordinates)             | Two consecutive points have equal `shape_dist_traveled` and the same lat/lon coordinates in `shapes.txt`.                                                     |
 | [`fast_travel_between_consecutive_stops`](#fast_travel_between_consecutive_stops)             | A transit vehicle moves too fast between two consecutive stops.                                                                                               |
 | [`fast_travel_between_far_stops`](#fast_travel_between_far_stops)                             | A transit vehicle moves too fast between two far stops.                                                                                                       |
-| [`feed_expiration_date_7_days`](#feed_expiration_date_7_days)                                 | Dataset should be valid for at least the next 7 days.                                                                                                         |
-| [`feed_expiration_date_30_days`](#feed_expiration_date_30_days)                               | Dataset should cover at least the next 30 days of service.                                                                                                    |
-| [`feed_info_lang_and_agency_mismatch`](#feed_info_lang_and_agency_mismatch)                   | Mismatching feed and agency language fields.                                                                                                                  |
+| [`feed_expiration_date7_days`](#feed_expiration_date7_days)                                   | Dataset should be valid for at least the next 7 days.                                                                                                         |
+| [`feed_expiration_date30_days`](#feed_expiration_date30_days)                                 | Dataset should cover at least the next 30 days of service.                                                                                                    |
+| [`feed_info_lang_and_agency_lang_mismatch`](#feed_info_lang_and_agency_lang_mismatch)         | Mismatching feed and agency language fields.                                                                                                                  |
 | [`inconsistent_agency_lang`](#inconsistent_agency_lang)                                       | Inconsistent language among agencies.                                                                                                                         |
 | [`leading_or_trailing_whitespaces`](#leading_or_trailing_whitespaces)                         | The value in CSV file has leading or trailing whitespaces.                                                                                                    |
 | [`missing_feed_info_date`](#missing_feed_info_date)                                           | `feed_end_date` should be provided if `feed_start_date` is provided. `feed_start_date` should be provided if `feed_end_date` is provided.                     |
@@ -138,11 +137,10 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`unusable_trip`](#unusable_trip)                                                             | Trips must have more than one stop to be usable.                                                                                                              |
 | [`unused_shape`](#unused_shape)                                                               | Shape is not used in GTFS file `trips.txt`.                                                                                                                   |
 | [`unused_trip`](#unused_trip)                                                                 | Trip is not be used in `stop_times.txt`                                                                                                                       |
-|                                                                                               |                                                                                                                                                               |
 
 <a name="INFOS"/>
 
-## Table of info
+## Table of INFOS
 
 | Notice code                                       | Description               |
 |---------------------------------------------------|---------------------------|
@@ -151,7 +149,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 
 <a name="SYSTEM_ERRORS"/>
 
-## Table of system errors
+## Table of SYSTEM ERRORS
 
 | System error code                                                               | Description                                            |
 |---------------------------------------------------------------------------------|--------------------------------------------------------|
@@ -161,7 +159,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`thread_execution_error`](#thread_execution_error)                             | ExecutionException during multithreaded validation     |
 | [`u_r_i_syntax_error`](#u_r_i_syntax_error)                                     | A string could not be parsed as a URI reference.       |
 
-# Errors
+# More details - ERRORS
 
 <a name="BlockTripsWithOverlappingStopTimesNotice"/>
 
@@ -171,8 +169,8 @@ Trips with the same block id have overlapping stop times.
 
 #### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
-* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
-* [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
+* [stops.txt specification](http://gtfs.org/reference/static#stopstxt)
+* [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
 
 <details>
 
@@ -189,8 +187,8 @@ Trips with the same block id have overlapping stop times.
 | `intersection`  	| The overlapping period.                      	            | Date   	|
 
 #### Affected files
-* [stops.txt specification](http://gtfs.org/reference/static#stopstxt)
-* [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+* [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
 
 </details>
 
@@ -210,7 +208,7 @@ Parsing of a CSV file failed. One common case of the problem is when a cell valu
 | `columnIndex` 	| The column index where the exception occurred.                                          	| Integer 	|
 | `lineIndex`   	| The line number where the exception occurred.                                           	| Long    	|
 | `message`     	| The detailed message describing the error, and the internal state of the parser/writer. 	| String  	|
-| `content`     	| The record number when the exception occurred.                                          	| String  	|
+| `parsedContent`     	| The record number when the exception occurred.                                          	| String  	|
 
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
@@ -377,11 +375,12 @@ When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` m
 |-----------------------	  |-------------------------------------------------------------------------------------------------	|---------	|
 | `shapeId`               	| The id of the faulty shape.                                                                      	| String  	|
 | `csvRowNumber`          	| The row number from `shapes.txt`.                                                                	| Long    	|
-| `shapeDistTraveled`     	| Actual distance traveled along the shape from the first shape point to the faulty record.        	| Double  	|
+| `shapeDistTraveled`     	| The faulty record's `shape_dist_traveled` value.							| Double  	|
 | `shapePtSequence`       	| The faulty record's `shapes.shape_pt_sequence`.                                                  	| Integer 	|
 | `prevCsvRowNumber`      	| The row number from `shapes.txt` of the previous shape point.                                    	| Long    	|
-| `prevShapeDistTraveled` 	| Actual distance traveled along the shape from the first shape point to the previous shape point. 	| Double  	|
+| `prevShapeDistTraveled`     	| The previous shape point's `shape_dist_traveled` value.						| Double  	|
 | `prevShapePtSequence`   	| The previous record's `shapes.shape_pt_sequence`.                                                	| Integer 	|
+| `actualDistanceBetweenShapePoints` 	| Actual distance traveled along the shape from the first shape point to the previous shape point. 	| Double  	|
 
 #### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
@@ -412,7 +411,7 @@ A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit_typ
 
 <a name="FareTransferRuleDurationLimitWithoutTypeNotice"/>
 
-### fare_transfer_rule_duration_limit_without_type 
+### fare_transfer_rule_duration_limit_without_type
 
 A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit` field but no `duration_limit_type` specified.
 
@@ -964,7 +963,8 @@ GTFS file `levels.txt` is required for elevator (`pathway_mode=5`). A row from `
 | Field name    	| Description                                                      	 | Type   	|
 |---------------	|------------------------------------------------------------------- |--------	|
 | `csvRowNumber`  | The row number of the faulty record. 	                             | Long   	|
-| `stopId`   	  | The id of the faulty from `stops.txt`.                               | String   |
+| `stopId`   	  | The id of the faulty stop from `stops.txt`.                               | String   |
+| `stopName`   	  | The name of the faulty stop from `stops.txt`.                               | String   |
 
 #### Affected files
 * [`levels.txt`](http://gtfs.org/reference/static#levelstxt)
@@ -1018,7 +1018,7 @@ The given field has no value in some input row, even though values are required.
 
 ### missing_required_file
 
-A required file is missing.
+A required file is missing. If this notice is triggered for every core file, it might be a problem with the input. To create a zip file from the GTFS `.txt` files: select all the `.txt` files, right-click, and compress. Do not compress the folder containing the files. 
 
 #### References
 * [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
@@ -1031,6 +1031,28 @@ A required file is missing.
 
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
+
+</details>
+
+<a name="MissingStopNameNotice"/>
+
+### missing_stop_name
+
+`stops.stop_name` is required for locations that are stops (`location_type=0`), stations (`location_type=1`) or entrances/exits (`location_type=2`).
+
+#### References
+* [stops.txt specification](https://gtfs.org/reference/static/#stopstxt)
+<details>
+
+#### Notice fields description
+| Field name     	  | Description                                 | Type    	|
+|-----------------  |-------------------------------------------- |---------	|
+| `csvRowNumber`  	| The row of the faulty record.               | Long    	|
+| `locationType`  	| `stops.location_type` of the faulty record. | Integer 	|
+| `stopId`        	| The `stops.stop_id` of the faulty record.   | String  	|
+
+#### Affected files
+* [stops.txt](https://gtfs.org/reference/static/#stopstxt)
 
 </details>
 
@@ -1143,6 +1165,18 @@ assigned - instead, pathways must be assigned to its boarding areas.
 #### References
 * [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
 
+<details>
+
+#### Notice fields description
+| Field name      	| Description                                      	| Type    	|
+|-----------------	|--------------------------------------------------	|---------	|
+| `csvRowNumber`  	| The row of the faulty row.                       	| Integer 	|
+| `pathwayId`   	| The id of the faulty pathway.                       	| String	|
+| `fieldName`   	| The platform id field name.                       	| String	|
+| `stopId`	   	| The id of the endpoint platform.                     	| String	|
+
+</details>
+
 <a name="PathwayToWrongLocationTypeNotice"/>
 
 ### pathway_to_wrong_location_type
@@ -1152,6 +1186,18 @@ entrances/exits, generic nodes or boarding areas.
 
 #### References
 * [pathways.txt specification](http://gtfs.org/reference/static/#pathwaystxt)
+
+<details>
+
+#### Notice fields description
+| Field name      	| Description                                      	| Type    	|
+|-----------------	|--------------------------------------------------	|---------	|
+| `csvRowNumber`  	| The row of the faulty row.                       	| Integer 	|
+| `pathwayId`   	| The id of the faulty pathway.                       	| String	|
+| `fieldName`   	| The station id field name.                       	| String	|
+| `stopId`	   	| The id of the endpoint station.                      	| String	|
+
+</details>
 
 <a name="PathwayUnreachableLocationNotice"/>
 
@@ -1202,6 +1248,7 @@ A point is too close to origin `(0, 0)`.
 |-----------------	|--------------------------------------------------	|---------	|
 | `filename`      	| The name of the affected GTFS file.              	| String  	|
 | `csvRowNumber`  	| The row of the faulty row.                       	| Integer 	|
+| `entityId`  		| The id of the faulty entity.                       	| String	|
 | `latFieldName`  	| The name of the field that uses latitude value.  	| String  	|
 | `latFieldValue` 	| The latitude of the faulty row.                  	| Double  	|
 | `lonFieldName`  	| The name of the field that uses longitude value. 	| String  	|
@@ -1228,6 +1275,7 @@ A point is too close to the North or South Pole.
 |-----------------	|--------------------------------------------------	|---------	|
 | `filename`      	| The name of the affected GTFS file.              	| String  	|
 | `csvRowNumber`  	| The row of the faulty row.                       	| Integer 	|
+| `entityId`		| The id of the faulty entity.				| String	|
 | `latFieldName`  	| The name of the field that uses latitude value.  	| String  	|
 | `latFieldValue` 	| The latitude of the faulty row.                  	| Double  	|
 | `lonFieldName`  	| The name of the field that uses longitude value. 	| String  	|
@@ -1276,6 +1324,7 @@ The fields `frequencies.start_date` and `frequencies.end_date` have been found e
 |-----------------	|-------------------------------------- |--------	|
 | `filename`       	| The name of the faulty file.         	| String 	|
 | `csvRowNumber`   	| The row number of the faulty record. 	| Long   	|
+| `entityId`		| The id of the faulty entity.		| String	|
 | `startFieldName` 	| The start value's field name.        	| String 	|
 | `endFieldName`   	| The end value's field name.          	| String 	|
 | `value`          	| The faulty value.                    	| String 	|
@@ -1409,6 +1458,28 @@ Missing `stop_time.arrival_time` or `stop_time.departure_time`
 
 #### Affected files
 * [`stop_times.txt`](http://gtfs.org/reference/static#stop_timestxt)
+
+</details>
+
+<a name="StopWithoutLocationNotice"/>
+
+### stop_without_location
+
+`stop_lat` and/or `stop_lon` are required for locations that are stops (`location_type=0`), stations (`location_type=1`) or entrances/exits (`location_type=2`).
+
+#### References
+* [GTFS stops.txt specification](https://gtfs.org/reference/static#stopstxt)
+<details>
+
+#### Notice fields description
+| Field name               	| Description                                	| Type   	|
+|--------------------------	|--------------------------------------------	|--------	|
+| `stopId`                 	| The faulty record's id.                    	| String 	|
+| `locationType`            | The faulty record's `stops.location_type`. 	| Integer	|
+| `csvRowNumber`           	| The row number of the faulty record.       	| Long   	|
+
+#### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
 </details>
 
@@ -1621,7 +1692,7 @@ Any other combination raise this error.
 
 </details>
 
-# Warnings
+# More details - WARNINGS
 
 <a name="AttributionWithoutRoleNotice"/>
 
@@ -1666,14 +1737,14 @@ Example of bad data:
 #### Notice fields description
 | Field name     	| Description                             	| Type   	|
 |----------------	|-----------------------------------------	|--------	|
-| csvRowNumber1  	| The row number of the first occurrence. 	| Long   	|
-| routeId1       	| The id of the the first occurrence.     	| String 	|
-| csvRowNumber2  	| The row number of the other occurrence. 	| Long   	|
-| routeId2       	| The id of the the other occurrence.     	| String 	|
-| routeShortName 	| Common `routes.route_short_name`.       	| String 	|
-| routeLongName  	| Common `routes.route_long_name`.        	| String 	|
-| routeType      	| Common `routes.route_type`.             	| String 	|
-| agencyId       	| Common `routes.agency_id`.              	| String 	|
+| `csvRowNumber1`  	| The row number of the first occurrence. 	| Long   	|
+| `routeId1`       	| The id of the the first occurrence.     	| String 	|
+| `csvRowNumber2`  	| The row number of the other occurrence. 	| Long   	|
+| `routeId2`       	| The id of the the other occurrence.     	| String 	|
+| `routeShortName` 	| Common `routes.route_short_name`.       	| String 	|
+| `routeLongName`  	| Common `routes.route_long_name`.        	| String 	|
+| `routeTypeValue`     	| Common `routes.route_type`.             	| String 	|
+| `agencyId`       	| Common `routes.agency_id`.              	| String 	|
 
 #### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
@@ -1792,7 +1863,7 @@ The speed threshold depends on route type.
 
 ##### Speed thresholds
 
-Same as for [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsecutiveStopsNotice).
+Same as for [`fast_travel_between_consecutive_stops`](#fast_travel_between_consecutive_stops).
 
 #### References
 * [Original Python validator implementation](https://github.com/google/transitfeed)
@@ -1827,7 +1898,7 @@ Same as for [`FastTravelBetweenConsecutiveStopsNotice`](#FastTravelBetweenConsec
 
 <a name="FeedExpirationDate7DaysNotice"/>
 
-### feed_expiration_date_7_days
+### feed_expiration_date7_days
 
 The dataset expiration date defined in `feed_info.txt` is in seven days or less. At any time, the published GTFS dataset should be valid for at least the next 7 days.
 
@@ -1851,7 +1922,7 @@ The dataset expiration date defined in `feed_info.txt` is in seven days or less.
 
 <a name="FeedExpirationDate30DaysNotice"/>
 
-### feed_expiration_date_30_days
+### feed_expiration_date30_days
 
 At any time, the GTFS dataset should cover at least the next 30 days of service, and ideally for as long as the operator is confident that the schedule will continue to be operated.
 
@@ -1874,7 +1945,7 @@ At any time, the GTFS dataset should cover at least the next 30 days of service,
 
 <a name="FeedInfoLangAndAgencyLangMismatchNotice"/>
 
-### feed_info_lang_and_agency_mismatch
+### feed_info_lang_and_agency_lang_mismatch
 1. Files `agency.txt` and `feed_info.txt` should define matching `agency.agency_lang` and `feed_info.feed_lang`.
   The default language may be multilingual for datasets with the original text in multiple languages. In such cases, the feed_lang field should contain the language code mul defined by the norm ISO 639-2.
   * If `feed_lang` is not `mul` and does not match with `agency_lang`, that's an error
@@ -1968,14 +2039,14 @@ Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one
 
 </details>
 
-<a name="MissingTimepointColumnNotice"/>
+<a name="MissingRecommendedFileNotice"/>
 
 ### missing_recommended_file
 
 A recommended file is missing.
 
 #### References
-* [feed_info.txt best practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/best-practices.md#feed_infotxt)
+* [feed_info.txt best practices](https://gtfs.org/schedule/best-practices/#feed_infotxt)
 <details>
 
 #### Notice fields description
@@ -1988,12 +2059,14 @@ A recommended file is missing.
 
 </details>
 
+<a name="MissingRecommendedFieldNotice"/>
+
 ### missing_recommended_field
 
 The given field has no value in some input row, even though values are recommended.
 
 #### References
-* [feed_info.txt best practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/best-practices.md#feed_infotxt)
+* [feed_info.txt best practices](https://gtfs.org/schedule/best-practices/#feed_infotxt)
 <details>
 
 #### Notice fields description
@@ -2008,12 +2081,14 @@ The given field has no value in some input row, even though values are recommend
 
 </details>
 
+<a name="MissingTimepointColumnNotice"/>
+
 ### missing_timepoint_column
 
 The `timepoint` column should be provided.
 
 #### References
-* [stop_times.txt best practices](https://github.com/MobilityData/GTFS_Schedule_Best-Practices/blob/master/en/stop_times.md)
+* [stop_times.txt best practices](https://gtfs.org/schedule/best-practices/#stop_timestxt)
 <details>
 
 #### Notice fields description
@@ -2022,8 +2097,7 @@ The `timepoint` column should be provided.
 | `filename`    	| The name of the affected file.                  	| String   	|
 
 #### Affected files
-* [`stop_times.txt`](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stop_timestxt)
-
+* [`stop_times.txt`](https://gtfs.org/schedule/reference/#stop_timestxt)
 </details>
 
 <a name="MissingTimepointValueNotice"/>
@@ -2033,7 +2107,7 @@ The `timepoint` column should be provided.
 Even though the column `timepoint` is optional in `stop_times.txt` according to the specification, `stop_times.timepoint` should not be empty when provided. 
 
 #### References
-* [stop_times.txt specification](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stop_timestxt)
+* [stop_times.txt specification](https://gtfs.org/schedule/reference/#stop_timestxt)
 <details>
 
 
@@ -2045,7 +2119,7 @@ Even though the column `timepoint` is optional in `stop_times.txt` according to 
 | `stopSequence` 	| The faulty record's `stop_times.stop_sequence`. 	| String 	|
 
 #### Affected files
-* [`stop_times.txt`](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stop_timestxt)
+* [`stop_times.txt`](https://gtfs.org/schedule/reference/#stop_timestxt)
 
 </details>
 
@@ -2164,7 +2238,7 @@ A platform has no `parent_station` field set.
 
 <a name="RouteColorContrastNotice"/>
 
-#### route_color_contrast
+### route_color_contrast
 
 A route's color and `route_text_color` should be contrasting.
 
@@ -2306,6 +2380,7 @@ A route should not have the same `routes.route_url` as a record from `agency.txt
 | `routeCsvRowNumber`    | The row number of the faulty record from `routes.txt`.       	| Long   	|
 | `routeId`         | The faulty record's id.                    	| String 	|
 | `agencyId`    	| The faulty record's `routes.agency_id`.    	| String 	|
+| `agencyName`    	| The faulty record's referenced agency name.  	| String 	|
 | `routeUrl`     	| The duplicate URL value                    	| String 	|
 | `agencyCsvRowNumber`    | The row number of the faulty record from `agency.txt`.       	| Long   	|
 
@@ -2353,7 +2428,7 @@ A stop should not have the same `stop.stop_url` as a record from `routes.txt`.
 #### Notice fields description
 | Field name          	| Description                                            	| Type   	|
 |---------------------	|--------------------------------------------------------	|--------	|
-| `stopsvRowNumber`     | The row number of the faulty record from `stops.txt`.    	| Long   	|
+| `stopCsvRowNumber`    | The row number of the faulty record from `stops.txt`.    	| Long   	|
 | `stopId`            	| The faulty record's id.                                	| String 	|
 | `stopUrl`           	| The duplicate URL value.                                | String 	|
 | `routeId`           	| The faulty record's id from `routes.txt.               	| String 	|
@@ -2373,7 +2448,7 @@ A stop entry that has many potential matches to the trip's path of travel, as de
 
 #### References
 * [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
-* [stops_times.txt specification](http://gtfs.org/reference/static#stopstimestxt)
+* [stops_times.txt specification](https://gtfs.org/schedule/reference/#stop_timestxt)
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 <details>
 
@@ -2391,7 +2466,7 @@ A stop entry that has many potential matches to the trip's path of travel, as de
 
 #### Affected files
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
-* [`stops_times.txt`](http://gtfs.org/reference/static#stopstimestxt)
+* [`stops_times.txt`](https://gtfs.org/schedule/reference/#stop_timestxt)
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
  </details>
 
@@ -2403,7 +2478,7 @@ Two stop entries in `stop_times.txt` are different than their arrival-departure 
 
 #### References
 * [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
-* [stops_times.txt specification](http://gtfs.org/reference/static#stopstimestxt)
+* [stops_times.txt specification](https://gtfs.org/schedule/reference/#stop_timestxt)
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 <details>
 
@@ -2465,7 +2540,7 @@ A stop time entry that is a large distance away from the location of the shape i
 
 #### References
 * [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
-* [stops_times.txt specification](http://gtfs.org/reference/static#stopstimestxt)
+* [stops_times.txt specification](https://gtfs.org/schedule/reference/#stop_timestxt)
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 <details>
 
@@ -2496,8 +2571,19 @@ A stop in `stops.txt` is not referenced by any `stop_times.stop_id`, so it is no
 Such stops normally do not provide user value. This notice may indicate a typo in `stop_times.txt`.
 
 #### References
-* [stops_times.txt specification](http://gtfs.org/reference/static#stopstimestxt)
+* [stops_times.txt specification](https://gtfs.org/schedule/reference/#stop_timestxt)
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+
+<details>
+
+#### Notice fields description
+| Field name       | Description                            | Type    	|
+|------------------|----------------------------------------|-------	|
+| `csvRowNumber`   | The row number of the faulty record.   | Long    	|
+| `stopId`         | The id of the faulty stop.             | String  	|
+| `stopName`       | The name of the faulty stop.           | String  	|
+
+</details>
 
 <a name="TranslationUnknownTableNameNotice"/>
 
@@ -2592,7 +2678,7 @@ All records defined by GTFS `shapes.txt` should be used in `trips.txt`.
 | Field name   	| Description                          	| Type   	|
 |--------------	|--------------------------------------	|--------	|
 | `csvRowNumber`| The row number of the faulty record. 	| Long   	|
-| `shapeId     	| The faulty record's id.              	| String 	|
+| `shapeId`    	| The faulty record's id.              	| String 	|
 
 #### Affected files
 * [`shapes.txt`](http://gtfs.org/reference/static#shapestxt)
@@ -2625,7 +2711,7 @@ Trips should be referred to at least once in `stop_times.txt`.
 
 </details>
 
-# Infos
+# More details - INFOS
 
 <a name="UnknownColumnNotice"/>
 
@@ -2666,7 +2752,7 @@ A file is unknown.
 
 </details>
 
-# System errors
+# More details - SYSTEM ERRORS
 
 <a name="IOError"/>
 
@@ -2681,6 +2767,7 @@ Error in IO operation.
 | `exception`  	| The name of the exception.                                    	| String 	|
 | `message`    	| The error message that explains the reason for the exception. 	| String  |
 </details>
+
 <a name="RuntimeExceptionInLoaderError"/>
 
 ### runtime_exception_in_loader_error

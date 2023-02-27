@@ -68,8 +68,7 @@ class TableContainerIndexGenerator {
           fileDescriptor.getSingleColumnPrimaryKey(),
           classNames.entityImplementationTypeName());
     } else if (fileDescriptor.hasMultiColumnPrimaryKey()) {
-      addMapByCompositeKey(
-          typeSpec, fileDescriptor.primaryKeys(), classNames.entityImplementationTypeName());
+      addMapByCompositeKey(typeSpec, classNames.entityImplementationTypeName());
     }
 
     for (GtfsFieldDescriptor indexField : fileDescriptor.indices()) {
@@ -164,9 +163,7 @@ class TableContainerIndexGenerator {
             .build());
   }
 
-  private static void addMapByCompositeKey(
-      TypeSpec.Builder typeSpec, ImmutableList<GtfsFieldDescriptor> keys, TypeName entityTypeName) {
-
+  private static void addMapByCompositeKey(TypeSpec.Builder typeSpec, TypeName entityTypeName) {
     // Field: Map<CompositeKey, EntityType?> byCompositeKeyMap;
     TypeName keyMapType =
         ParameterizedTypeName.get(
@@ -194,7 +191,7 @@ class TableContainerIndexGenerator {
                         "$T.$L",
                         classNames.entityImplementationTypeName(),
                         fieldNameField(f.name())))
-            .collect(CodeBlock.joining(", ")));
+            .collect(CodeBlock.joining(",\n")));
     return field.build();
   }
 
@@ -258,9 +255,9 @@ class TableContainerIndexGenerator {
       method
           .beginControlFlow("try")
           .addStatement(
-              "return Optional.ofNullable($L.getOrDefault(CompositeKey.builder()$L.build(), null))",
+              "return Optional.ofNullable($L.getOrDefault(CompositeKey.builder()\n$L.\nbuild(), null))",
               BY_COMPOSITE_KEY_MAP_FIELD_NAME,
-              CodeBlock.join(keyBuilderSetters, ""))
+              CodeBlock.join(keyBuilderSetters, "\n"))
           .nextControlFlow("catch (NumberFormatException ex)")
           .addStatement("return Optional.empty()")
           .endControlFlow();
@@ -308,7 +305,7 @@ class TableContainerIndexGenerator {
       method
           .beginControlFlow("for ($T newEntity : entities)", gtfsEntityType)
           .addStatement(
-              "CompositeKey key = CompositeKey.builder()$L.build()",
+              "CompositeKey key = CompositeKey.builder()\n$L\n.build()",
               fileDescriptor.primaryKeys().stream()
                   .map(
                       (field) ->
@@ -316,26 +313,26 @@ class TableContainerIndexGenerator {
                               ".$L(newEntity.$L())",
                               FieldNameConverter.setterMethodName(field.name()),
                               field.name()))
-                  .collect(CodeBlock.joining("")))
+                  .collect(CodeBlock.joining("\n")))
           .addStatement(
               "$T oldEntity = $L.getOrDefault(key, null)",
               classNames.entityImplementationTypeName(),
               BY_COMPOSITE_KEY_MAP_FIELD_NAME)
           .beginControlFlow("if (oldEntity != null)")
           .addStatement(
-              "noticeContainer.addValidationNotice(new $T("
+              "noticeContainer.addValidationNotice(new $T(\n"
                   + "gtfsFilename(), newEntity.csvRowNumber(), "
-                  + "oldEntity.csvRowNumber(), "
-                  + "$L, $L))",
+                  + "oldEntity.csvRowNumber(),\n"
+                  + "$L,\n$L))",
               DuplicateKeyNotice.class,
               fileDescriptor.primaryKeys().stream()
                   .map(
                       (field) ->
                           CodeBlock.of("$T.$L", gtfsEntityType, fieldNameField(field.name())))
-                  .collect(CodeBlock.joining(" + \",\" + ")),
+                  .collect(CodeBlock.joining(" + \",\" + \n")),
               fileDescriptor.primaryKeys().stream()
                   .map((field) -> CodeBlock.of("oldEntity.$L()", field.name()))
-                  .collect(CodeBlock.joining(" + \",\" + ")))
+                  .collect(CodeBlock.joining(" + \",\" + \n")))
           .nextControlFlow("else")
           .addStatement("$L.put(key, newEntity)", BY_COMPOSITE_KEY_MAP_FIELD_NAME)
           .endControlFlow()
