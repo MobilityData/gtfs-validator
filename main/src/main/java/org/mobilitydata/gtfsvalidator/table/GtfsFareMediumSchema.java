@@ -6,15 +6,15 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
 
-@GtfsTable("fare_payment_options.txt")
-public interface GtfsFarePaymentOptionSchema extends GtfsEntity {
+@GtfsTable("fare_media.txt")
+public interface GtfsFareMediumSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
   @PrimaryKey
   @Required
-  String farePaymentOptionId();
+  String fareMediumId();
 
-  String farePaymentOptionName();
+  String fareMediumName();
 
   @Required
-  GtfsFarePaymentOptionType farePaymentOptionType();
+  GtfsFareMediumType fareMediumType();
 }
