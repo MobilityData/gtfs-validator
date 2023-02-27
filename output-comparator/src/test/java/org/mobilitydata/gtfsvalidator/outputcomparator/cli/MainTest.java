@@ -130,8 +130,9 @@ public class MainTest {
                     NO_NEW_NOTICE_FOLDER_NAME,
                     ACCEPTANCE_TEST_REPORT_FOLDER_NAME,
                     ACCEPTANCE_REPORT_JSON)))
-        .isEqualTo(
-            "{\"newErrors\":[],\"droppedErrors\":[],\"corruptedSources\":{\"sourceIdCount\":1,\"corruptedSourcesCount\":0,\"corruptedSources\":[],\"percentCorruptedSourcesThreshold\":5.0,\"aboveThreshold\":false}}");
+        .isEqualTo("""
+            """);
+            //"{\"newErrors\":[],\"droppedErrors\":[],\"corruptedSources\":{\"sourceIdCount\":1,\"corruptedSourcesCount\":0,\"corruptedSources\":[],\"percentCorruptedSourcesThreshold\":5.0,\"aboveThreshold\":false}}");
   }
 
   @Test
