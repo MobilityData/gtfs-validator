@@ -54,7 +54,13 @@ public abstract class GtfsFieldDescriptor {
   // Dynamic properties.
   public abstract boolean recommended();
 
-  public abstract boolean required();
+  public abstract boolean valueRequired();
+
+  public abstract boolean columnRequired();
+
+  public boolean isHeaderRequired() {
+    return columnRequired() || valueRequired();
+  }
 
   public abstract Optional<RowParser.NumberBounds> numberBounds();
 
@@ -68,7 +74,9 @@ public abstract class GtfsFieldDescriptor {
 
     public abstract Builder setRecommended(boolean value);
 
-    public abstract Builder setRequired(boolean value);
+    public abstract Builder setValueRequired(boolean value);
+
+    public abstract Builder setColumnRequired(boolean value);
 
     public abstract Builder setPrimaryKey(PrimaryKey annotation);
 
