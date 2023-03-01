@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
@@ -53,7 +52,11 @@ public class AttributionWithoutRoleValidator extends SingleEntityValidator<GtfsA
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class AttributionWithoutRoleNotice extends ValidationNotice {
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
+
+    // The id of the faulty record.
     private final String attributionId;
 
     AttributionWithoutRoleNotice(int csvRowNumber, String attributionId) {

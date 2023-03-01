@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import com.google.common.collect.ImmutableList;
@@ -40,7 +39,9 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTranslationTableContainer;
  */
 @GtfsValidator
 public class TranslationFieldAndReferenceValidator extends FileValidator {
+
   private final GtfsTranslationTableContainer translationTable;
+
   private final GtfsFeedContainer feedContainer;
 
   @Inject
@@ -153,7 +154,6 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
             noticeContainer)) {
       return;
     }
-
     Optional<?> entity =
         parentTable.byTranslationKey(translation.recordId(), translation.recordSubId());
     if (entity.isEmpty()) {
@@ -189,8 +189,14 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
 
   /** A field in a translations row has value but must be empty. */
   static class TranslationUnexpectedValueNotice extends ValidationNotice {
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
+
+    // The name of the field that was expected to be empty.
     private final String fieldName;
+
+    // Actual value of the field that was expected to be empty.
     private final String fieldValue;
 
     TranslationUnexpectedValueNotice(
@@ -204,7 +210,11 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
 
   /** A translation references an unknown or missing GTFS table. */
   static class TranslationUnknownTableNameNotice extends ValidationNotice {
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
+
+    // `table_name` of the faulty record.
     private final String tableName;
 
     TranslationUnknownTableNameNotice(GtfsTranslation translation) {
@@ -219,9 +229,17 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
    * table.
    */
   static class TranslationForeignKeyViolationNotice extends ValidationNotice {
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
+
+    // `table_name` of the faulty record.
     private final String tableName;
+
+    // `record_id` of the faulty record.
     private final String recordId;
+
+    // `record_sub_id` of the faulty record.
     private final String recordSubId;
 
     TranslationForeignKeyViolationNotice(GtfsTranslation translation) {

@@ -35,8 +35,11 @@ import org.mobilitydata.gtfsvalidator.util.ServiceIdIntersectionCache;
 public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
 
   private final GtfsTripTableContainer tripTable;
+
   private final GtfsStopTimeTableContainer stopTimeTable;
+
   private final GtfsCalendarTableContainer calendarTable;
+
   private final GtfsCalendarDateTableContainer calendarDateTable;
 
   @Inject
@@ -57,14 +60,13 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
     if (tripTable.entityCount() == 0 || stopTimeTable.entityCount() == 0) {
       return;
     }
-
     // Our strategy to find trips with overlapping stop times that are active on the same service
     // date is to:
     // 1) iterate over groups of trips grouped by their block id;
     // 2) sort the trips within the block by stop times;
     // 3) iterate over each trip, looking for subsequent trips that
-    //   (a) are active on the same service date and
-    //   (b) have overlapping stop times.
+    // (a) are active on the same service date and
+    // (b) have overlapping stop times.
     // Because the trips will be ordered by stop times, we shouldn't have to look too far down the
     // list.
     final ServiceIdIntersectionCache serviceIdIntersectionCache =
@@ -77,8 +79,7 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
         continue;
       }
       // We need a first arrival time and a last departure time for each trip in the block to
-      // properly judge trip
-      // overlap.
+      // properly judge trip overlap.
       for (GtfsTripOverlap overlap :
           findOverlapIntervals(
               constructOrderedTripIntervals(tripsInBlock), serviceIdIntersectionCache)) {
@@ -146,7 +147,6 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
       final GtfsTripInterval interval = intervals.get(i);
       for (int j = i + 1; j < intervals.size(); ++j) {
         final GtfsTripInterval nextInterval = intervals.get(j);
-
         // We can stop searching for overlapping intervals if there is
         // no more overlap.
         if (interval.getLastDeparture().compareTo(nextInterval.getFirstArrival()) <= 0) {
@@ -180,9 +180,13 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
   private static class GtfsTripInterval {
 
     private final GtfsTrip trip;
+
     private final GtfsTime firstArrival;
+
     private final GtfsTime firstDeparture;
+
     private final GtfsTime lastArrival;
+
     private final GtfsTime lastDeparture;
 
     public GtfsTripInterval(
@@ -226,7 +230,9 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
   private static class GtfsTripOverlap {
 
     private final GtfsTrip tripA;
+
     private final GtfsTrip tripB;
+
     private final LocalDate intersection;
 
     public GtfsTripOverlap(GtfsTrip tripA, GtfsTrip tripB, LocalDate intersection) {
@@ -254,13 +260,29 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class BlockTripsWithOverlappingStopTimesNotice extends ValidationNotice {
+
+    // The row number from `trips.txt` of the first faulty trip.
     private final int csvRowNumberA;
+
+    // The id of first faulty trip.
     private final String tripIdA;
+
+    // The service id of the first faulty trip.
     private final String serviceIdA;
+
+    // The row number from `trips.txt` of the second faulty trip.
     private final int csvRowNumberB;
+
+    // The id of the other faulty trip.
     private final String tripIdB;
+
+    // The service id of the other faulty trip.
     private final String serviceIdB;
+
+    // The `trips.block_id` of the overlapping trip.
     private final String blockId;
+
+    // The overlapping period.
     private final GtfsDate intersection;
 
     BlockTripsWithOverlappingStopTimesNotice(

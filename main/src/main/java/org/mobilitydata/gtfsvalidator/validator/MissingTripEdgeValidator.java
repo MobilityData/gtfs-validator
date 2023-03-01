@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.table.GtfsStopTime.ARRIVAL_TIME_FIELD_NAME;
@@ -100,9 +99,17 @@ public class MissingTripEdgeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class MissingTripEdgeNotice extends ValidationNotice {
+
+    // The row of the faulty record.
     private final int csvRowNumber;
+
+    // `stops.stop_sequence` of the faulty record.
     private final int stopSequence;
+
+    // The `trips.trip_id` of the faulty record.
     private final String tripId;
+
+    // Name of the missing field.
     private final String specifiedField;
 
     MissingTripEdgeNotice(

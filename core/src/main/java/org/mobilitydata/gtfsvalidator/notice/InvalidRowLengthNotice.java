@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.notice;
 
 /**
@@ -22,9 +21,17 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class InvalidRowLengthNotice extends ValidationNotice {
+
+  // The row of the faulty record.
   private final String filename;
+
+  // The row of the faulty record.
   private final int csvRowNumber;
+
+  // The length of the faulty record.
   private final int rowLength;
+
+  // The number of column in the faulty file.
   private final int headerCount;
 
   public InvalidRowLengthNotice(String filename, int csvRowNumber, int rowLength, int headerCount) {

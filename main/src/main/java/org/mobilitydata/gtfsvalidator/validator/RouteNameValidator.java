@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
@@ -36,27 +35,27 @@ import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
  */
 @GtfsValidator
 public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
+
   private static final int MAX_SHORT_NAME_LENGTH = 12;
 
   @Override
   public void validate(GtfsRoute entity, NoticeContainer noticeContainer) {
     final boolean hasLongName = entity.hasRouteLongName();
     final boolean hasShortName = entity.hasRouteShortName();
-
     if (!hasLongName && !hasShortName) {
       noticeContainer.addValidationNotice(
           new RouteBothShortAndLongNameMissingNotice(entity.routeId(), entity.csvRowNumber()));
     }
-
     if (hasShortName
         && hasLongName
         && entity.routeShortName().equalsIgnoreCase(entity.routeLongName())) {
       noticeContainer.addValidationNotice(
           new RouteShortAndLongNameEqualNotice(
-              entity.routeId(), entity.csvRowNumber(),
-              entity.routeShortName(), entity.routeLongName()));
+              entity.routeId(),
+              entity.csvRowNumber(),
+              entity.routeShortName(),
+              entity.routeLongName()));
     }
-
     if (hasShortName && entity.routeShortName().length() > MAX_SHORT_NAME_LENGTH) {
       noticeContainer.addValidationNotice(
           new RouteShortNameTooLongNotice(
@@ -90,7 +89,11 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class RouteBothShortAndLongNameMissingNotice extends ValidationNotice {
+
+    // The id of the faulty record.
     private final String routeId;
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
 
     RouteBothShortAndLongNameMissingNotice(String routeId, int csvRowNumber) {
@@ -106,9 +109,17 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class RouteShortAndLongNameEqualNotice extends ValidationNotice {
+
+    // The id of the faulty record.
     private final String routeId;
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
+
+    // The faulty record's `route_short_name`.
     private final String routeShortName;
+
+    // The faulty record's `route_long_name`.
     private final String routeLongName;
 
     RouteShortAndLongNameEqualNotice(
@@ -128,8 +139,14 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class RouteShortNameTooLongNotice extends ValidationNotice {
+
+    // The id of the faulty record.
     private final String routeId;
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
+
+    // The faulty record's `route_short_name`.
     private final String routeShortName;
 
     RouteShortNameTooLongNotice(String routeId, int csvRowNumber, String routeShortName) {
@@ -147,9 +164,17 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class SameNameAndDescriptionForRouteNotice extends ValidationNotice {
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
+
+    // The id of the faulty record.
     private final String routeId;
+
+    // The `routes.routes_desc` of the faulty record.
     private final String routeDesc;
+
+    // Either `route_short_name` or `route_long_name`.
     private final String specifiedField;
 
     SameNameAndDescriptionForRouteNotice(

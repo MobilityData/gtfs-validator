@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import java.util.Optional;
@@ -40,6 +39,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 public class PathwayEndpointTypeValidator extends FileValidator {
 
   private final GtfsPathwayTableContainer pathwayTable;
+
   private final GtfsStopTableContainer stopTable;
 
   @Inject
@@ -84,9 +84,17 @@ public class PathwayEndpointTypeValidator extends FileValidator {
 
   /** Describes a pathway which endpoint is a station. */
   static class PathwayToWrongLocationTypeNotice extends ValidationNotice {
+
+    // The row of the faulty row.
     private final int csvRowNumber;
+
+    // The id of the faulty pathway.
     private final String pathwayId;
+
+    // The station id field name.
     private final String fieldName;
+
+    // The id of the endpoint station.
     private final String stopId;
 
     PathwayToWrongLocationTypeNotice(GtfsPathway pathway, String fieldName, String stopId) {
@@ -100,9 +108,17 @@ public class PathwayEndpointTypeValidator extends FileValidator {
 
   /** Describes a pathway which endpoint is a platform that has boarding areas. */
   static class PathwayToPlatformWithBoardingAreasNotice extends ValidationNotice {
+
+    // The row of the faulty row.
     private final int csvRowNumber;
+
+    // The id of the faulty pathway.
     private final String pathwayId;
+
+    // The platform id field name.
     private final String fieldName;
+
+    // The id of the endpoint platform.
     private final String stopId;
 
     PathwayToPlatformWithBoardingAreasNotice(GtfsPathway pathway, String fieldName, String stopId) {
