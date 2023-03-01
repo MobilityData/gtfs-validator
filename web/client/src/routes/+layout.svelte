@@ -30,6 +30,10 @@
         <span class="fa-sr-only">"love"</span>
         by&nbsp;<a href="https://mobilitydata.org/">MobilityData</a>.
       </span>
+      <span class="inline-block">
+        Contribute on
+        <a href="https://github.com/MobilityData/gtfs-validator">Github</a>.
+      </span>
     </p>
 
     <p

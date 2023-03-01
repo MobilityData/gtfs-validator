@@ -313,7 +313,7 @@
   <DropTarget {handleDragOver} {handleDrop}>
     <div class="container">
       <Form id="validator-form" on:submit={handleSubmit} on:reset={handleReset}>
-        <h2 class="h3 text-center">Check the quality of a file or a feed</h2>
+        <h2 class="h3 text-center">Evaluate your dataset against the official <a href="https://gtfs.org/fr/schedule/reference/" target="_blank" rel="noreferrer">GTFS Reference</a> and <a href="https://gtfs.org/fr/schedule/best-practices/" target="_blank" rel="noreferrer">Best Practices</a>.</h2>
 
         <div class="max-w-xl mx-auto">
           <FileField
