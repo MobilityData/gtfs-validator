@@ -16,7 +16,16 @@
   import { onMount } from 'svelte';
   import { quintOut } from 'svelte/easing';
 
+  /**
+ * @typedef CreateJobParameters
+ * @type {object}
+ * @property {string=} url - job source url.
+ * @property {string} countryCode - country code.
+ */
+
   let showDocs = true;
+
+  const apiRoot = 'https://gtfs-validator-web-mbzoxaljzq-ue.a.run.app'
 
   /** @type {HTMLInputElement} */
   let fileInput;
@@ -148,28 +157,28 @@
   function handleSubmit(event) {
     event.preventDefault();
 
-    const data = new FormData(form);
-
-    /** @type {Object<string, any>} */
-    const formValues = {};
-
-    for (const [name, value] of data) {
-      formValues[name] = value;
-    }
     const file = fileInput?.files?.item(0);
 
     if (file) {
       handleFile(file, true);
     } else if (sourceUrl) {
-      // TODO do something with the URL?
+      handleUrl(sourceUrl)
     } else {
       addError('Please include a file to validate.');
     }
   }
 
-  function createJob() {
+  /** @param {string=} url **/
+  function createJob(url) {
     return new Promise((resolve, reject) => {
-      const data = null;
+      /** @type {CreateJobParameters} */
+      const data = {
+        countryCode: region
+      };
+
+      if (url) {
+        data.url = url
+      }
 
       const xhr = new XMLHttpRequest();
       xhr.responseType = 'json';
@@ -179,12 +188,12 @@
           resolve(this.response);
         }
       });
-
       xhr.open(
-        'GET',
-        'https://gtfs-validator-web-mbzoxaljzq-ue.a.run.app/create-job'
+        'POST',
+        `${apiRoot}/create-job`
       );
-      xhr.send(data);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(JSON.stringify(data));
     });
   }
 
@@ -247,6 +256,29 @@
     updateStatus('uploading');
     jobId = result.jobId;
     await putFile(result.url, file);
+    updateStatus('processing');
+
+    let jobComplete = false;
+    do {
+      jobComplete = await reportExists();
+      if (!jobComplete) {
+        await sleep(2500);
+      }
+    } while (!jobComplete);
+
+    updateStatus('ready');
+
+    if (form) {
+      form.reset();
+      clearFile();
+    }
+  }
+
+  /** @param {string} url */
+  async function handleUrl(url) {
+    updateStatus('authorizing');
+    const result = await createJob(url);
+    jobId = result.jobId;
     updateStatus('processing');
 
     let jobComplete = false;
