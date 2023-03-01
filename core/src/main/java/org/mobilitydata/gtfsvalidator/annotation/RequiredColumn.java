@@ -28,14 +28,23 @@ import java.lang.annotation.Target;
  * <p>Example.
  *
  * <pre>
- *   {@literal @}GtfsTable("agency.txt")
- *   public interface GtfsAgencySchema extends GtfsEntity {
- *       {@literal @}FieldType(FieldTypeEnum.ID)
- *       {@literal @}PrimaryKey
- *       String agencyId();
+ *    {@literal @}GtfsTable("transfers.txt")
+ *    public interface GtfsTransferSchema extends GtfsEntity {
+ *        {@literal @}FieldType(FieldTypeEnum.ID)
+ *        {@literal @}Required
+ *        {@literal @}ForeignKey(table = "stops.txt", field = "stop_id")
+ *        {@literal @}PrimaryKey(translationRecordIdType = RECORD_ID)
+ *        String fromStopId();
  *
- *       {@literal @}RequiredColumn String agencyName();
- *   }
+ *        {@literal @}FieldType(FieldTypeEnum.ID)
+ *        {@literal @}Required
+ *        {@literal @}ForeignKey(table = "stops.txt", field = "stop_id")
+ *        {@literal @}PrimaryKey(translationRecordIdType = RECORD_SUB_ID)
+ *        String toStopId();
+ *
+ *        {@literal @}RequiredColumn
+ *        GtfsTransferType transferType();
+ *    }
  * </pre>
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
