@@ -2260,7 +2260,7 @@ A route's color and `route_text_color` should be contrasting.
 
 </details>
 
-<a name="RouteLongNameConainsShortName"/>
+<a name="RouteLongNameContainsShortNameNotice"/>
 
 ### route_long_name_contains_short_name
 
