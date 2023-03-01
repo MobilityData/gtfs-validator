@@ -7,4 +7,4 @@ ARG CREDS_FILE=src/main/resources/web-based-gtfs-validator-3c339fa28589.json
 COPY ${JAR_FILES} /
 COPY ${PROPERTIES_FILE} /
 COPY ${CREDS_FILE} /
-ENTRYPOINT ["java","-jar","/web-4.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar","/service-4.0.1-SNAPSHOT.jar"]
