@@ -34,8 +34,8 @@ public class DefaultTableHeaderValidator implements TableHeaderValidator {
   public void validate(
       String filename,
       CsvHeader actualHeader,
-      Set<String> supportedHeaders,
-      Set<String> requiredHeaders,
+      Set<String> supportedColumns,
+      Set<String> requiredColumns,
       NoticeContainer noticeContainer) {
     if (actualHeader.getColumnCount() == 0) {
       // This is an empty file.
@@ -43,7 +43,7 @@ public class DefaultTableHeaderValidator implements TableHeaderValidator {
     }
     Map<String, Integer> columnIndices = new HashMap<>();
     // Sorted tree set for stable order of notices.
-    TreeSet<String> missingColumns = new TreeSet<>(requiredHeaders);
+    TreeSet<String> missingColumns = new TreeSet<>(requiredColumns);
     for (int i = 0; i < actualHeader.getColumnCount(); ++i) {
       String column = actualHeader.getColumnName(i);
       // Column indices are zero-based. We add 1 to make them 1-based.
@@ -56,7 +56,7 @@ public class DefaultTableHeaderValidator implements TableHeaderValidator {
         noticeContainer.addValidationNotice(
             new DuplicatedColumnNotice(filename, column, prev + 1, i + 1));
       }
-      if (!supportedHeaders.contains(column)) {
+      if (!supportedColumns.contains(column)) {
         noticeContainer.addValidationNotice(new UnknownColumnNotice(filename, column, i + 1));
       }
       missingColumns.remove(column);
