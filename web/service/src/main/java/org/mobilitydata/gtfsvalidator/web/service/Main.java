@@ -1,10 +1,7 @@
 package org.mobilitydata.gtfsvalidator.web.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.cloud.storage.*;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -78,6 +75,23 @@ public class Main {
     }
   }
 
+  public void setJobCountryCode(String jobId, String countryCode) throws Exception {
+    try {
+      var jobInfoPath = getJobInfoPath(jobId);
+      var jobBlobId = BlobId.of(jobInfoBucketName, jobInfoPath);
+      var jobBlobInfo = BlobInfo.newBuilder(jobBlobId).setContentType("application/json").build();
+      var om = new ObjectMapper();
+      var jobNode = om.createObjectNode();
+      jobNode.put(countryCodeKey, countryCode);
+      var writer = om.writer();
+      var fileBytes = writer.writeValueAsBytes(jobNode);
+      storage.create(jobBlobInfo, fileBytes);
+    } catch (Exception exc) {
+      System.out.println("Error setting country code:" + exc.toString());
+      throw new Error("Could not set job country code");
+    }
+  }
+
   public static String getJobCountryCode(String jobId) {
     try {
       var jobInfoPath = getJobInfoPath(jobId);
@@ -88,8 +102,8 @@ public class Main {
               jobFilenameSuffix);
       var fileBytes = Files.readAllBytes(Paths.get(jobInfoFile.getPath()));
       var objectMapper = new ObjectMapper();
-      JsonNode jobNode = objectMapper.readTree(fileBytes);
-      var countryCode = jobNode.get(countryCodeKey).toString();
+      var jobNode = objectMapper.readTree(fileBytes);
+      var countryCode = jobNode.get(countryCodeKey).textValue();
       return countryCode;
     } catch (Exception exc) {
       System.out.println(
@@ -110,18 +124,10 @@ public class Main {
         countryCode = body.getCountryCode();
       }
 
-      if (body != null && !body.getUrl().isEmpty()) {
+      if (body != null && body.getUrl() != null && !body.getUrl().isEmpty()) {
         // Read file into memory
         var url = body.getUrl();
         var urlInputStream = new BufferedInputStream(new URL(url).openStream());
-//        var tempDir = Files.createTempDirectory(tempFolderName).toFile();
-//        var tempFile = File.createTempFile(jobId, ".zip", tempDir);
-//        var fileOutputStream = new FileOutputStream(tempFile);
-//        var dataBuffer = new byte[1024];
-//        var bytesRead = 0;
-//        while ((bytesRead = urlInputStream.read(dataBuffer, 0, 1024)) != -1) {
-//          fileOutputStream.write(dataBuffer, 0, bytesRead);
-//        }
 
         // Upload to GCS
         var blobId = BlobId.of(userUploadBucketName, jobId + "/" + jobId + ".zip");
@@ -129,35 +135,27 @@ public class Main {
         var blobInfo = BlobInfo.newBuilder(blobId).setContentType(mimeType).build();
         var fileBytes = urlInputStream.readAllBytes();
         storage.create(blobInfo, fileBytes);
+        setJobCountryCode(jobId, countryCode);
         return "{\"jobId\": \"" + jobId + "\"}";
       } else {
         var blobInfo =
-                BlobInfo.newBuilder(BlobId.of(userUploadBucketName, jobId + "/" + fileName)).build();
+            BlobInfo.newBuilder(BlobId.of(userUploadBucketName, jobId + "/" + fileName)).build();
 
         // Generate Signed URL
         Map<String, String> extensionHeaders = new HashMap<>();
         extensionHeaders.put("Content-Type", "application/octet-stream");
 
         URL url =
-                getStorage()
-                        .signUrl(
-                                blobInfo,
-                                15,
-                                TimeUnit.MINUTES,
-                                Storage.SignUrlOption.httpMethod(HttpMethod.PUT),
-                                Storage.SignUrlOption.withExtHeaders(extensionHeaders),
-                                Storage.SignUrlOption.withV4Signature());
+            getStorage()
+                .signUrl(
+                    blobInfo,
+                    15,
+                    TimeUnit.MINUTES,
+                    Storage.SignUrlOption.httpMethod(HttpMethod.PUT),
+                    Storage.SignUrlOption.withExtHeaders(extensionHeaders),
+                    Storage.SignUrlOption.withV4Signature());
 
-        var jobInfoPath = getJobInfoPath(jobId);
-        var jobBlobId = BlobId.of(jobInfoBucketName, jobInfoPath);
-        var jobBlobInfo = BlobInfo.newBuilder(jobBlobId).setContentType("application/json").build();
-        var om = new ObjectMapper();
-        var jobNode = om.createObjectNode();
-        jobNode.put(countryCodeKey, countryCode);
-        var writer = om.writer();
-        var fileBytes = writer.writeValueAsBytes(jobNode);
-        storage.create(jobBlobInfo, fileBytes);
-
+        setJobCountryCode(jobId, countryCode);
         return "{\"jobId\": \"" + jobId + "\", \"url\": \"" + url.toString() + "\"}";
       }
     } catch (Exception exc) {
