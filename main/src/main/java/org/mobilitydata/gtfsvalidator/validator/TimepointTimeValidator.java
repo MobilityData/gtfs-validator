@@ -85,7 +85,7 @@ public class TimepointTimeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class StopTimeTimepointWithoutTimesNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String tripId;
     private final long stopSequence;
     private final String specifiedField;
@@ -105,7 +105,7 @@ public class TimepointTimeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class MissingTimepointValueNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String tripId;
     private final long stopSequence;
 

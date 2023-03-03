@@ -25,13 +25,13 @@ public abstract class GtfsCellContext {
   public abstract String filename();
 
   /** Number of a row in the GTFS file. */
-  public abstract long csvRowNumber();
+  public abstract int csvRowNumber();
 
   /** Name of a field in the GTFS file. */
   public abstract String fieldName();
 
   /** Creates a context that describes a cell in a GTFS file. */
-  public static GtfsCellContext create(String filename, long csvRowNumber, String fieldName) {
+  public static GtfsCellContext create(String filename, int csvRowNumber, String fieldName) {
     return new AutoValue_GtfsCellContext(filename, csvRowNumber, fieldName);
   }
 }

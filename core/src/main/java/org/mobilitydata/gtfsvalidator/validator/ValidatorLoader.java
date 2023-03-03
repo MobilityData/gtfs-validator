@@ -19,10 +19,6 @@ package org.mobilitydata.gtfsvalidator.validator;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ListMultimap;
-import com.google.common.flogger.FluentLogger;
-import io.github.classgraph.ClassGraph;
-import io.github.classgraph.ClassInfo;
-import io.github.classgraph.ScanResult;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -32,7 +28,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
 import javax.inject.Inject;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -48,47 +43,11 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
  * classes.
  */
 public class ValidatorLoader {
-
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-  public static final String DEFAULT_VALIDATOR_PACKAGE = "org.mobilitydata.gtfsvalidator.validator";
-
   private final ListMultimap<Class<? extends GtfsEntity>, Class<? extends SingleEntityValidator<?>>>
       singleEntityValidators = ArrayListMultimap.create();
   private final ListMultimap<Class<? extends GtfsTableContainer<?>>, Class<? extends FileValidator>>
       singleFileValidators = ArrayListMultimap.create();
   private final List<Class<? extends FileValidator>> multiFileValidators = new ArrayList<>();
-
-  /** Loads validator classes from the default package path. */
-  public static ValidatorLoader createForDefaultPackage() throws ValidatorLoaderException {
-    return createForPackages(ImmutableList.of(DEFAULT_VALIDATOR_PACKAGE));
-  }
-
-  /**
-   * Loads validator classes from a given list of packages.
-   *
-   * @param validatorPackages list of package names for locating validator classes
-   */
-  public static ValidatorLoader createForPackages(ImmutableList<String> validatorPackages)
-      throws ValidatorLoaderException {
-    ImmutableList.Builder<Class<?>> validatorClasses = ImmutableList.builder();
-    for (String packageName : validatorPackages) {
-      try (ScanResult scanResult =
-          new ClassGraph()
-              .enableClassInfo()
-              .enableAnnotationInfo()
-              .acceptPackages(packageName)
-              .scan()) {
-        for (ClassInfo classInfo : scanResult.getClassesWithAnnotation(GtfsValidator.class)) {
-          Class<?> clazz = classInfo.loadClass();
-          if (SingleEntityValidator.class.isAssignableFrom(clazz)
-              || FileValidator.class.isAssignableFrom(clazz)) {
-            validatorClasses.add(clazz);
-          }
-        }
-      }
-    }
-    return createForClasses(validatorClasses.build());
-  }
 
   /** Create a validator with the specified validator classes loaded. */
   public static ValidatorLoader createForClasses(ImmutableList<Class<?>> validatorClasses)

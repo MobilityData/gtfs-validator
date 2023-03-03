@@ -66,7 +66,7 @@ public class LocationHasStopTimesValidator extends FileValidator {
 
   /** Describes a stop that does not have any stop time associated. */
   static class StopWithoutStopTimeNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String stopId;
     private final String stopName;
 
@@ -82,7 +82,7 @@ public class LocationHasStopTimesValidator extends FileValidator {
    * Describes a location in {@code stops.txt} that is not a stop but has a stop time associated.
    */
   static class LocationWithUnexpectedStopTimeNotice extends ValidationNotice {
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     private final String stopId;
     private final String stopName;
     private final long stopTimeCsvRowNumber;

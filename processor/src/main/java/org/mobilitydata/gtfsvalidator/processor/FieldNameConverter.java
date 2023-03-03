@@ -74,10 +74,6 @@ public final class FieldNameConverter {
     return CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, field) + "_FIELD_NAME";
   }
 
-  public static String fieldColumnIndex(String field) {
-    return field + "ColumnIndex";
-  }
-
   public static String fieldDefaultName(String field) {
     return "DEFAULT_" + CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, field);
   }

@@ -22,19 +22,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.table.MultiColumnLocalePrimaryKeyTableContainer;
-import org.mobilitydata.gtfsvalidator.table.MultiColumnLocalePrimaryKeyTableLoader;
+import org.mobilitydata.gtfsvalidator.table.MultiColumnLocalePrimaryKeyTableDescriptor;
 import org.mobilitydata.gtfsvalidator.testing.LoadingHelper;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 
 @RunWith(JUnit4.class)
 public class MultiColumnLocalePrimaryKeySchemaTest {
 
-  private MultiColumnLocalePrimaryKeyTableLoader loader;
+  private MultiColumnLocalePrimaryKeyTableDescriptor tableDescriptor;
   private LoadingHelper helper;
 
   @Before
   public void setup() {
-    loader = new MultiColumnLocalePrimaryKeyTableLoader();
+    tableDescriptor = new MultiColumnLocalePrimaryKeyTableDescriptor();
     helper = new LoadingHelper();
   }
 
@@ -46,7 +46,7 @@ public class MultiColumnLocalePrimaryKeySchemaTest {
   @Test
   public void testNullKeys() throws ValidatorLoaderException {
     MultiColumnLocalePrimaryKeyTableContainer container =
-        helper.load(loader, "id,language,translation", "a1,,apples");
+        helper.load(tableDescriptor, "id,language,translation", "a1,,apples");
 
     MultiColumnLocalePrimaryKeyTableContainer.CompositeKey key =
         MultiColumnLocalePrimaryKeyTableContainer.CompositeKey.builder().setId("a1").build();

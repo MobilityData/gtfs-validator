@@ -12,18 +12,18 @@ import java.math.BigDecimal;
  */
 public class InvalidCurrencyAmountNotice extends ValidationNotice {
 
-  private final String fileName;
+  private final String filename;
 
   private final String fieldName;
 
-  private final long csvRowNumber;
+  private final int csvRowNumber;
 
   private final String amount;
 
   public InvalidCurrencyAmountNotice(
-      String fileName, String fieldName, long csvRowNumber, BigDecimal amount) {
+      String filename, String fieldName, int csvRowNumber, BigDecimal amount) {
     super(SeverityLevel.ERROR);
-    this.fileName = fileName;
+    this.filename = filename;
     this.fieldName = fieldName;
     this.csvRowNumber = csvRowNumber;
     this.amount = amount.toPlainString();

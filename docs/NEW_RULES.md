@@ -55,7 +55,7 @@ public class TripUsabilityValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class UnusableTripNotice extends ValidationNotice {
-    UnusableTripNotice(long csvRowNumber, String tripId) {
+    UnusableTripNotice(int csvRowNumber, String tripId) {
       super(
           ImmutableMap.of(
               "csvRowNumber", csvRowNumber,
@@ -90,7 +90,7 @@ The `UnusableTripNotice` is the container for information that will be exported 
 
 ```java
   static class UnusableTripNotice extends ValidationNotice {
-    UnusableTripNotice(long csvRowNumber, String tripId) {
+    UnusableTripNotice(int csvRowNumber, String tripId) {
       super(
           ImmutableMap.of(
               "csvRowNumber", csvRowNumber,
@@ -101,7 +101,7 @@ The `UnusableTripNotice` is the container for information that will be exported 
 ```
 In this case, because the GTFS spec doesn't explictly say that each trip requires at least two stops, we can't say it's an `ERROR`. But it's still suspicious (riders need to board and exit the vehicle), so we set this as a `WARNING`.
 
-You can set up the notice constructor `UnusableTripNotice(long csvRowNumber, String tripId)` to take in whatever variables you want to pass from the validator to the notice, and then include them in the `ImmutableMap.of(` section to write them to the JSON output.
+You can set up the notice constructor `UnusableTripNotice(int csvRowNumber, String tripId)` to take in whatever variables you want to pass from the validator to the notice, and then include them in the `ImmutableMap.of(` section to write them to the JSON output.
 
 For example, this notice will appear in JSON output as:
 
@@ -205,7 +205,7 @@ public class FeedServiceDateValidator extends SingleEntityValidator<GtfsFeedInfo
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class MissingFeedInfoDateNotice extends ValidationNotice {
-    MissingFeedInfoDateNotice(long csvRowNumber, String fieldName) {
+    MissingFeedInfoDateNotice(int csvRowNumber, String fieldName) {
       super(
           ImmutableMap.of("csvRowNumber", csvRowNumber, "fieldName", fieldName),
           SeverityLevel.WARNING);
@@ -381,7 +381,7 @@ public class FeedServiceDateValidatorTest {
   }
 
   public static GtfsFeedInfo createFeedInfo(
-      long csvRowNumber,
+      int csvRowNumber,
       String feedPublisherName,
       String feedPublisherUrl,
       Locale feedLang,
@@ -411,7 +411,7 @@ See a full example [here](../main/src/test/java/org/mobilitydata/gtfsvalidator/v
 1️⃣ Create a [`GtfsEntity`](../core/src/main/java/org/mobilitydata/gtfsvalidator/table/GtfsEntity.java) via an annex private method: 
 ```
   public static GtfsFeedInfo createFeedInfo(
-      long csvRowNumber,
+      int csvRowNumber,
       String feedPublisherName,
       String feedPublisherUrl,
       Locale feedLang,

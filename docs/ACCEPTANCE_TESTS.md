@@ -123,6 +123,11 @@ Where each source id value come from the MobilityDatabase: they are a unique [pr
 
 The source id can be used to find all datasets versions of a source on the [MobilityDatabase](http://old.mobilitydatabase.org/wiki/Main_Page) for the sakes of debugging or exploration.
 
+## What do we do with the results?
+We follow this process:
+
+<img src="/docs/Acceptance-test-process.jpg" width="750">
+
 ## Instructions to run the pipeline
 
 1. Provide code changes by creating a new PR on the [GitHub repository](https://github.com/MobilityData/gtfs-validator);

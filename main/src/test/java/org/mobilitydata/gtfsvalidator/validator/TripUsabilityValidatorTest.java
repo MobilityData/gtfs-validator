@@ -31,7 +31,7 @@ import org.mobilitydata.gtfsvalidator.validator.TripUsabilityValidator.UnusableT
 
 public class TripUsabilityValidatorTest {
   public static GtfsTrip createTrip(
-      long csvRowNumber, String routeId, String serviceId, String tripId) {
+      int csvRowNumber, String routeId, String serviceId, String tripId) {
     return new GtfsTrip.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setRouteId(routeId)
@@ -41,7 +41,7 @@ public class TripUsabilityValidatorTest {
   }
 
   public static GtfsStopTime createStopTime(
-      long csvRowNumber, String tripId, String stopId, int stopSequence) {
+      int csvRowNumber, String tripId, String stopId, int stopSequence) {
     return new GtfsStopTime.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setTripId(tripId)

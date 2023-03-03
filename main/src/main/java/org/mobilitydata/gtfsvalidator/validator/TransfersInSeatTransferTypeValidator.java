@@ -143,7 +143,7 @@ public class TransfersInSeatTransferTypeValidator extends FileValidator {
    */
   public static class TransferWithSuspiciousMidTripInSeatNotice extends ValidationNotice {
     // The row number from `transfers.txt` for the faulty entry.
-    private final long csvRowNumber;
+    private final int csvRowNumber;
     // The name of the trip id field (e.g. `from_trip_id`) referencing a trip.
     private final String tripIdFieldName;
     // The referenced trip id.

@@ -68,17 +68,18 @@ public abstract class Notice {
    * @return notice code, e.g., "foreign_key_violation".
    */
   public String getCode() {
-    return getCode(getClass().getSimpleName());
+    return getCode(getClass());
   }
 
   /**
-   * Returns a descriptive type-specific name for this notice class simple name.
+   * Returns a descriptive type-specific name for this notice class.
    *
    * @return notice code, e.g., "foreign_key_violation".
    */
-  static String getCode(String className) {
+  public static String getCode(Class<?> noticeClass) {
     return CaseFormat.UPPER_CAMEL.to(
-        CaseFormat.LOWER_UNDERSCORE, StringUtils.removeEnd(className, NOTICE_SUFFIX));
+        CaseFormat.LOWER_UNDERSCORE,
+        StringUtils.removeEnd(noticeClass.getSimpleName(), NOTICE_SUFFIX));
   }
 
   /**
