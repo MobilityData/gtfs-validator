@@ -35,7 +35,17 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.util.CalendarUtil;
 
-/** */
+/**
+ * Validates that trip data exists for the next 7 days. Dates with the majority trips per day should
+ * be included for at least the next 7 day period. see
+ * https://github.com/MobilityData/gtfs-validator/issues/886#issuecomment-832237225
+ *
+ * <p>Generated notices:
+ *
+ * <ul>
+ *   <li>{@link TripDataShouldBeValidForNext7DaysNotice}.
+ * </ul>
+ */
 @GtfsValidator
 public class DateTripsValidator extends FileValidator {
 
@@ -71,16 +81,15 @@ public class DateTripsValidator extends FileValidator {
     GtfsDate currentDate = GtfsDate.fromLocalDate(now);
 
     // Attempt to get Start Date and End Date from feedInfo
-    for (GtfsFeedInfo entity : this.feedInfoTable.getEntities()) {
-      if (entity.hasFeedStartDate()) {
-        if (minStartDate == null || entity.feedEndDate().isBefore(minStartDate)) {
-          minStartDate = entity.feedStartDate();
-        }
+    GtfsFeedInfo entity = this.feedInfoTable.getSingleEntity().get();
+    if (entity.hasFeedStartDate()) {
+      if (minStartDate == null || entity.feedEndDate().isBefore(minStartDate)) {
+        minStartDate = entity.feedStartDate();
       }
-      if (entity.hasFeedEndDate()) {
-        if (maxEndDate == null || entity.feedEndDate().isAfter(maxEndDate)) {
-          maxEndDate = entity.feedEndDate();
-        }
+    }
+    if (entity.hasFeedEndDate()) {
+      if (maxEndDate == null || entity.feedEndDate().isAfter(maxEndDate)) {
+        maxEndDate = entity.feedEndDate();
       }
     }
 
@@ -139,19 +148,19 @@ public class DateTripsValidator extends FileValidator {
       if (serviceWindowStartDate.isAfter(currentDate)
           || serviceWindowEndDate.isBefore(currentDatePlusSevenDays)) {
         noticeContainer.addValidationNotice(
-            new DateTripsValidatorValidForNextSevenDaysNotice(currentDate,
-                serviceWindowStartDate, serviceWindowEndDate));
+            new TripDataShouldBeValidForNext7DaysNotice(
+                currentDate, serviceWindowStartDate, serviceWindowEndDate));
         return;
       }
     }
   }
 
-  static class DateTripsValidatorValidForNextSevenDaysNotice extends ValidationNotice {
+  static class TripDataShouldBeValidForNext7DaysNotice extends ValidationNotice {
     private final GtfsDate currentDate;
     private final GtfsDate serviceWindowStartDate;
     private final GtfsDate serviceWindowEndDate;
 
-    DateTripsValidatorValidForNextSevenDaysNotice(
+    TripDataShouldBeValidForNext7DaysNotice(
         GtfsDate currentDate, GtfsDate serviceWindowStartDate, GtfsDate serviceWindowEndDate) {
       super(SeverityLevel.WARNING);
       this.currentDate = currentDate;

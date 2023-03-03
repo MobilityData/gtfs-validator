@@ -31,12 +31,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.*;
-import org.mobilitydata.gtfsvalidator.util.CalendarUtilTest;
+import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
 @RunWith(JUnit4.class)
-public class CalendarValidatorTest {
+public class ExpiredCalendarValidatorTest {
 
   static final Set<DayOfWeek> weekDays =
       ImmutableSet.of(
@@ -48,30 +47,52 @@ public class CalendarValidatorTest {
   private static final ZonedDateTime TEST_NOW =
       ZonedDateTime.of(2021, 1, 1, 14, 30, 0, 0, ZoneOffset.UTC);
 
-  private GtfsCalendar createCalendar(LocalDate calendarEndDate) {
-    return CalendarUtilTest.createGtfsCalendar(
-        "WEEK", LocalDate.of(2021, 1, 14), calendarEndDate, weekDays);
-  }
-
-  private List<ValidationNotice> validateCalendar(GtfsCalendar calendar) {
+  @Test
+  public void calendarEndDateOneDayAgoShouldGenerateNotice() {
     NoticeContainer container = new NoticeContainer();
 
-    List<GtfsCalendar> calendars = ImmutableList.of(calendar);
+    List<GtfsCalendar> calendars =
+        ImmutableList.of(
+            new GtfsCalendar.Builder()
+                .setCsvRowNumber(2)
+                .setServiceId("WEEK")
+                .setStartDate(GtfsDate.fromLocalDate(LocalDate.of(2021, 1, 14)))
+                .setEndDate(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().minusDays(1)))
+                .setMonday(1)
+                .setTuesday(1)
+                .setWednesday(1)
+                .setThursday(1)
+                .setFriday(1)
+                .build());
     GtfsCalendarTableContainer calendarTable =
         GtfsCalendarTableContainer.forEntities(calendars, container);
 
-    new CalendarValidator(new CurrentDateTime(TEST_NOW), calendarTable).validate(container);
-    return container.getValidationNotices();
-  }
-
-  @Test
-  public void calendarEndDateOneDayAgoShouldGenerateNotice() {
-    assertThat(validateCalendar(createCalendar(TEST_NOW.toLocalDate().minusDays(1))))
-        .containsExactly(new CalendarValidator.CalendarValidatorExpiredCalendarNotice());
+    new ExpiredCalendarValidator(new CurrentDateTime(TEST_NOW), calendarTable).validate(container);
+    assertThat(container.getValidationNotices())
+        .containsExactly(new ExpiredCalendarValidator.ExpiredCalendarNotice(2, "WEEK"));
   }
 
   @Test
   public void calendarEndDateOneDayFromNowShouldNotGenerateNotice() {
-    assertThat(validateCalendar(createCalendar(TEST_NOW.toLocalDate().plusDays(1)))).isEmpty();
+    NoticeContainer container = new NoticeContainer();
+
+    List<GtfsCalendar> calendars =
+        ImmutableList.of(
+            new GtfsCalendar.Builder()
+                .setCsvRowNumber(2)
+                .setServiceId("WEEK")
+                .setStartDate(GtfsDate.fromLocalDate(LocalDate.of(2021, 1, 14)))
+                .setEndDate(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(1)))
+                .setMonday(1)
+                .setTuesday(1)
+                .setWednesday(1)
+                .setThursday(1)
+                .setFriday(1)
+                .build());
+    GtfsCalendarTableContainer calendarTable =
+        GtfsCalendarTableContainer.forEntities(calendars, container);
+
+    new ExpiredCalendarValidator(new CurrentDateTime(TEST_NOW), calendarTable).validate(container);
+    assertThat(container.getValidationNotices()).isEmpty();
   }
 }

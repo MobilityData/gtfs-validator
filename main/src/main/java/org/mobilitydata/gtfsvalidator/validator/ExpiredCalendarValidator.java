@@ -27,12 +27,13 @@ import org.mobilitydata.gtfsvalidator.table.*;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
 @GtfsValidator
-public class CalendarValidator extends FileValidator {
+public class ExpiredCalendarValidator extends FileValidator {
   private final GtfsCalendarTableContainer calendarTable;
   private final CurrentDateTime currentDateTime;
 
   @Inject
-  CalendarValidator(CurrentDateTime currentDateTime, GtfsCalendarTableContainer calendarTable) {
+  ExpiredCalendarValidator(
+      CurrentDateTime currentDateTime, GtfsCalendarTableContainer calendarTable) {
     this.currentDateTime = currentDateTime;
     this.calendarTable = calendarTable;
   }
@@ -45,14 +46,19 @@ public class CalendarValidator extends FileValidator {
     for (var calendar : calendarTable.getEntities()) {
       if (calendar.endDate().isBefore(currentDate)) {
         noticeContainer.addValidationNotice(
-            new CalendarValidator.CalendarValidatorExpiredCalendarNotice());
+            new ExpiredCalendarNotice(calendar.csvRowNumber(), calendar.serviceId()));
       }
     }
   }
 
-  static class CalendarValidatorExpiredCalendarNotice extends ValidationNotice {
-    CalendarValidatorExpiredCalendarNotice() {
+  static class ExpiredCalendarNotice extends ValidationNotice {
+    private final int csvRowNumber;
+    private final String serviceId;
+
+    ExpiredCalendarNotice(int csvRowNumber, String serviceId) {
       super(SeverityLevel.WARNING);
+      this.csvRowNumber = csvRowNumber;
+      this.serviceId = serviceId;
     }
   }
 }
