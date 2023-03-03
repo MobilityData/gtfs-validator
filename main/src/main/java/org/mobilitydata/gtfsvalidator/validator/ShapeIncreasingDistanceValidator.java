@@ -35,8 +35,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
  *
  * <ul>
  *   <li>{@link DecreasingShapeDistanceNotice}
- *   <li>{@link EqualShapeDistanceSameCoordinatesNotice}
- *   <li>{@link EqualShapeDistanceDiffCoordinatesNotice}
+ *   <li>{@link EqualShapeDistanceSameCoordinatesNotice2}
+ *   <li>{@link EqualShapeDistanceDiffCoordinatesNotice2}
  * </ul>
  */
 @GtfsValidator
@@ -69,11 +69,11 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
         // equal shape_dist_traveled and different coordinates
         if (!(curr.shapePtLon() == prev.shapePtLon() && curr.shapePtLat() == prev.shapePtLat())) {
           noticeContainer.addValidationNotice(
-              new EqualShapeDistanceDiffCoordinatesNotice(prev, curr));
+              new EqualShapeDistanceDiffCoordinatesNotice2(prev, curr));
         } else {
           // equal shape_dist_traveled and same coordinates
           noticeContainer.addValidationNotice(
-              new EqualShapeDistanceSameCoordinatesNotice(prev, curr));
+              new EqualShapeDistanceSameCoordinatesNotice2(prev, curr));
         }
       }
     }
@@ -120,7 +120,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
-  static class EqualShapeDistanceSameCoordinatesNotice extends ValidationNotice {
+  static class EqualShapeDistanceSameCoordinatesNotice2 extends ValidationNotice {
     private final String shapeId;
     private final int csvRowNumber;
     private final double shapeDistTraveled;
@@ -129,7 +129,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
     private final double prevShapeDistTraveled;
     private final int prevShapePtSequence;
 
-    EqualShapeDistanceSameCoordinatesNotice(GtfsShape previous, GtfsShape current) {
+    EqualShapeDistanceSameCoordinatesNotice2(GtfsShape previous, GtfsShape current) {
       super(SeverityLevel.WARNING);
       this.shapeId = current.shapeId();
       this.csvRowNumber = current.csvRowNumber();
@@ -150,7 +150,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
-  static class EqualShapeDistanceDiffCoordinatesNotice extends ValidationNotice {
+  static class EqualShapeDistanceDiffCoordinatesNotice2 extends ValidationNotice {
     private final String shapeId;
     private final int csvRowNumber;
     private final double shapeDistTraveled;
@@ -160,7 +160,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
     private final int prevShapePtSequence;
     private final double actualDistanceBetweenShapePoints;
 
-    EqualShapeDistanceDiffCoordinatesNotice(GtfsShape previous, GtfsShape current) {
+    EqualShapeDistanceDiffCoordinatesNotice2(GtfsShape previous, GtfsShape current) {
       super(SeverityLevel.ERROR);
       this.shapeId = current.shapeId();
       this.csvRowNumber = current.csvRowNumber();
