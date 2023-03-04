@@ -361,7 +361,7 @@
           class="flex flex-col md:flex-row md:justify-end md:w-auto mt-16 gap-4"
         >
           {#if showDocs}
-            <Button href="/rules">See Documentation</Button>
+            <Button href="/rules.html">See Documentation</Button>
           {/if}
 
           <Button type="submit" variant="primary">Validate</Button>
