@@ -105,13 +105,13 @@ gcloud storage buckets update gs://gtfs-validator-user-uploads --cors-file=cors.
 gcloud storage buckets update gs://gtfs-validator-results --cors-file=cors.json
 ```
 
-# Run It
+## Run It
 
 ```bash
 ./gradlew bootRun
 ```
 
-# Deploying Updates
+## Deploying Updates
 
 ```bash
 gcloud builds submit
