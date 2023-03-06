@@ -1291,7 +1291,7 @@ A point is too close to the North or South Pole.
 
 ### route_both_short_and_long_name_missing
 
-Both short_name and long_name are missing for a route.
+Both `route_short_name` and `route_long_name` are missing for a route.
 
 #### References
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
@@ -2287,12 +2287,14 @@ Bad examples:
 <details>
 
 #### Notice fields description
-| Field name     	| Description                               | Type   	|
-|-----------------	|---------------------------------------- |--------	|
-| `routeId`       	| The id of the faulty record.           	| String 	|
-| `csvRowNumber`  	| The row number of the faulty record.   	| Long   	|
-| `routeShortName` 	| The `short_name` of the faulty record.  | String 	|
-| `routeLongName` 	| The `long_name` of the faulty record.   | String 	|
+
+| Field name       | Description                                  | Type   |
+| ---------------- | -------------------------------------------- | ------ |
+| `routeId`        | The id of the faulty record.                 | String |
+| `csvRowNumber`   | The row number of the faulty record.         | Long   |
+| `routeShortName` | The `route_short_name` of the faulty record. | String |
+| `routeLongName`  | The `route_long_name` of the faulty record.  | String |
+
 
 #### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
