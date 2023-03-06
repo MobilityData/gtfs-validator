@@ -49,7 +49,7 @@ public interface GtfsFareProductSchema extends GtfsEntity {
   Currency currency();
 
   @FieldType(FieldTypeEnum.ID)
-  @ForeignKey(table = "fare_media.txt", field = "fare_medium_id")
+  @ForeignKey(table = "fare_media.txt", field = "fare_media_id")
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)
-  String fareMediumId();
+  String fareMediaId();
 }

@@ -3,24 +3,24 @@ package org.mobilitydata.gtfsvalidator.validator;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsFareMedium;
-import org.mobilitydata.gtfsvalidator.table.GtfsFareMediumType;
+import org.mobilitydata.gtfsvalidator.table.GtfsFareMedia;
+import org.mobilitydata.gtfsvalidator.table.GtfsFareMediaType;
 
 @GtfsValidator
-public class FareMediumNameValidator extends SingleEntityValidator<GtfsFareMedium> {
+public class FareMediaNameValidator extends SingleEntityValidator<GtfsFareMedia> {
 
   @Override
-  public void validate(GtfsFareMedium entity, NoticeContainer noticeContainer) {
-    if (shouldHaveName(entity.fareMediumType()) && !entity.hasFareMediumName()) {
+  public void validate(GtfsFareMedia entity, NoticeContainer noticeContainer) {
+    if (shouldHaveName(entity.fareMediaType()) && !entity.hasFareMediaName()) {
       noticeContainer.addValidationNotice(
           new MissingRecommendedFieldNotice(
-              GtfsFareMedium.FILENAME,
+              GtfsFareMedia.FILENAME,
               entity.csvRowNumber(),
-              GtfsFareMedium.FARE_MEDIUM_NAME_FIELD_NAME));
+              GtfsFareMedia.FARE_MEDIA_NAME_FIELD_NAME));
     }
   }
 
-  private static boolean shouldHaveName(GtfsFareMediumType type) {
+  private static boolean shouldHaveName(GtfsFareMediaType type) {
     switch (type) {
       case TRANSIT_CARD:
       case MOBILE_APP:

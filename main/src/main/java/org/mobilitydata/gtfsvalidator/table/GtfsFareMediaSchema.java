@@ -7,14 +7,14 @@ import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
 
 @GtfsTable("fare_media.txt")
-public interface GtfsFareMediumSchema extends GtfsEntity {
+public interface GtfsFareMediaSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
   @PrimaryKey
   @Required
-  String fareMediumId();
+  String fareMediaId();
 
-  String fareMediumName();
+  String fareMediaName();
 
   @Required
-  GtfsFareMediumType fareMediumType();
+  GtfsFareMediaType fareMediaType();
 }
