@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 /**
  * Adds a validation that the field or a file is required.
  *
- * <p>In the case of a field, both the column header, and a value for each row is required.
+ * <p>In the case of a field, both the column header and a value for each row is required.
  *
  * <p>Example.
  *
