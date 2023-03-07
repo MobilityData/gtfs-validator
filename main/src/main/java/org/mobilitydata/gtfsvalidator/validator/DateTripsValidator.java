@@ -71,42 +71,33 @@ public class DateTripsValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    GtfsDate minStartDate = null;
-    GtfsDate maxEndDate = null;
-
-    GtfsDate serviceWindowStartDate = null;
-    GtfsDate serviceWindowEndDate = null;
 
     LocalDate now = currentDateTime.getNow().toLocalDate();
     GtfsDate currentDate = GtfsDate.fromLocalDate(now);
 
     // Attempt to get Start Date and End Date from feedInfo
     GtfsFeedInfo entity = this.feedInfoTable.getSingleEntity().get();
-    if (entity.hasFeedStartDate()) {
-      if (minStartDate == null || entity.feedEndDate().isBefore(minStartDate)) {
-        minStartDate = entity.feedStartDate();
-      }
-    }
-    if (entity.hasFeedEndDate()) {
-      if (maxEndDate == null || entity.feedEndDate().isAfter(maxEndDate)) {
-        maxEndDate = entity.feedEndDate();
-      }
-    }
+    GtfsDate minStartDate = entity.hasFeedStartDate() ? entity.feedStartDate() : null;
+    GtfsDate maxEndDate = entity.hasFeedEndDate() ? entity.feedEndDate() : null;
 
     final Map<String, SortedSet<LocalDate>> servicePeriodMap =
         CalendarUtil.servicePeriodToServiceDatesMap(
             CalendarUtil.buildServicePeriodMap(calendarTable, calendarDateTable));
 
-    for (var serviceDates : servicePeriodMap.values()) {
+    for (var serviceId : servicePeriodMap.keySet()) {
+      SortedSet<LocalDate> serviceDates = servicePeriodMap.get(serviceId);
       var firstServiceDate = serviceDates.first();
       if (minStartDate == null || firstServiceDate.isBefore(minStartDate.getLocalDate())) {
         minStartDate = GtfsDate.fromLocalDate(serviceDates.first());
       }
-      if (maxEndDate == null || serviceDates.last().isAfter(maxEndDate.getLocalDate())) {
-        maxEndDate = GtfsDate.fromLocalDate(serviceDates.last());
+      LocalDate lastServiceDate = serviceDates.last();
+      if (maxEndDate == null || lastServiceDate.isAfter(maxEndDate.getLocalDate())) {
+        maxEndDate = GtfsDate.fromLocalDate(lastServiceDate);
       }
     }
 
+    GtfsDate serviceWindowStartDate = null;
+    GtfsDate serviceWindowEndDate = null;
     if (minStartDate != null && maxEndDate != null) {
       Map<GtfsDate, Integer> tripsPerDate = new HashMap<>();
       final var dates =

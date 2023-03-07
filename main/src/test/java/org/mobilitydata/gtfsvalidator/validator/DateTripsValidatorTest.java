@@ -1,8 +1,8 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mobilitydata.gtfsvalidator.validator.DateTripsValidator.*;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.time.DayOfWeek;
@@ -18,6 +18,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.*;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.util.CalendarUtilTest;
@@ -34,140 +35,82 @@ public class DateTripsValidatorTest {
   private static final ZonedDateTime TEST_NOW =
       ZonedDateTime.of(2022, 12, 1, 8, 30, 0, 0, ZoneOffset.UTC);
 
-  private GtfsCalendar createCalendar(LocalDate calendarEndDate) {
-    return CalendarUtilTest.createGtfsCalendar(
-        "WEEK", LocalDate.of(2021, 1, 14), calendarEndDate, weekDays);
-  }
-
   @Test
-  public void serviceWindowEndingBefore7DaysFromNow() {
+  public void serviceWindowEndingBefore7DaysFromNowShouldGenerateNotice() {
 
     var serviceWindowStart = TEST_NOW.toLocalDate();
     var serviceWindowEnd = TEST_NOW.toLocalDate().plusDays(6);
-    NoticeContainer noticeContainer = new NoticeContainer();
 
-    String[] serviceIds = {"s1"};
-    LocalDate[] serviceStartDates = {serviceWindowStart};
-    LocalDate[] serviceEndDates = {serviceWindowEnd};
-    DayOfWeek[][] serviceDays = {DayOfWeek.values()};
-    int tripsPerDay = 6;
-
-    DateTripsValidator validator =
-        createBasicValidator(
-            serviceWindowStart, serviceWindowEnd,
-            noticeContainer, serviceIds,
-            serviceStartDates, serviceEndDates,
-            serviceDays, tripsPerDay);
-
-    validator.validate(noticeContainer);
-
-    var notices = noticeContainer.getValidationNotices();
+    var notices = validateSimpleServiceWindow(serviceWindowStart, serviceWindowEnd);
     assertThat(notices)
         .containsExactly(
-            new DateTripsValidator.TripDataShouldBeValidForNext7DaysNotice(
+            new TripDataShouldBeValidForNext7DaysNotice(
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()),
                 GtfsDate.fromLocalDate(serviceWindowStart),
                 GtfsDate.fromLocalDate(serviceWindowEnd)));
   }
 
   @Test
-  public void serviceWindowStartingAfterNow() {
+  public void serviceWindowStartingAfterNowShouldGenerateNotice() {
 
     var serviceWindowStart = TEST_NOW.toLocalDate().plusDays(1);
     var serviceWindowEnd = TEST_NOW.toLocalDate().plusDays(7);
-    NoticeContainer noticeContainer = new NoticeContainer();
-
-    String[] serviceIds = {"s1"};
-    LocalDate[] serviceStartDates = {serviceWindowStart};
-    LocalDate[] serviceEndDates = {serviceWindowEnd};
-    DayOfWeek[][] serviceDays = {DayOfWeek.values()};
-    int tripsPerDay = 6;
-
-    DateTripsValidator validator =
-        createBasicValidator(
-            serviceWindowStart, serviceWindowEnd,
-            noticeContainer, serviceIds,
-            serviceStartDates, serviceEndDates,
-            serviceDays, tripsPerDay);
-
-    validator.validate(noticeContainer);
-
-    var notices = noticeContainer.getValidationNotices();
+    var notices = validateSimpleServiceWindow(serviceWindowStart, serviceWindowEnd);
     assertThat(notices)
         .containsExactly(
-            new DateTripsValidator.TripDataShouldBeValidForNext7DaysNotice(
+            new TripDataShouldBeValidForNext7DaysNotice(
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()),
                 GtfsDate.fromLocalDate(serviceWindowStart),
                 GtfsDate.fromLocalDate(serviceWindowEnd)));
   }
 
   @Test
-  public void serviceWindowStartingNowAndEndingIn7Days() {
+  public void serviceWindowStartingNowAndEndingIn7DaysShouldNotGenerateNotice() {
 
     var serviceWindowStart = TEST_NOW.toLocalDate();
     var serviceWindowEnd = TEST_NOW.toLocalDate().plusDays(7);
-    NoticeContainer noticeContainer = new NoticeContainer();
-
-    String[] serviceIds = {"s1"};
-    LocalDate[] serviceStartDates = {serviceWindowStart};
-    LocalDate[] serviceEndDates = {serviceWindowEnd};
-    DayOfWeek[][] serviceDays = {DayOfWeek.values()};
-    int tripsPerDay = 6;
-
-    DateTripsValidator validator =
-        createBasicValidator(
-            serviceWindowStart, serviceWindowEnd,
-            noticeContainer, serviceIds,
-            serviceStartDates, serviceEndDates,
-            serviceDays, tripsPerDay);
-
-    validator.validate(noticeContainer);
-
-    var notices = noticeContainer.getValidationNotices();
+    var notices = validateSimpleServiceWindow(serviceWindowStart, serviceWindowEnd);
     assertThat(notices).isEmpty();
   }
 
   @Test
-  public void serviceWindowStartingBeforeNowAndEndingAfter7Days() {
+  public void serviceWindowStartingBeforeNowAndEndingAfter7DaysShouldNotGenerateNotice() {
 
     var serviceWindowStart = TEST_NOW.toLocalDate().minusDays(1);
     var serviceWindowEnd = TEST_NOW.toLocalDate().plusDays(8);
-    NoticeContainer noticeContainer = new NoticeContainer();
-
-    String[] serviceIds = {"s1"};
-    LocalDate[] serviceStartDates = {serviceWindowStart};
-    LocalDate[] serviceEndDates = {serviceWindowEnd};
-    DayOfWeek[][] serviceDays = {DayOfWeek.values()};
-    int tripsPerDay = 6;
-
-    DateTripsValidator validator =
-        createBasicValidator(
-            serviceWindowStart, serviceWindowEnd,
-            noticeContainer, serviceIds,
-            serviceStartDates, serviceEndDates,
-            serviceDays, tripsPerDay);
-
-    validator.validate(noticeContainer);
-
-    var notices = noticeContainer.getValidationNotices();
+    var notices = validateSimpleServiceWindow(serviceWindowStart, serviceWindowEnd);
     assertThat(notices).isEmpty();
   }
 
-  private static DateTripsValidator createBasicValidator(
-      LocalDate serviceWindowStart,
-      LocalDate serviceWindowEnd,
-      NoticeContainer noticeContainer,
-      String[] serviceIds,
-      LocalDate[] serviceStartDates,
-      LocalDate[] serviceEndDates,
-      DayOfWeek[][] serviceDays,
-      int tripsPerDay) {
-    GtfsCalendarTableContainer calendarTable =
-        createCalendarTable(
-            serviceIds, serviceStartDates, serviceEndDates, serviceDays, noticeContainer);
+  private List<ValidationNotice> validateSimpleServiceWindow(
+      LocalDate serviceWindowStart, LocalDate serviceWindowEnd) {
+    var serviceId = "s1";
+    var noticeContainer = new NoticeContainer();
+    var calendar =
+        CalendarUtilTest.createGtfsCalendar(
+            serviceId,
+            serviceWindowStart,
+            serviceWindowEnd,
+            ImmutableSet.copyOf(DayOfWeek.values()));
+    var calendarTable =
+        GtfsCalendarTableContainer.forEntities(ImmutableList.of(calendar), noticeContainer);
+    var dateTable = new GtfsCalendarDateTableContainer(GtfsTableContainer.TableStatus.EMPTY_FILE);
+    var feedInfoTable = createFeedInfoTable(serviceWindowStart, serviceWindowEnd, noticeContainer);
 
-    GtfsCalendarDateTableContainer dateTable =
-        new GtfsCalendarDateTableContainer(GtfsTableContainer.TableStatus.EMPTY_FILE);
+    var tripBlock = createTripBlock(serviceId, 6, "b1");
+    var tripContainer = GtfsTripTableContainer.forEntities(tripBlock, noticeContainer);
+
+    var validator =
+        new DateTripsValidator(
+            new CurrentDateTime(TEST_NOW), dateTable, calendarTable, feedInfoTable, tripContainer);
+
+    validator.validate(noticeContainer);
+
+    return noticeContainer.getValidationNotices();
+  }
+
+  private static GtfsFeedInfoTableContainer createFeedInfoTable(
+      LocalDate serviceWindowStart, LocalDate serviceWindowEnd, NoticeContainer noticeContainer) {
     var feedInfoTable =
         GtfsFeedInfoTableContainer.forEntities(
             ImmutableList.of(
@@ -175,41 +118,22 @@ public class DateTripsValidatorTest {
                     GtfsDate.fromLocalDate(serviceWindowStart),
                     GtfsDate.fromLocalDate(serviceWindowEnd))),
             noticeContainer);
-
-    String[] tripIds = new String[tripsPerDay];
-    String[] tripsServiceIds = new String[tripsPerDay];
-    for (int i = 0; i < tripsPerDay; i++) {
-      tripIds[i] = "t" + i;
-      tripsServiceIds[i] = serviceIds[0];
-    }
-
-    var tripContainer =
-        GtfsTripTableContainer.forEntities(
-            createTripTable(tripIds, tripsServiceIds, "b1"), noticeContainer);
-
-    DateTripsValidator validator =
-        new DateTripsValidator(
-            new CurrentDateTime(TEST_NOW), dateTable, calendarTable, feedInfoTable, tripContainer);
-    return validator;
+    return feedInfoTable;
   }
 
-  private static GtfsCalendarTableContainer createCalendarTable(
-      String[] serviceIds,
-      LocalDate[] startDates,
-      LocalDate[] endDates,
-      DayOfWeek[][] days,
-      NoticeContainer noticeContainer) {
-    Preconditions.checkArgument(
-        serviceIds.length == startDates.length && serviceIds.length == endDates.length,
-        "serviceIds.length, startDates.length, and endDates.length must be equal");
-    ArrayList<GtfsCalendar> calendars = new ArrayList<>();
-
-    for (int i = 0; i < serviceIds.length; i++) {
-      calendars.add(
-          createGtfsCalendar(
-              serviceIds[i], startDates[i], endDates[i], ImmutableSet.copyOf(days[i])));
+  private static ArrayList<GtfsTrip> createTripBlock(
+      String serviceId, int tripsPerDay, String blockId) {
+    ArrayList<GtfsTrip> trips = new ArrayList<>();
+    for (int i = 0; i < tripsPerDay; i++) {
+      trips.add(
+          new GtfsTrip.Builder()
+              .setCsvRowNumber(i + 1)
+              .setTripId("t" + i)
+              .setServiceId(serviceId)
+              .setBlockId(blockId)
+              .build());
     }
-    return GtfsCalendarTableContainer.forEntities(calendars, noticeContainer);
+    return trips;
   }
 
   public static GtfsFeedInfo createFeedInfo(GtfsDate feedStartDate, GtfsDate feedEndDate) {
@@ -224,74 +148,4 @@ public class DateTripsValidatorTest {
         .build();
   }
 
-  public static GtfsCalendar createGtfsCalendar(
-      String serviceId, LocalDate startDate, LocalDate endDate, Set<DayOfWeek> days) {
-    GtfsCalendar.Builder calendar =
-        new GtfsCalendar.Builder()
-            .setServiceId(serviceId)
-            .setStartDate(GtfsDate.fromLocalDate(startDate))
-            .setEndDate(GtfsDate.fromLocalDate(endDate));
-    if (days.contains(DayOfWeek.MONDAY)) {
-      calendar.setMonday(1);
-    }
-    if (days.contains(DayOfWeek.TUESDAY)) {
-      calendar.setTuesday(1);
-    }
-    if (days.contains(DayOfWeek.WEDNESDAY)) {
-      calendar.setWednesday(1);
-    }
-    if (days.contains(DayOfWeek.THURSDAY)) {
-      calendar.setThursday(1);
-    }
-    if (days.contains(DayOfWeek.FRIDAY)) {
-      calendar.setFriday(1);
-    }
-    if (days.contains(DayOfWeek.SATURDAY)) {
-      calendar.setSaturday(1);
-    }
-    if (days.contains(DayOfWeek.SUNDAY)) {
-      calendar.setSunday(1);
-    }
-    return calendar.build();
-  }
-
-  private static GtfsCalendarDate addedCalendarDate(String serviceId, LocalDate date) {
-    return new GtfsCalendarDate.Builder()
-        .setServiceId(serviceId)
-        .setDate(GtfsDate.fromLocalDate(date))
-        .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_ADDED)
-        .build();
-  }
-
-  private static GtfsCalendarDate removedCalendarDate(String serviceId, LocalDate date) {
-    return new GtfsCalendarDate.Builder()
-        .setServiceId(serviceId)
-        .setDate(GtfsDate.fromLocalDate(date))
-        .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_REMOVED)
-        .build();
-  }
-
-  public static GtfsTrip createTrip(
-      int csvRowNumber, String tripId, String serviceId, String blockId) {
-    return new GtfsTrip.Builder()
-        .setCsvRowNumber(csvRowNumber)
-        .setTripId(tripId)
-        .setServiceId(serviceId)
-        .setBlockId(blockId)
-        .build();
-  }
-
-  private static List<GtfsTrip> createTripTable(
-      String[] tripIds, String[] serviceIds, String blockId) {
-    Preconditions.checkArgument(
-        tripIds.length == serviceIds.length, "tripIds.length must be equal to serviceIds.length");
-
-    ArrayList<GtfsTrip> trips = new ArrayList<>();
-    trips.ensureCapacity(tripIds.length);
-    for (int i = 0; i < tripIds.length; ++i) {
-      trips.add(createTrip(trips.size() + 1, tripIds[i], serviceIds[i], blockId));
-    }
-
-    return trips;
-  }
 }
