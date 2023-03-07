@@ -17,6 +17,8 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import java.time.LocalDate;
+import java.util.Map;
+import java.util.SortedSet;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
@@ -24,29 +26,38 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.*;
-import org.mobilitydata.gtfsvalidator.type.GtfsDate;
+import org.mobilitydata.gtfsvalidator.util.CalendarUtil;
 
 @GtfsValidator
 public class ExpiredCalendarValidator extends FileValidator {
   private final GtfsCalendarTableContainer calendarTable;
+  private final GtfsCalendarDateTableContainer calendarDateTable;
   private final CurrentDateTime currentDateTime;
 
   @Inject
   ExpiredCalendarValidator(
-      CurrentDateTime currentDateTime, GtfsCalendarTableContainer calendarTable) {
+      CurrentDateTime currentDateTime,
+      GtfsCalendarTableContainer calendarTable,
+      GtfsCalendarDateTableContainer calendarDateTable) {
     this.currentDateTime = currentDateTime;
     this.calendarTable = calendarTable;
+    this.calendarDateTable = calendarDateTable;
   }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
     LocalDate now = currentDateTime.getNow().toLocalDate();
-    GtfsDate currentDate = GtfsDate.fromLocalDate(now);
 
-    for (var calendar : calendarTable.getEntities()) {
-      if (calendar.endDate().isBefore(currentDate)) {
-        noticeContainer.addValidationNotice(
-            new ExpiredCalendarNotice(calendar.csvRowNumber(), calendar.serviceId()));
+    final Map<String, SortedSet<LocalDate>> servicePeriodMap =
+        CalendarUtil.servicePeriodToServiceDatesMap(
+            CalendarUtil.buildServicePeriodMap(calendarTable, calendarDateTable));
+
+    for (var serviceId : servicePeriodMap.keySet()) {
+      SortedSet<LocalDate> serviceDates = servicePeriodMap.get(serviceId);
+      LocalDate lastServiceDate = serviceDates.last();
+      if (lastServiceDate.isBefore(now)) {
+        int csvRowNumber = calendarTable.byServiceId(serviceId).get().csvRowNumber();
+        noticeContainer.addValidationNotice(new ExpiredCalendarNotice(csvRowNumber, serviceId));
       }
     }
   }
