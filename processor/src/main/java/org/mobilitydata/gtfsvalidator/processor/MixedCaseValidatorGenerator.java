@@ -25,7 +25,7 @@ import java.util.List;
 import javax.lang.model.element.Modifier;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.MixedCaseFieldNotice;
+import org.mobilitydata.gtfsvalidator.notice.MixedCaseRecommendedFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
 
@@ -33,7 +33,7 @@ import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
  * Generates validator classes to check that a string field contains mixed case characters.
  *
  * @see org.mobilitydata.gtfsvalidator.annotation.MixedCase
- * @see MixedCaseFieldNotice
+ * @see MixedCaseRecommendedFieldNotice
  */
 public class MixedCaseValidatorGenerator {
   public ImmutableList<TypeSpec> generateValidator(List<GtfsFileDescriptor> fileDescriptors) {
@@ -77,7 +77,7 @@ public class MixedCaseValidatorGenerator {
           .beginControlFlow("if (!(value.matches(\".*[a-z].*\") && value.matches(\".*[A-Z].*\")))")
           .addStatement(
               "noticeContainer.addValidationNotice(new $T(\"$L\", \"$L\", entity.csvRowNumber()))",
-              MixedCaseFieldNotice.class,
+              MixedCaseRecommendedFieldNotice.class,
               fileDescriptor.filename(),
               FieldNameConverter.gtfsColumnName(mixedCaseField.name()))
           .endControlFlow()
