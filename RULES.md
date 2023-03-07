@@ -1806,7 +1806,7 @@ When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` m
 
 ### expired_calendar
 
- Dataset should not contain date ranges for services that have already expired.
+ Dataset should not contain date ranges for services that have already expired. This warning takes into account the `calendar_dates.txt` file as well as the `calendar.txt` file.
 
 #### References
 * [Dataset Publishing & General Practices](https://gtfs.org/schedule/best-practices/#dataset-publishing-general-practices)
@@ -1821,6 +1821,7 @@ When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` m
 
 #### Affected files
 [`calendar.txt`](https://gtfs.org/schedule/reference/#calendartxt)
+[`calendar_dates.txt`](https://gtfs.org/schedule/reference/#calendar_datestxt)
 
 </details>
 
