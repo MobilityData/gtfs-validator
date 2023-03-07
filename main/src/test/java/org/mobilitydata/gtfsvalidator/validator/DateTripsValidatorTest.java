@@ -147,5 +147,4 @@ public class DateTripsValidatorTest {
         .setFeedEndDate(feedEndDate)
         .build();
   }
-
 }
