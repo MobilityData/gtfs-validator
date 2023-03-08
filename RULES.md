@@ -112,7 +112,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`missing_recommended_field`](#missing_recommended_field)                                     | A recommended field is missing.                                                                                                                               |
 | [`missing_timepoint_column`](#missing_timepoint_column)                                       | `timepoint` column is missing for a dataset.                                                                                                                  |
 | [`missing_timepoint_value`](#missing_timepoint_value)                                         | `stop_times.timepoint` value is missing for a record.                                                                                                         |
-| [`mixed_case_recommended_field`](#mixed_case_recommended_field)                                                       | This field has customer-facing text and should use Mixed Case (should contain upper and lower case letters.).                                                                                                         |
+| [`mixed_case_recommended_field`](#mixed_case_recommended_field)                                                       | This field has customer-facing text and should use Mixed Case (should contain upper and lower case letters).                                                                                                         |
 | [`more_than_one_entity`](#more_than_one_entity)                                               | More than one row in CSV.                                                                                                                                     |
 | [`non_ascii_or_non_printable_char`](#non_ascii_or_non_printable_char)                         | Non ascii or non printable char in  `id`.                                                                                                                     |
 | [`pathway_dangling_generic_node`](#pathway_dangling_generic_node)                             | A generic node has only one incident location in a pathway graph.                                                                                             |
@@ -2076,7 +2076,7 @@ Even though the column `timepoint` is optional in `stop_times.txt` according to 
 
 ### mixed_case_recommended_field
 
-This field has customer-facing text and should use Mixed Case (should contain upper and lower case letters.).
+This field contains customer-facing text and should use Mixed Case (upper and lower case letters) to ensure good readability when displayed to riders. Avoid the use of abbreviations throughout the feed (e.g. St. for Street) unless a location is called by its abbreviated name (e.g. “JFK Airport”). Abbreviations may be problematic for accessibility by screen reader software and voice user interfaces.
 
 #### References
 * [Best Practices for All Files](https://gtfs.org/schedule/best-practices/#practice-recommendations-organized-by-file)
