@@ -63,6 +63,7 @@ public class LoadingHelper {
       GtfsTableDescriptor<X> tableDescriptor, String... lines) throws ValidatorLoaderException {
     String content = Arrays.stream(lines).collect(Collectors.joining("\n"));
     InputStream in = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
+    noticeContainer = new NoticeContainer(); // reset notices if reloading helper
 
     ValidationContext context =
         ValidationContext.builder()
