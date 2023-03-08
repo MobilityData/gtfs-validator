@@ -119,7 +119,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`pathway_loop`](#pathway_loop)                                                               | A pathway starts and ends at the same location.                                                                                                               |
 | [`platform_without_parent_station`](#platform_without_parent_station)                         | A platform has no `parent_station` field set.                                                                                                                 |
 | [`route_color_contrast`](#route_color_contrast)                                               | Insufficient route color contrast.                                                                                                                            |
-| [`route_short_and_long_name_equal`](#route_short_and_long_name_equal)                         | `route_short_name` and `route_long_name` are equal for a single route.                                                                                        |
+| [`route_long_name_contains_short_name`](#route_long_name_contains_short_name)                 | Long name should not contain short name for a single route.                                                                                                   |
 | [`route_short_name_too_long`](#route_short_name_too_long)                                     | Short name of a route is too long (more than 12 characters).                                                                                                  |
 | [`same_name_and_description_for_route`](#same_name_and_description_for_route)                 | Same name and description for route.                                                                                                                          |
 | [`same_name_and_description_for_stop`](#same_name_and_description_for_stop)                   | Same name and description for stop.                                                                                                                           |
@@ -1291,7 +1291,7 @@ A point is too close to the North or South Pole.
 
 ### route_both_short_and_long_name_missing
 
-Both short_name and long_name are missing for a route.
+Both `route_short_name` and `route_long_name` are missing for a route.
 
 #### References
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
@@ -2262,29 +2262,41 @@ A route's color and `route_text_color` should be contrasting.
 
 </details>
 
-<a name="RouteShortAndLongNameEqualNotice"/>
+<a name="RouteLongNameContainsShortNameNotice"/>
 
-### route_short_and_long_name_equal
+### route_long_name_contains_short_name
 
-A single route has the same values for `route_short_name` and `route_long_name`.
+In routes.txt, `route_long_name` should not contain the value for `route_short_name`, because when both are provided, they are often combined by transit applications. Note that only one of the two fields is required. If there is no short name used for a route, use `route_long_name` only.
 
-Example of bad data:
+Good examples:
+| `route_short_name`/`route_long_name`                                                                | Dataset                                                                                                                                                                |
+| ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ["N"/"Judah"](https://www.sfmta.com/getting-around/transit/routes-stops/n-judah)                | [Muni San Fransisco](https://storage.googleapis.com/storage/v1/b/mdb-latest/o/us-california-san-francisco-municipal-transportation-agency-sfmta-gtfs-50.zip?alt=media) |
+| ["6"/"ML King Jr Blvd"](https://trimet.org/schedules/r006.htm)                                  | [Trimet Portland Streetcar](http://developer.trimet.org/schedule/gtfs.zip)                                                                                             |
+| ["55"/"Boulevard Saint Laurent"](https://www.stm.info/en/info/networks/bus/local/line-55-north) | [STM Montreal](https://storage.googleapis.com/storage/v1/b/mdb-latest/o/ca-quebec-societe-de-transport-de-montreal-gtfs-1221.zip?alt=media)                            |
+| ["1"/"Rangiora/Cashmere"](https://www.metroinfo.co.nz/timetables/1-rangiora-cashmere/)          | [Metro Christchurch](https://storage.googleapis.com/storage/v1/b/mdb-latest/o/nz-christchurch-christchurch-metro-gtfs-1313.zip?alt=media)                              |
 
-| `route_id` 	| `route_short_name` 	| `route_long_name` 	|
-|------------	|--------------------	|-------------------	|
-| route1     	| L1                 	| L1                	|
+Bad examples:
+| `route_short_name`/`route_long_name` |
+|-------------------------------------------|
+| "604"/"604"                               |
+| "14"/"Route 14"                           |
+| "2"/"Route 2: Bellows Falls In-Town"      |
+
 
 #### References
-* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
+* [routes.txt Best Practices](https://gtfs.org/schedule/best-practices/#routestxt)
 <details>
 
 #### Notice fields description
-| Field name     	| Description                             	  | Type   	|
-|----------------	|-------------------------------------------	|--------	|
-| `routeId`        	| The id of the faulty record.            	| String  |
-| `csvRowNumber`   	| The row number of the faulty record.    	| Long 	  |
-| `routeShortName` 	| The faulty record's `route_short_name`. 	| String 	|
-| `routeLongName`  	| The faulty record's `route_long_name`.  	| String 	|
+
+| Field name       | Description                                  | Type   |
+| ---------------- | -------------------------------------------- | ------ |
+| `routeId`        | The id of the faulty record.                 | String |
+| `csvRowNumber`   | The row number of the faulty record.         | Long   |
+| `routeShortName` | The `route_short_name` of the faulty record. | String |
+| `routeLongName`  | The `route_long_name` of the faulty record.  | String |
+
 
 #### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
