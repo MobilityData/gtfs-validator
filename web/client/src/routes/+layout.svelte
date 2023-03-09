@@ -1,6 +1,11 @@
 <script>
   import Button from '$lib/Button.svelte';
   import '../app.css';
+
+  // Fixes issue where clicking rule hash link scrolls too far
+  const handleHashchange = function() {
+    window.scrollTo(window.scrollX, window.scrollY - 60);
+  }
 </script>
 
 <header class="my-4 md:mb-8 lg:mb-16">
@@ -52,3 +57,5 @@
     </p>
   </div>
 </footer>
+
+<svelte:window on:hashchange|preventDefault={handleHashchange} />
