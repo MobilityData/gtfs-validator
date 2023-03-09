@@ -105,6 +105,10 @@ gcloud storage buckets update gs://gtfs-validator-user-uploads --cors-file=cors.
 gcloud storage buckets update gs://gtfs-validator-results --cors-file=cors.json
 ```
 
+## Google Cloud Storage Bucket Lifecycle
+
+Both `gtfs-validator-user-uploads` and `gtfs-validator-results` have been configured so that all files older than 30 days are deleted. This can be manually configured via the [Google Cloud Storage Console](https://console.cloud.google.com/storage/browser?project=web-based-gtfs-validator) or via the [CLI](https://cloud.google.com/storage/docs/gsutil/commands/lifecycle).
+
 ## Run It
 
 ```bash
