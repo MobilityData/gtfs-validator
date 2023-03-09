@@ -16,16 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
-import org.mobilitydata.gtfsvalidator.annotation.FieldType;
-import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
-import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.Index;
-import org.mobilitydata.gtfsvalidator.annotation.NonNegative;
-import org.mobilitydata.gtfsvalidator.annotation.NonZero;
-import org.mobilitydata.gtfsvalidator.annotation.Positive;
-import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.*;
 
 @GtfsTable("pathways.txt")
 public interface GtfsPathwaySchema extends GtfsEntity {
@@ -66,7 +57,9 @@ public interface GtfsPathwaySchema extends GtfsEntity {
   @Positive
   double minWidth();
 
+  @MixedCase
   String signpostedAs();
 
+  @MixedCase
   String reversedSignpostedAs();
 }
