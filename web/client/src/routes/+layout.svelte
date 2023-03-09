@@ -1,4 +1,5 @@
 <script>
+  import Button from '$lib/Button.svelte';
   import '../app.css';
 </script>
 
@@ -16,25 +17,28 @@
 
 <footer>
   <div class="container my-4">
-    <p class="text-mobi-purple-safe">
-      <span class="inline-block">
-        Made with
-        <i class="fa-regular fa-heart" />
-        <span class="fa-sr-only">"love"</span>
-        by <a href="https://dot.ca.gov/cal-itp">Cal-ITP</a>
-        and&nbsp;<a href="https://jarv.us">Jarvus</a>.
-      </span>
-      <span class="inline-block">
-        Maintained with
-        <i class="fa-regular fa-heart" />
-        <span class="fa-sr-only">"love"</span>
-        by&nbsp;<a href="https://mobilitydata.org/">MobilityData</a>.
-      </span>
-      <span class="inline-block">
-        Contribute on
-        <a href="https://github.com/MobilityData/gtfs-validator">Github</a>.
-      </span>
-    </p>
+    <div class="container my-4 flex flex-col items-center content-center space-y-4">
+      <Button href="https://share.mobilitydata.org/validator-feedback" target="_blank">Help Us by Sharing Feedback</Button>
+      <p class="text-mobi-purple-safe">
+        <span class="inline-block">
+          Made with
+          <i class="fa-regular fa-heart" />
+          <span class="fa-sr-only">"love"</span>
+          by <a href="https://dot.ca.gov/cal-itp">Cal-ITP</a>
+          and&nbsp;<a href="https://jarv.us">Jarvus</a>.
+        </span>
+        <span class="inline-block">
+          Maintained with
+          <i class="fa-regular fa-heart" />
+          <span class="fa-sr-only">"love"</span>
+          by&nbsp;<a href="https://mobilitydata.org/">MobilityData</a>.
+        </span>
+        <span class="inline-block">
+          Contribute on
+          <a href="https://github.com/MobilityData/gtfs-validator">Github</a>.
+        </span>
+      </p>
+    </div>
 
     <p
       class="text-gray-300 mt-16 mb-8 text-sm hover:text-gray-500 transition-colors"
