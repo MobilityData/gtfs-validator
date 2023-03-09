@@ -17,6 +17,12 @@ public abstract class GtfsColumnDescriptor {
 
   public abstract boolean isCached();
 
+  public abstract boolean isMixedCase();
+
+  public boolean isRequired() {
+    return FieldLevelEnum.REQUIRED.equals(fieldLevel());
+  }
+
   public static GtfsColumnDescriptor.Builder builder() {
     return new AutoValue_GtfsColumnDescriptor.Builder();
   }
@@ -34,6 +40,8 @@ public abstract class GtfsColumnDescriptor {
     public abstract Builder setNumberBounds(RowParser.NumberBounds value);
 
     public abstract Builder setIsCached(boolean value);
+
+    public abstract Builder setIsMixedCase(boolean value);
 
     public abstract GtfsColumnDescriptor build();
   }

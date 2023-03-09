@@ -185,12 +185,14 @@ public class TableDescriptorGenerator {
                       + ".setColumnName($T.$L)\n"
                       + ".setHeaderRequired($L)\n"
                       + ".setFieldLevel($T.$L)\n"
+                      + ".setIsMixedCase($L)\n"
                       + ".setIsCached($L)\n",
                   gtfsEntityType,
                   fieldNameField(field.name()),
                   field.isHeaderRequired(),
                   FieldLevelEnum.class,
                   getFieldLevel(field),
+                  field.mixedCase(),
                   cachingEnabled(field));
       field
           .numberBounds()
