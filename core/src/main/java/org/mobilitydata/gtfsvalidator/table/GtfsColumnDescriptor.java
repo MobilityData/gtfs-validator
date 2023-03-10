@@ -9,6 +9,8 @@ import org.mobilitydata.gtfsvalidator.parsing.RowParser;
 public abstract class GtfsColumnDescriptor {
   public abstract String columnName();
 
+  public abstract boolean headerRequired();
+
   public abstract FieldLevelEnum fieldLevel();
 
   public abstract Optional<RowParser.NumberBounds> numberBounds();
@@ -28,6 +30,8 @@ public abstract class GtfsColumnDescriptor {
   @AutoValue.Builder
   public abstract static class Builder {
     public abstract Builder setColumnName(String value);
+
+    public abstract Builder setHeaderRequired(boolean value);
 
     public abstract Builder setFieldLevel(FieldLevelEnum value);
 
