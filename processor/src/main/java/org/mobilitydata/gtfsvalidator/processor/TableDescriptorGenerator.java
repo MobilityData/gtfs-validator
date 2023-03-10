@@ -183,11 +183,13 @@ public class TableDescriptorGenerator {
               .add(
                   "GtfsColumnDescriptor.builder()\n"
                       + ".setColumnName($T.$L)\n"
+                      + ".setHeaderRequired($L)\n"
                       + ".setFieldLevel($T.$L)\n"
                       + ".setIsMixedCase($L)\n"
                       + ".setIsCached($L)\n",
                   gtfsEntityType,
                   fieldNameField(field.name()),
+                  field.isHeaderRequired(),
                   FieldLevelEnum.class,
                   getFieldLevel(field),
                   field.mixedCase(),
@@ -276,7 +278,7 @@ public class TableDescriptorGenerator {
   }
 
   static FieldLevelEnum getFieldLevel(GtfsFieldDescriptor field) {
-    return field.required() ? REQUIRED : field.recommended() ? RECOMMENDED : OPTIONAL;
+    return field.valueRequired() ? REQUIRED : field.recommended() ? RECOMMENDED : OPTIONAL;
   }
 
   private MethodSpec generateGtfsFilenameMethod() {

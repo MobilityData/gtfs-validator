@@ -141,7 +141,7 @@ public final class AnyTableLoader {
                 .map(GtfsColumnDescriptor::columnName)
                 .collect(Collectors.toSet()),
             columnDescriptors.stream()
-                .filter(GtfsColumnDescriptor::isRequired)
+                .filter(GtfsColumnDescriptor::headerRequired)
                 .map(GtfsColumnDescriptor::columnName)
                 .collect(Collectors.toSet()),
             headerNotices);
