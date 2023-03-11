@@ -30,23 +30,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleTypeVisitor8;
-import org.mobilitydata.gtfsvalidator.annotation.CachedField;
-import org.mobilitydata.gtfsvalidator.annotation.CurrencyAmount;
-import org.mobilitydata.gtfsvalidator.annotation.DefaultValue;
-import org.mobilitydata.gtfsvalidator.annotation.EndRange;
-import org.mobilitydata.gtfsvalidator.annotation.FieldType;
-import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
-import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValue;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValues;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.Index;
-import org.mobilitydata.gtfsvalidator.annotation.NonNegative;
-import org.mobilitydata.gtfsvalidator.annotation.NonZero;
-import org.mobilitydata.gtfsvalidator.annotation.Positive;
-import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
-import org.mobilitydata.gtfsvalidator.annotation.Recommended;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.*;
 import org.mobilitydata.gtfsvalidator.parsing.RowParser.NumberBounds;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
@@ -85,7 +69,9 @@ public class Analyser {
               ? fieldTypeAnnotation.value()
               : javaTypeToGtfsType(method.getReturnType()));
       fieldBuilder.setRecommended(method.getAnnotation(Recommended.class) != null);
-      fieldBuilder.setRequired(method.getAnnotation(Required.class) != null);
+      fieldBuilder.setColumnRequired(method.getAnnotation(RequiredColumn.class) != null);
+      fieldBuilder.setValueRequired(method.getAnnotation(Required.class) != null);
+      fieldBuilder.setMixedCase(method.getAnnotation(MixedCase.class) != null);
       PrimaryKey primaryKey = method.getAnnotation(PrimaryKey.class);
       if (primaryKey != null) {
         fieldBuilder.setPrimaryKey(primaryKey);

@@ -17,14 +17,7 @@
 package org.mobilitydata.gtfsvalidator.table;
 
 import java.time.ZoneId;
-import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
-import org.mobilitydata.gtfsvalidator.annotation.FieldType;
-import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
-import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.Index;
-import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.*;
 
 @GtfsTable("stops.txt")
 @Required
@@ -36,11 +29,13 @@ public interface GtfsStopSchema extends GtfsEntity {
 
   String stopCode();
 
+  @MixedCase
   @ConditionallyRequired
   String stopName();
 
   String ttsStopName();
 
+  @MixedCase
   String stopDesc();
 
   @FieldType(FieldTypeEnum.LATITUDE)

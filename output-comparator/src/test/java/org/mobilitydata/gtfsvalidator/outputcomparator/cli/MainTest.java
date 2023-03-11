@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -68,7 +69,16 @@ public class MainTest {
   }
 
   private static String retrieveReportString(Path path) throws IOException {
-    return Files.readString(path);
+    String content = Files.readString(path);
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    JsonObject obj = gson.fromJson(content, JsonObject.class);
+    return gson.toJson(obj);
+  }
+
+  private static String retrieveResource(String name) throws IOException {
+    try (InputStream in = MainTest.class.getResourceAsStream(name)) {
+      return new String(in.readAllBytes(), StandardCharsets.UTF_8);
+    }
   }
 
   private Path resolve(String... filenames) {
@@ -80,7 +90,7 @@ public class MainTest {
   }
 
   @Test
-  public void noNewNoticeType_generatesEmptyReport() throws IOException {
+  public void noNewNoticeTypes_generatesEmptyReport() throws IOException {
     NoticeContainer referenceNoticeContainer = new NoticeContainer();
     referenceNoticeContainer.addValidationNotice(new MissingRequiredFileNotice("some file"));
     referenceNoticeContainer.addValidationNotice(new EmptyColumnNameNotice("other file", 4));
@@ -130,9 +140,7 @@ public class MainTest {
                     NO_NEW_NOTICE_FOLDER_NAME,
                     ACCEPTANCE_TEST_REPORT_FOLDER_NAME,
                     ACCEPTANCE_REPORT_JSON)))
-        .isEqualTo("""
-            """);
-            //"{\"newErrors\":[],\"droppedErrors\":[],\"corruptedSources\":{\"sourceIdCount\":1,\"corruptedSourcesCount\":0,\"corruptedSources\":[],\"percentCorruptedSourcesThreshold\":5.0,\"aboveThreshold\":false}}");
+        .isEqualTo(retrieveResource("noNewNoticeTypes.json"));
   }
 
   @Test
@@ -217,8 +225,7 @@ public class MainTest {
                     NEW_NOTICES_TYPE_FOLDER_NAME,
                     ACCEPTANCE_TEST_REPORT_FOLDER_NAME,
                     ACCEPTANCE_REPORT_JSON)))
-        .isEqualTo(
-            "{\"newErrors\":[{\"noticeCode\":\"duplicate_key\",\"affectedSourcesCount\":2,\"affectedSources\":[{\"sourceId\":\"source-id-2\",\"sourceUrl\":\"url2\",\"noticeCount\":2},{\"sourceId\":\"source-id-3\",\"sourceUrl\":\"url3\",\"noticeCount\":3}]},{\"noticeCode\":\"invalid_currency\",\"affectedSourcesCount\":1,\"affectedSources\":[{\"sourceId\":\"source-id-3\",\"sourceUrl\":\"url3\",\"noticeCount\":1}]},{\"noticeCode\":\"invalid_email\",\"affectedSourcesCount\":2,\"affectedSources\":[{\"sourceId\":\"source-id-2\",\"sourceUrl\":\"url2\",\"noticeCount\":1},{\"sourceId\":\"source-id-3\",\"sourceUrl\":\"url3\",\"noticeCount\":1}]},{\"noticeCode\":\"point_near_pole\",\"affectedSourcesCount\":1,\"affectedSources\":[{\"sourceId\":\"source-id-3\",\"sourceUrl\":\"url3\",\"noticeCount\":1}]}],\"droppedErrors\":[],\"corruptedSources\":{\"sourceIdCount\":3,\"corruptedSourcesCount\":0,\"corruptedSources\":[],\"percentCorruptedSourcesThreshold\":5.0,\"aboveThreshold\":false}}");
+        .isEqualTo(retrieveResource("newNoticeTypes.json"));
   }
 
   @Test
@@ -283,12 +290,11 @@ public class MainTest {
                     NEW_NOTICES_TYPE_FOLDER_NAME,
                     ACCEPTANCE_TEST_REPORT_FOLDER_NAME,
                     ACCEPTANCE_REPORT_JSON)))
-        .isEqualTo(
-            "{\"newErrors\":[],\"droppedErrors\":[{\"noticeCode\":\"duplicate_key\",\"affectedSourcesCount\":1,\"affectedSources\":[{\"sourceId\":\"source-id-2\",\"sourceUrl\":\"url2\",\"noticeCount\":1}]}],\"corruptedSources\":{\"sourceIdCount\":2,\"corruptedSourcesCount\":0,\"corruptedSources\":[],\"percentCorruptedSourcesThreshold\":5.0,\"aboveThreshold\":false}}");
+        .isEqualTo(retrieveResource("droppedNoticeTypes.json"));
   }
 
   @Test
-  public void tooManyCorruptedSource_invalidTest() throws Exception {
+  public void tooManyCorruptedSources_invalidTest() throws Exception {
     NoticeContainer noticeContainer = new NoticeContainer();
     noticeContainer.addValidationNotice(new MissingRequiredFileNotice("some file"));
     noticeContainer.addValidationNotice(new EmptyColumnNameNotice("other file", 4));
@@ -362,7 +368,6 @@ public class MainTest {
                     NEW_NOTICES_TYPE_FOLDER_NAME,
                     ACCEPTANCE_TEST_REPORT_FOLDER_NAME,
                     ACCEPTANCE_REPORT_JSON)))
-        .isEqualTo(
-            "{\"newErrors\":[],\"droppedErrors\":[],\"corruptedSources\":{\"sourceIdCount\":5,\"corruptedSourcesCount\":2,\"corruptedSources\":[\"source-id-4\",\"source-id-5\"],\"percentCorruptedSourcesThreshold\":2.0,\"aboveThreshold\":true}}");
+        .isEqualTo(retrieveResource("tooManyCorruptedSources.json"));
   }
 }
