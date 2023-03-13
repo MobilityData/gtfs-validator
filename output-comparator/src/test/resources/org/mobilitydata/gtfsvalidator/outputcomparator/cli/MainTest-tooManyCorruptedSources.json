@@ -1,6 +1,8 @@
 {
   "newErrors": [],
   "droppedErrors": [],
+  "newWarnings": [],
+  "droppedWarnings": [],
   "corruptedSources": {
     "sourceIdCount": 5,
     "corruptedSourcesCount": 2,
