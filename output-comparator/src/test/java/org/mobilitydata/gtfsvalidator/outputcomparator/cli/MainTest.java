@@ -95,11 +95,15 @@ public class MainTest {
     NoticeContainer referenceNoticeContainer = new NoticeContainer();
     referenceNoticeContainer.addValidationNotice(new MissingRequiredFileNotice("some file"));
     referenceNoticeContainer.addValidationNotice(new EmptyColumnNameNotice("other file", 4));
+    referenceNoticeContainer.addValidationNotice(
+        new MissingRecommendedFieldNotice("other filename", 12, "other field name"));
 
     NoticeContainer latestNoticeContainer = new NoticeContainer();
     latestNoticeContainer.addValidationNotice(new MissingRequiredFileNotice("sample file"));
     latestNoticeContainer.addValidationNotice(new MissingRequiredFileNotice("other file"));
     latestNoticeContainer.addValidationNotice(new EmptyColumnNameNotice("filename", 5));
+    latestNoticeContainer.addValidationNotice(
+        new MissingRecommendedFieldNotice("other filename", 12, "other field name"));
 
     writeFile(
         latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
