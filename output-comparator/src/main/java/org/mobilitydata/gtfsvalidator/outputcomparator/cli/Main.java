@@ -128,6 +128,8 @@ public class Main {
       }
       newErrors.compareValidationReports(sourceId, sourceUrl, referenceReport, latestReport);
       droppedErrors.compareValidationReports(sourceId, sourceUrl, latestReport, referenceReport);
+      newWarnings.compareValidationReports(sourceId, sourceUrl, referenceReport, latestReport);
+      droppedWarnings.compareValidationReports(sourceId, sourceUrl, latestReport, referenceReport);
     }
 
     if (!(new File(args.getOutputBase()).mkdirs())) {
@@ -139,7 +141,7 @@ public class Main {
             newErrors.getChangedNotices(),
             droppedErrors.getChangedNotices(),
             newWarnings.getChangedNotices(),
-            droppedErrors.getChangedNotices(),
+            droppedWarnings.getChangedNotices(),
             corruptedSources.toReport());
     exportAcceptanceReport(report, args.getOutputBase());
 
