@@ -25,6 +25,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.mobilitydata.gtfsvalidator.model.NoticeReport;
 
+/**
+ * Models a collection of {@link NoticeReport} objects, with methods for comparing notices between
+ * two sets.
+ */
 public class NoticeSet {
 
   private final Map<String, List<NoticeReport>> noticesByCode;
@@ -77,6 +81,10 @@ public class NoticeSet {
     return Sets.difference(other.noticesByCode.keySet(), this.noticesByCode.keySet());
   }
 
+  /**
+   * Returns the total number of notices with the specified code, summed across the total notice
+   * count from each {@link NoticeReport}.
+   */
   public int getTotalNoticeCountForCode(String noticeCode) {
     return this.noticesByCode.getOrDefault(noticeCode, Collections.emptyList()).stream()
         .mapToInt(NoticeReport::getTotalNotices)
