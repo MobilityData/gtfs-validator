@@ -140,7 +140,7 @@ public class MainTest {
                     NO_NEW_NOTICE_FOLDER_NAME,
                     ACCEPTANCE_TEST_REPORT_FOLDER_NAME,
                     ACCEPTANCE_REPORT_JSON)))
-        .isEqualTo(retrieveResource("noNewNoticeTypes.json"));
+        .isEqualTo(retrieveResource("MainTest-noNewNoticeTypes.json"));
   }
 
   @Test
@@ -225,7 +225,7 @@ public class MainTest {
                     NEW_NOTICES_TYPE_FOLDER_NAME,
                     ACCEPTANCE_TEST_REPORT_FOLDER_NAME,
                     ACCEPTANCE_REPORT_JSON)))
-        .isEqualTo(retrieveResource("newNoticeTypes.json"));
+        .isEqualTo(retrieveResource("MainTest-newNoticeTypes.json"));
   }
 
   @Test
@@ -290,7 +290,7 @@ public class MainTest {
                     NEW_NOTICES_TYPE_FOLDER_NAME,
                     ACCEPTANCE_TEST_REPORT_FOLDER_NAME,
                     ACCEPTANCE_REPORT_JSON)))
-        .isEqualTo(retrieveResource("droppedNoticeTypes.json"));
+        .isEqualTo(retrieveResource("MainTest-droppedNoticeTypes.json"));
   }
 
   @Test
@@ -368,6 +368,6 @@ public class MainTest {
                     NEW_NOTICES_TYPE_FOLDER_NAME,
                     ACCEPTANCE_TEST_REPORT_FOLDER_NAME,
                     ACCEPTANCE_REPORT_JSON)))
-        .isEqualTo(retrieveResource("tooManyCorruptedSources.json"));
+        .isEqualTo(retrieveResource("MainTest-tooManyCorruptedSources.json"));
   }
 }
