@@ -98,7 +98,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | Notice code                                                                                   | Description                                                                                                                                                   |
 |-----------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`attribution_without_role`](#attribution_without_role)                                       | Attribution with no role.                                                                                                                                     |
-| [`duplicate_fare_media`](#duplicate_fare_medium)                                             | Two distinct fare media have the same fare medium name and type.                                                                                              |
+| [`duplicate_fare_media`](#duplicate_fare_media)                                               | Two distinct fare media have the same fare media name and type.                                                                                              |
 | [`duplicate_route_name`](#duplicate_route_name)                                               | Two distinct routes have either the same `route_short_name`, the same `route_long_name`, or the same combination of `route_short_name` and `route_long_name`. |
 | [`empty_row`](#empty_row)                                                                     | A row in the input file has only spaces.                                                                                                                      |
 | [`equal_shape_distance_same_coordinates`](#equal_shape_distance_same_coordinates)             | Two consecutive points have equal `shape_dist_traveled` and the same lat/lon coordinates in `shapes.txt`.                                                     |
@@ -1721,9 +1721,9 @@ At least one of the fields `is_producer`, `is_operator`, or `is_authority` shoul
 
 ### duplicate_fare_media
 
-Two distinct fare media have the same fare medium name and type.
+Two distinct fare media have the same fare media name and type.
 
-Fare media should have a unique combination of fare medium name and type.
+Fare media should have a unique combination of fare media name and type.
 
 #### References
 * [fare_media.txt specification](http://gtfs.org/reference/static/#faremediatxt)
@@ -1731,10 +1731,10 @@ Fare media should have a unique combination of fare medium name and type.
 <details>
 
 #### Notice fields description
-| Field name   | Description                             	  | Type   	|
-|--------------|--------------------------------------------|--------	|
-| `fareMedia1` | Reference to the first fare medium. 	      | Long   	|
-| `fareMedia2` | Reference to the second fare medium.     	 | String 	|
+| Field name   | Description                              | Type   	|
+|--------------|------------------------------------------|--------	|
+| `fareMedia1` | Reference to the first fare media. 	  | Long   	|
+| `fareMedia2` | Reference to the second fare media.      | String 	|
 
 #### Affected files
 * [fare_media.txt](http://gtfs.org/reference/static/#faremediatxt)

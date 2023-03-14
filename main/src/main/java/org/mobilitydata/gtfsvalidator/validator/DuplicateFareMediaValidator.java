@@ -25,10 +25,10 @@ public class DuplicateFareMediaValidator extends FileValidator {
   @Override
   public void validate(NoticeContainer noticeContainer) {
     Map<Key, GtfsFareMedia> mediaByKey = new HashMap<>();
-    for (GtfsFareMedia medium : fareMediaTable.getEntities()) {
-      GtfsFareMedia existing = mediaByKey.putIfAbsent(Key.create(medium), medium);
+    for (GtfsFareMedia media : fareMediaTable.getEntities()) {
+      GtfsFareMedia existing = mediaByKey.putIfAbsent(Key.create(media), media);
       if (existing != null) {
-        noticeContainer.addValidationNotice(new DuplicateFareMediaNotice(existing, medium));
+        noticeContainer.addValidationNotice(new DuplicateFareMediaNotice(existing, media));
       }
     }
   }
