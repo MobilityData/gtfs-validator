@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Google LLC
+ * Copyright 2023 Jarvus Innovations LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mobilitydata.gtfsvalidator.web.service;
+package org.mobilitydata.gtfsvalidator.web.service.controller;
 
-// Body.Message is the payload of a Pub/Sub event. Please refer to the docs for
-// additional information regarding Pub/Sub events.
-public class Body {
+/*
+ * Body.Message is the payload of a Pub/Sub event. Please refer to the docs for additional information regarding Pub/Sub events.
+ * @see <a href="https://cloud.google.com/pubsub/docs/reference/rest/v1/PubsubMessage">Google Cloud PubsubMessage</a>
+ */
+public class GoogleCloudPubsubMessage {
 
   private Message message;
 
-  public Body() {}
+  public GoogleCloudPubsubMessage() {}
 
   public Message getMessage() {
     return message;

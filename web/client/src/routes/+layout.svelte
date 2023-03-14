@@ -49,7 +49,7 @@
       class="text-gray-300 mt-16 mb-8 text-sm hover:text-gray-500 transition-colors"
     >
       For performance optimization reasons, any uploaded GTFS feeds can be
-      stored on MobilityData’s servers for 90 days. These feeds are not made
+      stored on MobilityData’s servers for 30 days. These feeds are not made
       publicly available nor shared with any third party, unless required to
       solve hosting issues. Our servers are located in the United States. If you
       have any concerns with this, please contact us at
