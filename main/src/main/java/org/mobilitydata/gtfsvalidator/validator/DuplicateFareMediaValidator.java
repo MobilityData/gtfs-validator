@@ -12,6 +12,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFareMedia;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareMediaTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareMediaType;
 
+/** Validates that two fare media do not have the same name and type. */
 @GtfsValidator
 public class DuplicateFareMediaValidator extends FileValidator {
 
@@ -40,7 +41,9 @@ public class DuplicateFareMediaValidator extends FileValidator {
    */
   static class DuplicateFareMediaNotice extends ValidationNotice {
 
+    // Reference to the first fare media.
     private final FareMediaReference fareMedia1;
+    // Reference to the second fare media.
     private final FareMediaReference fareMedia2;
 
     DuplicateFareMediaNotice(GtfsFareMedia lhs, GtfsFareMedia rhs) {
@@ -50,10 +53,13 @@ public class DuplicateFareMediaValidator extends FileValidator {
     }
   }
 
+  /** A reference to a particular fare media entry. */
   @AutoValue
   abstract static class FareMediaReference {
+    // The row number of the fare media entry.
     abstract int csvRowNumber();
 
+    // The id of the fare media entry.
     abstract String fareMediaId();
 
     static FareMediaReference create(GtfsFareMedia media) {
@@ -62,6 +68,7 @@ public class DuplicateFareMediaValidator extends FileValidator {
     }
   }
 
+  /** A "primary key" type composed of fare media name + type. */
   @AutoValue
   abstract static class Key {
     public abstract String name();
