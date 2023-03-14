@@ -22,23 +22,19 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Adds a validation that the field or a file is required.
- *
- * <p>In the case of a field, both the column header and a value for each row is required.
+ * Specifies a string field should have a mixed-case value. A validator will be automatically
+ * generated.
  *
  * <p>Example.
  *
  * <pre>
  *   {@literal @}GtfsTable("agency.txt")
  *   public interface GtfsAgencySchema extends GtfsEntity {
- *       {@literal @}FieldType(FieldTypeEnum.ID)
- *       {@literal @}PrimaryKey
- *       String agencyId();
- *
- *       {@literal @}Required String agencyName();
+ *       {@literal @}MixedCase
+ *       string agencyName();
  *   }
  * </pre>
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-public @interface Required {}
+public @interface MixedCase {}

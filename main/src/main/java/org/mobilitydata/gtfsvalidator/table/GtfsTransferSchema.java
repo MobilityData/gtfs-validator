@@ -18,14 +18,7 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.*;
 
-import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
-import org.mobilitydata.gtfsvalidator.annotation.FieldType;
-import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
-import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.NonNegative;
-import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.*;
 
 @GtfsTable("transfers.txt")
 public interface GtfsTransferSchema extends GtfsEntity {
@@ -41,7 +34,7 @@ public interface GtfsTransferSchema extends GtfsEntity {
   @PrimaryKey(translationRecordIdType = RECORD_SUB_ID)
   String toStopId();
 
-  @Required
+  @RequiredColumn
   GtfsTransferType transferType();
 
   @NonNegative

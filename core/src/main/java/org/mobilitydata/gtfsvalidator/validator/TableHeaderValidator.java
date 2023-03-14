@@ -26,7 +26,7 @@ public interface TableHeaderValidator {
   void validate(
       String filename,
       CsvHeader actualHeader,
-      Set<String> supportedColumns,
-      Set<String> requiredColumns,
+      Set<String> supportedHeaders,
+      Set<String> requiredHeaders,
       NoticeContainer noticeContainer);
 }
