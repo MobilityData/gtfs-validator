@@ -1738,7 +1738,8 @@ Fare media should have a unique combination of fare media name and type.
 | `fareMedia2` | Reference to the second fare media.      | String 	|
 
 #### Affected files
-* [fare_media.txt](http://gtfs.org/reference/static/#faremediatxt)
+* [fare_media.txt](http://gtfs.org/reference/static/#fare_mediatxt)
+* ```
 
 </details>
 
