@@ -1,0 +1,23 @@
+{
+  "newErrors": [],
+  "droppedErrors": [
+    {
+      "noticeCode": "duplicate_key",
+      "affectedSourcesCount": 1,
+      "affectedSources": [
+        {
+          "sourceId": "source-id-2",
+          "sourceUrl": "url2",
+          "noticeCount": 1
+        }
+      ]
+    }
+  ],
+  "corruptedSources": {
+    "sourceIdCount": 2,
+    "corruptedSourcesCount": 0,
+    "corruptedSources": [],
+    "percentCorruptedSourcesThreshold": 5.0,
+    "aboveThreshold": false
+  }
+}
