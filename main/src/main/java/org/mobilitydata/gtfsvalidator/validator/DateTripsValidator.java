@@ -46,7 +46,6 @@ public class DateTripsValidator extends FileValidator {
 
   private final GtfsCalendarDateTableContainer calendarDateTable;
   private final GtfsCalendarTableContainer calendarTable;
-  private final GtfsFeedInfoTableContainer feedInfoTable;
   private final GtfsTripTableContainer tripContainer;
   private final GtfsFrequencyTableContainer frequencyTable;
   private final CurrentDateTime currentDateTime;
@@ -56,11 +55,9 @@ public class DateTripsValidator extends FileValidator {
       CurrentDateTime currentDateTime,
       GtfsCalendarDateTableContainer calendarDateTable,
       GtfsCalendarTableContainer calendarTable,
-      GtfsFeedInfoTableContainer feedInfoTable,
       GtfsTripTableContainer tripContainer,
       GtfsFrequencyTableContainer frequencyTable) {
     this.currentDateTime = currentDateTime;
-    this.feedInfoTable = feedInfoTable;
     this.calendarTable = calendarTable;
     this.calendarDateTable = calendarDateTable;
     this.tripContainer = tripContainer;
@@ -71,11 +68,6 @@ public class DateTripsValidator extends FileValidator {
   public void validate(NoticeContainer noticeContainer) {
 
     LocalDate now = currentDateTime.getNow().toLocalDate();
-
-    // Attempt to get Start Date and End Date from feedInfo
-    GtfsFeedInfo entity = this.feedInfoTable.getSingleEntity().get();
-    GtfsDate minStartDate = entity.hasFeedStartDate() ? entity.feedStartDate() : null;
-    GtfsDate maxEndDate = entity.hasFeedEndDate() ? entity.feedEndDate() : null;
 
     final Map<String, SortedSet<LocalDate>> servicePeriodMap =
         CalendarUtil.servicePeriodToServiceDatesMap(

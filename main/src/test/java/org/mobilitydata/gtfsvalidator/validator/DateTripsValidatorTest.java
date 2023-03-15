@@ -11,8 +11,6 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -25,13 +23,6 @@ import org.mobilitydata.gtfsvalidator.util.CalendarUtilTest;
 
 @RunWith(JUnit4.class)
 public class DateTripsValidatorTest {
-  static final Set<DayOfWeek> weekDays =
-      ImmutableSet.of(
-          DayOfWeek.MONDAY,
-          DayOfWeek.TUESDAY,
-          DayOfWeek.WEDNESDAY,
-          DayOfWeek.THURSDAY,
-          DayOfWeek.FRIDAY);
   private static final ZonedDateTime TEST_NOW =
       ZonedDateTime.of(2022, 12, 1, 8, 30, 0, 0, ZoneOffset.UTC);
 
@@ -95,7 +86,6 @@ public class DateTripsValidatorTest {
     var calendarTable =
         GtfsCalendarTableContainer.forEntities(ImmutableList.of(calendar), noticeContainer);
     var dateTable = new GtfsCalendarDateTableContainer(GtfsTableContainer.TableStatus.EMPTY_FILE);
-    var feedInfoTable = createFeedInfoTable(serviceWindowStart, serviceWindowEnd, noticeContainer);
     var frequencyTable = new GtfsFrequencyTableContainer(GtfsTableContainer.TableStatus.EMPTY_FILE);
 
     var tripBlock = createTripBlock(serviceId, 6, "b1");
@@ -106,25 +96,12 @@ public class DateTripsValidatorTest {
             new CurrentDateTime(TEST_NOW),
             dateTable,
             calendarTable,
-            feedInfoTable,
             tripContainer,
             frequencyTable);
 
     validator.validate(noticeContainer);
 
     return noticeContainer.getValidationNotices();
-  }
-
-  private static GtfsFeedInfoTableContainer createFeedInfoTable(
-      LocalDate serviceWindowStart, LocalDate serviceWindowEnd, NoticeContainer noticeContainer) {
-    var feedInfoTable =
-        GtfsFeedInfoTableContainer.forEntities(
-            ImmutableList.of(
-                createFeedInfo(
-                    GtfsDate.fromLocalDate(serviceWindowStart),
-                    GtfsDate.fromLocalDate(serviceWindowEnd))),
-            noticeContainer);
-    return feedInfoTable;
   }
 
   private static ArrayList<GtfsTrip> createTripBlock(
@@ -142,15 +119,4 @@ public class DateTripsValidatorTest {
     return trips;
   }
 
-  public static GtfsFeedInfo createFeedInfo(GtfsDate feedStartDate, GtfsDate feedEndDate) {
-
-    return new GtfsFeedInfo.Builder()
-        .setCsvRowNumber(1)
-        .setFeedPublisherName("feed publisher name value")
-        .setFeedPublisherUrl("https://www.mobilitydata.org")
-        .setFeedLang(Locale.CANADA)
-        .setFeedStartDate(feedStartDate)
-        .setFeedEndDate(feedEndDate)
-        .build();
-  }
 }
