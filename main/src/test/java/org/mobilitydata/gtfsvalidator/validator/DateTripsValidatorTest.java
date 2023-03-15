@@ -96,13 +96,19 @@ public class DateTripsValidatorTest {
         GtfsCalendarTableContainer.forEntities(ImmutableList.of(calendar), noticeContainer);
     var dateTable = new GtfsCalendarDateTableContainer(GtfsTableContainer.TableStatus.EMPTY_FILE);
     var feedInfoTable = createFeedInfoTable(serviceWindowStart, serviceWindowEnd, noticeContainer);
+    var frequencyTable = new GtfsFrequencyTableContainer(GtfsTableContainer.TableStatus.EMPTY_FILE);
 
     var tripBlock = createTripBlock(serviceId, 6, "b1");
     var tripContainer = GtfsTripTableContainer.forEntities(tripBlock, noticeContainer);
 
     var validator =
         new DateTripsValidator(
-            new CurrentDateTime(TEST_NOW), dateTable, calendarTable, feedInfoTable, tripContainer);
+            new CurrentDateTime(TEST_NOW),
+            dateTable,
+            calendarTable,
+            feedInfoTable,
+            tripContainer,
+            frequencyTable);
 
     validator.validate(noticeContainer);
 
