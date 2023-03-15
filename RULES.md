@@ -1726,7 +1726,8 @@ Two distinct fare media have the same fare media name and type.
 Fare media should have a unique combination of fare media name and type.
 
 #### References
-* [fare_media.txt specification](http://gtfs.org/reference/static/#faremediatxt)
+* [fare_media.txt specification](http://gtfs.org/reference/static/#fare_mediatxt)
+* ```
 
 <details>
 
