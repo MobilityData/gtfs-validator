@@ -18,6 +18,8 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.NavigableMap;
+import java.util.Optional;
 import java.util.SortedSet;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
@@ -73,13 +75,13 @@ public class DateTripsValidator extends FileValidator {
         CalendarUtil.servicePeriodToServiceDatesMap(
             CalendarUtil.buildServicePeriodMap(calendarTable, calendarDateTable));
 
-    var tripCounts =
-        TripCalendarUtil.countTripsForEachServiceDate(
+
+    NavigableMap<LocalDate, Integer> tripCounts = TripCalendarUtil.countTripsForEachServiceDate(
             servicePeriodMap, tripContainer, frequencyTable);
-    var majorityServiceDates = TripCalendarUtil.computeMajorityServiceCoverage(tripCounts);
+    Optional<TripCalendarUtil.DateInterval> majorityServiceDates = TripCalendarUtil.computeMajorityServiceCoverage(tripCounts);
     LocalDate currentDatePlusSevenDays = now.plusDays(7);
 
-    if (majorityServiceDates != null) {
+    if (!majorityServiceDates.isEmpty()) {
       LocalDate serviceWindowStartDate = majorityServiceDates.get().startDate();
       LocalDate serviceWindowEndDate = majorityServiceDates.get().endDate();
       if (serviceWindowStartDate.isAfter(now)
