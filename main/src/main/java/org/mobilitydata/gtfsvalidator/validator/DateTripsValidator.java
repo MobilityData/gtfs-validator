@@ -96,8 +96,11 @@ public class DateTripsValidator extends FileValidator {
   }
 
   static class TripDataShouldBeValidForNext7DaysNotice extends ValidationNotice {
+    // The date at which the validation was run.
     private final GtfsDate currentDate;
+    // The start date of the majority service window.
     private final GtfsDate serviceWindowStartDate;
+    // The end date of the majority service window.
     private final GtfsDate serviceWindowEndDate;
 
     TripDataShouldBeValidForNext7DaysNotice(
