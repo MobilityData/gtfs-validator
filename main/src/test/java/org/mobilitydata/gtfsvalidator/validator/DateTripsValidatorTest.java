@@ -93,11 +93,7 @@ public class DateTripsValidatorTest {
 
     var validator =
         new DateTripsValidator(
-            new CurrentDateTime(TEST_NOW),
-            dateTable,
-            calendarTable,
-            tripContainer,
-            frequencyTable);
+            new CurrentDateTime(TEST_NOW), dateTable, calendarTable, tripContainer, frequencyTable);
 
     validator.validate(noticeContainer);
 
@@ -118,5 +114,4 @@ public class DateTripsValidatorTest {
     }
     return trips;
   }
-
 }

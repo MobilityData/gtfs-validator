@@ -75,10 +75,11 @@ public class DateTripsValidator extends FileValidator {
         CalendarUtil.servicePeriodToServiceDatesMap(
             CalendarUtil.buildServicePeriodMap(calendarTable, calendarDateTable));
 
-
-    NavigableMap<LocalDate, Integer> tripCounts = TripCalendarUtil.countTripsForEachServiceDate(
+    NavigableMap<LocalDate, Integer> tripCounts =
+        TripCalendarUtil.countTripsForEachServiceDate(
             servicePeriodMap, tripContainer, frequencyTable);
-    Optional<TripCalendarUtil.DateInterval> majorityServiceDates = TripCalendarUtil.computeMajorityServiceCoverage(tripCounts);
+    Optional<TripCalendarUtil.DateInterval> majorityServiceDates =
+        TripCalendarUtil.computeMajorityServiceCoverage(tripCounts);
     LocalDate currentDatePlusSevenDays = now.plusDays(7);
 
     if (!majorityServiceDates.isEmpty()) {
