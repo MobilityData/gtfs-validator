@@ -12,7 +12,7 @@ import java.math.BigDecimal;
  */
 public class InvalidCurrencyAmountNotice extends ValidationNotice {
 
-  // The row of the faulty record.
+  // The name of the faulty file.
   private final String filename;
 
   // Faulty record's field name.

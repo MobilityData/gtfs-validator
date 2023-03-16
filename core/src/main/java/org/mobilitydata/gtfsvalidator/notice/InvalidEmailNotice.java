@@ -26,7 +26,7 @@ package org.mobilitydata.gtfsvalidator.notice;
  */
 public class InvalidEmailNotice extends ValidationNotice {
 
-  // The row of the faulty record.
+  // The name of the faulty file.
   private final String filename;
 
   // The row of the faulty record.
