@@ -11,12 +11,19 @@ public abstract class AcceptanceReport {
 
   public abstract List<ChangedNotice> droppedErrors();
 
+  public abstract List<ChangedNotice> newWarnings();
+
+  public abstract List<ChangedNotice> droppedWarnings();
+
   public abstract CorruptedSources corruptedSources();
 
   public static AcceptanceReport create(
       List<ChangedNotice> newErrors,
       List<ChangedNotice> droppedErrors,
+      List<ChangedNotice> newWarnings,
+      List<ChangedNotice> droppedWarnings,
       CorruptedSources corruptedSources) {
-    return new AutoValue_AcceptanceReport(newErrors, droppedErrors, corruptedSources);
+    return new AutoValue_AcceptanceReport(
+        newErrors, droppedErrors, newWarnings, droppedWarnings, corruptedSources);
   }
 }
