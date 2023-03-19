@@ -17,7 +17,9 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
@@ -31,17 +33,20 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
 
 /**
- * Validates `location_type` of the referenced `parent_station`.
+ * Validates parent stations are used and have the correct `location_type`.
  *
- * <p>Generated notice: {@link WrongParentLocationTypeNotice}.
+ * <p>Generated notices:
+ *
+ * <ul>
+ *   <li>{@link WrongParentLocationTypeNotice}.
+ *   <li>{@link UnusedParentStationNotice}.
  */
 @GtfsValidator
-public class ParentLocationTypeValidator extends FileValidator {
-
+public class ParentStationValidator extends FileValidator {
   private final GtfsStopTableContainer stopTable;
 
   @Inject
-  ParentLocationTypeValidator(GtfsStopTableContainer stopTable) {
+  ParentStationValidator(GtfsStopTableContainer stopTable) {
     this.stopTable = stopTable;
   }
 
@@ -60,7 +65,15 @@ public class ParentLocationTypeValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
+    Set<String> stations = new HashSet<>();
+    Set<String> stationsWithStops = new HashSet<String>();
+
     for (GtfsStop location : stopTable.getEntities()) {
+      if (location.locationType() == GtfsLocationType.STATION) {
+        stations.add(location.stopId());
+        // Stations must not have parent_station; this is validated elsewhere.
+        continue;
+      }
       if (!location.hasParentStation()) {
         continue;
       }
@@ -68,6 +81,9 @@ public class ParentLocationTypeValidator extends FileValidator {
       if (optionalParentLocation.isEmpty()) {
         // Broken reference is reported in another rule.
         continue;
+      }
+      if (location.locationType() == GtfsLocationType.STOP) {
+        stationsWithStops.add(location.parentStation());
       }
       GtfsStop parentLocation = optionalParentLocation.get();
       GtfsLocationType expected = expectedParentLocationType(location.locationType());
@@ -84,6 +100,20 @@ public class ParentLocationTypeValidator extends FileValidator {
                 parentLocation.locationTypeValue(),
                 expected.getNumber()));
       }
+    }
+
+    stations.removeAll(stationsWithStops);
+    for (String station : stations) {
+      Optional<GtfsStop> optionalStationStop = stopTable.byStopId(station);
+      if (optionalStationStop.isEmpty()) {
+        // This should never happen because we just populated the set stations
+        // with actual stations.
+        continue;
+      }
+      GtfsStop stationStop = optionalStationStop.get();
+      noticeContainer.addValidationNotice(
+          new UnusedParentStationNotice(
+              stationStop.csvRowNumber(), stationStop.stopId(), stationStop.stopName()));
     }
   }
 
@@ -154,6 +184,24 @@ public class ParentLocationTypeValidator extends FileValidator {
       this.parentStopName = parentStopName;
       this.parentLocationType = parentLocationType;
       this.expectedLocationType = expectedLocationType;
+    }
+  }
+
+  /**
+   * Unused parent station.
+   *
+   * <p>Severity: {@code SeverityLevel.INFO}
+   */
+  static class UnusedParentStationNotice extends ValidationNotice {
+    private final int csvRowNumber;
+    private final String stopId;
+    private final String stopName;
+
+    UnusedParentStationNotice(int csvRowNumber, String stopId, String stopName) {
+      super(SeverityLevel.INFO);
+      this.csvRowNumber = csvRowNumber;
+      this.stopId = stopId;
+      this.stopName = stopName;
     }
   }
 }

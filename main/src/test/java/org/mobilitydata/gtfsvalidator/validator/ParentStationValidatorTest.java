@@ -28,15 +28,16 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
-import org.mobilitydata.gtfsvalidator.validator.ParentLocationTypeValidator.WrongParentLocationTypeNotice;
+import org.mobilitydata.gtfsvalidator.validator.ParentStationValidator.UnusedParentStationNotice;
+import org.mobilitydata.gtfsvalidator.validator.ParentStationValidator.WrongParentLocationTypeNotice;
 
 @RunWith(JUnit4.class)
-public class ParentLocationTypeValidatorTest {
+public class ParentStationValidatorTest {
 
   private List<ValidationNotice> validateChildAndParent(
       GtfsLocationType childType, GtfsLocationType parentType) {
     NoticeContainer noticeContainer = new NoticeContainer();
-    new ParentLocationTypeValidator(
+    new ParentStationValidator(
             GtfsStopTableContainer.forEntities(
                 ImmutableList.of(
                     new GtfsStop.Builder()
@@ -59,7 +60,7 @@ public class ParentLocationTypeValidatorTest {
 
   private List<ValidationNotice> validateNoParent(GtfsLocationType locationType) {
     NoticeContainer noticeContainer = new NoticeContainer();
-    new ParentLocationTypeValidator(
+    new ParentStationValidator(
             GtfsStopTableContainer.forEntities(
                 ImmutableList.of(
                     new GtfsStop.Builder()
@@ -76,7 +77,7 @@ public class ParentLocationTypeValidatorTest {
   public void stopParent() {
     assertThat(validateChildAndParent(GtfsLocationType.STOP, GtfsLocationType.STATION)).isEmpty();
     assertThat(validateChildAndParent(GtfsLocationType.STOP, GtfsLocationType.ENTRANCE))
-        .contains(
+        .containsExactly(
             new WrongParentLocationTypeNotice(
                 1,
                 "child",
@@ -92,9 +93,10 @@ public class ParentLocationTypeValidatorTest {
   @Test
   public void entranceParent() {
     assertThat(validateChildAndParent(GtfsLocationType.ENTRANCE, GtfsLocationType.STATION))
-        .isEmpty();
+        // No issue with the types, but the station has no stop (just an entrance).
+        .containsExactly(new UnusedParentStationNotice(2, "parent", "Parent location"));
     assertThat(validateChildAndParent(GtfsLocationType.ENTRANCE, GtfsLocationType.STOP))
-        .contains(
+        .containsExactly(
             new WrongParentLocationTypeNotice(
                 1,
                 "child",
@@ -110,9 +112,10 @@ public class ParentLocationTypeValidatorTest {
   @Test
   public void genericNodeParent() {
     assertThat(validateChildAndParent(GtfsLocationType.GENERIC_NODE, GtfsLocationType.STATION))
-        .isEmpty();
+        // No issue with the types, but the station has no stop.
+        .containsExactly(new UnusedParentStationNotice(2, "parent", "Parent location"));
     assertThat(validateChildAndParent(GtfsLocationType.GENERIC_NODE, GtfsLocationType.STOP))
-        .contains(
+        .containsExactly(
             new WrongParentLocationTypeNotice(
                 1,
                 "child",
@@ -130,33 +133,65 @@ public class ParentLocationTypeValidatorTest {
     assertThat(validateChildAndParent(GtfsLocationType.BOARDING_AREA, GtfsLocationType.STOP))
         .isEmpty();
     assertThat(validateChildAndParent(GtfsLocationType.BOARDING_AREA, GtfsLocationType.STATION))
-        .contains(
-            new WrongParentLocationTypeNotice(
-                1,
-                "child",
-                "Child location",
-                GtfsLocationType.BOARDING_AREA.getNumber(),
-                2,
-                "parent",
-                "Parent location",
-                GtfsLocationType.STATION.getNumber(),
-                GtfsLocationType.STOP.getNumber()));
+        .containsExactlyElementsIn(
+            ImmutableList.of(
+                new WrongParentLocationTypeNotice(
+                    1,
+                    "child",
+                    "Child location",
+                    GtfsLocationType.BOARDING_AREA.getNumber(),
+                    2,
+                    "parent",
+                    "Parent location",
+                    GtfsLocationType.STATION.getNumber(),
+                    GtfsLocationType.STOP.getNumber()),
+                new UnusedParentStationNotice(2, "parent", "Parent location")));
   }
 
   @Test
   public void noParent() {
-    // ParentLocationTypeValidator ignores rows without parent_station.
+    // ParentStationValidator ignores non-stations without parent_station.
     assertThat(validateNoParent(GtfsLocationType.STOP)).isEmpty();
-    assertThat(validateNoParent(GtfsLocationType.STATION)).isEmpty();
     assertThat(validateNoParent(GtfsLocationType.ENTRANCE)).isEmpty();
     assertThat(validateNoParent(GtfsLocationType.GENERIC_NODE)).isEmpty();
     assertThat(validateNoParent(GtfsLocationType.BOARDING_AREA)).isEmpty();
   }
 
   @Test
+  public void unusedStation() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    new ParentStationValidator(
+            GtfsStopTableContainer.forEntities(
+                ImmutableList.of(
+                    new GtfsStop.Builder()
+                        .setCsvRowNumber(1)
+                        .setStopId("child")
+                        .setStopName("Child location")
+                        .setLocationType(GtfsLocationType.STOP)
+                        .setParentStation("used_station")
+                        .build(),
+                    new GtfsStop.Builder()
+                        .setCsvRowNumber(2)
+                        .setStopId("unused_station")
+                        .setStopName("Unused station")
+                        .setLocationType(GtfsLocationType.STATION)
+                        .build(),
+                    new GtfsStop.Builder()
+                        .setCsvRowNumber(3)
+                        .setStopId("used_station")
+                        .setStopName("Used station")
+                        .setLocationType(GtfsLocationType.STATION)
+                        .build()),
+                noticeContainer))
+        .validate(noticeContainer);
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactly(new UnusedParentStationNotice(2, "unused_station", "Unused station"));
+  }
+
+  @Test
   public void foreignKeyViolation_handledGracefully() {
     NoticeContainer noticeContainer = new NoticeContainer();
-    new ParentLocationTypeValidator(
+    new ParentStationValidator(
             GtfsStopTableContainer.forEntities(
                 ImmutableList.of(
                     new GtfsStop.Builder()
