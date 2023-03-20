@@ -134,7 +134,7 @@ The validator can then be executed via bash commands. See the [preceeding instru
 ### Visualize the results
 In the output directory, the reports will be created as described [here](#visualize-the-results).
 
-# List of notices
+# Validation rules
 * See the list of all the noticed emitted by this validator in [RULES.md](/RULES.md).
 * If you'd like to map notice names between two validator versions, see [NOTICE_MIGRATION.md](/docs/NOTICE_MIGRATION.md).
 * Possible future rules for:
