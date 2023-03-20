@@ -252,6 +252,7 @@
   /** @param {File} file */
   async function uploadFile(file) {
     updateStatus('authorizing');
+    jobId = '_waiting_';
     const result = await createJob();
     updateStatus('uploading');
     jobId = result.jobId;
@@ -277,6 +278,7 @@
   /** @param {string} url */
   async function handleUrl(url) {
     updateStatus('authorizing');
+    jobId = '_waiting_';
     const result = await createJob(url);
     jobId = result.jobId;
     updateStatus('processing');
