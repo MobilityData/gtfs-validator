@@ -76,7 +76,14 @@
       const browserLanguage = window?.navigator?.language;
       if (browserLanguage && browserLanguage.split('-').length > 1) {
         const code = navigator.language.split('-')[1];
-        region = code;
+        const regionIndex = countryCodes.findIndex( (country) => country.value === code);
+        // copy detected region to the top of the list, if it's not already first
+        if (regionIndex > 0) {
+          const region = countryCodes[regionIndex];
+          countryCodes.unshift({ value: "", label: "---------------------"});
+          countryCodes.unshift(region);
+        }
+//        region = code;
       }
     }
   }
@@ -339,7 +346,7 @@
           <SelectField
             id="region"
             name="region"
-            label="Region"
+            label="Region (optional)"
             hint={region}
             bind:value={region}
             options={countryCodes}
