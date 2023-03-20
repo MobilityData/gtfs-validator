@@ -1,6 +1,6 @@
 # Notice migration
 
-Overview of the notice changes (new notices, dropped notices, change in severity) for each past release. 
+Overview of the notice changes (new notices, dropped notices, change in severity) for each past release. If a release number isn't in this table, it means that there is no change to the notices in the release.
 
 | V4.0.0                                                        |                  | V3.0.1                                                |                  | V3.0.0                                                |                  | V2.0.0                                                |                  | V1.0.0                 |
 | ------------------------------------------------------------- | ---------------- | ----------------------------------------------------- | ---------------- | ----------------------------------------------------- | ---------------- | ----------------------------------------------------- | ---------------- | ---------------------- |
