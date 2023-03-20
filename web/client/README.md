@@ -24,6 +24,11 @@ npm run dev
 # or start the server and open the app in a new browser tab
 npm run dev -- --open
 ```
+### Start the web service (from project root directory):
+
+```bash
+./gradlew bootRun
+```
 
 ## Building
 

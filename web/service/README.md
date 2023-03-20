@@ -111,9 +111,18 @@ Both `gtfs-validator-user-uploads` and `gtfs-validator-results` have been config
 
 ## Run It
 
+### Start the web service (from project root directory):
+
 ```bash
 ./gradlew bootRun
 ```
+
+### Start the client (from the `web/client` directory):
+
+```bash
+npm run dev
+```
+
 
 ## Deploying Updates
 
