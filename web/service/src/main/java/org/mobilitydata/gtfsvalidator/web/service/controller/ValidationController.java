@@ -30,6 +30,7 @@ import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunner;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 import org.mobilitydata.gtfsvalidator.util.VersionResolver;
+import org.mobilitydata.gtfsvalidator.web.service.util.StorageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,80 +44,17 @@ import org.springframework.web.server.ResponseStatusException;
 public class ValidationController {
 
   private final Logger logger = LoggerFactory.getLogger(ValidationController.class);
-  @Autowired private ApplicationContext applicationContext;
 
   static final String USER_UPLOAD_BUCKET_NAME = "gtfs-validator-user-uploads";
   static final String RESULTS_BUCKET_NAME = "gtfs-validator-results";
-  static final String JOB_INFO_BUCKET_NAME = "gtfs-validator-results";
   static final String FILE_NAME = "gtfs-job.zip";
-  static final String JOB_FILENAME_PREFIX = "job";
-  static final String JOB_FILENAME_SUFFIX = ".json";
-  static final String JOB_FILENAME = JOB_FILENAME_PREFIX + JOB_FILENAME_SUFFIX;
-  static final String COUNTRY_CODE_KEY = "country-code";
-  static final String TEMP_FOLDER_NAME = "gtfs-validator-temp";
 
   @Getter(AccessLevel.PROTECTED)
   @Setter(AccessLevel.PROTECTED)
   @Autowired
   private Storage storage;
 
-  public static String getJobInfoPath(String jobId) {
-    return jobId + "/" + JOB_FILENAME;
-  }
-
-  public File getRemoteFile(String remoteLocation, String localPrefix, String localSuffix)
-      throws Exception {
-    try {
-      var tempDir = Files.createTempDirectory(TEMP_FOLDER_NAME).toFile();
-
-      var inputResource = applicationContext.getResource(remoteLocation);
-      var inputFile = inputResource.getInputStream();
-
-      var tempFile = File.createTempFile(localPrefix, localSuffix, tempDir);
-      var output = new FileOutputStream(tempFile);
-      inputFile.transferTo(output);
-
-      return tempFile;
-    } catch (Exception exc) {
-      logger.error("Error could not load remote file:", exc);
-      throw exc;
-    }
-  }
-
-  public void setJobCountryCode(String jobId, String countryCode) throws Exception {
-    try {
-      var jobInfoPath = getJobInfoPath(jobId);
-      var jobBlobId = BlobId.of(JOB_INFO_BUCKET_NAME, jobInfoPath);
-      var jobBlobInfo = BlobInfo.newBuilder(jobBlobId).setContentType("application/json").build();
-      var om = new ObjectMapper();
-      var jobNode = om.createObjectNode();
-      jobNode.put(COUNTRY_CODE_KEY, countryCode);
-      var writer = om.writer();
-      var fileBytes = writer.writeValueAsBytes(jobNode);
-      storage.create(jobBlobInfo, fileBytes);
-    } catch (Exception exc) {
-      logger.error("Error setting country code", exc);
-      throw exc;
-    }
-  }
-
-  public String getJobCountryCode(String jobId) {
-    try {
-      var jobInfoPath = getJobInfoPath(jobId);
-      var jobInfoFile =
-          getRemoteFile(
-              "gs://" + JOB_INFO_BUCKET_NAME + "/" + jobInfoPath,
-              JOB_FILENAME_PREFIX,
-              JOB_FILENAME_SUFFIX);
-      var fileBytes = Files.readAllBytes(Paths.get(jobInfoFile.getPath()));
-      var objectMapper = new ObjectMapper();
-      var jobNode = objectMapper.readTree(fileBytes);
-      return jobNode.get(COUNTRY_CODE_KEY).textValue();
-    } catch (Exception exc) {
-      logger.error("Error could not load remote file, using default country code", exc);
-      return "";
-    }
-  }
+  @Autowired private ApplicationContext applicationContext;
 
   public void handleUrlUpload(String jobId, String url) throws Exception {
     // Read file into memory
@@ -159,7 +97,8 @@ public class ValidationController {
 
       if (body != null && !body.getCountryCode().isEmpty()) {
         countryCode = body.getCountryCode();
-        setJobCountryCode(jobId, countryCode);
+        StorageHelper storageHelper = new StorageHelper(storage, applicationContext);
+        storageHelper.setJobCountryCode(jobId, countryCode);
       }
 
       // Check to see if this request has a url
@@ -195,7 +134,7 @@ public class ValidationController {
 
       var inputFilename = node.get("name").textValue();
       var jobId = inputFilename.split("/")[0];
-      tempDir = Files.createTempDirectory(TEMP_FOLDER_NAME).toFile();
+      tempDir = Files.createTempDirectory(StorageHelper.TEMP_FOLDER_NAME).toFile();
 
       var inputResource =
           applicationContext.getResource("gs://" + USER_UPLOAD_BUCKET_NAME + "/" + inputFilename);
@@ -205,7 +144,8 @@ public class ValidationController {
       var output = new FileOutputStream(tempFile);
       inputFile.transferTo(output);
 
-      var countryCode = getJobCountryCode(jobId);
+      StorageHelper storageHelper = new StorageHelper(storage, applicationContext);
+      var countryCode = storageHelper.getJobCountryCode(jobId);
 
       var runner = new ValidationRunner(new VersionResolver());
       var outputPath = new File(tempDir.toPath().toString() + jobId);
