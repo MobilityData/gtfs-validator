@@ -53,7 +53,6 @@ public class ValidationController {
   static final String JOB_FILENAME_SUFFIX = ".json";
   static final String JOB_FILENAME = JOB_FILENAME_PREFIX + JOB_FILENAME_SUFFIX;
   static final String COUNTRY_CODE_KEY = "country-code";
-  static final String DEFAULT_COUNTRY_CODE = "US";
   static final String TEMP_FOLDER_NAME = "gtfs-validator-temp";
 
   @Getter(AccessLevel.PROTECTED)
@@ -112,12 +111,10 @@ public class ValidationController {
       var fileBytes = Files.readAllBytes(Paths.get(jobInfoFile.getPath()));
       var objectMapper = new ObjectMapper();
       var jobNode = objectMapper.readTree(fileBytes);
-      var countryCode = jobNode.get(COUNTRY_CODE_KEY).textValue();
-      return countryCode;
+      return jobNode.get(COUNTRY_CODE_KEY).textValue();
     } catch (Exception exc) {
       logger.error("Error could not load remote file, using default country code", exc);
-      // Use default
-      return DEFAULT_COUNTRY_CODE;
+      return "";
     }
   }
 
@@ -158,7 +155,7 @@ public class ValidationController {
   public String createJob(@RequestBody CreateJobBody body) {
     try {
       final var jobId = UUID.randomUUID().toString();
-      var countryCode = DEFAULT_COUNTRY_CODE;
+      var countryCode = "";
 
       if (body != null && !body.getCountryCode().isEmpty()) {
         countryCode = body.getCountryCode();
@@ -212,12 +209,14 @@ public class ValidationController {
 
       var runner = new ValidationRunner(new VersionResolver());
       var outputPath = new File(tempDir.toPath().toString() + jobId);
-      var config =
+      var configBuilder =
           ValidationRunnerConfig.builder()
               .setGtfsSource(tempFile.toURI())
-              .setOutputDirectory(outputPath.toPath())
-              .setCountryCode(CountryCode.forStringOrUnknown(countryCode))
-              .build();
+              .setOutputDirectory(outputPath.toPath());
+      if (!countryCode.isEmpty()) {
+        configBuilder.setCountryCode(CountryCode.forStringOrUnknown(countryCode));
+      }
+      var config = configBuilder.build();
       runner.run(config);
 
       var directoryListing = outputPath.listFiles();
