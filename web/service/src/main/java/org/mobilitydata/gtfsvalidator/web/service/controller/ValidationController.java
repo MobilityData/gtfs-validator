@@ -48,8 +48,8 @@ public class ValidationController {
 
   /**
    * Creates a new job id and returns it to the client. If a url is provided, the file is downloaded
-   * from the url and saved to GCS. If no url is provided, a unique url is generated for the client to
-   * upload the GTFS file.
+   * from the url and saved to GCS. If no url is provided, a unique url is generated for the client
+   * to upload the GTFS file.
    */
   @CrossOrigin(origins = "*")
   @PostMapping(value = "/create-job")
@@ -80,8 +80,8 @@ public class ValidationController {
   }
 
   /**
-   * Runs the validator on the GTFS file associated with the job id. The GTFS file is downloaded from
-   * GCS, extracted locally, validated, and the results are uploaded to GCS.
+   * Runs the validator on the GTFS file associated with the job id. The GTFS file is downloaded
+   * from GCS, extracted locally, validated, and the results are uploaded to GCS.
    */
   @PostMapping("/run-validator")
   public ResponseEntity runValidator(

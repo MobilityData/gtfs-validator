@@ -13,9 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
-/**
- * Helper class for interacting with GCS.
- */
+/** Helper class for interacting with GCS. */
 public class StorageHelper {
   static final String JOB_INFO_BUCKET_NAME = "gtfs-validator-results";
   static final String JOB_FILENAME_PREFIX = "job";
@@ -126,8 +124,7 @@ public class StorageHelper {
   }
 
   /**
-   * Copies the uploaded feed file from GCS to a local temp directory
-   * and returns the file.
+   * Copies the uploaded feed file from GCS to a local temp directory and returns the file.
    *
    * @param jobId
    * @param fileName

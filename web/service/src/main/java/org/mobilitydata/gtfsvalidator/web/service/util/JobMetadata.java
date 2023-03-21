@@ -1,8 +1,6 @@
 package org.mobilitydata.gtfsvalidator.web.service.util;
 
-/**
- * Metadata about a validation job, saved as json to GCS.
- */
+/** Metadata about a validation job, saved as json to GCS. */
 public class JobMetadata {
   private String jobId;
   private String countryCode;

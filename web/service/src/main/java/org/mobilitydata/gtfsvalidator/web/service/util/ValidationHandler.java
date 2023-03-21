@@ -12,15 +12,13 @@ import org.mobilitydata.gtfsvalidator.web.service.controller.GoogleCloudPubsubMe
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Helper class for validating GTFS feeds.
- */
+/** Helper class for validating GTFS feeds. */
 public class ValidationHandler {
   private final Logger logger = LoggerFactory.getLogger(ValidationHandler.class);
 
   /**
-   * Validates the GTFS feed zip file, and stores the results in a local temp directory
-   * using the job ID as the directory name.
+   * Validates the GTFS feed zip file, and stores the results in a local temp directory using the
+   * job ID as the directory name.
    *
    * @param feedFile
    * @param jobId
