@@ -70,26 +70,7 @@ public class StorageHelper {
     }
   }
 
-  public File getRemoteFile(String remoteLocation, String localPrefix, String localSuffix)
-      throws Exception {
-    try {
-      var tempDir = Files.createTempDirectory(TEMP_FOLDER_NAME).toFile();
-
-      var inputResource = applicationContext.getResource(remoteLocation);
-      var inputFile = inputResource.getInputStream();
-
-      var tempFile = File.createTempFile(localPrefix, localSuffix, tempDir);
-      var output = new FileOutputStream(tempFile);
-      inputFile.transferTo(output);
-
-      return tempFile;
-    } catch (Exception exc) {
-      logger.error("Error could not load remote file:", exc);
-      throw exc;
-    }
-  }
-
-  public void handleUrlUpload(String jobId, String url) throws Exception {
+  public void saveJobFileFromUrl(String jobId, String url) throws Exception {
     // Read file into memory
     var urlInputStream = new BufferedInputStream(new URL(url).openStream());
 
@@ -120,11 +101,11 @@ public class StorageHelper {
     return url;
   }
 
-  public File createTempFile(String jobId, String inputFilename) throws IOException {
+  public File createTempFile(String jobId, String fileName) throws IOException {
     var tempDir = Files.createTempDirectory(StorageHelper.TEMP_FOLDER_NAME).toFile();
 
     var inputResource =
-        applicationContext.getResource("gs://" + USER_UPLOAD_BUCKET_NAME + "/" + inputFilename);
+        applicationContext.getResource("gs://" + USER_UPLOAD_BUCKET_NAME + "/" + fileName);
     var inputFile = inputResource.getInputStream();
 
     var tempFile = File.createTempFile(jobId, ".zip", tempDir);

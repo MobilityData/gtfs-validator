@@ -15,7 +15,6 @@
  */
 package org.mobilitydata.gtfsvalidator.web.service.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.storage.*;
 import java.io.*;
 import java.net.URL;
@@ -23,11 +22,9 @@ import java.util.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import org.mobilitydata.gtfsvalidator.input.CountryCode;
-import org.mobilitydata.gtfsvalidator.runner.ValidationRunner;
-import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
-import org.mobilitydata.gtfsvalidator.util.VersionResolver;
 import org.mobilitydata.gtfsvalidator.web.service.util.StorageHelper;
+import org.mobilitydata.gtfsvalidator.web.service.util.ValidationHandler;
+import org.mobilitydata.gtfsvalidator.web.service.util.ValidationJobMetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +61,7 @@ public class ValidationController {
 
       // Check to see if this request has a url
       if (body != null && body.getUrl() != null && !body.getUrl().isEmpty()) {
-        storageHelper.handleUrlUpload(jobId, body.getUrl());
+        storageHelper.saveJobFileFromUrl(jobId, body.getUrl());
         return "{\"jobId\": \"" + jobId + "\"}";
       }
       // If no URL is provided, then we generate a unique url for the client to upload the GTFS file
@@ -87,38 +84,26 @@ public class ValidationController {
         var msg = "Bad Request: invalid Pub/Sub message format";
         return new ResponseEntity(msg, HttpStatus.BAD_REQUEST);
       }
+      var handler = new ValidationHandler();
 
-      var data = new String(Base64.getDecoder().decode(message.getData()));
-
-      var map = new ObjectMapper();
-      var node = map.readTree(data);
-
-      var inputFilename = node.get("name").textValue();
-      var jobId = inputFilename.split("/")[0];
+      ValidationJobMetaData jobData = handler.getFeedFileMetaData(message);
+      var jobId = jobData.getJobId();
+      var fileName = jobData.getFileName();
 
       StorageHelper storageHelper = new StorageHelper(storage, applicationContext);
       var countryCode = storageHelper.getJobCountryCode(jobId);
       logger.info("Country code: " + countryCode);
 
-      File tempFile = storageHelper.createTempFile(jobId, inputFilename);
+      // copy the file from GCS to a temp directory
+      File tempFile = storageHelper.createTempFile(jobId, fileName);
+      // extracts feed files from zip to temp output directory, validates, and returns
+      // the path to the output directory
+      File outputPath = handler.validateFeed(tempFile, jobId, countryCode);
 
-      var runner = new ValidationRunner(new VersionResolver());
-      tempDir = tempFile.getParentFile();
-      var outputPath = new File(tempDir.toPath() + jobId);
-      var configBuilder =
-          ValidationRunnerConfig.builder()
-              .setGtfsSource(tempFile.toURI())
-              .setOutputDirectory(outputPath.toPath());
-      if (!countryCode.isEmpty()) {
-        var country = CountryCode.forStringOrUnknown(countryCode);
-        logger.info("setting country code: " + country.getCountryCode());
-        configBuilder.setCountryCode(CountryCode.forStringOrUnknown(countryCode));
-      }
-      var config = configBuilder.build();
-      runner.run(config);
-
+      // upload the extracted files and the validation results from outputPath to GCS
       storageHelper.uploadFilesToStorage(jobId, outputPath);
 
+      // delete the temp directory
       tempDir.delete();
       return new ResponseEntity(HttpStatus.OK);
     } catch (Exception exc) {
