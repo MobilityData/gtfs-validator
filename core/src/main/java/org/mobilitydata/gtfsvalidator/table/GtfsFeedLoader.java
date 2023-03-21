@@ -139,6 +139,7 @@ public class GtfsFeedLoader {
         // Consider we failed to parse a row trip.txt but there is another row in stop_times.txt
         // that references a trip. Then foreign key validator may notify about a missing trip_id
         // which would be wrong.
+        logger.atSevere().log("Multi-file validators were not executed due to file parsing errors.");
         return feed;
       }
       List<Callable<NoticeContainer>> validatorCallables = new ArrayList<>();
