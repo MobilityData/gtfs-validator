@@ -19,10 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.storage.*;
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,10 +42,6 @@ public class ValidationController {
 
   private final Logger logger = LoggerFactory.getLogger(ValidationController.class);
 
-  static final String USER_UPLOAD_BUCKET_NAME = "gtfs-validator-user-uploads";
-  static final String RESULTS_BUCKET_NAME = "gtfs-validator-results";
-  static final String FILE_NAME = "gtfs-job.zip";
-
   @Getter(AccessLevel.PROTECTED)
   @Setter(AccessLevel.PROTECTED)
   @Autowired
@@ -56,58 +49,26 @@ public class ValidationController {
 
   @Autowired private ApplicationContext applicationContext;
 
-  public void handleUrlUpload(String jobId, String url) throws Exception {
-    // Read file into memory
-    var urlInputStream = new BufferedInputStream(new URL(url).openStream());
-
-    // Upload to GCS
-    var blobId = BlobId.of(USER_UPLOAD_BUCKET_NAME, jobId + "/" + jobId + ".zip");
-    var mimeType = "application/zip";
-    var blobInfo = BlobInfo.newBuilder(blobId).setContentType(mimeType).build();
-    var fileBytes = urlInputStream.readAllBytes();
-    storage.create(blobInfo, fileBytes);
-  }
-
-  public URL generateUniqueUploadUrl(String jobId) {
-    var blobInfo =
-        BlobInfo.newBuilder(BlobId.of(USER_UPLOAD_BUCKET_NAME, jobId + "/" + FILE_NAME)).build();
-
-    // Generate Signed URL
-    Map<String, String> extensionHeaders = new HashMap<>();
-    extensionHeaders.put("Content-Type", "application/octet-stream");
-
-    URL url =
-        getStorage()
-            .signUrl(
-                blobInfo,
-                15,
-                TimeUnit.MINUTES,
-                Storage.SignUrlOption.httpMethod(HttpMethod.PUT),
-                Storage.SignUrlOption.withExtHeaders(extensionHeaders),
-                Storage.SignUrlOption.withV4Signature());
-    return url;
-  }
-
   @CrossOrigin(origins = "*")
   @PostMapping(value = "/create-job")
   public String createJob(@RequestBody CreateJobBody body) {
     try {
       final var jobId = UUID.randomUUID().toString();
       var countryCode = "";
+      StorageHelper storageHelper = new StorageHelper(storage, applicationContext);
 
       if (body != null && !body.getCountryCode().isEmpty()) {
         countryCode = body.getCountryCode();
-        StorageHelper storageHelper = new StorageHelper(storage, applicationContext);
-        storageHelper.setJobCountryCode(jobId, countryCode);
+        storageHelper.saveJobMetaData(jobId, countryCode);
       }
 
       // Check to see if this request has a url
       if (body != null && body.getUrl() != null && !body.getUrl().isEmpty()) {
-        handleUrlUpload(jobId, body.getUrl());
+        storageHelper.handleUrlUpload(jobId, body.getUrl());
         return "{\"jobId\": \"" + jobId + "\"}";
       }
       // If no URL is provided, then we generate a unique url for the client to upload the GTFS file
-      URL url = generateUniqueUploadUrl(jobId);
+      URL url = storageHelper.generateUniqueUploadUrl(jobId);
 
       return "{\"jobId\": \"" + jobId + "\", \"url\": \"" + url.toString() + "\"}";
     } catch (Exception exc) {
@@ -134,41 +95,29 @@ public class ValidationController {
 
       var inputFilename = node.get("name").textValue();
       var jobId = inputFilename.split("/")[0];
-      tempDir = Files.createTempDirectory(StorageHelper.TEMP_FOLDER_NAME).toFile();
-
-      var inputResource =
-          applicationContext.getResource("gs://" + USER_UPLOAD_BUCKET_NAME + "/" + inputFilename);
-      var inputFile = inputResource.getInputStream();
-
-      var tempFile = File.createTempFile(jobId, ".zip", tempDir);
-      var output = new FileOutputStream(tempFile);
-      inputFile.transferTo(output);
 
       StorageHelper storageHelper = new StorageHelper(storage, applicationContext);
       var countryCode = storageHelper.getJobCountryCode(jobId);
+      logger.info("Country code: " + countryCode);
+
+      File tempFile = storageHelper.createTempFile(jobId, inputFilename);
 
       var runner = new ValidationRunner(new VersionResolver());
-      var outputPath = new File(tempDir.toPath().toString() + jobId);
+      tempDir = tempFile.getParentFile();
+      var outputPath = new File(tempDir.toPath() + jobId);
       var configBuilder =
           ValidationRunnerConfig.builder()
               .setGtfsSource(tempFile.toURI())
               .setOutputDirectory(outputPath.toPath());
       if (!countryCode.isEmpty()) {
+        var country = CountryCode.forStringOrUnknown(countryCode);
+        logger.info("setting country code: " + country.getCountryCode());
         configBuilder.setCountryCode(CountryCode.forStringOrUnknown(countryCode));
       }
       var config = configBuilder.build();
       runner.run(config);
 
-      var directoryListing = outputPath.listFiles();
-      if (directoryListing != null) {
-        for (var reportFile : directoryListing) {
-          var blobId = BlobId.of(RESULTS_BUCKET_NAME, jobId + "/" + reportFile.getName());
-          var mimeType = Files.probeContentType(reportFile.toPath());
-          var blobInfo = BlobInfo.newBuilder(blobId).setContentType(mimeType).build();
-          var fileBytes = Files.readAllBytes(Paths.get(reportFile.getPath()));
-          storage.create(blobInfo, fileBytes);
-        }
-      }
+      storageHelper.uploadFilesToStorage(jobId, outputPath);
 
       tempDir.delete();
       return new ResponseEntity(HttpStatus.OK);

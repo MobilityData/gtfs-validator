@@ -3,8 +3,12 @@ package org.mobilitydata.gtfsvalidator.web.service.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.storage.*;
 import java.io.*;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -14,8 +18,10 @@ public class StorageHelper {
   static final String JOB_FILENAME_PREFIX = "job";
   static final String JOB_FILENAME_SUFFIX = ".json";
   static final String JOB_FILENAME = JOB_FILENAME_PREFIX + JOB_FILENAME_SUFFIX;
-  static final String COUNTRY_CODE_KEY = "country-code";
   public static final String TEMP_FOLDER_NAME = "gtfs-validator-temp";
+  static final String USER_UPLOAD_BUCKET_NAME = "gtfs-validator-user-uploads";
+  static final String RESULTS_BUCKET_NAME = "gtfs-validator-results";
+  static final String FILE_NAME = "gtfs-job.zip";
 
   private final Logger logger = LoggerFactory.getLogger(StorageHelper.class);
   private Storage storage;
@@ -31,17 +37,16 @@ public class StorageHelper {
     return jobId + "/" + JOB_FILENAME;
   }
 
-  public void setJobCountryCode(String jobId, String countryCode) throws Exception {
+  public void saveJobMetaData(String jobId, String countryCode) throws Exception {
     try {
       var jobInfoPath = getJobInfoPath(jobId);
       var jobBlobId = BlobId.of(JOB_INFO_BUCKET_NAME, jobInfoPath);
       var jobBlobInfo = BlobInfo.newBuilder(jobBlobId).setContentType("application/json").build();
       var om = new ObjectMapper();
-      var jobNode = om.createObjectNode();
-      jobNode.put(COUNTRY_CODE_KEY, countryCode);
-      var writer = om.writer();
-      var fileBytes = writer.writeValueAsBytes(jobNode);
-      storage.create(jobBlobInfo, fileBytes);
+      var jobMetadata = new JobMetadata(jobId, countryCode);
+      var json = om.writeValueAsString(jobMetadata);
+      logger.info("Saving job metadata: " + json);
+      storage.create(jobBlobInfo, json.getBytes());
     } catch (Exception exc) {
       logger.error("Error setting country code", exc);
       throw exc;
@@ -51,15 +56,14 @@ public class StorageHelper {
   public String getJobCountryCode(String jobId) {
     try {
       var jobInfoPath = getJobInfoPath(jobId);
-      var jobInfoFile =
-          getRemoteFile(
-              "gs://" + JOB_INFO_BUCKET_NAME + "/" + jobInfoPath,
-              JOB_FILENAME_PREFIX,
-              JOB_FILENAME_SUFFIX);
-      var fileBytes = Files.readAllBytes(Paths.get(jobInfoFile.getPath()));
+      var jobBlobId = BlobId.of(JOB_INFO_BUCKET_NAME, jobInfoPath);
+      Blob blob = storage.get(jobBlobId);
+      var json = new String(blob.getContent());
+      logger.info("Loading job metadata: " + json);
+
       var objectMapper = new ObjectMapper();
-      var jobNode = objectMapper.readTree(fileBytes);
-      return jobNode.get(COUNTRY_CODE_KEY).textValue();
+      JobMetadata jobMetaData = objectMapper.readValue(json, JobMetadata.class);
+      return jobMetaData.getCountryCode();
     } catch (Exception exc) {
       logger.error("Error could not load remote file, using default country code", exc);
       return "";
@@ -82,6 +86,63 @@ public class StorageHelper {
     } catch (Exception exc) {
       logger.error("Error could not load remote file:", exc);
       throw exc;
+    }
+  }
+
+  public void handleUrlUpload(String jobId, String url) throws Exception {
+    // Read file into memory
+    var urlInputStream = new BufferedInputStream(new URL(url).openStream());
+
+    // Upload to GCS
+    var blobId = BlobId.of(USER_UPLOAD_BUCKET_NAME, jobId + "/" + jobId + ".zip");
+    var mimeType = "application/zip";
+    var blobInfo = BlobInfo.newBuilder(blobId).setContentType(mimeType).build();
+    var fileBytes = urlInputStream.readAllBytes();
+    storage.create(blobInfo, fileBytes);
+  }
+
+  public URL generateUniqueUploadUrl(String jobId) {
+    var blobInfo =
+        BlobInfo.newBuilder(BlobId.of(USER_UPLOAD_BUCKET_NAME, jobId + "/" + FILE_NAME)).build();
+
+    // Generate Signed URL
+    Map<String, String> extensionHeaders = new HashMap<>();
+    extensionHeaders.put("Content-Type", "application/octet-stream");
+
+    URL url =
+        storage.signUrl(
+            blobInfo,
+            15,
+            TimeUnit.MINUTES,
+            Storage.SignUrlOption.httpMethod(HttpMethod.PUT),
+            Storage.SignUrlOption.withExtHeaders(extensionHeaders),
+            Storage.SignUrlOption.withV4Signature());
+    return url;
+  }
+
+  public File createTempFile(String jobId, String inputFilename) throws IOException {
+    var tempDir = Files.createTempDirectory(StorageHelper.TEMP_FOLDER_NAME).toFile();
+
+    var inputResource =
+        applicationContext.getResource("gs://" + USER_UPLOAD_BUCKET_NAME + "/" + inputFilename);
+    var inputFile = inputResource.getInputStream();
+
+    var tempFile = File.createTempFile(jobId, ".zip", tempDir);
+    var output = new FileOutputStream(tempFile);
+    inputFile.transferTo(output);
+    return tempFile;
+  }
+
+  public void uploadFilesToStorage(String jobId, File outputPath) throws IOException {
+    var directoryListing = outputPath.listFiles();
+    if (directoryListing != null) {
+      for (var reportFile : directoryListing) {
+        var blobId = BlobId.of(RESULTS_BUCKET_NAME, jobId + "/" + reportFile.getName());
+        var mimeType = Files.probeContentType(reportFile.toPath());
+        var blobInfo = BlobInfo.newBuilder(blobId).setContentType(mimeType).build();
+        var fileBytes = Files.readAllBytes(Paths.get(reportFile.getPath()));
+        storage.create(blobInfo, fileBytes);
+      }
     }
   }
 }
