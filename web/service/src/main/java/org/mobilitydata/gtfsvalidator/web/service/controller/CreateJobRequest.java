@@ -15,12 +15,12 @@
  */
 package org.mobilitydata.gtfsvalidator.web.service.controller;
 
-public class CreateJobBody {
+public class CreateJobRequest {
 
   private String countryCode;
   private String url;
 
-  public CreateJobBody() {}
+  public CreateJobRequest() {}
 
   public String getCountryCode() {
     return countryCode;
