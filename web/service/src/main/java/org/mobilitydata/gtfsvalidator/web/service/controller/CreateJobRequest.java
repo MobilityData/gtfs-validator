@@ -15,6 +15,10 @@
  */
 package org.mobilitydata.gtfsvalidator.web.service.controller;
 
+/**
+ * A JSON request to create a new job. All fields are optional. If url is specified, it will be used
+ * to download the GTFS feed, otherwise a signed url will be returned for uploading a file to GCS.
+ */
 public class CreateJobRequest {
 
   private String countryCode;
@@ -26,15 +30,7 @@ public class CreateJobRequest {
     return countryCode;
   }
 
-  public void setCountryCode(String countryCode) {
-    this.countryCode = countryCode;
-  }
-
   public String getUrl() {
     return url;
-  }
-
-  public void setUrl(String url) {
-    this.url = url;
   }
 }

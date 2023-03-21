@@ -1,5 +1,8 @@
 package org.mobilitydata.gtfsvalidator.web.service.util;
 
+/**
+ * Metadata about a validation job, extracted from the PubSub message.
+ */
 public class ValidationJobMetaData {
   private final String jobId;
   private final String fileName;
