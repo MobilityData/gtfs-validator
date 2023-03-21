@@ -13,6 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
+/**
+ * Helper class for interacting with GCS.
+ */
 public class StorageHelper {
   static final String JOB_INFO_BUCKET_NAME = "gtfs-validator-results";
   static final String JOB_FILENAME_PREFIX = "job";
@@ -37,6 +40,13 @@ public class StorageHelper {
     return jobId + "/" + JOB_FILENAME;
   }
 
+  /**
+   * Creates job metadata, serializes to JSON and saves it to GCS.
+   *
+   * @param jobId
+   * @param countryCode
+   * @throws Exception
+   */
   public void saveJobMetaData(String jobId, String countryCode) throws Exception {
     try {
       var jobInfoPath = getJobInfoPath(jobId);
@@ -53,6 +63,12 @@ public class StorageHelper {
     }
   }
 
+  /**
+   * Loads job metadata from GCS.
+   *
+   * @param jobId
+   * @return
+   */
   public String getJobCountryCode(String jobId) {
     try {
       var jobInfoPath = getJobInfoPath(jobId);
@@ -70,6 +86,13 @@ public class StorageHelper {
     }
   }
 
+  /**
+   * Saves a file from a URL to GCS at a job-specific path.
+   *
+   * @param jobId
+   * @param url
+   * @throws Exception
+   */
   public void saveJobFileFromUrl(String jobId, String url) throws Exception {
     // Read file into memory
     var urlInputStream = new BufferedInputStream(new URL(url).openStream());
@@ -82,6 +105,7 @@ public class StorageHelper {
     storage.create(blobInfo, fileBytes);
   }
 
+  /** Generates a job-specific signed URL for uploading a file to GCS. */
   public URL generateUniqueUploadUrl(String jobId) {
     var blobInfo =
         BlobInfo.newBuilder(BlobId.of(USER_UPLOAD_BUCKET_NAME, jobId + "/" + FILE_NAME)).build();
@@ -101,6 +125,15 @@ public class StorageHelper {
     return url;
   }
 
+  /**
+   * Copies the uploaded feed file from GCS to a local temp directory
+   * and returns the file.
+   *
+   * @param jobId
+   * @param fileName
+   * @return
+   * @throws IOException
+   */
   public File createTempFile(String jobId, String fileName) throws IOException {
     var tempDir = Files.createTempDirectory(StorageHelper.TEMP_FOLDER_NAME).toFile();
 
@@ -114,6 +147,13 @@ public class StorageHelper {
     return tempFile;
   }
 
+  /**
+   * Uploads the validation report files to GCS.
+   *
+   * @param jobId
+   * @param outputPath
+   * @throws IOException
+   */
   public void uploadFilesToStorage(String jobId, File outputPath) throws IOException {
     var directoryListing = outputPath.listFiles();
     if (directoryListing != null) {
