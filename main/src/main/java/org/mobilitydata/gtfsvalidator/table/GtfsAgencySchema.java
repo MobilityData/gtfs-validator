@@ -18,12 +18,7 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import java.time.ZoneId;
 import java.util.Locale;
-import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
-import org.mobilitydata.gtfsvalidator.annotation.FieldType;
-import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.*;
 
 @GtfsTable("agency.txt")
 @Required
@@ -34,6 +29,7 @@ public interface GtfsAgencySchema extends GtfsEntity {
   String agencyId();
 
   @Required
+  @MixedCase
   String agencyName();
 
   @FieldType(FieldTypeEnum.URL)

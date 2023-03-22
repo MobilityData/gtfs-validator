@@ -16,16 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
-import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
-import org.mobilitydata.gtfsvalidator.annotation.DefaultValue;
-import org.mobilitydata.gtfsvalidator.annotation.FieldType;
-import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
-import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.Index;
-import org.mobilitydata.gtfsvalidator.annotation.NonNegative;
-import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.*;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 
 @GtfsTable("routes.txt")
@@ -41,12 +32,15 @@ public interface GtfsRouteSchema extends GtfsEntity {
   @ConditionallyRequired
   String agencyId();
 
+  @MixedCase
   @ConditionallyRequired
   String routeShortName();
 
+  @MixedCase
   @ConditionallyRequired
   String routeLongName();
 
+  @MixedCase
   String routeDesc();
 
   @Required
