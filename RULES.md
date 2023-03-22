@@ -1727,7 +1727,6 @@ Fare media should have a unique combination of fare media name and type.
 
 #### References
 * [fare_media.txt specification](http://gtfs.org/reference/static/#fare_mediatxt)
-* ```
 
 <details>
 
@@ -1739,7 +1738,6 @@ Fare media should have a unique combination of fare media name and type.
 
 #### Affected files
 * [fare_media.txt](http://gtfs.org/reference/static/#fare_mediatxt)
-* ```
 
 </details>
 
