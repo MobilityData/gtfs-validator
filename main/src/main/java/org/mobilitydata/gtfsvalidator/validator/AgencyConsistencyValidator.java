@@ -19,10 +19,7 @@ import java.time.ZoneId;
 import java.util.Locale;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
-import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
-import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.notice.*;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 
@@ -34,6 +31,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
  *
  * <ul>
  *   <li>{@link MissingRequiredFieldNotice} - multiple agencies present but no agency_id set
+ *   <li>{@link MissingRecommendedFieldNotice} - single agency present but no agency_id set
  *   <li>{@link InconsistentAgencyTimezoneNotice} - inconsistent timezone among the agencies
  *   <li>{@link InconsistentAgencyLangNotice} - inconsistent language among the agencies
  * </ul>
@@ -51,17 +49,28 @@ public class AgencyConsistencyValidator extends FileValidator {
   @Override
   public void validate(NoticeContainer noticeContainer) {
     final int agencyCount = agencyTable.entityCount();
-    if (agencyCount < 2) {
-      return;
-    }
-    for (GtfsAgency agency : agencyTable.getEntities()) {
-      // agency_id is required when there are 2 or more agencies.
+    if (agencyCount == 1) {
+      GtfsAgency agency = agencyTable.getEntities().get(0);
+      // agency_id is recommended even when there is only 1 agency
       if (!agency.hasAgencyId()) {
         noticeContainer.addValidationNotice(
-            new MissingRequiredFieldNotice(
-                agencyTable.gtfsFilename(),
-                agency.csvRowNumber(),
-                GtfsAgency.AGENCY_ID_FIELD_NAME));
+            new MissingRecommendedFieldNotice(
+                agencyTable.gtfsFilename(), agency.csvRowNumber(), agency.agencyName()));
+      }
+      // no further validation required
+      return;
+    }
+
+    if (agencyCount > 1) {
+      for (GtfsAgency agency : agencyTable.getEntities()) {
+        // agency_id is required when there are 2 or more agencies.
+        if (!agency.hasAgencyId()) {
+          noticeContainer.addValidationNotice(
+              new MissingRequiredFieldNotice(
+                  agencyTable.gtfsFilename(),
+                  agency.csvRowNumber(),
+                  GtfsAgency.AGENCY_ID_FIELD_NAME));
+        }
       }
     }
     // agency_timezone field is required and it must be the same for all agencies.

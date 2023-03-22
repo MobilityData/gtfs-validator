@@ -1,0 +1,16 @@
+{
+  "newErrors": [],
+  "droppedErrors": [],
+  "newWarnings": [],
+  "droppedWarnings": [],
+  "corruptedSources": {
+    "sourceIdCount": 5,
+    "corruptedSourcesCount": 2,
+    "corruptedSources": [
+      "source-id-4",
+      "source-id-5"
+    ],
+    "percentCorruptedSourcesThreshold": 2.0,
+    "aboveThreshold": true
+  }
+}

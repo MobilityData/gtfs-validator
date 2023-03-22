@@ -1,0 +1,197 @@
+/*
+ * Copyright 2023 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.mobilitydata.gtfsvalidator.validator;
+
+import static com.google.common.truth.Truth.assertThat;
+import static java.util.Arrays.stream;
+
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
+@RunWith(JUnit4.class)
+public class NoticeFieldsTest {
+
+  /**
+   * Is this test failing? That likely means you've added a new field name to a `Notice` that hasn't
+   * been used before. That's not necessarily a bad thing, but we want to enforce some consistency
+   * amongst Notice field names because they are communicated and consumed externally.
+   *
+   * <p>Some general guidelines:
+   *
+   * <p>1) If there is an existing field name that is a good fit, re-use it.
+   *
+   * <p>2) When you need to reference two different entities in a Notice, favor a numeric suffix for
+   * field names. E.g. `fieldName1` and `fieldName2` (as opposed to `fieldNameA` and `fieldNameB`).
+   *
+   * <p>If no existing field name is a good match, then add your new field to the sorted list below.
+   */
+  @Test
+  public void testNoticeClassFieldNames() {
+    // Keep the list of field names is in sorted order.
+    assertThat(discoverValidationNoticeFieldNames())
+        .containsExactly(
+            "actual",
+            "actualDistanceBetweenShapePoints",
+            "agencyCsvRowNumber",
+            "agencyId",
+            "agencyLang",
+            "agencyName",
+            "amount",
+            "arrivalTime",
+            "arrivalTime2",
+            "attributionId",
+            "blockId",
+            "charIndex",
+            "childFieldName",
+            "childFilename",
+            "columnIndex",
+            "columnName",
+            "csvRowNumber",
+            "csvRowNumber1",
+            "csvRowNumber2",
+            "csvRowNumberA",
+            "csvRowNumberB",
+            "currCsvRowNumber",
+            "currStartTime",
+            "currentDate",
+            "departureTime",
+            "departureTime1",
+            "distanceKm",
+            "endFieldName",
+            "endValue",
+            "entityCount",
+            "entityId",
+            "exception",
+            "expected",
+            "expectedLocationType",
+            "expectedRouteId",
+            "feedEndDate",
+            "feedLang",
+            "fieldName",
+            "fieldName1",
+            "fieldName2",
+            "fieldType",
+            "fieldValue",
+            "fieldValue1",
+            "fieldValue2",
+            "filename",
+            "firstIndex",
+            "geoDistanceToShape",
+            "hasEntrance",
+            "hasExit",
+            "headerCount",
+            "index",
+            "intersection",
+            "latFieldName",
+            "latFieldValue",
+            "lineIndex",
+            "locationType",
+            "locationTypeName",
+            "locationTypeValue",
+            "lonFieldName",
+            "lonFieldValue",
+            "match",
+            "match1",
+            "match2",
+            "matchCount",
+            "message",
+            "newCsvRowNumber",
+            "oldCsvRowNumber",
+            "parentCsvRowNumber",
+            "parentFieldName",
+            "parentFilename",
+            "parentLocationType",
+            "parentStation",
+            "parentStopName",
+            "parsedContent",
+            "pathwayId",
+            "prevCsvRowNumber",
+            "prevEndTime",
+            "prevShapeDistTraveled",
+            "prevShapePtSequence",
+            "prevStopSequence",
+            "prevStopTimeDistTraveled",
+            "recordId",
+            "recordSubId",
+            "routeColor",
+            "routeCsvRowNumber",
+            "routeDesc",
+            "routeFieldName",
+            "routeId",
+            "routeId1",
+            "routeId2",
+            "routeLongName",
+            "routeShortName",
+            "routeTextColor",
+            "routeTypeValue",
+            "routeUrl",
+            "rowLength",
+            "rowNumber",
+            "secondIndex",
+            "serviceIdA",
+            "serviceIdB",
+            "shapeDistTraveled",
+            "shapeId",
+            "shapePtSequence",
+            "specifiedField",
+            "speedKph",
+            "startFieldName",
+            "startValue",
+            "stopCsvRowNumber",
+            "stopDesc",
+            "stopFieldName",
+            "stopId",
+            "stopId1",
+            "stopId2",
+            "stopIdFieldName",
+            "stopName",
+            "stopName1",
+            "stopName2",
+            "stopSequence",
+            "stopSequence1",
+            "stopSequence2",
+            "stopTimeCsvRowNumber",
+            "stopTimeCsvRowNumber1",
+            "stopTimeCsvRowNumber2",
+            "stopUrl",
+            "suggestedExpirationDate",
+            "tableName",
+            "transferCount",
+            "tripCsvRowNumber",
+            "tripFieldName",
+            "tripId",
+            "tripIdA",
+            "tripIdB",
+            "tripIdFieldName",
+            "validator",
+            "value");
+  }
+
+  private static List<String> discoverValidationNoticeFieldNames() {
+    return ClassGraphDiscovery.discoverNoticeSubclasses(ClassGraphDiscovery.DEFAULT_NOTICE_PACKAGES)
+        .stream()
+        .flatMap(c -> stream(c.getDeclaredFields()))
+        .map(Field::getName)
+        .distinct()
+        .sorted()
+        .collect(Collectors.toList());
+  }
+}

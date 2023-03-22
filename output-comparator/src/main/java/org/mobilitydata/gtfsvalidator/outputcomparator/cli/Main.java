@@ -29,6 +29,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.model.ValidationReport;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.outputcomparator.io.ChangedNoticesCollector;
 import org.mobilitydata.gtfsvalidator.outputcomparator.io.CorruptedSourcesCollector;
 import org.mobilitydata.gtfsvalidator.outputcomparator.model.SourceUrlContainer;
@@ -75,10 +76,24 @@ public class Main {
 
     ChangedNoticesCollector newErrors =
         new ChangedNoticesCollector(
-            args.getNewErrorThreshold(), args.getPercentInvalidDatasetsThreshold());
+            SeverityLevel.ERROR,
+            args.getNewErrorThreshold(),
+            args.getPercentInvalidDatasetsThreshold());
     ChangedNoticesCollector droppedErrors =
         new ChangedNoticesCollector(
-            args.getNewErrorThreshold(), args.getPercentInvalidDatasetsThreshold());
+            SeverityLevel.ERROR,
+            args.getNewErrorThreshold(),
+            args.getPercentInvalidDatasetsThreshold());
+    ChangedNoticesCollector newWarnings =
+        new ChangedNoticesCollector(
+            SeverityLevel.WARNING,
+            args.getNewErrorThreshold(),
+            args.getPercentInvalidDatasetsThreshold());
+    ChangedNoticesCollector droppedWarnings =
+        new ChangedNoticesCollector(
+            SeverityLevel.WARNING,
+            args.getNewErrorThreshold(),
+            args.getPercentInvalidDatasetsThreshold());
     CorruptedSourcesCollector corruptedSources =
         new CorruptedSourcesCollector(args.getPercentCorruptedSourcesThreshold());
 
@@ -113,6 +128,8 @@ public class Main {
       }
       newErrors.compareValidationReports(sourceId, sourceUrl, referenceReport, latestReport);
       droppedErrors.compareValidationReports(sourceId, sourceUrl, latestReport, referenceReport);
+      newWarnings.compareValidationReports(sourceId, sourceUrl, referenceReport, latestReport);
+      droppedWarnings.compareValidationReports(sourceId, sourceUrl, latestReport, referenceReport);
     }
 
     if (!(new File(args.getOutputBase()).mkdirs())) {
@@ -123,6 +140,8 @@ public class Main {
         AcceptanceReport.create(
             newErrors.getChangedNotices(),
             droppedErrors.getChangedNotices(),
+            newWarnings.getChangedNotices(),
+            droppedWarnings.getChangedNotices(),
             corruptedSources.toReport());
     exportAcceptanceReport(report, args.getOutputBase());
 
@@ -132,7 +151,14 @@ public class Main {
             || corruptedSources.isAboveThreshold();
 
     String reportSummaryString =
-        generateReportSummaryString(failure, newErrors, droppedErrors, corruptedSources, args);
+        generateReportSummaryString(
+            failure,
+            newErrors,
+            droppedErrors,
+            newWarnings,
+            droppedWarnings,
+            corruptedSources,
+            args);
     System.out.print(reportSummaryString);
     exportReportSummary(reportSummaryString, args.getOutputBase());
 
@@ -165,6 +191,8 @@ public class Main {
       boolean failure,
       ChangedNoticesCollector newErrors,
       ChangedNoticesCollector droppedErrors,
+      ChangedNoticesCollector newWarnings,
+      ChangedNoticesCollector droppedWarnings,
       CorruptedSourcesCollector corruptedSources,
       Arguments args) {
     StringBuilder b = new StringBuilder();
@@ -172,6 +200,8 @@ public class Main {
     b.append(status).append('\n');
     b.append("New Errors: ").append(newErrors.generateLogString()).append('\n');
     b.append("Dropped Errors: ").append(droppedErrors.generateLogString()).append('\n');
+    b.append("New Warnings: ").append(newWarnings.generateLogString()).append('\n');
+    b.append("Dropped Warnings: ").append(droppedWarnings.generateLogString()).append('\n');
     b.append(corruptedSources.generateLogString()).append("\n");
     if (args.getCommitSha().isPresent()) {
       b.append("Commit: ").append(args.getCommitSha().get()).append("\n");

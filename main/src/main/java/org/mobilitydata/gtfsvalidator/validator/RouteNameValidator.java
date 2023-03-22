@@ -28,9 +28,9 @@ import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
  *
  * <ul>
  *   <li>{@link RouteBothShortAndLongNameMissingNotice}
- *   <li>{@link RouteShortAndLongNameEqualNotice}
  *   <li>{@link RouteShortNameTooLongNotice}
  *   <li>{@link SameNameAndDescriptionForRouteNotice}
+ *   <li>{@link RouteLongNameContainsShortNameNotice}
  * </ul>
  */
 @GtfsValidator
@@ -42,25 +42,34 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
   public void validate(GtfsRoute entity, NoticeContainer noticeContainer) {
     final boolean hasLongName = entity.hasRouteLongName();
     final boolean hasShortName = entity.hasRouteShortName();
+
     if (!hasLongName && !hasShortName) {
       noticeContainer.addValidationNotice(
           new RouteBothShortAndLongNameMissingNotice(entity.routeId(), entity.csvRowNumber()));
     }
-    if (hasShortName
-        && hasLongName
-        && entity.routeShortName().equalsIgnoreCase(entity.routeLongName())) {
-      noticeContainer.addValidationNotice(
-          new RouteShortAndLongNameEqualNotice(
-              entity.routeId(),
-              entity.csvRowNumber(),
-              entity.routeShortName(),
-              entity.routeLongName()));
-    }
+
     if (hasShortName && entity.routeShortName().length() > MAX_SHORT_NAME_LENGTH) {
       noticeContainer.addValidationNotice(
           new RouteShortNameTooLongNotice(
               entity.routeId(), entity.csvRowNumber(), entity.routeShortName()));
     }
+
+    // check if route_long_name begins with route_short_name followed by " ", "-", or "(".
+    // as referenced here
+    // https://github.com/MobilityData/gtfs-validator/pull/501#discussion_r535506016
+    if (hasLongName && hasShortName) {
+      String longName = entity.routeLongName();
+      String shortName = entity.routeShortName();
+      if (longName.toLowerCase().startsWith(shortName.toLowerCase())) {
+        String remainder = longName.substring(shortName.length());
+        if (remainder.isEmpty() || remainder.matches("^\\s?[\\s\\-\\(\\)].*")) {
+          noticeContainer.addValidationNotice(
+              new RouteLongNameContainsShortNameNotice(
+                  entity.routeId(), entity.csvRowNumber(), shortName, longName));
+        }
+      }
+    }
+
     if (entity.hasRouteDesc()) {
       String routeDesc = entity.routeDesc();
       String routeId = entity.routeId();
@@ -104,11 +113,11 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
   }
 
   /**
-   * Short and long name are equal for a single route.
+   * Long name can not contain short name for a single route.
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
-  static class RouteShortAndLongNameEqualNotice extends ValidationNotice {
+  static class RouteLongNameContainsShortNameNotice extends ValidationNotice {
 
     // The id of the faulty record.
     private final String routeId;
@@ -122,7 +131,7 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
     // The faulty record's `route_long_name`.
     private final String routeLongName;
 
-    RouteShortAndLongNameEqualNotice(
+    RouteLongNameContainsShortNameNotice(
         String routeId, int csvRowNumber, String routeShortName, String routeLongName) {
       super(SeverityLevel.WARNING);
       this.routeId = routeId;

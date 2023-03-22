@@ -6,22 +6,27 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.mobilitydata.gtfsvalidator.model.ValidationReport;
+import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.outputcomparator.model.report.AffectedSource;
 import org.mobilitydata.gtfsvalidator.outputcomparator.model.report.ChangedNotice;
 
 /**
  * Given validation reports computed against two versions of the validator across multiple datasets,
- * collects the set of newly-generated error notices that changed between the two validator
- * versions.
+ * collects the set of newly-generated notices of a particular severity level that changed between
+ * the two validator versions.
  */
 public class ChangedNoticesCollector {
 
+  // The notice severity level we will examine for changes.
+  private final SeverityLevel severityLevel;
+
   /**
-   * If the number of new error notices in a report meets or exceeds this threshold, the
-   * corresponding dataset will be considered "invalid".
+   * If the number of new notices in a report meets or exceeds this threshold, the corresponding
+   * dataset will be considered "invalid".
    */
-  private final int newErrorThreshold;
+  private final int newNoticeThreshold;
 
   /**
    * A percentage in the interval [0,100]. If percentage of "invalid" datasets (out of the total
@@ -38,12 +43,14 @@ public class ChangedNoticesCollector {
 
   /**
    * The number of invalid datasets, where the number of new validation errors exceeds {@link
-   * #newErrorThreshold}.
+   * #newNoticeThreshold}.
    */
   private int invalidDatasetCount = 0;
 
-  public ChangedNoticesCollector(int newErrorThreshold, float percentInvalidDatasetsThreshold) {
-    this.newErrorThreshold = newErrorThreshold;
+  public ChangedNoticesCollector(
+      SeverityLevel severityLevel, int newNoticeThreshold, float percentInvalidDatasetsThreshold) {
+    this.severityLevel = severityLevel;
+    this.newNoticeThreshold = newNoticeThreshold;
     this.percentInvalidDatasetsThreshold = percentInvalidDatasetsThreshold;
   }
 
@@ -67,23 +74,30 @@ public class ChangedNoticesCollector {
       String sourceUrl,
       ValidationReport referenceReport,
       ValidationReport latestReport) {
+    NoticeSet referenceNotices = filterNoticesFoSeverity(referenceReport);
+    NoticeSet latestNotices = filterNoticesFoSeverity(latestReport);
+
     totalDatasetCount++;
-    if (referenceReport.hasSameErrorCodes(latestReport)) {
+    if (referenceNotices.hasSameNoticeCodes(latestNotices)) {
       return;
     }
-    for (String noticeCode : referenceReport.getNewErrorsListing(latestReport)) {
+    Set<String> newNotices = referenceNotices.getNewNotices(latestNotices);
+    for (String noticeCode : newNotices) {
       ChangedNotice changedNotice =
           changedNoticesByCode.getOrDefault(noticeCode, new ChangedNotice(noticeCode));
       changedNoticesByCode.putIfAbsent(noticeCode, changedNotice);
       changedNotice.addAffectedSource(
           AffectedSource.create(
-              sourceId,
-              sourceUrl,
-              latestReport.getErrorNoticeReportByNoticeCode(noticeCode).getTotalNotices()));
+              sourceId, sourceUrl, latestNotices.getTotalNoticeCountForCode(noticeCode)));
     }
-    if (referenceReport.getNewErrorsListing(latestReport).size() >= this.newErrorThreshold) {
+    if (newNotices.size() >= this.newNoticeThreshold) {
       ++invalidDatasetCount;
     }
+  }
+
+  private NoticeSet filterNoticesFoSeverity(ValidationReport report) {
+    return new NoticeSet(
+        report.getNotices().stream().filter(n -> n.getSeverity() == severityLevel));
   }
 
   /**

@@ -113,13 +113,14 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`missing_recommended_field`](#missing_recommended_field)                                     | A recommended field is missing.                                                                                                                               |
 | [`missing_timepoint_column`](#missing_timepoint_column)                                       | `timepoint` column is missing for a dataset.                                                                                                                  |
 | [`missing_timepoint_value`](#missing_timepoint_value)                                         | `stop_times.timepoint` value is missing for a record.                                                                                                         |
+| [`mixed_case_recommended_field`](#mixed_case_recommended_field)                                                       | This field has customer-facing text and should use Mixed Case (should contain upper and lower case letters).                                                                                                         |
 | [`more_than_one_entity`](#more_than_one_entity)                                               | More than one row in CSV.                                                                                                                                     |
 | [`non_ascii_or_non_printable_char`](#non_ascii_or_non_printable_char)                         | Non ascii or non printable char in  `id`.                                                                                                                     |
 | [`pathway_dangling_generic_node`](#pathway_dangling_generic_node)                             | A generic node has only one incident location in a pathway graph.                                                                                             |
 | [`pathway_loop`](#pathway_loop)                                                               | A pathway starts and ends at the same location.                                                                                                               |
 | [`platform_without_parent_station`](#platform_without_parent_station)                         | A platform has no `parent_station` field set.                                                                                                                 |
 | [`route_color_contrast`](#route_color_contrast)                                               | Insufficient route color contrast.                                                                                                                            |
-| [`route_short_and_long_name_equal`](#route_short_and_long_name_equal)                         | `route_short_name` and `route_long_name` are equal for a single route.                                                                                        |
+| [`route_long_name_contains_short_name`](#route_long_name_contains_short_name)                 | Long name should not contain short name for a single route.                                                                                                   |
 | [`route_short_name_too_long`](#route_short_name_too_long)                                     | Short name of a route is too long (more than 12 characters).                                                                                                  |
 | [`same_name_and_description_for_route`](#same_name_and_description_for_route)                 | Same name and description for route.                                                                                                                          |
 | [`same_name_and_description_for_stop`](#same_name_and_description_for_stop)                   | Same name and description for stop.                                                                                                                           |
@@ -1291,7 +1292,7 @@ A point is too close to the North or South Pole.
 
 ### route_both_short_and_long_name_missing
 
-Both short_name and long_name are missing for a route.
+Both `route_short_name` and `route_long_name` are missing for a route.
 
 #### References
 * [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
@@ -2067,6 +2068,8 @@ The given field has no value in some input row, even though values are recommend
 
 #### References
 * [feed_info.txt best practices](https://gtfs.org/schedule/best-practices/#feed_infotxt)
+* [agency.txt best practices](https://gtfs.org/schedule/best-practices/#agencytxt)
+* [fare_attributes.txt best practices](https://gtfs.org/schedule/best-practices/#fare_attributestxt)
 <details>
 
 #### Notice fields description
@@ -2120,6 +2123,39 @@ Even though the column `timepoint` is optional in `stop_times.txt` according to 
 
 #### Affected files
 * [`stop_times.txt`](https://gtfs.org/schedule/reference/#stop_timestxt)
+
+</details>
+
+<a name="MixedCaseRecommendedFieldNotice"/>
+
+### mixed_case_recommended_field
+
+This field contains customer-facing text and should use Mixed Case (upper and lower case letters) to ensure good readability when displayed to riders. Avoid the use of abbreviations throughout the feed (e.g. St. for Street) unless a location is called by its abbreviated name (e.g. “JFK Airport”). Abbreviations may be problematic for accessibility by screen reader software and voice user interfaces.
+
+#### References
+* [Best Practices for All Files](https://gtfs.org/schedule/best-practices/#practice-recommendations-organized-by-file)
+<details>
+
+
+#### Notice fields description
+| Field name     	| Description                           	| Type   	|
+|----------------	|---------------------------------------	|--------	|
+| `csvRowNumber` 	| The row number of the faulty record.  	| Long   	|
+| `filename`    	| Name of the faulty file.              	| String 	|
+| `fieldName`    	| Name of the faulty field.              	| String 	|
+
+#### Affected files & fields
+* [`agency.agency_name`](https://gtfs.org/schedule/reference/#agencytxt)
+* [`stops.stop_name`](https://gtfs.org/schedule/reference/#stopstxt)
+* [`stops.stop_desc`](https://gtfs.org/schedule/reference/#stopstxt)
+* [`routes.route_short_name`](https://gtfs.org/schedule/reference/#routestxt)
+* [`routes.route_long_name`](https://gtfs.org/schedule/reference/#routestxt)
+* [`routes.route_desc`](https://gtfs.org/schedule/reference/#routestxt)
+* [`trips.trip_headsign`](https://gtfs.org/schedule/reference/#tripstxt)
+* [`trips.trip_short_name`](https://gtfs.org/schedule/reference/#tripstxt)
+* [`pathways.signposted_as`](https://gtfs.org/schedule/reference/#pathwaystxt)
+* [`pathways.reversed_signposted_as`](https://gtfs.org/schedule/reference/#pathwaystxt)
+* [`levels.level_name`](https://gtfs.org/schedule/reference/#levelstxt)
 
 </details>
 
@@ -2260,29 +2296,41 @@ A route's color and `route_text_color` should be contrasting.
 
 </details>
 
-<a name="RouteShortAndLongNameEqualNotice"/>
+<a name="RouteLongNameContainsShortNameNotice"/>
 
-### route_short_and_long_name_equal
+### route_long_name_contains_short_name
 
-A single route has the same values for `route_short_name` and `route_long_name`.
+In routes.txt, `route_long_name` should not contain the value for `route_short_name`, because when both are provided, they are often combined by transit applications. Note that only one of the two fields is required. If there is no short name used for a route, use `route_long_name` only.
 
-Example of bad data:
+Good examples:
+| `route_short_name`/`route_long_name`                                                                | Dataset                                                                                                                                                                |
+| ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ["N"/"Judah"](https://www.sfmta.com/getting-around/transit/routes-stops/n-judah)                | [Muni San Fransisco](https://storage.googleapis.com/storage/v1/b/mdb-latest/o/us-california-san-francisco-municipal-transportation-agency-sfmta-gtfs-50.zip?alt=media) |
+| ["6"/"ML King Jr Blvd"](https://trimet.org/schedules/r006.htm)                                  | [Trimet Portland Streetcar](http://developer.trimet.org/schedule/gtfs.zip)                                                                                             |
+| ["55"/"Boulevard Saint Laurent"](https://www.stm.info/en/info/networks/bus/local/line-55-north) | [STM Montreal](https://storage.googleapis.com/storage/v1/b/mdb-latest/o/ca-quebec-societe-de-transport-de-montreal-gtfs-1221.zip?alt=media)                            |
+| ["1"/"Rangiora/Cashmere"](https://www.metroinfo.co.nz/timetables/1-rangiora-cashmere/)          | [Metro Christchurch](https://storage.googleapis.com/storage/v1/b/mdb-latest/o/nz-christchurch-christchurch-metro-gtfs-1313.zip?alt=media)                              |
 
-| `route_id` 	| `route_short_name` 	| `route_long_name` 	|
-|------------	|--------------------	|-------------------	|
-| route1     	| L1                 	| L1                	|
+Bad examples:
+| `route_short_name`/`route_long_name` |
+|-------------------------------------------|
+| "604"/"604"                               |
+| "14"/"Route 14"                           |
+| "2"/"Route 2: Bellows Falls In-Town"      |
+
 
 #### References
-* [routes.txt specification](http://gtfs.org/reference/static/#routestxt)
+* [routes.txt Best Practices](https://gtfs.org/schedule/best-practices/#routestxt)
 <details>
 
 #### Notice fields description
-| Field name     	| Description                             	  | Type   	|
-|----------------	|-------------------------------------------	|--------	|
-| `routeId`        	| The id of the faulty record.            	| String  |
-| `csvRowNumber`   	| The row number of the faulty record.    	| Long 	  |
-| `routeShortName` 	| The faulty record's `route_short_name`. 	| String 	|
-| `routeLongName`  	| The faulty record's `route_long_name`.  	| String 	|
+
+| Field name       | Description                                  | Type   |
+| ---------------- | -------------------------------------------- | ------ |
+| `routeId`        | The id of the faulty record.                 | String |
+| `csvRowNumber`   | The row number of the faulty record.         | Long   |
+| `routeShortName` | The `route_short_name` of the faulty record. | String |
+| `routeLongName`  | The `route_long_name` of the faulty record.  | String |
+
 
 #### Affected files
 * [`routes.txt`](http://gtfs.org/reference/static#routestxt)
