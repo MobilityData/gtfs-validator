@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import com.google.common.collect.Multimaps;
@@ -75,12 +74,27 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class DecreasingOrEqualStopTimeDistanceNotice extends ValidationNotice {
+
+    // The id of the faulty trip.
     private final String tripId;
+
+    // The row number from `stop_times.txt`.
     private final int csvRowNumber;
+
+    // Actual distance traveled along the shape from the first shape point to the faulty record.
     private final double shapeDistTraveled;
+
+    // The faulty record's `stop_times.stop_sequence`.
     private final int stopSequence;
+
+    // The row number from `stop_times.txt` of the previous stop time.
     private final long prevCsvRowNumber;
+
+    // Actual distance traveled along the shape from the first shape point to the previous stop
+    // time.
     private final double prevStopTimeDistTraveled;
+
+    // The previous record's `stop_times.stop_sequence`.
     private final int prevStopSequence;
 
     DecreasingOrEqualStopTimeDistanceNotice(

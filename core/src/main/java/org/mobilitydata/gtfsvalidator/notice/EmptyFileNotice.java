@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.notice;
 
 /**
@@ -23,6 +22,7 @@ package org.mobilitydata.gtfsvalidator.notice;
  */
 public class EmptyFileNotice extends ValidationNotice {
 
+  // The name of the faulty file
   private final String filename;
 
   public EmptyFileNotice(String filename) {

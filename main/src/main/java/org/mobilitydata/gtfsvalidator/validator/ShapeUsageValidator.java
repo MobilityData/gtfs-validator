@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import java.util.HashSet;
@@ -34,7 +33,9 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
  */
 @GtfsValidator
 public class ShapeUsageValidator extends FileValidator {
+
   private final GtfsTripTableContainer tripTable;
+
   private final GtfsShapeTableContainer shapeTable;
 
   @Inject
@@ -62,7 +63,11 @@ public class ShapeUsageValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class UnusedShapeNotice extends ValidationNotice {
+
+    // The faulty record's id.
     private final String shapeId;
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
 
     UnusedShapeNotice(String shapeId, int csvRowNumber) {

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import javax.inject.Inject;
@@ -32,7 +31,9 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
  */
 @GtfsValidator
 public class TripUsabilityValidator extends FileValidator {
+
   private final GtfsTripTableContainer tripTable;
+
   private final GtfsStopTimeTableContainer stopTimeTable;
 
   @Inject
@@ -58,7 +59,11 @@ public class TripUsabilityValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class UnusableTripNotice extends ValidationNotice {
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
+
+    // The faulty record's id.
     private final String tripId;
 
     UnusableTripNotice(int csvRowNumber, String tripId) {

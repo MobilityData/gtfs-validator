@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.notice;
 
 import javax.annotation.Nullable;
@@ -24,12 +23,26 @@ import javax.annotation.Nullable;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class DuplicateKeyNotice extends ValidationNotice {
+
+  // The name of the faulty file
   private final String filename;
+
+  // The row of the first occurrence.
   private final long oldCsvRowNumber;
+
+  // The row of the other occurrence.
   private final long newCsvRowNumber;
+
+  // Composite key's first field name.
   private final String fieldName1;
+
+  // Composite key's first value.
   private final Object fieldValue1;
+
+  // Composite key's second field name.
   @Nullable private final String fieldName2;
+
+  // Composite key's second value.
   @Nullable private final Object fieldValue2;
 
   public DuplicateKeyNotice(

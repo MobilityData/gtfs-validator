@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.notice;
 
 /**
@@ -26,11 +25,23 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class ForeignKeyViolationNotice extends ValidationNotice {
+
+  // The name of the file from which reference is made.
   private final String childFilename;
+
+  // The name of the field that makes reference.
   private final String childFieldName;
+
+  // The name of the file that is referred to.
   private final String parentFilename;
+
+  // The name of the field that is referred to.
   private final String parentFieldName;
+
+  // The faulty record's value.
   private final String fieldValue;
+
+  // The row of the faulty record.
   private final int csvRowNumber;
 
   public ForeignKeyViolationNotice(

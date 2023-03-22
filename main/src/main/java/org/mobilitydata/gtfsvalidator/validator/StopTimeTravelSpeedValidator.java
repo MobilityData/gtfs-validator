@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.util.StopUtil.getStopOrParentLatLng;
@@ -52,11 +51,15 @@ import org.mobilitydata.gtfsvalidator.util.S2Earth;
  */
 @GtfsValidator
 public class StopTimeTravelSpeedValidator extends FileValidator {
+
   private static final HashFunction HASH_FUNCTION = Hashing.farmHashFingerprint64();
 
   private final GtfsRouteTableContainer routeTable;
+
   private final GtfsTripTableContainer tripTable;
+
   private final GtfsStopTimeTableContainer stopTimeTable;
+
   private final GtfsStopTableContainer stopTable;
 
   @Inject
@@ -81,7 +84,6 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
           .ifPresent(
               tripAndStopTimes -> tripsByHash.put(tripAndStopTimes.tripFprint(), tripAndStopTimes));
     }
-
     for (List<TripAndStopTimes> trips : Multimaps.asMap(tripsByHash).values()) {
       final TripAndStopTimes tripAndStopTimes = trips.get(0);
       // All trips belong to the same route.
@@ -92,7 +94,6 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
       }
       final double maxSpeedKph = getMaxVehicleSpeedKph(route.get().routeType());
       final double[] distancesKm = findDistancesKmBetweenStops(tripAndStopTimes.getStopTimes());
-
       validateConsecutiveStops(trips, distancesKm, maxSpeedKph, noticeContainer);
       validateFarStops(trips, distancesKm, maxSpeedKph, noticeContainer);
     }
@@ -100,7 +101,9 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
 
   /** A GTFS trip and all its stop times. */
   private static class TripAndStopTimes {
+
     private final GtfsTrip trip;
+
     private final List<GtfsStopTime> stopTimes;
 
     public TripAndStopTimes(GtfsTrip trip, List<GtfsStopTime> stopTimes) {
@@ -167,7 +170,6 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
       double maxSpeedKph,
       NoticeContainer noticeContainer) {
     final List<GtfsStopTime> stopTimes = trips.get(0).getStopTimes();
-
     for (int endIdx = 0; endIdx < stopTimes.size(); ++endIdx) {
       final GtfsStopTime endStopTime = stopTimes.get(endIdx);
       if (!endStopTime.hasArrivalTime()) {
@@ -230,7 +232,6 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
       double maxSpeedKph,
       NoticeContainer noticeContainer) {
     final List<GtfsStopTime> stopTimes = trips.get(0).getStopTimes();
-
     for (int i = 0; i < distancesKm.length; ++i) {
       final GtfsStopTime stopTime1 = stopTimes.get(i);
       final GtfsStopTime stopTime2 = stopTimes.get(i + 1);
@@ -295,6 +296,7 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
   private static final double MAX_DISTANCE_OVER_MAX_SPEED_IN_KMS = 10.0;
 
   private static final int NUM_SECONDS_PER_MINUTE = 60;
+
   private static final int NUM_SECONDS_PER_HOUR = 3600;
 
   /** Returns a speed threshold (km/h) for a given vehicle type. */
@@ -328,20 +330,50 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
 
   /** Describes a trip where the transit vehicle moves too fast between two consecutive stops. */
   static class FastTravelBetweenConsecutiveStopsNotice extends ValidationNotice {
+
+    // The row number of the problematic trip.
     private final long tripCsvRowNumber;
+
+    // `trip_id` of the problematic trip.
     private final String tripId;
+
+    // `route_id` of the problematic trip.
     private final String routeId;
+
+    // Travel speed (km/h).
     private final double speedKph;
+
+    // Distance between stops (km).
     private final double distanceKm;
+
+    // The row number of the first stop time.
     private final int csvRowNumber1;
+
+    // `stop_sequence` of the first stop.
     private final int stopSequence1;
+
+    // `stop_id` of the first stop.
     private final String stopId1;
+
+    // `stop_name` of the first stop.
     private final String stopName1;
+
+    // `departure_time` of the first stop.
     private final GtfsTime departureTime1;
+
+    // The row number of the second stop time.
     private final int csvRowNumber2;
+
+    // `stop_sequence` of the second stop.
     private final int stopSequence2;
+
+    // `stop_id` of the second stop.
     private final String stopId2;
+
+    // `stop_name` of the second stop.
     private final String stopName2;
+
+    // `arrival_time` of the second stop.
     private final GtfsTime arrivalTime2;
 
     FastTravelBetweenConsecutiveStopsNotice(
@@ -378,20 +410,50 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
    * stops.
    */
   static class FastTravelBetweenFarStopsNotice extends ValidationNotice {
+
+    // The row number of the problematic trip.
     private final long tripCsvRowNumber;
+
+    // `trip_id` of the problematic trip.
     private final String tripId;
+
+    // `route_id` of the problematic trip.
     private final String routeId;
+
+    // Travel speed (km/h).
     private final double speedKph;
+
+    // Distance between stops (km).
     private final double distanceKm;
+
+    // The row number of the first stop time.
     private final int csvRowNumber1;
+
+    // `stop_sequence` of the first stop.
     private final int stopSequence1;
+
+    // `stop_id` of the first stop.
     private final String stopId1;
+
+    // `stop_name` of the first stop.
     private final String stopName1;
+
+    // `departure_time` of the first stop.
     private final GtfsTime departureTime1;
+
+    // The row number of the second stop time.
     private final int csvRowNumber2;
+
+    // `stop_sequence` of the second stop.
     private final int stopSequence2;
+
+    // `stop_id` of the second stop.
     private final String stopId2;
+
+    // `stop_name` of the second stop.
     private final String stopName2;
+
+    // `arrival_time` of the second stop.
     private final GtfsTime arrivalTime2;
 
     FastTravelBetweenFarStopsNotice(

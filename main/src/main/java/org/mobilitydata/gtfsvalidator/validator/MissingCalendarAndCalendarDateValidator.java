@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import javax.inject.Inject;
@@ -36,6 +35,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
  */
 @GtfsValidator
 public class MissingCalendarAndCalendarDateValidator extends FileValidator {
+
   private final GtfsCalendarTableContainer calendarTable;
 
   private final GtfsCalendarDateTableContainer calendarDateTable;
@@ -60,6 +60,7 @@ public class MissingCalendarAndCalendarDateValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class MissingCalendarAndCalendarDateFilesNotice extends ValidationNotice {
+
     MissingCalendarAndCalendarDateFilesNotice() {
       super(SeverityLevel.ERROR);
     }

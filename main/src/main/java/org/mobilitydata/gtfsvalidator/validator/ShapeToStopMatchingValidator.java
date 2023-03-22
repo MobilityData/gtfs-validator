@@ -53,13 +53,19 @@ import org.mobilitydata.gtfsvalidator.util.shape.StopToShapeMatcherSettings;
  */
 @GtfsValidator
 public class ShapeToStopMatchingValidator extends FileValidator {
+
   private static final HashFunction HASH_FUNCTION = Hashing.farmHashFingerprint64();
 
   private final GtfsStopTableContainer stopTable;
+
   private final GtfsTripTableContainer tripTable;
+
   private final GtfsRouteTableContainer routeTable;
+
   private final GtfsStopTimeTableContainer stopTimeTable;
+
   private final GtfsShapeTableContainer shapeTable;
+
   private final StopToShapeMatcher stopToShapeMatcher;
 
   @Inject
@@ -113,7 +119,6 @@ public class ShapeToStopMatchingValidator extends FileValidator {
         || shapeTable.getEntities().isEmpty()) {
       return;
     }
-
     for (List<GtfsShape> gtfsShapePoints : Multimaps.asMap(shapeTable.byShapeIdMap()).values()) {
       List<GtfsTrip> trips = tripTable.byShapeId(gtfsShapePoints.get(0).shapeId());
       if (trips.isEmpty()) {
@@ -137,14 +142,12 @@ public class ShapeToStopMatchingValidator extends FileValidator {
         final StopPoints stopPoints =
             StopPoints.fromStopTimes(
                 stopTimes, stopTable, StopPoints.routeTypeToStationSize(route.get().routeType()));
-
         reportProblems(
             trip,
             stopToShapeMatcher.matchUsingGeoDistance(stopPoints, shapePoints).getProblems(),
             MatchingDistance.GEO,
             reportedStopIds,
             noticeContainer);
-
         if (stopPoints.hasUserDistance() && shapePoints.hasUserDistance()) {
           reportProblems(
               trip,
@@ -199,7 +202,8 @@ public class ShapeToStopMatchingValidator extends FileValidator {
             problem.getPrevStopTime(),
             stopNameForStopTime(problem.getPrevStopTime()),
             problem.getPrevMatch().getLocationLatLng());
-      default: // STOP_HAS_TOO_MANY_MATCHES
+      default:
+        // STOP_HAS_TOO_MANY_MATCHES
         return new StopHasTooManyMatchesForShapeNotice(
             trip,
             problem.getStopTime(),
@@ -214,12 +218,12 @@ public class ShapeToStopMatchingValidator extends FileValidator {
   }
 
   private enum MatchingDistance {
+
     /**
      * The distance along the shape on the earth's surface by starting at the first point, adding
      * the straight-line (or rather, great circle) distance for each pair of points.
      */
     GEO,
-
     /**
      * User distance is an arbitrary (positive and non-decreasing) parameterization passed in with
      * each point as {@code shape_dist_traveled}.
@@ -235,13 +239,28 @@ public class ShapeToStopMatchingValidator extends FileValidator {
    */
   static class StopHasTooManyMatchesForShapeNotice extends ValidationNotice {
 
+    // The row number of the faulty record from `trips.txt`.
     private final long tripCsvRowNumber;
+
+    // The id of the shape that is referred to.
     private final String shapeId;
+
+    // The id of the trip that is referred to.
     private final String tripId;
+
+    // The row number of the faulty record from `stop_times.txt`.
     private final long stopTimeCsvRowNumber;
+
+    // The id of the stop that is referred to.
     private final String stopId;
+
+    // The name of the stop that is referred to.
     private final String stopName;
+
+    // Latitude and longitude pair of the location.
     private final S2LatLng match;
+
+    // The number of matches for the stop that is referred to.
     private final int matchCount;
 
     StopHasTooManyMatchesForShapeNotice(
@@ -267,13 +286,28 @@ public class ShapeToStopMatchingValidator extends FileValidator {
    */
   static class StopTooFarFromShapeUsingUserDistanceNotice extends ValidationNotice {
 
+    // The row number of the faulty record from `trips.txt`.
     private final long tripCsvRowNumber;
+
+    // The id of the shape that is referred to.
     private final String shapeId;
+
+    // The id of the trip that is referred to.
     private final String tripId;
+
+    // The row number of the faulty record from `stop_times.txt`.
     private final long stopTimeCsvRowNumber;
+
+    // The id of the stop that is referred to.
     private final String stopId;
+
+    // The name of the stop that is referred to.
     private final String stopName;
+
+    // Latitude and longitude pair of the location.
     private final S2LatLng match;
+
+    // Distance from stop to shape.
     private final double geoDistanceToShape;
 
     StopTooFarFromShapeUsingUserDistanceNotice(
@@ -301,13 +335,29 @@ public class ShapeToStopMatchingValidator extends FileValidator {
    * <p>This potentially indicates a problem with the location of the stop or the path of the shape.
    */
   static class StopTooFarFromShapeNotice extends ValidationNotice {
+
+    // The row number of the faulty record from `trips.txt`.
     private final long tripCsvRowNumber;
+
+    // The id of the shape that is referred to.
     private final String shapeId;
+
+    // The id of the trip that is referred to.
     private final String tripId;
+
+    // The row number of the faulty record from `stop_times.txt`.
     private final long stopTimeCsvRowNumber;
+
+    // The id of the stop that is referred to.
     private final String stopId;
+
+    // The name of the stop that is referred to.
     private final String stopName;
+
+    // Latitude and longitude pair of the location.
     private final S2LatLng match;
+
+    // Distance from stop to shape.
     private final double geoDistanceToShape;
 
     StopTooFarFromShapeNotice(
@@ -337,16 +387,37 @@ public class ShapeToStopMatchingValidator extends FileValidator {
    */
   static class StopsMatchShapeOutOfOrderNotice extends ValidationNotice {
 
+    // The row number of the faulty record from `trips.txt`.
     private final long tripCsvRowNumber;
+
+    // The id of the shape that is referred to.
     private final String shapeId;
+
+    // The id of the trip that is referred to.
     private final String tripId;
+
+    // The row number of the first faulty record from `stop_times.txt`.
     private final long stopTimeCsvRowNumber1;
+
+    // The id of the first stop that is referred to.
     private final String stopId1;
+
+    // The name of the first stop that is referred to.
     private final String stopName1;
+
+    // Latitude and longitude pair of the first matching location.
     private final S2LatLng match1;
+
+    // The row number of the second faulty record from `stop_times.txt`.
     private final long stopTimeCsvRowNumber2;
+
+    // The id of the second stop that is referred to.
     private final String stopId2;
+
+    // The name of the second stop that is referred to.
     private final String stopName2;
+
+    // Latitude and longitude pair of the second matching location.
     private final S2LatLng match2;
 
     public StopsMatchShapeOutOfOrderNotice(
