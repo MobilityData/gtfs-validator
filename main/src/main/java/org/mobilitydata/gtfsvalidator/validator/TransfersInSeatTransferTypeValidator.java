@@ -30,7 +30,9 @@ import org.mobilitydata.gtfsvalidator.validator.TransfersStopTypeValidator.Trans
 public class TransfersInSeatTransferTypeValidator extends FileValidator {
 
   private final GtfsTransferTableContainer transfers;
+
   private final GtfsStopTableContainer stops;
+
   private final GtfsStopTimeTableContainer stopTimes;
 
   @Inject
@@ -57,9 +59,7 @@ public class TransfersInSeatTransferTypeValidator extends FileValidator {
     if (!isInSeatTransferType(transfer.transferType())) {
       return;
     }
-
     for (TransferDirection transferDirection : TransferDirection.values()) {
-
       // Trip IDs are required for in-seat transfer types.
       if (!transferDirection.hasTripId(transfer)) {
         noticeContainer.addValidationNotice(
@@ -68,7 +68,6 @@ public class TransfersInSeatTransferTypeValidator extends FileValidator {
                 transfer.csvRowNumber(),
                 transferDirection.tripIdFieldName()));
       }
-
       validateStop(transfer, transferDirection, noticeContainer);
     }
   }
@@ -101,7 +100,6 @@ public class TransfersInSeatTransferTypeValidator extends FileValidator {
       noticeContainer.addValidationNotice(
           new TransferWithInvalidStopLocationTypeNotice(transfer, transferDirection, locationType));
     }
-
     List<GtfsStopTime> stopTimesForTrip = stopTimes.byTripId(transferDirection.tripId(transfer));
     if (stopTimesForTrip.isEmpty()
         || !stopTimesForTrip.stream().anyMatch((st) -> st.stopId().equals(stopId))) {
@@ -109,7 +107,6 @@ public class TransfersInSeatTransferTypeValidator extends FileValidator {
       validatedElsewhereBy(TransfersTripReferenceValidator.class);
       return;
     }
-
     GtfsStopTime transferStop = getInSeatTransferStopTime(stopTimesForTrip, transferDirection);
     if (!transferStop.stopId().equals(stopId)) {
       noticeContainer.addValidationNotice(
@@ -142,14 +139,19 @@ public class TransfersInSeatTransferTypeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   public static class TransferWithSuspiciousMidTripInSeatNotice extends ValidationNotice {
+
     // The row number from `transfers.txt` for the faulty entry.
     private final int csvRowNumber;
+
     // The name of the trip id field (e.g. `from_trip_id`) referencing a trip.
     private final String tripIdFieldName;
+
     // The referenced trip id.
     private final String tripId;
+
     // The name of the stop id field (e.g. `from_stop_id`) referencing the stop.
     private final String stopIdFieldName;
+
     // The referenced stop id.
     private final String stopId;
 

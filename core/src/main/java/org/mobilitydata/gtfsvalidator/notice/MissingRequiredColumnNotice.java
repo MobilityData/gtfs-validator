@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.notice;
 
 /**
@@ -22,7 +21,11 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class MissingRequiredColumnNotice extends ValidationNotice {
+
+  // The name of the faulty file.
   private final String filename;
+
+  // The name of the missing column.
   private final String fieldName;
 
   public MissingRequiredColumnNotice(String filename, String fieldName) {

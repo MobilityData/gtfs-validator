@@ -41,7 +41,11 @@ public class FareTransferRuleTransferCountValidator
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class FareTransferRuleInvalidTransferCountNotice extends ValidationNotice {
+
+    // The row of the faulty record.
     private final int csvRowNumber;
+
+    // The transfer count value of the faulty record.
     private final int transferCount;
 
     FareTransferRuleInvalidTransferCountNotice(int csvRowNumber, int transferCount) {
@@ -58,6 +62,8 @@ public class FareTransferRuleTransferCountValidator
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class FareTransferRuleMissingTransferCountNotice extends ValidationNotice {
+
+    // The row of the faulty record.
     private final int csvRowNumber;
 
     FareTransferRuleMissingTransferCountNotice(int csvRowNumber) {
@@ -73,6 +79,8 @@ public class FareTransferRuleTransferCountValidator
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class FareTransferRuleWithForbiddenTransferCountNotice extends ValidationNotice {
+
+    // The row of the faulty record.
     private final int csvRowNumber;
 
     FareTransferRuleWithForbiddenTransferCountNotice(int csvRowNumber) {

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import java.util.HashSet;
@@ -34,7 +33,9 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
  */
 @GtfsValidator
 public class TripUsageValidator extends FileValidator {
+
   private final GtfsTripTableContainer tripTable;
+
   private final GtfsStopTimeTableContainer stopTimeTable;
 
   @Inject
@@ -54,6 +55,7 @@ public class TripUsageValidator extends FileValidator {
       }
     }
   }
+
   /**
    * A {@code GtfsTrip} should be referred to at least once in {@code GtfsStopTimeTableContainer}
    * station).
@@ -61,7 +63,11 @@ public class TripUsageValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class UnusedTripNotice extends ValidationNotice {
+
+    // The faulty record's id.
     private final String tripId;
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
 
     UnusedTripNotice(String tripId, int csvRowNumber) {

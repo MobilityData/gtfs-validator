@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
@@ -49,7 +48,11 @@ public class FeedServiceDateValidator extends SingleEntityValidator<GtfsFeedInfo
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class MissingFeedInfoDateNotice extends ValidationNotice {
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
+
+    // Either `feed_end_date` or `feed_start_date`
     private final String fieldName;
 
     MissingFeedInfoDateNotice(int csvRowNumber, String fieldName) {

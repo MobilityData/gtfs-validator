@@ -12,12 +12,16 @@ import java.math.BigDecimal;
  */
 public class InvalidCurrencyAmountNotice extends ValidationNotice {
 
+  // The name of the faulty file.
   private final String filename;
 
+  // Faulty record's field name.
   private final String fieldName;
 
+  // The row of the faulty record.
   private final int csvRowNumber;
 
+  // Faulty currency amount value.
   private final String amount;
 
   public InvalidCurrencyAmountNotice(

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
@@ -36,6 +35,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStop;
  */
 @GtfsValidator
 public class LocationTypeSingleEntityValidator extends SingleEntityValidator<GtfsStop> {
+
   private boolean requiresParentStation(GtfsLocationType locationType) {
     return locationType == GtfsLocationType.ENTRANCE
         || locationType == GtfsLocationType.GENERIC_NODE
@@ -48,8 +48,10 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
       if (location.locationType() == GtfsLocationType.STATION) {
         noticeContainer.addValidationNotice(
             new StationWithParentStationNotice(
-                location.csvRowNumber(), location.stopId(),
-                location.stopName(), location.parentStation()));
+                location.csvRowNumber(),
+                location.stopId(),
+                location.stopName(),
+                location.parentStation()));
       }
     } else if (location.locationType() == GtfsLocationType.STOP) {
       if (!location.platformCode().isEmpty()) {
@@ -62,8 +64,10 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
     } else if (requiresParentStation(location.locationType())) {
       noticeContainer.addValidationNotice(
           new LocationWithoutParentStationNotice(
-              location.csvRowNumber(), location.stopId(),
-              location.stopName(), location.locationTypeValue()));
+              location.csvRowNumber(),
+              location.stopId(),
+              location.stopName(),
+              location.locationTypeValue()));
     }
   }
 
@@ -73,9 +77,17 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class StationWithParentStationNotice extends ValidationNotice {
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
+
+    // The id of the faulty record.
     private final String stopId;
+
+    // The stops.stop_name of the faulty record.
     private final String stopName;
+
+    // Parent station's id.
     private final String parentStation;
 
     StationWithParentStationNotice(
@@ -97,9 +109,17 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class LocationWithoutParentStationNotice extends ValidationNotice {
+
+    // The row of the faulty record.
     private final int csvRowNumber;
+
+    // The id of the faulty record.
     private final String stopId;
+
+    // The `stops.stop_name` of the faulty record.
     private final String stopName;
+
+    // The `stops.location_type` of the faulty record.
     private final int locationType;
 
     LocationWithoutParentStationNotice(
@@ -120,8 +140,14 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class PlatformWithoutParentStationNotice extends ValidationNotice {
+
+    // Row number of the faulty record.
     private final int csvRowNumber;
+
+    // The id of the faulty record.
     private final String stopId;
+
+    // The stop name of the faulty record.
     private final String stopName;
 
     PlatformWithoutParentStationNotice(int csvRowNumber, String stopId, String stopName) {

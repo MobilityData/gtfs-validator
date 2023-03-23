@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import java.util.List;
@@ -40,6 +39,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 public class LocationHasStopTimesValidator extends FileValidator {
 
   private final GtfsStopTableContainer stopTable;
+
   private final GtfsStopTimeTableContainer stopTimeTable;
 
   @Inject
@@ -66,8 +66,14 @@ public class LocationHasStopTimesValidator extends FileValidator {
 
   /** Describes a stop that does not have any stop time associated. */
   static class StopWithoutStopTimeNotice extends ValidationNotice {
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
+
+    // The id of the faulty stop.
     private final String stopId;
+
+    // The name of the faulty stop.
     private final String stopName;
 
     StopWithoutStopTimeNotice(GtfsStop stop) {
@@ -82,9 +88,17 @@ public class LocationHasStopTimesValidator extends FileValidator {
    * Describes a location in {@code stops.txt} that is not a stop but has a stop time associated.
    */
   static class LocationWithUnexpectedStopTimeNotice extends ValidationNotice {
+
+    // The row number of the faulty record from `stops.txt`.
     private final int csvRowNumber;
+
+    // The id of the faulty record from `stops.txt`.
     private final String stopId;
+
+    // The `stops.stop_name` of the faulty record.
     private final String stopName;
+
+    // The row number of the faulty record from `stop_times.txt`.
     private final long stopTimeCsvRowNumber;
 
     LocationWithUnexpectedStopTimeNotice(GtfsStop location, GtfsStopTime stopTime) {
