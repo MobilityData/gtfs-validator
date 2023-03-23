@@ -83,7 +83,6 @@
           countryCodes.unshift({ value: "", label: "---------------------"});
           countryCodes.unshift(region);
         }
-//        region = code;
       }
     }
   }
@@ -146,7 +145,6 @@
   /** @param {Event} event */
   function handleReset(event) {
     event.preventDefault();
-    console.log('handleReset. region is', region);
     // store selected region since it's unlikely to change
     const selectedRegion = region;
     if (form) form.reset();
