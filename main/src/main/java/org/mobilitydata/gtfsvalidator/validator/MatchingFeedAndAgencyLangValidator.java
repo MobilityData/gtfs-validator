@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import java.util.Locale;
@@ -51,6 +50,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
 public class MatchingFeedAndAgencyLangValidator extends FileValidator {
 
   private final GtfsFeedInfoTableContainer feedInfoTable;
+
   private final GtfsAgencyTableContainer agencyTable;
 
   @Inject
@@ -91,10 +91,20 @@ public class MatchingFeedAndAgencyLangValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class FeedInfoLangAndAgencyLangMismatchNotice extends ValidationNotice {
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
+
+    // The agency id of the faulty record.
     private final String agencyId;
+
+    // The agency name of the faulty record.
     private final String agencyName;
+
+    // The agency language of the faulty record.
     private final String agencyLang;
+
+    // The feed language of the faulty record.
     private final String feedLang;
 
     FeedInfoLangAndAgencyLangMismatchNotice(

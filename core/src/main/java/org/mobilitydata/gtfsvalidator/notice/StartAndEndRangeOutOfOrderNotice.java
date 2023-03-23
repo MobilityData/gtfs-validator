@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.notice;
 
 import javax.annotation.Nullable;
@@ -27,12 +26,25 @@ import javax.annotation.Nullable;
  */
 public class StartAndEndRangeOutOfOrderNotice extends ValidationNotice {
 
+  // The name of the faulty file.
   private final String filename;
+
+  // The row number of the faulty record.
   private final int csvRowNumber;
+
+  // The faulty service id.
   @Nullable private final String entityId;
+
+  // The start value's field name.
   private final String startFieldName;
+
+  // The start value.
   private final String startValue;
+
+  // The end value's field name.
   private final String endFieldName;
+
+  // The end value.
   private final String endValue;
 
   public StartAndEndRangeOutOfOrderNotice(

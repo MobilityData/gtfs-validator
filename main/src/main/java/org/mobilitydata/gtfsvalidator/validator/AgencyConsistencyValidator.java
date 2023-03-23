@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import java.time.ZoneId;
@@ -39,6 +38,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
  */
 @GtfsValidator
 public class AgencyConsistencyValidator extends FileValidator {
+
   private final GtfsAgencyTableContainer agencyTable;
 
   @Inject
@@ -73,7 +73,6 @@ public class AgencyConsistencyValidator extends FileValidator {
         }
       }
     }
-
     // agency_timezone field is required and it must be the same for all agencies.
     ZoneId commonTimezone = agencyTable.getEntities().get(0).agencyTimezone();
     for (int i = 1; i < agencyCount; ++i) {
@@ -84,7 +83,6 @@ public class AgencyConsistencyValidator extends FileValidator {
                 agency.csvRowNumber(), commonTimezone.getId(), agency.agencyTimezone().getId()));
       }
     }
-
     // agency_lang field is optional. All provided values must be the same for all agencies.
     Locale commonLanguage = null;
     for (int i = 0; i < agencyCount; ++i) {
@@ -112,8 +110,14 @@ public class AgencyConsistencyValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class InconsistentAgencyLangNotice extends ValidationNotice {
+
+    // The row of the faulty record.
     private final int csvRowNumber;
+
+    // Expected language.
     private final String expected;
+
+    // Faulty record's language.
     private final String actual;
 
     InconsistentAgencyLangNotice(int csvRowNumber, String expected, String actual) {
@@ -130,8 +134,14 @@ public class AgencyConsistencyValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class InconsistentAgencyTimezoneNotice extends ValidationNotice {
+
+    // The row of the faulty record.
     private final int csvRowNumber;
+
+    // Expected timezone.
     private final String expected;
+
+    // Faulty record's timezone.
     private final String actual;
 
     InconsistentAgencyTimezoneNotice(int csvRowNumber, String expected, String actual) {

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.notice;
 
 /**
@@ -22,8 +21,14 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>Severity: {@code SeverityLevel.INFO}
  */
 public class UnknownColumnNotice extends ValidationNotice {
+
+  // The name of the faulty file.
   private final String filename;
+
+  // The name of the unknown column.
   private final String fieldName;
+
+  // The index of the faulty column.
   private final int index;
 
   public UnknownColumnNotice(String filename, String fieldName, int index) {

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.table.GtfsLocationType.GENERIC_NODE;
@@ -42,6 +41,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 public class PathwayDanglingGenericNodeValidator extends FileValidator {
 
   private final GtfsPathwayTableContainer pathwayTable;
+
   private final GtfsStopTableContainer stopTable;
 
   @Inject
@@ -75,9 +75,17 @@ public class PathwayDanglingGenericNodeValidator extends FileValidator {
    * Describes a dangling generic node, i.e. that has only one incident location in a pathway graph.
    */
   static class PathwayDanglingGenericNodeNotice extends ValidationNotice {
+
+    // Row number of the dangling generic node.
     private final int csvRowNumber;
+
+    // The id of the dangling generic node.
     private final String stopId;
+
+    // The stop name of the dangling generic node.
     private final String stopName;
+
+    // The parent station of the dangling generic node.
     private final String parentStation;
 
     PathwayDanglingGenericNodeNotice(GtfsStop genericNode) {

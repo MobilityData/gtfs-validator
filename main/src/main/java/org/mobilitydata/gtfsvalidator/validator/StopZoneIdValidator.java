@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import javax.inject.Inject;
@@ -44,6 +43,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 public class StopZoneIdValidator extends FileValidator {
 
   private final GtfsStopTableContainer stopTable;
+
   private final GtfsFareRuleTableContainer fareRuleTable;
 
   @Inject
@@ -94,8 +94,14 @@ public class StopZoneIdValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING} - Will be upgraded to {@code SeverityLevel.ERROR}
    */
   static class StopWithoutZoneIdNotice extends ValidationNotice {
+
+    // The faulty record's id.
     private final String stopId;
+
+    // The faulty record's `stops.stop_name`.
     private final String stopName;
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
 
     StopWithoutZoneIdNotice(GtfsStop stop) {

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.notice;
 
 /**
@@ -22,7 +21,11 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class MoreThanOneEntityNotice extends ValidationNotice {
+
+  // Name of the faulty file.
   private final String filename;
+
+  // Number of occurrences.
   private final long entityCount;
 
   public MoreThanOneEntityNotice(String filename, long entityCount) {
