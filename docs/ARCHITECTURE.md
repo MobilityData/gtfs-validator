@@ -3,8 +3,10 @@
 
 ```mermaid
 graph BT;
-  core
+  model
+    core-->model;
     processor-->core;
+    main-->model;
     main-->core;
     main-->processor;
     cli-->main;
@@ -21,7 +23,7 @@ The architecture leverages `AutoValue` and annotations to auto-generate the foll
 * `*ForeignKeyValidator.java` (such as `GtfsAttributionAgencyIdForeignKeyValidator.java`)
 
 ## Main
-_Depends on: `processor` and `core`_
+_Depends on: `processor`, `core`, and `model`_
 
 If you're looking to add new GTFS fields or rules, you'll want to look at this module.
 
@@ -42,9 +44,9 @@ Contains:
 - Code generators to generate code from annotations found by file analyser (_e.g._ `EnumGenerator`)
 
 ## Core
-_Depends on: nothing_
+_Depends on: `model`_
 
-- Annotation definitions such as `ForeignKey`, `GtfsTable`
+Contains:
 - Code to read zipped and unzipped file input
 - CSV file and row parsers 
 - Notice to be generated when checking data type validation rules such as `EmptyFileNotice` 
@@ -52,6 +54,15 @@ _Depends on: nothing_
 - GTFS data type definitions such as `GtfsTime`, `GtfsDate`, or `GtfsColor`
 - `GtfsFeedLoader` to load for a whole GTFS feed with all its CSV files
 - GTFS feed's name
+
+## Model
+_Depends on: nothing_
+
+Contains:
+- root interfaces and annotations for modeling a GTFS schema table
+
+Business logic should generally *not* be added to this module.
+
 
 ## CLI
 _Depends on: `main`_
