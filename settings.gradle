@@ -6,6 +6,7 @@ include 'core'
 include 'processor'
 include 'processor:tests'
 include 'main'
+include 'model'
 include 'output-comparator'
 include 'tests'
 
