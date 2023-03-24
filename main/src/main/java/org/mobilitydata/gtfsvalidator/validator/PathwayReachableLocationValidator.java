@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.table.GtfsLocationType.BOARDING_AREA;
@@ -55,6 +54,7 @@ import org.mobilitydata.gtfsvalidator.util.StopUtil;
 public class PathwayReachableLocationValidator extends FileValidator {
 
   private final GtfsPathwayTableContainer pathwayTable;
+
   private final GtfsStopTableContainer stopTable;
 
   @Inject
@@ -163,12 +163,25 @@ public class PathwayReachableLocationValidator extends FileValidator {
    */
   static class PathwayUnreachableLocationNotice extends ValidationNotice {
 
+    // Row number of the unreachable location.
     private final int csvRowNumber;
+
+    // The id of the unreachable location.
     private final String stopId;
+
+    // The stop name of the unreachable location.
     private final String stopName;
+
+    // The type of the unreachable location.
     private final int locationType;
+
+    // The parent of the unreachable location.
     private final String parentStation;
+
+    // Whether the location is reachable from entrances.
     private final boolean hasEntrance;
+
+    // Whether some exit can be reached from the location.
     private final boolean hasExit;
 
     PathwayUnreachableLocationNotice(GtfsStop location, boolean hasEntrance, boolean hasExit) {

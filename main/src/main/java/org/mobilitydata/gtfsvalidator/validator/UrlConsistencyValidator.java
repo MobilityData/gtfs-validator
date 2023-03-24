@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import com.google.common.base.Ascii;
@@ -44,7 +43,9 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 public class UrlConsistencyValidator extends FileValidator {
 
   private final GtfsAgencyTableContainer agencyTable;
+
   private final GtfsRouteTableContainer routeTable;
+
   private final GtfsStopTableContainer stopTable;
 
   @Inject
@@ -122,10 +123,20 @@ public class UrlConsistencyValidator extends FileValidator {
    * <p>{@code SeverityLevel.WARNING}
    */
   static class SameStopAndRouteUrlNotice extends ValidationNotice {
+
+    // The row number of the faulty record from `stops.txt`.
     private final long stopCsvRowNumber;
+
+    // The faulty record's id.
     private final String stopId;
+
+    // The duplicate URL value.
     private final String stopUrl;
+
+    // The faulty record's id from `routes.txt.
     private final String routeId;
+
+    // The row number of the faulty record from `routes.txt`.
     private final long routeCsvRowNumber;
 
     SameStopAndRouteUrlNotice(GtfsStop stop, GtfsRoute route) {
@@ -145,10 +156,20 @@ public class UrlConsistencyValidator extends FileValidator {
    * <p>{@code SeverityLevel.WARNING}
    */
   static class SameRouteAndAgencyUrlNotice extends ValidationNotice {
+
+    // The row number of the faulty record from `routes.txt`.
     private final long routeCsvRowNumber;
+
+    // The faulty record's id.
     private final String routeId;
+
+    // The faulty record's referenced agency name.
     private final String agencyName;
+
+    // The duplicate URL value
     private final String routeUrl;
+
+    // The row number of the faulty record from `agency.txt`.
     private final long agencyCsvRowNumber;
 
     SameRouteAndAgencyUrlNotice(GtfsRoute route, GtfsAgency agency) {
@@ -167,10 +188,20 @@ public class UrlConsistencyValidator extends FileValidator {
    * <p>{@code SeverityLevel.WARNING}
    */
   static class SameStopAndAgencyUrlNotice extends ValidationNotice {
+
+    // The row number of the faulty record from `stops.txt`.
     private final long stopCsvRowNumber;
+
+    // The faulty record's id.
     private final String stopId;
+
+    // The faulty record's `agency.agency_name`.
     private final String agencyName;
+
+    // The duplicate URL value.
     private final String stopUrl;
+
+    // The row number of the faulty record from `agency.txt`.
     private final long agencyCsvRowNumber;
 
     SameStopAndAgencyUrlNotice(GtfsStop stop, GtfsAgency agency) {

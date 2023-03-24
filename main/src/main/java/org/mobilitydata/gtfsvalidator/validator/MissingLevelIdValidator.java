@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import java.util.HashSet;
@@ -42,6 +41,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 public class MissingLevelIdValidator extends FileValidator {
 
   private final GtfsPathwayTableContainer pathways;
+
   private final GtfsStopTableContainer stops;
 
   @Inject
@@ -75,8 +75,13 @@ public class MissingLevelIdValidator extends FileValidator {
    */
   static class MissingLevelIdNotice extends ValidationNotice {
 
+    // The row number of the faulty record.
     private final int csvRowNumber;
+
+    // The id of the faulty stop from `stops.txt`.
     private final String stopId;
+
+    // The name of the faulty stop from `stops.txt`.
     private final String stopName;
 
     MissingLevelIdNotice(GtfsStop stop) {

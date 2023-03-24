@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
@@ -30,6 +29,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsColor;
  */
 @GtfsValidator
 public class RouteColorContrastValidator extends SingleEntityValidator<GtfsRoute> {
+
   /**
    * The maximum difference between the luma of the route display color and text color, beyond which
    * a warning is produced. http://www.w3.org/TR/2000/WD-AERT-20000426#color-contrast recommends a
@@ -62,9 +62,17 @@ public class RouteColorContrastValidator extends SingleEntityValidator<GtfsRoute
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class RouteColorContrastNotice extends ValidationNotice {
+
+    // The id of the faulty record.
     private final String routeId;
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
+
+    // The faulty record's HTML route color.
     private final GtfsColor routeColor;
+
+    // The faulty record's HTML route text color.
     private final GtfsColor routeTextColor;
 
     RouteColorContrastNotice(

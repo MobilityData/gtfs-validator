@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import java.util.Optional;
@@ -33,6 +32,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
  */
 @GtfsValidator
 public class ParentLocationTypeValidator extends FileValidator {
+
   private final GtfsStopTableContainer stopTable;
 
   @Inject
@@ -89,14 +89,32 @@ public class ParentLocationTypeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class WrongParentLocationTypeNotice extends ValidationNotice {
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
+
+    // The id of the faulty record.
     private final String stopId;
+
+    // The faulty record's `stops.stop_name`.
     private final String stopName;
+
+    // The faulty record's `stops.location_type`.
     private final int locationType;
+
+    // The row number of the faulty record's parent.
     private final long parentCsvRowNumber;
+
+    // The id of the faulty record's parent station.
     private final String parentStation;
+
+    // The stop name of the faulty record's parent.
     private final String parentStopName;
+
+    // The location type of the faulty record's parent.
     private final int parentLocationType;
+
+    // The expected location type of the faulty record.
     private final int expectedLocationType;
 
     WrongParentLocationTypeNotice(

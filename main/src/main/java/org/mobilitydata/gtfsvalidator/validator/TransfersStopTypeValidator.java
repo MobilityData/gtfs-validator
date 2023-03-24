@@ -17,7 +17,9 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTransferTableContainer;
  */
 @GtfsValidator
 public class TransfersStopTypeValidator extends FileValidator {
+
   private final GtfsTransferTableContainer transfersContainer;
+
   private final GtfsStopTableContainer stopsContainer;
 
   @Inject
@@ -46,7 +48,6 @@ public class TransfersStopTypeValidator extends FileValidator {
       // Foreign key reference is validated elsewhere.
       return;
     }
-
     GtfsLocationType locationType = optStop.get().locationType();
     if (!isValidTransferStopType(locationType)) {
       noticeContainer.addValidationNotice(
@@ -71,14 +72,19 @@ public class TransfersStopTypeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   public static final class TransferWithInvalidStopLocationTypeNotice extends ValidationNotice {
+
     // The row number from `transfers.txt` for the faulty entry.
     private final int csvRowNumber;
+
     // The name of the stop id field (e.g. `from_stop_id`) referencing the stop.
     private final String stopIdFieldName;
+
     // The referenced stop id.
     private final String stopId;
+
     // The numeric value of the invalid location type.
     private final int locationTypeValue;
+
     // The name of the invalid location type.
     private String locationTypeName;
 

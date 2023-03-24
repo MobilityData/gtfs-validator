@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import javax.inject.Inject;
@@ -39,6 +38,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTimepoint;
  */
 @GtfsValidator
 public class TimepointTimeValidator extends FileValidator {
+
   private final GtfsStopTimeTableContainer stopTimes;
 
   @Inject
@@ -85,9 +85,17 @@ public class TimepointTimeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class StopTimeTimepointWithoutTimesNotice extends ValidationNotice {
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
+
+    // The faulty record's id.
     private final String tripId;
+
+    // The faulty record's `stops.stop_sequence`.
     private final long stopSequence;
+
+    // Either `departure_time` or `arrival_time`.
     private final String specifiedField;
 
     StopTimeTimepointWithoutTimesNotice(GtfsStopTime stopTime, String specifiedField) {
@@ -105,8 +113,14 @@ public class TimepointTimeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class MissingTimepointValueNotice extends ValidationNotice {
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
+
+    // The faulty record's `stop_times.trip_id`.
     private final String tripId;
+
+    // The faulty record's `stop_times.stop_sequence`.
     private final long stopSequence;
 
     MissingTimepointValueNotice(GtfsStopTime stopTime) {
@@ -123,6 +137,8 @@ public class TimepointTimeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class MissingTimepointColumnNotice extends ValidationNotice {
+
+    // The name of the affected file.
     private final String filename;
 
     MissingTimepointColumnNotice() {
