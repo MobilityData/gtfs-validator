@@ -566,7 +566,7 @@ Value of field with type `color` is not valid. A color must be encoded as a six-
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
@@ -589,7 +589,7 @@ Value of field with type `currency` is not valid. Currency code must follow <a h
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
@@ -612,10 +612,10 @@ A currency amount field has a value that does not match the format (e.g. expecte
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
-| `amount` 	| Faulty currency amount value.		| String 	|
+| `amount`    	| Faulty currency amount value.		| String 	|
 
 #### Affected files
 * [`fare_products.txt`](http://gtfs.org/reference/static#fare_productstxt)
@@ -635,7 +635,7 @@ Value of field with type `date` is not valid. Dates must have the YYYYMMDD forma
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
@@ -661,7 +661,7 @@ Value of field with type `email` is not valid. Definitions for valid emails are 
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
@@ -687,7 +687,7 @@ Value of field with type `float` is not valid.
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
@@ -714,7 +714,7 @@ Value of field with type `integer` is not valid.
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
@@ -743,7 +743,7 @@ Value of field with type `language` is not valid. Language codes must follow <a 
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
@@ -768,7 +768,7 @@ Value of field with type `phone number` is not valid. This rule uses the [PhoneN
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
@@ -795,7 +795,7 @@ A row in the input file has a different number of values than specified by the C
 #### Notice fields description
 | Field name   	| Description                              	| Type   	|
 |--------------	|------------------------------------------	|--------	|
-| `filename`   	| The row of the faulty record.            	| String 	|
+| `filename`   	| The name of the faulty file.            	| String 	|
 | `csvRowNumber`| The row of the faulty record.            	| Long   	|
 | `rowLength`  	| The length of the faulty record.         	| Integer |
 | `headerCount`	| The number of column in the faulty file. 	| Intege 	|
@@ -818,7 +818,7 @@ Value of field with type `time` is not valid. Time must be in the `H:MM:SS`, `HH
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
@@ -842,7 +842,7 @@ Value of field with type `timezone` is not valid.Timezones are defined at <a hre
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
@@ -867,7 +867,7 @@ Value of field with type `url` is not valid. Definitions for valid URLs are quit
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
@@ -2008,7 +2008,7 @@ The value in CSV file has leading or trailing whitespaces.
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
