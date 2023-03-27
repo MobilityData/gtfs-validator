@@ -16,15 +16,18 @@
 
 package org.mobilitydata.gtfsvalidator.notice.testnotices;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
 import com.google.common.geometry.S2LatLng;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 
+@GtfsValidationNotice(severity = ERROR)
 public class S2LatLngNotice extends ValidationNotice {
   private final S2LatLng point;
 
   public S2LatLngNotice(S2LatLng point) {
-    super(SeverityLevel.ERROR);
+    super(ERROR);
     this.point = point;
   }
 }
