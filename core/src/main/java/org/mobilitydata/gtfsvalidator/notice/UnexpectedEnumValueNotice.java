@@ -15,11 +15,17 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
+
 /**
  * An enum has an unexpected value.
  *
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
+@GtfsValidationNotice(severity = WARNING, sections = @SectionRefs({"field-definitions"}))
 public class UnexpectedEnumValueNotice extends ValidationNotice {
 
   // The name of the faulty file.

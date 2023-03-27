@@ -1,6 +1,10 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
 import java.math.BigDecimal;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
 
 /**
  * A currency amount field has a value that does not match the format (e.g. expected number of
@@ -10,6 +14,7 @@ import java.math.BigDecimal;
  *
  * @see org.mobilitydata.gtfsvalidator.annotation.CurrencyAmount
  */
+@GtfsValidationNotice(severity = ERROR, sections = @SectionRefs({"field-types"}))
 public class InvalidCurrencyAmountNotice extends ValidationNotice {
 
   // The name of the faulty file.

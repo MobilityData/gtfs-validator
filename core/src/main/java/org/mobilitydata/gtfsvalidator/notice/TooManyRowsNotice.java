@@ -1,5 +1,9 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+
 /**
  * Describes a file with too many rows.
  *
@@ -7,6 +11,7 @@ package org.mobilitydata.gtfsvalidator.notice;
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
+@GtfsValidationNotice(severity = ERROR)
 public class TooManyRowsNotice extends ValidationNotice {
 
   // Name of the CSV file that has too many rows.

@@ -15,6 +15,12 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
+
 /**
  * A field contains a malformed URL.
  *
@@ -32,6 +38,15 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>However, some production feeds may use certain characters without escaping and those URL may
  * be still openable in modern browsers.
  */
+@GtfsValidationNotice(
+    severity = ERROR,
+    sections = @SectionRefs({"field-types"}),
+    urls = {
+      @UrlRef(
+          label = "Apache Commons UrlValidator",
+          url =
+              "https://commons.apache.org/proper/commons-validator/apidocs/org/apache/commons/validator/routines/UrlValidator.html")
+    })
 public class InvalidUrlNotice extends ValidationNotice {
 
   // The name of the faulty file.

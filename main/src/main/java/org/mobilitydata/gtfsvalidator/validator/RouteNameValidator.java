@@ -15,11 +15,16 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
+import org.mobilitydata.gtfsvalidator.table.GtfsRouteSchema;
 
 /**
  * Validates short and long name for a single route.
@@ -42,18 +47,15 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
   public void validate(GtfsRoute entity, NoticeContainer noticeContainer) {
     final boolean hasLongName = entity.hasRouteLongName();
     final boolean hasShortName = entity.hasRouteShortName();
-
     if (!hasLongName && !hasShortName) {
       noticeContainer.addValidationNotice(
           new RouteBothShortAndLongNameMissingNotice(entity.routeId(), entity.csvRowNumber()));
     }
-
     if (hasShortName && entity.routeShortName().length() > MAX_SHORT_NAME_LENGTH) {
       noticeContainer.addValidationNotice(
           new RouteShortNameTooLongNotice(
               entity.routeId(), entity.csvRowNumber(), entity.routeShortName()));
     }
-
     // check if route_long_name begins with route_short_name followed by " ", "-", or "(".
     // as referenced here
     // https://github.com/MobilityData/gtfs-validator/pull/501#discussion_r535506016
@@ -69,7 +71,6 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
         }
       }
     }
-
     if (entity.hasRouteDesc()) {
       String routeDesc = entity.routeDesc();
       String routeId = entity.routeId();
@@ -97,6 +98,7 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsRouteSchema.class))
   static class RouteBothShortAndLongNameMissingNotice extends ValidationNotice {
 
     // The id of the faulty record.

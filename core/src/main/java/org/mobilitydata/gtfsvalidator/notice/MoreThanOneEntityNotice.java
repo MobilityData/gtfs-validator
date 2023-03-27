@@ -15,11 +15,17 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
+
 /**
  * A notice that the file is expected to have a single entity but has more (e.g., "feed_info.txt").
  *
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
+@GtfsValidationNotice(severity = WARNING, sections = @SectionRefs({"field-definitions"}))
 public class MoreThanOneEntityNotice extends ValidationNotice {
 
   // Name of the faulty file.

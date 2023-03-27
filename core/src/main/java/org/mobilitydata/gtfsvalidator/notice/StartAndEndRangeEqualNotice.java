@@ -15,7 +15,11 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
 import javax.annotation.Nullable;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /**
  * Start and end range fields are equal for a certain GTFS entity.
@@ -24,6 +28,13 @@ import javax.annotation.Nullable;
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
+@GtfsValidationNotice(
+    severity = ERROR,
+    urls = {
+      @UrlRef(
+          label = "Original Python validator implementation",
+          url = "https://github.com/google/transitfeed")
+    })
 public class StartAndEndRangeEqualNotice extends ValidationNotice {
 
   // The name of the faulty file.

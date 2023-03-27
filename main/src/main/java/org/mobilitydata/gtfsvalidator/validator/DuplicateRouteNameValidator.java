@@ -15,16 +15,21 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
+import org.mobilitydata.gtfsvalidator.table.GtfsRouteSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
 
 /** Validates that combinations of route type, short and long name are unique within an agency. */
@@ -71,6 +76,10 @@ public class DuplicateRouteNameValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs(GtfsRouteSchema.class),
+      bestPractices = @FileRefs(GtfsRouteSchema.class))
   static class DuplicateRouteNameNotice extends ValidationNotice {
 
     // The row number of the first occurrence.

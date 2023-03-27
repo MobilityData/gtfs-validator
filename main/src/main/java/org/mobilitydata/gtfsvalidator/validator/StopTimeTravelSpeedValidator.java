@@ -15,6 +15,7 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 import static org.mobilitydata.gtfsvalidator.util.StopUtil.getStopOrParentLatLng;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -28,6 +29,8 @@ import com.google.common.hash.Hashing;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
@@ -329,6 +332,13 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
   }
 
   /** Describes a trip where the transit vehicle moves too fast between two consecutive stops. */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      urls = {
+        @UrlRef(
+            label = "Original Python validator implementation",
+            url = "https://github.com/google/transitfeed")
+      })
   static class FastTravelBetweenConsecutiveStopsNotice extends ValidationNotice {
 
     // The row number of the problematic trip.
