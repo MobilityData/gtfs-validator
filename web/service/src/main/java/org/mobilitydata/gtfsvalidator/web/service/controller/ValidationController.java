@@ -16,6 +16,7 @@
 package org.mobilitydata.gtfsvalidator.web.service.controller;
 
 import com.google.cloud.storage.*;
+import com.google.common.base.Strings;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
@@ -56,16 +57,14 @@ public class ValidationController {
   public CreateJobResponse createJob(@RequestBody CreateJobRequest body) {
     try {
       final var jobId = UUID.randomUUID().toString();
-      var countryCode = "";
       StorageHelper storageHelper = new StorageHelper(storage, applicationContext);
 
-      if (body != null && !body.getCountryCode().isEmpty()) {
-        countryCode = body.getCountryCode();
-        storageHelper.saveJobMetaData(jobId, countryCode);
+      if (body != null && !Strings.isNullOrEmpty(body.getCountryCode())) {
+        storageHelper.saveJobMetaData(jobId, body.getCountryCode());
       }
 
       // Check to see if this request has a url
-      if (body != null && body.getUrl() != null && !body.getUrl().isEmpty()) {
+      if (body != null && !Strings.isNullOrEmpty(body.getUrl())) {
         storageHelper.saveJobFileFromUrl(jobId, body.getUrl());
         return new CreateJobResponse(jobId, null);
       }
@@ -101,7 +100,6 @@ public class ValidationController {
 
       StorageHelper storageHelper = new StorageHelper(storage, applicationContext);
       var countryCode = storageHelper.getJobCountryCode(jobId);
-      logger.info("Country code: " + countryCode);
 
       // copy the file from GCS to a temp directory
       File tempFile = storageHelper.createTempFile(jobId, fileName);
