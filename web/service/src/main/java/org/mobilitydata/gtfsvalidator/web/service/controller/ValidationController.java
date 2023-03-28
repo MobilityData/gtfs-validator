@@ -102,7 +102,7 @@ public class ValidationController {
       var countryCode = storageHelper.getJobCountryCode(jobId);
 
       // copy the file from GCS to a temp directory
-      File tempFile = storageHelper.createTempFile(jobId, fileName);
+      File tempFile = storageHelper.copyFromStorageToTempFile(jobId, fileName);
       // extracts feed files from zip to temp output directory, validates, and returns
       // the path to the output directory
       File outputPath = handler.validateFeed(tempFile, jobId, countryCode);

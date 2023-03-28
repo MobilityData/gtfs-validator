@@ -131,16 +131,15 @@ public class StorageHelper {
    * @return
    * @throws IOException
    */
-  public File createTempFile(String jobId, String fileName) throws IOException {
+  public File copyFromStorageToTempFile(String jobId, String fileName) throws IOException {
     var tempDir = Files.createTempDirectory(StorageHelper.TEMP_FOLDER_NAME).toFile();
 
     var inputResource =
         applicationContext.getResource("gs://" + USER_UPLOAD_BUCKET_NAME + "/" + fileName);
-    var inputFile = inputResource.getInputStream();
 
     var tempFile = File.createTempFile(jobId, ".zip", tempDir);
     var output = new FileOutputStream(tempFile);
-    inputFile.transferTo(output);
+    inputResource.getInputStream().transferTo(output);
     return tempFile;
   }
 
