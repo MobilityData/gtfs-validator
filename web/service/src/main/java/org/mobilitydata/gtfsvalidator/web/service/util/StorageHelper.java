@@ -156,6 +156,7 @@ public class StorageHelper {
     var directoryListing = outputPath.listFiles();
     if (directoryListing != null) {
       for (var reportFile : directoryListing) {
+        if (reportFile.isDirectory()) { continue; }
         var blobId = BlobId.of(RESULTS_BUCKET_NAME, jobId + "/" + reportFile.getName());
         var mimeType = Files.probeContentType(reportFile.toPath());
         var blobInfo = BlobInfo.newBuilder(blobId).setContentType(mimeType).build();
