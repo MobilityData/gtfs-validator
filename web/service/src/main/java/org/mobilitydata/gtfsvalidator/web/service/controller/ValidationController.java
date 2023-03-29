@@ -20,16 +20,12 @@ import com.google.common.base.Strings;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
 import org.mobilitydata.gtfsvalidator.web.service.util.StorageHelper;
 import org.mobilitydata.gtfsvalidator.web.service.util.ValidationHandler;
 import org.mobilitydata.gtfsvalidator.web.service.util.ValidationJobMetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,12 +36,7 @@ public class ValidationController {
 
   private final Logger logger = LoggerFactory.getLogger(ValidationController.class);
 
-  @Getter(AccessLevel.PROTECTED)
-  @Setter(AccessLevel.PROTECTED)
-  @Autowired
-  private Storage storage;
-
-  @Autowired private ApplicationContext applicationContext;
+  @Autowired private StorageHelper storageHelper;
 
   /**
    * Creates a new job id and returns it to the client. If a url is provided, the file is downloaded
@@ -57,8 +48,6 @@ public class ValidationController {
   public CreateJobResponse createJob(@RequestBody CreateJobRequest body) {
     try {
       final var jobId = UUID.randomUUID().toString();
-      StorageHelper storageHelper = new StorageHelper(storage, applicationContext);
-
       if (body != null && !Strings.isNullOrEmpty(body.getCountryCode())) {
         storageHelper.saveJobMetaData(jobId, body.getCountryCode());
       }
@@ -98,7 +87,6 @@ public class ValidationController {
       var jobId = jobData.getJobId();
       var fileName = jobData.getFileName();
 
-      StorageHelper storageHelper = new StorageHelper(storage, applicationContext);
       var countryCode = storageHelper.getJobCountryCode(jobId);
 
       // copy the file from GCS to a temp directory

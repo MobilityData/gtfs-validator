@@ -12,8 +12,10 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 /** Helper class for interacting with GCS. */
+@Component
 public class StorageHelper {
   static final String JOB_INFO_BUCKET_NAME = "gtfs-validator-results";
   static final String JOB_FILENAME_PREFIX = "job";
