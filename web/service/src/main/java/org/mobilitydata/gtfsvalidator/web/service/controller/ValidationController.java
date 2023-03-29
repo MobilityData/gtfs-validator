@@ -15,6 +15,8 @@
  */
 package org.mobilitydata.gtfsvalidator.web.service.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.storage.*;
 import com.google.common.base.Strings;
 import java.io.*;
@@ -83,7 +85,7 @@ public class ValidationController {
       }
       var handler = new ValidationHandler();
 
-      ValidationJobMetaData jobData = handler.getFeedFileMetaData(message);
+      ValidationJobMetaData jobData = getFeedFileMetaData(message);
       var jobId = jobData.getJobId();
       var fileName = jobData.getFileName();
 
@@ -118,5 +120,24 @@ public class ValidationController {
       logger.error("Error", exc);
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error", exc);
     }
+  }
+
+  /**
+   * Extracts the job ID and input file name from the Pub/Sub message.
+   *
+   * @param message
+   * @return
+   * @throws JsonProcessingException
+   */
+  private ValidationJobMetaData getFeedFileMetaData(GoogleCloudPubsubMessage.Message message)
+      throws JsonProcessingException {
+    var data = new String(Base64.getDecoder().decode(message.getData()));
+
+    var map = new ObjectMapper();
+    var node = map.readTree(data);
+
+    var inputFilename = node.get("name").textValue();
+    var jobId = inputFilename.split("/")[0];
+    return new ValidationJobMetaData(jobId, inputFilename);
   }
 }
