@@ -17,14 +17,12 @@ public class ValidationHandler {
    * job ID as the directory name.
    *
    * @param feedFile
-   * @param jobId
+   * @param outputPath
    * @param countryCode
    * @return the path to the temp directory containing the validation results
    */
-  public File validateFeed(File feedFile, String jobId, String countryCode) {
+  public File validateFeed(File feedFile, File outputPath, String countryCode) {
     var runner = new ValidationRunner(new VersionResolver());
-    var tempDir = feedFile.getParentFile();
-    var outputPath = new File(tempDir.toPath() + jobId);
     var configBuilder =
         ValidationRunnerConfig.builder()
             .setGtfsSource(feedFile.toURI())

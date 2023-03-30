@@ -43,18 +43,18 @@ public class StorageHelper {
   /**
    * Creates job metadata, serializes to JSON and saves it to GCS.
    *
-   * @param jobId
-   * @param countryCode
+   * @param metadata
    * @throws Exception
    */
-  public void saveJobMetaData(String jobId, String countryCode) throws Exception {
+  public void saveJobMetaData(JobMetadata metadata) throws Exception {
     try {
+      String jobId = metadata.getJobId();
+      String countryCode = metadata.getCountryCode();
       var jobInfoPath = getJobInfoPath(jobId);
       var jobBlobId = BlobId.of(JOB_INFO_BUCKET_NAME, jobInfoPath);
       var jobBlobInfo = BlobInfo.newBuilder(jobBlobId).setContentType("application/json").build();
       var om = new ObjectMapper();
-      var jobMetadata = new JobMetadata(jobId, countryCode);
-      var json = om.writeValueAsString(jobMetadata);
+      var json = om.writeValueAsString(metadata);
       logger.info("Saving job metadata: " + json);
       storage.create(jobBlobInfo, json.getBytes());
     } catch (Exception exc) {
@@ -69,7 +69,7 @@ public class StorageHelper {
    * @param jobId
    * @return
    */
-  public String getJobCountryCode(String jobId) {
+  public JobMetadata getJobMetaData(String jobId) {
     try {
       var jobInfoPath = getJobInfoPath(jobId);
       var jobBlobId = BlobId.of(JOB_INFO_BUCKET_NAME, jobInfoPath);
@@ -79,10 +79,10 @@ public class StorageHelper {
 
       var objectMapper = new ObjectMapper();
       JobMetadata jobMetaData = objectMapper.readValue(json, JobMetadata.class);
-      return jobMetaData.getCountryCode();
+      return jobMetaData;
     } catch (Exception exc) {
       logger.error("Error could not load remote file, using default country code", exc);
-      return "";
+      return new JobMetadata(jobId, "");
     }
   }
 
@@ -156,7 +156,9 @@ public class StorageHelper {
     var directoryListing = outputPath.listFiles();
     if (directoryListing != null) {
       for (var reportFile : directoryListing) {
-        if (reportFile.isDirectory()) { continue; }
+        if (reportFile.isDirectory()) {
+          continue;
+        }
         var blobId = BlobId.of(RESULTS_BUCKET_NAME, jobId + "/" + reportFile.getName());
         var mimeType = Files.probeContentType(reportFile.toPath());
         var blobInfo = BlobInfo.newBuilder(blobId).setContentType(mimeType).build();

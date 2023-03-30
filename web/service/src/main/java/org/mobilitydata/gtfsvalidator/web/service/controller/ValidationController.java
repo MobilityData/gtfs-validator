@@ -17,11 +17,11 @@ package org.mobilitydata.gtfsvalidator.web.service.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.cloud.storage.*;
 import com.google.common.base.Strings;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
+import org.mobilitydata.gtfsvalidator.web.service.util.JobMetadata;
 import org.mobilitydata.gtfsvalidator.web.service.util.StorageHelper;
 import org.mobilitydata.gtfsvalidator.web.service.util.ValidationHandler;
 import org.mobilitydata.gtfsvalidator.web.service.util.ValidationJobMetaData;
@@ -51,7 +51,7 @@ public class ValidationController {
     try {
       final var jobId = UUID.randomUUID().toString();
       if (body != null && !Strings.isNullOrEmpty(body.getCountryCode())) {
-        storageHelper.saveJobMetaData(jobId, body.getCountryCode());
+        storageHelper.saveJobMetaData(new JobMetadata(jobId, body.getCountryCode()));
       }
 
       // Check to see if this request has a url
@@ -89,13 +89,16 @@ public class ValidationController {
       var jobId = jobData.getJobId();
       var fileName = jobData.getFileName();
 
-      var countryCode = storageHelper.getJobCountryCode(jobId);
+      var countryCode = storageHelper.getJobMetaData(jobId).getCountryCode();
 
       // copy the file from GCS to a temp directory
       File tempFile = storageHelper.copyFromStorageToTempFile(jobId, fileName);
+
+      tempDir = tempFile.getParentFile();
+      var outputPath = new File(tempDir.toPath() + jobId);
       // extracts feed files from zip to temp output directory, validates, and returns
       // the path to the output directory
-      File outputPath = handler.validateFeed(tempFile, jobId, countryCode);
+      handler.validateFeed(tempFile, outputPath, countryCode);
 
       // upload the extracted files and the validation results from outputPath to GCS
       storageHelper.uploadFilesToStorage(jobId, outputPath);
