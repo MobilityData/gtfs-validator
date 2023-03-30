@@ -41,30 +41,24 @@ public class DuplicateFareMediaValidator extends FileValidator {
    */
   static class DuplicateFareMediaNotice extends ValidationNotice {
 
-    // Reference to the first fare media.
-    private final FareMediaReference fareMedia1;
-    // Reference to the second fare media.
-    private final FareMediaReference fareMedia2;
+    // The row number of the first fare media.
+    private final int csvRowNumber1;
+
+    // The id of the first fare media.
+    private final String fareMediaId1;
+
+    // The row number of the second fare media.
+    private final int csvRowNumber2;
+
+    // The id of the second fare media.
+    private final String fareMediaId2;
 
     DuplicateFareMediaNotice(GtfsFareMedia lhs, GtfsFareMedia rhs) {
       super(SeverityLevel.WARNING);
-      this.fareMedia1 = FareMediaReference.create(lhs);
-      this.fareMedia2 = FareMediaReference.create(rhs);
-    }
-  }
-
-  /** A reference to a particular fare media entry. */
-  @AutoValue
-  abstract static class FareMediaReference {
-    // The row number of the fare media entry.
-    abstract int csvRowNumber();
-
-    // The id of the fare media entry.
-    abstract String fareMediaId();
-
-    static FareMediaReference create(GtfsFareMedia media) {
-      return new AutoValue_DuplicateFareMediaValidator_FareMediaReference(
-          media.csvRowNumber(), media.fareMediaId());
+      this.csvRowNumber1 = lhs.csvRowNumber();
+      this.fareMediaId1 = lhs.fareMediaId();
+      this.csvRowNumber2 = rhs.csvRowNumber();
+      this.fareMediaId2 = rhs.fareMediaId();
     }
   }
 
