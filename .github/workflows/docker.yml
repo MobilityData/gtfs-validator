@@ -108,6 +108,7 @@ jobs:
           build-args: |
             VERSION_TAG=${{ steps.prep.outputs.version }}
           load: true
+          platforms: linux/amd64,linux/arm64
           tags: ${{ steps.prep.outputs.tags }}
           labels: |
             org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY,,}.git
@@ -124,6 +125,7 @@ jobs:
           build-args: |
             VERSION_TAG=${{ steps.prep.outputs.version }}
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: ${{ steps.prep.outputs.tags }}
           labels: |
             org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY,,}.git
