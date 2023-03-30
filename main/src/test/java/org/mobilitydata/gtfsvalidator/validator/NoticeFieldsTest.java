@@ -83,6 +83,8 @@ public class NoticeFieldsTest {
             "expected",
             "expectedLocationType",
             "expectedRouteId",
+            "fareMediaId1",
+            "fareMediaId2",
             "feedEndDate",
             "feedLang",
             "fieldName",
