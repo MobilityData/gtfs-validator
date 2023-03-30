@@ -1,5 +1,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
 import com.google.common.collect.Multimaps;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -8,15 +10,18 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
+import org.mobilitydata.gtfsvalidator.table.GtfsTripSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
@@ -259,6 +264,13 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files = @FileRefs({GtfsTripSchema.class}),
+      urls =
+          @UrlRef(
+              label = "Original Python validator implementation",
+              url = "https://github.com/google/transitfeed"))
   static class BlockTripsWithOverlappingStopTimesNotice extends ValidationNotice {
 
     // The row number from `trips.txt` of the first faulty trip.
@@ -287,7 +299,7 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
 
     BlockTripsWithOverlappingStopTimesNotice(
         GtfsTrip tripA, GtfsTrip tripB, GtfsDate intersection) {
-      super(SeverityLevel.ERROR);
+      super(ERROR);
       this.csvRowNumberA = tripA.csvRowNumber();
       this.tripIdA = tripA.tripId();
       this.serviceIdA = tripA.serviceId();
