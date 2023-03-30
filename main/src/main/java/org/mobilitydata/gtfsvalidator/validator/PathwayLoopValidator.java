@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
@@ -36,8 +35,14 @@ public class PathwayLoopValidator extends SingleEntityValidator<GtfsPathway> {
   }
 
   static class PathwayLoopNotice extends ValidationNotice {
+
+    // Row number of the faulty row from `pathways.txt`.
     private final int csvRowNumber;
+
+    // The id of the faulty record.
     private final String pathwayId;
+
+    // The `pathway.stop_id` that is repeated in `pathways.from_stop_id` and `pathways.to_stop_id`.
     private final String stopId;
 
     PathwayLoopNotice(GtfsPathway pathway) {

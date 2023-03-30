@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.base.Strings;
@@ -27,11 +26,23 @@ import com.univocity.parsers.common.TextParsingException;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class CsvParsingFailedNotice extends ValidationNotice {
+
+  // The name of the faulty file.
   private final String filename;
+
+  // The location of the last character read from before the error occurred.
   private final long charIndex;
+
+  // The column index where the exception occurred.
   private final long columnIndex;
+
+  // The line number where the exception occurred.
   private final long lineIndex;
+
+  // The detailed message describing the error, and the internal state of the parser/writer.
   private final String message;
+
+  // The record number when the exception occurred.
   private final String parsedContent;
 
   /**

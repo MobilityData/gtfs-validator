@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.notice;
 
 /**
@@ -22,8 +21,14 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class MissingRecommendedFieldNotice extends ValidationNotice {
+
+  // The name of the faulty file.
   private final String filename;
+
+  // The row of the faulty record.
   private final int csvRowNumber;
+
+  // The name of the missing field.
   private final String fieldName;
 
   public MissingRecommendedFieldNotice(String filename, int csvRowNumber, String fieldName) {

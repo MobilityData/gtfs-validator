@@ -27,6 +27,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
  */
 @GtfsValidator
 public class OverlappingFrequencyValidator extends FileValidator {
+
   private final GtfsFrequencyTableContainer table;
 
   @Inject
@@ -43,7 +44,6 @@ public class OverlappingFrequencyValidator extends FileValidator {
           Comparator.comparing(GtfsFrequency::startTime)
               .thenComparing(GtfsFrequency::endTime)
               .thenComparing(GtfsFrequency::headwaySecs));
-
       for (int i = 1; i < frequencyList.size(); ++i) {
         GtfsFrequency prev = frequencyList.get(i - 1);
         GtfsFrequency curr = frequencyList.get(i);
@@ -69,10 +69,20 @@ public class OverlappingFrequencyValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class OverlappingFrequencyNotice extends ValidationNotice {
+
+    // The row number of the first frequency.
     private final long prevCsvRowNumber;
+
+    // The first frequency end time.
     private final GtfsTime prevEndTime;
+
+    // The overlapping frequency's row number.
     private final long currCsvRowNumber;
+
+    // The overlapping frequency's start time.
     private final GtfsTime currStartTime;
+
+    // The trip id associated to the first frequency.
     private final String tripId;
 
     OverlappingFrequencyNotice(

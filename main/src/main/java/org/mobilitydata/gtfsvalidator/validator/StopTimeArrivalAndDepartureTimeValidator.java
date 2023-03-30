@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import com.google.common.collect.Multimaps;
@@ -41,6 +40,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
  */
 @GtfsValidator
 public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
+
   private final GtfsStopTimeTableContainer table;
 
   @Inject
@@ -92,10 +92,20 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class StopTimeWithArrivalBeforePreviousDepartureTimeNotice extends ValidationNotice {
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
+
+    // The row of the previous stop time.
     private final long prevCsvRowNumber;
+
+    // The trip_id associated to the faulty record.
     private final String tripId;
+
+    // Arrival time at the faulty record.
     private final GtfsTime arrivalTime;
+
+    // Departure time at the previous stop time.
     private final GtfsTime departureTime;
 
     StopTimeWithArrivalBeforePreviousDepartureTimeNotice(
@@ -119,9 +129,17 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class StopTimeWithOnlyArrivalOrDepartureTimeNotice extends ValidationNotice {
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
+
+    // The trip_id associated to the faulty record.
     private final String tripId;
+
+    // The sequence of the faulty stop.
     private final int stopSequence;
+
+    // Either `arrival_time` or `departure_time`
     private final String specifiedField;
 
     StopTimeWithOnlyArrivalOrDepartureTimeNotice(

@@ -29,6 +29,8 @@ public class FareTransferRuleDurationLimitTypeValidator
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class FareTransferRuleDurationLimitWithoutTypeNotice extends ValidationNotice {
+
+    // The row of the faulty record.
     private final int csvRowNumber;
 
     FareTransferRuleDurationLimitWithoutTypeNotice(int csvRowNumber) {
@@ -45,6 +47,8 @@ public class FareTransferRuleDurationLimitTypeValidator
    */
   static class FareTransferRuleDurationLimitTypeWithoutDurationLimitNotice
       extends ValidationNotice {
+
+    // The row of the faulty record.
     private final int csvRowNumber;
 
     FareTransferRuleDurationLimitTypeWithoutDurationLimitNotice(int csvRowNumber) {

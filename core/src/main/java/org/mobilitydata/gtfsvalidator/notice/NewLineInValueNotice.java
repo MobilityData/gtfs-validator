@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.notice;
 
 /**
@@ -26,17 +25,24 @@ package org.mobilitydata.gtfsvalidator.notice;
  * actually parses as two fields: "f11", "f12\nf21,\"f22\"".
  *
  * <pre>
- *   f11,"f12
- *   f21,"f22"
+ * f11,"f12
+ * f21,"f22"
  * </pre>
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class NewLineInValueNotice extends ValidationNotice {
 
+  // The name of the faulty file.
   private final String filename;
+
+  // The row of the faulty record.
   private final int csvRowNumber;
+
+  // The name of the faulty field.
   private final String fieldName;
+
+  // Faulty value.
   private final String fieldValue;
 
   public NewLineInValueNotice(
