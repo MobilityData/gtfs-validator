@@ -17,15 +17,15 @@
   import { quintOut } from 'svelte/easing';
 
   /**
- * @typedef CreateJobParameters
- * @type {object}
- * @property {string=} url - job source url.
- * @property {string} countryCode - country code.
- */
+   * @typedef CreateJobParameters
+   * @type {object}
+   * @property {string=} url - job source url.
+   * @property {string} countryCode - country code.
+   */
 
   let showDocs = true;
 
-  const apiRoot = 'https://gtfs-validator-web-mbzoxaljzq-ue.a.run.app'
+  const apiRoot = 'https://gtfs-validator-web-mbzoxaljzq-ue.a.run.app';
 
   /** @type {HTMLInputElement} */
   let fileInput;
@@ -76,11 +76,13 @@
       const browserLanguage = window?.navigator?.language;
       if (browserLanguage && browserLanguage.split('-').length > 1) {
         const code = navigator.language.split('-')[1];
-        const regionIndex = countryCodes.findIndex( (country) => country.value === code);
+        const regionIndex = countryCodes.findIndex(
+          (country) => country.value === code
+        );
         // copy detected region to the top of the list, if it's not already first
         if (regionIndex > 0) {
           const region = countryCodes[regionIndex];
-          countryCodes.unshift({ value: "", label: "---------------------"});
+          countryCodes.unshift({ value: '', label: '---------------------' });
           countryCodes.unshift(region);
         }
       }
@@ -167,7 +169,7 @@
     if (file) {
       handleFile(file, true);
     } else if (sourceUrl) {
-      handleUrl(sourceUrl)
+      handleUrl(sourceUrl);
     } else {
       addError('Please include a file to validate.');
     }
@@ -178,11 +180,11 @@
     return new Promise((resolve, reject) => {
       /** @type {CreateJobParameters} */
       const data = {
-        countryCode: region
+        countryCode: region,
       };
 
       if (url) {
-        data.url = url
+        data.url = url;
       }
 
       const xhr = new XMLHttpRequest();
@@ -193,10 +195,7 @@
           resolve(this.response);
         }
       });
-      xhr.open(
-        'POST',
-        `${apiRoot}/create-job`
-      );
+      xhr.open('POST', `${apiRoot}/create-job`);
       xhr.setRequestHeader('Content-Type', 'application/json');
       xhr.send(JSON.stringify(data));
     });
@@ -320,7 +319,20 @@
   <DropTarget {handleDragOver} {handleDrop}>
     <div class="container">
       <Form id="validator-form" on:submit={handleSubmit} on:reset={handleReset}>
-        <h2 class="h3 text-center">Evaluate your dataset against the official <a href="https://gtfs.org/schedule/reference/" target="_blank" rel="noreferrer">GTFS Reference</a> and <a href="https://gtfs.org/schedule/best-practices/" target="_blank" rel="noreferrer">Best Practices</a>.</h2>
+        <h2 class="h3 text-center">
+          Evaluate your dataset against the official
+          <a
+            href="https://gtfs.org/schedule/reference/"
+            target="_blank"
+            rel="noreferrer">GTFS Reference</a
+          >
+          and
+          <a
+            href="https://gtfs.org/schedule/best-practices/"
+            target="_blank"
+            rel="noreferrer">Best&nbsp;Practices</a
+          >.
+        </h2>
 
         <div class="max-w-xl mx-auto">
           <FileField
