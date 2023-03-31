@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.notice;
 
 /**
@@ -22,9 +21,17 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class DuplicatedColumnNotice extends ValidationNotice {
+
+  // The name of the faulty file.
   private final String filename;
-  private final String fieldName; // Indices should start from 1.
+
+  // The name of the faulty field.
+  private final String fieldName;
+
+  // Index of the first occurrence.
   private final int firstIndex;
+
+  // Index of the other occurrence.
   private final int secondIndex;
 
   public DuplicatedColumnNotice(

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import java.time.LocalDate;
@@ -40,6 +39,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
  */
 @GtfsValidator
 public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedInfo> {
+
   private final CurrentDateTime currentDateTime;
 
   @Inject
@@ -75,9 +75,17 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
   }
 
   static class FeedExpirationDate7DaysNotice extends ValidationNotice {
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
+
+    // Current date (YYYYMMDD format).
     private final GtfsDate currentDate;
+
+    // Feed end date (YYYYMMDD format).
     private final GtfsDate feedEndDate;
+
+    // Suggested expiration date (YYYYMMDD format).
     private final GtfsDate suggestedExpirationDate;
 
     FeedExpirationDate7DaysNotice(
@@ -94,9 +102,17 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
   }
 
   static class FeedExpirationDate30DaysNotice extends ValidationNotice {
+
+    // The row number of the faulty record.
     private final int csvRowNumber;
+
+    // Current date (YYYYMMDD format).
     private final GtfsDate currentDate;
+
+    // Feed end date (YYYYMMDD format).
     private final GtfsDate feedEndDate;
+
+    // Suggested expiration date (YYYYMMDD format).
     private final GtfsDate suggestedExpirationDate;
 
     FeedExpirationDate30DaysNotice(

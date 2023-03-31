@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.notice;
 
 /**
@@ -22,9 +21,17 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
 public class UnexpectedEnumValueNotice extends ValidationNotice {
+
+  // The name of the faulty file.
   private final String filename;
+
+  // The row number of the faulty record.
   private final int csvRowNumber;
+
+  // The name of the field where the error occurred.
   private final String fieldName;
+
+  // Faulty value.
   private final int fieldValue;
 
   public UnexpectedEnumValueNotice(

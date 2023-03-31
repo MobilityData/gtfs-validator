@@ -56,6 +56,25 @@
     }
   ],
   "droppedErrors": [],
+  "newWarnings": [
+    {
+      "noticeCode": "missing_recommended_field",
+      "affectedSourcesCount": 2,
+      "affectedSources": [
+        {
+          "sourceId": "source-id-2",
+          "sourceUrl": "url2",
+          "noticeCount": 1
+        },
+        {
+          "sourceId": "source-id-3",
+          "sourceUrl": "url3",
+          "noticeCount": 1
+        }
+      ]
+    }
+  ],
+  "droppedWarnings": [],
   "corruptedSources": {
     "sourceIdCount": 3,
     "corruptedSourcesCount": 0,

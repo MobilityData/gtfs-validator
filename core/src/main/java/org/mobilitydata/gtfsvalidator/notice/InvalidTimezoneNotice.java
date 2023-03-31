@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.notice;
 
 /**
@@ -28,9 +27,17 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class InvalidTimezoneNotice extends ValidationNotice {
+
+  // The name of the faulty file.
   private final String filename;
+
+  // The row of the faulty record.
   private final int csvRowNumber;
+
+  // Faulty record's field name.
   private final String fieldName;
+
+  // Faulty value.
   private final String fieldValue;
 
   public InvalidTimezoneNotice(

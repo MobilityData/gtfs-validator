@@ -38,6 +38,7 @@ import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyNotice;
 import org.mobilitydata.gtfsvalidator.notice.EmptyColumnNameNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidCurrencyNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidEmailNotice;
+import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.PointNearPoleNotice;
@@ -94,11 +95,15 @@ public class MainTest {
     NoticeContainer referenceNoticeContainer = new NoticeContainer();
     referenceNoticeContainer.addValidationNotice(new MissingRequiredFileNotice("some file"));
     referenceNoticeContainer.addValidationNotice(new EmptyColumnNameNotice("other file", 4));
+    referenceNoticeContainer.addValidationNotice(
+        new MissingRecommendedFieldNotice("other filename", 12, "other field name"));
 
     NoticeContainer latestNoticeContainer = new NoticeContainer();
     latestNoticeContainer.addValidationNotice(new MissingRequiredFileNotice("sample file"));
     latestNoticeContainer.addValidationNotice(new MissingRequiredFileNotice("other file"));
     latestNoticeContainer.addValidationNotice(new EmptyColumnNameNotice("filename", 5));
+    latestNoticeContainer.addValidationNotice(
+        new MissingRecommendedFieldNotice("other filename", 12, "other field name"));
 
     writeFile(
         latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
@@ -167,6 +172,8 @@ public class MainTest {
         new DuplicateKeyNotice("filename", 8, 10, "field name 1", "field value1"));
     latestNoticeContainer.addValidationNotice(
         new DuplicateKeyNotice("other filename", 9, 11, "field name 1", "field value1"));
+    latestNoticeContainer.addValidationNotice(
+        new MissingRecommendedFieldNotice("other filename", 12, "other field name"));
 
     writeFile(
         latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
@@ -245,9 +252,12 @@ public class MainTest {
         referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-1", REFERENCE_JSON));
 
-    // A notice present only in the reference report.
+    // An error notice present only in the reference report.
     referenceNoticeContainer.addValidationNotice(
         new DuplicateKeyNotice("filename", 8, 10, "field name 1", "field value1"));
+    // A warning notice present only in the reference report.
+    referenceNoticeContainer.addValidationNotice(
+        new MissingRecommendedFieldNotice("other filename", 12, "other field name"));
 
     writeFile(
         latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),

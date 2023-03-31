@@ -21,7 +21,7 @@ public class ChangedNoticesCollectorTest {
 
   @Test
   public void testBasicFunctionality() {
-    ChangedNoticesCollector collector = new ChangedNoticesCollector(1, 25f);
+    ChangedNoticesCollector collector = new ChangedNoticesCollector(SeverityLevel.ERROR, 1, 25f);
 
     // First source has no change in errors.
     collector.compareValidationReports(
@@ -58,7 +58,7 @@ public class ChangedNoticesCollectorTest {
   @Test
   public void testInvalidErrorThreshold() {
     // Note the error threshold of 2.
-    ChangedNoticesCollector collector = new ChangedNoticesCollector(2, 25f);
+    ChangedNoticesCollector collector = new ChangedNoticesCollector(SeverityLevel.ERROR, 2, 25f);
 
     // Only one new error.
     collector.compareValidationReports(

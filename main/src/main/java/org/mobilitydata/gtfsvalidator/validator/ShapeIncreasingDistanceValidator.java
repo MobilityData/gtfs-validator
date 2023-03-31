@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.util.S2Earth.getDistanceMeters;
@@ -90,12 +89,27 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class DecreasingShapeDistanceNotice extends ValidationNotice {
+
+    // The id of the faulty shape.
     private final String shapeId;
+
+    // The row number from `shapes.txt`.
     private final int csvRowNumber;
+
+    // Actual distance traveled along the shape from the first shape point to the faulty record.
     private final double shapeDistTraveled;
+
+    // The faulty record's `shapes.shape_pt_sequence`.
     private final int shapePtSequence;
+
+    // The row number from `shapes.txt` of the previous shape point.
     private final long prevCsvRowNumber;
+
+    // Actual distance traveled along the shape from the first shape point to the previous shape
+    // point.
     private final double prevShapeDistTraveled;
+
+    // The previous record's `shapes.shape_pt_sequence`.
     private final int prevShapePtSequence;
 
     DecreasingShapeDistanceNotice(GtfsShape current, GtfsShape previous) {
@@ -121,12 +135,27 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class EqualShapeDistanceSameCoordinatesNotice extends ValidationNotice {
+
+    // The id of the faulty shape.
     private final String shapeId;
+
+    // The row number from `shapes.txt`.
     private final int csvRowNumber;
+
+    // Actual distance traveled along the shape from the first shape point to the faulty record.
     private final double shapeDistTraveled;
+
+    // The faulty record's `shapes.shape_pt_sequence`.
     private final int shapePtSequence;
+
+    // The row number from `shapes.txt` of the previous shape point.
     private final long prevCsvRowNumber;
+
+    // Actual distance traveled along the shape from the first shape point to the previous shape
+    // point.
     private final double prevShapeDistTraveled;
+
+    // The previous record's `shapes.shape_pt_sequence`.
     private final int prevShapePtSequence;
 
     EqualShapeDistanceSameCoordinatesNotice(GtfsShape previous, GtfsShape current) {
@@ -151,13 +180,30 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
   static class EqualShapeDistanceDiffCoordinatesNotice extends ValidationNotice {
+
+    // The id of the faulty shape.
     private final String shapeId;
+
+    // The row number from `shapes.txt`.
     private final int csvRowNumber;
+
+    // The faulty record's `shape_dist_traveled` value.
     private final double shapeDistTraveled;
+
+    // The faulty record's `shapes.shape_pt_sequence`.
     private final int shapePtSequence;
+
+    // The row number from `shapes.txt` of the previous shape point.
     private final long prevCsvRowNumber;
+
+    // The previous shape point's `shape_dist_traveled` value.
     private final double prevShapeDistTraveled;
+
+    // The previous record's `shapes.shape_pt_sequence`.
     private final int prevShapePtSequence;
+
+    // Actual distance traveled along the shape from the first shape point to the previous shape
+    // point.
     private final double actualDistanceBetweenShapePoints;
 
     EqualShapeDistanceDiffCoordinatesNotice(GtfsShape previous, GtfsShape current) {
