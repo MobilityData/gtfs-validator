@@ -16,7 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
 import static java.util.Arrays.stream;
 
 import java.lang.reflect.Field;
@@ -45,8 +45,11 @@ public class NoticeFieldsTest {
    */
   @Test
   public void testNoticeClassFieldNames() {
-    // Keep the list of field names is in sorted order.
-    assertThat(discoverValidationNoticeFieldNames())
+    assertWithMessage(
+            "Is this test failing? That likely means you've added a new field name to a "
+                + "`Notice` that hasn't been used before. See `NoticeFieldsTest` for instructions.")
+        .that(discoverValidationNoticeFieldNames())
+        // Keep the list of field names is in sorted order.
         .containsExactly(
             "actual",
             "actualDistanceBetweenShapePoints",
