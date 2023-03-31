@@ -136,7 +136,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`stop_without_stop_time`](#stop_without_stop_time)                                           | A stop in `stops.txt` is not referenced by any `stop_times.stop_id`.                                                                                          |
 | [`transfer_with_suspicious_mid_trip_in_seat`](#transfer_with_suspicious_mid_trip_in_seat)     | A trip id field from GTFS file `transfers.txt` with an in-seat transfer type references a stop that is not in the expected position in the trip's stop-times. |
 | [`translation_unknown_table_name`](#translation_unknown_table_name)                           | A translation references an unknown or missing GTFS table.                                                                                                    |
-| [`trip_data_should_be_valid_for_next7_days`](#trip_data_should_be_valid_for_next7_days)   | Trips data should be valid for at least the next seven days.                                                                                            |
+| [`trip_coverage_not_active_for_next7_days`](#trip_coverage_not_active_for_next7_days)   | Trips data should be valid for at least the next seven days.                                                                                            |
 | [`unexpected_enum_value`](#unexpected_enum_value)                                             | An enum has an unexpected value.                                                                                                                              |
 | [`unusable_trip`](#unusable_trip)                                                             | Trips must have more than one stop to be usable.                                                                                                              |
 | [`unused_shape`](#unused_shape)                                                               | Shape is not used in GTFS file `trips.txt`.                                                                                                                   |
@@ -2706,9 +2706,9 @@ A translation references an unknown or missing GTFS table.
 
 </details>
 
-<a name="TripDataShouldBeValidForNext7DaysNotice"/>
+<a name="TripCoverageNotActiveForNext7DaysNotice"/>
 
-### trip_data_should_be_valid_for_next7_days
+### trip_coverage_not_active_for_next7_days
 
 Trips data should be valid for at least the next seven days.
 

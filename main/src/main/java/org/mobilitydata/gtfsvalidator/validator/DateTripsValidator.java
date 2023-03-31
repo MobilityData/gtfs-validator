@@ -40,7 +40,7 @@ import org.mobilitydata.gtfsvalidator.util.TripCalendarUtil;
  * <p>Generated notices:
  *
  * <ul>
- *   <li>{@link TripDataShouldBeValidForNext7DaysNotice}.
+ *   <li>{@link TripCoverageNotActiveForNext7DaysNotice}.
  * </ul>
  */
 @GtfsValidator
@@ -88,7 +88,7 @@ public class DateTripsValidator extends FileValidator {
       if (serviceWindowStartDate.isAfter(now)
           || serviceWindowEndDate.isBefore(currentDatePlusSevenDays)) {
         noticeContainer.addValidationNotice(
-            new TripDataShouldBeValidForNext7DaysNotice(
+            new TripCoverageNotActiveForNext7DaysNotice(
                 GtfsDate.fromLocalDate(now),
                 GtfsDate.fromLocalDate(serviceWindowStartDate),
                 GtfsDate.fromLocalDate(serviceWindowEndDate)));
@@ -96,7 +96,12 @@ public class DateTripsValidator extends FileValidator {
     }
   }
 
-  static class TripDataShouldBeValidForNext7DaysNotice extends ValidationNotice {
+  /**
+   * Trip data must be valid for the next 7 days.
+   *
+   * <p>Severity: {@code SeverityLevel.WARNING
+   */
+  static class TripCoverageNotActiveForNext7DaysNotice extends ValidationNotice {
     // Current date (YYYYMMDD format)
     private final GtfsDate currentDate;
     // The start date of the majority service window.
@@ -104,7 +109,7 @@ public class DateTripsValidator extends FileValidator {
     // The end date of the majority service window.
     private final GtfsDate serviceWindowEndDate;
 
-    TripDataShouldBeValidForNext7DaysNotice(
+    TripCoverageNotActiveForNext7DaysNotice(
         GtfsDate currentDate, GtfsDate serviceWindowStartDate, GtfsDate serviceWindowEndDate) {
       super(SeverityLevel.WARNING);
       this.currentDate = currentDate;

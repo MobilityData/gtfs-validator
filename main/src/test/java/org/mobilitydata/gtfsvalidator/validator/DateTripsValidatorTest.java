@@ -35,7 +35,7 @@ public class DateTripsValidatorTest {
     var notices = validateSimpleServiceWindow(serviceWindowStart, serviceWindowEnd);
     assertThat(notices)
         .containsExactly(
-            new TripDataShouldBeValidForNext7DaysNotice(
+            new TripCoverageNotActiveForNext7DaysNotice(
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()),
                 GtfsDate.fromLocalDate(serviceWindowStart),
                 GtfsDate.fromLocalDate(serviceWindowEnd)));
@@ -49,7 +49,7 @@ public class DateTripsValidatorTest {
     var notices = validateSimpleServiceWindow(serviceWindowStart, serviceWindowEnd);
     assertThat(notices)
         .containsExactly(
-            new TripDataShouldBeValidForNext7DaysNotice(
+            new TripCoverageNotActiveForNext7DaysNotice(
                 GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()),
                 GtfsDate.fromLocalDate(serviceWindowStart),
                 GtfsDate.fromLocalDate(serviceWindowEnd)));
