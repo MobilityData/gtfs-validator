@@ -1733,8 +1733,10 @@ Fare media should have a unique combination of fare media name and type.
 #### Notice fields description
 | Field name   | Description                              | Type   	|
 |--------------|------------------------------------------|--------	|
-| `fareMedia1` | Reference to the first fare media. 	  | Long   	|
-| `fareMedia2` | Reference to the second fare media.      | String 	|
+| `csvRowNumber1` | The row of the first occurrence.	 	  | Long   	|
+| `fareMediaId1` | The id of the the first occurrence.		| String |
+| `csvRowNumber2` | The row of the second occurrence.	 	  | Long   	|
+| `fareMediaId2` | The id of the the second occurrence.		| String |
 
 #### Affected files
 * [fare_media.txt](http://gtfs.org/reference/static/#fare_mediatxt)
