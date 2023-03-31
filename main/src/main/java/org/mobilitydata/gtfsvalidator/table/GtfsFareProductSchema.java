@@ -16,12 +16,16 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.UNSUPPORTED;
+
 import java.math.BigDecimal;
 import java.util.Currency;
 import org.mobilitydata.gtfsvalidator.annotation.CurrencyAmount;
 import org.mobilitydata.gtfsvalidator.annotation.FieldType;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
+import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
+import org.mobilitydata.gtfsvalidator.annotation.Index;
 import org.mobilitydata.gtfsvalidator.annotation.NonNegative;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
@@ -30,7 +34,8 @@ import org.mobilitydata.gtfsvalidator.annotation.Required;
 public interface GtfsFareProductSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
   @Required
-  @PrimaryKey
+  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
+  @Index
   String fareProductId();
 
   String fareProductName();
@@ -42,4 +47,9 @@ public interface GtfsFareProductSchema extends GtfsEntity {
 
   @Required
   Currency currency();
+
+  @FieldType(FieldTypeEnum.ID)
+  @ForeignKey(table = "fare_media.txt", field = "fare_media_id")
+  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
+  String fareMediaId();
 }
