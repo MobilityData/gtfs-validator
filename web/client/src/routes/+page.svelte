@@ -23,6 +23,15 @@
    * @property {string} countryCode - country code.
    */
 
+  /**
+   * @typedef { 'authorizing'
+   *  | 'uploading'
+   *  | 'processing'
+   *  | 'ready'
+   * }
+   * Status
+   */
+
   let showDocs = true;
 
   const apiRoot = 'https://gtfs-validator-web-mbzoxaljzq-ue.a.run.app';
@@ -36,6 +45,9 @@
   /** @type {string} */
   let jobId;
 
+  /** @type {boolean} */
+  let jobInProgress;
+
   /** @type {string[]} */
   let errors = [];
 
@@ -48,7 +60,7 @@
   /** @type {string} */
   let sourceUrl = '';
 
-  /** @type {string} */
+  /** @type {Status} */
   let status;
 
   /** @type {HTMLDialogElement} */
@@ -128,7 +140,7 @@
     } else {
       pendingFilename = file?.name;
       if (shouldUpload) {
-        uploadFile(file);
+        generateReport(file);
       }
     }
   }
@@ -153,7 +165,6 @@
 
     // restore values after native reset
     setTimeout(() => {
-      console.log('timeout', region);
       region = selectedRegion;
       sourceUrl = '';
       clearFile();
@@ -167,9 +178,9 @@
     const file = fileInput?.files?.item(0);
 
     if (file) {
-      handleFile(file, true);
+      generateReport(file);
     } else if (sourceUrl) {
-      handleUrl(sourceUrl);
+      generateReport(sourceUrl);
     } else {
       addError('Please include a file to validate.');
     }
@@ -177,6 +188,10 @@
 
   /** @param {string=} url **/
   function createJob(url) {
+    updateStatus('authorizing');
+    jobInProgress = false; // stop any ongoing polling loops
+    jobId = '_waiting_';
+
     return new Promise((resolve, reject) => {
       /** @type {CreateJobParameters} */
       const data = {
@@ -189,19 +204,15 @@
 
       const xhr = new XMLHttpRequest();
       xhr.responseType = 'json';
-      xhr.onerror = reject;
-      xhr.addEventListener('readystatechange', function () {
-        if (this.readyState === this.DONE) {
-          resolve(this.response);
-        }
-      });
+      xhr.onerror = () => reject('Error authorizing upload.');
+      xhr.onload = () => resolve(xhr.response);
       xhr.open('POST', `${apiRoot}/create-job`);
       xhr.setRequestHeader('Content-Type', 'application/json');
       xhr.send(JSON.stringify(data));
     });
   }
 
-  /** @param {string} newStatus */
+  /** @param {Status} newStatus */
   function updateStatus(newStatus) {
     status = newStatus;
 
@@ -217,13 +228,36 @@
    * @param {File} file
    **/
   function putFile(url, file) {
+    updateStatus('uploading');
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.onload = resolve;
-      xhr.onerror = reject;
+      xhr.onerror = () => reject('Error uploading file.');
       xhr.open('PUT', url);
       xhr.setRequestHeader('Content-Type', 'application/octet-stream');
       xhr.send(file);
+    });
+  }
+
+  async function waitForJob() {
+    return new Promise(async (resolve, reject) => {
+      updateStatus('processing');
+      jobInProgress = true;
+
+      do {
+        try {
+          jobInProgress = !(await reportExists());
+          if (jobInProgress) {
+            await sleep(2500);
+          }
+        } catch (error) {
+          jobInProgress = false;
+          reject('Error processing report.');
+        }
+      } while (jobInProgress);
+
+      jobInProgress = false;
+      resolve(!jobInProgress);
     });
   }
 
@@ -231,11 +265,7 @@
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
 
-      xhr.addEventListener('readystatechange', function () {
-        if (this.readyState === this.DONE) {
-          resolve(xhr.status === 200);
-        }
-      });
+      xhr.onload = () => resolve(xhr.status === 200);
       xhr.onerror = reject;
       xhr.open('HEAD', reportUrl);
       xhr.send();
@@ -253,53 +283,52 @@
     return new Promise((res) => setTimeout(res, ms));
   }
 
-  /** @param {File} file */
-  async function uploadFile(file) {
-    updateStatus('authorizing');
-    jobId = '_waiting_';
-    const result = await createJob();
-    updateStatus('uploading');
-    jobId = result.jobId;
-    await putFile(result.url, file);
-    updateStatus('processing');
+  /** @param {File|string} source */
+  async function generateReport(source) {
+    let canContinue = true;
 
-    let jobComplete = false;
-    do {
-      jobComplete = await reportExists();
-      if (!jobComplete) {
-        await sleep(2500);
+    // if source is a URL, pass it to createJob
+    const url = typeof source === 'string' ? source : undefined;
+
+    // get a job id from the server
+    const job = await createJob(url).catch((error) => {
+      addError(error);
+      canContinue = false;
+    });
+
+    if (canContinue) {
+      jobId = job.jobId;
+
+      // upload the file (if applicable)
+      if (source instanceof File) {
+        await putFile(job.url, source).catch((error) => {
+          addError(error);
+          canContinue = false;
+        });
       }
-    } while (!jobComplete);
-
-    updateStatus('ready');
-
-    if (form) {
-      form.reset();
-      clearFile();
     }
-  }
 
-  /** @param {string} url */
-  async function handleUrl(url) {
-    updateStatus('authorizing');
-    jobId = '_waiting_';
-    const result = await createJob(url);
-    jobId = result.jobId;
-    updateStatus('processing');
+    // poll for report ready
+    if (canContinue) {
+      await waitForJob().catch((error) => {
+        addError(error);
+        canContinue = false;
+      });
+    }
 
-    let jobComplete = false;
-    do {
-      jobComplete = await reportExists();
-      if (!jobComplete) {
-        await sleep(2500);
+    // clean up
+    if (canContinue) {
+      updateStatus('ready');
+
+      if (form) {
+        form.reset();
+        clearFile();
       }
-    } while (!jobComplete);
+    }
 
-    updateStatus('ready');
-
-    if (form) {
-      form.reset();
-      clearFile();
+    // hide progress modal if there's an error
+    if (!canContinue) {
+      statusModal.close();
     }
   }
 
