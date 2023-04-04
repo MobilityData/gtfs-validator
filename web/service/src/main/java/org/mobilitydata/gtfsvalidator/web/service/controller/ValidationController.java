@@ -48,21 +48,25 @@ public class ValidationController {
   @CrossOrigin(origins = "*")
   @PostMapping(value = "/create-job", produces = "application/json", consumes = "application/json")
   public CreateJobResponse createJob(@RequestBody CreateJobRequest body) {
+    final var jobId = storageHelper.createNewJobId();
+    URL uploadUrl = null;
     try {
-      final var jobId = UUID.randomUUID().toString();
-      if (body != null && !Strings.isNullOrEmpty(body.getCountryCode())) {
-        storageHelper.saveJobMetaData(new JobMetadata(jobId, body.getCountryCode()));
+      if (body != null) {
+        if (!Strings.isNullOrEmpty(body.getCountryCode())) {
+          storageHelper.saveJobMetaData(new JobMetadata(jobId, body.getCountryCode()));
+        }
+        if (!Strings.isNullOrEmpty(body.getUrl())) {
+          storageHelper.saveJobFileFromUrl(jobId, body.getUrl());
+        } else {
+          uploadUrl = storageHelper.generateUniqueUploadUrl(jobId);
+        }
       }
-
-      // Check to see if this request has a url
-      if (body != null && !Strings.isNullOrEmpty(body.getUrl())) {
-        storageHelper.saveJobFileFromUrl(jobId, body.getUrl());
-        return new CreateJobResponse(jobId, null);
-      }
-      // If no URL is provided, then we generate a unique url for the client to upload the GTFS file
-      URL url = storageHelper.generateUniqueUploadUrl(jobId);
-
-      return new CreateJobResponse(jobId, url.toString());
+      return new CreateJobResponse(jobId, uploadUrl != null ? uploadUrl.toString() : null);
+      //      }
+      //      // If no URL is provided, then we generate a unique url for the client to upload the
+      // GTFS file
+      //
+      //      return new CreateJobResponse(jobId, url.toString());
     } catch (Exception exc) {
       logger.error("Error", exc);
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error", exc);

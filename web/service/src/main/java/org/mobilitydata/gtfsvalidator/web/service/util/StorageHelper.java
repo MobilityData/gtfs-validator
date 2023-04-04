@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,10 @@ public class StorageHelper {
   public StorageHelper(Storage storage, ApplicationContext applicationContext) {
     this.storage = storage;
     this.applicationContext = applicationContext;
+  }
+
+  public String createNewJobId() {
+    return UUID.randomUUID().toString();
   }
 
   public static String getJobInfoPath(String jobId) {
