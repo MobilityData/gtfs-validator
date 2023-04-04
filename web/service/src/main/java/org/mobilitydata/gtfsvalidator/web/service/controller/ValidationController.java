@@ -62,11 +62,6 @@ public class ValidationController {
         }
       }
       return new CreateJobResponse(jobId, uploadUrl != null ? uploadUrl.toString() : null);
-      //      }
-      //      // If no URL is provided, then we generate a unique url for the client to upload the
-      // GTFS file
-      //
-      //      return new CreateJobResponse(jobId, url.toString());
     } catch (Exception exc) {
       logger.error("Error", exc);
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error", exc);
