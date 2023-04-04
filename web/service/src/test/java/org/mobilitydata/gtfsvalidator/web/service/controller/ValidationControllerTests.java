@@ -88,10 +88,6 @@ public class ValidationControllerTests {
     when(storageHelper.createNewJobId()).thenReturn(testJobId);
     String url = "http://myfilehost.com/myfile.zip";
     var request = new CreateJobRequest(null, url);
-    // get json string from request object
-    var json = mapper.writeValueAsString(request);
-    ArgumentCaptor<JobMetadata> jobMetadataArgumentCaptor =
-        ArgumentCaptor.forClass(JobMetadata.class);
 
     makeCreateJobRequestAndCheckResult(request, testJobId, null);
 
@@ -106,8 +102,6 @@ public class ValidationControllerTests {
     when(storageHelper.createNewJobId()).thenReturn(testJobId);
     String url = "http://myfilehost.com/myfile.zip";
     var request = new CreateJobRequest("US", url);
-    // get json string from request object
-    var json = mapper.writeValueAsString(request);
     ArgumentCaptor<JobMetadata> jobMetadataArgumentCaptor =
         ArgumentCaptor.forClass(JobMetadata.class);
 
@@ -121,5 +115,35 @@ public class ValidationControllerTests {
     assert jobMetadata.getCountryCode().equals("US");
     // should saveJobFileFromUrl
     verify(storageHelper, times(1)).saveJobFileFromUrl(testJobId, url);
+  }
+
+  @Test
+  public void createJobShouldReturn500ErrorIfSaveMetaDataThrowsException() throws Exception {
+    when(storageHelper.createNewJobId()).thenReturn(testJobId);
+    doThrow(new RuntimeException("test exception")).when(storageHelper).saveJobMetaData(any());
+    String url = "http://myfilehost.com/myfile.zip";
+    var request = new CreateJobRequest("US", url);
+    var json = mapper.writeValueAsString(request);
+    mockMvc
+            .perform(
+                    MockMvcRequestBuilders.post("/create-job")
+                            .content(json)
+                            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().is5xxServerError());
+  }
+
+  @Test
+  public void createJobShouldReturn500ErrorIfSaveJobFileFromUrlThrowsException() throws Exception {
+    when(storageHelper.createNewJobId()).thenReturn(testJobId);
+    doThrow(new RuntimeException("test exception")).when(storageHelper).saveJobFileFromUrl(any(), any());
+    String url = "http://myfilehost.com/myfile.zip";
+    var request = new CreateJobRequest("US", url);
+    var json = mapper.writeValueAsString(request);
+    mockMvc
+            .perform(
+                    MockMvcRequestBuilders.post("/create-job")
+                            .content(json)
+                            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().is5xxServerError());
   }
 }
