@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.outputcomparator.cli;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mobilitydata.gtfsvalidator.outputcomparator.cli.Main.ACCEPTANCE_REPORT_JSON;
+import static org.mobilitydata.gtfsvalidator.outputcomparator.cli.TestHelper.writeFile;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -94,10 +95,10 @@ public class MainTest {
     latestNoticeContainer.addValidationNotice(
         new MissingRecommendedFieldNotice("other filename", 12, "other field name"));
 
-    TestHelper.writeFile(
+    writeFile(
         latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
         resolve(NO_NEW_NOTICE_FOLDER_NAME, "source-id-1", LATEST_JSON));
-    TestHelper.writeFile(
+    writeFile(
         referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
         resolve(NO_NEW_NOTICE_FOLDER_NAME, "source-id-1", REFERENCE_JSON));
 
@@ -105,7 +106,7 @@ public class MainTest {
     sourceUrlJsonObject.addProperty("source-id-1", "url1");
     sourceUrlJsonObject.addProperty("source-id-2", "url2");
     sourceUrlJsonObject.addProperty("source-id-3", "url3");
-    TestHelper.writeFile(
+    writeFile(
         sourceUrlJsonObject, resolve(SOURCE_INFO_FOLDER_NAME, "all", GTFS_LATEST_VERSIONS_JSON));
 
     String[] argv = {
@@ -148,10 +149,10 @@ public class MainTest {
     latestNoticeContainer.addValidationNotice(new MissingRequiredFileNotice("other file"));
     latestNoticeContainer.addValidationNotice(new EmptyColumnNameNotice("filename", 5));
 
-    TestHelper.writeFile(
+    writeFile(
         latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-1", LATEST_JSON));
-    TestHelper.writeFile(
+    writeFile(
         referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-1", REFERENCE_JSON));
 
@@ -164,10 +165,10 @@ public class MainTest {
     latestNoticeContainer.addValidationNotice(
         new MissingRecommendedFieldNotice("other filename", 12, "other field name"));
 
-    TestHelper.writeFile(
+    writeFile(
         latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-2", LATEST_JSON));
-    TestHelper.writeFile(
+    writeFile(
         referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-2", REFERENCE_JSON));
 
@@ -179,10 +180,10 @@ public class MainTest {
     latestNoticeContainer.addValidationNotice(
         new DuplicateKeyNotice("some filename", 9, 11, "field name 1", "field value1"));
 
-    TestHelper.writeFile(
+    writeFile(
         latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-3", LATEST_JSON));
-    TestHelper.writeFile(
+    writeFile(
         referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-3", REFERENCE_JSON));
 
@@ -190,7 +191,7 @@ public class MainTest {
     sourceUrlJsonObject.addProperty("source-id-1", "url1");
     sourceUrlJsonObject.addProperty("source-id-2", "url2");
     sourceUrlJsonObject.addProperty("source-id-3", "url3");
-    TestHelper.writeFile(
+    writeFile(
         sourceUrlJsonObject, resolve(SOURCE_INFO_FOLDER_NAME, "all", GTFS_LATEST_VERSIONS_JSON));
 
     String[] argv = {
@@ -234,10 +235,10 @@ public class MainTest {
     latestNoticeContainer.addValidationNotice(new MissingRequiredFileNotice("other file"));
     latestNoticeContainer.addValidationNotice(new EmptyColumnNameNotice("filename", 5));
 
-    TestHelper.writeFile(
+    writeFile(
         latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-1", LATEST_JSON));
-    TestHelper.writeFile(
+    writeFile(
         referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-1", REFERENCE_JSON));
 
@@ -248,17 +249,17 @@ public class MainTest {
     referenceNoticeContainer.addValidationNotice(
         new MissingRecommendedFieldNotice("other filename", 12, "other field name"));
 
-    TestHelper.writeFile(
+    writeFile(
         latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-2", LATEST_JSON));
-    TestHelper.writeFile(
+    writeFile(
         referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-2", REFERENCE_JSON));
 
     JsonObject sourceUrlJsonObject = new JsonObject();
     sourceUrlJsonObject.addProperty("source-id-1", "url1");
     sourceUrlJsonObject.addProperty("source-id-2", "url2");
-    TestHelper.writeFile(
+    writeFile(
         sourceUrlJsonObject, resolve(SOURCE_INFO_FOLDER_NAME, "all", GTFS_LATEST_VERSIONS_JSON));
 
     String[] argv = {
@@ -298,24 +299,24 @@ public class MainTest {
     noticeContainer.addValidationNotice(new MissingRequiredFileNotice("some file"));
     noticeContainer.addValidationNotice(new EmptyColumnNameNotice("other file", 4));
 
-    TestHelper.writeFile(
+    writeFile(
         noticeContainer.exportJson(noticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-1", LATEST_JSON));
-    TestHelper.writeFile(
+    writeFile(
         noticeContainer.exportJson(noticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-1", REFERENCE_JSON));
 
-    TestHelper.writeFile(
+    writeFile(
         noticeContainer.exportJson(noticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-2", LATEST_JSON));
-    TestHelper.writeFile(
+    writeFile(
         noticeContainer.exportJson(noticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-2", REFERENCE_JSON));
 
-    TestHelper.writeFile(
+    writeFile(
         noticeContainer.exportJson(noticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-3", LATEST_JSON));
-    TestHelper.writeFile(
+    writeFile(
         noticeContainer.exportJson(noticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-3", REFERENCE_JSON));
 
@@ -325,7 +326,7 @@ public class MainTest {
     sourceUrlJsonObject.addProperty("source-id-3", "url3");
     sourceUrlJsonObject.addProperty("source-id-4", "url4");
     sourceUrlJsonObject.addProperty("source-id-5", "url5");
-    TestHelper.writeFile(
+    writeFile(
         sourceUrlJsonObject, resolve(SOURCE_INFO_FOLDER_NAME, "all", GTFS_LATEST_VERSIONS_JSON));
 
     String[] argv = {
@@ -347,14 +348,14 @@ public class MainTest {
       resolve(SOURCE_INFO_FOLDER_NAME, "all", GTFS_LATEST_VERSIONS_JSON).toString()
     };
 
-    TestHelper.writeFile(
+    writeFile(
         noticeContainer.exportJson(noticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-4", "invalid_latest.json"));
-    TestHelper.writeFile(
+    writeFile(
         noticeContainer.exportJson(noticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-4", "invalid_reference.json"));
 
-    TestHelper.writeFile(
+    writeFile(
         noticeContainer.exportJson(noticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-5", "latest.json"));
 
