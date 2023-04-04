@@ -9,4 +9,4 @@ include 'main'
 include 'model'
 include 'output-comparator'
 include 'tests'
-
+include ':web:service'

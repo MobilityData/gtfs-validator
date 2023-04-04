@@ -109,7 +109,7 @@
     <span th:text="${summary.warningCount}">0</span> warnings,
     <span th:text="${summary.infoCount}">0</span> infos)</h2>
 <p>This validation report was generated using the <a href="https://github.com/MobilityData/gtfs-validator">Canonical GTFS Schedule validator</a>.</p>
-<p>Use this report alongside the <a href="https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md">RULES.md</a> file to get more details about the validation issues.</p>
+<p>Use this report alongside the <a href="https://gtfs-validator.mobilitydata.org/rules.html">rules</a> page to get more details about the validation issues.</p>
 <table class="accordion">
     <thead>
     <tr>
@@ -128,7 +128,7 @@
                 <td colspan="4">
                     <div class="desc-content">
                         <h3 th:text="${noticesByCode.key}" />
-                        <p> Please find this notice description <a th:href="@{'https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#' + ${noticesByCode.value[0].name}}">here</a>.</p>
+                        <p> Please find this notice description <a th:href="@{'https://gtfs-validator.mobilitydata.org/rules.html#' + ${noticesByCode.key}}">here</a>.</p>
                         <table>
                             <thead>
                                 <tr>
