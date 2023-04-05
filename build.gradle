@@ -60,3 +60,10 @@ tasks.register('testReport', TestReport) {
     // Use test results from testReportData configuration
     testResultDirs.from(configurations.testReportData)
 }
+
+task copyRulesToWebClient (type: Copy) {
+    from "./RULES.md"
+    into "./web/client/static"
+}
+
+build.dependsOn copyRulesToWebClient

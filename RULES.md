@@ -1,7 +1,6 @@
-# Implemented rules
+# Implemented notices
 This document lists all the notices that are emitted by this validator.\
-Note that the notice naming convention changed in `v2` to make contributions of new rules easier by reducing the likelihood of conflicting IDs during parallel development. Please refer to [MIGRATION_V1_V2.md](/docs/MIGRATION_V1_V2.md) for a mapping between v1 and v2 notices.\
-Note that some severities were modified in `v3` to solve discrepancies with the specification. Please refer to [MIGRATION_V2_V3.md](/docs/MIGRATION_V2_V3.md) for a mapping between v2 and v3 notices.
+For an overview  what changed in each validator release, please refer to [NOTICE_MIGRATION.md](/docs/NOTICE_MIGRATION.md).
 <a name="definitions"/>
 
 ## Definitions
@@ -98,6 +97,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | Notice code                                                                                   | Description                                                                                                                                                   |
 |-----------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`attribution_without_role`](#attribution_without_role)                                       | Attribution with no role.                                                                                                                                     |
+| [`duplicate_fare_media`](#duplicate_fare_media)                                               | Two distinct fare media have the same fare media name and type.                                                                                              |
 | [`duplicate_route_name`](#duplicate_route_name)                                               | Two distinct routes have either the same `route_short_name`, the same `route_long_name`, or the same combination of `route_short_name` and `route_long_name`. |
 | [`empty_row`](#empty_row)                                                                     | A row in the input file has only spaces.                                                                                                                      |
 | [`equal_shape_distance_same_coordinates`](#equal_shape_distance_same_coordinates)             | Two consecutive points have equal `shape_dist_traveled` and the same lat/lon coordinates in `shapes.txt`.                                                     |
@@ -1713,6 +1713,32 @@ At least one of the fields `is_producer`, `is_operator`, or `is_authority` shoul
 
 #### Affected files
 * [`attributions.txt`](http://gtfs.org/reference/static#attributionstxt)
+
+</details>
+
+<a name="DuplicateFareMediaNotice"/>
+
+### duplicate_fare_media
+
+Two distinct fare media have the same fare media name and type.
+
+Fare media should have a unique combination of fare media name and type.
+
+#### References
+* [fare_media.txt specification](http://gtfs.org/reference/static/#fare_mediatxt)
+
+<details>
+
+#### Notice fields description
+| Field name   | Description                              | Type   	|
+|--------------|------------------------------------------|--------	|
+| `csvRowNumber1` | The row of the first occurrence.	 	  | Long   	|
+| `fareMediaId1` | The id of the the first occurrence.		| String |
+| `csvRowNumber2` | The row of the second occurrence.	 	  | Long   	|
+| `fareMediaId2` | The id of the the second occurrence.		| String |
+
+#### Affected files
+* [fare_media.txt](http://gtfs.org/reference/static/#fare_mediatxt)
 
 </details>
 

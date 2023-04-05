@@ -100,6 +100,13 @@ public class NoticeContainer {
     validationNotices.add(notice);
   }
 
+  public <T extends ValidationNotice> NoticeContainer addValidationNotices(Iterable<T> notices) {
+    for (T notice : notices) {
+      addValidationNotice(notice);
+    }
+    return this;
+  }
+
   /** Adds a new system error to the container. */
   public void addSystemError(SystemError error) {
     updateNoticeCount(error);

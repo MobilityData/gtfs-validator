@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.outputcomparator.cli;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mobilitydata.gtfsvalidator.outputcomparator.cli.Main.ACCEPTANCE_REPORT_JSON;
+import static org.mobilitydata.gtfsvalidator.outputcomparator.cli.TestHelper.writeFile;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -57,17 +58,6 @@ public class MainTest {
   private static final String SOURCE_INFO_FOLDER_NAME = "source-info";
   private static final List<ChangedNotice> NO_CHANGES = new ArrayList<>();
   @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
-
-  private static final Gson GSON =
-      new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
-
-  private void writeFile(JsonObject fileData, Path path) throws IOException {
-    Path parentDir = path.getParent();
-    if (!Files.exists(parentDir)) {
-      Files.createDirectories(parentDir);
-    }
-    Files.write(path, GSON.toJson(fileData).getBytes(StandardCharsets.UTF_8));
-  }
 
   private static String retrieveReportString(Path path) throws IOException {
     String content = Files.readString(path);
