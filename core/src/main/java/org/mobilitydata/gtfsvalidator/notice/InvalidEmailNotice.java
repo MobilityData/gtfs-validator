@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.notice;
 
 /**
@@ -26,9 +25,17 @@ package org.mobilitydata.gtfsvalidator.notice;
  * reference</a> does not provide any special requirements or standards.
  */
 public class InvalidEmailNotice extends ValidationNotice {
+
+  // The name of the faulty file.
   private final String filename;
+
+  // The row of the faulty record.
   private final int csvRowNumber;
+
+  // Faulty record's field name.
   private final String fieldName;
+
+  // Faulty value.
   private final String fieldValue;
 
   /**

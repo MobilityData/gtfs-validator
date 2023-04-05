@@ -97,6 +97,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | Notice code                                                                                   | Description                                                                                                                                                   |
 |-----------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`attribution_without_role`](#attribution_without_role)                                       | Attribution with no role.                                                                                                                                     |
+| [`duplicate_fare_media`](#duplicate_fare_media)                                               | Two distinct fare media have the same fare media name and type.                                                                                              |
 | [`duplicate_route_name`](#duplicate_route_name)                                               | Two distinct routes have either the same `route_short_name`, the same `route_long_name`, or the same combination of `route_short_name` and `route_long_name`. |
 | [`empty_row`](#empty_row)                                                                     | A row in the input file has only spaces.                                                                                                                      |
 | [`equal_shape_distance_same_coordinates`](#equal_shape_distance_same_coordinates)             | Two consecutive points have equal `shape_dist_traveled` and the same lat/lon coordinates in `shapes.txt`.                                                     |
@@ -565,7 +566,7 @@ Value of field with type `color` is not valid. A color must be encoded as a six-
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
@@ -588,7 +589,7 @@ Value of field with type `currency` is not valid. Currency code must follow <a h
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
@@ -611,10 +612,10 @@ A currency amount field has a value that does not match the format (e.g. expecte
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
-| `amount` 	| Faulty currency amount value.		| String 	|
+| `amount`    	| Faulty currency amount value.		| String 	|
 
 #### Affected files
 * [`fare_products.txt`](http://gtfs.org/reference/static#fare_productstxt)
@@ -634,7 +635,7 @@ Value of field with type `date` is not valid. Dates must have the YYYYMMDD forma
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
@@ -660,7 +661,7 @@ Value of field with type `email` is not valid. Definitions for valid emails are 
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
@@ -686,7 +687,7 @@ Value of field with type `float` is not valid.
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
@@ -713,7 +714,7 @@ Value of field with type `integer` is not valid.
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
@@ -742,7 +743,7 @@ Value of field with type `language` is not valid. Language codes must follow <a 
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
@@ -767,7 +768,7 @@ Value of field with type `phone number` is not valid. This rule uses the [PhoneN
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
@@ -794,7 +795,7 @@ A row in the input file has a different number of values than specified by the C
 #### Notice fields description
 | Field name   	| Description                              	| Type   	|
 |--------------	|------------------------------------------	|--------	|
-| `filename`   	| The row of the faulty record.            	| String 	|
+| `filename`   	| The name of the faulty file.            	| String 	|
 | `csvRowNumber`| The row of the faulty record.            	| Long   	|
 | `rowLength`  	| The length of the faulty record.         	| Integer |
 | `headerCount`	| The number of column in the faulty file. 	| Intege 	|
@@ -817,7 +818,7 @@ Value of field with type `time` is not valid. Time must be in the `H:MM:SS`, `HH
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
@@ -841,7 +842,7 @@ Value of field with type `timezone` is not valid.Timezones are defined at <a hre
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
@@ -866,7 +867,7 @@ Value of field with type `url` is not valid. Definitions for valid URLs are quit
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|
@@ -1715,6 +1716,32 @@ At least one of the fields `is_producer`, `is_operator`, or `is_authority` shoul
 
 </details>
 
+<a name="DuplicateFareMediaNotice"/>
+
+### duplicate_fare_media
+
+Two distinct fare media have the same fare media name and type.
+
+Fare media should have a unique combination of fare media name and type.
+
+#### References
+* [fare_media.txt specification](http://gtfs.org/reference/static/#fare_mediatxt)
+
+<details>
+
+#### Notice fields description
+| Field name   | Description                              | Type   	|
+|--------------|------------------------------------------|--------	|
+| `csvRowNumber1` | The row of the first occurrence.	 	  | Long   	|
+| `fareMediaId1` | The id of the the first occurrence.		| String |
+| `csvRowNumber2` | The row of the second occurrence.	 	  | Long   	|
+| `fareMediaId2` | The id of the the second occurrence.		| String |
+
+#### Affected files
+* [fare_media.txt](http://gtfs.org/reference/static/#fare_mediatxt)
+
+</details>
+
 <a name="DuplicateRouteNameNotice"/>
 
 ### duplicate_route_name
@@ -2007,7 +2034,7 @@ The value in CSV file has leading or trailing whitespaces.
 #### Notice fields description
 | Field name   	| Description                   	| Type   	|
 |--------------	|-------------------------------	|--------	|
-| `filename`   	| The row of the faulty record. 	| String 	|
+| `filename`   	| The name of the faulty file.  	| String 	|
 | `csvRowNumber`| The row of the faulty record. 	| Long   	|
 | `fieldName`  	| Faulty record's field name.   	| String 	|
 | `fieldValue` 	| Faulty value.                 	| String 	|

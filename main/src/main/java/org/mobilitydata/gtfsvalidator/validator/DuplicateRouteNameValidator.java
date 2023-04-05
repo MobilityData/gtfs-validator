@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import com.google.common.hash.HashFunction;
@@ -31,7 +30,9 @@ import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
 /** Validates that combinations of route type, short and long name are unique within an agency. */
 @GtfsValidator
 public class DuplicateRouteNameValidator extends FileValidator {
+
   private static final HashFunction HASH_FUNCTION = Hashing.farmHashFingerprint64();
+
   private final GtfsRouteTableContainer routeTable;
 
   @Inject
@@ -71,13 +72,29 @@ public class DuplicateRouteNameValidator extends FileValidator {
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
   static class DuplicateRouteNameNotice extends ValidationNotice {
+
+    // The row number of the first occurrence.
     private final int csvRowNumber1;
+
+    // The id of the the first occurrence.
     private final String routeId1;
+
+    // The row number of the other occurrence.
     private final int csvRowNumber2;
+
+    // The id of the the other occurrence.
     private final String routeId2;
+
+    // Common `routes.route_short_name`.
     private final String routeShortName;
+
+    // Common `routes.route_long_name`.
     private final String routeLongName;
+
+    // Common `routes.route_type`.
     private final int routeTypeValue;
+
+    // Common `routes.agency_id`.
     private final String agencyId;
 
     DuplicateRouteNameNotice(GtfsRoute route1, GtfsRoute route2) {

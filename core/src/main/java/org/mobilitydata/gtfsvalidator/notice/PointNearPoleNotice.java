@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.notice;
 
 import javax.annotation.Nullable;
@@ -24,12 +23,26 @@ import javax.annotation.Nullable;
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
 public class PointNearPoleNotice extends ValidationNotice {
+
+  // The name of the affected GTFS file.
   private final String filename;
+
+  // The row of the faulty row.
   private final int csvRowNumber;
+
+  // The id of the faulty entity.
   @Nullable private final String entityId;
+
+  // The name of the field that uses latitude value.
   private final String latFieldName;
+
+  // The latitude of the faulty row.
   private final double latFieldValue;
+
+  // The name of the field that uses longitude value.
   private final String lonFieldName;
+
+  // The longitude of the faulty row
   private final double lonFieldValue;
 
   public PointNearPoleNotice(

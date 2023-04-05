@@ -39,6 +39,7 @@ publishing {
 dependencies {
     annotationProcessor project(':processor')
     compileOnly project(':processor')
+    implementation project(':model')
     implementation project(':core')
     annotationProcessor 'com.google.auto.value:auto-value:1.7.4'
     compileOnly 'com.google.auto.value:auto-value-annotations:1.7.4'

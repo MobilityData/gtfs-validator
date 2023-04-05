@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
@@ -72,8 +71,13 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
    */
   static class MissingStopNameNotice extends ValidationNotice {
 
+    // The row of the faulty record.
     private final long csvRowNumber;
+
+    // `stops.location_type` of the faulty record.
     private GtfsLocationType locationType;
+
+    // The `stops.stop_id` of the faulty record.
     private final String stopId;
 
     MissingStopNameNotice(long csvRowNumber, String stopId, GtfsLocationType locationType) {
@@ -94,8 +98,13 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
    */
   static class SameNameAndDescriptionForStopNotice extends ValidationNotice {
 
+    // The row number of the faulty record.
     private final int csvRowNumber;
+
+    // The id of the faulty record.
     private final String stopId;
+
+    // The faulty record's `stop_desc`.
     private final String stopDesc;
 
     SameNameAndDescriptionForStopNotice(int csvRowNumber, String stopId, String stopDesc) {
