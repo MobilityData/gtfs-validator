@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.web.service.util.JobMetadata;
 import org.mobilitydata.gtfsvalidator.web.service.util.StorageHelper;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,11 +20,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(ValidationController.class)
-public class ValidationControllerTests {
+public class ValidationControllerTest {
 
   @Autowired private MockMvc mockMvc;
 
   @MockBean private StorageHelper storageHelper;
+
+  @Captor ArgumentCaptor<JobMetadata> jobMetadataCaptor;
 
   private final ObjectMapper mapper = new ObjectMapper();
   private String testJobId;
@@ -72,10 +75,8 @@ public class ValidationControllerTests {
     makeCreateJobRequestAndCheckResult(request, testJobId, testUploadUrl);
 
     // should save job metadata with country code
-    ArgumentCaptor<JobMetadata> jobMetadataArgumentCaptor =
-        ArgumentCaptor.forClass(JobMetadata.class);
-    verify(storageHelper, times(1)).saveJobMetaData(jobMetadataArgumentCaptor.capture());
-    var jobMetadata = jobMetadataArgumentCaptor.getValue();
+    verify(storageHelper, times(1)).saveJobMetaData(jobMetadataCaptor.capture());
+    var jobMetadata = jobMetadataCaptor.getValue();
     assert jobMetadata.getJobId().equals(testJobId);
     assert jobMetadata.getCountryCode().equals("US");
 
@@ -102,14 +103,12 @@ public class ValidationControllerTests {
     when(storageHelper.createNewJobId()).thenReturn(testJobId);
     String url = "http://myfilehost.com/myfile.zip";
     var request = new CreateJobRequest("US", url);
-    ArgumentCaptor<JobMetadata> jobMetadataArgumentCaptor =
-        ArgumentCaptor.forClass(JobMetadata.class);
 
     makeCreateJobRequestAndCheckResult(request, testJobId, null);
 
     // should save job metadata with country code
-    verify(storageHelper, times(1)).saveJobMetaData(jobMetadataArgumentCaptor.capture());
-    var jobMetadata = jobMetadataArgumentCaptor.getValue();
+    verify(storageHelper, times(1)).saveJobMetaData(jobMetadataCaptor.capture());
+    var jobMetadata = jobMetadataCaptor.getValue();
     // assert jobMetaData jobId is equal to expectedJobId and countryCode is equal to "US"
     assert jobMetadata.getJobId().equals(testJobId);
     assert jobMetadata.getCountryCode().equals("US");
