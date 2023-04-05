@@ -1,6 +1,6 @@
 # Notice migration
 
-Overview of the list of notices for each release. Only the releases that affect the list of notices are included in this table: if a release number isn't in this table.
+Overview of the list of notices for each release. Only the releases that affect the list of notices are included in this table: if a release number isn't in this table, it means the notices were not affected.  
 If a notice is dropped from one older release to a newer release; it means it has been replaced by one or more new notices.
 
 | V4.0.0                                                                | V3.0.1                                                        | V3.0.0                                                        | V2.0.0                                                        | V1.0.0              |
