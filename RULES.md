@@ -2710,7 +2710,7 @@ A translation references an unknown or missing GTFS table.
 
 ### trip_coverage_not_active_for_next7_days
 
-Trips data should be valid for at least the next seven days.
+Trips data should be valid for at least the next seven days. This notice is triggered if the date range where a significant number of trips are running ends in less than 7 days.
 
 #### References
 
