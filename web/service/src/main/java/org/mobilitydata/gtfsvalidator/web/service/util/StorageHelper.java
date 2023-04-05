@@ -18,10 +18,10 @@ import org.springframework.stereotype.Component;
 /** Helper class for interacting with GCS. */
 @Component
 public class StorageHelper {
-  static final String JOB_INFO_BUCKET_NAME = "gtfs-validator-results";
+  public static final String JOB_INFO_BUCKET_NAME = "gtfs-validator-results";
   static final String JOB_FILENAME_PREFIX = "job";
   static final String JOB_FILENAME_SUFFIX = ".json";
-  static final String JOB_FILENAME = JOB_FILENAME_PREFIX + JOB_FILENAME_SUFFIX;
+  public static final String JOB_FILENAME = JOB_FILENAME_PREFIX + JOB_FILENAME_SUFFIX;
   public static final String TEMP_FOLDER_NAME = "gtfs-validator-temp";
   static final String USER_UPLOAD_BUCKET_NAME = "gtfs-validator-user-uploads";
   static final String RESULTS_BUCKET_NAME = "gtfs-validator-results";
@@ -51,7 +51,7 @@ public class StorageHelper {
    * @param metadata
    * @throws Exception
    */
-  public void saveJobMetaData(JobMetadata metadata) throws Exception {
+  public void saveJobMetadata(JobMetadata metadata) throws Exception {
     try {
       String jobId = metadata.getJobId();
       String countryCode = metadata.getCountryCode();
@@ -74,7 +74,7 @@ public class StorageHelper {
    * @param jobId
    * @return
    */
-  public JobMetadata getJobMetaData(String jobId) {
+  public JobMetadata getJobMetadata(String jobId) {
     try {
       var jobInfoPath = getJobInfoPath(jobId);
       var jobBlobId = BlobId.of(JOB_INFO_BUCKET_NAME, jobInfoPath);
@@ -83,8 +83,8 @@ public class StorageHelper {
       logger.info("Loading job metadata: " + json);
 
       var objectMapper = new ObjectMapper();
-      JobMetadata jobMetaData = objectMapper.readValue(json, JobMetadata.class);
-      return jobMetaData;
+      JobMetadata jobMetadata = objectMapper.readValue(json, JobMetadata.class);
+      return jobMetadata;
     } catch (Exception exc) {
       logger.error("Error could not load remote file, using default country code", exc);
       return new JobMetadata(jobId, "");

@@ -53,7 +53,7 @@ public class ValidationController {
     try {
       if (body != null) {
         if (!Strings.isNullOrEmpty(body.getCountryCode())) {
-          storageHelper.saveJobMetaData(new JobMetadata(jobId, body.getCountryCode()));
+          storageHelper.saveJobMetadata(new JobMetadata(jobId, body.getCountryCode()));
         }
         if (!Strings.isNullOrEmpty(body.getUrl())) {
           storageHelper.saveJobFileFromUrl(jobId, body.getUrl());
@@ -88,7 +88,7 @@ public class ValidationController {
       var jobId = jobData.getJobId();
       var fileName = jobData.getFileName();
 
-      var countryCode = storageHelper.getJobMetaData(jobId).getCountryCode();
+      var countryCode = storageHelper.getJobMetadata(jobId).getCountryCode();
 
       // copy the file from GCS to a temp directory
       File tempFile = storageHelper.copyFromStorageToTempFile(jobId, fileName);

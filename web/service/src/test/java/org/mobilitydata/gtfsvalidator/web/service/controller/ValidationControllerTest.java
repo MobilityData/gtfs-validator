@@ -60,8 +60,8 @@ public class ValidationControllerTest {
 
     makeCreateJobRequestAndCheckResult(request, testJobId, testUploadUrl);
 
-    // should not call saveJobMetaData
-    verify(storageHelper, times(0)).saveJobMetaData(any(JobMetadata.class));
+    // should not call saveJobMetadata
+    verify(storageHelper, times(0)).saveJobMetadata(any(JobMetadata.class));
     // should not call saveJobFileFromUrl
     verify(storageHelper, times(0)).saveJobFileFromUrl(anyString(), anyString());
   }
@@ -75,7 +75,7 @@ public class ValidationControllerTest {
     makeCreateJobRequestAndCheckResult(request, testJobId, testUploadUrl);
 
     // should save job metadata with country code
-    verify(storageHelper, times(1)).saveJobMetaData(jobMetadataCaptor.capture());
+    verify(storageHelper, times(1)).saveJobMetadata(jobMetadataCaptor.capture());
     var jobMetadata = jobMetadataCaptor.getValue();
     assert jobMetadata.getJobId().equals(testJobId);
     assert jobMetadata.getCountryCode().equals("US");
@@ -92,8 +92,8 @@ public class ValidationControllerTest {
 
     makeCreateJobRequestAndCheckResult(request, testJobId, null);
 
-    // should not call saveJobMetaData
-    verify(storageHelper, times(0)).saveJobMetaData(any(JobMetadata.class));
+    // should not call saveJobMetadata
+    verify(storageHelper, times(0)).saveJobMetadata(any(JobMetadata.class));
     // should saveJobFileFromUrl
     verify(storageHelper, times(1)).saveJobFileFromUrl(testJobId, url);
   }
@@ -107,9 +107,9 @@ public class ValidationControllerTest {
     makeCreateJobRequestAndCheckResult(request, testJobId, null);
 
     // should save job metadata with country code
-    verify(storageHelper, times(1)).saveJobMetaData(jobMetadataCaptor.capture());
+    verify(storageHelper, times(1)).saveJobMetadata(jobMetadataCaptor.capture());
     var jobMetadata = jobMetadataCaptor.getValue();
-    // assert jobMetaData jobId is equal to expectedJobId and countryCode is equal to "US"
+    // assert jobMetadata jobId is equal to expectedJobId and countryCode is equal to "US"
     assert jobMetadata.getJobId().equals(testJobId);
     assert jobMetadata.getCountryCode().equals("US");
     // should saveJobFileFromUrl
@@ -117,32 +117,34 @@ public class ValidationControllerTest {
   }
 
   @Test
-  public void createJobShouldReturn500ErrorIfSaveMetaDataThrowsException() throws Exception {
+  public void createJobShouldReturn500ErrorIfSaveMetadataThrowsException() throws Exception {
     when(storageHelper.createNewJobId()).thenReturn(testJobId);
-    doThrow(new RuntimeException("test exception")).when(storageHelper).saveJobMetaData(any());
+    doThrow(new RuntimeException("test exception")).when(storageHelper).saveJobMetadata(any());
     String url = "http://myfilehost.com/myfile.zip";
     var request = new CreateJobRequest("US", url);
     var json = mapper.writeValueAsString(request);
     mockMvc
-            .perform(
-                    MockMvcRequestBuilders.post("/create-job")
-                            .content(json)
-                            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(MockMvcResultMatchers.status().is5xxServerError());
+        .perform(
+            MockMvcRequestBuilders.post("/create-job")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().is5xxServerError());
   }
 
   @Test
   public void createJobShouldReturn500ErrorIfSaveJobFileFromUrlThrowsException() throws Exception {
     when(storageHelper.createNewJobId()).thenReturn(testJobId);
-    doThrow(new RuntimeException("test exception")).when(storageHelper).saveJobFileFromUrl(any(), any());
+    doThrow(new RuntimeException("test exception"))
+        .when(storageHelper)
+        .saveJobFileFromUrl(any(), any());
     String url = "http://myfilehost.com/myfile.zip";
     var request = new CreateJobRequest("US", url);
     var json = mapper.writeValueAsString(request);
     mockMvc
-            .perform(
-                    MockMvcRequestBuilders.post("/create-job")
-                            .content(json)
-                            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(MockMvcResultMatchers.status().is5xxServerError());
+        .perform(
+            MockMvcRequestBuilders.post("/create-job")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().is5xxServerError());
   }
 }

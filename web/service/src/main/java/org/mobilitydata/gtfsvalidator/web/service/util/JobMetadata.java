@@ -17,7 +17,7 @@ public class JobMetadata {
   }
 
   public void setJobId(String jobId) {
-    this.countryCode = countryCode;
+    this.jobId = jobId;
   }
 
   public String getCountryCode() {
