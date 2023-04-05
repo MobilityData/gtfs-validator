@@ -89,39 +89,79 @@ public class Arguments {
     return reportDirectory;
   }
 
+  public void setReportDirectory(String reportDirectory) {
+    this.reportDirectory = reportDirectory;
+  }
+
   public int getNewErrorThreshold() {
     return newErrorThreshold;
+  }
+
+  public void setNewErrorThreshold(int newErrorThreshold) {
+    this.newErrorThreshold = newErrorThreshold;
   }
 
   public String getReferenceValidationReportName() {
     return referenceValidationReportName;
   }
 
+  public void setReferenceValidationReportName(String referenceValidationReportName) {
+    this.referenceValidationReportName = referenceValidationReportName;
+  }
+
   public String getLatestValidationReportName() {
     return latestValidationReportName;
+  }
+
+  public void setLatestValidationReportName(String latestValidationReportName) {
+    this.latestValidationReportName = latestValidationReportName;
   }
 
   public float getPercentInvalidDatasetsThreshold() {
     return percentInvalidDatasetsThreshold;
   }
 
+  public void setPercentInvalidDatasetsThreshold(float percentInvalidDatasetsThreshold) {
+    this.percentInvalidDatasetsThreshold = percentInvalidDatasetsThreshold;
+  }
+
   public String getOutputBase() {
     return outputBase;
+  }
+
+  public void setOutputBase(String outputBase) {
+    this.outputBase = outputBase;
   }
 
   public Path getSourceUrlPath() {
     return Path.of(sourceUrlPath);
   }
 
+  public void setSourceUrlPath(String sourceUrlPath) {
+    this.sourceUrlPath = sourceUrlPath;
+  }
+
   public float getPercentCorruptedSourcesThreshold() {
     return percentCorruptedSourcesThreshold;
+  }
+
+  public void setPercentCorruptedSourcesThreshold(float percentCorruptedSourcesThreshold) {
+    this.percentCorruptedSourcesThreshold = percentCorruptedSourcesThreshold;
   }
 
   public Optional<String> getRunId() {
     return Optional.ofNullable(runId);
   }
 
+  public void setRunId(String runId) {
+    this.runId = runId;
+  }
+
   public Optional<String> getCommitSha() {
     return Optional.ofNullable(commitSha);
+  }
+
+  public void setCommitSha(String commitSha) {
+    this.commitSha = commitSha;
   }
 }
