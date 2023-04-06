@@ -134,6 +134,16 @@ The validator can then be executed via bash commands. See the [preceeding instru
 ### Visualize the results
 In the output directory, the reports will be created as described [here](#visualize-the-results).
 
+# Validation rules
+* See the list of all the noticed emitted by this validator in [RULES.md](/RULES.md).
+* If you'd like to map notice names between two validator versions, see [NOTICE_MIGRATION.md](/docs/NOTICE_MIGRATION.md).
+* Possible future rules for:
+  * [GTFS Reference](https://github.com/MobilityData/gtfs-validator/labels/Rules%20-%20GTFS%20Reference)
+  * [GTFS Best Practices](https://github.com/MobilityData/gtfs-validator/labels/Rules%20-%20GTFS%20Best%20Practices)
+  * [Community rules](https://github.com/MobilityData/gtfs-validator/labels/Rules%20-%20Community%20rules)
+
+Have a suggestion for a new rule? Open [an issue](https://github.com/MobilityData/gtfs-validator/issues/new/choose). You can see the complete process for adding new rules on the ["Adding new rules"](/docs/NEW_RULES.md) page.
+
 # Previous Releases, Snapshot Builds, and Documentation
 * If you'd like to run the bleeding-edge pre-release Snapshot of the application, see the [access instructions](/docs/DOWNLOAD_SNAPSHOT_JAR.md).
 * If you are looking for older releases, see the [Releases page](https://github.com/MobilityData/gtfs-validator/releases).
@@ -141,19 +151,6 @@ In the output directory, the reports will be created as described [here](#visual
   * [v1.4.0](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0-docs/README.md)
   * [v2.0.0](https://github.com/MobilityData/gtfs-validator/blob/v2.0.0-docs/README.md)
   * [v3.0.0](https://github.com/MobilityData/gtfs-validator/blob/docs/v3.0.0/README.md)
-* If you'd like to map notice names between two validator versions, see:
-  * [v1 to v2 notice mapping](https://github.com/MobilityData/gtfs-validator/blob/master/docs/MIGRATION_V1_V2.md)
-  * [v2 to v3 notice mapping](https://github.com/MobilityData/gtfs-validator/blob/master/docs/MIGRATION_V2_V3.md)
-
-# Validation rules
-* [Implemented rules](/RULES.md)
-
-Possible future rules for:
-* [GTFS Reference](https://github.com/MobilityData/gtfs-validator/labels/Rules%20-%20GTFS%20Reference)
-* [GTFS Best Practices](https://github.com/MobilityData/gtfs-validator/labels/Rules%20-%20GTFS%20Best%20Practices)
-* [Community rules](https://github.com/MobilityData/gtfs-validator/labels/Rules%20-%20Community%20rules)
-
-Have a suggestion for a new rule? Open [an issue](https://github.com/MobilityData/gtfs-validator/issues/new/choose). You can see the complete process for adding new rules on the ["Adding new rules"](/docs/NEW_RULES.md) page.
 
 # Build the code
 We suggest using [IntelliJ](https://www.jetbrains.com/idea/download/) to [import](https://www.jetbrains.com/help/idea/import-project-or-module-wizard.html), build, and run this project.

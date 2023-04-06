@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.outputcomparator.model;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -37,6 +38,10 @@ public class SourceUrlContainer {
   public SourceUrlContainer(Path pathToFile) throws IOException {
     Type type = new TypeToken<Map<String, String>>() {}.getType();
     this.urlsByArchiveId = GSON.fromJson(Files.newBufferedReader(pathToFile), type);
+  }
+
+  public SourceUrlContainer(ImmutableMap<String, String> urlsByArchiveId) {
+    this.urlsByArchiveId = urlsByArchiveId;
   }
 
   public String getUrlForSourceId(String sourceId) {
