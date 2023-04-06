@@ -140,7 +140,7 @@ public class AnyTableLoaderTest {
               .build(),
           AutoValue_GtfsColumnDescriptor.builder()
               .setColumnName(GtfsStop.STOP_CODE_FIELD_NAME)
-              .setHeaderRequired(false)
+              .setHeaderRequired(true)
               .setFieldLevel(FieldLevelEnum.REQUIRED)
               .setIsMixedCase(false)
               .setIsCached(false)
@@ -150,13 +150,13 @@ public class AnyTableLoaderTest {
     ValidatorProvider validatorProvider =
         spy(new DefaultValidatorProvider(validationContext, ValidatorLoader.createEmpty()));
     NoticeContainer loaderNotices = new NoticeContainer();
-    InputStream inputStream = toInputStream("stop_id,stop_code\n" + "s1, \n");
+    InputStream inputStream = toInputStream("stop_id\n" + "s1 \n");
 
     AnyTableLoader.load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
     assertTrue(loaderNotices.hasValidationErrors());
     assertThat(loaderNotices.getValidationNotices())
-        .containsExactly(new MissingRequiredFieldNotice("stops.txt", 2, "stop_code"));
+        .containsExactly(new MissingRequiredColumnNotice("stops.txt", "stop_code"));
     verify(testTableDescriptor, times(0)).createContainerForHeaderAndEntities(any(), any(), any());
     verify(validatorProvider, times(0)).createSingleFileValidators(any());
   }
