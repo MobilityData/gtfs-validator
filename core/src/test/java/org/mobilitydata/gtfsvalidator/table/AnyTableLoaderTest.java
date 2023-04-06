@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
@@ -32,10 +31,10 @@ public class AnyTableLoaderTest {
   @Before
   public void setup() {
     validationContext =
-            ValidationContext.builder()
-                    .setCountryCode(CountryCode.forStringOrUnknown("CA"))
-                    .setCurrentDateTime(new CurrentDateTime(ZonedDateTime.now(ZoneId.systemDefault())))
-                    .build();
+        ValidationContext.builder()
+            .setCountryCode(CountryCode.forStringOrUnknown("CA"))
+            .setCurrentDateTime(new CurrentDateTime(ZonedDateTime.now(ZoneId.systemDefault())))
+            .build();
   }
 
   @Test
@@ -184,28 +183,27 @@ public class AnyTableLoaderTest {
   public void missingRequiredField() {
     var testTableDescriptor = spy(new GtfsStopTableDescriptor());
     GtfsColumnDescriptor[] columns =
-            new GtfsColumnDescriptor[] {
-                    AutoValue_GtfsColumnDescriptor.builder()
-                            .setColumnName(GtfsStop.STOP_ID_FIELD_NAME)
-                            .setHeaderRequired(true)
-                            .setFieldLevel(FieldLevelEnum.REQUIRED)
-                            .setIsMixedCase(false)
-                            .setIsCached(false)
-                            .build(),
-                    AutoValue_GtfsColumnDescriptor.builder()
-                            .setColumnName(GtfsStop.STOP_CODE_FIELD_NAME)
-                            .setHeaderRequired(false)
-                            .setFieldLevel(FieldLevelEnum.REQUIRED)
-                            .setIsMixedCase(false)
-                            .setIsCached(false)
-                            .build()
-            };
+        new GtfsColumnDescriptor[] {
+          AutoValue_GtfsColumnDescriptor.builder()
+              .setColumnName(GtfsStop.STOP_ID_FIELD_NAME)
+              .setHeaderRequired(true)
+              .setFieldLevel(FieldLevelEnum.REQUIRED)
+              .setIsMixedCase(false)
+              .setIsCached(false)
+              .build(),
+          AutoValue_GtfsColumnDescriptor.builder()
+              .setColumnName(GtfsStop.STOP_CODE_FIELD_NAME)
+              .setHeaderRequired(false)
+              .setFieldLevel(FieldLevelEnum.REQUIRED)
+              .setIsMixedCase(false)
+              .setIsCached(false)
+              .build()
+        };
     when(testTableDescriptor.getColumns()).thenReturn(ImmutableList.copyOf(columns));
     ValidatorProvider validatorProvider =
         spy(new DefaultValidatorProvider(validationContext, ValidatorLoader.createEmpty()));
     NoticeContainer loaderNotices = new NoticeContainer();
-    InputStream inputStream =
-        toInputStream("stop_id,stop_code\n" + "s1,\n");
+    InputStream inputStream = toInputStream("stop_id,stop_code\n" + "s1,\n");
 
     AnyTableLoader.load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
