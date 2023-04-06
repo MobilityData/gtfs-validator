@@ -174,7 +174,7 @@ public class StorageHelper {
     }
   }
 
-  public Path getOutputPathForJob(String jobId) {
-    return Path.of(StorageHelper.TEMP_FOLDER_NAME, jobId);
+  public Path createOutputFolderForJob(String jobId) throws IOException {
+    return Files.createTempDirectory(StorageHelper.TEMP_FOLDER_NAME + jobId);
   }
 }

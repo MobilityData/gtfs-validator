@@ -41,6 +41,7 @@ public class ValidationHandler {
     var config = configBuilder.build();
     ValidationRunner.Status status = runner.run(config);
     if (status != ValidationRunner.Status.SUCCESS) {
+      logger.error("Validation failed");
       throw new Exception("Validation failed");
     }
   }

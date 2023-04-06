@@ -94,7 +94,7 @@ public class ValidationController {
 
       // copy the file from GCS to a temp directory
       tempFile = storageHelper.downloadFeedFileFromStorage(jobId, fileName);
-      outputPath = storageHelper.getOutputPathForJob(jobId);
+      outputPath = storageHelper.createOutputFolderForJob(jobId);
 
       // extracts feed files from zip to temp output directory, validates, and returns
       // the path to the output directory
