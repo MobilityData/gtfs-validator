@@ -308,9 +308,4 @@ public class GtfsStop implements GtfsEntity {
       stopLon = DEFAULT_STOP_LON;
     }
   }
-
-  //  @Override
-  //  public int csvRowNumber() {
-  //    return 0;
-  //  }
 }
