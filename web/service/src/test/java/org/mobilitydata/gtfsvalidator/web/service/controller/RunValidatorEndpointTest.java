@@ -5,8 +5,10 @@ import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import org.apache.commons.codec.binary.Base64;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.web.service.util.JobMetadata;
 import org.mobilitydata.gtfsvalidator.web.service.util.StorageHelper;
@@ -24,41 +26,51 @@ public class RunValidatorEndpointTest {
 
   @Autowired private MockMvc mockMvc;
   @MockBean private StorageHelper storageHelper;
-  @MockBean private ValidationHandler handler;
+  @MockBean private ValidationHandler validationHandler;
   private final ObjectMapper mapper = new ObjectMapper();
+  private String testJobId;
+  JobMetadata jobMetaData;
+  File mockFeedFile;
+  Path mockOutputPath;
+  File mockOutputPathToFile;
+  GoogleCloudPubsubMessage pubSubMessage;
 
-  @Test
-  public void runValidator() throws Exception {
+  @BeforeEach
+  public void setUp() throws Exception {
+    testJobId = "123";
+    jobMetaData = new JobMetadata(testJobId, "US");
+    mockFeedFile = mock(File.class);
+    mockOutputPath = mock(Path.class);
+    mockOutputPathToFile = mock(File.class);
 
-    var testJobId = "123";
     var filePath = testJobId + "/feedFile.zip";
     var msgText = "{\"name\": \"" + filePath + "\"}";
-    var msg = new GoogleCloudPubsubMessage.Message();
-    msg.setData(Base64.encodeBase64String(msgText.getBytes()));
-    var gcpm = new GoogleCloudPubsubMessage();
-    gcpm.setMessage(msg);
+    var innerMsg = new GoogleCloudPubsubMessage.Message();
+    innerMsg.setData(Base64.encodeBase64String(msgText.getBytes()));
+    pubSubMessage = new GoogleCloudPubsubMessage();
+    pubSubMessage.setMessage(innerMsg);
 
-    var jobMetaData = new JobMetadata(testJobId, "US");
-    File mockFeedFile = mock(File.class);
-    Path mockOutputPath = mock(Path.class);
-    File mockOutputPathToFile = mock(File.class);
+    doReturn(jobMetaData).when(storageHelper).getJobMetadata(testJobId);
+    doReturn(mockOutputPath).when(storageHelper).getOutputPathForJob(testJobId);
+    doReturn(mockOutputPathToFile).when(mockOutputPath).toFile();
+  }
 
-    when(storageHelper.getJobMetadata(testJobId)).thenReturn(jobMetaData);
-    when(storageHelper.downloadFeedFileFromStorage(anyString(), anyString()))
-        .thenReturn(mockFeedFile);
-    when(storageHelper.getOutputPathForJob(testJobId)).thenReturn(mockOutputPath);
-    when(mockOutputPath.toFile()).thenReturn(mockOutputPathToFile);
+  @Test
+  public void runValidatorSuccess() throws Exception {
+    doReturn(mockFeedFile)
+        .when(storageHelper)
+        .downloadFeedFileFromStorage(anyString(), anyString());
 
     mockMvc
         .perform(
             MockMvcRequestBuilders.post("/run-validator")
-                .content(mapper.writeValueAsString(gcpm))
+                .content(mapper.writeValueAsString(pubSubMessage))
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isOk());
 
     // verify that the validationHandler is called with the downloaded feed file, output path, and
     // country code
-    verify(handler, times(1))
+    verify(validationHandler, times(1))
         .validateFeed(mockFeedFile, mockOutputPath, jobMetaData.getCountryCode());
 
     // verify that the validation output files are uploaded to storage
@@ -67,5 +79,50 @@ public class RunValidatorEndpointTest {
     // verify that the temp files and directory are deleted
     verify(mockFeedFile, times(1)).delete();
     verify(mockOutputPathToFile, times(1)).delete();
+  }
+
+  @Test
+  public void runValidatorStorageDownloadFailure() throws Exception {
+    doThrow(IOException.class)
+        .when(storageHelper)
+        .downloadFeedFileFromStorage(anyString(), anyString());
+
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.post("/run-validator")
+                .content(mapper.writeValueAsString(pubSubMessage))
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().is5xxServerError());
+
+    // should not attempt validation
+    verify(validationHandler, times(0)).validateFeed(any(File.class), any(Path.class), anyString());
+
+    // should not upload to storage
+    verify(storageHelper, times(0)).uploadFilesToStorage(anyString(), any(Path.class));
+
+    // should not delete temp files
+    verify(mockFeedFile, times(0)).delete();
+    verify(mockOutputPathToFile, times(0)).delete();
+  }
+
+  @Test
+  public void runValidatorValidateFeedFailure() throws Exception {
+    doThrow(new Exception())
+        .when(validationHandler)
+        .validateFeed(any(File.class), any(Path.class), anyString());
+
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.post("/run-validator")
+                .content(mapper.writeValueAsString(pubSubMessage))
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().is5xxServerError());
+
+    // should not upload to storage
+    verify(storageHelper, times(0)).uploadFilesToStorage(anyString(), any(Path.class));
+
+    // should not delete temp files
+    verify(mockFeedFile, times(0)).delete();
+    verify(mockOutputPathToFile, times(0)).delete();
   }
 }

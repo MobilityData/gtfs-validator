@@ -54,12 +54,12 @@ public class CreateJobEndpointTest {
   public void setUp() {
     testJobId = "123";
     testUploadUrl = "https://gcs.io/bucket/123";
-    when(storageHelper.createNewJobId()).thenReturn(testJobId);
+    doReturn(testJobId).when(storageHelper).createNewJobId();
   }
 
   @Test
   public void createJobWithNoUrlNoCountryCode() throws Exception {
-    when(storageHelper.generateUniqueUploadUrl(testJobId)).thenReturn(new URL(testUploadUrl));
+    doReturn(new URL(testUploadUrl)).when(storageHelper).generateUniqueUploadUrl(testJobId);
     var request = new CreateJobRequest(null, null);
 
     makeCreateJobRequestAndCheckResult(request, testJobId, testUploadUrl);
@@ -72,7 +72,7 @@ public class CreateJobEndpointTest {
 
   @Test
   public void createJobWithCountryCodeButNoUrl() throws Exception {
-    when(storageHelper.generateUniqueUploadUrl(testJobId)).thenReturn(new URL(testUploadUrl));
+    doReturn(new URL(testUploadUrl)).when(storageHelper).generateUniqueUploadUrl(testJobId);
 
     var request = new CreateJobRequest("US", null);
 
@@ -90,7 +90,7 @@ public class CreateJobEndpointTest {
 
   @Test
   public void createJobWithUrlButNoCountryCode() throws Exception {
-    when(storageHelper.createNewJobId()).thenReturn(testJobId);
+    doReturn(testJobId).when(storageHelper).createNewJobId();
     String url = "http://myfilehost.com/myfile.zip";
     var request = new CreateJobRequest(null, url);
 
@@ -104,7 +104,7 @@ public class CreateJobEndpointTest {
 
   @Test
   public void createJobWithUrlAndCountryCode() throws Exception {
-    when(storageHelper.createNewJobId()).thenReturn(testJobId);
+    doReturn(testJobId).when(storageHelper).createNewJobId();
     String url = "http://myfilehost.com/myfile.zip";
     var request = new CreateJobRequest("US", url);
 
@@ -122,7 +122,7 @@ public class CreateJobEndpointTest {
 
   @Test
   public void createJobShouldReturn500ErrorIfSaveMetadataThrowsException() throws Exception {
-    when(storageHelper.createNewJobId()).thenReturn(testJobId);
+    doReturn(testJobId).when(storageHelper).createNewJobId();
     doThrow(new RuntimeException("test exception")).when(storageHelper).saveJobMetadata(any());
     String url = "http://myfilehost.com/myfile.zip";
     var request = new CreateJobRequest("US", url);
@@ -137,7 +137,7 @@ public class CreateJobEndpointTest {
 
   @Test
   public void createJobShouldReturn500ErrorIfSaveJobFileFromUrlThrowsException() throws Exception {
-    when(storageHelper.createNewJobId()).thenReturn(testJobId);
+    doReturn(testJobId).when(storageHelper).createNewJobId();
     doThrow(new RuntimeException("test exception"))
         .when(storageHelper)
         .saveJobFileFromUrl(any(), any());

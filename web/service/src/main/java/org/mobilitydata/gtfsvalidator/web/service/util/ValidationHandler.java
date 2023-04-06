@@ -2,6 +2,7 @@ package org.mobilitydata.gtfsvalidator.web.service.util;
 
 import java.io.File;
 import java.nio.file.Path;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunner;
@@ -26,7 +27,8 @@ public class ValidationHandler {
    * @param outputPath
    * @param countryCode
    */
-  public void validateFeed(File feedFile, Path outputPath, String countryCode) {
+  public void validateFeed(@NonNull File feedFile, @NonNull Path outputPath, String countryCode)
+      throws Exception {
     var configBuilder =
         ValidationRunnerConfig.builder()
             .setGtfsSource(feedFile.toURI())
@@ -37,6 +39,9 @@ public class ValidationHandler {
       configBuilder.setCountryCode(CountryCode.forStringOrUnknown(countryCode));
     }
     var config = configBuilder.build();
-    runner.run(config);
+    ValidationRunner.Status status = runner.run(config);
+    if (status != ValidationRunner.Status.SUCCESS) {
+      throw new Exception("Validation failed");
+    }
   }
 }
