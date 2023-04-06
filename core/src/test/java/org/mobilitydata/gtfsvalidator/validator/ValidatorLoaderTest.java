@@ -24,7 +24,6 @@ import java.time.ZonedDateTime;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
-import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsStopTableContainer;
@@ -44,8 +43,7 @@ public class ValidatorLoaderTest {
 
   @Test
   public void createValidatorWithContext_injectsContext() throws ReflectiveOperationException {
-    GtfsStopTableContainer stopTable =
-        new GtfsStopTableContainer(TableStatus.EMPTY_FILE, CsvHeader.EMPTY);
+    GtfsStopTableContainer stopTable = new GtfsStopTableContainer(TableStatus.EMPTY_FILE);
     StopEntityValidator validator =
         ValidatorLoader.createValidatorWithContext(StopEntityValidator.class, VALIDATION_CONTEXT);
 
@@ -56,8 +54,7 @@ public class ValidatorLoaderTest {
   @Test
   public void createSingleFileValidator_injectsTableContainerAndContext()
       throws ReflectiveOperationException {
-    GtfsStopTableContainer stopTable =
-        new GtfsStopTableContainer(TableStatus.EMPTY_FILE, CsvHeader.EMPTY);
+    GtfsStopTableContainer stopTable = new GtfsStopTableContainer(TableStatus.EMPTY_FILE);
     StopFileValidator validator =
         (StopFileValidator)
             ValidatorLoader.createSingleFileValidator(
@@ -71,8 +68,7 @@ public class ValidatorLoaderTest {
   @Test
   public void createMultiFileValidator_injectsFeedContainerAndContext()
       throws ReflectiveOperationException {
-    GtfsStopTableContainer stopTable =
-        new GtfsStopTableContainer(TableStatus.EMPTY_FILE, CsvHeader.EMPTY);
+    GtfsStopTableContainer stopTable = new GtfsStopTableContainer(TableStatus.EMPTY_FILE);
     GtfsFeedContainer feedContainer = new GtfsFeedContainer(ImmutableList.of(stopTable));
     WholeFeedValidator validator =
         (WholeFeedValidator)

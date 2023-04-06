@@ -41,6 +41,7 @@ dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.13'
     testImplementation "com.google.truth:truth:1.0.1"
     testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'
+    testImplementation 'org.mockito:mockito-core:4.5.1'
 }
 
 jar {
@@ -67,3 +68,22 @@ compileJava {
 compileTestJava {
     options.compilerArgs << '-parameters'
 }
+
+// Share the test report data to be aggregated for the whole project
+configurations {
+    binaryTestResultsElements {
+        canBeResolved = false
+        canBeConsumed = true
+        attributes {
+            attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category, Category.DOCUMENTATION))
+            attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named(DocsType, 'test-report-data'))
+        }
+        outgoing.artifact(test.binaryResultsDirectory)
+    }
+}
+
+task copyTestResources(type: Copy) {
+    from "${projectDir}/src/test/resources"
+    into "${buildDir}/classes/test"
+}
+processTestResources.dependsOn copyTestResources

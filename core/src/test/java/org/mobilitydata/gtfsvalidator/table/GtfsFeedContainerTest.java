@@ -20,7 +20,6 @@ import static com.google.common.truth.Truth8.assertThat;
 
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsStopTableContainer;
 
@@ -28,8 +27,7 @@ public class GtfsFeedContainerTest {
 
   @Test
   public void getTableForFilename() {
-    GtfsStopTableContainer stopTable =
-        new GtfsStopTableContainer(TableStatus.EMPTY_FILE, CsvHeader.EMPTY);
+    GtfsStopTableContainer stopTable = new GtfsStopTableContainer(TableStatus.EMPTY_FILE);
     GtfsFeedContainer feedContainer = new GtfsFeedContainer(ImmutableList.of(stopTable));
 
     assertThat(feedContainer.getTableForFilename("stops.txt")).hasValue(stopTable);
