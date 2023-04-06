@@ -5,6 +5,7 @@ import com.google.cloud.storage.*;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
@@ -138,7 +139,7 @@ public class StorageHelper {
    * @return
    * @throws IOException
    */
-  public File copyFromStorageToTempFile(String jobId, String fileName) throws IOException {
+  public File downloadFeedFileFromStorage(String jobId, String fileName) throws IOException {
     var tempDir = Files.createTempDirectory(StorageHelper.TEMP_FOLDER_NAME).toFile();
 
     var inputResource =
@@ -157,8 +158,8 @@ public class StorageHelper {
    * @param outputPath
    * @throws IOException
    */
-  public void uploadFilesToStorage(String jobId, File outputPath) throws IOException {
-    var directoryListing = outputPath.listFiles();
+  public void uploadFilesToStorage(String jobId, Path outputPath) throws IOException {
+    var directoryListing = outputPath.toFile().listFiles();
     if (directoryListing != null) {
       for (var reportFile : directoryListing) {
         if (reportFile.isDirectory()) {
@@ -171,5 +172,9 @@ public class StorageHelper {
         storage.create(blobInfo, fileBytes);
       }
     }
+  }
+
+  public Path getOutputPathForJob(String jobId) {
+    return Path.of(StorageHelper.TEMP_FOLDER_NAME, jobId);
   }
 }

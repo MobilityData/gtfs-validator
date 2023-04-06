@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.*;
 import org.mobilitydata.gtfsvalidator.web.service.util.JobMetadata;
 import org.mobilitydata.gtfsvalidator.web.service.util.StorageHelper;
@@ -39,6 +40,7 @@ public class ValidationController {
   private final Logger logger = LoggerFactory.getLogger(ValidationController.class);
 
   @Autowired private StorageHelper storageHelper;
+  @Autowired private ValidationHandler validationHandler;
 
   /**
    * Creates a new job id and returns it to the client. If a url is provided, the file is downloaded
@@ -75,14 +77,14 @@ public class ValidationController {
   @PostMapping("/run-validator")
   public ResponseEntity runValidator(
       @RequestBody GoogleCloudPubsubMessage googleCloudPubsubMessage) {
-    File tempDir = null;
+    File tempFile = null;
+    Path outputPath = null;
     try {
       var message = googleCloudPubsubMessage.getMessage();
       if (message == null) {
         var msg = "Bad Request: invalid Pub/Sub message format";
         return new ResponseEntity(msg, HttpStatus.BAD_REQUEST);
       }
-      var handler = new ValidationHandler();
 
       ValidationJobMetaData jobData = getFeedFileMetaData(message);
       var jobId = jobData.getJobId();
@@ -91,26 +93,28 @@ public class ValidationController {
       var countryCode = storageHelper.getJobMetadata(jobId).getCountryCode();
 
       // copy the file from GCS to a temp directory
-      File tempFile = storageHelper.copyFromStorageToTempFile(jobId, fileName);
+      tempFile = storageHelper.downloadFeedFileFromStorage(jobId, fileName);
+      outputPath = storageHelper.getOutputPathForJob(jobId);
 
-      tempDir = tempFile.getParentFile();
-      var outputPath = new File(tempDir.toPath() + jobId);
       // extracts feed files from zip to temp output directory, validates, and returns
       // the path to the output directory
-      handler.validateFeed(tempFile, outputPath, countryCode);
+      validationHandler.validateFeed(tempFile, outputPath, countryCode);
 
       // upload the extracted files and the validation results from outputPath to GCS
       storageHelper.uploadFilesToStorage(jobId, outputPath);
 
-      // delete the temp directory
-      tempDir.delete();
       return new ResponseEntity(HttpStatus.OK);
     } catch (Exception exc) {
       logger.error("Error", exc);
-      if (tempDir != null) {
-        tempDir.delete();
-      }
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error", exc);
+    } finally {
+      // delete the temp file and directory
+      if (tempFile != null) {
+        tempFile.delete();
+      }
+      if (outputPath != null) {
+        outputPath.toFile().delete();
+      }
     }
   }
 

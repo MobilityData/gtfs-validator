@@ -4,11 +4,15 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
 import java.net.URL;
+import java.nio.file.Path;
+import org.apache.commons.codec.binary.Base64;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.web.service.util.JobMetadata;
 import org.mobilitydata.gtfsvalidator.web.service.util.StorageHelper;
+import org.mobilitydata.gtfsvalidator.web.service.util.ValidationHandler;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +29,12 @@ public class ValidationControllerTest {
   @Autowired private MockMvc mockMvc;
 
   @MockBean private StorageHelper storageHelper;
+  @MockBean private ValidationHandler handler;
 
   @Captor ArgumentCaptor<JobMetadata> jobMetadataCaptor;
+  @Captor ArgumentCaptor<File> feedFileCaptor;
+  @Captor ArgumentCaptor<Path> outputPathCaptor;
+  @Captor ArgumentCaptor<String> countryCodeCaptor;
 
   private final ObjectMapper mapper = new ObjectMapper();
   private String testJobId;
@@ -146,5 +154,47 @@ public class ValidationControllerTest {
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().is5xxServerError());
+  }
+
+  @Test
+  public void runValidator() throws Exception {
+
+    var testJobId = "123";
+    var filePath = testJobId + "/feedFile.zip";
+    var msgText = "{\"name\": \"" + filePath + "\"}";
+    var msg = new GoogleCloudPubsubMessage.Message();
+    msg.setData(Base64.encodeBase64String(msgText.getBytes()));
+    var gcpm = new GoogleCloudPubsubMessage();
+    gcpm.setMessage(msg);
+
+    var jobMetaData = new JobMetadata(testJobId, "US");
+    File mockFeedFile = mock(File.class);
+    Path mockOutputPath = mock(Path.class);
+    File mockOutputPathToFile = mock(File.class);
+
+    when(storageHelper.getJobMetadata(testJobId)).thenReturn(jobMetaData);
+    when(storageHelper.downloadFeedFileFromStorage(anyString(), anyString()))
+        .thenReturn(mockFeedFile);
+    when(storageHelper.getOutputPathForJob(testJobId)).thenReturn(mockOutputPath);
+    when(mockOutputPath.toFile()).thenReturn(mockOutputPathToFile);
+
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.post("/run-validator")
+                .content(mapper.writeValueAsString(gcpm))
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isOk());
+
+    // verify that the validationHandler is called with the downloaded feed file, output path, and
+    // country code
+    verify(handler, times(1))
+        .validateFeed(mockFeedFile, mockOutputPath, jobMetaData.getCountryCode());
+
+    // verify that the validation output files are uploaded to storage
+    verify(storageHelper, times(1)).uploadFilesToStorage(testJobId, mockOutputPath);
+
+    // verify that the temp files and directory are deleted
+    verify(mockFeedFile, times(1)).delete();
+    verify(mockOutputPathToFile, times(1)).delete();
   }
 }
