@@ -63,7 +63,11 @@ public class MainTest {
     String content = Files.readString(path);
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     JsonObject obj = gson.fromJson(content, JsonObject.class);
-    return gson.toJson(obj);
+    String jsonAsString = gson.toJson(obj);
+    // On Windows systems, the pretty-printed JSON output will have window line separators, which
+    // will cause a test failure when comparing against our expected strings with Unix line
+    // separators if we don't normalize them.
+    return jsonAsString.replace(System.lineSeparator(), "\n");
   }
 
   private static String retrieveResource(String name) throws IOException {
