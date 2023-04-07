@@ -32,10 +32,12 @@ public class GtfsValidatorPreferencesTest {
 
   @Test
   public void testEndToEnd() {
+    Path outputDirectory = Path.of("/tmp/gtfs");
+
     {
       GtfsValidatorApp source = new GtfsValidatorApp(runner, display);
       source.setGtfsSource("http://gtfs.org/gtfs.zip");
-      source.setOutputDirectory(Path.of("/tmp/gtfs"));
+      source.setOutputDirectory(outputDirectory);
       source.setNumThreads(3);
       source.setCountryCode("CA");
 
@@ -49,7 +51,7 @@ public class GtfsValidatorPreferencesTest {
       prefs.loadPreferences(dest);
 
       assertThat(dest.getGtfsSource()).isEqualTo("http://gtfs.org/gtfs.zip");
-      assertThat(dest.getOutputDirectory()).isEqualTo("/tmp/gtfs");
+      assertThat(dest.getOutputDirectory()).isEqualTo(outputDirectory.toString());
       assertThat(dest.getNumThreads()).isEqualTo(3);
       assertThat(dest.getCountryCode()).isEqualTo("CA");
     }
