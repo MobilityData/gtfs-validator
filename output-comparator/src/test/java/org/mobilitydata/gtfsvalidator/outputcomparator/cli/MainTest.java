@@ -63,16 +63,15 @@ public class MainTest {
     String content = Files.readString(path);
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     JsonObject obj = gson.fromJson(content, JsonObject.class);
-    String jsonAsString = gson.toJson(obj);
-    // On Windows systems, the pretty-printed JSON output will have window line separators, which
-    // will cause a test failure when comparing against our expected strings with Unix line
-    // separators if we don't normalize them.
-    return jsonAsString.replace(System.lineSeparator(), "\n");
+    return gson.toJson(obj);
   }
 
   private static String retrieveResource(String name) throws IOException {
     try (InputStream in = MainTest.class.getResourceAsStream(name)) {
-      return new String(in.readAllBytes(), StandardCharsets.UTF_8);
+      String content = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+      // On Windows systems, resource files will be checked out by Git with Windows line separators.
+      // However, all our tests assume Unix line separators.  So we fix up the content here.
+      return content.replace(System.lineSeparator(), "\n");
     }
   }
 
