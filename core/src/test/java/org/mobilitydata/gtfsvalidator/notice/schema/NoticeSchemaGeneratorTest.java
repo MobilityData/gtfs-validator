@@ -111,7 +111,10 @@ public class NoticeSchemaGeneratorTest {
     try (InputStream in =
         NoticeSchemaGeneratorTest.class.getResourceAsStream(
             NoticeSchemaGeneratorTest.class.getSimpleName() + "-" + name)) {
-      return new String(in.readAllBytes(), StandardCharsets.UTF_8);
+      String content = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+      // On Windows systems, resource files will be checked out by Git with Windows line separators.
+      // However, all our tests assume Unix line separators.  So we fix up the content here.
+      return content.replace(System.lineSeparator(), "\n");
     }
   }
 }
