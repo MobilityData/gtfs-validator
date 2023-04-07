@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
+import org.mobilitydata.gtfsvalidator.notice.testnotices.DocumentedNotice;
 import org.mobilitydata.gtfsvalidator.notice.testnotices.DoubleFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.testnotices.GtfsTypesValidationNotice;
 import org.mobilitydata.gtfsvalidator.notice.testnotices.S2LatLngNotice;
@@ -18,6 +19,7 @@ public class ClassGraphDiscoveryTest {
   public void discoverNoticeSubclasses() {
     assertThat(ClassGraphDiscovery.discoverNoticeSubclasses(ImmutableList.of(TEST_NOTICES_PACKAGE)))
         .containsExactly(
+            DocumentedNotice.class,
             DoubleFieldNotice.class,
             TestInnerNotice.class,
             GtfsTypesValidationNotice.class,

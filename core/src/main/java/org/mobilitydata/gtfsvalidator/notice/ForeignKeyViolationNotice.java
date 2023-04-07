@@ -15,6 +15,10 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+
 /**
  * The values of the given key and rows of one table cannot be found a values of the given key in
  * another table.
@@ -24,6 +28,7 @@ package org.mobilitydata.gtfsvalidator.notice;
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
+@GtfsValidationNotice(severity = ERROR)
 public class ForeignKeyViolationNotice extends ValidationNotice {
 
   // The name of the file from which reference is made.
@@ -51,7 +56,7 @@ public class ForeignKeyViolationNotice extends ValidationNotice {
       String parentFieldName,
       String fieldValue,
       int csvRowNumber) {
-    super(SeverityLevel.ERROR);
+    super(ERROR);
     this.childFilename = childFilename;
     this.childFieldName = childFieldName;
     this.parentFilename = parentFilename;
