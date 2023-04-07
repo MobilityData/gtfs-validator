@@ -26,9 +26,10 @@ repositories {
     mavenCentral()
 }
 
-// Setup and configure Javadoc plugin
+// Setup and configure properties that are consistent across all projects, including sub-modules.
 allprojects {
     group 'org.mobilitydata'
+
     // Per the axion-release plugin, this computes the project version based
     // on the most recent tag in the repo.
     version scmVersion.version
@@ -37,6 +38,7 @@ allprojects {
         options.encoding = 'UTF-8'
     }
 
+    // All projects that include the 'java` plugin will have a Test task by default.
     tasks.withType(Test) {
         // Always run tests, even when nothing changed.
         dependsOn 'cleanTest'
