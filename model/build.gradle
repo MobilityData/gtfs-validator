@@ -12,33 +12,10 @@ repositories {
 dependencies {
 }
 
-test {
-    // Always run tests, even when nothing changed.
-    dependsOn 'cleanTest'
-
-    // Show test results.
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
-}
-
 compileJava {
     options.compilerArgs << '-parameters'
 }
 
 compileTestJava {
     options.compilerArgs << '-parameters'
-}
-
-// Share the test report data to be aggregated for the whole project
-configurations {
-    binaryTestResultsElements {
-        canBeResolved = false
-        canBeConsumed = true
-        attributes {
-            attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category, Category.DOCUMENTATION))
-            attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named(DocsType, 'test-report-data'))
-        }
-        outgoing.artifact(test.binaryResultsDirectory)
-    }
 }

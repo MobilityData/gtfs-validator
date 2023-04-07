@@ -16,6 +16,7 @@
 
 plugins {
     id 'java'
+    id 'test-report-aggregation'
     id 'com.github.sherter.google-java-format' version '0.9'
     id "io.freefair.aggregate-javadoc-jar" version "6.4.3"
     id "pl.allegro.tech.build.axion-release" version "1.13.6"
@@ -35,30 +36,31 @@ allprojects {
     tasks.withType(Javadoc) {
         options.encoding = 'UTF-8'
     }
-}
 
-// A resolvable configuration to collect test reports data
-configurations {
-    testReportData {
-        canBeResolved = true
-        canBeConsumed = false
-        attributes {
-            attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category, Category.DOCUMENTATION))
-            attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named(DocsType, 'test-report-data'))
+    tasks.withType(Test) {
+        // Always run tests, even when nothing changed.
+        dependsOn 'cleanTest'
+
+        // Show test results.
+        testLogging {
+            events "passed", "skipped", "failed"
         }
+
+        // Define a system project for the project version
+        systemProperty 'gtfsValidatorVersionForTest', project.version
+
+        // Any project with a test should be added to test report aggregation in the root project.
+        rootProject.dependencies.add('testReportAggregation', project)
     }
 }
 
-dependencies {
-    testReportData project('main')
-    testReportData project(':processor')
-    testReportData project(':core')
-}
-
-tasks.register('testReport', TestReport) {
-    destinationDir = file("$buildDir/reports/allTests")
-    // Use test results from testReportData configuration
-    testResultDirs.from(configurations.testReportData)
+reporting {
+    reports {
+        // Necessary for unit test result aggregation.
+        testAggregateTestReport(AggregateTestReport) {
+            testType = TestSuiteType.UNIT_TEST
+        }
+    }
 }
 
 task copyRulesToWebClient (type: Copy) {
@@ -67,3 +69,4 @@ task copyRulesToWebClient (type: Copy) {
 }
 
 build.dependsOn copyRulesToWebClient
+
