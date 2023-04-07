@@ -2,13 +2,6 @@ plugins {
     id 'java'
 }
 
-sourceCompatibility = JavaVersion.VERSION_11
-compileTestJava.options.encoding = "UTF-8"
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
 }
 

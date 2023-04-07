@@ -18,13 +18,6 @@ plugins {
     id 'java'
 }
 
-sourceCompatibility = JavaVersion.VERSION_11
-compileJava.options.encoding = "UTF-8"
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     annotationProcessor project(':processor')
     compileOnly project(':processor')

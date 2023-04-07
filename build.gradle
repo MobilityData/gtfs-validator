@@ -22,10 +22,6 @@ plugins {
     id "pl.allegro.tech.build.axion-release" version "1.13.6"
 }
 
-repositories {
-    mavenCentral()
-}
-
 // Setup and configure properties that are consistent across all projects, including sub-modules.
 allprojects {
     group 'org.mobilitydata'
@@ -33,6 +29,20 @@ allprojects {
     // Per the axion-release plugin, this computes the project version based
     // on the most recent tag in the repo.
     version scmVersion.version
+
+    repositories {
+        mavenCentral()
+    }
+
+    tasks.withType(JavaCompile) {
+        // All Java projects should target the same compatibility version.
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+
+        // Our source files should be encoded in UTF-8, regardless of the platform (e.g. Windows).
+        compileJava.options.encoding = "UTF-8"
+        compileTestJava.options.encoding = "UTF-8"
+    }
 
     tasks.withType(Javadoc) {
         options.encoding = 'UTF-8'
@@ -71,4 +81,3 @@ task copyRulesToWebClient (type: Copy) {
 }
 
 build.dependsOn copyRulesToWebClient
-

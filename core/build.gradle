@@ -19,13 +19,6 @@ plugins {
     id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_11
-compileTestJava.options.encoding = "UTF-8"
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     implementation project(':model')
     annotationProcessor 'com.google.auto.value:auto-value:1.7.4'
@@ -63,16 +56,6 @@ publishing {
 
             from components.java
         }
-    }
-}
-
-test {
-    // Always run tests, even when nothing changed.
-    dependsOn 'cleanTest'
-
-    // Show test results.
-    testLogging {
-        events "passed", "skipped", "failed"
     }
 }
 
