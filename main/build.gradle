@@ -65,3 +65,8 @@ tasks.register('copyRulesMarkdown', Copy) {
     from "$rootDir/RULES.md"
     into "$projectDir/build/resources/test"
 }
+
+test {
+    // Make sure `copyRulesMarkdown` runs before we run any tests.
+    dependsOn 'copyRulesMarkdown'
+}
