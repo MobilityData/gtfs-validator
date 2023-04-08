@@ -10,6 +10,9 @@ repositories {
 }
 
 dependencies {
+    annotationProcessor 'com.google.auto.value:auto-value:1.7.4'
+    compileOnly 'com.google.auto.value:auto-value-annotations:1.7.4'
+    implementation 'org.jetbrains:annotations:20.1.0'
 }
 
 test {
