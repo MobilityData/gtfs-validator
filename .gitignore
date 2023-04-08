@@ -90,4 +90,7 @@ build/
 # Web Validator Authentication Credential
 web/service/src/main/resources/web-based-gtfs-validator-a088ec5f045d.json
 
+# Web Validator Service Sentry Settings
+web/service/src/main/resources/sentry.properties
+
 processor/tests/bin
