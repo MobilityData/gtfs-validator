@@ -1,0 +1,6 @@
+{
+  "docComment":"This is a notice comment.",
+  "fieldDocComments":{
+    "value": "A field comment"
+  }
+}

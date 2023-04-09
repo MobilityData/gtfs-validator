@@ -1,0 +1,16 @@
+{
+  "code": "s2_lat_lng",
+  "severityLevel": "ERROR",
+  "type": "object",
+  "properties": {
+    "point": {
+      "fieldName": "point",
+      "type": "array",
+      "contains": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    }
+  }
+}
