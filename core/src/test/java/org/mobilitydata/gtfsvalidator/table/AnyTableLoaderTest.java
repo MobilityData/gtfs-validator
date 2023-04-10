@@ -73,7 +73,7 @@ public class AnyTableLoaderTest {
     when(testTableDescriptor.gtfsFilename()).thenReturn("filename");
     GtfsColumnDescriptor[] columns =
         new GtfsColumnDescriptor[] {
-          AutoValue_GtfsColumnDescriptor.builder()
+          GtfsColumnDescriptor.builder()
               .setColumnName("route_id")
               .setHeaderRequired(true)
               .setFieldLevel(FieldLevelEnum.REQUIRED)
@@ -123,14 +123,14 @@ public class AnyTableLoaderTest {
     var testTableDescriptor = spy(new GtfsStopTableDescriptor());
     GtfsColumnDescriptor[] columns =
         new GtfsColumnDescriptor[] {
-          AutoValue_GtfsColumnDescriptor.builder()
+          GtfsColumnDescriptor.builder()
               .setColumnName(GtfsStop.STOP_ID_FIELD_NAME)
               .setHeaderRequired(true)
               .setFieldLevel(FieldLevelEnum.REQUIRED)
               .setIsMixedCase(false)
               .setIsCached(false)
               .build(),
-          AutoValue_GtfsColumnDescriptor.builder()
+          GtfsColumnDescriptor.builder()
               .setColumnName(GtfsStop.STOP_CODE_FIELD_NAME)
               .setHeaderRequired(true)
               .setFieldLevel(FieldLevelEnum.REQUIRED)
@@ -176,14 +176,14 @@ public class AnyTableLoaderTest {
     var testTableDescriptor = spy(new GtfsStopTableDescriptor());
     GtfsColumnDescriptor[] columns =
         new GtfsColumnDescriptor[] {
-          AutoValue_GtfsColumnDescriptor.builder()
+          GtfsColumnDescriptor.builder()
               .setColumnName(GtfsStop.STOP_ID_FIELD_NAME)
               .setHeaderRequired(true)
               .setFieldLevel(FieldLevelEnum.REQUIRED)
               .setIsMixedCase(false)
               .setIsCached(false)
               .build(),
-          AutoValue_GtfsColumnDescriptor.builder()
+          GtfsColumnDescriptor.builder()
               .setColumnName(GtfsStop.STOP_CODE_FIELD_NAME)
               .setHeaderRequired(false)
               .setFieldLevel(FieldLevelEnum.REQUIRED)
