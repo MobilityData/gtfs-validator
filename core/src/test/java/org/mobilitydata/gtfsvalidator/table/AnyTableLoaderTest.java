@@ -50,7 +50,7 @@ public class AnyTableLoaderTest {
 
     assertThat(loaderNotices.hasValidationErrors()).isTrue();
 
-    assertValidationNotice(loaderNotices, CsvParsingFailedNotice.class);
+    assertThat(validationNoticeTypes(loaderNotices)).containsExactly(CsvParsingFailedNotice.class);
     assertThat(loaderNotices.getValidationNotices().size()).isEqualTo(1);
     verify(testTableDescriptor, times(0)).createContainerForHeaderAndEntities(any(), any(), any());
   }

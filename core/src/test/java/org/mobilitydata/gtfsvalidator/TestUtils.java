@@ -1,10 +1,11 @@
 package org.mobilitydata.gtfsvalidator;
 
-import static org.junit.Assert.fail;
+import static java.util.stream.Collectors.toList;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 
@@ -18,13 +19,10 @@ public class TestUtils {
     return TestUtils.class.getResourceAsStream(path);
   }
 
-  public static void assertValidationNotice(
-      NoticeContainer noticeContainer, Class<? extends ValidationNotice> noticeClass) {
-    noticeContainer.getValidationNotices().stream()
-        .filter(notice -> noticeClass.isInstance(notice))
-        .findAny()
-        .ifPresentOrElse(
-            x -> {}, () -> fail("Expected notice not found: " + noticeClass.getCanonicalName()));
+  // In TestUtils...
+  public static List<Class<? extends ValidationNotice>> validationNoticeTypes(
+      NoticeContainer notices) {
+    return notices.getValidationNotices().stream().map(obj -> obj.getClass()).collect(toList());
   }
 
   public static InputStream toInputStream(String s) {
