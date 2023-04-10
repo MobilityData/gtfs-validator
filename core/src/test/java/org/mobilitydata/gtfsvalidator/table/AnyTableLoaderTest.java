@@ -71,17 +71,16 @@ public class AnyTableLoaderTest {
   public void invalidHeaders() {
     var testTableDescriptor = mock(GtfsTableDescriptor.class);
     when(testTableDescriptor.gtfsFilename()).thenReturn("filename");
-    GtfsColumnDescriptor[] columns =
-        new GtfsColumnDescriptor[] {
-          GtfsColumnDescriptor.builder()
-              .setColumnName("route_id")
-              .setHeaderRequired(true)
-              .setFieldLevel(FieldLevelEnum.REQUIRED)
-              .setIsMixedCase(false)
-              .setIsCached(false)
-              .build()
-        };
-    when(testTableDescriptor.getColumns()).thenReturn(ImmutableList.copyOf(columns));
+    when(testTableDescriptor.getColumns())
+        .thenReturn(
+            ImmutableList.of(
+                GtfsColumnDescriptor.builder()
+                    .setColumnName("route_id")
+                    .setHeaderRequired(true)
+                    .setFieldLevel(FieldLevelEnum.REQUIRED)
+                    .setIsMixedCase(false)
+                    .setIsCached(false)
+                    .build()));
     ValidatorProvider validatorProvider =
         spy(
             new DefaultValidatorProvider(
@@ -121,24 +120,23 @@ public class AnyTableLoaderTest {
   @Test
   public void missingRequiredColumn() {
     var testTableDescriptor = spy(new GtfsStopTableDescriptor());
-    GtfsColumnDescriptor[] columns =
-        new GtfsColumnDescriptor[] {
-          GtfsColumnDescriptor.builder()
-              .setColumnName(GtfsStop.STOP_ID_FIELD_NAME)
-              .setHeaderRequired(true)
-              .setFieldLevel(FieldLevelEnum.REQUIRED)
-              .setIsMixedCase(false)
-              .setIsCached(false)
-              .build(),
-          GtfsColumnDescriptor.builder()
-              .setColumnName(GtfsStop.STOP_CODE_FIELD_NAME)
-              .setHeaderRequired(true)
-              .setFieldLevel(FieldLevelEnum.REQUIRED)
-              .setIsMixedCase(false)
-              .setIsCached(false)
-              .build()
-        };
-    when(testTableDescriptor.getColumns()).thenReturn(ImmutableList.copyOf(columns));
+    when(testTableDescriptor.getColumns())
+        .thenReturn(
+            ImmutableList.of(
+                GtfsColumnDescriptor.builder()
+                    .setColumnName(GtfsStop.STOP_ID_FIELD_NAME)
+                    .setHeaderRequired(true)
+                    .setFieldLevel(FieldLevelEnum.REQUIRED)
+                    .setIsMixedCase(false)
+                    .setIsCached(false)
+                    .build(),
+                GtfsColumnDescriptor.builder()
+                    .setColumnName(GtfsStop.STOP_CODE_FIELD_NAME)
+                    .setHeaderRequired(true)
+                    .setFieldLevel(FieldLevelEnum.REQUIRED)
+                    .setIsMixedCase(false)
+                    .setIsCached(false)
+                    .build()));
     ValidatorProvider validatorProvider =
         spy(new DefaultValidatorProvider(validationContext, ValidatorLoader.createEmpty()));
     NoticeContainer loaderNotices = new NoticeContainer();
@@ -174,24 +172,23 @@ public class AnyTableLoaderTest {
   @Test
   public void missingRequiredField() {
     var testTableDescriptor = spy(new GtfsStopTableDescriptor());
-    GtfsColumnDescriptor[] columns =
-        new GtfsColumnDescriptor[] {
-          GtfsColumnDescriptor.builder()
-              .setColumnName(GtfsStop.STOP_ID_FIELD_NAME)
-              .setHeaderRequired(true)
-              .setFieldLevel(FieldLevelEnum.REQUIRED)
-              .setIsMixedCase(false)
-              .setIsCached(false)
-              .build(),
-          GtfsColumnDescriptor.builder()
-              .setColumnName(GtfsStop.STOP_CODE_FIELD_NAME)
-              .setHeaderRequired(false)
-              .setFieldLevel(FieldLevelEnum.REQUIRED)
-              .setIsMixedCase(false)
-              .setIsCached(false)
-              .build()
-        };
-    when(testTableDescriptor.getColumns()).thenReturn(ImmutableList.copyOf(columns));
+    when(testTableDescriptor.getColumns())
+        .thenReturn(
+            ImmutableList.of(
+                GtfsColumnDescriptor.builder()
+                    .setColumnName(GtfsStop.STOP_ID_FIELD_NAME)
+                    .setHeaderRequired(true)
+                    .setFieldLevel(FieldLevelEnum.REQUIRED)
+                    .setIsMixedCase(false)
+                    .setIsCached(false)
+                    .build(),
+                GtfsColumnDescriptor.builder()
+                    .setColumnName(GtfsStop.STOP_CODE_FIELD_NAME)
+                    .setHeaderRequired(false)
+                    .setFieldLevel(FieldLevelEnum.REQUIRED)
+                    .setIsMixedCase(false)
+                    .setIsCached(false)
+                    .build()));
     ValidatorProvider validatorProvider =
         spy(new DefaultValidatorProvider(validationContext, ValidatorLoader.createEmpty()));
     NoticeContainer loaderNotices = new NoticeContainer();
