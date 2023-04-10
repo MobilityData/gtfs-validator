@@ -1,7 +1,6 @@
 package org.mobilitydata.gtfsvalidator.table;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.junit.Assert.*;
 import static org.mobilitydata.gtfsvalidator.TestUtils.*;
 import static org.mockito.Mockito.*;
 
@@ -49,10 +48,10 @@ public class AnyTableLoaderTest {
         retrieveInputStream("_not_a_valid_file_"),
         loaderNotices);
 
-    assertTrue(loaderNotices.hasValidationErrors());
+    assertThat(loaderNotices.hasValidationErrors()).isTrue();
 
     assertValidationNotice(loaderNotices, CsvParsingFailedNotice.class);
-    assertEquals(1, loaderNotices.getValidationNotices().size());
+    assertThat(loaderNotices.getValidationNotices().size()).isEqualTo(1);
     verify(testTableDescriptor, times(0)).createContainerForHeaderAndEntities(any(), any(), any());
   }
 
@@ -66,8 +65,8 @@ public class AnyTableLoaderTest {
 
     AnyTableLoader.load(testTableDescriptor, validatorProvider, csvInputStream, loaderNotices);
 
-    assertTrue(loaderNotices.hasValidationErrors());
-    assertEquals(1, loaderNotices.getValidationNotices().size());
+    assertThat(loaderNotices.hasValidationErrors()).isTrue();
+    assertThat(loaderNotices.getValidationNotices().size()).isEqualTo(1);
     assertThat(loaderNotices.getValidationNotices())
         .containsExactly(new EmptyFileNotice("filename"));
     verify(testTableDescriptor, times(0)).createContainerForHeaderAndEntities(any(), any(), any());
@@ -99,8 +98,8 @@ public class AnyTableLoaderTest {
 
     AnyTableLoader.load(testTableDescriptor, validatorProvider, csvInputStream, loaderNotices);
 
-    assertTrue(loaderNotices.hasValidationErrors());
-    assertEquals(2, loaderNotices.getValidationNotices().size());
+    assertThat(loaderNotices.hasValidationErrors()).isTrue();
+    assertThat(loaderNotices.getValidationNotices().size()).isEqualTo(2);
     assertThat(loaderNotices.getValidationNotices())
         .contains(new UnknownColumnNotice("filename", "A file with no headers", 1));
     assertThat(loaderNotices.getValidationNotices())
@@ -119,7 +118,7 @@ public class AnyTableLoaderTest {
 
     AnyTableLoader.load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
-    assertTrue(loaderNotices.hasValidationErrors());
+    assertThat(loaderNotices.hasValidationErrors()).isTrue();
     assertThat(loaderNotices.getValidationNotices())
         .containsExactly(new InvalidRowLengthNotice("stops.txt", 2, 1, 2));
     verify(testTableDescriptor, times(0)).createContainerForHeaderAndEntities(any(), any(), any());
@@ -154,7 +153,7 @@ public class AnyTableLoaderTest {
 
     AnyTableLoader.load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
-    assertTrue(loaderNotices.hasValidationErrors());
+    assertThat(loaderNotices.hasValidationErrors()).isTrue();
     assertThat(loaderNotices.getValidationNotices())
         .containsExactly(new MissingRequiredColumnNotice("stops.txt", "stop_code"));
     verify(testTableDescriptor, times(0)).createContainerForHeaderAndEntities(any(), any(), any());
@@ -172,7 +171,7 @@ public class AnyTableLoaderTest {
 
     AnyTableLoader.load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
-    assertFalse(loaderNotices.hasValidationErrors());
+    assertThat(loaderNotices.hasValidationErrors()).isFalse();
     assertThat(loaderNotices.getValidationNotices())
         .contains(new UnknownColumnNotice("stops.txt", "_no_name_", 3));
     verify(testTableDescriptor, times(1)).createContainerForHeaderAndEntities(any(), any(), any());
@@ -207,7 +206,7 @@ public class AnyTableLoaderTest {
 
     AnyTableLoader.load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
-    assertTrue(loaderNotices.hasValidationErrors());
+    assertThat(loaderNotices.hasValidationErrors()).isTrue();
     assertThat(loaderNotices.getValidationNotices())
         .contains(new MissingRequiredFieldNotice("stops.txt", 2, "stop_code"));
     verify(testTableDescriptor, times(0)).createContainerForHeaderAndEntities(any(), any(), any());
