@@ -1,7 +1,8 @@
 package org.mobilitydata.gtfsvalidator.table;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mobilitydata.gtfsvalidator.TestUtils.*;
+import static org.mobilitydata.gtfsvalidator.TestUtils.toInputStream;
+import static org.mobilitydata.gtfsvalidator.TestUtils.validationNoticeTypes;
 import static org.mockito.Mockito.*;
 
 import com.google.common.collect.ImmutableList;
@@ -40,11 +41,7 @@ public class AnyTableLoaderTest {
     when(testTableDescriptor.gtfsFilename()).thenReturn("_not_a_valid_file_");
     NoticeContainer loaderNotices = new NoticeContainer();
 
-    AnyTableLoader.load(
-        testTableDescriptor,
-        mock(ValidatorProvider.class),
-        retrieveInputStream("_not_a_valid_file_"),
-        loaderNotices);
+    AnyTableLoader.load(testTableDescriptor, mock(ValidatorProvider.class), null, loaderNotices);
 
     assertThat(loaderNotices.hasValidationErrors()).isTrue();
 

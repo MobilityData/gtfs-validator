@@ -15,10 +15,6 @@ public class TestUtils {
     //        Hiding default constructor to avoid instantiation
   }
 
-  public static InputStream retrieveInputStream(String path) {
-    return TestUtils.class.getResourceAsStream(path);
-  }
-
   // In TestUtils...
   public static List<Class<? extends ValidationNotice>> validationNoticeTypes(
       NoticeContainer notices) {
