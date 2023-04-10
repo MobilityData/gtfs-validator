@@ -5,9 +5,7 @@ import static org.mobilitydata.gtfsvalidator.TestUtils.*;
 import static org.mockito.Mockito.*;
 
 import com.google.common.collect.ImmutableList;
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import org.junit.Before;
@@ -51,7 +49,6 @@ public class AnyTableLoaderTest {
     assertThat(loaderNotices.hasValidationErrors()).isTrue();
 
     assertThat(validationNoticeTypes(loaderNotices)).containsExactly(CsvParsingFailedNotice.class);
-    assertThat(loaderNotices.getValidationNotices().size()).isEqualTo(1);
     verify(testTableDescriptor, times(0)).createContainerForHeaderAndEntities(any(), any(), any());
   }
 
@@ -60,7 +57,7 @@ public class AnyTableLoaderTest {
     var testTableDescriptor = mock(GtfsTableDescriptor.class);
     when(testTableDescriptor.gtfsFilename()).thenReturn("filename");
     NoticeContainer loaderNotices = new NoticeContainer();
-    InputStream csvInputStream = new ByteArrayInputStream("".getBytes(StandardCharsets.UTF_8));
+    InputStream csvInputStream = toInputStream("");
     ValidatorProvider validatorProvider = mock(ValidatorProvider.class);
 
     AnyTableLoader.load(testTableDescriptor, validatorProvider, csvInputStream, loaderNotices);
@@ -93,8 +90,7 @@ public class AnyTableLoaderTest {
             new DefaultValidatorProvider(
                 mock(ValidationContext.class), mock(ValidatorLoader.class)));
     NoticeContainer loaderNotices = new NoticeContainer();
-    InputStream csvInputStream =
-        new ByteArrayInputStream("A file with no headers".getBytes(StandardCharsets.UTF_8));
+    InputStream csvInputStream = toInputStream("A file with no headers");
 
     AnyTableLoader.load(testTableDescriptor, validatorProvider, csvInputStream, loaderNotices);
 
