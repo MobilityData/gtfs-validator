@@ -21,7 +21,6 @@ import javax.annotation.Nullable;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntityBuilder;
 
-/** Test class to avoid dependency on the real GtfsTestEntity and annotation processor. */
 public class GtfsTestEntity implements GtfsEntity {
   public static final String FILENAME = "filename.txt";
 
@@ -35,9 +34,9 @@ public class GtfsTestEntity implements GtfsEntity {
 
   private int csvRowNumber;
 
-  private String stopId;
+  private String id;
 
-  private String stopCode;
+  private String code;
 
   private short bitField0_;
 
@@ -50,24 +49,24 @@ public class GtfsTestEntity implements GtfsEntity {
   }
 
   @Nonnull
-  public String stopId() {
-    return stopId;
+  public String id() {
+    return id;
   }
 
-  public boolean hasStopId() {
+  public boolean hasId() {
     return (bitField0_ & 0x1) != 0;
   }
 
-  public boolean hasStopCode() {
+  public boolean hasCode() {
     return (bitField0_ & 0x2) != 0;
   }
 
   public static final class Builder implements GtfsEntityBuilder<GtfsTestEntity> {
     private int csvRowNumber;
 
-    private String stopId;
+    private String id;
 
-    private String stopCode;
+    private String code;
 
     private short bitField0_;
 
@@ -88,45 +87,45 @@ public class GtfsTestEntity implements GtfsEntity {
     }
 
     @Nonnull
-    public String stopId() {
-      return stopId;
+    public String id() {
+      return id;
     }
 
     @Nonnull
-    public GtfsTestEntity.Builder setStopId(@Nullable String value) {
+    public GtfsTestEntity.Builder setId(@Nullable String value) {
       if (value == null) {
         return clearStopId();
       }
-      stopId = value;
+      id = value;
       bitField0_ |= 0x1;
       return this;
     }
 
     @Nonnull
     public GtfsTestEntity.Builder clearStopId() {
-      stopId = DEFAULT_ID;
+      id = DEFAULT_ID;
       bitField0_ &= ~0x1;
       return this;
     }
 
     @Nonnull
     public String stopCode() {
-      return stopCode;
+      return code;
     }
 
     @Nonnull
-    public GtfsTestEntity.Builder setStopCode(@Nullable String value) {
+    public GtfsTestEntity.Builder setCode(@Nullable String value) {
       if (value == null) {
         return clearStopCode();
       }
-      stopCode = value;
+      code = value;
       bitField0_ |= 0x2;
       return this;
     }
 
     @Nonnull
     public GtfsTestEntity.Builder clearStopCode() {
-      stopCode = DEFAULT_CODE;
+      code = DEFAULT_CODE;
       bitField0_ &= ~0x2;
       return this;
     }
@@ -136,8 +135,8 @@ public class GtfsTestEntity implements GtfsEntity {
       GtfsTestEntity entity = new GtfsTestEntity();
       entity.csvRowNumber = this.csvRowNumber;
       entity.bitField0_ = this.bitField0_;
-      entity.stopId = this.stopId;
-      entity.stopCode = this.stopCode;
+      entity.id = this.id;
+      entity.code = this.code;
       return entity;
     }
 
@@ -145,8 +144,8 @@ public class GtfsTestEntity implements GtfsEntity {
     public void clear() {
       csvRowNumber = 0;
       bitField0_ = 0;
-      stopId = DEFAULT_ID;
-      stopCode = DEFAULT_CODE;
+      id = DEFAULT_ID;
+      code = DEFAULT_CODE;
     }
   }
 }

@@ -16,26 +16,19 @@
 
 package org.mobilitydata.gtfsvalidator.testgtfs;
 
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ListMultimap;
-import java.util.*;
-import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyNotice;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 
-public final class GtfsTestTableContainer extends GtfsTableContainer<GtfsTestEntity> {
+public class GtfsTestTableContainer extends GtfsTableContainer<GtfsTestEntity> {
   private static final ImmutableList<String> KEY_COLUMN_NAMES =
       ImmutableList.of(GtfsTestEntity.ID_FIELD_NAME);
 
   private List<GtfsTestEntity> entities;
-
-  private Map<String, GtfsTestEntity> byStopIdMap = new HashMap<>();
-
-  private ListMultimap<String, GtfsTestEntity> byZoneIdMap = ArrayListMultimap.create();
-
-  private ListMultimap<String, GtfsTestEntity> byParentStationMap = ArrayListMultimap.create();
 
   private GtfsTestTableContainer(CsvHeader header, List<GtfsTestEntity> entities) {
     super(TableStatus.PARSABLE_HEADERS_AND_ROWS, header);
@@ -76,7 +69,6 @@ public final class GtfsTestTableContainer extends GtfsTableContainer<GtfsTestEnt
   public static GtfsTestTableContainer forHeaderAndEntities(
       CsvHeader header, List<GtfsTestEntity> entities, NoticeContainer noticeContainer) {
     GtfsTestTableContainer table = new GtfsTestTableContainer(header, entities);
-    table.setupIndices(noticeContainer);
     return table;
   }
 
@@ -89,63 +81,13 @@ public final class GtfsTestTableContainer extends GtfsTableContainer<GtfsTestEnt
     return forHeaderAndEntities(CsvHeader.EMPTY, entities, noticeContainer);
   }
 
-  public Optional<GtfsTestEntity> byStopId(String key) {
-    return Optional.ofNullable(byStopIdMap.getOrDefault(key, null));
-  }
-
-  /** @return List of org.mobilitydata.gtfsvalidator.table.GtfsStop */
-  public List<GtfsTestEntity> byZoneId(String key) {
-    return byZoneIdMap.get(key);
-  }
-
-  /**
-   * @return ListMultimap keyed on zone_id with values that are Lists of
-   *     org.mobilitydata.gtfsvalidator.table.GtfsStop
-   */
-  public ListMultimap<String, GtfsTestEntity> byZoneIdMap() {
-    return byZoneIdMap;
-  }
-
-  /** @return List of org.mobilitydata.gtfsvalidator.table.GtfsStop */
-  public List<GtfsTestEntity> byParentStation(String key) {
-    return byParentStationMap.get(key);
-  }
-
-  /**
-   * @return ListMultimap keyed on parent_station with values that are Lists of
-   *     org.mobilitydata.gtfsvalidator.table.GtfsStop
-   */
-  public ListMultimap<String, GtfsTestEntity> byParentStationMap() {
-    return byParentStationMap;
-  }
-
-  @Override
-  public Optional<GtfsTestEntity> byTranslationKey(String recordId, String recordSubId) {
-    return Optional.ofNullable(byStopIdMap.getOrDefault(recordId, null));
-  }
-
   @Override
   public ImmutableList<String> getKeyColumnNames() {
     return KEY_COLUMN_NAMES;
   }
 
-  private void setupIndices(NoticeContainer noticeContainer) {
-    for (GtfsTestEntity newEntity : entities) {
-      if (!newEntity.hasStopId()) {
-        continue;
-      }
-      GtfsTestEntity oldEntity = byStopIdMap.getOrDefault(newEntity.stopId(), null);
-      if (oldEntity != null) {
-        noticeContainer.addValidationNotice(
-            new DuplicateKeyNotice(
-                gtfsFilename(),
-                newEntity.csvRowNumber(),
-                oldEntity.csvRowNumber(),
-                GtfsTestEntity.ID_FIELD_NAME,
-                newEntity.stopId()));
-      } else {
-        byStopIdMap.put(newEntity.stopId(), newEntity);
-      }
-    }
+  @Override
+  public Optional<GtfsTestEntity> byTranslationKey(String recordId, String recordSubId) {
+    return Optional.empty();
   }
 }

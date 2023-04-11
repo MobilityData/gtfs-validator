@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableList;
 import java.io.InputStream;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
@@ -16,6 +17,8 @@ import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.*;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntity;
+import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestFileValidator;
+import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestTableContainer;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestTableDescriptor;
 import org.mobilitydata.gtfsvalidator.validator.DefaultValidatorProvider;
 import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
@@ -178,6 +181,12 @@ public class AnyTableLoaderTest {
     ValidatorProvider validatorProvider =
         spy(new DefaultValidatorProvider(validationContext, ValidatorLoader.createEmpty()));
     NoticeContainer loaderNotices = new NoticeContainer();
+    GtfsTestTableContainer mockContainer = mock(GtfsTestTableContainer.class);
+    GtfsTestFileValidator validator = mock(GtfsTestFileValidator.class);
+    when(validatorProvider.createSingleFileValidators(mockContainer))
+        .thenReturn(List.of(validator));
+    when(testTableDescriptor.createContainerForHeaderAndEntities(any(), any(), any()))
+        .thenReturn(mockContainer);
     InputStream inputStream = toInputStream("id,stop_lat,_no_name_\n" + "s1, 23.00, no_value\n");
 
     var loadedContainer =
@@ -186,10 +195,8 @@ public class AnyTableLoaderTest {
     assertThat(loaderNotices.hasValidationErrors()).isFalse();
     assertThat(loaderNotices.getValidationNotices())
         .contains(new UnknownColumnNotice("filename.txt", "_no_name_", 3));
-    assertThat(loadedContainer.getTableStatus())
-        .isEqualTo(GtfsTableContainer.TableStatus.PARSABLE_HEADERS_AND_ROWS);
-    verify(testTableDescriptor, times(1)).createContainerForHeaderAndEntities(any(), any(), any());
-    verify(validatorProvider, times(1)).createSingleFileValidators(any());
+    assertThat(loadedContainer).isEqualTo(mockContainer);
+    verify(validator, times(1)).validate(any());
   }
 
   @Test

@@ -68,7 +68,7 @@ public class GtfsTestTableDescriptor extends GtfsTableDescriptor<GtfsTestEntity>
               GtfsColumnDescriptor columnDescriptor,
               FieldCache<String> fieldCache,
               GtfsTestEntity.Builder builder) {
-            builder.setStopId(
+            builder.setId(
                 addToCacheIfPresent(
                     rowParser.asId(columnIndex, columnDescriptor.fieldLevel()), fieldCache));
           }
@@ -83,7 +83,7 @@ public class GtfsTestTableDescriptor extends GtfsTableDescriptor<GtfsTestEntity>
               GtfsColumnDescriptor columnDescriptor,
               FieldCache<String> fieldCache,
               GtfsTestEntity.Builder builder) {
-            builder.setStopCode(
+            builder.setCode(
                 addToCacheIfPresent(
                     rowParser.asText(columnIndex, columnDescriptor.fieldLevel()), fieldCache));
           }
