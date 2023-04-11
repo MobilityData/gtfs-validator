@@ -94,7 +94,7 @@ public class GtfsTestEntity implements GtfsEntity {
     @Nonnull
     public GtfsTestEntity.Builder setId(@Nullable String value) {
       if (value == null) {
-        return clearStopId();
+        return clearId();
       }
       id = value;
       bitField0_ |= 0x1;
@@ -102,21 +102,21 @@ public class GtfsTestEntity implements GtfsEntity {
     }
 
     @Nonnull
-    public GtfsTestEntity.Builder clearStopId() {
+    public GtfsTestEntity.Builder clearId() {
       id = DEFAULT_ID;
       bitField0_ &= ~0x1;
       return this;
     }
 
     @Nonnull
-    public String stopCode() {
+    public String code() {
       return code;
     }
 
     @Nonnull
     public GtfsTestEntity.Builder setCode(@Nullable String value) {
       if (value == null) {
-        return clearStopCode();
+        return clearCode();
       }
       code = value;
       bitField0_ |= 0x2;
@@ -124,7 +124,7 @@ public class GtfsTestEntity implements GtfsEntity {
     }
 
     @Nonnull
-    public GtfsTestEntity.Builder clearStopCode() {
+    public GtfsTestEntity.Builder clearCode() {
       code = DEFAULT_CODE;
       bitField0_ &= ~0x2;
       return this;
