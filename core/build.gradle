@@ -21,6 +21,7 @@ plugins {
 
 dependencies {
     implementation project(':model')
+    annotationProcessor project(':processor:notices')
     annotationProcessor 'com.google.auto.value:auto-value:1.7.4'
     compileOnly 'com.google.auto.value:auto-value-annotations:1.7.4'
     implementation 'org.apache.commons:commons-compress:1.20'

@@ -30,6 +30,7 @@ publishing {
 }
 
 dependencies {
+    annotationProcessor project(':processor:notices')
     annotationProcessor project(':processor')
     compileOnly project(':processor')
     implementation project(':model')
