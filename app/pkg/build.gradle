@@ -22,10 +22,6 @@ plugins {
     id "org.beryx.jlink" version "2.24.1"
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     // Note that we depend on the :app:gui shadow jar, which bundles the gui
     // application and all its dependencies into a single uber jar.
@@ -62,9 +58,6 @@ extraJavaModuleInfo {
         requires('jdk.crypto.cryptoki')
   }
 }
-
-sourceCompatibility = JavaVersion.VERSION_11
-compileJava.options.encoding = "UTF-8"
 
 java {
     modularity.inferModulePath = true
