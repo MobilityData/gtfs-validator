@@ -21,17 +21,17 @@ import static com.google.common.truth.Truth8.assertThat;
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
-import org.mobilitydata.gtfsvalidator.testgtfs.GtfsStopTableContainer;
+import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestTableContainer;
 
 public class GtfsFeedContainerTest {
 
   @Test
   public void getTableForFilename() {
-    GtfsStopTableContainer stopTable = new GtfsStopTableContainer(TableStatus.EMPTY_FILE);
-    GtfsFeedContainer feedContainer = new GtfsFeedContainer(ImmutableList.of(stopTable));
+    GtfsTestTableContainer table = new GtfsTestTableContainer(TableStatus.EMPTY_FILE);
+    GtfsFeedContainer feedContainer = new GtfsFeedContainer(ImmutableList.of(table));
 
-    assertThat(feedContainer.getTableForFilename("stops.txt")).hasValue(stopTable);
-    assertThat(feedContainer.getTableForFilename("STOPS.TXT")).hasValue(stopTable);
+    assertThat(feedContainer.getTableForFilename("filename.txt")).hasValue(table);
+    assertThat(feedContainer.getTableForFilename("FILENAME.TXT")).hasValue(table);
     assertThat(feedContainer.getTableForFilename("STOPS")).isEmpty();
   }
 }

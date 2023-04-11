@@ -25,37 +25,36 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 
-/** Test class to avoid dependency on the real GtfsStopTableContainer and annotation processor. */
-public final class GtfsStopTableContainer extends GtfsTableContainer<GtfsStop> {
+public final class GtfsTestTableContainer extends GtfsTableContainer<GtfsTestEntity> {
   private static final ImmutableList<String> KEY_COLUMN_NAMES =
-      ImmutableList.of(GtfsStop.STOP_ID_FIELD_NAME);
+      ImmutableList.of(GtfsTestEntity.ID_FIELD_NAME);
 
-  private List<GtfsStop> entities;
+  private List<GtfsTestEntity> entities;
 
-  private Map<String, GtfsStop> byStopIdMap = new HashMap<>();
+  private Map<String, GtfsTestEntity> byStopIdMap = new HashMap<>();
 
-  private ListMultimap<String, GtfsStop> byZoneIdMap = ArrayListMultimap.create();
+  private ListMultimap<String, GtfsTestEntity> byZoneIdMap = ArrayListMultimap.create();
 
-  private ListMultimap<String, GtfsStop> byParentStationMap = ArrayListMultimap.create();
+  private ListMultimap<String, GtfsTestEntity> byParentStationMap = ArrayListMultimap.create();
 
-  private GtfsStopTableContainer(CsvHeader header, List<GtfsStop> entities) {
+  private GtfsTestTableContainer(CsvHeader header, List<GtfsTestEntity> entities) {
     super(TableStatus.PARSABLE_HEADERS_AND_ROWS, header);
     this.entities = entities;
   }
 
-  public GtfsStopTableContainer(TableStatus tableStatus) {
+  public GtfsTestTableContainer(TableStatus tableStatus) {
     super(tableStatus, CsvHeader.EMPTY);
     this.entities = new ArrayList<>();
   }
 
   @Override
-  public Class<GtfsStop> getEntityClass() {
-    return GtfsStop.class;
+  public Class<GtfsTestEntity> getEntityClass() {
+    return GtfsTestEntity.class;
   }
 
   @Override
   public String gtfsFilename() {
-    return GtfsStop.FILENAME;
+    return GtfsTestEntity.FILENAME;
   }
 
   @Override
@@ -69,14 +68,14 @@ public final class GtfsStopTableContainer extends GtfsTableContainer<GtfsStop> {
   }
 
   @Override
-  public List<GtfsStop> getEntities() {
+  public List<GtfsTestEntity> getEntities() {
     return entities;
   }
 
   /** Creates a table with given header and entities */
-  public static GtfsStopTableContainer forHeaderAndEntities(
-      CsvHeader header, List<GtfsStop> entities, NoticeContainer noticeContainer) {
-    GtfsStopTableContainer table = new GtfsStopTableContainer(header, entities);
+  public static GtfsTestTableContainer forHeaderAndEntities(
+      CsvHeader header, List<GtfsTestEntity> entities, NoticeContainer noticeContainer) {
+    GtfsTestTableContainer table = new GtfsTestTableContainer(header, entities);
     table.setupIndices(noticeContainer);
     return table;
   }
@@ -85,17 +84,17 @@ public final class GtfsStopTableContainer extends GtfsTableContainer<GtfsStop> {
    * Creates a table with given entities and empty header. This method is intended to be used in
    * tests.
    */
-  public static GtfsStopTableContainer forEntities(
-      List<GtfsStop> entities, NoticeContainer noticeContainer) {
+  public static GtfsTestTableContainer forEntities(
+      List<GtfsTestEntity> entities, NoticeContainer noticeContainer) {
     return forHeaderAndEntities(CsvHeader.EMPTY, entities, noticeContainer);
   }
 
-  public Optional<GtfsStop> byStopId(String key) {
+  public Optional<GtfsTestEntity> byStopId(String key) {
     return Optional.ofNullable(byStopIdMap.getOrDefault(key, null));
   }
 
   /** @return List of org.mobilitydata.gtfsvalidator.table.GtfsStop */
-  public List<GtfsStop> byZoneId(String key) {
+  public List<GtfsTestEntity> byZoneId(String key) {
     return byZoneIdMap.get(key);
   }
 
@@ -103,12 +102,12 @@ public final class GtfsStopTableContainer extends GtfsTableContainer<GtfsStop> {
    * @return ListMultimap keyed on zone_id with values that are Lists of
    *     org.mobilitydata.gtfsvalidator.table.GtfsStop
    */
-  public ListMultimap<String, GtfsStop> byZoneIdMap() {
+  public ListMultimap<String, GtfsTestEntity> byZoneIdMap() {
     return byZoneIdMap;
   }
 
   /** @return List of org.mobilitydata.gtfsvalidator.table.GtfsStop */
-  public List<GtfsStop> byParentStation(String key) {
+  public List<GtfsTestEntity> byParentStation(String key) {
     return byParentStationMap.get(key);
   }
 
@@ -116,12 +115,12 @@ public final class GtfsStopTableContainer extends GtfsTableContainer<GtfsStop> {
    * @return ListMultimap keyed on parent_station with values that are Lists of
    *     org.mobilitydata.gtfsvalidator.table.GtfsStop
    */
-  public ListMultimap<String, GtfsStop> byParentStationMap() {
+  public ListMultimap<String, GtfsTestEntity> byParentStationMap() {
     return byParentStationMap;
   }
 
   @Override
-  public Optional<GtfsStop> byTranslationKey(String recordId, String recordSubId) {
+  public Optional<GtfsTestEntity> byTranslationKey(String recordId, String recordSubId) {
     return Optional.ofNullable(byStopIdMap.getOrDefault(recordId, null));
   }
 
@@ -131,18 +130,18 @@ public final class GtfsStopTableContainer extends GtfsTableContainer<GtfsStop> {
   }
 
   private void setupIndices(NoticeContainer noticeContainer) {
-    for (GtfsStop newEntity : entities) {
+    for (GtfsTestEntity newEntity : entities) {
       if (!newEntity.hasStopId()) {
         continue;
       }
-      GtfsStop oldEntity = byStopIdMap.getOrDefault(newEntity.stopId(), null);
+      GtfsTestEntity oldEntity = byStopIdMap.getOrDefault(newEntity.stopId(), null);
       if (oldEntity != null) {
         noticeContainer.addValidationNotice(
             new DuplicateKeyNotice(
                 gtfsFilename(),
                 newEntity.csvRowNumber(),
                 oldEntity.csvRowNumber(),
-                GtfsStop.STOP_ID_FIELD_NAME,
+                GtfsTestEntity.ID_FIELD_NAME,
                 newEntity.stopId()));
       } else {
         byStopIdMap.put(newEntity.stopId(), newEntity);

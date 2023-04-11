@@ -15,8 +15,8 @@ import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.*;
-import org.mobilitydata.gtfsvalidator.testgtfs.GtfsStop;
-import org.mobilitydata.gtfsvalidator.testgtfs.GtfsStopTableDescriptor;
+import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntity;
+import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestTableDescriptor;
 import org.mobilitydata.gtfsvalidator.validator.DefaultValidatorProvider;
 import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
@@ -115,7 +115,7 @@ public class AnyTableLoaderTest {
 
   @Test
   public void invalidRowLengthNotice() {
-    var testTableDescriptor = spy(new GtfsStopTableDescriptor());
+    var testTableDescriptor = spy(new GtfsTestTableDescriptor());
     GtfsTableContainer mockContainer = mock(GtfsTableContainer.class);
     when(testTableDescriptor.createContainerForInvalidStatus(
             GtfsTableContainer.TableStatus.UNPARSABLE_ROWS))
@@ -123,32 +123,32 @@ public class AnyTableLoaderTest {
     ValidatorProvider validatorProvider =
         spy(new DefaultValidatorProvider(validationContext, ValidatorLoader.createEmpty()));
     NoticeContainer loaderNotices = new NoticeContainer();
-    InputStream inputStream = toInputStream("stop_id,stop_code\n" + "s1\n");
+    InputStream inputStream = toInputStream("id,code\n" + "s1\n");
 
     var loadedContainer =
         AnyTableLoader.load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
     assertThat(loaderNotices.hasValidationErrors()).isTrue();
     assertThat(loaderNotices.getValidationNotices())
-        .containsExactly(new InvalidRowLengthNotice("stops.txt", 2, 1, 2));
+        .containsExactly(new InvalidRowLengthNotice("filename.txt", 2, 1, 2));
     assertThat(loadedContainer).isEqualTo(mockContainer);
   }
 
   @Test
   public void missingRequiredColumn() {
-    var testTableDescriptor = spy(new GtfsStopTableDescriptor());
+    var testTableDescriptor = spy(new GtfsTestTableDescriptor());
     when(testTableDescriptor.getColumns())
         .thenReturn(
             ImmutableList.of(
                 GtfsColumnDescriptor.builder()
-                    .setColumnName(GtfsStop.STOP_ID_FIELD_NAME)
+                    .setColumnName(GtfsTestEntity.ID_FIELD_NAME)
                     .setHeaderRequired(true)
                     .setFieldLevel(FieldLevelEnum.REQUIRED)
                     .setIsMixedCase(false)
                     .setIsCached(false)
                     .build(),
                 GtfsColumnDescriptor.builder()
-                    .setColumnName(GtfsStop.STOP_CODE_FIELD_NAME)
+                    .setColumnName(GtfsTestEntity.CODE_FIELD_NAME)
                     .setHeaderRequired(true)
                     .setFieldLevel(FieldLevelEnum.REQUIRED)
                     .setIsMixedCase(false)
@@ -161,32 +161,31 @@ public class AnyTableLoaderTest {
     ValidatorProvider validatorProvider =
         spy(new DefaultValidatorProvider(validationContext, ValidatorLoader.createEmpty()));
     NoticeContainer loaderNotices = new NoticeContainer();
-    InputStream inputStream = toInputStream("stop_id\n" + "s1 \n");
+    InputStream inputStream = toInputStream("id\n" + "s1 \n");
 
     var loadedContainer =
         AnyTableLoader.load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
     assertThat(loaderNotices.hasValidationErrors()).isTrue();
     assertThat(loaderNotices.getValidationNotices())
-        .containsExactly(new MissingRequiredColumnNotice("stops.txt", "stop_code"));
+        .containsExactly(new MissingRequiredColumnNotice("filename.txt", "code"));
     assertThat(loadedContainer).isEqualTo(mockContainer);
   }
 
   @Test
   public void parsableTableRows() {
-    var testTableDescriptor = spy(new GtfsStopTableDescriptor());
+    var testTableDescriptor = spy(new GtfsTestTableDescriptor());
     ValidatorProvider validatorProvider =
         spy(new DefaultValidatorProvider(validationContext, ValidatorLoader.createEmpty()));
     NoticeContainer loaderNotices = new NoticeContainer();
-    InputStream inputStream =
-        toInputStream("stop_id,stop_lat,_no_name_\n" + "s1, 23.00, no_value\n");
+    InputStream inputStream = toInputStream("id,stop_lat,_no_name_\n" + "s1, 23.00, no_value\n");
 
     var loadedContainer =
         AnyTableLoader.load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
     assertThat(loaderNotices.hasValidationErrors()).isFalse();
     assertThat(loaderNotices.getValidationNotices())
-        .contains(new UnknownColumnNotice("stops.txt", "_no_name_", 3));
+        .contains(new UnknownColumnNotice("filename.txt", "_no_name_", 3));
     assertThat(loadedContainer.getTableStatus())
         .isEqualTo(GtfsTableContainer.TableStatus.PARSABLE_HEADERS_AND_ROWS);
     verify(testTableDescriptor, times(1)).createContainerForHeaderAndEntities(any(), any(), any());
@@ -195,19 +194,19 @@ public class AnyTableLoaderTest {
 
   @Test
   public void missingRequiredField() {
-    var testTableDescriptor = spy(new GtfsStopTableDescriptor());
+    var testTableDescriptor = spy(new GtfsTestTableDescriptor());
     when(testTableDescriptor.getColumns())
         .thenReturn(
             ImmutableList.of(
                 GtfsColumnDescriptor.builder()
-                    .setColumnName(GtfsStop.STOP_ID_FIELD_NAME)
+                    .setColumnName(GtfsTestEntity.ID_FIELD_NAME)
                     .setHeaderRequired(true)
                     .setFieldLevel(FieldLevelEnum.REQUIRED)
                     .setIsMixedCase(false)
                     .setIsCached(false)
                     .build(),
                 GtfsColumnDescriptor.builder()
-                    .setColumnName(GtfsStop.STOP_CODE_FIELD_NAME)
+                    .setColumnName(GtfsTestEntity.CODE_FIELD_NAME)
                     .setHeaderRequired(false)
                     .setFieldLevel(FieldLevelEnum.REQUIRED)
                     .setIsMixedCase(false)
@@ -220,14 +219,14 @@ public class AnyTableLoaderTest {
     ValidatorProvider validatorProvider =
         spy(new DefaultValidatorProvider(validationContext, ValidatorLoader.createEmpty()));
     NoticeContainer loaderNotices = new NoticeContainer();
-    InputStream inputStream = toInputStream("stop_id,stop_code\n" + "s1,\n");
+    InputStream inputStream = toInputStream("id,code\n" + "s1,\n");
 
     var loadedContainer =
         AnyTableLoader.load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
     assertThat(loaderNotices.hasValidationErrors()).isTrue();
     assertThat(loaderNotices.getValidationNotices())
-        .contains(new MissingRequiredFieldNotice("stops.txt", 2, "stop_code"));
+        .contains(new MissingRequiredFieldNotice("filename.txt", 2, "code"));
     assertThat(loadedContainer).isEqualTo(mockContainer);
   }
 }
