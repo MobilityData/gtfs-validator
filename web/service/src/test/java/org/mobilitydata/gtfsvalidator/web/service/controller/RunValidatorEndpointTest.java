@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.web.service.util.JobMetadata;
 import org.mobilitydata.gtfsvalidator.web.service.util.StorageHelper;
@@ -107,11 +106,14 @@ public class RunValidatorEndpointTest {
   }
 
   @Test
-  @Disabled("TODO: Fix this test")
   public void runValidatorValidateFeedFailure() throws Exception {
     doThrow(new Exception())
         .when(validationHandler)
         .validateFeed(any(File.class), any(Path.class), anyString());
+
+    doReturn(mockFeedFile)
+        .when(storageHelper)
+        .downloadFeedFileFromStorage(anyString(), anyString());
 
     mockMvc
         .perform(
@@ -123,8 +125,8 @@ public class RunValidatorEndpointTest {
     // should not upload to storage
     verify(storageHelper, times(0)).uploadFilesToStorage(anyString(), any(Path.class));
 
-    // should not delete temp files
-    verify(mockFeedFile, times(0)).delete();
-    verify(mockOutputPathToFile, times(0)).delete();
+    // should delete temp files when an exception is thrown
+    verify(mockFeedFile, times(1)).delete();
+    verify(mockOutputPathToFile, times(1)).delete();
   }
 }
