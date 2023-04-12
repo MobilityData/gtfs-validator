@@ -12,7 +12,7 @@ If this step is skipped, newly declared invalid datasets could be rejected by GT
    
 ## Process description
 
-For the latest version of all GTFS datasets from the [MobilityDatabase](http://old.mobilitydatabase.org/wiki/Main_Page), the validation report from both the proposed and the reference validator are compared. An acceptance test report is generated: it quantifies for each agency/dataset the number of new errors (as defined [here](https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#definitions)) that have been introduced.
+For the latest version of all GTFS datasets from the [MobilityDatabase](http://old.mobilitydatabase.org/wiki/Main_Page), the validation report from both the proposed and the reference validator are compared. An acceptance test report is generated: it quantifies for each agency/dataset the number of new notice (as defined [here](https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#definitions)) that have been introduced.
 ![steps](https://user-images.githubusercontent.com/35747326/139877746-fd047437-38b3-44fa-aeb8-37d925c289e8.png)
 
 ## Github Actions
@@ -32,13 +32,13 @@ On each of these urls:
 At the end of execution of the two aforementioned steps for every url in the matrix, all the validation
 reports are gathered in a single folder (`output`) and compared - the percentage of newly invalid datasets
 is output to the console.  The final acceptance test report is output at `acceptance_report.json`.
-It includes a summary of both new error types and dropped error types.  It also contains a list of
+It includes a summary of both new notice types and dropped notice types.  It also contains a list of
 "corrupted" sources: sources that could not be taken into account while generating the acceptance test 
 report because of I/O errors, or missing file.  
 
 To finish with, a comment that sums up the acceptance test result is issued on the PR.
 
-Sample outputs:
+Example output:
 - `acceptance_report.json`
 ```json
 {
@@ -70,40 +70,16 @@ Sample outputs:
         }
       ]
     },
-    {
-      "noticeCode": "third_notice_code",
-      "affectedSourcesCount": 1,
-      "affectedSources": [
-        {
-          "sourceId": "source-id-2",
-          "sourceUrl": "url to the latest version of the dataset issued by source-id-2",
-          "noticeCount": 40
-        }
-      ]
-    },
-    {
-      "noticeCode": "fourth_notice_code",
-      "affectedSourcesCount": 3,
-      "affectedSources": [
-        {
-          "sourceId": "source-id-1",
-          "sourceUrl": "url to the latest version of the dataset issued by source-id-1",
-          "noticeCount": 40
-        },
-        {
-          "sourceId": "source-id-3",
-          "sourceUrl": "url to the latest version of the dataset issued by source-id-3",
-          "noticeCount": 15
-        },
-        {
-          "sourceId": "source-id-5",
-          "sourceUrl": "url to the latest version of the dataset issued by source-id-5",
-          "noticeCount": 2
-        }
-      ]
-    }
   ],
   "droppedErrors": [
+    # Same schema as `newErrors`
+  "newWarnings": [
+    # Same schema as `newErrors`
+  "droppedWarnings": [
+    # Same schema as `newErrors`
+  "newInfo": [
+    # Same schema as `newErrors`
+  "droppedInfo": [
     # Same schema as `newErrors`
   ],
   "corruptedSources": {
