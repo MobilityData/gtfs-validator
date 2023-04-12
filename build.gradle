@@ -16,47 +16,68 @@
 
 plugins {
     id 'java'
+    id 'test-report-aggregation'
     id 'com.github.sherter.google-java-format' version '0.9'
     id "io.freefair.aggregate-javadoc-jar" version "6.4.3"
     id "pl.allegro.tech.build.axion-release" version "1.13.6"
 }
 
-repositories {
-    mavenCentral()
-}
-
-// Setup and configure Javadoc plugin
+// Setup and configure properties that are consistent across all projects, including sub-modules.
 allprojects {
     group 'org.mobilitydata'
+
     // Per the axion-release plugin, this computes the project version based
     // on the most recent tag in the repo.
     version scmVersion.version
 
+    repositories {
+        mavenCentral()
+    }
+
+    tasks.withType(JavaCompile) {
+        // All Java projects should target the same compatibility version.
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+
+        // Our source files should be encoded in UTF-8, regardless of the platform (e.g. Windows).
+        compileJava.options.encoding = "UTF-8"
+        compileTestJava.options.encoding = "UTF-8"
+    }
+
     tasks.withType(Javadoc) {
         options.encoding = 'UTF-8'
     }
+
+    // All projects that include the 'java` plugin will have a Test task by default.
+    tasks.withType(Test) {
+        // Always run tests, even when nothing changed.
+        dependsOn 'cleanTest'
+
+        // Show test results.
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
+
+        // Define a system project for the project version
+        systemProperty 'gtfsValidatorVersionForTest', project.version
+
+        // Any project with a test should be added to test report aggregation in the root project.
+        rootProject.dependencies.add('testReportAggregation', project)
+    }
 }
 
-// A resolvable configuration to collect test reports data
-configurations {
-    testReportData {
-        canBeResolved = true
-        canBeConsumed = false
-        attributes {
-            attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category, Category.DOCUMENTATION))
-            attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named(DocsType, 'test-report-data'))
+reporting {
+    reports {
+        // Necessary for unit test result aggregation.
+        testAggregateTestReport(AggregateTestReport) {
+            testType = TestSuiteType.UNIT_TEST
         }
     }
 }
 
-dependencies {
-    testReportData project('main')
-    testReportData project(':processor')
-    testReportData project(':core')
+task copyRulesToWebClient (type: Copy) {
+    from "./RULES.md"
+    into "./web/client/static"
 }
 
-tasks.register('testReport', TestReport) {
-    destinationDir = file("$buildDir/reports/allTests")
-    // Use test results from testReportData configuration
-    testResultDirs.from(configurations.testReportData)
-}
+build.dependsOn copyRulesToWebClient

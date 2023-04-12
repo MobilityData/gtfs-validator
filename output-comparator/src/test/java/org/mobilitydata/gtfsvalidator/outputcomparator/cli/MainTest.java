@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.outputcomparator.cli;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mobilitydata.gtfsvalidator.outputcomparator.cli.Main.ACCEPTANCE_REPORT_JSON;
+import static org.mobilitydata.gtfsvalidator.outputcomparator.cli.TestHelper.writeFile;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -58,17 +59,6 @@ public class MainTest {
   private static final List<ChangedNotice> NO_CHANGES = new ArrayList<>();
   @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
 
-  private static final Gson GSON =
-      new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
-
-  private void writeFile(JsonObject fileData, Path path) throws IOException {
-    Path parentDir = path.getParent();
-    if (!Files.exists(parentDir)) {
-      Files.createDirectories(parentDir);
-    }
-    Files.write(path, GSON.toJson(fileData).getBytes(StandardCharsets.UTF_8));
-  }
-
   private static String retrieveReportString(Path path) throws IOException {
     String content = Files.readString(path);
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -78,7 +68,10 @@ public class MainTest {
 
   private static String retrieveResource(String name) throws IOException {
     try (InputStream in = MainTest.class.getResourceAsStream(name)) {
-      return new String(in.readAllBytes(), StandardCharsets.UTF_8);
+      String content = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+      // On Windows systems, resource files will be checked out by Git with Windows line separators.
+      // However, all our tests assume Unix line separators.  So we fix up the content here.
+      return content.replace(System.lineSeparator(), "\n");
     }
   }
 

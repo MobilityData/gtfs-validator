@@ -273,7 +273,7 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
               url = "https://github.com/google/transitfeed"))
   static class BlockTripsWithOverlappingStopTimesNotice extends ValidationNotice {
 
-    // The row number from `trips.txt` of the first faulty trip.
+    /** The row number from `trips.txt` of the first faulty trip. */
     private final int csvRowNumberA;
 
     // The id of first faulty trip.

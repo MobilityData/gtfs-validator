@@ -18,13 +18,6 @@ plugins {
     id 'java'
 }
 
-sourceCompatibility = JavaVersion.VERSION_11
-compileJava.options.encoding = "UTF-8"
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     annotationProcessor project(':processor')
     compileOnly project(':processor')
@@ -39,14 +32,4 @@ dependencies {
     testImplementation 'junit:junit:4.13'
     testImplementation 'com.google.truth:truth:1.0.1'
     testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'
-}
-
-test {
-    // Always run tests, even when nothing changed.
-    dependsOn 'cleanTest'
-
-    // Show test results.
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
 }
