@@ -43,7 +43,6 @@ public class ValidatorLoaderTest {
 
   @Test
   public void createValidatorWithContext_injectsContext() throws ReflectiveOperationException {
-    //    GtfsTestTableContainer table = new GtfsTestTableContainer(TableStatus.EMPTY_FILE);
     GtfsTestEntityValidator validator =
         ValidatorLoader.createValidatorWithContext(
             GtfsTestEntityValidator.class, VALIDATION_CONTEXT);
