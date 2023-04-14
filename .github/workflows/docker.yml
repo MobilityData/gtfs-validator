@@ -41,7 +41,6 @@ jobs:
 
   build_push:
     needs: test
-    if: ${{ false }} # TODO remove this after testing the ci
     name: Build and push Docker image
     runs-on: ubuntu-latest
     steps:
