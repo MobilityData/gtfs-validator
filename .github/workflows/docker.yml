@@ -5,6 +5,8 @@ on:
     branches: [ master ]
   release:
     types: [ prereleased, released ]
+  pull_request: # TODO remove after testing the ci
+    branches: [ master ]
 
 jobs:
   validate_gradle_wrapper:
