@@ -31,22 +31,13 @@ jobs:
       - name: Run Java tests
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: testReport
-      - name: Persist **Passing** Java tests merged report
-        uses: actions/upload-artifact@v3
-        with:
-          name: Test report - Java
-          path: build/reports/allTests/
-      - name: Persist **Failing** Java tests unmerged reports
+          arguments: testAggregateTestReport
+      - name: Persist aggregated test reports on failure
         if: ${{ failure() }}
         uses: actions/upload-artifact@v3
         with:
           name: Test report - Java
-          path: |
-            cli/build/reports/tests/
-            core/build/reports/tests/
-            main/build/reports/tests/
-            processor/build/reports/tests/
+          path: build/reports/tests/unit-test/aggregated-results/
 
   build_push:
     needs: test

@@ -1,6 +1,8 @@
 package org.mobilitydata.gtfsvalidator.outputcomparator.model.report;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,6 +27,10 @@ public class ChangedNotice {
     this.affectedSources.add(affectedSource);
     this.affectedSourcesCount = this.affectedSources.size();
     return this;
+  }
+
+  public void sortAffectedSources() {
+    Collections.sort(affectedSources, Comparator.comparing(AffectedSource::sourceId));
   }
 
   @Override
