@@ -29,13 +29,7 @@ shadowJar {
     archiveClassifier = 'web'
 }
 
-sourceCompatibility = JavaVersion.VERSION_11
 mainClassName = 'org.mobilitydata.gtfsvalidator.web.service.Main'
-compileJava.options.encoding = "UTF-8"
-
-repositories {
-	mavenCentral()
-}
 
 ext {
 	set('springCloudGcpVersion', "3.4.0")

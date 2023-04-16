@@ -15,8 +15,11 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
 import com.google.common.base.Strings;
 import com.univocity.parsers.common.TextParsingException;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 
 /**
  * Parsing of a CSV file failed.
@@ -25,6 +28,7 @@ import com.univocity.parsers.common.TextParsingException;
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
+@GtfsValidationNotice(severity = ERROR)
 public class CsvParsingFailedNotice extends ValidationNotice {
 
   // The name of the faulty file.
@@ -52,7 +56,7 @@ public class CsvParsingFailedNotice extends ValidationNotice {
    * @param exception the exception thrown
    */
   public CsvParsingFailedNotice(String filename, TextParsingException exception) {
-    super(SeverityLevel.ERROR);
+    super(ERROR);
     this.filename = filename;
     this.charIndex = exception.getCharIndex();
     this.columnIndex = exception.getColumnIndex();
