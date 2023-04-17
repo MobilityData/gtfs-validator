@@ -1,6 +1,15 @@
 package org.mobilitydata.gtfsvalidator.table;
 
+import static com.google.common.truth.Truth.assertThat;
+import static org.mobilitydata.gtfsvalidator.TestUtils.toInputStream;
+import static org.mobilitydata.gtfsvalidator.TestUtils.validationNoticeTypes;
+import static org.mockito.Mockito.*;
+
 import com.google.common.collect.ImmutableList;
+import java.io.InputStream;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,16 +28,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.mockito.quality.Strictness;
-
-import java.io.InputStream;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.List;
-
-import static com.google.common.truth.Truth.assertThat;
-import static org.mobilitydata.gtfsvalidator.TestUtils.toInputStream;
-import static org.mobilitydata.gtfsvalidator.TestUtils.validationNoticeTypes;
-import static org.mockito.Mockito.*;
 
 public class AnyTableLoaderTest {
 
