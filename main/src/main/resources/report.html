@@ -102,6 +102,29 @@
 <body>
 <h1>GTFS Schedule Validation Report</h1>
 
+<h2>Overview:</h2>
+
+<h3>Found Files:</h3>
+  <ol>
+    <li th:each="file: ${metadata.foundFiles}" th:text="${file}"></li>
+  </ol>
+
+<h3>Entity Counts:</h3>
+
+<table>
+    <thead>
+    <tr>
+        <th>Entity</th><th>Count</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="count: ${metadata.counts}">
+        <td th:text="${count.key}"></td>
+        <td th:text="${count.value}"></td>
+    </tr>
+</table>
+
+
 <p class="version-update" th:if="${summary.newVersionOfValidatorAvailable}">A new version of the <a href="https://github.com/MobilityData/gtfs-validator/releases">Canonical GTFS Schedule validator</a> is available!  Please update to get the latest/best validation results.</p>
 
 <h2><span th:text="${summary.noticeCount}">X</span> notices reported

@@ -38,11 +38,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
 import org.mobilitydata.gtfsvalidator.util.VersionInfo;
 import org.mobilitydata.gtfsvalidator.util.VersionResolver;
-import org.mobilitydata.gtfsvalidator.validator.ClassGraphDiscovery;
-import org.mobilitydata.gtfsvalidator.validator.DefaultValidatorProvider;
-import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
-import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
-import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
+import org.mobilitydata.gtfsvalidator.validator.*;
 
 /** The main entry point for running the validator against a GTFS input. */
 public class ValidationRunner {
@@ -105,7 +101,7 @@ public class ValidationRunner {
       noticeContainer.addSystemError(new URISyntaxError(e));
     }
     if (gtfsInput == null) {
-      exportReport(noticeContainer, config, versionInfo);
+      exportReport(null, noticeContainer, config, versionInfo);
       if (!noticeContainer.getSystemErrors().isEmpty()) {
         return Status.SYSTEM_ERRORS;
       } else {
@@ -121,14 +117,17 @@ public class ValidationRunner {
       feedContainer =
           loadAndValidate(
               validatorLoader, feedLoader, noticeContainer, gtfsInput, validationContext);
+      // TODO: collect metadata from feedContainer and include in report.
+
     } catch (InterruptedException e) {
       logger.atSevere().withCause(e).log("Validation was interrupted");
       return Status.EXCEPTION;
     }
+    FeedMetadata feedMetadata = FeedMetadata.from(feedContainer);
     closeGtfsInput(gtfsInput, noticeContainer);
 
     // Output
-    exportReport(noticeContainer, config, versionInfo);
+    exportReport(feedMetadata, noticeContainer, config, versionInfo);
     printSummary(startNanos, feedContainer);
     return Status.SUCCESS;
   }
@@ -151,7 +150,7 @@ public class ValidationRunner {
       logger.atSevere().log(b.toString());
     }
     logger.atInfo().log("Validation took %.3f seconds%n", (endNanos - startNanos) / 1e9);
-    logger.atInfo().log(feedContainer.tableTotals());
+    logger.atInfo().log(feedContainer.tableTotalsText());
   }
 
   /**
@@ -209,7 +208,10 @@ public class ValidationRunner {
 
   /** Generates and exports reports for both validation notices and system errors reports. */
   public static void exportReport(
-      NoticeContainer noticeContainer, ValidationRunnerConfig config, VersionInfo versionInfo) {
+      FeedMetadata feedMetadata,
+      NoticeContainer noticeContainer,
+      ValidationRunnerConfig config,
+      VersionInfo versionInfo) {
     if (!Files.exists(config.outputDirectory())) {
       try {
         Files.createDirectories(config.outputDirectory());
@@ -225,6 +227,7 @@ public class ValidationRunner {
           config.outputDirectory().resolve(config.validationReportFileName()),
           gson.toJson(noticeContainer.exportValidationNotices()).getBytes(StandardCharsets.UTF_8));
       generator.generateReport(
+          feedMetadata,
           noticeContainer,
           config,
           versionInfo,

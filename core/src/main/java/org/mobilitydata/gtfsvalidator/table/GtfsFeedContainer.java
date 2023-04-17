@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
+import org.mobilitydata.gtfsvalidator.validator.TableMetadata;
 
 /**
  * Container for a whole parsed GTFS feed with all its tables.
@@ -78,7 +79,7 @@ public class GtfsFeedContainer {
     return true;
   }
 
-  public String tableTotals() {
+  public String tableTotalsText() {
     List<String> totalList = new ArrayList<>();
     for (GtfsTableContainer<?> table : tables.values()) {
       totalList.add(
@@ -90,5 +91,13 @@ public class GtfsFeedContainer {
     }
     Collections.sort(totalList);
     return String.join("\n", totalList);
+  }
+
+  public List<TableMetadata> tableMetadata() {
+    List<TableMetadata> totalList = new ArrayList<>();
+    for (GtfsTableContainer<?> table : tables.values()) {
+      totalList.add(TableMetadata.from(table));
+    }
+    return totalList;
   }
 }
