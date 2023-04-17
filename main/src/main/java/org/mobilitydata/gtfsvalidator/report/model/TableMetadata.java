@@ -1,4 +1,4 @@
-package org.mobilitydata.gtfsvalidator.validator;
+package org.mobilitydata.gtfsvalidator.report.model;
 
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 

@@ -34,6 +34,7 @@ import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
 import org.mobilitydata.gtfsvalidator.report.HtmlReportGenerator;
+import org.mobilitydata.gtfsvalidator.report.model.FeedMetadata;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
 import org.mobilitydata.gtfsvalidator.util.VersionInfo;

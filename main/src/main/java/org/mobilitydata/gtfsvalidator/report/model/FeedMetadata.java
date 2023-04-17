@@ -1,7 +1,6 @@
-package org.mobilitydata.gtfsvalidator.validator;
+package org.mobilitydata.gtfsvalidator.report.model;
 
 import java.util.*;
-
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 
@@ -11,7 +10,8 @@ public class FeedMetadata {
   public static FeedMetadata from(GtfsFeedContainer feedContainer) {
     var feedMetadata = new FeedMetadata();
     TreeMap<String, TableMetadata> map = new TreeMap<>();
-    for (var metadata : feedContainer.tableMetadata()) {
+    for (var table : feedContainer.getTables()) {
+      var metadata = TableMetadata.from(table);
       map.put(metadata.getFilename(), metadata);
     }
     feedMetadata.setTableMetaData(map);

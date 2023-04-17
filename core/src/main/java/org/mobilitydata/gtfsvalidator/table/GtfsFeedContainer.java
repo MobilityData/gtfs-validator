@@ -17,14 +17,8 @@
 package org.mobilitydata.gtfsvalidator.table;
 
 import com.google.common.base.Ascii;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
-import org.mobilitydata.gtfsvalidator.validator.TableMetadata;
 
 /**
  * Container for a whole parsed GTFS feed with all its tables.
@@ -79,6 +73,10 @@ public class GtfsFeedContainer {
     return true;
   }
 
+  public Collection<GtfsTableContainer<?>> getTables() {
+    return tables.values();
+  }
+
   public String tableTotalsText() {
     List<String> totalList = new ArrayList<>();
     for (GtfsTableContainer<?> table : tables.values()) {
@@ -91,13 +89,5 @@ public class GtfsFeedContainer {
     }
     Collections.sort(totalList);
     return String.join("\n", totalList);
-  }
-
-  public List<TableMetadata> tableMetadata() {
-    List<TableMetadata> totalList = new ArrayList<>();
-    for (GtfsTableContainer<?> table : tables.values()) {
-      totalList.add(TableMetadata.from(table));
-    }
-    return totalList;
   }
 }
