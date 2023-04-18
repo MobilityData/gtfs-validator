@@ -1,7 +1,6 @@
 package org.mobilitydata.gtfsvalidator.report.model;
 
 import java.util.*;
-
 import org.mobilitydata.gtfsvalidator.table.*;
 
 public class FeedMetadata {
@@ -16,8 +15,11 @@ public class FeedMetadata {
       map.put(metadata.getFilename(), metadata);
     }
     feedMetadata.setTableMetaData(map);
-    if(feedContainer.getTableForFilename(GtfsTrip.FILENAME).isPresent()){
-      feedMetadata.setBlockCount(feedMetadata.countBlocks((GtfsTableContainer<GtfsTrip>) feedContainer.getTableForFilename(GtfsTrip.FILENAME).get()));
+    if (feedContainer.getTableForFilename(GtfsTrip.FILENAME).isPresent()) {
+      feedMetadata.setBlockCount(
+          feedMetadata.countBlocks(
+              (GtfsTableContainer<GtfsTrip>)
+                  feedContainer.getTableForFilename(GtfsTrip.FILENAME).get()));
     }
     return feedMetadata;
   }
@@ -52,15 +54,12 @@ public class FeedMetadata {
     counts.put("Shapes", tableMetaData.get(GtfsShape.FILENAME).getEntityCount());
     counts.put("Blocks", blockCount);
 
-
-
     return counts;
   }
 
   public void setTableMetaData(Map<String, TableMetadata> tableMetaData) {
     this.tableMetaData = tableMetaData;
   }
-
 
   public void setBlockCount(int blockCount) {
     this.blockCount = blockCount;
