@@ -7,6 +7,12 @@ public class FeedMetadata {
   private Map<String, TableMetadata> tableMetaData;
   private int blockCount = 0;
 
+  private Map<String, String> feedInfo = new LinkedHashMap<>();
+
+
+  public Map<String, String> getFeedInfo() {
+    return feedInfo;
+  }
   public static FeedMetadata from(GtfsFeedContainer feedContainer) {
     var feedMetadata = new FeedMetadata();
     TreeMap<String, TableMetadata> map = new TreeMap<>();
@@ -16,15 +22,33 @@ public class FeedMetadata {
     }
     feedMetadata.setTableMetaData(map);
     if (feedContainer.getTableForFilename(GtfsTrip.FILENAME).isPresent()) {
-      feedMetadata.setBlockCount(
-          feedMetadata.countBlocks(
-              (GtfsTableContainer<GtfsTrip>)
-                  feedContainer.getTableForFilename(GtfsTrip.FILENAME).get()));
+      feedMetadata.loadBlockCount(
+          (GtfsTableContainer<GtfsTrip>)
+              feedContainer.getTableForFilename(GtfsTrip.FILENAME).get());
+    }
+    if (feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).isPresent()) {
+      feedMetadata.loadFeedInfo(
+          (GtfsTableContainer<GtfsFeedInfo>)
+              feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).get());
     }
     return feedMetadata;
   }
 
-  private int countBlocks(GtfsTableContainer<GtfsTrip> tripFile) {
+  private void loadFeedInfo(GtfsTableContainer<GtfsFeedInfo> feedTable) {
+    var info = feedTable.getEntities().get(0);
+
+    feedInfo.put("Publisher Name", info.feedPublisherName());
+    feedInfo.put("Publisher URL", info.feedPublisherUrl());
+    feedInfo.put("Feed Language", info.feedLang().getDisplayLanguage());
+    if (feedTable.hasColumn(GtfsFeedInfo.FEED_START_DATE_FIELD_NAME)) {
+      feedInfo.put("Feed Start Date", info.feedStartDate().toYYYYMMDD());
+    }
+    if (feedTable.hasColumn(GtfsFeedInfo.FEED_END_DATE_FIELD_NAME)) {
+      feedInfo.put("Feed End Date", info.feedEndDate().toYYYYMMDD());
+    }
+  }
+
+  private void loadBlockCount(GtfsTableContainer<GtfsTrip> tripFile) {
     // iterate through entities and count unique block_ids
     Set<String> blockIds = new HashSet<>();
     for (GtfsTrip trip : tripFile.getEntities()) {
@@ -32,7 +56,7 @@ public class FeedMetadata {
         blockIds.add(trip.blockId());
       }
     }
-    return blockIds.size();
+    blockCount = blockIds.size();
   }
 
   public ArrayList<String> foundFiles() {

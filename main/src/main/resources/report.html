@@ -104,6 +104,15 @@
 
 <h2>Overview:</h2>
 
+<h3>Feed Info:</h3>
+<table>
+    <tbody>
+    <tr th:each="info: ${metadata.feedInfo}">
+        <th th:text="${info.key}"></th>
+        <td th:text="${info.value}"></td>
+    </tr>
+</table>
+
 <h3>Found Files:</h3>
   <ol>
     <li th:each="file: ${metadata.foundFiles}" th:text="${file}"></li>
