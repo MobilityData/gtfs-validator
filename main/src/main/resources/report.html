@@ -133,6 +133,26 @@
     </tr>
 </table>
 
+<h3>Agencies:</h3>
+
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Url</th>
+        <th>Phone</th>
+        <th>Email</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="agency: ${metadata.agencies}">
+        <td><b th:text="${agency.name}"></b></td>
+        <td><a th:href="${agency.url}" th:text="${agency.url}"></a></td>
+        <td th:text="${agency.phone}"></td>
+        <td th:text="${agency.email}"></td>
+    </tr>
+</table>
+
 
 <p class="version-update" th:if="${summary.newVersionOfValidatorAvailable}">A new version of the <a href="https://github.com/MobilityData/gtfs-validator/releases">Canonical GTFS Schedule validator</a> is available!  Please update to get the latest/best validation results.</p>
 

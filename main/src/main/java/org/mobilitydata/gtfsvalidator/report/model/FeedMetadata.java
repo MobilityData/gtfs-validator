@@ -7,12 +7,11 @@ public class FeedMetadata {
   private Map<String, TableMetadata> tableMetaData;
   private int blockCount = 0;
 
-  private Map<String, String> feedInfo = new LinkedHashMap<>();
+ public Map<String, String> feedInfo = new LinkedHashMap<>();
+
+public ArrayList<AgencyMetadata> agencies = new ArrayList<>();
 
 
-  public Map<String, String> getFeedInfo() {
-    return feedInfo;
-  }
   public static FeedMetadata from(GtfsFeedContainer feedContainer) {
     var feedMetadata = new FeedMetadata();
     TreeMap<String, TableMetadata> map = new TreeMap<>();
@@ -31,7 +30,16 @@ public class FeedMetadata {
           (GtfsTableContainer<GtfsFeedInfo>)
               feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).get());
     }
+    feedMetadata.loadAgencyData(
+        (GtfsTableContainer<GtfsAgency>)
+            feedContainer.getTableForFilename(GtfsAgency.FILENAME).get());
     return feedMetadata;
+  }
+
+  private void loadAgencyData(GtfsTableContainer<GtfsAgency> agencyTable) {
+    for (GtfsAgency agency : agencyTable.getEntities()) {
+      agencies.add(AgencyMetadata.from(agency));
+    }
   }
 
   private void loadFeedInfo(GtfsTableContainer<GtfsFeedInfo> feedTable) {
@@ -41,10 +49,10 @@ public class FeedMetadata {
     feedInfo.put("Publisher URL", info.feedPublisherUrl());
     feedInfo.put("Feed Language", info.feedLang().getDisplayLanguage());
     if (feedTable.hasColumn(GtfsFeedInfo.FEED_START_DATE_FIELD_NAME)) {
-      feedInfo.put("Feed Start Date", info.feedStartDate().toYYYYMMDD());
+      feedInfo.put("Feed Start Date", info.feedStartDate().getLocalDate().toString());
     }
     if (feedTable.hasColumn(GtfsFeedInfo.FEED_END_DATE_FIELD_NAME)) {
-      feedInfo.put("Feed End Date", info.feedEndDate().toYYYYMMDD());
+      feedInfo.put("Feed End Date", info.feedEndDate().getLocalDate().toString());
     }
   }
 
