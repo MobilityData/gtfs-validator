@@ -7,10 +7,9 @@ public class FeedMetadata {
   private Map<String, TableMetadata> tableMetaData;
   private int blockCount = 0;
 
- public Map<String, String> feedInfo = new LinkedHashMap<>();
+  public Map<String, String> feedInfo = new LinkedHashMap<>();
 
-public ArrayList<AgencyMetadata> agencies = new ArrayList<>();
-
+  public ArrayList<AgencyMetadata> agencies = new ArrayList<>();
 
   public static FeedMetadata from(GtfsFeedContainer feedContainer) {
     var feedMetadata = new FeedMetadata();
