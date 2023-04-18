@@ -1,8 +1,8 @@
 package org.mobilitydata.gtfsvalidator.report.model;
 
 import java.util.*;
-import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
+
+import org.mobilitydata.gtfsvalidator.table.*;
 
 public class FeedMetadata {
   private Map<String, TableMetadata> tableMetaData;
@@ -30,11 +30,11 @@ public class FeedMetadata {
 
   public Map<String, Integer> counts() {
     var counts = new HashMap<String, Integer>();
-    for (var table : tableMetaData.values()) {
-      if (table.getTableStatus() == GtfsTableContainer.TableStatus.PARSABLE_HEADERS_AND_ROWS) {
-        counts.put(table.getFilename(), table.getEntityCount());
-      }
-    }
+    counts.put("Agencies", tableMetaData.get(GtfsAgency.FILENAME).getEntityCount());
+    counts.put("Routes", tableMetaData.get(GtfsRoute.FILENAME).getEntityCount());
+    counts.put("Trips", tableMetaData.get(GtfsTrip.FILENAME).getEntityCount());
+    counts.put("Stops", tableMetaData.get(GtfsStop.FILENAME).getEntityCount());
+    counts.put("Shapes", tableMetaData.get(GtfsShape.FILENAME).getEntityCount());
     return counts;
   }
 
