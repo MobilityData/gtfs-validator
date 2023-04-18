@@ -153,6 +153,22 @@
     </tr>
 </table>
 
+<h3>Spec Features:</h3>
+
+<table>
+    <thead>
+    <tr>
+        <th>Feature</th>
+        <th>Present?</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="feature: ${metadata.specFeatures}">
+        <td><b th:text="${feature.key}"></b></td>
+        <td th:text="${feature.value}"></td>
+    </tr>
+</table>
+
 
 <p class="version-update" th:if="${summary.newVersionOfValidatorAvailable}">A new version of the <a href="https://github.com/MobilityData/gtfs-validator/releases">Canonical GTFS Schedule validator</a> is available!  Please update to get the latest/best validation results.</p>
 

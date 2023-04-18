@@ -9,6 +9,8 @@ public class FeedMetadata {
 
   public Map<String, String> feedInfo = new LinkedHashMap<>();
 
+  public Map<String, String> specFeatures = new LinkedHashMap<>();
+
   public ArrayList<AgencyMetadata> agencies = new ArrayList<>();
 
   public static FeedMetadata from(GtfsFeedContainer feedContainer) {
@@ -32,7 +34,23 @@ public class FeedMetadata {
     feedMetadata.loadAgencyData(
         (GtfsTableContainer<GtfsAgency>)
             feedContainer.getTableForFilename(GtfsAgency.FILENAME).get());
+    feedMetadata.loadSpecFeatures(feedContainer);
     return feedMetadata;
+  }
+
+  private void loadSpecFeatures(GtfsFeedContainer feedContainer) {
+    var pathwaysTable = feedContainer.getTableForFilename(GtfsPathway.FILENAME);
+    boolean pathways = pathwaysTable.isPresent() && pathwaysTable.get().entityCount() > 0;
+    specFeatures.put("Pathways", pathways ? "Yes" : "No");
+    var fareAttributesTable = feedContainer.getTableForFilename(GtfsFareAttribute.FILENAME);
+    boolean faresV1 =
+        fareAttributesTable.isPresent() && fareAttributesTable.get().entityCount() > 0;
+    specFeatures.put("Fares V1", faresV1 ? "Yes" : "No");
+    var fareProductsTable = feedContainer.getTableForFilename(GtfsFareProduct.FILENAME);
+    boolean faresV2 = fareProductsTable.isPresent() && fareProductsTable.get().entityCount() > 0;
+    specFeatures.put("Fares V2", faresV2 ? "Yes" : "No");
+    var stopTimesTable = feedContainer.getTableForFilename(GtfsStopTime.FILENAME);
+    // TODO: figure out Flex V1 & V2 checks
   }
 
   private void loadAgencyData(GtfsTableContainer<GtfsAgency> agencyTable) {
