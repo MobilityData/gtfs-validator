@@ -54,6 +54,7 @@ public class HtmlReportGenerator {
     String date = formatter.format(now);
 
     Context context = new Context();
+    // TODO: handle null metadata
     context.setVariable("metadata", feedMetadata);
     context.setVariable("summary", summary);
     context.setVariable("config", config);
