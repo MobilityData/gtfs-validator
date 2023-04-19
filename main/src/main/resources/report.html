@@ -108,7 +108,7 @@
 <table>
     <tbody>
     <tr th:each="info: ${metadata.feedInfo}">
-        <th th:text="${info.key}"></th>
+        <td><b th:text="${info.key}"></b></td>
         <td th:text="${info.value}"></td>
     </tr>
 </table>
@@ -128,7 +128,7 @@
     </thead>
     <tbody>
     <tr th:each="count: ${metadata.counts}">
-        <td th:text="${count.key}"></td>
+        <td><b th:text="${count.key}"></b></td>
         <td th:text="${count.value}"></td>
     </tr>
 </table>
