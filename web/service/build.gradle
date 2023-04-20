@@ -59,7 +59,8 @@ dependencies {
 	implementation 'com.google.cloud:spring-cloud-gcp-starter-storage'
   implementation 'org.projectlombok:lombok:1.18.22'
   implementation 'org.projectlombok:lombok:1.18.22'
-  implementation 'io.sentry:sentry-spring:1.7.30'
+  implementation 'io.sentry:sentry-spring-boot-starter:6.18.1'
+  implementation 'io.sentry:sentry-logback:6.18.1'
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
