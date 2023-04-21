@@ -2,7 +2,8 @@
   import ButtonContent from './ButtonContent.svelte';
 
   /** @type {string} */
-  export let className = '';
+  let className = '';
+  export { className as class };
 
   /** @type {boolean|null} */
   export let disabled = null;

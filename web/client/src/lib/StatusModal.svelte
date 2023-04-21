@@ -44,7 +44,7 @@
   {#if status == 'ready'}
     <form method="dialog" class="flex justify-end -mt-7 -mr-7">
       <span in:scale|local>
-        <Button type="submit" className="px-4" variant="link">
+        <Button type="submit" class="px-4" variant="link">
           <i class="fa-solid fa-times" />
           <div class="sr-only">Dismiss</div>
         </Button>
