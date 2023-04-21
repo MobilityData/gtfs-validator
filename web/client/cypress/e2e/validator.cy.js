@@ -1,6 +1,8 @@
 /// <reference types="cypress" />
 
 context('GTFS Validator - Core Workflow', () => {
+  let numReportCalls = 0;
+
   beforeEach(() => {
     cy.visit('https://gtfs-validator.mobilitydata.org/')
   });
@@ -30,11 +32,31 @@ context('GTFS Validator - Core Workflow', () => {
       .as('createJob');
 
 
-    cy.intercept('HEAD', 'https://gtfs-validator-results.mobilitydata.org/_waiting_/report.html')
+    cy.intercept(
+      'HEAD',
+      'https://gtfs-validator-results.mobilitydata.org/*/report.html',
+      (req) => {
+        if (numReportCalls > 1) {
+          // return 200 code
+          req.reply({
+            statusCode: 200,
+            headers: {
+              "x-number-of-calls": numReportCalls.toString()
+            }
+          });
+        } else {
+          // return 404 code
+          req.reply({
+            statusCode: 404,
+            headers: {
+              "x-number-of-calls": numReportCalls.toString()
+            }
+          });
+        }
+        numReportCalls++;
+      }
+    )
       .as('awaitJob');
-
-    cy.intercept('HEAD', `https://gtfs-validator-results.mobilitydata.org/${jobId}/report.html`)
-      .as('resultJob');
 
 
     // Enter URL to .zip file
@@ -50,23 +72,16 @@ context('GTFS Validator - Core Workflow', () => {
     cy.get('button[type=submit]')
       .click();
 
-    // Wait for submission
-
+    // Wait for create job 200 response
     cy.wait('@createJob').its('response.statusCode').should('eq', 200);
 
-    // cy.wait('@awaitJob').its('response.statusCode').should('eq', 404);
+    // Wait for 404
+    cy.wait('@awaitJob').its('response.statusCode').should('eq', 404);
 
-    // cy.wait('@resultJob', { timeout: 20000 }).its('response.statusCode').should('eq', 200);
+    // Wait for 404
+    cy.wait('@awaitJob').its('response.statusCode').should('eq', 404);
 
-    // cy.get('dialog')
-    //   .should('be.visible')
-    //   .within(() => {
-    //     cy.get('a.btn:contains("Open Report")').should('be.visible');
-    //   });
-
-
-
-
-
+    // Wait for 200
+    cy.wait('@awaitJob').its('response.statusCode').should('eq', 200);
   });
 });
