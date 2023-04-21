@@ -28,7 +28,7 @@ context('GTFS Validator - Core Workflow', () => {
             }
           });
         }
-    )
+      )
       .as('createJob');
 
 
@@ -54,8 +54,7 @@ context('GTFS Validator - Core Workflow', () => {
           });
         }
         numReportCalls++;
-      }
-    )
+      })
       .as('awaitJob');
 
 
@@ -83,5 +82,12 @@ context('GTFS Validator - Core Workflow', () => {
 
     // Wait for 200
     cy.wait('@awaitJob').its('response.statusCode').should('eq', 200);
+
+    // Confirm "report ready"
+    cy.get('dialog')
+      .should('be.visible')
+      .within(() => {
+        cy.get('a.btn:contains("Open Report")').should('be.visible');
+      });
   });
 });
