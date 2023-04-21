@@ -1,4 +1,5 @@
 <script>
+  import { dev } from '$app/environment';
   import Button from '$lib/Button.svelte';
   import '../app.css';
 
@@ -7,6 +8,24 @@
     window.scrollTo(window.scrollX, window.scrollY - 60);
   };
 </script>
+
+<svelte:head>
+  {#if !dev}
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-NXV73Q9HBS"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'G-NXV73Q9HBS');
+    </script>
+  {/if}
+</svelte:head>
 
 <header class="my-4 md:mb-8 lg:mb-16">
   <div class="container">
