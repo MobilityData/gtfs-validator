@@ -3,9 +3,9 @@
   import '../app.css';
 
   // Fixes issue where clicking rule hash link scrolls too far
-  const handleHashchange = function() {
+  const handleHashchange = function () {
     window.scrollTo(window.scrollX, window.scrollY - 60);
-  }
+  };
 </script>
 
 <header class="my-4 md:mb-8 lg:mb-16">
@@ -22,8 +22,13 @@
 
 <footer>
   <div class="container my-4">
-    <div class="container my-4 flex flex-col items-center content-center space-y-4">
-      <Button href="https://share.mobilitydata.org/validator-feedback" target="_blank">Help Us by Sharing Feedback</Button>
+    <div
+      class="container my-4 flex flex-col items-center content-center space-y-4"
+    >
+      <Button
+        href="https://share.mobilitydata.org/validator-feedback"
+        target="_blank">Help Us by Sharing Feedback</Button
+      >
       <p class="text-mobi-purple-safe">
         <span class="inline-block">
           Made with
