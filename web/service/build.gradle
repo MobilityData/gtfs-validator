@@ -63,3 +63,15 @@ dependencyManagement {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+task webSecrets {
+}
+
+task webTest {
+}
+
+task webBuild {
+}
+
+task webDeploy {
+}
