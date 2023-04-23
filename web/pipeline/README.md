@@ -41,3 +41,12 @@ a project's `gradle.properties` file. Where build inputs must be switched
 according to a target environment, the convention is to set the environment
 variable `WEB_BUILD_ENV` and lookup properties under the key
 `env.{WEB_BUILD_ENV}.{propertyName}`.
+
+## Setup GitHub Actions
+
+GitHub actions will require a GCP service account with the following privileges
+in order to operate:
+
+- Access gcloud secret `svcCredentialSrc`
+- Submit build to cloud build
+- Deploy to cloud run service `WEB_DEPLOY_SVC_CLOUDRUN`
