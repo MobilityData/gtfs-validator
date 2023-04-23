@@ -6,10 +6,12 @@ plugins {
   id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
-def WEB_BUILD_ENV         = System.getenv("WEB_BUILD_ENV") ?: 'dev'
-def svcCredentialProvider = hasProperty("env.${WEB_BUILD_ENV}.svcCredentialProvider") ? property("env.${WEB_BUILD_ENV}.svcCredentialProvider") : null
-def svcCredentialSrc      = hasProperty("env.${WEB_BUILD_ENV}.svcCredentialSrc")      ? property("env.${WEB_BUILD_ENV}.svcCredentialSrc")      : null
-def svcCredentialDst      = hasProperty("env.${WEB_BUILD_ENV}.svcCredentialDst")      ? property("env.${WEB_BUILD_ENV}.svcCredentialDst")      : 'src/main/resources/web-based-gtfs-validator-a088ec5f045d.json'
+def WEB_BUILD_ENV           = System.getenv("WEB_BUILD_ENV") ?: 'dev'
+def WEB_DEPLOY_SVC_IMAGE    = System.getenv("WEB_DEPLOY_SVC_IMAGE")
+def WEB_DEPLOY_SVC_CLOUDRUN = System.getenv("WEB_DEPLOY_SVC_CLOUDRUN")
+def svcCredentialProvider   = hasProperty("env.${WEB_BUILD_ENV}.svcCredentialProvider") ? property("env.${WEB_BUILD_ENV}.svcCredentialProvider") : null
+def svcCredentialSrc        = hasProperty("env.${WEB_BUILD_ENV}.svcCredentialSrc")      ? property("env.${WEB_BUILD_ENV}.svcCredentialSrc")      : null
+def svcCredentialDst        = hasProperty("env.${WEB_BUILD_ENV}.svcCredentialDst")      ? property("env.${WEB_BUILD_ENV}.svcCredentialDst")      : 'src/main/resources/web-based-gtfs-validator-a088ec5f045d.json'
 
 jar {
     // Add the manifest within the JAR, using gtfs-validator as the title
@@ -113,5 +115,22 @@ task webBuild {
   finalizedBy build
 }
 
-task webDeploy {
+task webDeploy (type: Exec) {
+
+  def required_missing = []
+  if (WEB_DEPLOY_SVC_IMAGE == null)    required_missing.add('WEB_DEPLOY_SVC_IMAGE')
+  if (WEB_DEPLOY_SVC_CLOUDRUN == null) required_missing.add('WEB_DEPLOY_SVC_CLOUDRUN')
+  if (required_missing.size > 0) {
+    commandLine 'echo', 'SKIP: webDeploy: missing required environment variables:', required_missing.join(', ')
+    return
+  }
+
+  dependsOn webBuild
+  commandLine (
+    'gcloud',
+    'builds',
+    'submit',
+    "--substitutions=_WEB_DEPLOY_SVC_IMAGE=${WEB_DEPLOY_SVC_IMAGE},_WEB_DEPLOY_SVC_CLOUDRUN=${WEB_DEPLOY_SVC_CLOUDRUN}"
+  )
+
 }
