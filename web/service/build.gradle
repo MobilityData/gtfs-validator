@@ -6,6 +6,11 @@ plugins {
   id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
+def WEB_BUILD_ENV         = System.getenv("WEB_BUILD_ENV") ?: 'dev'
+def svcCredentialProvider = hasProperty("env.${WEB_BUILD_ENV}.svcCredentialProvider") ? property("env.${WEB_BUILD_ENV}.svcCredentialProvider") : null
+def svcCredentialSrc      = hasProperty("env.${WEB_BUILD_ENV}.svcCredentialSrc")      ? property("env.${WEB_BUILD_ENV}.svcCredentialSrc")      : null
+def svcCredentialDst      = hasProperty("env.${WEB_BUILD_ENV}.svcCredentialDst")      ? property("env.${WEB_BUILD_ENV}.svcCredentialDst")      : 'src/main/resources/web-based-gtfs-validator-a088ec5f045d.json'
+
 jar {
     // Add the manifest within the JAR, using gtfs-validator as the title
     manifest {
@@ -64,7 +69,38 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-task webSecrets {
+task webSecrets (type: Exec) {
+
+  def required_missing = []
+  if (svcCredentialProvider == null) required_missing.add("env.${WEB_BUILD_ENV}.svcCredentialProvider")
+  if (svcCredentialSrc == null) required_missing.add("env.${WEB_BUILD_ENV}.svcCredentialSrc")
+  if (required_missing.size > 0) {
+    commandLine 'echo', 'SKIP: webSecrets: missing required project properties:', required_missing.join(', ')
+    return
+  }
+
+  inputs.property('svcCredentialProvider', svcCredentialProvider)
+  inputs.property('svcCredentialSrc', svcCredentialSrc)
+  outputs.file(file(svcCredentialDst))
+
+  switch (svcCredentialProvider) {
+    case "gcloud-secrets":
+      commandLine (
+        'gcloud',
+        '--verbosity=info',
+        'secrets',
+        'versions',
+        'access',
+        'latest',
+        "--secret=${svcCredentialSrc}",
+        "--out-file=${svcCredentialDst}"
+      )
+      break
+    default:
+      commandLine 'echo', "SKIP: webSecrets: unsupported svcCredentialProvider: ${svcCredentialProvider}"
+      break
+  }
+
 }
 
 task webTest {
