@@ -104,9 +104,13 @@ task webSecrets (type: Exec) {
 }
 
 task webTest {
+  dependsOn   webSecrets
+  finalizedBy test
 }
 
 task webBuild {
+  dependsOn   webSecrets
+  finalizedBy build
 }
 
 task webDeploy {
