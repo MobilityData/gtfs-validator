@@ -13,8 +13,7 @@ phase tasks) and from gradle properties (for build phase tasks).
 To perform a full build & deploy to production:
 
 ```bash
-set -o allexport
-source web/pipeline/prd.env
+ENV_FILE=web/pipeline/prd.env source web/pipeline/env-file.sh
 ./gradlew webCI webCD
 ```
 
