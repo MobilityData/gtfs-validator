@@ -130,7 +130,7 @@ task webDeploy (type: Exec) {
     'gcloud',
     'builds',
     'submit',
-    "--substitutions=_WEB_DEPLOY_SVC_IMAGE=${WEB_DEPLOY_SVC_IMAGE},_WEB_DEPLOY_SVC_CLOUDRUN=${WEB_DEPLOY_SVC_CLOUDRUN}"
+    "--substitutions=_WEB_DEPLOY_SVC_IMAGE=${WEB_DEPLOY_SVC_IMAGE},_WEB_DEPLOY_SVC_CLOUDRUN=${WEB_DEPLOY_SVC_CLOUDRUN},_CURRENT_VERSION=${project.version}"
   )
 
 }

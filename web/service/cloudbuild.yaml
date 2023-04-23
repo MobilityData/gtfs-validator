@@ -1,7 +1,12 @@
 steps:
   # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', '${_WEB_DEPLOY_SVC_IMAGE}', '.']
+    args: [
+      'build',
+      '--build-arg', 'CURRENT_VERSION=${_CURRENT_VERSION}',
+      '-t', '${_WEB_DEPLOY_SVC_IMAGE}',
+      '.'
+    ]
   # Push the container image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', '${_WEB_DEPLOY_SVC_IMAGE}']
@@ -14,3 +19,4 @@ images:
 substitutions:
   _WEB_DEPLOY_SVC_IMAGE: gcr.io/web-based-gtfs-validator/gtfs-validator-web
   _WEB_DEPLOY_SVC_CLOUDRUN: gtfs-validator-web
+  _CURRENT_VERSION: 4.0.1-SNAPSHOT
