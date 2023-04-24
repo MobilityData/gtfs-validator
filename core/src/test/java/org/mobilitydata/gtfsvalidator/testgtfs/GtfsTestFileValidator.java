@@ -20,20 +20,28 @@ import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
+import org.mobilitydata.gtfsvalidator.validator.FileValidator;
 
-public class StopEntityValidator extends SingleEntityValidator<GtfsStop> {
+public class GtfsTestFileValidator extends FileValidator {
+
+  private final GtfsTestTableContainer table;
   private final CountryCode countryCode;
   private final CurrentDateTime currentDateTime;
 
   @Inject
-  public StopEntityValidator(CountryCode countryCode, CurrentDateTime currentDateTime) {
+  public GtfsTestFileValidator(
+      GtfsTestTableContainer table, CountryCode countryCode, CurrentDateTime currentDateTime) {
+    this.table = table;
     this.countryCode = countryCode;
     this.currentDateTime = currentDateTime;
   }
 
   @Override
-  public void validate(GtfsStop entity, NoticeContainer noticeContainer) {}
+  public void validate(NoticeContainer noticeContainer) {}
+
+  public GtfsTestTableContainer getStopTable() {
+    return table;
+  }
 
   public CountryCode getCountryCode() {
     return countryCode;
