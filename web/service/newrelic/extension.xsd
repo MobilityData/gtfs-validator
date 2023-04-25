@@ -1,0 +1,248 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<xs:schema targetNamespace="https://newrelic.com/docs/java/xsd/v1.0" elementFormDefault="qualified"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:urn="https://newrelic.com/docs/java/xsd/v1.0" 
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0">
+    
+    <xs:annotation>
+      <xs:appinfo>
+        <jaxb:schemaBindings>
+          <jaxb:package name="com.newrelic.agent.extension.beans"/>
+        </jaxb:schemaBindings>
+      </xs:appinfo>
+    </xs:annotation>
+
+    <xs:element name="extension">
+        <xs:annotation>
+            <xs:documentation>
+                An extension allows users to extend the built-in
+                monitoring capabilities of the New Relic Java agent
+                to monitor new frameworks without modifying the framework source code.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="instrumentation" minOccurs="0" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="pointcut" minOccurs="0" maxOccurs="unbounded">
+                                <xs:annotation>
+                                    <xs:documentation>
+                                        Pointcuts are used to inject timing measures into 
+                                        Java methods to add additional detail to transaction breakdowns.
+                                    </xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="nameTransaction" minOccurs="0">
+                                            <xs:annotation>
+                                                <xs:documentation>
+                                                    If this element is present, the agent will name the transaction using the method(s) instrumented by this pointcut. 
+                                                </xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType/>
+                                        </xs:element>
+                                        <xs:choice>
+                                            <xs:element name="methodAnnotation" type="xs:string">
+                                                <xs:annotation>
+                                                    <xs:documentation>
+                                                        The full name of an annotation class including the package name.  All methods that are marked with this annotation will be matched. 
+                                                    </xs:documentation>
+                                                </xs:annotation>
+                                            </xs:element>
+                                            <xs:sequence>
+                                                <xs:choice minOccurs="1" maxOccurs="1">
+                                                    <xs:element name="className">
+                                                        <xs:annotation>
+                                                            <xs:documentation>
+                                                                The case sensitive name of the class to match including the package name.
+                                                            </xs:documentation>
+                                                        </xs:annotation>
+                                                        <xs:complexType>
+                                                            <xs:simpleContent>
+                                                                <xs:extension base="xs:string">
+                                                                    <xs:attribute default="false" name="includeSubclasses" type="xs:boolean">
+                                                                        <xs:annotation>
+                                                                            <xs:documentation>
+                                                                                If false, this works as an exact class matcher.  If true, the
+                                                                                methods on the class with the matching name will be matched along 
+                                                                                with the matching methods on any child class of the class.
+                                                                            </xs:documentation>
+                                                                        </xs:annotation>
+                                                                    </xs:attribute>
+                                                                </xs:extension>
+                                                            </xs:simpleContent>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="interfaceName" type="xs:string">
+                                                        <xs:annotation>
+                                                            <xs:documentation>
+                                                                The case sensitive name of an interface whose implementation classes will be matched.
+                                                            </xs:documentation>
+                                                        </xs:annotation>
+                                                    </xs:element>
+                                                </xs:choice>
+                                                <xs:choice minOccurs="1">
+                                                    <xs:element maxOccurs="unbounded" name="method">
+                                                    <xs:complexType>
+                                                        <xs:choice minOccurs="1">
+                                                            <xs:element name="returnType" type="xs:string" minOccurs="0">
+                                                                <xs:annotation>
+                                                                    <xs:documentation>
+                                                                        The case sensitive name of a class indicating a return type to match.  All methods that return this class type will be matched.
+                                                                    </xs:documentation>
+                                                                </xs:annotation>
+                                                            </xs:element>
+                                                            <xs:sequence>
+                                                                <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1"
+                                                                    nillable="false">
+                                                                    <xs:annotation>
+                                                                        <xs:documentation>
+                                                                            The exact case sensitive name of the method to
+                                                                            match.
+                                                                        </xs:documentation>
+                                                                    </xs:annotation>
+                                                                </xs:element>
+                                                                <xs:element name="parameters" minOccurs="0" maxOccurs="1">
+                                                                    <xs:annotation>
+                                                                        <xs:documentation>
+                                                                            The parameter types of the method specified in order.  
+                                                                            If the parameters element is left off all methods 
+                                                                            matching the name will be matched including private
+                                                                            and protected declarations.
+                                                                        </xs:documentation>
+                                                                    </xs:annotation>
+                                                                    <xs:complexType>
+                                                                        <xs:sequence>
+                                                                            <xs:element name="type" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+                                                                                <xs:annotation>
+                                                                                    <xs:documentation>
+                                                                                        A parameter type.  This is either a case sensitive class name
+                                                                                        including the package name or a primitive 
+                                                                                        type (boolean, char, int, float, double, etc).
+                                                                                    </xs:documentation>
+                                                                                </xs:annotation>
+                                                                            </xs:element>
+                                                                        </xs:sequence>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                        </xs:choice>
+                                                        
+                                                    </xs:complexType>
+                                                </xs:element>
+                                                    <xs:element name="traceLambda">
+                                                        <xs:complexType>
+                                                            <xs:simpleContent>
+                                                                <xs:extension base="xs:boolean">
+                                                                    <xs:attribute type="xs:string" name="pattern"/>
+                                                                    <xs:attribute type="xs:boolean" name="includeNonstatic"/>
+                                                                </xs:extension>
+                                                            </xs:simpleContent>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element maxOccurs="unbounded" name="traceByReturnType"/>
+                                                </xs:choice>
+                                            </xs:sequence>
+                                        </xs:choice>
+                                    </xs:sequence>
+                        
+                                    <xs:attribute name="transactionStartPoint" type="xs:boolean" default="false">
+                                        <xs:annotation>
+                                            <xs:documentation>
+                                                If a transaction is not already in progress when
+                                                this point cut is reached, then a transaction will be started.
+                                                If a transaction is already in progress, then that
+                                                transaction will continue. A new transaction will not
+                                                be created.
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:attribute>
+                                    <xs:attribute name="metricNameFormat" type="xs:string">
+                                        <xs:annotation>
+                                            <xs:documentation>
+                                                The name of the metric to be generated for this pointcut. If not
+                                                present, the default is the concatenation of the metric prefix, the class name and the method name.
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:attribute>
+                                    <xs:attribute name="excludeFromTransactionTrace" type="xs:boolean" default="false">
+                                        <xs:annotation>
+                                            <xs:documentation>
+                                                When true the transaction trace will not be provided if this point cut initiates the transaction.
+                                                If this point cut is reached in the middle of a transaction, then the transaction
+                                                trace will still be present, but this method will be excluded from the call graph.
+                                                When used in conjuction with leaf the agent will create a tracer with lower overhead.
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:attribute>
+                                    <xs:attribute name="leaf" type="xs:boolean" default="false">
+                                        <xs:annotation>
+                                            <xs:documentation>
+                                                When true this tracer will not have any child tracers.  This is useful when all time should be attributed to the tracer
+                                                even if other trace points are encountered during its execution. For example, database tracers often act as leaf tracers
+                                                so that all time is attributed to database activity even if instrumented external calls are made.
+                                                When used in conjuction with excludeFromTransactionTrace the agent will create a tracer with lower overhead.
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:attribute>
+                                    <xs:attribute name="ignoreTransaction" type="xs:boolean" default="false">
+                                        <xs:annotation>
+                                            <xs:documentation>
+                                                When true the entire transaction will be ignored regardless of how much of the transaction has completed.
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:attribute>
+                                    <xs:attribute name="transactionType" default="background">
+                                        <xs:annotation>
+                                            <xs:documentation>
+                                                Sets the type of the transaction. Possible values are "web" and
+                                                "background", with "background" as the default.
+
+                                                When set to "web" the transaction will be reported as a web transaction.
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:enumeration value="background"/>
+                                                <xs:enumeration value="web"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:attribute>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="metricPrefix" type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    The prefix used in metric names (when metricNameFormat is not specified).  Defaults to 'Custom'.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        The descriptive name of this extension.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="enabled" type="xs:boolean" default="true">
+                <xs:annotation>
+                    <xs:documentation>
+                        Enables and disables this extension.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="version" type="xs:double" default="1.0">
+                <xs:annotation>
+                    <xs:documentation>
+                        The extension version.  If the agent finds multiple extensions with the same name it will load the one with the highest version number.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
