@@ -113,11 +113,11 @@
       flex-wrap: wrap;
     }
 
-.summary div.summary_info {
+.summary td.summary_info {
   flex: 1 1 calc(25% - 4px);
   margin: 0 5px 20px 0;
 }
-.summary div.summary_list {
+.summary td.summary_list {
   flex: 1 1 calc(12% - 4px);
   margin: 0 5px 20px 0;
 }
@@ -137,7 +137,34 @@
     .summary li {
       padding-left: 0px;
     }
+.summary table {
+  table-layout: fixed;
+  width: 100%;
+}
 
+.summary td, th {
+  vertical-align: top;
+  word-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+.summary ul, ol, dl {
+ margin-top: 0px;
+ margin-block-start: 0px;
+}
+
+/* Set width of first two cells to 50% */
+.summary table > th:nth-child(-n + 2),
+td:nth-child(-n + 2) {
+  width: 50%;
+}
+
+/* Balance remaining cells */
+th:nth-child(n + 3),
+td:nth-child(n + 3) {
+  width: calc(50% / 3);
+}
 .spec-feature {
 background-color: #d4d4d4;
 padding: 2px 5px;
@@ -168,56 +195,60 @@ padding: 2px 5px;
 <h2>Summary</h2>
 
 <div class="summary">
-    <div class="summary_info">
-        <h4>Agencies included</h4>
-        <hr />
-        <ul>
-            <li th:each="agency: ${metadata.agencies}">
-                <span th:text="${agency.name}"></span>
+    <table>
+        <thead>
+        <tr>
+            <th>Agencies included</th>
+            <th>Feed Info</th>
+            <th>Files included</th>
+            <th>Counts</th>
+            <th>GTFS Components included</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="summary_info">
                 <ul>
-                    <li><b>website: </b><a th:href="${agency.url}" th:text="${agency.url}"></a></li>
-                    <li><b>phone number: </b><span th:text="${agency.phone}" /></li>
-                    <li><b>email: </b><span th:text="${agency.email.isEmpty()} ? 'Not provided' : ${agency.email}" /></li>
+                    <li th:each="agency: ${metadata.agencies}">
+                        <span th:text="${agency.name}"></span>
+                        <ul>
+                            <li><b>website: </b><a th:href="${agency.url}" th:text="${agency.url}"></a></li>
+                            <li><b>phone number: </b><span th:text="${agency.phone}" /></li>
+                            <li><b>email: </b><span th:text="${agency.email.isEmpty()} ? 'Not provided' : ${agency.email}" /></li>
+                        </ul>
+                    </li>
                 </ul>
-            </li>
-        </ul>
-    </div>
-    <div class="summary_info">
-        <h4>Feed Info</h4>
-        <hr />
-        <dl>
-            <div th:each="info: ${metadata.feedInfo}">
-                <dd th:text="${info.key} + ':'" />
-                <dt>
+            </td>
+            <td class="summary_info">
+                <dl>
+                    <div th:each="info: ${metadata.feedInfo}">
+                        <dd th:text="${info.key} + ':'" />
+                        <dt>
                     <span th:if="${info.key.contains('URL')}">
                         <a th:href="${info.value}" target="_blank" th:text="${info.value}" />
                     </span>
-                    <span th:unless="${info.key.contains('URL')}" th:text="${info.value}" />
-                </dt>
+                            <span th:unless="${info.key.contains('URL')}" th:text="${info.value}" />
+                        </dt>
+                    </div>
+                </dl>
+            </td>
+            <td class="summary_list">
+                <ol>
+                    <li th:each="file: ${metadata.foundFiles}" th:text="${file}"></li>
+                </ol>
+            </td>
+            <td class="summary_list">
+                <ul>
+                    <li th:each="count: ${metadata.counts}"><span th:text="${count.key} + ': ' + ${count.value}" /></li>
+                </ul>
+            <td class="summary_list">
+            <div>
+                <span class="spec-feature" th:each="feature: ${metadata.specFeatures}" th:if="${feature.value == 'Yes'}" th:text="${feature.key}" />
             </div>
-        </dl>
-    </div>
-    <div class="summary_list">
-        <h4>Files included</h4>
-        <hr />
-        <ol>
-            <li th:each="file: ${metadata.foundFiles}" th:text="${file}"></li>
-        </ol>
-    </div>
-    <div class="summary_list">
-        <h4>Counts</h4>
-        <hr />
-        <ul>
-            <li th:each="count: ${metadata.counts}"><span th:text="${count.key} + ': ' + ${count.value}" /></li>
-        </ul>
-    </div>
-    <div class="summary_list">
-        <h4>GTFS Components included</h4>
-        <hr />
-        <div>
-            <span class="spec-feature" th:each="feature: ${metadata.specFeatures}" th:if="${feature.value == 'Yes'}" th:text="${feature.key}" />
-</div>
-    </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
 <h2>Specification Compliance report</h2>
