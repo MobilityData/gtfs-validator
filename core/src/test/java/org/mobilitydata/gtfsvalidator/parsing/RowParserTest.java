@@ -17,12 +17,11 @@
 package org.mobilitydata.gtfsvalidator.parsing;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mobilitydata.gtfsvalidator.TestUtils.toInputStream;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.function.Function;
@@ -31,20 +30,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
-import org.mobilitydata.gtfsvalidator.notice.EmptyRowNotice;
-import org.mobilitydata.gtfsvalidator.notice.InvalidEmailNotice;
-import org.mobilitydata.gtfsvalidator.notice.InvalidFloatNotice;
-import org.mobilitydata.gtfsvalidator.notice.InvalidPhoneNumberNotice;
-import org.mobilitydata.gtfsvalidator.notice.InvalidRowLengthNotice;
-import org.mobilitydata.gtfsvalidator.notice.InvalidUrlNotice;
-import org.mobilitydata.gtfsvalidator.notice.LeadingOrTrailingWhitespacesNotice;
-import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFieldNotice;
-import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
-import org.mobilitydata.gtfsvalidator.notice.NewLineInValueNotice;
-import org.mobilitydata.gtfsvalidator.notice.NonAsciiOrNonPrintableCharNotice;
-import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.NumberOutOfRangeNotice;
-import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.notice.*;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
@@ -56,10 +42,6 @@ public class RowParserTest {
 
   private static CountryCode TEST_COUNTRY_CODE = CountryCode.forStringOrUnknown("AU");
   private static String TEST_FILENAME = "stops.txt";
-
-  private static InputStream toInputStream(String s) {
-    return new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
-  }
 
   private static GtfsFieldValidator FIELD_VALIDATOR = new DefaultFieldValidator(TEST_COUNTRY_CODE);
 

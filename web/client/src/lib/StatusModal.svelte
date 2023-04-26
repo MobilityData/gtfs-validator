@@ -29,10 +29,6 @@
     processing: 'Validating GTFS data\u2026',
     ready: 'Your report is\u00a0ready!',
   };
-
-  /** @type {string[]} */
-  // TODO some kind of shared enum?
-  const statusSteps = ['authorizing', 'uploading', 'processing', 'ready'];
 </script>
 
 <dialog

@@ -4,12 +4,6 @@ plugins {
     id 'application'
 }
 
-sourceCompatibility = JavaVersion.VERSION_11
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     implementation project(':model')
     implementation project(':core')
@@ -44,5 +38,3 @@ shadowJar {
 }
 
 mainClassName = 'org.mobilitydata.gtfsvalidator.outputcomparator.cli.Main'
-compileJava.options.encoding = "UTF-8"
-

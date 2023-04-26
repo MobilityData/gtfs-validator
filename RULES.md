@@ -101,6 +101,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`duplicate_route_name`](#duplicate_route_name)                                               | Two distinct routes have either the same `route_short_name`, the same `route_long_name`, or the same combination of `route_short_name` and `route_long_name`. |
 | [`empty_row`](#empty_row)                                                                     | A row in the input file has only spaces.                                                                                                                      |
 | [`equal_shape_distance_same_coordinates`](#equal_shape_distance_same_coordinates)             | Two consecutive points have equal `shape_dist_traveled` and the same lat/lon coordinates in `shapes.txt`.                                                     |
+| [`expired_calendar`](#expired_calendar)                                         | Dataset should not contain date ranges for services that have already expired.
 | [`fast_travel_between_consecutive_stops`](#fast_travel_between_consecutive_stops)             | A transit vehicle moves too fast between two consecutive stops.                                                                                               |
 | [`fast_travel_between_far_stops`](#fast_travel_between_far_stops)                             | A transit vehicle moves too fast between two far stops.                                                                                                       |
 | [`feed_expiration_date7_days`](#feed_expiration_date7_days)                                   | Dataset should be valid for at least the next 7 days.                                                                                                         |
@@ -134,6 +135,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`stop_without_stop_time`](#stop_without_stop_time)                                           | A stop in `stops.txt` is not referenced by any `stop_times.stop_id`.                                                                                          |
 | [`transfer_with_suspicious_mid_trip_in_seat`](#transfer_with_suspicious_mid_trip_in_seat)     | A trip id field from GTFS file `transfers.txt` with an in-seat transfer type references a stop that is not in the expected position in the trip's stop-times. |
 | [`translation_unknown_table_name`](#translation_unknown_table_name)                           | A translation references an unknown or missing GTFS table.                                                                                                    |
+| [`trip_coverage_not_active_for_next7_days`](#trip_coverage_not_active_for_next7_days)   | Trips data should be valid for at least the next seven days.                                                                                            |
 | [`unexpected_enum_value`](#unexpected_enum_value)                                             | An enum has an unexpected value.                                                                                                                              |
 | [`unusable_trip`](#unusable_trip)                                                             | Trips must have more than one stop to be usable.                                                                                                              |
 | [`unused_shape`](#unused_shape)                                                               | Shape is not used in GTFS file `trips.txt`.                                                                                                                   |
@@ -1827,6 +1829,29 @@ When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` m
 
 </details>
 
+<a name="ExpiredCalendarNotice"/>
+
+### expired_calendar
+
+ Dataset should not contain date ranges for services that have already expired. This warning takes into account the `calendar_dates.txt` file as well as the `calendar.txt` file.
+
+#### References
+* [Dataset Publishing & General Practices](https://gtfs.org/schedule/best-practices/#dataset-publishing-general-practices)
+
+<details>
+
+#### Notice fields description
+| Field name   	| Description                          	| Type    	|
+|--------------	|--------------------------------------	|---------	|
+| `csvRowNumber`| The row number of the faulty record. 	| Long 	    |
+| `serviceId`| The `service_id` for the faulty record. 	| Long 	    |
+
+#### Affected files
+[`calendar.txt`](https://gtfs.org/schedule/reference/#calendartxt)
+[`calendar_dates.txt`](https://gtfs.org/schedule/reference/#calendar_datestxt)
+
+</details>
+
 <a name="FastTravelBetweenConsecutiveStopsNotice"/>
 
 ### fast_travel_between_consecutive_stops
@@ -2164,11 +2189,12 @@ This field contains customer-facing text and should use Mixed Case (upper and lo
 
 
 #### Notice fields description
-| Field name     	| Description                           	| Type   	|
-|----------------	|---------------------------------------	|--------	|
-| `csvRowNumber` 	| The row number of the faulty record.  	| Long   	|
-| `filename`    	| Name of the faulty file.              	| String 	|
-| `fieldName`    	| Name of the faulty field.              	| String 	|
+| Field name     	 | Description                           	| Type   	|
+|------------------|---------------------------------------	|--------	|
+| `csvRowNumber`   | The row number of the faulty record.  	| Long   	|
+| `filename`       | Name of the faulty file.              	| String 	|
+| `fieldName`      | Name of the faulty field.              	| String 	|
+| `fieldValue`     | Name of the faulty field.              	| String 	|
 
 #### Affected files & fields
 * [`agency.agency_name`](https://gtfs.org/schedule/reference/#agencytxt)
@@ -2679,6 +2705,32 @@ A translation references an unknown or missing GTFS table.
 * [`translations.txt`](http://gtfs.org/reference/static#translationstxt)
 
 </details>
+
+<a name="TripCoverageNotActiveForNext7DaysNotice"/>
+
+### trip_coverage_not_active_for_next7_days
+
+Trips data should be valid for at least the next seven days. This notice is triggered if the date range where a significant number of trips are running ends in less than 7 days.
+
+#### References
+
+- [Dataset Publishing & General Practices](https://gtfs.org/schedule/best-practices/#dataset-publishing-general-practices)
+<details>
+
+#### Notice fields description
+
+| Field name               | Description                                 | Type |
+| ------------------------ | ------------------------------------------- | ---- |
+| `currentDate`            | The date that the dataset was validated.    | Date |
+| `serviceWindowStartDate` | The start date of the trips in the dataset. | Date |
+| `serviceWindowEndDate`   | The end date of the trips in the dataset.   | Date |
+
+#### Affected files
+
+- [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
+
+</details>
+
 <a name="UnexpectedEnumValueNotice"/>
 
 ### unexpected_enum_value
