@@ -6,11 +6,13 @@ A [General Transit Feed Specification (GTFS) Schedule](https://gtfs.mobilitydata
 
 ---
 <p align="center">
-<a href="#running-the-app">Using the Desktop app</a>
+<a href="#using-the-web-based-validator">Web version</a>
 ●
-<a href="#run-the-app-via-command-line">Using the command line</a>
+<a href="#using-the-desktop-app">Desktop version</a>
 ●
-<a href="#run-the-app-using-docker">Using Docker</a>
+<a href="#using-the-command-line">Command line</a>
+●
+<a href="#using-docker">Docker</a>
 </p>
 
 
@@ -37,9 +39,9 @@ This is a cross-platform application written in Java that performs the following
 </video>
 
 # Using the web-based validator
-
-The GTFS Web Validator can be accessed from [https://gtfs-validator.mobilitydata.org/](https://gtfs-validator.mobilitydata.org/).
-The GTFS Web Validator accepts locally saved datasets and datasets available via the Web. Validation reports are available 30 days after creation and can be shared with their unique link.
+The GTFS Web Validator can be accessed at [https://gtfs-validator.mobilitydata.org/](https://gtfs-validator.mobilitydata.org/).
+The GTFS Web Validator accepts locally saved datasets in a zip format and datasets available via the Web in an URL format. 
+Validation reports have a unique URL link that can be shared and are available 30 days after creation.
 
 The GTFS Web Validator contains two main components: the GTFS Web Validator Client and the GTFS Validator Web Service. More information about these components can be found in [GTFS Web Validator Client](./web/client/README.md) and [GTFS Validator Web Service](./web/service/README.md)
 
