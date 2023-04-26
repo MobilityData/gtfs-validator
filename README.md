@@ -35,7 +35,7 @@ This is a cross-platform application written in Java that performs the following
 3. Performs complete validation against the [GTFS Schedule standard](https://gtfs.org/schedule/reference/#h.hc443y62gb8c).
 4. Provides an easy-to-use validation report in HTML format that can be opened in the browser and shared with other parties. See an [example of a validation report](https://htmlpreview.github.io/?https://github.com/MobilityData/gtfs-validator/blob/master/docs/report.html). The report is also available in JSON format that can be used for parsing and running additional analyses.
 
-<video src="https://user-images.githubusercontent.com/1192523/234676530-659918ef-7e37-4dd3-a7da-9762b69f1328.mp4" controls="controls" style="max-width: 730px;">
+<video src="https://user-images.githubusercontent.com/63653518/234697111-59cbc5de-5bf2-4c49-8474-fd41ac51a745.mp4" controls="controls" style="max-width: 730px;">
 </video>
 
 # Using the web-based validator
