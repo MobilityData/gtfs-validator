@@ -76,7 +76,7 @@ public class MixedCaseValidatorGenerator {
           .addStatement("$T value = entity.$L()", String.class, mixedCaseField.name())
           .beginControlFlow("if (!(value.matches(\".*[a-z].*\") && value.matches(\".*[A-Z].*\")))")
           .addStatement(
-              "noticeContainer.addValidationNotice(new $T(\"$L\", \"$L\", entity.csvRowNumber()))",
+              "noticeContainer.addValidationNotice(new $T(\"$L\", \"$L\", value, entity.csvRowNumber()))",
               MixedCaseRecommendedFieldNotice.class,
               fileDescriptor.filename(),
               FieldNameConverter.gtfsColumnName(mixedCaseField.name()))
