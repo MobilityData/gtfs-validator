@@ -129,6 +129,9 @@ where:
 
 `... c:/myDirectory:/work ...`
 
+### Visualize the results
+In the output directory, the reports will be created as described [here](#visualize-the-results).
+
 # GTFS Web Validator
 
 The GTFS Web Validator can be accessed from [https://gtfs-validator.mobilitydata.org/](https://gtfs-validator.mobilitydata.org/).
@@ -136,8 +139,8 @@ The GTFS Web Validator accepts locally saved datasets and datasets available via
 
 The GTFS Web Validator contains two main components the GTFS Web Validator Client and the GTFS Validator Web Service. More information about these components can be found in [GTFS Web Validator Client](./web/client/README.md) and [GTFS Validator Web Service](./web/service/README.md)
 
-### Visualize the results
-In the output directory, the reports will be created as described [here](#visualize-the-results).
+<video src="https://user-images.githubusercontent.com/1192523/234625823-6ea6beb3-3449-4bb9-8195-274c75c6da4a.mov" controls="controls" style="max-width: 730px;">
+</video>
 
 # Validation rules
 * See the list of all the noticed emitted by this validator in [RULES.md](/RULES.md).
