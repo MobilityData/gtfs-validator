@@ -43,7 +43,7 @@ The GTFS Web Validator can be accessed at [https://gtfs-validator.mobilitydata.o
 The GTFS Web Validator accepts locally saved datasets in a zip format and datasets available via the Web in an URL format. 
 Validation reports have a unique URL link that can be shared and are available 30 days after creation.
 
-The GTFS Web Validator contains two main components: the GTFS Web Validator Client and the GTFS Validator Web Service. More information about these components can be found in [GTFS Web Validator Client](./web/client/README.md) and [GTFS Validator Web Service](./web/service/README.md)
+The GTFS Web Validator contains two main components: the GTFS Web Validator Client and the GTFS Validator Web Service. More information about these components can be found in [GTFS Web Validator Client](./web/client/README.md) and [GTFS Validator Web Service](./web/service/README.md).
 
 # Using the Desktop app
 ### Setup
