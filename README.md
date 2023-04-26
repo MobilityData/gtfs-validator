@@ -129,7 +129,12 @@ where:
 
 `... c:/myDirectory:/work ...`
 
-The validator can then be executed via bash commands. See the [preceeding instructions for command line usage](#run-the-app-via-command-line).
+# GTFS Web Validator
+
+The GTFS Web Validator can be accessed from [https://gtfs-validator.mobilitydata.org/](https://gtfs-validator.mobilitydata.org/).
+The GTFS Web Validator accepts locally saved datasets and datasets available via the Web. Validation reports are available 30 days after creation and can be shared with their unique link.
+
+The GTFS Web Validator contains two main components the GTFS Web Validator Client and the GTFS Validator Web Service. More information about these components can be found in [GTFS Web Validator Client](./web/client/README.md) and [GTFS Validator Web Service](./web/service/README.md)
 
 ### Visualize the results
 In the output directory, the reports will be created as described [here](#visualize-the-results).
