@@ -129,6 +129,8 @@ where:
 
 `... c:/myDirectory:/work ...`
 
+The validator can then be executed via bash commands. See the [preceeding instructions for command line usage](#run-the-app-via-command-line).
+
 ### Visualize the results
 In the output directory, the reports will be created as described [here](#visualize-the-results).
 
