@@ -67,16 +67,30 @@ context('GTFS Validator - Core Workflow', () => {
       .click();
 
     // Wait for create job 200 response
-    cy.wait('@createJob').its('response.statusCode').should('eq', 200);
+    cy.wait('@createJob').should((xhr) => {
+      expect(xhr.response.statusCode).to.eq(200);
+    });
 
     // Wait for 404
-    cy.wait('@awaitJob').its('response.statusCode').should('eq', 404);
+    cy.wait('@awaitJob').should((xhr) => {
+      expect(xhr.response.statusCode).to.eq(404);
+      expect(xhr.request.url).to.contain('_waiting_');
+      expect(xhr.request.url).to.not.contain(jobId);
+    });
 
     // Wait for 404
-    cy.wait('@awaitJob').its('response.statusCode').should('eq', 404);
+    cy.wait('@awaitJob').should((xhr) => {
+      expect(xhr.response.statusCode).to.eq(404);
+      expect(xhr.request.url).to.contain(jobId);
+      expect(xhr.request.url).to.not.contain('_waiting_');
+    });
 
     // Wait for 200
-    cy.wait('@awaitJob').its('response.statusCode').should('eq', 200);
+    cy.wait('@awaitJob').should((xhr) => {
+      expect(xhr.response.statusCode).to.eq(200);
+      expect(xhr.request.url).to.contain(jobId);
+      expect(xhr.request.url).to.not.contain('_waiting_');
+    });
 
     // Confirm "report ready"
     cy.get('dialog')
