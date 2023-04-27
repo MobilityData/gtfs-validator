@@ -16,13 +16,9 @@ context('GTFS Validator - Core Workflow', () => {
         'POST',
         'https://gtfs-validator-web-mbzoxaljzq-ue.a.run.app/create-job',
         (req) => {
-          req.headers['x-custom-headers'] = 'added by cy.intercept';
           req.reply({
             statusCode: 200,
             statusMessage: "OK",
-            headers: {
-              "x-custom-header": 'mgunn',
-            },
             body: {
               jobId: jobId
             }
@@ -64,7 +60,6 @@ context('GTFS Validator - Core Workflow', () => {
 
     // Choose Region - US
     cy.get('select#region')
-      // .select('United States');
       .select(1);
 
     // Submit
