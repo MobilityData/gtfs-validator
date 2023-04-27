@@ -14,7 +14,7 @@ context('GTFS Validator - Core Workflow', () => {
     // Setup intercept aliases
     cy.intercept(
         'POST',
-        'https://gtfs-validator-web-mbzoxaljzq-ue.a.run.app/create-job',
+        'https://*/create-job',
         (req) => {
           req.reply({
             statusCode: 200,
