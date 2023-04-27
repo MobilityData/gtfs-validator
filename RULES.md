@@ -2189,11 +2189,12 @@ This field contains customer-facing text and should use Mixed Case (upper and lo
 
 
 #### Notice fields description
-| Field name     	| Description                           	| Type   	|
-|----------------	|---------------------------------------	|--------	|
-| `csvRowNumber` 	| The row number of the faulty record.  	| Long   	|
-| `filename`    	| Name of the faulty file.              	| String 	|
-| `fieldName`    	| Name of the faulty field.              	| String 	|
+| Field name     	 | Description                           	| Type   	|
+|------------------|---------------------------------------	|--------	|
+| `csvRowNumber`   | The row number of the faulty record.  	| Long   	|
+| `filename`       | Name of the faulty file.              	| String 	|
+| `fieldName`      | Name of the faulty field.              	| String 	|
+| `fieldValue`     | Name of the faulty field.              	| String 	|
 
 #### Affected files & fields
 * [`agency.agency_name`](https://gtfs.org/schedule/reference/#agencytxt)

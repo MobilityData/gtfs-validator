@@ -55,7 +55,6 @@ public class StorageHelper {
   public void saveJobMetadata(JobMetadata metadata) throws Exception {
     try {
       String jobId = metadata.getJobId();
-      String countryCode = metadata.getCountryCode();
       var jobInfoPath = getJobInfoPath(jobId);
       var jobBlobId = BlobId.of(JOB_INFO_BUCKET_NAME, jobInfoPath);
       var jobBlobInfo = BlobInfo.newBuilder(jobBlobId).setContentType("application/json").build();
