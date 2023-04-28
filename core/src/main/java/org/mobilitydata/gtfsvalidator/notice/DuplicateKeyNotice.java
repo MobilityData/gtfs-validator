@@ -15,6 +15,7 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.FILE_REQUIREMENTS;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import javax.annotation.Nullable;
@@ -29,7 +30,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  */
 @GtfsValidationNotice(
     severity = ERROR,
-    sections = @SectionRefs({"file-requirements"}),
+    sections = @SectionRefs(FILE_REQUIREMENTS),
     urls = {
       @UrlRef(
           label = "Original Python validator implementation",

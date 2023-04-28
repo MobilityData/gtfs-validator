@@ -51,7 +51,25 @@ public @interface GtfsValidationNotice {
   @Target(ElementType.TYPE)
   @interface SectionRefs {
     /** Each value represents a section id string (e.g. `field-types`) in the reference docs. */
-    String[] value() default {};
+    SectionRef[] value() default {};
+  }
+
+  enum SectionRef {
+    FILE_REQUIREMENTS("file-requirements"),
+    FILED_TYPES("field-types"),
+    FIELD_DEFINITIONS("field-definitions"),
+    TERM_DEFINITIONS("term-definitions");
+
+    // The HTML section id.
+    private final String id;
+
+    SectionRef(String id) {
+      this.id = id;
+    }
+
+    String id() {
+      return this.id;
+    }
   }
 
   /**

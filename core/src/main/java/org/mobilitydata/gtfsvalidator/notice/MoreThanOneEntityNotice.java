@@ -15,6 +15,7 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.FIELD_DEFINITIONS;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
@@ -25,7 +26,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
  *
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
-@GtfsValidationNotice(severity = WARNING, sections = @SectionRefs({"field-definitions"}))
+@GtfsValidationNotice(severity = WARNING, sections = @SectionRefs(FIELD_DEFINITIONS))
 public class MoreThanOneEntityNotice extends ValidationNotice {
 
   // Name of the faulty file.

@@ -15,6 +15,7 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.FILED_TYPES;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
@@ -32,7 +33,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  */
 @GtfsValidationNotice(
     severity = ERROR,
-    sections = @SectionRefs({"field-types"}),
+    sections = @SectionRefs(FILED_TYPES),
     urls = {
       @UrlRef(
           label = "Apache Commons EmailValidator",

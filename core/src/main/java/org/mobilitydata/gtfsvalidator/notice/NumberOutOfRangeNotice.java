@@ -15,6 +15,8 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.FILED_TYPES;
+import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.FILE_REQUIREMENTS;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
@@ -28,7 +30,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  */
 @GtfsValidationNotice(
     severity = ERROR,
-    sections = @SectionRefs({"file-requirements", "field-types"}),
+    sections = @SectionRefs({FILE_REQUIREMENTS, FILED_TYPES}),
     urls = {
       @UrlRef(
           label = "Original Python validator implementation",

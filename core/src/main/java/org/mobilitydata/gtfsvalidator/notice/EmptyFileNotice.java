@@ -15,6 +15,7 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.FILE_REQUIREMENTS;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
@@ -25,7 +26,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-@GtfsValidationNotice(severity = ERROR, sections = @SectionRefs({"file-requirements"}))
+@GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILE_REQUIREMENTS))
 public class EmptyFileNotice extends ValidationNotice {
 
   // The name of the faulty file
