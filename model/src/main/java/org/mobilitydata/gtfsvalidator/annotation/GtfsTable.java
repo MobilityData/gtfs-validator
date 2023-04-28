@@ -37,7 +37,7 @@ import java.lang.annotation.Target;
  * </pre>
  */
 @Target(ElementType.TYPE)
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface GtfsTable {
   String value();
 

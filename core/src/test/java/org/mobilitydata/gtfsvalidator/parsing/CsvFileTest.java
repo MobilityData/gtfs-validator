@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.parsing;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mobilitydata.gtfsvalidator.TestUtils.toInputStream;
 
 import com.google.common.primitives.Bytes;
 import java.io.ByteArrayInputStream;
@@ -31,10 +32,6 @@ import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class CsvFileTest {
-
-  private static InputStream toInputStream(String s) {
-    return new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
-  }
 
   @Test
   public void emptyFile() throws IOException {

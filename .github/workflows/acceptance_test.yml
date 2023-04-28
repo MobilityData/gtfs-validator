@@ -13,6 +13,7 @@ on:
       - 'test_pack_dock.yml'
       - 'triage.yml'
       - 'end_to_end.yml'
+      - 'web/**'
 concurrency:
   group: ${{ github.head_ref }}
   cancel-in-progress: true
@@ -129,7 +130,8 @@ jobs:
     needs: [ fetch-urls, pack-master, pack-snapshot ]
     # We use machines with more memory to run validation, as large feeds
     # can consume too much heap for default machine instances (see #1304).
-    runs-on: ubuntu-latest-4-cores
+    runs-on: gitrunners-ubuntu-2204-x64-4vcpu
+    ## ubuntu-latest-4-cores
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:

@@ -26,12 +26,15 @@ public class MixedCaseRecommendedFieldNotice extends ValidationNotice {
 
   private final String fieldName;
 
+  private final String fieldValue;
   private final int csvRowNumber;
 
-  public MixedCaseRecommendedFieldNotice(String filename, String fieldName, int csvRowNumber) {
+  public MixedCaseRecommendedFieldNotice(
+      String filename, String fieldName, String fieldValue, int csvRowNumber) {
     super(SeverityLevel.WARNING);
     this.filename = filename;
     this.fieldName = fieldName;
+    this.fieldValue = fieldValue;
     this.csvRowNumber = csvRowNumber;
   }
 }

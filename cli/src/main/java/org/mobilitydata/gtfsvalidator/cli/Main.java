@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import org.mobilitydata.gtfsvalidator.notice.NoticeSchemaGenerator;
+import org.mobilitydata.gtfsvalidator.notice.schema.NoticeSchemaGenerator;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunner;
 import org.mobilitydata.gtfsvalidator.util.VersionResolver;
 import org.mobilitydata.gtfsvalidator.validator.ClassGraphDiscovery;
@@ -85,7 +85,7 @@ public class Main {
       Files.write(
           Paths.get(args.getOutputBase(), NOTICE_SCHEMA_JSON),
           gson.toJson(
-                  NoticeSchemaGenerator.jsonSchemaForPackages(
+                  NoticeSchemaGenerator.generateSchemasForNoticesInPackages(
                       ClassGraphDiscovery.DEFAULT_NOTICE_PACKAGES))
               .getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {

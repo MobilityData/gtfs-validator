@@ -57,6 +57,7 @@ public class ChangedNoticesCollector {
   public List<ChangedNotice> getChangedNotices() {
     List<ChangedNotice> changed = new ArrayList<>(changedNoticesByCode.values());
     Collections.sort(changed, Comparator.comparing(ChangedNotice::noticeCode));
+    changed.stream().forEach(ChangedNotice::sortAffectedSources);
     return changed;
   }
 

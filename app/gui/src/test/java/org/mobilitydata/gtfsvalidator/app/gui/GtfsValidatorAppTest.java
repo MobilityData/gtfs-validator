@@ -4,10 +4,12 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
 import static org.mockito.Mockito.verify;
 
+import java.awt.GraphicsEnvironment;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import javax.swing.JButton;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,6 +35,10 @@ public class GtfsValidatorAppTest {
 
   @Before
   public void before() {
+    // This test uses Swing and AWT classes that will fail if we are in a headless environment,
+    // so we skip the test if that's the case.
+    Assume.assumeFalse(GraphicsEnvironment.isHeadless());
+
     this.app = new GtfsValidatorApp(runner, display);
     app.constructUI();
   }
