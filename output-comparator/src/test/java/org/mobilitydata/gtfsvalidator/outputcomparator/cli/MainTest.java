@@ -44,7 +44,6 @@ import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.PointNearPoleNotice;
 import org.mobilitydata.gtfsvalidator.outputcomparator.model.report.ChangedNotice;
-import uk.org.webcompere.systemstubs.SystemStubs; // catchSystemExit() for JDK 16 and newer.
 
 @RunWith(JUnit4.class)
 public class MainTest {
@@ -216,7 +215,7 @@ public class MainTest {
       resolve(SOURCE_INFO_FOLDER_NAME, "all", GTFS_LATEST_VERSIONS_JSON).toString(),
     };
 
-    int exitCode = SystemStubs.catchSystemExit(() -> Main.main(argv));
+    int exitCode = Main.run(argv);
 
     assertThat(exitCode).isNotEqualTo(0);
     assertThat(
@@ -284,7 +283,7 @@ public class MainTest {
       resolve(SOURCE_INFO_FOLDER_NAME, "all", GTFS_LATEST_VERSIONS_JSON).toString(),
     };
 
-    int exitCode = SystemStubs.catchSystemExit(() -> Main.main(argv));
+    int exitCode = Main.run(argv);
 
     assertThat(exitCode).isNotEqualTo(0);
     assertThat(
@@ -362,7 +361,7 @@ public class MainTest {
         noticeContainer.exportJson(noticeContainer.getValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-5", "latest.json"));
 
-    int exitCode = SystemStubs.catchSystemExit(() -> Main.main(argv));
+    int exitCode = Main.run(argv);
 
     assertThat(exitCode).isNotEqualTo(0);
     assertThat(
