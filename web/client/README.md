@@ -10,7 +10,13 @@ npm run dev
 # or start the server and open the app in a new browser tab
 npm run dev -- --open
 ```
-### Start the web service (from project root directory):
+### Use locally running web service (from project root directory):
+
+The project is configured to use the production instance of the web service (https://gtfs-validator-web-mbzoxaljzq-ue.a.run.app).
+
+In order to use a locally running version of the web service, update `apiRoot` in `web/client/src/routes/+page.svelte` to `http://localhost:8080`.
+
+To start the service, run the following in the root of the project.
 
 ```bash
 ./gradlew bootRun
