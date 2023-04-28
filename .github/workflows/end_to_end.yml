@@ -14,6 +14,7 @@ on:
       - 'test_pack_dock.yml'
       - 'triage.yml'
       - 'acceptance_test.yml'
+      - 'web/**'
   pull_request:
     branches: [ master ]
     paths-ignore:
@@ -27,6 +28,7 @@ on:
       - 'test_pack_dock.yml'
       - 'triage.yml'
       - 'acceptance_test.yml'
+      - 'web/**'
 jobs:
   validate_gradle_wrapper:
     runs-on: ubuntu-latest
