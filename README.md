@@ -6,11 +6,13 @@ A [General Transit Feed Specification (GTFS) Schedule](https://gtfs.mobilitydata
 
 ---
 <p align="center">
-<a href="#running-the-app">Using the Desktop app</a>
+<a href="#using-the-web-based-validator">Web version</a>
 ●
-<a href="#run-the-app-via-command-line">Using the command line</a>
+<a href="#using-the-desktop-app">Desktop version</a>
 ●
-<a href="#run-the-app-using-docker">Using Docker</a>
+<a href="#using-the-command-line">Command line</a>
+●
+<a href="#using-docker">Docker</a>
 </p>
 
 
@@ -33,10 +35,17 @@ This is a cross-platform application written in Java that performs the following
 3. Performs complete validation against the [GTFS Schedule standard](https://gtfs.org/schedule/reference/#h.hc443y62gb8c).
 4. Provides an easy-to-use validation report in HTML format that can be opened in the browser and shared with other parties. See an [example of a validation report](https://htmlpreview.github.io/?https://github.com/MobilityData/gtfs-validator/blob/master/docs/report.html). The report is also available in JSON format that can be used for parsing and running additional analyses.
 
-<video src="https://user-images.githubusercontent.com/63653518/191132078-5cd1e34c-bc99-4193-b4da-74ccdc2d35b6.mp4" controls="controls" style="max-width: 730px;">
+<video src="https://user-images.githubusercontent.com/63653518/234697111-59cbc5de-5bf2-4c49-8474-fd41ac51a745.mp4" controls="controls" style="max-width: 730px;">
 </video>
 
-# Running the app
+# Using the web-based validator
+The GTFS Web Validator can be accessed at [https://gtfs-validator.mobilitydata.org/](https://gtfs-validator.mobilitydata.org/).
+The GTFS Web Validator accepts locally saved datasets in a zip format and datasets available via the Web in an URL format. 
+Validation reports have a unique URL link that can be shared and are available 30 days after creation.
+
+The GTFS Web Validator contains two main components: the GTFS Web Validator Client and the GTFS Validator Web Service. More information about these components can be found in [GTFS Web Validator Client](./web/client/README.md) and [GTFS Validator Web Service](./web/service/README.md).
+
+# Using the Desktop app
 ### Setup
 1. Navigate to the [Releases page](https://github.com/MobilityData/gtfs-validator/releases) and download the latest `Gtfs Validator` installer for your operating system:
     * Windows => `.msi`
@@ -68,7 +77,7 @@ Before running validation, tap the `Advanced` button to configure other aspects 
 * Number of threads used to run the validator.
 * The country code used for phone number validation.
 
-# Run the app via command line
+# Using the command line
 ### Setup
 1. Install [Java 11 or higher](https://www.oracle.com/java/technologies/javase-downloads.html). To check which version of Java is installed on your computer, type the following command in the terminal: `java --version`.
 2. Navigate to the [Releases page](https://github.com/MobilityData/gtfs-validator/releases) and download the latest `Gtfs Validator` CLI jar (not OS-specific). It is located in the **Assets** section of the release, and it looks like `gtfs-validator-vX.X.X_cli.jar`
@@ -90,7 +99,7 @@ More detailed instructions with all the parameters that exists are available on 
 ### Visualize the results
 In the output directory, the reports will be created as described [here](#visualize-the-results).
 
-# Run the app using Docker
+# Using Docker
 ### Setup
 1. Download and install [Docker](https://docs.docker.com/get-started/)
 1. To obtain a validator Docker container image, you have two options:
