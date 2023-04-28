@@ -15,6 +15,11 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
+
 /**
  * ID value contains something different from printable ASCII characters.
  *
@@ -23,6 +28,13 @@ package org.mobilitydata.gtfsvalidator.notice;
  *
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
+@GtfsValidationNotice(
+    severity = WARNING,
+    urls = {
+      @UrlRef(
+          label = "Original Python validator implementation",
+          url = "https://github.com/google/transitfeed")
+    })
 public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
 
   // Name of the faulty file.

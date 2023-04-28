@@ -1,5 +1,10 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
+
 /**
  * A string field has a value that does not contain mixed case.
  *
@@ -7,7 +12,16 @@ package org.mobilitydata.gtfsvalidator.notice;
  *
  * @see org.mobilitydata.gtfsvalidator.annotation.MixedCase
  */
+@GtfsValidationNotice(
+    severity = WARNING,
+    urls = {
+      @UrlRef(
+          label = "Best Practices for All Files",
+          url =
+              "https://gtfs.org/schedule/best-practices/#practice-recommendations-organized-by-file")
+    })
 public class MixedCaseRecommendedFieldNotice extends ValidationNotice {
+
   private final String filename;
 
   private final String fieldName;

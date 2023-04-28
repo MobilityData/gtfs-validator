@@ -15,9 +15,13 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
 import com.google.common.collect.ImmutableList;
 import java.util.Optional;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -26,6 +30,7 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTranslation;
+import org.mobilitydata.gtfsvalidator.table.GtfsTranslationSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsTranslationTableContainer;
 
 /**
@@ -188,6 +193,7 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
   }
 
   /** A field in a translations row has value but must be empty. */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsTranslationSchema.class))
   static class TranslationUnexpectedValueNotice extends ValidationNotice {
 
     // The row number of the faulty record.

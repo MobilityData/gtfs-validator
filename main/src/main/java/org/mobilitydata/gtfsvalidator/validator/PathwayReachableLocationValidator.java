@@ -15,6 +15,7 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 import static org.mobilitydata.gtfsvalidator.table.GtfsLocationType.BOARDING_AREA;
 import static org.mobilitydata.gtfsvalidator.table.GtfsLocationType.ENTRANCE;
 import static org.mobilitydata.gtfsvalidator.table.GtfsLocationType.GENERIC_NODE;
@@ -29,11 +30,14 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathway;
+import org.mobilitydata.gtfsvalidator.table.GtfsPathwaySchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathwayTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
@@ -161,6 +165,7 @@ public class PathwayReachableLocationValidator extends FileValidator {
    * Describes a location that is not reachable at least in one direction: from the entrances or to
    * the exits.
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsPathwaySchema.class))
   static class PathwayUnreachableLocationNotice extends ValidationNotice {
 
     // Row number of the unreachable location.

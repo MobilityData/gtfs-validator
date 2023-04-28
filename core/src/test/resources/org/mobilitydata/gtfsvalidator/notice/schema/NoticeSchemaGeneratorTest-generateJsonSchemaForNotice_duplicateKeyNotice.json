@@ -1,7 +1,18 @@
 {
   "code": "duplicate_key",
-  "severityLevel": "INFO",
+  "severityLevel": "ERROR",
   "type": "object",
+  "description": "The values of the given key and rows are duplicates.",
+  "references": {
+    "fileReferences": [],
+    "bestPracticesFileReferences": [],
+    "urlReferences": [
+      {
+        "label": "Original Python validator implementation",
+        "url": "https://github.com/google/transitfeed"
+      }
+    ]
+  },
   "properties": {
     "fieldName1": {
       "fieldName": "fieldName1",

@@ -15,6 +15,12 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.FILE_REQUIREMENTS;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
+
 /**
  * The value in CSV file has leading or trailing whitespaces.
  *
@@ -29,6 +35,7 @@ package org.mobilitydata.gtfsvalidator.notice;
  * and a foreign key differ just by a whitespace: it is clear that they are intended to be the same,
  * that is why we always strip whitespaces.
  */
+@GtfsValidationNotice(severity = WARNING, sections = @SectionRefs(FILE_REQUIREMENTS))
 public class LeadingOrTrailingWhitespacesNotice extends ValidationNotice {
 
   // The name of the faulty file.

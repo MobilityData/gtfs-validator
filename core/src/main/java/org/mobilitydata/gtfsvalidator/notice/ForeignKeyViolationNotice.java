@@ -15,9 +15,12 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.FILE_REQUIREMENTS;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /**
  * The values of the given key and rows of one table cannot be found a values of the given key in
@@ -28,7 +31,14 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
-@GtfsValidationNotice(severity = ERROR)
+@GtfsValidationNotice(
+    severity = ERROR,
+    sections = @SectionRefs(FILE_REQUIREMENTS),
+    urls = {
+      @UrlRef(
+          label = "Original Python validator implementation",
+          url = "https://github.com/google/transitfeed")
+    })
 public class ForeignKeyViolationNotice extends ValidationNotice {
 
   // The name of the file from which reference is made.

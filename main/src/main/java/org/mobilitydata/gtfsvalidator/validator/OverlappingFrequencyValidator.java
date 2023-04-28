@@ -1,16 +1,21 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
 import com.google.common.collect.Multimaps;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFrequency;
+import org.mobilitydata.gtfsvalidator.table.GtfsFrequencySchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsFrequencyTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
@@ -68,6 +73,7 @@ public class OverlappingFrequencyValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsFrequencySchema.class))
   static class OverlappingFrequencyNotice extends ValidationNotice {
 
     // The row number of the first frequency.

@@ -15,6 +15,12 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.FILED_TYPES;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
+
 /**
  * A field cannot be parsed as a timezone.
  *
@@ -26,6 +32,7 @@ package org.mobilitydata.gtfsvalidator.notice;
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
+@GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILED_TYPES))
 public class InvalidTimezoneNotice extends ValidationNotice {
 
   // The name of the faulty file.

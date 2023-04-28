@@ -4,7 +4,6 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.BestPracticesRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -15,7 +14,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 @GtfsValidationNotice(
     severity = ERROR,
     files = @FileRefs(AppleSchema.class),
-    bestPractices = @BestPracticesRefs(BananaSchema.class),
+    bestPractices = @FileRefs(BananaSchema.class),
     urls = @UrlRef(label = "Coconuts", url = "http://coconuts.com"))
 public class DocumentedNotice extends ValidationNotice {
 

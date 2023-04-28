@@ -15,11 +15,16 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathway;
+import org.mobilitydata.gtfsvalidator.table.GtfsPathwaySchema;
 
 /** Validates that pathway is not a loop, i.e. it does not start and end at the same location. */
 @GtfsValidator
@@ -34,6 +39,7 @@ public class PathwayLoopValidator extends SingleEntityValidator<GtfsPathway> {
     }
   }
 
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsPathwaySchema.class))
   static class PathwayLoopNotice extends ValidationNotice {
 
     // Row number of the faulty row from `pathways.txt`.
