@@ -17,6 +17,7 @@
     "@sveltejs/kit": "^1.0.0",
     "@types/marked": "^4.0.8",
     "autoprefixer": "^10.4.13",
+    "cypress": "^12.10.0",
     "eslint": "^8.28.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-svelte3": "^4.0.0",
