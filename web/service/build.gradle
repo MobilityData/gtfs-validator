@@ -12,6 +12,9 @@ def WEB_DEPLOY_SVC_CLOUDRUN = System.getenv("WEB_DEPLOY_SVC_CLOUDRUN")
 def svcCredentialProvider   = hasProperty("env.${WEB_BUILD_ENV}.svcCredentialProvider") ? property("env.${WEB_BUILD_ENV}.svcCredentialProvider") : null
 def svcCredentialSrc        = hasProperty("env.${WEB_BUILD_ENV}.svcCredentialSrc")      ? property("env.${WEB_BUILD_ENV}.svcCredentialSrc")      : null
 def svcCredentialDst        = hasProperty("env.${WEB_BUILD_ENV}.svcCredentialDst")      ? property("env.${WEB_BUILD_ENV}.svcCredentialDst")      : 'src/main/resources/web-based-gtfs-validator-a088ec5f045d.json'
+def svcAPMLicenseProvider   = hasProperty("env.${WEB_BUILD_ENV}.svcAPMLicenseProvider") ? property("env.${WEB_BUILD_ENV}.svcAPMLicenseProvider") : null
+def svcAPMLicenseSrc        = hasProperty("env.${WEB_BUILD_ENV}.svcAPMLicenseSrc")      ? property("env.${WEB_BUILD_ENV}.svcAPMLicenseSrc")      : null
+def svcAPMLicenseDst        = hasProperty("env.${WEB_BUILD_ENV}.svcAPMLicenseDst")      ? property("env.${WEB_BUILD_ENV}.svcAPMLicenseDst")      : 'newrelic/newrelic.yml'
 
 jar {
     // Add the manifest within the JAR, using gtfs-validator as the title
@@ -71,13 +74,13 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-task webSecrets (type: Exec) {
+task webSvcCredential (type: Exec) {
 
   def required_missing = []
   if (svcCredentialProvider == null) required_missing.add("env.${WEB_BUILD_ENV}.svcCredentialProvider")
   if (svcCredentialSrc == null) required_missing.add("env.${WEB_BUILD_ENV}.svcCredentialSrc")
   if (required_missing.size > 0) {
-    commandLine 'echo', 'SKIP: webSecrets: missing required project properties:', required_missing.join(', ')
+    commandLine 'echo', 'SKIP: webSvcCredential: missing required project properties:', required_missing.join(', ')
     return
   }
 
@@ -99,10 +102,49 @@ task webSecrets (type: Exec) {
       )
       break
     default:
-      commandLine 'echo', "SKIP: webSecrets: unsupported svcCredentialProvider: ${svcCredentialProvider}"
+      commandLine 'echo', "SKIP: webSvcCredential: unsupported svcCredentialProvider: ${svcCredentialProvider}"
       break
   }
 
+}
+
+task webSvcAPMLicense (type: Exec) {
+
+  def required_missing = []
+  if (svcAPMLicenseProvider == null) required_missing.add("env.${WEB_BUILD_ENV}.svcAPMLicenseProvider")
+  if (svcAPMLicenseSrc == null) required_missing.add("env.${WEB_BUILD_ENV}.svcAPMLicenseSrc")
+  if (required_missing.size > 0) {
+    commandLine 'echo', 'SKIP: webSvcAPMLicense: missing required project properties:', required_missing.join(', ')
+    return
+  }
+
+  inputs.property('svcAPMLicenseProvider', svcAPMLicenseProvider)
+  inputs.property('svcAPMLicenseSrc', svcAPMLicenseSrc)
+  outputs.file(file(svcAPMLicenseDst))
+
+  switch (svcAPMLicenseProvider) {
+    case "gcloud-secrets":
+      commandLine (
+        'gcloud',
+        '--verbosity=info',
+        'secrets',
+        'versions',
+        'access',
+        'latest',
+        "--secret=${svcAPMLicenseSrc}",
+        "--out-file=${svcAPMLicenseDst}"
+      )
+      break
+    default:
+      commandLine 'echo', "SKIP: webSvcAPMLicense: unsupported svcAPMLicenseProvider: ${svcAPMLicenseProvider}"
+      break
+  }
+
+}
+
+task webSecrets {
+  dependsOn webSvcCredential
+  dependsOn webSvcAPMLicense
 }
 
 task webTest {
