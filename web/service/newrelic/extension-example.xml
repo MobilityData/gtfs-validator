@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This is an example of a custom instrumentation extension XML file. -->
+
+<extension xmlns="https://newrelic.com/docs/java/xsd/v1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="newrelic-extension extension.xsd " name="extension-example"
+	version="1.0" enabled="true">
+	<instrumentation>
+
+		<!-- This point cut instruments some of the methods in the class com.sample.SampleArrayList. -->
+		<pointcut transactionStartPoint="true"
+			excludeFromTransactionTrace="false" ignoreTransaction="false">
+			<className>com.sample.SampleArrayList</className>
+			<!-- Instruments the method clear() -->
+			<method>
+				<name>clear</name>
+				<parameters />
+				<!-- The parameters node should be specified if there are no input parameters 
+					and you only want to match clear(). Not specifying the parameters node will 
+					match all methods named clear on the class regardless of the input parameters. 
+					In other words it would match clear(int) clear(long) clear(int, long). -->
+			</method>
+			<!-- Instruments the method Object get(int index) -->
+			<method>
+				<name>get</name>
+				<parameters>
+					<!-- Primitives should written using their name: byte, short, int, long, 
+						float, double, boolean, char -->
+					<type>int</type>
+				</parameters>
+			</method>
+			<!-- Instruments the method boolean addAll(int index, Collection c) -->
+			<method>
+				<name>addAll</name>
+				<parameters>
+					<!-- Make sure your parameters are listed in order. -->
+					<type>int</type>
+					<type>java.util.Collection</type>
+				</parameters>
+			</method>
+		</pointcut>
+
+		<!-- This point cut instruments some of the methods in the class com.sample.SampleString. -->
+		<pointcut transactionStartPoint="true">
+			<className>com.sample.SampleString</className>
+			<!-- Instruments the method boolean startsWith(String prefix) -->
+			<method>
+				<name>startsWith</name>
+				<parameters>
+					<type>java.lang.String</type>
+				</parameters>
+			</method>
+			<!-- Instruments the method String valueOf(char[] data, int offset, int 
+				count) -->
+			<method>
+				<name>valueOf</name>
+				<parameters>
+					<!-- Be sure to use brackets for arrays. -->
+					<type>char[]</type>
+					<type>int</type>
+					<type>int</type>
+				</parameters>
+			</method>
+		</pointcut>
+
+
+		<!-- This point cut instruments all of the methods in the class com.sample.SampleString 
+			that are named startsWith, ignoring the input parameters and return type. -->
+		<pointcut transactionStartPoint="true">
+			<className>com.sample.SampleString</className>
+			<method>
+				<name>startsWith</name>
+			</method>
+		</pointcut>
+
+
+		<!-- This point cut instruments the method startsWith in the class com.sample.SampleString. 
+			By adding the <nameTransaction/> element, the class and method specified 
+			in this pointcut will be used to name transactions which hit this pointcut. 
+			Without this, the default convention is to name transctions with the class 
+			and method from the transaction start point. -->
+		<pointcut transactionStartPoint="false">
+			<nameTransaction />
+			<className>com.sample.SampleString</className>
+			<!-- Instruments the method boolean startsWith(String prefix) -->
+			<method>
+				<name>startsWith</name>
+				<parameters>
+					<type>java.lang.String</type>
+				</parameters>
+			</method>
+		</pointcut>
+
+		<!-- This point cut instruments the method startsWith(String prefix) for 
+			all implementations of the interface com.sample.SampleStringInterface. -->
+		<pointcut transactionStartPoint="true">
+			<interfaceName>com.sample.SampleStringInterface</interfaceName>
+			<!-- Instruments the method boolean startsWith(String prefix) -->
+			<method>
+				<name>startsWith</name>
+				<parameters>
+					<type>java.lang.String</type>
+				</parameters>
+			</method>
+		</pointcut>
+
+		<!-- This point cut instruments some of the methods in the class com.sample.SampleString 
+			based on return type. -->
+		<pointcut transactionStartPoint="true">
+			<className>com.sample.SampleString</className>
+			<!-- Instruments all methods in the class whose return type is ResultSet -->
+			<method>
+				<returnType>com.example.ResultSet</returnType>
+			</method>
+		</pointcut>
+
+		<!-- This point cut instruments all of the methods which have the annotation 
+			com.example.myAnnotation. -->
+		<pointcut transactionStartPoint="true">
+			<methodAnnotation>com.example.myAnnotation</methodAnnotation>
+		</pointcut>
+
+		<pointcut transactionStartPoint="true">
+			<className>com.sample.SampleString</className>
+			<traceLambda>true</traceLambda>
+		</pointcut>
+
+		<pointcut transactionStartPoint="true">
+			<className>com.sample.SampleString</className>
+			<traceByReturnType>Lcom/sample/SampleString;</traceByReturnType>
+		</pointcut>
+	</instrumentation>
+</extension>

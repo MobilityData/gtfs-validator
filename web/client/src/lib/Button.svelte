@@ -2,13 +2,17 @@
   import ButtonContent from './ButtonContent.svelte';
 
   /** @type {string} */
-  export let className = '';
+  let className = '';
+  export { className as class };
 
   /** @type {boolean|null} */
   export let disabled = null;
 
   /** @type {string|null} */
   export let href = null;
+
+  /** @type {'sm'|'md'} */
+  export let size = 'md';
 
   /** @type {string|null} */
   export let target = null;
@@ -22,11 +26,11 @@
   $: buttonClass = [
     'btn',
     `btn-${variant}`,
+    `btn-${size}`,
     `focus-ring`,
     disabled ? 'cursor-not-allowed opacity-60' : '',
     'inline-block',
     'font-mono',
-    'px-8 py-2',
     'rounded',
     'shadow',
     'transition-transform duration-100 [&:not(:disabled)]:active:scale-95',
@@ -68,5 +72,14 @@
   .btn-link {
     @apply bg-none border-0 shadow-none text-mobi-purple-safe;
     @apply px-4;
+  }
+
+  .btn-sm {
+    @apply text-sm;
+    @apply px-3 py-1;
+  }
+
+  .btn-md {
+    @apply px-8 py-2;
   }
 </style>

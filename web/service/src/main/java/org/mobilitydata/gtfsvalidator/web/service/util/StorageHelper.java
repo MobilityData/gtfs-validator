@@ -5,9 +5,11 @@ import com.google.cloud.storage.*;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,10 +19,10 @@ import org.springframework.stereotype.Component;
 /** Helper class for interacting with GCS. */
 @Component
 public class StorageHelper {
-  static final String JOB_INFO_BUCKET_NAME = "gtfs-validator-results";
+  public static final String JOB_INFO_BUCKET_NAME = "gtfs-validator-results";
   static final String JOB_FILENAME_PREFIX = "job";
   static final String JOB_FILENAME_SUFFIX = ".json";
-  static final String JOB_FILENAME = JOB_FILENAME_PREFIX + JOB_FILENAME_SUFFIX;
+  public static final String JOB_FILENAME = JOB_FILENAME_PREFIX + JOB_FILENAME_SUFFIX;
   public static final String TEMP_FOLDER_NAME = "gtfs-validator-temp";
   static final String USER_UPLOAD_BUCKET_NAME = "gtfs-validator-user-uploads";
   static final String RESULTS_BUCKET_NAME = "gtfs-validator-results";
@@ -36,6 +38,10 @@ public class StorageHelper {
     this.applicationContext = applicationContext;
   }
 
+  public String createNewJobId() {
+    return UUID.randomUUID().toString();
+  }
+
   public static String getJobInfoPath(String jobId) {
     return jobId + "/" + JOB_FILENAME;
   }
@@ -46,10 +52,9 @@ public class StorageHelper {
    * @param metadata
    * @throws Exception
    */
-  public void saveJobMetaData(JobMetadata metadata) throws Exception {
+  public void saveJobMetadata(JobMetadata metadata) throws Exception {
     try {
       String jobId = metadata.getJobId();
-      String countryCode = metadata.getCountryCode();
       var jobInfoPath = getJobInfoPath(jobId);
       var jobBlobId = BlobId.of(JOB_INFO_BUCKET_NAME, jobInfoPath);
       var jobBlobInfo = BlobInfo.newBuilder(jobBlobId).setContentType("application/json").build();
@@ -69,7 +74,7 @@ public class StorageHelper {
    * @param jobId
    * @return
    */
-  public JobMetadata getJobMetaData(String jobId) {
+  public JobMetadata getJobMetadata(String jobId) {
     try {
       var jobInfoPath = getJobInfoPath(jobId);
       var jobBlobId = BlobId.of(JOB_INFO_BUCKET_NAME, jobInfoPath);
@@ -78,8 +83,8 @@ public class StorageHelper {
       logger.info("Loading job metadata: " + json);
 
       var objectMapper = new ObjectMapper();
-      JobMetadata jobMetaData = objectMapper.readValue(json, JobMetadata.class);
-      return jobMetaData;
+      JobMetadata jobMetadata = objectMapper.readValue(json, JobMetadata.class);
+      return jobMetadata;
     } catch (Exception exc) {
       logger.error("Error could not load remote file, using default country code", exc);
       return new JobMetadata(jobId, "");
@@ -133,7 +138,7 @@ public class StorageHelper {
    * @return
    * @throws IOException
    */
-  public File copyFromStorageToTempFile(String jobId, String fileName) throws IOException {
+  public File downloadFeedFileFromStorage(String jobId, String fileName) throws IOException {
     var tempDir = Files.createTempDirectory(StorageHelper.TEMP_FOLDER_NAME).toFile();
 
     var inputResource =
@@ -152,8 +157,8 @@ public class StorageHelper {
    * @param outputPath
    * @throws IOException
    */
-  public void uploadFilesToStorage(String jobId, File outputPath) throws IOException {
-    var directoryListing = outputPath.listFiles();
+  public void uploadFilesToStorage(String jobId, Path outputPath) throws IOException {
+    var directoryListing = outputPath.toFile().listFiles();
     if (directoryListing != null) {
       for (var reportFile : directoryListing) {
         if (reportFile.isDirectory()) {
@@ -166,5 +171,9 @@ public class StorageHelper {
         storage.create(blobInfo, fileBytes);
       }
     }
+  }
+
+  public Path createOutputFolderForJob(String jobId) throws IOException {
+    return Files.createTempDirectory(StorageHelper.TEMP_FOLDER_NAME + jobId);
   }
 }
