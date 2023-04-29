@@ -117,6 +117,8 @@ The location of the crednetial key file is located in `web/service/src/main/reso
 
 Once this is completed, the server can be started by running `./gradlew bootRun` in the root of the project.
 
+**Note**: The `web/service/src/test/resources/web-based-gtfs-validator.json` contains a valid primary key, but it is not tied to a valid Google Cloud Service Account.
+
 ### Start the client (from the `web/client` directory):
 
 ```bash
