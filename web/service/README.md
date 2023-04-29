@@ -109,13 +109,13 @@ gcloud storage buckets update gs://gtfs-validator-results --cors-file=cors.json
 
 Both `gtfs-validator-user-uploads` and `gtfs-validator-results` have been configured so that all files older than 30 days are deleted. This can be manually configured via the [Google Cloud Storage Console](https://console.cloud.google.com/storage/browser?project=web-based-gtfs-validator) or via the [CLI](https://cloud.google.com/storage/docs/gsutil/commands/lifecycle).
 
-## Run It
+## Local Development
 
-### Start the web service (from project root directory):
+A google cloud credentials file is requierd to start the web service. Either complete the steps above to provision a new Google Cloud project or reach out to the maintainers of the project to be granted access to the production instance credentials.
 
-```bash
-./gradlew bootRun
-```
+The location of the crednetial key file is located in `web/service/src/main/resources/application.properties`.
+
+Once this is completed, the server can be started by running `./gradlew bootRun` in the root of the project.
 
 ### Start the client (from the `web/client` directory):
 
@@ -126,6 +126,9 @@ npm run dev
 
 ## Deploying Updates
 
+First [install the gcloud cli](https://cloud.google.com/sdk/docs/install) and [authenticate](https://cloud.google.com/sdk/gcloud/reference/auth/login).
+
 ```bash
 gcloud builds submit
 ```
+
