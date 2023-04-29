@@ -1,0 +1,2701 @@
+{
+  "attribution_without_role": {
+    "code": "attribution_without_role",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "attributionId": {
+        "fieldName": "attributionId",
+        "type": "string"
+      },
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      }
+    }
+  },
+  "block_trips_with_overlapping_stop_times": {
+    "code": "block_trips_with_overlapping_stop_times",
+    "severityLevel": "ERROR",
+    "type": "object",
+    "description": "Describes two trips with the same block id that have overlapping stop times.",
+    "references": {
+      "fileReferences": [
+        "trips.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "urlReferences": [
+        {
+          "label": "Original Python validator implementation",
+          "url": "https://github.com/google/transitfeed"
+        }
+      ]
+    },
+    "properties": {
+      "blockId": {
+        "fieldName": "blockId",
+        "type": "string"
+      },
+      "csvRowNumberA": {
+        "fieldName": "csvRowNumberA",
+        "description": "The row number from `trips.txt` of the first faulty trip.",
+        "type": "integer"
+      },
+      "csvRowNumberB": {
+        "fieldName": "csvRowNumberB",
+        "type": "integer"
+      },
+      "intersection": {
+        "fieldName": "intersection",
+        "type": "string"
+      },
+      "serviceIdA": {
+        "fieldName": "serviceIdA",
+        "type": "string"
+      },
+      "serviceIdB": {
+        "fieldName": "serviceIdB",
+        "type": "string"
+      },
+      "tripIdA": {
+        "fieldName": "tripIdA",
+        "type": "string"
+      },
+      "tripIdB": {
+        "fieldName": "tripIdB",
+        "type": "string"
+      }
+    }
+  },
+  "csv_parsing_failed": {
+    "code": "csv_parsing_failed",
+    "severityLevel": "ERROR",
+    "type": "object",
+    "description": "Parsing of a CSV file failed.\n\nOne common case of the problem is when a cell value contains more than 4096 characters.",
+    "properties": {
+      "charIndex": {
+        "fieldName": "charIndex",
+        "type": "integer"
+      },
+      "columnIndex": {
+        "fieldName": "columnIndex",
+        "type": "integer"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      },
+      "lineIndex": {
+        "fieldName": "lineIndex",
+        "type": "integer"
+      },
+      "message": {
+        "fieldName": "message",
+        "type": "string"
+      },
+      "parsedContent": {
+        "fieldName": "parsedContent",
+        "type": "string"
+      }
+    }
+  },
+  "decreasing_or_equal_stop_time_distance": {
+    "code": "decreasing_or_equal_stop_time_distance",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "prevCsvRowNumber": {
+        "fieldName": "prevCsvRowNumber",
+        "type": "integer"
+      },
+      "prevStopSequence": {
+        "fieldName": "prevStopSequence",
+        "type": "integer"
+      },
+      "prevStopTimeDistTraveled": {
+        "fieldName": "prevStopTimeDistTraveled",
+        "type": "number"
+      },
+      "shapeDistTraveled": {
+        "fieldName": "shapeDistTraveled",
+        "type": "number"
+      },
+      "stopSequence": {
+        "fieldName": "stopSequence",
+        "type": "integer"
+      },
+      "tripId": {
+        "fieldName": "tripId",
+        "type": "string"
+      }
+    }
+  },
+  "decreasing_shape_distance": {
+    "code": "decreasing_shape_distance",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "prevCsvRowNumber": {
+        "fieldName": "prevCsvRowNumber",
+        "type": "integer"
+      },
+      "prevShapeDistTraveled": {
+        "fieldName": "prevShapeDistTraveled",
+        "type": "number"
+      },
+      "prevShapePtSequence": {
+        "fieldName": "prevShapePtSequence",
+        "type": "integer"
+      },
+      "shapeDistTraveled": {
+        "fieldName": "shapeDistTraveled",
+        "type": "number"
+      },
+      "shapeId": {
+        "fieldName": "shapeId",
+        "type": "string"
+      },
+      "shapePtSequence": {
+        "fieldName": "shapePtSequence",
+        "type": "integer"
+      }
+    }
+  },
+  "duplicate_fare_media": {
+    "code": "duplicate_fare_media",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber1": {
+        "fieldName": "csvRowNumber1",
+        "type": "integer"
+      },
+      "csvRowNumber2": {
+        "fieldName": "csvRowNumber2",
+        "type": "integer"
+      },
+      "fareMediaId1": {
+        "fieldName": "fareMediaId1",
+        "type": "string"
+      },
+      "fareMediaId2": {
+        "fieldName": "fareMediaId2",
+        "type": "string"
+      }
+    }
+  },
+  "duplicate_key": {
+    "code": "duplicate_key",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "fieldName1": {
+        "fieldName": "fieldName1",
+        "type": "string"
+      },
+      "fieldName2": {
+        "fieldName": "fieldName2",
+        "type": "string"
+      },
+      "fieldValue1": {
+        "fieldName": "fieldValue1",
+        "type": "object"
+      },
+      "fieldValue2": {
+        "fieldName": "fieldValue2",
+        "type": "object"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      },
+      "newCsvRowNumber": {
+        "fieldName": "newCsvRowNumber",
+        "type": "integer"
+      },
+      "oldCsvRowNumber": {
+        "fieldName": "oldCsvRowNumber",
+        "type": "integer"
+      }
+    }
+  },
+  "duplicate_route_name": {
+    "code": "duplicate_route_name",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "agencyId": {
+        "fieldName": "agencyId",
+        "type": "string"
+      },
+      "csvRowNumber1": {
+        "fieldName": "csvRowNumber1",
+        "type": "integer"
+      },
+      "csvRowNumber2": {
+        "fieldName": "csvRowNumber2",
+        "type": "integer"
+      },
+      "routeId1": {
+        "fieldName": "routeId1",
+        "type": "string"
+      },
+      "routeId2": {
+        "fieldName": "routeId2",
+        "type": "string"
+      },
+      "routeLongName": {
+        "fieldName": "routeLongName",
+        "type": "string"
+      },
+      "routeShortName": {
+        "fieldName": "routeShortName",
+        "type": "string"
+      },
+      "routeTypeValue": {
+        "fieldName": "routeTypeValue",
+        "type": "integer"
+      }
+    }
+  },
+  "duplicated_column": {
+    "code": "duplicated_column",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      },
+      "firstIndex": {
+        "fieldName": "firstIndex",
+        "type": "integer"
+      },
+      "secondIndex": {
+        "fieldName": "secondIndex",
+        "type": "integer"
+      }
+    }
+  },
+  "empty_column_name": {
+    "code": "empty_column_name",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      },
+      "index": {
+        "fieldName": "index",
+        "type": "integer"
+      }
+    }
+  },
+  "empty_file": {
+    "code": "empty_file",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "empty_row": {
+    "code": "empty_row",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "equal_shape_distance_diff_coordinates": {
+    "code": "equal_shape_distance_diff_coordinates",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "actualDistanceBetweenShapePoints": {
+        "fieldName": "actualDistanceBetweenShapePoints",
+        "type": "number"
+      },
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "prevCsvRowNumber": {
+        "fieldName": "prevCsvRowNumber",
+        "type": "integer"
+      },
+      "prevShapeDistTraveled": {
+        "fieldName": "prevShapeDistTraveled",
+        "type": "number"
+      },
+      "prevShapePtSequence": {
+        "fieldName": "prevShapePtSequence",
+        "type": "integer"
+      },
+      "shapeDistTraveled": {
+        "fieldName": "shapeDistTraveled",
+        "type": "number"
+      },
+      "shapeId": {
+        "fieldName": "shapeId",
+        "type": "string"
+      },
+      "shapePtSequence": {
+        "fieldName": "shapePtSequence",
+        "type": "integer"
+      }
+    }
+  },
+  "equal_shape_distance_same_coordinates": {
+    "code": "equal_shape_distance_same_coordinates",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "prevCsvRowNumber": {
+        "fieldName": "prevCsvRowNumber",
+        "type": "integer"
+      },
+      "prevShapeDistTraveled": {
+        "fieldName": "prevShapeDistTraveled",
+        "type": "number"
+      },
+      "prevShapePtSequence": {
+        "fieldName": "prevShapePtSequence",
+        "type": "integer"
+      },
+      "shapeDistTraveled": {
+        "fieldName": "shapeDistTraveled",
+        "type": "number"
+      },
+      "shapeId": {
+        "fieldName": "shapeId",
+        "type": "string"
+      },
+      "shapePtSequence": {
+        "fieldName": "shapePtSequence",
+        "type": "integer"
+      }
+    }
+  },
+  "expired_calendar": {
+    "code": "expired_calendar",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "serviceId": {
+        "fieldName": "serviceId",
+        "type": "string"
+      }
+    }
+  },
+  "fare_transfer_rule_duration_limit_type_without_duration_limit": {
+    "code": "fare_transfer_rule_duration_limit_type_without_duration_limit",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      }
+    }
+  },
+  "fare_transfer_rule_duration_limit_without_type": {
+    "code": "fare_transfer_rule_duration_limit_without_type",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      }
+    }
+  },
+  "fare_transfer_rule_invalid_transfer_count": {
+    "code": "fare_transfer_rule_invalid_transfer_count",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "transferCount": {
+        "fieldName": "transferCount",
+        "type": "integer"
+      }
+    }
+  },
+  "fare_transfer_rule_missing_transfer_count": {
+    "code": "fare_transfer_rule_missing_transfer_count",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      }
+    }
+  },
+  "fare_transfer_rule_with_forbidden_transfer_count": {
+    "code": "fare_transfer_rule_with_forbidden_transfer_count",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      }
+    }
+  },
+  "fast_travel_between_consecutive_stops": {
+    "code": "fast_travel_between_consecutive_stops",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "arrivalTime2": {
+        "fieldName": "arrivalTime2",
+        "type": "string"
+      },
+      "csvRowNumber1": {
+        "fieldName": "csvRowNumber1",
+        "type": "integer"
+      },
+      "csvRowNumber2": {
+        "fieldName": "csvRowNumber2",
+        "type": "integer"
+      },
+      "departureTime1": {
+        "fieldName": "departureTime1",
+        "type": "string"
+      },
+      "distanceKm": {
+        "fieldName": "distanceKm",
+        "type": "number"
+      },
+      "routeId": {
+        "fieldName": "routeId",
+        "type": "string"
+      },
+      "speedKph": {
+        "fieldName": "speedKph",
+        "type": "number"
+      },
+      "stopId1": {
+        "fieldName": "stopId1",
+        "type": "string"
+      },
+      "stopId2": {
+        "fieldName": "stopId2",
+        "type": "string"
+      },
+      "stopName1": {
+        "fieldName": "stopName1",
+        "type": "string"
+      },
+      "stopName2": {
+        "fieldName": "stopName2",
+        "type": "string"
+      },
+      "stopSequence1": {
+        "fieldName": "stopSequence1",
+        "type": "integer"
+      },
+      "stopSequence2": {
+        "fieldName": "stopSequence2",
+        "type": "integer"
+      },
+      "tripCsvRowNumber": {
+        "fieldName": "tripCsvRowNumber",
+        "type": "integer"
+      },
+      "tripId": {
+        "fieldName": "tripId",
+        "type": "string"
+      }
+    }
+  },
+  "fast_travel_between_far_stops": {
+    "code": "fast_travel_between_far_stops",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "arrivalTime2": {
+        "fieldName": "arrivalTime2",
+        "type": "string"
+      },
+      "csvRowNumber1": {
+        "fieldName": "csvRowNumber1",
+        "type": "integer"
+      },
+      "csvRowNumber2": {
+        "fieldName": "csvRowNumber2",
+        "type": "integer"
+      },
+      "departureTime1": {
+        "fieldName": "departureTime1",
+        "type": "string"
+      },
+      "distanceKm": {
+        "fieldName": "distanceKm",
+        "type": "number"
+      },
+      "routeId": {
+        "fieldName": "routeId",
+        "type": "string"
+      },
+      "speedKph": {
+        "fieldName": "speedKph",
+        "type": "number"
+      },
+      "stopId1": {
+        "fieldName": "stopId1",
+        "type": "string"
+      },
+      "stopId2": {
+        "fieldName": "stopId2",
+        "type": "string"
+      },
+      "stopName1": {
+        "fieldName": "stopName1",
+        "type": "string"
+      },
+      "stopName2": {
+        "fieldName": "stopName2",
+        "type": "string"
+      },
+      "stopSequence1": {
+        "fieldName": "stopSequence1",
+        "type": "integer"
+      },
+      "stopSequence2": {
+        "fieldName": "stopSequence2",
+        "type": "integer"
+      },
+      "tripCsvRowNumber": {
+        "fieldName": "tripCsvRowNumber",
+        "type": "integer"
+      },
+      "tripId": {
+        "fieldName": "tripId",
+        "type": "string"
+      }
+    }
+  },
+  "feed_expiration_date30_days": {
+    "code": "feed_expiration_date30_days",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "currentDate": {
+        "fieldName": "currentDate",
+        "type": "string"
+      },
+      "feedEndDate": {
+        "fieldName": "feedEndDate",
+        "type": "string"
+      },
+      "suggestedExpirationDate": {
+        "fieldName": "suggestedExpirationDate",
+        "type": "string"
+      }
+    }
+  },
+  "feed_expiration_date7_days": {
+    "code": "feed_expiration_date7_days",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "currentDate": {
+        "fieldName": "currentDate",
+        "type": "string"
+      },
+      "feedEndDate": {
+        "fieldName": "feedEndDate",
+        "type": "string"
+      },
+      "suggestedExpirationDate": {
+        "fieldName": "suggestedExpirationDate",
+        "type": "string"
+      }
+    }
+  },
+  "feed_info_lang_and_agency_lang_mismatch": {
+    "code": "feed_info_lang_and_agency_lang_mismatch",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "agencyId": {
+        "fieldName": "agencyId",
+        "type": "string"
+      },
+      "agencyLang": {
+        "fieldName": "agencyLang",
+        "type": "string"
+      },
+      "agencyName": {
+        "fieldName": "agencyName",
+        "type": "string"
+      },
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "feedLang": {
+        "fieldName": "feedLang",
+        "type": "string"
+      }
+    }
+  },
+  "foreign_key_violation": {
+    "code": "foreign_key_violation",
+    "severityLevel": "ERROR",
+    "type": "object",
+    "description": "The values of the given key and rows of one table cannot be found a values of the given key in\nanother table.\n\nThis is the case when a foreign key of one table references a non-existing value in its\noriginal table.",
+    "properties": {
+      "childFieldName": {
+        "fieldName": "childFieldName",
+        "type": "string"
+      },
+      "childFilename": {
+        "fieldName": "childFilename",
+        "type": "string"
+      },
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldValue": {
+        "fieldName": "fieldValue",
+        "type": "string"
+      },
+      "parentFieldName": {
+        "fieldName": "parentFieldName",
+        "type": "string"
+      },
+      "parentFilename": {
+        "fieldName": "parentFilename",
+        "type": "string"
+      }
+    }
+  },
+  "i_o_error": {
+    "code": "i_o_error",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "exception": {
+        "fieldName": "exception",
+        "type": "string"
+      },
+      "message": {
+        "fieldName": "message",
+        "type": "string"
+      }
+    }
+  },
+  "inconsistent_agency_lang": {
+    "code": "inconsistent_agency_lang",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "actual": {
+        "fieldName": "actual",
+        "type": "string"
+      },
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "expected": {
+        "fieldName": "expected",
+        "type": "string"
+      }
+    }
+  },
+  "inconsistent_agency_timezone": {
+    "code": "inconsistent_agency_timezone",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "actual": {
+        "fieldName": "actual",
+        "type": "string"
+      },
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "expected": {
+        "fieldName": "expected",
+        "type": "string"
+      }
+    }
+  },
+  "invalid_color": {
+    "code": "invalid_color",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "fieldValue": {
+        "fieldName": "fieldValue",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "invalid_currency": {
+    "code": "invalid_currency",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "fieldValue": {
+        "fieldName": "fieldValue",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "invalid_currency_amount": {
+    "code": "invalid_currency_amount",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "amount": {
+        "fieldName": "amount",
+        "type": "string"
+      },
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "invalid_date": {
+    "code": "invalid_date",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "fieldValue": {
+        "fieldName": "fieldValue",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "invalid_email": {
+    "code": "invalid_email",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "fieldValue": {
+        "fieldName": "fieldValue",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "invalid_float": {
+    "code": "invalid_float",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "fieldValue": {
+        "fieldName": "fieldValue",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "invalid_integer": {
+    "code": "invalid_integer",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "fieldValue": {
+        "fieldName": "fieldValue",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "invalid_language_code": {
+    "code": "invalid_language_code",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "fieldValue": {
+        "fieldName": "fieldValue",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "invalid_phone_number": {
+    "code": "invalid_phone_number",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "fieldValue": {
+        "fieldName": "fieldValue",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "invalid_row_length": {
+    "code": "invalid_row_length",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      },
+      "headerCount": {
+        "fieldName": "headerCount",
+        "type": "integer"
+      },
+      "rowLength": {
+        "fieldName": "rowLength",
+        "type": "integer"
+      }
+    }
+  },
+  "invalid_time": {
+    "code": "invalid_time",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "fieldValue": {
+        "fieldName": "fieldValue",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "invalid_timezone": {
+    "code": "invalid_timezone",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "fieldValue": {
+        "fieldName": "fieldValue",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "invalid_url": {
+    "code": "invalid_url",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "fieldValue": {
+        "fieldName": "fieldValue",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "leading_or_trailing_whitespaces": {
+    "code": "leading_or_trailing_whitespaces",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "fieldValue": {
+        "fieldName": "fieldValue",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "location_with_unexpected_stop_time": {
+    "code": "location_with_unexpected_stop_time",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      },
+      "stopName": {
+        "fieldName": "stopName",
+        "type": "string"
+      },
+      "stopTimeCsvRowNumber": {
+        "fieldName": "stopTimeCsvRowNumber",
+        "type": "integer"
+      }
+    }
+  },
+  "location_without_parent_station": {
+    "code": "location_without_parent_station",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "locationType": {
+        "fieldName": "locationType",
+        "type": "integer"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      },
+      "stopName": {
+        "fieldName": "stopName",
+        "type": "string"
+      }
+    }
+  },
+  "missing_calendar_and_calendar_date_files": {
+    "code": "missing_calendar_and_calendar_date_files",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {}
+  },
+  "missing_feed_info_date": {
+    "code": "missing_feed_info_date",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      }
+    }
+  },
+  "missing_level_id": {
+    "code": "missing_level_id",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      },
+      "stopName": {
+        "fieldName": "stopName",
+        "type": "string"
+      }
+    }
+  },
+  "missing_recommended_field": {
+    "code": "missing_recommended_field",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "missing_recommended_file": {
+    "code": "missing_recommended_file",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "missing_required_column": {
+    "code": "missing_required_column",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "missing_required_field": {
+    "code": "missing_required_field",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "missing_required_file": {
+    "code": "missing_required_file",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "missing_stop_name": {
+    "code": "missing_stop_name",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "locationType": {
+        "fieldName": "locationType",
+        "type": "enum"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      }
+    }
+  },
+  "missing_timepoint_column": {
+    "code": "missing_timepoint_column",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "missing_timepoint_value": {
+    "code": "missing_timepoint_value",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "stopSequence": {
+        "fieldName": "stopSequence",
+        "type": "integer"
+      },
+      "tripId": {
+        "fieldName": "tripId",
+        "type": "string"
+      }
+    }
+  },
+  "missing_trip_edge": {
+    "code": "missing_trip_edge",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "specifiedField": {
+        "fieldName": "specifiedField",
+        "type": "string"
+      },
+      "stopSequence": {
+        "fieldName": "stopSequence",
+        "type": "integer"
+      },
+      "tripId": {
+        "fieldName": "tripId",
+        "type": "string"
+      }
+    }
+  },
+  "mixed_case_recommended_field": {
+    "code": "mixed_case_recommended_field",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "more_than_one_entity": {
+    "code": "more_than_one_entity",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "entityCount": {
+        "fieldName": "entityCount",
+        "type": "integer"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "new_line_in_value": {
+    "code": "new_line_in_value",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "fieldValue": {
+        "fieldName": "fieldValue",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "non_ascii_or_non_printable_char": {
+    "code": "non_ascii_or_non_printable_char",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "columnName": {
+        "fieldName": "columnName",
+        "type": "string"
+      },
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldValue": {
+        "fieldName": "fieldValue",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "number_out_of_range": {
+    "code": "number_out_of_range",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "fieldType": {
+        "fieldName": "fieldType",
+        "type": "string"
+      },
+      "fieldValue": {
+        "fieldName": "fieldValue",
+        "type": "object"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "overlapping_frequency": {
+    "code": "overlapping_frequency",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "currCsvRowNumber": {
+        "fieldName": "currCsvRowNumber",
+        "type": "integer"
+      },
+      "currStartTime": {
+        "fieldName": "currStartTime",
+        "type": "string"
+      },
+      "prevCsvRowNumber": {
+        "fieldName": "prevCsvRowNumber",
+        "type": "integer"
+      },
+      "prevEndTime": {
+        "fieldName": "prevEndTime",
+        "type": "string"
+      },
+      "tripId": {
+        "fieldName": "tripId",
+        "type": "string"
+      }
+    }
+  },
+  "pathway_dangling_generic_node": {
+    "code": "pathway_dangling_generic_node",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "parentStation": {
+        "fieldName": "parentStation",
+        "type": "string"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      },
+      "stopName": {
+        "fieldName": "stopName",
+        "type": "string"
+      }
+    }
+  },
+  "pathway_loop": {
+    "code": "pathway_loop",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "pathwayId": {
+        "fieldName": "pathwayId",
+        "type": "string"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      }
+    }
+  },
+  "pathway_to_platform_with_boarding_areas": {
+    "code": "pathway_to_platform_with_boarding_areas",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "pathwayId": {
+        "fieldName": "pathwayId",
+        "type": "string"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      }
+    }
+  },
+  "pathway_to_wrong_location_type": {
+    "code": "pathway_to_wrong_location_type",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "pathwayId": {
+        "fieldName": "pathwayId",
+        "type": "string"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      }
+    }
+  },
+  "pathway_unreachable_location": {
+    "code": "pathway_unreachable_location",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "hasEntrance": {
+        "fieldName": "hasEntrance",
+        "type": "boolean"
+      },
+      "hasExit": {
+        "fieldName": "hasExit",
+        "type": "boolean"
+      },
+      "locationType": {
+        "fieldName": "locationType",
+        "type": "integer"
+      },
+      "parentStation": {
+        "fieldName": "parentStation",
+        "type": "string"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      },
+      "stopName": {
+        "fieldName": "stopName",
+        "type": "string"
+      }
+    }
+  },
+  "platform_without_parent_station": {
+    "code": "platform_without_parent_station",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      },
+      "stopName": {
+        "fieldName": "stopName",
+        "type": "string"
+      }
+    }
+  },
+  "point_near_origin": {
+    "code": "point_near_origin",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "entityId": {
+        "fieldName": "entityId",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      },
+      "latFieldName": {
+        "fieldName": "latFieldName",
+        "type": "string"
+      },
+      "latFieldValue": {
+        "fieldName": "latFieldValue",
+        "type": "number"
+      },
+      "lonFieldName": {
+        "fieldName": "lonFieldName",
+        "type": "string"
+      },
+      "lonFieldValue": {
+        "fieldName": "lonFieldValue",
+        "type": "number"
+      }
+    }
+  },
+  "point_near_pole": {
+    "code": "point_near_pole",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "entityId": {
+        "fieldName": "entityId",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      },
+      "latFieldName": {
+        "fieldName": "latFieldName",
+        "type": "string"
+      },
+      "latFieldValue": {
+        "fieldName": "latFieldValue",
+        "type": "number"
+      },
+      "lonFieldName": {
+        "fieldName": "lonFieldName",
+        "type": "string"
+      },
+      "lonFieldValue": {
+        "fieldName": "lonFieldValue",
+        "type": "number"
+      }
+    }
+  },
+  "route_both_short_and_long_name_missing": {
+    "code": "route_both_short_and_long_name_missing",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "routeId": {
+        "fieldName": "routeId",
+        "type": "string"
+      }
+    }
+  },
+  "route_color_contrast": {
+    "code": "route_color_contrast",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "routeColor": {
+        "fieldName": "routeColor",
+        "type": "string"
+      },
+      "routeId": {
+        "fieldName": "routeId",
+        "type": "string"
+      },
+      "routeTextColor": {
+        "fieldName": "routeTextColor",
+        "type": "string"
+      }
+    }
+  },
+  "route_long_name_contains_short_name": {
+    "code": "route_long_name_contains_short_name",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "routeId": {
+        "fieldName": "routeId",
+        "type": "string"
+      },
+      "routeLongName": {
+        "fieldName": "routeLongName",
+        "type": "string"
+      },
+      "routeShortName": {
+        "fieldName": "routeShortName",
+        "type": "string"
+      }
+    }
+  },
+  "route_short_name_too_long": {
+    "code": "route_short_name_too_long",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "routeId": {
+        "fieldName": "routeId",
+        "type": "string"
+      },
+      "routeShortName": {
+        "fieldName": "routeShortName",
+        "type": "string"
+      }
+    }
+  },
+  "runtime_exception_in_loader_error": {
+    "code": "runtime_exception_in_loader_error",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "exception": {
+        "fieldName": "exception",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      },
+      "message": {
+        "fieldName": "message",
+        "type": "string"
+      }
+    }
+  },
+  "runtime_exception_in_validator_error": {
+    "code": "runtime_exception_in_validator_error",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "exception": {
+        "fieldName": "exception",
+        "type": "string"
+      },
+      "message": {
+        "fieldName": "message",
+        "type": "string"
+      },
+      "validator": {
+        "fieldName": "validator",
+        "type": "string"
+      }
+    }
+  },
+  "same_name_and_description_for_route": {
+    "code": "same_name_and_description_for_route",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "routeDesc": {
+        "fieldName": "routeDesc",
+        "type": "string"
+      },
+      "routeId": {
+        "fieldName": "routeId",
+        "type": "string"
+      },
+      "specifiedField": {
+        "fieldName": "specifiedField",
+        "type": "string"
+      }
+    }
+  },
+  "same_name_and_description_for_stop": {
+    "code": "same_name_and_description_for_stop",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "stopDesc": {
+        "fieldName": "stopDesc",
+        "type": "string"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      }
+    }
+  },
+  "same_route_and_agency_url": {
+    "code": "same_route_and_agency_url",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "agencyCsvRowNumber": {
+        "fieldName": "agencyCsvRowNumber",
+        "type": "integer"
+      },
+      "agencyName": {
+        "fieldName": "agencyName",
+        "type": "string"
+      },
+      "routeCsvRowNumber": {
+        "fieldName": "routeCsvRowNumber",
+        "type": "integer"
+      },
+      "routeId": {
+        "fieldName": "routeId",
+        "type": "string"
+      },
+      "routeUrl": {
+        "fieldName": "routeUrl",
+        "type": "string"
+      }
+    }
+  },
+  "same_stop_and_agency_url": {
+    "code": "same_stop_and_agency_url",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "agencyCsvRowNumber": {
+        "fieldName": "agencyCsvRowNumber",
+        "type": "integer"
+      },
+      "agencyName": {
+        "fieldName": "agencyName",
+        "type": "string"
+      },
+      "stopCsvRowNumber": {
+        "fieldName": "stopCsvRowNumber",
+        "type": "integer"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      },
+      "stopUrl": {
+        "fieldName": "stopUrl",
+        "type": "string"
+      }
+    }
+  },
+  "same_stop_and_route_url": {
+    "code": "same_stop_and_route_url",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "routeCsvRowNumber": {
+        "fieldName": "routeCsvRowNumber",
+        "type": "integer"
+      },
+      "routeId": {
+        "fieldName": "routeId",
+        "type": "string"
+      },
+      "stopCsvRowNumber": {
+        "fieldName": "stopCsvRowNumber",
+        "type": "integer"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      },
+      "stopUrl": {
+        "fieldName": "stopUrl",
+        "type": "string"
+      }
+    }
+  },
+  "start_and_end_range_equal": {
+    "code": "start_and_end_range_equal",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "endFieldName": {
+        "fieldName": "endFieldName",
+        "type": "string"
+      },
+      "entityId": {
+        "fieldName": "entityId",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      },
+      "startFieldName": {
+        "fieldName": "startFieldName",
+        "type": "string"
+      },
+      "value": {
+        "fieldName": "value",
+        "type": "string"
+      }
+    }
+  },
+  "start_and_end_range_out_of_order": {
+    "code": "start_and_end_range_out_of_order",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "endFieldName": {
+        "fieldName": "endFieldName",
+        "type": "string"
+      },
+      "endValue": {
+        "fieldName": "endValue",
+        "type": "string"
+      },
+      "entityId": {
+        "fieldName": "entityId",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      },
+      "startFieldName": {
+        "fieldName": "startFieldName",
+        "type": "string"
+      },
+      "startValue": {
+        "fieldName": "startValue",
+        "type": "string"
+      }
+    }
+  },
+  "station_with_parent_station": {
+    "code": "station_with_parent_station",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "parentStation": {
+        "fieldName": "parentStation",
+        "type": "string"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      },
+      "stopName": {
+        "fieldName": "stopName",
+        "type": "string"
+      }
+    }
+  },
+  "stop_has_too_many_matches_for_shape": {
+    "code": "stop_has_too_many_matches_for_shape",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "match": {
+        "fieldName": "match",
+        "type": "array",
+        "contains": {
+          "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2
+      },
+      "matchCount": {
+        "fieldName": "matchCount",
+        "type": "integer"
+      },
+      "shapeId": {
+        "fieldName": "shapeId",
+        "type": "string"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      },
+      "stopName": {
+        "fieldName": "stopName",
+        "type": "string"
+      },
+      "stopTimeCsvRowNumber": {
+        "fieldName": "stopTimeCsvRowNumber",
+        "type": "integer"
+      },
+      "tripCsvRowNumber": {
+        "fieldName": "tripCsvRowNumber",
+        "type": "integer"
+      },
+      "tripId": {
+        "fieldName": "tripId",
+        "type": "string"
+      }
+    }
+  },
+  "stop_time_timepoint_without_times": {
+    "code": "stop_time_timepoint_without_times",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "specifiedField": {
+        "fieldName": "specifiedField",
+        "type": "string"
+      },
+      "stopSequence": {
+        "fieldName": "stopSequence",
+        "type": "integer"
+      },
+      "tripId": {
+        "fieldName": "tripId",
+        "type": "string"
+      }
+    }
+  },
+  "stop_time_with_arrival_before_previous_departure_time": {
+    "code": "stop_time_with_arrival_before_previous_departure_time",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "arrivalTime": {
+        "fieldName": "arrivalTime",
+        "type": "string"
+      },
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "departureTime": {
+        "fieldName": "departureTime",
+        "type": "string"
+      },
+      "prevCsvRowNumber": {
+        "fieldName": "prevCsvRowNumber",
+        "type": "integer"
+      },
+      "tripId": {
+        "fieldName": "tripId",
+        "type": "string"
+      }
+    }
+  },
+  "stop_time_with_only_arrival_or_departure_time": {
+    "code": "stop_time_with_only_arrival_or_departure_time",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "specifiedField": {
+        "fieldName": "specifiedField",
+        "type": "string"
+      },
+      "stopSequence": {
+        "fieldName": "stopSequence",
+        "type": "integer"
+      },
+      "tripId": {
+        "fieldName": "tripId",
+        "type": "string"
+      }
+    }
+  },
+  "stop_too_far_from_shape": {
+    "code": "stop_too_far_from_shape",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "geoDistanceToShape": {
+        "fieldName": "geoDistanceToShape",
+        "type": "number"
+      },
+      "match": {
+        "fieldName": "match",
+        "type": "array",
+        "contains": {
+          "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2
+      },
+      "shapeId": {
+        "fieldName": "shapeId",
+        "type": "string"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      },
+      "stopName": {
+        "fieldName": "stopName",
+        "type": "string"
+      },
+      "stopTimeCsvRowNumber": {
+        "fieldName": "stopTimeCsvRowNumber",
+        "type": "integer"
+      },
+      "tripCsvRowNumber": {
+        "fieldName": "tripCsvRowNumber",
+        "type": "integer"
+      },
+      "tripId": {
+        "fieldName": "tripId",
+        "type": "string"
+      }
+    }
+  },
+  "stop_too_far_from_shape_using_user_distance": {
+    "code": "stop_too_far_from_shape_using_user_distance",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "geoDistanceToShape": {
+        "fieldName": "geoDistanceToShape",
+        "type": "number"
+      },
+      "match": {
+        "fieldName": "match",
+        "type": "array",
+        "contains": {
+          "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2
+      },
+      "shapeId": {
+        "fieldName": "shapeId",
+        "type": "string"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      },
+      "stopName": {
+        "fieldName": "stopName",
+        "type": "string"
+      },
+      "stopTimeCsvRowNumber": {
+        "fieldName": "stopTimeCsvRowNumber",
+        "type": "integer"
+      },
+      "tripCsvRowNumber": {
+        "fieldName": "tripCsvRowNumber",
+        "type": "integer"
+      },
+      "tripId": {
+        "fieldName": "tripId",
+        "type": "string"
+      }
+    }
+  },
+  "stop_without_location": {
+    "code": "stop_without_location",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "locationType": {
+        "fieldName": "locationType",
+        "type": "enum"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      }
+    }
+  },
+  "stop_without_stop_time": {
+    "code": "stop_without_stop_time",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      },
+      "stopName": {
+        "fieldName": "stopName",
+        "type": "string"
+      }
+    }
+  },
+  "stop_without_zone_id": {
+    "code": "stop_without_zone_id",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      },
+      "stopName": {
+        "fieldName": "stopName",
+        "type": "string"
+      }
+    }
+  },
+  "stops_match_shape_out_of_order": {
+    "code": "stops_match_shape_out_of_order",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "match1": {
+        "fieldName": "match1",
+        "type": "array",
+        "contains": {
+          "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2
+      },
+      "match2": {
+        "fieldName": "match2",
+        "type": "array",
+        "contains": {
+          "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2
+      },
+      "shapeId": {
+        "fieldName": "shapeId",
+        "type": "string"
+      },
+      "stopId1": {
+        "fieldName": "stopId1",
+        "type": "string"
+      },
+      "stopId2": {
+        "fieldName": "stopId2",
+        "type": "string"
+      },
+      "stopName1": {
+        "fieldName": "stopName1",
+        "type": "string"
+      },
+      "stopName2": {
+        "fieldName": "stopName2",
+        "type": "string"
+      },
+      "stopTimeCsvRowNumber1": {
+        "fieldName": "stopTimeCsvRowNumber1",
+        "type": "integer"
+      },
+      "stopTimeCsvRowNumber2": {
+        "fieldName": "stopTimeCsvRowNumber2",
+        "type": "integer"
+      },
+      "tripCsvRowNumber": {
+        "fieldName": "tripCsvRowNumber",
+        "type": "integer"
+      },
+      "tripId": {
+        "fieldName": "tripId",
+        "type": "string"
+      }
+    }
+  },
+  "thread_execution_error": {
+    "code": "thread_execution_error",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "exception": {
+        "fieldName": "exception",
+        "type": "string"
+      },
+      "message": {
+        "fieldName": "message",
+        "type": "string"
+      }
+    }
+  },
+  "too_many_rows": {
+    "code": "too_many_rows",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      },
+      "rowNumber": {
+        "fieldName": "rowNumber",
+        "type": "integer"
+      }
+    }
+  },
+  "transfer_with_invalid_stop_location_type": {
+    "code": "transfer_with_invalid_stop_location_type",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "locationTypeName": {
+        "fieldName": "locationTypeName",
+        "type": "string"
+      },
+      "locationTypeValue": {
+        "fieldName": "locationTypeValue",
+        "type": "integer"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      },
+      "stopIdFieldName": {
+        "fieldName": "stopIdFieldName",
+        "type": "string"
+      }
+    }
+  },
+  "transfer_with_invalid_trip_and_route": {
+    "code": "transfer_with_invalid_trip_and_route",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "expectedRouteId": {
+        "fieldName": "expectedRouteId",
+        "type": "string"
+      },
+      "routeFieldName": {
+        "fieldName": "routeFieldName",
+        "type": "string"
+      },
+      "routeId": {
+        "fieldName": "routeId",
+        "type": "string"
+      },
+      "tripFieldName": {
+        "fieldName": "tripFieldName",
+        "type": "string"
+      },
+      "tripId": {
+        "fieldName": "tripId",
+        "type": "string"
+      }
+    }
+  },
+  "transfer_with_invalid_trip_and_stop": {
+    "code": "transfer_with_invalid_trip_and_stop",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "stopFieldName": {
+        "fieldName": "stopFieldName",
+        "type": "string"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      },
+      "tripFieldName": {
+        "fieldName": "tripFieldName",
+        "type": "string"
+      },
+      "tripId": {
+        "fieldName": "tripId",
+        "type": "string"
+      }
+    }
+  },
+  "transfer_with_suspicious_mid_trip_in_seat": {
+    "code": "transfer_with_suspicious_mid_trip_in_seat",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      },
+      "stopIdFieldName": {
+        "fieldName": "stopIdFieldName",
+        "type": "string"
+      },
+      "tripId": {
+        "fieldName": "tripId",
+        "type": "string"
+      },
+      "tripIdFieldName": {
+        "fieldName": "tripIdFieldName",
+        "type": "string"
+      }
+    }
+  },
+  "translation_foreign_key_violation": {
+    "code": "translation_foreign_key_violation",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "recordId": {
+        "fieldName": "recordId",
+        "type": "string"
+      },
+      "recordSubId": {
+        "fieldName": "recordSubId",
+        "type": "string"
+      },
+      "tableName": {
+        "fieldName": "tableName",
+        "type": "string"
+      }
+    }
+  },
+  "translation_unexpected_value": {
+    "code": "translation_unexpected_value",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "fieldValue": {
+        "fieldName": "fieldValue",
+        "type": "string"
+      }
+    }
+  },
+  "translation_unknown_table_name": {
+    "code": "translation_unknown_table_name",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "tableName": {
+        "fieldName": "tableName",
+        "type": "string"
+      }
+    }
+  },
+  "trip_coverage_not_active_for_next7_days": {
+    "code": "trip_coverage_not_active_for_next7_days",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "currentDate": {
+        "fieldName": "currentDate",
+        "type": "string"
+      },
+      "serviceWindowEndDate": {
+        "fieldName": "serviceWindowEndDate",
+        "type": "string"
+      },
+      "serviceWindowStartDate": {
+        "fieldName": "serviceWindowStartDate",
+        "type": "string"
+      }
+    }
+  },
+  "u_r_i_syntax_error": {
+    "code": "u_r_i_syntax_error",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "exception": {
+        "fieldName": "exception",
+        "type": "string"
+      },
+      "message": {
+        "fieldName": "message",
+        "type": "string"
+      }
+    }
+  },
+  "unexpected_enum_value": {
+    "code": "unexpected_enum_value",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "fieldValue": {
+        "fieldName": "fieldValue",
+        "type": "integer"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "unknown_column": {
+    "code": "unknown_column",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "fieldName": {
+        "fieldName": "fieldName",
+        "type": "string"
+      },
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      },
+      "index": {
+        "fieldName": "index",
+        "type": "integer"
+      }
+    }
+  },
+  "unknown_file": {
+    "code": "unknown_file",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "filename": {
+        "fieldName": "filename",
+        "type": "string"
+      }
+    }
+  },
+  "unusable_trip": {
+    "code": "unusable_trip",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "tripId": {
+        "fieldName": "tripId",
+        "type": "string"
+      }
+    }
+  },
+  "unused_shape": {
+    "code": "unused_shape",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "shapeId": {
+        "fieldName": "shapeId",
+        "type": "string"
+      }
+    }
+  },
+  "unused_trip": {
+    "code": "unused_trip",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "tripId": {
+        "fieldName": "tripId",
+        "type": "string"
+      }
+    }
+  },
+  "wrong_parent_location_type": {
+    "code": "wrong_parent_location_type",
+    "severityLevel": "INFO",
+    "type": "object",
+    "properties": {
+      "csvRowNumber": {
+        "fieldName": "csvRowNumber",
+        "type": "integer"
+      },
+      "expectedLocationType": {
+        "fieldName": "expectedLocationType",
+        "type": "integer"
+      },
+      "locationType": {
+        "fieldName": "locationType",
+        "type": "integer"
+      },
+      "parentCsvRowNumber": {
+        "fieldName": "parentCsvRowNumber",
+        "type": "integer"
+      },
+      "parentLocationType": {
+        "fieldName": "parentLocationType",
+        "type": "integer"
+      },
+      "parentStation": {
+        "fieldName": "parentStation",
+        "type": "string"
+      },
+      "parentStopName": {
+        "fieldName": "parentStopName",
+        "type": "string"
+      },
+      "stopId": {
+        "fieldName": "stopId",
+        "type": "string"
+      },
+      "stopName": {
+        "fieldName": "stopName",
+        "type": "string"
+      }
+    }
+  }
+}
