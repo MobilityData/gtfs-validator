@@ -142,6 +142,7 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopTimeSchema.class))
   static class StopTimeWithOnlyArrivalOrDepartureTimeNotice extends ValidationNotice {
 
     // The row number of the faulty record.

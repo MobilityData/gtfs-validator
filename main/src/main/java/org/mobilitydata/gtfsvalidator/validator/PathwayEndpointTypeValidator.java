@@ -113,6 +113,7 @@ public class PathwayEndpointTypeValidator extends FileValidator {
   }
 
   /** Describes a pathway which endpoint is a platform that has boarding areas. */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsPathwaySchema.class))
   static class PathwayToPlatformWithBoardingAreasNotice extends ValidationNotice {
 
     // The row of the faulty row.

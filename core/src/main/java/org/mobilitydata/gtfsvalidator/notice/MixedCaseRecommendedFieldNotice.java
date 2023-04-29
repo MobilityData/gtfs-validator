@@ -27,6 +27,7 @@ public class MixedCaseRecommendedFieldNotice extends ValidationNotice {
   private final String fieldName;
 
   private final String fieldValue;
+
   private final int csvRowNumber;
 
   public MixedCaseRecommendedFieldNotice(

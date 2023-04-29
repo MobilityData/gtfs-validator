@@ -16,6 +16,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 import static org.mobilitydata.gtfsvalidator.util.S2Earth.getDistanceMeters;
 
 import com.google.common.collect.Multimaps;
@@ -139,6 +140,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsShapeSchema.class))
   static class EqualShapeDistanceSameCoordinatesNotice extends ValidationNotice {
 
     // The id of the faulty shape.
@@ -184,6 +186,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsShapeSchema.class))
   static class EqualShapeDistanceDiffCoordinatesNotice extends ValidationNotice {
 
     // The id of the faulty shape.

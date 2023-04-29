@@ -13,19 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.notice;
+
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import com.google.common.base.Strings;
 import java.io.IOException;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 
 /**
  * This is related to Input and Output operations in the code.
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
+@GtfsValidationNotice(severity = ERROR)
 public class IOError extends SystemError {
+
   private final String exception;
+
   private final String message;
 
   public IOError(IOException exception) {

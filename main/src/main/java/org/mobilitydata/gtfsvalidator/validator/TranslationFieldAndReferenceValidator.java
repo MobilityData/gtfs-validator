@@ -16,6 +16,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import com.google.common.collect.ImmutableList;
 import java.util.Optional;
@@ -215,6 +216,7 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
   }
 
   /** A translation references an unknown or missing GTFS table. */
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsTranslationSchema.class))
   static class TranslationUnknownTableNameNotice extends ValidationNotice {
 
     // The row number of the faulty record.
@@ -234,6 +236,7 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
    * An entity with the given {@code record_id, record_sub_id} cannot be found in the referenced
    * table.
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsTranslationSchema.class))
   static class TranslationForeignKeyViolationNotice extends ValidationNotice {
 
     // The row number of the faulty record.
