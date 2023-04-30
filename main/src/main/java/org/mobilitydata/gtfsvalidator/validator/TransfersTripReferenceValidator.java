@@ -166,6 +166,7 @@ public class TransfersTripReferenceValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsTransferSchema.class))
   public static class TransferWithInvalidTripAndStopNotice extends ValidationNotice {
 
     // The row number from `transfers.txt` for the faulty entry.

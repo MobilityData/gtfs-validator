@@ -20,6 +20,7 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 import java.time.LocalDate;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -105,6 +106,13 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
     }
   }
 
+  @GtfsValidationNotice(
+      severity = WARNING,
+      urls = {
+        @UrlRef(
+            label = "General Publishing & General Practices",
+            url = "https://gtfs.org/best-practices/#dataset-publishing--general-practices")
+      })
   static class FeedExpirationDate30DaysNotice extends ValidationNotice {
 
     // The row number of the faulty record.

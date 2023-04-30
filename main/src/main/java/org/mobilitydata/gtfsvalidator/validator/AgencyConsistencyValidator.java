@@ -15,16 +15,19 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import java.time.ZoneId;
 import java.util.Locale;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.*;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
+import org.mobilitydata.gtfsvalidator.table.GtfsAgencySchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 
 /**
@@ -143,6 +146,7 @@ public class AgencyConsistencyValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsAgencySchema.class))
   static class InconsistentAgencyTimezoneNotice extends ValidationNotice {
 
     // The row of the faulty record.

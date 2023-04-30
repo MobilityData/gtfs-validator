@@ -16,6 +16,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
@@ -102,6 +103,7 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
+  @GtfsValidationNotice(severity = WARNING)
   static class SameNameAndDescriptionForStopNotice extends ValidationNotice {
 
     // The row number of the faulty record.

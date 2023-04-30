@@ -37,6 +37,7 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
+import org.mobilitydata.gtfsvalidator.table.GtfsShapeSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
@@ -294,6 +295,9 @@ public class ShapeToStopMatchingValidator extends FileValidator {
    * <p>This potentially indicates a problem with the location of the stop or the use of {@code
    * shape_dist_traveled} values.
    */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs({GtfsTripSchema.class, GtfsStopTimeSchema.class, GtfsStopSchema.class}))
   static class StopTooFarFromShapeUsingUserDistanceNotice extends ValidationNotice {
 
     // The row number of the faulty record from `trips.txt`.
@@ -344,6 +348,7 @@ public class ShapeToStopMatchingValidator extends FileValidator {
    *
    * <p>This potentially indicates a problem with the location of the stop or the path of the shape.
    */
+  @GtfsValidationNotice(severity = WARNING, bestPractices = @FileRefs(GtfsShapeSchema.class))
   static class StopTooFarFromShapeNotice extends ValidationNotice {
 
     // The row number of the faulty record from `trips.txt`.
@@ -395,6 +400,9 @@ public class ShapeToStopMatchingValidator extends FileValidator {
    * <p>This could indicate a problem with the location of the stops, the path of the shape, or the
    * sequence of the stops for their trip.
    */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs({GtfsTripSchema.class, GtfsStopTimeSchema.class, GtfsStopSchema.class}))
   static class StopsMatchShapeOutOfOrderNotice extends ValidationNotice {
 
     // The row number of the faulty record from `trips.txt`.

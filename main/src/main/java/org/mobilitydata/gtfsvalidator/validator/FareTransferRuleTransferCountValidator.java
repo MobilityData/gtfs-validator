@@ -67,6 +67,7 @@ public class FareTransferRuleTransferCountValidator
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsFareTransferRuleSchema.class))
   static class FareTransferRuleMissingTransferCountNotice extends ValidationNotice {
 
     // The row of the faulty record.
@@ -84,6 +85,7 @@ public class FareTransferRuleTransferCountValidator
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsFareTransferRuleSchema.class))
   static class FareTransferRuleWithForbiddenTransferCountNotice extends ValidationNotice {
 
     // The row of the faulty record.

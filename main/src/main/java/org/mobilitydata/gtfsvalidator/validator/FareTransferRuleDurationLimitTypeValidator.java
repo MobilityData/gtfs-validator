@@ -51,6 +51,7 @@ public class FareTransferRuleDurationLimitTypeValidator
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsFareTransferRuleSchema.class))
   static class FareTransferRuleDurationLimitTypeWithoutDurationLimitNotice
       extends ValidationNotice {
 

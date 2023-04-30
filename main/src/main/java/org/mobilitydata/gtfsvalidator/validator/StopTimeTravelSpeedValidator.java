@@ -419,6 +419,13 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
    * <p>This normally indicates a more serious problem than too fast travel between consecutive
    * stops.
    */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      urls = {
+        @UrlRef(
+            label = "Original Python validator implementation",
+            url = "https://github.com/google/transitfeed")
+      })
   static class FastTravelBetweenFarStopsNotice extends ValidationNotice {
 
     // The row number of the problematic trip.

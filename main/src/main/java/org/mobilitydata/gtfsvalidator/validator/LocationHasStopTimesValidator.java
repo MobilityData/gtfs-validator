@@ -15,6 +15,7 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import java.util.List;
@@ -96,6 +97,7 @@ public class LocationHasStopTimesValidator extends FileValidator {
   /**
    * Describes a location in {@code stops.txt} that is not a stop but has a stop time associated.
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopTimeSchema.class))
   static class LocationWithUnexpectedStopTimeNotice extends ValidationNotice {
 
     // The row number of the faulty record from `stops.txt`.

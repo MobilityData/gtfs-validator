@@ -16,6 +16,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
@@ -119,6 +120,7 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
+  @GtfsValidationNotice(severity = WARNING, bestPractices = @FileRefs(GtfsRouteSchema.class))
   static class RouteLongNameContainsShortNameNotice extends ValidationNotice {
 
     // The id of the faulty record.
@@ -149,6 +151,7 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
+  @GtfsValidationNotice(severity = WARNING, bestPractices = @FileRefs(GtfsRouteSchema.class))
   static class RouteShortNameTooLongNotice extends ValidationNotice {
 
     // The id of the faulty record.
@@ -174,6 +177,7 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
+  @GtfsValidationNotice(severity = WARNING)
   static class SameNameAndDescriptionForRouteNotice extends ValidationNotice {
 
     // The row number of the faulty record.
