@@ -103,7 +103,7 @@ public class NoticeSchemaGenerator {
     return schema;
   }
 
-  private static NoticeDocComments loadComments(Class<?> noticeClass) {
+  public static NoticeDocComments loadComments(Class<?> noticeClass) {
     String resourceName = NoticeDocComments.getResourceNameForClass(noticeClass);
     InputStream is = noticeClass.getResourceAsStream(resourceName);
     if (is == null) {

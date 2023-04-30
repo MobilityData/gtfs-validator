@@ -39,6 +39,7 @@ public class PathwayLoopValidator extends SingleEntityValidator<GtfsPathway> {
     }
   }
 
+  /** A pathway should not have same values for `from_stop_id` and `to_stop_id`x. */
   @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsPathwaySchema.class))
   static class PathwayLoopNotice extends ValidationNotice {
 
