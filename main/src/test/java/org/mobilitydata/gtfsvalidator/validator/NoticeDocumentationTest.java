@@ -1,11 +1,14 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -16,6 +19,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.Notice;
+import org.mobilitydata.gtfsvalidator.notice.NoticeDocComments;
+import org.mobilitydata.gtfsvalidator.notice.schema.NoticeSchemaGenerator;
 
 @RunWith(JUnit4.class)
 public class NoticeDocumentationTest {
@@ -49,6 +54,24 @@ public class NoticeDocumentationTest {
         discoverValidationNoticeClasses().map(Notice::getCode).collect(Collectors.toSet());
 
     assertThat(fromMarkdown).isEqualTo(fromSource);
+  }
+
+  @Test
+  public void testThatNoticeFieldsAreDocumented() {
+    List<String> fieldsWithoutComments =
+        discoverValidationNoticeClasses()
+            .flatMap(
+                clazz -> {
+                  NoticeDocComments docComments = NoticeSchemaGenerator.loadComments(clazz);
+                  return Arrays.stream(clazz.getDeclaredFields())
+                      .filter(f -> docComments.getFieldComment(f.getName()) == null);
+                })
+            .map(f -> f.getDeclaringClass().getSimpleName() + "." + f.getName())
+            .collect(Collectors.toList());
+    assertWithMessage(
+            "Every field of a validation notice much be documented with a JavaDoc comment (aka /** */, not //).  The following fields are undocumented:")
+        .that(fieldsWithoutComments)
+        .isEmpty();
   }
 
   private static Stream<Class<Notice>> discoverValidationNoticeClasses() {
