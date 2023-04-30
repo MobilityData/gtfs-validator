@@ -134,3 +134,8 @@ First [install the gcloud cli](https://cloud.google.com/sdk/docs/install) and [a
 gcloud builds submit
 ```
 
+## Open API Spec
+
+:warning: **Subject to change**: This API spec may change at any time. We do not reccomend building any production systems that depend on this API directly.
+
+Open API Spec V3 documentation is avaliable at `web/service/open-api-spec.json`.
