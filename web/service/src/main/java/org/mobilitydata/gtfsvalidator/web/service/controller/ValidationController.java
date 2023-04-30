@@ -23,10 +23,7 @@ import java.io.*;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
-import org.mobilitydata.gtfsvalidator.web.service.util.JobMetadata;
-import org.mobilitydata.gtfsvalidator.web.service.util.StorageHelper;
-import org.mobilitydata.gtfsvalidator.web.service.util.ValidationHandler;
-import org.mobilitydata.gtfsvalidator.web.service.util.ValidationJobMetaData;
+import org.mobilitydata.gtfsvalidator.web.service.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +54,8 @@ public class ValidationController {
       if (body != null) {
         if (!Strings.isNullOrEmpty(body.getCountryCode())) {
           storageHelper.saveJobMetadata(new JobMetadata(jobId, body.getCountryCode()));
+        } else {
+          storageHelper.saveJobMetadata(new JobMetadata(jobId));
         }
         if (!Strings.isNullOrEmpty(body.getUrl())) {
           storageHelper.saveJobFileFromUrl(jobId, body.getUrl());
@@ -81,6 +80,9 @@ public class ValidationController {
       @RequestBody GoogleCloudPubsubMessage googleCloudPubsubMessage) {
     File tempFile = null;
     Path outputPath = null;
+    String jobId = null;
+    String countryCode = null;
+
     try {
       var message = googleCloudPubsubMessage.getMessage();
       if (message == null) {
@@ -89,10 +91,10 @@ public class ValidationController {
       }
 
       ValidationJobMetaData jobData = getFeedFileMetaData(message);
-      var jobId = jobData.getJobId();
+      jobId = jobData.getJobId();
       var fileName = jobData.getFileName();
 
-      var countryCode = storageHelper.getJobMetadata(jobId).getCountryCode();
+      countryCode = storageHelper.getJobMetadata(jobId).getCountryCode();
 
       // copy the file from GCS to a temp directory
       tempFile = storageHelper.downloadFeedFileFromStorage(jobId, fileName);
@@ -105,11 +107,16 @@ public class ValidationController {
       // upload the extracted files and the validation results from outputPath to GCS
       storageHelper.uploadFilesToStorage(jobId, outputPath);
 
+      // Update Job Status
+      storageHelper.saveJobMetadata(new JobMetadata(jobId, countryCode, JobStatus.COMPLETE));
+
       return new ResponseEntity(HttpStatus.OK);
     } catch (Exception exc) {
       logger.error("Error", exc);
       Sentry.captureException(exc);
-      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error", exc);
+      storageHelper.saveJobMetadata(
+          new JobMetadata(jobId, countryCode, JobStatus.ERROR, exc.getMessage()));
+      return new ResponseEntity(HttpStatus.ACCEPTED);
     } finally {
       // delete the temp file and directory
       if (tempFile != null) {
