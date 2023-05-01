@@ -96,8 +96,10 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
     /** The row number from `stop_times.txt` of the previous stop time. */
     private final long prevCsvRowNumber;
 
-    // Actual distance traveled along the shape from the first shape point to the previous stop
-    /** time. */
+    /**
+     * Actual distance traveled along the shape from the first shape point to the previous stop
+     * time.
+     */
     private final double prevStopTimeDistTraveled;
 
     /** The previous record's `stop_times.stop_sequence`. */

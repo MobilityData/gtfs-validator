@@ -53,7 +53,7 @@ public class PointNearPoleNotice extends ValidationNotice {
   /** The name of the field that uses longitude value. */
   private final String lonFieldName;
 
-  /** The longitude of the faulty row */
+  /** The longitude of the faulty row. */
   private final double lonFieldValue;
 
   public PointNearPoleNotice(

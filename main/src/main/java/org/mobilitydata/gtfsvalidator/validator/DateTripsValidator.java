@@ -106,7 +106,7 @@ public class DateTripsValidator extends FileValidator {
   @GtfsValidationNotice(severity = WARNING)
   static class TripCoverageNotActiveForNext7DaysNotice extends ValidationNotice {
 
-    /** Current date (YYYYMMDD format) */
+    /** Current date (YYYYMMDD format). */
     private final GtfsDate currentDate;
 
     /** The start date of the majority service window. */

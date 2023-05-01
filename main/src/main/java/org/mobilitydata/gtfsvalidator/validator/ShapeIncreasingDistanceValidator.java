@@ -111,8 +111,10 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
     /** The row number from `shapes.txt` of the previous shape point. */
     private final long prevCsvRowNumber;
 
-    // Actual distance traveled along the shape from the first shape point to the previous shape
-    /** point. */
+    /**
+     * Actual distance traveled along the shape from the first shape point to the previous shape
+     * point.
+     */
     private final double prevShapeDistTraveled;
 
     /** The previous record's `shapes.shape_pt_sequence`. */
@@ -158,8 +160,10 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
     /** The row number from `shapes.txt` of the previous shape point. */
     private final long prevCsvRowNumber;
 
-    // Actual distance traveled along the shape from the first shape point to the previous shape
-    /** point. */
+    /**
+     * Actual distance traveled along the shape from the first shape point to the previous shape
+     * point.
+     */
     private final double prevShapeDistTraveled;
 
     /** The previous record's `shapes.shape_pt_sequence`. */

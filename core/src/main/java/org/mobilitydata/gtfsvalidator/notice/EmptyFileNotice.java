@@ -29,7 +29,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
 @GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILE_REQUIREMENTS))
 public class EmptyFileNotice extends ValidationNotice {
 
-  /** The name of the faulty file */
+  /** The name of the faulty file. */
   private final String filename;
 
   public EmptyFileNotice(String filename) {

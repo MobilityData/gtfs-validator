@@ -28,7 +28,7 @@ public class MixedCaseRecommendedFieldNotice extends ValidationNotice {
   /** Name of the faulty field. */
   private final String fieldName;
 
-  /** Name of the faulty field. */
+  /** Faulty value. */
   private final String fieldValue;
 
   /** The row number of the faulty record. */
