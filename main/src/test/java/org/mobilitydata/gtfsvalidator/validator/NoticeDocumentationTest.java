@@ -57,6 +57,22 @@ public class NoticeDocumentationTest {
   }
 
   @Test
+  public void testThatAllValidationNoticesAreDocumented() {
+    List<Class<?>> noticesWithoutDocComment =
+        discoverValidationNoticeClasses()
+            .filter(
+                clazz -> {
+                  NoticeDocComments docComments = NoticeSchemaGenerator.loadComments(clazz);
+                  return docComments.getDocComment() == null;
+                })
+            .collect(Collectors.toList());
+    assertWithMessage(
+            "We expect all validation notices to have a documentation comment.  If this test fails, it likely means that a Javadoc /** */ documentation header needs to be added to the following classes:")
+        .that(noticesWithoutDocComment)
+        .isEmpty();
+  }
+
+  @Test
   public void testThatNoticeFieldsAreDocumented() {
     List<String> fieldsWithoutComments =
         discoverValidationNoticeClasses()
