@@ -29,8 +29,10 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 @GtfsValidationNotice(severity = ERROR)
 public class IOError extends SystemError {
 
+  /** The name of the exception. */
   private final String exception;
 
+  /** The error message that explains the reason for the exception. */
   private final String message;
 
   public IOError(IOException exception) {

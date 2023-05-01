@@ -143,19 +143,19 @@ public class TransfersInSeatTransferTypeValidator extends FileValidator {
   @GtfsValidationNotice(severity = WARNING)
   public static class TransferWithSuspiciousMidTripInSeatNotice extends ValidationNotice {
 
-    // The row number from `transfers.txt` for the faulty entry.
+    /** The row number from `transfers.txt` for the faulty entry. */
     private final int csvRowNumber;
 
-    // The name of the trip id field (e.g. `from_trip_id`) referencing a trip.
+    /** The name of the trip id field (e.g. `from_trip_id`) referencing a trip. */
     private final String tripIdFieldName;
 
-    // The referenced trip id.
+    /** The referenced trip id. */
     private final String tripId;
 
-    // The name of the stop id field (e.g. `from_stop_id`) referencing the stop.
+    /** The name of the stop id field (e.g. `from_stop_id`) referencing the stop. */
     private final String stopIdFieldName;
 
-    // The referenced stop id.
+    /** The referenced stop id. */
     private final String stopId;
 
     public TransferWithSuspiciousMidTripInSeatNotice(

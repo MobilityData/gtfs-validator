@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -68,6 +69,24 @@ public class NoticeDocumentationTest {
     assertWithMessage(
             "We expect all validation notices to have a documentation comment.  If this test fails, it likely means that a Javadoc /** */ documentation header needs to be added to the following classes:")
         .that(noticesWithoutDocComment)
+        .isEmpty();
+  }
+
+  @Test
+  public void testThatNoticeFieldsAreDocumented() {
+    List<String> fieldsWithoutComments =
+        discoverValidationNoticeClasses()
+            .flatMap(
+                clazz -> {
+                  NoticeDocComments docComments = NoticeSchemaGenerator.loadComments(clazz);
+                  return Arrays.stream(clazz.getDeclaredFields())
+                      .filter(f -> docComments.getFieldComment(f.getName()) == null);
+                })
+            .map(f -> f.getDeclaringClass().getSimpleName() + "." + f.getName())
+            .collect(Collectors.toList());
+    assertWithMessage(
+            "Every field of a validation notice much be documented with a JavaDoc comment (aka /** */, not //).  The following fields are undocumented:")
+        .that(fieldsWithoutComments)
         .isEmpty();
   }
 

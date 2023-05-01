@@ -102,10 +102,10 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsRouteSchema.class))
   static class RouteBothShortAndLongNameMissingNotice extends ValidationNotice {
 
-    // The id of the faulty record.
+    /** The id of the faulty record. */
     private final String routeId;
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
     RouteBothShortAndLongNameMissingNotice(String routeId, int csvRowNumber) {
@@ -123,16 +123,16 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
   @GtfsValidationNotice(severity = WARNING, bestPractices = @FileRefs(GtfsRouteSchema.class))
   static class RouteLongNameContainsShortNameNotice extends ValidationNotice {
 
-    // The id of the faulty record.
+    /** The id of the faulty record. */
     private final String routeId;
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The faulty record's `route_short_name`.
+    /** The faulty record's `route_short_name`. */
     private final String routeShortName;
 
-    // The faulty record's `route_long_name`.
+    /** The faulty record's `route_long_name`. */
     private final String routeLongName;
 
     RouteLongNameContainsShortNameNotice(
@@ -154,13 +154,13 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
   @GtfsValidationNotice(severity = WARNING, bestPractices = @FileRefs(GtfsRouteSchema.class))
   static class RouteShortNameTooLongNotice extends ValidationNotice {
 
-    // The id of the faulty record.
+    /** The id of the faulty record. */
     private final String routeId;
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The faulty record's `route_short_name`.
+    /** The faulty record's `route_short_name`. */
     private final String routeShortName;
 
     RouteShortNameTooLongNotice(String routeId, int csvRowNumber, String routeShortName) {
@@ -180,16 +180,16 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
   @GtfsValidationNotice(severity = WARNING)
   static class SameNameAndDescriptionForRouteNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The id of the faulty record.
+    /** The id of the faulty record. */
     private final String routeId;
 
-    // The `routes.routes_desc` of the faulty record.
+    /** The `routes.routes_desc` of the faulty record. */
     private final String routeDesc;
 
-    // Either `route_short_name` or `route_long_name`.
+    /** Either `route_short_name` or `route_long_name`. */
     private final String specifiedField;
 
     SameNameAndDescriptionForRouteNotice(

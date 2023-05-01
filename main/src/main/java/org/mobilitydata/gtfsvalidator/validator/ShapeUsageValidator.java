@@ -68,10 +68,10 @@ public class ShapeUsageValidator extends FileValidator {
   @GtfsValidationNotice(severity = WARNING)
   static class UnusedShapeNotice extends ValidationNotice {
 
-    // The faulty record's id.
+    /** The faulty record's id. */
     private final String shapeId;
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
     UnusedShapeNotice(String shapeId, int csvRowNumber) {

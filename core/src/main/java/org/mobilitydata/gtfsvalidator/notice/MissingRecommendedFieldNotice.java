@@ -27,13 +27,13 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 @GtfsValidationNotice(severity = WARNING)
 public class MissingRecommendedFieldNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The row of the faulty record.
+  /** The row of the faulty record. */
   private final int csvRowNumber;
 
-  // The name of the missing field.
+  /** The name of the missing field. */
   private final String fieldName;
 
   public MissingRecommendedFieldNotice(String filename, int csvRowNumber, String fieldName) {

@@ -37,25 +37,25 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
     })
 public class StartAndEndRangeOutOfOrderNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The row number of the faulty record.
+  /** The row number of the faulty record. */
   private final int csvRowNumber;
 
-  // The faulty service id.
+  /** The faulty service id. */
   @Nullable private final String entityId;
 
-  // The start value's field name.
+  /** The start value's field name. */
   private final String startFieldName;
 
-  // The start value.
+  /** The start value. */
   private final String startValue;
 
-  // The end value's field name.
+  /** The end value's field name. */
   private final String endFieldName;
 
-  // The end value.
+  /** The end value. */
   private final String endValue;
 
   public StartAndEndRangeOutOfOrderNotice(

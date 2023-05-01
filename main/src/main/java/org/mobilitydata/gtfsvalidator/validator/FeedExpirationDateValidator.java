@@ -85,16 +85,16 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
   @GtfsValidationNotice(severity = WARNING)
   static class FeedExpirationDate7DaysNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // Current date (YYYYMMDD format).
+    /** Current date (YYYYMMDD format). */
     private final GtfsDate currentDate;
 
-    // Feed end date (YYYYMMDD format).
+    /** Feed end date (YYYYMMDD format). */
     private final GtfsDate feedEndDate;
 
-    // Suggested expiration date (YYYYMMDD format).
+    /** Suggested expiration date (YYYYMMDD format). */
     private final GtfsDate suggestedExpirationDate;
 
     FeedExpirationDate7DaysNotice(
@@ -123,16 +123,16 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
       })
   static class FeedExpirationDate30DaysNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // Current date (YYYYMMDD format).
+    /** Current date (YYYYMMDD format). */
     private final GtfsDate currentDate;
 
-    // Feed end date (YYYYMMDD format).
+    /** Feed end date (YYYYMMDD format). */
     private final GtfsDate feedEndDate;
 
-    // Suggested expiration date (YYYYMMDD format).
+    /** Suggested expiration date (YYYYMMDD format). */
     private final GtfsDate suggestedExpirationDate;
 
     FeedExpirationDate30DaysNotice(
