@@ -38,7 +38,7 @@ jobs:
 
       - uses: google-github-actions/auth@v1
         with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          credentials_json: ${{ secrets.GCP_WEB_VALIDATOR_SA_KEY }}
 
       - uses: google-github-actions/setup-gcloud@v1
         with:
