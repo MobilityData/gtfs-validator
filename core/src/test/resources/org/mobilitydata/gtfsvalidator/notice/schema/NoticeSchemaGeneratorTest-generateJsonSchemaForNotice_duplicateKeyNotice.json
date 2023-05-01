@@ -6,6 +6,9 @@
   "references": {
     "fileReferences": [],
     "bestPracticesFileReferences": [],
+    "sectionReferences": [
+      "file-requirements"
+    ],
     "urlReferences": [
       {
         "label": "Original Python validator implementation",
