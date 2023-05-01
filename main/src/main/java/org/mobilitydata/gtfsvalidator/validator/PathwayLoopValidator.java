@@ -42,13 +42,15 @@ public class PathwayLoopValidator extends SingleEntityValidator<GtfsPathway> {
   @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsPathwaySchema.class))
   static class PathwayLoopNotice extends ValidationNotice {
 
-    // Row number of the faulty row from `pathways.txt`.
+    /** Row number of the faulty row from `pathways.txt`. */
     private final int csvRowNumber;
 
-    // The id of the faulty record.
+    /** The id of the faulty record. */
     private final String pathwayId;
 
-    // The `pathway.stop_id` that is repeated in `pathways.from_stop_id` and `pathways.to_stop_id`.
+    /**
+     * The `pathway.stop_id` that is repeated in `pathways.from_stop_id` and `pathways.to_stop_id`.
+     */
     private final String stopId;
 
     PathwayLoopNotice(GtfsPathway pathway) {

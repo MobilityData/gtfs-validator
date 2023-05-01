@@ -59,10 +59,10 @@ public class AttributionWithoutRoleValidator extends SingleEntityValidator<GtfsA
   @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsAttributionSchema.class))
   static class AttributionWithoutRoleNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The id of the faulty record.
+    /** The id of the faulty record. */
     private final String attributionId;
 
     AttributionWithoutRoleNotice(int csvRowNumber, String attributionId) {

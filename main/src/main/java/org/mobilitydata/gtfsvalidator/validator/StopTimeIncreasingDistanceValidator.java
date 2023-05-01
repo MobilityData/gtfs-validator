@@ -81,26 +81,26 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopTimeSchema.class))
   static class DecreasingOrEqualStopTimeDistanceNotice extends ValidationNotice {
 
-    // The id of the faulty trip.
+    /** The id of the faulty trip. */
     private final String tripId;
 
-    // The row number from `stop_times.txt`.
+    /** The row number from `stop_times.txt`. */
     private final int csvRowNumber;
 
-    // Actual distance traveled along the shape from the first shape point to the faulty record.
+    /** Actual distance traveled along the shape from the first shape point to the faulty record. */
     private final double shapeDistTraveled;
 
-    // The faulty record's `stop_times.stop_sequence`.
+    /** The faulty record's `stop_times.stop_sequence`. */
     private final int stopSequence;
 
-    // The row number from `stop_times.txt` of the previous stop time.
+    /** The row number from `stop_times.txt` of the previous stop time. */
     private final long prevCsvRowNumber;
 
     // Actual distance traveled along the shape from the first shape point to the previous stop
-    // time.
+    /** time. */
     private final double prevStopTimeDistTraveled;
 
-    // The previous record's `stop_times.stop_sequence`.
+    /** The previous record's `stop_times.stop_sequence`. */
     private final int prevStopSequence;
 
     DecreasingOrEqualStopTimeDistanceNotice(

@@ -47,13 +47,13 @@ public class StopRequiredLocationValidator extends SingleEntityValidator<GtfsSto
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopSchema.class))
   static class StopWithoutLocationNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The faulty record's `stops.location_type`.
+    /** The faulty record's `stops.location_type`. */
     private final GtfsLocationType locationType;
 
-    // The faulty record's id.
+    /** The faulty record's id. */
     private final String stopId;
 
     StopWithoutLocationNotice(int csvRowNumber, String stopId, GtfsLocationType type) {

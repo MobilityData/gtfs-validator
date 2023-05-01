@@ -276,25 +276,25 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
     /** The row number from `trips.txt` of the first faulty trip. */
     private final int csvRowNumberA;
 
-    // The id of first faulty trip.
+    /** The id of first faulty trip. */
     private final String tripIdA;
 
-    // The service id of the first faulty trip.
+    /** The service id of the first faulty trip. */
     private final String serviceIdA;
 
-    // The row number from `trips.txt` of the second faulty trip.
+    /** The row number from `trips.txt` of the second faulty trip. */
     private final int csvRowNumberB;
 
-    // The id of the other faulty trip.
+    /** The id of the other faulty trip. */
     private final String tripIdB;
 
-    // The service id of the other faulty trip.
+    /** The service id of the other faulty trip. */
     private final String serviceIdB;
 
-    // The `trips.block_id` of the overlapping trip.
+    /** The `trips.block_id` of the overlapping trip. */
     private final String blockId;
 
-    // The overlapping period.
+    /** The overlapping period. */
     private final GtfsDate intersection;
 
     BlockTripsWithOverlappingStopTimesNotice(

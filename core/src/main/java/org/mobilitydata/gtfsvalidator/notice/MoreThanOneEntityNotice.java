@@ -29,10 +29,10 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
 @GtfsValidationNotice(severity = WARNING, sections = @SectionRefs(FIELD_DEFINITIONS))
 public class MoreThanOneEntityNotice extends ValidationNotice {
 
-  // Name of the faulty file.
+  /** Name of the faulty file. */
   private final String filename;
 
-  // Number of occurrences.
+  /** Number of occurrences. */
   private final long entityCount;
 
   public MoreThanOneEntityNotice(String filename, long entityCount) {

@@ -22,12 +22,16 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
     })
 public class MixedCaseRecommendedFieldNotice extends ValidationNotice {
 
+  /** Name of the faulty file. */
   private final String filename;
 
+  /** Name of the faulty field. */
   private final String fieldName;
 
+  /** Name of the faulty field. */
   private final String fieldValue;
 
+  /** The row number of the faulty record. */
   private final int csvRowNumber;
 
   public MixedCaseRecommendedFieldNotice(

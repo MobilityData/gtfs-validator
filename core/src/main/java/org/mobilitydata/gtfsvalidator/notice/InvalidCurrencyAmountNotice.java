@@ -18,16 +18,16 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
 @GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILED_TYPES))
 public class InvalidCurrencyAmountNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // Faulty record's field name.
+  /** Faulty record's field name. */
   private final String fieldName;
 
-  // The row of the faulty record.
+  /** The row of the faulty record. */
   private final int csvRowNumber;
 
-  // Faulty currency amount value.
+  /** Faulty currency amount value. */
   private final String amount;
 
   public InvalidCurrencyAmountNotice(

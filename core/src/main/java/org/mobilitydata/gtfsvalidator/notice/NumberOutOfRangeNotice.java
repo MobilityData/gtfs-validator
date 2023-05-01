@@ -38,19 +38,19 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
     })
 public class NumberOutOfRangeNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The row of the faulty record.
+  /** The row of the faulty record. */
   private final int csvRowNumber;
 
-  // The name of the faulty field.
+  /** The name of the faulty field. */
   private final String fieldName;
 
-  // The type of the faulty field.
+  /** The type of the faulty field. */
   private final String fieldType;
 
-  // Faulty value.
+  /** Faulty value. */
   private final Object fieldValue;
 
   public NumberOutOfRangeNotice(

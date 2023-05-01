@@ -96,31 +96,31 @@ public class ParentLocationTypeValidator extends FileValidator {
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopSchema.class))
   static class WrongParentLocationTypeNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The id of the faulty record.
+    /** The id of the faulty record. */
     private final String stopId;
 
-    // The faulty record's `stops.stop_name`.
+    /** The faulty record's `stops.stop_name`. */
     private final String stopName;
 
-    // The faulty record's `stops.location_type`.
+    /** The faulty record's `stops.location_type`. */
     private final int locationType;
 
-    // The row number of the faulty record's parent.
+    /** The row number of the faulty record's parent. */
     private final long parentCsvRowNumber;
 
-    // The id of the faulty record's parent station.
+    /** The id of the faulty record's parent station. */
     private final String parentStation;
 
-    // The stop name of the faulty record's parent.
+    /** The stop name of the faulty record's parent. */
     private final String parentStopName;
 
-    // The location type of the faulty record's parent.
+    /** The location type of the faulty record's parent. */
     private final int parentLocationType;
 
-    // The expected location type of the faulty record.
+    /** The expected location type of the faulty record. */
     private final int expectedLocationType;
 
     WrongParentLocationTypeNotice(

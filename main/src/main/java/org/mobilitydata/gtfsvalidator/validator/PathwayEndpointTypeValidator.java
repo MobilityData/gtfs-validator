@@ -91,16 +91,16 @@ public class PathwayEndpointTypeValidator extends FileValidator {
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsPathwaySchema.class))
   static class PathwayToWrongLocationTypeNotice extends ValidationNotice {
 
-    // The row of the faulty row.
+    /** The row of the faulty row. */
     private final int csvRowNumber;
 
-    // The id of the faulty pathway.
+    /** The id of the faulty pathway. */
     private final String pathwayId;
 
-    // The station id field name.
+    /** The station id field name. */
     private final String fieldName;
 
-    // The id of the endpoint station.
+    /** The id of the endpoint station. */
     private final String stopId;
 
     PathwayToWrongLocationTypeNotice(GtfsPathway pathway, String fieldName, String stopId) {
@@ -116,16 +116,16 @@ public class PathwayEndpointTypeValidator extends FileValidator {
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsPathwaySchema.class))
   static class PathwayToPlatformWithBoardingAreasNotice extends ValidationNotice {
 
-    // The row of the faulty row.
+    /** The row of the faulty row. */
     private final int csvRowNumber;
 
-    // The id of the faulty pathway.
+    /** The id of the faulty pathway. */
     private final String pathwayId;
 
-    // The platform id field name.
+    /** The platform id field name. */
     private final String fieldName;
 
-    // The id of the endpoint platform.
+    /** The id of the endpoint platform. */
     private final String stopId;
 
     PathwayToPlatformWithBoardingAreasNotice(GtfsPathway pathway, String fieldName, String stopId) {

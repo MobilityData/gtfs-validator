@@ -75,10 +75,10 @@ public class ExpiredCalendarValidator extends FileValidator {
       })
   static class ExpiredCalendarNotice extends ValidationNotice {
 
-    // The row of the faulty record.
+    /** The row of the faulty record. */
     private final int csvRowNumber;
 
-    // The service id of the faulty record.
+    /** The service id of the faulty record. */
     private final String serviceId;
 
     ExpiredCalendarNotice(int csvRowNumber, String serviceId) {

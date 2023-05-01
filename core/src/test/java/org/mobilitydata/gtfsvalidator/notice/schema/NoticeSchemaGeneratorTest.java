@@ -66,17 +66,30 @@ public class NoticeSchemaGeneratorTest {
     assertThat(schema.getFields())
         .containsExactly(
             "childFieldName",
-            new FieldSchema(FieldTypeSchema.STRING, "childFieldName", null),
+            new FieldSchema(
+                FieldTypeSchema.STRING,
+                "childFieldName",
+                "The name of the field that makes reference."),
             "childFilename",
-            new FieldSchema(FieldTypeSchema.STRING, "childFilename", null),
+            new FieldSchema(
+                FieldTypeSchema.STRING,
+                "childFilename",
+                "The name of the file from which reference is made."),
             "csvRowNumber",
-            new FieldSchema(FieldTypeSchema.INTEGER, "csvRowNumber", null),
+            new FieldSchema(
+                FieldTypeSchema.INTEGER, "csvRowNumber", "The row of the faulty record."),
             "fieldValue",
-            new FieldSchema(FieldTypeSchema.STRING, "fieldValue", null),
+            new FieldSchema(FieldTypeSchema.STRING, "fieldValue", "The faulty record's value."),
             "parentFieldName",
-            new FieldSchema(FieldTypeSchema.STRING, "parentFieldName", null),
+            new FieldSchema(
+                FieldTypeSchema.STRING,
+                "parentFieldName",
+                "The name of the field that is referred to."),
             "parentFilename",
-            new FieldSchema(FieldTypeSchema.STRING, "parentFilename", null));
+            new FieldSchema(
+                FieldTypeSchema.STRING,
+                "parentFilename",
+                "The name of the file that is referred to."));
   }
 
   @Test

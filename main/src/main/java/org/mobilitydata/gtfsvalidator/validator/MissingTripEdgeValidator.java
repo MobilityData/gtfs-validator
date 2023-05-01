@@ -105,16 +105,16 @@ public class MissingTripEdgeValidator extends FileValidator {
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopTimeSchema.class))
   static class MissingTripEdgeNotice extends ValidationNotice {
 
-    // The row of the faulty record.
+    /** The row of the faulty record. */
     private final int csvRowNumber;
 
-    // `stops.stop_sequence` of the faulty record.
+    /** `stops.stop_sequence` of the faulty record. */
     private final int stopSequence;
 
-    // The `trips.trip_id` of the faulty record.
+    /** The `trips.trip_id` of the faulty record. */
     private final String tripId;
 
-    // Name of the missing field.
+    /** Name of the missing field. */
     private final String specifiedField;
 
     MissingTripEdgeNotice(

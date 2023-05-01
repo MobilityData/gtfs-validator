@@ -31,22 +31,22 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 @GtfsValidationNotice(severity = ERROR)
 public class CsvParsingFailedNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The location of the last character read from before the error occurred.
+  /** The location of the last character read from before the error occurred. */
   private final long charIndex;
 
-  // The column index where the exception occurred.
+  /** The column index where the exception occurred. */
   private final long columnIndex;
 
-  // The line number where the exception occurred.
+  /** The line number where the exception occurred. */
   private final long lineIndex;
 
-  // The detailed message describing the error, and the internal state of the parser/writer.
+  /** The detailed message describing the error, and the internal state of the parser/writer. */
   private final String message;
 
-  // The record number when the exception occurred.
+  /** The record number when the exception occurred. */
   private final String parsedContent;
 
   /**
