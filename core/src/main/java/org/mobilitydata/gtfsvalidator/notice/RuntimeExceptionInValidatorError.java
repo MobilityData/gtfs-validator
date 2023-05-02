@@ -14,10 +14,13 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 @GtfsValidationNotice(severity = ERROR)
 public class RuntimeExceptionInValidatorError extends SystemError {
 
+  /** The name of the validator that caused the exception. */
   private final String validator;
 
+  /** The name of the exception. */
   private final String exception;
 
+  /** The error message that explains the reason for the exception. */
   private final String message;
 
   public RuntimeExceptionInValidatorError(String validatorClassName, RuntimeException exception) {

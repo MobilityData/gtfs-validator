@@ -29,10 +29,10 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
 @GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(TERM_DEFINITIONS))
 public class MissingRequiredColumnNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The name of the missing column.
+  /** The name of the missing column. */
   private final String fieldName;
 
   public MissingRequiredColumnNotice(String filename, String fieldName) {

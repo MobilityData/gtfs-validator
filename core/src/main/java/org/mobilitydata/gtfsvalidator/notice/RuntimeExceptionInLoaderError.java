@@ -14,10 +14,13 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 @GtfsValidationNotice(severity = ERROR)
 public class RuntimeExceptionInLoaderError extends SystemError {
 
+  /** The name of the file that caused the exception. */
   private final String filename;
 
+  /** The name of the exception. */
   private final String exception;
 
+  /** The error message that explains the reason for the exception. */
   private final String message;
 
   public RuntimeExceptionInLoaderError(String filename, RuntimeException exception) {

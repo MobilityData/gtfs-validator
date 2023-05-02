@@ -197,13 +197,13 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsTranslationSchema.class))
   static class TranslationUnexpectedValueNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The name of the field that was expected to be empty.
+    /** The name of the field that was expected to be empty. */
     private final String fieldName;
 
-    // Actual value of the field that was expected to be empty.
+    /** Actual value of the field that was expected to be empty. */
     private final String fieldValue;
 
     TranslationUnexpectedValueNotice(
@@ -219,10 +219,10 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
   @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsTranslationSchema.class))
   static class TranslationUnknownTableNameNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // `table_name` of the faulty record.
+    /** `table_name` of the faulty record. */
     private final String tableName;
 
     TranslationUnknownTableNameNotice(GtfsTranslation translation) {
@@ -239,16 +239,16 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsTranslationSchema.class))
   static class TranslationForeignKeyViolationNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // `table_name` of the faulty record.
+    /** `table_name` of the faulty record. */
     private final String tableName;
 
-    // `record_id` of the faulty record.
+    /** `record_id` of the faulty record. */
     private final String recordId;
 
-    // `record_sub_id` of the faulty record.
+    /** `record_sub_id` of the faulty record. */
     private final String recordSubId;
 
     TranslationForeignKeyViolationNotice(GtfsTranslation translation) {

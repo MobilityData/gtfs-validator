@@ -32,10 +32,10 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
 @GtfsValidationNotice(severity = WARNING, sections = @SectionRefs(FILE_REQUIREMENTS))
 public class EmptyRowNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The row number of the faulty record.
+  /** The row number of the faulty record. */
   private final int csvRowNumber;
 
   public EmptyRowNotice(String filename, int csvRowNumber) {

@@ -37,16 +37,16 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
     })
 public class InvalidRowLengthNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The row of the faulty record.
+  /** The row of the faulty record. */
   private final int csvRowNumber;
 
-  // The length of the faulty record.
+  /** The length of the faulty record. */
   private final int rowLength;
 
-  // The number of column in the faulty file.
+  /** The number of column in the faulty file. */
   private final int headerCount;
 
   public InvalidRowLengthNotice(String filename, int csvRowNumber, int rowLength, int headerCount) {

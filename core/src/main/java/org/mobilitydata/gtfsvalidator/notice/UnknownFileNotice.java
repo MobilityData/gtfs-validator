@@ -34,7 +34,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
     })
 public class UnknownFileNotice extends ValidationNotice {
 
-  // The name of the unknown file.
+  /** The name of the unknown file. */
   private final String filename;
 
   public UnknownFileNotice(String filename) {

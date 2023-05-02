@@ -101,13 +101,13 @@ public class StopZoneIdValidator extends FileValidator {
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopSchema.class))
   static class StopWithoutZoneIdNotice extends ValidationNotice {
 
-    // The faulty record's id.
+    /** The faulty record's id. */
     private final String stopId;
 
-    // The faulty record's `stops.stop_name`.
+    /** The faulty record's `stops.stop_name`. */
     private final String stopName;
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
     StopWithoutZoneIdNotice(GtfsStop stop) {

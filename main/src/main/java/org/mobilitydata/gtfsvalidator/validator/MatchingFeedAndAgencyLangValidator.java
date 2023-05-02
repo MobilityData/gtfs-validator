@@ -101,19 +101,19 @@ public class MatchingFeedAndAgencyLangValidator extends FileValidator {
       files = @FileRefs({GtfsFeedInfoSchema.class, GtfsAgencySchema.class}))
   static class FeedInfoLangAndAgencyLangMismatchNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The agency id of the faulty record.
+    /** The agency id of the faulty record. */
     private final String agencyId;
 
-    // The agency name of the faulty record.
+    /** The agency name of the faulty record. */
     private final String agencyName;
 
-    // The agency language of the faulty record.
+    /** The agency language of the faulty record. */
     private final String agencyLang;
 
-    // The feed language of the faulty record.
+    /** The feed language of the faulty record. */
     private final String feedLang;
 
     FeedInfoLangAndAgencyLangMismatchNotice(

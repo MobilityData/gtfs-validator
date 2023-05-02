@@ -37,22 +37,22 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
     })
 public class StartAndEndRangeEqualNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The row number of the faulty record.
+  /** The row number of the faulty record. */
   private final int csvRowNumber;
 
-  // The id of the faulty entity.
+  /** The id of the faulty entity. */
   @Nullable private final String entityId;
 
-  // The start value's field name.
+  /** The start value's field name. */
   private final String startFieldName;
 
-  // The end value's field name.
+  /** The end value's field name. */
   private final String endFieldName;
 
-  // The faulty value.
+  /** The faulty value. */
   private final String value;
 
   public StartAndEndRangeEqualNotice(

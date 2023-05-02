@@ -66,6 +66,12 @@ public class ExpiredCalendarValidator extends FileValidator {
     }
   }
 
+  /**
+   * Dataset should not contain date ranges for services that have already expired.
+   *
+   * <p>This warning takes into account the `calendar_dates.txt` file as well as the `calendar.txt`
+   * file.
+   */
   @GtfsValidationNotice(
       severity = WARNING,
       urls = {
@@ -75,10 +81,10 @@ public class ExpiredCalendarValidator extends FileValidator {
       })
   static class ExpiredCalendarNotice extends ValidationNotice {
 
-    // The row of the faulty record.
+    /** The row of the faulty record. */
     private final int csvRowNumber;
 
-    // The service id of the faulty record.
+    /** The service id of the faulty record. */
     private final String serviceId;
 
     ExpiredCalendarNotice(int csvRowNumber, String serviceId) {

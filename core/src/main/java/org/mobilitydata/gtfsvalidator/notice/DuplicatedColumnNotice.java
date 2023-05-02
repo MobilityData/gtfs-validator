@@ -37,16 +37,16 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
     })
 public class DuplicatedColumnNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The name of the faulty field.
+  /** The name of the faulty field. */
   private final String fieldName;
 
-  // Index of the first occurrence.
+  /** Index of the first occurrence. */
   private final int firstIndex;
 
-  // Index of the other occurrence.
+  /** Index of the other occurrence. */
   private final int secondIndex;
 
   public DuplicatedColumnNotice(

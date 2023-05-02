@@ -76,19 +76,19 @@ public class OverlappingFrequencyValidator extends FileValidator {
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsFrequencySchema.class))
   static class OverlappingFrequencyNotice extends ValidationNotice {
 
-    // The row number of the first frequency.
+    /** The row number of the first frequency. */
     private final long prevCsvRowNumber;
 
-    // The first frequency end time.
+    /** The first frequency end time. */
     private final GtfsTime prevEndTime;
 
-    // The overlapping frequency's row number.
+    /** The overlapping frequency's row number. */
     private final long currCsvRowNumber;
 
-    // The overlapping frequency's start time.
+    /** The overlapping frequency's start time. */
     private final GtfsTime currStartTime;
 
-    // The trip id associated to the first frequency.
+    /** The trip id associated to the first frequency. */
     private final String tripId;
 
     OverlappingFrequencyNotice(

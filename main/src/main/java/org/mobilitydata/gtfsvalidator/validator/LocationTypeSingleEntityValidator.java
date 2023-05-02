@@ -85,16 +85,16 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
   @GtfsValidationNotice(severity = ERROR)
   static class StationWithParentStationNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The id of the faulty record.
+    /** The id of the faulty record. */
     private final String stopId;
 
-    // The stops.stop_name of the faulty record.
+    /** The stops.stop_name of the faulty record. */
     private final String stopName;
 
-    // Parent station's id.
+    /** Parent station's id. */
     private final String parentStation;
 
     StationWithParentStationNotice(
@@ -118,16 +118,16 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopSchema.class))
   static class LocationWithoutParentStationNotice extends ValidationNotice {
 
-    // The row of the faulty record.
+    /** The row of the faulty record. */
     private final int csvRowNumber;
 
-    // The id of the faulty record.
+    /** The id of the faulty record. */
     private final String stopId;
 
-    // The `stops.stop_name` of the faulty record.
+    /** The `stops.stop_name` of the faulty record. */
     private final String stopName;
 
-    // The `stops.location_type` of the faulty record.
+    /** The `stops.location_type` of the faulty record. */
     private final int locationType;
 
     LocationWithoutParentStationNotice(
@@ -150,13 +150,13 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
   @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsStopSchema.class))
   static class PlatformWithoutParentStationNotice extends ValidationNotice {
 
-    // Row number of the faulty record.
+    /** Row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The id of the faulty record.
+    /** The id of the faulty record. */
     private final String stopId;
 
-    // The stop name of the faulty record.
+    /** The stop name of the faulty record. */
     private final String stopName;
 
     PlatformWithoutParentStationNotice(int csvRowNumber, String stopId, String stopName) {

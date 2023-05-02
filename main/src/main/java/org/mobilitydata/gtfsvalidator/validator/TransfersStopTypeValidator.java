@@ -79,19 +79,19 @@ public class TransfersStopTypeValidator extends FileValidator {
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsTransferSchema.class))
   public static final class TransferWithInvalidStopLocationTypeNotice extends ValidationNotice {
 
-    // The row number from `transfers.txt` for the faulty entry.
+    /** The row number from `transfers.txt` for the faulty entry. */
     private final int csvRowNumber;
 
-    // The name of the stop id field (e.g. `from_stop_id`) referencing the stop.
+    /** The name of the stop id field (e.g. `from_stop_id`) referencing the stop. */
     private final String stopIdFieldName;
 
-    // The referenced stop id.
+    /** The referenced stop id. */
     private final String stopId;
 
-    // The numeric value of the invalid location type.
+    /** The numeric value of the invalid location type. */
     private final int locationTypeValue;
 
-    // The name of the invalid location type.
+    /** The name of the invalid location type. */
     private String locationTypeName;
 
     public TransferWithInvalidStopLocationTypeNotice(
