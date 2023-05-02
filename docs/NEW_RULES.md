@@ -118,7 +118,7 @@ The `UnusableTripNotice` is the container for information that will be exported 
 ```
 In this case, because the GTFS spec doesn't explictly say that each trip requires at least two stops, we can't say it's an `ERROR`. But it's still suspicious (riders need to board and exit the vehicle), so we set this as a `WARNING`.
 
-You can set up the notice constructor `UnusableTripNotice(int csvRowNumber, String tripId)` to take in whatever variables you want to pass from the validator to the notice, and then include them in the `ImmutableMap.of(` section to write them to the JSON output.
+You can set up the notice constructor `UnusableTripNotice(int csvRowNumber, String tripId)` to take in whatever variables you want to pass from the validator to the notice, specifying them as fields in the notice to write them to the JSON output.
 
 For example, this notice will appear in JSON output as:
 
@@ -131,8 +131,8 @@ For example, this notice will appear in JSON output as:
          "totalNotices":1,
          "notices":[
             {
-               "tripId":"3362144",
                "csvRowNumber":40150
+               "tripId":"3362144",
             },
             ...
         ]
@@ -141,7 +141,7 @@ For example, this notice will appear in JSON output as:
 } 
 ```
 
-Values for `tripId` and `csvRowNumber` will be different for each generated notice.
+Values for `csvRowNumber` and `tripId` will be different for each generated notice.
 
 ### c. Implement the validation rule logic (`FileValidator`)
 
@@ -218,14 +218,20 @@ public class FeedServiceDateValidator extends SingleEntityValidator<GtfsFeedInfo
   /**
    * Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one field is
    * provided the second one should also be provided.
-   *
-   * <p>Severity: {@code SeverityLevel.WARNING}
    */
+  @GtfsValidationNotice(severity = WARNING, bestPractices = @FileRefs(GtfsFeedInfoSchema.class))
   static class MissingFeedInfoDateNotice extends ValidationNotice {
+
+    /** The row number of the faulty record. */
+    private final int csvRowNumber;
+
+    /** Either `feed_end_date` or `feed_start_date`. */
+    private final String fieldName;
+
     MissingFeedInfoDateNotice(int csvRowNumber, String fieldName) {
-      super(
-          ImmutableMap.of("csvRowNumber", csvRowNumber, "fieldName", fieldName),
-          SeverityLevel.WARNING);
+      super(SeverityLevel.WARNING);
+      this.csvRowNumber = csvRowNumber;
+      this.fieldName = fieldName;
     }
   }
 }
@@ -284,7 +290,7 @@ Each Notice needs a class-level comment of the following form:
 
 The short description should generally describe the invalid condition found in the feed (e.g. "A recommended file is missing.") as oppossed to describing the expected condition (e.g. "All recommended files should be present.").
 
-Additional text describing the notice is allowed on lines separate from the short description.  Markdown syntax is allowed and should be used instead of Javadoc syntax (e.g. prefer `value` over {@code value}).  Unfortunately, our code formatter will still try to enforce Javadoc formatting to a certain extent, so if you need more complex Markdown formatting (e.g. a list or table), wrap it in a &lt;pre&gt; block:
+Additional text describing the notice is allowed on lines separate from the short description.  Markdown syntax is allowed and should be used instead of Javadoc syntax (e.g. prefer `` `value` `` over `{@code value}`).  Unfortunately, our code formatter will still try to enforce Javadoc formatting to a certain extent, so if you need more complex Markdown formatting (e.g. a list or table), wrap it in a `&lt;pre&gt;` block:
 
 ```java
 /**
@@ -300,7 +306,7 @@ Additional text describing the notice is allowed on lines separate from the shor
 
 If you would like to link to the GTFS reference or best-practices in a generic way, add a documentation reference to the `@GtfsValidationNotice` so that documentation can be generated in a consistent way.
 
-Each field of the Notice must also be documented with a field-level `/** comment */` (note: not //).
+Each field of the Notice must also be documented with a field-level `/** comment */` (note: not `// comment`).
 
 
 ## 3. Test the newly added to rule
