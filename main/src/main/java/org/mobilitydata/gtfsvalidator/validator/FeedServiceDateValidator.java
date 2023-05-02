@@ -55,10 +55,10 @@ public class FeedServiceDateValidator extends SingleEntityValidator<GtfsFeedInfo
   @GtfsValidationNotice(severity = WARNING, bestPractices = @FileRefs(GtfsFeedInfoSchema.class))
   static class MissingFeedInfoDateNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // Either `feed_end_date` or `feed_start_date`
+    /** Either `feed_end_date` or `feed_start_date`. */
     private final String fieldName;
 
     MissingFeedInfoDateNotice(int csvRowNumber, String fieldName) {

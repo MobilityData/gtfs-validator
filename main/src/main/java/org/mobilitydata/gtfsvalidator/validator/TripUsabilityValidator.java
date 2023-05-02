@@ -64,10 +64,10 @@ public class TripUsabilityValidator extends FileValidator {
   @GtfsValidationNotice(severity = WARNING)
   static class UnusableTripNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The faulty record's id.
+    /** The faulty record's id. */
     private final String tripId;
 
     UnusableTripNotice(int csvRowNumber, String tripId) {

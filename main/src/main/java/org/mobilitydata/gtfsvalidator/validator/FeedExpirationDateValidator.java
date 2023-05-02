@@ -78,19 +78,23 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
     }
   }
 
+  /**
+   * The dataset expiration date defined in `feed_info.txt` is in seven days or less. At any time,
+   * the published GTFS dataset should be valid for at least the next 7 days.
+   */
   @GtfsValidationNotice(severity = WARNING)
   static class FeedExpirationDate7DaysNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // Current date (YYYYMMDD format).
+    /** Current date (YYYYMMDD format). */
     private final GtfsDate currentDate;
 
-    // Feed end date (YYYYMMDD format).
+    /** Feed end date (YYYYMMDD format). */
     private final GtfsDate feedEndDate;
 
-    // Suggested expiration date (YYYYMMDD format).
+    /** Suggested expiration date (YYYYMMDD format). */
     private final GtfsDate suggestedExpirationDate;
 
     FeedExpirationDate7DaysNotice(
@@ -106,6 +110,10 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
     }
   }
 
+  /**
+   * At any time, the GTFS dataset should cover at least the next 30 days of service, and ideally
+   * for as long as the operator is confident that the schedule will continue to be operated.
+   */
   @GtfsValidationNotice(
       severity = WARNING,
       urls = {
@@ -115,16 +123,16 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
       })
   static class FeedExpirationDate30DaysNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // Current date (YYYYMMDD format).
+    /** Current date (YYYYMMDD format). */
     private final GtfsDate currentDate;
 
-    // Feed end date (YYYYMMDD format).
+    /** Feed end date (YYYYMMDD format). */
     private final GtfsDate feedEndDate;
 
-    // Suggested expiration date (YYYYMMDD format).
+    /** Suggested expiration date (YYYYMMDD format). */
     private final GtfsDate suggestedExpirationDate;
 
     FeedExpirationDate30DaysNotice(

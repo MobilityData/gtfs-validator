@@ -67,7 +67,7 @@ public @interface GtfsValidationNotice {
       this.id = id;
     }
 
-    String id() {
+    public String id() {
       return this.id;
     }
   }

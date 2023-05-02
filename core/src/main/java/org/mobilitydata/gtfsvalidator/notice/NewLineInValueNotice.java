@@ -40,16 +40,16 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
 @GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILE_REQUIREMENTS))
 public class NewLineInValueNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The row of the faulty record.
+  /** The row of the faulty record. */
   private final int csvRowNumber;
 
-  // The name of the faulty field.
+  /** The name of the faulty field. */
   private final String fieldName;
 
-  // Faulty value.
+  /** Faulty value. */
   private final String fieldValue;
 
   public NewLineInValueNotice(

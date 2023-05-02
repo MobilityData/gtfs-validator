@@ -38,25 +38,25 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
     })
 public class DuplicateKeyNotice extends ValidationNotice {
 
-  // The name of the faulty file
+  /** The name of the faulty file */
   private final String filename;
 
-  // The row of the first occurrence.
+  /** The row of the first occurrence. */
   private final long oldCsvRowNumber;
 
-  // The row of the other occurrence.
+  /** The row of the other occurrence. */
   private final long newCsvRowNumber;
 
-  // Composite key's first field name.
+  /** Composite key's first field name. */
   private final String fieldName1;
 
-  // Composite key's first value.
+  /** Composite key's first value. */
   private final Object fieldValue1;
 
-  // Composite key's second field name.
+  /** Composite key's second field name. */
   @Nullable private final String fieldName2;
 
-  // Composite key's second value.
+  /** Composite key's second value. */
   @Nullable private final Object fieldValue2;
 
   public DuplicateKeyNotice(

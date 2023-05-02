@@ -79,10 +79,10 @@ public class TripUsageValidator extends FileValidator {
       })
   static class UnusedTripNotice extends ValidationNotice {
 
-    // The faulty record's id.
+    /** The faulty record's id. */
     private final String tripId;
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
     UnusedTripNotice(String tripId, int csvRowNumber) {

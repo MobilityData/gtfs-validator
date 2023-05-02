@@ -14,10 +14,10 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 @GtfsValidationNotice(severity = ERROR)
 public class TooManyRowsNotice extends ValidationNotice {
 
-  // Name of the CSV file that has too many rows.
+  /** Name of the CSV file that has too many rows. */
   private final String filename;
 
-  // Number of the row when reading was stopped.
+  /** Number of the row when reading was stopped. */
   private final long rowNumber;
 
   public TooManyRowsNotice(String filename, long rowNumber) {

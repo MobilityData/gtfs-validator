@@ -47,16 +47,16 @@ public class DuplicateFareMediaValidator extends FileValidator {
   @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsFareMediaSchema.class))
   static class DuplicateFareMediaNotice extends ValidationNotice {
 
-    // The row number of the first fare media.
+    /** The row number of the first fare media. */
     private final int csvRowNumber1;
 
-    // The id of the first fare media.
+    /** The id of the first fare media. */
     private final String fareMediaId1;
 
-    // The row number of the second fare media.
+    /** The row number of the second fare media. */
     private final int csvRowNumber2;
 
-    // The id of the second fare media.
+    /** The id of the second fare media. */
     private final String fareMediaId2;
 
     DuplicateFareMediaNotice(GtfsFareMedia lhs, GtfsFareMedia rhs) {

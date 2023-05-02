@@ -6,6 +6,16 @@ plugins {
   id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
+def WEB_BUILD_ENV           = System.getenv("WEB_BUILD_ENV") ?: 'dev'
+def WEB_DEPLOY_SVC_IMAGE    = System.getenv("WEB_DEPLOY_SVC_IMAGE")
+def WEB_DEPLOY_SVC_CLOUDRUN = System.getenv("WEB_DEPLOY_SVC_CLOUDRUN")
+def svcCredentialProvider   = hasProperty("env.${WEB_BUILD_ENV}.svcCredentialProvider") ? property("env.${WEB_BUILD_ENV}.svcCredentialProvider") : null
+def svcCredentialSrc        = hasProperty("env.${WEB_BUILD_ENV}.svcCredentialSrc")      ? property("env.${WEB_BUILD_ENV}.svcCredentialSrc")      : null
+def svcCredentialDst        = hasProperty("env.${WEB_BUILD_ENV}.svcCredentialDst")      ? property("env.${WEB_BUILD_ENV}.svcCredentialDst")      : 'src/main/resources/web-based-gtfs-validator-a088ec5f045d.json'
+def svcAPMLicenseProvider   = hasProperty("env.${WEB_BUILD_ENV}.svcAPMLicenseProvider") ? property("env.${WEB_BUILD_ENV}.svcAPMLicenseProvider") : null
+def svcAPMLicenseSrc        = hasProperty("env.${WEB_BUILD_ENV}.svcAPMLicenseSrc")      ? property("env.${WEB_BUILD_ENV}.svcAPMLicenseSrc")      : null
+def svcAPMLicenseDst        = hasProperty("env.${WEB_BUILD_ENV}.svcAPMLicenseDst")      ? property("env.${WEB_BUILD_ENV}.svcAPMLicenseDst")      : 'newrelic/newrelic.yml'
+
 jar {
     // Add the manifest within the JAR, using gtfs-validator as the title
     manifest {
@@ -62,4 +72,107 @@ dependencyManagement {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+task webSvcCredential (type: Exec) {
+
+  def required_missing = []
+  if (svcCredentialProvider == null) required_missing.add("env.${WEB_BUILD_ENV}.svcCredentialProvider")
+  if (svcCredentialSrc == null) required_missing.add("env.${WEB_BUILD_ENV}.svcCredentialSrc")
+  if (required_missing.size > 0) {
+    commandLine 'echo', 'SKIP: webSvcCredential: missing required project properties:', required_missing.join(', ')
+    return
+  }
+
+  inputs.property('svcCredentialProvider', svcCredentialProvider)
+  inputs.property('svcCredentialSrc', svcCredentialSrc)
+  outputs.file(file(svcCredentialDst))
+
+  switch (svcCredentialProvider) {
+    case "gcloud-secrets":
+      commandLine (
+        'gcloud',
+        '--verbosity=info',
+        'secrets',
+        'versions',
+        'access',
+        'latest',
+        "--secret=${svcCredentialSrc}",
+        "--out-file=${svcCredentialDst}"
+      )
+      break
+    default:
+      commandLine 'echo', "SKIP: webSvcCredential: unsupported svcCredentialProvider: ${svcCredentialProvider}"
+      break
+  }
+
+}
+
+task webSvcAPMLicense (type: Exec) {
+
+  def required_missing = []
+  if (svcAPMLicenseProvider == null) required_missing.add("env.${WEB_BUILD_ENV}.svcAPMLicenseProvider")
+  if (svcAPMLicenseSrc == null) required_missing.add("env.${WEB_BUILD_ENV}.svcAPMLicenseSrc")
+  if (required_missing.size > 0) {
+    commandLine 'echo', 'SKIP: webSvcAPMLicense: missing required project properties:', required_missing.join(', ')
+    return
+  }
+
+  inputs.property('svcAPMLicenseProvider', svcAPMLicenseProvider)
+  inputs.property('svcAPMLicenseSrc', svcAPMLicenseSrc)
+  outputs.file(file(svcAPMLicenseDst))
+
+  switch (svcAPMLicenseProvider) {
+    case "gcloud-secrets":
+      commandLine (
+        'gcloud',
+        '--verbosity=info',
+        'secrets',
+        'versions',
+        'access',
+        'latest',
+        "--secret=${svcAPMLicenseSrc}",
+        "--out-file=${svcAPMLicenseDst}"
+      )
+      break
+    default:
+      commandLine 'echo', "SKIP: webSvcAPMLicense: unsupported svcAPMLicenseProvider: ${svcAPMLicenseProvider}"
+      break
+  }
+
+}
+
+task webSecrets {
+  dependsOn webSvcCredential
+  dependsOn webSvcAPMLicense
+}
+
+task webTest {
+  dependsOn   webSecrets
+  finalizedBy test
+}
+
+task webBuild {
+  dependsOn   webSecrets
+  finalizedBy build
+}
+
+task webDeploy (type: Exec) {
+
+  def required_missing = []
+  if (WEB_DEPLOY_SVC_IMAGE == null)    required_missing.add('WEB_DEPLOY_SVC_IMAGE')
+  if (WEB_DEPLOY_SVC_CLOUDRUN == null) required_missing.add('WEB_DEPLOY_SVC_CLOUDRUN')
+  if (required_missing.size > 0) {
+    commandLine 'echo', 'SKIP: webDeploy: missing required environment variables:', required_missing.join(', ')
+    return
+  }
+
+  dependsOn webBuild
+  commandLine (
+    'gcloud',
+    'builds',
+    'submit',
+    "--substitutions=_WEB_DEPLOY_SVC_IMAGE=${WEB_DEPLOY_SVC_IMAGE},_WEB_DEPLOY_SVC_CLOUDRUN=${WEB_DEPLOY_SVC_CLOUDRUN},_CURRENT_VERSION=${project.version}"
+  )
+
 }

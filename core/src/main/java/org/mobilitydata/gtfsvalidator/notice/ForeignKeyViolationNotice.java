@@ -41,22 +41,22 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
     })
 public class ForeignKeyViolationNotice extends ValidationNotice {
 
-  // The name of the file from which reference is made.
+  /** The name of the file from which reference is made. */
   private final String childFilename;
 
-  // The name of the field that makes reference.
+  /** The name of the field that makes reference. */
   private final String childFieldName;
 
-  // The name of the file that is referred to.
+  /** The name of the file that is referred to. */
   private final String parentFilename;
 
-  // The name of the field that is referred to.
+  /** The name of the field that is referred to. */
   private final String parentFieldName;
 
-  // The faulty record's value.
+  /** The faulty record's value. */
   private final String fieldValue;
 
-  // The row of the faulty record.
+  /** The row of the faulty record. */
   private final int csvRowNumber;
 
   public ForeignKeyViolationNotice(

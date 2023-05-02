@@ -34,6 +34,7 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.notice.Notice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeDocComments;
@@ -103,7 +104,7 @@ public class NoticeSchemaGenerator {
     return schema;
   }
 
-  private static NoticeDocComments loadComments(Class<?> noticeClass) {
+  public static NoticeDocComments loadComments(Class<?> noticeClass) {
     String resourceName = NoticeDocComments.getResourceNameForClass(noticeClass);
     InputStream is = noticeClass.getResourceAsStream(resourceName);
     if (is == null) {
@@ -128,6 +129,9 @@ public class NoticeSchemaGenerator {
         .map(NoticeSchemaGenerator::getFileIdForTableClass)
         .flatMap(Optional::stream)
         .forEach(schema::addBestPracticesFileReference);
+    Arrays.stream(noticeAnnotation.sections().value())
+        .map(SectionRef::id)
+        .forEach(schema::addSectionReference);
     Arrays.stream(noticeAnnotation.urls())
         .map(NoticeSchemaGenerator::convertUrlRef)
         .forEach(schema::addUrlReference);
