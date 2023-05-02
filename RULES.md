@@ -2121,6 +2121,7 @@ The given field has no value in some input row, even though values are recommend
 * [feed_info.txt best practices](https://gtfs.org/schedule/best-practices/#feed_infotxt)
 * [agency.txt best practices](https://gtfs.org/schedule/best-practices/#agencytxt)
 * [fare_attributes.txt best practices](https://gtfs.org/schedule/best-practices/#fare_attributestxt)
+* [routes.txt best practices](https://gtfs.org/schedule/best-practices/#routestxt)
 <details>
 
 #### Notice fields description
