@@ -1,0 +1,29 @@
+plugins {
+  id 'base'
+}
+
+defaultTasks 'tasks'
+
+task webTest {
+  dependsOn ':web:client:webTest'
+  dependsOn ':web:service:webTest'
+}
+
+task webBuild {
+  dependsOn ':web:client:webBuild'
+  dependsOn ':web:service:webBuild'
+}
+
+task webDeploy {
+  dependsOn ':web:client:webDeploy'
+  dependsOn ':web:service:webDeploy'
+}
+
+task webCI {
+  finalizedBy webTest
+  finalizedBy webBuild
+}
+
+task webCD {
+  finalizedBy webDeploy
+}
