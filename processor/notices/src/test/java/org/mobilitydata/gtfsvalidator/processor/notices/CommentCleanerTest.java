@@ -37,6 +37,12 @@ public class CommentCleanerTest {
   }
 
   @Test
+  public void testCleanComment_preBlock() {
+    assertThat(cleaner.cleanComment("Line 1.\n\n<pre>\n```\nverbatim\n```\n</pre>"))
+        .isEqualTo("Line 1.\n\n```\nverbatim\n```");
+  }
+
+  @Test
   public void testCleanComment_what() {
     assertThat(
             cleaner.cleanComment(
