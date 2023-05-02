@@ -55,6 +55,7 @@ public @interface GtfsValidationNotice {
   }
 
   enum SectionRef {
+    DATASET_FILES("dataset-files"),
     FILE_REQUIREMENTS("file-requirements"),
     FILED_TYPES("field-types"),
     FIELD_DEFINITIONS("field-definitions"),

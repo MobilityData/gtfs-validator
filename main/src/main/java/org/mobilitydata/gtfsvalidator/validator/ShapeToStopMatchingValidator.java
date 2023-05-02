@@ -45,7 +45,6 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsStopstimeSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
@@ -416,8 +415,7 @@ public class ShapeToStopMatchingValidator extends FileValidator {
           @FileRefs({
             GtfsTripSchema.class,
             GtfsStopTimeSchema.class,
-            GtfsStopSchema.class,
-            GtfsStopstimeSchema.class
+            GtfsStopSchema.class
           }))
   static class StopsMatchShapeOutOfOrderNotice extends ValidationNotice {
 

@@ -26,7 +26,7 @@ import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareRule;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareRuleTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsFareruleSchema;
+import org.mobilitydata.gtfsvalidator.table.GtfsFareRuleSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
@@ -101,7 +101,7 @@ public class StopZoneIdValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = ERROR,
-      files = @FileRefs({GtfsStopSchema.class, GtfsFareruleSchema.class}))
+      files = @FileRefs({GtfsStopSchema.class, GtfsFareRuleSchema.class}))
   static class StopWithoutZoneIdNotice extends ValidationNotice {
 
     /** The faulty record's id. */
