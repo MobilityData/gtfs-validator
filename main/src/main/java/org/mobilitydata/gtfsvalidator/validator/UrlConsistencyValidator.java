@@ -124,9 +124,9 @@ public class UrlConsistencyValidator extends FileValidator {
   }
 
   /**
-   * A {@code GtfsStop} has the same value for {@code stops.stop_url} as a record from "routes.txt".
+   * Same `stops.stop_url` and `routes.route_url`.
    *
-   * <p>{@code SeverityLevel.WARNING}
+   * <p>A stop should not have the same `stop.stop_url` as a record from `routes.txt`.
    */
   @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsStopSchema.class))
   static class SameStopAndRouteUrlNotice extends ValidationNotice {
@@ -157,10 +157,9 @@ public class UrlConsistencyValidator extends FileValidator {
   }
 
   /**
-   * A {@code GtfsRoute} has the same value for {@code routes.route_url} as a record from
-   * "agency.txt".
+   * Same `routes.route_url` and `agency.agency_url`.
    *
-   * <p>{@code SeverityLevel.WARNING}
+   * <p>A route should not have the same `routes.route_url` as a record from `agency.txt`.
    */
   @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsRouteSchema.class))
   static class SameRouteAndAgencyUrlNotice extends ValidationNotice {
@@ -191,9 +190,9 @@ public class UrlConsistencyValidator extends FileValidator {
   }
 
   /**
-   * A {@code GtfsStop} has the same value for {@code stops.stop_url} as a record from "agency.txt".
+   * Same `stops.stop_url` and `agency.agency_url`.
    *
-   * <p>{@code SeverityLevel.WARNING}
+   * <p>A stop should not have the same `stops.stop_url` as a record from `agency.txt`.
    */
   @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsStopSchema.class))
   static class SameStopAndAgencyUrlNotice extends ValidationNotice {

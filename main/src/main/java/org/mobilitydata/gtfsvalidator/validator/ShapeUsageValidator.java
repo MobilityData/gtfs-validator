@@ -60,10 +60,9 @@ public class ShapeUsageValidator extends FileValidator {
   }
 
   /**
-   * A {@code GtfsShape} should be referred to at least once in {@code GtfsTripTableContainer}
-   * station).
+   * Shape is not used in GTFS file `trips.txt`.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>All records defined by GTFS `shapes.txt` should be used in `trips.txt`.
    */
   @GtfsValidationNotice(severity = WARNING)
   static class UnusedShapeNotice extends ValidationNotice {

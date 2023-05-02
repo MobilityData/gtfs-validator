@@ -21,11 +21,7 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
 
-/**
- * An enum has an unexpected value.
- *
- * <p>Severity: {@code SeverityLevel.WARNING}
- */
+/** An enum has an unexpected value. */
 @GtfsValidationNotice(severity = WARNING, sections = @SectionRefs(FIELD_DEFINITIONS))
 public class UnexpectedEnumValueNotice extends ValidationNotice {
 

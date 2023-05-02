@@ -162,8 +162,13 @@ public class PathwayReachableLocationValidator extends FileValidator {
   }
 
   /**
-   * Describes a location that is not reachable at least in one direction: from the entrances or to
-   * the exits.
+   * A location is not reachable at least in one direction: from the entrances or to the exits.
+   *
+   * <p>Notices are reported for platforms, boarding areas and generic nodes but not for entrances
+   * or stations.
+   *
+   * <p>Notices are not reported for platforms that have boarding areas since such platforms may not
+   * have incident pathways. Instead, notices are reported for the boarding areas.
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsPathwaySchema.class))
   static class PathwayUnreachableLocationNotice extends ValidationNotice {

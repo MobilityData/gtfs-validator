@@ -93,10 +93,11 @@ public class StopZoneIdValidator extends FileValidator {
   }
 
   /**
-   * A {@code GtfsShape} should be referred to at least once in {@code GtfsTripTableContainer}
-   * station).
+   * Stop without value for `stops.zone_id`.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING} - Will be upgraded to {@code SeverityLevel.ERROR}
+   * <p>If `fare_rules.txt` is provided, and `fare_rules.txt` uses at least one column among
+   * `origin_id`, `destination_id`, and `contains_id`, then all stops and platforms (location_type =
+   * 0) must have `stops.zone_id` assigned.
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopSchema.class))
   static class StopWithoutZoneIdNotice extends ValidationNotice {

@@ -23,9 +23,9 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /**
- * The input file CSV header has the same column name repeated.
+ * Duplicated column in CSV.
  *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>The input file CSV header has the same column name repeated.
  */
 @GtfsValidationNotice(
     severity = ERROR,

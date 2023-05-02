@@ -331,7 +331,27 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
     }
   }
 
-  /** Describes a trip where the transit vehicle moves too fast between two consecutive stops. */
+  /**
+   * A transit vehicle moves too fast between two consecutive stops.
+   *
+   * <p>The speed threshold depends on route type:
+   *
+   * <pre>
+   * | Route type | Description | Threshold, km/h |
+   * |------------|-------------|-----------------|
+   * | 0          | Light rail  | 100             |
+   * | 1          | Subway      | 150             |
+   * | 2          | Rail        | 500             |
+   * | 3          | Bus         | 150             |
+   * | 4          | Ferry       |  80             |
+   * | 5          | Cable tram  |  30             |
+   * | 6          | Aerial lift |  50             |
+   * | 7          | Funicular   |  50             |
+   * | 11         | Trolleybus  | 150             |
+   * | 12         | Monorail    | 150             |
+   * | -          | Unknown     | 200             |
+   * </pre>
+   */
   @GtfsValidationNotice(
       severity = WARNING,
       urls = {
@@ -414,10 +434,13 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
   }
 
   /**
-   * Describes a trip where the transit vehicle moves too fast between two far stops.
+   * A transit vehicle moves too fast between two far stops.
    *
-   * <p>This normally indicates a more serious problem than too fast travel between consecutive
-   * stops.
+   * <p>Two stops are considered "far" if they are more than 10 km apart. This normally indicates a
+   * more serious problem than too fast travel between consecutive stops.
+   *
+   * <p>The speed threshold depends on route type and are the same as
+   * `fast_travel_between_consecutive_stops`.
    */
   @GtfsValidationNotice(
       severity = WARNING,

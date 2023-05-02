@@ -22,9 +22,9 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
 
 /**
- * The given field has no value in some input row, even though values are required.
+ * A required field is missing.
  *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>The given field has no value in some input row, even though values are required.
  */
 @GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(TERM_DEFINITIONS))
 public class MissingRequiredFieldNotice extends ValidationNotice {
