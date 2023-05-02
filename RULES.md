@@ -913,7 +913,7 @@ A location that must have `parent_station` field does not have it. The following
 Referenced locations (using `stop_times.stop_id`) must be stops/platforms, i.e. their `stops.location_type` value must be 0 or empty.
 
 #### References
-* [stop_times.txt GTFS specification](https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md#stoptimestxt)
+* [stop_times.txt GTFS specification](http://gtfs.org/reference/static#stop_timestxt)
 <details>
 
 #### Notice fields description

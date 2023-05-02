@@ -1,11 +1,16 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
 
 /**
  * Validates {@code stops.stop_lat} and {@code stops.stop_long} exist for a single {@code GtfsStop}
@@ -39,15 +44,16 @@ public class StopRequiredLocationValidator extends SingleEntityValidator<GtfsSto
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopSchema.class))
   static class StopWithoutLocationNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The faulty record's `stops.location_type`.
+    /** The faulty record's `stops.location_type`. */
     private final GtfsLocationType locationType;
 
-    // The faulty record's id.
+    /** The faulty record's id. */
     private final String stopId;
 
     StopWithoutLocationNotice(int csvRowNumber, String stopId, GtfsLocationType type) {

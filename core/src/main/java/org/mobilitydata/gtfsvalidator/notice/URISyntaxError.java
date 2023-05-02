@@ -13,19 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.notice;
+
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import com.google.common.base.Strings;
 import java.net.URISyntaxException;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 
 /**
  * Indicates that a string could not be parsed as a URI reference.
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
+@GtfsValidationNotice(severity = ERROR)
 public class URISyntaxError extends SystemError {
+
+  /** The name of the exception. */
   private final String exception;
+
+  /** The error message that explains the reason for the exception. */
   private final String message;
 
   public URISyntaxError(URISyntaxException exception) {

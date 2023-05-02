@@ -1,11 +1,14 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 import static org.mobilitydata.gtfsvalidator.validator.ValidatorReference.validatedElsewhereBy;
 
 import com.google.common.collect.ImmutableSet;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
@@ -16,6 +19,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransfer;
+import org.mobilitydata.gtfsvalidator.table.GtfsTransferSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransferTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
@@ -123,24 +127,25 @@ public class TransfersTripReferenceValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsTransferSchema.class))
   public static class TransferWithInvalidTripAndRouteNotice extends ValidationNotice {
 
-    // The row number from `transfers.txt` for the faulty entry.
+    /** The row number from `transfers.txt` for the faulty entry. */
     private final int csvRowNumber;
 
-    // The name of the trip id field (e.g. `from_trip_id`) referencing a trip.
+    /** The name of the trip id field (e.g. `from_trip_id`) referencing a trip. */
     private final String tripFieldName;
 
-    // The referenced trip id.
+    /** The referenced trip id. */
     private final String tripId;
 
-    // The name of the route id field (e.g. `from_route_id`) referencing the route.
+    /** The name of the route id field (e.g. `from_route_id`) referencing the route. */
     private final String routeFieldName;
 
-    // The referenced route id.
+    /** The referenced route id. */
     private final String routeId;
 
-    // The expected route id from `trips.txt`.
+    /** The expected route id from `trips.txt`. */
     private final String expectedRouteId;
 
     public TransferWithInvalidTripAndRouteNotice(
@@ -161,21 +166,22 @@ public class TransfersTripReferenceValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsTransferSchema.class))
   public static class TransferWithInvalidTripAndStopNotice extends ValidationNotice {
 
-    // The row number from `transfers.txt` for the faulty entry.
+    /** The row number from `transfers.txt` for the faulty entry. */
     private final int csvRowNumber;
 
-    // The name of the trip id field (e.g. `from_trip_id`) referencing a trip.
+    /** The name of the trip id field (e.g. `from_trip_id`) referencing a trip. */
     private final String tripFieldName;
 
-    // The referenced trip id.
+    /** The referenced trip id. */
     private final String tripId;
 
-    // The name of the stop id field (e.g. `stop_route_id`) referencing the stop.
+    /** The name of the stop id field (e.g. `stop_route_id`) referencing the stop. */
     private final String stopFieldName;
 
-    // The referenced stop id.
+    /** The referenced stop id. */
     private final String stopId;
 
     public TransferWithInvalidTripAndStopNotice(

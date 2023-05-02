@@ -15,12 +15,19 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+
 import java.time.ZoneId;
 import java.util.Locale;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.*;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
+import org.mobilitydata.gtfsvalidator.table.GtfsAgencySchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 
 /**
@@ -60,7 +67,6 @@ public class AgencyConsistencyValidator extends FileValidator {
       // no further validation required
       return;
     }
-
     if (agencyCount > 1) {
       for (GtfsAgency agency : agencyTable.getEntities()) {
         // agency_id is required when there are 2 or more agencies.
@@ -109,15 +115,22 @@ public class AgencyConsistencyValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      urls = {
+        @UrlRef(
+            label = "Original Python validator implementation",
+            url = "https://github.com/google/transitfeed")
+      })
   static class InconsistentAgencyLangNotice extends ValidationNotice {
 
-    // The row of the faulty record.
+    /** The row of the faulty record. */
     private final int csvRowNumber;
 
-    // Expected language.
+    /** Expected language. */
     private final String expected;
 
-    // Faulty record's language.
+    /** Faulty record's language. */
     private final String actual;
 
     InconsistentAgencyLangNotice(int csvRowNumber, String expected, String actual) {
@@ -133,15 +146,16 @@ public class AgencyConsistencyValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsAgencySchema.class))
   static class InconsistentAgencyTimezoneNotice extends ValidationNotice {
 
-    // The row of the faulty record.
+    /** The row of the faulty record. */
     private final int csvRowNumber;
 
-    // Expected timezone.
+    /** Expected timezone. */
     private final String expected;
 
-    // Faulty record's timezone.
+    /** Faulty record's timezone. */
     private final String actual;
 
     InconsistentAgencyTimezoneNotice(int csvRowNumber, String expected, String actual) {

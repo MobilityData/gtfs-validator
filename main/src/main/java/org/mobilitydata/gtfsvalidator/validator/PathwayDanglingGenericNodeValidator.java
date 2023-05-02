@@ -15,16 +15,20 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 import static org.mobilitydata.gtfsvalidator.table.GtfsLocationType.GENERIC_NODE;
 
 import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathway;
+import org.mobilitydata.gtfsvalidator.table.GtfsPathwaySchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathwayTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
@@ -74,18 +78,19 @@ public class PathwayDanglingGenericNodeValidator extends FileValidator {
   /**
    * Describes a dangling generic node, i.e. that has only one incident location in a pathway graph.
    */
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsPathwaySchema.class))
   static class PathwayDanglingGenericNodeNotice extends ValidationNotice {
 
-    // Row number of the dangling generic node.
+    /** Row number of the dangling generic node. */
     private final int csvRowNumber;
 
-    // The id of the dangling generic node.
+    /** The id of the dangling generic node. */
     private final String stopId;
 
-    // The stop name of the dangling generic node.
+    /** The stop name of the dangling generic node. */
     private final String stopName;
 
-    // The parent station of the dangling generic node.
+    /** The parent station of the dangling generic node. */
     private final String parentStation;
 
     PathwayDanglingGenericNodeNotice(GtfsStop genericNode) {

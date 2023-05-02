@@ -15,23 +15,38 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.FILE_REQUIREMENTS;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
+
 /**
  * A row in the input file has a different number of values than specified by the CSV header.
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
+@GtfsValidationNotice(
+    severity = ERROR,
+    sections = @SectionRefs(FILE_REQUIREMENTS),
+    urls = {
+      @UrlRef(
+          label = "Original Python validator implementation",
+          url = "https://github.com/google/transitfeed")
+    })
 public class InvalidRowLengthNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The row of the faulty record.
+  /** The row of the faulty record. */
   private final int csvRowNumber;
 
-  // The length of the faulty record.
+  /** The length of the faulty record. */
   private final int rowLength;
 
-  // The number of column in the faulty file.
+  /** The number of column in the faulty file. */
   private final int headerCount;
 
   public InvalidRowLengthNotice(String filename, int csvRowNumber, int rowLength, int headerCount) {

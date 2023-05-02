@@ -15,6 +15,13 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.FILED_TYPES;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
+
 /**
  * A field contains a malformed URL.
  *
@@ -32,18 +39,27 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p>However, some production feeds may use certain characters without escaping and those URL may
  * be still openable in modern browsers.
  */
+@GtfsValidationNotice(
+    severity = ERROR,
+    sections = @SectionRefs(FILED_TYPES),
+    urls = {
+      @UrlRef(
+          label = "Apache Commons UrlValidator",
+          url =
+              "https://commons.apache.org/proper/commons-validator/apidocs/org/apache/commons/validator/routines/UrlValidator.html")
+    })
 public class InvalidUrlNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The row of the faulty record.
+  /** The row of the faulty record. */
   private final int csvRowNumber;
 
-  // Faulty record's field name.
+  /** Faulty record's field name. */
   private final String fieldName;
 
-  // Faulty value.
+  /** Faulty value. */
   private final String fieldValue;
 
   /**

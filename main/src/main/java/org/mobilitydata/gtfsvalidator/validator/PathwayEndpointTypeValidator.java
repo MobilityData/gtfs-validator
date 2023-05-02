@@ -15,13 +15,18 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
 import java.util.Optional;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathway;
+import org.mobilitydata.gtfsvalidator.table.GtfsPathwaySchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathwayTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
@@ -83,18 +88,19 @@ public class PathwayEndpointTypeValidator extends FileValidator {
   }
 
   /** Describes a pathway which endpoint is a station. */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsPathwaySchema.class))
   static class PathwayToWrongLocationTypeNotice extends ValidationNotice {
 
-    // The row of the faulty row.
+    /** The row of the faulty row. */
     private final int csvRowNumber;
 
-    // The id of the faulty pathway.
+    /** The id of the faulty pathway. */
     private final String pathwayId;
 
-    // The station id field name.
+    /** The station id field name. */
     private final String fieldName;
 
-    // The id of the endpoint station.
+    /** The id of the endpoint station. */
     private final String stopId;
 
     PathwayToWrongLocationTypeNotice(GtfsPathway pathway, String fieldName, String stopId) {
@@ -107,18 +113,19 @@ public class PathwayEndpointTypeValidator extends FileValidator {
   }
 
   /** Describes a pathway which endpoint is a platform that has boarding areas. */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsPathwaySchema.class))
   static class PathwayToPlatformWithBoardingAreasNotice extends ValidationNotice {
 
-    // The row of the faulty row.
+    /** The row of the faulty row. */
     private final int csvRowNumber;
 
-    // The id of the faulty pathway.
+    /** The id of the faulty pathway. */
     private final String pathwayId;
 
-    // The platform id field name.
+    /** The platform id field name. */
     private final String fieldName;
 
-    // The id of the endpoint platform.
+    /** The id of the endpoint platform. */
     private final String stopId;
 
     PathwayToPlatformWithBoardingAreasNotice(GtfsPathway pathway, String fieldName, String stopId) {

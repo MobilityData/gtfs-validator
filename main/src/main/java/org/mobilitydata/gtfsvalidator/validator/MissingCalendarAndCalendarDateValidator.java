@@ -15,12 +15,18 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsCalendarSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
 
 /**
@@ -59,6 +65,9 @@ public class MissingCalendarAndCalendarDateValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files = @FileRefs({GtfsCalendarSchema.class, GtfsCalendarDateSchema.class}))
   static class MissingCalendarAndCalendarDateFilesNotice extends ValidationNotice {
 
     MissingCalendarAndCalendarDateFilesNotice() {

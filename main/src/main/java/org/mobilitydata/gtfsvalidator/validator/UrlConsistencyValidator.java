@@ -15,10 +15,14 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+
 import com.google.common.base.Ascii;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
@@ -26,8 +30,10 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
+import org.mobilitydata.gtfsvalidator.table.GtfsRouteSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 
 /**
@@ -122,21 +128,22 @@ public class UrlConsistencyValidator extends FileValidator {
    *
    * <p>{@code SeverityLevel.WARNING}
    */
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsStopSchema.class))
   static class SameStopAndRouteUrlNotice extends ValidationNotice {
 
-    // The row number of the faulty record from `stops.txt`.
+    /** The row number of the faulty record from `stops.txt`. */
     private final long stopCsvRowNumber;
 
-    // The faulty record's id.
+    /** The faulty record's id. */
     private final String stopId;
 
-    // The duplicate URL value.
+    /** The duplicate URL value. */
     private final String stopUrl;
 
-    // The faulty record's id from `routes.txt.
+    /** The faulty record's id from `routes.txt. */
     private final String routeId;
 
-    // The row number of the faulty record from `routes.txt`.
+    /** The row number of the faulty record from `routes.txt`. */
     private final long routeCsvRowNumber;
 
     SameStopAndRouteUrlNotice(GtfsStop stop, GtfsRoute route) {
@@ -155,21 +162,22 @@ public class UrlConsistencyValidator extends FileValidator {
    *
    * <p>{@code SeverityLevel.WARNING}
    */
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsRouteSchema.class))
   static class SameRouteAndAgencyUrlNotice extends ValidationNotice {
 
-    // The row number of the faulty record from `routes.txt`.
+    /** The row number of the faulty record from `routes.txt`. */
     private final long routeCsvRowNumber;
 
-    // The faulty record's id.
+    /** The faulty record's id. */
     private final String routeId;
 
-    // The faulty record's referenced agency name.
+    /** The faulty record's referenced agency name. */
     private final String agencyName;
 
-    // The duplicate URL value
+    /** The duplicate URL value */
     private final String routeUrl;
 
-    // The row number of the faulty record from `agency.txt`.
+    /** The row number of the faulty record from `agency.txt`. */
     private final long agencyCsvRowNumber;
 
     SameRouteAndAgencyUrlNotice(GtfsRoute route, GtfsAgency agency) {
@@ -187,21 +195,22 @@ public class UrlConsistencyValidator extends FileValidator {
    *
    * <p>{@code SeverityLevel.WARNING}
    */
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsStopSchema.class))
   static class SameStopAndAgencyUrlNotice extends ValidationNotice {
 
-    // The row number of the faulty record from `stops.txt`.
+    /** The row number of the faulty record from `stops.txt`. */
     private final long stopCsvRowNumber;
 
-    // The faulty record's id.
+    /** The faulty record's id. */
     private final String stopId;
 
-    // The faulty record's `agency.agency_name`.
+    /** The faulty record's `agency.agency_name`. */
     private final String agencyName;
 
-    // The duplicate URL value.
+    /** The duplicate URL value. */
     private final String stopUrl;
 
-    // The row number of the faulty record from `agency.txt`.
+    /** The row number of the faulty record from `agency.txt`. */
     private final long agencyCsvRowNumber;
 
     SameStopAndAgencyUrlNotice(GtfsStop stop, GtfsAgency agency) {
