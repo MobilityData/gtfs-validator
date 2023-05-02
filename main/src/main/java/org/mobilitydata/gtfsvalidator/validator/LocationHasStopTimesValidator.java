@@ -97,7 +97,9 @@ public class LocationHasStopTimesValidator extends FileValidator {
   /**
    * Describes a location in {@code stops.txt} that is not a stop but has a stop time associated.
    */
-  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopTimeSchema.class))
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files = @FileRefs({GtfsStopTimeSchema.class, GtfsStopSchema.class}))
   static class LocationWithUnexpectedStopTimeNotice extends ValidationNotice {
 
     /** The row number of the faulty record from `stops.txt`. */

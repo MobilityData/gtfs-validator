@@ -40,6 +40,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsPathway;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathwaySchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathwayTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 import org.mobilitydata.gtfsvalidator.util.StopUtil;
 
@@ -165,7 +166,9 @@ public class PathwayReachableLocationValidator extends FileValidator {
    * Describes a location that is not reachable at least in one direction: from the entrances or to
    * the exits.
    */
-  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsPathwaySchema.class))
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files = @FileRefs({GtfsPathwaySchema.class, GtfsStopSchema.class}))
   static class PathwayUnreachableLocationNotice extends ValidationNotice {
 
     /** Row number of the unreachable location. */

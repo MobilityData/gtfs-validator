@@ -29,6 +29,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
 
 /**
  * Validates `location_type` of the referenced `parent_station`.
@@ -93,7 +94,9 @@ public class ParentLocationTypeValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
-  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopSchema.class))
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files = @FileRefs({GtfsStopSchema.class, GtfsStopTimeSchema.class}))
   static class WrongParentLocationTypeNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */

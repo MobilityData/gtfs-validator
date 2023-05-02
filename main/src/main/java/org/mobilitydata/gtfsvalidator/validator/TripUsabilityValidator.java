@@ -19,12 +19,16 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
+import org.mobilitydata.gtfsvalidator.table.GtfsTripSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 
 /**
@@ -61,7 +65,14 @@ public class TripUsabilityValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
-  @GtfsValidationNotice(severity = WARNING)
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs({GtfsStopTimeSchema.class, GtfsTripSchema.class}),
+      urls = {
+        @UrlRef(
+            label = "Original Python validator implementation",
+            url = "https://github.com/google/transitfeed")
+      })
   static class UnusableTripNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */

@@ -52,7 +52,10 @@ public class FeedServiceDateValidator extends SingleEntityValidator<GtfsFeedInfo
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
-  @GtfsValidationNotice(severity = WARNING, bestPractices = @FileRefs(GtfsFeedInfoSchema.class))
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs(GtfsFeedInfoSchema.class),
+      bestPractices = @FileRefs(GtfsFeedInfoSchema.class))
   static class MissingFeedInfoDateNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */
