@@ -69,7 +69,10 @@ public class NoticeDocumentationTest {
                 })
             .collect(Collectors.toList());
     assertWithMessage(
-            "We expect all validation notices to have a documentation comment.  If this test fails, it likely means that a Javadoc /** */ documentation header needs to be added to the following classes:")
+            "We expect all validation notices to have a documentation comment.  If "
+                + "this test fails, it likely means that a Javadoc /** */ documentation header needs to "
+                + "be added to the following classes. "
+                + "See https://github.com/MobilityData/gtfs-validator/blob/master/docs/NEW_RULES.md#2-document-the-new-rule for more details.")
         .that(noticesWithoutDocComment)
         .isEmpty();
   }
@@ -80,7 +83,13 @@ public class NoticeDocumentationTest {
         discoverValidationNoticeClasses()
             .flatMap(NoticeDocumentationTest::checkNoticeForUnsupportedJavadocInComment)
             .collect(Collectors.toList());
-    assertWithMessage("What's going on here?").that(noticesWithInvalidJavadoc).isEmpty();
+    assertWithMessage(
+            "Validation notice documentation should use Markdown formatting instead "
+                + "of Javadoc formatting, where appropriate.  If this test fails, it likely means that "
+                + " a Javadoc /** */ documentation header needs to be updated for the following classes. "
+                + "See https://github.com/MobilityData/gtfs-validator/blob/master/docs/NEW_RULES.md#2-document-the-new-rule for more details.")
+        .that(noticesWithInvalidJavadoc)
+        .isEmpty();
   }
 
   private static final ImmutableList<String> UNSUPPORTED_JAVADOC =
