@@ -216,9 +216,10 @@
                     <div th:each="info: ${metadata.feedInfo}">
                         <dd th:text="${info.key} + ':'" />
                         <dt>
-                        <span th:if="${info.key.contains('URL')}">
+                        <span th:if="${info.key.contains('URL') and info.value != 'N/A'}">
                             <a th:href="${info.value}" target="_blank" th:text="${info.value}" />
                         </span>
+                            <span th:if="${info.key.contains('URL') and info.value == 'N/A'}" th:text="${info.value}"></span>
                             <span th:unless="${info.key.contains('URL')}" th:text="${info.value}" />
                         </dt>
                     </div>

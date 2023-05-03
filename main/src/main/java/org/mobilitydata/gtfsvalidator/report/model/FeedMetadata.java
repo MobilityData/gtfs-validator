@@ -66,16 +66,18 @@ public class FeedMetadata {
   }
 
   private void loadFeedInfo(GtfsTableContainer<GtfsFeedInfo> feedTable) {
-    var info = feedTable.getEntities().get(0);
+    var info = feedTable.getEntities().isEmpty() ? null : feedTable.getEntities().get(0);
 
-    feedInfo.put("Publisher Name", info.feedPublisherName());
-    feedInfo.put("Publisher URL", info.feedPublisherUrl());
-    feedInfo.put("Feed Language", info.feedLang().getDisplayLanguage());
+    feedInfo.put("Publisher Name", info == null ? "N/A" : info.feedPublisherName());
+    feedInfo.put("Publisher URL", info == null ? "N/A" : info.feedPublisherUrl());
+    feedInfo.put("Feed Language", info == null ? "N/A" : info.feedLang().getDisplayLanguage());
     if (feedTable.hasColumn(GtfsFeedInfo.FEED_START_DATE_FIELD_NAME)) {
-      feedInfo.put("Feed Start Date", info.feedStartDate().getLocalDate().toString());
+      feedInfo.put(
+          "Feed Start Date", info == null ? "N/A" : info.feedStartDate().getLocalDate().toString());
     }
     if (feedTable.hasColumn(GtfsFeedInfo.FEED_END_DATE_FIELD_NAME)) {
-      feedInfo.put("Feed End Date", info.feedEndDate().getLocalDate().toString());
+      feedInfo.put(
+          "Feed End Date", info == null ? "N/A" : info.feedEndDate().getLocalDate().toString());
     }
   }
 
