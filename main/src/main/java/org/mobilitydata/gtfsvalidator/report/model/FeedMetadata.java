@@ -6,6 +6,7 @@ import org.mobilitydata.gtfsvalidator.table.*;
 public class FeedMetadata {
   private Map<String, TableMetadata> tableMetaData;
   private int blockCount = 0;
+  private int shapeCount = 0;
 
   public Map<String, String> feedInfo = new LinkedHashMap<>();
 
@@ -21,10 +22,15 @@ public class FeedMetadata {
       map.put(metadata.getFilename(), metadata);
     }
     feedMetadata.setTableMetaData(map);
+    if (feedContainer.getTableForFilename(GtfsShape.FILENAME).isPresent()) {
+      feedMetadata.loadShapeCount(
+          (GtfsTableContainer<GtfsShape>)
+              feedContainer.getTableForFilename(GtfsShape.FILENAME).get());
+    }
     if (feedContainer.getTableForFilename(GtfsTrip.FILENAME).isPresent()) {
       feedMetadata.loadBlockCount(
-          (GtfsTableContainer<GtfsTrip>)
-              feedContainer.getTableForFilename(GtfsTrip.FILENAME).get());
+              (GtfsTableContainer<GtfsTrip>)
+                      feedContainer.getTableForFilename(GtfsTrip.FILENAME).get());
     }
     if (feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).isPresent()) {
       feedMetadata.loadFeedInfo(
@@ -37,6 +43,7 @@ public class FeedMetadata {
     feedMetadata.loadSpecFeatures(feedContainer);
     return feedMetadata;
   }
+
 
   private void loadSpecFeatures(GtfsFeedContainer feedContainer) {
     var pathwaysTable = feedContainer.getTableForFilename(GtfsPathway.FILENAME);
@@ -83,6 +90,16 @@ public class FeedMetadata {
     }
     blockCount = blockIds.size();
   }
+  private void loadShapeCount(GtfsTableContainer<GtfsShape> shapeFile) {
+    // iterate through entities and count unique shape_ids
+    Set<String> shapeIds = new HashSet<>();
+    for (GtfsShape shape : shapeFile.getEntities()) {
+      if (shape.hasShapeId()) {
+        shapeIds.add(shape.shapeId());
+      }
+    }
+    shapeCount = shapeIds.size();
+  }
 
   public ArrayList<String> foundFiles() {
     var foundFiles = new ArrayList<String>();
@@ -100,7 +117,7 @@ public class FeedMetadata {
     counts.put("Routes", tableMetaData.get(GtfsRoute.FILENAME).getEntityCount());
     counts.put("Trips", tableMetaData.get(GtfsTrip.FILENAME).getEntityCount());
     counts.put("Stops", tableMetaData.get(GtfsStop.FILENAME).getEntityCount());
-    counts.put("Shapes", tableMetaData.get(GtfsShape.FILENAME).getEntityCount());
+    counts.put("Shapes", shapeCount);
     counts.put("Blocks", blockCount);
 
     return counts;
