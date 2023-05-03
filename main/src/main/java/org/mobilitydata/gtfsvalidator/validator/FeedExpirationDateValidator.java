@@ -15,13 +15,14 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.BEST_PRACTICES_DATASET_PUBLISHING;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import java.time.LocalDate;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -87,11 +88,7 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
   @GtfsValidationNotice(
       severity = WARNING,
       files = @FileRefs(GtfsFeedInfoSchema.class),
-      urls = {
-        @UrlRef(
-            label = "General Publishing & General Practices",
-            url = "https://gtfs.org/best-practices/#dataset-publishing--general-practices")
-      })
+      sections = @SectionRefs(BEST_PRACTICES_DATASET_PUBLISHING))
   static class FeedExpirationDate7DaysNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */
@@ -126,11 +123,7 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
   @GtfsValidationNotice(
       severity = WARNING,
       files = @FileRefs(GtfsFeedInfoSchema.class),
-      urls = {
-        @UrlRef(
-            label = "General Publishing & General Practices",
-            url = "https://gtfs.org/best-practices/#dataset-publishing--general-practices")
-      })
+      sections = @SectionRefs(BEST_PRACTICES_DATASET_PUBLISHING))
   static class FeedExpirationDate30DaysNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */
