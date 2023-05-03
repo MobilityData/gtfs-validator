@@ -15,6 +15,13 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.FILED_TYPES;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
+
 /**
  * A field contains a malformed email address.
  *
@@ -24,18 +31,27 @@ package org.mobilitydata.gtfsvalidator.notice;
  * <p><a href="https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md">GTFS
  * reference</a> does not provide any special requirements or standards.
  */
+@GtfsValidationNotice(
+    severity = ERROR,
+    sections = @SectionRefs(FILED_TYPES),
+    urls = {
+      @UrlRef(
+          label = "Apache Commons EmailValidator",
+          url =
+              "https://commons.apache.org/proper/commons-validator/apidocs/org/apache/commons/validator/routines/EmailValidator.html")
+    })
 public class InvalidEmailNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The row of the faulty record.
+  /** The row of the faulty record. */
   private final int csvRowNumber;
 
-  // Faulty record's field name.
+  /** Faulty record's field name. */
   private final String fieldName;
 
-  // Faulty value.
+  /** Faulty value. */
   private final String fieldValue;
 
   /**

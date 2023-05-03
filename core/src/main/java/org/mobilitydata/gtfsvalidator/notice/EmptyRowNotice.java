@@ -15,6 +15,12 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.FILE_REQUIREMENTS;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
+
 /**
  * A row in the input file has only spaces.
  *
@@ -23,12 +29,13 @@ package org.mobilitydata.gtfsvalidator.notice;
  *
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
+@GtfsValidationNotice(severity = WARNING, sections = @SectionRefs(FILE_REQUIREMENTS))
 public class EmptyRowNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The row number of the faulty record.
+  /** The row number of the faulty record. */
   private final int csvRowNumber;
 
   public EmptyRowNotice(String filename, int csvRowNumber) {

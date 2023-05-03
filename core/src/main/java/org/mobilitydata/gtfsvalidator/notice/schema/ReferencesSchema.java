@@ -19,12 +19,15 @@ public class ReferencesSchema {
   /** References to files in the GTFS Best Practices document (e.g. `stops.txt`). */
   private final List<String> bestPracticesFileReferences = new ArrayList();
 
+  private final List<String> sectionReferences = new ArrayList<>();
+
   /** References to arbitrary URLs. */
   private final List<UrlReference> urlReferences = new ArrayList<>();
 
   public boolean isEmpty() {
     return fileReferences.isEmpty()
         && bestPracticesFileReferences.isEmpty()
+        && sectionReferences.isEmpty()
         && urlReferences.isEmpty();
   }
 
@@ -42,6 +45,14 @@ public class ReferencesSchema {
 
   public void addBestPracticesFileReference(String fileName) {
     bestPracticesFileReferences.add(fileName);
+  }
+
+  public List<String> getSectionReferences() {
+    return this.sectionReferences;
+  }
+
+  public void addSectionReference(String sectionReference) {
+    this.sectionReferences.add(sectionReference);
   }
 
   public List<UrlReference> getUrlReferences() {

@@ -15,14 +15,21 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.TERM_DEFINITIONS;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
+
 /**
  * A required file is missing.
  *
  * <p>Severity: {@code SeverityLevel.ERROR}
  */
+@GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(TERM_DEFINITIONS))
 public class MissingRequiredFileNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
   public MissingRequiredFileNotice(String filename) {

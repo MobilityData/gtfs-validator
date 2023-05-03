@@ -24,7 +24,7 @@ There are many ways to contribute to this project: improving code and documentat
 
 
 ## MobilityData slack
-To join the slack, please fill this ["Request to join"](https://docs.google.com/forms/d/e/1FAIpQLSczZbZB9ql_Xl-1uBtmvYmA0fwfm1UX92SyWAdkuMEDfxac5w/viewform) form. Then, you will receive your invitation via the e-mail provided. 
+[Here is a link](https://share.mobilitydata.org/slack) to join our slack.
 After joining, you can add the `gtfs-validators` channel and introduce yourself there. This channel is dedicated to the GTFS Schedule and Realtime validators, and this is where users can ask questions, share their intention to contribute, and receive any important news. 
 
 ## Contributor meeting

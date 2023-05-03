@@ -1,10 +1,12 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 import static org.mobilitydata.gtfsvalidator.validator.ValidatorReference.validatedElsewhereBy;
 
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -138,21 +140,22 @@ public class TransfersInSeatTransferTypeValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
+  @GtfsValidationNotice(severity = WARNING)
   public static class TransferWithSuspiciousMidTripInSeatNotice extends ValidationNotice {
 
-    // The row number from `transfers.txt` for the faulty entry.
+    /** The row number from `transfers.txt` for the faulty entry. */
     private final int csvRowNumber;
 
-    // The name of the trip id field (e.g. `from_trip_id`) referencing a trip.
+    /** The name of the trip id field (e.g. `from_trip_id`) referencing a trip. */
     private final String tripIdFieldName;
 
-    // The referenced trip id.
+    /** The referenced trip id. */
     private final String tripId;
 
-    // The name of the stop id field (e.g. `from_stop_id`) referencing the stop.
+    /** The name of the stop id field (e.g. `from_stop_id`) referencing the stop. */
     private final String stopIdFieldName;
 
-    // The referenced stop id.
+    /** The referenced stop id. */
     private final String stopId;
 
     public TransferWithSuspiciousMidTripInSeatNotice(

@@ -26,6 +26,11 @@ public class CreateJobRequest {
 
   public CreateJobRequest() {}
 
+  public CreateJobRequest(String countryCode, String url) {
+    this.countryCode = countryCode;
+    this.url = url;
+  }
+
   public String getCountryCode() {
     return countryCode;
   }

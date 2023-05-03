@@ -15,14 +15,20 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+
 import java.util.Locale;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
+import org.mobilitydata.gtfsvalidator.table.GtfsAgencySchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
 
 /**
@@ -90,21 +96,24 @@ public class MatchingFeedAndAgencyLangValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs({GtfsFeedInfoSchema.class, GtfsAgencySchema.class}))
   static class FeedInfoLangAndAgencyLangMismatchNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The agency id of the faulty record.
+    /** The agency id of the faulty record. */
     private final String agencyId;
 
-    // The agency name of the faulty record.
+    /** The agency name of the faulty record. */
     private final String agencyName;
 
-    // The agency language of the faulty record.
+    /** The agency language of the faulty record. */
     private final String agencyLang;
 
-    // The feed language of the faulty record.
+    /** The feed language of the faulty record. */
     private final String feedLang;
 
     FeedInfoLangAndAgencyLangMismatchNotice(

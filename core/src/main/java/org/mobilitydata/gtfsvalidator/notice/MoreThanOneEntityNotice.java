@@ -15,17 +15,24 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.FIELD_DEFINITIONS;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
+
 /**
  * A notice that the file is expected to have a single entity but has more (e.g., "feed_info.txt").
  *
  * <p>Severity: {@code SeverityLevel.WARNING}
  */
+@GtfsValidationNotice(severity = WARNING, sections = @SectionRefs(FIELD_DEFINITIONS))
 public class MoreThanOneEntityNotice extends ValidationNotice {
 
-  // Name of the faulty file.
+  /** Name of the faulty file. */
   private final String filename;
 
-  // Number of occurrences.
+  /** Number of occurrences. */
   private final long entityCount;
 
   public MoreThanOneEntityNotice(String filename, long entityCount) {

@@ -43,6 +43,13 @@ public class Main {
       new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
 
   public static void main(String[] argv) {
+    int rc = run(argv);
+    if (rc != 0) {
+      System.exit(rc);
+    }
+  }
+
+  public static int run(String[] argv) {
     Arguments args = new Arguments();
     new JCommander(args).parse(argv);
     List<File> reportDirectory = null;
@@ -54,11 +61,11 @@ public class Main {
       if (reportDirectory.isEmpty()) {
         logger.atSevere().log(
             "Specified directory is empty, cannot generate acceptance tests report.");
-        return;
+        return 0;
       }
     } catch (IOException ioException) {
       logger.atSevere().withCause(ioException).log("Error reading report directory");
-      System.exit(IO_EXCEPTION_EXIT_CODE);
+      return IO_EXCEPTION_EXIT_CODE;
     }
     List<File> reportDirs =
         reportDirectory.stream().filter(File::isDirectory).collect(Collectors.toList());
@@ -68,7 +75,7 @@ public class Main {
       sourceUrlContainer = new SourceUrlContainer(args.getSourceUrlPath());
     } catch (IOException ioException) {
       logger.atSevere().withCause(ioException).log("Error loading source url container");
-      System.exit(IO_EXCEPTION_EXIT_CODE);
+      return IO_EXCEPTION_EXIT_CODE;
     }
 
     ValidationReportComparator comparator = new ValidationReportComparator();
@@ -84,8 +91,10 @@ public class Main {
     exportReportSummary(result.reportSummary(), args.getOutputBase());
 
     if (result.failure()) {
-      System.exit(COMPARISON_FAILURE_EXIT_CODE);
+      return COMPARISON_FAILURE_EXIT_CODE;
     }
+
+    return 0;
   }
 
   /**
