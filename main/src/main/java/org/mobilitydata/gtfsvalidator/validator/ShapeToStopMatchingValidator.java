@@ -411,12 +411,7 @@ public class ShapeToStopMatchingValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = WARNING,
-      files =
-          @FileRefs({
-            GtfsTripSchema.class,
-            GtfsStopTimeSchema.class,
-            GtfsStopSchema.class
-          }))
+      files = @FileRefs({GtfsTripSchema.class, GtfsStopTimeSchema.class, GtfsStopSchema.class}))
   static class StopsMatchShapeOutOfOrderNotice extends ValidationNotice {
 
     /** The row number of the faulty record from `trips.txt`. */
