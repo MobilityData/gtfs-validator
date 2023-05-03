@@ -1,12 +1,12 @@
 package org.mobilitydata.gtfsvalidator.report.model;
 
 import java.util.*;
+import java.util.function.Function;
 import org.mobilitydata.gtfsvalidator.table.*;
 
 public class FeedMetadata {
   private Map<String, TableMetadata> tableMetaData;
-  private int blockCount = 0;
-  private int shapeCount = 0;
+  public Map<String, Integer> counts = new TreeMap<>();
 
   public Map<String, String> feedInfo = new LinkedHashMap<>();
 
@@ -22,16 +22,9 @@ public class FeedMetadata {
       map.put(metadata.getFilename(), metadata);
     }
     feedMetadata.setTableMetaData(map);
-    if (feedContainer.getTableForFilename(GtfsShape.FILENAME).isPresent()) {
-      feedMetadata.loadShapeCount(
-          (GtfsTableContainer<GtfsShape>)
-              feedContainer.getTableForFilename(GtfsShape.FILENAME).get());
-    }
-    if (feedContainer.getTableForFilename(GtfsTrip.FILENAME).isPresent()) {
-      feedMetadata.loadBlockCount(
-          (GtfsTableContainer<GtfsTrip>)
-              feedContainer.getTableForFilename(GtfsTrip.FILENAME).get());
-    }
+
+    feedMetadata.setCounts(feedContainer);
+
     if (feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).isPresent()) {
       feedMetadata.loadFeedInfo(
           (GtfsTableContainer<GtfsFeedInfo>)
@@ -42,6 +35,47 @@ public class FeedMetadata {
             feedContainer.getTableForFilename(GtfsAgency.FILENAME).get());
     feedMetadata.loadSpecFeatures(feedContainer);
     return feedMetadata;
+  }
+
+  private void setCounts(GtfsFeedContainer feedContainer) {
+    this.setCount("Shapes", feedContainer, GtfsShape.FILENAME, GtfsShape.class, GtfsShape::shapeId);
+    this.setCount("Stops", feedContainer, GtfsStop.FILENAME, GtfsStop.class, GtfsStop::stopId);
+    this.setCount("Routes", feedContainer, GtfsRoute.FILENAME, GtfsRoute.class, GtfsRoute::routeId);
+    this.setCount("Trips", feedContainer, GtfsTrip.FILENAME, GtfsTrip.class, GtfsTrip::tripId);
+    this.setCount(
+        "Agencies", feedContainer, GtfsAgency.FILENAME, GtfsAgency.class, GtfsAgency::agencyId);
+    this.setCount("Blocks", feedContainer, GtfsTrip.FILENAME, GtfsTrip.class, GtfsTrip::blockId);
+  }
+
+  private <T extends GtfsTableContainer<E>, E extends GtfsEntity> void setCount(
+      String countName,
+      GtfsFeedContainer feedContainer,
+      String fileName,
+      Class<E> clazz,
+      Function<E, String> idExtractor) {
+
+    var table = feedContainer.getTableForFilename(fileName);
+    this.counts.put(
+        countName,
+        table
+            .map(gtfsTableContainer -> loadUniqueCount(gtfsTableContainer, clazz, idExtractor))
+            .orElse(0));
+  }
+
+  private <E extends GtfsEntity> int loadUniqueCount(
+      GtfsTableContainer<?> table, Class<E> clazz, Function<E, String> idExtractor) {
+    // Iterate through entities and count unique IDs
+    Set<String> uniqueIds = new HashSet<>();
+    for (GtfsEntity entity : table.getEntities()) {
+      if (entity != null) {
+        E castedEntity = clazz.cast(entity);
+        String id = idExtractor.apply(castedEntity);
+        if (id != null) {
+          uniqueIds.add(id);
+        }
+      }
+    }
+    return uniqueIds.size();
   }
 
   private void loadSpecFeatures(GtfsFeedContainer feedContainer) {
@@ -81,28 +115,6 @@ public class FeedMetadata {
     }
   }
 
-  private void loadBlockCount(GtfsTableContainer<GtfsTrip> tripFile) {
-    // iterate through entities and count unique block_ids
-    Set<String> blockIds = new HashSet<>();
-    for (GtfsTrip trip : tripFile.getEntities()) {
-      if (trip.hasBlockId()) {
-        blockIds.add(trip.blockId());
-      }
-    }
-    blockCount = blockIds.size();
-  }
-
-  private void loadShapeCount(GtfsTableContainer<GtfsShape> shapeFile) {
-    // iterate through entities and count unique shape_ids
-    Set<String> shapeIds = new HashSet<>();
-    for (GtfsShape shape : shapeFile.getEntities()) {
-      if (shape.hasShapeId()) {
-        shapeIds.add(shape.shapeId());
-      }
-    }
-    shapeCount = shapeIds.size();
-  }
-
   public ArrayList<String> foundFiles() {
     var foundFiles = new ArrayList<String>();
     for (var table : tableMetaData.values()) {
@@ -113,23 +125,7 @@ public class FeedMetadata {
     return foundFiles;
   }
 
-  public Map<String, Integer> counts() {
-    var counts = new TreeMap<String, Integer>();
-    counts.put("Agencies", tableMetaData.get(GtfsAgency.FILENAME).getEntityCount());
-    counts.put("Routes", tableMetaData.get(GtfsRoute.FILENAME).getEntityCount());
-    counts.put("Trips", tableMetaData.get(GtfsTrip.FILENAME).getEntityCount());
-    counts.put("Stops", tableMetaData.get(GtfsStop.FILENAME).getEntityCount());
-    counts.put("Shapes", shapeCount);
-    counts.put("Blocks", blockCount);
-
-    return counts;
-  }
-
   public void setTableMetaData(Map<String, TableMetadata> tableMetaData) {
     this.tableMetaData = tableMetaData;
-  }
-
-  public void setBlockCount(int blockCount) {
-    this.blockCount = blockCount;
   }
 }
