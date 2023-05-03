@@ -70,11 +70,14 @@ public class MixedCaseValidatorGenerator {
       if (!mixedCaseField.mixedCase()) {
         continue;
       }
+      String test = "blah";
+
       validateMethod
           .beginControlFlow(
               "if (entity.$L())", FieldNameConverter.hasMethodName(mixedCaseField.name()))
           .addStatement("$T value = entity.$L()", String.class, mixedCaseField.name())
-          .beginControlFlow("if (!(value.matches(\".*[a-z].*\") && value.matches(\".*[A-Z].*\")))")
+          .beginControlFlow(
+              "if (value.matches(\".*\\\\p{L}{2}.*\") && (value.toLowerCase() == value || value.toUpperCase() == value))")
           .addStatement(
               "noticeContainer.addValidationNotice(new $T(\"$L\", \"$L\", value, entity.csvRowNumber()))",
               MixedCaseRecommendedFieldNotice.class,

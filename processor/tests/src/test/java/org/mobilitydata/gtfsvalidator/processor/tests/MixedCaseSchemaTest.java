@@ -18,10 +18,12 @@ package org.mobilitydata.gtfsvalidator.processor.tests;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.collect.ImmutableList;
+import java.util.Arrays;
+import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.runners.Parameterized;
 import org.mobilitydata.gtfsvalidator.notice.MixedCaseRecommendedFieldNotice;
 import org.mobilitydata.gtfsvalidator.table.MixedCaseTest;
 import org.mobilitydata.gtfsvalidator.table.MixedCaseTestTableDescriptor;
@@ -30,8 +32,15 @@ import org.mobilitydata.gtfsvalidator.validator.MixedCaseTestMixedCaseValidator;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 
-@RunWith(JUnit4.class)
+@RunWith(Parameterized.class)
 public class MixedCaseSchemaTest {
+  private final String value;
+  private final boolean isValid;
+
+  public MixedCaseSchemaTest(String value, boolean isValid) {
+    this.value = value;
+    this.isValid = isValid;
+  }
 
   private MixedCaseTestTableDescriptor tableDescriptor;
   private LoadingHelper helper;
@@ -44,17 +53,47 @@ public class MixedCaseSchemaTest {
         ValidatorLoader.createForClasses(ImmutableList.of(MixedCaseTestMixedCaseValidator.class)));
   }
 
+  @Parameterized.Parameters
+  public static Collection<Object[]> data() {
+    return Arrays.asList(
+        new Object[][] {
+          // valid values
+          {"MixedCase", true},
+          {"Mixed-Case", true},
+          {"Mixed_Case", true},
+          {"Mixed Case", true},
+          {"Another good value", true},
+          {"22222", true},
+          {"101B", true},
+          {"A14C", true},
+          {"A14c", true},
+          {"A14-C", true},
+          {"A14_C", true},
+          {"A14 C", true},
+          //          {"ZA12", true}, // TODO: Should this be allowed to succeed?
+          {"Avenue des Champs-Élysées", true},
+          // invalid values
+          {"lowercase", false},
+          {"UPPERCASE", false},
+          {"snake_case", false},
+          {"kebab-case", false},
+          {"UPPER-CASE", false},
+          {"lower case space", false},
+          {"ROUTE 22", false},
+          {"34broadst", false}
+        });
+  }
+
   @Test
   public void testValidMixedCase() throws ValidatorLoaderException {
-
-    String[] validValues = {
-      "MixedCase", "Mixed-Case", "Mixed_Case", "Mixed Case", "Another good value"
-    };
-
-    for (String value : validValues) {
-      helper.load(tableDescriptor, MixedCaseTest.SOME_FIELD_FIELD_NAME, value);
-
+    helper.load(tableDescriptor, MixedCaseTest.SOME_FIELD_FIELD_NAME, value);
+    if (isValid) {
       assertThat(helper.getValidationNotices()).isEmpty();
+    } else {
+      assertThat(helper.getValidationNotices())
+          .containsExactly(
+              new MixedCaseRecommendedFieldNotice(
+                  MixedCaseTest.FILENAME, MixedCaseTest.SOME_FIELD_FIELD_NAME, value, 2));
     }
   }
 
