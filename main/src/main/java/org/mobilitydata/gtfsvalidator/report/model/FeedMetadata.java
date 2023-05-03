@@ -29,8 +29,8 @@ public class FeedMetadata {
     }
     if (feedContainer.getTableForFilename(GtfsTrip.FILENAME).isPresent()) {
       feedMetadata.loadBlockCount(
-              (GtfsTableContainer<GtfsTrip>)
-                      feedContainer.getTableForFilename(GtfsTrip.FILENAME).get());
+          (GtfsTableContainer<GtfsTrip>)
+              feedContainer.getTableForFilename(GtfsTrip.FILENAME).get());
     }
     if (feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).isPresent()) {
       feedMetadata.loadFeedInfo(
@@ -43,7 +43,6 @@ public class FeedMetadata {
     feedMetadata.loadSpecFeatures(feedContainer);
     return feedMetadata;
   }
-
 
   private void loadSpecFeatures(GtfsFeedContainer feedContainer) {
     var pathwaysTable = feedContainer.getTableForFilename(GtfsPathway.FILENAME);
@@ -90,6 +89,7 @@ public class FeedMetadata {
     }
     blockCount = blockIds.size();
   }
+
   private void loadShapeCount(GtfsTableContainer<GtfsShape> shapeFile) {
     // iterate through entities and count unique shape_ids
     Set<String> shapeIds = new HashSet<>();
