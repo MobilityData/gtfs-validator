@@ -290,15 +290,13 @@
                                         </th:block>
                                     </tr>
                                 </thead>
-                                <span th:each="notice: ${noticesByCode.value}">
-                                    <tbody>
-                                        <tr>
-                                            <th:block th:each="field: ${notice.fields}">
-                                                <td th:text="${notice.getValueForField(field)}" />
-                                            </th:block>
-                                        </tr>
-                                    </tbody>
-                                </span>
+                                <tbody>
+                                    <tr th:each="notice, iStat : ${noticesByCode.value}" th:if="${iStat.count <= 100}">
+                                    <th:block th:each="field: ${notice.fields}">
+                                            <td th:text="${notice.getValueForField(field)}" />
+                                    </th:block>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </td>
