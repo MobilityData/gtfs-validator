@@ -90,8 +90,8 @@ build/
 # Web Validator Authentication Credential
 web/service/src/main/resources/web-based-gtfs-validator-a088ec5f045d.json
 
-# Web Validator Service Sentry Settings
-web/service/src/main/resources/sentry.properties
+# Web Validator Service Secret Properties
+web/service/src/main/resources/application.properties
 
 # Web Validator Service New Relic Settings
 web/service/newrelic/newrelic.yml

@@ -6,15 +6,18 @@ plugins {
   id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
-def WEB_BUILD_ENV           = System.getenv("WEB_BUILD_ENV") ?: 'dev'
-def WEB_DEPLOY_SVC_IMAGE    = System.getenv("WEB_DEPLOY_SVC_IMAGE")
-def WEB_DEPLOY_SVC_CLOUDRUN = System.getenv("WEB_DEPLOY_SVC_CLOUDRUN")
-def svcCredentialProvider   = hasProperty("env.${WEB_BUILD_ENV}.svcCredentialProvider") ? property("env.${WEB_BUILD_ENV}.svcCredentialProvider") : null
-def svcCredentialSrc        = hasProperty("env.${WEB_BUILD_ENV}.svcCredentialSrc")      ? property("env.${WEB_BUILD_ENV}.svcCredentialSrc")      : null
-def svcCredentialDst        = hasProperty("env.${WEB_BUILD_ENV}.svcCredentialDst")      ? property("env.${WEB_BUILD_ENV}.svcCredentialDst")      : 'src/main/resources/web-based-gtfs-validator-a088ec5f045d.json'
-def svcAPMLicenseProvider   = hasProperty("env.${WEB_BUILD_ENV}.svcAPMLicenseProvider") ? property("env.${WEB_BUILD_ENV}.svcAPMLicenseProvider") : null
-def svcAPMLicenseSrc        = hasProperty("env.${WEB_BUILD_ENV}.svcAPMLicenseSrc")      ? property("env.${WEB_BUILD_ENV}.svcAPMLicenseSrc")      : null
-def svcAPMLicenseDst        = hasProperty("env.${WEB_BUILD_ENV}.svcAPMLicenseDst")      ? property("env.${WEB_BUILD_ENV}.svcAPMLicenseDst")      : 'newrelic/newrelic.yml'
+def WEB_BUILD_ENV               = System.getenv("WEB_BUILD_ENV") ?: 'dev'
+def WEB_DEPLOY_SVC_IMAGE        = System.getenv("WEB_DEPLOY_SVC_IMAGE")
+def WEB_DEPLOY_SVC_CLOUDRUN     = System.getenv("WEB_DEPLOY_SVC_CLOUDRUN")
+def svcCredentialProvider       = hasProperty("env.${WEB_BUILD_ENV}.svcCredentialProvider")       ? property("env.${WEB_BUILD_ENV}.svcCredentialProvider")       : null
+def svcCredentialSrc            = hasProperty("env.${WEB_BUILD_ENV}.svcCredentialSrc")            ? property("env.${WEB_BUILD_ENV}.svcCredentialSrc")            : null
+def svcCredentialDst            = hasProperty("env.${WEB_BUILD_ENV}.svcCredentialDst")            ? property("env.${WEB_BUILD_ENV}.svcCredentialDst")            : 'src/main/resources/web-based-gtfs-validator-a088ec5f045d.json'
+def svcAPMLicenseProvider       = hasProperty("env.${WEB_BUILD_ENV}.svcAPMLicenseProvider")       ? property("env.${WEB_BUILD_ENV}.svcAPMLicenseProvider")       : null
+def svcAPMLicenseSrc            = hasProperty("env.${WEB_BUILD_ENV}.svcAPMLicenseSrc")            ? property("env.${WEB_BUILD_ENV}.svcAPMLicenseSrc")            : null
+def svcAPMLicenseDst            = hasProperty("env.${WEB_BUILD_ENV}.svcAPMLicenseDst")            ? property("env.${WEB_BUILD_ENV}.svcAPMLicenseDst")            : 'newrelic/newrelic.yml'
+def svcSecretPropertiesProvider = hasProperty("env.${WEB_BUILD_ENV}.svcSecretPropertiesProvider") ? property("env.${WEB_BUILD_ENV}.svcSecretPropertiesProvider") : null
+def svcSecretPropertiesSrc      = hasProperty("env.${WEB_BUILD_ENV}.svcSecretPropertiesSrc")      ? property("env.${WEB_BUILD_ENV}.svcSecretPropertiesSrc")      : null
+def svcSecretPropertiesDst      = hasProperty("env.${WEB_BUILD_ENV}.svcSecretPropertiesDst")      ? property("env.${WEB_BUILD_ENV}.svcSecretPropertiesDst")      : 'src/main/resources/application.properties'
 
 jar {
     // Add the manifest within the JAR, using gtfs-validator as the title
@@ -143,9 +146,44 @@ task webSvcAPMLicense (type: Exec) {
 
 }
 
+task webSvcSecretProperties (type: Exec) {
+
+  def required_missing = []
+  if (svcSecretPropertiesProvider == null) required_missing.add("env.${WEB_BUILD_ENV}.svcSecretPropertiesProvider")
+  if (svcSecretPropertiesSrc == null) required_missing.add("env.${WEB_BUILD_ENV}.svcSecretPropertiesSrc")
+  if (required_missing.size > 0) {
+    commandLine 'echo', 'SKIP: webSvcSecretProperties: missing required project properties:', required_missing.join(', ')
+    return
+  }
+
+  inputs.property('svcSecretPropertiesProvider', svcSecretPropertiesProvider)
+  inputs.property('svcSecretPropertiesSrc', svcSecretPropertiesSrc)
+  outputs.file(file(svcSecretPropertiesDst))
+
+  switch (svcSecretPropertiesProvider) {
+    case "gcloud-secrets":
+      commandLine (
+        'gcloud',
+        '--verbosity=info',
+        'secrets',
+        'versions',
+        'access',
+        'latest',
+        "--secret=${svcSecretPropertiesSrc}",
+        "--out-file=${svcSecretPropertiesDst}"
+      )
+      break
+    default:
+      commandLine 'echo', "SKIP: webSvcSecretProperties: unsupported svcSecretPropertiesProvider: ${svcSecretPropertiesProvider}"
+      break
+  }
+
+}
+
 task webSecrets {
   dependsOn webSvcCredential
   dependsOn webSvcAPMLicense
+  dependsOn webSvcSecretProperties
 }
 
 task webTest {
