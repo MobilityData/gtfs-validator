@@ -235,6 +235,7 @@ public class TableDescriptorGenerator {
                       ClassName.get(GtfsFieldLoader.class),
                       gtfsEntityType.nestedClass("Builder"),
                       boxedType));
+      //todo:for GtfsFeedInfo.FEED_CONTACT_URL_FIELD_NAME's load method add specific method to adjust
       MethodSpec.Builder loadMethod =
           MethodSpec.methodBuilder("load")
               .addAnnotation(Override.class)
@@ -246,6 +247,7 @@ public class TableDescriptorGenerator {
                   ParameterizedTypeName.get(ClassName.get(FieldCache.class), boxedType),
                   "fieldCache")
               .addParameter(gtfsEntityType.nestedClass("Builder"), "builder");
+      //todo:change to constant value
 
       CodeBlock fieldValue =
           field.type() == FieldTypeEnum.ENUM

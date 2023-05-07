@@ -144,6 +144,7 @@ public class NoticeContainer {
     }
   }
 
+
   /** Tells if this container has any {@code ValidationNotice} that is an error. */
   public boolean hasValidationErrors() {
     return hasValidationErrors;

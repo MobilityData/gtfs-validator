@@ -7,8 +7,11 @@ import com.univocity.parsers.common.TextParsingException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
+
+import org.mobilitydata.gtfsvalidator.NoticeFilter.NoticeFilter;
 import org.mobilitydata.gtfsvalidator.notice.CsvParsingFailedNotice;
 import org.mobilitydata.gtfsvalidator.notice.EmptyFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFileNotice;
@@ -105,7 +108,13 @@ public final class AnyTableLoader {
               entity, singleEntityValidators, noticeContainer);
           entities.add(entity);
         }
+
         noticeContainer.addAll(rowNotices);
+
+        ServiceLoader<NoticeFilter> noticeFilterServiceLoader = ServiceLoader.load(NoticeFilter.class);
+        for(NoticeFilter filter:noticeFilterServiceLoader){
+          filter.filter(noticeContainer);
+        }
       }
     } catch (TextParsingException e) {
       noticeContainer.addValidationNotice(new CsvParsingFailedNotice(gtfsFilename, e));
