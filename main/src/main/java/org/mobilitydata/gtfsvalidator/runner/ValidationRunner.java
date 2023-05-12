@@ -28,6 +28,9 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ServiceLoader;
+
+import org.mobilitydata.gtfsvalidator.NoticeFilter.NoticeFilter;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
@@ -125,6 +128,10 @@ public class ValidationRunner {
       logger.atSevere().withCause(e).log("Validation was interrupted");
       return Status.EXCEPTION;
     }
+
+    ServiceLoader<NoticeFilter> noticeFilterServiceLoader = ServiceLoader.load(NoticeFilter.class);
+    noticeContainer.filterNotice(noticeFilterServiceLoader);
+
     closeGtfsInput(gtfsInput, noticeContainer);
 
     // Output

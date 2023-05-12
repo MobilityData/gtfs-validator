@@ -19,12 +19,11 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
 import com.google.gson.JsonObject;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 import java.util.Map.Entry;
+
+import org.mobilitydata.gtfsvalidator.NoticeFilter.NoticeFilter;
 import org.mobilitydata.gtfsvalidator.io.ValidationReportDeserializer;
 
 /**
@@ -182,5 +181,12 @@ public class NoticeContainer {
       noticesByType.put(notice.getMappingKey(), notice);
     }
     return noticesByType;
+  }
+
+
+  public void filterNotice(ServiceLoader<NoticeFilter> noticeFilterServiceLoader){
+    for(NoticeFilter filter:noticeFilterServiceLoader){
+      filter.filter(validationNotices);
+    }
   }
 }
