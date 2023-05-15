@@ -19,8 +19,16 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import com.google.common.collect.ImmutableList;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
+
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
@@ -46,217 +54,336 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTranslationTableContainer;
 @GtfsValidator
 public class TranslationFieldAndReferenceValidator extends FileValidator {
 
-  private final GtfsTranslationTableContainer translationTable;
+    private final GtfsTranslationTableContainer translationTable;
 
-  private final GtfsFeedContainer feedContainer;
+    private final GtfsFeedContainer feedContainer;
 
-  @Inject
-  TranslationFieldAndReferenceValidator(
-      GtfsTranslationTableContainer translationTable, GtfsFeedContainer feedContainer) {
-    this.translationTable = translationTable;
-    this.feedContainer = feedContainer;
-  }
-
-  @Override
-  public void validate(NoticeContainer noticeContainer) {
-    // The legacy Google translation format does not define `translations.table_name` field.
-    if (!translationTable.getHeader().hasColumn(GtfsTranslation.TABLE_NAME_FIELD_NAME)) {
-      // Skip validation if legacy Google translation format is detected.
-      return;
+    @Inject
+    TranslationFieldAndReferenceValidator(
+            GtfsTranslationTableContainer translationTable, GtfsFeedContainer feedContainer) {
+        this.translationTable = translationTable;
+        this.feedContainer = feedContainer;
     }
-    // If GtfsTranslationSchema.java is patched to enable the legacy Google format, then
-    // fields field_name, language and table_name become optional. Here we have detected that
-    // table_name header is present, so this is the standard GTFS translation format. Check that the
-    // standard required fields are present.
-    if (!validateStandardRequiredFields(noticeContainer)) {
-      return;
+
+    @Override
+    public void validate(NoticeContainer noticeContainer) {
+        // The legacy Google translation format does not define `translations.table_name` field.
+        if (!translationTable.getHeader().hasColumn(GtfsTranslation.TABLE_NAME_FIELD_NAME)) {
+            // Skip validation if legacy Google translation format is detected.
+            return;
+        }
+        // If GtfsTranslationSchema.java is patched to enable the legacy Google format, then
+        // fields field_name, language and table_name become optional. Here we have detected that
+        // table_name header is present, so this is the standard GTFS translation format. Check that the
+        // standard required fields are present.
+        if (!validateStandardRequiredFields(noticeContainer)) {
+            return;
+        }
+        for (GtfsTranslation translation : translationTable.getEntities()) {
+            validateTranslation(translation, noticeContainer);
+        }
     }
-    for (GtfsTranslation translation : translationTable.getEntities()) {
-      validateTranslation(translation, noticeContainer);
+
+    /**
+     * Emits errors for missing required fields field_name, language and table_name.
+     *
+     * @return true if all required fields are set for all entities, false otherwise
+     */
+    private boolean validateStandardRequiredFields(NoticeContainer noticeContainer) {
+        boolean isValid = true;
+        for (GtfsTranslation translation : translationTable.getEntities()) {
+            if (!translation.hasFieldName()) {
+                noticeContainer.addValidationNotice(
+                        new MissingRequiredFieldNotice(
+                                GtfsTranslation.FILENAME,
+                                translation.csvRowNumber(),
+                                GtfsTranslation.FIELD_NAME_FIELD_NAME));
+                isValid = false;
+            }
+            if (!translation.hasLanguage()) {
+                noticeContainer.addValidationNotice(
+                        new MissingRequiredFieldNotice(
+                                GtfsTranslation.FILENAME,
+                                translation.csvRowNumber(),
+                                GtfsTranslation.LANGUAGE_FIELD_NAME));
+                isValid = false;
+            }
+            if (!translation.hasTableName()) {
+                noticeContainer.addValidationNotice(
+                        new MissingRequiredFieldNotice(
+                                GtfsTranslation.FILENAME,
+                                translation.csvRowNumber(),
+                                GtfsTranslation.TABLE_NAME_FIELD_NAME));
+                isValid = false;
+            }
+        }
+        return isValid;
     }
-  }
 
-  /**
-   * Emits errors for missing required fields field_name, language and table_name.
-   *
-   * @return true if all required fields are set for all entities, false otherwise
-   */
-  private boolean validateStandardRequiredFields(NoticeContainer noticeContainer) {
-    boolean isValid = true;
-    for (GtfsTranslation translation : translationTable.getEntities()) {
-      if (!translation.hasFieldName()) {
-        noticeContainer.addValidationNotice(
-            new MissingRequiredFieldNotice(
-                GtfsTranslation.FILENAME,
-                translation.csvRowNumber(),
-                GtfsTranslation.FIELD_NAME_FIELD_NAME));
-        isValid = false;
-      }
-      if (!translation.hasLanguage()) {
-        noticeContainer.addValidationNotice(
-            new MissingRequiredFieldNotice(
-                GtfsTranslation.FILENAME,
-                translation.csvRowNumber(),
-                GtfsTranslation.LANGUAGE_FIELD_NAME));
-        isValid = false;
-      }
-      if (!translation.hasTableName()) {
-        noticeContainer.addValidationNotice(
-            new MissingRequiredFieldNotice(
-                GtfsTranslation.FILENAME,
-                translation.csvRowNumber(),
-                GtfsTranslation.TABLE_NAME_FIELD_NAME));
-        isValid = false;
-      }
+    /**
+     * Validates a single row in {@code translations.txt}.
+     */
+    private void validateTranslation(GtfsTranslation translation, NoticeContainer noticeContainer) {
+        if (translation.hasFieldValue()) {
+            if (translation.hasRecordId()) {
+                noticeContainer.addValidationNotice(
+                        new TranslationUnexpectedValueNotice(
+                                translation, GtfsTranslation.RECORD_ID_FIELD_NAME, translation.recordId()));
+            }
+            if (translation.hasRecordSubId()) {
+                noticeContainer.addValidationNotice(
+                        new TranslationUnexpectedValueNotice(
+                                translation, GtfsTranslation.RECORD_SUB_ID_FIELD_NAME, translation.recordSubId()));
+            }
+        }
+        Optional<GtfsTableContainer<?>> parentTable =
+                feedContainer.getTableForFilename(translation.tableName() + ".txt");
+        if (parentTable.isEmpty() || parentTable.get().isMissingFile()) {
+            noticeContainer.addValidationNotice(new TranslationUnknownTableNameNotice(translation));
+        } else if (!translation.hasFieldValue()) {
+            validateReferenceIntegrity(translation, parentTable.get(), noticeContainer);
+        } else {
+            validateFiledValueReferenceIntegrity(translation, parentTable.get(), noticeContainer);
+        }
     }
-    return isValid;
-  }
 
-  /** Validates a single row in {@code translations.txt}. */
-  private void validateTranslation(GtfsTranslation translation, NoticeContainer noticeContainer) {
-    if (translation.hasFieldValue()) {
-      if (translation.hasRecordId()) {
-        noticeContainer.addValidationNotice(
-            new TranslationUnexpectedValueNotice(
-                translation, GtfsTranslation.RECORD_ID_FIELD_NAME, translation.recordId()));
-      }
-      if (translation.hasRecordSubId()) {
-        noticeContainer.addValidationNotice(
-            new TranslationUnexpectedValueNotice(
-                translation, GtfsTranslation.RECORD_SUB_ID_FIELD_NAME, translation.recordSubId()));
-      }
+    /**
+     * Checks that {@code record_id, record_sub_id} fields are properly assigned and reference an
+     * existing row in the parent table.
+     */
+    private void validateReferenceIntegrity(
+            GtfsTranslation translation,
+            GtfsTableContainer<?> parentTable,
+            NoticeContainer noticeContainer) {
+        ImmutableList<String> keyColumnNames = parentTable.getKeyColumnNames();
+        if (isMissingOrUnexpectedField(
+                translation,
+                translation.hasRecordId(),
+                keyColumnNames.size() >= 1,
+                GtfsTranslation.RECORD_ID_FIELD_NAME,
+                translation.recordId(),
+                noticeContainer)
+                || isMissingOrUnexpectedField(
+                translation,
+                translation.hasRecordSubId(),
+                keyColumnNames.size() >= 2,
+                GtfsTranslation.RECORD_SUB_ID_FIELD_NAME,
+                translation.recordSubId(),
+                noticeContainer)) {
+            return;
+        }
+        Optional<?> entity =
+                parentTable.byTranslationKey(translation.recordId(), translation.recordSubId());
+        if (entity.isEmpty()) {
+            noticeContainer.addValidationNotice(new TranslationForeignKeyViolationNotice(translation));
+        }
     }
-    Optional<GtfsTableContainer<?>> parentTable =
-        feedContainer.getTableForFilename(translation.tableName() + ".txt");
-    if (parentTable.isEmpty() || parentTable.get().isMissingFile()) {
-      noticeContainer.addValidationNotice(new TranslationUnknownTableNameNotice(translation));
-    } else if (!translation.hasFieldValue()) {
-      validateReferenceIntegrity(translation, parentTable.get(), noticeContainer);
+
+    /**
+     * Checks that {@code field_name} is present in parent table and {@code field_value} reference an
+     * existing row in the parent table.
+     */
+    private static void validateFiledValueReferenceIntegrity(
+            GtfsTranslation translation,
+            GtfsTableContainer<?> parentTable,
+            NoticeContainer noticeContainer) {
+
+        try {
+            Method getFieldValueMethod = parentTable.getEntityClass().getMethod(underlineToCamel(translation.fieldName()));
+            List<?> entitiesFindByValue = parentTable.getEntities().stream().parallel().filter(gtfsEntity -> {
+                try {
+                    return getFieldValueMethod.invoke(gtfsEntity).toString().equals(translation.fieldValue());
+                } catch (InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }).collect(Collectors.toList());
+            if (entitiesFindByValue.size() == 0)
+                noticeContainer.addValidationNotice(new TranslationNotFoundValueNotice(translation, translation.fieldName(), translation.fieldValue()));
+        } catch (NoSuchMethodException e) {
+            noticeContainer.addValidationNotice(new TranslationUnexpectedNameNotice(translation, translation.fieldName()));
+        }
     }
-  }
 
-  /**
-   * Checks that {@code record_id, record_sub_id} fields are properly assigned and reference an
-   * existing row in the parent table.
-   */
-  private void validateReferenceIntegrity(
-      GtfsTranslation translation,
-      GtfsTableContainer<?> parentTable,
-      NoticeContainer noticeContainer) {
-    ImmutableList<String> keyColumnNames = parentTable.getKeyColumnNames();
-    if (isMissingOrUnexpectedField(
-            translation,
-            translation.hasRecordId(),
-            keyColumnNames.size() >= 1,
-            GtfsTranslation.RECORD_ID_FIELD_NAME,
-            translation.recordId(),
-            noticeContainer)
-        || isMissingOrUnexpectedField(
-            translation,
-            translation.hasRecordSubId(),
-            keyColumnNames.size() >= 2,
-            GtfsTranslation.RECORD_SUB_ID_FIELD_NAME,
-            translation.recordSubId(),
-            noticeContainer)) {
-      return;
+    /**
+     * A translation references an missing row according to field_value in parent table.
+     */
+    @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsTranslationSchema.class))
+    static class TranslationUnexpectedNameNotice extends ValidationNotice {
+
+        /**
+         * The row number of the faulty record.
+         */
+        private final int csvRowNumber;
+
+        /**
+         * The name of the field that didn't exist in table.
+         */
+        private final String fieldName;
+
+        TranslationUnexpectedNameNotice(
+                GtfsTranslation translation, String fieldName) {
+            super(SeverityLevel.ERROR);
+            this.csvRowNumber = translation.csvRowNumber();
+            this.fieldName = fieldName;
+        }
     }
-    Optional<?> entity =
-        parentTable.byTranslationKey(translation.recordId(), translation.recordSubId());
-    if (entity.isEmpty()) {
-      noticeContainer.addValidationNotice(new TranslationForeignKeyViolationNotice(translation));
+
+    /**
+     * Checks that a field is present (or missing) as expected and emits errors if not.
+     *
+     * @return whether the field is missing or unexpected
+     */
+    private static boolean isMissingOrUnexpectedField(
+            GtfsTranslation translation,
+            boolean actualPresence,
+            boolean expectedPresence,
+            String fieldName,
+            String fieldValue,
+            NoticeContainer noticeContainer) {
+        if (expectedPresence == actualPresence) {
+            return false;
+        }
+        if (actualPresence) {
+            noticeContainer.addValidationNotice(
+                    new TranslationUnexpectedValueNotice(translation, fieldName, fieldValue));
+        } else {
+            noticeContainer.addValidationNotice(
+                    new MissingRequiredFieldNotice(
+                            GtfsTranslation.FILENAME, translation.csvRowNumber(), fieldName));
+        }
+        return true;
     }
-  }
 
-  /**
-   * Checks that a field is present (or missing) as expected and emits errors if not.
-   *
-   * @return whether the field is missing or unexpected
-   */
-  private static boolean isMissingOrUnexpectedField(
-      GtfsTranslation translation,
-      boolean actualPresence,
-      boolean expectedPresence,
-      String fieldName,
-      String fieldValue,
-      NoticeContainer noticeContainer) {
-    if (expectedPresence == actualPresence) {
-      return false;
+    private static String underlineToCamel(String str) {
+
+        StringBuffer sb = new StringBuffer();
+        str = str.toLowerCase();
+        Matcher matcher = Pattern.compile("_[a-z]").matcher(str);
+        while (matcher.find()) {
+            matcher.appendReplacement(sb, matcher.group(0).toUpperCase().replace("_", ""));
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
     }
-    if (actualPresence) {
-      noticeContainer.addValidationNotice(
-          new TranslationUnexpectedValueNotice(translation, fieldName, fieldValue));
-    } else {
-      noticeContainer.addValidationNotice(
-          new MissingRequiredFieldNotice(
-              GtfsTranslation.FILENAME, translation.csvRowNumber(), fieldName));
+
+
+    /**
+     * A translation references an unknown field in parent table.
+     */
+    @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsTranslationSchema.class))
+    static class TranslationNotFoundValueNotice extends ValidationNotice {
+
+        /**
+         * The row number of the faulty record.
+         */
+        private final int csvRowNumber;
+
+        /**
+         * The name of the field that cannot find entities by value.
+         */
+        private final String fieldName;
+        /**
+         * The value of the field that not be found in table.
+         */
+        private final String fieldValue;
+
+        TranslationNotFoundValueNotice(
+                GtfsTranslation translation, String fieldName, String fieldValue) {
+            super(SeverityLevel.ERROR);
+            this.csvRowNumber = translation.csvRowNumber();
+            this.fieldValue = fieldValue;
+            this.fieldName = fieldName;
+        }
     }
-    return true;
-  }
 
-  /** A field in a translations row has value but must be empty. */
-  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsTranslationSchema.class))
-  static class TranslationUnexpectedValueNotice extends ValidationNotice {
+    /**
+     * A field in a translations row has value but must be empty.
+     */
+    @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsTranslationSchema.class))
+    static class TranslationUnexpectedValueNotice extends ValidationNotice {
 
-    /** The row number of the faulty record. */
-    private final int csvRowNumber;
+        /**
+         * The row number of the faulty record.
+         */
+        private final int csvRowNumber;
 
-    /** The name of the field that was expected to be empty. */
-    private final String fieldName;
+        /**
+         * The name of the field that was expected to be empty.
+         */
+        private final String fieldName;
 
-    /** Actual value of the field that was expected to be empty. */
-    private final String fieldValue;
+        /**
+         * Actual value of the field that was expected to be empty.
+         */
+        private final String fieldValue;
 
-    TranslationUnexpectedValueNotice(
-        GtfsTranslation translation, String fieldName, String fieldValue) {
-      super(SeverityLevel.ERROR);
-      this.csvRowNumber = translation.csvRowNumber();
-      this.fieldValue = fieldValue;
-      this.fieldName = fieldName;
+        TranslationUnexpectedValueNotice(
+                GtfsTranslation translation, String fieldName, String fieldValue) {
+            super(SeverityLevel.ERROR);
+            this.csvRowNumber = translation.csvRowNumber();
+            this.fieldValue = fieldValue;
+            this.fieldName = fieldName;
+        }
     }
-  }
 
-  /** A translation references an unknown or missing GTFS table. */
-  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsTranslationSchema.class))
-  static class TranslationUnknownTableNameNotice extends ValidationNotice {
+    /**
+     * A translation references an unknown or missing GTFS table.
+     */
+    @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsTranslationSchema.class))
+    static class TranslationUnknownTableNameNotice extends ValidationNotice {
 
-    /** The row number of the faulty record. */
-    private final int csvRowNumber;
+        /**
+         * The row number of the faulty record.
+         */
+        private final int csvRowNumber;
 
-    /** `table_name` of the faulty record. */
-    private final String tableName;
+        /**
+         * `table_name` of the faulty record.
+         */
+        private final String tableName;
 
-    TranslationUnknownTableNameNotice(GtfsTranslation translation) {
-      super(SeverityLevel.WARNING);
-      this.csvRowNumber = translation.csvRowNumber();
-      this.tableName = translation.tableName();
+        TranslationUnknownTableNameNotice(GtfsTranslation translation) {
+            super(SeverityLevel.WARNING);
+            this.csvRowNumber = translation.csvRowNumber();
+            this.tableName = translation.tableName();
+        }
     }
-  }
 
-  /**
-   * An entity with the given {@code record_id, record_sub_id} cannot be found in the referenced
-   * table.
-   */
-  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsTranslationSchema.class))
-  static class TranslationForeignKeyViolationNotice extends ValidationNotice {
+    /**
+     * An entity with the given {@code record_id, record_sub_id} cannot be found in the referenced
+     * table.
+     */
+    @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsTranslationSchema.class))
+    static class TranslationForeignKeyViolationNotice extends ValidationNotice {
 
-    /** The row number of the faulty record. */
-    private final int csvRowNumber;
+        /**
+         * The row number of the faulty record.
+         */
+        private final int csvRowNumber;
 
-    /** `table_name` of the faulty record. */
-    private final String tableName;
+        /**
+         * `table_name` of the faulty record.
+         */
+        private final String tableName;
 
-    /** `record_id` of the faulty record. */
-    private final String recordId;
+        /**
+         * `record_id` of the faulty record.
+         */
+        private final String recordId;
 
-    /** `record_sub_id` of the faulty record. */
-    private final String recordSubId;
+        /**
+         * `record_sub_id` of the faulty record.
+         */
+        private final String recordSubId;
 
-    TranslationForeignKeyViolationNotice(GtfsTranslation translation) {
-      super(SeverityLevel.ERROR);
-      this.csvRowNumber = translation.csvRowNumber();
-      this.tableName = translation.tableName();
-      this.recordId = translation.recordId();
-      this.recordSubId = translation.recordSubId();
+        TranslationForeignKeyViolationNotice(GtfsTranslation translation) {
+            super(SeverityLevel.ERROR);
+            this.csvRowNumber = translation.csvRowNumber();
+            this.tableName = translation.tableName();
+            this.recordId = translation.recordId();
+            this.recordSubId = translation.recordSubId();
+        }
     }
-  }
 }
