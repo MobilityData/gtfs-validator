@@ -82,7 +82,7 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
-  @GtfsValidationNotice(severity = ERROR)
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopSchema.class))
   static class StationWithParentStationNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */

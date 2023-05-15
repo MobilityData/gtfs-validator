@@ -120,7 +120,10 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
-  @GtfsValidationNotice(severity = WARNING, bestPractices = @FileRefs(GtfsRouteSchema.class))
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs(GtfsRouteSchema.class),
+      bestPractices = @FileRefs(GtfsRouteSchema.class))
   static class RouteLongNameContainsShortNameNotice extends ValidationNotice {
 
     /** The id of the faulty record. */
@@ -151,7 +154,10 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
-  @GtfsValidationNotice(severity = WARNING, bestPractices = @FileRefs(GtfsRouteSchema.class))
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs(GtfsRouteSchema.class),
+      bestPractices = @FileRefs(GtfsRouteSchema.class))
   static class RouteShortNameTooLongNotice extends ValidationNotice {
 
     /** The id of the faulty record. */
@@ -177,7 +183,7 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
-  @GtfsValidationNotice(severity = WARNING)
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsRouteSchema.class))
   static class SameNameAndDescriptionForRouteNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */
