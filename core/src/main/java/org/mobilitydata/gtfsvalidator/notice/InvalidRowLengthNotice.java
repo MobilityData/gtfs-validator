@@ -23,9 +23,9 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /**
- * A row in the input file has a different number of values than specified by the CSV header.
+ * Invalid csv row length.
  *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>A row in the input file has a different number of values than specified by the CSV header.
  */
 @GtfsValidationNotice(
     severity = ERROR,

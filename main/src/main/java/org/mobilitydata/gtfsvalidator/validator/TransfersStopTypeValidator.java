@@ -71,10 +71,8 @@ public class TransfersStopTypeValidator extends FileValidator {
   }
 
   /**
-   * A `from_stop_id` or `to_stop_id` field from GTFS file `transfers.txt` references a stop that
-   * has a `location_type` other than 0 or 1 (aka Stop/Platform or Station).
-   *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * A stop id field from GTFS file `transfers.txt` references a stop that has a `location_type`
+   * other than 0 or 1 (aka Stop/Platform or Station).
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsTransferSchema.class))
   public static final class TransferWithInvalidStopLocationTypeNotice extends ValidationNotice {

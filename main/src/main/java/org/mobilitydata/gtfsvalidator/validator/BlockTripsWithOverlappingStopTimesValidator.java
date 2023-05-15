@@ -259,11 +259,7 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
     }
   }
 
-  /**
-   * Describes two trips with the same block id that have overlapping stop times.
-   *
-   * <p>Severity: {@code SeverityLevel.ERROR}
-   */
+  /** Trips with the same block id have overlapping stop times. */
   @GtfsValidationNotice(
       severity = ERROR,
       files = @FileRefs({GtfsTripSchema.class}),

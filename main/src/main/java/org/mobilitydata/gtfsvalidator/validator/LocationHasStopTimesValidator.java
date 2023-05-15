@@ -71,7 +71,12 @@ public class LocationHasStopTimesValidator extends FileValidator {
     }
   }
 
-  /** Describes a stop that does not have any stop time associated. */
+  /**
+   * A stop in `stops.txt` is not referenced by any `stop_times.stop_id`.
+   *
+   * <p>Such stops are not used by any trip and normally do not provide user value. This notice may
+   * indicate a typo in `stop_times.txt`.
+   */
   @GtfsValidationNotice(
       severity = WARNING,
       files = @FileRefs({GtfsStopTimeSchema.class, GtfsStopSchema.class}))
@@ -95,7 +100,10 @@ public class LocationHasStopTimesValidator extends FileValidator {
   }
 
   /**
-   * Describes a location in {@code stops.txt} that is not a stop but has a stop time associated.
+   * A location in `stops.txt` that is not a stop is referenced by some `stop_times.stop_id`.
+   *
+   * <p>Referenced locations (using `stop_times.stop_id`) must be stops/platforms, i.e. their
+   * `stops.location_type` value must be 0 or empty.
    */
   @GtfsValidationNotice(
       severity = ERROR,

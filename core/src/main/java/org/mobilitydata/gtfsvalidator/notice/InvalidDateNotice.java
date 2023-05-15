@@ -26,9 +26,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
  *
  * <p>Dates must have the YYYYMMDD format.
  *
- * <p>Example: {@code 20180913} for September 13th, 2018.
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>Example: `20180913` for September 13th, 2018.
  */
 @GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILED_TYPES))
 public class InvalidDateNotice extends ValidationNotice {

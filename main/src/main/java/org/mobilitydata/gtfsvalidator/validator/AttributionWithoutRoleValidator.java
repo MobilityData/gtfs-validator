@@ -51,10 +51,10 @@ public class AttributionWithoutRoleValidator extends SingleEntityValidator<GtfsA
   }
 
   /**
-   * A row from GTFS file `attributions.txt` has fields `attributions.is_producer`,
-   * `attributions.is_operator`, and `attributions.is_authority` not defined or set at 0.
+   * Attribution with no role.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>At least one of the fields `is_producer`, `is_operator`, or `is_authority` should be set to
+   * 1.
    */
   @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsAttributionSchema.class))
   static class AttributionWithoutRoleNotice extends ValidationNotice {

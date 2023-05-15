@@ -21,11 +21,7 @@ import javax.annotation.Nullable;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
-/**
- * A point is too close to origin (0, 0).
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
- */
+/** A point is too close to origin `(0, 0)`. */
 @GtfsValidationNotice(
     severity = ERROR,
     urls = {

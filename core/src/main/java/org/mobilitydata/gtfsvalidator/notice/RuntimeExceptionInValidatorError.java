@@ -6,10 +6,12 @@ import com.google.common.base.Strings;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 
 /**
- * Describes a runtime exception during validation. This normally indicates a bug in validator code,
- * e.g., in a custom validator class.
+ * RuntimeException while validating GTFS archive.
  *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>A
+ * [RuntimeException](https://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html)
+ * occurred during validation. This normally indicates a bug in validator code, e.g., in a custom
+ * validator class.
  */
 @GtfsValidationNotice(severity = ERROR)
 public class RuntimeExceptionInValidatorError extends SystemError {

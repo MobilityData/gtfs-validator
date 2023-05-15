@@ -71,10 +71,23 @@ public class DuplicateRouteNameValidator extends FileValidator {
   }
 
   /**
-   * Describes two routes that have the same long and short names, route type and belong to the same
-   * agency.
+   * Two distinct routes have either the same `route_short_name`, the same `route_long_name`, or the
+   * same combination of `route_short_name` and `route_long_name`.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>All routes of the same `route_type` with the same `agency_id` should have unique
+   * combinations of `route_short_name` and `route_long_name`.
+   *
+   * <p>Note that there may be valid cases where routes have the same short and long name, e.g., if
+   * they serve different areas. However, different directions must be modeled as the same route.
+   *
+   * <p>Example of bad data:
+   *
+   * <pre>
+   * | `route_id` 	| `route_short_name` 	| `route_long_name` 	|
+   * |------------	|--------------------	|-------------------	|
+   * | route1     	| U1                 	| Southern          	|
+   * | route2     	| U1                 	| Southern          	|
+   * </pre>
    */
   @GtfsValidationNotice(
       severity = WARNING,

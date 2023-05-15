@@ -24,11 +24,9 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
 /**
  * A field cannot be parsed as time.
  *
- * <p>Time must be in the {@code H:MM:SS}, {@code HH:MM:SS} or {@code HHH:MM:SS} format.
+ * <p>Time must be in the `H:MM:SS`, `HH:MM:SS` or `HHH:MM:SS` format.
  *
- * <p>Example: {@code 14:30:00} for 2:30PM or {@code 25:35:00} for 1:35AM on the next day.
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>Example: `14:30:00` for 2:30PM or `25:35:00` for 1:35AM on the next day.
  */
 @GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILED_TYPES))
 public class InvalidTimeNotice extends ValidationNotice {
