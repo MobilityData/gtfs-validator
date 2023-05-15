@@ -113,7 +113,7 @@ Both `gtfs-validator-user-uploads` and `gtfs-validator-results` have been config
 
 A google cloud credentials file is requierd to start the web service. Either complete the steps above to provision a new Google Cloud project or reach out to the maintainers of the project to be granted access to the production instance credentials.
 
-The location of the crednetial key file is located in `web/service/src/main/resources/application.properties`.
+The location of credential key file is located in `web/service/src/main/resources/application.properties`.
 
 Once this is completed, the server can be started by running `./gradlew bootRun` in the root of the project.
 
