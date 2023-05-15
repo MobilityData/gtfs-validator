@@ -101,7 +101,7 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
    * <p>Description of the location that provides useful, quality information. Do not simply
    * duplicate the name of the location.
    */
-  @GtfsValidationNotice(severity = WARNING)
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsStopSchema.class))
   static class SameNameAndDescriptionForStopNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */

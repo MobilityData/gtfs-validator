@@ -31,6 +31,7 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
 
 /**
  * Validates that the shape_dist_traveled along a shape in "shapes.txt" is increasing.
@@ -136,7 +137,9 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
    * along a shape. Two consecutive points with equal values for `shape_dist_traveled` and the same
    * coordinates indicate a duplicative shape point.
    */
-  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsShapeSchema.class))
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs({GtfsShapeSchema.class, GtfsStopSchema.class}))
   static class EqualShapeDistanceSameCoordinatesNotice extends ValidationNotice {
 
     /** The id of the faulty shape. */
@@ -183,7 +186,9 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
    * along a shape. Two consecutive points with equal values for `shape_dist_traveled` and different
    * coordinates indicate an error.
    */
-  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsShapeSchema.class))
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files = @FileRefs({GtfsShapeSchema.class, GtfsStopSchema.class}))
   static class EqualShapeDistanceDiffCoordinatesNotice extends ValidationNotice {
 
     /** The id of the faulty shape. */

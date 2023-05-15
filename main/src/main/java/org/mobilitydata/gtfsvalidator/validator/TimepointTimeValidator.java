@@ -91,7 +91,9 @@ public class TimepointTimeValidator extends FileValidator {
    * <p>Any records with `stop_times.timepoint` set to 1 must define a value for
    * `stop_times.arrival_time` and `stop_times.departure_time` fields.
    */
-  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopTimeSchema.class))
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files = @FileRefs({GtfsStopTimeSchema.class, GtfsStopTimeSchema.class}))
   static class StopTimeTimepointWithoutTimesNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */
@@ -142,7 +144,10 @@ public class TimepointTimeValidator extends FileValidator {
   }
 
   /** `timepoint` column is missing for a dataset. */
-  @GtfsValidationNotice(severity = WARNING, bestPractices = @FileRefs(GtfsStopTimeSchema.class))
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs(GtfsStopTimeSchema.class),
+      bestPractices = @FileRefs(GtfsStopTimeSchema.class))
   static class MissingTimepointColumnNotice extends ValidationNotice {
 
     /** The name of the affected file. */

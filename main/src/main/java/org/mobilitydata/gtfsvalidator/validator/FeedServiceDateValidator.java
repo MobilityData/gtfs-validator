@@ -52,7 +52,10 @@ public class FeedServiceDateValidator extends SingleEntityValidator<GtfsFeedInfo
    * <p>Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one field is
    * provided the second one should also be provided.
    */
-  @GtfsValidationNotice(severity = WARNING, bestPractices = @FileRefs(GtfsFeedInfoSchema.class))
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs(GtfsFeedInfoSchema.class),
+      bestPractices = @FileRefs(GtfsFeedInfoSchema.class))
   static class MissingFeedInfoDateNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */

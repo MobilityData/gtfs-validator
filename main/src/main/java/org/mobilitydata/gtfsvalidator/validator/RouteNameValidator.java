@@ -140,7 +140,10 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    * | "2"/"Route 2: Bellows Falls In-Town"      |
    * </pre>
    */
-  @GtfsValidationNotice(severity = WARNING, bestPractices = @FileRefs(GtfsRouteSchema.class))
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs(GtfsRouteSchema.class),
+      bestPractices = @FileRefs(GtfsRouteSchema.class))
   static class RouteLongNameContainsShortNameNotice extends ValidationNotice {
 
     /** The id of the faulty record. */
@@ -166,7 +169,10 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
   }
 
   /** Short name of a route is too long (more than 12 characters). */
-  @GtfsValidationNotice(severity = WARNING, bestPractices = @FileRefs(GtfsRouteSchema.class))
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs(GtfsRouteSchema.class),
+      bestPractices = @FileRefs(GtfsRouteSchema.class))
   static class RouteShortNameTooLongNotice extends ValidationNotice {
 
     /** The id of the faulty record. */
@@ -198,7 +204,7 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    * <p>See the GTFS and GTFS Best Practices links below for more examples of how to populate the
    * `route_short_name`, `route_long_name`, and `route_desc` fields.
    */
-  @GtfsValidationNotice(severity = WARNING)
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsRouteSchema.class))
   static class SameNameAndDescriptionForRouteNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */

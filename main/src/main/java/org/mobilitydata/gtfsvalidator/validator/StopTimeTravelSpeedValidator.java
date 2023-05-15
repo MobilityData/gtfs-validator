@@ -30,19 +30,24 @@ import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
+import org.mobilitydata.gtfsvalidator.table.GtfsRouteSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
+import org.mobilitydata.gtfsvalidator.table.GtfsTripSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 import org.mobilitydata.gtfsvalidator.util.S2Earth;
@@ -354,6 +359,13 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = WARNING,
+      files =
+          @FileRefs({
+            GtfsRouteSchema.class,
+            GtfsStopSchema.class,
+            GtfsStopTimeSchema.class,
+            GtfsTripSchema.class
+          }),
       urls = {
         @UrlRef(
             label = "Original Python validator implementation",
@@ -444,6 +456,13 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = WARNING,
+      files =
+          @FileRefs({
+            GtfsRouteSchema.class,
+            GtfsStopSchema.class,
+            GtfsStopTimeSchema.class,
+            GtfsTripSchema.class
+          }),
       urls = {
         @UrlRef(
             label = "Original Python validator implementation",

@@ -117,6 +117,7 @@ public class AgencyConsistencyValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = WARNING,
+      files = @FileRefs(GtfsAgencySchema.class),
       urls = {
         @UrlRef(
             label = "Original Python validator implementation",

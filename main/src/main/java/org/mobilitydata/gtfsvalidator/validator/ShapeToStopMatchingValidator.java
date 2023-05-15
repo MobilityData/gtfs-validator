@@ -296,7 +296,13 @@ public class ShapeToStopMatchingValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = WARNING,
-      files = @FileRefs({GtfsTripSchema.class, GtfsStopTimeSchema.class, GtfsStopSchema.class}))
+      files =
+          @FileRefs({
+            GtfsTripSchema.class,
+            GtfsStopTimeSchema.class,
+            GtfsStopSchema.class,
+            GtfsStopTimeSchema.class
+          }))
   static class StopTooFarFromShapeUsingUserDistanceNotice extends ValidationNotice {
 
     /** The row number of the faulty record from `trips.txt`. */
@@ -348,7 +354,10 @@ public class ShapeToStopMatchingValidator extends FileValidator {
    * stop locations which a trip serves. This potentially indicates a problem with the location of
    * the stop or the path of the shape.
    */
-  @GtfsValidationNotice(severity = WARNING, bestPractices = @FileRefs(GtfsShapeSchema.class))
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs({GtfsStopTimeSchema.class, GtfsStopSchema.class, GtfsTripSchema.class}),
+      bestPractices = @FileRefs(GtfsShapeSchema.class))
   static class StopTooFarFromShapeNotice extends ValidationNotice {
 
     /** The row number of the faulty record from `trips.txt`. */

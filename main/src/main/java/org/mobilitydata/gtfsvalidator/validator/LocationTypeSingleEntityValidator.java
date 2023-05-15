@@ -82,7 +82,7 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
    *
    * <p>Field `parent_station` must be empty when `location_type` is 1.
    */
-  @GtfsValidationNotice(severity = ERROR)
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopSchema.class))
   static class StationWithParentStationNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */

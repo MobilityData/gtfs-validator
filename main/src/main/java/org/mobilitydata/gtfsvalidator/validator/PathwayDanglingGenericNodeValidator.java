@@ -31,6 +31,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsPathway;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathwaySchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathwayTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 
 /**
@@ -80,7 +81,9 @@ public class PathwayDanglingGenericNodeValidator extends FileValidator {
    *
    * <p>Such generic node is useless because there is no benefit in visiting it.
    */
-  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsPathwaySchema.class))
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs({GtfsPathwaySchema.class, GtfsStopSchema.class}))
   static class PathwayDanglingGenericNodeNotice extends ValidationNotice {
 
     /** Row number of the dangling generic node. */

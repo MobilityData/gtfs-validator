@@ -105,7 +105,9 @@ public class LocationHasStopTimesValidator extends FileValidator {
    * <p>Referenced locations (using `stop_times.stop_id`) must be stops/platforms, i.e. their
    * `stops.location_type` value must be 0 or empty.
    */
-  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopTimeSchema.class))
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files = @FileRefs({GtfsStopTimeSchema.class, GtfsStopSchema.class}))
   static class LocationWithUnexpectedStopTimeNotice extends ValidationNotice {
 
     /** The row number of the faulty record from `stops.txt`. */

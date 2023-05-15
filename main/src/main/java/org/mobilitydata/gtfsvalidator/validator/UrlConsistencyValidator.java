@@ -28,6 +28,7 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
+import org.mobilitydata.gtfsvalidator.table.GtfsAgencySchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteSchema;
@@ -128,7 +129,9 @@ public class UrlConsistencyValidator extends FileValidator {
    *
    * <p>A stop should not have the same `stop.stop_url` as a record from `routes.txt`.
    */
-  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsStopSchema.class))
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs({GtfsStopSchema.class, GtfsRouteSchema.class}))
   static class SameStopAndRouteUrlNotice extends ValidationNotice {
 
     /** The row number of the faulty record from `stops.txt`. */
@@ -161,7 +164,9 @@ public class UrlConsistencyValidator extends FileValidator {
    *
    * <p>A route should not have the same `routes.route_url` as a record from `agency.txt`.
    */
-  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsRouteSchema.class))
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs({GtfsRouteSchema.class, GtfsAgencySchema.class}))
   static class SameRouteAndAgencyUrlNotice extends ValidationNotice {
 
     /** The row number of the faulty record from `routes.txt`. */
@@ -194,7 +199,9 @@ public class UrlConsistencyValidator extends FileValidator {
    *
    * <p>A stop should not have the same `stops.stop_url` as a record from `agency.txt`.
    */
-  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsStopSchema.class))
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs({GtfsStopSchema.class, GtfsAgencySchema.class}))
   static class SameStopAndAgencyUrlNotice extends ValidationNotice {
 
     /** The row number of the faulty record from `stops.txt`. */
