@@ -107,19 +107,19 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
       })
   static class StopTimeWithArrivalBeforePreviousDepartureTimeNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The row of the previous stop time.
+    /** The row of the previous stop time. */
     private final long prevCsvRowNumber;
 
-    // The trip_id associated to the faulty record.
+    /** The trip_id associated to the faulty record. */
     private final String tripId;
 
-    // Arrival time at the faulty record.
+    /** Arrival time at the faulty record. */
     private final GtfsTime arrivalTime;
 
-    // Departure time at the previous stop time.
+    /** Departure time at the previous stop time. */
     private final GtfsTime departureTime;
 
     StopTimeWithArrivalBeforePreviousDepartureTimeNotice(
@@ -142,18 +142,19 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopTimeSchema.class))
   static class StopTimeWithOnlyArrivalOrDepartureTimeNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The trip_id associated to the faulty record.
+    /** The trip_id associated to the faulty record. */
     private final String tripId;
 
-    // The sequence of the faulty stop.
+    /** The sequence of the faulty stop. */
     private final int stopSequence;
 
-    // Either `arrival_time` or `departure_time`
+    /** Either `arrival_time` or `departure_time` */
     private final String specifiedField;
 
     StopTimeWithOnlyArrivalOrDepartureTimeNotice(

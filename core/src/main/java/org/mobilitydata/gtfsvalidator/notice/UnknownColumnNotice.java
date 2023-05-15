@@ -34,13 +34,13 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
     })
 public class UnknownColumnNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The name of the unknown column.
+  /** The name of the unknown column. */
   private final String fieldName;
 
-  // The index of the faulty column.
+  /** The index of the faulty column. */
   private final int index;
 
   public UnknownColumnNotice(String filename, String fieldName, int index) {

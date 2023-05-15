@@ -81,13 +81,13 @@ public class MissingLevelIdValidator extends FileValidator {
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsLevelSchema.class))
   static class MissingLevelIdNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The id of the faulty stop from `stops.txt`.
+    /** The id of the faulty stop from `stops.txt`. */
     private final String stopId;
 
-    // The name of the faulty stop from `stops.txt`.
+    /** The name of the faulty stop from `stops.txt`. */
     private final String stopName;
 
     MissingLevelIdNotice(GtfsStop stop) {

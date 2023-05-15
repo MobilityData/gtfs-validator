@@ -77,16 +77,16 @@ public class RouteColorContrastValidator extends SingleEntityValidator<GtfsRoute
       })
   static class RouteColorContrastNotice extends ValidationNotice {
 
-    // The id of the faulty record.
+    /** The id of the faulty record. */
     private final String routeId;
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The faulty record's HTML route color.
+    /** The faulty record's HTML route color. */
     private final GtfsColor routeColor;
 
-    // The faulty record's HTML route text color.
+    /** The faulty record's HTML route text color. */
     private final GtfsColor routeTextColor;
 
     RouteColorContrastNotice(

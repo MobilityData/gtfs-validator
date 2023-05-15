@@ -48,10 +48,10 @@ public class FareTransferRuleTransferCountValidator
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsFareTransferRuleSchema.class))
   static class FareTransferRuleInvalidTransferCountNotice extends ValidationNotice {
 
-    // The row of the faulty record.
+    /** The row of the faulty record. */
     private final int csvRowNumber;
 
-    // The transfer count value of the faulty record.
+    /** The transfer count value of the faulty record. */
     private final int transferCount;
 
     FareTransferRuleInvalidTransferCountNotice(int csvRowNumber, int transferCount) {
@@ -67,9 +67,10 @@ public class FareTransferRuleTransferCountValidator
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsFareTransferRuleSchema.class))
   static class FareTransferRuleMissingTransferCountNotice extends ValidationNotice {
 
-    // The row of the faulty record.
+    /** The row of the faulty record. */
     private final int csvRowNumber;
 
     FareTransferRuleMissingTransferCountNotice(int csvRowNumber) {
@@ -84,9 +85,10 @@ public class FareTransferRuleTransferCountValidator
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsFareTransferRuleSchema.class))
   static class FareTransferRuleWithForbiddenTransferCountNotice extends ValidationNotice {
 
-    // The row of the faulty record.
+    /** The row of the faulty record. */
     private final int csvRowNumber;
 
     FareTransferRuleWithForbiddenTransferCountNotice(int csvRowNumber) {

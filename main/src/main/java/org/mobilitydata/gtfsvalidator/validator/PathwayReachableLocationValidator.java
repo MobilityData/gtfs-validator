@@ -168,25 +168,25 @@ public class PathwayReachableLocationValidator extends FileValidator {
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsPathwaySchema.class))
   static class PathwayUnreachableLocationNotice extends ValidationNotice {
 
-    // Row number of the unreachable location.
+    /** Row number of the unreachable location. */
     private final int csvRowNumber;
 
-    // The id of the unreachable location.
+    /** The id of the unreachable location. */
     private final String stopId;
 
-    // The stop name of the unreachable location.
+    /** The stop name of the unreachable location. */
     private final String stopName;
 
-    // The type of the unreachable location.
+    /** The type of the unreachable location. */
     private final int locationType;
 
-    // The parent of the unreachable location.
+    /** The parent of the unreachable location. */
     private final String parentStation;
 
-    // Whether the location is reachable from entrances.
+    /** Whether the location is reachable from entrances. */
     private final boolean hasEntrance;
 
-    // Whether some exit can be reached from the location.
+    /** Whether some exit can be reached from the location. */
     private final boolean hasExit;
 
     PathwayUnreachableLocationNotice(GtfsStop location, boolean hasEntrance, boolean hasExit) {

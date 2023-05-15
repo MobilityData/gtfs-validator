@@ -27,7 +27,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 @GtfsValidationNotice(severity = WARNING)
 public class MissingRecommendedFileNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
   public MissingRecommendedFileNotice(String filename) {

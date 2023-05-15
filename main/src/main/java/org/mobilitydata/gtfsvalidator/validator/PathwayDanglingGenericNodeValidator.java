@@ -81,16 +81,16 @@ public class PathwayDanglingGenericNodeValidator extends FileValidator {
   @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsPathwaySchema.class))
   static class PathwayDanglingGenericNodeNotice extends ValidationNotice {
 
-    // Row number of the dangling generic node.
+    /** Row number of the dangling generic node. */
     private final int csvRowNumber;
 
-    // The id of the dangling generic node.
+    /** The id of the dangling generic node. */
     private final String stopId;
 
-    // The stop name of the dangling generic node.
+    /** The stop name of the dangling generic node. */
     private final String stopName;
 
-    // The parent station of the dangling generic node.
+    /** The parent station of the dangling generic node. */
     private final String parentStation;
 
     PathwayDanglingGenericNodeNotice(GtfsStop genericNode) {

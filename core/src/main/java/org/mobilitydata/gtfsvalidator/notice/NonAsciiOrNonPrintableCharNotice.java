@@ -37,16 +37,16 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
     })
 public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
 
-  // Name of the faulty file.
+  /** Name of the faulty file. */
   private final String filename;
 
-  // Row number of the faulty record.
+  /** Row number of the faulty record. */
   private final int csvRowNumber;
 
-  // Name of the column where the error occurred.
+  /** Name of the column where the error occurred. */
   private final String columnName;
 
-  // Faulty value.
+  /** Faulty value. */
   private final String fieldValue;
 
   public NonAsciiOrNonPrintableCharNotice(

@@ -16,6 +16,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
@@ -92,16 +93,16 @@ public class TimepointTimeValidator extends FileValidator {
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopTimeSchema.class))
   static class StopTimeTimepointWithoutTimesNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The faulty record's id.
+    /** The faulty record's id. */
     private final String tripId;
 
-    // The faulty record's `stops.stop_sequence`.
+    /** The faulty record's `stops.stop_sequence`. */
     private final long stopSequence;
 
-    // Either `departure_time` or `arrival_time`.
+    /** Either `departure_time` or `arrival_time`. */
     private final String specifiedField;
 
     StopTimeTimepointWithoutTimesNotice(GtfsStopTime stopTime, String specifiedField) {
@@ -118,15 +119,16 @@ public class TimepointTimeValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsStopTimeSchema.class))
   static class MissingTimepointValueNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The faulty record's `stop_times.trip_id`.
+    /** The faulty record's `stop_times.trip_id`. */
     private final String tripId;
 
-    // The faulty record's `stop_times.stop_sequence`.
+    /** The faulty record's `stop_times.stop_sequence`. */
     private final long stopSequence;
 
     MissingTimepointValueNotice(GtfsStopTime stopTime) {
@@ -142,9 +144,10 @@ public class TimepointTimeValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
+  @GtfsValidationNotice(severity = WARNING, bestPractices = @FileRefs(GtfsStopTimeSchema.class))
   static class MissingTimepointColumnNotice extends ValidationNotice {
 
-    // The name of the affected file.
+    /** The name of the affected file. */
     private final String filename;
 
     MissingTimepointColumnNotice() {

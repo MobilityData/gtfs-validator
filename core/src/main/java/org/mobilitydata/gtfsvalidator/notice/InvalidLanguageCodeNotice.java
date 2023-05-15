@@ -34,16 +34,16 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
 @GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILED_TYPES))
 public class InvalidLanguageCodeNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The row of the faulty record.
+  /** The row of the faulty record. */
   private final int csvRowNumber;
 
-  // Faulty record's field name.
+  /** Faulty record's field name. */
   private final String fieldName;
 
-  // Faulty value.
+  /** Faulty value. */
   private final String fieldValue;
 
   public InvalidLanguageCodeNotice(

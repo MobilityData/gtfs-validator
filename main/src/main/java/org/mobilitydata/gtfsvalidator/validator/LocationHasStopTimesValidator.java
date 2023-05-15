@@ -15,6 +15,7 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import java.util.List;
@@ -76,13 +77,13 @@ public class LocationHasStopTimesValidator extends FileValidator {
       files = @FileRefs({GtfsStopTimeSchema.class, GtfsStopSchema.class}))
   static class StopWithoutStopTimeNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The id of the faulty stop.
+    /** The id of the faulty stop. */
     private final String stopId;
 
-    // The name of the faulty stop.
+    /** The name of the faulty stop. */
     private final String stopName;
 
     StopWithoutStopTimeNotice(GtfsStop stop) {
@@ -96,18 +97,19 @@ public class LocationHasStopTimesValidator extends FileValidator {
   /**
    * Describes a location in {@code stops.txt} that is not a stop but has a stop time associated.
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopTimeSchema.class))
   static class LocationWithUnexpectedStopTimeNotice extends ValidationNotice {
 
-    // The row number of the faulty record from `stops.txt`.
+    /** The row number of the faulty record from `stops.txt`. */
     private final int csvRowNumber;
 
-    // The id of the faulty record from `stops.txt`.
+    /** The id of the faulty record from `stops.txt`. */
     private final String stopId;
 
-    // The `stops.stop_name` of the faulty record.
+    /** The `stops.stop_name` of the faulty record. */
     private final String stopName;
 
-    // The row number of the faulty record from `stop_times.txt`.
+    /** The row number of the faulty record from `stop_times.txt`. */
     private final long stopTimeCsvRowNumber;
 
     LocationWithUnexpectedStopTimeNotice(GtfsStop location, GtfsStopTime stopTime) {

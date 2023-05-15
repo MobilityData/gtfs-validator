@@ -36,7 +36,7 @@ public class FareTransferRuleDurationLimitTypeValidator
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsFareTransferRuleSchema.class))
   static class FareTransferRuleDurationLimitWithoutTypeNotice extends ValidationNotice {
 
-    // The row of the faulty record.
+    /** The row of the faulty record. */
     private final int csvRowNumber;
 
     FareTransferRuleDurationLimitWithoutTypeNotice(int csvRowNumber) {
@@ -51,10 +51,11 @@ public class FareTransferRuleDurationLimitTypeValidator
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsFareTransferRuleSchema.class))
   static class FareTransferRuleDurationLimitTypeWithoutDurationLimitNotice
       extends ValidationNotice {
 
-    // The row of the faulty record.
+    /** The row of the faulty record. */
     private final int csvRowNumber;
 
     FareTransferRuleDurationLimitTypeWithoutDurationLimitNotice(int csvRowNumber) {

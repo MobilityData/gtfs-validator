@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
+
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.SortedSet;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -30,8 +33,11 @@ import org.mobilitydata.gtfsvalidator.util.CalendarUtil;
 
 @GtfsValidator
 public class ExpiredCalendarValidator extends FileValidator {
+
   private final GtfsCalendarTableContainer calendarTable;
+
   private final GtfsCalendarDateTableContainer calendarDateTable;
+
   private final CurrentDateTime currentDateTime;
 
   @Inject
@@ -47,11 +53,9 @@ public class ExpiredCalendarValidator extends FileValidator {
   @Override
   public void validate(NoticeContainer noticeContainer) {
     LocalDate now = currentDateTime.getNow().toLocalDate();
-
     final Map<String, SortedSet<LocalDate>> servicePeriodMap =
         CalendarUtil.servicePeriodToServiceDatesMap(
             CalendarUtil.buildServicePeriodMap(calendarTable, calendarDateTable));
-
     for (var serviceId : servicePeriodMap.keySet()) {
       SortedSet<LocalDate> serviceDates = servicePeriodMap.get(serviceId);
       LocalDate lastServiceDate = serviceDates.last();
@@ -62,10 +66,25 @@ public class ExpiredCalendarValidator extends FileValidator {
     }
   }
 
+  /**
+   * Dataset should not contain date ranges for services that have already expired.
+   *
+   * <p>This warning takes into account the `calendar_dates.txt` file as well as the `calendar.txt`
+   * file.
+   */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      urls = {
+        @UrlRef(
+            label = "Dataset Publishing & General Practices",
+            url = "https://gtfs.org/schedule/best-practices/#dataset-publishing-general-practices")
+      })
   static class ExpiredCalendarNotice extends ValidationNotice {
-    // The row of the faulty record.
+
+    /** The row of the faulty record. */
     private final int csvRowNumber;
-    // The service id of the faulty record.
+
+    /** The service id of the faulty record. */
     private final String serviceId;
 
     ExpiredCalendarNotice(int csvRowNumber, String serviceId) {
