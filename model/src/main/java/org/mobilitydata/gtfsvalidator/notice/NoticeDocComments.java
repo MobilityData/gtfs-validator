@@ -2,9 +2,8 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.lang.model.element.TypeElement;
 import javax.annotation.Nullable;
-
+import javax.lang.model.element.TypeElement;
 
 /**
  * Documentation comments associated with a notice and its fields, as extracted from source code.
@@ -17,8 +16,7 @@ import javax.annotation.Nullable;
 public class NoticeDocComments {
 
   /** The main notice description, extracted from the notice's Javadoc comment. */
-  @Nullable
-  private String docComment;
+  @Nullable private String docComment;
 
   /** Field-specific comments, keyed by field name. */
   private Map<String, String> fieldDocComments = new HashMap<>();
