@@ -103,7 +103,7 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
-  @GtfsValidationNotice(severity = WARNING)
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsStopSchema.class))
   static class SameNameAndDescriptionForStopNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */

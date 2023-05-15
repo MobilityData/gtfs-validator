@@ -15,18 +15,21 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.BEST_PRACTICES_DATASET_PUBLISHING;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import java.time.LocalDate;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoSchema;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
 /**
@@ -82,7 +85,10 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
    * The dataset expiration date defined in `feed_info.txt` is in seven days or less. At any time,
    * the published GTFS dataset should be valid for at least the next 7 days.
    */
-  @GtfsValidationNotice(severity = WARNING)
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs(GtfsFeedInfoSchema.class),
+      sections = @SectionRefs(BEST_PRACTICES_DATASET_PUBLISHING))
   static class FeedExpirationDate7DaysNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */
@@ -116,11 +122,8 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
    */
   @GtfsValidationNotice(
       severity = WARNING,
-      urls = {
-        @UrlRef(
-            label = "General Publishing & General Practices",
-            url = "https://gtfs.org/best-practices/#dataset-publishing--general-practices")
-      })
+      files = @FileRefs(GtfsFeedInfoSchema.class),
+      sections = @SectionRefs(BEST_PRACTICES_DATASET_PUBLISHING))
   static class FeedExpirationDate30DaysNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */

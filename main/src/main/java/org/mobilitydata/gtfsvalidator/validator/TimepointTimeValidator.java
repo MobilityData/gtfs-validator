@@ -90,7 +90,9 @@ public class TimepointTimeValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.ERROR}
    */
-  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopTimeSchema.class))
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files = @FileRefs({GtfsStopTimeSchema.class, GtfsStopTimeSchema.class}))
   static class StopTimeTimepointWithoutTimesNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */
@@ -144,7 +146,10 @@ public class TimepointTimeValidator extends FileValidator {
    *
    * <p>Severity: {@code SeverityLevel.WARNING}
    */
-  @GtfsValidationNotice(severity = WARNING, bestPractices = @FileRefs(GtfsStopTimeSchema.class))
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs(GtfsStopTimeSchema.class),
+      bestPractices = @FileRefs(GtfsStopTimeSchema.class))
   static class MissingTimepointColumnNotice extends ValidationNotice {
 
     /** The name of the affected file. */
