@@ -133,7 +133,8 @@
   function handleFile(file, shouldUpload = false) {
     clearFile();
 
-    if (file.type != 'application/zip') {
+    // Zip files on MS Windows seem to have the application/x-zip-compressed mime type
+    if (file.type != 'application/zip' && file.type != 'application/x-zip-compressed') {
       console.log('file type error', file.type);
       addError('Sorry, only ZIP files are supported at this time.');
       console.log(errors);
