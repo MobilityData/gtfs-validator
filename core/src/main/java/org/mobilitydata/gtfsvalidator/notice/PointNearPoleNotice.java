@@ -21,11 +21,7 @@ import javax.annotation.Nullable;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
-/**
- * A point is too close to the North or South Pole.
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
- */
+/** A point is too close to the North or South Pole. */
 @GtfsValidationNotice(
     severity = ERROR,
     urls = {

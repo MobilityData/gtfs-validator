@@ -87,7 +87,12 @@ public class PathwayEndpointTypeValidator extends FileValidator {
     }
   }
 
-  /** Describes a pathway which endpoint is a station. */
+  /**
+   * A pathway has an endpoint that is a station.
+   *
+   * <p>Pathways endpoints must be platforms (stops), entrances/exits, generic nodes or boarding
+   * areas.
+   */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsPathwaySchema.class))
   static class PathwayToWrongLocationTypeNotice extends ValidationNotice {
 
@@ -112,7 +117,13 @@ public class PathwayEndpointTypeValidator extends FileValidator {
     }
   }
 
-  /** Describes a pathway which endpoint is a platform that has boarding areas. */
+  /**
+   * A pathway has an endpoint that is a platform which has boarding areas.
+   *
+   * <p>A platform that has boarding areas is treated as a parent object, not a point. In such
+   * cases, the platform must not have pathways assigned - instead, pathways must be assigned to its
+   * boarding areas.
+   */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsPathwaySchema.class))
   static class PathwayToPlatformWithBoardingAreasNotice extends ValidationNotice {
 

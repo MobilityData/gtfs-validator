@@ -70,13 +70,11 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
   }
 
   /**
-   * When sorted on `stops.stop_sequence` key, stop times should have strictly increasing values for
-   * `stops.shape_dist_traveled`
+   * Decreasing or equal `shape_dist_traveled` in `stop_times.txt`.
    *
-   * <p>"Values used for shape_dist_traveled must increase along with stop_sequence"
-   * (http://gtfs.org/reference/static/#stoptimestxt)
-   *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>When sorted by `stop_times.stop_sequence`, two consecutive entries in `stop_times.txt`
+   * should have increasing distance, based on the field `shape_dist_traveled`. If the values are
+   * equal, this is considered as an error.
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopTimeSchema.class))
   static class DecreasingOrEqualStopTimeDistanceNotice extends ValidationNotice {

@@ -25,9 +25,9 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /**
- * The values in the given column of the input rows are out of range.
+ * Out of range value.
  *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>The values in the given column of the input rows are out of range.
  */
 @GtfsValidationNotice(
     severity = ERROR,
