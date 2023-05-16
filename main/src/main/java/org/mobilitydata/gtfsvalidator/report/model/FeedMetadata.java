@@ -1,5 +1,7 @@
 package org.mobilitydata.gtfsvalidator.report.model;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSortedSet;
 import java.util.*;
 import java.util.function.Function;
 import org.mobilitydata.gtfsvalidator.table.*;
@@ -13,11 +15,13 @@ public class FeedMetadata {
   public Map<String, String> specFeatures = new LinkedHashMap<>();
 
   public ArrayList<AgencyMetadata> agencies = new ArrayList<>();
+  private ImmutableSortedSet<String> filenames;
 
   protected FeedMetadata() {}
 
-  public static FeedMetadata from(GtfsFeedContainer feedContainer) {
+  public static FeedMetadata from(GtfsFeedContainer feedContainer, ImmutableSet<String> filenames) {
     var feedMetadata = new FeedMetadata();
+    feedMetadata.setFilenames(ImmutableSortedSet.copyOf(filenames));
     TreeMap<String, TableMetadata> map = new TreeMap<>();
     for (var table : feedContainer.getTables()) {
       var metadata = TableMetadata.from(table);
@@ -129,5 +133,13 @@ public class FeedMetadata {
 
   public void setTableMetaData(Map<String, TableMetadata> tableMetaData) {
     this.tableMetaData = tableMetaData;
+  }
+
+  public void setFilenames(ImmutableSortedSet<String> filenames) {
+    this.filenames = filenames;
+  }
+
+  public ImmutableSortedSet<String> getFilenames() {
+    return filenames;
   }
 }

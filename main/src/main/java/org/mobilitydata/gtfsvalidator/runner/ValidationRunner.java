@@ -122,7 +122,7 @@ public class ValidationRunner {
       logger.atSevere().withCause(e).log("Validation was interrupted");
       return Status.EXCEPTION;
     }
-    FeedMetadata feedMetadata = FeedMetadata.from(feedContainer);
+    FeedMetadata feedMetadata = FeedMetadata.from(feedContainer, gtfsInput.getFilenames());
     closeGtfsInput(gtfsInput, noticeContainer);
 
     // Output
