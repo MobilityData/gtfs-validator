@@ -22,11 +22,10 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /**
- * Start and end range fields are out of order for a certain GTFS entity.
+ * Two date or time fields are out of order.
  *
- * <p>Example: {@code start_date &gt; end_date} for {@code calendar.txt}.
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>Date or time fields have been found out of order in `calendar.txt`, `feed_info.txt` and
+ * `stop_times.txt`.
  */
 @GtfsValidationNotice(
     severity = ERROR,

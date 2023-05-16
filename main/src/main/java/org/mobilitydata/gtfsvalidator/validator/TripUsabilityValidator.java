@@ -61,9 +61,10 @@ public class TripUsabilityValidator extends FileValidator {
   }
 
   /**
-   * A {@code GtfsTrip} should be referred to by at least two {@code GtfsStopTime}
+   * Trips must have more than one stop to be usable.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>A trip must visit more than one stop in stop_times.txt to be usable by passengers for
+   * boarding and alighting.
    */
   @GtfsValidationNotice(
       severity = WARNING,

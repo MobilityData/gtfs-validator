@@ -26,10 +26,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
  *
  * <p>A color must be encoded as a six-digit hexadecimal number. The leading "#" is not included.
  *
- * <p>Example: {@code FFFFFF} for white, {@code 000000} for black or {@code 0039A6} for the A,C,E
- * lines in NYMTA.
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>Example: `FFFFFF` for white, `000000` for black or `0039A6` for the A,C,E lines in NYC MTA.
  */
 @GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILED_TYPES))
 public class InvalidColorNotice extends ValidationNotice {

@@ -22,11 +22,12 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /**
- * Start and end range fields are equal for a certain GTFS entity.
+ * Two date or time fields are equal.
  *
- * <p>Example: {@code start_time == end_time} for {@code frequencies.txt}.
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>The fields `frequencies.start_date` and `frequencies.end_date` have been found equal in
+ * `frequencies.txt`. The GTFS spec is currently unclear how this case should be handled (e.g., is
+ * it a trip that circulates once?). It is recommended to use a trip not defined via frequencies.txt
+ * for this case.
  */
 @GtfsValidationNotice(
     severity = ERROR,
