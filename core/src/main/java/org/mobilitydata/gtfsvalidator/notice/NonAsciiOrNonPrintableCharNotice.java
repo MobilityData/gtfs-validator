@@ -21,12 +21,10 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /**
- * ID value contains something different from printable ASCII characters.
+ * Non ascii or non printable char in ID field.
  *
- * <p>An ID field value is an internal ID, not intended to be shown to riders, and is a sequence of
- * any UTF-8 characters. Using only printable ASCII characters is recommended.
- *
- * <p>Severity: {@code SeverityLevel.WARNING}
+ * <p>A value of a field with type ID contains non ASCII or non printable characters. This is not
+ * recommended.
  */
 @GtfsValidationNotice(
     severity = WARNING,

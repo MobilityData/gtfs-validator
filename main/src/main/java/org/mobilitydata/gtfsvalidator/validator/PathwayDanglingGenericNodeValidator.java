@@ -77,7 +77,9 @@ public class PathwayDanglingGenericNodeValidator extends FileValidator {
   }
 
   /**
-   * Describes a dangling generic node, i.e. that has only one incident location in a pathway graph.
+   * A generic node has only one incident location in a pathway graph.
+   *
+   * <p>Such generic node is useless because there is no benefit in visiting it.
    */
   @GtfsValidationNotice(
       severity = WARNING,

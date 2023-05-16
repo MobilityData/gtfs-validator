@@ -23,13 +23,12 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /**
- * The values of the given key and rows of one table cannot be found a values of the given key in
- * another table.
+ * Wrong foreign key.
  *
- * <p>This is the case when a foreign key of one table references a non-existing value in its
- * original table.
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>A foreign key references the primary key of another file. A foreign key violation means that
+ * the foreign key referenced from a given row (the child file) cannot be found in the corresponding
+ * file (the parent file). The Foreign keys are defined in the specification under "Type" for each
+ * file.
  */
 @GtfsValidationNotice(
     severity = ERROR,

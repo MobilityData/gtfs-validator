@@ -82,8 +82,10 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
   }
 
   /**
-   * The dataset expiration date defined in `feed_info.txt` is in seven days or less. At any time,
-   * the published GTFS dataset should be valid for at least the next 7 days.
+   * Dataset should be valid for at least the next 7 days.
+   *
+   * <p>The dataset expiration date defined in `feed_info.txt` is in seven days or less. At any
+   * time, the published GTFS dataset should be valid for at least the next 7 days.
    */
   @GtfsValidationNotice(
       severity = WARNING,
@@ -117,7 +119,9 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
   }
 
   /**
-   * At any time, the GTFS dataset should cover at least the next 30 days of service, and ideally
+   * Dataset should cover at least the next 30 days of service.
+   *
+   * <p>At any time, the GTFS dataset should cover at least the next 30 days of service, and ideally
    * for as long as the operator is confident that the schedule will continue to be operated.
    */
   @GtfsValidationNotice(

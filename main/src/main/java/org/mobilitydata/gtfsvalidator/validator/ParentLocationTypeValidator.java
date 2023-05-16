@@ -89,10 +89,20 @@ public class ParentLocationTypeValidator extends FileValidator {
   }
 
   /**
-   * Incorrect type of the parent location (e.g., a parent for a stop or an entrance must be a
-   * station).
+   * Incorrect type of the parent location.
    *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>Value of field `location_type` of parent found in field `parent_station` is invalid.
+   *
+   * <p>According to spec
+   *
+   * <pre>
+   * - _Stop/platform_ can only have _Station_ as parent
+   * - _Station_ can NOT have a parent
+   * - _Entrance/exit_ or _generic node_ can only have _Station_ as parent
+   * - _Boarding Area_ can only have _Platform_ as parent
+   * </pre>
+   *
+   * Any other combination raise this error.
    */
   @GtfsValidationNotice(
       severity = ERROR,

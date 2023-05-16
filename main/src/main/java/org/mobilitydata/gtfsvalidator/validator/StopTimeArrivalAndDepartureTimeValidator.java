@@ -93,9 +93,10 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
   }
 
   /**
-   * Two {@code GtfsTime} are out of order
+   * Backwards time travel between stops in `stop_times.txt`
    *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must not precede
+   * the `departure_time` of n-th stoptime in sequence in `stop_times.txt`.
    */
   @GtfsValidationNotice(
       severity = ERROR,
@@ -137,11 +138,7 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
     }
   }
 
-  /**
-   * Missing `stop_times.arrival_time` or `stop_times.departure_time`
-   *
-   * <p>Severity: {@code SeverityLevel.ERROR}
-   */
+  /** Missing `stop_times.arrival_time` or `stop_times.departure_time`. */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopTimeSchema.class))
   static class StopTimeWithOnlyArrivalOrDepartureTimeNotice extends ValidationNotice {
 
