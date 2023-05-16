@@ -14,6 +14,8 @@ public class FeedMetadata {
 
   public ArrayList<AgencyMetadata> agencies = new ArrayList<>();
 
+  protected FeedMetadata() {}
+
   public static FeedMetadata from(GtfsFeedContainer feedContainer) {
     var feedMetadata = new FeedMetadata();
     TreeMap<String, TableMetadata> map = new TreeMap<>();

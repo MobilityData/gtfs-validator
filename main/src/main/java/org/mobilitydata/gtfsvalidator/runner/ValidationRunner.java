@@ -118,8 +118,6 @@ public class ValidationRunner {
       feedContainer =
           loadAndValidate(
               validatorLoader, feedLoader, noticeContainer, gtfsInput, validationContext);
-      // TODO: collect metadata from feedContainer and include in report.
-
     } catch (InterruptedException e) {
       logger.atSevere().withCause(e).log("Validation was interrupted");
       return Status.EXCEPTION;
