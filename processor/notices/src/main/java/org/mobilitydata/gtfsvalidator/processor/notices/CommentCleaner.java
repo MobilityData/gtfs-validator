@@ -1,5 +1,6 @@
 package org.mobilitydata.gtfsvalidator.processor.notices;
 
+import com.google.common.collect.ImmutableSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,6 +12,13 @@ import java.util.stream.Collectors;
  * output.
  */
 public class CommentCleaner {
+
+  /**
+   * Some Javadoc elements like <pre> are used to escape Markdown content that would otherwise be
+   * mangled by the Javadoc formatter.  We strip these elements.
+   */
+  private static final ImmutableSet<String> LINES_TO_DROP = ImmutableSet.of("<pre>", "</pre>");
+
   public String cleanComment(String docComment) {
     if (docComment.isEmpty()) {
       return docComment;
@@ -40,6 +48,8 @@ public class CommentCleaner {
             .map(String::stripTrailing)
             // Strip out any Javadoc paragraph tags.
             .map(s -> s.replaceFirst("<p>", ""))
+            // Filter out formatting lines that shouldn't be included in the output.
+            .filter(s -> !LINES_TO_DROP.contains(s))
             // Drop the SeverityLevel comment, if it exists.
             .filter(s -> !s.startsWith("Severity: {@code SeverityLevel"))
             .collect(Collectors.toCollection(ArrayList::new));

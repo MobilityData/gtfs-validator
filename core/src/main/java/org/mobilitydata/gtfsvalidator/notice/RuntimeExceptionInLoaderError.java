@@ -6,10 +6,11 @@ import com.google.common.base.Strings;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 
 /**
- * Describes a runtime exception during loading a table. This normally indicates a bug in validator
- * code.
+ * RuntimeException while loading GTFS dataset in memory.
  *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>A
+ * [RuntimeException](https://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html)
+ * occurred while loading a table. This normally indicates a bug in validator.
  */
 @GtfsValidationNotice(severity = ERROR)
 public class RuntimeExceptionInLoaderError extends SystemError {

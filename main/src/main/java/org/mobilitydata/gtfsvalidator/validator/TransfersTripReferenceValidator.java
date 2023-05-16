@@ -122,10 +122,8 @@ public class TransfersTripReferenceValidator extends FileValidator {
   }
 
   /**
-   * A `from_trip_id` or `to_trip_id` field from GTFS file `transfers.txt` references a route that
-   * does not match its `trips.txt` `route_id`.
-   *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * A trip id field from GTFS file `transfers.txt` references a route that does not match its
+   * `trips.txt` `route_id`.
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsTransferSchema.class))
   public static class TransferWithInvalidTripAndRouteNotice extends ValidationNotice {
@@ -161,10 +159,8 @@ public class TransfersTripReferenceValidator extends FileValidator {
   }
 
   /**
-   * A `from_trip_id` or `to_trip_id` field from GTFS file `transfers.txt` references a stop that is
-   * not included in the referenced trip's stop-times.
-   *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * A trip id field from GTFS file `transfers.txt` references a stop that is not included in the
+   * referenced trip's stop-times.
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsTransferSchema.class))
   public static class TransferWithInvalidTripAndStopNotice extends ValidationNotice {
