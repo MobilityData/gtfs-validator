@@ -76,8 +76,16 @@ public class MixedCaseValidatorGenerator {
           .beginControlFlow(
               "if (entity.$L())", FieldNameConverter.hasMethodName(mixedCaseField.name()))
           .addStatement("$T value = entity.$L()", String.class, mixedCaseField.name())
+          .addStatement("$T[] tokens = value.split(\"[^\\\\p{L}]+\")", String.class)
+          .addStatement("$T isValid = true", boolean.class)
+          .beginControlFlow("for ($T token : tokens)", String.class)
           .beginControlFlow(
-              "if (value.matches(\".*\\\\p{L}{2}.*\") && (value.toLowerCase() == value || value.toUpperCase() == value))")
+              "if (!((token.length() <= 3) || (Character.isUpperCase(token.charAt(0)) && token.substring(1).toLowerCase().equals(token.substring(1)))))")
+          .addStatement("isValid = false")
+          .addStatement("break")
+          .endControlFlow()
+          .endControlFlow()
+          .beginControlFlow("if (!isValid)")
           .addStatement(
               "noticeContainer.addValidationNotice(new $T(\"$L\", \"$L\", value, entity.csvRowNumber()))",
               MixedCaseRecommendedFieldNotice.class,

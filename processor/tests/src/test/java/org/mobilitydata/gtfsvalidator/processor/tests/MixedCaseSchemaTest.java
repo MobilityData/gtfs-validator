@@ -58,19 +58,26 @@ public class MixedCaseSchemaTest {
     return Arrays.asList(
         new Object[][] {
           // valid values
-          {"MixedCase", true},
           {"Mixed-Case", true},
           {"Mixed_Case", true},
           {"Mixed Case", true},
-          {"Another good value", true},
           {"22222", true},
+          {"A1", true},
+          {"ZA112", true},
+          {"301", true},
+          {"RTE 30", true},
+          {"급 행 12", true},
+          {"급행12", true},
+          {"東西線", true},
           {"101B", true},
           {"A14C", true},
           {"A14c", true},
           {"A14-C", true},
           {"A14_C", true},
           {"A14 C", true},
-          //          {"ZA12", true}, // TODO: Should this be allowed to succeed?
+          {"Route 1", true},
+          {"Route 1 Boulevard", true},
+          {"ZA12", true},
           {"Avenue des Champs-Élysées", true},
           // invalid values
           {"lowercase", false},
@@ -80,32 +87,20 @@ public class MixedCaseSchemaTest {
           {"UPPER-CASE", false},
           {"lower case space", false},
           {"ROUTE 22", false},
-          {"34broadst", false}
+          {"34broadst", false},
+          {"ROUTE 1", false},
+          {"route 1 Boulevard", false},
+          {"Another bad value", false},
+          {"MixedCaseButSingleWord", false},
         });
   }
 
   @Test
-  public void testValidMixedCase() throws ValidatorLoaderException {
+  public void testMixedCase() throws ValidatorLoaderException {
     helper.load(tableDescriptor, MixedCaseTest.SOME_FIELD_FIELD_NAME, value);
     if (isValid) {
       assertThat(helper.getValidationNotices()).isEmpty();
     } else {
-      assertThat(helper.getValidationNotices())
-          .containsExactly(
-              new MixedCaseRecommendedFieldNotice(
-                  MixedCaseTest.FILENAME, MixedCaseTest.SOME_FIELD_FIELD_NAME, value, 2));
-    }
-  }
-
-  @Test
-  public void testInvalidMixedCases() throws ValidatorLoaderException {
-    String[] invalidValues = {
-      "lowercase", "UPPERCASE", "snake_case", "kebab-case", "UPPER-CASE", "lower case space"
-    };
-
-    for (String value : invalidValues) {
-      helper.load(tableDescriptor, MixedCaseTest.SOME_FIELD_FIELD_NAME, value);
-
       assertThat(helper.getValidationNotices())
           .containsExactly(
               new MixedCaseRecommendedFieldNotice(
