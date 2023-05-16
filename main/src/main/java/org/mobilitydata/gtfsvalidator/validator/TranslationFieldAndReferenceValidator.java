@@ -233,7 +233,7 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
   }
 
   /**
-   * An entity with the given {@code record_id, record_sub_id} cannot be found in the referenced
+   * An entity with the given `record_id` and `record_sub_id` cannot be found in the referenced
    * table.
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsTranslationSchema.class))

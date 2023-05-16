@@ -25,8 +25,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
  * Parsing of a CSV file failed.
  *
  * <p>One common case of the problem is when a cell value contains more than 4096 characters.
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
  */
 @GtfsValidationNotice(severity = ERROR)
 public class CsvParsingFailedNotice extends ValidationNotice {

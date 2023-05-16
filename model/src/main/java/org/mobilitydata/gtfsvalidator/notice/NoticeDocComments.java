@@ -2,8 +2,8 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Nullable;
 import javax.lang.model.element.TypeElement;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Documentation comments associated with a notice and its fields, as extracted from source code.

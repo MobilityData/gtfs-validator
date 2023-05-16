@@ -31,6 +31,7 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
 
 /**
  * Validates that the shape_dist_traveled along a shape in "shapes.txt" is increasing.
@@ -84,14 +85,10 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
   }
 
   /**
-   * When sorted by {@code shape.shape_pt_sequence}, the values for {@code shape_dist_traveled} must
-   * increase along a shape. Two consecutive points with equal values for {@code
-   * shape_dist_traveled} and different coordinates indicate an error.
+   * Decreasing `shape_dist_traveled` in `shapes.txt`.
    *
-   * <p>"Values must increase along with shape_pt_sequence."
-   * (http://gtfs.org/reference/static/#shapestxt)
-   *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>When sorted by `shape.shape_pt_sequence`, two consecutive shape points must not have
+   * decreasing values for `shape_dist_traveled`.
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsShapeSchema.class))
   static class DecreasingShapeDistanceNotice extends ValidationNotice {
@@ -133,16 +130,16 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
   }
 
   /**
-   * When sorted by {@code shape.shape_pt_sequence}, the values for {@code shape_dist_traveled} must
-   * increase along a shape. Two consecutive points with equal values for {@code
-   * shape_dist_traveled} and the same coordinates indicate a duplicative shape point.
+   * Two consecutive points have equal `shape_dist_traveled` and the same lat/lon coordinates in
+   * `shapes.txt`.
    *
-   * <p>"Values must increase along with shape_pt_sequence."
-   * (http://gtfs.org/reference/static/#shapestxt)
-   *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` must increase
+   * along a shape. Two consecutive points with equal values for `shape_dist_traveled` and the same
+   * coordinates indicate a duplicative shape point.
    */
-  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsShapeSchema.class))
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs({GtfsShapeSchema.class, GtfsStopSchema.class}))
   static class EqualShapeDistanceSameCoordinatesNotice extends ValidationNotice {
 
     /** The id of the faulty shape. */
@@ -182,15 +179,16 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
   }
 
   /**
-   * When sorted on {@code shapes.shape_pt_sequence} key, shape points with different coordinates
-   * must not have equal values for {@code shapes.shape_dist_traveled}
+   * Two consecutive points have equal `shape_dist_traveled` and different lat/lon coordinates in
+   * `shapes.txt`.
    *
-   * <p>"Values must increase along with shape_pt_sequence."
-   * (http://gtfs.org/reference/static/#shapestxt)
-   *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` must increase
+   * along a shape. Two consecutive points with equal values for `shape_dist_traveled` and different
+   * coordinates indicate an error.
    */
-  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsShapeSchema.class))
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files = @FileRefs({GtfsShapeSchema.class, GtfsStopSchema.class}))
   static class EqualShapeDistanceDiffCoordinatesNotice extends ValidationNotice {
 
     /** The id of the faulty shape. */

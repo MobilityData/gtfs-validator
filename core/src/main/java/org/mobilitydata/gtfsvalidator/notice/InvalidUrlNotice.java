@@ -25,19 +25,8 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 /**
  * A field contains a malformed URL.
  *
- * <p>Definitions for valid URLs are quite vague. We perform strict validation in the upstream using
- * the Apache Common UrlValidator.
- *
- * <p><a href="https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md">GTFS
- * reference</a> describes the requirements in the following way.
- *
- * <p><i>A fully qualified URL that includes http:// or https://, and any special characters in the
- * URL must be correctly escaped. See the following <a
- * href="http://www.w3.org/Addressing/URL/4_URI_Recommentations.html">URI recommentations</a> for a
- * description of how to create fully qualified URL values.</i>
- *
- * <p>However, some production feeds may use certain characters without escaping and those URL may
- * be still openable in modern browsers.
+ * <p>Definitions for valid URLs are quite vague. We perform strict validation using the Apache
+ * Commons UrlValidator.
  */
 @GtfsValidationNotice(
     severity = ERROR,

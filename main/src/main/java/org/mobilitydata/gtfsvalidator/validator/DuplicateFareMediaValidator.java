@@ -40,9 +40,9 @@ public class DuplicateFareMediaValidator extends FileValidator {
   }
 
   /**
-   * Describes two fare medias that have the same name and type.
+   * Two distinct fare media have the same fare media name and type.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>Fare media should have a unique combination of fare media name and type.
    */
   @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsFareMediaSchema.class))
   static class DuplicateFareMediaNotice extends ValidationNotice {

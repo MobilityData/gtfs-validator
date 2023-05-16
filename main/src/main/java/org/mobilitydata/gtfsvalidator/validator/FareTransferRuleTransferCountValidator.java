@@ -42,8 +42,6 @@ public class FareTransferRuleTransferCountValidator
   /**
    * A row from GTFS file `fare_transfer_rules.txt` has a defined `transfer_count` with an invalid
    * value.
-   *
-   * <p>Severity: {@code SeverityLevel.ERROR}
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsFareTransferRuleSchema.class))
   static class FareTransferRuleInvalidTransferCountNotice extends ValidationNotice {
@@ -62,10 +60,10 @@ public class FareTransferRuleTransferCountValidator
   }
 
   /**
-   * A row from GTFS file `fare_transfer_rules.txt` has `from_leg_group_id` equal to
-   * `to_leg_group_id`, but has no `transfer_count` specified.
+   * A row from `fare_transfer_rules.txt` has `from_leg_group_id` equal to `to_leg_group_id`, but
+   * has no `transfer_count` specified.
    *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>Per the spec, `transfer_count` is required if the two leg group ids are equal.
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsFareTransferRuleSchema.class))
   static class FareTransferRuleMissingTransferCountNotice extends ValidationNotice {
@@ -80,10 +78,10 @@ public class FareTransferRuleTransferCountValidator
   }
 
   /**
-   * A row from GTFS file `fare_transfer_rules.txt` has `from_leg_group_id` not equal to
-   * `to_leg_group_id`, but has `transfer_count` specified.
+   * A row from `fare_transfer_rules.txt` has `from_leg_group_id` not equal to `to_leg_group_id`,
+   * but has `transfer_count` specified.
    *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>Per the spec, `transfer_count` is forbidden if the two leg group ids are not equal.
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsFareTransferRuleSchema.class))
   static class FareTransferRuleWithForbiddenTransferCountNotice extends ValidationNotice {

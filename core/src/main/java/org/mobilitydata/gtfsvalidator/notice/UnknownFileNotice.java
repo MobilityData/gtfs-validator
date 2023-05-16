@@ -20,11 +20,7 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.INFO;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
-/**
- * A file is unknown.
- *
- * <p>Severity: {@code SeverityLevel.INFO}
- */
+/** A file is unknown. */
 @GtfsValidationNotice(
     severity = INFO,
     urls = {

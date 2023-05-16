@@ -7,12 +7,11 @@ import java.util.concurrent.ExecutionException;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 
 /**
- * Describes an ExecutionException during multithreaded validation.
+ * ExecutionException during multithreaded validation
  *
- * <p>{@link java.util.concurrent.ExecutionException} is thrown when attempting to retrieve the
- * result of a task that aborted by throwing an exception.
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>An
+ * [ExecutionException](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutionException.html)
+ * occurred during multithreaded validation.
  */
 @GtfsValidationNotice(severity = ERROR)
 public class ThreadExecutionError extends SystemError {

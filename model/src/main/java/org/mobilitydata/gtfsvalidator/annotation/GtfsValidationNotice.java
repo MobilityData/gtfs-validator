@@ -55,10 +55,12 @@ public @interface GtfsValidationNotice {
   }
 
   enum SectionRef {
+    DATASET_FILES("dataset-files"),
     FILE_REQUIREMENTS("file-requirements"),
     FILED_TYPES("field-types"),
     FIELD_DEFINITIONS("field-definitions"),
-    TERM_DEFINITIONS("term-definitions");
+    TERM_DEFINITIONS("term-definitions"),
+    BEST_PRACTICES_DATASET_PUBLISHING("dataset-publishing-general-practices");
 
     // The HTML section id.
     private final String id;
