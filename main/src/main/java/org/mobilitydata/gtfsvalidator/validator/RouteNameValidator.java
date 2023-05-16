@@ -94,11 +94,7 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
     return !routeDesc.equalsIgnoreCase(routeShortOrLongName);
   }
 
-  /**
-   * Both `routes.route_short_name` and `routes.route_long_name` are missing for a route.
-   *
-   * <p>Severity: {@code SeverityLevel.ERROR}
-   */
+  /** Both `route_short_name` and `route_long_name` are missing for a route. */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsRouteSchema.class))
   static class RouteBothShortAndLongNameMissingNotice extends ValidationNotice {
 
@@ -116,11 +112,38 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
   }
 
   /**
-   * Long name can not contain short name for a single route.
+   * Long name should not contain short name for a single route.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>In routes.txt, `route_long_name` should not contain the value for `route_short_name`,
+   * because when both are provided, they are often combined by transit applications. Note that only
+   * one of the two fields is required. If there is no short name used for a route, use
+   * `route_long_name` only.
+   *
+   * <p>Good examples:
+   *
+   * <pre>
+   * | `route_short_name`/`route_long_name`                                                                | Dataset                                                                                                                                                                |
+   * | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   * | ["N"/"Judah"](https://www.sfmta.com/getting-around/transit/routes-stops/n-judah)                | [Muni San Fransisco](https://storage.googleapis.com/storage/v1/b/mdb-latest/o/us-california-san-francisco-municipal-transportation-agency-sfmta-gtfs-50.zip?alt=media) |
+   * | ["6"/"ML King Jr Blvd"](https://trimet.org/schedules/r006.htm)                                  | [Trimet Portland Streetcar](http://developer.trimet.org/schedule/gtfs.zip)                                                                                             |
+   * | ["55"/"Boulevard Saint Laurent"](https://www.stm.info/en/info/networks/bus/local/line-55-north) | [STM Montreal](https://storage.googleapis.com/storage/v1/b/mdb-latest/o/ca-quebec-societe-de-transport-de-montreal-gtfs-1221.zip?alt=media)                            |
+   * | ["1"/"Rangiora/Cashmere"](https://www.metroinfo.co.nz/timetables/1-rangiora-cashmere/)          | [Metro Christchurch](https://storage.googleapis.com/storage/v1/b/mdb-latest/o/nz-christchurch-christchurch-metro-gtfs-1313.zip?alt=media)                              |
+   * </pre>
+   *
+   * Bad examples:
+   *
+   * <pre>
+   * | `route_short_name`/`route_long_name` |
+   * |-------------------------------------------|
+   * | "604"/"604"                               |
+   * | "14"/"Route 14"                           |
+   * | "2"/"Route 2: Bellows Falls In-Town"      |
+   * </pre>
    */
-  @GtfsValidationNotice(severity = WARNING, bestPractices = @FileRefs(GtfsRouteSchema.class))
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs(GtfsRouteSchema.class),
+      bestPractices = @FileRefs(GtfsRouteSchema.class))
   static class RouteLongNameContainsShortNameNotice extends ValidationNotice {
 
     /** The id of the faulty record. */
@@ -145,13 +168,11 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
     }
   }
 
-  /**
-   * Short name of a single route is too long (more than 12 characters,
-   * https://gtfs.org/best-practices/#routestxt).
-   *
-   * <p>Severity: {@code SeverityLevel.WARNING}
-   */
-  @GtfsValidationNotice(severity = WARNING, bestPractices = @FileRefs(GtfsRouteSchema.class))
+  /** Short name of a route is too long (more than 12 characters). */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs(GtfsRouteSchema.class),
+      bestPractices = @FileRefs(GtfsRouteSchema.class))
   static class RouteShortNameTooLongNotice extends ValidationNotice {
 
     /** The id of the faulty record. */
@@ -172,12 +193,18 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
   }
 
   /**
-   * A single route has identical values for {@code routes.route_desc} and {@code route_long_name}
-   * or {@code route_short_name}.
+   * Same name and description for route.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>The GTFS spec defines `routes.txt`
+   * [route_desc](https://gtfs.org/reference/static/#routestxt) as:
+   *
+   * <p>Description of a route that provides useful, quality information. Do not simply duplicate
+   * the name of the route.
+   *
+   * <p>See the GTFS and GTFS Best Practices links below for more examples of how to populate the
+   * `route_short_name`, `route_long_name`, and `route_desc` fields.
    */
-  @GtfsValidationNotice(severity = WARNING)
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsRouteSchema.class))
   static class SameNameAndDescriptionForRouteNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */

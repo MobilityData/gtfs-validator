@@ -22,9 +22,9 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
 
 /**
- * A notice that the file is expected to have a single entity but has more (e.g., "feed_info.txt").
+ * More than one row in CSV.
  *
- * <p>Severity: {@code SeverityLevel.WARNING}
+ * <p>The file is expected to have a single entity but has more (e.g., "feed_info.txt").
  */
 @GtfsValidationNotice(severity = WARNING, sections = @SectionRefs(FIELD_DEFINITIONS))
 public class MoreThanOneEntityNotice extends ValidationNotice {

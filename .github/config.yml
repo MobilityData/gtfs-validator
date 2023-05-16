@@ -16,7 +16,7 @@ newPRWelcomeComment: >
   We use [semantic commit messages](https://github.com/electron/electron/blob/main/docs/development/pull-requests.md#commit-message-guidelines) to streamline the release process. Before your pull request can be merged, you should **update your pull request title** to start with a semantic prefix.
   Examples of titles with semantic prefixes:
     - `fix: Bug with ssl network connections + Java module permissions.`
-    - `feat: Initial support for multiple @PrimaryKey annotations.
+    - `feat: Initial support for multiple @PrimaryKey annotations`.
     - `docs: update RELEASE.md with new process`
   To get this PR to the finish line, please do the following:
     - Read our [Contribution Guidelines](https://github.com/MobilityData/gtfs-validator/blob/master/docs/CONTRIBUTING.md)

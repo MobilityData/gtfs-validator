@@ -64,10 +64,9 @@ public class TripUsageValidator extends FileValidator {
   }
 
   /**
-   * A {@code GtfsTrip} should be referred to at least once in {@code GtfsStopTimeTableContainer}
-   * station).
+   * Trip is not be used in `stop_times.txt`
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>Trips should be referred to at least once in `stop_times.txt`.
    */
   @GtfsValidationNotice(
       severity = WARNING,

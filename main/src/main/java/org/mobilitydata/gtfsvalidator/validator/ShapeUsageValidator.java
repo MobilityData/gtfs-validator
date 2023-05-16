@@ -21,12 +21,16 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
+import org.mobilitydata.gtfsvalidator.table.GtfsShapeSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsTripSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 
 /**
@@ -60,12 +64,18 @@ public class ShapeUsageValidator extends FileValidator {
   }
 
   /**
-   * A {@code GtfsShape} should be referred to at least once in {@code GtfsTripTableContainer}
-   * station).
+   * Shape is not used in GTFS file `trips.txt`.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>All records defined by GTFS `shapes.txt` should be used in `trips.txt`.
    */
-  @GtfsValidationNotice(severity = WARNING)
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs({GtfsShapeSchema.class, GtfsTripSchema.class}),
+      urls = {
+        @UrlRef(
+            label = "Original Python validator implementation",
+            url = "https://github.com/google/transitfeed")
+      })
   static class UnusedShapeNotice extends ValidationNotice {
 
     /** The faulty record's id. */

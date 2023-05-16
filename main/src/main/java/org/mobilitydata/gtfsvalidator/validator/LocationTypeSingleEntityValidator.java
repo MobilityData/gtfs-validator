@@ -80,9 +80,9 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
   /**
    * A station has `parent_station` field set.
    *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>Field `parent_station` must be empty when `location_type` is 1.
    */
-  @GtfsValidationNotice(severity = ERROR)
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopSchema.class))
   static class StationWithParentStationNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */
@@ -110,10 +110,8 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
   /**
    * A location that must have `parent_station` field does not have it.
    *
-   * <p>The following location types must have `parent_station`: entrance, generic node, boarding
-   * area.
-   *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>The following location types must have `parent_station`: entrance, generic node,
+   * boarding_area.
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopSchema.class))
   static class LocationWithoutParentStationNotice extends ValidationNotice {
@@ -143,9 +141,7 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
   /**
    * A platform has no `parent_station` field set.
    *
-   * <p>This is different from {@code LocationWithoutParentStationNotice} since it is less severe.
-   *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>This is different from `location_without_parent_station` since it is less severe.
    */
   @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsStopSchema.class))
   static class PlatformWithoutParentStationNotice extends ValidationNotice {

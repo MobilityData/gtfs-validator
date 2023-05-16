@@ -240,8 +240,8 @@ public class ShapeToStopMatchingValidator extends FileValidator {
   }
 
   /**
-   * Describes a stop entry that has many potential matches to the trip's path of travel, as defined
-   * by the shape entry in {@code shapes.txt}.
+   * Stop entry that has many potential matches to the trip's path of travel, as defined by the
+   * shape entry in `shapes.txt`.
    *
    * <p>This potentially indicates a problem with the location of the stop or the path of the shape.
    */
@@ -289,15 +289,20 @@ public class ShapeToStopMatchingValidator extends FileValidator {
   }
 
   /**
-   * Describes a stop time entry that is a large distance away from the location of the shape in
-   * {@code shapes.txt} as defined by {@code shape_dist_traveled} values.
+   * Stop time too far from shape.
    *
-   * <p>This potentially indicates a problem with the location of the stop or the use of {@code
-   * shape_dist_traveled} values.
+   * <p>A stop time entry that is a large distance away from the location of the shape in
+   * `shapes.txt` as defined by `shape_dist_traveled` values.
    */
   @GtfsValidationNotice(
       severity = WARNING,
-      files = @FileRefs({GtfsTripSchema.class, GtfsStopTimeSchema.class, GtfsStopSchema.class}))
+      files =
+          @FileRefs({
+            GtfsTripSchema.class,
+            GtfsStopTimeSchema.class,
+            GtfsStopSchema.class,
+            GtfsStopTimeSchema.class
+          }))
   static class StopTooFarFromShapeUsingUserDistanceNotice extends ValidationNotice {
 
     /** The row number of the faulty record from `trips.txt`. */
@@ -343,12 +348,16 @@ public class ShapeToStopMatchingValidator extends FileValidator {
   }
 
   /**
-   * Describes a stop time entry that is a large distance away from the trip's path of travel, as
-   * defined by the shape entry in {@code shapes.txt}.
+   * Stop too far from trip shape.
    *
-   * <p>This potentially indicates a problem with the location of the stop or the path of the shape.
+   * <p>Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100 meters of
+   * stop locations which a trip serves. This potentially indicates a problem with the location of
+   * the stop or the path of the shape.
    */
-  @GtfsValidationNotice(severity = WARNING, bestPractices = @FileRefs(GtfsShapeSchema.class))
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs({GtfsStopTimeSchema.class, GtfsStopSchema.class, GtfsTripSchema.class}),
+      bestPractices = @FileRefs(GtfsShapeSchema.class))
   static class StopTooFarFromShapeNotice extends ValidationNotice {
 
     /** The row number of the faulty record from `trips.txt`. */
@@ -394,8 +403,7 @@ public class ShapeToStopMatchingValidator extends FileValidator {
   }
 
   /**
-   * Describes two stop entries in {@code stop_times.txt} that are different than their
-   * arrival-departure order as defined by the shape in the {@code shapes.txt} file.
+   * Two stop entries are different than their arrival-departure order defined by `shapes.txt`.
    *
    * <p>This could indicate a problem with the location of the stops, the path of the shape, or the
    * sequence of the stops for their trip.

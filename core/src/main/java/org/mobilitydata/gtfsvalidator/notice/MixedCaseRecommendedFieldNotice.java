@@ -6,9 +6,14 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /**
- * A string field has a value that does not contain mixed case.
+ * This field has customer-facing text and should use Mixed Case (should contain upper and lower
+ * case letters).
  *
- * <p>Severity: {@code SeverityLevel.WARNING}
+ * <p>This field contains customer-facing text and should use Mixed Case (upper and lower case
+ * letters) to ensure good readability when displayed to riders. Avoid the use of abbreviations
+ * throughout the feed (e.g. St. for Street) unless a location is called by its abbreviated name
+ * (e.g. “JFK Airport”). Abbreviations may be problematic for accessibility by screen reader
+ * software and voice user interfaces.
  *
  * @see org.mobilitydata.gtfsvalidator.annotation.MixedCase
  */

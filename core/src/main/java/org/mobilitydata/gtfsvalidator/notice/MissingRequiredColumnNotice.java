@@ -21,11 +21,7 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
 
-/**
- * A required column is missing in the input file.
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
- */
+/** A required column is missing in the input file. */
 @GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(TERM_DEFINITIONS))
 public class MissingRequiredColumnNotice extends ValidationNotice {
 

@@ -229,7 +229,7 @@
                 <h4>Files included</h4>
                 <hr />
                 <ol>
-                    <li th:each="file: ${metadata.foundFiles}" th:text="${file}"></li>
+                    <li th:each="file: ${metadata.getFilenames}" th:text="${file}"></li>
                 </ol>
             </div>
             <div class="summary-cell summary_list">
