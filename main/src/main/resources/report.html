@@ -282,7 +282,7 @@
                             <p> Please find this notice description <a
                                     th:href="@{'https://gtfs-validator.mobilitydata.org/rules.html#' + ${noticesByCode.key}}">here</a>.
                             </p>
-                             <p th:if="${noticesByCode.value.size > 100}">Only the first 100 of <span th:text="${noticesByCode.value.size}"></span> affected records are displayed below.</p>
+                             <p th:if="${noticesByCode.value.size > 50}">Only the first 50 of <span th:text="${noticesByCode.value.size}"></span> affected records are displayed below.</p>
                             <table>
                                 <thead>
                                     <tr>
@@ -292,7 +292,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr th:each="notice, iStat : ${noticesByCode.value}" th:if="${iStat.count <= 100}">
+                                    <tr th:each="notice, iStat : ${noticesByCode.value}" th:if="${iStat.count <= 50}">
                                     <th:block th:each="field: ${notice.fields}">
                                             <td th:text="${notice.getValueForField(field)}" />
                                     </th:block>
