@@ -92,9 +92,18 @@ public class MatchingFeedAndAgencyLangValidator extends FileValidator {
   }
 
   /**
-   * {@code agency.agency_lang} and {@code feed_info.feed_lang} do not match
+   * Mismatching feed and agency language fields.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>Files `agency.txt` and `feed_info.txt` should define matching `agency.agency_lang` and
+   * `feed_info.feed_lang`. The default language may be multilingual for datasets with the original
+   * text in multiple languages. In such cases, the `feed_lang` field should contain the language
+   * code `mul` defined by the norm ISO 639-2.
+   *
+   * <pre>
+   * - If `feed_lang` is not `mul` and does not match with `agency_lang`, that's an error.
+   * - If there is more than one `agency_lang` and `feed_lang` isn't `mul`, that's an error.
+   * - If `feed_lang` is `mul` and there isn't more than one `agency_lang`, that's an error.
+   * </pre>
    */
   @GtfsValidationNotice(
       severity = WARNING,

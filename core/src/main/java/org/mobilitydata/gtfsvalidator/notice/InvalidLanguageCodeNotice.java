@@ -27,9 +27,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
  * <p>Language codes must follow <a href="http://www.rfc-editor.org/rfc/bcp/bcp47.txt">IETF BCP
  * 47</a>.
  *
- * <p>Example: {@code en} for English, {@code en-US} for American English or {@code de} for German.
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>Example: `en` for English, `en-US` for American English or `de` for German.
  */
 @GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILED_TYPES))
 public class InvalidLanguageCodeNotice extends ValidationNotice {

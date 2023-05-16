@@ -24,11 +24,10 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
 /**
  * A field contains a malformed phone number.
  *
- * <p>Definitions for valid phone numbers are quite vague. We perform strict validation in the
- * upstream using the Google libphonenumber.
- *
- * <p><a href="https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md">GTFS
- * reference</a> does not provide any special requirements or standards.
+ * <p>This rule uses the
+ * [PhoneNumberUtil](https://www.javadoc.io/doc/com.googlecode.libphonenumber/libphonenumber/8.4.1/com/google/i18n/phonenumbers/PhoneNumberUtil.html)
+ * class to validate a phone number based on a country code. If no country code is provided in the
+ * parameters used to run the validator, this notice won't be emitted.
  */
 @GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILED_TYPES))
 public class InvalidPhoneNumberNotice extends ValidationNotice {

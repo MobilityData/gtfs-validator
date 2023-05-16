@@ -24,9 +24,9 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /**
- * The values of the given key and rows are duplicates.
+ * Duplicated entity.
  *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>The values of the given key and rows are duplicates.
  */
 @GtfsValidationNotice(
     severity = ERROR,

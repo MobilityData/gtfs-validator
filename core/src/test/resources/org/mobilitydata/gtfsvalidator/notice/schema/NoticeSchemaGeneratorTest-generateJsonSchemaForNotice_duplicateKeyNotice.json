@@ -2,7 +2,7 @@
   "code": "duplicate_key",
   "severityLevel": "ERROR",
   "type": "object",
-  "description": "The values of the given key and rows are duplicates.",
+  "description": "Duplicated entity.\n\nThe values of the given key and rows are duplicates.",
   "references": {
     "fileReferences": [],
     "bestPracticesFileReferences": [],

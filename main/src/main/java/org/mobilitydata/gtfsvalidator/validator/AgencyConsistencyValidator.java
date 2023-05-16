@@ -113,10 +113,11 @@ public class AgencyConsistencyValidator extends FileValidator {
   /**
    * Inconsistent language among agencies.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>Agencies from GTFS `agency.txt` have been found to have different languages.
    */
   @GtfsValidationNotice(
       severity = WARNING,
+      files = @FileRefs(GtfsAgencySchema.class),
       urls = {
         @UrlRef(
             label = "Original Python validator implementation",
@@ -142,9 +143,9 @@ public class AgencyConsistencyValidator extends FileValidator {
   }
 
   /**
-   * Inconsistent timezone among agencies.
+   * Inconsistent Timezone among agencies.
    *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>Agencies from GTFS `agency.txt` have been found to have different timezones.
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsAgencySchema.class))
   static class InconsistentAgencyTimezoneNotice extends ValidationNotice {

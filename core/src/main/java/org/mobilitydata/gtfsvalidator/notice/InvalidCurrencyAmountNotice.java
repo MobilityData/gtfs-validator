@@ -8,10 +8,12 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
 
 /**
- * A currency amount field has a value that does not match the format (e.g. expected number of
- * decimal places) of its corresponding currency code field.
+ * A currency amount field has a value that does not match the format of its corresponding currency
+ * code field.
  *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>Typically, this means the amount did not have the expected number of decimal places. The
+ * number of decimal places is specified by <a
+ * href="https://en.wikipedia.org/wiki/ISO_4217#Active_codes">ISO 4217</a>.
  *
  * @see org.mobilitydata.gtfsvalidator.annotation.CurrencyAmount
  */
