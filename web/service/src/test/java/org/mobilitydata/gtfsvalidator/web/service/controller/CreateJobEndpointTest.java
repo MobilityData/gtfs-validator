@@ -8,6 +8,7 @@ import java.net.URL;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.web.service.util.JobMetadata;
+import org.mobilitydata.gtfsvalidator.web.service.util.JobStatus;
 import org.mobilitydata.gtfsvalidator.web.service.util.StorageHelper;
 import org.mobilitydata.gtfsvalidator.web.service.util.ValidationHandler;
 import org.mockito.ArgumentCaptor;
@@ -64,8 +65,13 @@ public class CreateJobEndpointTest {
 
     makeCreateJobRequestAndCheckResult(request, testJobId, testUploadUrl);
 
-    // should not call saveJobMetadata
-    verify(storageHelper, times(0)).saveJobMetadata(any(JobMetadata.class));
+    // should save job metadata with country code
+    verify(storageHelper, times(1)).saveJobMetadata(jobMetadataCaptor.capture());
+    var jobMetadata = jobMetadataCaptor.getValue();
+    assert jobMetadata.getJobId().equals(testJobId);
+    assert jobMetadata.getCountryCode() == null;
+    assert jobMetadata.getStatus().equals(JobStatus.PENDING);
+    assert jobMetadata.getErrorMessage() == null;
     // should not call saveJobFileFromUrl
     verify(storageHelper, times(0)).saveJobFileFromUrl(anyString(), anyString());
   }
@@ -83,6 +89,8 @@ public class CreateJobEndpointTest {
     var jobMetadata = jobMetadataCaptor.getValue();
     assert jobMetadata.getJobId().equals(testJobId);
     assert jobMetadata.getCountryCode().equals("US");
+    assert jobMetadata.getStatus().equals(JobStatus.PENDING);
+    assert jobMetadata.getErrorMessage() == null;
 
     // should not call saveJobFileFromUrl
     verify(storageHelper, times(0)).saveJobFileFromUrl(anyString(), anyString());
@@ -96,8 +104,14 @@ public class CreateJobEndpointTest {
 
     makeCreateJobRequestAndCheckResult(request, testJobId, null);
 
-    // should not call saveJobMetadata
-    verify(storageHelper, times(0)).saveJobMetadata(any(JobMetadata.class));
+    // should save job metadata with no country code
+    verify(storageHelper, times(1)).saveJobMetadata(jobMetadataCaptor.capture());
+    var jobMetadata = jobMetadataCaptor.getValue();
+    // assert jobMetadata jobId is equal to expectedJobId and countryCode is equal to "US"
+    assert jobMetadata.getJobId().equals(testJobId);
+    assert jobMetadata.getCountryCode() == null;
+    assert jobMetadata.getStatus().equals(JobStatus.PENDING);
+    assert jobMetadata.getErrorMessage() == null;
     // should saveJobFileFromUrl
     verify(storageHelper, times(1)).saveJobFileFromUrl(testJobId, url);
   }
@@ -116,6 +130,8 @@ public class CreateJobEndpointTest {
     // assert jobMetadata jobId is equal to expectedJobId and countryCode is equal to "US"
     assert jobMetadata.getJobId().equals(testJobId);
     assert jobMetadata.getCountryCode().equals("US");
+    assert jobMetadata.getStatus().equals(JobStatus.PENDING);
+    assert jobMetadata.getErrorMessage() == null;
     // should saveJobFileFromUrl
     verify(storageHelper, times(1)).saveJobFileFromUrl(testJobId, url);
   }
