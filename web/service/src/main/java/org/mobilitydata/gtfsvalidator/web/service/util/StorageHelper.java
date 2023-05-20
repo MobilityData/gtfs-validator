@@ -2,6 +2,7 @@ package org.mobilitydata.gtfsvalidator.web.service.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.storage.*;
+import io.sentry.Sentry;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
@@ -50,9 +51,8 @@ public class StorageHelper {
    * Creates job metadata, serializes to JSON and saves it to GCS.
    *
    * @param metadata
-   * @throws Exception
    */
-  public void saveJobMetadata(JobMetadata metadata) throws Exception {
+  public void saveJobMetadata(JobMetadata metadata) {
     try {
       String jobId = metadata.getJobId();
       var jobInfoPath = getJobInfoPath(jobId);
@@ -63,8 +63,8 @@ public class StorageHelper {
       logger.info("Saving job metadata: " + json);
       storage.create(jobBlobInfo, json.getBytes());
     } catch (Exception exc) {
-      logger.error("Error setting country code", exc);
-      throw exc;
+      logger.error("Error saving job metadata", exc);
+      Sentry.captureException(exc);
     }
   }
 

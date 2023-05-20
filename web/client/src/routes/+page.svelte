@@ -68,6 +68,7 @@
   let statusModal;
 
   $: reportUrl = `https://gtfs-validator-results.mobilitydata.org/${jobId}/report.html`;
+  $: jobJsonUrl = `https://gtfs-validator-results.mobilitydata.org/${jobId}/job.json`;
 
   function clearErrors() {
     errors = [];
@@ -256,13 +257,14 @@
   }
 
   async function waitForJob() {
+    let jobStatus = 'PENDING'
     return new Promise(async (resolve, reject) => {
       updateStatus('processing');
       jobInProgress = true;
 
       do {
         try {
-          jobInProgress = !(await reportExists());
+          jobInProgress = !(await checkJobCompleted());
           if (jobInProgress) {
             await sleep(2500);
           }
@@ -284,6 +286,25 @@
       xhr.onload = () => resolve(xhr.status === 200);
       xhr.onerror = reject;
       xhr.open('HEAD', reportUrl);
+      xhr.send();
+    });
+  }
+
+  function checkJobCompleted() {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+
+      xhr.responseType = 'json';
+      xhr.onload  = function() {
+        var jsonResponse = xhr.response;
+        if (jsonResponse?.status === 'ERROR') {
+          errors.push(jsonResponse?.errorMessage)
+          return reject()
+        }
+        return resolve(jsonResponse?.status === 'COMPLETE')
+      };
+      xhr.onerror = reject;
+      xhr.open('GET', jobJsonUrl);
       xhr.send();
     });
   }
