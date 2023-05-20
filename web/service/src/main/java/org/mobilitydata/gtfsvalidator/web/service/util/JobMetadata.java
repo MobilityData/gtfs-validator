@@ -14,10 +14,10 @@ public class JobMetadata {
 
   @JsonCreator
   public JobMetadata(
-          @JsonProperty("jobId") String jobId,
-          @JsonProperty("countryCode") String countryCode,
-          @JsonProperty("status") JobStatus status,
-          @JsonProperty("errorMessage") String errorMessage) {
+      @JsonProperty("jobId") String jobId,
+      @JsonProperty("countryCode") String countryCode,
+      @JsonProperty("status") JobStatus status,
+      @JsonProperty("errorMessage") String errorMessage) {
     this.jobId = jobId;
     this.countryCode = countryCode;
     this.status = status;
