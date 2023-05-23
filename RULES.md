@@ -2303,29 +2303,6 @@ A pathway should not have same values for `from_stop_id` and `to_stop_id`.
 * [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
 </details>
 
-<a name="PlatformWithoutParentStationNotice"/>
-
-### platform_without_parent_station
-
-A platform has no `parent_station` field set.
-
-#### References
-* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
-<details>
-
-#### Notice fields description
-| Field name   	| Description                             	| Type    	|
-|--------------	|-----------------------------------------	|---------	|
-| `csvRowNumber`| Row number of the faulty record.        	| Long    	|
-| `stopId`     	| The id of the faulty record.             	| String  	|
-| `stopName`   	| The stop name of the faulty record.     	| String  	|
-| `locationType`| The location type of the faulty record. 	| Integer 	|
-
-#### Affected files
-* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
-
-</details>
-
 <a name="RouteColorContrastNotice"/>
 
 ### route_color_contrast
@@ -2840,6 +2817,29 @@ Trips should be referred to at least once in `stop_times.txt`.
 </details>
 
 # More details - INFOS
+
+<a name="PlatformWithoutParentStationNotice"/>
+
+### platform_without_parent_station
+
+A platform has no `parent_station` field set.
+
+#### References
+* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+<details>
+
+#### Notice fields description
+| Field name   	| Description                             	| Type    	|
+|--------------	|-----------------------------------------	|---------	|
+| `csvRowNumber`| Row number of the faulty record.        	| Long    	|
+| `stopId`     	| The id of the faulty record.             	| String  	|
+| `stopName`   	| The stop name of the faulty record.     	| String  	|
+| `locationType`| The location type of the faulty record. 	| Integer 	|
+
+#### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+
+</details>
 
 <a name="UnknownColumnNotice"/>
 
