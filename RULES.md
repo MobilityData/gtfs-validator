@@ -119,7 +119,6 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`non_ascii_or_non_printable_char`](#non_ascii_or_non_printable_char)                         | Non ascii or non printable char in  `id`.                                                                                                                     |
 | [`pathway_dangling_generic_node`](#pathway_dangling_generic_node)                             | A generic node has only one incident location in a pathway graph.                                                                                             |
 | [`pathway_loop`](#pathway_loop)                                                               | A pathway starts and ends at the same location.                                                                                                               |
-| [`platform_without_parent_station`](#platform_without_parent_station)                         | A platform has no `parent_station` field set.                                                                                                                 |
 | [`route_color_contrast`](#route_color_contrast)                                               | Insufficient route color contrast.                                                                                                                            |
 | [`route_long_name_contains_short_name`](#route_long_name_contains_short_name)                 | Long name should not contain short name for a single route.                                                                                                   |
 | [`route_short_name_too_long`](#route_short_name_too_long)                                     | Short name of a route is too long (more than 12 characters).                                                                                                  |
@@ -145,10 +144,12 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 
 ## Table of INFOS
 
-| Notice code                                       | Description               |
-|---------------------------------------------------|---------------------------|
-| [`unknown_column`](#unknown_column) | A column name is unknown. |
-| [`unknown_file`](#unknown_file)     | A file is unknown.        |
+| Notice code                                                           | Description                                   |
+|-----------------------------------------------------------------------|-----------------------------------------------|
+| [`platform_without_parent_station`](#platform_without_parent_station) | A platform has no `parent_station` field set. |
+| [`unknown_column`](#unknown_column)                                   | A column name is unknown.                     |
+| [`unknown_file`](#unknown_file)                                       | A file is unknown.                            |
+
 
 <a name="SYSTEM_ERRORS"/>
 
