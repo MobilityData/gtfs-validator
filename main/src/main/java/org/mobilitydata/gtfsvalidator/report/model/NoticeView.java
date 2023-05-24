@@ -63,9 +63,9 @@ public class NoticeView {
   }
 
   /**
-   * Returns the severity level of the notice.
+   * Returns the description text for the notice.
    *
-   * @return severity level.
+   * @return description text
    */
   public String getDescription() {
     String markdown = this.comments.getDocComment();
