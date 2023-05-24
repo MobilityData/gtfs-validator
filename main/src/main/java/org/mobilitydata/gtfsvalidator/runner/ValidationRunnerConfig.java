@@ -21,7 +21,7 @@ import java.nio.file.Path;
 import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 
-/** Defines executation parameters for {@link ValidationRunner}. */
+/** Defines execution parameters for {@link ValidationRunner}. */
 @AutoValue
 public abstract class ValidationRunnerConfig {
   // The GTFS input, as a URI to a local file or an external URL.
