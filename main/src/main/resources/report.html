@@ -279,6 +279,7 @@
                     <td colspan="4">
                         <div class="desc-content">
                             <h3 th:text="${noticesByCode.key}" />
+                            <p th:utext="${noticesByCode.value[0].description}" />
                             <p> Please find this notice description <a
                                     th:href="@{'https://gtfs-validator.mobilitydata.org/rules.html#' + ${noticesByCode.key}}">here</a>.
                             </p>
