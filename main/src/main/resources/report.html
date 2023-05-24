@@ -288,7 +288,7 @@
                                 <thead>
                                     <tr>
                                         <th:block th:each="field: ${noticesByCode.value[0].fields}">
-                                            <th th:text="${field}" />
+                                            <th th:text="${field}" th:title="${noticesByCode.value[0].getCommentForField(field)}" />
                                         </th:block>
                                     </tr>
                                 </thead>

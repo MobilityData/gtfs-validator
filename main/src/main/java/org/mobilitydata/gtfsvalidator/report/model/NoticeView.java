@@ -67,6 +67,14 @@ public class NoticeView {
    *
    * @return description text
    */
+  public String getCommentForField(String field) {
+    return comments.getFieldComment(field);
+  }
+  /**
+   * Returns the description text for the notice.
+   *
+   * @return description text
+   */
   public String getDescription() {
     String markdown = this.comments.getDocComment();
 
