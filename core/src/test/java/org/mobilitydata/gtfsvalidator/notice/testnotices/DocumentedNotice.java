@@ -11,6 +11,7 @@ import org.mobilitydata.gtfsvalidator.notice.testnotices.DocumentedNotice.AppleS
 import org.mobilitydata.gtfsvalidator.notice.testnotices.DocumentedNotice.BananaSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 
+/** Look in `DocumentedNotice-DocComments.json` for actual comment values. */
 @GtfsValidationNotice(
     severity = ERROR,
     files = @FileRefs(AppleSchema.class),
