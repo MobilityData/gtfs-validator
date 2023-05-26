@@ -78,6 +78,40 @@ public class NoticeDocumentationTest {
   }
 
   @Test
+  public void testThatAllValidationNoticesAreDocumentedWithFirstLine() {
+    List<Class<?>> noticesWithImproperMultilineDocComment =
+        discoverValidationNoticeClasses()
+            .filter(
+                clazz -> {
+                  NoticeDocComments docComments = NoticeSchemaGenerator.loadComments(clazz);
+                  if (docComments.getDocComment() == null) {
+                    return false;
+                  }
+                  String[] lines = docComments.getDocComment().split("\n");
+                  if (lines.length == 0) {
+                    return false;
+                  }
+                  // The first line of the comment must be a single sentence.
+                  return lines[0].contains(". ");
+                })
+            .collect(Collectors.toList());
+    assertWithMessage(
+            "We expect all validation notices to have a documentation comment of the "
+                + "following form:\n"
+                + "\n"
+                + "  Short single-sentence text describing the notice on a single line (required).\n"
+                + "  \n"
+                + "  Additional text further describing the notice with multiple additional sentences "
+                + "on multiple lines(optional).\n"
+                + "\n"
+                + "See https://github.com/MobilityData/gtfs-validator/blob/master/docs/NEW_RULES.md#2-document-the-new-rule for more details.<br/>\n"
+                + "\n"
+                + "The following notice classes do not match that convention:")
+        .that(noticesWithImproperMultilineDocComment)
+        .isEmpty();
+  }
+
+  @Test
   public void testThatValidationNoticesDoNotUseUnsupportedJavadocSyntax() {
     List<String> noticesWithInvalidJavadoc =
         discoverValidationNoticeClasses()
