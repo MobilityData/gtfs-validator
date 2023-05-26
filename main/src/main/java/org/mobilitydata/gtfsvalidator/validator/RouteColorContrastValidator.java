@@ -62,10 +62,9 @@ public class RouteColorContrastValidator extends SingleEntityValidator<GtfsRoute
   }
 
   /**
-   * "The color difference between route_color and route_text_color should provide sufficient
-   * contrast when viewed on a black and white screen." (http://gtfs.org/best-practices/#routestxt)
+   * Insufficient route color contrast.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>A route's color and `route_text_color` should be contrasting.
    */
   @GtfsValidationNotice(
       severity = WARNING,
@@ -77,16 +76,16 @@ public class RouteColorContrastValidator extends SingleEntityValidator<GtfsRoute
       })
   static class RouteColorContrastNotice extends ValidationNotice {
 
-    // The id of the faulty record.
+    /** The id of the faulty record. */
     private final String routeId;
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The faulty record's HTML route color.
+    /** The faulty record's HTML route color. */
     private final GtfsColor routeColor;
 
-    // The faulty record's HTML route text color.
+    /** The faulty record's HTML route text color. */
     private final GtfsColor routeTextColor;
 
     RouteColorContrastNotice(

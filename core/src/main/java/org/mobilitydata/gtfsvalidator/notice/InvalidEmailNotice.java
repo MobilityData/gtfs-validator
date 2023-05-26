@@ -25,11 +25,8 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 /**
  * A field contains a malformed email address.
  *
- * <p>Definitions for valid emails are quite vague. We perform strict validation in the upstream
- * using the Apache Commons EmailValidator.
- *
- * <p><a href="https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md">GTFS
- * reference</a> does not provide any special requirements or standards.
+ * <p>Definitions for valid emails are quite vague. We perform strict validation using the Apache
+ * Commons EmailValidator.
  */
 @GtfsValidationNotice(
     severity = ERROR,
@@ -42,16 +39,16 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
     })
 public class InvalidEmailNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The row of the faulty record.
+  /** The row of the faulty record. */
   private final int csvRowNumber;
 
-  // Faulty record's field name.
+  /** Faulty record's field name. */
   private final String fieldName;
 
-  // Faulty value.
+  /** Faulty value. */
   private final String fieldValue;
 
   /**

@@ -29,6 +29,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
 
 /**
  * Validates `location_type` of the referenced `parent_station`.
@@ -88,39 +89,51 @@ public class ParentLocationTypeValidator extends FileValidator {
   }
 
   /**
-   * Incorrect type of the parent location (e.g., a parent for a stop or an entrance must be a
-   * station).
+   * Incorrect type of the parent location.
    *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>Value of field `location_type` of parent found in field `parent_station` is invalid.
+   *
+   * <p>According to spec
+   *
+   * <pre>
+   * - _Stop/platform_ can only have _Station_ as parent
+   * - _Station_ can NOT have a parent
+   * - _Entrance/exit_ or _generic node_ can only have _Station_ as parent
+   * - _Boarding Area_ can only have _Platform_ as parent
+   * </pre>
+   *
+   * Any other combination raise this error.
    */
-  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopSchema.class))
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files = @FileRefs({GtfsStopSchema.class, GtfsStopTimeSchema.class}))
   static class WrongParentLocationTypeNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The id of the faulty record.
+    /** The id of the faulty record. */
     private final String stopId;
 
-    // The faulty record's `stops.stop_name`.
+    /** The faulty record's `stops.stop_name`. */
     private final String stopName;
 
-    // The faulty record's `stops.location_type`.
+    /** The faulty record's `stops.location_type`. */
     private final int locationType;
 
-    // The row number of the faulty record's parent.
+    /** The row number of the faulty record's parent. */
     private final long parentCsvRowNumber;
 
-    // The id of the faulty record's parent station.
+    /** The id of the faulty record's parent station. */
     private final String parentStation;
 
-    // The stop name of the faulty record's parent.
+    /** The stop name of the faulty record's parent. */
     private final String parentStopName;
 
-    // The location type of the faulty record's parent.
+    /** The location type of the faulty record's parent. */
     private final int parentLocationType;
 
-    // The expected location type of the faulty record.
+    /** The expected location type of the faulty record. */
     private final int expectedLocationType;
 
     WrongParentLocationTypeNotice(

@@ -21,16 +21,14 @@ import com.google.common.base.Strings;
 import java.net.URISyntaxException;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 
-/**
- * Indicates that a string could not be parsed as a URI reference.
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
- */
+/** A string could not be parsed as a URI reference. */
 @GtfsValidationNotice(severity = ERROR)
 public class URISyntaxError extends SystemError {
 
+  /** The name of the exception. */
   private final String exception;
 
+  /** The error message that explains the reason for the exception. */
   private final String message;
 
   public URISyntaxError(URISyntaxException exception) {

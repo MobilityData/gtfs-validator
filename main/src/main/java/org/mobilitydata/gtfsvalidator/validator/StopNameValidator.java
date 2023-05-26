@@ -67,24 +67,21 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
   }
 
   /**
-   * {@code stops.stop_name} is required for a {@code GtfsStop} with {@code stops.location_type} of
-   * {@code 0}, {@code 1}, or {@code 2}
+   * `stops.stop_name` is required for `location_type` equal to `0`, `1`, or `2`.
    *
-   * <p>"Please provide a stop name for Stops, Stations, and Entrance/Exits."
-   * (http://gtfs.org/reference/static#stopstxt)
-   *
-   * <p>Severity: {@code SeverityLevel.Error}
+   * <p>`stops.stop_name` is required for locations that are stops (`location_type=0`), stations
+   * (`location_type=1`) or entrances/exits (`location_type=2`).
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopSchema.class))
   static class MissingStopNameNotice extends ValidationNotice {
 
-    // The row of the faulty record.
+    /** The row of the faulty record. */
     private final long csvRowNumber;
 
-    // `stops.location_type` of the faulty record.
+    /** `stops.location_type` of the faulty record. */
     private GtfsLocationType locationType;
 
-    // The `stops.stop_id` of the faulty record.
+    /** The `stops.stop_id` of the faulty record. */
     private final String stopId;
 
     MissingStopNameNotice(long csvRowNumber, String stopId, GtfsLocationType locationType) {
@@ -96,23 +93,24 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
   }
 
   /**
-   * A {@code GtfsStop} has identical value for {@code stops.route_desc} and {@code stops.stop_name}
+   * Same name and description for stop.
    *
-   * <p>"Do not simply duplicate the name of the location."
-   * (http://gtfs.org/reference/static#stopstxt)
+   * <p>The GTFS spec defines `stops.txt`
+   * [stop_description](https://gtfs.org/reference/static/#stopstxt) as:
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>Description of the location that provides useful, quality information. Do not simply
+   * duplicate the name of the location.
    */
-  @GtfsValidationNotice(severity = WARNING)
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsStopSchema.class))
   static class SameNameAndDescriptionForStopNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The id of the faulty record.
+    /** The id of the faulty record. */
     private final String stopId;
 
-    // The faulty record's `stop_desc`.
+    /** The faulty record's `stop_desc`. */
     private final String stopDesc;
 
     SameNameAndDescriptionForStopNotice(int csvRowNumber, String stopId, String stopDesc) {

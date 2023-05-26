@@ -24,12 +24,14 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
 /**
  * A required file is missing.
  *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>If this notice is triggered for every core file, it might be a problem with the input. To
+ * create a zip file from the GTFS `.txt` files: select all the `.txt` files, right-click, and
+ * compress. Do not compress the folder containing the files.
  */
 @GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(TERM_DEFINITIONS))
 public class MissingRequiredFileNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
   public MissingRequiredFileNotice(String filename) {

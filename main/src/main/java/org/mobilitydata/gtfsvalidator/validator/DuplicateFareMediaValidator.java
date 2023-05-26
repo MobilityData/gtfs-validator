@@ -40,23 +40,23 @@ public class DuplicateFareMediaValidator extends FileValidator {
   }
 
   /**
-   * Describes two fare medias that have the same name and type.
+   * Two distinct fare media have the same fare media name and type.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>Fare media should have a unique combination of fare media name and type.
    */
   @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsFareMediaSchema.class))
   static class DuplicateFareMediaNotice extends ValidationNotice {
 
-    // The row number of the first fare media.
+    /** The row number of the first fare media. */
     private final int csvRowNumber1;
 
-    // The id of the first fare media.
+    /** The id of the first fare media. */
     private final String fareMediaId1;
 
-    // The row number of the second fare media.
+    /** The row number of the second fare media. */
     private final int csvRowNumber2;
 
-    // The id of the second fare media.
+    /** The id of the second fare media. */
     private final String fareMediaId2;
 
     DuplicateFareMediaNotice(GtfsFareMedia lhs, GtfsFareMedia rhs) {

@@ -2,7 +2,7 @@
   "code": "duplicate_key",
   "severityLevel": "ERROR",
   "type": "object",
-  "description": "The values of the given key and rows are duplicates.",
+  "description": "Duplicated entity.\n\nThe values of the given key and rows are duplicates.",
   "references": {
     "fileReferences": [],
     "bestPracticesFileReferences": [],
@@ -19,30 +19,37 @@
   "properties": {
     "fieldName1": {
       "fieldName": "fieldName1",
+      "description": "Composite key\u0027s first field name.",
       "type": "string"
     },
     "fieldName2": {
       "fieldName": "fieldName2",
+      "description": "Composite key\u0027s second field name.",
       "type": "string"
     },
     "fieldValue1": {
       "fieldName": "fieldValue1",
+      "description": "Composite key\u0027s first value.",
       "type": "object"
     },
     "fieldValue2": {
       "fieldName": "fieldValue2",
+      "description": "Composite key\u0027s second value.",
       "type": "object"
     },
     "filename": {
       "fieldName": "filename",
+      "description": "The name of the faulty file",
       "type": "string"
     },
     "newCsvRowNumber": {
       "fieldName": "newCsvRowNumber",
+      "description": "The row of the other occurrence.",
       "type": "integer"
     },
     "oldCsvRowNumber": {
       "fieldName": "oldCsvRowNumber",
+      "description": "The row of the first occurrence.",
       "type": "integer"
     }
   }

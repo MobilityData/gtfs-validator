@@ -27,10 +27,8 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
  * <p>This notice is emitted for values protected with double quotes since whitespaces for
  * non-protected values are trimmed automatically by CSV parser.
  *
- * <p>This is a warning in the upstream validator.
- *
- * <p>GTFS Validator strips whitespaces from protected values. We do not see any use case when such
- * a whitespace may be needed. On the other hand, some real-world feeds use trailing whitespaces for
+ * <p>The validator strips whitespaces from protected values. We do not see any use case when such a
+ * whitespace may be needed. On the other hand, some real-world feeds use trailing whitespaces for
  * some values and omit them for the others. This is causing the largest problem when a primary key
  * and a foreign key differ just by a whitespace: it is clear that they are intended to be the same,
  * that is why we always strip whitespaces.
@@ -38,16 +36,16 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
 @GtfsValidationNotice(severity = WARNING, sections = @SectionRefs(FILE_REQUIREMENTS))
 public class LeadingOrTrailingWhitespacesNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The row of the faulty record.
+  /** The row of the faulty record. */
   private final int csvRowNumber;
 
-  // Faulty record's field name.
+  /** Faulty record's field name. */
   private final String fieldName;
 
-  // Faulty value.
+  /** Faulty value. */
   private final String fieldValue;
 
   public LeadingOrTrailingWhitespacesNotice(

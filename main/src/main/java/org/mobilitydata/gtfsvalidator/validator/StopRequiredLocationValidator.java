@@ -37,23 +37,21 @@ public class StopRequiredLocationValidator extends SingleEntityValidator<GtfsSto
   }
 
   /**
-   * A {@code GtfsStop} is missing {@code stops.stop_lat} and/or {@code stops.stop_long}
+   * `stop_lat` and/or `stop_lon` is missing for stop with `location_type` equal to`0`, `1`, or `2`
    *
-   * <p>"Required for locations which are stops (location_type=0), stations (location_type=1) or
-   * entrances/exits (location_type=2)." (http://gtfs.org/reference/static#stopstxt)
-   *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>`stop_lat` and/or `stop_lon` are required for locations that are stops (`location_type=0`),
+   * stations (`location_type=1`) or entrances/exits (`location_type=2`).
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopSchema.class))
   static class StopWithoutLocationNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The faulty record's `stops.location_type`.
+    /** The faulty record's `stops.location_type`. */
     private final GtfsLocationType locationType;
 
-    // The faulty record's id.
+    /** The faulty record's id. */
     private final String stopId;
 
     StopWithoutLocationNotice(int csvRowNumber, String stopId, GtfsLocationType type) {

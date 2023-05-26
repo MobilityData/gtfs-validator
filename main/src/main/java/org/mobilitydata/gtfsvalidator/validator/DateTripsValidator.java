@@ -99,20 +99,21 @@ public class DateTripsValidator extends FileValidator {
   }
 
   /**
-   * Trip data must be valid for the next 7 days.
+   * Trips data should be valid for at least the next seven days.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING
+   * <p>This notice is triggered if the date range where a significant number of trips are running
+   * ends in less than 7 days.
    */
   @GtfsValidationNotice(severity = WARNING)
   static class TripCoverageNotActiveForNext7DaysNotice extends ValidationNotice {
 
-    // Current date (YYYYMMDD format)
+    /** Current date (YYYYMMDD format). */
     private final GtfsDate currentDate;
 
-    // The start date of the majority service window.
+    /** The start date of the majority service window. */
     private final GtfsDate serviceWindowStartDate;
 
-    // The end date of the majority service window.
+    /** The end date of the majority service window. */
     private final GtfsDate serviceWindowEndDate;
 
     TripCoverageNotActiveForNext7DaysNotice(

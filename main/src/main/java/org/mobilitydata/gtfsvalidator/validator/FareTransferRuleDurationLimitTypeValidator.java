@@ -30,13 +30,11 @@ public class FareTransferRuleDurationLimitTypeValidator
   /**
    * A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit` field but no
    * `duration_limit_type` specified.
-   *
-   * <p>Severity: {@code SeverityLevel.ERROR}
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsFareTransferRuleSchema.class))
   static class FareTransferRuleDurationLimitWithoutTypeNotice extends ValidationNotice {
 
-    // The row of the faulty record.
+    /** The row of the faulty record. */
     private final int csvRowNumber;
 
     FareTransferRuleDurationLimitWithoutTypeNotice(int csvRowNumber) {
@@ -48,14 +46,12 @@ public class FareTransferRuleDurationLimitTypeValidator
   /**
    * A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit_type` field but no
    * `duration_limit` specified.
-   *
-   * <p>Severity: {@code SeverityLevel.ERROR}
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsFareTransferRuleSchema.class))
   static class FareTransferRuleDurationLimitTypeWithoutDurationLimitNotice
       extends ValidationNotice {
 
-    // The row of the faulty record.
+    /** The row of the faulty record. */
     private final int csvRowNumber;
 
     FareTransferRuleDurationLimitTypeWithoutDurationLimitNotice(int csvRowNumber) {

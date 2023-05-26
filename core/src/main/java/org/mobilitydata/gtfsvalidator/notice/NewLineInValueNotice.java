@@ -22,34 +22,34 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
 
 /**
- * A value in CSV file has a new line or carriage return.
+ * New line or carriage return in a value in CSV file.
  *
  * <p>This error is usually found when the CSV file does not close double quotes properly, so the
  * next line is considered as a continuation of the previous line.
  *
- * <p>Example. The following file was intended to have fields "f11", "f12", "f21", "f22", but it
+ * <p>Example: the following file was intended to have fields "f11", "f12", "f21", "f22", but it
  * actually parses as two fields: "f11", "f12\nf21,\"f22\"".
  *
  * <pre>
+ * ```
  * f11,"f12
  * f21,"f22"
+ * ```
  * </pre>
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
  */
 @GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILE_REQUIREMENTS))
 public class NewLineInValueNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The row of the faulty record.
+  /** The row of the faulty record. */
   private final int csvRowNumber;
 
-  // The name of the faulty field.
+  /** The name of the faulty field. */
   private final String fieldName;
 
-  // Faulty value.
+  /** Faulty value. */
   private final String fieldValue;
 
   public NewLineInValueNotice(

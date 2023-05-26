@@ -64,7 +64,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`missing_required_column`](#missing_required_column)                                                                             | A required column is missing in the input file.                                                                                                        |
 | [`missing_required_field`](#missing_required_field)                                                                               | A required field is missing.                                                                                                                           |
 | [`missing_required_file`](#missing_required_file)                                                                                 | A required file is missing.                                                                                                                            |
-| [`missing_stop_name`](#missing_stop_name)                                                                                         | `stops.stop_name` is required for `location_type` equal to `0`, `1`, or `2`.                                                                          |
+| [`missing_stop_name`](#missing_stop_name)                                                                                         | `stops.stop_name` is required for `location_type` equal to `0`, `1`, or `2`.                                                                           |
 | [`missing_trip_edge`](#missing_trip_edge)                                                                                         | Missing trip edge `arrival_time` or `departure_time`.                                                                                                  |
 | [`new_line_in_value`](#new_line_in_value)                                                                                         | New line or carriage return in a value in CSV file.                                                                                                    |
 | [`number_out_of_range`](#number_out_of_range)                                                                                     | Out of range value.                                                                                                                                    |
@@ -81,7 +81,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`stop_time_timepoint_without_times`](#stop_time_timepoint_without_times)                                                         | `arrival_time` or `departure_time` not specified for timepoint.                                                                                        |
 | [`stop_time_with_arrival_before_previous_departure_time`](#stop_time_with_arrival_before_previous_departure_time)                 | Backwards time travel between stops in `stop_times.txt`                                                                                                |
 | [`stop_time_with_only_arrival_or_departure_time`](#stop_time_with_only_arrival_or_departure_time)                                 | Missing `stop_times.arrival_time` or `stop_times.departure_time`.                                                                                      |
-| [`stop_without_location`](#stop_without_location) | `stop_lat` and/or `stop_lon` is missing for stop with `location_type` equal to`0`, `1`, or `2`
+| [`stop_without_location`](#stop_without_location)                                                                                 | `stop_lat` and/or `stop_lon` is missing for stop with `location_type` equal to`0`, `1`, or `2`                                                         |
 | [`stop_without_zone_id`](#stop_without_zone_id)                                                                                   | Stop without value for `stops.zone_id`.                                                                                                                |
 | [`too_many_rows`](#too_many_rows)                                                                                                 | A CSV file has too many rows.                                                                                                                          |
 | [`transfer_with_invalid_stop_location_type`](#transfer_with_invalid_stop_location_type)                                           | A stop id field from GTFS file `transfers.txt` references a stop that has a `location_type` other than 0 or 1 (aka Stop/Platform or Station).          |
@@ -101,7 +101,7 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`duplicate_route_name`](#duplicate_route_name)                                               | Two distinct routes have either the same `route_short_name`, the same `route_long_name`, or the same combination of `route_short_name` and `route_long_name`. |
 | [`empty_row`](#empty_row)                                                                     | A row in the input file has only spaces.                                                                                                                      |
 | [`equal_shape_distance_same_coordinates`](#equal_shape_distance_same_coordinates)             | Two consecutive points have equal `shape_dist_traveled` and the same lat/lon coordinates in `shapes.txt`.                                                     |
-| [`expired_calendar`](#expired_calendar)                                         | Dataset should not contain date ranges for services that have already expired.
+| [`expired_calendar`](#expired_calendar)                                                       | Dataset should not contain date ranges for services that have already expired.                                                                                |
 | [`fast_travel_between_consecutive_stops`](#fast_travel_between_consecutive_stops)             | A transit vehicle moves too fast between two consecutive stops.                                                                                               |
 | [`fast_travel_between_far_stops`](#fast_travel_between_far_stops)                             | A transit vehicle moves too fast between two far stops.                                                                                                       |
 | [`feed_expiration_date7_days`](#feed_expiration_date7_days)                                   | Dataset should be valid for at least the next 7 days.                                                                                                         |
@@ -114,12 +114,11 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`missing_recommended_field`](#missing_recommended_field)                                     | A recommended field is missing.                                                                                                                               |
 | [`missing_timepoint_column`](#missing_timepoint_column)                                       | `timepoint` column is missing for a dataset.                                                                                                                  |
 | [`missing_timepoint_value`](#missing_timepoint_value)                                         | `stop_times.timepoint` value is missing for a record.                                                                                                         |
-| [`mixed_case_recommended_field`](#mixed_case_recommended_field)                                                       | This field has customer-facing text and should use Mixed Case (should contain upper and lower case letters).                                                                                                         |
+| [`mixed_case_recommended_field`](#mixed_case_recommended_field)                               | This field has customer-facing text and should use Mixed Case (should contain upper and lower case letters).                                                  |
 | [`more_than_one_entity`](#more_than_one_entity)                                               | More than one row in CSV.                                                                                                                                     |
 | [`non_ascii_or_non_printable_char`](#non_ascii_or_non_printable_char)                         | Non ascii or non printable char in  `id`.                                                                                                                     |
 | [`pathway_dangling_generic_node`](#pathway_dangling_generic_node)                             | A generic node has only one incident location in a pathway graph.                                                                                             |
 | [`pathway_loop`](#pathway_loop)                                                               | A pathway starts and ends at the same location.                                                                                                               |
-| [`platform_without_parent_station`](#platform_without_parent_station)                         | A platform has no `parent_station` field set.                                                                                                                 |
 | [`route_color_contrast`](#route_color_contrast)                                               | Insufficient route color contrast.                                                                                                                            |
 | [`route_long_name_contains_short_name`](#route_long_name_contains_short_name)                 | Long name should not contain short name for a single route.                                                                                                   |
 | [`route_short_name_too_long`](#route_short_name_too_long)                                     | Short name of a route is too long (more than 12 characters).                                                                                                  |
@@ -145,10 +144,12 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 
 ## Table of INFOS
 
-| Notice code                                       | Description               |
-|---------------------------------------------------|---------------------------|
-| [`unknown_column`](#unknown_column) | A column name is unknown. |
-| [`unknown_file`](#unknown_file)     | A file is unknown.        |
+| Notice code                                                           | Description                                   |
+|-----------------------------------------------------------------------|-----------------------------------------------|
+| [`platform_without_parent_station`](#platform_without_parent_station) | A platform has no `parent_station` field set. |
+| [`unknown_column`](#unknown_column)                                   | A column name is unknown.                     |
+| [`unknown_file`](#unknown_file)                                       | A file is unknown.                            |
+
 
 <a name="SYSTEM_ERRORS"/>
 
@@ -2121,6 +2122,7 @@ The given field has no value in some input row, even though values are recommend
 * [feed_info.txt best practices](https://gtfs.org/schedule/best-practices/#feed_infotxt)
 * [agency.txt best practices](https://gtfs.org/schedule/best-practices/#agencytxt)
 * [fare_attributes.txt best practices](https://gtfs.org/schedule/best-practices/#fare_attributestxt)
+* [routes.txt best practices](https://gtfs.org/schedule/best-practices/#routestxt)
 <details>
 
 #### Notice fields description
@@ -2299,29 +2301,6 @@ A pathway should not have same values for `from_stop_id` and `to_stop_id`.
 
 #### Affected files
 * [`pathways.txt`](http://gtfs.org/reference/static#pathwaystxt)
-</details>
-
-<a name="PlatformWithoutParentStationNotice"/>
-
-### platform_without_parent_station
-
-A platform has no `parent_station` field set.
-
-#### References
-* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
-<details>
-
-#### Notice fields description
-| Field name   	| Description                             	| Type    	|
-|--------------	|-----------------------------------------	|---------	|
-| `csvRowNumber`| Row number of the faulty record.        	| Long    	|
-| `stopId`     	| The id of the faulty record.             	| String  	|
-| `stopName`   	| The stop name of the faulty record.     	| String  	|
-| `locationType`| The location type of the faulty record. 	| Integer 	|
-
-#### Affected files
-* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
-
 </details>
 
 <a name="RouteColorContrastNotice"/>
@@ -2838,6 +2817,29 @@ Trips should be referred to at least once in `stop_times.txt`.
 </details>
 
 # More details - INFOS
+
+<a name="PlatformWithoutParentStationNotice"/>
+
+### platform_without_parent_station
+
+A platform has no `parent_station` field set.
+
+#### References
+* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+<details>
+
+#### Notice fields description
+| Field name   	| Description                             	| Type    	|
+|--------------	|-----------------------------------------	|---------	|
+| `csvRowNumber`| Row number of the faulty record.        	| Long    	|
+| `stopId`     	| The id of the faulty record.             	| String  	|
+| `stopName`   	| The stop name of the faulty record.     	| String  	|
+| `locationType`| The location type of the faulty record. 	| Integer 	|
+
+#### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
+
+</details>
 
 <a name="UnknownColumnNotice"/>
 

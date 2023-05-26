@@ -73,21 +73,21 @@ public class MissingLevelIdValidator extends FileValidator {
   }
 
   /**
-   * A row from stops.txt is linked to a row from pathways.txt with {@code pathways.pathway_mode=5}
-   * but has no value for {@code stops.level_id}
+   * `stops.level_id` is conditionally required.
    *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>GTFS file `levels.txt` is required for elevator (`pathway_mode=5`). A row from `stops.txt`
+   * linked to an elevator pathway has no value for `stops.level_id`.
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsLevelSchema.class))
   static class MissingLevelIdNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The id of the faulty stop from `stops.txt`.
+    /** The id of the faulty stop from `stops.txt`. */
     private final String stopId;
 
-    // The name of the faulty stop from `stops.txt`.
+    /** The name of the faulty stop from `stops.txt`. */
     private final String stopName;
 
     MissingLevelIdNotice(GtfsStop stop) {

@@ -71,10 +71,23 @@ public class DuplicateRouteNameValidator extends FileValidator {
   }
 
   /**
-   * Describes two routes that have the same long and short names, route type and belong to the same
-   * agency.
+   * Two distinct routes have either the same `route_short_name`, the same `route_long_name`, or the
+   * same combination of `route_short_name` and `route_long_name`.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>All routes of the same `route_type` with the same `agency_id` should have unique
+   * combinations of `route_short_name` and `route_long_name`.
+   *
+   * <p>Note that there may be valid cases where routes have the same short and long name, e.g., if
+   * they serve different areas. However, different directions must be modeled as the same route.
+   *
+   * <p>Example of bad data:
+   *
+   * <pre>
+   * | `route_id` 	| `route_short_name` 	| `route_long_name` 	|
+   * |------------	|--------------------	|-------------------	|
+   * | route1     	| U1                 	| Southern          	|
+   * | route2     	| U1                 	| Southern          	|
+   * </pre>
    */
   @GtfsValidationNotice(
       severity = WARNING,
@@ -82,28 +95,28 @@ public class DuplicateRouteNameValidator extends FileValidator {
       bestPractices = @FileRefs(GtfsRouteSchema.class))
   static class DuplicateRouteNameNotice extends ValidationNotice {
 
-    // The row number of the first occurrence.
+    /** The row number of the first occurrence. */
     private final int csvRowNumber1;
 
-    // The id of the the first occurrence.
+    /** The id of the the first occurrence. */
     private final String routeId1;
 
-    // The row number of the other occurrence.
+    /** The row number of the other occurrence. */
     private final int csvRowNumber2;
 
-    // The id of the the other occurrence.
+    /** The id of the the other occurrence. */
     private final String routeId2;
 
-    // Common `routes.route_short_name`.
+    /** Common `routes.route_short_name`. */
     private final String routeShortName;
 
-    // Common `routes.route_long_name`.
+    /** Common `routes.route_long_name`. */
     private final String routeLongName;
 
-    // Common `routes.route_type`.
+    /** Common `routes.route_type`. */
     private final int routeTypeValue;
 
-    // Common `routes.agency_id`.
+    /** Common `routes.agency_id`. */
     private final String agencyId;
 
     DuplicateRouteNameNotice(GtfsRoute route1, GtfsRoute route2) {

@@ -19,15 +19,11 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 
-/**
- * A recommended file is missing.
- *
- * <p>Severity: {@code SeverityLevel.WARNING}
- */
+/** A recommended file is missing. */
 @GtfsValidationNotice(severity = WARNING)
 public class MissingRecommendedFileNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
   public MissingRecommendedFileNotice(String filename) {

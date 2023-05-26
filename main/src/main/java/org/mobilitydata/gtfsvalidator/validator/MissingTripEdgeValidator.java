@@ -93,28 +93,26 @@ public class MissingTripEdgeValidator extends FileValidator {
   }
 
   /**
-   * "First and last stop of a trip must define both `arrival_time` and `departure_time` fields."
+   * Missing trip edge `arrival_time` or `departure_time`.
    *
-   * <p>"If there are not separate times for arrival and departure at a stop, enter the same value
-   * for arrival_time and departure_time."
-   *
-   * <p>(http://gtfs.org/reference/static/#stop_timestxt)
-   *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>First and last stop of a trip must define both `arrival_time` and `departure_time` fields.
+   * Per [stop_times.txt](http://gtfs.org/reference/static/#stop_timestxt), "If there are not
+   * separate times for arrival and departure at a stop, enter the same value for arrival_time and
+   * departure_time."
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopTimeSchema.class))
   static class MissingTripEdgeNotice extends ValidationNotice {
 
-    // The row of the faulty record.
+    /** The row of the faulty record. */
     private final int csvRowNumber;
 
-    // `stops.stop_sequence` of the faulty record.
+    /** `stops.stop_sequence` of the faulty record. */
     private final int stopSequence;
 
-    // The `trips.trip_id` of the faulty record.
+    /** The `trips.trip_id` of the faulty record. */
     private final String tripId;
 
-    // Name of the missing field.
+    /** Name of the missing field. */
     private final String specifiedField;
 
     MissingTripEdgeNotice(

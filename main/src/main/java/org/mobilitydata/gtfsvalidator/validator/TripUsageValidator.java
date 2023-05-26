@@ -64,10 +64,9 @@ public class TripUsageValidator extends FileValidator {
   }
 
   /**
-   * A {@code GtfsTrip} should be referred to at least once in {@code GtfsStopTimeTableContainer}
-   * station).
+   * Trip is not be used in `stop_times.txt`
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>Trips should be referred to at least once in `stop_times.txt`.
    */
   @GtfsValidationNotice(
       severity = WARNING,
@@ -79,10 +78,10 @@ public class TripUsageValidator extends FileValidator {
       })
   static class UnusedTripNotice extends ValidationNotice {
 
-    // The faulty record's id.
+    /** The faulty record's id. */
     private final String tripId;
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
     UnusedTripNotice(String tripId, int csvRowNumber) {

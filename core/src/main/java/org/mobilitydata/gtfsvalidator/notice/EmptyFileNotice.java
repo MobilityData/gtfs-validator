@@ -24,12 +24,14 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
 /**
  * A CSV file is empty.
  *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>Empty csv file found in the archive: file does not have any headers, or is a required file and
+ * does not have any data. The GTFS specification requires the first line of each file to contain
+ * field names and required files must have data.
  */
 @GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILE_REQUIREMENTS))
 public class EmptyFileNotice extends ValidationNotice {
 
-  // The name of the faulty file
+  /** The name of the faulty file. */
   private final String filename;
 
   public EmptyFileNotice(String filename) {

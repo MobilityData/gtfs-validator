@@ -15,6 +15,7 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.DATASET_FILES;
 import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.FILED_TYPES;
 import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.FILE_REQUIREMENTS;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
@@ -24,13 +25,13 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /**
- * The values in the given column of the input rows are out of range.
+ * Out of range value.
  *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>The values in the given column of the input rows are out of range.
  */
 @GtfsValidationNotice(
     severity = ERROR,
-    sections = @SectionRefs({FILE_REQUIREMENTS, FILED_TYPES}),
+    sections = @SectionRefs({FILE_REQUIREMENTS, FILED_TYPES, DATASET_FILES}),
     urls = {
       @UrlRef(
           label = "Original Python validator implementation",
@@ -38,19 +39,19 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
     })
 public class NumberOutOfRangeNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The row of the faulty record.
+  /** The row of the faulty record. */
   private final int csvRowNumber;
 
-  // The name of the faulty field.
+  /** The name of the faulty field. */
   private final String fieldName;
 
-  // The type of the faulty field.
+  /** The type of the faulty field. */
   private final String fieldType;
 
-  // Faulty value.
+  /** Faulty value. */
   private final Object fieldValue;
 
   public NumberOutOfRangeNotice(

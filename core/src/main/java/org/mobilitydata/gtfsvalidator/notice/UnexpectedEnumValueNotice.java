@@ -21,24 +21,20 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
 
-/**
- * An enum has an unexpected value.
- *
- * <p>Severity: {@code SeverityLevel.WARNING}
- */
+/** An enum has an unexpected value. */
 @GtfsValidationNotice(severity = WARNING, sections = @SectionRefs(FIELD_DEFINITIONS))
 public class UnexpectedEnumValueNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The row number of the faulty record.
+  /** The row number of the faulty record. */
   private final int csvRowNumber;
 
-  // The name of the field where the error occurred.
+  /** The name of the field where the error occurred. */
   private final String fieldName;
 
-  // Faulty value.
+  /** Faulty value. */
   private final int fieldValue;
 
   public UnexpectedEnumValueNotice(

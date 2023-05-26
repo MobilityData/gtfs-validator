@@ -1,0 +1,38 @@
+plugins {
+  id 'base'
+}
+
+def WEB_DEPLOY_CLIENT_BUCKET = System.getenv("WEB_DEPLOY_CLIENT_BUCKET")
+
+task webClientNodeModules (type: Exec) {
+  outputs.dir(file('./node_modules'))
+  commandLine 'npm', 'install'
+}
+
+task webClientSetup {
+  dependsOn webClientNodeModules
+  dependsOn ':copyRulesToWebClient'
+}
+
+task webTest (type: Exec) {
+  dependsOn webClientSetup
+  // lint is currently failing
+  //commandLine 'npm', 'run', 'lint'
+  commandLine 'npm', 'run', 'check'
+}
+
+task webBuild (type: Exec) {
+  outputs.dir(file('./build'))
+  dependsOn   webClientSetup
+  commandLine 'npm', 'run', 'build'
+}
+
+task webDeploy (type: Exec){
+  if (WEB_DEPLOY_CLIENT_BUCKET != null) {
+    dependsOn   webBuild
+    workingDir  webBuild.outputs.files[0]
+    commandLine 'gcloud', 'storage', 'cp', '--recursive', '.', "gs://${WEB_DEPLOY_CLIENT_BUCKET}/"
+  } else {
+    commandLine 'echo', 'SKIP: webDeploy: missing required environment variable: WEB_DEPLOY_CLIENT_BUCKET'
+  }
+}

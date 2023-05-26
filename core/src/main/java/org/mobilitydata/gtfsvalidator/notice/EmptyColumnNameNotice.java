@@ -22,17 +22,17 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
 
 /**
- * A column name is empty. Such columns are skipped by the validator.
+ * A column name is empty.
  *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>Such columns are skipped by the validator.
  */
 @GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILE_REQUIREMENTS))
 public class EmptyColumnNameNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The index of the empty column.
+  /** The index of the empty column. */
   private final int index;
 
   public EmptyColumnNameNotice(String filename, int index) {

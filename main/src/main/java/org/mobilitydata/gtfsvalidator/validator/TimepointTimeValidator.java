@@ -86,23 +86,26 @@ public class TimepointTimeValidator extends FileValidator {
   }
 
   /**
-   * Timepoint without time
+   * `arrival_time` or `departure_time` not specified for timepoint.
    *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>Any records with `stop_times.timepoint` set to 1 must define a value for
+   * `stop_times.arrival_time` and `stop_times.departure_time` fields.
    */
-  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopTimeSchema.class))
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files = @FileRefs({GtfsStopTimeSchema.class, GtfsStopTimeSchema.class}))
   static class StopTimeTimepointWithoutTimesNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The faulty record's id.
+    /** The faulty record's id. */
     private final String tripId;
 
-    // The faulty record's `stops.stop_sequence`.
+    /** The faulty record's `stops.stop_sequence`. */
     private final long stopSequence;
 
-    // Either `departure_time` or `arrival_time`.
+    /** Either `departure_time` or `arrival_time`. */
     private final String specifiedField;
 
     StopTimeTimepointWithoutTimesNotice(GtfsStopTime stopTime, String specifiedField) {
@@ -115,20 +118,21 @@ public class TimepointTimeValidator extends FileValidator {
   }
 
   /**
-   * {@code stop_times.timepoint} value is missing
+   * `stop_times.timepoint` value is missing for a record.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>Even though the column `timepoint` is optional in `stop_times.txt` according to the
+   * specification, `stop_times.timepoint` should not be empty when provided.
    */
   @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsStopTimeSchema.class))
   static class MissingTimepointValueNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The faulty record's `stop_times.trip_id`.
+    /** The faulty record's `stop_times.trip_id`. */
     private final String tripId;
 
-    // The faulty record's `stop_times.stop_sequence`.
+    /** The faulty record's `stop_times.stop_sequence`. */
     private final long stopSequence;
 
     MissingTimepointValueNotice(GtfsStopTime stopTime) {
@@ -139,15 +143,14 @@ public class TimepointTimeValidator extends FileValidator {
     }
   }
 
-  /**
-   * Column {@code stop_times.timepoint} is missing.
-   *
-   * <p>Severity: {@code SeverityLevel.WARNING}
-   */
-  @GtfsValidationNotice(severity = WARNING, bestPractices = @FileRefs(GtfsStopTimeSchema.class))
+  /** `timepoint` column is missing for a dataset. */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs(GtfsStopTimeSchema.class),
+      bestPractices = @FileRefs(GtfsStopTimeSchema.class))
   static class MissingTimepointColumnNotice extends ValidationNotice {
 
-    // The name of the affected file.
+    /** The name of the affected file. */
     private final String filename;
 
     MissingTimepointColumnNotice() {

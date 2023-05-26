@@ -129,33 +129,31 @@ public class TransfersInSeatTransferTypeValidator extends FileValidator {
   }
 
   /**
-   * A `from_trip_id` or `to_trip_id` field from GTFS file `transfers.txt` with an in-seat transfer
-   * type references a stop that is not in the expected position in the trip's stop-times.
+   * A trip id field from GTFS file `transfers.txt` with an in-seat transfer type references a stop
+   * that is not in the expected position in the trip's stop-times.
    *
    * <p>For in-seat transfers, we expect the stop to be the last stop-time in the trip sequence for
    * `from_stop_id` and the first stop-time for `to_stop_id`. If you are intentionally using this
    * feature to model mid-trip transfers, you can ignore this warning, but be aware that this
    * functionality is still considered to be partially experimental in some interpretations of the
    * spec.
-   *
-   * <p>Severity: {@code SeverityLevel.WARNING}
    */
   @GtfsValidationNotice(severity = WARNING)
   public static class TransferWithSuspiciousMidTripInSeatNotice extends ValidationNotice {
 
-    // The row number from `transfers.txt` for the faulty entry.
+    /** The row number from `transfers.txt` for the faulty entry. */
     private final int csvRowNumber;
 
-    // The name of the trip id field (e.g. `from_trip_id`) referencing a trip.
+    /** The name of the trip id field (e.g. `from_trip_id`) referencing a trip. */
     private final String tripIdFieldName;
 
-    // The referenced trip id.
+    /** The referenced trip id. */
     private final String tripId;
 
-    // The name of the stop id field (e.g. `from_stop_id`) referencing the stop.
+    /** The name of the stop id field (e.g. `from_stop_id`) referencing the stop. */
     private final String stopIdFieldName;
 
-    // The referenced stop id.
+    /** The referenced stop id. */
     private final String stopId;
 
     public TransferWithSuspiciousMidTripInSeatNotice(

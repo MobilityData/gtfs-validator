@@ -28,23 +28,21 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
  * names never contain the space character but may contain an underscore. Refer to <a
  * href="http://en.wikipedia.org/wiki/List_of_tz_zones">Wikipedia</a> for a list of valid values.
  *
- * <p>Example: {@code Asia/Tokyo}, {@code America/Los_Angeles} or {@code Africa/Cairo}.
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>Example: `Asia/Tokyo`, `America/Los_Angeles` or `Africa/Cairo`.
  */
 @GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILED_TYPES))
 public class InvalidTimezoneNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The row of the faulty record.
+  /** The row of the faulty record. */
   private final int csvRowNumber;
 
-  // Faulty record's field name.
+  /** Faulty record's field name. */
   private final String fieldName;
 
-  // Faulty value.
+  /** Faulty value. */
   private final String fieldValue;
 
   public InvalidTimezoneNotice(

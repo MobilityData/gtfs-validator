@@ -21,16 +21,14 @@ import com.google.common.base.Strings;
 import java.io.IOException;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 
-/**
- * This is related to Input and Output operations in the code.
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
- */
+/** Error in IO operation. */
 @GtfsValidationNotice(severity = ERROR)
 public class IOError extends SystemError {
 
+  /** The name of the exception. */
   private final String exception;
 
+  /** The error message that explains the reason for the exception. */
   private final String message;
 
   public IOError(IOException exception) {

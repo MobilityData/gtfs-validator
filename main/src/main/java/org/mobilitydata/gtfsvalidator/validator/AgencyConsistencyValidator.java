@@ -113,10 +113,11 @@ public class AgencyConsistencyValidator extends FileValidator {
   /**
    * Inconsistent language among agencies.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>Agencies from GTFS `agency.txt` have been found to have different languages.
    */
   @GtfsValidationNotice(
       severity = WARNING,
+      files = @FileRefs(GtfsAgencySchema.class),
       urls = {
         @UrlRef(
             label = "Original Python validator implementation",
@@ -124,13 +125,13 @@ public class AgencyConsistencyValidator extends FileValidator {
       })
   static class InconsistentAgencyLangNotice extends ValidationNotice {
 
-    // The row of the faulty record.
+    /** The row of the faulty record. */
     private final int csvRowNumber;
 
-    // Expected language.
+    /** Expected language. */
     private final String expected;
 
-    // Faulty record's language.
+    /** Faulty record's language. */
     private final String actual;
 
     InconsistentAgencyLangNotice(int csvRowNumber, String expected, String actual) {
@@ -142,20 +143,20 @@ public class AgencyConsistencyValidator extends FileValidator {
   }
 
   /**
-   * Inconsistent timezone among agencies.
+   * Inconsistent Timezone among agencies.
    *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>Agencies from GTFS `agency.txt` have been found to have different timezones.
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsAgencySchema.class))
   static class InconsistentAgencyTimezoneNotice extends ValidationNotice {
 
-    // The row of the faulty record.
+    /** The row of the faulty record. */
     private final int csvRowNumber;
 
-    // Expected timezone.
+    /** Expected timezone. */
     private final String expected;
 
-    // Faulty record's timezone.
+    /** Faulty record's timezone. */
     private final String actual;
 
     InconsistentAgencyTimezoneNotice(int csvRowNumber, String expected, String actual) {

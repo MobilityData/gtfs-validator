@@ -61,9 +61,9 @@ public class MissingCalendarAndCalendarDateValidator extends FileValidator {
   }
 
   /**
-   * GTFS files `calendar.txt` and `calendar_dates.txt` cannot be missing from the GTFS archive.
+   * Missing GTFS files `calendar.txt` and `calendar_dates.txt`.
    *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>At least one of the files must be provided.
    */
   @GtfsValidationNotice(
       severity = ERROR,
