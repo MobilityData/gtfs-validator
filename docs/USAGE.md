@@ -71,7 +71,7 @@ Sample usage:
 
 ### Without file validation
 ``` 
-java -jar gtfs-validator-SNAPSHOT.jar --export_notice_schema
+java -jar gtfs-validator-SNAPSHOT.jar --export_notices_schema
 ```
 
 ...which will:
@@ -79,7 +79,7 @@ java -jar gtfs-validator-SNAPSHOT.jar --export_notice_schema
  
 ### With file validation
 ``` 
-java -jar gtfs-validator-SNAPSHOT.jar --export_notice_schema --url https://url/to/dataset.zip --output relative/output/path --country_code <country_code> --threads <number_of_threads_to_use> --storage_directory input.zip 
+java -jar gtfs-validator-SNAPSHOT.jar --export_notices_schema --url https://url/to/dataset.zip --output relative/output/path --country_code <country_code> --threads <number_of_threads_to_use> --storage_directory input.zip 
 ```
 
 ...which will:
