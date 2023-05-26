@@ -1,21 +1,28 @@
 package org.mobilitydata.gtfsvalidator.report.model;
 
 import com.google.gson.JsonObject;
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.ast.Document;
 import java.util.ArrayList;
 import java.util.List;
 import org.mobilitydata.gtfsvalidator.notice.Notice;
+import org.mobilitydata.gtfsvalidator.notice.NoticeDocComments;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.schema.NoticeSchemaGenerator;
 
 /** NoticeView is a wrapper class to display a Notice. */
 public class NoticeView {
   private final Notice notice;
   private final JsonObject json;
   private final List<String> fields;
+  private final NoticeDocComments comments;
 
   public NoticeView(Notice notice) {
     this.notice = notice;
     this.json = notice.getContext().getAsJsonObject();
     this.fields = new ArrayList<>(json.keySet());
+    this.comments = NoticeSchemaGenerator.loadComments(notice.getClass());
   }
 
   /**
@@ -53,6 +60,28 @@ public class NoticeView {
    */
   public SeverityLevel getSeverityLevel() {
     return notice.getSeverityLevel();
+  }
+
+  /**
+   * Returns the description text for the notice.
+   *
+   * @return description text
+   */
+  public String getCommentForField(String field) {
+    return comments.getFieldComment(field);
+  }
+  /**
+   * Returns the description text for the notice.
+   *
+   * @return description text
+   */
+  public String getDescription() {
+    String markdown = this.comments.getDocComment();
+
+    Parser parser = Parser.builder().build();
+    Document document = parser.parse(markdown == null ? "" : markdown);
+    HtmlRenderer renderer = HtmlRenderer.builder().build();
+    return renderer.render(document);
   }
 
   /**
