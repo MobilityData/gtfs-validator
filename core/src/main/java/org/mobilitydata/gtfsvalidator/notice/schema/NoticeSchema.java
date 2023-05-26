@@ -20,7 +20,14 @@ public class NoticeSchema {
   /** This field is kept for compatibility with the original schema serialization code. */
   private final String type = "object";
 
-  /** The textual description associated with this notice. May contain Markdown markup. */
+  /** A short single-line summary describing the notice. May contain Markdown markup. */
+  @Nullable private String shortSummary;
+
+  /**
+   * Additional textual description associated with this notice. It will not contain the
+   * `shortSummary` string, but is typically combined as `shortSummary` + "\n\n" + `description`.
+   * May contain Markdown markup.
+   */
   @Nullable private String description;
 
   @Nullable private ReferencesSchema references;
@@ -42,6 +49,15 @@ public class NoticeSchema {
 
   public SeverityLevel getSeverityLevel() {
     return this.severityLevel;
+  }
+
+  @Nullable
+  public String getShortSummary() {
+    return shortSummary;
+  }
+
+  public void setShortSummary(@Nullable String shortSummary) {
+    this.shortSummary = shortSummary;
   }
 
   public String getDescription() {

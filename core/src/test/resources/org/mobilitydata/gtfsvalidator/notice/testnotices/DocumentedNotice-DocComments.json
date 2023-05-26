@@ -1,5 +1,6 @@
 {
-  "docComment":"This is a notice comment.",
+  "shortSummary": "This is a notice comment.",
+  "additionalDocumentation": "This is additional documentation.",
   "fieldDocComments":{
     "value": "A field comment"
   }
