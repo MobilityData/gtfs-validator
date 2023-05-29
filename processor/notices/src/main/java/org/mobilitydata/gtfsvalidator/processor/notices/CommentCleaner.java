@@ -1,5 +1,6 @@
 package org.mobilitydata.gtfsvalidator.processor.notices;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,9 +20,10 @@ public class CommentCleaner {
    */
   private static final ImmutableSet<String> LINES_TO_DROP = ImmutableSet.of("<pre>", "</pre>");
 
-  public String cleanComment(String docComment) {
+  /** Returns the cleaned comment split into individual lines. */
+  public List<String> cleanComment(String docComment) {
     if (docComment.isEmpty()) {
-      return docComment;
+      return ImmutableList.of();
     }
 
     List<String> lines = Arrays.asList(docComment.split("\n"));
@@ -60,7 +62,7 @@ public class CommentCleaner {
       lines.remove(lines.size() - 1);
     }
 
-    return lines.stream().collect(Collectors.joining("\n"));
+    return lines;
   }
 
   /** Returns the number of leading whitespace characters at the beginning of the line. */
@@ -70,5 +72,28 @@ public class CommentCleaner {
       i++;
     }
     return i;
+  }
+
+  public SplitComment splitLinesIntoSummaryAndAdditionalDocumentation(List<String> lines) {
+    SplitComment comment = new SplitComment();
+    if (lines.isEmpty()) {
+      return comment;
+    }
+    comment.shortSummary = lines.get(0);
+    int fromIndex = 1;
+    while (fromIndex < lines.size() && lines.get(fromIndex).isBlank()) {
+      fromIndex++;
+    }
+    if (fromIndex < lines.size()) {
+      comment.additionalDocumentation =
+          lines.subList(fromIndex, lines.size()).stream().collect(Collectors.joining("\n"));
+    }
+    return comment;
+  }
+
+  public final class SplitComment {
+    String shortSummary;
+
+    String additionalDocumentation;
   }
 }
