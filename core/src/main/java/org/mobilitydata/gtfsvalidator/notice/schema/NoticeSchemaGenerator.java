@@ -82,8 +82,11 @@ public class NoticeSchemaGenerator {
     NoticeSchema schema = new NoticeSchema(Notice.getCode(noticeClass), severity);
 
     NoticeDocComments comments = loadComments(noticeClass);
-    if (comments.getDocComment() != null) {
-      schema.setDescription(comments.getDocComment());
+    if (comments.getShortSummary() != null) {
+      schema.setShortSummary(comments.getShortSummary());
+    }
+    if (comments.getAdditionalDocumentation() != null) {
+      schema.setDescription(comments.getAdditionalDocumentation());
     }
 
     if (noticeAnnotation != null) {

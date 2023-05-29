@@ -65,7 +65,7 @@ public class NoticeDocumentationTest {
             .filter(
                 clazz -> {
                   NoticeDocComments docComments = NoticeSchemaGenerator.loadComments(clazz);
-                  return docComments.getDocComment() == null;
+                  return docComments.getShortSummary() == null;
                 })
             .collect(Collectors.toList());
     assertWithMessage(
@@ -131,7 +131,7 @@ public class NoticeDocumentationTest {
 
   private static Stream<String> checkNoticeForUnsupportedJavadocInComment(Class<?> noticeClass) {
     NoticeDocComments docComments = NoticeSchemaGenerator.loadComments(noticeClass);
-    String docComment = docComments.getDocComment();
+    String docComment = docComments.getCombinedDocumentation();
 
     List<String> errors = new ArrayList<>();
 

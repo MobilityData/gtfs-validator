@@ -76,7 +76,7 @@ public class NoticeView {
    * @return description text
    */
   public String getDescription() {
-    String markdown = this.comments.getDocComment();
+    String markdown = this.comments.getCombinedDocumentation();
 
     Parser parser = Parser.builder().build();
     Document document = parser.parse(markdown == null ? "" : markdown);

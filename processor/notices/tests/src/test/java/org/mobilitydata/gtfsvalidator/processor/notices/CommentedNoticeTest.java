@@ -20,7 +20,9 @@ public class CommentedNoticeTest {
 
     try (Reader reader = new InputStreamReader(is)) {
       NoticeDocComments comments = new Gson().fromJson(reader, NoticeDocComments.class);
-      assertThat(comments.getDocComment()).isEqualTo("This is the notice comment.");
+      assertThat(comments.getShortSummary()).isEqualTo("This is the notice comment.");
+      assertThat(comments.getAdditionalDocumentation()).isNull();
+      assertThat(comments.getCombinedDocumentation()).isEqualTo("This is the notice comment.");
       assertThat(comments.getFieldComment("fieldA")).isEqualTo("This is the fieldA comment.");
       assertThat(comments.getFieldComment("fieldB")).isEqualTo("This is the fieldB comment.");
     }
