@@ -146,7 +146,53 @@
             flex-basis: 100%;
         }
     }
+
+    table.accordion > tbody > tr.notice td,
+    table.accordion > tbody > tr.view th {
+        cursor: auto;
+    }
+
+    table.accordion > tbody > tr.notice td:first-child,
+    table.accordion > tbody > tr.notice th:first-child {
+        position: relative;
+        padding-left: 20px;
+    }
+
+    table.accordion > tbody > tr.notice td:first-child:before,
+    table.accordion > tbody > tr.notice th:first-child:before {
+        position: absolute;
+        top: 50%;
+        left: 5px;
+        width: 9px;
+        height: 16px;
+        margin-top: -8px;
+        color: #000;
+        content: "+";
+    }
+
+    table.accordion > tbody > tr.notice.open td:first-child:before,
+    table.accordion > tbody > tr.notice.open th:first-child:before {
+        content: "\2013";
+    }
+
+    table.accordion > tbody > tr.notice:hover {
+        background: #ddd;
+    }
+
+    table.accordion > tbody > tr.notice.open {
+        background: #ddd;
+        color: black;
+    }
+
+    table.accordion > tbody > tr.description {
+        display: none;
+    }
+
+    table.accordion > tbody > tr.description.open {
+        display: table-row;
+    }
 </style>
+
 </head>
 <body>
     <h1>GTFS Schedule Validation Report</h1>
