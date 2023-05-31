@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
+import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedColumnNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -39,7 +40,6 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTimepoint;
  *   <li>{@link StopTimeTimepointWithoutTimesNotice} - a timepoint does not specifies arrival_time
  *       or departure_time
  *   <li>{@link MissingTimepointValueNotice} - value for {@code stop_times.timepoint} is missing
- *   <li>{@link MissingTimepointColumnNotice} - field {@code stop_times.timepoint} is missing
  * </ul>
  */
 @GtfsValidator
@@ -59,7 +59,9 @@ public class TimepointTimeValidator extends FileValidator {
       // - this should be flagged;
       // - but also no notice regarding the absence of arrival_time or departure_time should be
       // generated
-      noticeContainer.addValidationNotice(new MissingTimepointColumnNotice());
+      noticeContainer.addValidationNotice(
+          new MissingRecommendedColumnNotice(
+              GtfsStopTime.FILENAME, GtfsStopTime.TIMEPOINT_FIELD_NAME));
       return;
     }
     for (GtfsStopTime stopTime : stopTimes.getEntities()) {
@@ -140,22 +142,6 @@ public class TimepointTimeValidator extends FileValidator {
       this.csvRowNumber = stopTime.csvRowNumber();
       this.tripId = stopTime.tripId();
       this.stopSequence = stopTime.stopSequence();
-    }
-  }
-
-  /** `timepoint` column is missing for a dataset. */
-  @GtfsValidationNotice(
-      severity = WARNING,
-      files = @FileRefs(GtfsStopTimeSchema.class),
-      bestPractices = @FileRefs(GtfsStopTimeSchema.class))
-  static class MissingTimepointColumnNotice extends ValidationNotice {
-
-    /** The name of the affected file. */
-    private final String filename;
-
-    MissingTimepointColumnNotice() {
-      super(SeverityLevel.WARNING);
-      this.filename = GtfsStopTime.FILENAME;
     }
   }
 }

@@ -127,6 +127,18 @@ public abstract class Notice {
     return getSeverityLevel().ordinal() >= SeverityLevel.ERROR.ordinal();
   }
 
+  /**
+   * Tells if this notice is a {@code WARNING}.
+   *
+   * <p>This method is preferred to checking {@code severityLevel} directly since more levels may be
+   * added in the future.
+   *
+   * @return true if this notice is an warning, false otherwise
+   */
+  public boolean isWarning() {
+    return getSeverityLevel().ordinal() == SeverityLevel.WARNING.ordinal();
+  }
+
   /** JSON exclusion strategy for notice context. It skips {@link Notice#severityLevel}. */
   private static class NoticeExclusionStrategy implements ExclusionStrategy {
     public boolean shouldSkipClass(Class<?> clazz) {

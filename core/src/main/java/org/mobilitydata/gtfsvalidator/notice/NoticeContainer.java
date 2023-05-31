@@ -58,6 +58,7 @@ public class NoticeContainer {
   private final List<SystemError> systemErrors = new ArrayList<>();
   private final Map<String, Integer> noticesCountPerTypeAndSeverity = new HashMap<>();
   private boolean hasValidationErrors = false;
+  private boolean hasValidationWarnings = false;
 
   /**
    * Used to specify limits on amount of notices in this {@code NoticeContainer}.
@@ -91,6 +92,10 @@ public class NoticeContainer {
     if (notice.isError()) {
       hasValidationErrors = true;
     }
+    if (notice.isWarning()) {
+      hasValidationWarnings = true;
+    }
+
     updateNoticeCount(notice);
     if (validationNotices.size() >= maxTotalValidationNotices
         || noticesCountPerTypeAndSeverity.get(notice.getMappingKey())
@@ -138,6 +143,7 @@ public class NoticeContainer {
     validationNotices.addAll(otherContainer.validationNotices);
     systemErrors.addAll(otherContainer.systemErrors);
     hasValidationErrors |= otherContainer.hasValidationErrors;
+    hasValidationWarnings |= otherContainer.hasValidationWarnings;
     for (Entry<String, Integer> entry : otherContainer.noticesCountPerTypeAndSeverity.entrySet()) {
       int count = noticesCountPerTypeAndSeverity.getOrDefault(entry.getKey(), 0);
       noticesCountPerTypeAndSeverity.put(entry.getKey(), count + entry.getValue());
@@ -147,6 +153,11 @@ public class NoticeContainer {
   /** Tells if this container has any {@code ValidationNotice} that is an error. */
   public boolean hasValidationErrors() {
     return hasValidationErrors;
+  }
+
+  /** Tells if this container has any {@code ValidationNotice} that is a warning. */
+  public boolean hasValidationWarnings() {
+    return hasValidationWarnings;
   }
 
   /** Returns a list of all validation notices in the container. */
