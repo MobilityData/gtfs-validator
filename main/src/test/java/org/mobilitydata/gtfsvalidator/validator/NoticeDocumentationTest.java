@@ -84,15 +84,10 @@ public class NoticeDocumentationTest {
             .filter(
                 clazz -> {
                   NoticeDocComments docComments = NoticeSchemaGenerator.loadComments(clazz);
-                  if (docComments.getDocComment() == null) {
+                  if (docComments.getShortSummary() == null) {
                     return false;
                   }
-                  String[] lines = docComments.getDocComment().split("\n");
-                  if (lines.length == 0) {
-                    return false;
-                  }
-                  // The first line of the comment must be a single sentence.
-                  return lines[0].contains(". ");
+                  return docComments.getShortSummary().contains(". ");
                 })
             .collect(Collectors.toList());
     assertWithMessage(
