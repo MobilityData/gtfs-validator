@@ -23,13 +23,13 @@ import org.mobilitydata.gtfsvalidator.annotation.*;
 @GtfsTable("transfers.txt")
 public interface GtfsTransferSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
-  @Required
+  @RequiredValue
   @ForeignKey(table = "stops.txt", field = "stop_id")
   @PrimaryKey(translationRecordIdType = RECORD_ID)
   String fromStopId();
 
   @FieldType(FieldTypeEnum.ID)
-  @Required
+  @RequiredValue
   @ForeignKey(table = "stops.txt", field = "stop_id")
   @PrimaryKey(translationRecordIdType = RECORD_SUB_ID)
   String toStopId();

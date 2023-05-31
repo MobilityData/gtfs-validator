@@ -21,8 +21,8 @@ package org.mobilitydata.gtfsvalidator.annotation;
  * points in order will be generated automatically.
  *
  * <p>Validation is performed only when both start and end field are set. If any field is missing,
- * then no notice is generated. You need to put an extra {@link Required} annotation if you want to
- * make any field required.
+ * then no notice is generated. You need to put an extra {@link RequiredFile} annotation if you want
+ * to make any field required.
  *
  * <p>Example.
  *

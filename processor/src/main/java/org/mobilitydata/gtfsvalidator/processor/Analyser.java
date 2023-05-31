@@ -57,8 +57,8 @@ public class Analyser {
     }
     fileBuilder.interfacesBuilder().add(type.asType());
     fileBuilder.setClassName(entityImplementationSimpleName(type.getSimpleName().toString()));
-    fileBuilder.setRecommended(type.getAnnotation(Recommended.class) != null);
-    fileBuilder.setRequired(type.getAnnotation(Required.class) != null);
+    fileBuilder.setRecommended(type.getAnnotation(RecommendedFile.class) != null);
+    fileBuilder.setRequired(type.getAnnotation(RequiredFile.class) != null);
     for (ExecutableElement method : methodsIn(type.getEnclosedElements())) {
       GtfsFieldDescriptor.Builder fieldBuilder = GtfsFieldDescriptor.builder();
       fieldBuilder.setName(method.getSimpleName().toString());
@@ -68,9 +68,11 @@ public class Analyser {
           fieldTypeAnnotation != null
               ? fieldTypeAnnotation.value()
               : javaTypeToGtfsType(method.getReturnType()));
-      fieldBuilder.setRecommended(method.getAnnotation(Recommended.class) != null);
+
+      fieldBuilder.setValueRequired(method.getAnnotation(RequiredValue.class) != null);
       fieldBuilder.setColumnRequired(method.getAnnotation(RequiredColumn.class) != null);
-      fieldBuilder.setValueRequired(method.getAnnotation(Required.class) != null);
+      fieldBuilder.setRecommended(method.getAnnotation(RecommendedValue.class) != null);
+
       fieldBuilder.setMixedCase(method.getAnnotation(MixedCase.class) != null);
       PrimaryKey primaryKey = method.getAnnotation(PrimaryKey.class);
       if (primaryKey != null) {

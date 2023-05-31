@@ -18,30 +18,23 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import java.math.BigDecimal;
 import java.util.Currency;
-import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
-import org.mobilitydata.gtfsvalidator.annotation.FieldType;
-import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
-import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.NonNegative;
-import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.*;
 
 @GtfsTable("fare_attributes.txt")
 public interface GtfsFareAttributeSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
   @PrimaryKey
-  @Required
+  @RequiredValue
   String fareId();
 
-  @Required
+  @RequiredValue
   @NonNegative
   BigDecimal price();
 
-  @Required
+  @RequiredValue
   Currency currencyType();
 
-  @Required
+  @RequiredValue
   GtfsFareAttributePaymentMethod paymentMethod();
 
   /**

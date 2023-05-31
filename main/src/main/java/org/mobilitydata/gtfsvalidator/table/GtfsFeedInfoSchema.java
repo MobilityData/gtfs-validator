@@ -17,44 +17,39 @@
 package org.mobilitydata.gtfsvalidator.table;
 
 import java.util.Locale;
-import org.mobilitydata.gtfsvalidator.annotation.EndRange;
-import org.mobilitydata.gtfsvalidator.annotation.FieldType;
-import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.Recommended;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.*;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
 @GtfsTable(value = "feed_info.txt", singleRow = true)
-@Recommended
+@RecommendedFile
 public interface GtfsFeedInfoSchema extends GtfsEntity {
-  @Required
+  @RequiredValue
   String feedPublisherName();
 
-  @Required
+  @RequiredValue
   @FieldType(FieldTypeEnum.URL)
   String feedPublisherUrl();
 
-  @Required
+  @RequiredValue
   Locale feedLang();
 
   Locale defaultLang();
 
-  @Recommended
+  @RecommendedValue
   @EndRange(field = "feed_end_date", allowEqual = true)
   GtfsDate feedStartDate();
 
-  @Recommended
+  @RecommendedValue
   GtfsDate feedEndDate();
 
-  @Recommended
+  @RecommendedValue
   String feedVersion();
 
-  @Recommended
+  @RecommendedValue
   @FieldType(FieldTypeEnum.EMAIL)
   String feedContactEmail();
 
-  @Recommended
+  @RecommendedValue
   @FieldType(FieldTypeEnum.URL)
   String feedContactUrl();
 }

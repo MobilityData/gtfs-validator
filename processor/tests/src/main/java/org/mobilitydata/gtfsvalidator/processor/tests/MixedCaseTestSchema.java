@@ -1,12 +1,10 @@
 package org.mobilitydata.gtfsvalidator.processor.tests;
 
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.MixedCase;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.*;
 
 @GtfsTable("mixed_case.txt")
 public interface MixedCaseTestSchema {
-  @Required
+  @RequiredValue
   @MixedCase
   String someField();
 }

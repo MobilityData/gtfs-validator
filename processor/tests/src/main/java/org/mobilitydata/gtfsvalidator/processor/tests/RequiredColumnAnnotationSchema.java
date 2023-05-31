@@ -1,13 +1,11 @@
 package org.mobilitydata.gtfsvalidator.processor.tests;
 
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
-import org.mobilitydata.gtfsvalidator.annotation.RequiredColumn;
+import org.mobilitydata.gtfsvalidator.annotation.*;
 
 @GtfsTable("required_column.txt")
 public interface RequiredColumnAnnotationSchema {
 
-  @Required
+  @RequiredValue
   String valueRequired();
 
   @RequiredColumn

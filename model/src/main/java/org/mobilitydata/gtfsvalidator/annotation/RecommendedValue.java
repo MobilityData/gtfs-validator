@@ -22,17 +22,21 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Adds a validation that the field or a file is recommended.
+ * Adds a validation that a column header and a value for each row is recommended.
  *
  * <p>Example.
  *
  * <pre>
- *   {@literal @}Recommended
- *   {@literal @}GtfsTable(value = "feed_info.txt", singleRow = true) {
- *     ...
+ *   {@literal @}GtfsTable("agency.txt")
+ *   public interface GtfsAgencySchema extends GtfsEntity {
+ *       {@literal @}FieldType(FieldTypeEnum.ID)
+ *       {@literal @}PrimaryKey
+ *       String agencyId();
+ *
+ *       {@literal @}RequiredValue String agencyName();
  *   }
  * </pre>
  */
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.SOURCE)
-public @interface Recommended {}
+public @interface RecommendedValue {}

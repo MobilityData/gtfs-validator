@@ -18,24 +18,19 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.UNSUPPORTED;
 
-import org.mobilitydata.gtfsvalidator.annotation.FieldType;
-import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
-import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.*;
 
 @GtfsTable("stop_areas.txt")
 public interface GtfsStopAreaSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
   @ForeignKey(table = "areas.txt", field = "area_id")
-  @Required
+  @RequiredValue
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)
   String areaId();
 
   @FieldType(FieldTypeEnum.ID)
   @ForeignKey(table = "stops.txt", field = "stop_id")
-  @Required
+  @RequiredValue
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)
   String stopId();
 }

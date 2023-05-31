@@ -19,21 +19,21 @@ package org.mobilitydata.gtfsvalidator.table;
 import org.mobilitydata.gtfsvalidator.annotation.*;
 
 @GtfsTable("trips.txt")
-@Required
+@RequiredFile
 public interface GtfsTripSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
-  @Required
+  @RequiredValue
   @PrimaryKey
   String tripId();
 
   @FieldType(FieldTypeEnum.ID)
-  @Required
+  @RequiredValue
   @ForeignKey(table = "routes.txt", field = "route_id")
   String routeId();
 
   @FieldType(FieldTypeEnum.ID)
   @Index
-  @Required
+  @RequiredValue
   String serviceId();
 
   @MixedCase

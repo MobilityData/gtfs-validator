@@ -20,11 +20,11 @@ import org.mobilitydata.gtfsvalidator.annotation.*;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 
 @GtfsTable("routes.txt")
-@Required
+@RequiredFile
 public interface GtfsRouteSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
   @PrimaryKey
-  @Required
+  @RequiredValue
   String routeId();
 
   @FieldType(FieldTypeEnum.ID)
@@ -43,7 +43,7 @@ public interface GtfsRouteSchema extends GtfsEntity {
   @MixedCase
   String routeDesc();
 
-  @Required
+  @RequiredValue
   GtfsRouteType routeType();
 
   @FieldType(FieldTypeEnum.URL)

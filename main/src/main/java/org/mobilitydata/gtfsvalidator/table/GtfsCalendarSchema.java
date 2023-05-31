@@ -16,13 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
-import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
-import org.mobilitydata.gtfsvalidator.annotation.EndRange;
-import org.mobilitydata.gtfsvalidator.annotation.FieldType;
-import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.*;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
 @GtfsTable("calendar.txt")
@@ -30,34 +24,34 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 public interface GtfsCalendarSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
   @PrimaryKey
-  @Required
+  @RequiredValue
   String serviceId();
 
-  @Required
+  @RequiredValue
   GtfsCalendarService monday();
 
-  @Required
+  @RequiredValue
   GtfsCalendarService tuesday();
 
-  @Required
+  @RequiredValue
   GtfsCalendarService wednesday();
 
-  @Required
+  @RequiredValue
   GtfsCalendarService thursday();
 
-  @Required
+  @RequiredValue
   GtfsCalendarService friday();
 
-  @Required
+  @RequiredValue
   GtfsCalendarService saturday();
 
-  @Required
+  @RequiredValue
   GtfsCalendarService sunday();
 
-  @Required
+  @RequiredValue
   @EndRange(field = "end_date", allowEqual = true)
   GtfsDate startDate();
 
-  @Required
+  @RequiredValue
   GtfsDate endDate();
 }

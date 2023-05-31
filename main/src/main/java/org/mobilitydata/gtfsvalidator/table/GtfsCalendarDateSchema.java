@@ -18,28 +18,22 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.RECORD_SUB_ID;
 
-import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
-import org.mobilitydata.gtfsvalidator.annotation.FieldType;
-import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.Index;
-import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.*;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
 @GtfsTable("calendar_dates.txt")
 @ConditionallyRequired
 public interface GtfsCalendarDateSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
-  @Required
+  @RequiredValue
   @PrimaryKey
   @Index
   String serviceId();
 
-  @Required
+  @RequiredValue
   @PrimaryKey(translationRecordIdType = RECORD_SUB_ID)
   GtfsDate date();
 
-  @Required
+  @RequiredValue
   GtfsCalendarDateExceptionType exceptionType();
 }

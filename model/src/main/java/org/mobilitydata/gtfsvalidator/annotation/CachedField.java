@@ -27,7 +27,7 @@ package org.mobilitydata.gtfsvalidator.annotation;
  *
  * <pre>
  *   {@literal @}GtfsTable("stop_times.txt")
- *   {@literal @}Required
+ *   {@literal @}RequiredFile
  *   public interface GtfsStopTimeSchema extends GtfsEntity {
  *       {@literal @}CachedField
  *       String stopHeadsign();
