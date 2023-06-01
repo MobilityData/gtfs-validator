@@ -129,8 +129,8 @@ public class FeedMetadata {
       GtfsRouteTableContainer routeTable = (GtfsRouteTableContainer) routeContainer.get();
       if (routeTable.hasColumn(GtfsRoute.ROUTE_SHORT_NAME_FIELD_NAME)
           && routeTable.hasColumn(GtfsRoute.ROUTE_LONG_NAME_FIELD_NAME))
-        return routeTable.getEntities().stream().anyMatch(GtfsRoute::hasRouteShortName)
-            && routeTable.getEntities().stream().anyMatch(GtfsRoute::hasRouteLongName);
+        return routeTable.getEntities().stream()
+            .anyMatch(route -> route.hasRouteShortName() && route.hasRouteLongName());
     }
     return false;
   }
