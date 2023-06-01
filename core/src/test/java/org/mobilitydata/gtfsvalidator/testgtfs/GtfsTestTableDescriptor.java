@@ -3,6 +3,7 @@ package org.mobilitydata.gtfsvalidator.testgtfs;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
+import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
@@ -104,5 +105,10 @@ public class GtfsTestTableDescriptor extends GtfsTableDescriptor<GtfsTestEntity>
   @Override
   public boolean isRequired() {
     return true;
+  }
+
+  @Override
+  public Optional<Integer> maxCharsPerColumn() {
+    return Optional.empty();
   }
 }
