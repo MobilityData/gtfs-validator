@@ -27,23 +27,15 @@ import java.lang.annotation.Target;
  *
  * <p>Example.
  *
- * <pre>{@code
- * @GtfsTable("stop_times.txt")
- * public interface GtfsStopTimeSchema extends GtfsEntity {
- *   @FieldType(FieldTypeEnum.ID)
- *   @PrimaryKey
- *   @Index
- *   @Required
- *   @ForeignKey(table = "trips.txt", field = "trip_id")
- *   String tripId();
+ * <pre>
+ *   {@literal @}GtfsTable("stop_times.txt")
+ *    public interface GtfsStopTimeSchema extends GtfsEntity {
  *
- *    ...
- *
- *   @DefaultValue("1")
- *   @RecommendedColumn
- *   GtfsStopTimeTimepoint timepoint();
- * }
- * }</pre>
+ *     {@literal @}DefaultValue("1")
+ *     {@literal @}RecommendedColumn
+ *      GtfsStopTimeTimepoint timepoint();
+ *   }
+ * </pre>
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
