@@ -1,15 +1,27 @@
 {
   "attribution_without_role": {
     "code": "attribution_without_role",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Attribution with no role.",
+    "description": "At least one of the fields `is_producer`, `is_operator`, or `is_authority` should be set to\n1.",
+    "references": {
+      "fileReferences": [
+        "attributions.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "attributionId": {
         "fieldName": "attributionId",
+        "description": "The id of the faulty record.",
         "type": "string"
       },
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       }
     }
@@ -18,12 +30,13 @@
     "code": "block_trips_with_overlapping_stop_times",
     "severityLevel": "ERROR",
     "type": "object",
-    "description": "Describes two trips with the same block id that have overlapping stop times.",
+    "shortSummary": "Trips with the same block id have overlapping stop times.",
     "references": {
       "fileReferences": [
         "trips.txt"
       ],
       "bestPracticesFileReferences": [],
+      "sectionReferences": [],
       "urlReferences": [
         {
           "label": "Original Python validator implementation",
@@ -34,6 +47,7 @@
     "properties": {
       "blockId": {
         "fieldName": "blockId",
+        "description": "The `trips.block_id` of the overlapping trip.",
         "type": "string"
       },
       "csvRowNumberA": {
@@ -43,26 +57,32 @@
       },
       "csvRowNumberB": {
         "fieldName": "csvRowNumberB",
+        "description": "The row number from `trips.txt` of the second faulty trip.",
         "type": "integer"
       },
       "intersection": {
         "fieldName": "intersection",
+        "description": "The overlapping period.",
         "type": "string"
       },
       "serviceIdA": {
         "fieldName": "serviceIdA",
+        "description": "The service id of the first faulty trip.",
         "type": "string"
       },
       "serviceIdB": {
         "fieldName": "serviceIdB",
+        "description": "The service id of the other faulty trip.",
         "type": "string"
       },
       "tripIdA": {
         "fieldName": "tripIdA",
+        "description": "The id of first faulty trip.",
         "type": "string"
       },
       "tripIdB": {
         "fieldName": "tripIdB",
+        "description": "The id of the other faulty trip.",
         "type": "string"
       }
     }
@@ -71,616 +91,989 @@
     "code": "csv_parsing_failed",
     "severityLevel": "ERROR",
     "type": "object",
-    "description": "Parsing of a CSV file failed.\n\nOne common case of the problem is when a cell value contains more than 4096 characters.",
+    "shortSummary": "Parsing of a CSV file failed.",
+    "description": "One common case of the problem is when a cell value contains more than 4096 characters.",
     "properties": {
       "charIndex": {
         "fieldName": "charIndex",
+        "description": "The location of the last character read from before the error occurred.",
         "type": "integer"
       },
       "columnIndex": {
         "fieldName": "columnIndex",
+        "description": "The column index where the exception occurred.",
         "type": "integer"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       },
       "lineIndex": {
         "fieldName": "lineIndex",
+        "description": "The line number where the exception occurred.",
         "type": "integer"
       },
       "message": {
         "fieldName": "message",
+        "description": "The detailed message describing the error, and the internal state of the parser/writer.",
         "type": "string"
       },
       "parsedContent": {
         "fieldName": "parsedContent",
+        "description": "The record number when the exception occurred.",
         "type": "string"
       }
     }
   },
   "decreasing_or_equal_stop_time_distance": {
     "code": "decreasing_or_equal_stop_time_distance",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "Decreasing or equal `shape_dist_traveled` in `stop_times.txt`.",
+    "description": "When sorted by `stop_times.stop_sequence`, two consecutive entries in `stop_times.txt`\nshould have increasing distance, based on the field `shape_dist_traveled`. If the values are\nequal, this is considered as an error.",
+    "references": {
+      "fileReferences": [
+        "stop_times.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number from `stop_times.txt`.",
         "type": "integer"
       },
       "prevCsvRowNumber": {
         "fieldName": "prevCsvRowNumber",
+        "description": "The row number from `stop_times.txt` of the previous stop time.",
         "type": "integer"
       },
       "prevStopSequence": {
         "fieldName": "prevStopSequence",
+        "description": "The previous record\u0027s `stop_times.stop_sequence`.",
         "type": "integer"
       },
       "prevStopTimeDistTraveled": {
         "fieldName": "prevStopTimeDistTraveled",
+        "description": "Actual distance traveled along the shape from the first shape point to the previous stop\ntime.",
         "type": "number"
       },
       "shapeDistTraveled": {
         "fieldName": "shapeDistTraveled",
+        "description": "Actual distance traveled along the shape from the first shape point to the faulty record.",
         "type": "number"
       },
       "stopSequence": {
         "fieldName": "stopSequence",
+        "description": "The faulty record\u0027s `stop_times.stop_sequence`.",
         "type": "integer"
       },
       "tripId": {
         "fieldName": "tripId",
+        "description": "The id of the faulty trip.",
         "type": "string"
       }
     }
   },
   "decreasing_shape_distance": {
     "code": "decreasing_shape_distance",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "Decreasing `shape_dist_traveled` in `shapes.txt`.",
+    "description": "When sorted by `shape.shape_pt_sequence`, two consecutive shape points must not have\ndecreasing values for `shape_dist_traveled`.",
+    "references": {
+      "fileReferences": [
+        "shapes.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number from `shapes.txt`.",
         "type": "integer"
       },
       "prevCsvRowNumber": {
         "fieldName": "prevCsvRowNumber",
+        "description": "The row number from `shapes.txt` of the previous shape point.",
         "type": "integer"
       },
       "prevShapeDistTraveled": {
         "fieldName": "prevShapeDistTraveled",
+        "description": "Actual distance traveled along the shape from the first shape point to the previous shape\npoint.",
         "type": "number"
       },
       "prevShapePtSequence": {
         "fieldName": "prevShapePtSequence",
+        "description": "The previous record\u0027s `shapes.shape_pt_sequence`.",
         "type": "integer"
       },
       "shapeDistTraveled": {
         "fieldName": "shapeDistTraveled",
+        "description": "Actual distance traveled along the shape from the first shape point to the faulty record.",
         "type": "number"
       },
       "shapeId": {
         "fieldName": "shapeId",
+        "description": "The id of the faulty shape.",
         "type": "string"
       },
       "shapePtSequence": {
         "fieldName": "shapePtSequence",
+        "description": "The faulty record\u0027s `shapes.shape_pt_sequence`.",
         "type": "integer"
       }
     }
   },
   "duplicate_fare_media": {
     "code": "duplicate_fare_media",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Two distinct fare media have the same fare media name and type.",
+    "description": "Fare media should have a unique combination of fare media name and type.",
+    "references": {
+      "fileReferences": [
+        "fare_media.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber1": {
         "fieldName": "csvRowNumber1",
+        "description": "The row number of the first fare media.",
         "type": "integer"
       },
       "csvRowNumber2": {
         "fieldName": "csvRowNumber2",
+        "description": "The row number of the second fare media.",
         "type": "integer"
       },
       "fareMediaId1": {
         "fieldName": "fareMediaId1",
+        "description": "The id of the first fare media.",
         "type": "string"
       },
       "fareMediaId2": {
         "fieldName": "fareMediaId2",
+        "description": "The id of the second fare media.",
         "type": "string"
       }
     }
   },
   "duplicate_key": {
     "code": "duplicate_key",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "Duplicated entity.",
+    "description": "The values of the given key and rows are duplicates.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "file-requirements"
+      ],
+      "urlReferences": [
+        {
+          "label": "Original Python validator implementation",
+          "url": "https://github.com/google/transitfeed"
+        }
+      ]
+    },
     "properties": {
       "fieldName1": {
         "fieldName": "fieldName1",
+        "description": "Composite key\u0027s first field name.",
         "type": "string"
       },
       "fieldName2": {
         "fieldName": "fieldName2",
+        "description": "Composite key\u0027s second field name.",
         "type": "string"
       },
       "fieldValue1": {
         "fieldName": "fieldValue1",
+        "description": "Composite key\u0027s first value.",
         "type": "object"
       },
       "fieldValue2": {
         "fieldName": "fieldValue2",
+        "description": "Composite key\u0027s second value.",
         "type": "object"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file",
         "type": "string"
       },
       "newCsvRowNumber": {
         "fieldName": "newCsvRowNumber",
+        "description": "The row of the other occurrence.",
         "type": "integer"
       },
       "oldCsvRowNumber": {
         "fieldName": "oldCsvRowNumber",
+        "description": "The row of the first occurrence.",
         "type": "integer"
       }
     }
   },
   "duplicate_route_name": {
     "code": "duplicate_route_name",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Two distinct routes have either the same `route_short_name`, the same `route_long_name`, or the",
+    "description": "same combination of `route_short_name` and `route_long_name`.\n\nAll routes of the same `route_type` with the same `agency_id` should have unique\ncombinations of `route_short_name` and `route_long_name`.\n\nNote that there may be valid cases where routes have the same short and long name, e.g., if\nthey serve different areas. However, different directions must be modeled as the same route.\n\nExample of bad data:\n\n| `route_id` \t| `route_short_name` \t| `route_long_name` \t|\n|------------\t|--------------------\t|-------------------\t|\n| route1     \t| U1                 \t| Southern          \t|\n| route2     \t| U1                 \t| Southern          \t|",
+    "references": {
+      "fileReferences": [
+        "routes.txt"
+      ],
+      "bestPracticesFileReferences": [
+        "routes.txt"
+      ],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "agencyId": {
         "fieldName": "agencyId",
+        "description": "Common `routes.agency_id`.",
         "type": "string"
       },
       "csvRowNumber1": {
         "fieldName": "csvRowNumber1",
+        "description": "The row number of the first occurrence.",
         "type": "integer"
       },
       "csvRowNumber2": {
         "fieldName": "csvRowNumber2",
+        "description": "The row number of the other occurrence.",
         "type": "integer"
       },
       "routeId1": {
         "fieldName": "routeId1",
+        "description": "The id of the the first occurrence.",
         "type": "string"
       },
       "routeId2": {
         "fieldName": "routeId2",
+        "description": "The id of the the other occurrence.",
         "type": "string"
       },
       "routeLongName": {
         "fieldName": "routeLongName",
+        "description": "Common `routes.route_long_name`.",
         "type": "string"
       },
       "routeShortName": {
         "fieldName": "routeShortName",
+        "description": "Common `routes.route_short_name`.",
         "type": "string"
       },
       "routeTypeValue": {
         "fieldName": "routeTypeValue",
+        "description": "Common `routes.route_type`.",
         "type": "integer"
       }
     }
   },
   "duplicated_column": {
     "code": "duplicated_column",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "Duplicated column in CSV.",
+    "description": "The input file CSV header has the same column name repeated.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "file-requirements"
+      ],
+      "urlReferences": [
+        {
+          "label": "Original Python validator implementation",
+          "url": "https://github.com/google/transitfeed"
+        }
+      ]
+    },
     "properties": {
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "The name of the faulty field.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       },
       "firstIndex": {
         "fieldName": "firstIndex",
+        "description": "Index of the first occurrence.",
         "type": "integer"
       },
       "secondIndex": {
         "fieldName": "secondIndex",
+        "description": "Index of the other occurrence.",
         "type": "integer"
       }
     }
   },
   "empty_column_name": {
     "code": "empty_column_name",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A column name is empty.",
+    "description": "Such columns are skipped by the validator.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "file-requirements"
+      ],
+      "urlReferences": []
+    },
     "properties": {
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       },
       "index": {
         "fieldName": "index",
+        "description": "The index of the empty column.",
         "type": "integer"
       }
     }
   },
   "empty_file": {
     "code": "empty_file",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A CSV file is empty.",
+    "description": "Empty csv file found in the archive: file does not have any headers, or is a required file and\ndoes not have any data. The GTFS specification requires the first line of each file to contain\nfield names and required files must have data.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "file-requirements"
+      ],
+      "urlReferences": []
+    },
     "properties": {
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       }
     }
   },
   "empty_row": {
     "code": "empty_row",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "A row in the input file has only spaces.",
+    "description": "Some CSV parsers, such as Univocity, may misinterpret it as a non-empty row that has a single\ncolumn which is empty, hence we show a warning.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "file-requirements"
+      ],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       }
     }
   },
   "equal_shape_distance_diff_coordinates": {
     "code": "equal_shape_distance_diff_coordinates",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "Two consecutive points have equal `shape_dist_traveled` and different lat/lon coordinates in",
+    "description": "`shapes.txt`.\n\nWhen sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` must increase\nalong a shape. Two consecutive points with equal values for `shape_dist_traveled` and different\ncoordinates indicate an error.",
+    "references": {
+      "fileReferences": [
+        "shapes.txt",
+        "stops.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "actualDistanceBetweenShapePoints": {
         "fieldName": "actualDistanceBetweenShapePoints",
+        "description": "point.",
         "type": "number"
       },
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number from `shapes.txt`.",
         "type": "integer"
       },
       "prevCsvRowNumber": {
         "fieldName": "prevCsvRowNumber",
+        "description": "The row number from `shapes.txt` of the previous shape point.",
         "type": "integer"
       },
       "prevShapeDistTraveled": {
         "fieldName": "prevShapeDistTraveled",
+        "description": "The previous shape point\u0027s `shape_dist_traveled` value.",
         "type": "number"
       },
       "prevShapePtSequence": {
         "fieldName": "prevShapePtSequence",
+        "description": "The previous record\u0027s `shapes.shape_pt_sequence`.",
         "type": "integer"
       },
       "shapeDistTraveled": {
         "fieldName": "shapeDistTraveled",
+        "description": "The faulty record\u0027s `shape_dist_traveled` value.",
         "type": "number"
       },
       "shapeId": {
         "fieldName": "shapeId",
+        "description": "The id of the faulty shape.",
         "type": "string"
       },
       "shapePtSequence": {
         "fieldName": "shapePtSequence",
+        "description": "The faulty record\u0027s `shapes.shape_pt_sequence`.",
         "type": "integer"
       }
     }
   },
   "equal_shape_distance_same_coordinates": {
     "code": "equal_shape_distance_same_coordinates",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Two consecutive points have equal `shape_dist_traveled` and the same lat/lon coordinates in",
+    "description": "`shapes.txt`.\n\nWhen sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` must increase\nalong a shape. Two consecutive points with equal values for `shape_dist_traveled` and the same\ncoordinates indicate a duplicative shape point.",
+    "references": {
+      "fileReferences": [
+        "shapes.txt",
+        "stops.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number from `shapes.txt`.",
         "type": "integer"
       },
       "prevCsvRowNumber": {
         "fieldName": "prevCsvRowNumber",
+        "description": "The row number from `shapes.txt` of the previous shape point.",
         "type": "integer"
       },
       "prevShapeDistTraveled": {
         "fieldName": "prevShapeDistTraveled",
+        "description": "Actual distance traveled along the shape from the first shape point to the previous shape\npoint.",
         "type": "number"
       },
       "prevShapePtSequence": {
         "fieldName": "prevShapePtSequence",
+        "description": "The previous record\u0027s `shapes.shape_pt_sequence`.",
         "type": "integer"
       },
       "shapeDistTraveled": {
         "fieldName": "shapeDistTraveled",
+        "description": "Actual distance traveled along the shape from the first shape point to the faulty record.",
         "type": "number"
       },
       "shapeId": {
         "fieldName": "shapeId",
+        "description": "The id of the faulty shape.",
         "type": "string"
       },
       "shapePtSequence": {
         "fieldName": "shapePtSequence",
+        "description": "The faulty record\u0027s `shapes.shape_pt_sequence`.",
         "type": "integer"
       }
     }
   },
   "expired_calendar": {
     "code": "expired_calendar",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Dataset should not contain date ranges for services that have already expired.",
+    "description": "This warning takes into account the `calendar_dates.txt` file as well as the `calendar.txt`\nfile.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": [
+        {
+          "label": "Dataset Publishing \u0026 General Practices",
+          "url": "https://gtfs.org/schedule/best-practices/#dataset-publishing-general-practices"
+        }
+      ]
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "serviceId": {
         "fieldName": "serviceId",
+        "description": "The service id of the faulty record.",
         "type": "string"
       }
     }
   },
   "fare_transfer_rule_duration_limit_type_without_duration_limit": {
     "code": "fare_transfer_rule_duration_limit_type_without_duration_limit",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit_type` field but no",
+    "description": "`duration_limit` specified.",
+    "references": {
+      "fileReferences": [
+        "fare_transfer_rules.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       }
     }
   },
   "fare_transfer_rule_duration_limit_without_type": {
     "code": "fare_transfer_rule_duration_limit_without_type",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit` field but no",
+    "description": "`duration_limit_type` specified.",
+    "references": {
+      "fileReferences": [
+        "fare_transfer_rules.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       }
     }
   },
   "fare_transfer_rule_invalid_transfer_count": {
     "code": "fare_transfer_rule_invalid_transfer_count",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A row from GTFS file `fare_transfer_rules.txt` has a defined `transfer_count` with an invalid",
+    "description": "value.",
+    "references": {
+      "fileReferences": [
+        "fare_transfer_rules.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "transferCount": {
         "fieldName": "transferCount",
+        "description": "The transfer count value of the faulty record.",
         "type": "integer"
       }
     }
   },
   "fare_transfer_rule_missing_transfer_count": {
     "code": "fare_transfer_rule_missing_transfer_count",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A row from `fare_transfer_rules.txt` has `from_leg_group_id` equal to `to_leg_group_id`, but",
+    "description": "has no `transfer_count` specified.\n\nPer the spec, `transfer_count` is required if the two leg group ids are equal.",
+    "references": {
+      "fileReferences": [
+        "fare_transfer_rules.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       }
     }
   },
   "fare_transfer_rule_with_forbidden_transfer_count": {
     "code": "fare_transfer_rule_with_forbidden_transfer_count",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A row from `fare_transfer_rules.txt` has `from_leg_group_id` not equal to `to_leg_group_id`,",
+    "description": "but has `transfer_count` specified.\n\nPer the spec, `transfer_count` is forbidden if the two leg group ids are not equal.",
+    "references": {
+      "fileReferences": [
+        "fare_transfer_rules.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       }
     }
   },
   "fast_travel_between_consecutive_stops": {
     "code": "fast_travel_between_consecutive_stops",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "A transit vehicle moves too fast between two consecutive stops.",
+    "description": "The speed threshold depends on route type:\n\n| Route type | Description | Threshold, km/h |\n|------------|-------------|-----------------|\n| 0          | Light rail  | 100             |\n| 1          | Subway      | 150             |\n| 2          | Rail        | 500             |\n| 3          | Bus         | 150             |\n| 4          | Ferry       |  80             |\n| 5          | Cable tram  |  30             |\n| 6          | Aerial lift |  50             |\n| 7          | Funicular   |  50             |\n| 11         | Trolleybus  | 150             |\n| 12         | Monorail    | 150             |\n| -          | Unknown     | 200             |",
+    "references": {
+      "fileReferences": [
+        "routes.txt",
+        "stops.txt",
+        "stop_times.txt",
+        "trips.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": [
+        {
+          "label": "Original Python validator implementation",
+          "url": "https://github.com/google/transitfeed"
+        }
+      ]
+    },
     "properties": {
       "arrivalTime2": {
         "fieldName": "arrivalTime2",
+        "description": "`arrival_time` of the second stop.",
         "type": "string"
       },
       "csvRowNumber1": {
         "fieldName": "csvRowNumber1",
+        "description": "The row number of the first stop time.",
         "type": "integer"
       },
       "csvRowNumber2": {
         "fieldName": "csvRowNumber2",
+        "description": "The row number of the second stop time.",
         "type": "integer"
       },
       "departureTime1": {
         "fieldName": "departureTime1",
+        "description": "`departure_time` of the first stop.",
         "type": "string"
       },
       "distanceKm": {
         "fieldName": "distanceKm",
+        "description": "Distance between stops (km).",
         "type": "number"
       },
       "routeId": {
         "fieldName": "routeId",
+        "description": "`route_id` of the problematic trip.",
         "type": "string"
       },
       "speedKph": {
         "fieldName": "speedKph",
+        "description": "Travel speed (km/h).",
         "type": "number"
       },
       "stopId1": {
         "fieldName": "stopId1",
+        "description": "`stop_id` of the first stop.",
         "type": "string"
       },
       "stopId2": {
         "fieldName": "stopId2",
+        "description": "`stop_id` of the second stop.",
         "type": "string"
       },
       "stopName1": {
         "fieldName": "stopName1",
+        "description": "`stop_name` of the first stop.",
         "type": "string"
       },
       "stopName2": {
         "fieldName": "stopName2",
+        "description": "`stop_name` of the second stop.",
         "type": "string"
       },
       "stopSequence1": {
         "fieldName": "stopSequence1",
+        "description": "`stop_sequence` of the first stop.",
         "type": "integer"
       },
       "stopSequence2": {
         "fieldName": "stopSequence2",
+        "description": "`stop_sequence` of the second stop.",
         "type": "integer"
       },
       "tripCsvRowNumber": {
         "fieldName": "tripCsvRowNumber",
+        "description": "The row number of the problematic trip.",
         "type": "integer"
       },
       "tripId": {
         "fieldName": "tripId",
+        "description": "`trip_id` of the problematic trip.",
         "type": "string"
       }
     }
   },
   "fast_travel_between_far_stops": {
     "code": "fast_travel_between_far_stops",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "A transit vehicle moves too fast between two far stops.",
+    "description": "Two stops are considered \"far\" if they are more than 10 km apart. This normally indicates a\nmore serious problem than too fast travel between consecutive stops.\n\nThe speed threshold depends on route type and are the same as\n`fast_travel_between_consecutive_stops`.",
+    "references": {
+      "fileReferences": [
+        "routes.txt",
+        "stops.txt",
+        "stop_times.txt",
+        "trips.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": [
+        {
+          "label": "Original Python validator implementation",
+          "url": "https://github.com/google/transitfeed"
+        }
+      ]
+    },
     "properties": {
       "arrivalTime2": {
         "fieldName": "arrivalTime2",
+        "description": "`arrival_time` of the second stop.",
         "type": "string"
       },
       "csvRowNumber1": {
         "fieldName": "csvRowNumber1",
+        "description": "The row number of the first stop time.",
         "type": "integer"
       },
       "csvRowNumber2": {
         "fieldName": "csvRowNumber2",
+        "description": "The row number of the second stop time.",
         "type": "integer"
       },
       "departureTime1": {
         "fieldName": "departureTime1",
+        "description": "`departure_time` of the first stop.",
         "type": "string"
       },
       "distanceKm": {
         "fieldName": "distanceKm",
+        "description": "Distance between stops (km).",
         "type": "number"
       },
       "routeId": {
         "fieldName": "routeId",
+        "description": "`route_id` of the problematic trip.",
         "type": "string"
       },
       "speedKph": {
         "fieldName": "speedKph",
+        "description": "Travel speed (km/h).",
         "type": "number"
       },
       "stopId1": {
         "fieldName": "stopId1",
+        "description": "`stop_id` of the first stop.",
         "type": "string"
       },
       "stopId2": {
         "fieldName": "stopId2",
+        "description": "`stop_id` of the second stop.",
         "type": "string"
       },
       "stopName1": {
         "fieldName": "stopName1",
+        "description": "`stop_name` of the first stop.",
         "type": "string"
       },
       "stopName2": {
         "fieldName": "stopName2",
+        "description": "`stop_name` of the second stop.",
         "type": "string"
       },
       "stopSequence1": {
         "fieldName": "stopSequence1",
+        "description": "`stop_sequence` of the first stop.",
         "type": "integer"
       },
       "stopSequence2": {
         "fieldName": "stopSequence2",
+        "description": "`stop_sequence` of the second stop.",
         "type": "integer"
       },
       "tripCsvRowNumber": {
         "fieldName": "tripCsvRowNumber",
+        "description": "The row number of the problematic trip.",
         "type": "integer"
       },
       "tripId": {
         "fieldName": "tripId",
+        "description": "`trip_id` of the problematic trip.",
         "type": "string"
       }
     }
   },
   "feed_expiration_date30_days": {
     "code": "feed_expiration_date30_days",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Dataset should cover at least the next 30 days of service.",
+    "description": "At any time, the GTFS dataset should cover at least the next 30 days of service, and ideally\nfor as long as the operator is confident that the schedule will continue to be operated.",
+    "references": {
+      "fileReferences": [
+        "feed_info.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "dataset-publishing-general-practices"
+      ],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "currentDate": {
         "fieldName": "currentDate",
+        "description": "Current date (YYYYMMDD format).",
         "type": "string"
       },
       "feedEndDate": {
         "fieldName": "feedEndDate",
+        "description": "Feed end date (YYYYMMDD format).",
         "type": "string"
       },
       "suggestedExpirationDate": {
         "fieldName": "suggestedExpirationDate",
+        "description": "Suggested expiration date (YYYYMMDD format).",
         "type": "string"
       }
     }
   },
   "feed_expiration_date7_days": {
     "code": "feed_expiration_date7_days",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Dataset should be valid for at least the next 7 days.",
+    "description": "The dataset expiration date defined in `feed_info.txt` is in seven days or less. At any\ntime, the published GTFS dataset should be valid for at least the next 7 days.",
+    "references": {
+      "fileReferences": [
+        "feed_info.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "dataset-publishing-general-practices"
+      ],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "currentDate": {
         "fieldName": "currentDate",
+        "description": "Current date (YYYYMMDD format).",
         "type": "string"
       },
       "feedEndDate": {
         "fieldName": "feedEndDate",
+        "description": "Feed end date (YYYYMMDD format).",
         "type": "string"
       },
       "suggestedExpirationDate": {
         "fieldName": "suggestedExpirationDate",
+        "description": "Suggested expiration date (YYYYMMDD format).",
         "type": "string"
       }
     }
   },
   "feed_info_lang_and_agency_lang_mismatch": {
     "code": "feed_info_lang_and_agency_lang_mismatch",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Mismatching feed and agency language fields.",
+    "description": "Files `agency.txt` and `feed_info.txt` should define matching `agency.agency_lang` and\n`feed_info.feed_lang`. The default language may be multilingual for datasets with the original\ntext in multiple languages. In such cases, the `feed_lang` field should contain the language\ncode `mul` defined by the norm ISO 639-2.\n\n- If `feed_lang` is not `mul` and does not match with `agency_lang`, that\u0027s an error.\n- If there is more than one `agency_lang` and `feed_lang` isn\u0027t `mul`, that\u0027s an error.\n- If `feed_lang` is `mul` and there isn\u0027t more than one `agency_lang`, that\u0027s an error.",
+    "references": {
+      "fileReferences": [
+        "feed_info.txt",
+        "agency.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "agencyId": {
         "fieldName": "agencyId",
+        "description": "The agency id of the faulty record.",
         "type": "string"
       },
       "agencyLang": {
         "fieldName": "agencyLang",
+        "description": "The agency language of the faulty record.",
         "type": "string"
       },
       "agencyName": {
         "fieldName": "agencyName",
+        "description": "The agency name of the faulty record.",
         "type": "string"
       },
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "feedLang": {
         "fieldName": "feedLang",
+        "description": "The feed language of the faulty record.",
         "type": "string"
       }
     }
@@ -689,895 +1082,1494 @@
     "code": "foreign_key_violation",
     "severityLevel": "ERROR",
     "type": "object",
-    "description": "The values of the given key and rows of one table cannot be found a values of the given key in\nanother table.\n\nThis is the case when a foreign key of one table references a non-existing value in its\noriginal table.",
+    "shortSummary": "Wrong foreign key.",
+    "description": "A foreign key references the primary key of another file. A foreign key violation means that\nthe foreign key referenced from a given row (the child file) cannot be found in the corresponding\nfile (the parent file). The Foreign keys are defined in the specification under \"Type\" for each\nfile.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "file-requirements"
+      ],
+      "urlReferences": [
+        {
+          "label": "Original Python validator implementation",
+          "url": "https://github.com/google/transitfeed"
+        }
+      ]
+    },
     "properties": {
       "childFieldName": {
         "fieldName": "childFieldName",
+        "description": "The name of the field that makes reference.",
         "type": "string"
       },
       "childFilename": {
         "fieldName": "childFilename",
+        "description": "The name of the file from which reference is made.",
         "type": "string"
       },
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "fieldValue": {
         "fieldName": "fieldValue",
+        "description": "The faulty record\u0027s value.",
         "type": "string"
       },
       "parentFieldName": {
         "fieldName": "parentFieldName",
+        "description": "The name of the field that is referred to.",
         "type": "string"
       },
       "parentFilename": {
         "fieldName": "parentFilename",
+        "description": "The name of the file that is referred to.",
         "type": "string"
       }
     }
   },
   "i_o_error": {
     "code": "i_o_error",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "Error in IO operation.",
     "properties": {
       "exception": {
         "fieldName": "exception",
+        "description": "The name of the exception.",
         "type": "string"
       },
       "message": {
         "fieldName": "message",
+        "description": "The error message that explains the reason for the exception.",
         "type": "string"
       }
     }
   },
   "inconsistent_agency_lang": {
     "code": "inconsistent_agency_lang",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Inconsistent language among agencies.",
+    "description": "Agencies from GTFS `agency.txt` have been found to have different languages.",
+    "references": {
+      "fileReferences": [
+        "agency.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": [
+        {
+          "label": "Original Python validator implementation",
+          "url": "https://github.com/google/transitfeed"
+        }
+      ]
+    },
     "properties": {
       "actual": {
         "fieldName": "actual",
+        "description": "Faulty record\u0027s language.",
         "type": "string"
       },
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "expected": {
         "fieldName": "expected",
+        "description": "Expected language.",
         "type": "string"
       }
     }
   },
   "inconsistent_agency_timezone": {
     "code": "inconsistent_agency_timezone",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "Inconsistent Timezone among agencies.",
+    "description": "Agencies from GTFS `agency.txt` have been found to have different timezones.",
+    "references": {
+      "fileReferences": [
+        "agency.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "actual": {
         "fieldName": "actual",
+        "description": "Faulty record\u0027s timezone.",
         "type": "string"
       },
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "expected": {
         "fieldName": "expected",
+        "description": "Expected timezone.",
         "type": "string"
       }
     }
   },
   "invalid_color": {
     "code": "invalid_color",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A field contains an invalid color value.",
+    "description": "A color must be encoded as a six-digit hexadecimal number. The leading \"#\" is not included.\n\nExample: `FFFFFF` for white, `000000` for black or `0039A6` for the A,C,E lines in NYC MTA.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "field-types"
+      ],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "Faulty record\u0027s field name.",
         "type": "string"
       },
       "fieldValue": {
         "fieldName": "fieldValue",
+        "description": "Faulty value.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       }
     }
   },
   "invalid_currency": {
     "code": "invalid_currency",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A field contains a wrong currency code.",
+    "description": "Currency code must follow \u003ca href\u003d\"https://en.wikipedia.org/wiki/ISO_4217#Active_codes\"\u003eISO\n4217\u003c/a\u003e\n\nExample: `CAD` for Canadian dollars, `EUR` for euros or `JPY` for Japanese yen.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "field-types"
+      ],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "Faulty record\u0027s field name.",
         "type": "string"
       },
       "fieldValue": {
         "fieldName": "fieldValue",
+        "description": "Faulty value.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       }
     }
   },
   "invalid_currency_amount": {
     "code": "invalid_currency_amount",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A currency amount field has a value that does not match the format of its corresponding currency",
+    "description": "code field.\n\nTypically, this means the amount did not have the expected number of decimal places. The\nnumber of decimal places is specified by \u003ca\nhref\u003d\"https://en.wikipedia.org/wiki/ISO_4217#Active_codes\"\u003eISO 4217\u003c/a\u003e.\n\n@see org.mobilitydata.gtfsvalidator.annotation.CurrencyAmount",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "field-types"
+      ],
+      "urlReferences": []
+    },
     "properties": {
       "amount": {
         "fieldName": "amount",
+        "description": "Faulty currency amount value.",
         "type": "string"
       },
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "Faulty record\u0027s field name.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       }
     }
   },
   "invalid_date": {
     "code": "invalid_date",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A field cannot be parsed as date.",
+    "description": "Dates must have the YYYYMMDD format.\n\nExample: `20180913` for September 13th, 2018.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "field-types"
+      ],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "Faulty record\u0027s field name.",
         "type": "string"
       },
       "fieldValue": {
         "fieldName": "fieldValue",
+        "description": "Faulty value.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       }
     }
   },
   "invalid_email": {
     "code": "invalid_email",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A field contains a malformed email address.",
+    "description": "Definitions for valid emails are quite vague. We perform strict validation using the Apache\nCommons EmailValidator.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "field-types"
+      ],
+      "urlReferences": [
+        {
+          "label": "Apache Commons EmailValidator",
+          "url": "https://commons.apache.org/proper/commons-validator/apidocs/org/apache/commons/validator/routines/EmailValidator.html"
+        }
+      ]
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "Faulty record\u0027s field name.",
         "type": "string"
       },
       "fieldValue": {
         "fieldName": "fieldValue",
+        "description": "Faulty value.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       }
     }
   },
   "invalid_float": {
     "code": "invalid_float",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A field cannot be parsed as a floating point number.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "field-types"
+      ],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "Faulty record\u0027s field name.",
         "type": "string"
       },
       "fieldValue": {
         "fieldName": "fieldValue",
+        "description": "Faulty value.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       }
     }
   },
   "invalid_integer": {
     "code": "invalid_integer",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A field cannot be parsed as an integer.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "field-types"
+      ],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "Faulty record\u0027s field name.",
         "type": "string"
       },
       "fieldValue": {
         "fieldName": "fieldValue",
+        "description": "Faulty value.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       }
     }
   },
   "invalid_language_code": {
     "code": "invalid_language_code",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A field contains a wrong language code.",
+    "description": "Language codes must follow \u003ca href\u003d\"http://www.rfc-editor.org/rfc/bcp/bcp47.txt\"\u003eIETF BCP\n47\u003c/a\u003e.\n\nExample: `en` for English, `en-US` for American English or `de` for German.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "field-types"
+      ],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "Faulty record\u0027s field name.",
         "type": "string"
       },
       "fieldValue": {
         "fieldName": "fieldValue",
+        "description": "Faulty value.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       }
     }
   },
   "invalid_phone_number": {
     "code": "invalid_phone_number",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A field contains a malformed phone number.",
+    "description": "This rule uses the\n[PhoneNumberUtil](https://www.javadoc.io/doc/com.googlecode.libphonenumber/libphonenumber/8.4.1/com/google/i18n/phonenumbers/PhoneNumberUtil.html)\nclass to validate a phone number based on a country code. If no country code is provided in the\nparameters used to run the validator, this notice won\u0027t be emitted.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "field-types"
+      ],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "Faulty record\u0027s field name.",
         "type": "string"
       },
       "fieldValue": {
         "fieldName": "fieldValue",
+        "description": "Faulty value.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       }
     }
   },
   "invalid_row_length": {
     "code": "invalid_row_length",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "Invalid csv row length.",
+    "description": "A row in the input file has a different number of values than specified by the CSV header.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "file-requirements"
+      ],
+      "urlReferences": [
+        {
+          "label": "Original Python validator implementation",
+          "url": "https://github.com/google/transitfeed"
+        }
+      ]
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       },
       "headerCount": {
         "fieldName": "headerCount",
+        "description": "The number of column in the faulty file.",
         "type": "integer"
       },
       "rowLength": {
         "fieldName": "rowLength",
+        "description": "The length of the faulty record.",
         "type": "integer"
       }
     }
   },
   "invalid_time": {
     "code": "invalid_time",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A field cannot be parsed as time.",
+    "description": "Time must be in the `H:MM:SS`, `HH:MM:SS` or `HHH:MM:SS` format.\n\nExample: `14:30:00` for 2:30PM or `25:35:00` for 1:35AM on the next day.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "field-types"
+      ],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "Faulty record\u0027s field name.",
         "type": "string"
       },
       "fieldValue": {
         "fieldName": "fieldValue",
+        "description": "Faulty value.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       }
     }
   },
   "invalid_timezone": {
     "code": "invalid_timezone",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A field cannot be parsed as a timezone.",
+    "description": "Timezones are defined at \u003ca href\u003d\"https://www.iana.org/time-zones\"\u003ewww.iana.org\u003c/a\u003e. Timezone\nnames never contain the space character but may contain an underscore. Refer to \u003ca\nhref\u003d\"http://en.wikipedia.org/wiki/List_of_tz_zones\"\u003eWikipedia\u003c/a\u003e for a list of valid values.\n\nExample: `Asia/Tokyo`, `America/Los_Angeles` or `Africa/Cairo`.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "field-types"
+      ],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "Faulty record\u0027s field name.",
         "type": "string"
       },
       "fieldValue": {
         "fieldName": "fieldValue",
+        "description": "Faulty value.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       }
     }
   },
   "invalid_url": {
     "code": "invalid_url",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A field contains a malformed URL.",
+    "description": "Definitions for valid URLs are quite vague. We perform strict validation using the Apache\nCommons UrlValidator.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "field-types"
+      ],
+      "urlReferences": [
+        {
+          "label": "Apache Commons UrlValidator",
+          "url": "https://commons.apache.org/proper/commons-validator/apidocs/org/apache/commons/validator/routines/UrlValidator.html"
+        }
+      ]
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "Faulty record\u0027s field name.",
         "type": "string"
       },
       "fieldValue": {
         "fieldName": "fieldValue",
+        "description": "Faulty value.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       }
     }
   },
   "leading_or_trailing_whitespaces": {
     "code": "leading_or_trailing_whitespaces",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "The value in CSV file has leading or trailing whitespaces.",
+    "description": "This notice is emitted for values protected with double quotes since whitespaces for\nnon-protected values are trimmed automatically by CSV parser.\n\nThe validator strips whitespaces from protected values. We do not see any use case when such a\nwhitespace may be needed. On the other hand, some real-world feeds use trailing whitespaces for\nsome values and omit them for the others. This is causing the largest problem when a primary key\nand a foreign key differ just by a whitespace: it is clear that they are intended to be the same,\nthat is why we always strip whitespaces.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "file-requirements"
+      ],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "Faulty record\u0027s field name.",
         "type": "string"
       },
       "fieldValue": {
         "fieldName": "fieldValue",
+        "description": "Faulty value.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       }
     }
   },
   "location_with_unexpected_stop_time": {
     "code": "location_with_unexpected_stop_time",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A location in `stops.txt` that is not a stop is referenced by some `stop_times.stop_id`.",
+    "description": "Referenced locations (using `stop_times.stop_id`) must be stops/platforms, i.e. their\n`stops.location_type` value must be 0 or empty.",
+    "references": {
+      "fileReferences": [
+        "stop_times.txt",
+        "stops.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record from `stops.txt`.",
         "type": "integer"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The id of the faulty record from `stops.txt`.",
         "type": "string"
       },
       "stopName": {
         "fieldName": "stopName",
+        "description": "The `stops.stop_name` of the faulty record.",
         "type": "string"
       },
       "stopTimeCsvRowNumber": {
         "fieldName": "stopTimeCsvRowNumber",
+        "description": "The row number of the faulty record from `stop_times.txt`.",
         "type": "integer"
       }
     }
   },
   "location_without_parent_station": {
     "code": "location_without_parent_station",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A location that must have `parent_station` field does not have it.",
+    "description": "The following location types must have `parent_station`: entrance, generic node,\nboarding_area.",
+    "references": {
+      "fileReferences": [
+        "stops.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "locationType": {
         "fieldName": "locationType",
+        "description": "The `stops.location_type` of the faulty record.",
         "type": "integer"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The id of the faulty record.",
         "type": "string"
       },
       "stopName": {
         "fieldName": "stopName",
+        "description": "The `stops.stop_name` of the faulty record.",
         "type": "string"
       }
     }
   },
   "missing_calendar_and_calendar_date_files": {
     "code": "missing_calendar_and_calendar_date_files",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "Missing GTFS files `calendar.txt` and `calendar_dates.txt`.",
+    "description": "At least one of the files must be provided.",
+    "references": {
+      "fileReferences": [
+        "calendar.txt",
+        "calendar_dates.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {}
   },
   "missing_feed_info_date": {
     "code": "missing_feed_info_date",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "One of `feed_start_date` or `feed_end_date` is specified, but not both.",
+    "description": "Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one field is\nprovided the second one should also be provided.",
+    "references": {
+      "fileReferences": [
+        "feed_info.txt"
+      ],
+      "bestPracticesFileReferences": [
+        "feed_info.txt"
+      ],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "Either `feed_end_date` or `feed_start_date`.",
         "type": "string"
       }
     }
   },
   "missing_level_id": {
     "code": "missing_level_id",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "`stops.level_id` is conditionally required.",
+    "description": "GTFS file `levels.txt` is required for elevator (`pathway_mode\u003d5`). A row from `stops.txt`\nlinked to an elevator pathway has no value for `stops.level_id`.",
+    "references": {
+      "fileReferences": [
+        "levels.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The id of the faulty stop from `stops.txt`.",
         "type": "string"
       },
       "stopName": {
         "fieldName": "stopName",
+        "description": "The name of the faulty stop from `stops.txt`.",
         "type": "string"
       }
     }
   },
   "missing_recommended_field": {
     "code": "missing_recommended_field",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "A recommended field is missing.",
+    "description": "The given field has no value in some input row, even though values are recommended.",
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "The name of the missing field.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       }
     }
   },
   "missing_recommended_file": {
     "code": "missing_recommended_file",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "A recommended file is missing.",
     "properties": {
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       }
     }
   },
   "missing_required_column": {
     "code": "missing_required_column",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A required column is missing in the input file.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "term-definitions"
+      ],
+      "urlReferences": []
+    },
     "properties": {
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "The name of the missing column.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       }
     }
   },
   "missing_required_field": {
     "code": "missing_required_field",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A required field is missing.",
+    "description": "The given field has no value in some input row, even though values are required.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "term-definitions"
+      ],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "The name of the missing field.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       }
     }
   },
   "missing_required_file": {
     "code": "missing_required_file",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A required file is missing.",
+    "description": "If this notice is triggered for every core file, it might be a problem with the input. To\ncreate a zip file from the GTFS `.txt` files: select all the `.txt` files, right-click, and\ncompress. Do not compress the folder containing the files.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "term-definitions"
+      ],
+      "urlReferences": []
+    },
     "properties": {
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       }
     }
   },
   "missing_stop_name": {
     "code": "missing_stop_name",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "`stops.stop_name` is required for `location_type` equal to `0`, `1`, or `2`.",
+    "description": "`stops.stop_name` is required for locations that are stops (`location_type\u003d0`), stations\n(`location_type\u003d1`) or entrances/exits (`location_type\u003d2`).",
+    "references": {
+      "fileReferences": [
+        "stops.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "locationType": {
         "fieldName": "locationType",
+        "description": "`stops.location_type` of the faulty record.",
         "type": "enum"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The `stops.stop_id` of the faulty record.",
         "type": "string"
       }
     }
   },
   "missing_timepoint_column": {
     "code": "missing_timepoint_column",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "`timepoint` column is missing for a dataset.",
+    "references": {
+      "fileReferences": [
+        "stop_times.txt"
+      ],
+      "bestPracticesFileReferences": [
+        "stop_times.txt"
+      ],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the affected file.",
         "type": "string"
       }
     }
   },
   "missing_timepoint_value": {
     "code": "missing_timepoint_value",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "`stop_times.timepoint` value is missing for a record.",
+    "description": "Even though the column `timepoint` is optional in `stop_times.txt` according to the\nspecification, `stop_times.timepoint` should not be empty when provided.",
+    "references": {
+      "fileReferences": [
+        "stop_times.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "stopSequence": {
         "fieldName": "stopSequence",
+        "description": "The faulty record\u0027s `stop_times.stop_sequence`.",
         "type": "integer"
       },
       "tripId": {
         "fieldName": "tripId",
+        "description": "The faulty record\u0027s `stop_times.trip_id`.",
         "type": "string"
       }
     }
   },
   "missing_trip_edge": {
     "code": "missing_trip_edge",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "Missing trip edge `arrival_time` or `departure_time`.",
+    "description": "First and last stop of a trip must define both `arrival_time` and `departure_time` fields.\nPer [stop_times.txt](http://gtfs.org/reference/static/#stop_timestxt), \"If there are not\nseparate times for arrival and departure at a stop, enter the same value for arrival_time and\ndeparture_time.\"",
+    "references": {
+      "fileReferences": [
+        "stop_times.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "specifiedField": {
         "fieldName": "specifiedField",
+        "description": "Name of the missing field.",
         "type": "string"
       },
       "stopSequence": {
         "fieldName": "stopSequence",
+        "description": "`stops.stop_sequence` of the faulty record.",
         "type": "integer"
       },
       "tripId": {
         "fieldName": "tripId",
+        "description": "The `trips.trip_id` of the faulty record.",
         "type": "string"
       }
     }
   },
   "mixed_case_recommended_field": {
     "code": "mixed_case_recommended_field",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "This field has customer-facing text and should use Mixed Case (should contain upper and lower",
+    "description": "case letters).\n\nThis field contains customer-facing text and should use Mixed Case (upper and lower case\nletters) to ensure good readability when displayed to riders. Avoid the use of abbreviations\nthroughout the feed (e.g. St. for Street) unless a location is called by its abbreviated name\n(e.g. “JFK Airport”). Abbreviations may be problematic for accessibility by screen reader\nsoftware and voice user interfaces.\n\n@see org.mobilitydata.gtfsvalidator.annotation.MixedCase",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": [
+        {
+          "label": "Best Practices for All Files",
+          "url": "https://gtfs.org/schedule/best-practices/#practice-recommendations-organized-by-file"
+        }
+      ]
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "Name of the faulty field.",
+        "type": "string"
+      },
+      "fieldValue": {
+        "fieldName": "fieldValue",
+        "description": "Faulty value.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "Name of the faulty file.",
         "type": "string"
       }
     }
   },
   "more_than_one_entity": {
     "code": "more_than_one_entity",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "More than one row in CSV.",
+    "description": "The file is expected to have a single entity but has more (e.g., \"feed_info.txt\").",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "field-definitions"
+      ],
+      "urlReferences": []
+    },
     "properties": {
       "entityCount": {
         "fieldName": "entityCount",
+        "description": "Number of occurrences.",
         "type": "integer"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "Name of the faulty file.",
         "type": "string"
       }
     }
   },
   "new_line_in_value": {
     "code": "new_line_in_value",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "New line or carriage return in a value in CSV file.",
+    "description": "This error is usually found when the CSV file does not close double quotes properly, so the\nnext line is considered as a continuation of the previous line.\n\nExample: the following file was intended to have fields \"f11\", \"f12\", \"f21\", \"f22\", but it\nactually parses as two fields: \"f11\", \"f12\\nf21,\\\"f22\\\"\".\n\n```\nf11,\"f12\nf21,\"f22\"\n```",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "file-requirements"
+      ],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "The name of the faulty field.",
         "type": "string"
       },
       "fieldValue": {
         "fieldName": "fieldValue",
+        "description": "Faulty value.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       }
     }
   },
   "non_ascii_or_non_printable_char": {
     "code": "non_ascii_or_non_printable_char",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Non ascii or non printable char in ID field.",
+    "description": "A value of a field with type ID contains non ASCII or non printable characters. This is not\nrecommended.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": [
+        {
+          "label": "Original Python validator implementation",
+          "url": "https://github.com/google/transitfeed"
+        }
+      ]
+    },
     "properties": {
       "columnName": {
         "fieldName": "columnName",
+        "description": "Name of the column where the error occurred.",
         "type": "string"
       },
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "Row number of the faulty record.",
         "type": "integer"
       },
       "fieldValue": {
         "fieldName": "fieldValue",
+        "description": "Faulty value.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "Name of the faulty file.",
         "type": "string"
       }
     }
   },
   "number_out_of_range": {
     "code": "number_out_of_range",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "Out of range value.",
+    "description": "The values in the given column of the input rows are out of range.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "file-requirements",
+        "field-types",
+        "dataset-files"
+      ],
+      "urlReferences": [
+        {
+          "label": "Original Python validator implementation",
+          "url": "https://github.com/google/transitfeed"
+        }
+      ]
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty record.",
         "type": "integer"
       },
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "The name of the faulty field.",
         "type": "string"
       },
       "fieldType": {
         "fieldName": "fieldType",
+        "description": "The type of the faulty field.",
         "type": "string"
       },
       "fieldValue": {
         "fieldName": "fieldValue",
+        "description": "Faulty value.",
         "type": "object"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       }
     }
   },
   "overlapping_frequency": {
     "code": "overlapping_frequency",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "Trip frequencies overlap.",
+    "description": "Trip frequencies must not overlap in time. Two entries X and Y are considered to directly\noverlap if `X.start_time \u0026lt;\u003d Y.start_time` and `Y.start_time \u0026lt; X.end_time`.",
+    "references": {
+      "fileReferences": [
+        "frequencies.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "currCsvRowNumber": {
         "fieldName": "currCsvRowNumber",
+        "description": "The overlapping frequency\u0027s row number.",
         "type": "integer"
       },
       "currStartTime": {
         "fieldName": "currStartTime",
+        "description": "The overlapping frequency\u0027s start time.",
         "type": "string"
       },
       "prevCsvRowNumber": {
         "fieldName": "prevCsvRowNumber",
+        "description": "The row number of the first frequency.",
         "type": "integer"
       },
       "prevEndTime": {
         "fieldName": "prevEndTime",
+        "description": "The first frequency end time.",
         "type": "string"
       },
       "tripId": {
         "fieldName": "tripId",
+        "description": "The trip id associated to the first frequency.",
         "type": "string"
       }
     }
   },
   "pathway_dangling_generic_node": {
     "code": "pathway_dangling_generic_node",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "A generic node has only one incident location in a pathway graph.",
+    "description": "Such generic node is useless because there is no benefit in visiting it.",
+    "references": {
+      "fileReferences": [
+        "pathways.txt",
+        "stops.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "Row number of the dangling generic node.",
         "type": "integer"
       },
       "parentStation": {
         "fieldName": "parentStation",
+        "description": "The parent station of the dangling generic node.",
         "type": "string"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The id of the dangling generic node.",
         "type": "string"
       },
       "stopName": {
         "fieldName": "stopName",
+        "description": "The stop name of the dangling generic node.",
         "type": "string"
       }
     }
   },
   "pathway_loop": {
     "code": "pathway_loop",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "A pathway starts and ends at the same location.",
+    "description": "A pathway should not have same values for `from_stop_id` and `to_stop_id`.",
+    "references": {
+      "fileReferences": [
+        "pathways.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "Row number of the faulty row from `pathways.txt`.",
         "type": "integer"
       },
       "pathwayId": {
         "fieldName": "pathwayId",
+        "description": "The id of the faulty record.",
         "type": "string"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The `pathway.stop_id` that is repeated in `pathways.from_stop_id` and `pathways.to_stop_id`.",
         "type": "string"
       }
     }
   },
   "pathway_to_platform_with_boarding_areas": {
     "code": "pathway_to_platform_with_boarding_areas",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A pathway has an endpoint that is a platform which has boarding areas.",
+    "description": "A platform that has boarding areas is treated as a parent object, not a point. In such\ncases, the platform must not have pathways assigned - instead, pathways must be assigned to its\nboarding areas.",
+    "references": {
+      "fileReferences": [
+        "pathways.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty row.",
         "type": "integer"
       },
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "The platform id field name.",
         "type": "string"
       },
       "pathwayId": {
         "fieldName": "pathwayId",
+        "description": "The id of the faulty pathway.",
         "type": "string"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The id of the endpoint platform.",
         "type": "string"
       }
     }
   },
   "pathway_to_wrong_location_type": {
     "code": "pathway_to_wrong_location_type",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A pathway has an endpoint that is a station.",
+    "description": "Pathways endpoints must be platforms (stops), entrances/exits, generic nodes or boarding\nareas.",
+    "references": {
+      "fileReferences": [
+        "pathways.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty row.",
         "type": "integer"
       },
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "The station id field name.",
         "type": "string"
       },
       "pathwayId": {
         "fieldName": "pathwayId",
+        "description": "The id of the faulty pathway.",
         "type": "string"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The id of the endpoint station.",
         "type": "string"
       }
     }
   },
   "pathway_unreachable_location": {
     "code": "pathway_unreachable_location",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A location is not reachable at least in one direction: from the entrances or to the exits.",
+    "description": "Notices are reported for platforms, boarding areas and generic nodes but not for entrances\nor stations.\n\nNotices are not reported for platforms that have boarding areas since such platforms may not\nhave incident pathways. Instead, notices are reported for the boarding areas.",
+    "references": {
+      "fileReferences": [
+        "pathways.txt",
+        "stops.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "Row number of the unreachable location.",
         "type": "integer"
       },
       "hasEntrance": {
         "fieldName": "hasEntrance",
+        "description": "Whether the location is reachable from entrances.",
         "type": "boolean"
       },
       "hasExit": {
         "fieldName": "hasExit",
+        "description": "Whether some exit can be reached from the location.",
         "type": "boolean"
       },
       "locationType": {
         "fieldName": "locationType",
+        "description": "The type of the unreachable location.",
         "type": "integer"
       },
       "parentStation": {
         "fieldName": "parentStation",
+        "description": "The parent of the unreachable location.",
         "type": "string"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The id of the unreachable location.",
         "type": "string"
       },
       "stopName": {
         "fieldName": "stopName",
+        "description": "The stop name of the unreachable location.",
         "type": "string"
       }
     }
@@ -1586,428 +2578,690 @@
     "code": "platform_without_parent_station",
     "severityLevel": "INFO",
     "type": "object",
+    "shortSummary": "A platform has no `parent_station` field set.",
+    "description": "This is different from `location_without_parent_station` since it is less severe.",
+    "references": {
+      "fileReferences": [
+        "stops.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "Row number of the faulty record.",
         "type": "integer"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The id of the faulty record.",
         "type": "string"
       },
       "stopName": {
         "fieldName": "stopName",
+        "description": "The stop name of the faulty record.",
         "type": "string"
       }
     }
   },
   "point_near_origin": {
     "code": "point_near_origin",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A point is too close to origin `(0, 0)`.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": [
+        {
+          "label": "Original Python validator implementation",
+          "url": "https://github.com/google/transitfeed"
+        }
+      ]
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty row.",
         "type": "integer"
       },
       "entityId": {
         "fieldName": "entityId",
+        "description": "The id of the faulty entity.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the affected GTFS file.",
         "type": "string"
       },
       "latFieldName": {
         "fieldName": "latFieldName",
+        "description": "The name of the field that uses latitude value.",
         "type": "string"
       },
       "latFieldValue": {
         "fieldName": "latFieldValue",
+        "description": "The latitude of the faulty row.",
         "type": "number"
       },
       "lonFieldName": {
         "fieldName": "lonFieldName",
+        "description": "The name of the field that uses longitude value.",
         "type": "string"
       },
       "lonFieldValue": {
         "fieldName": "lonFieldValue",
+        "description": "The longitude of the faulty row",
         "type": "number"
       }
     }
   },
   "point_near_pole": {
     "code": "point_near_pole",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A point is too close to the North or South Pole.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": [
+        {
+          "label": "Original Python validator implementation",
+          "url": "https://github.com/google/transitfeed"
+        }
+      ]
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row of the faulty row.",
         "type": "integer"
       },
       "entityId": {
         "fieldName": "entityId",
+        "description": "The id of the faulty entity.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the affected GTFS file.",
         "type": "string"
       },
       "latFieldName": {
         "fieldName": "latFieldName",
+        "description": "The name of the field that uses latitude value.",
         "type": "string"
       },
       "latFieldValue": {
         "fieldName": "latFieldValue",
+        "description": "The latitude of the faulty row.",
         "type": "number"
       },
       "lonFieldName": {
         "fieldName": "lonFieldName",
+        "description": "The name of the field that uses longitude value.",
         "type": "string"
       },
       "lonFieldValue": {
         "fieldName": "lonFieldValue",
+        "description": "The longitude of the faulty row.",
         "type": "number"
       }
     }
   },
   "route_both_short_and_long_name_missing": {
     "code": "route_both_short_and_long_name_missing",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "Both `route_short_name` and `route_long_name` are missing for a route.",
+    "references": {
+      "fileReferences": [
+        "routes.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "routeId": {
         "fieldName": "routeId",
+        "description": "The id of the faulty record.",
         "type": "string"
       }
     }
   },
   "route_color_contrast": {
     "code": "route_color_contrast",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Insufficient route color contrast.",
+    "description": "A route\u0027s color and `route_text_color` should be contrasting.",
+    "references": {
+      "fileReferences": [
+        "routes.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": [
+        {
+          "label": "Original Python validator implementation",
+          "url": "https://github.com/google/transitfeed"
+        }
+      ]
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "routeColor": {
         "fieldName": "routeColor",
+        "description": "The faulty record\u0027s HTML route color.",
         "type": "string"
       },
       "routeId": {
         "fieldName": "routeId",
+        "description": "The id of the faulty record.",
         "type": "string"
       },
       "routeTextColor": {
         "fieldName": "routeTextColor",
+        "description": "The faulty record\u0027s HTML route text color.",
         "type": "string"
       }
     }
   },
   "route_long_name_contains_short_name": {
     "code": "route_long_name_contains_short_name",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Long name should not contain short name for a single route.",
+    "description": "In routes.txt, `route_long_name` should not contain the value for `route_short_name`,\nbecause when both are provided, they are often combined by transit applications. Note that only\none of the two fields is required. If there is no short name used for a route, use\n`route_long_name` only.\n\nGood examples:\n\n| `route_short_name`/`route_long_name`                                                                | Dataset                                                                                                                                                                |\n| ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |\n| [\"N\"/\"Judah\"](https://www.sfmta.com/getting-around/transit/routes-stops/n-judah)                | [Muni San Fransisco](https://storage.googleapis.com/storage/v1/b/mdb-latest/o/us-california-san-francisco-municipal-transportation-agency-sfmta-gtfs-50.zip?alt\u003dmedia) |\n| [\"6\"/\"ML King Jr Blvd\"](https://trimet.org/schedules/r006.htm)                                  | [Trimet Portland Streetcar](http://developer.trimet.org/schedule/gtfs.zip)                                                                                             |\n| [\"55\"/\"Boulevard Saint Laurent\"](https://www.stm.info/en/info/networks/bus/local/line-55-north) | [STM Montreal](https://storage.googleapis.com/storage/v1/b/mdb-latest/o/ca-quebec-societe-de-transport-de-montreal-gtfs-1221.zip?alt\u003dmedia)                            |\n| [\"1\"/\"Rangiora/Cashmere\"](https://www.metroinfo.co.nz/timetables/1-rangiora-cashmere/)          | [Metro Christchurch](https://storage.googleapis.com/storage/v1/b/mdb-latest/o/nz-christchurch-christchurch-metro-gtfs-1313.zip?alt\u003dmedia)                              |\n\nBad examples:\n\n| `route_short_name`/`route_long_name` |\n|-------------------------------------------|\n| \"604\"/\"604\"                               |\n| \"14\"/\"Route 14\"                           |\n| \"2\"/\"Route 2: Bellows Falls In-Town\"      |",
+    "references": {
+      "fileReferences": [
+        "routes.txt"
+      ],
+      "bestPracticesFileReferences": [
+        "routes.txt"
+      ],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "routeId": {
         "fieldName": "routeId",
+        "description": "The id of the faulty record.",
         "type": "string"
       },
       "routeLongName": {
         "fieldName": "routeLongName",
+        "description": "The faulty record\u0027s `route_long_name`.",
         "type": "string"
       },
       "routeShortName": {
         "fieldName": "routeShortName",
+        "description": "The faulty record\u0027s `route_short_name`.",
         "type": "string"
       }
     }
   },
   "route_short_name_too_long": {
     "code": "route_short_name_too_long",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Short name of a route is too long (more than 12 characters).",
+    "references": {
+      "fileReferences": [
+        "routes.txt"
+      ],
+      "bestPracticesFileReferences": [
+        "routes.txt"
+      ],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "routeId": {
         "fieldName": "routeId",
+        "description": "The id of the faulty record.",
         "type": "string"
       },
       "routeShortName": {
         "fieldName": "routeShortName",
+        "description": "The faulty record\u0027s `route_short_name`.",
         "type": "string"
       }
     }
   },
   "runtime_exception_in_loader_error": {
     "code": "runtime_exception_in_loader_error",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "RuntimeException while loading GTFS dataset in memory.",
+    "description": "A\n[RuntimeException](https://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html)\noccurred while loading a table. This normally indicates a bug in validator.",
     "properties": {
       "exception": {
         "fieldName": "exception",
+        "description": "The name of the exception.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the file that caused the exception.",
         "type": "string"
       },
       "message": {
         "fieldName": "message",
+        "description": "The error message that explains the reason for the exception.",
         "type": "string"
       }
     }
   },
   "runtime_exception_in_validator_error": {
     "code": "runtime_exception_in_validator_error",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "RuntimeException while validating GTFS archive.",
+    "description": "A\n[RuntimeException](https://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html)\noccurred during validation. This normally indicates a bug in validator code, e.g., in a custom\nvalidator class.",
     "properties": {
       "exception": {
         "fieldName": "exception",
+        "description": "The name of the exception.",
         "type": "string"
       },
       "message": {
         "fieldName": "message",
+        "description": "The error message that explains the reason for the exception.",
         "type": "string"
       },
       "validator": {
         "fieldName": "validator",
+        "description": "The name of the validator that caused the exception.",
         "type": "string"
       }
     }
   },
   "same_name_and_description_for_route": {
     "code": "same_name_and_description_for_route",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Same name and description for route.",
+    "description": "The GTFS spec defines `routes.txt`\n[route_desc](https://gtfs.org/reference/static/#routestxt) as:\n\nDescription of a route that provides useful, quality information. Do not simply duplicate\nthe name of the route.\n\nSee the GTFS and GTFS Best Practices links below for more examples of how to populate the\n`route_short_name`, `route_long_name`, and `route_desc` fields.",
+    "references": {
+      "fileReferences": [
+        "routes.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "routeDesc": {
         "fieldName": "routeDesc",
+        "description": "The `routes.routes_desc` of the faulty record.",
         "type": "string"
       },
       "routeId": {
         "fieldName": "routeId",
+        "description": "The id of the faulty record.",
         "type": "string"
       },
       "specifiedField": {
         "fieldName": "specifiedField",
+        "description": "Either `route_short_name` or `route_long_name`.",
         "type": "string"
       }
     }
   },
   "same_name_and_description_for_stop": {
     "code": "same_name_and_description_for_stop",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Same name and description for stop.",
+    "description": "The GTFS spec defines `stops.txt`\n[stop_description](https://gtfs.org/reference/static/#stopstxt) as:\n\nDescription of the location that provides useful, quality information. Do not simply\nduplicate the name of the location.",
+    "references": {
+      "fileReferences": [
+        "stops.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "stopDesc": {
         "fieldName": "stopDesc",
+        "description": "The faulty record\u0027s `stop_desc`.",
         "type": "string"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The id of the faulty record.",
         "type": "string"
       }
     }
   },
   "same_route_and_agency_url": {
     "code": "same_route_and_agency_url",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Same `routes.route_url` and `agency.agency_url`.",
+    "description": "A route should not have the same `routes.route_url` as a record from `agency.txt`.",
+    "references": {
+      "fileReferences": [
+        "routes.txt",
+        "agency.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "agencyCsvRowNumber": {
         "fieldName": "agencyCsvRowNumber",
+        "description": "The row number of the faulty record from `agency.txt`.",
         "type": "integer"
       },
       "agencyName": {
         "fieldName": "agencyName",
+        "description": "The faulty record\u0027s referenced agency name.",
         "type": "string"
       },
       "routeCsvRowNumber": {
         "fieldName": "routeCsvRowNumber",
+        "description": "The row number of the faulty record from `routes.txt`.",
         "type": "integer"
       },
       "routeId": {
         "fieldName": "routeId",
+        "description": "The faulty record\u0027s id.",
         "type": "string"
       },
       "routeUrl": {
         "fieldName": "routeUrl",
+        "description": "The duplicate URL value",
         "type": "string"
       }
     }
   },
   "same_stop_and_agency_url": {
     "code": "same_stop_and_agency_url",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Same `stops.stop_url` and `agency.agency_url`.",
+    "description": "A stop should not have the same `stops.stop_url` as a record from `agency.txt`.",
+    "references": {
+      "fileReferences": [
+        "stops.txt",
+        "agency.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "agencyCsvRowNumber": {
         "fieldName": "agencyCsvRowNumber",
+        "description": "The row number of the faulty record from `agency.txt`.",
         "type": "integer"
       },
       "agencyName": {
         "fieldName": "agencyName",
+        "description": "The faulty record\u0027s `agency.agency_name`.",
         "type": "string"
       },
       "stopCsvRowNumber": {
         "fieldName": "stopCsvRowNumber",
+        "description": "The row number of the faulty record from `stops.txt`.",
         "type": "integer"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The faulty record\u0027s id.",
         "type": "string"
       },
       "stopUrl": {
         "fieldName": "stopUrl",
+        "description": "The duplicate URL value.",
         "type": "string"
       }
     }
   },
   "same_stop_and_route_url": {
     "code": "same_stop_and_route_url",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Same `stops.stop_url` and `routes.route_url`.",
+    "description": "A stop should not have the same `stop.stop_url` as a record from `routes.txt`.",
+    "references": {
+      "fileReferences": [
+        "stops.txt",
+        "routes.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "routeCsvRowNumber": {
         "fieldName": "routeCsvRowNumber",
+        "description": "The row number of the faulty record from `routes.txt`.",
         "type": "integer"
       },
       "routeId": {
         "fieldName": "routeId",
+        "description": "The faulty record\u0027s id from `routes.txt.",
         "type": "string"
       },
       "stopCsvRowNumber": {
         "fieldName": "stopCsvRowNumber",
+        "description": "The row number of the faulty record from `stops.txt`.",
         "type": "integer"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The faulty record\u0027s id.",
         "type": "string"
       },
       "stopUrl": {
         "fieldName": "stopUrl",
+        "description": "The duplicate URL value.",
         "type": "string"
       }
     }
   },
   "start_and_end_range_equal": {
     "code": "start_and_end_range_equal",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "Two date or time fields are equal.",
+    "description": "The fields `frequencies.start_date` and `frequencies.end_date` have been found equal in\n`frequencies.txt`. The GTFS spec is currently unclear how this case should be handled (e.g., is\nit a trip that circulates once?). It is recommended to use a trip not defined via frequencies.txt\nfor this case.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": [
+        {
+          "label": "Original Python validator implementation",
+          "url": "https://github.com/google/transitfeed"
+        }
+      ]
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "endFieldName": {
         "fieldName": "endFieldName",
+        "description": "The end value\u0027s field name.",
         "type": "string"
       },
       "entityId": {
         "fieldName": "entityId",
+        "description": "The id of the faulty entity.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       },
       "startFieldName": {
         "fieldName": "startFieldName",
+        "description": "The start value\u0027s field name.",
         "type": "string"
       },
       "value": {
         "fieldName": "value",
+        "description": "The faulty value.",
         "type": "string"
       }
     }
   },
   "start_and_end_range_out_of_order": {
     "code": "start_and_end_range_out_of_order",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "Two date or time fields are out of order.",
+    "description": "Date or time fields have been found out of order in `calendar.txt`, `feed_info.txt` and\n`stop_times.txt`.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": [
+        {
+          "label": "Original Python validator implementation",
+          "url": "https://github.com/google/transitfeed"
+        }
+      ]
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "endFieldName": {
         "fieldName": "endFieldName",
+        "description": "The end value\u0027s field name.",
         "type": "string"
       },
       "endValue": {
         "fieldName": "endValue",
+        "description": "The end value.",
         "type": "string"
       },
       "entityId": {
         "fieldName": "entityId",
+        "description": "The faulty service id.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       },
       "startFieldName": {
         "fieldName": "startFieldName",
+        "description": "The start value\u0027s field name.",
         "type": "string"
       },
       "startValue": {
         "fieldName": "startValue",
+        "description": "The start value.",
         "type": "string"
       }
     }
   },
   "station_with_parent_station": {
     "code": "station_with_parent_station",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A station has `parent_station` field set.",
+    "description": "Field `parent_station` must be empty when `location_type` is 1.",
+    "references": {
+      "fileReferences": [
+        "stops.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "parentStation": {
         "fieldName": "parentStation",
+        "description": "Parent station\u0027s id.",
         "type": "string"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The id of the faulty record.",
         "type": "string"
       },
       "stopName": {
         "fieldName": "stopName",
+        "description": "The stops.stop_name of the faulty record.",
         "type": "string"
       }
     }
   },
   "stop_has_too_many_matches_for_shape": {
     "code": "stop_has_too_many_matches_for_shape",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Stop entry that has many potential matches to the trip\u0027s path of travel, as defined by the",
+    "description": "shape entry in `shapes.txt`.\n\nThis potentially indicates a problem with the location of the stop or the path of the shape.",
+    "references": {
+      "fileReferences": [
+        "trips.txt",
+        "stop_times.txt",
+        "stops.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "match": {
         "fieldName": "match",
+        "description": "Latitude and longitude pair of the location.",
         "type": "array",
         "contains": {
           "type": "number"
@@ -2017,118 +3271,189 @@
       },
       "matchCount": {
         "fieldName": "matchCount",
+        "description": "The number of matches for the stop that is referred to.",
         "type": "integer"
       },
       "shapeId": {
         "fieldName": "shapeId",
+        "description": "The id of the shape that is referred to.",
         "type": "string"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The id of the stop that is referred to.",
         "type": "string"
       },
       "stopName": {
         "fieldName": "stopName",
+        "description": "The name of the stop that is referred to.",
         "type": "string"
       },
       "stopTimeCsvRowNumber": {
         "fieldName": "stopTimeCsvRowNumber",
+        "description": "The row number of the faulty record from `stop_times.txt`.",
         "type": "integer"
       },
       "tripCsvRowNumber": {
         "fieldName": "tripCsvRowNumber",
+        "description": "The row number of the faulty record from `trips.txt`.",
         "type": "integer"
       },
       "tripId": {
         "fieldName": "tripId",
+        "description": "The id of the trip that is referred to.",
         "type": "string"
       }
     }
   },
   "stop_time_timepoint_without_times": {
     "code": "stop_time_timepoint_without_times",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "`arrival_time` or `departure_time` not specified for timepoint.",
+    "description": "Any records with `stop_times.timepoint` set to 1 must define a value for\n`stop_times.arrival_time` and `stop_times.departure_time` fields.",
+    "references": {
+      "fileReferences": [
+        "stop_times.txt",
+        "stop_times.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "specifiedField": {
         "fieldName": "specifiedField",
+        "description": "Either `departure_time` or `arrival_time`.",
         "type": "string"
       },
       "stopSequence": {
         "fieldName": "stopSequence",
+        "description": "The faulty record\u0027s `stops.stop_sequence`.",
         "type": "integer"
       },
       "tripId": {
         "fieldName": "tripId",
+        "description": "The faulty record\u0027s id.",
         "type": "string"
       }
     }
   },
   "stop_time_with_arrival_before_previous_departure_time": {
     "code": "stop_time_with_arrival_before_previous_departure_time",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "Backwards time travel between stops in `stop_times.txt`",
+    "description": "For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must not precede\nthe `departure_time` of n-th stoptime in sequence in `stop_times.txt`.",
+    "references": {
+      "fileReferences": [
+        "stop_times.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": [
+        {
+          "label": "Original Python validator implementation",
+          "url": "https://github.com/google/transitfeed"
+        }
+      ]
+    },
     "properties": {
       "arrivalTime": {
         "fieldName": "arrivalTime",
+        "description": "Arrival time at the faulty record.",
         "type": "string"
       },
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "departureTime": {
         "fieldName": "departureTime",
+        "description": "Departure time at the previous stop time.",
         "type": "string"
       },
       "prevCsvRowNumber": {
         "fieldName": "prevCsvRowNumber",
+        "description": "The row of the previous stop time.",
         "type": "integer"
       },
       "tripId": {
         "fieldName": "tripId",
+        "description": "The trip_id associated to the faulty record.",
         "type": "string"
       }
     }
   },
   "stop_time_with_only_arrival_or_departure_time": {
     "code": "stop_time_with_only_arrival_or_departure_time",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "Missing `stop_times.arrival_time` or `stop_times.departure_time`.",
+    "references": {
+      "fileReferences": [
+        "stop_times.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "specifiedField": {
         "fieldName": "specifiedField",
+        "description": "Either `arrival_time` or `departure_time`",
         "type": "string"
       },
       "stopSequence": {
         "fieldName": "stopSequence",
+        "description": "The sequence of the faulty stop.",
         "type": "integer"
       },
       "tripId": {
         "fieldName": "tripId",
+        "description": "The trip_id associated to the faulty record.",
         "type": "string"
       }
     }
   },
   "stop_too_far_from_shape": {
     "code": "stop_too_far_from_shape",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Stop too far from trip shape.",
+    "description": "Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100 meters of\nstop locations which a trip serves. This potentially indicates a problem with the location of\nthe stop or the path of the shape.",
+    "references": {
+      "fileReferences": [
+        "stop_times.txt",
+        "stops.txt",
+        "trips.txt"
+      ],
+      "bestPracticesFileReferences": [
+        "shapes.txt"
+      ],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "geoDistanceToShape": {
         "fieldName": "geoDistanceToShape",
+        "description": "Distance from stop to shape.",
         "type": "number"
       },
       "match": {
         "fieldName": "match",
+        "description": "Latitude and longitude pair of the location.",
         "type": "array",
         "contains": {
           "type": "number"
@@ -2138,41 +3463,62 @@
       },
       "shapeId": {
         "fieldName": "shapeId",
+        "description": "The id of the shape that is referred to.",
         "type": "string"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The id of the stop that is referred to.",
         "type": "string"
       },
       "stopName": {
         "fieldName": "stopName",
+        "description": "The name of the stop that is referred to.",
         "type": "string"
       },
       "stopTimeCsvRowNumber": {
         "fieldName": "stopTimeCsvRowNumber",
+        "description": "The row number of the faulty record from `stop_times.txt`.",
         "type": "integer"
       },
       "tripCsvRowNumber": {
         "fieldName": "tripCsvRowNumber",
+        "description": "The row number of the faulty record from `trips.txt`.",
         "type": "integer"
       },
       "tripId": {
         "fieldName": "tripId",
+        "description": "The id of the trip that is referred to.",
         "type": "string"
       }
     }
   },
   "stop_too_far_from_shape_using_user_distance": {
     "code": "stop_too_far_from_shape_using_user_distance",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Stop time too far from shape.",
+    "description": "A stop time entry that is a large distance away from the location of the shape in\n`shapes.txt` as defined by `shape_dist_traveled` values.",
+    "references": {
+      "fileReferences": [
+        "trips.txt",
+        "stop_times.txt",
+        "stops.txt",
+        "stop_times.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "geoDistanceToShape": {
         "fieldName": "geoDistanceToShape",
+        "description": "Distance from stop to shape.",
         "type": "number"
       },
       "match": {
         "fieldName": "match",
+        "description": "Latitude and longitude pair of the location.",
         "type": "array",
         "contains": {
           "type": "number"
@@ -2182,94 +3528,154 @@
       },
       "shapeId": {
         "fieldName": "shapeId",
+        "description": "The id of the shape that is referred to.",
         "type": "string"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The id of the stop that is referred to.",
         "type": "string"
       },
       "stopName": {
         "fieldName": "stopName",
+        "description": "The name of the stop that is referred to.",
         "type": "string"
       },
       "stopTimeCsvRowNumber": {
         "fieldName": "stopTimeCsvRowNumber",
+        "description": "The row number of the faulty record from `stop_times.txt`.",
         "type": "integer"
       },
       "tripCsvRowNumber": {
         "fieldName": "tripCsvRowNumber",
+        "description": "The row number of the faulty record from `trips.txt`.",
         "type": "integer"
       },
       "tripId": {
         "fieldName": "tripId",
+        "description": "The id of the trip that is referred to.",
         "type": "string"
       }
     }
   },
   "stop_without_location": {
     "code": "stop_without_location",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "`stop_lat` and/or `stop_lon` is missing for stop with `location_type` equal to`0`, `1`, or `2`",
+    "description": "`stop_lat` and/or `stop_lon` are required for locations that are stops (`location_type\u003d0`),\nstations (`location_type\u003d1`) or entrances/exits (`location_type\u003d2`).",
+    "references": {
+      "fileReferences": [
+        "stops.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "locationType": {
         "fieldName": "locationType",
+        "description": "The faulty record\u0027s `stops.location_type`.",
         "type": "enum"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The faulty record\u0027s id.",
         "type": "string"
       }
     }
   },
   "stop_without_stop_time": {
     "code": "stop_without_stop_time",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "A stop in `stops.txt` is not referenced by any `stop_times.stop_id`.",
+    "description": "Such stops are not used by any trip and normally do not provide user value. This notice may\nindicate a typo in `stop_times.txt`.",
+    "references": {
+      "fileReferences": [
+        "stop_times.txt",
+        "stops.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The id of the faulty stop.",
         "type": "string"
       },
       "stopName": {
         "fieldName": "stopName",
+        "description": "The name of the faulty stop.",
         "type": "string"
       }
     }
   },
   "stop_without_zone_id": {
     "code": "stop_without_zone_id",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "Stop without value for `stops.zone_id`.",
+    "description": "If `fare_rules.txt` is provided, and `fare_rules.txt` uses at least one column among\n`origin_id`, `destination_id`, and `contains_id`, then all stops and platforms (location_type \u003d\n0) must have `stops.zone_id` assigned.",
+    "references": {
+      "fileReferences": [
+        "stops.txt",
+        "fare_rules.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The faulty record\u0027s id.",
         "type": "string"
       },
       "stopName": {
         "fieldName": "stopName",
+        "description": "The faulty record\u0027s `stops.stop_name`.",
         "type": "string"
       }
     }
   },
   "stops_match_shape_out_of_order": {
     "code": "stops_match_shape_out_of_order",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Two stop entries are different than their arrival-departure order defined by `shapes.txt`.",
+    "description": "This could indicate a problem with the location of the stops, the path of the shape, or the\nsequence of the stops for their trip.",
+    "references": {
+      "fileReferences": [
+        "trips.txt",
+        "stop_times.txt",
+        "stops.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "match1": {
         "fieldName": "match1",
+        "description": "Latitude and longitude pair of the first matching location.",
         "type": "array",
         "contains": {
           "type": "number"
@@ -2279,6 +3685,7 @@
       },
       "match2": {
         "fieldName": "match2",
+        "description": "Latitude and longitude pair of the second matching location.",
         "type": "array",
         "contains": {
           "type": "number"
@@ -2288,294 +3695,422 @@
       },
       "shapeId": {
         "fieldName": "shapeId",
+        "description": "The id of the shape that is referred to.",
         "type": "string"
       },
       "stopId1": {
         "fieldName": "stopId1",
+        "description": "The id of the first stop that is referred to.",
         "type": "string"
       },
       "stopId2": {
         "fieldName": "stopId2",
+        "description": "The id of the second stop that is referred to.",
         "type": "string"
       },
       "stopName1": {
         "fieldName": "stopName1",
+        "description": "The name of the first stop that is referred to.",
         "type": "string"
       },
       "stopName2": {
         "fieldName": "stopName2",
+        "description": "The name of the second stop that is referred to.",
         "type": "string"
       },
       "stopTimeCsvRowNumber1": {
         "fieldName": "stopTimeCsvRowNumber1",
+        "description": "The row number of the first faulty record from `stop_times.txt`.",
         "type": "integer"
       },
       "stopTimeCsvRowNumber2": {
         "fieldName": "stopTimeCsvRowNumber2",
+        "description": "The row number of the second faulty record from `stop_times.txt`.",
         "type": "integer"
       },
       "tripCsvRowNumber": {
         "fieldName": "tripCsvRowNumber",
+        "description": "The row number of the faulty record from `trips.txt`.",
         "type": "integer"
       },
       "tripId": {
         "fieldName": "tripId",
+        "description": "The id of the trip that is referred to.",
         "type": "string"
       }
     }
   },
   "thread_execution_error": {
     "code": "thread_execution_error",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "ExecutionException during multithreaded validation",
+    "description": "An\n[ExecutionException](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutionException.html)\noccurred during multithreaded validation.",
     "properties": {
       "exception": {
         "fieldName": "exception",
+        "description": "The name of the exception.",
         "type": "string"
       },
       "message": {
         "fieldName": "message",
+        "description": "The error message that explains the reason for the exception.",
         "type": "string"
       }
     }
   },
   "too_many_rows": {
     "code": "too_many_rows",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A CSV file has too many rows.",
+    "description": "Feeds with too large files cannot be processed in a reasonable time by GTFS consumers.",
     "properties": {
       "filename": {
         "fieldName": "filename",
+        "description": "Name of the CSV file that has too many rows.",
         "type": "string"
       },
       "rowNumber": {
         "fieldName": "rowNumber",
+        "description": "Number of the row when reading was stopped.",
         "type": "integer"
       }
     }
   },
   "transfer_with_invalid_stop_location_type": {
     "code": "transfer_with_invalid_stop_location_type",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A stop id field from GTFS file `transfers.txt` references a stop that has a `location_type`",
+    "description": "other than 0 or 1 (aka Stop/Platform or Station).",
+    "references": {
+      "fileReferences": [
+        "transfers.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number from `transfers.txt` for the faulty entry.",
         "type": "integer"
       },
       "locationTypeName": {
         "fieldName": "locationTypeName",
+        "description": "The name of the invalid location type.",
         "type": "string"
       },
       "locationTypeValue": {
         "fieldName": "locationTypeValue",
+        "description": "The numeric value of the invalid location type.",
         "type": "integer"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The referenced stop id.",
         "type": "string"
       },
       "stopIdFieldName": {
         "fieldName": "stopIdFieldName",
+        "description": "The name of the stop id field (e.g. `from_stop_id`) referencing the stop.",
         "type": "string"
       }
     }
   },
   "transfer_with_invalid_trip_and_route": {
     "code": "transfer_with_invalid_trip_and_route",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A trip id field from GTFS file `transfers.txt` references a route that does not match its",
+    "description": "`trips.txt` `route_id`.",
+    "references": {
+      "fileReferences": [
+        "transfers.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number from `transfers.txt` for the faulty entry.",
         "type": "integer"
       },
       "expectedRouteId": {
         "fieldName": "expectedRouteId",
+        "description": "The expected route id from `trips.txt`.",
         "type": "string"
       },
       "routeFieldName": {
         "fieldName": "routeFieldName",
+        "description": "The name of the route id field (e.g. `from_route_id`) referencing the route.",
         "type": "string"
       },
       "routeId": {
         "fieldName": "routeId",
+        "description": "The referenced route id.",
         "type": "string"
       },
       "tripFieldName": {
         "fieldName": "tripFieldName",
+        "description": "The name of the trip id field (e.g. `from_trip_id`) referencing a trip.",
         "type": "string"
       },
       "tripId": {
         "fieldName": "tripId",
+        "description": "The referenced trip id.",
         "type": "string"
       }
     }
   },
   "transfer_with_invalid_trip_and_stop": {
     "code": "transfer_with_invalid_trip_and_stop",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A trip id field from GTFS file `transfers.txt` references a stop that is not included in the",
+    "description": "referenced trip\u0027s stop-times.",
+    "references": {
+      "fileReferences": [
+        "transfers.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number from `transfers.txt` for the faulty entry.",
         "type": "integer"
       },
       "stopFieldName": {
         "fieldName": "stopFieldName",
+        "description": "The name of the stop id field (e.g. `stop_route_id`) referencing the stop.",
         "type": "string"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The referenced stop id.",
         "type": "string"
       },
       "tripFieldName": {
         "fieldName": "tripFieldName",
+        "description": "The name of the trip id field (e.g. `from_trip_id`) referencing a trip.",
         "type": "string"
       },
       "tripId": {
         "fieldName": "tripId",
+        "description": "The referenced trip id.",
         "type": "string"
       }
     }
   },
   "transfer_with_suspicious_mid_trip_in_seat": {
     "code": "transfer_with_suspicious_mid_trip_in_seat",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "A trip id field from GTFS file `transfers.txt` with an in-seat transfer type references a stop",
+    "description": "that is not in the expected position in the trip\u0027s stop-times.\n\nFor in-seat transfers, we expect the stop to be the last stop-time in the trip sequence for\n`from_stop_id` and the first stop-time for `to_stop_id`. If you are intentionally using this\nfeature to model mid-trip transfers, you can ignore this warning, but be aware that this\nfunctionality is still considered to be partially experimental in some interpretations of the\nspec.",
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number from `transfers.txt` for the faulty entry.",
         "type": "integer"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The referenced stop id.",
         "type": "string"
       },
       "stopIdFieldName": {
         "fieldName": "stopIdFieldName",
+        "description": "The name of the stop id field (e.g. `from_stop_id`) referencing the stop.",
         "type": "string"
       },
       "tripId": {
         "fieldName": "tripId",
+        "description": "The referenced trip id.",
         "type": "string"
       },
       "tripIdFieldName": {
         "fieldName": "tripIdFieldName",
+        "description": "The name of the trip id field (e.g. `from_trip_id`) referencing a trip.",
         "type": "string"
       }
     }
   },
   "translation_foreign_key_violation": {
     "code": "translation_foreign_key_violation",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "An entity with the given `record_id` and `record_sub_id` cannot be found in the referenced",
+    "description": "table.",
+    "references": {
+      "fileReferences": [
+        "translations.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "recordId": {
         "fieldName": "recordId",
+        "description": "`record_id` of the faulty record.",
         "type": "string"
       },
       "recordSubId": {
         "fieldName": "recordSubId",
+        "description": "`record_sub_id` of the faulty record.",
         "type": "string"
       },
       "tableName": {
         "fieldName": "tableName",
+        "description": "`table_name` of the faulty record.",
         "type": "string"
       }
     }
   },
   "translation_unexpected_value": {
     "code": "translation_unexpected_value",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A field in a translations row has value but must be empty.",
+    "references": {
+      "fileReferences": [
+        "translations.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "The name of the field that was expected to be empty.",
         "type": "string"
       },
       "fieldValue": {
         "fieldName": "fieldValue",
+        "description": "Actual value of the field that was expected to be empty.",
         "type": "string"
       }
     }
   },
   "translation_unknown_table_name": {
     "code": "translation_unknown_table_name",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "A translation references an unknown or missing GTFS table.",
+    "references": {
+      "fileReferences": [
+        "translations.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "tableName": {
         "fieldName": "tableName",
+        "description": "`table_name` of the faulty record.",
         "type": "string"
       }
     }
   },
   "trip_coverage_not_active_for_next7_days": {
     "code": "trip_coverage_not_active_for_next7_days",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Trips data should be valid for at least the next seven days.",
+    "description": "This notice is triggered if the date range where a significant number of trips are running\nends in less than 7 days.",
     "properties": {
       "currentDate": {
         "fieldName": "currentDate",
+        "description": "Current date (YYYYMMDD format).",
         "type": "string"
       },
       "serviceWindowEndDate": {
         "fieldName": "serviceWindowEndDate",
+        "description": "The end date of the majority service window.",
         "type": "string"
       },
       "serviceWindowStartDate": {
         "fieldName": "serviceWindowStartDate",
+        "description": "The start date of the majority service window.",
         "type": "string"
       }
     }
   },
   "u_r_i_syntax_error": {
     "code": "u_r_i_syntax_error",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "A string could not be parsed as a URI reference.",
     "properties": {
       "exception": {
         "fieldName": "exception",
+        "description": "The name of the exception.",
         "type": "string"
       },
       "message": {
         "fieldName": "message",
+        "description": "The error message that explains the reason for the exception.",
         "type": "string"
       }
     }
   },
   "unexpected_enum_value": {
     "code": "unexpected_enum_value",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "An enum has an unexpected value.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [
+        "field-definitions"
+      ],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "The name of the field where the error occurred.",
         "type": "string"
       },
       "fieldValue": {
         "fieldName": "fieldValue",
+        "description": "Faulty value.",
         "type": "integer"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       }
     }
@@ -2584,17 +4119,32 @@
     "code": "unknown_column",
     "severityLevel": "INFO",
     "type": "object",
+    "shortSummary": "A column name is unknown.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": [
+        {
+          "label": "Original Python validator implementation",
+          "url": "https://github.com/google/transitfeed"
+        }
+      ]
+    },
     "properties": {
       "fieldName": {
         "fieldName": "fieldName",
+        "description": "The name of the unknown column.",
         "type": "string"
       },
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the faulty file.",
         "type": "string"
       },
       "index": {
         "fieldName": "index",
+        "description": "The index of the faulty column.",
         "type": "integer"
       }
     }
@@ -2603,97 +4153,184 @@
     "code": "unknown_file",
     "severityLevel": "INFO",
     "type": "object",
+    "shortSummary": "A file is unknown.",
+    "references": {
+      "fileReferences": [],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": [
+        {
+          "label": "Original Python validator implementation",
+          "url": "https://github.com/google/transitfeed"
+        }
+      ]
+    },
     "properties": {
       "filename": {
         "fieldName": "filename",
+        "description": "The name of the unknown file.",
         "type": "string"
       }
     }
   },
   "unusable_trip": {
     "code": "unusable_trip",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Trips must have more than one stop to be usable.",
+    "description": "A trip must visit more than one stop in stop_times.txt to be usable by passengers for\nboarding and alighting.",
+    "references": {
+      "fileReferences": [
+        "stop_times.txt",
+        "trips.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": [
+        {
+          "label": "Original Python validator implementation",
+          "url": "https://github.com/google/transitfeed"
+        }
+      ]
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "tripId": {
         "fieldName": "tripId",
+        "description": "The faulty record\u0027s id.",
         "type": "string"
       }
     }
   },
   "unused_shape": {
     "code": "unused_shape",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Shape is not used in GTFS file `trips.txt`.",
+    "description": "All records defined by GTFS `shapes.txt` should be used in `trips.txt`.",
+    "references": {
+      "fileReferences": [
+        "shapes.txt",
+        "trips.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": [
+        {
+          "label": "Original Python validator implementation",
+          "url": "https://github.com/google/transitfeed"
+        }
+      ]
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "shapeId": {
         "fieldName": "shapeId",
+        "description": "The faulty record\u0027s id.",
         "type": "string"
       }
     }
   },
   "unused_trip": {
     "code": "unused_trip",
-    "severityLevel": "INFO",
+    "severityLevel": "WARNING",
     "type": "object",
+    "shortSummary": "Trip is not be used in `stop_times.txt`",
+    "description": "Trips should be referred to at least once in `stop_times.txt`.",
+    "references": {
+      "fileReferences": [
+        "trips.txt",
+        "stop_times.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": [
+        {
+          "label": "Original Python validator implementation",
+          "url": "https://github.com/google/transitfeed"
+        }
+      ]
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "tripId": {
         "fieldName": "tripId",
+        "description": "The faulty record\u0027s id.",
         "type": "string"
       }
     }
   },
   "wrong_parent_location_type": {
     "code": "wrong_parent_location_type",
-    "severityLevel": "INFO",
+    "severityLevel": "ERROR",
     "type": "object",
+    "shortSummary": "Incorrect type of the parent location.",
+    "description": "Value of field `location_type` of parent found in field `parent_station` is invalid.\n\nAccording to spec\n\n- _Stop/platform_ can only have _Station_ as parent\n- _Station_ can NOT have a parent\n- _Entrance/exit_ or _generic node_ can only have _Station_ as parent\n- _Boarding Area_ can only have _Platform_ as parent\n\nAny other combination raise this error.",
+    "references": {
+      "fileReferences": [
+        "stops.txt",
+        "stop_times.txt"
+      ],
+      "bestPracticesFileReferences": [],
+      "sectionReferences": [],
+      "urlReferences": []
+    },
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
+        "description": "The row number of the faulty record.",
         "type": "integer"
       },
       "expectedLocationType": {
         "fieldName": "expectedLocationType",
+        "description": "The expected location type of the faulty record.",
         "type": "integer"
       },
       "locationType": {
         "fieldName": "locationType",
+        "description": "The faulty record\u0027s `stops.location_type`.",
         "type": "integer"
       },
       "parentCsvRowNumber": {
         "fieldName": "parentCsvRowNumber",
+        "description": "The row number of the faulty record\u0027s parent.",
         "type": "integer"
       },
       "parentLocationType": {
         "fieldName": "parentLocationType",
+        "description": "The location type of the faulty record\u0027s parent.",
         "type": "integer"
       },
       "parentStation": {
         "fieldName": "parentStation",
+        "description": "The id of the faulty record\u0027s parent station.",
         "type": "string"
       },
       "parentStopName": {
         "fieldName": "parentStopName",
+        "description": "The stop name of the faulty record\u0027s parent.",
         "type": "string"
       },
       "stopId": {
         "fieldName": "stopId",
+        "description": "The id of the faulty record.",
         "type": "string"
       },
       "stopName": {
         "fieldName": "stopName",
+        "description": "The faulty record\u0027s `stops.stop_name`.",
         "type": "string"
       }
     }
