@@ -1,6 +1,6 @@
 package org.mobilitydata.gtfsvalidator.report.model;
 
-import static org.junit.Assert.assertEquals;
+import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.collect.ImmutableList;
 import java.io.BufferedWriter;
@@ -64,7 +64,7 @@ public class FeedMetadataTest {
               new DefaultValidatorProvider(validationContext, validatorLoader),
               new NoticeContainer());
       FeedMetadata feedMetadata = FeedMetadata.from(feedContainer, gtfsInput.getFilenames());
-      assertEquals(expectedValue, feedMetadata.specFeatures.get(specFeature));
+      assertThat(feedMetadata.specFeatures.get(specFeature)).isEqualTo(expectedValue);
     }
   }
 
