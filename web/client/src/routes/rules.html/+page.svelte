@@ -9,13 +9,18 @@
   $: categories = _.groupBy(rules, 'severityLevel');
 
   /** @param {string} filename */
+  function getSectionRef(filename) {
+    return `https://gtfs.org/schedule/reference/#${filename.replace('.', '')}`;
+  }
+
+  /** @param {string} filename */
   function getSpecRef(filename) {
-    return `http://gtfs.org/reference/static#${filename.replace('.', '')}`;
+    return `https://gtfs.org/schedule/reference/#${filename.replace('.', '')}`;
   }
 
   /** @param {string} filename */
   function getBestPracticeRef(filename) {
-    return `http://gtfs.org/best-practices/#${filename.replace('.', '')}`;
+    return `https://gtfs.org/best-practices/#${filename.replace('.', '')}`;
   }
 </script>
 
@@ -45,26 +50,30 @@
     {:else}
       <ul class="list-disc">
         {#each Object.entries(categories) as [category]}
-          <li><a href="#{category}-table">Table of {category}s</a></li>
+          <li><a href="#{category}-table">Table of {category} notices</a></li>
         {/each}
         <li><a href="#more-details">More details</a></li>
       </ul>
 
       {#each Object.entries(categories) as [category, rules]}
-        <div id="{category}-table" class="mt-8">
-          <h2 class="h2">
-            Table of {category}s
-            <a
-              class="text-xl"
-              href="#{category}-table"
-              title="Link to this section"
-            >
-              <i class="fa-solid fa-hashtag text-black/30" />
-            </a>
+      <div id="{category}-table" class="mt-8">
+          <h2 class="h2 md:flex items-baseline justify-between">
+            <a class="text-base order-last" href="#"><i class="fas fa-arrow-up"></i> Top</a>
+
+            <div>
+              Table of {category} notices
+              <a
+                class="text-xl"
+                href="#{category}-table"
+                title="Link to this section"
+              >
+                <i class="fa-solid fa-hashtag text-black/30" />
+              </a>
+            </div>
           </h2>
 
           <div class="overflow-x-auto">
-            <table class="w-full">
+            <table class="w-full table-collapse-responsive sm:block lg:table">
               <thead>
                 <tr>
                   <th>Notice code</th>
@@ -74,12 +83,15 @@
               <tbody>
                 {#each rules as rule}
                   <tr>
-                    <td class="break-all md:break-normal">
-                      <a href="#{rule.code}-rule">
-                        <code>{rule.code}</code>
+                    <td>
+                      <a href="#{rule.code}-rule" id="{rule.code}-table">
+                        <code class="break-all">{rule.code}</code>
                       </a>
                     </td>
-                    <td>{@html marked.parse(rule.description ?? '\u2014')}</td>
+                    <td>
+                      <div class="font-bold">{@html marked.parse(rule.shortSummary ?? '')}</div>
+                      {@html marked.parse(rule.description ?? '\u2014')}
+                    </td>
                   </tr>
                 {/each}
               </tbody>
@@ -91,24 +103,43 @@
       <h2 class="h2" id="more-details">More details</h2>
 
       {#each Object.entries(rules) as [code, rule]}
-        <div id="{rule.code}-rule">
-          <h3 class="h3">
-            {code}
-            <a
-              class="text-base"
-              href="#{rule.code}-rule"
-              title="Link to this section"
-            >
-              <i class="fa-solid fa-hashtag text-black/30" />
+        <div id="{rule.code}-rule" class="table-sm">
+          <h3 class="h3 md:flex items-baseline justify-between">
+            <a class="text-base order-last" href="#{rule.code}-table">
+              <i class="fas fa-arrow-up"></i> Table
             </a>
+
+            <div>
+              <span class="break-all">{code}</span>
+              <a
+                class="text-base"
+                href="#{rule.code}-rule"
+                title="Link to this section"
+              >
+                <i class="fa-solid fa-hashtag text-black/30" />
+              </a>
+            </div>
           </h3>
 
-          {@html marked.parse(rule.description ?? '')}
+          <blockquote>
+            {@html marked.parse(rule.shortSummary ?? '')}
+          </blockquote>
+
+          <div class="overflow-x-auto">
+            {@html marked.parse(rule.description ?? '')}
+          </div>
 
           {#if rule.references}
             <h4 class="h4">References</h4>
             <ul>
               <!-- TODO: are there any other kinds of references? -->
+              {#each rule.references?.sectionReferences ?? [] as ref}
+                <li>
+                  <a href={getSectionRef(ref)} target="_blank" rel="noreferrer">
+                    {ref} specification
+                  </a>
+                </li>
+              {/each}
               {#each rule.references?.fileReferences ?? [] as ref}
                 <li>
                   <a href={getSpecRef(ref)} target="_blank" rel="noreferrer">
@@ -141,7 +172,7 @@
             <details>
               <summary>Fields</summary>
               <div class="overflow-x-auto">
-                <table>
+                <table class="table-sm">
                   <thead>
                     <tr>
                       <th>Field name</th>
@@ -154,6 +185,7 @@
                       <tr>
                         <td><code>{property.fieldName}</code></td>
                         <td>
+                          {@html marked.parse(property.shortSummary ?? '')}
                           {@html marked.parse(property.description ?? '\u2014')}
                         </td>
                         <td>{property.type ?? '\u2014'}</td>
