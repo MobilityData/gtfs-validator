@@ -2,7 +2,8 @@
   "code": "duplicate_key",
   "severityLevel": "ERROR",
   "type": "object",
-  "description": "Duplicated entity.\n\nThe values of the given key and rows are duplicates.",
+  "shortSummary": "Duplicated entity.",
+  "description": "The values of the given key and rows are duplicates.",
   "references": {
     "fileReferences": [],
     "bestPracticesFileReferences": [],
