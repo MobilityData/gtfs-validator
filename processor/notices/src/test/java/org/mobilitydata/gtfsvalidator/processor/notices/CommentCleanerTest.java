@@ -85,11 +85,22 @@ public class CommentCleanerTest {
   }
 
   @Test
-  public void testSplitLinesIntoSummaryAndAdditionalDocumentation_noBlankLines() {
+  public void testSplitLinesIntoSummaryAndAdditionalDocumentation_multiLineSummary() {
     SplitComment split =
-        cleaner.splitLinesIntoSummaryAndAdditionalDocumentation(ImmutableList.of("A.", "B."));
+        cleaner.splitLinesIntoSummaryAndAdditionalDocumentation(
+            ImmutableList.of("This line continues", "onto the next line.", "", "Description."));
+
+    assertThat(split.shortSummary).isEqualTo("This line continues onto the next line.");
+    assertThat(split.additionalDocumentation).isEqualTo("Description.");
+  }
+
+  @Test
+  public void testSplitLinesIntoSummaryAndAdditionalDocumentation_multiLineDescription() {
+    SplitComment split =
+        cleaner.splitLinesIntoSummaryAndAdditionalDocumentation(
+            ImmutableList.of("A.", "", "B.", "", "C."));
 
     assertThat(split.shortSummary).isEqualTo("A.");
-    assertThat(split.additionalDocumentation).isEqualTo("B.");
+    assertThat(split.additionalDocumentation).isEqualTo("B.\n\nC.");
   }
 }
