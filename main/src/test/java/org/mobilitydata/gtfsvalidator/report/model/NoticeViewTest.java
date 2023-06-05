@@ -7,8 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
-import org.mobilitydata.gtfsvalidator.notice.Notice;
+import org.mobilitydata.gtfsvalidator.notice.ResolvedNotice;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 
 public class NoticeViewTest {
   private static final String FILENAME = "filename";
@@ -19,8 +20,9 @@ public class NoticeViewTest {
   private static final int CSV_ROW_NUMBER_VALUE = 1;
   private static final String FIELD_NAME_VALUE = "field";
 
-  private static final Notice notice =
-      new MissingRequiredFieldNotice(FILENAME_VALUE, CSV_ROW_NUMBER_VALUE, FIELD_NAME_VALUE);
+  private static final ResolvedNotice<ValidationNotice> notice =
+      new MissingRequiredFieldNotice(FILENAME_VALUE, CSV_ROW_NUMBER_VALUE, FIELD_NAME_VALUE)
+          .resolveWithDefaultSeverity();
   private static final NoticeView noticeView = new NoticeView(notice);
 
   @Test

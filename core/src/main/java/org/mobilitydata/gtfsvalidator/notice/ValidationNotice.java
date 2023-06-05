@@ -16,6 +16,9 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
+import com.google.common.base.Preconditions;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+
 /**
  * ValidationNotice is the base class for all validation errors and warnings related to the content
  * of a GTFS feed.
@@ -26,7 +29,25 @@ package org.mobilitydata.gtfsvalidator.notice;
  */
 public abstract class ValidationNotice extends Notice {
 
-  public ValidationNotice(SeverityLevel severityLevel) {
-    super(severityLevel);
+  public ValidationNotice() {}
+
+  // TODO(bdferris): Remove this constructor in a follow-up PR.
+  public ValidationNotice(SeverityLevel severityLevel) {}
+
+  /**
+   * Resolves the default {@link SeverityLevel} for a validation notice from its {@link
+   * GtfsValidationNotice} annotation.
+   */
+  public static <T extends ValidationNotice> SeverityLevel getDefaultSeverityLevel(
+      Class<T> noticeType) {
+    GtfsValidationNotice annotation = noticeType.getAnnotation(GtfsValidationNotice.class);
+    Preconditions.checkNotNull(
+        annotation,
+        "Found ValidationNotice without a @GtfsValidationNotice annotation: " + noticeType);
+    return annotation.severity();
+  }
+
+  public ResolvedNotice<ValidationNotice> resolveWithDefaultSeverity() {
+    return new ResolvedNotice<>(this, getDefaultSeverityLevel(getClass()));
   }
 }
