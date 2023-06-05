@@ -133,10 +133,10 @@ public abstract class Notice {
    * <p>This method is preferred to checking {@code severityLevel} directly since more levels may be
    * added in the future.
    *
-   * @return true if this notice is an warning, false otherwise
+   * @return true if this notice is a warning, false otherwise
    */
   public boolean isWarning() {
-    return getSeverityLevel().ordinal() == SeverityLevel.WARNING.ordinal();
+    return getSeverityLevel() == SeverityLevel.WARNING;
   }
 
   /** JSON exclusion strategy for notice context. It skips {@link Notice#severityLevel}. */
