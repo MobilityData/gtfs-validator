@@ -222,7 +222,6 @@
       xhr.responseType = 'json';
       xhr.onerror = () => reject('Error authorizing upload.');
       xhr.onload = () => {
-      console.log(xhr);
       if (xhr.status >= 200 && xhr.status < 300) {
         resolve(xhr.response);
       } else {
@@ -318,9 +317,6 @@
       addError(error);
       canContinue = false;
     });
-
-    canContinue = canContinue && job != null;
-    console.log(job);
 
     if (canContinue) {
       jobId = job.jobId;
