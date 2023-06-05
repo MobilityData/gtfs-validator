@@ -95,6 +95,7 @@ public class FeedMetadata {
     boolean faresV2 = fareProductsTable.isPresent() && fareProductsTable.get().entityCount() > 0;
     specFeatures.put("Fares V2", faresV2 ? "Yes" : "No");
     specFeatures.put("Route Names", hasRouteNamesComponent(feedContainer) ? "Yes" : "No");
+    specFeatures.put("Route Colors", hasRouteColorsComponent(feedContainer) ? "Yes" : "No");
     specFeatures.put(
         "Shapes", hasOneRecordOfComponent(feedContainer, GtfsShape.FILENAME) ? "Yes" : "No");
     var stopTimesTable = feedContainer.getTableForFilename(GtfsStopTime.FILENAME);
@@ -121,6 +122,18 @@ public class FeedMetadata {
       feedInfo.put(
           "Feed End Date", info == null ? "N/A" : info.feedEndDate().getLocalDate().toString());
     }
+  }
+
+  private boolean hasRouteColorsComponent(GtfsFeedContainer feedContainer) {
+    var routeContainer = feedContainer.getTableForFilename(GtfsRoute.FILENAME);
+    if (routeContainer.isPresent()) {
+      GtfsRouteTableContainer routeTable = (GtfsRouteTableContainer) routeContainer.get();
+      if (routeTable.hasColumn(GtfsRoute.ROUTE_COLOR_FIELD_NAME)
+              && routeTable.hasColumn(GtfsRoute.ROUTE_TEXT_COLOR_FIELD_NAME))
+        return routeTable.getEntities().stream()
+                .anyMatch(route -> route.hasRouteColor() && route.hasRouteTextColor());
+    }
+    return false;
   }
 
   private boolean hasRouteNamesComponent(GtfsFeedContainer feedContainer) {
