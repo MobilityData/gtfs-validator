@@ -20,6 +20,7 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 import static org.mobilitydata.gtfsvalidator.util.S2Earth.getDistanceMeters;
 
 import com.google.common.collect.Multimaps;
+import com.google.common.geometry.S2LatLng;
 import java.util.List;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
@@ -166,6 +167,9 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
     /** The previous record's `shapes.shape_pt_sequence`. */
     private final int prevShapePtSequence;
 
+    /** the faulty record's lat/lon coordinates. */
+    private final S2LatLng shapePtLatLon;
+    /** the previous record's lat/lon coordinates. */
     EqualShapeDistanceSameCoordinatesNotice(GtfsShape previous, GtfsShape current) {
       super(SeverityLevel.WARNING);
       this.shapeId = current.shapeId();
@@ -175,6 +179,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
       this.prevCsvRowNumber = previous.csvRowNumber();
       this.prevShapeDistTraveled = previous.shapeDistTraveled();
       this.prevShapePtSequence = previous.shapePtSequence();
+      this.shapePtLatLon = current.shapePtLatLon();
     }
   }
 
@@ -212,9 +217,17 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
     /** The previous record's `shapes.shape_pt_sequence`. */
     private final int prevShapePtSequence;
 
-    // Actual distance traveled along the shape from the first shape point to the previous shape
-    /** point. */
+    /**
+     * Actual distance traveled along the shape from the first shape point to the previous shape /**
+     * point.
+     */
     private final double actualDistanceBetweenShapePoints;
+
+    /** The faulty record's lat/lon coordinates. */
+    private final S2LatLng shapePtLatLon;
+
+    /** The previous record's lat/lon coordinates. */
+    private final S2LatLng prevShapePtLatLon;
 
     EqualShapeDistanceDiffCoordinatesNotice(GtfsShape previous, GtfsShape current) {
       super(SeverityLevel.ERROR);
@@ -225,6 +238,8 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
       this.prevCsvRowNumber = previous.csvRowNumber();
       this.prevShapeDistTraveled = previous.shapeDistTraveled();
       this.prevShapePtSequence = previous.shapePtSequence();
+      this.shapePtLatLon = current.shapePtLatLon();
+      this.prevShapePtLatLon = previous.shapePtLatLon();
       this.actualDistanceBetweenShapePoints =
           getDistanceMeters(current.shapePtLatLon(), previous.shapePtLatLon());
     }
