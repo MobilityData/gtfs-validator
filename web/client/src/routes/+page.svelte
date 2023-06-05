@@ -221,7 +221,14 @@
       const xhr = new XMLHttpRequest();
       xhr.responseType = 'json';
       xhr.onerror = () => reject('Error authorizing upload.');
-      xhr.onload = () => resolve(xhr.response);
+      xhr.onload = () => {
+      console.log(xhr);
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve(xhr.response);
+      } else {
+        reject('Error authorizing upload.');
+      }
+    };
       xhr.open('POST', `${apiRoot}/create-job`);
       xhr.setRequestHeader('Content-Type', 'application/json');
       xhr.send(JSON.stringify(data));
@@ -311,6 +318,9 @@
       addError(error);
       canContinue = false;
     });
+
+    canContinue = canContinue && job != null;
+    console.log(job);
 
     if (canContinue) {
       jobId = job.jobId;
