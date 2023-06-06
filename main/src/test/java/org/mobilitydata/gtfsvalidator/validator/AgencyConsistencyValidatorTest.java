@@ -73,7 +73,6 @@ public class AgencyConsistencyValidatorTest {
                     Locale.CANADA)));
     assertThat(notices)
         .containsExactly(new MissingRecommendedFieldNotice("agency.txt", 0, "agency name"));
-    assertThat(notices.get(0).getSeverityLevel()).isEqualTo(SeverityLevel.WARNING);
   }
 
   @Test
@@ -97,7 +96,6 @@ public class AgencyConsistencyValidatorTest {
                     Locale.CANADA)));
     assertThat(notices)
         .containsExactly(new MissingRequiredFieldNotice("agency.txt", 1, "agency_id"));
-    assertThat(notices.get(0).getSeverityLevel()).isEqualTo(SeverityLevel.ERROR);
   }
 
   @Test

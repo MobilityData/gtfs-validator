@@ -59,8 +59,7 @@ public class ShapeToStopMatchingValidatorTest {
 
   private static boolean noticeApproxEquals(
       ValidationNotice n1, ValidationNotice n2, double maxError) {
-    if (!n1.getClass().equals(n2.getClass())
-        || !n1.getSeverityLevel().equals(n2.getSeverityLevel())) {
+    if (!n1.getClass().equals(n2.getClass())) {
       return false;
     }
     for (Field field : n1.getClass().getDeclaredFields()) {
