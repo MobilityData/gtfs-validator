@@ -1,11 +1,16 @@
 package org.mobilitydata.gtfsvalidator.processor.notices;
 
+import static java.util.function.Predicate.not;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.List;
 import java.util.OptionalInt;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -79,16 +84,42 @@ public class CommentCleaner {
     if (lines.isEmpty()) {
       return comment;
     }
-    comment.shortSummary = lines.get(0);
-    int fromIndex = 1;
-    while (fromIndex < lines.size() && lines.get(fromIndex).isBlank()) {
-      fromIndex++;
+
+    // The lines extracted and cleaned from a Javadoc notice comment should have the following
+    // form at this point.
+    //
+    //    Initial short-summary text that possibly spans more
+    //    than one line.
+    //
+    //    Optional additional descriptive text that possibly
+    //    spans more than one line.  May have more than one
+    //    sentence.
+    //
+    //    Even more additional descriptive text.
+
+    Deque<String> remainingLines = new ArrayDeque<>(lines);
+    // There shouldn't be any initial blank lines, but strip them just in case.
+    consumeLines(remainingLines, String::isBlank);
+
+    List<String> shortSummaryLines = consumeLines(remainingLines, not(String::isBlank));
+    consumeLines(remainingLines, String::isBlank);
+
+    if (!shortSummaryLines.isEmpty()) {
+      comment.shortSummary = String.join(" ", shortSummaryLines);
     }
-    if (fromIndex < lines.size()) {
-      comment.additionalDocumentation =
-          lines.subList(fromIndex, lines.size()).stream().collect(Collectors.joining("\n"));
+    if (!remainingLines.isEmpty()) {
+      comment.additionalDocumentation = String.join("\n", remainingLines);
     }
     return comment;
+  }
+
+  private List<String> consumeLines(
+      Deque<String> remainingLines, Predicate<String> matchCondition) {
+    List<String> matching = new ArrayList<>();
+    while (!remainingLines.isEmpty() && matchCondition.test(remainingLines.peekFirst())) {
+      matching.add(remainingLines.pollFirst());
+    }
+    return matching;
   }
 
   public final class SplitComment {

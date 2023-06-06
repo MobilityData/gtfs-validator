@@ -85,9 +85,8 @@ public class FeedMetadata {
   }
 
   private void loadSpecFeatures(GtfsFeedContainer feedContainer) {
-    var pathwaysTable = feedContainer.getTableForFilename(GtfsPathway.FILENAME);
-    boolean pathways = pathwaysTable.isPresent() && pathwaysTable.get().entityCount() > 0;
-    specFeatures.put("Pathways", pathways ? "Yes" : "No");
+    specFeatures.put(
+        "Pathways", hasOneRecordOfComponent(feedContainer, GtfsPathway.FILENAME) ? "Yes" : "No");
     var fareAttributesTable = feedContainer.getTableForFilename(GtfsFareAttribute.FILENAME);
     boolean faresV1 =
         fareAttributesTable.isPresent() && fareAttributesTable.get().entityCount() > 0;
@@ -96,9 +95,10 @@ public class FeedMetadata {
     boolean faresV2 = fareProductsTable.isPresent() && fareProductsTable.get().entityCount() > 0;
     specFeatures.put("Fares V2", faresV2 ? "Yes" : "No");
     specFeatures.put("Route Names", hasRouteNamesComponent(feedContainer) ? "Yes" : "No");
+    specFeatures.put(
+        "Shapes", hasOneRecordOfComponent(feedContainer, GtfsShape.FILENAME) ? "Yes" : "No");
     var stopTimesTable = feedContainer.getTableForFilename(GtfsStopTime.FILENAME);
     // TODO: figure out Flex V1 & V2 checks
-
   }
 
   private void loadAgencyData(GtfsTableContainer<GtfsAgency> agencyTable) {
@@ -133,6 +133,12 @@ public class FeedMetadata {
             .anyMatch(route -> route.hasRouteShortName() && route.hasRouteLongName());
     }
     return false;
+  }
+
+  private boolean hasOneRecordOfComponent(
+      GtfsFeedContainer feedContainer, String componentFilename) {
+    var table = feedContainer.getTableForFilename(componentFilename);
+    return table.isPresent() && table.get().entityCount() > 0;
   }
 
   public ArrayList<String> foundFiles() {
