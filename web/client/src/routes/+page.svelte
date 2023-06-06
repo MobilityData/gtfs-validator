@@ -137,6 +137,7 @@
     if (file.type != 'application/zip' && file.type != 'application/x-zip-compressed') {
       console.log('file type error', file.type);
       addError('Sorry, only ZIP files are supported at this time.');
+      fileInput.value = ''; // clear input to avoid validation
       console.log(errors);
     } else {
       pendingFilename = file?.name;
