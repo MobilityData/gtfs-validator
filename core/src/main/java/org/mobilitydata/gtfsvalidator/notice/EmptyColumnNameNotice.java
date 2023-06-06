@@ -36,7 +36,6 @@ public class EmptyColumnNameNotice extends ValidationNotice {
   private final int index;
 
   public EmptyColumnNameNotice(String filename, int index) {
-    super();
     this.filename = filename;
     this.index = index;
   }

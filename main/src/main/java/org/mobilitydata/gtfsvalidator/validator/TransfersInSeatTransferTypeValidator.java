@@ -157,7 +157,6 @@ public class TransfersInSeatTransferTypeValidator extends FileValidator {
 
     public TransferWithSuspiciousMidTripInSeatNotice(
         GtfsTransfer transfer, TransferDirection transferDirection) {
-      super();
       this.csvRowNumber = transfer.csvRowNumber();
       this.tripIdFieldName = transferDirection.tripIdFieldName();
       this.tripId = transferDirection.tripId(transfer);

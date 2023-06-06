@@ -116,7 +116,6 @@ public class MissingTripEdgeValidator extends FileValidator {
 
     MissingTripEdgeNotice(
         int csvRowNumber, int stopSequence, String tripId, String specifiedField) {
-      super();
       this.csvRowNumber = csvRowNumber;
       this.stopSequence = stopSequence;
       this.tripId = tripId;

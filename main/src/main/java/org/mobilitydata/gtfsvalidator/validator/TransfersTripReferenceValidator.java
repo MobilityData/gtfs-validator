@@ -147,7 +147,6 @@ public class TransfersTripReferenceValidator extends FileValidator {
 
     public TransferWithInvalidTripAndRouteNotice(
         GtfsTransfer transfer, TransferDirection transferDirection, String expectedRouteId) {
-      super();
       this.csvRowNumber = transfer.csvRowNumber();
       this.tripFieldName = transferDirection.tripIdFieldName();
       this.tripId = transferDirection.tripId(transfer);
@@ -181,7 +180,6 @@ public class TransfersTripReferenceValidator extends FileValidator {
 
     public TransferWithInvalidTripAndStopNotice(
         GtfsTransfer transfer, TransferDirection transferDirection) {
-      super();
       this.csvRowNumber = transfer.csvRowNumber();
       this.tripFieldName = transferDirection.tripIdFieldName();
       this.tripId = transferDirection.tripId(transfer);

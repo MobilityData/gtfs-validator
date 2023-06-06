@@ -94,7 +94,6 @@ public class OverlappingFrequencyValidator extends FileValidator {
         long currCsvRowNumber,
         GtfsTime currStartTime,
         String tripId) {
-      super();
       this.prevCsvRowNumber = prevCsvRowNumber;
       this.prevEndTime = prevEndTime;
       this.currCsvRowNumber = currCsvRowNumber;

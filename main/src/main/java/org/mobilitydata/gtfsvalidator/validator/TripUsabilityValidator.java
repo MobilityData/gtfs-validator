@@ -82,7 +82,6 @@ public class TripUsabilityValidator extends FileValidator {
     private final String tripId;
 
     UnusableTripNotice(int csvRowNumber, String tripId) {
-      super();
       this.csvRowNumber = csvRowNumber;
       this.tripId = tripId;
     }

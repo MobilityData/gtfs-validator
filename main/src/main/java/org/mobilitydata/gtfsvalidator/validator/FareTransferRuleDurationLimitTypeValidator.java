@@ -37,7 +37,6 @@ public class FareTransferRuleDurationLimitTypeValidator
     private final int csvRowNumber;
 
     FareTransferRuleDurationLimitWithoutTypeNotice(int csvRowNumber) {
-      super();
       this.csvRowNumber = csvRowNumber;
     }
   }
@@ -54,7 +53,6 @@ public class FareTransferRuleDurationLimitTypeValidator
     private final int csvRowNumber;
 
     FareTransferRuleDurationLimitTypeWithoutDurationLimitNotice(int csvRowNumber) {
-      super();
       this.csvRowNumber = csvRowNumber;
     }
   }

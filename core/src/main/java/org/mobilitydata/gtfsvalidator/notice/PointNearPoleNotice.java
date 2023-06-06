@@ -60,7 +60,6 @@ public class PointNearPoleNotice extends ValidationNotice {
       double latFieldValue,
       String lonFieldName,
       double lonFieldValue) {
-    super();
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.entityId = entityId;

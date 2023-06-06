@@ -145,7 +145,6 @@ public class ParentLocationTypeValidator extends FileValidator {
         String parentStopName,
         int parentLocationType,
         int expectedLocationType) {
-      super();
       this.csvRowNumber = csvRowNumber;
       this.stopId = stopId;
       this.stopName = stopName;

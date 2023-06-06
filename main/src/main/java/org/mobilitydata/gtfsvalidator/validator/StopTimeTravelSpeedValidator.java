@@ -425,7 +425,6 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
         GtfsStop stop2,
         double speedKph,
         double distanceKm) {
-      super();
       this.tripCsvRowNumber = trip.csvRowNumber();
       this.tripId = trip.tripId();
       this.routeId = trip.routeId();
@@ -522,7 +521,6 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
         GtfsStop stop2,
         double speedKph,
         double distanceKm) {
-      super();
       this.tripCsvRowNumber = trip.csvRowNumber();
       this.tripId = trip.tripId();
       this.routeId = trip.routeId();

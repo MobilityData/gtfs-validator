@@ -119,7 +119,6 @@ public class DuplicateRouteNameValidator extends FileValidator {
     private final String agencyId;
 
     DuplicateRouteNameNotice(GtfsRoute route1, GtfsRoute route2) {
-      super();
       this.csvRowNumber1 = route1.csvRowNumber();
       this.routeId1 = route1.routeId();
       this.csvRowNumber2 = route2.csvRowNumber();

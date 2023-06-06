@@ -149,7 +149,6 @@ public class UrlConsistencyValidator extends FileValidator {
     private final long routeCsvRowNumber;
 
     SameStopAndRouteUrlNotice(GtfsStop stop, GtfsRoute route) {
-      super();
       this.stopCsvRowNumber = stop.csvRowNumber();
       this.stopId = stop.stopId();
       this.stopUrl = stop.stopUrl();
@@ -184,7 +183,6 @@ public class UrlConsistencyValidator extends FileValidator {
     private final long agencyCsvRowNumber;
 
     SameRouteAndAgencyUrlNotice(GtfsRoute route, GtfsAgency agency) {
-      super();
       this.routeCsvRowNumber = route.csvRowNumber();
       this.routeId = route.routeId();
       this.agencyName = agency.agencyName();
@@ -219,7 +217,6 @@ public class UrlConsistencyValidator extends FileValidator {
     private final long agencyCsvRowNumber;
 
     SameStopAndAgencyUrlNotice(GtfsStop stop, GtfsAgency agency) {
-      super();
       this.stopCsvRowNumber = stop.csvRowNumber();
       this.stopId = stop.stopId();
       this.agencyName = agency.agencyName();

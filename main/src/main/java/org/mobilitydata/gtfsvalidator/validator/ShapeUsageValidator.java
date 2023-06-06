@@ -84,7 +84,6 @@ public class ShapeUsageValidator extends FileValidator {
     private final int csvRowNumber;
 
     UnusedShapeNotice(String shapeId, int csvRowNumber) {
-      super();
       this.shapeId = shapeId;
       this.csvRowNumber = csvRowNumber;
     }

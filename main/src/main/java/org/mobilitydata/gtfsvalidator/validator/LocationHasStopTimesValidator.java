@@ -91,7 +91,6 @@ public class LocationHasStopTimesValidator extends FileValidator {
     private final String stopName;
 
     StopWithoutStopTimeNotice(GtfsStop stop) {
-      super();
       this.csvRowNumber = stop.csvRowNumber();
       this.stopId = stop.stopId();
       this.stopName = stop.stopName();
@@ -122,7 +121,6 @@ public class LocationHasStopTimesValidator extends FileValidator {
     private final long stopTimeCsvRowNumber;
 
     LocationWithUnexpectedStopTimeNotice(GtfsStop location, GtfsStopTime stopTime) {
-      super();
       this.csvRowNumber = location.csvRowNumber();
       this.stopId = location.stopId();
       this.stopName = location.stopName();

@@ -34,7 +34,6 @@ public class InvalidCurrencyAmountNotice extends ValidationNotice {
 
   public InvalidCurrencyAmountNotice(
       String filename, String fieldName, int csvRowNumber, BigDecimal amount) {
-    super();
     this.filename = filename;
     this.fieldName = fieldName;
     this.csvRowNumber = csvRowNumber;

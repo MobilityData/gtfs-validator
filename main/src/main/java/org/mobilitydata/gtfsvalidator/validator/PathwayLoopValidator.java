@@ -58,7 +58,6 @@ public class PathwayLoopValidator extends SingleEntityValidator<GtfsPathway> {
     private final String stopId;
 
     PathwayLoopNotice(GtfsPathway pathway) {
-      super();
       this.csvRowNumber = pathway.csvRowNumber();
       this.pathwayId = pathway.pathwayId();
       this.stopId = pathway.fromStopId();

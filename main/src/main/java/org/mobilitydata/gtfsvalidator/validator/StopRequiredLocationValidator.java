@@ -54,7 +54,6 @@ public class StopRequiredLocationValidator extends SingleEntityValidator<GtfsSto
     private final String stopId;
 
     StopWithoutLocationNotice(int csvRowNumber, String stopId, GtfsLocationType type) {
-      super();
       this.stopId = stopId;
       this.csvRowNumber = csvRowNumber;
       this.locationType = type;

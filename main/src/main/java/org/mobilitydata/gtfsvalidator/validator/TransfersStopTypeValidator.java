@@ -93,7 +93,6 @@ public class TransfersStopTypeValidator extends FileValidator {
 
     public TransferWithInvalidStopLocationTypeNotice(
         GtfsTransfer transfer, TransferDirection transferDirection, GtfsLocationType locationType) {
-      super();
       this.csvRowNumber = transfer.csvRowNumber();
       this.stopIdFieldName = transferDirection.stopIdFieldName();
       this.stopId = transferDirection.stopId(transfer);

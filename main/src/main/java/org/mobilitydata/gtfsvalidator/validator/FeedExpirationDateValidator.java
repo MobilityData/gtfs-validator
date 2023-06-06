@@ -109,7 +109,6 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
         GtfsDate currentDate,
         GtfsDate feedEndDate,
         GtfsDate suggestedExpirationDate) {
-      super();
       this.csvRowNumber = csvRowNumber;
       this.currentDate = currentDate;
       this.feedEndDate = feedEndDate;
@@ -146,7 +145,6 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
         GtfsDate currentDate,
         GtfsDate feedEndDate,
         GtfsDate suggestedExpirationDate) {
-      super();
       this.csvRowNumber = csvRowNumber;
       this.currentDate = currentDate;
       this.feedEndDate = feedEndDate;

@@ -65,7 +65,6 @@ public class AttributionWithoutRoleValidator extends SingleEntityValidator<GtfsA
     private final String attributionId;
 
     AttributionWithoutRoleNotice(int csvRowNumber, String attributionId) {
-      super();
       this.csvRowNumber = csvRowNumber;
       this.attributionId = attributionId;
     }

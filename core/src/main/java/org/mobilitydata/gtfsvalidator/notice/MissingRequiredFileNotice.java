@@ -35,7 +35,6 @@ public class MissingRequiredFileNotice extends ValidationNotice {
   private final String filename;
 
   public MissingRequiredFileNotice(String filename) {
-    super();
     this.filename = filename;
   }
 }

@@ -275,7 +275,6 @@ public class ShapeToStopMatchingValidator extends FileValidator {
 
     StopHasTooManyMatchesForShapeNotice(
         GtfsTrip trip, GtfsStopTime stopTime, String stopName, S2LatLng location, int matchCount) {
-      super();
       this.tripCsvRowNumber = trip.csvRowNumber();
       this.shapeId = trip.shapeId();
       this.tripId = trip.tripId();
@@ -334,7 +333,6 @@ public class ShapeToStopMatchingValidator extends FileValidator {
         String stopName,
         S2LatLng location,
         double geoDistanceToShape) {
-      super();
       this.tripCsvRowNumber = trip.csvRowNumber();
       this.shapeId = trip.shapeId();
       this.tripId = trip.tripId();
@@ -389,7 +387,6 @@ public class ShapeToStopMatchingValidator extends FileValidator {
         String stopName,
         S2LatLng location,
         double geoDistanceToShape) {
-      super();
       this.tripCsvRowNumber = trip.csvRowNumber();
       this.shapeId = trip.shapeId();
       this.tripId = trip.tripId();
@@ -453,7 +450,6 @@ public class ShapeToStopMatchingValidator extends FileValidator {
         GtfsStopTime stopTime2,
         String stopName2,
         S2LatLng location2) {
-      super();
       this.tripCsvRowNumber = trip.csvRowNumber();
       this.shapeId = trip.shapeId();
       this.tripId = trip.tripId();

@@ -89,7 +89,6 @@ public class RouteColorContrastValidator extends SingleEntityValidator<GtfsRoute
 
     RouteColorContrastNotice(
         String routeId, int csvRowNumber, GtfsColor routeColor, GtfsColor routeTextColor) {
-      super();
       this.routeId = routeId;
       this.csvRowNumber = csvRowNumber;
       this.routeColor = routeColor;

@@ -90,7 +90,6 @@ public class MissingLevelIdValidator extends FileValidator {
     private final String stopName;
 
     MissingLevelIdNotice(GtfsStop stop) {
-      super();
       this.csvRowNumber = stop.csvRowNumber();
       this.stopId = stop.stopId();
       this.stopName = stop.stopName();

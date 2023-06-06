@@ -108,7 +108,6 @@ public class PathwayEndpointTypeValidator extends FileValidator {
     private final String stopId;
 
     PathwayToWrongLocationTypeNotice(GtfsPathway pathway, String fieldName, String stopId) {
-      super();
       this.csvRowNumber = pathway.csvRowNumber();
       this.pathwayId = pathway.pathwayId();
       this.fieldName = fieldName;
@@ -139,7 +138,6 @@ public class PathwayEndpointTypeValidator extends FileValidator {
     private final String stopId;
 
     PathwayToPlatformWithBoardingAreasNotice(GtfsPathway pathway, String fieldName, String stopId) {
-      super();
       this.csvRowNumber = pathway.csvRowNumber();
       this.pathwayId = pathway.pathwayId();
       this.fieldName = fieldName;

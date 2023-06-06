@@ -56,7 +56,6 @@ public class NumberOutOfRangeNotice extends ValidationNotice {
 
   public NumberOutOfRangeNotice(
       String filename, int csvRowNumber, String fieldName, String fieldType, Object fieldValue) {
-    super();
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.fieldName = fieldName;

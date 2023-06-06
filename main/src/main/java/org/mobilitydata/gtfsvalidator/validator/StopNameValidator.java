@@ -84,7 +84,6 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
     private final String stopId;
 
     MissingStopNameNotice(long csvRowNumber, String stopId, GtfsLocationType locationType) {
-      super();
       this.locationType = locationType;
       this.stopId = stopId;
       this.csvRowNumber = csvRowNumber;
@@ -113,7 +112,6 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
     private final String stopDesc;
 
     SameNameAndDescriptionForStopNotice(int csvRowNumber, String stopId, String stopDesc) {
-      super();
       this.stopId = stopId;
       this.csvRowNumber = csvRowNumber;
       this.stopDesc = stopDesc;

@@ -117,7 +117,6 @@ public class DateTripsValidator extends FileValidator {
 
     TripCoverageNotActiveForNext7DaysNotice(
         GtfsDate currentDate, GtfsDate serviceWindowStartDate, GtfsDate serviceWindowEndDate) {
-      super();
       this.currentDate = currentDate;
       this.serviceWindowStartDate = serviceWindowStartDate;
       this.serviceWindowEndDate = serviceWindowEndDate;

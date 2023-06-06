@@ -59,7 +59,6 @@ public class DuplicateFareMediaValidator extends FileValidator {
     private final String fareMediaId2;
 
     DuplicateFareMediaNotice(GtfsFareMedia lhs, GtfsFareMedia rhs) {
-      super();
       this.csvRowNumber1 = lhs.csvRowNumber();
       this.fareMediaId1 = lhs.fareMediaId();
       this.csvRowNumber2 = rhs.csvRowNumber();

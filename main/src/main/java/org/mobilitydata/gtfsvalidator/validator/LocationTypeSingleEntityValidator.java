@@ -98,7 +98,6 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
 
     StationWithParentStationNotice(
         int csvRowNumber, String stopId, String stopName, String parentStation) {
-      super();
       this.stopId = stopId;
       this.stopName = stopName;
       this.csvRowNumber = csvRowNumber;
@@ -129,7 +128,6 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
 
     LocationWithoutParentStationNotice(
         int csvRowNumber, String stopId, String stopName, int locationType) {
-      super();
       this.csvRowNumber = csvRowNumber;
       this.stopId = stopId;
       this.stopName = stopName;
@@ -155,7 +153,6 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
     private final String stopName;
 
     PlatformWithoutParentStationNotice(int csvRowNumber, String stopId, String stopName) {
-      super();
       this.csvRowNumber = csvRowNumber;
       this.stopId = stopId;
       this.stopName = stopName;

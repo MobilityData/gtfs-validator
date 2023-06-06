@@ -41,7 +41,6 @@ public class MixedCaseRecommendedFieldNotice extends ValidationNotice {
 
   public MixedCaseRecommendedFieldNotice(
       String filename, String fieldName, String fieldValue, int csvRowNumber) {
-    super();
     this.filename = filename;
     this.fieldName = fieldName;
     this.fieldValue = fieldValue;

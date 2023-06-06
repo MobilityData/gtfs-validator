@@ -128,7 +128,6 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
         String tripId,
         GtfsTime arrivalTime,
         GtfsTime departureTime) {
-      super();
       this.csvRowNumber = csvRowNumber;
       this.prevCsvRowNumber = prevCsvRowNumber;
       this.tripId = tripId;
@@ -155,7 +154,6 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
 
     StopTimeWithOnlyArrivalOrDepartureTimeNotice(
         int csvRowNumber, String tripId, int stopSequence, String specifiedField) {
-      super();
       this.csvRowNumber = csvRowNumber;
       this.tripId = tripId;
       this.stopSequence = stopSequence;

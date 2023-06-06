@@ -87,7 +87,6 @@ public class ExpiredCalendarValidator extends FileValidator {
     private final String serviceId;
 
     ExpiredCalendarNotice(int csvRowNumber, String serviceId) {
-      super();
       this.csvRowNumber = csvRowNumber;
       this.serviceId = serviceId;
     }

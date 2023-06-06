@@ -135,7 +135,6 @@ public class AgencyConsistencyValidator extends FileValidator {
     private final String actual;
 
     InconsistentAgencyLangNotice(int csvRowNumber, String expected, String actual) {
-      super();
       this.csvRowNumber = csvRowNumber;
       this.expected = expected;
       this.actual = actual;
@@ -160,7 +159,6 @@ public class AgencyConsistencyValidator extends FileValidator {
     private final String actual;
 
     InconsistentAgencyTimezoneNotice(int csvRowNumber, String expected, String actual) {
-      super();
       this.csvRowNumber = csvRowNumber;
       this.expected = expected;
       this.actual = actual;

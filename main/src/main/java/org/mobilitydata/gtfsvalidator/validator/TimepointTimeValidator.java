@@ -108,7 +108,6 @@ public class TimepointTimeValidator extends FileValidator {
     private final String specifiedField;
 
     StopTimeTimepointWithoutTimesNotice(GtfsStopTime stopTime, String specifiedField) {
-      super();
       this.csvRowNumber = stopTime.csvRowNumber();
       this.tripId = stopTime.tripId();
       this.stopSequence = stopTime.stopSequence();
@@ -135,7 +134,6 @@ public class TimepointTimeValidator extends FileValidator {
     private final long stopSequence;
 
     MissingTimepointValueNotice(GtfsStopTime stopTime) {
-      super();
       this.csvRowNumber = stopTime.csvRowNumber();
       this.tripId = stopTime.tripId();
       this.stopSequence = stopTime.stopSequence();
@@ -153,7 +151,6 @@ public class TimepointTimeValidator extends FileValidator {
     private final String filename;
 
     MissingTimepointColumnNotice() {
-      super();
       this.filename = GtfsStopTime.FILENAME;
     }
   }

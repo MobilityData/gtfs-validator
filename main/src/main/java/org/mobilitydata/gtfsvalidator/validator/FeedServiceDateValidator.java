@@ -64,7 +64,6 @@ public class FeedServiceDateValidator extends SingleEntityValidator<GtfsFeedInfo
     private final String fieldName;
 
     MissingFeedInfoDateNotice(int csvRowNumber, String fieldName) {
-      super();
       this.csvRowNumber = csvRowNumber;
       this.fieldName = fieldName;
     }

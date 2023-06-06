@@ -46,7 +46,6 @@ public class InvalidLanguageCodeNotice extends ValidationNotice {
 
   public InvalidLanguageCodeNotice(
       String filename, int csvRowNumber, String fieldName, String fieldValue) {
-    super();
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.fieldName = fieldName;

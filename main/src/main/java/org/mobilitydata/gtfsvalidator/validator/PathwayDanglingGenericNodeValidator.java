@@ -98,7 +98,6 @@ public class PathwayDanglingGenericNodeValidator extends FileValidator {
     private final String parentStation;
 
     PathwayDanglingGenericNodeNotice(GtfsStop genericNode) {
-      super();
       this.csvRowNumber = genericNode.csvRowNumber();
       this.stopId = genericNode.stopId();
       this.stopName = genericNode.stopName();

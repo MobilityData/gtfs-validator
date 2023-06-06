@@ -52,7 +52,6 @@ public class FareTransferRuleTransferCountValidator
     private final int transferCount;
 
     FareTransferRuleInvalidTransferCountNotice(int csvRowNumber, int transferCount) {
-      super();
       this.csvRowNumber = csvRowNumber;
       this.transferCount = transferCount;
     }
@@ -71,7 +70,6 @@ public class FareTransferRuleTransferCountValidator
     private final int csvRowNumber;
 
     FareTransferRuleMissingTransferCountNotice(int csvRowNumber) {
-      super();
       this.csvRowNumber = csvRowNumber;
     }
   }
@@ -89,7 +87,6 @@ public class FareTransferRuleTransferCountValidator
     private final int csvRowNumber;
 
     FareTransferRuleWithForbiddenTransferCountNotice(int csvRowNumber) {
-      super();
       this.csvRowNumber = csvRowNumber;
     }
   }

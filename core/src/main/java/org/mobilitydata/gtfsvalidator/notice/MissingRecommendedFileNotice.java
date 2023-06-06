@@ -27,7 +27,6 @@ public class MissingRecommendedFileNotice extends ValidationNotice {
   private final String filename;
 
   public MissingRecommendedFileNotice(String filename) {
-    super();
     this.filename = filename;
   }
 }

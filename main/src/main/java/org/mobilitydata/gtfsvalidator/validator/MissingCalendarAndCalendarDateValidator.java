@@ -69,8 +69,6 @@ public class MissingCalendarAndCalendarDateValidator extends FileValidator {
       files = @FileRefs({GtfsCalendarSchema.class, GtfsCalendarDateSchema.class}))
   static class MissingCalendarAndCalendarDateFilesNotice extends ValidationNotice {
 
-    MissingCalendarAndCalendarDateFilesNotice() {
-      super();
-    }
+    MissingCalendarAndCalendarDateFilesNotice() {}
   }
 }

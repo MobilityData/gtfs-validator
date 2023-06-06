@@ -207,7 +207,6 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
 
     TranslationUnexpectedValueNotice(
         GtfsTranslation translation, String fieldName, String fieldValue) {
-      super();
       this.csvRowNumber = translation.csvRowNumber();
       this.fieldValue = fieldValue;
       this.fieldName = fieldName;
@@ -225,7 +224,6 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
     private final String tableName;
 
     TranslationUnknownTableNameNotice(GtfsTranslation translation) {
-      super();
       this.csvRowNumber = translation.csvRowNumber();
       this.tableName = translation.tableName();
     }
@@ -251,7 +249,6 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
     private final String recordSubId;
 
     TranslationForeignKeyViolationNotice(GtfsTranslation translation) {
-      super();
       this.csvRowNumber = translation.csvRowNumber();
       this.tableName = translation.tableName();
       this.recordId = translation.recordId();

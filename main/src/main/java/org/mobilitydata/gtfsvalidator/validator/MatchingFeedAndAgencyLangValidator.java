@@ -126,7 +126,6 @@ public class MatchingFeedAndAgencyLangValidator extends FileValidator {
 
     FeedInfoLangAndAgencyLangMismatchNotice(
         int csvRowNumber, String agencyId, String agencyName, String agencyLang, String feedLang) {
-      super();
       this.csvRowNumber = csvRowNumber;
       this.agencyId = agencyId;
       this.agencyName = agencyName;

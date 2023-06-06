@@ -104,7 +104,6 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
     private final int csvRowNumber;
 
     RouteBothShortAndLongNameMissingNotice(String routeId, int csvRowNumber) {
-      super();
       this.routeId = routeId;
       this.csvRowNumber = csvRowNumber;
     }
@@ -159,7 +158,6 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
 
     RouteLongNameContainsShortNameNotice(
         String routeId, int csvRowNumber, String routeShortName, String routeLongName) {
-      super();
       this.routeId = routeId;
       this.csvRowNumber = csvRowNumber;
       this.routeShortName = routeShortName;
@@ -184,7 +182,6 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
     private final String routeShortName;
 
     RouteShortNameTooLongNotice(String routeId, int csvRowNumber, String routeShortName) {
-      super();
       this.routeId = routeId;
       this.csvRowNumber = csvRowNumber;
       this.routeShortName = routeShortName;
@@ -220,7 +217,6 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
 
     SameNameAndDescriptionForRouteNotice(
         int csvRowNumber, String routeId, String routeDesc, String routeShortOrLongName) {
-      super();
       this.routeId = routeId;
       this.csvRowNumber = csvRowNumber;
       this.routeDesc = routeDesc;

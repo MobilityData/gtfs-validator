@@ -117,7 +117,6 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
     private final int prevShapePtSequence;
 
     DecreasingShapeDistanceNotice(GtfsShape current, GtfsShape previous) {
-      super();
       this.shapeId = current.shapeId();
       this.csvRowNumber = current.csvRowNumber();
       this.shapeDistTraveled = current.shapeDistTraveled();
@@ -166,7 +165,6 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
     private final int prevShapePtSequence;
 
     EqualShapeDistanceSameCoordinatesNotice(GtfsShape previous, GtfsShape current) {
-      super();
       this.shapeId = current.shapeId();
       this.csvRowNumber = current.csvRowNumber();
       this.shapeDistTraveled = current.shapeDistTraveled();
@@ -216,7 +214,6 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
     private final double actualDistanceBetweenShapePoints;
 
     EqualShapeDistanceDiffCoordinatesNotice(GtfsShape previous, GtfsShape current) {
-      super();
       this.shapeId = current.shapeId();
       this.csvRowNumber = current.csvRowNumber();
       this.shapeDistTraveled = current.shapeDistTraveled();

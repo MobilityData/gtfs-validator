@@ -110,7 +110,6 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
         long prevCsvRowNumber,
         double prevStopTimeDistTraveled,
         int prevStopSequence) {
-      super();
       this.tripId = tripId;
       this.csvRowNumber = csvRowNumber;
       this.shapeDistTraveled = shapeDistTraveled;
