@@ -17,10 +17,10 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.MultimapBuilder;
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,8 +54,8 @@ public class NoticeContainer {
   private final int maxTotalValidationNotices;
   private final int maxValidationNoticesPerTypeAndSeverity;
   private final int maxExportsPerNoticeTypeAndSeverity;
-  private final List<ValidationNotice> validationNotices = new ArrayList<>();
-  private final List<SystemError> systemErrors = new ArrayList<>();
+  private final List<ResolvedNotice<ValidationNotice>> validationNotices = new ArrayList<>();
+  private final List<ResolvedNotice<SystemError>> systemErrors = new ArrayList<>();
   private final Map<String, Integer> noticesCountPerTypeAndSeverity = new HashMap<>();
   private boolean hasValidationErrors = false;
 
@@ -88,16 +88,24 @@ public class NoticeContainer {
 
   /** Adds a new validation notice to the container (if there is capacity). */
   public void addValidationNotice(ValidationNotice notice) {
-    if (notice.isError()) {
+    // TODO: This would be the spot to add customization of notice severity levels in the future.
+    SeverityLevel severity = ValidationNotice.getDefaultSeverityLevel(notice.getClass());
+    addValidationNoticeWithSeverity(notice, severity);
+  }
+
+  public void addValidationNoticeWithSeverity(
+      ValidationNotice notice, SeverityLevel severityLevel) {
+    ResolvedNotice<ValidationNotice> resolved = new ResolvedNotice<>(notice, severityLevel);
+    if (resolved.isError()) {
       hasValidationErrors = true;
     }
-    updateNoticeCount(notice);
+    updateNoticeCount(resolved);
     if (validationNotices.size() >= maxTotalValidationNotices
-        || noticesCountPerTypeAndSeverity.get(notice.getMappingKey())
+        || noticesCountPerTypeAndSeverity.get(resolved.getMappingKey())
             > maxValidationNoticesPerTypeAndSeverity) {
       return;
     }
-    validationNotices.add(notice);
+    validationNotices.add(resolved);
   }
 
   public <T extends ValidationNotice> NoticeContainer addValidationNotices(Iterable<T> notices) {
@@ -109,8 +117,9 @@ public class NoticeContainer {
 
   /** Adds a new system error to the container. */
   public void addSystemError(SystemError error) {
-    updateNoticeCount(error);
-    systemErrors.add(error);
+    ResolvedNotice<SystemError> resolved = new ResolvedNotice<>(error, SeverityLevel.ERROR);
+    updateNoticeCount(resolved);
+    systemErrors.add(resolved);
   }
 
   /**
@@ -118,7 +127,7 @@ public class NoticeContainer {
    *
    * @param notice the {@code Notice} whose count should be updated
    */
-  private void updateNoticeCount(Notice notice) {
+  private void updateNoticeCount(ResolvedNotice notice) {
     int count = noticesCountPerTypeAndSeverity.getOrDefault(notice.getMappingKey(), 0);
     noticesCountPerTypeAndSeverity.put(notice.getMappingKey(), count + 1);
   }
@@ -149,14 +158,18 @@ public class NoticeContainer {
     return hasValidationErrors;
   }
 
+  public List<ResolvedNotice<ValidationNotice>> getResolvedValidationNotices() {
+    return validationNotices;
+  }
+
   /** Returns a list of all validation notices in the container. */
   public List<ValidationNotice> getValidationNotices() {
-    return Collections.unmodifiableList(validationNotices);
+    return Lists.transform(validationNotices, ResolvedNotice::getContext);
   }
 
   /** Returns a list of all system errors in the container. */
   public List<SystemError> getSystemErrors() {
-    return Collections.unmodifiableList(systemErrors);
+    return Lists.transform(systemErrors, ResolvedNotice::getContext);
   }
 
   /** Exports all validation notices as JSON. */
@@ -169,15 +182,17 @@ public class NoticeContainer {
     return exportJson(systemErrors);
   }
 
-  public <T extends Notice> JsonObject exportJson(List<T> notices) {
+  public <T extends Notice> JsonObject exportJson(List<ResolvedNotice<T>> notices) {
     return ValidationReportDeserializer.serialize(
         notices, maxExportsPerNoticeTypeAndSeverity, noticesCountPerTypeAndSeverity);
   }
 
-  public static <T extends Notice> ListMultimap<String, T> groupNoticesByTypeAndSeverity(
-      List<T> notices) {
-    ListMultimap<String, T> noticesByType = MultimapBuilder.treeKeys().arrayListValues().build();
-    for (T notice : notices) {
+  public static <T extends Notice>
+      ListMultimap<String, ResolvedNotice<T>> groupNoticesByTypeAndSeverity(
+          List<ResolvedNotice<T>> notices) {
+    ListMultimap<String, ResolvedNotice<T>> noticesByType =
+        MultimapBuilder.treeKeys().arrayListValues().build();
+    for (ResolvedNotice<T> notice : notices) {
       noticesByType.put(notice.getMappingKey(), notice);
     }
     return noticesByType;

@@ -16,60 +16,47 @@ package org.mobilitydata.gtfsvalidator.model;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.internal.LinkedTreeMap;
-import java.util.List;
+import com.google.gson.JsonElement;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mobilitydata.gtfsvalidator.notice.InvalidUrlNotice;
+import org.mobilitydata.gtfsvalidator.notice.Notice;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 
 @RunWith(JUnit4.class)
 public class NoticeReportTest {
 
   private static NoticeReport createNoticeReport(
-      String code,
-      SeverityLevel severityLevel,
-      int totalNotices,
-      List<LinkedTreeMap<String, Object>> notices) {
-    return new NoticeReport(code, severityLevel, totalNotices, notices);
+      String code, SeverityLevel severityLevel, int totalNotices, ImmutableList<Notice> notices) {
+    ImmutableList<JsonElement> sampleNotices =
+        notices.stream().map(Notice::toJsonTree).collect(ImmutableList.toImmutableList());
+    return new NoticeReport(code, severityLevel, totalNotices, sampleNotices);
   }
 
-  private static LinkedTreeMap<String, Object> invalidUrlNoticeContext = new LinkedTreeMap<>();
-  private static LinkedTreeMap<String, Object> otherInvalidUrlNoticeContext = new LinkedTreeMap<>();
-
-  static {
-    invalidUrlNoticeContext.put("filename", "stops.txt");
-    invalidUrlNoticeContext.put("csvRowNumber", 16);
-    invalidUrlNoticeContext.put("fieldName", "stop_url");
-    invalidUrlNoticeContext.put("fieldValue", "erroneous url");
-
-    otherInvalidUrlNoticeContext.put("filename", "stops.txt");
-    otherInvalidUrlNoticeContext.put("csvRowNumber", 163);
-    otherInvalidUrlNoticeContext.put("fieldName", "other_url_field");
-    otherInvalidUrlNoticeContext.put("fieldValue", "erroneous url");
-  }
+  private static final Notice INVALID_URL_NOTICE =
+      new InvalidUrlNotice("stops.txt", 16, "stop_url", "erroneous url");
+  private static final Notice OTHER_INVALID_URL_NOTICE =
+      new InvalidUrlNotice("stops.txt", 163, "other_url_field", "erroneous url");
 
   @Test
   public void equals_sameNotices_true() {
     assertThat(
             createNoticeReport(
-                "invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(invalidUrlNoticeContext)))
+                "invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(INVALID_URL_NOTICE)))
         .isEqualTo(
             createNoticeReport(
-                "invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(invalidUrlNoticeContext)));
+                "invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(INVALID_URL_NOTICE)));
   }
 
   @Test
   public void equals_differentNotices_false() {
     assertThat(
             createNoticeReport(
-                "invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(invalidUrlNoticeContext)))
+                "invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(INVALID_URL_NOTICE)))
         .isNotEqualTo(
             createNoticeReport(
-                "invalid_url",
-                SeverityLevel.ERROR,
-                1,
-                ImmutableList.of(otherInvalidUrlNoticeContext)));
+                "invalid_url", SeverityLevel.ERROR, 1, ImmutableList.of(OTHER_INVALID_URL_NOTICE)));
   }
 
   @Test
@@ -83,10 +70,10 @@ public class NoticeReportTest {
   public void equals_differentSeverity_false() {
     assertThat(
             createNoticeReport(
-                "invalid_url", SeverityLevel.INFO, 2, ImmutableList.of(invalidUrlNoticeContext)))
+                "invalid_url", SeverityLevel.INFO, 2, ImmutableList.of(INVALID_URL_NOTICE)))
         .isNotEqualTo(
             createNoticeReport(
-                "invalid_url", SeverityLevel.ERROR, 2, ImmutableList.of(invalidUrlNoticeContext)));
+                "invalid_url", SeverityLevel.ERROR, 2, ImmutableList.of(INVALID_URL_NOTICE)));
   }
 
   @Test
