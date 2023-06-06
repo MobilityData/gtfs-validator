@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-import org.mobilitydata.gtfsvalidator.notice.Notice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.ResolvedNotice;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.util.VersionInfo;
 
@@ -36,10 +36,11 @@ public class ReportSummary {
   public ReportSummary(NoticeContainer container, VersionInfo versionInfo) {
     this.container = container;
     this.severityCounts =
-        container.getValidationNotices().stream()
-            .collect(Collectors.groupingBy(Notice::getSeverityLevel, Collectors.counting()));
+        container.getResolvedValidationNotices().stream()
+            .collect(
+                Collectors.groupingBy(ResolvedNotice::getSeverityLevel, Collectors.counting()));
     this.noticesMap =
-        container.getValidationNotices().stream()
+        container.getResolvedValidationNotices().stream()
             .map(NoticeView::new)
             .collect(
                 Collectors.groupingBy(

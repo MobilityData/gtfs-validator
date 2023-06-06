@@ -16,19 +16,13 @@
 
 package org.mobilitydata.gtfsvalidator.io;
 
-import static org.mobilitydata.gtfsvalidator.notice.Notice.GSON;
-
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.internal.LinkedTreeMap;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -38,6 +32,7 @@ import org.mobilitydata.gtfsvalidator.model.NoticeReport;
 import org.mobilitydata.gtfsvalidator.model.ValidationReport;
 import org.mobilitydata.gtfsvalidator.notice.Notice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.ResolvedNotice;
 
 /**
  * Used to (de)serialize a JSON validation report. This represents a validation report as a list of
@@ -46,8 +41,6 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
  */
 public class ValidationReportDeserializer implements JsonDeserializer<ValidationReport> {
 
-  private static final Gson GSON =
-      new GsonBuilder().serializeNulls().serializeSpecialFloatingPointValues().create();
   private static final String NOTICES_MEMBER_NAME = "notices";
 
   @Override
@@ -57,38 +50,36 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
     JsonObject rootObject = json.getAsJsonObject();
     JsonArray noticesArray = rootObject.getAsJsonArray(NOTICES_MEMBER_NAME);
     for (JsonElement childObject : noticesArray) {
-      notices.add(GSON.fromJson(childObject, NoticeReport.class));
+      notices.add(Notice.GSON.fromJson(childObject, NoticeReport.class));
     }
     return new ValidationReport(notices);
   }
 
   public static <T extends Notice> JsonObject serialize(
-      List<T> notices,
+      List<ResolvedNotice<T>> resolvedNotices,
       int maxExportsPerNoticeTypeAndSeverity,
       Map<String, Integer> noticesCountPerTypeAndSeverity) {
     Set<NoticeReport> noticeReports = new LinkedHashSet<>();
-    Gson gson = new Gson();
-    Type contextType = new TypeToken<Map<String, Object>>() {}.getType();
-    for (Collection<T> noticesOfType :
-        NoticeContainer.groupNoticesByTypeAndSeverity(notices).asMap().values()) {
-      T firstNotice = noticesOfType.iterator().next();
-      List<LinkedTreeMap<String, Object>> contexts = new ArrayList<>();
+    for (Collection<ResolvedNotice<T>> noticesOfType :
+        NoticeContainer.groupNoticesByTypeAndSeverity(resolvedNotices).asMap().values()) {
+      ResolvedNotice<T> firstNotice = noticesOfType.iterator().next();
+      ImmutableList.Builder<JsonElement> noticesToExport = ImmutableList.builder();
       int i = 0;
-      for (T notice : noticesOfType) {
+      for (ResolvedNotice<T> notice : noticesOfType) {
         ++i;
         if (i > maxExportsPerNoticeTypeAndSeverity) {
           // Do not export too many notices for this type.
           break;
         }
-        contexts.add(gson.fromJson(notice.getContext(), contextType));
+        noticesToExport.add(notice.getContext().toJsonTree());
       }
       noticeReports.add(
           new NoticeReport(
-              firstNotice.getCode(),
+              firstNotice.getContext().getCode(),
               firstNotice.getSeverityLevel(),
               noticesCountPerTypeAndSeverity.get(firstNotice.getMappingKey()),
-              contexts));
+              noticesToExport.build()));
     }
-    return GSON.toJsonTree(new ValidationReport(noticeReports)).getAsJsonObject();
+    return Notice.GSON.toJsonTree(new ValidationReport(noticeReports)).getAsJsonObject();
   }
 }
