@@ -44,25 +44,11 @@ public class InvalidPhoneNumberNotice extends ValidationNotice {
   /** Faulty value. */
   private final String fieldValue;
 
-  /**
-   * Constructs a notice with given severity. This constructor may be used by users that want to
-   * lower the priority to {@code WARNING}.
-   */
   public InvalidPhoneNumberNotice(
-      String filename,
-      int csvRowNumber,
-      String fieldName,
-      String fieldValue,
-      SeverityLevel severityLevel) {
+      String filename, int csvRowNumber, String fieldName, String fieldValue) {
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.fieldName = fieldName;
     this.fieldValue = fieldValue;
-  }
-
-  /** Constructs a notice with the default severity {@code ERROR}. */
-  public InvalidPhoneNumberNotice(
-      String filename, int csvRowNumber, String fieldName, String fieldValue) {
-    this(filename, csvRowNumber, fieldName, fieldValue, SeverityLevel.ERROR);
   }
 }

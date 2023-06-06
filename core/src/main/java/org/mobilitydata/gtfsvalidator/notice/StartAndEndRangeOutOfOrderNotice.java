@@ -81,7 +81,6 @@ public class StartAndEndRangeOutOfOrderNotice extends ValidationNotice {
       String startValue,
       String endFieldName,
       String endValue) {
-    super();
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.entityId = null;

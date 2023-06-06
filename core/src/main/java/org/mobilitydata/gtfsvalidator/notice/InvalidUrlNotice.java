@@ -51,24 +51,10 @@ public class InvalidUrlNotice extends ValidationNotice {
   /** Faulty value. */
   private final String fieldValue;
 
-  /**
-   * Constructs a notice with given severity. This constructor may be used by users that want to
-   * lower the priority to {@code WARNING}.
-   */
-  public InvalidUrlNotice(
-      String filename,
-      int csvRowNumber,
-      String fieldName,
-      String fieldValue,
-      SeverityLevel severityLevel) {
+  public InvalidUrlNotice(String filename, int csvRowNumber, String fieldName, String fieldValue) {
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.fieldName = fieldName;
     this.fieldValue = fieldValue;
-  }
-
-  /** Constructs a notice with the default severity {@code ERROR}. */
-  public InvalidUrlNotice(String filename, int csvRowNumber, String fieldName, String fieldValue) {
-    this(filename, csvRowNumber, fieldName, fieldValue, SeverityLevel.ERROR);
   }
 }
