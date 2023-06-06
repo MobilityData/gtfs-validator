@@ -375,16 +375,18 @@ When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` m
 <details>
 
 #### Notice fields description
-| Field name            	  | Description                                                                                    	  | Type    	|
-|-----------------------	  |-------------------------------------------------------------------------------------------------	|---------	|
-| `shapeId`               	| The id of the faulty shape.                                                                      	| String  	|
-| `csvRowNumber`          	| The row number from `shapes.txt`.                                                                	| Long    	|
-| `shapeDistTraveled`     	| The faulty record's `shape_dist_traveled` value.							| Double  	|
-| `shapePtSequence`       	| The faulty record's `shapes.shape_pt_sequence`.                                                  	| Integer 	|
-| `prevCsvRowNumber`      	| The row number from `shapes.txt` of the previous shape point.                                    	| Long    	|
-| `prevShapeDistTraveled`     	| The previous shape point's `shape_dist_traveled` value.						| Double  	|
-| `prevShapePtSequence`   	| The previous record's `shapes.shape_pt_sequence`.                                                	| Integer 	|
-| `actualDistanceBetweenShapePoints` 	| Actual distance traveled along the shape from the first shape point to the previous shape point. 	| Double  	|
+| Field name            	              | Description                                                                                    	   | Type    	|
+|--------------------------------------|----------------------------------------------------------------------------------------------------|---------	|
+| `shapeId`               	            | The id of the faulty shape.                                                                      	 | String  	|
+| `csvRowNumber`          	            | The row number from `shapes.txt`.                                                                	 | Long    	|
+| `shapeDistTraveled`     	            | The faulty record's `shape_dist_traveled` value.							                                            | Double  	|
+| `shapePtSequence`       	            | The faulty record's `shapes.shape_pt_sequence`.                                                  	 | Integer 	|
+| `prevCsvRowNumber`      	            | The row number from `shapes.txt` of the previous shape point.                                    	 | Long    	|
+| `prevShapeDistTraveled`     	        | The previous shape point's `shape_dist_traveled` value.						                                      | Double  	|
+| `prevShapePtSequence`   	            | The previous record's `shapes.shape_pt_sequence`.                                                	 | Integer 	|
+| `actualDistanceBetweenShapePoints` 	 | Actual distance traveled along the shape from the first shape point to the previous shape point. 	 | Double  	|
+| `shapePtLatLon`        	             | the faulty record's lat/lon coordinates.                                    	                      | String  	|
+| `prevShapePtLatLon`        	         | the previous shape point's lat/lon coordinates.                                    	                   | String  	|
 
 #### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
@@ -1823,6 +1825,7 @@ When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` m
 | `prevCsvRowNumber`      	| The row number from `shapes.txt` of the previous shape point.                                    	| Long    	|
 | `prevShapeDistTraveled` 	| Actual distance traveled along the shape from the first shape point to the previous shape point. 	| Double  	|
 | `prevShapePtSequence`   	| The previous record's `shapes.shape_pt_sequence`.                                                	| Integer 	|
+| `shapePtLatLon`        	             | the faulty record's lat/lon coordinates.                                    	                      | String  	|
 
 #### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
