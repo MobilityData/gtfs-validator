@@ -37,7 +37,7 @@ public class EmptyRowNotice extends ValidationNotice {
   private final int csvRowNumber;
 
   public EmptyRowNotice(String filename, int csvRowNumber) {
-    super(SeverityLevel.WARNING);
+    super();
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
   }

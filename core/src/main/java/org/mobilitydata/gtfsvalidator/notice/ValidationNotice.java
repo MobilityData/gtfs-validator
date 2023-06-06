@@ -31,9 +31,6 @@ public abstract class ValidationNotice extends Notice {
 
   public ValidationNotice() {}
 
-  // TODO(bdferris): Remove this constructor in a follow-up PR.
-  public ValidationNotice(SeverityLevel severityLevel) {}
-
   /**
    * Resolves the default {@link SeverityLevel} for a validation notice from its {@link
    * GtfsValidationNotice} annotation.

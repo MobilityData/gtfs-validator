@@ -26,7 +26,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoSchema;
@@ -110,7 +109,7 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
         GtfsDate currentDate,
         GtfsDate feedEndDate,
         GtfsDate suggestedExpirationDate) {
-      super(SeverityLevel.WARNING);
+      super();
       this.csvRowNumber = csvRowNumber;
       this.currentDate = currentDate;
       this.feedEndDate = feedEndDate;
@@ -147,7 +146,7 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
         GtfsDate currentDate,
         GtfsDate feedEndDate,
         GtfsDate suggestedExpirationDate) {
-      super(SeverityLevel.WARNING);
+      super();
       this.csvRowNumber = csvRowNumber;
       this.currentDate = currentDate;
       this.feedEndDate = feedEndDate;

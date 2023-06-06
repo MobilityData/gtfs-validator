@@ -65,7 +65,7 @@ public class DuplicateKeyNotice extends ValidationNotice {
       long newCsvRowNumber,
       String fieldName1,
       Object fieldValue1) {
-    super(SeverityLevel.ERROR);
+    super();
     this.filename = filename;
     this.oldCsvRowNumber = oldCsvRowNumber;
     this.newCsvRowNumber = newCsvRowNumber;
@@ -83,7 +83,7 @@ public class DuplicateKeyNotice extends ValidationNotice {
       Object fieldValue1,
       String fieldName2,
       Object fieldValue2) {
-    super(SeverityLevel.ERROR);
+    super();
     this.filename = filename;
     this.oldCsvRowNumber = oldCsvRowNumber;
     this.newCsvRowNumber = newCsvRowNumber;

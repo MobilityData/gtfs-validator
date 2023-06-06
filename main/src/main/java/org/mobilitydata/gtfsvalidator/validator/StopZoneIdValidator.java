@@ -22,7 +22,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareRule;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareRuleSchema;
@@ -115,7 +114,7 @@ public class StopZoneIdValidator extends FileValidator {
     private final int csvRowNumber;
 
     StopWithoutZoneIdNotice(GtfsStop stop) {
-      super(SeverityLevel.ERROR);
+      super();
       this.stopId = stop.stopId();
       this.stopName = stop.stopName();
       this.csvRowNumber = stop.csvRowNumber();

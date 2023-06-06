@@ -50,7 +50,7 @@ public class InvalidRowLengthNotice extends ValidationNotice {
   private final int headerCount;
 
   public InvalidRowLengthNotice(String filename, int csvRowNumber, int rowLength, int headerCount) {
-    super(SeverityLevel.ERROR);
+    super();
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.rowLength = rowLength;

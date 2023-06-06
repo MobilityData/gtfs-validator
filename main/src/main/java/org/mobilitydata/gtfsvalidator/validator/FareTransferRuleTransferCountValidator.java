@@ -7,7 +7,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareTransferRule;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareTransferRuleSchema;
@@ -53,7 +52,7 @@ public class FareTransferRuleTransferCountValidator
     private final int transferCount;
 
     FareTransferRuleInvalidTransferCountNotice(int csvRowNumber, int transferCount) {
-      super(SeverityLevel.ERROR);
+      super();
       this.csvRowNumber = csvRowNumber;
       this.transferCount = transferCount;
     }
@@ -72,7 +71,7 @@ public class FareTransferRuleTransferCountValidator
     private final int csvRowNumber;
 
     FareTransferRuleMissingTransferCountNotice(int csvRowNumber) {
-      super(SeverityLevel.ERROR);
+      super();
       this.csvRowNumber = csvRowNumber;
     }
   }
@@ -90,7 +89,7 @@ public class FareTransferRuleTransferCountValidator
     private final int csvRowNumber;
 
     FareTransferRuleWithForbiddenTransferCountNotice(int csvRowNumber) {
-      super(SeverityLevel.ERROR);
+      super();
       this.csvRowNumber = csvRowNumber;
     }
   }

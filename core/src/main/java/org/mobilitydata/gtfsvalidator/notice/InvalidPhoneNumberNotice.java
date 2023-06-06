@@ -54,7 +54,7 @@ public class InvalidPhoneNumberNotice extends ValidationNotice {
       String fieldName,
       String fieldValue,
       SeverityLevel severityLevel) {
-    super(severityLevel);
+    super();
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.fieldName = fieldName;

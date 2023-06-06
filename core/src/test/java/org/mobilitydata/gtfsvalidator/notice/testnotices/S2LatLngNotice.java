@@ -27,7 +27,7 @@ public class S2LatLngNotice extends ValidationNotice {
   private final S2LatLng point;
 
   public S2LatLngNotice(S2LatLng point) {
-    super(ERROR);
+    super();
     this.point = point;
   }
 }

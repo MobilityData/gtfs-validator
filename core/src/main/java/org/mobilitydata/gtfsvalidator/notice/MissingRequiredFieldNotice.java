@@ -39,7 +39,7 @@ public class MissingRequiredFieldNotice extends ValidationNotice {
   private final String fieldName;
 
   public MissingRequiredFieldNotice(String filename, int csvRowNumber, String fieldName) {
-    super(SeverityLevel.ERROR);
+    super();
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.fieldName = fieldName;

@@ -26,7 +26,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
@@ -208,7 +207,7 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
 
     TranslationUnexpectedValueNotice(
         GtfsTranslation translation, String fieldName, String fieldValue) {
-      super(SeverityLevel.ERROR);
+      super();
       this.csvRowNumber = translation.csvRowNumber();
       this.fieldValue = fieldValue;
       this.fieldName = fieldName;
@@ -226,7 +225,7 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
     private final String tableName;
 
     TranslationUnknownTableNameNotice(GtfsTranslation translation) {
-      super(SeverityLevel.WARNING);
+      super();
       this.csvRowNumber = translation.csvRowNumber();
       this.tableName = translation.tableName();
     }
@@ -252,7 +251,7 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
     private final String recordSubId;
 
     TranslationForeignKeyViolationNotice(GtfsTranslation translation) {
-      super(SeverityLevel.ERROR);
+      super();
       this.csvRowNumber = translation.csvRowNumber();
       this.tableName = translation.tableName();
       this.recordId = translation.recordId();

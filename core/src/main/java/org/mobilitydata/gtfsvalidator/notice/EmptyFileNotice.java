@@ -35,7 +35,7 @@ public class EmptyFileNotice extends ValidationNotice {
   private final String filename;
 
   public EmptyFileNotice(String filename) {
-    super(SeverityLevel.ERROR);
+    super();
     this.filename = filename;
   }
 }

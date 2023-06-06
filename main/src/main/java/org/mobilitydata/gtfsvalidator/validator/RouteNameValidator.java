@@ -22,7 +22,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteSchema;
@@ -105,7 +104,7 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
     private final int csvRowNumber;
 
     RouteBothShortAndLongNameMissingNotice(String routeId, int csvRowNumber) {
-      super(SeverityLevel.ERROR);
+      super();
       this.routeId = routeId;
       this.csvRowNumber = csvRowNumber;
     }
@@ -160,7 +159,7 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
 
     RouteLongNameContainsShortNameNotice(
         String routeId, int csvRowNumber, String routeShortName, String routeLongName) {
-      super(SeverityLevel.WARNING);
+      super();
       this.routeId = routeId;
       this.csvRowNumber = csvRowNumber;
       this.routeShortName = routeShortName;
@@ -185,7 +184,7 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
     private final String routeShortName;
 
     RouteShortNameTooLongNotice(String routeId, int csvRowNumber, String routeShortName) {
-      super(SeverityLevel.WARNING);
+      super();
       this.routeId = routeId;
       this.csvRowNumber = csvRowNumber;
       this.routeShortName = routeShortName;
@@ -221,7 +220,7 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
 
     SameNameAndDescriptionForRouteNotice(
         int csvRowNumber, String routeId, String routeDesc, String routeShortOrLongName) {
-      super(SeverityLevel.WARNING);
+      super();
       this.routeId = routeId;
       this.csvRowNumber = csvRowNumber;
       this.routeDesc = routeDesc;

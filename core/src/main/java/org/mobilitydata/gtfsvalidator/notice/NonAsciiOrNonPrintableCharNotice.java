@@ -49,7 +49,7 @@ public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
 
   public NonAsciiOrNonPrintableCharNotice(
       String filename, int csvRowNumber, String columnName, String fieldValue) {
-    super(SeverityLevel.WARNING);
+    super();
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.columnName = columnName;

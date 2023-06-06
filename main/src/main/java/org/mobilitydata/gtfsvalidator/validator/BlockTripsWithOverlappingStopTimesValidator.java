@@ -295,7 +295,7 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
 
     BlockTripsWithOverlappingStopTimesNotice(
         GtfsTrip tripA, GtfsTrip tripB, GtfsDate intersection) {
-      super(ERROR);
+      super();
       this.csvRowNumberA = tripA.csvRowNumber();
       this.tripIdA = tripA.tripId();
       this.serviceIdA = tripA.serviceId();

@@ -35,7 +35,7 @@ public class MissingRequiredFileNotice extends ValidationNotice {
   private final String filename;
 
   public MissingRequiredFileNotice(String filename) {
-    super(SeverityLevel.ERROR);
+    super();
     this.filename = filename;
   }
 }

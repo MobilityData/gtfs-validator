@@ -50,7 +50,7 @@ public class LeadingOrTrailingWhitespacesNotice extends ValidationNotice {
 
   public LeadingOrTrailingWhitespacesNotice(
       String filename, int csvRowNumber, String fieldName, String fieldValue) {
-    super(SeverityLevel.WARNING);
+    super();
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.fieldName = fieldName;

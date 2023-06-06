@@ -32,7 +32,7 @@ public class MissingRequiredColumnNotice extends ValidationNotice {
   private final String fieldName;
 
   public MissingRequiredColumnNotice(String filename, String fieldName) {
-    super(SeverityLevel.ERROR);
+    super();
     this.filename = filename;
     this.fieldName = fieldName;
   }

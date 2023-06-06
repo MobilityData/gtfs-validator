@@ -36,7 +36,7 @@ public class MoreThanOneEntityNotice extends ValidationNotice {
   private final long entityCount;
 
   public MoreThanOneEntityNotice(String filename, long entityCount) {
-    super(SeverityLevel.WARNING);
+    super();
     this.filename = filename;
     this.entityCount = entityCount;
   }

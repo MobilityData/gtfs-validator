@@ -54,7 +54,7 @@ public class CsvParsingFailedNotice extends ValidationNotice {
    * @param exception the exception thrown
    */
   public CsvParsingFailedNotice(String filename, TextParsingException exception) {
-    super(ERROR);
+    super();
     this.filename = filename;
     this.charIndex = exception.getCharIndex();
     this.columnIndex = exception.getColumnIndex();

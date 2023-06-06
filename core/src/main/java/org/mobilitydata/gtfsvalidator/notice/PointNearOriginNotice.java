@@ -60,7 +60,7 @@ public class PointNearOriginNotice extends ValidationNotice {
       double latFieldValue,
       String lonFieldName,
       double lonFieldValue) {
-    super(SeverityLevel.ERROR);
+    super();
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.entityId = entityId;
@@ -77,7 +77,7 @@ public class PointNearOriginNotice extends ValidationNotice {
       double latFieldValue,
       String lonFieldName,
       double lonFieldValue) {
-    super(SeverityLevel.ERROR);
+    super();
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.entityId = null;

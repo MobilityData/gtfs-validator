@@ -40,7 +40,7 @@ public class UnknownColumnNotice extends ValidationNotice {
   private final int index;
 
   public UnknownColumnNotice(String filename, String fieldName, int index) {
-    super(SeverityLevel.INFO);
+    super();
     this.filename = filename;
     this.fieldName = fieldName;
     this.index = index;

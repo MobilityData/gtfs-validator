@@ -6,7 +6,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
@@ -55,7 +54,7 @@ public class StopRequiredLocationValidator extends SingleEntityValidator<GtfsSto
     private final String stopId;
 
     StopWithoutLocationNotice(int csvRowNumber, String stopId, GtfsLocationType type) {
-      super(SeverityLevel.ERROR);
+      super();
       this.stopId = stopId;
       this.csvRowNumber = csvRowNumber;
       this.locationType = type;
