@@ -16,7 +16,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
-import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.INFO;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
@@ -143,7 +143,7 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
    *
    * <p>This is different from `location_without_parent_station` since it is less severe.
    */
-  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsStopSchema.class))
+  @GtfsValidationNotice(severity = INFO, files = @FileRefs(GtfsStopSchema.class))
   static class PlatformWithoutParentStationNotice extends ValidationNotice {
 
     /** Row number of the faulty record. */
@@ -156,7 +156,7 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
     private final String stopName;
 
     PlatformWithoutParentStationNotice(int csvRowNumber, String stopId, String stopName) {
-      super(SeverityLevel.WARNING);
+      super(INFO);
       this.csvRowNumber = csvRowNumber;
       this.stopId = stopId;
       this.stopName = stopName;

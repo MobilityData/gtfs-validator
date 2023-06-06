@@ -95,7 +95,8 @@ public class NoticeSchemaGeneratorTest {
   @Test
   public void generateSchemaForNotice_documentedNotice() {
     NoticeSchema schema = NoticeSchemaGenerator.generateSchemaForNotice(DocumentedNotice.class);
-    assertThat(schema.getDescription()).isEqualTo("This is a notice comment.");
+    assertThat(schema.getShortSummary()).isEqualTo("This is a notice comment.");
+    assertThat(schema.getDescription()).isEqualTo("This is additional documentation.");
     ReferencesSchema refs = schema.getReferences();
     assertThat(refs.getFileReferences()).containsExactly("apples.txt");
     assertThat(refs.getBestPracticesFileReferences()).containsExactly("bananas.txt");

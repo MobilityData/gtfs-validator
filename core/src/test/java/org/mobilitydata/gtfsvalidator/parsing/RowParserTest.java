@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.function.Function;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -68,7 +69,7 @@ public class RowParserTest {
     RowParser parser = createParser(cellValue);
     assertThat(parse.apply(parser)).isEqualTo(expected);
     assertThat(parser.getNoticeContainer().getValidationNotices())
-        .containsExactlyElementsIn(validationNotices);
+        .containsExactlyElementsIn(Arrays.asList(validationNotices));
     assertThat(parser.getNoticeContainer().hasValidationErrors()).isTrue();
   }
 
@@ -91,7 +92,7 @@ public class RowParserTest {
     RowParser parser = createParser("ABCDE");
 
     assertThat(parser.asString(0, FieldLevelEnum.RECOMMENDED)).isEqualTo("ABCDE");
-    assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices()).isEmpty();
   }
 
   @Test
@@ -99,7 +100,7 @@ public class RowParserTest {
     RowParser parser = createParser("ABCDE");
 
     assertThat(parser.asString(0, FieldLevelEnum.REQUIRED)).isEqualTo("ABCDE");
-    assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices()).isEmpty();
   }
 
   @Test
@@ -129,19 +130,19 @@ public class RowParserTest {
     RowParser parser = createParser("12345");
 
     assertThat(parser.asInteger(0, FieldLevelEnum.REQUIRED)).isEqualTo(12345);
-    assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices()).isEmpty();
 
     assertThat(parser.asInteger(0, FieldLevelEnum.REQUIRED, RowParser.NumberBounds.NON_NEGATIVE))
         .isEqualTo(12345);
-    assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices()).isEmpty();
 
     assertThat(parser.asInteger(0, FieldLevelEnum.REQUIRED, RowParser.NumberBounds.NON_ZERO))
         .isEqualTo(12345);
-    assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices()).isEmpty();
 
     assertThat(parser.asInteger(0, FieldLevelEnum.REQUIRED, RowParser.NumberBounds.POSITIVE))
         .isEqualTo(12345);
-    assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices()).isEmpty();
 
     assertThat(createParser("abc").asInteger(0, FieldLevelEnum.REQUIRED)).isNull();
   }
@@ -151,19 +152,19 @@ public class RowParserTest {
     RowParser parser = createParser("123.45");
 
     assertThat(parser.asDecimal(0, FieldLevelEnum.REQUIRED)).isEqualTo(new BigDecimal("123.45"));
-    assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices()).isEmpty();
 
     assertThat(parser.asDecimal(0, FieldLevelEnum.REQUIRED, RowParser.NumberBounds.NON_NEGATIVE))
         .isEqualTo(new BigDecimal("123.45"));
-    assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices()).isEmpty();
 
     assertThat(parser.asDecimal(0, FieldLevelEnum.REQUIRED, RowParser.NumberBounds.NON_ZERO))
         .isEqualTo(new BigDecimal("123.45"));
-    assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices()).isEmpty();
 
     assertThat(parser.asDecimal(0, FieldLevelEnum.REQUIRED, RowParser.NumberBounds.POSITIVE))
         .isEqualTo(new BigDecimal("123.45"));
-    assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices()).isEmpty();
 
     assertThat(createParser("abc").asDecimal(0, FieldLevelEnum.REQUIRED)).isNull();
   }
@@ -173,19 +174,19 @@ public class RowParserTest {
     RowParser parser = createParser("123.45");
 
     assertThat(parser.asFloat(0, FieldLevelEnum.REQUIRED)).isEqualTo(123.45);
-    assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices()).isEmpty();
 
     assertThat(parser.asFloat(0, FieldLevelEnum.REQUIRED, RowParser.NumberBounds.NON_NEGATIVE))
         .isEqualTo(123.45);
-    assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices()).isEmpty();
 
     assertThat(parser.asFloat(0, FieldLevelEnum.REQUIRED, RowParser.NumberBounds.NON_ZERO))
         .isEqualTo(123.45);
-    assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices()).isEmpty();
 
     assertThat(parser.asFloat(0, FieldLevelEnum.REQUIRED, RowParser.NumberBounds.POSITIVE))
         .isEqualTo(123.45);
-    assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
+    assertThat(parser.getNoticeContainer().getValidationNotices()).isEmpty();
 
     assertThat(createParser("abc").asFloat(0, FieldLevelEnum.REQUIRED)).isNull();
   }

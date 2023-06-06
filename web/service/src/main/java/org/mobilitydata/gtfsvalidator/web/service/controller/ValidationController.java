@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.web.service.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
+import io.sentry.Sentry;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Path;
@@ -66,6 +67,7 @@ public class ValidationController {
       return new CreateJobResponse(jobId, uploadUrl != null ? uploadUrl.toString() : null);
     } catch (Exception exc) {
       logger.error("Error", exc);
+      Sentry.captureException(exc);
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error", exc);
     }
   }
@@ -106,6 +108,7 @@ public class ValidationController {
       return new ResponseEntity(HttpStatus.OK);
     } catch (Exception exc) {
       logger.error("Error", exc);
+      Sentry.captureException(exc);
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error", exc);
     } finally {
       // delete the temp file and directory
@@ -124,6 +127,7 @@ public class ValidationController {
       throw new Exception("Exception message");
     } catch (Exception exc) {
       logger.error("Error", exc);
+      Sentry.captureException(exc);
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error", exc);
     }
   }

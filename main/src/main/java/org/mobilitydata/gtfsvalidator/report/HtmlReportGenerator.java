@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.report.model.FeedMetadata;
 import org.mobilitydata.gtfsvalidator.report.model.ReportSummary;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 import org.mobilitydata.gtfsvalidator.util.VersionInfo;
@@ -35,6 +36,7 @@ public class HtmlReportGenerator {
 
   /** Generate the HTML report using the class ReportSummary and the notice container. */
   public void generateReport(
+      FeedMetadata feedMetadata,
       NoticeContainer noticeContainer,
       ValidationRunnerConfig config,
       VersionInfo versionInfo,
@@ -52,6 +54,8 @@ public class HtmlReportGenerator {
     String date = formatter.format(now);
 
     Context context = new Context();
+    // TODO: handle null metadata
+    context.setVariable("metadata", feedMetadata);
     context.setVariable("summary", summary);
     context.setVariable("config", config);
     context.setVariable("date", date);

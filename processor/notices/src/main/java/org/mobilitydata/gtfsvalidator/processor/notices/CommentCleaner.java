@@ -1,10 +1,16 @@
 package org.mobilitydata.gtfsvalidator.processor.notices;
 
+import static java.util.function.Predicate.not;
+
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.List;
 import java.util.OptionalInt;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -19,9 +25,10 @@ public class CommentCleaner {
    */
   private static final ImmutableSet<String> LINES_TO_DROP = ImmutableSet.of("<pre>", "</pre>");
 
-  public String cleanComment(String docComment) {
+  /** Returns the cleaned comment split into individual lines. */
+  public List<String> cleanComment(String docComment) {
     if (docComment.isEmpty()) {
-      return docComment;
+      return ImmutableList.of();
     }
 
     List<String> lines = Arrays.asList(docComment.split("\n"));
@@ -60,7 +67,7 @@ public class CommentCleaner {
       lines.remove(lines.size() - 1);
     }
 
-    return lines.stream().collect(Collectors.joining("\n"));
+    return lines;
   }
 
   /** Returns the number of leading whitespace characters at the beginning of the line. */
@@ -70,5 +77,54 @@ public class CommentCleaner {
       i++;
     }
     return i;
+  }
+
+  public SplitComment splitLinesIntoSummaryAndAdditionalDocumentation(List<String> lines) {
+    SplitComment comment = new SplitComment();
+    if (lines.isEmpty()) {
+      return comment;
+    }
+
+    // The lines extracted and cleaned from a Javadoc notice comment should have the following
+    // form at this point.
+    //
+    //    Initial short-summary text that possibly spans more
+    //    than one line.
+    //
+    //    Optional additional descriptive text that possibly
+    //    spans more than one line.  May have more than one
+    //    sentence.
+    //
+    //    Even more additional descriptive text.
+
+    Deque<String> remainingLines = new ArrayDeque<>(lines);
+    // There shouldn't be any initial blank lines, but strip them just in case.
+    consumeLines(remainingLines, String::isBlank);
+
+    List<String> shortSummaryLines = consumeLines(remainingLines, not(String::isBlank));
+    consumeLines(remainingLines, String::isBlank);
+
+    if (!shortSummaryLines.isEmpty()) {
+      comment.shortSummary = String.join(" ", shortSummaryLines);
+    }
+    if (!remainingLines.isEmpty()) {
+      comment.additionalDocumentation = String.join("\n", remainingLines);
+    }
+    return comment;
+  }
+
+  private List<String> consumeLines(
+      Deque<String> remainingLines, Predicate<String> matchCondition) {
+    List<String> matching = new ArrayList<>();
+    while (!remainingLines.isEmpty() && matchCondition.test(remainingLines.peekFirst())) {
+      matching.add(remainingLines.pollFirst());
+    }
+    return matching;
+  }
+
+  public final class SplitComment {
+    String shortSummary;
+
+    String additionalDocumentation;
   }
 }

@@ -65,7 +65,7 @@ public class NoticeDocumentationTest {
             .filter(
                 clazz -> {
                   NoticeDocComments docComments = NoticeSchemaGenerator.loadComments(clazz);
-                  return docComments.getDocComment() == null;
+                  return docComments.getShortSummary() == null;
                 })
             .collect(Collectors.toList());
     assertWithMessage(
@@ -74,6 +74,35 @@ public class NoticeDocumentationTest {
                 + "be added to the following classes. "
                 + "See https://github.com/MobilityData/gtfs-validator/blob/master/docs/NEW_RULES.md#2-document-the-new-rule for more details.")
         .that(noticesWithoutDocComment)
+        .isEmpty();
+  }
+
+  @Test
+  public void testThatAllValidationNoticesAreDocumentedWithFirstLine() {
+    List<Class<?>> noticesWithImproperMultilineDocComment =
+        discoverValidationNoticeClasses()
+            .filter(
+                clazz -> {
+                  NoticeDocComments docComments = NoticeSchemaGenerator.loadComments(clazz);
+                  if (docComments.getShortSummary() == null) {
+                    return false;
+                  }
+                  return docComments.getShortSummary().contains(". ");
+                })
+            .collect(Collectors.toList());
+    assertWithMessage(
+            "We expect all validation notices to have a documentation comment of the "
+                + "following form:\n"
+                + "\n"
+                + "  Short single-sentence text describing the notice on a single line (required).\n"
+                + "  \n"
+                + "  Additional text further describing the notice with multiple additional sentences "
+                + "on multiple lines(optional).\n"
+                + "\n"
+                + "See https://github.com/MobilityData/gtfs-validator/blob/master/docs/NEW_RULES.md#2-document-the-new-rule for more details.<br/>\n"
+                + "\n"
+                + "The following notice classes do not match that convention:")
+        .that(noticesWithImproperMultilineDocComment)
         .isEmpty();
   }
 
@@ -97,7 +126,7 @@ public class NoticeDocumentationTest {
 
   private static Stream<String> checkNoticeForUnsupportedJavadocInComment(Class<?> noticeClass) {
     NoticeDocComments docComments = NoticeSchemaGenerator.loadComments(noticeClass);
-    String docComment = docComments.getDocComment();
+    String docComment = docComments.getCombinedDocumentation();
 
     List<String> errors = new ArrayList<>();
 

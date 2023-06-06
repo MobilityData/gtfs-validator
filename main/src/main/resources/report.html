@@ -1,210 +1,351 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>GTFS Schedule Validation Report</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8; width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8; width=device-width, initial-scale=1"/>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        body {
-            font-family: Helvetica, Arial, sans-serif;
-            font-size: 14px;
-            min-width: 800px;
-        }
+    body {
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        min-width: 800px;
+        padding: 1em 2em;
+    }
 
-        .error:before {
-            content: "\1F534  ";
-        }
+    .error:before {
+        content: "\1F534  ";
+    }
 
-        .warning:before {
-            content: "\1F7E0  ";
-        }
+    .warning:before {
+        content: "\1F7E0  ";
+    }
 
-        .info:before {
-            content: "\26AA  ";
-        }
+    .info:before {
+        content: "\26AA  ";
+    }
 
-        * {
-            box-sizing: border-box;
-        }
+    * {
+        box-sizing: border-box;
+    }
 
-        body {
-            padding: 1em 2em;
-        }
+    .version-update {
+        font-weight: bold;
+        color: red;
+    }
 
-        .version-update {
-          font-weight: bold;
-          color: red;
-        }
+    table {
+        width: 100%;
+    }
 
-        table {
-            width: 100%;
-        }
-        table th {
-            text-align: left;
-            border-bottom: 2px solid #000;
-            padding: 0.5em;
-        }
-        table td {
-            border-bottom: 1px solid #ddd;
-            padding: 0.5em;
-        }
+    table th {
+        text-align: left;
+        border-bottom: 2px solid #000;
+        padding: 0.5em;
+        white-space: nowrap;
+    }
 
-        table.accordion > tbody > tr.notice td, table.accordion > tbody > tr.view th {
-            cursor: auto;
-        }
-        table.accordion > tbody > tr.notice td:first-child,
-        table.accordion > tbody > tr.notice th:first-child {
-            position: relative;
-            padding-left: 20px;
-        }
-        table.accordion > tbody > tr.notice td:first-child:before,
-        table.accordion > tbody > tr.notice th:first-child:before {
-            position: absolute;
-            top: 50%;
-            left: 5px;
-            width: 9px;
-            height: 16px;
-            margin-top: -8px;
-            color: #000;
-            content: "+";
-        }
-        table.accordion > tbody > tr.notice.open td:first-child:before,
-        table.accordion > tbody > tr.notice.open th:first-child:before {
-            content: "\2013";
-        }
-        table.accordion > tbody > tr.notice:hover {
-            background: #ddd;
-        }
-        table.accordion > tbody > tr.notice.open {
-            background: #ddd;
-            color: black;
-        }
-        table.accordion > tbody > tr.description {
-            display: none;
-        }
-        table.accordion > tbody > tr.description.open {
-            display: table-row;
-        }
+    table td {
+        border-bottom: 1px solid #ddd;
+        padding: 0.5em;
+    }
 
-        .desc-content {
-            padding: 0.5em;
-            border-bottom: 5px solid #000;
-            border-top: 5px solid #000
-        }
-        .desc-content h3 {
-            margin-top: 0;
-        }
+    .desc-content {
+        padding: 0.5em;
+        border-bottom: 5px solid #000;
+        border-top: 5px solid #000;
+    }
 
-    </style>
+    .desc-content h3 {
+        margin-top: 0;
+    }
+
+    .summary {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .summary-row {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .summary-cell {
+        padding: 5px;
+        box-sizing: border-box;
+    }
+
+    .summary h4 {
+        white-space: nowrap;
+    }
+
+    .summary dt,
+    .summary dd {
+        display: inline-block;
+    }
+
+    .summary dd {
+        font-weight: bold;
+        width: 130px;
+        margin-inline-start: 0;
+    }
+
+    .summary ul,
+    .summary ol {
+        padding-left: 20px;
+    }
+
+    .summary li {
+        padding-left: 0px;
+    }
+
+    hr {
+        border: none;
+        border-top: 2px solid #000;
+        margin-top: 5px;
+        margin-bottom: 15px;
+    }
+
+    .spec-feature {
+        background-color: #d4d4d4;
+        padding: 2px 5px;
+        margin-right: 2px;
+    }
+
+    .tooltip {
+        text-decoration: none;
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 5px;
+        position: absolute;
+        z-index: 1;
+        bottom: 100%;
+        left: 50%;
+        margin-left: -60px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    /* Responsive behavior */
+    @media (max-width: 767px) {
+        .summary .summary_info,
+        .summary .summary_list {
+            flex-basis: 100%;
+        }
+    }
+
+    table.accordion > tbody > tr.notice td,
+    table.accordion > tbody > tr.view th {
+        cursor: auto;
+    }
+
+    table.accordion > tbody > tr.notice td:first-child,
+    table.accordion > tbody > tr.notice th:first-child {
+        position: relative;
+        padding-left: 20px;
+    }
+
+    table.accordion > tbody > tr.notice td:first-child:before,
+    table.accordion > tbody > tr.notice th:first-child:before {
+        position: absolute;
+        top: 50%;
+        left: 5px;
+        width: 9px;
+        height: 16px;
+        margin-top: -8px;
+        color: #000;
+        content: "+";
+    }
+
+    table.accordion > tbody > tr.notice.open td:first-child:before,
+    table.accordion > tbody > tr.notice.open th:first-child:before {
+        content: "\2013";
+    }
+
+    table.accordion > tbody > tr.notice:hover {
+        background: #ddd;
+    }
+
+    table.accordion > tbody > tr.notice.open {
+        background: #ddd;
+        color: black;
+    }
+
+    table.accordion > tbody > tr.description {
+        display: none;
+    }
+
+    table.accordion > tbody > tr.description.open {
+        display: table-row;
+    }
+</style>
+
 </head>
-
 <body>
-<h1>GTFS Schedule Validation Report</h1>
+    <h1>GTFS Schedule Validation Report</h1>
+    <p>This report was generated by the <a href="https://github.com/MobilityData/gtfs-validator">Canonical GTFS Schedule
+        validator</a>,
+        <span th:if="summary.version != null" th:text="'version ' + ${summary.version}"></span> at <span
+                th:text="${date}"></span>,
+        <br/>
+        for the dataset
+        <span th:text="${config.gtfsSource}"></span><span
+                th:text="${config.countryCode.isUnknown()} ? '. No country code was provided.' : ', with the country code: ' + ${config.countryCode} + '.'"></span>
+        </br>
 
-<p class="version-update" th:if="${summary.newVersionOfValidatorAvailable}">A new version of the <a href="https://github.com/MobilityData/gtfs-validator/releases">Canonical GTFS Schedule validator</a> is available!  Please update to get the latest/best validation results.</p>
+    <p>Use this report alongside our <a href="https://gtfs-validator.mobilitydata.org/rules.html">documentation</a>.</p>
 
-<h2><span th:text="${summary.noticeCount}">X</span> notices reported
-    (<span th:text="${summary.errorCount}">0</span> errors,
-    <span th:text="${summary.warningCount}">0</span> warnings,
-    <span th:text="${summary.infoCount}">0</span> infos)</h2>
-<p>This validation report was generated using the <a href="https://github.com/MobilityData/gtfs-validator">Canonical GTFS Schedule validator</a>.</p>
-<p>Use this report alongside the <a href="https://gtfs-validator.mobilitydata.org/rules.html">rules</a> page to get more details about the validation issues.</p>
-<table class="accordion">
-    <thead>
-    <tr>
-    <th>Notice Code</th><th>Severity</th><th>Total</th>
-    </tr>
-    </thead>
-    <tbody>
-    <span th:each="noticesBySeverityLevel: ${summary.noticesMap}">
-        <span th:each="noticesByCode: ${noticesBySeverityLevel.value}">
-            <tr class="notice">
-                <td th:text="${noticesByCode.key}" />
-                <td th:class="${noticesBySeverityLevel.key.toString().toLowerCase()}" th:text="${noticesBySeverityLevel.key}" />
-                <td th:text="${noticesByCode.value.size}" />
-            </tr>
-            <tr class="description">
-                <td colspan="4">
-                    <div class="desc-content">
-                        <h3 th:text="${noticesByCode.key}" />
-                        <p> Please find this notice description <a th:href="@{'https://gtfs-validator.mobilitydata.org/rules.html#' + ${noticesByCode.key}}">here</a>.</p>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th:block th:each="field: ${noticesByCode.value[0].fields}" >
-                                        <th th:text="${field}" />
-                                    </th:block>
-                                </tr>
-                            </thead>
-                            <span th:each="notice: ${noticesByCode.value}">
-                                <tbody>
-                                <tr>
-                                <th:block th:each="field: ${notice.fields}">
-                                        <td th:text="${notice.getValueForField(field)}" />
-                                </th:block>
-                                </tr>
-                                </tbody>
-                            </span>
-                        </table>
+    <p class="version-update" th:if="${summary.newVersionOfValidatorAvailable}">A new version of the <a
+            href="https://github.com/MobilityData/gtfs-validator/releases">Canonical GTFS Schedule validator</a> is available!
+        Please update to get the latest/best validation results.</p>
+
+    <h2>Summary</h2>
+
+    <div class="summary" th:if="${metadata}">
+        <div class="summary-row">
+            <div class="summary-cell summary_info">
+                <h4>Agencies included</h4>
+                <hr />
+                <ul>
+                    <li th:each="agency: ${metadata.agencies}">
+                        <span th:text="${agency.name}"></span>
+                        <ul>
+                            <li><b>website: </b><a th:href="${agency.url}" th:text="${agency.url}"></a></li>
+                            <li><b>phone number: </b><span th:text="${agency.phone}" /></li>
+                            <li><b>email: </b><span th:text="${agency.email.isEmpty()} ? 'Not provided' : ${agency.email}" /></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="summary-cell summary_info">
+                <h4>Feed Info</h4>
+                <hr />
+                <dl>
+                    <div th:each="info: ${metadata.feedInfo}">
+                        <dd th:text="${info.key} + ':'" />
+                        <dt>
+                        <span th:if="${info.key.contains('URL') and info.value != 'N/A'}">
+                            <a th:href="${info.value}" target="_blank" th:text="${info.value}" />
+                        </span>
+                            <span th:if="${info.key.contains('URL') and info.value == 'N/A'}" th:text="${info.value}"></span>
+                            <span th:unless="${info.key.contains('URL')}" th:text="${info.value}" />
+                        </dt>
                     </div>
-                </td>
-            </tr>
+                </dl>
+            </div>
+            <div class="summary-cell summary_list">
+                <h4>Files included</h4>
+                <hr />
+                <ol>
+                    <li th:each="file: ${metadata.getFilenames}" th:text="${file}"></li>
+                </ol>
+            </div>
+            <div class="summary-cell summary_list">
+                <h4>Counts</h4>
+                <hr />
+                <ul>
+                    <li th:each="count: ${metadata.counts}"><span th:text="${count.key} + ': ' + ${count.value}" /></li>
+                </ul>
+            </div>
+            <div class="summary-cell summary_list">
+                <h4>GTFS Components included</h4>
+                <hr />
+                <div>
+                    <span class="spec-feature" th:each="feature: ${metadata.specFeatures}" th:if="${feature.value == 'Yes'}" th:text="${feature.key}" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <h2>Specification Compliance report</h2>
+
+    <h3><span th:text="${summary.noticeCount}">X</span> notices reported
+        (<span th:text="${summary.errorCount}">0</span> errors,
+        <span th:text="${summary.warningCount}">0</span> warnings,
+        <span th:text="${summary.infoCount}">0</span> infos)
+    </h3>
+
+    <table class="accordion">
+        <thead>
+        <tr>
+            <th>Notice Code</th>
+            <th>Severity</th>
+            <th>Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <span th:each="noticesBySeverityLevel: ${summary.noticesMap}">
+            <span th:each="noticesByCode: ${noticesBySeverityLevel.value}">
+                <tr class="notice">
+                    <td th:text="${noticesByCode.key}" />
+                    <td th:class="${noticesBySeverityLevel.key.toString().toLowerCase()}"
+                        th:text="${noticesBySeverityLevel.key}" />
+                    <td th:text="${noticesByCode.value.size}" />
+                </tr>
+                <tr class="description">
+                    <td colspan="4">
+                        <div class="desc-content">
+                            <h3 th:text="${noticesByCode.key}" />
+                            <p th:utext="${noticesByCode.value[0].description}" />
+                            <p> You can see more about this notice <a
+                                    th:href="@{'https://gtfs-validator.mobilitydata.org/rules.html#' + ${noticesByCode.key}}">here</a>.
+                            </p>
+                             <p th:if="${noticesByCode.value.size > 50}">Only the first 50 of <span th:text="${noticesByCode.value.size}"></span> affected records are displayed below.</p>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th:block th:each="field: ${noticesByCode.value[0].fields}">
+                                            <th>
+                                               <span th:text="${field}"></span>
+                                                <a href="#" class="tooltip" onclick="event.preventDefault();"><span>(?)</span>
+                                                    <span class="tooltiptext" th:text="${noticesByCode.value[0].getCommentForField(field)}"></span>
+                                                </a>
+                                            </th>
+                                        </th:block>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="notice, iStat : ${noticesByCode.value}" th:if="${iStat.count <= 50}">
+                                    <th:block th:each="field: ${notice.fields}">
+                                            <td th:text="${notice.getValueForField(field)}" />
+                                    </th:block>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </span>
         </span>
-    </span>
-    </tbody>
-</table>
-<H2>Settings and version</H2>
-<p th:if="summary.version != null" th:text="'Validator version: ' + ${summary.version}">
-<p th:text="'Validation date and time: ' + ${date}">
-<p>Parameters used (more about the available parameters in <a href="https://github.com/MobilityData/gtfs-validator/blob/master/docs/USAGE.md">USAGE.md</a>):</p>
-<table>
-    <thead>
-    <tr>
-        <th>Parameter description</th><th>Value</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>GTFS input (ZIP file, directory or URL)</td>
-        <td th:text="${config.gtfsSource}" />
-    </tr>
-    <tr>
-        <td>Output directory</td>
-        <td th:text="${config.outputDirectory}" />
-    </tr>
-    <tr>
-        <td>Number of threads used to run the validator</td>
-        <td th:text="${config.numThreads}" />
-    </tr>
-    <tr>
-        <td>Country code (for phone validation)</td>
-        <td th:text="${config.countryCode.isUnknown()} ? 'The country code was not valid or was not provided.' : ${config.countryCode}" />
-    </tr>
-    <tr>
-        <td>Validation report name</td>
-        <td th:text="${config.validationReportFileName}" />
-    </tr>
-    <tr>
-        <td>System errors report name</td>
-        <td th:text="${config.systemErrorsReportFileName}" />
-    </tr>
-    <tr>
-        <td>HTML report name</td>
-        <td th:text="${config.htmlReportFileName}" />
-    </tr>
-    </tbody>
-</table>
-<br>
-<footer class="footer text-center text-muted mt-5">
-    Made with ♥ by <a href="https://mobilitydata.org/">MobilityData</a>
-</footer>
+        </tbody>
+    </table>
+    <br>
+    <footer class="footer text-center text-muted mt-5">
+        Made with ♥ by <a href="https://mobilitydata.org/">MobilityData</a>
+    </footer>
 </body>
-<script>
-    $(function(){
-        $(".accordion tr.notice").on("click", function(){
-            $(this).toggleClass("open").next(".description").toggleClass("open");
+    <script>
+        $(function () {
+            $(".accordion tr.notice").on("click", function () {
+                $(this).toggleClass("open").next(".description").toggleClass("open")
+            })
         });
-    });
-</script>
+    </script>
+
 </html>
+
