@@ -34,10 +34,8 @@ public class FeedMetadataTest {
   File rootDir;
 
 
-  @Test
-  private void createDataFile(String filename, String content) throws IOException {
+  public void createDataFile(String filename, String content) throws IOException {
     File dataFile = tmpDir.newFile("data/" + filename);
-    assertTrue(dataFile.exists());
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(dataFile))) {
       writer.write(content);
     }
