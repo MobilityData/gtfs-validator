@@ -46,7 +46,6 @@ public class InvalidCurrencyNotice extends ValidationNotice {
 
   public InvalidCurrencyNotice(
       String filename, int csvRowNumber, String fieldName, String fieldValue) {
-    super(SeverityLevel.ERROR);
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.fieldName = fieldName;

@@ -27,7 +27,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
@@ -117,7 +116,6 @@ public class MissingTripEdgeValidator extends FileValidator {
 
     MissingTripEdgeNotice(
         int csvRowNumber, int stopSequence, String tripId, String specifiedField) {
-      super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
       this.stopSequence = stopSequence;
       this.tripId = tripId;

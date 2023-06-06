@@ -21,7 +21,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathway;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathwaySchema;
@@ -59,7 +58,6 @@ public class PathwayLoopValidator extends SingleEntityValidator<GtfsPathway> {
     private final String stopId;
 
     PathwayLoopNotice(GtfsPathway pathway) {
-      super(SeverityLevel.WARNING);
       this.csvRowNumber = pathway.csvRowNumber();
       this.pathwayId = pathway.pathwayId();
       this.stopId = pathway.fromStopId();

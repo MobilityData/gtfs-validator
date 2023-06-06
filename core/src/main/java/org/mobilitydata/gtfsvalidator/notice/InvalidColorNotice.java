@@ -45,7 +45,6 @@ public class InvalidColorNotice extends ValidationNotice {
 
   public InvalidColorNotice(
       String filename, int csvRowNumber, String fieldName, String fieldValue) {
-    super(SeverityLevel.ERROR);
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.fieldName = fieldName;

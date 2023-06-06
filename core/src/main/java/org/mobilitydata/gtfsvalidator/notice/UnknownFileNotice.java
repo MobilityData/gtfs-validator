@@ -34,7 +34,6 @@ public class UnknownFileNotice extends ValidationNotice {
   private final String filename;
 
   public UnknownFileNotice(String filename) {
-    super(SeverityLevel.INFO);
     this.filename = filename;
   }
 }

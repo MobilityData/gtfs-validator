@@ -44,7 +44,6 @@ public class InvalidDateNotice extends ValidationNotice {
   private final String fieldValue;
 
   public InvalidDateNotice(String filename, int csvRowNumber, String fieldName, String fieldValue) {
-    super(SeverityLevel.ERROR);
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.fieldName = fieldName;

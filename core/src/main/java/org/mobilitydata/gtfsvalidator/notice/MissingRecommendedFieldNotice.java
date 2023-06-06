@@ -37,7 +37,6 @@ public class MissingRecommendedFieldNotice extends ValidationNotice {
   private final String fieldName;
 
   public MissingRecommendedFieldNotice(String filename, int csvRowNumber, String fieldName) {
-    super(SeverityLevel.WARNING);
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.fieldName = fieldName;

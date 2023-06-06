@@ -27,7 +27,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.*;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
@@ -118,7 +117,6 @@ public class DateTripsValidator extends FileValidator {
 
     TripCoverageNotActiveForNext7DaysNotice(
         GtfsDate currentDate, GtfsDate serviceWindowStartDate, GtfsDate serviceWindowEndDate) {
-      super(SeverityLevel.WARNING);
       this.currentDate = currentDate;
       this.serviceWindowStartDate = serviceWindowStartDate;
       this.serviceWindowEndDate = serviceWindowEndDate;

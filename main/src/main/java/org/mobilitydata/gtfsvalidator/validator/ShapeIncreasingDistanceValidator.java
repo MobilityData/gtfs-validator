@@ -26,7 +26,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeSchema;
@@ -118,7 +117,6 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
     private final int prevShapePtSequence;
 
     DecreasingShapeDistanceNotice(GtfsShape current, GtfsShape previous) {
-      super(SeverityLevel.ERROR);
       this.shapeId = current.shapeId();
       this.csvRowNumber = current.csvRowNumber();
       this.shapeDistTraveled = current.shapeDistTraveled();
@@ -167,7 +165,6 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
     private final int prevShapePtSequence;
 
     EqualShapeDistanceSameCoordinatesNotice(GtfsShape previous, GtfsShape current) {
-      super(SeverityLevel.WARNING);
       this.shapeId = current.shapeId();
       this.csvRowNumber = current.csvRowNumber();
       this.shapeDistTraveled = current.shapeDistTraveled();
@@ -217,7 +214,6 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
     private final double actualDistanceBetweenShapePoints;
 
     EqualShapeDistanceDiffCoordinatesNotice(GtfsShape previous, GtfsShape current) {
-      super(SeverityLevel.ERROR);
       this.shapeId = current.shapeId();
       this.csvRowNumber = current.csvRowNumber();
       this.shapeDistTraveled = current.shapeDistTraveled();
