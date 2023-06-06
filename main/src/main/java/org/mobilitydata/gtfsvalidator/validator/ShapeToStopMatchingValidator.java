@@ -32,7 +32,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
@@ -276,7 +275,6 @@ public class ShapeToStopMatchingValidator extends FileValidator {
 
     StopHasTooManyMatchesForShapeNotice(
         GtfsTrip trip, GtfsStopTime stopTime, String stopName, S2LatLng location, int matchCount) {
-      super(SeverityLevel.WARNING);
       this.tripCsvRowNumber = trip.csvRowNumber();
       this.shapeId = trip.shapeId();
       this.tripId = trip.tripId();
@@ -335,7 +333,6 @@ public class ShapeToStopMatchingValidator extends FileValidator {
         String stopName,
         S2LatLng location,
         double geoDistanceToShape) {
-      super(SeverityLevel.WARNING);
       this.tripCsvRowNumber = trip.csvRowNumber();
       this.shapeId = trip.shapeId();
       this.tripId = trip.tripId();
@@ -390,7 +387,6 @@ public class ShapeToStopMatchingValidator extends FileValidator {
         String stopName,
         S2LatLng location,
         double geoDistanceToShape) {
-      super(SeverityLevel.WARNING);
       this.tripCsvRowNumber = trip.csvRowNumber();
       this.shapeId = trip.shapeId();
       this.tripId = trip.tripId();
@@ -454,7 +450,6 @@ public class ShapeToStopMatchingValidator extends FileValidator {
         GtfsStopTime stopTime2,
         String stopName2,
         S2LatLng location2) {
-      super(SeverityLevel.WARNING);
       this.tripCsvRowNumber = trip.csvRowNumber();
       this.shapeId = trip.shapeId();
       this.tripId = trip.tripId();

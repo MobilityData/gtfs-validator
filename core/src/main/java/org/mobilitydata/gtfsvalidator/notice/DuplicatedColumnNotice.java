@@ -51,7 +51,6 @@ public class DuplicatedColumnNotice extends ValidationNotice {
 
   public DuplicatedColumnNotice(
       String filename, String fieldName, int firstIndex, int secondIndex) {
-    super(SeverityLevel.ERROR);
     this.filename = filename;
     this.fieldName = fieldName;
     this.firstIndex = firstIndex;

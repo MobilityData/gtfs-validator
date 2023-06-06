@@ -25,7 +25,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathway;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathwaySchema;
@@ -99,7 +98,6 @@ public class PathwayDanglingGenericNodeValidator extends FileValidator {
     private final String parentStation;
 
     PathwayDanglingGenericNodeNotice(GtfsStop genericNode) {
-      super(SeverityLevel.WARNING);
       this.csvRowNumber = genericNode.csvRowNumber();
       this.stopId = genericNode.stopId();
       this.stopName = genericNode.stopName();

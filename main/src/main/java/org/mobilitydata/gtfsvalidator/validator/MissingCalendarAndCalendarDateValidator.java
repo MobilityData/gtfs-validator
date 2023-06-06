@@ -22,7 +22,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
@@ -70,8 +69,6 @@ public class MissingCalendarAndCalendarDateValidator extends FileValidator {
       files = @FileRefs({GtfsCalendarSchema.class, GtfsCalendarDateSchema.class}))
   static class MissingCalendarAndCalendarDateFilesNotice extends ValidationNotice {
 
-    MissingCalendarAndCalendarDateFilesNotice() {
-      super(SeverityLevel.ERROR);
-    }
+    MissingCalendarAndCalendarDateFilesNotice() {}
   }
 }

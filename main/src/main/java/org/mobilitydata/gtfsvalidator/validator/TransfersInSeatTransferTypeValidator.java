@@ -10,7 +10,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
@@ -158,7 +157,6 @@ public class TransfersInSeatTransferTypeValidator extends FileValidator {
 
     public TransferWithSuspiciousMidTripInSeatNotice(
         GtfsTransfer transfer, TransferDirection transferDirection) {
-      super(SeverityLevel.WARNING);
       this.csvRowNumber = transfer.csvRowNumber();
       this.tripIdFieldName = transferDirection.tripIdFieldName();
       this.tripId = transferDirection.tripId(transfer);

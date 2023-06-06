@@ -11,7 +11,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
@@ -148,7 +147,6 @@ public class TransfersTripReferenceValidator extends FileValidator {
 
     public TransferWithInvalidTripAndRouteNotice(
         GtfsTransfer transfer, TransferDirection transferDirection, String expectedRouteId) {
-      super(SeverityLevel.ERROR);
       this.csvRowNumber = transfer.csvRowNumber();
       this.tripFieldName = transferDirection.tripIdFieldName();
       this.tripId = transferDirection.tripId(transfer);
@@ -182,7 +180,6 @@ public class TransfersTripReferenceValidator extends FileValidator {
 
     public TransferWithInvalidTripAndStopNotice(
         GtfsTransfer transfer, TransferDirection transferDirection) {
-      super(SeverityLevel.ERROR);
       this.csvRowNumber = transfer.csvRowNumber();
       this.tripFieldName = transferDirection.tripIdFieldName();
       this.tripId = transferDirection.tripId(transfer);
