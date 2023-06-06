@@ -23,7 +23,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
@@ -146,7 +145,6 @@ public class ParentLocationTypeValidator extends FileValidator {
         String parentStopName,
         int parentLocationType,
         int expectedLocationType) {
-      super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
       this.stopId = stopId;
       this.stopName = stopName;

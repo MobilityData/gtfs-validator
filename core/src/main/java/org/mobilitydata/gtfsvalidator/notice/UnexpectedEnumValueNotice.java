@@ -39,7 +39,6 @@ public class UnexpectedEnumValueNotice extends ValidationNotice {
 
   public UnexpectedEnumValueNotice(
       String filename, int csvRowNumber, String fieldName, int fieldValue) {
-    super(SeverityLevel.WARNING);
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.fieldName = fieldName;

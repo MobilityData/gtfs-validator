@@ -22,7 +22,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
@@ -85,7 +84,6 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
     private final String stopId;
 
     MissingStopNameNotice(long csvRowNumber, String stopId, GtfsLocationType locationType) {
-      super(SeverityLevel.ERROR);
       this.locationType = locationType;
       this.stopId = stopId;
       this.csvRowNumber = csvRowNumber;
@@ -114,7 +112,6 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
     private final String stopDesc;
 
     SameNameAndDescriptionForStopNotice(int csvRowNumber, String stopId, String stopDesc) {
-      super(SeverityLevel.WARNING);
       this.stopId = stopId;
       this.csvRowNumber = csvRowNumber;
       this.stopDesc = stopDesc;
