@@ -70,7 +70,6 @@ public class TripUsabilityValidator extends FileValidator {
     private final String tripId;
 
     UnusableTripNotice(int csvRowNumber, String tripId) {
-      super(SeverityLevel.WARNING);
       this.csvRowNumber = csvRowNumber;
       this.tripId = tripId;
     }
@@ -110,7 +109,6 @@ The `UnusableTripNotice` is the container for information that will be exported 
     private final String tripId;
 
     UnusableTripNotice(int csvRowNumber, String tripId) {
-      super(SeverityLevel.WARNING);
       this.csvRowNumber = csvRowNumber;
       this.tripId = tripId;
     }
@@ -229,7 +227,6 @@ public class FeedServiceDateValidator extends SingleEntityValidator<GtfsFeedInfo
     private final String fieldName;
 
     MissingFeedInfoDateNotice(int csvRowNumber, String fieldName) {
-      super(SeverityLevel.WARNING);
       this.csvRowNumber = csvRowNumber;
       this.fieldName = fieldName;
     }
@@ -271,7 +268,6 @@ Coming back to our example:
     private final String tripId;
 
     UnusableTripNotice(int csvRowNumber, String tripId) {
-      super(SeverityLevel.WARNING);
       this.csvRowNumber = csvRowNumber;
       this.tripId = tripId;
     }
