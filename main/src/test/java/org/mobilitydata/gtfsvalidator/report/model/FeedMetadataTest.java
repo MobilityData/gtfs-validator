@@ -1,6 +1,7 @@
 package org.mobilitydata.gtfsvalidator.report.model;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import com.google.common.collect.ImmutableList;
 import java.io.BufferedWriter;
@@ -32,8 +33,11 @@ public class FeedMetadataTest {
   ValidatorLoader validatorLoader;
   File rootDir;
 
+
+  @Test
   private void createDataFile(String filename, String content) throws IOException {
     File dataFile = tmpDir.newFile("data/" + filename);
+    assertTrue(dataFile.exists());
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(dataFile))) {
       writer.write(content);
     }
@@ -118,6 +122,58 @@ public class FeedMetadataTest {
         "Route Names",
         "No",
         ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void containsRouteColorsComponentTest() throws IOException, InterruptedException {
+    String routesContent =
+            "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color\n"
+                    + "01,LTC -2023 Spring Schedules,01,Route 1,,3,,70C2DA,000000\n"
+                    + "02,LTC -2023 Spring Schedules,02,Route 2,,3,,0080C0,000000\n";
+    createDataFile("routes.txt", routesContent);
+    validateSpecFeature(
+            "Route Colors",
+            "Yes",
+            ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsRouteColorsComponentTest1() throws IOException, InterruptedException {
+    String routesContent =
+            "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color\n"
+                    + "01,LTC -2023 Spring Schedules,01,Route 1,,3,,,\n"
+                    + "02,LTC -2023 Spring Schedules,02,Route 2,,3,,,\n";
+    createDataFile("routes.txt", routesContent);
+    validateSpecFeature(
+            "Route Colors",
+            "No",
+            ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsRouteColorsComponentTest2() throws IOException, InterruptedException {
+    String routesContent =
+            "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color\n"
+                    + "01,LTC -2023 Spring Schedules,01,Route 1,,3,,70C2DA,\n"
+                    + "02,LTC -2023 Spring Schedules,02,Route 2,,3,,0080C0,\n";
+    createDataFile("routes.txt", routesContent);
+    validateSpecFeature(
+            "Route Colors",
+            "No",
+            ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsRouteColorsComponentTest3() throws IOException, InterruptedException {
+    String routesContent =
+            "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color\n"
+                    + "01,LTC -2023 Spring Schedules,01,Route 1,,3,,,000000\n"
+                    + "02,LTC -2023 Spring Schedules,02,Route 2,,3,,,000000\n";
+    createDataFile("routes.txt", routesContent);
+    validateSpecFeature(
+            "Route Colors",
+            "No",
+            ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
   @Test
