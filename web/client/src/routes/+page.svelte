@@ -222,7 +222,13 @@
       const xhr = new XMLHttpRequest();
       xhr.responseType = 'json';
       xhr.onerror = () => reject('Error authorizing upload.');
-      xhr.onload = () => resolve(xhr.response);
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve(xhr.response);
+        } else {
+          reject('Error authorizing upload.');
+        }
+      };
       xhr.open('POST', `${apiRoot}/create-job`);
       xhr.setRequestHeader('Content-Type', 'application/json');
       xhr.send(JSON.stringify(data));
