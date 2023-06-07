@@ -1,7 +1,6 @@
 package org.mobilitydata.gtfsvalidator.report.model;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import com.google.common.collect.ImmutableList;
 import java.io.BufferedWriter;
