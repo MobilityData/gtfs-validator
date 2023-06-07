@@ -123,7 +123,7 @@ public class FeedMetadataTest {
 
   @Test
   /**
-   * This method is to test when both route_color and route_text_color are present in routes.txt, and they have two records
+   * This method is to test when both route_color and route_text_color are present in routes.txt, and they each have two records
    */
   public void containsRouteColorsComponentTest() throws IOException, InterruptedException {
     String routesContent =
@@ -138,7 +138,7 @@ public class FeedMetadataTest {
   }
 
   /**
-   * This method is to test when both route_color and route_text_color are present in routes.txt, and they have no records
+   * This method is to test when both route_color and route_text_color are present in routes.txt, and none of them has records
    */
   @Test
   public void omitsRouteColorsComponentTest1() throws IOException, InterruptedException {
@@ -154,7 +154,7 @@ public class FeedMetadataTest {
   }
 
   /**
-   * This method is to test when both route_color and route_text_color are present in routes.txt, and they have one record
+   * This method is to test when both route_color and route_text_color are present in routes.txt, and they each have one record
    */
   @Test
   public void omitsRouteColorsComponentTest2() throws IOException, InterruptedException {
@@ -165,12 +165,12 @@ public class FeedMetadataTest {
     createDataFile("routes.txt", routesContent);
     validateSpecFeature(
             "Route Colors",
-            "No",//todo should be Yes??
+            "Yes",
             ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
   /**
-   * This method is to test when both route_color and route_text_color are present in routes.txt, and one of them has two records
+   * This method is to test when both route_color and route_text_color are present in routes.txt, and one has two records, one has none
    */
   @Test
   public void omitsRouteColorsComponentTest3() throws IOException, InterruptedException {
