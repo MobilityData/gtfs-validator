@@ -32,7 +32,7 @@ public class FeedMetadataTest {
   ValidatorLoader validatorLoader;
   File rootDir;
 
-  public void createDataFile(String filename, String content) throws IOException {
+  private void createDataFile(String filename, String content) throws IOException {
     File dataFile = tmpDir.newFile("data/" + filename);
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(dataFile))) {
       writer.write(content);
