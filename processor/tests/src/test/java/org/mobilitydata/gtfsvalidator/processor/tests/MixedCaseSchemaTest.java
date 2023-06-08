@@ -79,19 +79,19 @@ public class MixedCaseSchemaTest {
           {"Route 1 Boulevard", true},
           {"ZA12", true},
           {"Avenue des Champs-Élysées", true},
+          {"UPPERCASE", true},
+          {"ROUTE 22", true},
+          {"ROUTE 1", true},
+          {"route 1 Boulevard", true},
+          {"Sentences are ok with one mixed case word", true},
+          {"MixedCaseButSingleWord", true},
           // invalid values
           {"lowercase", false},
-          {"UPPERCASE", false},
           {"snake_case", false},
           {"kebab-case", false},
           {"UPPER-CASE", false},
           {"lower case space", false},
-          {"ROUTE 22", false},
           {"34broadst", false},
-          {"ROUTE 1", false},
-          {"route 1 Boulevard", false},
-          {"Another bad value", false},
-          {"MixedCaseButSingleWord", false},
         });
   }
 
