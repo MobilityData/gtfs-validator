@@ -60,7 +60,9 @@ public interface ValidatorProvider {
       GtfsTableContainer<T> table);
 
   /**
-   * Creates a list of cross-table validators.
+   * Creates a list of cross-table validators. Any validator that has a dependency with parse errors
+   * will not be returned by this method, but instead noted with a call to the `skippedValidators`
+   * callback.
    *
    * <p>Use {@link ValidatorUtil#safeValidate} to invoke each validator.
    *

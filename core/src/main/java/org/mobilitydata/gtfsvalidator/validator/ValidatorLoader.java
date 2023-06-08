@@ -225,11 +225,16 @@ public class ValidatorLoader {
     return createValidator(clazz, new DependencyResolver(validationContext, null, feed));
   }
 
+  /**
+   * Helper class for resolving injected dependencies of validators, while also tracking if those
+   * dependencies have blocking errors.
+   */
   private static class DependencyResolver {
     private final ValidationContext context;
     @Nullable private final GtfsTableContainer<?> tableContainer;
     @Nullable private final GtfsFeedContainer feedContainer;
 
+    /** This will be set to true if a resolved dependency was not parsed successfully. */
     private boolean dependenciesHaveErrors = false;
 
     public DependencyResolver(
@@ -268,6 +273,7 @@ public class ValidatorLoader {
 
   public static final class ValidatorWithDependencyStatus<T> {
     private final T validator;
+    // Will be true if one of the injected dependencies of the validator has parse errors.
     private final boolean dependenciesHaveErrors;
 
     public ValidatorWithDependencyStatus(T validator, boolean dependenciesHaveErrors) {
