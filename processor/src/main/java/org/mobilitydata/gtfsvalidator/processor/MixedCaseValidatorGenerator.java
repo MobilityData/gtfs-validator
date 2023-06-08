@@ -77,7 +77,8 @@ public class MixedCaseValidatorGenerator {
               "if (entity.$L())", FieldNameConverter.hasMethodName(mixedCaseField.name()))
           .addStatement("$T value = entity.$L()", String.class, mixedCaseField.name())
           .addStatement("$T[] tokens = value.split(\"[^\\\\p{L}]+\")", String.class)
-          .addComment("If there is only one token, check that it is not all lowercase")
+          .addComment(
+              "If there is only one token, and no numbers, check that it is not all lowercase")
           .beginControlFlow("if (tokens.length == 1)")
           .beginControlFlow(
               "if (tokens[0].length() > 1 && !tokens[0].matches(\".*\\\\d+.*\") && tokens[0].matches(\"^\\\\p{Ll}+$$\"))")
