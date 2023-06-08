@@ -1,4 +1,4 @@
-name: Cypress E2E Tests
+name: Web client Cypress e2e tests
 
 on:
   pull_request:

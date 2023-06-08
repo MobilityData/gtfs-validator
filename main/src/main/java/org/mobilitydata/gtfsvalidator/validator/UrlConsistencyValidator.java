@@ -25,7 +25,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencySchema;
@@ -150,7 +149,6 @@ public class UrlConsistencyValidator extends FileValidator {
     private final long routeCsvRowNumber;
 
     SameStopAndRouteUrlNotice(GtfsStop stop, GtfsRoute route) {
-      super(SeverityLevel.WARNING);
       this.stopCsvRowNumber = stop.csvRowNumber();
       this.stopId = stop.stopId();
       this.stopUrl = stop.stopUrl();
@@ -185,7 +183,6 @@ public class UrlConsistencyValidator extends FileValidator {
     private final long agencyCsvRowNumber;
 
     SameRouteAndAgencyUrlNotice(GtfsRoute route, GtfsAgency agency) {
-      super(SeverityLevel.WARNING);
       this.routeCsvRowNumber = route.csvRowNumber();
       this.routeId = route.routeId();
       this.agencyName = agency.agencyName();
@@ -220,7 +217,6 @@ public class UrlConsistencyValidator extends FileValidator {
     private final long agencyCsvRowNumber;
 
     SameStopAndAgencyUrlNotice(GtfsStop stop, GtfsAgency agency) {
-      super(SeverityLevel.WARNING);
       this.stopCsvRowNumber = stop.csvRowNumber();
       this.stopId = stop.stopId();
       this.agencyName = agency.agencyName();

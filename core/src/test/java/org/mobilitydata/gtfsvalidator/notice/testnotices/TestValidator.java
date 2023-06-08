@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.notice.testnotices;
 
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.validator.FileValidator;
 
@@ -27,7 +26,7 @@ public class TestValidator extends FileValidator {
     private final int intField;
 
     public TestInnerNotice() {
-      super(SeverityLevel.ERROR);
+      super();
       this.intField = 0;
     }
   }

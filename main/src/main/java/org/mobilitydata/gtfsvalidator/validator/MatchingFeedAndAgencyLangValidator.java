@@ -23,7 +23,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencySchema;
@@ -127,7 +126,6 @@ public class MatchingFeedAndAgencyLangValidator extends FileValidator {
 
     FeedInfoLangAndAgencyLangMismatchNotice(
         int csvRowNumber, String agencyId, String agencyName, String agencyLang, String feedLang) {
-      super(SeverityLevel.WARNING);
       this.csvRowNumber = csvRowNumber;
       this.agencyId = agencyId;
       this.agencyName = agencyName;

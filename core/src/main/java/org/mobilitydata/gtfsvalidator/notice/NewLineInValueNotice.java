@@ -54,7 +54,6 @@ public class NewLineInValueNotice extends ValidationNotice {
 
   public NewLineInValueNotice(
       String filename, int csvRowNumber, String fieldName, String fieldValue) {
-    super(SeverityLevel.ERROR);
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.fieldName = fieldName;

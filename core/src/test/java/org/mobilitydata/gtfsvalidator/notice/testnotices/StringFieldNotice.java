@@ -16,15 +16,17 @@
 
 package org.mobilitydata.gtfsvalidator.notice.testnotices;
 
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 
+@GtfsValidationNotice(severity = ERROR)
 public class StringFieldNotice extends ValidationNotice {
 
   private final String someField;
 
-  public StringFieldNotice(String someField, SeverityLevel severityLevel) {
-    super(severityLevel);
+  public StringFieldNotice(String someField) {
     this.someField = someField;
   }
 }

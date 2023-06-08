@@ -25,7 +25,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
@@ -129,7 +128,6 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
         String tripId,
         GtfsTime arrivalTime,
         GtfsTime departureTime) {
-      super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
       this.prevCsvRowNumber = prevCsvRowNumber;
       this.tripId = tripId;
@@ -156,7 +154,6 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
 
     StopTimeWithOnlyArrivalOrDepartureTimeNotice(
         int csvRowNumber, String tripId, int stopSequence, String specifiedField) {
-      super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
       this.tripId = tripId;
       this.stopSequence = stopSequence;
