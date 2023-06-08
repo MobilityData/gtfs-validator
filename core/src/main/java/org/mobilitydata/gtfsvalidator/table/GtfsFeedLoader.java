@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.flogger.FluentLogger;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,8 @@ public class GtfsFeedLoader {
   private final HashMap<String, GtfsTableDescriptor<?>> tableDescriptors = new HashMap<>();
   private int numThreads = 1;
 
+  private final List<Class<? extends FileValidator>> skippedValidators = new ArrayList<>();
+
   public GtfsFeedLoader(
       ImmutableList<Class<? extends GtfsTableDescriptor<?>>> tableDescriptorClasses) {
     for (Class<? extends GtfsTableDescriptor<?>> clazz : tableDescriptorClasses) {
@@ -70,6 +73,10 @@ public class GtfsFeedLoader {
 
   public void setNumThreads(int numThreads) {
     this.numThreads = numThreads;
+  }
+
+  public List<Class<? extends FileValidator>> getSkippedValidators() {
+    return Collections.unmodifiableList(skippedValidators);
   }
 
   @SuppressWarnings("unchecked")
@@ -132,17 +139,9 @@ public class GtfsFeedLoader {
         }
       }
       GtfsFeedContainer feed = new GtfsFeedContainer(tableContainers);
-      if (!feed.isParsedSuccessfully()) {
-        // No need to call file validators if any file failed to parse. File validations in that
-        // case may lead to confusing error messages.
-        //
-        // Consider we failed to parse a row trip.txt but there is another row in stop_times.txt
-        // that references a trip. Then foreign key validator may notify about a missing trip_id
-        // which would be wrong.
-        return feed;
-      }
       List<Callable<NoticeContainer>> validatorCallables = new ArrayList<>();
-      for (FileValidator validator : validatorProvider.createMultiFileValidators(feed)) {
+      for (FileValidator validator :
+          validatorProvider.createMultiFileValidators(feed, skippedValidators::add)) {
         validatorCallables.add(
             () -> {
               NoticeContainer validatorNotices = new NoticeContainer();

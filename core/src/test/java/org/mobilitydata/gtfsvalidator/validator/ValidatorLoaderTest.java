@@ -73,7 +73,8 @@ public class ValidatorLoaderTest {
     WholeFeedValidator validator =
         (WholeFeedValidator)
             ValidatorLoader.createMultiFileValidator(
-                WholeFeedValidator.class, feedContainer, VALIDATION_CONTEXT);
+                    WholeFeedValidator.class, feedContainer, VALIDATION_CONTEXT)
+                .validator();
 
     assertThat(validator.getCountryCode()).isEqualTo(VALIDATION_CONTEXT.countryCode());
     assertThat(validator.getCurrentDateTime()).isEqualTo(VALIDATION_CONTEXT.currentDateTime());

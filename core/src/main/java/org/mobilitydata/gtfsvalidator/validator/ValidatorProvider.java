@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import java.util.List;
+import java.util.function.Consumer;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
@@ -64,6 +65,8 @@ public interface ValidatorProvider {
    * <p>Use {@link ValidatorUtil#safeValidate} to invoke each validator.
    *
    * @param feed GTFS feed to validate
+   * @param skippedValidators
    */
-  List<FileValidator> createMultiFileValidators(GtfsFeedContainer feed);
+  List<FileValidator> createMultiFileValidators(
+      GtfsFeedContainer feed, Consumer<Class<? extends FileValidator>> skippedValidators);
 }
