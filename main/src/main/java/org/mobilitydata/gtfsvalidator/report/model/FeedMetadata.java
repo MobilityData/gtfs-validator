@@ -129,9 +129,9 @@ public class FeedMetadata {
     if (routeContainer.isPresent()) {
       GtfsRouteTableContainer routeTable = (GtfsRouteTableContainer) routeContainer.get();
       if (routeTable.hasColumn(GtfsRoute.ROUTE_COLOR_FIELD_NAME)
-              && routeTable.hasColumn(GtfsRoute.ROUTE_TEXT_COLOR_FIELD_NAME))
+          && routeTable.hasColumn(GtfsRoute.ROUTE_TEXT_COLOR_FIELD_NAME))
         return routeTable.getEntities().stream()
-                .anyMatch(route -> route.hasRouteColor() || route.hasRouteTextColor());
+            .anyMatch(route -> route.hasRouteColor() || route.hasRouteTextColor());
     }
     return false;
   }

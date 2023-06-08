@@ -32,7 +32,6 @@ public class FeedMetadataTest {
   ValidatorLoader validatorLoader;
   File rootDir;
 
-
   public void createDataFile(String filename, String content) throws IOException {
     File dataFile = tmpDir.newFile("data/" + filename);
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(dataFile))) {
@@ -123,98 +122,101 @@ public class FeedMetadataTest {
 
   @Test
   /**
-   * This method is to test when both route_color and route_text_color are present in routes.txt, and they each have two records
+   * This method is to test when both route_color and route_text_color are present in routes.txt,
+   * and they each have two records
    */
   public void containsRouteColorsComponentTest() throws IOException, InterruptedException {
     String routesContent =
-            "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color\n"
-                    + "01,LTC -2023 Spring Schedules,01,Route 1,,3,,70C2DA,000000\n"
-                    + "02,LTC -2023 Spring Schedules,02,Route 2,,3,,0080C0,000000\n";
+        "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color\n"
+            + "01,LTC -2023 Spring Schedules,01,Route 1,,3,,70C2DA,000000\n"
+            + "02,LTC -2023 Spring Schedules,02,Route 2,,3,,0080C0,000000\n";
     createDataFile("routes.txt", routesContent);
     validateSpecFeature(
-            "Route Colors",
-            "Yes",
-            ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+        "Route Colors",
+        "Yes",
+        ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
   /**
-   * This method is to test when both route_color and route_text_color are present in routes.txt, and none of them has records
+   * This method is to test when both route_color and route_text_color are present in routes.txt,
+   * and none of them has records
    */
   @Test
   public void omitsRouteColorsComponentTest1() throws IOException, InterruptedException {
     String routesContent =
-            "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color\n"
-                    + "01,LTC -2023 Spring Schedules,01,Route 1,,3,,,\n"
-                    + "02,LTC -2023 Spring Schedules,02,Route 2,,3,,,\n";
+        "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color\n"
+            + "01,LTC -2023 Spring Schedules,01,Route 1,,3,,,\n"
+            + "02,LTC -2023 Spring Schedules,02,Route 2,,3,,,\n";
     createDataFile("routes.txt", routesContent);
     validateSpecFeature(
-            "Route Colors",
-            "No",
-            ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+        "Route Colors",
+        "No",
+        ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
   /**
-   * This method is to test when both route_color and route_text_color are present in routes.txt, and they each have one record
+   * This method is to test when both route_color and route_text_color are present in routes.txt,
+   * and they each have one record
    */
   @Test
   public void omitsRouteColorsComponentTest2() throws IOException, InterruptedException {
     String routesContent =
-            "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color\n"
-                    + "01,LTC -2023 Spring Schedules,01,Route 1,,3,,,70C2DA\n"
-                    + "02,LTC -2023 Spring Schedules,02,Route 2,,3,,0080C0,\n";
+        "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color\n"
+            + "01,LTC -2023 Spring Schedules,01,Route 1,,3,,,70C2DA\n"
+            + "02,LTC -2023 Spring Schedules,02,Route 2,,3,,0080C0,\n";
     createDataFile("routes.txt", routesContent);
     validateSpecFeature(
-            "Route Colors",
-            "Yes",
-            ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+        "Route Colors",
+        "Yes",
+        ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
   /**
-   * This method is to test when both route_color and route_text_color are present in routes.txt, and one has two records, one has none
+   * This method is to test when both route_color and route_text_color are present in routes.txt,
+   * and one has two records, one has none
    */
   @Test
   public void omitsRouteColorsComponentTest3() throws IOException, InterruptedException {
     String routesContent =
-            "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color\n"
-                    + "01,LTC -2023 Spring Schedules,01,Route 1,,3,,0080C0,000000\n"
-                    + "02,LTC -2023 Spring Schedules,02,Route 2,,3,,,\n";
+        "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color\n"
+            + "01,LTC -2023 Spring Schedules,01,Route 1,,3,,0080C0,000000\n"
+            + "02,LTC -2023 Spring Schedules,02,Route 2,,3,,,\n";
     createDataFile("routes.txt", routesContent);
     validateSpecFeature(
-            "Route Colors",
-            "Yes",
-            ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+        "Route Colors",
+        "Yes",
+        ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
   /**
-   * This method is to test when route_color is present and route_text_color is missing in routes.txt
+   * This method is to test when route_color is present and route_text_color is missing in
+   * routes.txt
    */
   @Test
   public void omitsRouteColorsComponentTest4() throws IOException, InterruptedException {
     String routesContent =
-            "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color\n"
-                    + "01,LTC -2023 Spring Schedules,01,Route 1,,3,,\n"
-                    + "02,LTC -2023 Spring Schedules,02,Route 2,,3,70C2DA\n";
+        "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color\n"
+            + "01,LTC -2023 Spring Schedules,01,Route 1,,3,,,\n"
+            + "02,LTC -2023 Spring Schedules,02,Route 2,,3,,70C2DA\n";
     createDataFile("routes.txt", routesContent);
     validateSpecFeature(
-            "Route Colors",
-            "No",
-            ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+        "Route Colors",
+        "No",
+        ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
-  /**
-   * This method is to test when both route_color and route_text_color are missing in routes.txt
-   */
+  /** This method is to test when both route_color and route_text_color are missing in routes.txt */
   @Test
   public void omitsRouteColorsComponentTest5() throws IOException, InterruptedException {
     String routesContent =
-            "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url\n"
-                    + "01,LTC -2023 Spring Schedules,01,Route 1,,3,\n"
-                    + "02,LTC -2023 Spring Schedules,02,Route 2,,3,\n";
+        "route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url\n"
+            + "01,LTC -2023 Spring Schedules,01,Route 1,,3,\n"
+            + "02,LTC -2023 Spring Schedules,02,Route 2,,3,\n";
     createDataFile("routes.txt", routesContent);
     validateSpecFeature(
-            "Route Colors",
-            "No",
-            ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+        "Route Colors",
+        "No",
+        ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
   @Test
