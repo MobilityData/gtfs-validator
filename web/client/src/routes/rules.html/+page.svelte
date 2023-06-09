@@ -58,7 +58,7 @@
       {#each Object.entries(categories) as [category, rules]}
       <div id="{category}-table" class="mt-8">
           <h2 class="h2 md:flex items-baseline justify-between">
-            <a class="text-base order-last" href="#"><i class="fas fa-arrow-up"></i> Top</a>
+            <a class="text-base order-last" href="#_top"><i class="fas fa-arrow-up"></i> Top</a>
 
             <div>
               Table of {category} notices
