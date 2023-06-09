@@ -57,6 +57,10 @@ public class GtfsTestEntity implements GtfsEntity {
     return (bitField0_ & 0x1) != 0;
   }
 
+  public String code() {
+    return code;
+  }
+
   public boolean hasCode() {
     return (bitField0_ & 0x2) != 0;
   }

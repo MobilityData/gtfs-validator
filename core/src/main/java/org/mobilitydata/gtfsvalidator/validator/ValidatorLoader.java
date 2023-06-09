@@ -217,10 +217,8 @@ public class ValidatorLoader {
 
   /** Instantiates a {@code FileValidator} for multiple tables in a given feed. */
   @SuppressWarnings("unchecked")
-  public static ValidatorWithDependencyStatus<? extends FileValidator> createMultiFileValidator(
-      Class<? extends FileValidator> clazz,
-      GtfsFeedContainer feed,
-      ValidationContext validationContext)
+  public static <T extends FileValidator> ValidatorWithDependencyStatus<T> createMultiFileValidator(
+      Class<T> clazz, GtfsFeedContainer feed, ValidationContext validationContext)
       throws ReflectiveOperationException {
     return createValidator(clazz, new DependencyResolver(validationContext, null, feed));
   }
@@ -262,7 +260,7 @@ public class ValidatorLoader {
       if (feedContainer != null && GtfsTableContainer.class.isAssignableFrom(parameterClass)) {
         GtfsTableContainer<?> container =
             feedContainer.getTable((Class<? extends GtfsTableContainer<?>>) parameterClass);
-        if (!container.isParsedSuccessfully()) {
+        if (container != null && !container.isParsedSuccessfully()) {
           dependenciesHaveErrors = true;
         }
         return container;
