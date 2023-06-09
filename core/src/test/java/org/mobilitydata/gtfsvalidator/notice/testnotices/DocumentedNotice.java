@@ -22,7 +22,7 @@ public class DocumentedNotice extends ValidationNotice {
   private final String value = "";
 
   public DocumentedNotice() {
-    super(ERROR);
+    super();
   }
 
   @GtfsTable("apples.txt")

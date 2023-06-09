@@ -60,7 +60,6 @@ public class PointNearPoleNotice extends ValidationNotice {
       double latFieldValue,
       String lonFieldName,
       double lonFieldValue) {
-    super(SeverityLevel.ERROR);
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.entityId = entityId;
@@ -77,7 +76,6 @@ public class PointNearPoleNotice extends ValidationNotice {
       double latFieldValue,
       String lonFieldName,
       double lonFieldValue) {
-    super(SeverityLevel.ERROR);
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.entityId = null;

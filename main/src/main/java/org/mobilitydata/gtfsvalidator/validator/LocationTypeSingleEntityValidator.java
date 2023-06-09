@@ -22,7 +22,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
@@ -99,7 +98,6 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
 
     StationWithParentStationNotice(
         int csvRowNumber, String stopId, String stopName, String parentStation) {
-      super(SeverityLevel.ERROR);
       this.stopId = stopId;
       this.stopName = stopName;
       this.csvRowNumber = csvRowNumber;
@@ -130,7 +128,6 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
 
     LocationWithoutParentStationNotice(
         int csvRowNumber, String stopId, String stopName, int locationType) {
-      super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
       this.stopId = stopId;
       this.stopName = stopName;
@@ -156,7 +153,6 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
     private final String stopName;
 
     PlatformWithoutParentStationNotice(int csvRowNumber, String stopId, String stopName) {
-      super(INFO);
       this.csvRowNumber = csvRowNumber;
       this.stopId = stopId;
       this.stopName = stopName;

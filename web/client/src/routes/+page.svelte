@@ -137,6 +137,7 @@
     if (file.type != 'application/zip' && file.type != 'application/x-zip-compressed') {
       console.log('file type error', file.type);
       addError('Sorry, only ZIP files are supported at this time.');
+      fileInput.value = ''; // clear input to avoid validation
       console.log(errors);
     } else {
       pendingFilename = file?.name;
@@ -221,7 +222,13 @@
       const xhr = new XMLHttpRequest();
       xhr.responseType = 'json';
       xhr.onerror = () => reject('Error authorizing upload.');
-      xhr.onload = () => resolve(xhr.response);
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve(xhr.response);
+        } else {
+          reject('Error authorizing upload.');
+        }
+      };
       xhr.open('POST', `${apiRoot}/create-job`);
       xhr.setRequestHeader('Content-Type', 'application/json');
       xhr.send(JSON.stringify(data));

@@ -16,20 +16,19 @@
 
 package org.mobilitydata.gtfsvalidator.notice.testnotices;
 
-import org.mobilitydata.gtfsvalidator.notice.Notice;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
-public class GtfsTypesValidationNotice extends Notice {
+public class GtfsTypesValidationNotice extends ValidationNotice {
 
   private final GtfsColor color;
   private final GtfsDate date;
   private final GtfsTime time;
 
   public GtfsTypesValidationNotice(GtfsColor color, GtfsDate date, GtfsTime time) {
-    super(SeverityLevel.ERROR);
+    super();
     this.color = color;
     this.date = date;
     this.time = time;

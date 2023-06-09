@@ -8,7 +8,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
@@ -94,7 +93,6 @@ public class TransfersStopTypeValidator extends FileValidator {
 
     public TransferWithInvalidStopLocationTypeNotice(
         GtfsTransfer transfer, TransferDirection transferDirection, GtfsLocationType locationType) {
-      super(SeverityLevel.ERROR);
       this.csvRowNumber = transfer.csvRowNumber();
       this.stopIdFieldName = transferDirection.stopIdFieldName();
       this.stopId = transferDirection.stopId(transfer);

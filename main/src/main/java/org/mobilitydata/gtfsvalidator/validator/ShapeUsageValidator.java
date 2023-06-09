@@ -25,7 +25,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeSchema;
@@ -85,7 +84,6 @@ public class ShapeUsageValidator extends FileValidator {
     private final int csvRowNumber;
 
     UnusedShapeNotice(String shapeId, int csvRowNumber) {
-      super(SeverityLevel.WARNING);
       this.shapeId = shapeId;
       this.csvRowNumber = csvRowNumber;
     }

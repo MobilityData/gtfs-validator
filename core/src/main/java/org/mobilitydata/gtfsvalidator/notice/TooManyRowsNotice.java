@@ -19,7 +19,6 @@ public class TooManyRowsNotice extends ValidationNotice {
   private final long rowNumber;
 
   public TooManyRowsNotice(String filename, long rowNumber) {
-    super(SeverityLevel.ERROR);
     this.filename = filename;
     this.rowNumber = rowNumber;
   }

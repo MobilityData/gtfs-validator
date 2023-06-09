@@ -23,7 +23,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
@@ -83,7 +82,6 @@ public class TripUsabilityValidator extends FileValidator {
     private final String tripId;
 
     UnusableTripNotice(int csvRowNumber, String tripId) {
-      super(SeverityLevel.WARNING);
       this.csvRowNumber = csvRowNumber;
       this.tripId = tripId;
     }
