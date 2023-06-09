@@ -70,8 +70,6 @@ public class MixedCaseValidatorGenerator {
       if (!mixedCaseField.mixedCase()) {
         continue;
       }
-      String test = "blah";
-
       validateMethod
           .beginControlFlow(
               "if (entity.$L())", FieldNameConverter.hasMethodName(mixedCaseField.name()))
@@ -114,45 +112,6 @@ public class MixedCaseValidatorGenerator {
           .endControlFlow()
           .endControlFlow()
           .endControlFlow();
-
-      //      validateMethod
-      //              .beginControlFlow("if (entity.$L())",
-      // FieldNameConverter.hasMethodName(mixedCaseField.name()))
-      //              .addStatement("$T value = entity.$L()", String.class, mixedCaseField.name())
-      //              .addStatement("$T[] tokens = value.split(\"[^\\\\p{L}\\\\d]+\")",
-      // String.class)
-      //              .beginControlFlow("if (tokens.length == 1 &&
-      // !tokens[0].matches(\".*\\\\d+.*\") && tokens[0].matches(\"^\\\\p{Ll}+$\"))")
-      //              .addStatement(
-      //                      "noticeContainer.addValidationNotice(new $T(\"$L\", \"$L\", value,
-      // entity.csvRowNumber()))",
-      //                      MixedCaseRecommendedFieldNotice.class,
-      //                      fileDescriptor.filename(),
-      //                      FieldNameConverter.gtfsColumnName(mixedCaseField.name()))
-      //              .endControlFlow()
-      //              .addStatement("boolean hasMixedCaseToken = false")
-      //              .addStatement("int noNumberTokensCount = 0")
-      //              .beginControlFlow("for (String token : tokens)")
-      //              .beginControlFlow("if (token.matches(\".*\\\\d+.*\"))")
-      //              .addStatement("continue")
-      //              .endControlFlow()
-      //              .beginControlFlow("else")
-      //              .addStatement("noNumberTokensCount++")
-      //              .beginControlFlow("if
-      // (token.matches(\"^(?=.*\\\\p{Lu})(?=.*\\\\p{Ll}).*$\"))")
-      //              .addStatement("hasMixedCaseToken = true")
-      //              .endControlFlow()
-      //              .endControlFlow()
-      //              .endControlFlow()
-      //              .beginControlFlow("if (noNumberTokensCount >= 2 && !hasMixedCaseToken)")
-      //              .addStatement(
-      //                      "noticeContainer.addValidationNotice(new $T(\"$L\", \"$L\", value,
-      // entity.csvRowNumber()))",
-      //                      MixedCaseRecommendedFieldNotice.class,
-      //                      fileDescriptor.filename(),
-      //                      FieldNameConverter.gtfsColumnName(mixedCaseField.name()))
-      //              .endControlFlow()
-      //              .endControlFlow();
 
     }
 
