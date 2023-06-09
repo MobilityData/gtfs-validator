@@ -113,7 +113,7 @@
                     </td>
                     <td>
                       <div class="font-bold">{@html marked.parse(rule.shortSummary ?? '')}</div>
-                      {@html marked.parse(rule.description ?? '\u2014')}
+                      {@html marked.parse(rule.description ?? '')}
                     </td>
                   </tr>
                 {/each}
@@ -148,9 +148,11 @@
             {@html marked.parse(rule.shortSummary ?? '')}
           </blockquote>
 
-          <div class="overflow-x-auto">
-            {@html marked.parse(rule.description ?? '')}
-          </div>
+          {#if rule.description}
+            <div class="overflow-x-auto">
+              {@html marked.parse(rule.description)}
+            </div>
+          {/if}
 
           {#if rule.references}
             <h4 class="h4">References</h4>
