@@ -166,7 +166,7 @@
               {#each rule.references?.fileReferences ?? [] as ref}
                 <li>
                   <a href={getSpecRef(ref)} target="_blank" rel="noreferrer">
-                    {ref} specification
+                    {ref}
                   </a>
                 </li>
               {/each}
@@ -177,7 +177,7 @@
                     target="_blank"
                     rel="noreferrer"
                   >
-                    {ref} best practices
+                    {ref} Best Practices
                   </a>
                 </li>
               {/each}
