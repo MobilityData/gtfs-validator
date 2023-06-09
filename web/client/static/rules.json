@@ -328,8 +328,8 @@
     "code": "duplicate_route_name",
     "severityLevel": "WARNING",
     "type": "object",
-    "shortSummary": "Two distinct routes have either the same `route_short_name`, the same `route_long_name`, or the",
-    "description": "same combination of `route_short_name` and `route_long_name`.\n\nAll routes of the same `route_type` with the same `agency_id` should have unique\ncombinations of `route_short_name` and `route_long_name`.\n\nNote that there may be valid cases where routes have the same short and long name, e.g., if\nthey serve different areas. However, different directions must be modeled as the same route.\n\nExample of bad data:\n\n| `route_id` \t| `route_short_name` \t| `route_long_name` \t|\n|------------\t|--------------------\t|-------------------\t|\n| route1     \t| U1                 \t| Southern          \t|\n| route2     \t| U1                 \t| Southern          \t|",
+    "shortSummary": "Two distinct routes have either the same `route_short_name`, the same `route_long_name`, or the same combination of `route_short_name` and `route_long_name`.",
+    "description": "All routes of the same `route_type` with the same `agency_id` should have unique\ncombinations of `route_short_name` and `route_long_name`.\n\nNote that there may be valid cases where routes have the same short and long name, e.g., if\nthey serve different areas. However, different directions must be modeled as the same route.\n\nExample of bad data:\n\n| `route_id` \t| `route_short_name` \t| `route_long_name` \t|\n|------------\t|--------------------\t|-------------------\t|\n| route1     \t| U1                 \t| Southern          \t|\n| route2     \t| U1                 \t| Southern          \t|",
     "references": {
       "fileReferences": [
         "routes.txt"
@@ -505,8 +505,8 @@
     "code": "equal_shape_distance_diff_coordinates",
     "severityLevel": "ERROR",
     "type": "object",
-    "shortSummary": "Two consecutive points have equal `shape_dist_traveled` and different lat/lon coordinates in",
-    "description": "`shapes.txt`.\n\nWhen sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` must increase\nalong a shape. Two consecutive points with equal values for `shape_dist_traveled` and different\ncoordinates indicate an error.",
+    "shortSummary": "Two consecutive points have equal `shape_dist_traveled` and different lat/lon coordinates in `shapes.txt`.",
+    "description": "When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` must increase\nalong a shape. Two consecutive points with equal values for `shape_dist_traveled` and different\ncoordinates indicate an error.",
     "references": {
       "fileReferences": [
         "shapes.txt",
@@ -563,8 +563,8 @@
     "code": "equal_shape_distance_same_coordinates",
     "severityLevel": "WARNING",
     "type": "object",
-    "shortSummary": "Two consecutive points have equal `shape_dist_traveled` and the same lat/lon coordinates in",
-    "description": "`shapes.txt`.\n\nWhen sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` must increase\nalong a shape. Two consecutive points with equal values for `shape_dist_traveled` and the same\ncoordinates indicate a duplicative shape point.",
+    "shortSummary": "Two consecutive points have equal `shape_dist_traveled` and the same lat/lon coordinates in `shapes.txt`.",
+    "description": "When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` must increase\nalong a shape. Two consecutive points with equal values for `shape_dist_traveled` and the same\ncoordinates indicate a duplicative shape point.",
     "references": {
       "fileReferences": [
         "shapes.txt",
@@ -646,8 +646,7 @@
     "code": "fare_transfer_rule_duration_limit_type_without_duration_limit",
     "severityLevel": "ERROR",
     "type": "object",
-    "shortSummary": "A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit_type` field but no",
-    "description": "`duration_limit` specified.",
+    "shortSummary": "A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit_type` field but no `duration_limit` specified.",
     "references": {
       "fileReferences": [
         "fare_transfer_rules.txt"
@@ -668,8 +667,7 @@
     "code": "fare_transfer_rule_duration_limit_without_type",
     "severityLevel": "ERROR",
     "type": "object",
-    "shortSummary": "A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit` field but no",
-    "description": "`duration_limit_type` specified.",
+    "shortSummary": "A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit` field but no `duration_limit_type` specified.",
     "references": {
       "fileReferences": [
         "fare_transfer_rules.txt"
@@ -690,8 +688,7 @@
     "code": "fare_transfer_rule_invalid_transfer_count",
     "severityLevel": "ERROR",
     "type": "object",
-    "shortSummary": "A row from GTFS file `fare_transfer_rules.txt` has a defined `transfer_count` with an invalid",
-    "description": "value.",
+    "shortSummary": "A row from GTFS file `fare_transfer_rules.txt` has a defined `transfer_count` with an invalid value.",
     "references": {
       "fileReferences": [
         "fare_transfer_rules.txt"
@@ -717,8 +714,8 @@
     "code": "fare_transfer_rule_missing_transfer_count",
     "severityLevel": "ERROR",
     "type": "object",
-    "shortSummary": "A row from `fare_transfer_rules.txt` has `from_leg_group_id` equal to `to_leg_group_id`, but",
-    "description": "has no `transfer_count` specified.\n\nPer the spec, `transfer_count` is required if the two leg group ids are equal.",
+    "shortSummary": "A row from `fare_transfer_rules.txt` has `from_leg_group_id` equal to `to_leg_group_id`, but has no `transfer_count` specified.",
+    "description": "Per the spec, `transfer_count` is required if the two leg group ids are equal.",
     "references": {
       "fileReferences": [
         "fare_transfer_rules.txt"
@@ -739,8 +736,8 @@
     "code": "fare_transfer_rule_with_forbidden_transfer_count",
     "severityLevel": "ERROR",
     "type": "object",
-    "shortSummary": "A row from `fare_transfer_rules.txt` has `from_leg_group_id` not equal to `to_leg_group_id`,",
-    "description": "but has `transfer_count` specified.\n\nPer the spec, `transfer_count` is forbidden if the two leg group ids are not equal.",
+    "shortSummary": "A row from `fare_transfer_rules.txt` has `from_leg_group_id` not equal to `to_leg_group_id`, but has `transfer_count` specified.",
+    "description": "Per the spec, `transfer_count` is forbidden if the two leg group ids are not equal.",
     "references": {
       "fileReferences": [
         "fare_transfer_rules.txt"
@@ -1295,8 +1292,8 @@
     "code": "invalid_currency_amount",
     "severityLevel": "ERROR",
     "type": "object",
-    "shortSummary": "A currency amount field has a value that does not match the format of its corresponding currency",
-    "description": "code field.\n\nTypically, this means the amount did not have the expected number of decimal places. The\nnumber of decimal places is specified by \u003ca\nhref\u003d\"https://en.wikipedia.org/wiki/ISO_4217#Active_codes\"\u003eISO 4217\u003c/a\u003e.\n\n@see org.mobilitydata.gtfsvalidator.annotation.CurrencyAmount",
+    "shortSummary": "A currency amount field has a value that does not match the format of its corresponding currency code field.",
+    "description": "Typically, this means the amount did not have the expected number of decimal places. The\nnumber of decimal places is specified by \u003ca\nhref\u003d\"https://en.wikipedia.org/wiki/ISO_4217#Active_codes\"\u003eISO 4217\u003c/a\u003e.\n\n@see org.mobilitydata.gtfsvalidator.annotation.CurrencyAmount",
     "references": {
       "fileReferences": [],
       "bestPracticesFileReferences": [],
@@ -2146,8 +2143,8 @@
     "code": "mixed_case_recommended_field",
     "severityLevel": "WARNING",
     "type": "object",
-    "shortSummary": "This field has customer-facing text and should use Mixed Case (should contain upper and lower",
-    "description": "case letters).\n\nThis field contains customer-facing text and should use Mixed Case (upper and lower case\nletters) to ensure good readability when displayed to riders. Avoid the use of abbreviations\nthroughout the feed (e.g. St. for Street) unless a location is called by its abbreviated name\n(e.g. “JFK Airport”). Abbreviations may be problematic for accessibility by screen reader\nsoftware and voice user interfaces.\n\n@see org.mobilitydata.gtfsvalidator.annotation.MixedCase",
+    "shortSummary": "This field has customer-facing text and should use Mixed Case (should contain upper and lower case letters).",
+    "description": "This field contains customer-facing text and should use Mixed Case (upper and lower case\nletters) to ensure good readability when displayed to riders. Avoid the use of abbreviations\nthroughout the feed (e.g. St. for Street) unless a location is called by its abbreviated name\n(e.g. “JFK Airport”). Abbreviations may be problematic for accessibility by screen reader\nsoftware and voice user interfaces.\n\n@see org.mobilitydata.gtfsvalidator.annotation.MixedCase",
     "references": {
       "fileReferences": [],
       "bestPracticesFileReferences": [],
@@ -3246,8 +3243,8 @@
     "code": "stop_has_too_many_matches_for_shape",
     "severityLevel": "WARNING",
     "type": "object",
-    "shortSummary": "Stop entry that has many potential matches to the trip\u0027s path of travel, as defined by the",
-    "description": "shape entry in `shapes.txt`.\n\nThis potentially indicates a problem with the location of the stop or the path of the shape.",
+    "shortSummary": "Stop entry that has many potential matches to the trip\u0027s path of travel, as defined by the shape entry in `shapes.txt`.",
+    "description": "This potentially indicates a problem with the location of the stop or the path of the shape.",
     "references": {
       "fileReferences": [
         "trips.txt",
@@ -3782,8 +3779,7 @@
     "code": "transfer_with_invalid_stop_location_type",
     "severityLevel": "ERROR",
     "type": "object",
-    "shortSummary": "A stop id field from GTFS file `transfers.txt` references a stop that has a `location_type`",
-    "description": "other than 0 or 1 (aka Stop/Platform or Station).",
+    "shortSummary": "A stop id field from GTFS file `transfers.txt` references a stop that has a `location_type` other than 0 or 1 (aka Stop/Platform or Station).",
     "references": {
       "fileReferences": [
         "transfers.txt"
@@ -3824,8 +3820,7 @@
     "code": "transfer_with_invalid_trip_and_route",
     "severityLevel": "ERROR",
     "type": "object",
-    "shortSummary": "A trip id field from GTFS file `transfers.txt` references a route that does not match its",
-    "description": "`trips.txt` `route_id`.",
+    "shortSummary": "A trip id field from GTFS file `transfers.txt` references a route that does not match its `trips.txt` `route_id`.",
     "references": {
       "fileReferences": [
         "transfers.txt"
@@ -3871,8 +3866,7 @@
     "code": "transfer_with_invalid_trip_and_stop",
     "severityLevel": "ERROR",
     "type": "object",
-    "shortSummary": "A trip id field from GTFS file `transfers.txt` references a stop that is not included in the",
-    "description": "referenced trip\u0027s stop-times.",
+    "shortSummary": "A trip id field from GTFS file `transfers.txt` references a stop that is not included in the referenced trip\u0027s stop-times.",
     "references": {
       "fileReferences": [
         "transfers.txt"
@@ -3913,8 +3907,8 @@
     "code": "transfer_with_suspicious_mid_trip_in_seat",
     "severityLevel": "WARNING",
     "type": "object",
-    "shortSummary": "A trip id field from GTFS file `transfers.txt` with an in-seat transfer type references a stop",
-    "description": "that is not in the expected position in the trip\u0027s stop-times.\n\nFor in-seat transfers, we expect the stop to be the last stop-time in the trip sequence for\n`from_stop_id` and the first stop-time for `to_stop_id`. If you are intentionally using this\nfeature to model mid-trip transfers, you can ignore this warning, but be aware that this\nfunctionality is still considered to be partially experimental in some interpretations of the\nspec.",
+    "shortSummary": "A trip id field from GTFS file `transfers.txt` with an in-seat transfer type references a stop that is not in the expected position in the trip\u0027s stop-times.",
+    "description": "For in-seat transfers, we expect the stop to be the last stop-time in the trip sequence for\n`from_stop_id` and the first stop-time for `to_stop_id`. If you are intentionally using this\nfeature to model mid-trip transfers, you can ignore this warning, but be aware that this\nfunctionality is still considered to be partially experimental in some interpretations of the\nspec.",
     "properties": {
       "csvRowNumber": {
         "fieldName": "csvRowNumber",
@@ -3947,8 +3941,7 @@
     "code": "translation_foreign_key_violation",
     "severityLevel": "ERROR",
     "type": "object",
-    "shortSummary": "An entity with the given `record_id` and `record_sub_id` cannot be found in the referenced",
-    "description": "table.",
+    "shortSummary": "An entity with the given `record_id` and `record_sub_id` cannot be found in the referenced table.",
     "references": {
       "fileReferences": [
         "translations.txt"
