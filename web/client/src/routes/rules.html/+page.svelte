@@ -4,14 +4,11 @@
   import { page } from '$app/stores';
   import _ from 'lodash';
 
+  import SectionRefLink from './SectionRefLink.svelte';
+
   const rules = $page.data.rules;
 
   $: categories = _.groupBy(rules, 'severityLevel');
-
-  /** @param {string} filename */
-  function getSectionRef(filename) {
-    return `https://gtfs.org/schedule/reference/#${filename.replace('.', '')}`;
-  }
 
   /** @param {string} filename */
   function getSpecRef(filename) {
@@ -135,9 +132,7 @@
               <!-- TODO: are there any other kinds of references? -->
               {#each rule.references?.sectionReferences ?? [] as ref}
                 <li>
-                  <a href={getSectionRef(ref)} target="_blank" rel="noreferrer">
-                    {ref} specification
-                  </a>
+                  <SectionRefLink {ref}></SectionRefLink>
                 </li>
               {/each}
               {#each rule.references?.fileReferences ?? [] as ref}
