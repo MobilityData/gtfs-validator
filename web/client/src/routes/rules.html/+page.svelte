@@ -1,5 +1,4 @@
 <script>
-  import { dev } from '$app/environment';
   import { marked } from 'marked';
   import { page } from '$app/stores';
   import _ from 'lodash';
@@ -193,30 +192,6 @@
           {/if}
         </div>
       {/each}
-    {/if}
-
-    {#if dev}
-      <div class="mt-16">
-        <h2 class="h2">Dev only</h2>
-
-        <details>
-          <summary>Raw JSON</summary>
-          <pre class="whitespace-pre-wrap">{JSON.stringify(
-              rules,
-              null,
-              2
-            )}</pre>
-        </details>
-
-        <details>
-          <summary>Categories (grouped by severityLevel)</summary>
-          <pre class="whitespace-pre-wrap">{JSON.stringify(
-              categories,
-              null,
-              2
-            )}</pre>
-        </details>
-      </div>
     {/if}
   </div>
 </div>
