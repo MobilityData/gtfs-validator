@@ -112,7 +112,6 @@ public class MixedCaseValidatorGenerator {
           .endControlFlow()
           .endControlFlow()
           .endControlFlow();
-
     }
 
     typeSpec.addMethod(validateMethod.build());
