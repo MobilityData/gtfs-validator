@@ -152,11 +152,19 @@ public class FeedMetadataTest {
     validateSpecFeature(
         "Route Names",
         "No",
-        ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+        ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
     validateSpecFeature(
         "Shapes",
         "No",
-        ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+        ImmutableList.of(GtfsShapeTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+//    validateSpecFeature(
+//            "Route Colors",
+//            "No",
+//            ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+//    validateSpecFeature(
+//            "Transfers",
+//            "No",
+//            ImmutableList.of(GtfsTransferTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
   @Test
@@ -168,5 +176,17 @@ public class FeedMetadataTest {
         "Shapes",
         "Yes",
         ImmutableList.of(GtfsShapeTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void containsTransfersComponentTest() throws IOException, InterruptedException {
+    String transfersContent =
+            "from_stop_id,to_stop_id,transfer_type,min_transfer_time\n" + "COMMDEV1,COMMDEV4,,\n";
+    createDataFile("transfers.txt", transfersContent);
+    validateSpecFeature(
+            "Transfers",
+            "Yes",
+            ImmutableList.of(GtfsTransferTableDescriptor.class, GtfsAgencyTableDescriptor.class)
+    );
   }
 }
