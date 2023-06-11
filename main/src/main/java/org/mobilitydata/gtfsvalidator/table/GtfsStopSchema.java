@@ -35,7 +35,6 @@ public interface GtfsStopSchema extends GtfsEntity {
 
   String ttsStopName();
 
-  @MixedCase
   String stopDesc();
 
   @FieldType(FieldTypeEnum.LATITUDE)
