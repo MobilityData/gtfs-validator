@@ -87,7 +87,8 @@ public class FeedMetadata {
   private void loadSpecFeatures(GtfsFeedContainer feedContainer) {
     specFeatures.put(
         "Pathways", hasOneRecordOfComponent(feedContainer, GtfsPathway.FILENAME) ? "Yes" : "No");
-    specFeatures.put("Transfers", hasOneRecordOfComponent(feedContainer, GtfsTransfer.FILENAME) ? "Yes" : "No");
+    specFeatures.put(
+        "Transfers", hasOneRecordOfComponent(feedContainer, GtfsTransfer.FILENAME) ? "Yes" : "No");
     var fareAttributesTable = feedContainer.getTableForFilename(GtfsFareAttribute.FILENAME);
     boolean faresV1 =
         fareAttributesTable.isPresent() && fareAttributesTable.get().entityCount() > 0;
