@@ -251,11 +251,19 @@ public class FeedMetadataTest {
     validateSpecFeature(
         "Route Names",
         "No",
-        ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+        ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
     validateSpecFeature(
         "Shapes",
         "No",
-        ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+        ImmutableList.of(GtfsShapeTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+    validateSpecFeature(
+            "Route Colors",
+            "No",
+            ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+    validateSpecFeature(
+            "Transfers",
+            "No",
+            ImmutableList.of(GtfsTransferTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
   @Test
