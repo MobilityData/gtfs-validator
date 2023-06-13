@@ -30,6 +30,7 @@ import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntityValidator;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestFileValidator;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestTableContainer;
 import org.mobilitydata.gtfsvalidator.testgtfs.WholeFeedValidator;
+import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader.ValidatorWithDependencyStatus;
 
 public class ValidatorLoaderTest {
   private static final CountryCode COUNTRY_CODE = CountryCode.forStringOrUnknown("AU");
@@ -68,15 +69,32 @@ public class ValidatorLoaderTest {
   @Test
   public void createMultiFileValidator_injectsFeedContainerAndContext()
       throws ReflectiveOperationException {
-    GtfsTestTableContainer stopTable = new GtfsTestTableContainer(TableStatus.EMPTY_FILE);
+    GtfsTestTableContainer stopTable =
+        new GtfsTestTableContainer(TableStatus.PARSABLE_HEADERS_AND_ROWS);
     GtfsFeedContainer feedContainer = new GtfsFeedContainer(ImmutableList.of(stopTable));
-    WholeFeedValidator validator =
-        (WholeFeedValidator)
-            ValidatorLoader.createMultiFileValidator(
-                WholeFeedValidator.class, feedContainer, VALIDATION_CONTEXT);
 
+    ValidatorWithDependencyStatus<WholeFeedValidator> validatorWithStatus =
+        ValidatorLoader.createMultiFileValidator(
+            WholeFeedValidator.class, feedContainer, VALIDATION_CONTEXT);
+    assertThat(validatorWithStatus.dependenciesHaveErrors()).isFalse();
+
+    WholeFeedValidator validator = validatorWithStatus.validator();
     assertThat(validator.getCountryCode()).isEqualTo(VALIDATION_CONTEXT.countryCode());
     assertThat(validator.getCurrentDateTime()).isEqualTo(VALIDATION_CONTEXT.currentDateTime());
     assertThat(validator.getFeedContainer()).isEqualTo(feedContainer);
+  }
+
+  @Test
+  public void createMultiFileValidator_singleContainer_dependenciesHaveErrors()
+      throws ReflectiveOperationException {
+    GtfsTestTableContainer table = new GtfsTestTableContainer(TableStatus.UNPARSABLE_ROWS);
+    GtfsFeedContainer feedContainer = new GtfsFeedContainer(ImmutableList.of(table));
+
+    ValidatorWithDependencyStatus<GtfsTestFileValidator> validatorWithStatus =
+        ValidatorLoader.createMultiFileValidator(
+            GtfsTestFileValidator.class, feedContainer, VALIDATION_CONTEXT);
+
+    assertThat(validatorWithStatus.dependenciesHaveErrors()).isTrue();
+    assertThat(validatorWithStatus.validator().getStopTable()).isEqualTo(table);
   }
 }
