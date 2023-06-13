@@ -28,6 +28,8 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
@@ -127,7 +129,7 @@ public class ValidationRunner {
 
     // Output
     exportReport(feedMetadata, noticeContainer, config, versionInfo);
-    printSummary(startNanos, feedContainer);
+    printSummary(startNanos, feedContainer, feedLoader);
     return Status.SUCCESS;
   }
 
@@ -137,15 +139,23 @@ public class ValidationRunner {
    * @param startNanos start time as nanoseconds
    * @param feedContainer the {@code GtfsFeedContainer}
    */
-  public static void printSummary(long startNanos, GtfsFeedContainer feedContainer) {
+  public static void printSummary(
+      long startNanos, GtfsFeedContainer feedContainer, GtfsFeedLoader loader) {
     final long endNanos = System.nanoTime();
     if (!feedContainer.isParsedSuccessfully()) {
       StringBuilder b = new StringBuilder();
+      b.append("\n");
       b.append(" ----------------------------------------- \n");
       b.append("|       !!!    PARSING FAILED    !!!      |\n");
-      b.append("|   Most validators were never invoked.   |\n");
+      b.append("|   Some validators were never invoked.   |\n");
       b.append("|   Please see report.json for details.   |\n");
       b.append(" ----------------------------------------- \n");
+      List<Class<? extends FileValidator>> skippedValidators = loader.getSkippedValidators();
+      if (!skippedValidators.isEmpty()) {
+        b.append("Skipped validators: ");
+        b.append(
+            skippedValidators.stream().map(Class::getSimpleName).collect(Collectors.joining(",")));
+      }
       logger.atSevere().log(b.toString());
     }
     logger.atInfo().log("Validation took %.3f seconds%n", (endNanos - startNanos) / 1e9);

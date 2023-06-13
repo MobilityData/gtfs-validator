@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import java.util.List;
+import java.util.function.Consumer;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
@@ -59,11 +60,15 @@ public interface ValidatorProvider {
       GtfsTableContainer<T> table);
 
   /**
-   * Creates a list of cross-table validators.
+   * Creates a list of cross-table validators. Any validator that has a dependency with parse errors
+   * will not be returned by this method, but instead noted with a call to the `skippedValidators`
+   * callback.
    *
    * <p>Use {@link ValidatorUtil#safeValidate} to invoke each validator.
    *
    * @param feed GTFS feed to validate
+   * @param skippedValidators
    */
-  List<FileValidator> createMultiFileValidators(GtfsFeedContainer feed);
+  List<FileValidator> createMultiFileValidators(
+      GtfsFeedContainer feed, Consumer<Class<? extends FileValidator>> skippedValidators);
 }
