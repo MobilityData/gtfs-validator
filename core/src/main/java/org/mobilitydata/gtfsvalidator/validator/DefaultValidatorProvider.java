@@ -20,9 +20,11 @@ import com.google.common.collect.ListMultimap;
 import com.google.common.flogger.FluentLogger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
+import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader.ValidatorWithDependencyStatus;
 
 /** Default implementation of {@link ValidatorProvider}. */
 public class DefaultValidatorProvider implements ValidatorProvider {
@@ -109,13 +111,19 @@ public class DefaultValidatorProvider implements ValidatorProvider {
   }
 
   @Override
-  public List<FileValidator> createMultiFileValidators(GtfsFeedContainer feed) {
+  public List<FileValidator> createMultiFileValidators(
+      GtfsFeedContainer feed, Consumer<Class<? extends FileValidator>> skippedValidators) {
     ArrayList<FileValidator> validators = new ArrayList<>();
     validators.ensureCapacity(multiFileValidators.size());
     for (Class<? extends FileValidator> validatorClass : multiFileValidators) {
       try {
-        validators.add(
-            ValidatorLoader.createMultiFileValidator(validatorClass, feed, validationContext));
+        ValidatorWithDependencyStatus<? extends FileValidator> validatorWithStatus =
+            ValidatorLoader.createMultiFileValidator(validatorClass, feed, validationContext);
+        if (validatorWithStatus.dependenciesHaveErrors()) {
+          skippedValidators.accept(validatorClass);
+        } else {
+          validators.add(validatorWithStatus.validator());
+        }
       } catch (ReflectiveOperationException e) {
         logger.atSevere().withCause(e).log(
             "Cannot instantiate validator %s", validatorClass.getCanonicalName());
