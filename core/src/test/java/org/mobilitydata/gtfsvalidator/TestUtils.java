@@ -5,9 +5,13 @@ import static java.util.stream.Collectors.toList;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.ZonedDateTime;
 import java.util.List;
+import org.mobilitydata.gtfsvalidator.input.CountryCode;
+import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.validator.ValidationContext;
 
 public class TestUtils {
 
@@ -23,5 +27,12 @@ public class TestUtils {
 
   public static InputStream toInputStream(String s) {
     return new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
+  }
+
+  public static ValidationContext contextForTest() {
+    return ValidationContext.builder()
+        .setCountryCode(CountryCode.forStringOrUnknown("ca"))
+        .setCurrentDateTime(new CurrentDateTime(ZonedDateTime.now()))
+        .build();
   }
 }
