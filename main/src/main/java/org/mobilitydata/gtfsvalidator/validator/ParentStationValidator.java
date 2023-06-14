@@ -198,7 +198,6 @@ public class ParentStationValidator extends FileValidator {
     private final String stopName;
 
     UnusedParentStationNotice(int csvRowNumber, String stopId, String stopName) {
-      super(SeverityLevel.INFO);
       this.csvRowNumber = csvRowNumber;
       this.stopId = stopId;
       this.stopName = stopName;
