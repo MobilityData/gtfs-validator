@@ -190,11 +190,19 @@ public class ParentStationValidator extends FileValidator {
   /**
    * Unused parent station.
    *
-   * <p>Severity: {@code SeverityLevel.INFO}
+   * <p>A stop has `location_type` STATION (1) but does not appear in any stop's `parent_station`.
    */
+  @GtfsValidationNotice(
+          severity = SeverityLevel.INFO,
+          files = @FileRefs({GtfsStopSchema.class}))
   static class UnusedParentStationNotice extends ValidationNotice {
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
+
+    /** The id of the faulty stop. */
     private final String stopId;
+
+    /** The name of the faulty stop. */
     private final String stopName;
 
     UnusedParentStationNotice(int csvRowNumber, String stopId, String stopName) {

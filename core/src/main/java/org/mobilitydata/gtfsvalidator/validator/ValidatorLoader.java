@@ -26,7 +26,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Function;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
@@ -169,16 +169,9 @@ public class ValidatorLoader {
             validatorClass.getCanonicalName()));
   }
 
-  /**
-   * Instantiates a validator of given class and injects its dependencies.
-   *
-   * @param clazz validator class to instantiate
-   * @param provider dependency provider
-   * @param <T> type of the validator to instantiate
-   * @return a new validator
-   */
-  private static <T> T createValidator(Class<T> clazz, Function<Class<?>, Object> provider)
-      throws ReflectiveOperationException {
+  /** Instantiates a validator of given class and injects its dependencies. */
+  private static <T> ValidatorWithDependencyStatus<T> createValidator(
+      Class<T> clazz, DependencyResolver dependencyResolver) throws ReflectiveOperationException {
     Constructor<T> chosenConstructor;
     try {
       chosenConstructor = chooseConstructor(clazz);
@@ -189,10 +182,13 @@ public class ValidatorLoader {
     // Inject constructor parameters.
     Object[] parameters = new Object[chosenConstructor.getParameterCount()];
     for (int i = 0; i < parameters.length; ++i) {
-      parameters[i] = provider.apply(chosenConstructor.getParameters()[i].getType());
+      parameters[i] =
+          dependencyResolver.resolveDependency(chosenConstructor.getParameters()[i].getType());
     }
     chosenConstructor.setAccessible(true);
-    return chosenConstructor.newInstance(parameters);
+    T validator = chosenConstructor.newInstance(parameters);
+    return new ValidatorWithDependencyStatus<T>(
+        validator, dependencyResolver.dependenciesHaveErrors);
   }
 
   /**
@@ -205,7 +201,8 @@ public class ValidatorLoader {
    */
   public static <T> T createValidatorWithContext(
       Class<T> clazz, ValidationContext validationContext) throws ReflectiveOperationException {
-    return createValidator(clazz, validationContext::get);
+    return createValidator(clazz, new DependencyResolver(validationContext, null, null))
+        .validator();
   }
 
   /** Instantiates a {@code FileValidator} for a single table. */
@@ -214,29 +211,81 @@ public class ValidatorLoader {
       GtfsTableContainer<?> table,
       ValidationContext validationContext)
       throws ReflectiveOperationException {
-    return createValidator(
-        clazz,
-        parameterClass ->
-            parameterClass.isAssignableFrom(table.getClass())
-                ? table
-                : validationContext.get(parameterClass));
+    return createValidator(clazz, new DependencyResolver(validationContext, table, null))
+        .validator();
   }
 
   /** Instantiates a {@code FileValidator} for multiple tables in a given feed. */
   @SuppressWarnings("unchecked")
-  public static FileValidator createMultiFileValidator(
-      Class<? extends FileValidator> clazz,
-      GtfsFeedContainer feed,
-      ValidationContext validationContext)
+  public static <T extends FileValidator> ValidatorWithDependencyStatus<T> createMultiFileValidator(
+      Class<T> clazz, GtfsFeedContainer feed, ValidationContext validationContext)
       throws ReflectiveOperationException {
-    return createValidator(
-        clazz,
-        parameterClass ->
-            GtfsFeedContainer.class.isAssignableFrom(parameterClass)
-                ? feed
-                : GtfsTableContainer.class.isAssignableFrom(parameterClass)
-                    ? feed.getTable((Class<? extends GtfsTableContainer<?>>) parameterClass)
-                    : validationContext.get(parameterClass));
+    return createValidator(clazz, new DependencyResolver(validationContext, null, feed));
+  }
+
+  /**
+   * Helper class for resolving injected dependencies of validators, while also tracking if those
+   * dependencies have blocking errors.
+   */
+  private static class DependencyResolver {
+    private final ValidationContext context;
+    @Nullable private final GtfsTableContainer<?> tableContainer;
+    @Nullable private final GtfsFeedContainer feedContainer;
+
+    /** This will be set to true if a resolved dependency was not parsed successfully. */
+    private boolean dependenciesHaveErrors = false;
+
+    public DependencyResolver(
+        ValidationContext context,
+        @Nullable GtfsTableContainer<?> tableContainer,
+        @Nullable GtfsFeedContainer feedContainer) {
+      this.context = context;
+      this.tableContainer = tableContainer;
+      this.feedContainer = feedContainer;
+    }
+
+    public Object resolveDependency(Class<?> parameterClass) {
+      if (feedContainer != null && parameterClass.isAssignableFrom(GtfsFeedContainer.class)) {
+        if (!feedContainer.isParsedSuccessfully()) {
+          dependenciesHaveErrors = true;
+        }
+        return feedContainer;
+      }
+      if (tableContainer != null && parameterClass.isAssignableFrom(tableContainer.getClass())) {
+        if (!tableContainer.isParsedSuccessfully()) {
+          dependenciesHaveErrors = true;
+        }
+        return tableContainer;
+      }
+      if (feedContainer != null && GtfsTableContainer.class.isAssignableFrom(parameterClass)) {
+        GtfsTableContainer<?> container =
+            feedContainer.getTable((Class<? extends GtfsTableContainer<?>>) parameterClass);
+        if (container != null && !container.isParsedSuccessfully()) {
+          dependenciesHaveErrors = true;
+        }
+        return container;
+      }
+      return context.get(parameterClass);
+    }
+  }
+
+  public static final class ValidatorWithDependencyStatus<T> {
+    private final T validator;
+    // Will be true if one of the injected dependencies of the validator has parse errors.
+    private final boolean dependenciesHaveErrors;
+
+    public ValidatorWithDependencyStatus(T validator, boolean dependenciesHaveErrors) {
+      this.validator = validator;
+      this.dependenciesHaveErrors = dependenciesHaveErrors;
+    }
+
+    public T validator() {
+      return validator;
+    }
+
+    public boolean dependenciesHaveErrors() {
+      return dependenciesHaveErrors;
+    }
   }
 
   /** Describes all loaded validators. */
