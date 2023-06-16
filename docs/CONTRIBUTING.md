@@ -49,12 +49,12 @@ Remove the Needs triage label and replace it with the appropriate status label (
 
 **Core developers**
 
-Contributors who actively push to the project. They can perform code reviews, request changes, approve and merge Pull Requests. Core developers have Write permissions to the repository. The current core developers for this project are [Maxime Armstrong](https://github.com/maximearmstrong) and [Brian Ferris](https://github.com/bdferris-v2), [Kevin Clough](https://github.com/KClough), [Alexei Ababilov](https://github.com/aababilov) and [Artur Svechnikov](https://github.com/asvechnikov2).
+Contributors who actively push to the project. They can perform code reviews, request changes, approve and merge Pull Requests. Core developers have Write permissions to the repository. The current core developers for this project are [David Gamez](https://github.com/davidgamez) and [Brian Ferris](https://github.com/bdferris-v2), [Kevin Clough](https://github.com/KClough), [Alexei Ababilov](https://github.com/aababilov) and [Artur Svechnikov](https://github.com/asvechnikov2).
 @TODO how to become a core developer
 
 **Steering committee**
 The steering committee is composed of core developers and the product manager, who have additional responsibilities to ensure the project runs smoothly and the progress is in line with the big picture vision: they discuss considerable changes to the project, perform strategic planning, and approve changes to the governance model. 
-The Steering committee currently consists of [Isabelle de Robert](https://github.com/isabelle-dr) and [Brian Ferris](https://github.com/bdferris-v2).
+The Steering committee currently consists of [Isabelle de Robert](https://github.com/isabelle-dr), [David Gamez](https://github.com/davidgamez) and [Brian Ferris](https://github.com/bdferris-v2).
 @TODO how to join the steering committee.
 
 ## Overview of the contribution process
