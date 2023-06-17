@@ -18,14 +18,7 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.UNSUPPORTED;
 
-import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
-import org.mobilitydata.gtfsvalidator.annotation.FieldType;
-import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
-import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.Positive;
-import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.*;
 
 @GtfsTable("fare_transfer_rules.txt")
 public interface GtfsFareTransferRuleSchema extends GtfsEntity {
@@ -46,7 +39,7 @@ public interface GtfsFareTransferRuleSchema extends GtfsEntity {
   @ConditionallyRequired
   GtfsDurationLimitType durationLimitType();
 
-  @Required
+  @RequiredValue
   GtfsFareTransferType fareTransferType();
 
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)

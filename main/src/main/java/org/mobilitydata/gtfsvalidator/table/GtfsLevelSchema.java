@@ -22,10 +22,10 @@ import org.mobilitydata.gtfsvalidator.annotation.*;
 public interface GtfsLevelSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
   @PrimaryKey
-  @Required
+  @RequiredValue
   String levelId();
 
-  @Required
+  @RequiredValue
   double levelIndex();
 
   @MixedCase

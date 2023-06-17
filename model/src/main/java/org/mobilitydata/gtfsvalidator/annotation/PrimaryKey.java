@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * <p>This also adds a validation that all values are unique.
  *
  * <p>Note that {@code @PrimaryKey} does not imply that the field is required and you need to put an
- * extra {@code @Required} annotation in this case.
+ * extra {@code @RequiredFile} annotation in this case.
  *
  * <p>Example.
  *
@@ -35,7 +35,7 @@ import java.lang.annotation.Target;
  *   {@literal @}GtfsTable("stops.txt")
  *   public interface GtfsStopSchema extends GtfsEntity {
  *       {@literal @}FieldType(FieldTypeEnum.ID)
- *       {@literal @}Required
+ *       {@literal @}RequiredFile
  *       {@literal @}PrimaryKey
  *       String stopId();
  *   }

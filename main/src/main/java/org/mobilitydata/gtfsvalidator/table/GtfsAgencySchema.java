@@ -21,22 +21,22 @@ import java.util.Locale;
 import org.mobilitydata.gtfsvalidator.annotation.*;
 
 @GtfsTable("agency.txt")
-@Required
+@RequiredFile
 public interface GtfsAgencySchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
   @PrimaryKey
   @ConditionallyRequired
   String agencyId();
 
-  @Required
+  @RequiredValue
   @MixedCase
   String agencyName();
 
   @FieldType(FieldTypeEnum.URL)
-  @Required
+  @RequiredValue
   String agencyUrl();
 
-  @Required
+  @RequiredValue
   ZoneId agencyTimezone();
 
   Locale agencyLang();

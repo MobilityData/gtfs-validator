@@ -18,13 +18,7 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.UNSUPPORTED;
 
-import org.mobilitydata.gtfsvalidator.annotation.FieldType;
-import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
-import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.Index;
-import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.*;
 
 @GtfsTable("fare_leg_rules.txt")
 public interface GtfsFareLegRuleSchema extends GtfsEntity {
@@ -48,7 +42,7 @@ public interface GtfsFareLegRuleSchema extends GtfsEntity {
   String toAreaId();
 
   @FieldType(FieldTypeEnum.ID)
-  @Required
+  @RequiredValue
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)
   @ForeignKey(table = "fare_products.txt", field = "fare_product_id")
   String fareProductId();

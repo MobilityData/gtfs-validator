@@ -22,28 +22,23 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Specifies a reference to a foreign key. A validator for data integrity will be generated
- * automatically.
+ * Adds a validation that the field or a file is required.
  *
- * <p>Note that {@code @ForeignKey} does not imply that the field is required and you need to put an
- * extra {@code @RequiredFile} annotation in this case.
+ * <p>In the case of a field, both the column header and a value for each row is required.
  *
  * <p>Example.
  *
  * <pre>
- *   {@literal @}GtfsTable("trips.txt")
- *   public interface GtfsTripSchema extends GtfsEntity {
- *     {@literal @}FieldType(FieldTypeEnum.ID)
- *     {@literal @}RequiredFile
- *     {@literal @}ForeignKey(table = "routes.txt", field = "route_id")
- *     String routeId();
+ *   {@literal @}GtfsTable("agency.txt")
+ *   public interface GtfsAgencySchema extends GtfsEntity {
+ *       {@literal @}FieldType(FieldTypeEnum.ID)
+ *       {@literal @}PrimaryKey
+ *       String agencyId();
+ *
+ *       {@literal @}RequiredFile String agencyName();
  *   }
  * </pre>
  */
-@Target(ElementType.METHOD)
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-public @interface ForeignKey {
-  String table();
-
-  String field();
-}
+public @interface RequiredFile {}

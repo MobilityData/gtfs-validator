@@ -19,29 +19,25 @@ package org.mobilitydata.gtfsvalidator.table;
 import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.UNSUPPORTED;
 
 import java.util.Locale;
-import org.mobilitydata.gtfsvalidator.annotation.CachedField;
-import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.*;
 
 @GtfsTable("translations.txt")
 public interface GtfsTranslationSchema extends GtfsEntity {
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)
-  @Required
+  @RequiredValue
   @CachedField
   String tableName();
 
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)
-  @Required
+  @RequiredValue
   @CachedField
   String fieldName();
 
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)
-  @Required
+  @RequiredValue
   Locale language();
 
-  @Required
+  @RequiredValue
   String translation();
 
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)

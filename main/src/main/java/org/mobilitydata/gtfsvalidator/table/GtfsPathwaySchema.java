@@ -22,25 +22,25 @@ import org.mobilitydata.gtfsvalidator.annotation.*;
 public interface GtfsPathwaySchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
   @PrimaryKey
-  @Required
+  @RequiredValue
   String pathwayId();
 
   @FieldType(FieldTypeEnum.ID)
   @Index
-  @Required
+  @RequiredValue
   @ForeignKey(table = "stops.txt", field = "stop_id")
   String fromStopId();
 
   @FieldType(FieldTypeEnum.ID)
   @Index
-  @Required
+  @RequiredValue
   @ForeignKey(table = "stops.txt", field = "stop_id")
   String toStopId();
 
-  @Required
+  @RequiredValue
   GtfsPathwayMode pathwayMode();
 
-  @Required
+  @RequiredValue
   GtfsPathwayIsBidirectional isBidirectional();
 
   @NonNegative

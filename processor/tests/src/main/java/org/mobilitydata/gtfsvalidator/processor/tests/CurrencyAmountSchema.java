@@ -17,17 +17,15 @@ package org.mobilitydata.gtfsvalidator.processor.tests;
 
 import java.math.BigDecimal;
 import java.util.Currency;
-import org.mobilitydata.gtfsvalidator.annotation.CurrencyAmount;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.*;
 
 @GtfsTable("currency_amount.txt")
 public interface CurrencyAmountSchema {
 
-  @Required
+  @RequiredValue
   @CurrencyAmount(currencyField = "currency")
   BigDecimal amount();
 
-  @Required
+  @RequiredValue
   Currency currency();
 }

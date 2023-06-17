@@ -18,17 +18,12 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.*;
 
-import org.mobilitydata.gtfsvalidator.annotation.FieldType;
-import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
-import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.*;
 
 @GtfsTable("fare_rules.txt")
 public interface GtfsFareRuleSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
-  @Required
+  @RequiredValue
   @ForeignKey(table = "fare_attributes.txt", field = "fare_id")
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)
   String fareId();

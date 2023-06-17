@@ -22,9 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Adds a validation that the field or a file is required.
- *
- * <p>In the case of a field, both the column header and a value for each row is required.
+ * Adds a validation that a column header and a value for each row is required.
  *
  * <p>Example.
  *
@@ -35,10 +33,10 @@ import java.lang.annotation.Target;
  *       {@literal @}PrimaryKey
  *       String agencyId();
  *
- *       {@literal @}Required String agencyName();
+ *       {@literal @}RequiredValue String agencyName();
  *   }
  * </pre>
  */
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.SOURCE)
-public @interface Required {}
+public @interface RequiredValue {}

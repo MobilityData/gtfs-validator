@@ -18,31 +18,25 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.RECORD_SUB_ID;
 
-import org.mobilitydata.gtfsvalidator.annotation.FieldType;
-import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.Index;
-import org.mobilitydata.gtfsvalidator.annotation.NonNegative;
-import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.*;
 
 @GtfsTable("shapes.txt")
 public interface GtfsShapeSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
-  @Required
+  @RequiredValue
   @PrimaryKey
   @Index
   String shapeId();
 
   @FieldType(FieldTypeEnum.LATITUDE)
-  @Required
+  @RequiredValue
   double shapePtLat();
 
   @FieldType(FieldTypeEnum.LONGITUDE)
-  @Required
+  @RequiredValue
   double shapePtLon();
 
-  @Required
+  @RequiredValue
   @NonNegative
   @PrimaryKey(isSequenceUsedForSorting = true, translationRecordIdType = RECORD_SUB_ID)
   int shapePtSequence();
