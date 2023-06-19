@@ -34,7 +34,8 @@ import org.mobilitydata.gtfsvalidator.util.ServiceIdIntersectionCache;
  * <p>Both trips have to be operating on the same service day, as determined by comparing the
  * service dates of the trips.
  *
- * <p>Generated notices: {@link BlockTripsWithOverlappingStopTimesNotice}.
+ * <p>Generated notices: {@link BlockTripsWithOverlappingStopTimesNotice}, {@link
+ * StopTimeTripWithoutTimesNotice}.
  */
 @GtfsValidator
 public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
@@ -87,7 +88,8 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
       // properly judge trip overlap.
       for (GtfsTripOverlap overlap :
           findOverlapIntervals(
-              constructOrderedTripIntervals(tripsInBlock), serviceIdIntersectionCache)) {
+              constructOrderedTripIntervals(tripsInBlock, noticeContainer),
+              serviceIdIntersectionCache)) {
         final GtfsTrip tripA = overlap.getTripA();
         final GtfsTrip tripB = overlap.getTripB();
         noticeContainer.addValidationNotice(
@@ -106,7 +108,8 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
    *
    * <p>Intervals are sorted by increasing first-arrival times, and then last-departure time.
    */
-  private List<GtfsTripInterval> constructOrderedTripIntervals(List<GtfsTrip> tripsInBlock) {
+  private List<GtfsTripInterval> constructOrderedTripIntervals(
+      List<GtfsTrip> tripsInBlock, NoticeContainer noticeContainer) {
     ArrayList<GtfsTripInterval> intervals = new ArrayList<>();
     intervals.ensureCapacity(tripsInBlock.size());
     for (GtfsTrip trip : tripsInBlock) {
@@ -117,10 +120,22 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
       }
       GtfsStopTime firstStopTime = stopTimes.get(0);
       GtfsStopTime lastStopTime = stopTimes.get(stopTimes.size() - 1);
+
       if (!firstStopTime.hasArrivalTime()
           || !firstStopTime.hasDepartureTime()
           || !lastStopTime.hasArrivalTime()
           || !lastStopTime.hasDepartureTime()) {
+
+        for (var stop : new GtfsStopTime[] {firstStopTime, lastStopTime}) {
+          if (!stop.hasArrivalTime()) {
+            noticeContainer.addValidationNotice(
+                new StopTimeTripWithoutTimesNotice(stop, GtfsStopTime.ARRIVAL_TIME_FIELD_NAME));
+          }
+          if (!stop.hasDepartureTime()) {
+            noticeContainer.addValidationNotice(
+                new StopTimeTripWithoutTimesNotice(stop, GtfsStopTime.DEPARTURE_TIME_FIELD_NAME));
+          }
+        }
         continue;
       }
       intervals.add(
@@ -303,6 +318,32 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
       this.serviceIdB = tripB.serviceId();
       this.blockId = tripA.blockId();
       this.intersection = intersection;
+    }
+  }
+
+  /**
+   * We can't generate the ERROR notice block_trips_with_overlapping_stop_times for the same trip
+   * because we are missing time information
+   *
+   * <p>Severity: {@code SeverityLevel.ERROR}
+   */
+  @GtfsValidationNotice(severity = ERROR)
+  static class StopTimeTripWithoutTimesNotice extends ValidationNotice {
+    /** The row number from `stops.txt` of the faulty stop. */
+    private final int csvRowNumber;
+    /** The id of faulty trip. */
+    private final String tripId;
+    /** The faulty record's `stop_times.stop_sequence`. */
+    private final long stopSequence;
+    /** Name of the missing field. */
+    private final String specifiedField;
+
+    StopTimeTripWithoutTimesNotice(GtfsStopTime stopTime, String specifiedField) {
+      super(ERROR);
+      this.csvRowNumber = stopTime.csvRowNumber();
+      this.tripId = stopTime.tripId();
+      this.stopSequence = stopTime.stopSequence();
+      this.specifiedField = specifiedField;
     }
   }
 }

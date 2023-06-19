@@ -79,6 +79,8 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 | [`start_and_end_range_out_of_order`](#start_and_end_range_out_of_order)                                                           | Two date or time fields are out of order.                                                                                                              |
 | [`station_with_parent_station`](#station_with_parent_station)                                                                     | A station has `parent_station` field set.                                                                                                              |
 | [`stop_time_timepoint_without_times`](#stop_time_timepoint_without_times)                                                         | `arrival_time` or `departure_time` not specified for timepoint.                                                                                        |
+| [\`stop_time_trip_without_times_notice](#stop_time_trip_without_times) \| `arrival_time` or `departure_time` not specified for stop time trip. |                                                                                                                                               |
+
 | [`stop_time_with_arrival_before_previous_departure_time`](#stop_time_with_arrival_before_previous_departure_time)                 | Backwards time travel between stops in `stop_times.txt`                                                                                                |
 | [`stop_time_with_only_arrival_or_departure_time`](#stop_time_with_only_arrival_or_departure_time)                                 | Missing `stop_times.arrival_time` or `stop_times.departure_time`.                                                                                      |
 | [`stop_without_location`](#stop_without_location)                                                                                 | `stop_lat` and/or `stop_lon` is missing for stop with `location_type` equal to`0`, `1`, or `2`                                                         |
@@ -193,6 +195,32 @@ Trips with the same block id have overlapping stop times.
 #### Affected files
 * [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 * [`trips.txt`](http://gtfs.org/reference/static#tripstxt)
+
+</details>
+
+<a name="StopTimeTripWithoutTimesNotice"/>
+
+### stop_time_trip_without_times
+
+We can't generate the ERROR notice block_trips_with_overlapping_stop_times for the same trip because we are missing time information.
+
+#### References
+* [stops.txt specification](http://gtfs.org/reference/static#stopstxt)
+* [trips.txt specification](http://gtfs.org/reference/static#tripstxt)
+
+<details>
+
+#### Notice fields description
+
+| Field name       | Description                                         | Type    |
+| ---------------- | --------------------------------------------------- | ------- |
+| `csvRowNumber`   | The row number from `stops.txt` of the faulty stop. | Long    |
+| `tripId`         | The id of faulty trip.                              | String  |
+| `stopSequence`   | The faulty record's `stop_times.stop_sequence`.     | Integer |
+| `specifiedField` | Name of the missing field.                          | String  |
+
+#### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
 </details>
 
