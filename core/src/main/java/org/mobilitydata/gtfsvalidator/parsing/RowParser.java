@@ -40,6 +40,7 @@ import org.mobilitydata.gtfsvalidator.notice.NumberOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.notice.TooManyRowsNotice;
 import org.mobilitydata.gtfsvalidator.notice.UnexpectedEnumValueNotice;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.table.GtfsColumnDescriptor;
 import org.mobilitydata.gtfsvalidator.table.GtfsEnum;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
@@ -124,17 +125,39 @@ public class RowParser {
     return true;
   }
 
+  //  @Nullable
+  //  public String asString(int columnIndex, FieldLevelEnum level) {
+  //    String s = row.asString(columnIndex);
+  //    if (level == FieldLevelEnum.REQUIRED && s == null) {
+  //      noticeContainer.addValidationNotice(
+  //          new MissingRequiredFieldNotice(
+  //              fileName, getRowNumber(), header.getColumnName(columnIndex)));
+  //    } else if (level == FieldLevelEnum.RECOMMENDED && s == null) {
+  //      noticeContainer.addValidationNotice(
+  //          new MissingRecommendedFieldNotice(
+  //              fileName, getRowNumber(), header.getColumnName(columnIndex)));
+  //    }
+  //    if (s != null) {
+  //      s =
+  //          fieldValidator.validateField(
+  //              s,
+  //              GtfsCellContext.create(fileName, getRowNumber(),
+  // header.getColumnName(columnIndex)),
+  //              noticeContainer);
+  //    }
+  //    return s;
+  //  }
+
   @Nullable
-  public String asString(int columnIndex, FieldLevelEnum level) {
+  public String asString(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
     String s = row.asString(columnIndex);
-    if (level == FieldLevelEnum.REQUIRED && s == null) {
+    if (columnDescriptor.fieldLevel() == FieldLevelEnum.REQUIRED && s == null) {
       noticeContainer.addValidationNotice(
-          new MissingRequiredFieldNotice(
-              fileName, getRowNumber(), header.getColumnName(columnIndex)));
-    } else if (level == FieldLevelEnum.RECOMMENDED && s == null) {
+          new MissingRequiredFieldNotice(fileName, getRowNumber(), columnDescriptor.columnName()));
+    } else if (columnDescriptor.fieldLevel() == FieldLevelEnum.RECOMMENDED && s == null) {
       noticeContainer.addValidationNotice(
           new MissingRecommendedFieldNotice(
-              fileName, getRowNumber(), header.getColumnName(columnIndex)));
+              fileName, getRowNumber(), columnDescriptor.columnName()));
     }
     if (s != null) {
       s =
@@ -147,23 +170,23 @@ public class RowParser {
   }
 
   @Nullable
-  public String asText(int columnIndex, FieldLevelEnum level) {
-    return asString(columnIndex, level);
+  public String asText(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
+    return asString(columnIndex, columnDescriptor);
   }
 
   @Nullable
-  public String asId(int columnIndex, FieldLevelEnum level) {
-    return asValidatedString(columnIndex, level, fieldValidator::validateId);
+  public String asId(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
+    return asValidatedString(columnIndex, columnDescriptor, fieldValidator::validateId);
   }
 
   @Nullable
-  public String asUrl(int columnIndex, FieldLevelEnum level) {
-    return asValidatedString(columnIndex, level, fieldValidator::validateUrl);
+  public String asUrl(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
+    return asValidatedString(columnIndex, columnDescriptor, fieldValidator::validateUrl);
   }
 
   @Nullable
-  public String asEmail(int columnIndex, FieldLevelEnum level) {
-    return asValidatedString(columnIndex, level, fieldValidator::validateEmail);
+  public String asEmail(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
+    return asValidatedString(columnIndex, columnDescriptor, fieldValidator::validateEmail);
   }
 
   /**
@@ -172,14 +195,14 @@ public class RowParser {
    * unknown, only phone number starting by "+" are validated.
    *
    * @param columnIndex the column index
-   * @param level whether the value is required, recommended or optional according to GTFS
+   * @param columnDescriptor Gtfs Column Descriptor
    * @return the string value of the phone number to be validated if a valid number according to the
    *     {@code CountryCode}, returns {@code null} otherwise. Note that if {@code CountryCode} is
    *     unknown, only phone number starting by "+" are validated.
    */
   @Nullable
-  public String asPhoneNumber(int columnIndex, FieldLevelEnum level) {
-    return asValidatedString(columnIndex, level, fieldValidator::validatePhoneNumber);
+  public String asPhoneNumber(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
+    return asValidatedString(columnIndex, columnDescriptor, fieldValidator::validatePhoneNumber);
   }
 
   @Nullable
@@ -190,8 +213,9 @@ public class RowParser {
    * @param level whether the value is required, recommended or optional according to GTFS
    * @return If parsing was successful returns {@code Locale}, otherwise, {@code null} is returned.
    */
-  public Locale asLanguageCode(int columnIndex, FieldLevelEnum level) {
-    return parseAsType(columnIndex, level, RowParser::parseLocale, InvalidLanguageCodeNotice::new);
+  public Locale asLanguageCode(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
+    return parseAsType(
+        columnIndex, columnDescriptor, RowParser::parseLocale, InvalidLanguageCodeNotice::new);
   }
 
   /**
@@ -209,28 +233,30 @@ public class RowParser {
   }
 
   @Nullable
-  public ZoneId asTimezone(int columnIndex, FieldLevelEnum level) {
-    return parseAsType(columnIndex, level, ZoneId::of, InvalidTimezoneNotice::new);
+  public ZoneId asTimezone(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
+    return parseAsType(columnIndex, columnDescriptor, ZoneId::of, InvalidTimezoneNotice::new);
   }
 
   @Nullable
-  public Currency asCurrencyCode(int columnIndex, FieldLevelEnum level) {
-    return parseAsType(columnIndex, level, Currency::getInstance, InvalidCurrencyNotice::new);
+  public Currency asCurrencyCode(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
+    return parseAsType(
+        columnIndex, columnDescriptor, Currency::getInstance, InvalidCurrencyNotice::new);
   }
 
   @Nullable
-  public Double asFloat(int columnIndex, FieldLevelEnum level) {
-    return parseAsType(columnIndex, level, Double::parseDouble, InvalidFloatNotice::new);
+  public Double asFloat(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
+    return parseAsType(columnIndex, columnDescriptor, Double::parseDouble, InvalidFloatNotice::new);
   }
 
   @Nullable
-  public Double asFloat(int columnIndex, FieldLevelEnum level, NumberBounds bounds) {
-    return checkBounds(asFloat(columnIndex, level), 0.0, columnIndex, "float", bounds);
+  public Double asFloat(
+      int columnIndex, GtfsColumnDescriptor columnDescriptor, NumberBounds bounds) {
+    return checkBounds(asFloat(columnIndex, columnDescriptor), 0.0, columnIndex, "float", bounds);
   }
 
   @Nullable
-  public Double asLatitude(int columnIndex, FieldLevelEnum level) {
-    Double value = asFloat(columnIndex, level);
+  public Double asLatitude(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
+    Double value = asFloat(columnIndex, columnDescriptor);
     if (value != null && !(-90 <= value && value <= 90)) {
       noticeContainer.addValidationNotice(
           new NumberOutOfRangeNotice(
@@ -245,8 +271,8 @@ public class RowParser {
   }
 
   @Nullable
-  public Double asLongitude(int columnIndex, FieldLevelEnum level) {
-    Double value = asFloat(columnIndex, level);
+  public Double asLongitude(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
+    Double value = asFloat(columnIndex, columnDescriptor);
     if (value != null && !(-180 <= value && value <= 180)) {
       noticeContainer.addValidationNotice(
           new NumberOutOfRangeNotice(
@@ -261,24 +287,30 @@ public class RowParser {
   }
 
   @Nullable
-  public Integer asInteger(int columnIndex, FieldLevelEnum level) {
-    return parseAsType(columnIndex, level, Integer::parseInt, InvalidIntegerNotice::new);
+  public Integer asInteger(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
+    return parseAsType(columnIndex, columnDescriptor, Integer::parseInt, InvalidIntegerNotice::new);
   }
 
   @Nullable
-  public Integer asInteger(int columnIndex, FieldLevelEnum level, NumberBounds bounds) {
-    return checkBounds(asInteger(columnIndex, level), 0, columnIndex, "integer", bounds);
+  public Integer asInteger(
+      int columnIndex, GtfsColumnDescriptor columnDescriptor, NumberBounds bounds) {
+    return checkBounds(asInteger(columnIndex, columnDescriptor), 0, columnIndex, "integer", bounds);
   }
 
   @Nullable
-  public BigDecimal asDecimal(int columnIndex, FieldLevelEnum level) {
-    return parseAsType(columnIndex, level, BigDecimal::new, InvalidFloatNotice::new);
+  public BigDecimal asDecimal(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
+    return parseAsType(columnIndex, columnDescriptor, BigDecimal::new, InvalidFloatNotice::new);
   }
 
   @Nullable
-  public BigDecimal asDecimal(int columnIndex, FieldLevelEnum level, NumberBounds bounds) {
+  public BigDecimal asDecimal(
+      int columnIndex, GtfsColumnDescriptor columnDescriptor, NumberBounds bounds) {
     return checkBounds(
-        asDecimal(columnIndex, level), new BigDecimal(0), columnIndex, "decimal", bounds);
+        asDecimal(columnIndex, columnDescriptor),
+        new BigDecimal(0),
+        columnIndex,
+        "decimal",
+        bounds);
   }
 
   /**
@@ -337,14 +369,18 @@ public class RowParser {
   }
 
   @Nullable
-  public GtfsColor asColor(int columnIndex, FieldLevelEnum level) {
-    return parseAsType(columnIndex, level, GtfsColor::fromString, InvalidColorNotice::new);
+  public GtfsColor asColor(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
+    return parseAsType(
+        columnIndex, columnDescriptor, GtfsColor::fromString, InvalidColorNotice::new);
   }
 
   @Nullable
   public <E extends GtfsEnum> Integer asEnum(
-      int columnIndex, FieldLevelEnum level, EnumCreator<E> enumCreator, E unrecognized) {
-    Integer i = asInteger(columnIndex, level);
+      int columnIndex,
+      GtfsColumnDescriptor columnDescriptor,
+      EnumCreator<E> enumCreator,
+      E unrecognized) {
+    Integer i = asInteger(columnIndex, columnDescriptor);
     if (i == null) {
       return null;
     }
@@ -358,13 +394,13 @@ public class RowParser {
   }
 
   @Nullable
-  public GtfsTime asTime(int columnIndex, FieldLevelEnum level) {
-    return parseAsType(columnIndex, level, GtfsTime::fromString, InvalidTimeNotice::new);
+  public GtfsTime asTime(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
+    return parseAsType(columnIndex, columnDescriptor, GtfsTime::fromString, InvalidTimeNotice::new);
   }
 
   @Nullable
-  public GtfsDate asDate(int columnIndex, FieldLevelEnum level) {
-    return parseAsType(columnIndex, level, GtfsDate::fromString, InvalidDateNotice::new);
+  public GtfsDate asDate(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
+    return parseAsType(columnIndex, columnDescriptor, GtfsDate::fromString, InvalidDateNotice::new);
   }
 
   public enum NumberBounds {
@@ -384,7 +420,7 @@ public class RowParser {
    * parsing failed.
    *
    * @param columnIndex index of the column to parse
-   * @param level whether the value is required, recommended or optional according to GTFS
+   * @param columnDescriptor Gtfs Column Descriptor
    * @param parsingFunction function that converts string to an object to return
    * @param noticingFunction function to create a notice about parse errors
    * @param <T> the type to return
@@ -393,10 +429,10 @@ public class RowParser {
   @Nullable
   private <T> T parseAsType(
       int columnIndex,
-      FieldLevelEnum level,
+      GtfsColumnDescriptor columnDescriptor,
       Function<String, T> parsingFunction,
       NoticingFunction noticingFunction) {
-    String s = asString(columnIndex, level);
+    String s = asString(columnIndex, columnDescriptor);
     if (s == null) {
       return null;
     }
@@ -418,14 +454,16 @@ public class RowParser {
    * error is emitted, the value is considered invalid.
    *
    * @param columnIndex index of the column to parse
-   * @param level whether the value is required, recommended or optional according to GTFS
+   * @param columnDescriptor GTFS column descriptor
    * @param validatingFunction the predicate to validate a given string
    * @return the cell value at the given column or null if the value is missing
    */
   @Nullable
   private String asValidatedString(
-      int columnIndex, FieldLevelEnum level, FieldValidatingFunction validatingFunction) {
-    String s = asString(columnIndex, level);
+      int columnIndex,
+      GtfsColumnDescriptor columnDescriptor,
+      FieldValidatingFunction validatingFunction) {
+    String s = asString(columnIndex, columnDescriptor);
     if (s == null) {
       return null;
     }
