@@ -252,12 +252,12 @@ public class TableDescriptorGenerator {
       CodeBlock fieldValue =
           field.type() == FieldTypeEnum.ENUM
               ? CodeBlock.of(
-                  "rowParser.asEnum(columnIndex, columnDescriptor.fieldLevel(), $T::forNumber,"
+                  "rowParser.asEnum(columnIndex, columnDescriptor, $T::forNumber,"
                       + " $T.UNRECOGNIZED)",
                   ClassName.get(field.javaType()),
                   ClassName.get(field.javaType()))
               : CodeBlock.of(
-                  "rowParser.$L(columnIndex, columnDescriptor.fieldLevel()$L)",
+                  "rowParser.$L(columnIndex, columnDescriptor$L)",
                   gtfsTypeToParserMethod(field.type()),
                   field.numberBounds().isPresent()
                       ? ", RowParser.NumberBounds." + field.numberBounds().get()
