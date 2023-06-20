@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth8.assertThat;
 
 import com.google.gson.Gson;
 import org.junit.Test;
@@ -66,8 +67,7 @@ public class NoticeContainerTest {
   @Test
   public void exportInfinityInContext() {
     NoticeContainer container = new NoticeContainer();
-    container.addValidationNotice(
-        new DoubleFieldNotice(Double.POSITIVE_INFINITY, SeverityLevel.ERROR));
+    container.addValidationNotice(new DoubleFieldNotice(Double.POSITIVE_INFINITY));
     assertThat(new Gson().toJson(container.exportValidationNotices()))
         .isEqualTo(
             "{\"notices\":[{\"code\":\"double_field\",\"severity\":\"ERROR\","
@@ -77,9 +77,10 @@ public class NoticeContainerTest {
   @Test
   public void exportSeverities() {
     NoticeContainer container = new NoticeContainer();
-    container.addValidationNotice(new StringFieldNotice("1", SeverityLevel.ERROR));
-    container.addValidationNotice(new DoubleFieldNotice(2.0, SeverityLevel.ERROR));
-    container.addValidationNotice(new StringFieldNotice("3", SeverityLevel.INFO));
+    container.addValidationNotice(new StringFieldNotice("1"));
+    container.addValidationNotice(new DoubleFieldNotice(2.0));
+    // We override the default severity here.
+    container.addValidationNoticeWithSeverity(new StringFieldNotice("3"), SeverityLevel.INFO);
 
     assertThat(new Gson().toJson(container.exportValidationNotices()))
         .isEqualTo(
@@ -131,8 +132,8 @@ public class NoticeContainerTest {
 
   @Test
   public void addValidationNotice_setMax_perNoticeTypeAndSeverity() {
-    ValidationNotice n1 = new DoubleFieldNotice(2.0, SeverityLevel.WARNING);
-    ValidationNotice n2 = new DoubleFieldNotice(2.0, SeverityLevel.ERROR);
+    ValidationNotice n1 = new DoubleFieldNotice(2.0);
+    ValidationNotice n2 = new DoubleFieldNotice(2.0);
     int MAX_TOTAL_VALIDATION_NOTICES = 50;
     int MAX_PER_NOTICE_TYPE_AND_SEVERITY = 15;
     int MAX_EXPORT_PER_NOTICE_TYPE_AND_SEVERITY = 15;
@@ -142,19 +143,21 @@ public class NoticeContainerTest {
             MAX_PER_NOTICE_TYPE_AND_SEVERITY,
             MAX_EXPORT_PER_NOTICE_TYPE_AND_SEVERITY);
     for (int i = 0; i < MAX_TOTAL_VALIDATION_NOTICES + 5; i++) {
-      noticeContainer.addValidationNotice(n1);
-      noticeContainer.addValidationNotice(n2);
+      noticeContainer.addValidationNoticeWithSeverity(n1, SeverityLevel.WARNING);
+      noticeContainer.addValidationNoticeWithSeverity(n2, SeverityLevel.ERROR);
     }
-    assertThat(noticeContainer.getValidationNotices().size())
-        .isEqualTo(2 * MAX_PER_NOTICE_TYPE_AND_SEVERITY);
+    assertThat(noticeContainer.getValidationNotices())
+        .hasSize(2 * MAX_PER_NOTICE_TYPE_AND_SEVERITY);
     assertThat(
-            NoticeContainer.groupNoticesByTypeAndSeverity(noticeContainer.getValidationNotices())
-                .get(n1.getMappingKey())
+            NoticeContainer.groupNoticesByTypeAndSeverity(
+                    noticeContainer.getResolvedValidationNotices())
+                .get(n1.resolveWithDefaultSeverity().getMappingKey())
                 .size())
         .isEqualTo(MAX_PER_NOTICE_TYPE_AND_SEVERITY);
     assertThat(
-            NoticeContainer.groupNoticesByTypeAndSeverity(noticeContainer.getValidationNotices())
-                .get(n2.getMappingKey())
+            NoticeContainer.groupNoticesByTypeAndSeverity(
+                    noticeContainer.getResolvedValidationNotices())
+                .get(n2.resolveWithDefaultSeverity().getMappingKey())
                 .size())
         .isEqualTo(MAX_PER_NOTICE_TYPE_AND_SEVERITY);
   }
@@ -175,17 +178,16 @@ public class NoticeContainerTest {
       noticeContainer.addValidationNotice(n1);
       noticeContainer.addValidationNotice(n2);
     }
-    assertThat(noticeContainer.getValidationNotices().size())
-        .isEqualTo(MAX_TOTAL_VALIDATION_NOTICES);
+    assertThat(noticeContainer.getValidationNotices()).hasSize(MAX_TOTAL_VALIDATION_NOTICES);
   }
 
   @Test
   public void exportNotices_shouldReflectTheTotalNumberOfNoticesAndContexts() {
     NoticeContainer container = new NoticeContainer(26, 8, 3);
     for (int i = 0; i < 55; i++) {
-      container.addValidationNotice(new StringFieldNotice("1", SeverityLevel.ERROR));
-      container.addValidationNotice(new DoubleFieldNotice(2.0, SeverityLevel.ERROR));
-      container.addValidationNotice(new StringFieldNotice("3", SeverityLevel.INFO));
+      container.addValidationNotice(new StringFieldNotice("1"));
+      container.addValidationNotice(new DoubleFieldNotice(2.0));
+      container.addValidationNoticeWithSeverity(new StringFieldNotice("3"), SeverityLevel.INFO);
     }
     assertThat(new Gson().toJson(container.exportValidationNotices()))
         .isEqualTo(

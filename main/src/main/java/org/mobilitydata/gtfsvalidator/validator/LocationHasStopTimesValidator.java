@@ -24,7 +24,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
@@ -92,7 +91,6 @@ public class LocationHasStopTimesValidator extends FileValidator {
     private final String stopName;
 
     StopWithoutStopTimeNotice(GtfsStop stop) {
-      super(SeverityLevel.WARNING);
       this.csvRowNumber = stop.csvRowNumber();
       this.stopId = stop.stopId();
       this.stopName = stop.stopName();
@@ -123,7 +121,6 @@ public class LocationHasStopTimesValidator extends FileValidator {
     private final long stopTimeCsvRowNumber;
 
     LocationWithUnexpectedStopTimeNotice(GtfsStop location, GtfsStopTime stopTime) {
-      super(SeverityLevel.ERROR);
       this.csvRowNumber = location.csvRowNumber();
       this.stopId = location.stopId();
       this.stopName = location.stopName();

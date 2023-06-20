@@ -79,8 +79,7 @@ public class AnyTableLoaderTest {
             GtfsTableContainer.TableStatus.INVALID_HEADERS))
         .thenReturn(mockContainer);
     InputStream csvInputStream = toInputStream("A file with no headers");
-    ValidationNotice headerValidationNotice = mock(ValidationNotice.class);
-    when(headerValidationNotice.isError()).thenReturn(true);
+    ValidationNotice headerValidationNotice = new EmptyColumnNameNotice("stops.txt", 0);
     TableHeaderValidator tableHeaderValidator =
         new TableHeaderValidator() {
           @Override

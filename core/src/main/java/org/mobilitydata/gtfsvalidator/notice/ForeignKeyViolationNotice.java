@@ -65,7 +65,6 @@ public class ForeignKeyViolationNotice extends ValidationNotice {
       String parentFieldName,
       String fieldValue,
       int csvRowNumber) {
-    super(ERROR);
     this.childFilename = childFilename;
     this.childFieldName = childFieldName;
     this.parentFilename = parentFilename;

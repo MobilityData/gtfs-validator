@@ -26,7 +26,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.*;
 import org.mobilitydata.gtfsvalidator.util.CalendarUtil;
@@ -88,7 +87,6 @@ public class ExpiredCalendarValidator extends FileValidator {
     private final String serviceId;
 
     ExpiredCalendarNotice(int csvRowNumber, String serviceId) {
-      super(SeverityLevel.WARNING);
       this.csvRowNumber = csvRowNumber;
       this.serviceId = serviceId;
     }

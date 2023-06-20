@@ -46,11 +46,6 @@ public class Arguments {
   private int numThreads = 1;
 
   @Parameter(
-      names = {"-f", "--feed_name"},
-      description = "Deprecated: please use '-c' or '-country_code' instead.")
-  private String feedName;
-
-  @Parameter(
       names = {"-c", "--country_code"},
       description =
           "Country code of the feed, e.g., `nl`. "
@@ -168,12 +163,7 @@ public class Arguments {
           "CLI parameter '--storage_directory' must not be provided if '--url' is not provided");
       return false;
     }
-    if (feedName != null) {
-      logger.atSevere().log(
-          " '-f' or '--feed_name is no longer supported. Please use '-c' or '--country_code'"
-              + " instead.");
-      return false;
-    }
+
     return true;
   }
 

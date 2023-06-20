@@ -63,7 +63,6 @@ public class StartAndEndRangeEqualNotice extends ValidationNotice {
       String startFieldName,
       String endFieldName,
       String value) {
-    super(SeverityLevel.ERROR);
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.entityId = entityId;
@@ -74,7 +73,6 @@ public class StartAndEndRangeEqualNotice extends ValidationNotice {
 
   public StartAndEndRangeEqualNotice(
       String filename, int csvRowNumber, String startFieldName, String endFieldName, String value) {
-    super(SeverityLevel.ERROR);
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.entityId = null;

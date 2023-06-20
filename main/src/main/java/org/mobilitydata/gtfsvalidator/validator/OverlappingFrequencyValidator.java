@@ -12,7 +12,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFrequency;
 import org.mobilitydata.gtfsvalidator.table.GtfsFrequencySchema;
@@ -95,7 +94,6 @@ public class OverlappingFrequencyValidator extends FileValidator {
         long currCsvRowNumber,
         GtfsTime currStartTime,
         String tripId) {
-      super(SeverityLevel.ERROR);
       this.prevCsvRowNumber = prevCsvRowNumber;
       this.prevEndTime = prevEndTime;
       this.currCsvRowNumber = currCsvRowNumber;

@@ -24,7 +24,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedColumnNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
@@ -111,7 +110,6 @@ public class TimepointTimeValidator extends FileValidator {
     private final String specifiedField;
 
     StopTimeTimepointWithoutTimesNotice(GtfsStopTime stopTime, String specifiedField) {
-      super(SeverityLevel.ERROR);
       this.csvRowNumber = stopTime.csvRowNumber();
       this.tripId = stopTime.tripId();
       this.stopSequence = stopTime.stopSequence();
@@ -138,10 +136,24 @@ public class TimepointTimeValidator extends FileValidator {
     private final long stopSequence;
 
     MissingTimepointValueNotice(GtfsStopTime stopTime) {
-      super(SeverityLevel.WARNING);
       this.csvRowNumber = stopTime.csvRowNumber();
       this.tripId = stopTime.tripId();
       this.stopSequence = stopTime.stopSequence();
+    }
+  }
+
+  /** `timepoint` column is missing for a dataset. */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs(GtfsStopTimeSchema.class),
+      bestPractices = @FileRefs(GtfsStopTimeSchema.class))
+  static class MissingTimepointColumnNotice extends ValidationNotice {
+
+    /** The name of the affected file. */
+    private final String filename;
+
+    MissingTimepointColumnNotice() {
+      this.filename = GtfsStopTime.FILENAME;
     }
   }
 }

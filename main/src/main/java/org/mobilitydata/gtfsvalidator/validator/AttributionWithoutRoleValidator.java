@@ -21,7 +21,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsAttribution;
 import org.mobilitydata.gtfsvalidator.table.GtfsAttributionRole;
@@ -66,7 +65,6 @@ public class AttributionWithoutRoleValidator extends SingleEntityValidator<GtfsA
     private final String attributionId;
 
     AttributionWithoutRoleNotice(int csvRowNumber, String attributionId) {
-      super(SeverityLevel.WARNING);
       this.csvRowNumber = csvRowNumber;
       this.attributionId = attributionId;
     }

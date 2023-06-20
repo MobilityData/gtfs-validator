@@ -6,7 +6,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareTransferRule;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareTransferRuleSchema;
@@ -38,7 +37,6 @@ public class FareTransferRuleDurationLimitTypeValidator
     private final int csvRowNumber;
 
     FareTransferRuleDurationLimitWithoutTypeNotice(int csvRowNumber) {
-      super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
     }
   }
@@ -55,7 +53,6 @@ public class FareTransferRuleDurationLimitTypeValidator
     private final int csvRowNumber;
 
     FareTransferRuleDurationLimitTypeWithoutDurationLimitNotice(int csvRowNumber) {
-      super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
     }
   }

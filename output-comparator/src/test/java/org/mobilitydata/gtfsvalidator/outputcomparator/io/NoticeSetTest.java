@@ -19,7 +19,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.internal.LinkedTreeMap;
+import com.google.gson.JsonElement;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
@@ -27,7 +27,7 @@ import org.mobilitydata.gtfsvalidator.model.NoticeReport;
 
 public class NoticeSetTest {
 
-  private static final List<LinkedTreeMap<String, Object>> SAMPLES = Collections.emptyList();
+  private static final List<JsonElement> SAMPLES = Collections.emptyList();
 
   @Test
   public void hasSameErrorCodes_sameErrorsInReports_true() {

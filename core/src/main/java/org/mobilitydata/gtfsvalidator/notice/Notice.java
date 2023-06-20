@@ -18,8 +18,6 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.geometry.S2LatLng;
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -28,7 +26,6 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import java.lang.reflect.Type;
-import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
@@ -38,7 +35,6 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 public abstract class Notice {
   public static final Gson GSON =
       new GsonBuilder()
-          .setExclusionStrategies(new NoticeExclusionStrategy())
           .registerTypeAdapter(GtfsColor.class, new GtfsColorSerializer())
           .registerTypeAdapter(GtfsDate.class, new GtfsDateSerializer())
           .registerTypeAdapter(GtfsTime.class, new GtfsTimeSerializer())
@@ -48,18 +44,8 @@ public abstract class Notice {
 
   private static final String NOTICE_SUFFIX = "Notice";
 
-  private final SeverityLevel severityLevel;
-
-  public Notice(SeverityLevel severityLevel) {
-    this.severityLevel = severityLevel;
-  }
-
-  public JsonElement getContext() {
+  public JsonElement toJsonTree() {
     return GSON.toJsonTree(this);
-  }
-
-  public SeverityLevel getSeverityLevel() {
-    return this.severityLevel;
   }
 
   /**
@@ -82,72 +68,29 @@ public abstract class Notice {
         StringUtils.removeEnd(noticeClass.getSimpleName(), NOTICE_SUFFIX));
   }
 
-  /**
-   * Returns the key used to group notices per type and severity: code + ordinal of severity level.
-   *
-   * @return the key used to group notices per type and severity: code + ordinal of severity level.
-   */
-  public String getMappingKey() {
-    return getCode() + getSeverityLevel().ordinal();
-  }
-
   @Override
-  public boolean equals(Object other) {
-    if (this == other) {
+  public boolean equals(Object o) {
+    if (this == o) {
       return true;
     }
-    if (other instanceof Notice) {
-      Notice otherNotice = (Notice) other;
-      return getClass().equals(otherNotice.getClass())
-          && severityLevel.equals(otherNotice.severityLevel)
-          && getContext().equals(otherNotice.getContext());
+    if (o == null || this.getClass() != o.getClass()) {
+      return false;
     }
-    return false;
+    Notice notice = (Notice) o;
+
+    JsonElement lhsJson = this.toJsonTree();
+    JsonElement rhsJson = notice.toJsonTree();
+    return lhsJson.equals(rhsJson);
   }
 
   @Override
   public String toString() {
-    return String.format("%s %s %s", getCode(), getSeverityLevel(), getContext());
+    return toJsonTree().toString();
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getClass(), getContext(), getSeverityLevel());
-  }
-
-  /**
-   * Tells if this notice is an {@code ERROR}.
-   *
-   * <p>This method is preferred to checking {@code severityLevel} directly since more levels may be
-   * added in the future.
-   *
-   * @return true if this notice is an error, false otherwise
-   */
-  public boolean isError() {
-    return getSeverityLevel().ordinal() >= SeverityLevel.ERROR.ordinal();
-  }
-
-  /**
-   * Tells if this notice is a {@code WARNING}.
-   *
-   * <p>This method is preferred to checking {@code severityLevel} directly since more levels may be
-   * added in the future.
-   *
-   * @return true if this notice is a warning, false otherwise
-   */
-  public boolean isWarning() {
-    return getSeverityLevel() == SeverityLevel.WARNING;
-  }
-
-  /** JSON exclusion strategy for notice context. It skips {@link Notice#severityLevel}. */
-  private static class NoticeExclusionStrategy implements ExclusionStrategy {
-    public boolean shouldSkipClass(Class<?> clazz) {
-      return false;
-    }
-
-    public boolean shouldSkipField(FieldAttributes f) {
-      return f.getName().equals("severityLevel");
-    }
+    return toJsonTree().hashCode();
   }
 
   private static class GtfsColorSerializer implements JsonSerializer<GtfsColor> {

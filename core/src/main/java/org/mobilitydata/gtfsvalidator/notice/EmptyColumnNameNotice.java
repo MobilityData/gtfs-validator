@@ -36,7 +36,6 @@ public class EmptyColumnNameNotice extends ValidationNotice {
   private final int index;
 
   public EmptyColumnNameNotice(String filename, int index) {
-    super(SeverityLevel.ERROR);
     this.filename = filename;
     this.index = index;
   }
