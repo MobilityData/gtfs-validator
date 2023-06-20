@@ -22,7 +22,6 @@ import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedColumnNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
@@ -55,12 +54,9 @@ public class TimepointTimeValidator extends FileValidator {
   public void validate(NoticeContainer noticeContainer) {
     if (!stopTimes.hasColumn(GtfsStopTime.TIMEPOINT_FIELD_NAME)) {
       // legacy datasets do not use timepoint column in stop_times.txt as a result:
-      // - this should be flagged;
+      // - this should be flagged in the header tests.
       // - but also no notice regarding the absence of arrival_time or departure_time should be
       // generated
-      noticeContainer.addValidationNotice(
-          new MissingRecommendedColumnNotice(
-              GtfsStopTime.FILENAME, GtfsStopTime.TIMEPOINT_FIELD_NAME));
       return;
     }
     for (GtfsStopTime stopTime : stopTimes.getEntities()) {
@@ -139,21 +135,6 @@ public class TimepointTimeValidator extends FileValidator {
       this.csvRowNumber = stopTime.csvRowNumber();
       this.tripId = stopTime.tripId();
       this.stopSequence = stopTime.stopSequence();
-    }
-  }
-
-  /** `timepoint` column is missing for a dataset. */
-  @GtfsValidationNotice(
-      severity = WARNING,
-      files = @FileRefs(GtfsStopTimeSchema.class),
-      bestPractices = @FileRefs(GtfsStopTimeSchema.class))
-  static class MissingTimepointColumnNotice extends ValidationNotice {
-
-    /** The name of the affected file. */
-    private final String filename;
-
-    MissingTimepointColumnNotice() {
-      this.filename = GtfsStopTime.FILENAME;
     }
   }
 }

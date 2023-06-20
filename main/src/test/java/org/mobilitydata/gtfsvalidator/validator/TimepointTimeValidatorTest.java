@@ -33,7 +33,6 @@ import static org.mobilitydata.gtfsvalidator.table.GtfsStopTime.TRIP_ID_FIELD_NA
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedColumnNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
@@ -94,62 +93,6 @@ public class TimepointTimeValidatorTest {
           SHAPE_DIST_TRAVELED_FIELD_NAME,
           TIMEPOINT_FIELD_NAME
         });
-  }
-
-  @Test
-  public void noTimepointColumn_noTimeProvided_shouldGenerateNotice() {
-    // Using createLegacyHeader() that omits the timepoint column will trigger the
-    // MissingRecommendedColumnNotice.
-    // .setTimepoint(null) is used to indicate that no value is provided, although it has no effect
-    // in this test.
-    List<GtfsStopTime> stopTimes = new ArrayList<>();
-    stopTimes.add(
-        new GtfsStopTime.Builder()
-            .setCsvRowNumber(1)
-            .setTripId("first trip id")
-            .setArrivalTime(null)
-            .setDepartureTime(null)
-            .setStopId("stop id 0")
-            .setStopSequence(2)
-            .setTimepoint((Integer) null)
-            .build());
-    stopTimes.add(
-        new GtfsStopTime.Builder()
-            .setCsvRowNumber(4)
-            .setTripId("second trip id")
-            .setArrivalTime(null)
-            .setDepartureTime(null)
-            .setStopId("stop id 1")
-            .setStopSequence(2)
-            .setTimepoint((Integer) null)
-            .build());
-    assertThat(generateNotices(createLegacyHeader(), stopTimes))
-        .containsExactly(
-            new MissingRecommendedColumnNotice(
-                GtfsStopTime.FILENAME, GtfsStopTime.TIMEPOINT_FIELD_NAME));
-  }
-
-  @Test
-  public void noTimepointColumn_timesProvided_shouldGenerateNotice() {
-    // Using createLegacyHeader() that omits the timestamp column will trigger the
-    // MissingTimepointColumnNotice.
-    // .setTimepoint(null) is used to indicate that no value is provided, although it has no effect
-    // in this test.
-    List<GtfsStopTime> stopTimes = new ArrayList<>();
-    stopTimes.add(
-        new GtfsStopTime.Builder()
-            .setCsvRowNumber(1)
-            .setTripId("first trip id")
-            .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
-            .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(580))
-            .setStopId("stop id")
-            .setStopSequence(2)
-            .setTimepoint((Integer) null)
-            .build());
-    assertThat(generateNotices(createLegacyHeader(), stopTimes))
-        .containsExactly(
-            new MissingRecommendedColumnNotice(
-                GtfsStopTime.FILENAME, GtfsStopTime.TIMEPOINT_FIELD_NAME));
   }
 
   @Test

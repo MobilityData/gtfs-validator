@@ -100,7 +100,7 @@ public class NoticeContainer {
     if (resolved.isError()) {
       hasValidationErrors = true;
     }
-    if (resolved.isWarning()) (
+    if (resolved.isWarning()) {
       hasValidationWarnings = true;
     }
 

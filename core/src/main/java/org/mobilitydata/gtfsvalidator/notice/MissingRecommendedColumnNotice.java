@@ -32,7 +32,6 @@ public class MissingRecommendedColumnNotice extends ValidationNotice {
   private final String fieldName;
 
   public MissingRecommendedColumnNotice(String filename, String fieldName) {
-    super(SeverityLevel.WARNING);
     this.filename = filename;
     this.fieldName = fieldName;
   }
