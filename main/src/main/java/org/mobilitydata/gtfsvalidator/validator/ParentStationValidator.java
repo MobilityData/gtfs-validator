@@ -16,6 +16,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.INFO;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -192,9 +193,7 @@ public class ParentStationValidator extends FileValidator {
    *
    * <p>A stop has `location_type` STATION (1) but does not appear in any stop's `parent_station`.
    */
-  @GtfsValidationNotice(
-          severity = SeverityLevel.INFO,
-          files = @FileRefs({GtfsStopSchema.class}))
+  @GtfsValidationNotice(severity = INFO, files = @FileRefs({GtfsStopSchema.class}))
   static class UnusedParentStationNotice extends ValidationNotice {
     /** The row number of the faulty record. */
     private final int csvRowNumber;
