@@ -41,6 +41,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
  * <ul>
  *   <li>{@link WrongParentLocationTypeNotice}.
  *   <li>{@link UnusedParentStationNotice}.
+ * </ul>
  */
 @GtfsValidator
 public class ParentStationValidator extends FileValidator {
