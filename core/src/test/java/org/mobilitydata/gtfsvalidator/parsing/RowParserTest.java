@@ -1,91 +1,99 @@
 /**
- * Copyright 2020 Google LLC, MobilityData IO Licensed under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance with the License. You may obtain a
- * copy of the License at
+ * Copyright 2020 Google LLC, MobilityData IO
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * <p>http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * <p>Unless required by applicable law or agreed to in writing, software distributed under the
- * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the License for the specific language governing permissions and
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mobilitydata.gtfsvalidator.parsing;
+ package org.mobilitydata.gtfsvalidator.parsing;
 
-import static com.google.common.truth.Truth.assertThat;
-import static org.mobilitydata.gtfsvalidator.TestUtils.toInputStream;
+ import static com.google.common.truth.Truth.assertThat;
+ import static org.mobilitydata.gtfsvalidator.TestUtils.toInputStream;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Arrays;
+ import java.io.IOException;
+ import java.io.InputStream;
+ import java.math.BigDecimal;
+ import java.time.LocalDate;
+ import java.time.ZoneId;
+ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Function;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
-import org.mobilitydata.gtfsvalidator.input.CountryCode;
-import org.mobilitydata.gtfsvalidator.notice.*;
+ import org.junit.Test;
+ import org.junit.runner.RunWith;
+ import org.junit.runners.JUnit4;
+ import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
+ import org.mobilitydata.gtfsvalidator.input.CountryCode;
+ import org.mobilitydata.gtfsvalidator.notice.*;
+import org.mobilitydata.gtfsvalidator.parsing.CsvFile;
+import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
+import org.mobilitydata.gtfsvalidator.parsing.CsvRow;
+import org.mobilitydata.gtfsvalidator.parsing.RowParser;
 import org.mobilitydata.gtfsvalidator.table.GtfsColumnDescriptor;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
-import org.mobilitydata.gtfsvalidator.type.GtfsDate;
-import org.mobilitydata.gtfsvalidator.type.GtfsTime;
-import org.mobilitydata.gtfsvalidator.validator.DefaultFieldValidator;
-import org.mobilitydata.gtfsvalidator.validator.GtfsFieldValidator;
+ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
+ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
+ import org.mobilitydata.gtfsvalidator.validator.DefaultFieldValidator;
+ import org.mobilitydata.gtfsvalidator.validator.GtfsFieldValidator;
 
-@RunWith(JUnit4.class)
-public class RowParserTest {
+ @RunWith(JUnit4.class)
+ public class RowParserTest {
 
   private static CountryCode TEST_COUNTRY_CODE = CountryCode.forStringOrUnknown("AU");
   private static String TEST_FILENAME = "stops.txt";
 
-  private static GtfsFieldValidator FIELD_VALIDATOR = new DefaultFieldValidator(TEST_COUNTRY_CODE);
+  private static GtfsFieldValidator FIELD_VALIDATOR = new
+ DefaultFieldValidator(TEST_COUNTRY_CODE);
 
-  private static GtfsColumnDescriptor GTFS_COLUMN_DESCRIPTOR =
-      new GtfsColumnDescriptor() {
-        @Override
-        public String columnName() {
+  private static GtfsColumnDescriptor GTFS_COLUMN_DESCRIPTOR = new GtfsColumnDescriptor() {
+      @Override
+      public String columnName() {
           return "column name";
-        }
+      }
 
-        @Override
-        public boolean headerRequired() {
+      @Override
+      public boolean headerRequired() {
           return false;
-        }
+      }
 
-        @Override
-        public FieldLevelEnum fieldLevel() {
+      @Override
+      public FieldLevelEnum fieldLevel() {
           return FieldLevelEnum.REQUIRED;
-        }
+      }
 
-        @Override
-        public Optional<RowParser.NumberBounds> numberBounds() {
+      @Override
+      public Optional<RowParser.NumberBounds> numberBounds() {
           return Optional.empty();
-        }
+      }
 
-        @Override
-        public boolean isCached() {
+      @Override
+      public boolean isCached() {
           return false;
-        }
+      }
 
-        @Override
-        public boolean isMixedCase() {
+      @Override
+      public boolean isMixedCase() {
           return false;
-        }
-      };
+      }
+  };
 
   private static RowParser createParser(String cellValue) {
     NoticeContainer noticeContainer = new NoticeContainer();
     RowParser parser =
-        new RowParser(TEST_FILENAME, new CsvHeader(new String[] {"column name"}), FIELD_VALIDATOR);
+        new RowParser(TEST_FILENAME, new CsvHeader(new String[] {"column name"}),
+ FIELD_VALIDATOR);
     parser.setRow(new CsvRow(8, new String[] {cellValue}), noticeContainer);
     return parser;
   }
 
-  private static <T> void assertValid(String cellValue, Function<RowParser, T> parse, T expected) {
+  private static <T> void assertValid(String cellValue, Function<RowParser, T> parse, T expected)
+ {
     RowParser parser = createParser(cellValue);
     assertThat(parse.apply(parser)).isEqualTo(expected);
     assertThat(parser.getNoticeContainer().getValidationNotices()).isEmpty();
@@ -106,7 +114,8 @@ public class RowParserTest {
 
   @Test
   public void asUrl_valid() {
-    assertValid("http://google.com", p -> p.asUrl(0, GTFS_COLUMN_DESCRIPTOR), "http://google.com");
+    assertValid("http://google.com", p -> p.asUrl(0, GTFS_COLUMN_DESCRIPTOR),
+ "http://google.com");
   }
 
   @Test
@@ -137,7 +146,19 @@ public class RowParserTest {
   @Test
   public void asString_recommended_missing() {
     RowParser parser = createParser(null);
-    assertThat(parser.asString(0, GTFS_COLUMN_DESCRIPTOR)).isEqualTo(null);
+    GtfsColumnDescriptor tempColumnDescriptor = GtfsColumnDescriptor.builder()
+                            .setColumnName("column name")
+                            .setHeaderRequired(false)
+                            .setFieldLevel(FieldLevelEnum.RECOMMENDED)
+                            .setIsMixedCase(false)
+                            .setIsCached(false)
+                            .build();
+
+    assertThat(parser.asString(0, tempColumnDescriptor)).isEqualTo(null);
+    MissingRecommendedFieldNotice notice =
+        new MissingRecommendedFieldNotice(TEST_FILENAME, 8, "column name");
+    assertThat(parser.getNoticeContainer().getValidationNotices()).containsExactly(notice);
+    assertThat(parser.getNoticeContainer().hasValidationErrors()).isFalse();
   }
 
   @Test
@@ -269,7 +290,9 @@ public class RowParserTest {
         .isEqualTo("ru-RU");
     // Zürich German.
     assertThat(
-            createParser("gsw-u-sd-chzh").asLanguageCode(0, GTFS_COLUMN_DESCRIPTOR).toLanguageTag())
+            createParser("gsw-u-sd-chzh")
+                .asLanguageCode(0, GTFS_COLUMN_DESCRIPTOR)
+                .toLanguageTag())
         .isEqualTo("gsw-u-sd-chzh");
     // Latin American Spanish.
     assertThat(createParser("es-419").asLanguageCode(0, GTFS_COLUMN_DESCRIPTOR).toLanguageTag())
@@ -464,4 +487,4 @@ public class RowParserTest {
     assertThat(parser.getNoticeContainer().getValidationNotices())
         .containsExactly(new InvalidRowLengthNotice(TEST_FILENAME, 2, 1, 2));
   }
-}
+ }
