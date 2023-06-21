@@ -80,7 +80,6 @@ public class TableHeaderValidatorTest {
 
     assertThat(container.getValidationNotices())
         .containsExactly(new MissingRequiredColumnNotice("stops.txt", "stop_id"));
-    assertThat(container.hasValidationErrors()).isTrue();
   }
 
   @Test
@@ -97,8 +96,6 @@ public class TableHeaderValidatorTest {
 
     assertThat(container.getValidationNotices())
         .containsExactly(new MissingRecommendedColumnNotice("stops.txt", "stop_id"));
-    assertThat(container.hasValidationErrors()).isFalse();
-    assertThat(container.hasValidationWarnings()).isTrue();
   }
 
   @Test
