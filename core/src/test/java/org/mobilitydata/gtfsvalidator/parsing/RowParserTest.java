@@ -57,6 +57,11 @@ public class RowParserTest {
         }
 
         @Override
+        public boolean headerRecommended() {
+          return false;
+        }
+
+        @Override
         public FieldLevelEnum fieldLevel() {
           return FieldLevelEnum.REQUIRED;
         }
@@ -141,6 +146,7 @@ public class RowParserTest {
         GtfsColumnDescriptor.builder()
             .setColumnName("column name")
             .setHeaderRequired(false)
+            .setHeaderRecommended(false)
             .setFieldLevel(FieldLevelEnum.RECOMMENDED)
             .setIsMixedCase(false)
             .setIsCached(false)
