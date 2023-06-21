@@ -125,29 +125,6 @@ public class RowParser {
     return true;
   }
 
-  //  @Nullable
-  //  public String asString(int columnIndex, FieldLevelEnum level) {
-  //    String s = row.asString(columnIndex);
-  //    if (level == FieldLevelEnum.REQUIRED && s == null) {
-  //      noticeContainer.addValidationNotice(
-  //          new MissingRequiredFieldNotice(
-  //              fileName, getRowNumber(), header.getColumnName(columnIndex)));
-  //    } else if (level == FieldLevelEnum.RECOMMENDED && s == null) {
-  //      noticeContainer.addValidationNotice(
-  //          new MissingRecommendedFieldNotice(
-  //              fileName, getRowNumber(), header.getColumnName(columnIndex)));
-  //    }
-  //    if (s != null) {
-  //      s =
-  //          fieldValidator.validateField(
-  //              s,
-  //              GtfsCellContext.create(fileName, getRowNumber(),
-  // header.getColumnName(columnIndex)),
-  //              noticeContainer);
-  //    }
-  //    return s;
-  //  }
-
   @Nullable
   public String asString(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
     String s = row.asString(columnIndex);
