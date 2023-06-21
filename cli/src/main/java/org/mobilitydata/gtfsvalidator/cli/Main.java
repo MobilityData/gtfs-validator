@@ -45,6 +45,10 @@ public class Main {
       jCommander.usage();
       System.out.println(
           "⚠️ Note that parameters marked with an asterisk (*) in the help menu are mandatory.");
+      System.out.println(
+          "⚠️ Note that exactly one of the following options must be provided: --url or --input.");
+      System.out.println(
+          "⚠️ Note that --storage_directory must not be provided if --url is not provided.");
       System.exit(0);
     }
 
