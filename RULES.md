@@ -144,12 +144,12 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 
 ## Table of INFOS
 
-| Notice code                                                           | Description                                   |
-|-----------------------------------------------------------------------|-----------------------------------------------|
-| [`platform_without_parent_station`](#platform_without_parent_station) | A platform has no `parent_station` field set. |
-| [`unknown_column`](#unknown_column)                                   | A column name is unknown.                     |
-| [`unknown_file`](#unknown_file)                                       | A file is unknown.                            |
-
+| Notice code                                                           | Description                                                                                      |
+|-----------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
+| [`platform_without_parent_station`](#platform_without_parent_station) | A platform has no `parent_station` field set.                                                    |
+| [`unknown_column`](#unknown_column)                                   | A column name is unknown.                                                                        |
+| [`unknown_file`](#unknown_file)                                       | A file is unknown.                                                                               |
+| [`unused_parent_station`](#unused_parent_station)                     | A stop has `location_type` STATION (1) but does not appear in any stop's `parent_station` field. |
 
 <a name="SYSTEM_ERRORS"/>
 
@@ -2880,6 +2880,26 @@ A file is unknown.
 | Field name 	  | Description                     	| Type    |
 |-------------	|---------------------------------	|---------|
 | `filename`   	| The name of the unknown file.    	| String 	|
+
+</details>
+
+<a name="UnusedParentStationNotice"/>
+
+### unused_parent_station
+
+A stop has `location_type` 1 (station) but does not appear in the
+`parent_station` field for any stop with `location_type` 0
+(stop/platform) in `stops.txt`.
+
+#### Notice fields description
+| Field name       | Description                            | Type    	|
+|------------------|----------------------------------------|-------	|
+| `csvRowNumber`   | The row number of the faulty record.   | Int    	|
+| `stopId`         | The id of the faulty stop.             | String  	|
+| `stopName`       | The name of the faulty stop.           | String  	|
+
+#### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
 </details>
 
