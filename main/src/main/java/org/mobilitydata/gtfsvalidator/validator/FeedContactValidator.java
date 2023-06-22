@@ -13,7 +13,7 @@ public class FeedContactValidator extends SingleEntityValidator<GtfsFeedInfo>{
 
     @Override
     public void validate(GtfsFeedInfo entity, NoticeContainer noticeContainer) {
-        if (entity.feedContactEmail().isBlank() && entity.feedContactUrl().isBlank()) {
+        if (!entity.hasFeedContactEmail()&& !entity.hasFeedContactUrl() || entity.feedContactEmail().isBlank() && entity.feedContactUrl().isBlank()) {
             noticeContainer.addValidationNotice(new FeedContactNotice(
                     entity.csvRowNumber(),
                     entity.feedContactEmail(),
