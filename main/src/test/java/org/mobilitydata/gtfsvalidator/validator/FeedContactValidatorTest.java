@@ -3,8 +3,6 @@ package org.mobilitydata.gtfsvalidator.validator;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
-import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
-import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
 import java.util.Locale;
@@ -119,5 +117,27 @@ public class FeedContactValidatorTest {
         FeedContactValidator underTest = new FeedContactValidator();
         underTest.validate(entity, noticeContainer);
         assertThat(noticeContainer.getValidationNotices()).isEmpty();
+    }
+
+    @Test
+    public void nonFeedContactEmailAndUrlShouldGenerateNotice() {
+        NoticeContainer noticeContainer = new NoticeContainer();
+        GtfsFeedInfo entity =
+                createFeedInfo(
+                        2,
+                        "feed publisher name value",
+                        "feed publisher url value",
+                        GtfsFeedInfo.DEFAULT_FEED_LANG,
+                        GtfsFeedInfo.DEFAULT_DEFAULT_LANG,
+                        GtfsFeedInfo.DEFAULT_FEED_START_DATE,
+                        GtfsFeedInfo.DEFAULT_FEED_END_DATE,
+                        GtfsFeedInfo.DEFAULT_FEED_VERSION,
+                        "",
+                        "");
+
+        FeedContactValidator underTest = new FeedContactValidator();
+        underTest.validate(entity, noticeContainer);
+        assertThat(noticeContainer.getValidationNotices())
+                .containsExactly(new FeedContactValidator.FeedContactNotice(2, "", ""));
     }
 }
