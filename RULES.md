@@ -26,130 +26,130 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 <a name="ERRORS"/>
 
 ## Table of ERRORS
-| Notice code                                                                                                                       | Description                                                                                                                                            |
-|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`block_trips_with_overlapping_stop_times`](#block_trips_with_overlapping_stop_times)                                             | Block trips with overlapping stop times.                                                                                                               |
-| [`csv_parsing_failed`](#csv_parsing_failed)                                                                                       | Parsing of a CSV file failed.                                                                                                                          |
-| [`decreasing_shape_distance`](#decreasing_shape_distance)                                                                         | Decreasing `shape_dist_traveled` in `shapes.txt`.                                                                                                      |
-| [`decreasing_or_equal_stop_time_distance`](#decreasing_or_equal_stop_time_distance)                                               | Decreasing or equal `shape_dist_traveled` in `stop_times.txt`.                                                                                         |
-| [`duplicated_column`](#duplicated_column)                                                                                         | Duplicated column in CSV.                                                                                                                              |
-| [`duplicate_key`](#duplicate_key)                                                                                                 | Duplicated entity.                                                                                                                                     |
-| [`empty_column_name`](#empty_column_name)                                                                                         | A column name is empty.                                                                                                                                |
-| [`empty_file`](#empty_file)                                                                                                       | A CSV file is empty.                                                                                                                                   |
-| [`equal_shape_distance_diff_coordinates`](#equal_shape_distance_diff_coordinates)                                                 | Two consecutive points have equal `shape_dist_traveled` and different lat/lon coordinates in `shapes.txt`.                                             |
-| [`fare_transfer_rule_duration_limit_type_without_duration_limit`](#fare_transfer_rule_duration_limit_type_without_duration_limit) | A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit_type` field but no `duration_limit` specified.                            |
-| [`fare_transfer_rule_duration_limit_without_type`](#fare_transfer_rule_duration_limit_without_type)                               | A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit` field but no `duration_limit_type` specified.                            |
-| [`fare_transfer_rule_invalid_transfer_count`](#fare_transfer_rule_invalid_transfer_count)                                         | A row from GTFS file `fare_transfer_rules.txt` has a defined `transfer_count` with an invalid value.                                                   |
-| [`fare_transfer_rule_missing_transfer_count`](#fare_transfer_rule_missing_transfer_count)                                         | A row from `fare_transfer_rules.txt` has `from_leg_group_id` equal to `to_leg_group_id`, but has no `transfer_count` specified.                        |
-| [`fare_transfer_rule_with_forbidden_transfer_count`](#fare_transfer_rule_with_forbidden_transfer_count)                           | A row from `fare_transfer_rules.txt` has `from_leg_group_id` not equal to `to_leg_group_id`, but has `transfer_count` specified.                       |
-| [`foreign_key_violation`](#foreign_key_violation)                                                                                 | Wrong foreign key.                                                                                                                                     |
-| [`inconsistent_agency_timezone`](#inconsistent_agency_timezone)                                                                   | Inconsistent Timezone among agencies.                                                                                                                  |
-| [`invalid_color`](#invalid_color)                                                                                                 | A field contains an invalid color value.                                                                                                               |
-| [`invalid_currency`](#invalid_currency)                                                                                           | A field contains a wrong currency code.                                                                                                                |
-| [`invalid_currency_amount`](#invalid_currency_amount)                                                                             | A currency amount field has a value that does not match the format of its corresponding currency code field.                                           |
-| [`invalid_date`](#invalid_date)                                                                                                   | A field cannot be parsed as date.                                                                                                                      |
-| [`invalid_email`](#invalid_email)                                                                                                 | A field contains a malformed email address.                                                                                                            |
-| [`invalid_float`](#invalid_float)                                                                                                 | A field cannot be parsed as a floating point number.                                                                                                   |
-| [`invalid_integer`](#invalid_integer)                                                                                             | A field cannot be parsed as an integer.                                                                                                                |
-| [`invalid_language_code`](#invalid_language_code)                                                                                 | A field contains a wrong language code.                                                                                                                |
-| [`invalid_phone_number`](#invalid_phone_number)                                                                                   | A field contains a malformed phone number.                                                                                                             |
-| [`invalid_row_length`](#invalid_row_length)                                                                                       | Invalid csv row length.                                                                                                                                |
-| [`invalid_time`](#invalid_time)                                                                                                   | A field cannot be parsed as time.                                                                                                                      |
-| [`invalid_timezone`](#invalid_timezone)                                                                                           | A field cannot be parsed as a timezone.                                                                                                                |
-| [`invalid_url`](#invalid_url)                                                                                                     | A field contains a malformed URL.                                                                                                                      |
-| [`location_without_parent_station`](#location_without_parent_station)                                                             | A location that must have `parent_station` field does not have it.                                                                                     |
-| [`location_with_unexpected_stop_time`](#location_with_unexpected_stop_time)                                                       | A location in `stops.txt` that is not a stop is referenced by some `stop_times.stop_id`.                                                               |
-| [`missing_calendar_and_calendar_date_files`](#missing_calendar_and_calendar_date_files)                                           | Missing GTFS files `calendar.txt` and `calendar_dates.txt`.                                                                                            |
-| [`missing_level_id`](#missing_level_id)                                                                                           | `stops.level_id` is conditionally required.                                                                                                            |
-| [`missing_required_column`](#missing_required_column)                                                                             | A required column is missing in the input file.                                                                                                        |
-| [`missing_required_field`](#missing_required_field)                                                                               | A required field is missing.                                                                                                                           |
-| [`missing_required_file`](#missing_required_file)                                                                                 | A required file is missing.                                                                                                                            |
-| [`missing_stop_name`](#missing_stop_name)                                                                                         | `stops.stop_name` is required for `location_type` equal to `0`, `1`, or `2`.                                                                           |
-| [`missing_trip_edge`](#missing_trip_edge)                                                                                         | Missing trip edge `arrival_time` or `departure_time`.                                                                                                  |
-| [`new_line_in_value`](#new_line_in_value)                                                                                         | New line or carriage return in a value in CSV file.                                                                                                    |
-| [`number_out_of_range`](#number_out_of_range)                                                                                     | Out of range value.                                                                                                                                    |
-| [`overlapping_frequency`](#overlapping_frequency)                                                                                 | Trip frequencies overlap.                                                                                                                              |
-| [`pathway_to_platform_with_boarding_areas`](#pathway_to_platform_with_boarding_areas)                                             | A pathway has an endpoint that is a platform which has boarding areas.                                                                                 |
-| [`pathway_to_wrong_location_type`](#pathway_to_wrong_location_type)                                                               | A pathway has an endpoint that is a station.                                                                                                           |
-| [`pathway_unreachable_location`](#pathway_unreachable_location)                                                                   | A location is not reachable at least in one direction: from the entrances or to the exits.                                                             |
-| [`point_near_origin`](#point_near_origin)                                                                                         | A point is too close to origin `(0, 0)`.                                                                                                               |
-| [`point_near_pole`](#point_near_pole)                                                                                             | A point is too close to the North or South Pole.                                                                                                       |
-| [`route_both_short_and_long_name_missing`](#route_both_short_and_long_name_missing)                                               | Missing route short name and long name.                                                                                                                |
-| [`start_and_end_range_equal`](#start_and_end_range_equal)                                                                         | Two date or time fields are equal.                                                                                                                     |
-| [`start_and_end_range_out_of_order`](#start_and_end_range_out_of_order)                                                           | Two date or time fields are out of order.                                                                                                              |
-| [`station_with_parent_station`](#station_with_parent_station)                                                                     | A station has `parent_station` field set.                                                                                                              |
-| [`stop_time_timepoint_without_times`](#stop_time_timepoint_without_times)                                                         | `arrival_time` or `departure_time` not specified for timepoint.                                                                                        |
-| [`stop_time_with_arrival_before_previous_departure_time`](#stop_time_with_arrival_before_previous_departure_time)                 | Backwards time travel between stops in `stop_times.txt`                                                                                                |
-| [`stop_time_with_only_arrival_or_departure_time`](#stop_time_with_only_arrival_or_departure_time)                                 | Missing `stop_times.arrival_time` or `stop_times.departure_time`.                                                                                      |
-| [`stop_without_location`](#stop_without_location)                                                                                 | `stop_lat` and/or `stop_lon` is missing for stop with `location_type` equal to`0`, `1`, or `2`                                                         |
-| [`stop_without_zone_id`](#stop_without_zone_id)                                                                                   | Stop without value for `stops.zone_id`.                                                                                                                |
-| [`too_many_rows`](#too_many_rows)                                                                                                 | A CSV file has too many rows.                                                                                                                          |
-| [`transfer_with_invalid_stop_location_type`](#transfer_with_invalid_stop_location_type)                                           | A stop id field from GTFS file `transfers.txt` references a stop that has a `location_type` other than 0 or 1 (aka Stop/Platform or Station).          |
-| [`transfer_with_invalid_trip_and_route`](#transfer_with_invalid_trip_and_route)                                                   | A trip id field from GTFS file `transfers.txt` references a route that does not match its `trips.txt` `route_id`.                                      |
-| [`transfer_with_invalid_trip_and_stop`](#transfer_with_invalid_trip_and_stop)                                                     | A trip id field from GTFS file `transfers.txt` references a stop that is not included in the referenced trip's stop-times.                             |
-| [`translation_foreign_key_violation`](#translation_foreign_key_violation)                                                         | An entity with the given `record_id` and `record_sub_id` cannot be found in the referenced table.                                                      |
-| [`translation_unexpected_value`](#translation_unexpected_value)                                                                   | A field in a translations row has value but must be empty.                                                                                             |
-| [`wrong_parent_location_type`](#wrong_parent_location_type)                                                                       | Incorrect type of the parent location.                                                                                                                 |
+| Notice code                                                                                                                       | Description                                                                                                                                   |
+|-----------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| [`block_trips_with_overlapping_stop_times`](#block_trips_with_overlapping_stop_times)                                             | Block trips with overlapping stop times.                                                                                                      |
+| [`csv_parsing_failed`](#csv_parsing_failed)                                                                                       | Parsing of a CSV file failed.                                                                                                                 |
+| [`decreasing_shape_distance`](#decreasing_shape_distance)                                                                         | Decreasing `shape_dist_traveled` in `shapes.txt`.                                                                                             |
+| [`decreasing_or_equal_stop_time_distance`](#decreasing_or_equal_stop_time_distance)                                               | Decreasing or equal `shape_dist_traveled` in `stop_times.txt`.                                                                                |
+| [`duplicated_column`](#duplicated_column)                                                                                         | Duplicated column in CSV.                                                                                                                     |
+| [`duplicate_key`](#duplicate_key)                                                                                                 | Duplicated entity.                                                                                                                            |
+| [`empty_column_name`](#empty_column_name)                                                                                         | A column name is empty.                                                                                                                       |
+| [`empty_file`](#empty_file)                                                                                                       | A CSV file is empty.                                                                                                                          |
+| [`equal_shape_distance_diff_coordinates`](#equal_shape_distance_diff_coordinates)                                                 | Two consecutive points have equal `shape_dist_traveled` and different lat/lon coordinates in `shapes.txt`.                                    |
+| [`fare_transfer_rule_duration_limit_type_without_duration_limit`](#fare_transfer_rule_duration_limit_type_without_duration_limit) | A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit_type` field but no `duration_limit` specified.                   |
+| [`fare_transfer_rule_duration_limit_without_type`](#fare_transfer_rule_duration_limit_without_type)                               | A row from GTFS file `fare_transfer_rules.txt` has a defined `duration_limit` field but no `duration_limit_type` specified.                   |
+| [`fare_transfer_rule_invalid_transfer_count`](#fare_transfer_rule_invalid_transfer_count)                                         | A row from GTFS file `fare_transfer_rules.txt` has a defined `transfer_count` with an invalid value.                                          |
+| [`fare_transfer_rule_missing_transfer_count`](#fare_transfer_rule_missing_transfer_count)                                         | A row from `fare_transfer_rules.txt` has `from_leg_group_id` equal to `to_leg_group_id`, but has no `transfer_count` specified.               |
+| [`fare_transfer_rule_with_forbidden_transfer_count`](#fare_transfer_rule_with_forbidden_transfer_count)                           | A row from `fare_transfer_rules.txt` has `from_leg_group_id` not equal to `to_leg_group_id`, but has `transfer_count` specified.              |
+| [`foreign_key_violation`](#foreign_key_violation)                                                                                 | Wrong foreign key.                                                                                                                            |
+| [`inconsistent_agency_timezone`](#inconsistent_agency_timezone)                                                                   | Inconsistent Timezone among agencies.                                                                                                         |
+| [`invalid_color`](#invalid_color)                                                                                                 | A field contains an invalid color value.                                                                                                      |
+| [`invalid_currency`](#invalid_currency)                                                                                           | A field contains a wrong currency code.                                                                                                       |
+| [`invalid_currency_amount`](#invalid_currency_amount)                                                                             | A currency amount field has a value that does not match the format of its corresponding currency code field.                                  |
+| [`invalid_date`](#invalid_date)                                                                                                   | A field cannot be parsed as date.                                                                                                             |
+| [`invalid_email`](#invalid_email)                                                                                                 | A field contains a malformed email address.                                                                                                   |
+| [`invalid_float`](#invalid_float)                                                                                                 | A field cannot be parsed as a floating point number.                                                                                          |
+| [`invalid_integer`](#invalid_integer)                                                                                             | A field cannot be parsed as an integer.                                                                                                       |
+| [`invalid_language_code`](#invalid_language_code)                                                                                 | A field contains a wrong language code.                                                                                                       |
+| [`invalid_phone_number`](#invalid_phone_number)                                                                                   | A field contains a malformed phone number.                                                                                                    |
+| [`invalid_row_length`](#invalid_row_length)                                                                                       | Invalid csv row length.                                                                                                                       |
+| [`invalid_time`](#invalid_time)                                                                                                   | A field cannot be parsed as time.                                                                                                             |
+| [`invalid_timezone`](#invalid_timezone)                                                                                           | A field cannot be parsed as a timezone.                                                                                                       |
+| [`invalid_url`](#invalid_url)                                                                                                     | A field contains a malformed URL.                                                                                                             |
+| [`location_without_parent_station`](#location_without_parent_station)                                                             | A location that must have `parent_station` field does not have it.                                                                            |
+| [`location_with_unexpected_stop_time`](#location_with_unexpected_stop_time)                                                       | A location in `stops.txt` that is not a stop is referenced by some `stop_times.stop_id`.                                                      |
+| [`missing_calendar_and_calendar_date_files`](#missing_calendar_and_calendar_date_files)                                           | Missing GTFS files `calendar.txt` and `calendar_dates.txt`.                                                                                   |
+| [`missing_level_id`](#missing_level_id)                                                                                           | `stops.level_id` is conditionally required.                                                                                                   |
+| [`missing_required_column`](#missing_required_column)                                                                             | A required column is missing in the input file.                                                                                               |
+| [`missing_required_field`](#missing_required_field)                                                                               | A required field is missing.                                                                                                                  |
+| [`missing_required_file`](#missing_required_file)                                                                                 | A required file is missing.                                                                                                                   |
+| [`missing_stop_name`](#missing_stop_name)                                                                                         | `stops.stop_name` is required for `location_type` equal to `0`, `1`, or `2`.                                                                  |
+| [`missing_trip_edge`](#missing_trip_edge)                                                                                         | Missing trip edge `arrival_time` or `departure_time`.                                                                                         |
+| [`new_line_in_value`](#new_line_in_value)                                                                                         | New line or carriage return in a value in CSV file.                                                                                           |
+| [`number_out_of_range`](#number_out_of_range)                                                                                     | Out of range value.                                                                                                                           |
+| [`overlapping_frequency`](#overlapping_frequency)                                                                                 | Trip frequencies overlap.                                                                                                                     |
+| [`pathway_to_platform_with_boarding_areas`](#pathway_to_platform_with_boarding_areas)                                             | A pathway has an endpoint that is a platform which has boarding areas.                                                                        |
+| [`pathway_to_wrong_location_type`](#pathway_to_wrong_location_type)                                                               | A pathway has an endpoint that is a station.                                                                                                  |
+| [`pathway_unreachable_location`](#pathway_unreachable_location)                                                                   | A location is not reachable at least in one direction: from the entrances or to the exits.                                                    |
+| [`point_near_origin`](#point_near_origin)                                                                                         | A point is too close to origin `(0, 0)`.                                                                                                      |
+| [`point_near_pole`](#point_near_pole)                                                                                             | A point is too close to the North or South Pole.                                                                                              |
+| [`route_both_short_and_long_name_missing`](#route_both_short_and_long_name_missing)                                               | Missing route short name and long name.                                                                                                       |
+| [`start_and_end_range_equal`](#start_and_end_range_equal)                                                                         | Two date or time fields are equal.                                                                                                            |
+| [`start_and_end_range_out_of_order`](#start_and_end_range_out_of_order)                                                           | Two date or time fields are out of order.                                                                                                     |
+| [`station_with_parent_station`](#station_with_parent_station)                                                                     | A station has `parent_station` field set.                                                                                                     |
+| [`stop_time_timepoint_without_times`](#stop_time_timepoint_without_times)                                                         | `arrival_time` or `departure_time` not specified for timepoint.                                                                               |
+| [`stop_time_with_arrival_before_previous_departure_time`](#stop_time_with_arrival_before_previous_departure_time)                 | Backwards time travel between stops in `stop_times.txt`                                                                                       |
+| [`stop_time_with_only_arrival_or_departure_time`](#stop_time_with_only_arrival_or_departure_time)                                 | Missing `stop_times.arrival_time` or `stop_times.departure_time`.                                                                             |
+| [`stop_without_location`](#stop_without_location)                                                                                 | `stop_lat` and/or `stop_lon` is missing for stop with `location_type` equal to`0`, `1`, or `2`                                                |
+| [`stop_without_zone_id`](#stop_without_zone_id)                                                                                   | Stop without value for `stops.zone_id`.                                                                                                       |
+| [`too_many_rows`](#too_many_rows)                                                                                                 | A CSV file has too many rows.                                                                                                                 |
+| [`transfer_with_invalid_stop_location_type`](#transfer_with_invalid_stop_location_type)                                           | A stop id field from GTFS file `transfers.txt` references a stop that has a `location_type` other than 0 or 1 (aka Stop/Platform or Station). |
+| [`transfer_with_invalid_trip_and_route`](#transfer_with_invalid_trip_and_route)                                                   | A trip id field from GTFS file `transfers.txt` references a route that does not match its `trips.txt` `route_id`.                             |
+| [`transfer_with_invalid_trip_and_stop`](#transfer_with_invalid_trip_and_stop)                                                     | A trip id field from GTFS file `transfers.txt` references a stop that is not included in the referenced trip's stop-times.                    |
+| [`translation_foreign_key_violation`](#translation_foreign_key_violation)                                                         | An entity with the given `record_id` and `record_sub_id` cannot be found in the referenced table.                                             |
+| [`translation_unexpected_value`](#translation_unexpected_value)                                                                   | A field in a translations row has value but must be empty.                                                                                    |
+| [`wrong_parent_location_type`](#wrong_parent_location_type)                                                                       | Incorrect type of the parent location.                                                                                                        |
 
 <a name="WARNINGS"/>
 
 ## Table of WARNINGS
-| Notice code                                                                                   | Description                                                                                                                                                   |
-|-----------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`attribution_without_role`](#attribution_without_role)                                       | Attribution with no role.                                                                                                                                     |
-| [`duplicate_fare_media`](#duplicate_fare_media)                                               | Two distinct fare media have the same fare media name and type.                                                                                              |
-| [`duplicate_route_name`](#duplicate_route_name)                                               | Two distinct routes have either the same `route_short_name`, the same `route_long_name`, or the same combination of `route_short_name` and `route_long_name`. |
-| [`empty_row`](#empty_row)                                                                     | A row in the input file has only spaces.                                                                                                                      |
-| [`equal_shape_distance_same_coordinates`](#equal_shape_distance_same_coordinates)             | Two consecutive points have equal `shape_dist_traveled` and the same lat/lon coordinates in `shapes.txt`.                                                     |
-| [`expired_calendar`](#expired_calendar)                                                       | Dataset should not contain date ranges for services that have already expired.                                                                                |
-| [`fast_travel_between_consecutive_stops`](#fast_travel_between_consecutive_stops)             | A transit vehicle moves too fast between two consecutive stops.                                                                                               |
-| [`fast_travel_between_far_stops`](#fast_travel_between_far_stops)                             | A transit vehicle moves too fast between two far stops.                                                                                                       |
-| [`feed_expiration_date7_days`](#feed_expiration_date7_days)                                   | Dataset should be valid for at least the next 7 days.                                                                                                         |
-| [`feed_expiration_date30_days`](#feed_expiration_date30_days)                                 | Dataset should cover at least the next 30 days of service.                                                                                                    |
-| [`feed_info_lang_and_agency_lang_mismatch`](#feed_info_lang_and_agency_lang_mismatch)         | Mismatching feed and agency language fields.                                                                                                                  |
-| [`inconsistent_agency_lang`](#inconsistent_agency_lang)                                       | Inconsistent language among agencies.                                                                                                                         |
-| [`leading_or_trailing_whitespaces`](#leading_or_trailing_whitespaces)                         | The value in CSV file has leading or trailing whitespaces.                                                                                                    |
-| [`missing_feed_info_date`](#missing_feed_info_date)                                           | `feed_end_date` should be provided if `feed_start_date` is provided. `feed_start_date` should be provided if `feed_end_date` is provided.                     |
-| [`missing_recommended_file`](#missing_recommended_file)                                       | A recommended file is missing.                                                                                                                                |
-| [`missing_recommended_field`](#missing_recommended_field)                                     | A recommended field is missing.                                                                                                                               |
-| [`missing_timepoint_column`](#missing_timepoint_column)                                       | `timepoint` column is missing for a dataset.                                                                                                                  |
-| [`missing_timepoint_value`](#missing_timepoint_value)                                         | `stop_times.timepoint` value is missing for a record.                                                                                                         |
-| [`mixed_case_recommended_field`](#mixed_case_recommended_field)                               | This field has customer-facing text and should use Mixed Case (should contain upper and lower case letters).                                                  |
-| [`more_than_one_entity`](#more_than_one_entity)                                               | More than one row in CSV.                                                                                                                                     |
-| [`non_ascii_or_non_printable_char`](#non_ascii_or_non_printable_char)                         | Non ascii or non printable char in  `id`.                                                                                                                     |
-| [`pathway_dangling_generic_node`](#pathway_dangling_generic_node)                             | A generic node has only one incident location in a pathway graph.                                                                                             |
-| [`pathway_loop`](#pathway_loop)                                                               | A pathway starts and ends at the same location.                                                                                                               |
-| [`route_color_contrast`](#route_color_contrast)                                               | Insufficient route color contrast.                                                                                                                            |
-| [`route_long_name_contains_short_name`](#route_long_name_contains_short_name)                 | Long name should not contain short name for a single route.                                                                                                   |
-| [`route_short_name_too_long`](#route_short_name_too_long)                                     | Short name of a route is too long (more than 12 characters).                                                                                                  |
-| [`same_name_and_description_for_route`](#same_name_and_description_for_route)                 | Same name and description for route.                                                                                                                          |
-| [`same_name_and_description_for_stop`](#same_name_and_description_for_stop)                   | Same name and description for stop.                                                                                                                           |
-| [`same_route_and_agency_url`](#same_route_and_agency_url)                                     | Same `routes.route_url` and `agency.agency_url`.                                                                                                              |
-| [`same_stop_and_agency_url`](#same_stop_and_agency_url)                                       | Same `stops.stop_url` and `agency.agency_url`.                                                                                                                |
-| [`same_stop_and_route_url`](#same_stop_and_route_url)                                         | Same `stops.stop_url` and `routes.route_url`.                                                                                                                 |
-| [`stop_has_too_many_matches_for_shape`](#stop_has_too_many_matches_for_shape)                 | Stop entry that has many potential matches to the trip's path of travel.                                                                                      |
-| [`stops_match_shape_out_of_order`](#stops_match_shape_out_of_order)                           | Two stop entries are different than their arrival-departure order defined by the shapes.txt                                                                   |
-| [`stop_too_far_from_shape`](#stop_too_far_from_shape)                                         | Stop too far from trip shape.                                                                                                                                 |
-| [`stop_too_far_from_shape_using_user_distance`](#stop_too_far_from_shape_using_user_distance) | Stop time too far from shape.                                                                                                                                 |
-| [`stop_without_stop_time`](#stop_without_stop_time)                                           | A stop in `stops.txt` is not referenced by any `stop_times.stop_id`.                                                                                          |
-| [`transfer_with_suspicious_mid_trip_in_seat`](#transfer_with_suspicious_mid_trip_in_seat)     | A trip id field from GTFS file `transfers.txt` with an in-seat transfer type references a stop that is not in the expected position in the trip's stop-times. |
-| [`translation_unknown_table_name`](#translation_unknown_table_name)                           | A translation references an unknown or missing GTFS table.                                                                                                    |
-| [`trip_coverage_not_active_for_next7_days`](#trip_coverage_not_active_for_next7_days)   | Trips data should be valid for at least the next seven days.                                                                                            |
-| [`unexpected_enum_value`](#unexpected_enum_value)                                             | An enum has an unexpected value.                                                                                                                              |
-| [`unusable_trip`](#unusable_trip)                                                             | Trips must have more than one stop to be usable.                                                                                                              |
-| [`unused_shape`](#unused_shape)                                                               | Shape is not used in GTFS file `trips.txt`.                                                                                                                   |
-| [`unused_trip`](#unused_trip)                                                                 | Trip is not be used in `stop_times.txt`                                                                                                                       |
+| Notice code                                                                                    | Description                                                                                                                                                   |
+|------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`attribution_without_role`](#attribution_without_role)                                        | Attribution with no role.                                                                                                                                     |
+| [`duplicate_fare_media`](#duplicate_fare_media)                                                | Two distinct fare media have the same fare media name and type.                                                                                              |
+| [`duplicate_route_name`](#duplicate_route_name)                                                | Two distinct routes have either the same `route_short_name`, the same `route_long_name`, or the same combination of `route_short_name` and `route_long_name`. |
+| [`empty_row`](#empty_row)                                                                      | A row in the input file has only spaces.                                                                                                                      |
+| [`equal_shape_distance_same_coordinates`](#equal_shape_distance_same_coordinates)              | Two consecutive points have equal `shape_dist_traveled` and the same lat/lon coordinates in `shapes.txt`.                                                     |
+| [`expired_calendar`](#expired_calendar)                                                        | Dataset should not contain date ranges for services that have already expired.                                                                                |
+| [`fast_travel_between_consecutive_stops`](#fast_travel_between_consecutive_stops)              | A transit vehicle moves too fast between two consecutive stops.                                                                                               |
+| [`fast_travel_between_far_stops`](#fast_travel_between_far_stops)                              | A transit vehicle moves too fast between two far stops.                                                                                                       |
+| [`feed_expiration_date7_days`](#feed_expiration_date7_days)                                    | Dataset should be valid for at least the next 7 days.                                                                                                         |
+| [`feed_expiration_date30_days`](#feed_expiration_date30_days)                                  | Dataset should cover at least the next 30 days of service.                                                                                                    |
+| [`feed_info_lang_and_agency_lang_mismatch`](#feed_info_lang_and_agency_lang_mismatch)          | Mismatching feed and agency language fields.                                                                                                                  |
+| [`inconsistent_agency_lang`](#inconsistent_agency_lang)                                        | Inconsistent language among agencies.                                                                                                                         |
+| [`leading_or_trailing_whitespaces`](#leading_or_trailing_whitespaces)                          | The value in CSV file has leading or trailing whitespaces.                                                                                                    |
+| [`missing_feed_info_date`](#missing_feed_info_date)                                            | `feed_end_date` should be provided if `feed_start_date` is provided. `feed_start_date` should be provided if `feed_end_date` is provided.                     |
+| [`missing_recommended_column`](#missing_recommended_column)                                    | A recommended column is missing in the input file.                                                                                            |
+| [`missing_recommended_file`](#missing_recommended_file)                                        | A recommended file is missing.                                                                                                                                |
+| [`missing_recommended_field`](#missing_recommended_field)                                      | A recommended field is missing.                                                                                                                               |
+| [`missing_timepoint_value`](#missing_timepoint_value)                                          | `stop_times.timepoint` value is missing for a record.                                                                                                         |
+| [`mixed_case_recommended_field`](#mixed_case_recommended_field)                                | This field has customer-facing text and should use Mixed Case (should contain upper and lower case letters).                                                  |
+| [`more_than_one_entity`](#more_than_one_entity)                                                | More than one row in CSV.                                                                                                                                     |
+| [`non_ascii_or_non_printable_char`](#non_ascii_or_non_printable_char)                          | Non ascii or non printable char in  `id`.                                                                                                                     |
+| [`pathway_dangling_generic_node`](#pathway_dangling_generic_node)                              | A generic node has only one incident location in a pathway graph.                                                                                             |
+| [`pathway_loop`](#pathway_loop)                                                                | A pathway starts and ends at the same location.                                                                                                               |
+| [`route_color_contrast`](#route_color_contrast)                                                | Insufficient route color contrast.                                                                                                                            |
+| [`route_long_name_contains_short_name`](#route_long_name_contains_short_name)                  | Long name should not contain short name for a single route.                                                                                                   |
+| [`route_short_name_too_long`](#route_short_name_too_long)                                      | Short name of a route is too long (more than 12 characters).                                                                                                  |
+| [`same_name_and_description_for_route`](#same_name_and_description_for_route)                  | Same name and description for route.                                                                                                                          |
+| [`same_name_and_description_for_stop`](#same_name_and_description_for_stop)                    | Same name and description for stop.                                                                                                                           |
+| [`same_route_and_agency_url`](#same_route_and_agency_url)                                      | Same `routes.route_url` and `agency.agency_url`.                                                                                                              |
+| [`same_stop_and_agency_url`](#same_stop_and_agency_url)                                        | Same `stops.stop_url` and `agency.agency_url`.                                                                                                                |
+| [`same_stop_and_route_url`](#same_stop_and_route_url)                                          | Same `stops.stop_url` and `routes.route_url`.                                                                                                                 |
+| [`stop_has_too_many_matches_for_shape`](#stop_has_too_many_matches_for_shape)                  | Stop entry that has many potential matches to the trip's path of travel.                                                                                      |
+| [`stops_match_shape_out_of_order`](#stops_match_shape_out_of_order)                            | Two stop entries are different than their arrival-departure order defined by the shapes.txt                                                                   |
+| [`stop_too_far_from_shape`](#stop_too_far_from_shape)                                          | Stop too far from trip shape.                                                                                                                                 |
+| [`stop_too_far_from_shape_using_user_distance`](#stop_too_far_from_shape_using_user_distance)  | Stop time too far from shape.                                                                                                                                 |
+| [`stop_without_stop_time`](#stop_without_stop_time)                                            | A stop in `stops.txt` is not referenced by any `stop_times.stop_id`.                                                                                          |
+| [`transfer_with_suspicious_mid_trip_in_seat`](#transfer_with_suspicious_mid_trip_in_seat)      | A trip id field from GTFS file `transfers.txt` with an in-seat transfer type references a stop that is not in the expected position in the trip's stop-times. |
+| [`translation_unknown_table_name`](#translation_unknown_table_name)                            | A translation references an unknown or missing GTFS table.                                                                                                    |
+| [`trip_coverage_not_active_for_next7_days`](#trip_coverage_not_active_for_next7_days)          | Trips data should be valid for at least the next seven days.                                                                                            |
+| [`unexpected_enum_value`](#unexpected_enum_value)                                              | An enum has an unexpected value.                                                                                                                              |
+| [`unusable_trip`](#unusable_trip)                                                              | Trips must have more than one stop to be usable.                                                                                                              |
+| [`unused_shape`](#unused_shape)                                                                | Shape is not used in GTFS file `trips.txt`.                                                                                                                   |
+| [`unused_trip`](#unused_trip)                                                                  | Trip is not be used in `stop_times.txt`                                                                                                                       |
 
 <a name="INFOS"/>
 
 ## Table of INFOS
 
-| Notice code                                                           | Description                                   |
-|-----------------------------------------------------------------------|-----------------------------------------------|
-| [`platform_without_parent_station`](#platform_without_parent_station) | A platform has no `parent_station` field set. |
-| [`unknown_column`](#unknown_column)                                   | A column name is unknown.                     |
-| [`unknown_file`](#unknown_file)                                       | A file is unknown.                            |
-
+| Notice code                                                           | Description                                                                                      |
+|-----------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
+| [`platform_without_parent_station`](#platform_without_parent_station) | A platform has no `parent_station` field set.                                                    |
+| [`unknown_column`](#unknown_column)                                   | A column name is unknown.                                                                        |
+| [`unknown_file`](#unknown_file)                                       | A file is unknown.                                                                               |
+| [`unused_parent_station`](#unused_parent_station)                     | A stop has `location_type` STATION (1) but does not appear in any stop's `parent_station` field. |
 
 <a name="SYSTEM_ERRORS"/>
 
@@ -2092,6 +2092,28 @@ Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one
 
 </details>
 
+<a name="MissingRecommendedColumnNotice"/>
+
+### missing_recommended_column
+
+A recommended column is missing in the input file.
+
+#### References
+* [GTFS terms definition](https://gtfs.org/reference/static/#term-definitions)
+<details>
+
+#### Notice fields description
+| Field name 	  | Description                     | Type   	|
+|-------------	|-------------------------------- |--------	|
+| `filename`   	| The name of the faulty file.    | String 	|
+| `fieldName`  	| The name of the missing column. | String 	|
+
+#### Affected files
+[All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
+
+</details>
+
+
 <a name="MissingRecommendedFileNotice"/>
 
 ### missing_recommended_file
@@ -2135,25 +2157,6 @@ The given field has no value in some input row, even though values are recommend
 #### Affected files
 * [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
 
-</details>
-
-<a name="MissingTimepointColumnNotice"/>
-
-### missing_timepoint_column
-
-The `timepoint` column should be provided.
-
-#### References
-* [stop_times.txt best practices](https://gtfs.org/schedule/best-practices/#stop_timestxt)
-<details>
-
-#### Notice fields description
-| Field name     	| Description                                     	| Type   	|
-|----------------	|-------------------------------------------------	|--------	|
-| `filename`    	| The name of the affected file.                  	| String   	|
-
-#### Affected files
-* [`stop_times.txt`](https://gtfs.org/schedule/reference/#stop_timestxt)
 </details>
 
 <a name="MissingTimepointValueNotice"/>
@@ -2877,6 +2880,26 @@ A file is unknown.
 | Field name 	  | Description                     	| Type    |
 |-------------	|---------------------------------	|---------|
 | `filename`   	| The name of the unknown file.    	| String 	|
+
+</details>
+
+<a name="UnusedParentStationNotice"/>
+
+### unused_parent_station
+
+A stop has `location_type` 1 (station) but does not appear in the
+`parent_station` field for any stop with `location_type` 0
+(stop/platform) in `stops.txt`.
+
+#### Notice fields description
+| Field name       | Description                            | Type    	|
+|------------------|----------------------------------------|-------	|
+| `csvRowNumber`   | The row number of the faulty record.   | Int    	|
+| `stopId`         | The id of the faulty stop.             | String  	|
+| `stopName`       | The name of the faulty stop.           | String  	|
+
+#### Affected files
+* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
 
 </details>
 

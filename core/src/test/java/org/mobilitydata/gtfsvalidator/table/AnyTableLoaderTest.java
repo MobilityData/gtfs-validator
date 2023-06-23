@@ -88,6 +88,7 @@ public class AnyTableLoaderTest {
               CsvHeader actualHeader,
               Set<String> supportedHeaders,
               Set<String> requiredHeaders,
+              Set<String> recommendedHeaders,
               NoticeContainer noticeContainer) {
             noticeContainer.addValidationNotice(headerValidationNotice);
           }
@@ -144,6 +145,7 @@ public class AnyTableLoaderTest {
                 GtfsColumnDescriptor.builder()
                     .setColumnName(GtfsTestEntity.ID_FIELD_NAME)
                     .setHeaderRequired(true)
+                    .setHeaderRecommended(false)
                     .setFieldLevel(FieldLevelEnum.REQUIRED)
                     .setIsMixedCase(false)
                     .setIsCached(false)
@@ -151,6 +153,7 @@ public class AnyTableLoaderTest {
                 GtfsColumnDescriptor.builder()
                     .setColumnName(GtfsTestEntity.CODE_FIELD_NAME)
                     .setHeaderRequired(false)
+                    .setHeaderRecommended(false)
                     .setFieldLevel(FieldLevelEnum.REQUIRED)
                     .setIsMixedCase(false)
                     .setIsCached(false)
