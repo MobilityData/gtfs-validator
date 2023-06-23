@@ -15,11 +15,15 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathway;
+import org.mobilitydata.gtfsvalidator.table.GtfsPathwaySchema;
 
 /** Validates that pathway is not a loop, i.e. it does not start and end at the same location. */
 @GtfsValidator
@@ -34,19 +38,26 @@ public class PathwayLoopValidator extends SingleEntityValidator<GtfsPathway> {
     }
   }
 
+  /**
+   * A pathway starts and ends at the same location.
+   *
+   * <p>A pathway should not have same values for `from_stop_id` and `to_stop_id`.
+   */
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsPathwaySchema.class))
   static class PathwayLoopNotice extends ValidationNotice {
 
-    // Row number of the faulty row from `pathways.txt`.
+    /** Row number of the faulty row from `pathways.txt`. */
     private final int csvRowNumber;
 
-    // The id of the faulty record.
+    /** The id of the faulty record. */
     private final String pathwayId;
 
-    // The `pathway.stop_id` that is repeated in `pathways.from_stop_id` and `pathways.to_stop_id`.
+    /**
+     * The `pathway.stop_id` that is repeated in `pathways.from_stop_id` and `pathways.to_stop_id`.
+     */
     private final String stopId;
 
     PathwayLoopNotice(GtfsPathway pathway) {
-      super(SeverityLevel.WARNING);
       this.csvRowNumber = pathway.csvRowNumber();
       this.pathwayId = pathway.pathwayId();
       this.stopId = pathway.fromStopId();

@@ -15,14 +15,19 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
 import com.google.common.collect.Multimaps;
 import java.util.List;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
@@ -87,25 +92,34 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
   }
 
   /**
-   * Two {@code GtfsTime} are out of order
+   * Backwards time travel between stops in `stop_times.txt`
    *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must not precede
+   * the `departure_time` of n-th stoptime in sequence in `stop_times.txt`.
    */
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files = @FileRefs(GtfsStopTimeSchema.class),
+      urls = {
+        @UrlRef(
+            label = "Original Python validator implementation",
+            url = "https://github.com/google/transitfeed")
+      })
   static class StopTimeWithArrivalBeforePreviousDepartureTimeNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The row of the previous stop time.
+    /** The row of the previous stop time. */
     private final long prevCsvRowNumber;
 
-    // The trip_id associated to the faulty record.
+    /** The trip_id associated to the faulty record. */
     private final String tripId;
 
-    // Arrival time at the faulty record.
+    /** Arrival time at the faulty record. */
     private final GtfsTime arrivalTime;
 
-    // Departure time at the previous stop time.
+    /** Departure time at the previous stop time. */
     private final GtfsTime departureTime;
 
     StopTimeWithArrivalBeforePreviousDepartureTimeNotice(
@@ -114,7 +128,6 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
         String tripId,
         GtfsTime arrivalTime,
         GtfsTime departureTime) {
-      super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
       this.prevCsvRowNumber = prevCsvRowNumber;
       this.tripId = tripId;
@@ -123,28 +136,24 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
     }
   }
 
-  /**
-   * Missing `stop_times.arrival_time` or `stop_times.departure_time`
-   *
-   * <p>Severity: {@code SeverityLevel.ERROR}
-   */
+  /** Missing `stop_times.arrival_time` or `stop_times.departure_time`. */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopTimeSchema.class))
   static class StopTimeWithOnlyArrivalOrDepartureTimeNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The trip_id associated to the faulty record.
+    /** The trip_id associated to the faulty record. */
     private final String tripId;
 
-    // The sequence of the faulty stop.
+    /** The sequence of the faulty stop. */
     private final int stopSequence;
 
-    // Either `arrival_time` or `departure_time`
+    /** Either `arrival_time` or `departure_time` */
     private final String specifiedField;
 
     StopTimeWithOnlyArrivalOrDepartureTimeNotice(
         int csvRowNumber, String tripId, int stopSequence, String specifiedField) {
-      super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
       this.tripId = tripId;
       this.stopSequence = stopSequence;

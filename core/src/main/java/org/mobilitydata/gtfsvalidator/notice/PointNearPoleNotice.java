@@ -15,34 +15,41 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
-import javax.annotation.Nullable;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
-/**
- * A point is too close to the North or South Pole.
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
- */
+import javax.annotation.Nullable;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
+
+/** A point is too close to the North or South Pole. */
+@GtfsValidationNotice(
+    severity = ERROR,
+    urls = {
+      @UrlRef(
+          label = "Original Python validator implementation",
+          url = "https://github.com/google/transitfeed")
+    })
 public class PointNearPoleNotice extends ValidationNotice {
 
-  // The name of the affected GTFS file.
+  /** The name of the affected GTFS file. */
   private final String filename;
 
-  // The row of the faulty row.
+  /** The row of the faulty row. */
   private final int csvRowNumber;
 
-  // The id of the faulty entity.
+  /** The id of the faulty entity. */
   @Nullable private final String entityId;
 
-  // The name of the field that uses latitude value.
+  /** The name of the field that uses latitude value. */
   private final String latFieldName;
 
-  // The latitude of the faulty row.
+  /** The latitude of the faulty row. */
   private final double latFieldValue;
 
-  // The name of the field that uses longitude value.
+  /** The name of the field that uses longitude value. */
   private final String lonFieldName;
 
-  // The longitude of the faulty row
+  /** The longitude of the faulty row. */
   private final double lonFieldValue;
 
   public PointNearPoleNotice(
@@ -53,7 +60,6 @@ public class PointNearPoleNotice extends ValidationNotice {
       double latFieldValue,
       String lonFieldName,
       double lonFieldValue) {
-    super(SeverityLevel.ERROR);
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.entityId = entityId;
@@ -70,7 +76,6 @@ public class PointNearPoleNotice extends ValidationNotice {
       double latFieldValue,
       String lonFieldName,
       double lonFieldValue) {
-    super(SeverityLevel.ERROR);
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.entityId = null;

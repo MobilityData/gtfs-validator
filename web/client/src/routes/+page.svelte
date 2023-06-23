@@ -13,7 +13,7 @@
   import countryCodes from '$lib/countryCodes';
 
   import { fly } from 'svelte/transition';
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import { quintOut } from 'svelte/easing';
 
   /**
@@ -24,7 +24,8 @@
    */
 
   /**
-   * @typedef { 'authorizing'
+   * @typedef { 'error'
+   *  | 'authorizing'
    *  | 'uploading'
    *  | 'processing'
    *  | 'ready'
@@ -130,12 +131,13 @@
    * @param {boolean} shouldUpload
    **/
   function handleFile(file, shouldUpload = false) {
-    console.log('handling file', file.name);
     clearFile();
 
-    if (file.type != 'application/zip') {
+    // Zip files on MS Windows seem to have the application/x-zip-compressed mime type
+    if (file.type != 'application/zip' && file.type != 'application/x-zip-compressed') {
       console.log('file type error', file.type);
       addError('Sorry, only ZIP files are supported at this time.');
+      fileInput.value = ''; // clear input to avoid validation
       console.log(errors);
     } else {
       pendingFilename = file?.name;
@@ -147,12 +149,27 @@
 
   /** @param {FileList} files */
   function handleFiles(files, shouldUpload = false) {
-    console.log('handling files', files);
     clearFile();
     if (files.length > 1) {
       addError('Sorry, you must upload only a single ZIP file.');
     } else if (files.length == 1) {
       handleFile(files[0], shouldUpload);
+    }
+  }
+
+  async function handleUrlParams() {
+    // if there's a report id in the url like ?report=[id]
+    // let's try to show the report info in a StatusModal
+    const params = new URLSearchParams(window.location.search);
+    const reportId = params.get('report');
+    if (reportId) {
+      jobId = reportId;
+      await tick();
+      const exists = await reportExists().catch(() => false);
+      updateStatus(exists ? 'ready' : 'error');
+    } else {
+      // if there's no id, clear status modal
+      statusModal.close();
     }
   }
 
@@ -205,7 +222,13 @@
       const xhr = new XMLHttpRequest();
       xhr.responseType = 'json';
       xhr.onerror = () => reject('Error authorizing upload.');
-      xhr.onload = () => resolve(xhr.response);
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve(xhr.response);
+        } else {
+          reject('Error authorizing upload.');
+        }
+      };
       xhr.open('POST', `${apiRoot}/create-job`);
       xhr.setRequestHeader('Content-Type', 'application/json');
       xhr.send(JSON.stringify(data));
@@ -299,6 +322,9 @@
     if (canContinue) {
       jobId = job.jobId;
 
+      // push a url with the ID so it can be referred to later (see handleUrlParams)
+      history.pushState(null, '', `?report=${jobId}`);
+
       // upload the file (if applicable)
       if (source instanceof File) {
         await putFile(job.url, source).catch((error) => {
@@ -336,7 +362,11 @@
     form = /** @type {HTMLFormElement} */ (
       document.getElementById('validator-form')
     );
+
     detectRegion();
+
+    handleUrlParams();
+    addEventListener('popstate', handleUrlParams);
   });
 </script>
 
@@ -419,4 +449,11 @@
   </DropTarget>
 </div>
 
-<StatusModal bind:dialog={statusModal} bind:status {reportUrl} />
+<StatusModal
+  bind:dialog={statusModal}
+  bind:status
+  {reportUrl}
+  on:close={() => {
+    status = 'processing';
+  }}
+/>

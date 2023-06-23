@@ -50,17 +50,28 @@ public class TripUsabilityValidator extends FileValidator {
   }
 
   /**
-   * A {@code GtfsTrip} should be referred to by at least two {@code GtfsStopTime}
+   * Trips must have more than one stop to be usable.                                                
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * A trip must visit more than one stop in `stop_times.txt` to be usable by passengers for boarding and alighting.
    */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs({GtfsStopTimeSchema.class, GtfsTripSchema.class}),
+      urls = {
+        @UrlRef(
+            label = "Original Python validator implementation",
+            url = "https://github.com/google/transitfeed")
+      })
   static class UnusableTripNotice extends ValidationNotice {
+    /** The row number of the faulty record. */
+    private final int csvRowNumber;
+
+    /** The faulty record's id. */
+    private final String tripId;
+
     UnusableTripNotice(int csvRowNumber, String tripId) {
-      super(
-          ImmutableMap.of(
-              "csvRowNumber", csvRowNumber,
-              "tripId", tripId),
-          SeverityLevel.WARNING);
+      this.csvRowNumber = csvRowNumber;
+      this.tripId = tripId;
     }
   }
 }
@@ -89,19 +100,23 @@ Note that some validators are automatically generated based on annotations in th
 The `UnusableTripNotice` is the container for information that will be exported to JSON when this rule detects a problem and is also where we declare if this notice is a [`WARNING` or `ERROR`](/RULES.md#definitions).
 
 ```java
+  @GtfsValidationNotice(severity = WARNING, ...)
   static class UnusableTripNotice extends ValidationNotice {
+    /** The row number of the faulty record. */
+    private final int csvRowNumber;
+    
+    /** The faulty record's id. */
+    private final String tripId;
+
     UnusableTripNotice(int csvRowNumber, String tripId) {
-      super(
-          ImmutableMap.of(
-              "csvRowNumber", csvRowNumber,
-              "tripId", tripId),
-          SeverityLevel.WARNING);
+      this.csvRowNumber = csvRowNumber;
+      this.tripId = tripId;
     }
   }
 ```
 In this case, because the GTFS spec doesn't explictly say that each trip requires at least two stops, we can't say it's an `ERROR`. But it's still suspicious (riders need to board and exit the vehicle), so we set this as a `WARNING`.
 
-You can set up the notice constructor `UnusableTripNotice(int csvRowNumber, String tripId)` to take in whatever variables you want to pass from the validator to the notice, and then include them in the `ImmutableMap.of(` section to write them to the JSON output.
+You can set up the notice constructor `UnusableTripNotice(int csvRowNumber, String tripId)` to take in whatever variables you want to pass from the validator to the notice, specifying them as fields in the notice to write them to the JSON output.
 
 For example, this notice will appear in JSON output as:
 
@@ -114,8 +129,8 @@ For example, this notice will appear in JSON output as:
          "totalNotices":1,
          "notices":[
             {
-               "tripId":"3362144",
                "csvRowNumber":40150
+               "tripId":"3362144",
             },
             ...
         ]
@@ -124,7 +139,7 @@ For example, this notice will appear in JSON output as:
 } 
 ```
 
-Values for `tripId` and `csvRowNumber` will be different for each generated notice.
+Values for `csvRowNumber` and `tripId` will be different for each generated notice.
 
 ### c. Implement the validation rule logic (`FileValidator`)
 
@@ -169,7 +184,7 @@ If so, it adds a notice to the `noticeContainer` with the info needed to trouble
 
 That's it for the main rule logic!
 
-### c. Implement the validation rule logic (`SingleEntityValidator`)
+### d. Implement the validation rule logic (`SingleEntityValidator`)
 
 Before we talk about documentation and testing for our new rule, let's look at how this rule would be implemented differently if it was looking at a single record at a time instead of multiple records and files.
 
@@ -201,14 +216,19 @@ public class FeedServiceDateValidator extends SingleEntityValidator<GtfsFeedInfo
   /**
    * Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one field is
    * provided the second one should also be provided.
-   *
-   * <p>Severity: {@code SeverityLevel.WARNING}
    */
+  @GtfsValidationNotice(severity = WARNING, bestPractices = @FileRefs(GtfsFeedInfoSchema.class))
   static class MissingFeedInfoDateNotice extends ValidationNotice {
+
+    /** The row number of the faulty record. */
+    private final int csvRowNumber;
+
+    /** Either `feed_end_date` or `feed_start_date`. */
+    private final String fieldName;
+
     MissingFeedInfoDateNotice(int csvRowNumber, String fieldName) {
-      super(
-          ImmutableMap.of("csvRowNumber", csvRowNumber, "fieldName", fieldName),
-          SeverityLevel.WARNING);
+      this.csvRowNumber = csvRowNumber;
+      this.fieldName = fieldName;
     }
   }
 }
@@ -220,39 +240,70 @@ The `validate()` now takes an additional parameters now:
 
 Note that we don't need to define the GTFS tables as local variables and we can also omit the constructor. The notice subclass is declared the same as before.
 
-## 2. Document the new rule in [`RULES.md`](../RULES.md).
+## 2. Document the new rule
 
-Add the rule to [`RULES.md`](../RULES.md) keeping the alphabetical order of the table: 
-```markdown
-| [new_rule_related_to_stops](#new_rule_related_to_stops) | new rule short description | new_rule_related_to_stops | 
+Notices are documented directly in source code via comments.
+
+Coming back to our example:
+
+```java
+  /**
+   * Trips must have more than one stop to be usable.
+   *
+   * A trip must visit more than one stop in `stop_times.txt` to be usable by passengers for boarding and alighting.
+   */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs({GtfsStopTimeSchema.class, GtfsTripSchema.class}),
+      urls = {
+        @UrlRef(
+            label = "Original Python validator implementation",
+            url = "https://github.com/google/transitfeed")
+      })
+  static class UnusableTripNotice extends ValidationNotice {
+    /** The row number of the faulty record. */
+    private final int csvRowNumber;
+
+    /** The faulty record's id. */
+    private final String tripId;
+
+    UnusableTripNotice(int csvRowNumber, String tripId) {
+      this.csvRowNumber = csvRowNumber;
+      this.tripId = tripId;
+    }
+  }
 ```
-...and add a definition of that rule, the notice fields description, the affected files and the reference to any additional documentation material in the errors or warnings section (maintaining alphabetical order).
 
-```markdown
-<a name="NewRuleRelatedToStops"/>
+Each Notice needs a class-level comment of the following form:
 
-### new_rule_related_to_stops
-
-Longer description of the new rule
-
-##### References
-* [stops.txt specification](http://gtfs.org/reference/static#stopstxt)
-
-<details>
-
-#### Notice fields description
-| Field name                | Description                            	| Type    	|
-|-----------------------	|-------------------------------------------|---------	|
-| `FieldName1`              | The id of the faulty shape.               | String  	|
-| `FieldName2`          	| The row number from `shapes.txt`.      	| Long    	|
-
-##### Affected files
-* [`stops.txt`](http://gtfs.org/reference/static#stopstxt)
-
-</details>
+```java
+/**
+ * Short text describing the notice in a single line (required).
+ *
+ * Additional text further describing the notice on new lines (optional).
+ */
 ```
 
-Users will be directed here when looking at error reports (e.g., from a web interface), so any information that might help a data producer or consumer fix the problem should be included here.
+The short description should generally describe the invalid condition found in the feed (e.g. "A recommended file is missing.") as oppossed to describing the expected condition (e.g. "All recommended files should be present.").
+
+Additional text describing the notice is allowed on lines separate from the short description.  Markdown syntax is allowed and should be used instead of Javadoc syntax (e.g. prefer `` `value` `` over `{@code value}`).  Unfortunately, our code formatter will still try to enforce Javadoc formatting to a certain extent, so if you need more complex Markdown formatting (e.g. a list or table), wrap it in a `&lt;pre&gt;` block:
+
+```java
+/**
+ * Invalid data.
+ *
+ * Here's a list of things to check:
+ * <pre>
+ * - a
+ * - b
+ * - c
+ * </pre>
+```
+
+If you would like to link to the GTFS reference or best-practices in a generic way, add a documentation reference to the `@GtfsValidationNotice` so that documentation can be generated in a consistent way.
+
+Each field of the Notice must also be documented with a field-level `/** comment */` (note: not `// comment`).
+
 
 ## 3. Test the newly added to rule
 `gtfs-validator` tests use [`JUnit 4`](https://junit.org/junit4/) and [`Google Truth`](https://github.com/google/truth).

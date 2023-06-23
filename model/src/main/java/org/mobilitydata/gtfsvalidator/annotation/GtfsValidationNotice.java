@@ -22,6 +22,12 @@ public @interface GtfsValidationNotice {
   SeverityLevel severity();
 
   /**
+   * GTFS specification section references. For specific file references, use {@link #files()}
+   * instead.
+   */
+  SectionRefs sections() default @SectionRefs();
+
+  /**
    * GTFS specification file references used in automatic documentation generation for the notice.
    */
   FileRefs files() default @FileRefs({});
@@ -29,7 +35,7 @@ public @interface GtfsValidationNotice {
   /**
    * GTFS Best Practices file references used in automatic documentation generation for the notice.
    */
-  BestPracticesRefs bestPractices() default @BestPracticesRefs({});
+  FileRefs bestPractices() default @FileRefs({});
 
   /**
    * Arbitrary documentation reference urls used in automatic documentation generation for the
@@ -38,34 +44,51 @@ public @interface GtfsValidationNotice {
   UrlRef[] urls() default {};
 
   /**
-   * Annotation used in notice documentation to specify a link to the specification documentation
-   * for a specific GTFS file, as identified by its table schema.
+   * Annotation used in notice documentation to specify a link to a general section in the GTFS
+   * reference documentation, as identified by the section id.
    */
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.TYPE)
-  @interface BestPracticesRefs {
-    /** The set of GTFS table schemas corresponding to the GTFS file in question. */
-    Class<? extends GtfsEntity>[] value();
+  @interface SectionRefs {
+    /** Each value represents a section id string (e.g. `field-types`) in the reference docs. */
+    SectionRef[] value() default {};
+  }
+
+  enum SectionRef {
+    DATASET_FILES("dataset-files"),
+    FILE_REQUIREMENTS("file-requirements"),
+    FILED_TYPES("field-types"),
+    FIELD_DEFINITIONS("field-definitions"),
+    TERM_DEFINITIONS("term-definitions"),
+    BEST_PRACTICES_DATASET_PUBLISHING("dataset-publishing-general-practices");
+
+    // The HTML section id.
+    private final String id;
+
+    SectionRef(String id) {
+      this.id = id;
+    }
+
+    public String id() {
+      return this.id;
+    }
   }
 
   /**
-   * Annotation used in notice documentation to specify a link to the Best Practices documentation
-   * for a specific GTFS file, as identified by its table schema.
+   * Annotation used in notice documentation to specify a link to the reference documentation for a
+   * specific GTFS file, as identified by its table schema.
    */
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.TYPE)
   @interface FileRefs {
     /** The set of GTFS table schemas corresponding to the GTFS file in question. */
     Class<? extends GtfsEntity>[] value();
-
-    /** True if a particular notice applies to all files in the GTFS spec. */
-    boolean allFiles() default false;
   }
 
   /**
    * Annotation used in notice documentation to specify a general reference URL for a notice. For
-   * links to specific GTFS file references and best-practices, use {@link FileRefs} or {@link
-   * BestPracticesRefs} instead.
+   * links to specific GTFS file references and best-practices, use {@link #files()} or {@link
+   * #bestPractices()}.
    */
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.TYPE)

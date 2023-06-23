@@ -15,49 +15,47 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.FILED_TYPES;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
+
 /**
  * A field contains a malformed email address.
  *
- * <p>Definitions for valid emails are quite vague. We perform strict validation in the upstream
- * using the Apache Commons EmailValidator.
- *
- * <p><a href="https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md">GTFS
- * reference</a> does not provide any special requirements or standards.
+ * <p>Definitions for valid emails are quite vague. We perform strict validation using the Apache
+ * Commons EmailValidator.
  */
+@GtfsValidationNotice(
+    severity = ERROR,
+    sections = @SectionRefs(FILED_TYPES),
+    urls = {
+      @UrlRef(
+          label = "Apache Commons EmailValidator",
+          url =
+              "https://commons.apache.org/proper/commons-validator/apidocs/org/apache/commons/validator/routines/EmailValidator.html")
+    })
 public class InvalidEmailNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The row of the faulty record.
+  /** The row of the faulty record. */
   private final int csvRowNumber;
 
-  // Faulty record's field name.
+  /** Faulty record's field name. */
   private final String fieldName;
 
-  // Faulty value.
+  /** Faulty value. */
   private final String fieldValue;
 
-  /**
-   * Constructs a notice with given severity. This constructor may be used by users that want to
-   * lower the priority to {@code WARNING}.
-   */
   public InvalidEmailNotice(
-      String filename,
-      int csvRowNumber,
-      String fieldName,
-      String fieldValue,
-      SeverityLevel severityLevel) {
-    super(severityLevel);
+      String filename, int csvRowNumber, String fieldName, String fieldValue) {
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.fieldName = fieldName;
     this.fieldValue = fieldValue;
-  }
-
-  /** Constructs a notice with the default severity {@code ERROR}. */
-  public InvalidEmailNotice(
-      String filename, int csvRowNumber, String fieldName, String fieldValue) {
-    this(filename, csvRowNumber, fieldName, fieldValue, SeverityLevel.ERROR);
   }
 }

@@ -15,14 +15,18 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
 import com.google.common.collect.Multimaps;
 import java.util.List;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 
 /**
@@ -65,36 +69,37 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
   }
 
   /**
-   * When sorted on `stops.stop_sequence` key, stop times should have strictly increasing values for
-   * `stops.shape_dist_traveled`
+   * Decreasing or equal `shape_dist_traveled` in `stop_times.txt`.
    *
-   * <p>"Values used for shape_dist_traveled must increase along with stop_sequence"
-   * (http://gtfs.org/reference/static/#stoptimestxt)
-   *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>When sorted by `stop_times.stop_sequence`, two consecutive entries in `stop_times.txt`
+   * should have increasing distance, based on the field `shape_dist_traveled`. If the values are
+   * equal, this is considered as an error.
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopTimeSchema.class))
   static class DecreasingOrEqualStopTimeDistanceNotice extends ValidationNotice {
 
-    // The id of the faulty trip.
+    /** The id of the faulty trip. */
     private final String tripId;
 
-    // The row number from `stop_times.txt`.
+    /** The row number from `stop_times.txt`. */
     private final int csvRowNumber;
 
-    // Actual distance traveled along the shape from the first shape point to the faulty record.
+    /** Actual distance traveled along the shape from the first shape point to the faulty record. */
     private final double shapeDistTraveled;
 
-    // The faulty record's `stop_times.stop_sequence`.
+    /** The faulty record's `stop_times.stop_sequence`. */
     private final int stopSequence;
 
-    // The row number from `stop_times.txt` of the previous stop time.
+    /** The row number from `stop_times.txt` of the previous stop time. */
     private final long prevCsvRowNumber;
 
-    // Actual distance traveled along the shape from the first shape point to the previous stop
-    // time.
+    /**
+     * Actual distance traveled along the shape from the first shape point to the previous stop
+     * time.
+     */
     private final double prevStopTimeDistTraveled;
 
-    // The previous record's `stop_times.stop_sequence`.
+    /** The previous record's `stop_times.stop_sequence`. */
     private final int prevStopSequence;
 
     DecreasingOrEqualStopTimeDistanceNotice(
@@ -105,7 +110,6 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
         long prevCsvRowNumber,
         double prevStopTimeDistTraveled,
         int prevStopSequence) {
-      super(SeverityLevel.ERROR);
       this.tripId = tripId;
       this.csvRowNumber = csvRowNumber;
       this.shapeDistTraveled = shapeDistTraveled;

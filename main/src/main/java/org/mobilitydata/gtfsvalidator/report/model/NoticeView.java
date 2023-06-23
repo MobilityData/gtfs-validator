@@ -1,21 +1,29 @@
 package org.mobilitydata.gtfsvalidator.report.model;
 
 import com.google.gson.JsonObject;
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.ast.Document;
 import java.util.ArrayList;
 import java.util.List;
 import org.mobilitydata.gtfsvalidator.notice.Notice;
+import org.mobilitydata.gtfsvalidator.notice.NoticeDocComments;
+import org.mobilitydata.gtfsvalidator.notice.ResolvedNotice;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.schema.NoticeSchemaGenerator;
 
 /** NoticeView is a wrapper class to display a Notice. */
 public class NoticeView {
-  private final Notice notice;
+  private final ResolvedNotice notice;
   private final JsonObject json;
   private final List<String> fields;
+  private final NoticeDocComments comments;
 
-  public NoticeView(Notice notice) {
+  public NoticeView(ResolvedNotice<? extends Notice> notice) {
     this.notice = notice;
-    this.json = notice.getContext().getAsJsonObject();
+    this.json = notice.getContext().toJsonTree().getAsJsonObject();
     this.fields = new ArrayList<>(json.keySet());
+    this.comments = NoticeSchemaGenerator.loadComments(notice.getClass());
   }
 
   /**
@@ -24,7 +32,7 @@ public class NoticeView {
    * @return notice name, e.g., "ForeignKeyViolationNotice".
    */
   public String getName() {
-    return notice.getClass().getSimpleName();
+    return notice.getContext().getClass().getSimpleName();
   }
 
   /**
@@ -56,11 +64,33 @@ public class NoticeView {
   }
 
   /**
+   * Returns the description text for the notice.
+   *
+   * @return description text
+   */
+  public String getCommentForField(String field) {
+    return comments.getFieldComment(field);
+  }
+  /**
+   * Returns the description text for the notice.
+   *
+   * @return description text
+   */
+  public String getDescription() {
+    String markdown = this.comments.getCombinedDocumentation();
+
+    Parser parser = Parser.builder().build();
+    Document document = parser.parse(markdown == null ? "" : markdown);
+    HtmlRenderer renderer = HtmlRenderer.builder().build();
+    return renderer.render(document);
+  }
+
+  /**
    * Returns a descriptive type-specific name for this notice class simple name.
    *
    * @return notice code, e.g., "foreign_key_violation".
    */
   public String getCode() {
-    return notice.getCode();
+    return notice.getContext().getCode();
   }
 }

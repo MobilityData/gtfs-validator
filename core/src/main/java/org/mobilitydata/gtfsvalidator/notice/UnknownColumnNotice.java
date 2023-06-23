@@ -15,24 +15,31 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
-/**
- * A column name is unknown.
- *
- * <p>Severity: {@code SeverityLevel.INFO}
- */
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.INFO;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
+
+/** A column name is unknown. */
+@GtfsValidationNotice(
+    severity = INFO,
+    urls = {
+      @UrlRef(
+          label = "Original Python validator implementation",
+          url = "https://github.com/google/transitfeed")
+    })
 public class UnknownColumnNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The name of the unknown column.
+  /** The name of the unknown column. */
   private final String fieldName;
 
-  // The index of the faulty column.
+  /** The index of the faulty column. */
   private final int index;
 
   public UnknownColumnNotice(String filename, String fieldName, int index) {
-    super(SeverityLevel.INFO);
     this.filename = filename;
     this.fieldName = fieldName;
     this.index = index;

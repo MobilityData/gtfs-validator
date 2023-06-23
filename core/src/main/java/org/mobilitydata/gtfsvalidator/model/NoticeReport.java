@@ -16,9 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.model;
 
+import com.google.gson.JsonElement;
 import com.google.gson.annotations.Expose;
-import com.google.gson.internal.LinkedTreeMap;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
@@ -34,13 +33,10 @@ public class NoticeReport {
   @Expose() private final String code;
   @Expose() private final SeverityLevel severity;
   @Expose() private final int totalNotices;
-  @Expose() private final List<LinkedTreeMap<String, Object>> sampleNotices;
+  @Expose() private final List<JsonElement> sampleNotices;
 
   public NoticeReport(
-      String code,
-      SeverityLevel severity,
-      int count,
-      List<LinkedTreeMap<String, Object>> sampleNotices) {
+      String code, SeverityLevel severity, int count, List<JsonElement> sampleNotices) {
     this.code = code;
     this.severity = severity;
     this.totalNotices = count;
@@ -59,8 +55,8 @@ public class NoticeReport {
     return code;
   }
 
-  public List<LinkedTreeMap<String, Object>> getSampleNotices() {
-    return Collections.unmodifiableList(sampleNotices);
+  public List<JsonElement> getSampleNotices() {
+    return sampleNotices;
   }
 
   public boolean isError() {

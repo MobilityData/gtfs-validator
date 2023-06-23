@@ -3,6 +3,7 @@ package org.mobilitydata.gtfsvalidator.testgtfs;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
+import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
@@ -40,6 +41,7 @@ public class GtfsTestTableDescriptor extends GtfsTableDescriptor<GtfsTestEntity>
         GtfsColumnDescriptor.builder()
             .setColumnName(GtfsTestEntity.ID_FIELD_NAME)
             .setHeaderRequired(true)
+            .setHeaderRecommended(false)
             .setFieldLevel(FieldLevelEnum.REQUIRED)
             .setIsMixedCase(false)
             .setIsCached(false)
@@ -48,6 +50,7 @@ public class GtfsTestTableDescriptor extends GtfsTableDescriptor<GtfsTestEntity>
         GtfsColumnDescriptor.builder()
             .setColumnName(GtfsTestEntity.CODE_FIELD_NAME)
             .setHeaderRequired(false)
+            .setHeaderRecommended(false)
             .setFieldLevel(FieldLevelEnum.OPTIONAL)
             .setIsMixedCase(false)
             .setIsCached(false)
@@ -69,8 +72,7 @@ public class GtfsTestTableDescriptor extends GtfsTableDescriptor<GtfsTestEntity>
               FieldCache<String> fieldCache,
               GtfsTestEntity.Builder builder) {
             builder.setId(
-                addToCacheIfPresent(
-                    rowParser.asId(columnIndex, columnDescriptor.fieldLevel()), fieldCache));
+                addToCacheIfPresent(rowParser.asId(columnIndex, columnDescriptor), fieldCache));
           }
         });
     builder.put(
@@ -84,8 +86,7 @@ public class GtfsTestTableDescriptor extends GtfsTableDescriptor<GtfsTestEntity>
               FieldCache<String> fieldCache,
               GtfsTestEntity.Builder builder) {
             builder.setCode(
-                addToCacheIfPresent(
-                    rowParser.asText(columnIndex, columnDescriptor.fieldLevel()), fieldCache));
+                addToCacheIfPresent(rowParser.asText(columnIndex, columnDescriptor), fieldCache));
           }
         });
     return builder.build();
@@ -104,5 +105,10 @@ public class GtfsTestTableDescriptor extends GtfsTableDescriptor<GtfsTestEntity>
   @Override
   public boolean isRequired() {
     return true;
+  }
+
+  @Override
+  public Optional<Integer> maxCharsPerColumn() {
+    return Optional.empty();
   }
 }

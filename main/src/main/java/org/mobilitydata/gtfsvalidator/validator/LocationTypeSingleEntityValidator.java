@@ -15,12 +15,17 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.INFO;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
 
 /**
  * Validates presence or absence of `parent_station` field based on `location_type`.
@@ -74,25 +79,25 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
   /**
    * A station has `parent_station` field set.
    *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>Field `parent_station` must be empty when `location_type` is 1.
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopSchema.class))
   static class StationWithParentStationNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The id of the faulty record.
+    /** The id of the faulty record. */
     private final String stopId;
 
-    // The stops.stop_name of the faulty record.
+    /** The stops.stop_name of the faulty record. */
     private final String stopName;
 
-    // Parent station's id.
+    /** Parent station's id. */
     private final String parentStation;
 
     StationWithParentStationNotice(
         int csvRowNumber, String stopId, String stopName, String parentStation) {
-      super(SeverityLevel.ERROR);
       this.stopId = stopId;
       this.stopName = stopName;
       this.csvRowNumber = csvRowNumber;
@@ -103,28 +108,26 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
   /**
    * A location that must have `parent_station` field does not have it.
    *
-   * <p>The following location types must have `parent_station`: entrance, generic node, boarding
-   * area.
-   *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>The following location types must have `parent_station`: entrance, generic node,
+   * boarding_area.
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopSchema.class))
   static class LocationWithoutParentStationNotice extends ValidationNotice {
 
-    // The row of the faulty record.
+    /** The row of the faulty record. */
     private final int csvRowNumber;
 
-    // The id of the faulty record.
+    /** The id of the faulty record. */
     private final String stopId;
 
-    // The `stops.stop_name` of the faulty record.
+    /** The `stops.stop_name` of the faulty record. */
     private final String stopName;
 
-    // The `stops.location_type` of the faulty record.
+    /** The `stops.location_type` of the faulty record. */
     private final int locationType;
 
     LocationWithoutParentStationNotice(
         int csvRowNumber, String stopId, String stopName, int locationType) {
-      super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
       this.stopId = stopId;
       this.stopName = stopName;
@@ -135,23 +138,21 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
   /**
    * A platform has no `parent_station` field set.
    *
-   * <p>This is different from {@code LocationWithoutParentStationNotice} since it is less severe.
-   *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>This is different from `location_without_parent_station` since it is less severe.
    */
+  @GtfsValidationNotice(severity = INFO, files = @FileRefs(GtfsStopSchema.class))
   static class PlatformWithoutParentStationNotice extends ValidationNotice {
 
-    // Row number of the faulty record.
+    /** Row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The id of the faulty record.
+    /** The id of the faulty record. */
     private final String stopId;
 
-    // The stop name of the faulty record.
+    /** The stop name of the faulty record. */
     private final String stopName;
 
     PlatformWithoutParentStationNotice(int csvRowNumber, String stopId, String stopName) {
-      super(SeverityLevel.WARNING);
       this.csvRowNumber = csvRowNumber;
       this.stopId = stopId;
       this.stopName = stopName;

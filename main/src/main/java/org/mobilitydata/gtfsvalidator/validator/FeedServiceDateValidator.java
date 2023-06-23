@@ -15,11 +15,15 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoSchema;
 
 /**
  * Validates that if one of {@code (start_date, end_date)} fields is provided for {@code
@@ -42,21 +46,24 @@ public class FeedServiceDateValidator extends SingleEntityValidator<GtfsFeedInfo
   }
 
   /**
-   * Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one field is
-   * provided the second one should also be provided.
+   * One of `feed_start_date` or `feed_end_date` is specified, but not both.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>Even though `feed_info.start_date` and `feed_info.end_date` are optional, if one field is
+   * provided the second one should also be provided.
    */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs(GtfsFeedInfoSchema.class),
+      bestPractices = @FileRefs(GtfsFeedInfoSchema.class))
   static class MissingFeedInfoDateNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // Either `feed_end_date` or `feed_start_date`
+    /** Either `feed_end_date` or `feed_start_date`. */
     private final String fieldName;
 
     MissingFeedInfoDateNotice(int csvRowNumber, String fieldName) {
-      super(SeverityLevel.WARNING);
       this.csvRowNumber = csvRowNumber;
       this.fieldName = fieldName;
     }

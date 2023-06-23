@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mobilitydata.gtfsvalidator.validator;
+
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -22,10 +23,10 @@ import java.util.NavigableMap;
 import java.util.Optional;
 import java.util.SortedSet;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.*;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
@@ -47,9 +48,13 @@ import org.mobilitydata.gtfsvalidator.util.TripCalendarUtil;
 public class DateTripsValidator extends FileValidator {
 
   private final GtfsCalendarDateTableContainer calendarDateTable;
+
   private final GtfsCalendarTableContainer calendarTable;
+
   private final GtfsTripTableContainer tripContainer;
+
   private final GtfsFrequencyTableContainer frequencyTable;
+
   private final CurrentDateTime currentDateTime;
 
   @Inject
@@ -68,20 +73,16 @@ public class DateTripsValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-
     LocalDate now = currentDateTime.getNow().toLocalDate();
-
     final Map<String, SortedSet<LocalDate>> servicePeriodMap =
         CalendarUtil.servicePeriodToServiceDatesMap(
             CalendarUtil.buildServicePeriodMap(calendarTable, calendarDateTable));
-
     NavigableMap<LocalDate, Integer> tripCounts =
         TripCalendarUtil.countTripsForEachServiceDate(
             servicePeriodMap, tripContainer, frequencyTable);
     Optional<TripCalendarUtil.DateInterval> majorityServiceDates =
         TripCalendarUtil.computeMajorityServiceCoverage(tripCounts);
     LocalDate currentDatePlusSevenDays = now.plusDays(7);
-
     if (!majorityServiceDates.isEmpty()) {
       LocalDate serviceWindowStartDate = majorityServiceDates.get().startDate();
       LocalDate serviceWindowEndDate = majorityServiceDates.get().endDate();
@@ -97,21 +98,25 @@ public class DateTripsValidator extends FileValidator {
   }
 
   /**
-   * Trip data must be valid for the next 7 days.
+   * Trips data should be valid for at least the next seven days.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING
+   * <p>This notice is triggered if the date range where a significant number of trips are running
+   * ends in less than 7 days.
    */
+  @GtfsValidationNotice(severity = WARNING)
   static class TripCoverageNotActiveForNext7DaysNotice extends ValidationNotice {
-    // Current date (YYYYMMDD format)
+
+    /** Current date (YYYYMMDD format). */
     private final GtfsDate currentDate;
-    // The start date of the majority service window.
+
+    /** The start date of the majority service window. */
     private final GtfsDate serviceWindowStartDate;
-    // The end date of the majority service window.
+
+    /** The end date of the majority service window. */
     private final GtfsDate serviceWindowEndDate;
 
     TripCoverageNotActiveForNext7DaysNotice(
         GtfsDate currentDate, GtfsDate serviceWindowStartDate, GtfsDate serviceWindowEndDate) {
-      super(SeverityLevel.WARNING);
       this.currentDate = currentDate;
       this.serviceWindowStartDate = serviceWindowStartDate;
       this.serviceWindowEndDate = serviceWindowEndDate;

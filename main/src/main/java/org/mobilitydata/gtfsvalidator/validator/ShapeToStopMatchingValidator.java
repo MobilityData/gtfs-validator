@@ -15,6 +15,8 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Multimaps;
 import com.google.common.geometry.S2LatLng;
@@ -26,19 +28,24 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
+import org.mobilitydata.gtfsvalidator.table.GtfsShapeSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
+import org.mobilitydata.gtfsvalidator.table.GtfsTripSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 import org.mobilitydata.gtfsvalidator.util.shape.Problem;
 import org.mobilitydata.gtfsvalidator.util.shape.Problem.ProblemType;
@@ -232,40 +239,42 @@ public class ShapeToStopMatchingValidator extends FileValidator {
   }
 
   /**
-   * Describes a stop entry that has many potential matches to the trip's path of travel, as defined
-   * by the shape entry in {@code shapes.txt}.
+   * Stop entry that has many potential matches to the trip's path of travel, as defined by the
+   * shape entry in `shapes.txt`.
    *
    * <p>This potentially indicates a problem with the location of the stop or the path of the shape.
    */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs({GtfsTripSchema.class, GtfsStopTimeSchema.class, GtfsStopSchema.class}))
   static class StopHasTooManyMatchesForShapeNotice extends ValidationNotice {
 
-    // The row number of the faulty record from `trips.txt`.
+    /** The row number of the faulty record from `trips.txt`. */
     private final long tripCsvRowNumber;
 
-    // The id of the shape that is referred to.
+    /** The id of the shape that is referred to. */
     private final String shapeId;
 
-    // The id of the trip that is referred to.
+    /** The id of the trip that is referred to. */
     private final String tripId;
 
-    // The row number of the faulty record from `stop_times.txt`.
+    /** The row number of the faulty record from `stop_times.txt`. */
     private final long stopTimeCsvRowNumber;
 
-    // The id of the stop that is referred to.
+    /** The id of the stop that is referred to. */
     private final String stopId;
 
-    // The name of the stop that is referred to.
+    /** The name of the stop that is referred to. */
     private final String stopName;
 
-    // Latitude and longitude pair of the location.
+    /** Latitude and longitude pair of the location. */
     private final S2LatLng match;
 
-    // The number of matches for the stop that is referred to.
+    /** The number of matches for the stop that is referred to. */
     private final int matchCount;
 
     StopHasTooManyMatchesForShapeNotice(
         GtfsTrip trip, GtfsStopTime stopTime, String stopName, S2LatLng location, int matchCount) {
-      super(SeverityLevel.WARNING);
       this.tripCsvRowNumber = trip.csvRowNumber();
       this.shapeId = trip.shapeId();
       this.tripId = trip.tripId();
@@ -278,36 +287,44 @@ public class ShapeToStopMatchingValidator extends FileValidator {
   }
 
   /**
-   * Describes a stop time entry that is a large distance away from the location of the shape in
-   * {@code shapes.txt} as defined by {@code shape_dist_traveled} values.
+   * Stop time too far from shape.
    *
-   * <p>This potentially indicates a problem with the location of the stop or the use of {@code
-   * shape_dist_traveled} values.
+   * <p>A stop time entry that is a large distance away from the location of the shape in
+   * `shapes.txt` as defined by `shape_dist_traveled` values.
    */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files =
+          @FileRefs({
+            GtfsTripSchema.class,
+            GtfsStopTimeSchema.class,
+            GtfsStopSchema.class,
+            GtfsStopTimeSchema.class
+          }))
   static class StopTooFarFromShapeUsingUserDistanceNotice extends ValidationNotice {
 
-    // The row number of the faulty record from `trips.txt`.
+    /** The row number of the faulty record from `trips.txt`. */
     private final long tripCsvRowNumber;
 
-    // The id of the shape that is referred to.
+    /** The id of the shape that is referred to. */
     private final String shapeId;
 
-    // The id of the trip that is referred to.
+    /** The id of the trip that is referred to. */
     private final String tripId;
 
-    // The row number of the faulty record from `stop_times.txt`.
+    /** The row number of the faulty record from `stop_times.txt`. */
     private final long stopTimeCsvRowNumber;
 
-    // The id of the stop that is referred to.
+    /** The id of the stop that is referred to. */
     private final String stopId;
 
-    // The name of the stop that is referred to.
+    /** The name of the stop that is referred to. */
     private final String stopName;
 
-    // Latitude and longitude pair of the location.
+    /** Latitude and longitude pair of the location. */
     private final S2LatLng match;
 
-    // Distance from stop to shape.
+    /** Distance from stop to shape. */
     private final double geoDistanceToShape;
 
     StopTooFarFromShapeUsingUserDistanceNotice(
@@ -316,7 +333,6 @@ public class ShapeToStopMatchingValidator extends FileValidator {
         String stopName,
         S2LatLng location,
         double geoDistanceToShape) {
-      super(SeverityLevel.WARNING);
       this.tripCsvRowNumber = trip.csvRowNumber();
       this.shapeId = trip.shapeId();
       this.tripId = trip.tripId();
@@ -329,35 +345,40 @@ public class ShapeToStopMatchingValidator extends FileValidator {
   }
 
   /**
-   * Describes a stop time entry that is a large distance away from the trip's path of travel, as
-   * defined by the shape entry in {@code shapes.txt}.
+   * Stop too far from trip shape.
    *
-   * <p>This potentially indicates a problem with the location of the stop or the path of the shape.
+   * <p>Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100 meters of
+   * stop locations which a trip serves. This potentially indicates a problem with the location of
+   * the stop or the path of the shape.
    */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs({GtfsStopTimeSchema.class, GtfsStopSchema.class, GtfsTripSchema.class}),
+      bestPractices = @FileRefs(GtfsShapeSchema.class))
   static class StopTooFarFromShapeNotice extends ValidationNotice {
 
-    // The row number of the faulty record from `trips.txt`.
+    /** The row number of the faulty record from `trips.txt`. */
     private final long tripCsvRowNumber;
 
-    // The id of the shape that is referred to.
+    /** The id of the shape that is referred to. */
     private final String shapeId;
 
-    // The id of the trip that is referred to.
+    /** The id of the trip that is referred to. */
     private final String tripId;
 
-    // The row number of the faulty record from `stop_times.txt`.
+    /** The row number of the faulty record from `stop_times.txt`. */
     private final long stopTimeCsvRowNumber;
 
-    // The id of the stop that is referred to.
+    /** The id of the stop that is referred to. */
     private final String stopId;
 
-    // The name of the stop that is referred to.
+    /** The name of the stop that is referred to. */
     private final String stopName;
 
-    // Latitude and longitude pair of the location.
+    /** Latitude and longitude pair of the location. */
     private final S2LatLng match;
 
-    // Distance from stop to shape.
+    /** Distance from stop to shape. */
     private final double geoDistanceToShape;
 
     StopTooFarFromShapeNotice(
@@ -366,7 +387,6 @@ public class ShapeToStopMatchingValidator extends FileValidator {
         String stopName,
         S2LatLng location,
         double geoDistanceToShape) {
-      super(SeverityLevel.WARNING);
       this.tripCsvRowNumber = trip.csvRowNumber();
       this.shapeId = trip.shapeId();
       this.tripId = trip.tripId();
@@ -379,45 +399,47 @@ public class ShapeToStopMatchingValidator extends FileValidator {
   }
 
   /**
-   * Describes two stop entries in {@code stop_times.txt} that are different than their
-   * arrival-departure order as defined by the shape in the {@code shapes.txt} file.
+   * Two stop entries are different than their arrival-departure order defined by `shapes.txt`.
    *
    * <p>This could indicate a problem with the location of the stops, the path of the shape, or the
    * sequence of the stops for their trip.
    */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs({GtfsTripSchema.class, GtfsStopTimeSchema.class, GtfsStopSchema.class}))
   static class StopsMatchShapeOutOfOrderNotice extends ValidationNotice {
 
-    // The row number of the faulty record from `trips.txt`.
+    /** The row number of the faulty record from `trips.txt`. */
     private final long tripCsvRowNumber;
 
-    // The id of the shape that is referred to.
+    /** The id of the shape that is referred to. */
     private final String shapeId;
 
-    // The id of the trip that is referred to.
+    /** The id of the trip that is referred to. */
     private final String tripId;
 
-    // The row number of the first faulty record from `stop_times.txt`.
+    /** The row number of the first faulty record from `stop_times.txt`. */
     private final long stopTimeCsvRowNumber1;
 
-    // The id of the first stop that is referred to.
+    /** The id of the first stop that is referred to. */
     private final String stopId1;
 
-    // The name of the first stop that is referred to.
+    /** The name of the first stop that is referred to. */
     private final String stopName1;
 
-    // Latitude and longitude pair of the first matching location.
+    /** Latitude and longitude pair of the first matching location. */
     private final S2LatLng match1;
 
-    // The row number of the second faulty record from `stop_times.txt`.
+    /** The row number of the second faulty record from `stop_times.txt`. */
     private final long stopTimeCsvRowNumber2;
 
-    // The id of the second stop that is referred to.
+    /** The id of the second stop that is referred to. */
     private final String stopId2;
 
-    // The name of the second stop that is referred to.
+    /** The name of the second stop that is referred to. */
     private final String stopName2;
 
-    // Latitude and longitude pair of the second matching location.
+    /** Latitude and longitude pair of the second matching location. */
     private final S2LatLng match2;
 
     public StopsMatchShapeOutOfOrderNotice(
@@ -428,7 +450,6 @@ public class ShapeToStopMatchingValidator extends FileValidator {
         GtfsStopTime stopTime2,
         String stopName2,
         S2LatLng location2) {
-      super(SeverityLevel.WARNING);
       this.tripCsvRowNumber = trip.csvRowNumber();
       this.shapeId = trip.shapeId();
       this.tripId = trip.tripId();

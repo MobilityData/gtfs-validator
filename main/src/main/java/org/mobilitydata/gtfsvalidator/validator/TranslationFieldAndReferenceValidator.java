@@ -15,17 +15,22 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+
 import com.google.common.collect.ImmutableList;
 import java.util.Optional;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTranslation;
+import org.mobilitydata.gtfsvalidator.table.GtfsTranslationSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsTranslationTableContainer;
 
 /**
@@ -188,20 +193,20 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
   }
 
   /** A field in a translations row has value but must be empty. */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsTranslationSchema.class))
   static class TranslationUnexpectedValueNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The name of the field that was expected to be empty.
+    /** The name of the field that was expected to be empty. */
     private final String fieldName;
 
-    // Actual value of the field that was expected to be empty.
+    /** Actual value of the field that was expected to be empty. */
     private final String fieldValue;
 
     TranslationUnexpectedValueNotice(
         GtfsTranslation translation, String fieldName, String fieldValue) {
-      super(SeverityLevel.ERROR);
       this.csvRowNumber = translation.csvRowNumber();
       this.fieldValue = fieldValue;
       this.fieldName = fieldName;
@@ -209,41 +214,41 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
   }
 
   /** A translation references an unknown or missing GTFS table. */
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsTranslationSchema.class))
   static class TranslationUnknownTableNameNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // `table_name` of the faulty record.
+    /** `table_name` of the faulty record. */
     private final String tableName;
 
     TranslationUnknownTableNameNotice(GtfsTranslation translation) {
-      super(SeverityLevel.WARNING);
       this.csvRowNumber = translation.csvRowNumber();
       this.tableName = translation.tableName();
     }
   }
 
   /**
-   * An entity with the given {@code record_id, record_sub_id} cannot be found in the referenced
+   * An entity with the given `record_id` and `record_sub_id` cannot be found in the referenced
    * table.
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsTranslationSchema.class))
   static class TranslationForeignKeyViolationNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // `table_name` of the faulty record.
+    /** `table_name` of the faulty record. */
     private final String tableName;
 
-    // `record_id` of the faulty record.
+    /** `record_id` of the faulty record. */
     private final String recordId;
 
-    // `record_sub_id` of the faulty record.
+    /** `record_sub_id` of the faulty record. */
     private final String recordSubId;
 
     TranslationForeignKeyViolationNotice(GtfsTranslation translation) {
-      super(SeverityLevel.ERROR);
       this.csvRowNumber = translation.csvRowNumber();
       this.tableName = translation.tableName();
       this.recordId = translation.recordId();

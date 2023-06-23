@@ -59,7 +59,7 @@
     />
   </div>
 
-  <Button type="button" className="py-1" on:click={clickFileInput}>
+  <Button type="button" class="py-1" on:click={clickFileInput}>
     {buttonText}
   </Button>
 </LabeledField>

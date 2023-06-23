@@ -1,14 +1,18 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+
 import com.google.auto.value.AutoValue;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareMedia;
+import org.mobilitydata.gtfsvalidator.table.GtfsFareMediaSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareMediaTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareMediaType;
 
@@ -35,26 +39,26 @@ public class DuplicateFareMediaValidator extends FileValidator {
   }
 
   /**
-   * Describes two fare medias that have the same name and type.
+   * Two distinct fare media have the same fare media name and type.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>Fare media should have a unique combination of fare media name and type.
    */
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsFareMediaSchema.class))
   static class DuplicateFareMediaNotice extends ValidationNotice {
 
-    // The row number of the first fare media.
+    /** The row number of the first fare media. */
     private final int csvRowNumber1;
 
-    // The id of the first fare media.
+    /** The id of the first fare media. */
     private final String fareMediaId1;
 
-    // The row number of the second fare media.
+    /** The row number of the second fare media. */
     private final int csvRowNumber2;
 
-    // The id of the second fare media.
+    /** The id of the second fare media. */
     private final String fareMediaId2;
 
     DuplicateFareMediaNotice(GtfsFareMedia lhs, GtfsFareMedia rhs) {
-      super(SeverityLevel.WARNING);
       this.csvRowNumber1 = lhs.csvRowNumber();
       this.fareMediaId1 = lhs.fareMediaId();
       this.csvRowNumber2 = rhs.csvRowNumber();
@@ -65,6 +69,7 @@ public class DuplicateFareMediaValidator extends FileValidator {
   /** A "primary key" type composed of fare media name + type. */
   @AutoValue
   abstract static class Key {
+
     public abstract String name();
 
     public abstract GtfsFareMediaType type();

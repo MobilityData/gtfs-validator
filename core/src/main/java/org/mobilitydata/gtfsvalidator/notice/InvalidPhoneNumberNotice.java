@@ -15,49 +15,40 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.FILED_TYPES;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
+
 /**
  * A field contains a malformed phone number.
  *
- * <p>Definitions for valid phone numbers are quite vague. We perform strict validation in the
- * upstream using the Google libphonenumber.
- *
- * <p><a href="https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md">GTFS
- * reference</a> does not provide any special requirements or standards.
+ * <p>This rule uses the
+ * [PhoneNumberUtil](https://www.javadoc.io/doc/com.googlecode.libphonenumber/libphonenumber/8.4.1/com/google/i18n/phonenumbers/PhoneNumberUtil.html)
+ * class to validate a phone number based on a country code. If no country code is provided in the
+ * parameters used to run the validator, this notice won't be emitted.
  */
+@GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILED_TYPES))
 public class InvalidPhoneNumberNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The row of the faulty record.
+  /** The row of the faulty record. */
   private final int csvRowNumber;
 
-  // Faulty record's field name.
+  /** Faulty record's field name. */
   private final String fieldName;
 
-  // Faulty value.
+  /** Faulty value. */
   private final String fieldValue;
 
-  /**
-   * Constructs a notice with given severity. This constructor may be used by users that want to
-   * lower the priority to {@code WARNING}.
-   */
   public InvalidPhoneNumberNotice(
-      String filename,
-      int csvRowNumber,
-      String fieldName,
-      String fieldValue,
-      SeverityLevel severityLevel) {
-    super(severityLevel);
+      String filename, int csvRowNumber, String fieldName, String fieldValue) {
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.fieldName = fieldName;
     this.fieldValue = fieldValue;
-  }
-
-  /** Constructs a notice with the default severity {@code ERROR}. */
-  public InvalidPhoneNumberNotice(
-      String filename, int csvRowNumber, String fieldName, String fieldValue) {
-    this(filename, csvRowNumber, fieldName, fieldValue, SeverityLevel.ERROR);
   }
 }

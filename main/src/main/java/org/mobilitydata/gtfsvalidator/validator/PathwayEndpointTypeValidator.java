@@ -15,13 +15,17 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
 import java.util.Optional;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathway;
+import org.mobilitydata.gtfsvalidator.table.GtfsPathwaySchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathwayTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
@@ -82,23 +86,28 @@ public class PathwayEndpointTypeValidator extends FileValidator {
     }
   }
 
-  /** Describes a pathway which endpoint is a station. */
+  /**
+   * A pathway has an endpoint that is a station.
+   *
+   * <p>Pathways endpoints must be platforms (stops), entrances/exits, generic nodes or boarding
+   * areas.
+   */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsPathwaySchema.class))
   static class PathwayToWrongLocationTypeNotice extends ValidationNotice {
 
-    // The row of the faulty row.
+    /** The row of the faulty row. */
     private final int csvRowNumber;
 
-    // The id of the faulty pathway.
+    /** The id of the faulty pathway. */
     private final String pathwayId;
 
-    // The station id field name.
+    /** The station id field name. */
     private final String fieldName;
 
-    // The id of the endpoint station.
+    /** The id of the endpoint station. */
     private final String stopId;
 
     PathwayToWrongLocationTypeNotice(GtfsPathway pathway, String fieldName, String stopId) {
-      super(SeverityLevel.ERROR);
       this.csvRowNumber = pathway.csvRowNumber();
       this.pathwayId = pathway.pathwayId();
       this.fieldName = fieldName;
@@ -106,23 +115,29 @@ public class PathwayEndpointTypeValidator extends FileValidator {
     }
   }
 
-  /** Describes a pathway which endpoint is a platform that has boarding areas. */
+  /**
+   * A pathway has an endpoint that is a platform which has boarding areas.
+   *
+   * <p>A platform that has boarding areas is treated as a parent object, not a point. In such
+   * cases, the platform must not have pathways assigned - instead, pathways must be assigned to its
+   * boarding areas.
+   */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsPathwaySchema.class))
   static class PathwayToPlatformWithBoardingAreasNotice extends ValidationNotice {
 
-    // The row of the faulty row.
+    /** The row of the faulty row. */
     private final int csvRowNumber;
 
-    // The id of the faulty pathway.
+    /** The id of the faulty pathway. */
     private final String pathwayId;
 
-    // The platform id field name.
+    /** The platform id field name. */
     private final String fieldName;
 
-    // The id of the endpoint platform.
+    /** The id of the endpoint platform. */
     private final String stopId;
 
     PathwayToPlatformWithBoardingAreasNotice(GtfsPathway pathway, String fieldName, String stopId) {
-      super(SeverityLevel.ERROR);
       this.csvRowNumber = pathway.csvRowNumber();
       this.pathwayId = pathway.pathwayId();
       this.fieldName = fieldName;

@@ -44,7 +44,6 @@ import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.PointNearPoleNotice;
 import org.mobilitydata.gtfsvalidator.outputcomparator.model.report.ChangedNotice;
-import uk.org.webcompere.systemstubs.SystemStubs; // catchSystemExit() for JDK 16 and newer.
 
 @RunWith(JUnit4.class)
 public class MainTest {
@@ -99,10 +98,11 @@ public class MainTest {
         new MissingRecommendedFieldNotice("other filename", 12, "other field name"));
 
     writeFile(
-        latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
+        latestNoticeContainer.exportJson(latestNoticeContainer.getResolvedValidationNotices()),
         resolve(NO_NEW_NOTICE_FOLDER_NAME, "source-id-1", LATEST_JSON));
     writeFile(
-        referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
+        referenceNoticeContainer.exportJson(
+            referenceNoticeContainer.getResolvedValidationNotices()),
         resolve(NO_NEW_NOTICE_FOLDER_NAME, "source-id-1", REFERENCE_JSON));
 
     JsonObject sourceUrlJsonObject = new JsonObject();
@@ -153,10 +153,11 @@ public class MainTest {
     latestNoticeContainer.addValidationNotice(new EmptyColumnNameNotice("filename", 5));
 
     writeFile(
-        latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
+        latestNoticeContainer.exportJson(latestNoticeContainer.getResolvedValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-1", LATEST_JSON));
     writeFile(
-        referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
+        referenceNoticeContainer.exportJson(
+            referenceNoticeContainer.getResolvedValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-1", REFERENCE_JSON));
 
     latestNoticeContainer.addValidationNotice(
@@ -169,10 +170,11 @@ public class MainTest {
         new MissingRecommendedFieldNotice("other filename", 12, "other field name"));
 
     writeFile(
-        latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
+        latestNoticeContainer.exportJson(latestNoticeContainer.getResolvedValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-2", LATEST_JSON));
     writeFile(
-        referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
+        referenceNoticeContainer.exportJson(
+            referenceNoticeContainer.getResolvedValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-2", REFERENCE_JSON));
 
     latestNoticeContainer.addValidationNotice(
@@ -184,10 +186,11 @@ public class MainTest {
         new DuplicateKeyNotice("some filename", 9, 11, "field name 1", "field value1"));
 
     writeFile(
-        latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
+        latestNoticeContainer.exportJson(latestNoticeContainer.getResolvedValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-3", LATEST_JSON));
     writeFile(
-        referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
+        referenceNoticeContainer.exportJson(
+            referenceNoticeContainer.getResolvedValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-3", REFERENCE_JSON));
 
     JsonObject sourceUrlJsonObject = new JsonObject();
@@ -216,7 +219,7 @@ public class MainTest {
       resolve(SOURCE_INFO_FOLDER_NAME, "all", GTFS_LATEST_VERSIONS_JSON).toString(),
     };
 
-    int exitCode = SystemStubs.catchSystemExit(() -> Main.main(argv));
+    int exitCode = Main.run(argv);
 
     assertThat(exitCode).isNotEqualTo(0);
     assertThat(
@@ -239,10 +242,11 @@ public class MainTest {
     latestNoticeContainer.addValidationNotice(new EmptyColumnNameNotice("filename", 5));
 
     writeFile(
-        latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
+        latestNoticeContainer.exportJson(latestNoticeContainer.getResolvedValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-1", LATEST_JSON));
     writeFile(
-        referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
+        referenceNoticeContainer.exportJson(
+            referenceNoticeContainer.getResolvedValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-1", REFERENCE_JSON));
 
     // An error notice present only in the reference report.
@@ -253,10 +257,11 @@ public class MainTest {
         new MissingRecommendedFieldNotice("other filename", 12, "other field name"));
 
     writeFile(
-        latestNoticeContainer.exportJson(latestNoticeContainer.getValidationNotices()),
+        latestNoticeContainer.exportJson(latestNoticeContainer.getResolvedValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-2", LATEST_JSON));
     writeFile(
-        referenceNoticeContainer.exportJson(referenceNoticeContainer.getValidationNotices()),
+        referenceNoticeContainer.exportJson(
+            referenceNoticeContainer.getResolvedValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-2", REFERENCE_JSON));
 
     JsonObject sourceUrlJsonObject = new JsonObject();
@@ -284,7 +289,7 @@ public class MainTest {
       resolve(SOURCE_INFO_FOLDER_NAME, "all", GTFS_LATEST_VERSIONS_JSON).toString(),
     };
 
-    int exitCode = SystemStubs.catchSystemExit(() -> Main.main(argv));
+    int exitCode = Main.run(argv);
 
     assertThat(exitCode).isNotEqualTo(0);
     assertThat(
@@ -303,24 +308,24 @@ public class MainTest {
     noticeContainer.addValidationNotice(new EmptyColumnNameNotice("other file", 4));
 
     writeFile(
-        noticeContainer.exportJson(noticeContainer.getValidationNotices()),
+        noticeContainer.exportJson(noticeContainer.getResolvedValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-1", LATEST_JSON));
     writeFile(
-        noticeContainer.exportJson(noticeContainer.getValidationNotices()),
+        noticeContainer.exportJson(noticeContainer.getResolvedValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-1", REFERENCE_JSON));
 
     writeFile(
-        noticeContainer.exportJson(noticeContainer.getValidationNotices()),
+        noticeContainer.exportJson(noticeContainer.getResolvedValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-2", LATEST_JSON));
     writeFile(
-        noticeContainer.exportJson(noticeContainer.getValidationNotices()),
+        noticeContainer.exportJson(noticeContainer.getResolvedValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-2", REFERENCE_JSON));
 
     writeFile(
-        noticeContainer.exportJson(noticeContainer.getValidationNotices()),
+        noticeContainer.exportJson(noticeContainer.getResolvedValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-3", LATEST_JSON));
     writeFile(
-        noticeContainer.exportJson(noticeContainer.getValidationNotices()),
+        noticeContainer.exportJson(noticeContainer.getResolvedValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-3", REFERENCE_JSON));
 
     JsonObject sourceUrlJsonObject = new JsonObject();
@@ -352,17 +357,17 @@ public class MainTest {
     };
 
     writeFile(
-        noticeContainer.exportJson(noticeContainer.getValidationNotices()),
+        noticeContainer.exportJson(noticeContainer.getResolvedValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-4", "invalid_latest.json"));
     writeFile(
-        noticeContainer.exportJson(noticeContainer.getValidationNotices()),
+        noticeContainer.exportJson(noticeContainer.getResolvedValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-4", "invalid_reference.json"));
 
     writeFile(
-        noticeContainer.exportJson(noticeContainer.getValidationNotices()),
+        noticeContainer.exportJson(noticeContainer.getResolvedValidationNotices()),
         resolve(NEW_NOTICES_TYPE_FOLDER_NAME, "source-id-5", "latest.json"));
 
-    int exitCode = SystemStubs.catchSystemExit(() -> Main.main(argv));
+    int exitCode = Main.run(argv);
 
     assertThat(exitCode).isNotEqualTo(0);
     assertThat(

@@ -15,15 +15,21 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+
 import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
+import org.mobilitydata.gtfsvalidator.table.GtfsTripSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 
 /**
@@ -57,21 +63,27 @@ public class TripUsageValidator extends FileValidator {
   }
 
   /**
-   * A {@code GtfsTrip} should be referred to at least once in {@code GtfsStopTimeTableContainer}
-   * station).
+   * Trip is not be used in `stop_times.txt`
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>Trips should be referred to at least once in `stop_times.txt`.
    */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs({GtfsTripSchema.class, GtfsStopTimeSchema.class}),
+      urls = {
+        @UrlRef(
+            label = "Original Python validator implementation",
+            url = "https://github.com/google/transitfeed")
+      })
   static class UnusedTripNotice extends ValidationNotice {
 
-    // The faulty record's id.
+    /** The faulty record's id. */
     private final String tripId;
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
     UnusedTripNotice(String tripId, int csvRowNumber) {
-      super(SeverityLevel.WARNING);
       this.tripId = tripId;
       this.csvRowNumber = csvRowNumber;
     }

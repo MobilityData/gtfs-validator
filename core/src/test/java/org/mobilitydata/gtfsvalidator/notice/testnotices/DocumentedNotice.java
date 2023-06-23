@@ -4,7 +4,6 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.BestPracticesRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -12,17 +11,18 @@ import org.mobilitydata.gtfsvalidator.notice.testnotices.DocumentedNotice.AppleS
 import org.mobilitydata.gtfsvalidator.notice.testnotices.DocumentedNotice.BananaSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 
+/** Look in `DocumentedNotice-DocComments.json` for actual comment values. */
 @GtfsValidationNotice(
     severity = ERROR,
     files = @FileRefs(AppleSchema.class),
-    bestPractices = @BestPracticesRefs(BananaSchema.class),
+    bestPractices = @FileRefs(BananaSchema.class),
     urls = @UrlRef(label = "Coconuts", url = "http://coconuts.com"))
 public class DocumentedNotice extends ValidationNotice {
 
   private final String value = "";
 
   public DocumentedNotice() {
-    super(ERROR);
+    super();
   }
 
   @GtfsTable("apples.txt")

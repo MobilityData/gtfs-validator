@@ -15,14 +15,19 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+
 import java.util.Locale;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
+import org.mobilitydata.gtfsvalidator.table.GtfsAgencySchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
 
 /**
@@ -86,30 +91,41 @@ public class MatchingFeedAndAgencyLangValidator extends FileValidator {
   }
 
   /**
-   * {@code agency.agency_lang} and {@code feed_info.feed_lang} do not match
+   * Mismatching feed and agency language fields.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>Files `agency.txt` and `feed_info.txt` should define matching `agency.agency_lang` and
+   * `feed_info.feed_lang`. The default language may be multilingual for datasets with the original
+   * text in multiple languages. In such cases, the `feed_lang` field should contain the language
+   * code `mul` defined by the norm ISO 639-2.
+   *
+   * <pre>
+   * - If `feed_lang` is not `mul` and does not match with `agency_lang`, that's an error.
+   * - If there is more than one `agency_lang` and `feed_lang` isn't `mul`, that's an error.
+   * - If `feed_lang` is `mul` and there isn't more than one `agency_lang`, that's an error.
+   * </pre>
    */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs({GtfsFeedInfoSchema.class, GtfsAgencySchema.class}))
   static class FeedInfoLangAndAgencyLangMismatchNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The agency id of the faulty record.
+    /** The agency id of the faulty record. */
     private final String agencyId;
 
-    // The agency name of the faulty record.
+    /** The agency name of the faulty record. */
     private final String agencyName;
 
-    // The agency language of the faulty record.
+    /** The agency language of the faulty record. */
     private final String agencyLang;
 
-    // The feed language of the faulty record.
+    /** The feed language of the faulty record. */
     private final String feedLang;
 
     FeedInfoLangAndAgencyLangMismatchNotice(
         int csvRowNumber, String agencyId, String agencyName, String agencyLang, String feedLang) {
-      super(SeverityLevel.WARNING);
       this.csvRowNumber = csvRowNumber;
       this.agencyId = agencyId;
       this.agencyName = agencyName;

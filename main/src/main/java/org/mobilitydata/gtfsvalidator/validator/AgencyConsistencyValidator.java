@@ -15,12 +15,19 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+
 import java.time.ZoneId;
 import java.util.Locale;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.*;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
+import org.mobilitydata.gtfsvalidator.table.GtfsAgencySchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 
 /**
@@ -60,7 +67,6 @@ public class AgencyConsistencyValidator extends FileValidator {
       // no further validation required
       return;
     }
-
     if (agencyCount > 1) {
       for (GtfsAgency agency : agencyTable.getEntities()) {
         // agency_id is required when there are 2 or more agencies.
@@ -107,21 +113,28 @@ public class AgencyConsistencyValidator extends FileValidator {
   /**
    * Inconsistent language among agencies.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>Agencies from GTFS `agency.txt` have been found to have different languages.
    */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs(GtfsAgencySchema.class),
+      urls = {
+        @UrlRef(
+            label = "Original Python validator implementation",
+            url = "https://github.com/google/transitfeed")
+      })
   static class InconsistentAgencyLangNotice extends ValidationNotice {
 
-    // The row of the faulty record.
+    /** The row of the faulty record. */
     private final int csvRowNumber;
 
-    // Expected language.
+    /** Expected language. */
     private final String expected;
 
-    // Faulty record's language.
+    /** Faulty record's language. */
     private final String actual;
 
     InconsistentAgencyLangNotice(int csvRowNumber, String expected, String actual) {
-      super(SeverityLevel.WARNING);
       this.csvRowNumber = csvRowNumber;
       this.expected = expected;
       this.actual = actual;
@@ -129,23 +142,23 @@ public class AgencyConsistencyValidator extends FileValidator {
   }
 
   /**
-   * Inconsistent timezone among agencies.
+   * Inconsistent Timezone among agencies.
    *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>Agencies from GTFS `agency.txt` have been found to have different timezones.
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsAgencySchema.class))
   static class InconsistentAgencyTimezoneNotice extends ValidationNotice {
 
-    // The row of the faulty record.
+    /** The row of the faulty record. */
     private final int csvRowNumber;
 
-    // Expected timezone.
+    /** Expected timezone. */
     private final String expected;
 
-    // Faulty record's timezone.
+    /** Faulty record's timezone. */
     private final String actual;
 
     InconsistentAgencyTimezoneNotice(int csvRowNumber, String expected, String actual) {
-      super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
       this.expected = expected;
       this.actual = actual;

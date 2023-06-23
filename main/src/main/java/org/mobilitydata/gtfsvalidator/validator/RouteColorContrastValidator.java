@@ -15,11 +15,16 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
+import org.mobilitydata.gtfsvalidator.table.GtfsRouteSchema;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 
 /**
@@ -56,28 +61,34 @@ public class RouteColorContrastValidator extends SingleEntityValidator<GtfsRoute
   }
 
   /**
-   * "The color difference between route_color and route_text_color should provide sufficient
-   * contrast when viewed on a black and white screen." (http://gtfs.org/best-practices/#routestxt)
+   * Insufficient route color contrast.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>A route's color and `route_text_color` should be contrasting.
    */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs(GtfsRouteSchema.class),
+      urls = {
+        @UrlRef(
+            label = "Original Python validator implementation",
+            url = "https://github.com/google/transitfeed")
+      })
   static class RouteColorContrastNotice extends ValidationNotice {
 
-    // The id of the faulty record.
+    /** The id of the faulty record. */
     private final String routeId;
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The faulty record's HTML route color.
+    /** The faulty record's HTML route color. */
     private final GtfsColor routeColor;
 
-    // The faulty record's HTML route text color.
+    /** The faulty record's HTML route text color. */
     private final GtfsColor routeTextColor;
 
     RouteColorContrastNotice(
         String routeId, int csvRowNumber, GtfsColor routeColor, GtfsColor routeTextColor) {
-      super(SeverityLevel.WARNING);
       this.routeId = routeId;
       this.csvRowNumber = csvRowNumber;
       this.routeColor = routeColor;

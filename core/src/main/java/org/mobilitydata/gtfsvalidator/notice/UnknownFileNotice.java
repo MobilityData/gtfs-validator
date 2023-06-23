@@ -15,18 +15,25 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
-/**
- * A file is unknown.
- *
- * <p>Severity: {@code SeverityLevel.INFO}
- */
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.INFO;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
+
+/** A file is unknown. */
+@GtfsValidationNotice(
+    severity = INFO,
+    urls = {
+      @UrlRef(
+          label = "Original Python validator implementation",
+          url = "https://github.com/google/transitfeed")
+    })
 public class UnknownFileNotice extends ValidationNotice {
 
-  // The name of the unknown file.
+  /** The name of the unknown file. */
   private final String filename;
 
   public UnknownFileNotice(String filename) {
-    super(SeverityLevel.INFO);
     this.filename = filename;
   }
 }

@@ -33,6 +33,7 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import java.util.List;
+import java.util.Optional;
 import javax.lang.model.element.Modifier;
 import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
@@ -114,6 +115,7 @@ public class TableDescriptorGenerator {
     typeSpec.addMethod(generateGtfsFilenameMethod());
     typeSpec.addMethod(generateIsRecommendedMethod());
     typeSpec.addMethod(generateIsRequiredMethod());
+    typeSpec.addMethod(generateMaxCharsPerColumnMethod());
 
     return typeSpec.build();
   }
@@ -184,12 +186,14 @@ public class TableDescriptorGenerator {
                   "GtfsColumnDescriptor.builder()\n"
                       + ".setColumnName($T.$L)\n"
                       + ".setHeaderRequired($L)\n"
+                      + ".setHeaderRecommended($L)\n"
                       + ".setFieldLevel($T.$L)\n"
                       + ".setIsMixedCase($L)\n"
                       + ".setIsCached($L)\n",
                   gtfsEntityType,
                   fieldNameField(field.name()),
                   field.isHeaderRequired(),
+                  field.columnRecommended(),
                   FieldLevelEnum.class,
                   getFieldLevel(field),
                   field.mixedCase(),
@@ -250,12 +254,12 @@ public class TableDescriptorGenerator {
       CodeBlock fieldValue =
           field.type() == FieldTypeEnum.ENUM
               ? CodeBlock.of(
-                  "rowParser.asEnum(columnIndex, columnDescriptor.fieldLevel(), $T::forNumber,"
+                  "rowParser.asEnum(columnIndex, columnDescriptor, $T::forNumber,"
                       + " $T.UNRECOGNIZED)",
                   ClassName.get(field.javaType()),
                   ClassName.get(field.javaType()))
               : CodeBlock.of(
-                  "rowParser.$L(columnIndex, columnDescriptor.fieldLevel()$L)",
+                  "rowParser.$L(columnIndex, columnDescriptor$L)",
                   gtfsTypeToParserMethod(field.type()),
                   field.numberBounds().isPresent()
                       ? ", RowParser.NumberBounds." + field.numberBounds().get()
@@ -306,5 +310,19 @@ public class TableDescriptorGenerator {
         .addAnnotation(Override.class)
         .addStatement("return $L", fileDescriptor.required())
         .build();
+  }
+
+  private MethodSpec generateMaxCharsPerColumnMethod() {
+    MethodSpec.Builder m =
+        MethodSpec.methodBuilder("maxCharsPerColumn")
+            .addModifiers(Modifier.PUBLIC)
+            .returns(ParameterizedTypeName.get(Optional.class, Integer.class))
+            .addAnnotation(Override.class);
+    if (fileDescriptor.maxCharsPerColumn().isPresent()) {
+      m.addStatement("return Optional.of($L)", fileDescriptor.maxCharsPerColumn().get());
+    } else {
+      m.addStatement("return Optional.empty()");
+    }
+    return m.build();
   }
 }

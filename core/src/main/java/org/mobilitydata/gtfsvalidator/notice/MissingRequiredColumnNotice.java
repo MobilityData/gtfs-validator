@@ -15,21 +15,23 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
-/**
- * A required column is missing in the input file.
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
- */
+import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.TERM_DEFINITIONS;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
+
+/** A required column is missing in the input file. */
+@GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(TERM_DEFINITIONS))
 public class MissingRequiredColumnNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The name of the missing column.
+  /** The name of the missing column. */
   private final String fieldName;
 
   public MissingRequiredColumnNotice(String filename, String fieldName) {
-    super(SeverityLevel.ERROR);
     this.filename = filename;
     this.fieldName = fieldName;
   }

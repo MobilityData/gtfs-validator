@@ -15,34 +15,37 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
+import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.FILED_TYPES;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
+
 /**
  * A field contains a wrong currency code.
  *
  * <p>Currency code must follow <a href="https://en.wikipedia.org/wiki/ISO_4217#Active_codes">ISO
- * 4217</a>.
+ * 4217</a>
  *
- * <p>Example: {@code CAD} for Canadian dollars, {@code EUR} for euros or {@code JPY} for Japanese
- * yen.
- *
- * <p>Severity: {@code SeverityLevel.ERROR}
+ * <p>Example: `CAD` for Canadian dollars, `EUR` for euros or `JPY` for Japanese yen.
  */
+@GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILED_TYPES))
 public class InvalidCurrencyNotice extends ValidationNotice {
 
-  // The name of the faulty file.
+  /** The name of the faulty file. */
   private final String filename;
 
-  // The row of the faulty record.
+  /** The row of the faulty record. */
   private final int csvRowNumber;
 
-  // Faulty record's field name.
+  /** Faulty record's field name. */
   private final String fieldName;
 
-  // Faulty value.
+  /** Faulty value. */
   private final String fieldValue;
 
   public InvalidCurrencyNotice(
       String filename, int csvRowNumber, String fieldName, String fieldValue) {
-    super(SeverityLevel.ERROR);
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.fieldName = fieldName;

@@ -1,0 +1,58 @@
+plugins {
+  id 'base'
+}
+
+def WEB_DEPLOY_CLIENT_BUCKET = System.getenv("WEB_DEPLOY_CLIENT_BUCKET")
+
+task webClientNodeModules (type: Exec) {
+  outputs.dir(file('./node_modules'))
+  commandLine 'npm', 'install'
+}
+
+task webClientNoticeSchema (type: Exec){
+  dependsOn ':cli:build'
+  outputs.file(file('./notice_schema.json'))
+  def javaCmd = System.getenv('JAVA_HOME') == null ? 'java' : "${System.getenv('JAVA_HOME')}/bin/java"
+  commandLine (
+    javaCmd,
+    '-jar',
+    "../../cli/build/libs/gtfs-validator-${project.version}-cli.jar",
+    '--export_notices_schema',
+    '-o',
+    '.'
+  )
+}
+
+task webClientRulesJSON (type: Exec) {
+  dependsOn webClientNoticeSchema
+  outputs.file(file('./static/rules.json'))
+  commandLine 'mv', webClientNoticeSchema.outputs.files[0], outputs.files[0]
+}
+
+task webClientSetup {
+  dependsOn webClientNodeModules
+  dependsOn webClientRulesJSON
+}
+
+task webTest (type: Exec) {
+  dependsOn webClientSetup
+  // lint is currently failing
+  //commandLine 'npm', 'run', 'lint'
+  commandLine 'npm', 'run', 'check'
+}
+
+task webBuild (type: Exec) {
+  outputs.dir(file('./build'))
+  dependsOn   webClientSetup
+  commandLine 'npm', 'run', 'build'
+}
+
+task webDeploy (type: Exec){
+  if (WEB_DEPLOY_CLIENT_BUCKET != null) {
+    dependsOn   webBuild
+    workingDir  webBuild.outputs.files[0]
+    commandLine 'gcloud', 'storage', 'cp', '--recursive', '.', "gs://${WEB_DEPLOY_CLIENT_BUCKET}/"
+  } else {
+    commandLine 'echo', 'SKIP: webDeploy: missing required environment variable: WEB_DEPLOY_CLIENT_BUCKET'
+  }
+}

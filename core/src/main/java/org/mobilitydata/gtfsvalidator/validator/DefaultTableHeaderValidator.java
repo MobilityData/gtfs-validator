@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import org.mobilitydata.gtfsvalidator.notice.DuplicatedColumnNotice;
 import org.mobilitydata.gtfsvalidator.notice.EmptyColumnNameNotice;
+import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedColumnNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredColumnNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.UnknownColumnNotice;
@@ -36,14 +37,20 @@ public class DefaultTableHeaderValidator implements TableHeaderValidator {
       CsvHeader actualHeader,
       Set<String> supportedColumns,
       Set<String> requiredColumns,
+      Set<String> recommendedColumns,
       NoticeContainer noticeContainer) {
     if (actualHeader.getColumnCount() == 0) {
       // This is an empty file.
       return;
     }
     Map<String, Integer> columnIndices = new HashMap<>();
-    // Sorted tree set for stable order of notices.
+    // Sorted tree set of all the columns for stable order of notices.
+    // We remove the columns that are properly present and well formed from that set, and at the
+    // end only the missing required columns are left in the set.
     TreeSet<String> missingColumns = new TreeSet<>(requiredColumns);
+    // We also want to find the recommended columns that are absent. We use the same scheme for
+    // these.
+    TreeSet<String> missingRecommendedColumns = new TreeSet<>(recommendedColumns);
     for (int i = 0; i < actualHeader.getColumnCount(); ++i) {
       String column = actualHeader.getColumnName(i);
       // Column indices are zero-based. We add 1 to make them 1-based.
@@ -59,11 +66,22 @@ public class DefaultTableHeaderValidator implements TableHeaderValidator {
       if (!supportedColumns.contains(column)) {
         noticeContainer.addValidationNotice(new UnknownColumnNotice(filename, column, i + 1));
       }
+
+      // If the column is present, it should not be in the missing required columns set
       missingColumns.remove(column);
+
+      // If the column is present, it should not be in the missing recommended columns set
+      missingRecommendedColumns.remove(column);
     }
     if (!missingColumns.isEmpty()) {
       for (String column : missingColumns) {
         noticeContainer.addValidationNotice(new MissingRequiredColumnNotice(filename, column));
+      }
+    }
+
+    if (!missingRecommendedColumns.isEmpty()) {
+      for (String column : missingRecommendedColumns) {
+        noticeContainer.addValidationNotice(new MissingRecommendedColumnNotice(filename, column));
       }
     }
   }

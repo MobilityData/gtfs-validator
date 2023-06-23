@@ -4,9 +4,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.flogger.FluentLogger;
 import com.univocity.parsers.common.TextParsingException;
+import com.univocity.parsers.csv.CsvParserSettings;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import org.mobilitydata.gtfsvalidator.notice.CsvParsingFailedNotice;
@@ -33,9 +35,15 @@ public final class AnyTableLoader {
       InputStream csvInputStream,
       NoticeContainer noticeContainer) {
     final String gtfsFilename = tableDescriptor.gtfsFilename();
+
     CsvFile csvFile;
     try {
-      csvFile = new CsvFile(csvInputStream, gtfsFilename);
+      CsvParserSettings settings = CsvFile.createDefaultParserSettings();
+      if (tableDescriptor.maxCharsPerColumn().isPresent()) {
+        Optional<Integer> maxCharsPerColumn = tableDescriptor.maxCharsPerColumn();
+        settings.setMaxCharsPerColumn(maxCharsPerColumn.get());
+      }
+      csvFile = new CsvFile(csvInputStream, gtfsFilename, settings);
     } catch (TextParsingException e) {
       noticeContainer.addValidationNotice(new CsvParsingFailedNotice(gtfsFilename, e));
       return tableDescriptor.createContainerForInvalidStatus(
@@ -142,6 +150,10 @@ public final class AnyTableLoader {
                 .collect(Collectors.toSet()),
             columnDescriptors.stream()
                 .filter(GtfsColumnDescriptor::headerRequired)
+                .map(GtfsColumnDescriptor::columnName)
+                .collect(Collectors.toSet()),
+            columnDescriptors.stream()
+                .filter(GtfsColumnDescriptor::headerRecommended)
                 .map(GtfsColumnDescriptor::columnName)
                 .collect(Collectors.toSet()),
             headerNotices);

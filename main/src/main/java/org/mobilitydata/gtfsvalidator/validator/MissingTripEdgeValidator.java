@@ -15,6 +15,7 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 import static org.mobilitydata.gtfsvalidator.table.GtfsStopTime.ARRIVAL_TIME_FIELD_NAME;
 import static org.mobilitydata.gtfsvalidator.table.GtfsStopTime.DEPARTURE_TIME_FIELD_NAME;
 
@@ -22,11 +23,13 @@ import com.google.common.collect.Multimaps;
 import java.util.List;
 import java.util.Map.Entry;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 
 /**
@@ -89,32 +92,30 @@ public class MissingTripEdgeValidator extends FileValidator {
   }
 
   /**
-   * "First and last stop of a trip must define both `arrival_time` and `departure_time` fields."
+   * Missing trip edge `arrival_time` or `departure_time`.
    *
-   * <p>"If there are not separate times for arrival and departure at a stop, enter the same value
-   * for arrival_time and departure_time."
-   *
-   * <p>(http://gtfs.org/reference/static/#stop_timestxt)
-   *
-   * <p>Severity: {@code SeverityLevel.ERROR}
+   * <p>First and last stop of a trip must define both `arrival_time` and `departure_time` fields.
+   * Per [stop_times.txt](http://gtfs.org/reference/static/#stop_timestxt), "If there are not
+   * separate times for arrival and departure at a stop, enter the same value for arrival_time and
+   * departure_time."
    */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopTimeSchema.class))
   static class MissingTripEdgeNotice extends ValidationNotice {
 
-    // The row of the faulty record.
+    /** The row of the faulty record. */
     private final int csvRowNumber;
 
-    // `stops.stop_sequence` of the faulty record.
+    /** `stops.stop_sequence` of the faulty record. */
     private final int stopSequence;
 
-    // The `trips.trip_id` of the faulty record.
+    /** The `trips.trip_id` of the faulty record. */
     private final String tripId;
 
-    // Name of the missing field.
+    /** Name of the missing field. */
     private final String specifiedField;
 
     MissingTripEdgeNotice(
         int csvRowNumber, int stopSequence, String tripId, String specifiedField) {
-      super(SeverityLevel.ERROR);
       this.csvRowNumber = csvRowNumber;
       this.stopSequence = stopSequence;
       this.tripId = tripId;

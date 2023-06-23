@@ -31,8 +31,5 @@ package org.mobilitydata.gtfsvalidator.notice;
  */
 public abstract class SystemError extends Notice {
 
-  public SystemError() {
-    // by default SystemError.severity is set to SeverityLevel.ERROR
-    super(SeverityLevel.ERROR);
-  }
+  public SystemError() {}
 }

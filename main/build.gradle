@@ -46,6 +46,7 @@ dependencies {
     implementation 'com.univocity:univocity-parsers:2.9.0'
     implementation 'com.google.geometry:s2-geometry:2.0.0'
     implementation 'org.thymeleaf:thymeleaf:3.0.15.RELEASE'
+    implementation 'com.vladsch.flexmark:flexmark-all:0.64.8'
     implementation 'io.github.classgraph:classgraph:4.8.146'
     testImplementation group: 'junit', name: 'junit', version: '4.13'
     testImplementation 'com.google.truth:truth:1.0.1'

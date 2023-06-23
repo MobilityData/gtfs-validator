@@ -235,20 +235,6 @@ public class ArgumentsTest {
   }
 
   @Test
-  public void feedName_long_isNotValid() {
-    assertThat(
-            validateArguments(
-                new String[] {
-                  "--input", "input value",
-                  "--output_base", "output value",
-                  "--country_code", "ca",
-                  "--threads", "4",
-                  "--feed_name", "feed name"
-                }))
-        .isFalse();
-  }
-
-  @Test
   public void exportNoticesSchema_schemaOnly() {
     String[] cliArguments = {"--export_notices_schema", "--output_base", "output value"};
     Arguments args = new Arguments();

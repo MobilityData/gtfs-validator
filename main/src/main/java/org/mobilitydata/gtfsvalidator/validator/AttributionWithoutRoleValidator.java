@@ -15,12 +15,16 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsAttribution;
 import org.mobilitydata.gtfsvalidator.table.GtfsAttributionRole;
+import org.mobilitydata.gtfsvalidator.table.GtfsAttributionSchema;
 
 /**
  * Validates that an attribution has at least one role: is_producer, is_operator, or is_authority.
@@ -46,21 +50,21 @@ public class AttributionWithoutRoleValidator extends SingleEntityValidator<GtfsA
   }
 
   /**
-   * A row from GTFS file `attributions.txt` has fields `attributions.is_producer`,
-   * `attributions.is_operator`, and `attributions.is_authority` not defined or set at 0.
+   * Attribution with no role.
    *
-   * <p>Severity: {@code SeverityLevel.WARNING}
+   * <p>At least one of the fields `is_producer`, `is_operator`, or `is_authority` should be set to
+   * 1.
    */
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsAttributionSchema.class))
   static class AttributionWithoutRoleNotice extends ValidationNotice {
 
-    // The row number of the faulty record.
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    // The id of the faulty record.
+    /** The id of the faulty record. */
     private final String attributionId;
 
     AttributionWithoutRoleNotice(int csvRowNumber, String attributionId) {
-      super(SeverityLevel.WARNING);
       this.csvRowNumber = csvRowNumber;
       this.attributionId = attributionId;
     }

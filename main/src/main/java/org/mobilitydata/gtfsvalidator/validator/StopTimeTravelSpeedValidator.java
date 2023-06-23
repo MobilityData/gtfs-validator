@@ -15,6 +15,7 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 import static org.mobilitydata.gtfsvalidator.util.StopUtil.getStopOrParentLatLng;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -28,18 +29,24 @@ import com.google.common.hash.Hashing;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
+import org.mobilitydata.gtfsvalidator.table.GtfsRouteSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
+import org.mobilitydata.gtfsvalidator.table.GtfsTripSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 import org.mobilitydata.gtfsvalidator.util.S2Earth;
@@ -328,52 +335,86 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
     }
   }
 
-  /** Describes a trip where the transit vehicle moves too fast between two consecutive stops. */
+  /**
+   * A transit vehicle moves too fast between two consecutive stops.
+   *
+   * <p>The speed threshold depends on route type:
+   *
+   * <pre>
+   * | Route type | Description | Threshold, km/h |
+   * |------------|-------------|-----------------|
+   * | 0          | Light rail  | 100             |
+   * | 1          | Subway      | 150             |
+   * | 2          | Rail        | 500             |
+   * | 3          | Bus         | 150             |
+   * | 4          | Ferry       |  80             |
+   * | 5          | Cable tram  |  30             |
+   * | 6          | Aerial lift |  50             |
+   * | 7          | Funicular   |  50             |
+   * | 11         | Trolleybus  | 150             |
+   * | 12         | Monorail    | 150             |
+   * | -          | Unknown     | 200             |
+   * </pre>
+   */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files =
+          @FileRefs({
+            GtfsRouteSchema.class,
+            GtfsStopSchema.class,
+            GtfsStopTimeSchema.class,
+            GtfsTripSchema.class
+          }),
+      urls = {
+        @UrlRef(
+            label = "Original Python validator implementation",
+            url = "https://github.com/google/transitfeed")
+      })
   static class FastTravelBetweenConsecutiveStopsNotice extends ValidationNotice {
 
-    // The row number of the problematic trip.
+    /** The row number of the problematic trip. */
     private final long tripCsvRowNumber;
 
-    // `trip_id` of the problematic trip.
+    /** `trip_id` of the problematic trip. */
     private final String tripId;
 
-    // `route_id` of the problematic trip.
+    /** `route_id` of the problematic trip. */
     private final String routeId;
 
-    // Travel speed (km/h).
+    /** Travel speed (km/h). */
     private final double speedKph;
 
-    // Distance between stops (km).
+    /** Distance between stops (km). */
     private final double distanceKm;
 
-    // The row number of the first stop time.
+    /** The row number of the first stop time. */
     private final int csvRowNumber1;
 
-    // `stop_sequence` of the first stop.
+    /** `stop_sequence` of the first stop. */
     private final int stopSequence1;
 
-    // `stop_id` of the first stop.
+    /** `stop_id` of the first stop. */
     private final String stopId1;
 
-    // `stop_name` of the first stop.
+    /** `stop_name` of the first stop. */
     private final String stopName1;
 
-    // `departure_time` of the first stop.
+    /** `departure_time` of the first stop. */
     private final GtfsTime departureTime1;
 
-    // The row number of the second stop time.
+    /** The row number of the second stop time. */
     private final int csvRowNumber2;
 
-    // `stop_sequence` of the second stop.
+    /** `stop_sequence` of the second stop. */
     private final int stopSequence2;
 
-    // `stop_id` of the second stop.
+    /** `stop_id` of the second stop. */
     private final String stopId2;
 
-    // `stop_name` of the second stop.
+    /** `stop_name` of the second stop. */
     private final String stopName2;
 
-    // `arrival_time` of the second stop.
+    /** `arrival_time` of the second stop. */
     private final GtfsTime arrivalTime2;
 
     FastTravelBetweenConsecutiveStopsNotice(
@@ -384,7 +425,6 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
         GtfsStop stop2,
         double speedKph,
         double distanceKm) {
-      super(SeverityLevel.WARNING);
       this.tripCsvRowNumber = trip.csvRowNumber();
       this.tripId = trip.tripId();
       this.routeId = trip.routeId();
@@ -404,56 +444,73 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
   }
 
   /**
-   * Describes a trip where the transit vehicle moves too fast between two far stops.
+   * A transit vehicle moves too fast between two far stops.
    *
-   * <p>This normally indicates a more serious problem than too fast travel between consecutive
-   * stops.
+   * <p>Two stops are considered "far" if they are more than 10 km apart. This normally indicates a
+   * more serious problem than too fast travel between consecutive stops.
+   *
+   * <p>The speed threshold depends on route type and are the same as
+   * `fast_travel_between_consecutive_stops`.
    */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files =
+          @FileRefs({
+            GtfsRouteSchema.class,
+            GtfsStopSchema.class,
+            GtfsStopTimeSchema.class,
+            GtfsTripSchema.class
+          }),
+      urls = {
+        @UrlRef(
+            label = "Original Python validator implementation",
+            url = "https://github.com/google/transitfeed")
+      })
   static class FastTravelBetweenFarStopsNotice extends ValidationNotice {
 
-    // The row number of the problematic trip.
+    /** The row number of the problematic trip. */
     private final long tripCsvRowNumber;
 
-    // `trip_id` of the problematic trip.
+    /** `trip_id` of the problematic trip. */
     private final String tripId;
 
-    // `route_id` of the problematic trip.
+    /** `route_id` of the problematic trip. */
     private final String routeId;
 
-    // Travel speed (km/h).
+    /** Travel speed (km/h). */
     private final double speedKph;
 
-    // Distance between stops (km).
+    /** Distance between stops (km). */
     private final double distanceKm;
 
-    // The row number of the first stop time.
+    /** The row number of the first stop time. */
     private final int csvRowNumber1;
 
-    // `stop_sequence` of the first stop.
+    /** `stop_sequence` of the first stop. */
     private final int stopSequence1;
 
-    // `stop_id` of the first stop.
+    /** `stop_id` of the first stop. */
     private final String stopId1;
 
-    // `stop_name` of the first stop.
+    /** `stop_name` of the first stop. */
     private final String stopName1;
 
-    // `departure_time` of the first stop.
+    /** `departure_time` of the first stop. */
     private final GtfsTime departureTime1;
 
-    // The row number of the second stop time.
+    /** The row number of the second stop time. */
     private final int csvRowNumber2;
 
-    // `stop_sequence` of the second stop.
+    /** `stop_sequence` of the second stop. */
     private final int stopSequence2;
 
-    // `stop_id` of the second stop.
+    /** `stop_id` of the second stop. */
     private final String stopId2;
 
-    // `stop_name` of the second stop.
+    /** `stop_name` of the second stop. */
     private final String stopName2;
 
-    // `arrival_time` of the second stop.
+    /** `arrival_time` of the second stop. */
     private final GtfsTime arrivalTime2;
 
     FastTravelBetweenFarStopsNotice(
@@ -464,7 +521,6 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
         GtfsStop stop2,
         double speedKph,
         double distanceKm) {
-      super(SeverityLevel.WARNING);
       this.tripCsvRowNumber = trip.csvRowNumber();
       this.tripId = trip.tripId();
       this.routeId = trip.routeId();
