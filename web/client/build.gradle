@@ -9,9 +9,29 @@ task webClientNodeModules (type: Exec) {
   commandLine 'npm', 'install'
 }
 
+task webClientNoticeSchema (type: Exec){
+  dependsOn ':cli:build'
+  outputs.file(file('./notice_schema.json'))
+  def javaCmd = System.getenv('JAVA_HOME') == null ? 'java' : "${System.getenv('JAVA_HOME')}/bin/java"
+  commandLine (
+    javaCmd,
+    '-jar',
+    "../../cli/build/libs/gtfs-validator-${project.version}-cli.jar",
+    '--export_notices_schema',
+    '-o',
+    '.'
+  )
+}
+
+task webClientRulesJSON (type: Exec) {
+  dependsOn webClientNoticeSchema
+  outputs.file(file('./static/rules.json'))
+  commandLine 'mv', webClientNoticeSchema.outputs.files[0], outputs.files[0]
+}
+
 task webClientSetup {
   dependsOn webClientNodeModules
-  dependsOn ':copyRulesToWebClient'
+  dependsOn webClientRulesJSON
 }
 
 task webTest (type: Exec) {

@@ -27,6 +27,8 @@
   {/if}
 </svelte:head>
 
+<div id="_top"></div>
+
 <header class="my-4 md:mb-8 lg:mb-16">
   <div class="container">
     <a href="https://mobilitydata.org/">
