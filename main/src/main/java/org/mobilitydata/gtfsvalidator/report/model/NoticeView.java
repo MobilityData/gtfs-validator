@@ -23,7 +23,7 @@ public class NoticeView {
     this.notice = notice;
     this.json = notice.getContext().toJsonTree().getAsJsonObject();
     this.fields = new ArrayList<>(json.keySet());
-    this.comments = NoticeSchemaGenerator.loadComments(notice.getClass());
+    this.comments = NoticeSchemaGenerator.loadComments(notice.getContext().getClass());
   }
 
   /**
