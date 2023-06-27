@@ -190,7 +190,9 @@ public class NoticeFieldsTest {
             "tripIdB",
             "tripIdFieldName",
             "validator",
-            "value");
+            "value",
+            "feedContactEmail",
+            "feedContactUrl");
   }
 
   private static List<String> discoverValidationNoticeFieldNames() {

@@ -8,6 +8,9 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 
+/**
+ * Validate that if the dataset provides at least one of feed_contact_email and feed_contact_url in "feed_info.txt".
+ */
 @GtfsValidator
 public class FeedContactValidator extends SingleEntityValidator<GtfsFeedInfo> {
 
@@ -36,7 +39,7 @@ public class FeedContactValidator extends SingleEntityValidator<GtfsFeedInfo> {
       urls = {
         @GtfsValidationNotice.UrlRef(
             label = "Original Python validator implementation",
-            url = "https://github.com/google/transitfeed")
+            url = "https://gtfs.org/schedule/best-practices/#feed_infotxt")
       })
   static class FeedContactNotice extends ValidationNotice {
     /** The row number of the validated record. */
