@@ -28,7 +28,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTimeframeSchema;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 @GtfsValidator
-public class TimeframeTimeValidator extends SingleEntityValidator<GtfsTimeframe> {
+public class TimeframeStartAndEndTimeValidator extends SingleEntityValidator<GtfsTimeframe> {
 
   private static final GtfsTime TWENTY_FOUR_HOURS = GtfsTime.fromHourMinuteSecond(24, 0, 0);
 
@@ -40,12 +40,12 @@ public class TimeframeTimeValidator extends SingleEntityValidator<GtfsTimeframe>
     }
     if (entity.hasStartTime() && entity.startTime().isAfter(TWENTY_FOUR_HOURS)) {
       noticeContainer.addValidationNotice(
-          new TimeframeTimeGreaterThanTwentyFourHoursNotice(
+          new TimeframeStartOrEndTimeGreaterThanTwentyFourHoursNotice(
               entity.csvRowNumber(), GtfsTimeframe.START_TIME_FIELD_NAME, entity.startTime()));
     }
     if (entity.hasEndTime() && entity.endTime().isAfter(TWENTY_FOUR_HOURS)) {
       noticeContainer.addValidationNotice(
-          new TimeframeTimeGreaterThanTwentyFourHoursNotice(
+          new TimeframeStartOrEndTimeGreaterThanTwentyFourHoursNotice(
               entity.csvRowNumber(), GtfsTimeframe.END_TIME_FIELD_NAME, entity.endTime()));
     }
   }
@@ -68,7 +68,7 @@ public class TimeframeTimeValidator extends SingleEntityValidator<GtfsTimeframe>
 
   /** A time in `timeframes.txt` is greater than `24:00:00`. */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsTimeframeSchema.class))
-  static class TimeframeTimeGreaterThanTwentyFourHoursNotice extends ValidationNotice {
+  static class TimeframeStartOrEndTimeGreaterThanTwentyFourHoursNotice extends ValidationNotice {
     /** The row number for the faulty record. */
     private final int csvRowNumber;
     /** The time field name for the faulty record. */
@@ -76,7 +76,7 @@ public class TimeframeTimeValidator extends SingleEntityValidator<GtfsTimeframe>
     /** The invalid time value. */
     private final GtfsTime time;
 
-    TimeframeTimeGreaterThanTwentyFourHoursNotice(
+    TimeframeStartOrEndTimeGreaterThanTwentyFourHoursNotice(
         int csvRowNumber, String fieldName, GtfsTime time) {
       this.csvRowNumber = csvRowNumber;
       this.fieldName = fieldName;

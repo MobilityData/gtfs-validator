@@ -26,11 +26,11 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsTimeframe;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
-import org.mobilitydata.gtfsvalidator.validator.TimeframeTimeValidator.TimeframeOnlyStartOrEndTimeSpecifiedNotice;
-import org.mobilitydata.gtfsvalidator.validator.TimeframeTimeValidator.TimeframeTimeGreaterThanTwentyFourHoursNotice;
+import org.mobilitydata.gtfsvalidator.validator.TimeframeStartAndEndTimeValidator.TimeframeOnlyStartOrEndTimeSpecifiedNotice;
+import org.mobilitydata.gtfsvalidator.validator.TimeframeStartAndEndTimeValidator.TimeframeStartOrEndTimeGreaterThanTwentyFourHoursNotice;
 
 @RunWith(JUnit4.class)
-public class TimeframeTimeValidatorTest {
+public class TimeframeStartAndEndTimeValidatorTest {
 
   @Test
   public void testExplicitFullDayInterval() {
@@ -58,7 +58,7 @@ public class TimeframeTimeValidatorTest {
                     .setEndTime(GtfsTime.fromString("24:00:01"))
                     .build()))
         .containsExactly(
-            new TimeframeTimeGreaterThanTwentyFourHoursNotice(
+            new TimeframeStartOrEndTimeGreaterThanTwentyFourHoursNotice(
                 2, "end_time", GtfsTime.fromString("24:00:01")));
   }
 
@@ -86,7 +86,7 @@ public class TimeframeTimeValidatorTest {
 
   private List<ValidationNotice> validate(GtfsTimeframe timeframe) {
     NoticeContainer container = new NoticeContainer();
-    new TimeframeTimeValidator().validate(timeframe, container);
+    new TimeframeStartAndEndTimeValidator().validate(timeframe, container);
     return container.getValidationNotices();
   }
 }
