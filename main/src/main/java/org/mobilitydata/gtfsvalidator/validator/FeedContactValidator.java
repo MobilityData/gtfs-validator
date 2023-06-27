@@ -9,14 +9,16 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 
 /**
- * Validate that if the dataset provides at least one of feed_contact_email and feed_contact_url in "feed_info.txt".
+ * Validate that if the dataset provides at least one of feed_contact_email and feed_contact_url in
+ * "feed_info.txt".
  */
 @GtfsValidator
 public class FeedContactValidator extends SingleEntityValidator<GtfsFeedInfo> {
 
   /**
-   * Best Practices https://gtfs.org/schedule/best-practices/#feed_infotxt
-   * suggest providing at least one of feed_contact_email and feed_contact_url
+   * Best Practices https://gtfs.org/schedule/best-practices/#feed_infotxt suggest providing at
+   * least one of feed_contact_email and feed_contact_url
+   *
    * @param entity
    * @param noticeContainer
    */
@@ -30,9 +32,7 @@ public class FeedContactValidator extends SingleEntityValidator<GtfsFeedInfo> {
     }
   }
 
-  /**
-   * Only generates a warning when both feed_contact_email and feed_contact_url are unset
-   */
+  /** Only generates a warning when both feed_contact_email and feed_contact_url are unset */
   @GtfsValidationNotice(
       severity = WARNING,
       files = @GtfsValidationNotice.FileRefs(GtfsFeedInfo.class),
