@@ -20,6 +20,10 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTimeframe;
 import org.mobilitydata.gtfsvalidator.table.GtfsTimeframeTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
+/**
+ * Validates that two entries from `timesframes.txt` with the same `timeframe_group_id` and
+ * `service_id` do not have overlapping time intervals.
+ */
 @GtfsValidator
 public class TimeframeOverlapValidator extends FileValidator {
 

@@ -27,6 +27,10 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTimeframe;
 import org.mobilitydata.gtfsvalidator.table.GtfsTimeframeSchema;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
+/**
+ * Validates the `start_time` and `end_time` values from `timeframes.txt`, checking that either both
+ * are present or neither. Also checks that no value is greater than 24-hours.
+ */
 @GtfsValidator
 public class TimeframeStartAndEndTimeValidator extends SingleEntityValidator<GtfsTimeframe> {
 
