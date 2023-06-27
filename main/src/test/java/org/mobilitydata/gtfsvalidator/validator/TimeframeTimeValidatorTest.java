@@ -26,12 +26,14 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsTimeframe;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
+import org.mobilitydata.gtfsvalidator.validator.TimeframeTimeValidator.TimeframeOnlyStartOrEndTimeSpecifiedNotice;
+import org.mobilitydata.gtfsvalidator.validator.TimeframeTimeValidator.TimeframeTimeGreaterThanTwentyFourHoursNotice;
 
 @RunWith(JUnit4.class)
 public class TimeframeTimeValidatorTest {
 
   @Test
-  public void test() {
+  public void testExplicitFullDayInterval() {
     assertThat(
             validate(
                 new GtfsTimeframe.Builder()
@@ -39,6 +41,47 @@ public class TimeframeTimeValidatorTest {
                     .setEndTime(GtfsTime.fromString("24:00:00"))
                     .build()))
         .isEmpty();
+  }
+
+  @Test
+  public void testImplicitFullDayInterval() {
+    assertThat(validate(new GtfsTimeframe.Builder().build())).isEmpty();
+  }
+
+  @Test
+  public void testBeyondTwentyFourHours() {
+    assertThat(
+            validate(
+                new GtfsTimeframe.Builder()
+                    .setCsvRowNumber(2)
+                    .setStartTime(GtfsTime.fromString("00:00:00"))
+                    .setEndTime(GtfsTime.fromString("24:00:01"))
+                    .build()))
+        .containsExactly(
+            new TimeframeTimeGreaterThanTwentyFourHoursNotice(
+                2, "end_time", GtfsTime.fromString("24:00:01")));
+  }
+
+  @Test
+  public void testOnlyStartTimeSpecified() {
+    assertThat(
+            validate(
+                new GtfsTimeframe.Builder()
+                    .setStartTime(GtfsTime.fromString("00:00:00"))
+                    .setCsvRowNumber(2)
+                    .build()))
+        .containsExactly(new TimeframeOnlyStartOrEndTimeSpecifiedNotice(2));
+  }
+
+  @Test
+  public void testOnlyEndTimeSpecified() {
+    assertThat(
+            validate(
+                new GtfsTimeframe.Builder()
+                    .setEndTime(GtfsTime.fromString("10:00:00"))
+                    .setCsvRowNumber(2)
+                    .build()))
+        .containsExactly(new TimeframeOnlyStartOrEndTimeSpecifiedNotice(2));
   }
 
   private List<ValidationNotice> validate(GtfsTimeframe timeframe) {
