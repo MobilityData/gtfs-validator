@@ -10,7 +10,9 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 
 /**
  * Validate that if the dataset provides at least one of feed_contact_email and feed_contact_url in
- * "feed_info.txt".
+ * "feed_info.txt". *
+ *
+ * <p>Generated notice: {@link MissingFeedContactEmailAndUrlNotice}.
  */
 @GtfsValidator
 public class FeedContactValidator extends SingleEntityValidator<GtfsFeedInfo> {
@@ -27,12 +29,17 @@ public class FeedContactValidator extends SingleEntityValidator<GtfsFeedInfo> {
     if (!entity.hasFeedContactEmail() && !entity.hasFeedContactUrl()
         || entity.feedContactEmail().isBlank() && entity.feedContactUrl().isBlank()) {
       noticeContainer.addValidationNotice(
-          new FeedContactNotice(
+          new MissingFeedContactEmailAndUrlNotice(
               entity.csvRowNumber(), entity.feedContactEmail(), entity.feedContactUrl()));
     }
   }
 
-  /** Only generates a warning when both feed_contact_email and feed_contact_url are unset */
+  /**
+   * Only generates a warning when both feed_contact_email and feed_contact_url are unset
+   *
+   * <p>There should be no warning generated when the dataset has one of feed_contact_email and
+   * feed_contact_url.
+   */
   @GtfsValidationNotice(
       severity = WARNING,
       files = @GtfsValidationNotice.FileRefs(GtfsFeedInfo.class),
@@ -41,7 +48,7 @@ public class FeedContactValidator extends SingleEntityValidator<GtfsFeedInfo> {
             label = "Original Python validator implementation",
             url = "https://gtfs.org/schedule/best-practices/#feed_infotxt")
       })
-  static class FeedContactNotice extends ValidationNotice {
+  static class MissingFeedContactEmailAndUrlNotice extends ValidationNotice {
     /** The row number of the validated record. */
     private final int rowNumber;
 
@@ -51,7 +58,8 @@ public class FeedContactValidator extends SingleEntityValidator<GtfsFeedInfo> {
     /** The url contact information of a feed. */
     private final String feedContactUrl;
 
-    FeedContactNotice(int rowNumber, String feedContactEmail, String feedContactUrl) {
+    MissingFeedContactEmailAndUrlNotice(
+        int rowNumber, String feedContactEmail, String feedContactUrl) {
       this.rowNumber = rowNumber;
       this.feedContactEmail = feedContactEmail;
       this.feedContactUrl = feedContactUrl;

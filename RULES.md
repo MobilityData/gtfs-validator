@@ -94,51 +94,52 @@ Each Notice is associated with a severity: `INFO`, `WARNING`, `ERROR`.
 <a name="WARNINGS"/>
 
 ## Table of WARNINGS
-| Notice code                                                                                   | Description                                                                                                                                                   |
-|-----------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`attribution_without_role`](#attribution_without_role)                                       | Attribution with no role.                                                                                                                                     |
-| [`duplicate_fare_media`](#duplicate_fare_media)                                               | Two distinct fare media have the same fare media name and type.                                                                                              |
+| Notice code                                                                                   | Description                                                                                                                                     |
+|-----------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`attribution_without_role`](#attribution_without_role)                                       | Attribution with no role.                                                                                                                       |
+| [`duplicate_fare_media`](#duplicate_fare_media)                                               | Two distinct fare media have the same fare media name and type.                                                                                 |
 | [`duplicate_route_name`](#duplicate_route_name)                                               | Two distinct routes have either the same `route_short_name`, the same `route_long_name`, or the same combination of `route_short_name` and `route_long_name`. |
-| [`empty_row`](#empty_row)                                                                     | A row in the input file has only spaces.                                                                                                                      |
-| [`equal_shape_distance_same_coordinates`](#equal_shape_distance_same_coordinates)             | Two consecutive points have equal `shape_dist_traveled` and the same lat/lon coordinates in `shapes.txt`.                                                     |
-| [`expired_calendar`](#expired_calendar)                                                       | Dataset should not contain date ranges for services that have already expired.                                                                                |
+| [`empty_row`](#empty_row)                                                                     | A row in the input file has only spaces.                                                                                                        |
+| [`equal_shape_distance_same_coordinates`](#equal_shape_distance_same_coordinates)             | Two consecutive points have equal `shape_dist_traveled` and the same lat/lon coordinates in `shapes.txt`.                                       |
+| [`expired_calendar`](#expired_calendar)                                                       | Dataset should not contain date ranges for services that have already expired.                                                                  |
 | [`fast_travel_between_consecutive_stops`](#fast_travel_between_consecutive_stops)             | A transit vehicle moves too fast between two consecutive stops.                                                                                               |
-| [`fast_travel_between_far_stops`](#fast_travel_between_far_stops)                             | A transit vehicle moves too fast between two far stops.                                                                                                       |
-| [`feed_expiration_date7_days`](#feed_expiration_date7_days)                                   | Dataset should be valid for at least the next 7 days.                                                                                                         |
-| [`feed_expiration_date30_days`](#feed_expiration_date30_days)                                 | Dataset should cover at least the next 30 days of service.                                                                                                    |
-| [`feed_info_lang_and_agency_lang_mismatch`](#feed_info_lang_and_agency_lang_mismatch)         | Mismatching feed and agency language fields.                                                                                                                  |
-| [`inconsistent_agency_lang`](#inconsistent_agency_lang)                                       | Inconsistent language among agencies.                                                                                                                         |
-| [`leading_or_trailing_whitespaces`](#leading_or_trailing_whitespaces)                         | The value in CSV file has leading or trailing whitespaces.                                                                                                    |
-| [`missing_feed_info_date`](#missing_feed_info_date)                                           | `feed_end_date` should be provided if `feed_start_date` is provided. `feed_start_date` should be provided if `feed_end_date` is provided.                     |
-| [`missing_recommended_file`](#missing_recommended_file)                                       | A recommended file is missing.                                                                                                                                |
-| [`missing_recommended_field`](#missing_recommended_field)                                     | A recommended field is missing.                                                                                                                               |
-| [`missing_timepoint_column`](#missing_timepoint_column)                                       | `timepoint` column is missing for a dataset.                                                                                                                  |
-| [`missing_timepoint_value`](#missing_timepoint_value)                                         | `stop_times.timepoint` value is missing for a record.                                                                                                         |
-| [`mixed_case_recommended_field`](#mixed_case_recommended_field)                               | This field has customer-facing text and should use Mixed Case (should contain upper and lower case letters).                                                  |
-| [`more_than_one_entity`](#more_than_one_entity)                                               | More than one row in CSV.                                                                                                                                     |
-| [`non_ascii_or_non_printable_char`](#non_ascii_or_non_printable_char)                         | Non ascii or non printable char in  `id`.                                                                                                                     |
-| [`pathway_dangling_generic_node`](#pathway_dangling_generic_node)                             | A generic node has only one incident location in a pathway graph.                                                                                             |
-| [`pathway_loop`](#pathway_loop)                                                               | A pathway starts and ends at the same location.                                                                                                               |
-| [`route_color_contrast`](#route_color_contrast)                                               | Insufficient route color contrast.                                                                                                                            |
-| [`route_long_name_contains_short_name`](#route_long_name_contains_short_name)                 | Long name should not contain short name for a single route.                                                                                                   |
-| [`route_short_name_too_long`](#route_short_name_too_long)                                     | Short name of a route is too long (more than 12 characters).                                                                                                  |
-| [`same_name_and_description_for_route`](#same_name_and_description_for_route)                 | Same name and description for route.                                                                                                                          |
-| [`same_name_and_description_for_stop`](#same_name_and_description_for_stop)                   | Same name and description for stop.                                                                                                                           |
-| [`same_route_and_agency_url`](#same_route_and_agency_url)                                     | Same `routes.route_url` and `agency.agency_url`.                                                                                                              |
-| [`same_stop_and_agency_url`](#same_stop_and_agency_url)                                       | Same `stops.stop_url` and `agency.agency_url`.                                                                                                                |
-| [`same_stop_and_route_url`](#same_stop_and_route_url)                                         | Same `stops.stop_url` and `routes.route_url`.                                                                                                                 |
-| [`stop_has_too_many_matches_for_shape`](#stop_has_too_many_matches_for_shape)                 | Stop entry that has many potential matches to the trip's path of travel.                                                                                      |
-| [`stops_match_shape_out_of_order`](#stops_match_shape_out_of_order)                           | Two stop entries are different than their arrival-departure order defined by the shapes.txt                                                                   |
-| [`stop_too_far_from_shape`](#stop_too_far_from_shape)                                         | Stop too far from trip shape.                                                                                                                                 |
-| [`stop_too_far_from_shape_using_user_distance`](#stop_too_far_from_shape_using_user_distance) | Stop time too far from shape.                                                                                                                                 |
-| [`stop_without_stop_time`](#stop_without_stop_time)                                           | A stop in `stops.txt` is not referenced by any `stop_times.stop_id`.                                                                                          |
+| [`fast_travel_between_far_stops`](#fast_travel_between_far_stops)                             | A transit vehicle moves too fast between two far stops.                                                                                         |
+| [`feed_expiration_date7_days`](#feed_expiration_date7_days)                                   | Dataset should be valid for at least the next 7 days.                                                                                           |
+| [`feed_expiration_date30_days`](#feed_expiration_date30_days)                                 | Dataset should cover at least the next 30 days of service.                                                                                      |
+| [`feed_info_lang_and_agency_lang_mismatch`](#feed_info_lang_and_agency_lang_mismatch)         | Mismatching feed and agency language fields.                                                                                                    |
+| [`inconsistent_agency_lang`](#inconsistent_agency_lang)                                       | Inconsistent language among agencies.                                                                                                           |
+| [`leading_or_trailing_whitespaces`](#leading_or_trailing_whitespaces)                         | The value in CSV file has leading or trailing whitespaces.                                                                                      |
+| [`missing_feed_contact_email_and_url`](#missing_feed_contact_email_and_url)                   | Missing both feed_contact_email and feed_contact_url in `feed_info.txt'.       |
+| [`missing_feed_info_date`](#missing_feed_info_date)                                           | `feed_end_date` should be provided if `feed_start_date` is provided. `feed_start_date` should be provided if `feed_end_date` is provided.       |
+| [`missing_recommended_file`](#missing_recommended_file)                                       | A recommended file is missing.                                                                                                                  |
+| [`missing_recommended_field`](#missing_recommended_field)                                     | A recommended field is missing.                                                                                                                 |
+| [`missing_timepoint_column`](#missing_timepoint_column)                                       | `timepoint` column is missing for a dataset.                                                                                                    |
+| [`missing_timepoint_value`](#missing_timepoint_value)                                         | `stop_times.timepoint` value is missing for a record.                                                                                           |
+| [`mixed_case_recommended_field`](#mixed_case_recommended_field)                               | This field has customer-facing text and should use Mixed Case (should contain upper and lower case letters).                                    |
+| [`more_than_one_entity`](#more_than_one_entity)                                               | More than one row in CSV.                                                                                                                       |
+| [`non_ascii_or_non_printable_char`](#non_ascii_or_non_printable_char)                         | Non ascii or non printable char in  `id`.                                                                                                       |
+| [`pathway_dangling_generic_node`](#pathway_dangling_generic_node)                             | A generic node has only one incident location in a pathway graph.                                                                               |
+| [`pathway_loop`](#pathway_loop)                                                               | A pathway starts and ends at the same location.                                                                                                 |
+| [`route_color_contrast`](#route_color_contrast)                                               | Insufficient route color contrast.                                                                                                              |
+| [`route_long_name_contains_short_name`](#route_long_name_contains_short_name)                 | Long name should not contain short name for a single route.                                                                                     |
+| [`route_short_name_too_long`](#route_short_name_too_long)                                     | Short name of a route is too long (more than 12 characters).                                                                                    |
+| [`same_name_and_description_for_route`](#same_name_and_description_for_route)                 | Same name and description for route.                                                                                                            |
+| [`same_name_and_description_for_stop`](#same_name_and_description_for_stop)                   | Same name and description for stop.                                                                                                             |
+| [`same_route_and_agency_url`](#same_route_and_agency_url)                                     | Same `routes.route_url` and `agency.agency_url`.                                                                                                |
+| [`same_stop_and_agency_url`](#same_stop_and_agency_url)                                       | Same `stops.stop_url` and `agency.agency_url`.                                                                                                  |
+| [`same_stop_and_route_url`](#same_stop_and_route_url)                                         | Same `stops.stop_url` and `routes.route_url`.                                                                                                   |
+| [`stop_has_too_many_matches_for_shape`](#stop_has_too_many_matches_for_shape)                 | Stop entry that has many potential matches to the trip's path of travel.                                                                        |
+| [`stops_match_shape_out_of_order`](#stops_match_shape_out_of_order)                           | Two stop entries are different than their arrival-departure order defined by the shapes.txt                                                     |
+| [`stop_too_far_from_shape`](#stop_too_far_from_shape)                                         | Stop too far from trip shape.                                                                                                                   |
+| [`stop_too_far_from_shape_using_user_distance`](#stop_too_far_from_shape_using_user_distance) | Stop time too far from shape.                                                                                                                   |
+| [`stop_without_stop_time`](#stop_without_stop_time)                                           | A stop in `stops.txt` is not referenced by any `stop_times.stop_id`.                                                                            |
 | [`transfer_with_suspicious_mid_trip_in_seat`](#transfer_with_suspicious_mid_trip_in_seat)     | A trip id field from GTFS file `transfers.txt` with an in-seat transfer type references a stop that is not in the expected position in the trip's stop-times. |
-| [`translation_unknown_table_name`](#translation_unknown_table_name)                           | A translation references an unknown or missing GTFS table.                                                                                                    |
-| [`trip_coverage_not_active_for_next7_days`](#trip_coverage_not_active_for_next7_days)   | Trips data should be valid for at least the next seven days.                                                                                            |
-| [`unexpected_enum_value`](#unexpected_enum_value)                                             | An enum has an unexpected value.                                                                                                                              |
-| [`unusable_trip`](#unusable_trip)                                                             | Trips must have more than one stop to be usable.                                                                                                              |
-| [`unused_shape`](#unused_shape)                                                               | Shape is not used in GTFS file `trips.txt`.                                                                                                                   |
-| [`unused_trip`](#unused_trip)                                                                 | Trip is not be used in `stop_times.txt`                                                                                                                       |
+| [`translation_unknown_table_name`](#translation_unknown_table_name)                           | A translation references an unknown or missing GTFS table.                                                                                      |
+| [`trip_coverage_not_active_for_next7_days`](#trip_coverage_not_active_for_next7_days)         | Trips data should be valid for at least the next seven days.                                                                                    |
+| [`unexpected_enum_value`](#unexpected_enum_value)                                             | An enum has an unexpected value.                                                                                                                |
+| [`unusable_trip`](#unusable_trip)                                                             | Trips must have more than one stop to be usable.                                                                                                |
+| [`unused_shape`](#unused_shape)                                                               | Shape is not used in GTFS file `trips.txt`.                                                                                                     |
+| [`unused_trip`](#unused_trip)                                                                 | Trip is not be used in `stop_times.txt`                                                                                                         |
 
 <a name="INFOS"/>
 
@@ -2067,6 +2068,28 @@ The value in CSV file has leading or trailing whitespaces.
 
 #### Affected files
 [All GTFS files supported by the specification.](http://gtfs.org/reference/static#dataset-files)
+
+</details>
+
+<a name="MissingFeedContactEmailAndUrlNotice"/>
+
+### missing_feed_contact_email_and_url
+
+
+Provide at least one of `feed_info.feed_contact_email` and `feed_info.feed_contact_url`.
+
+#### References
+* [feed_info.txt Best practices](https://gtfs.org/schedule/best-practices/#feed_infotxt)
+<details>
+
+#### Notice fields description
+| Field name     	| Description                                	      | Type   	|
+|----------------	|---------------------------------------------------|--------	|
+| `fieldName`    	| Either `feed_contact_email` or `feed_contact_url` | String 	|
+
+#### Affected files
+* [`feed_info.txt`](http://gtfs.org/reference/static#feed_infotxt)
+#### Notice fields description
 
 </details>
 
