@@ -182,6 +182,6 @@ public class FeedContactValidatorTest {
     FeedContactValidator underTest = new FeedContactValidator();
     underTest.validate(entity, noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new FeedContactValidator.MissingFeedContactEmailAndUrlNotice(2, "", ""));
+        .containsExactly(new FeedContactValidator.MissingFeedContactEmailAndUrlNotice(2));
   }
 }
