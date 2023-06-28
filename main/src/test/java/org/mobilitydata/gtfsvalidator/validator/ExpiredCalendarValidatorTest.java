@@ -195,4 +195,25 @@ public class ExpiredCalendarValidatorTest {
     assertThat(container.getValidationNotices())
         .containsExactly(new ExpiredCalendarValidator.ExpiredCalendarNotice(2, "WEEK"));
   }
+
+  @Test
+  public void calendarWithNoDaysShouldNotGenerateNotice() {
+    NoticeContainer container = new NoticeContainer();
+
+    List<GtfsCalendar> calendars =
+            ImmutableList.of(
+                    new GtfsCalendar.Builder()
+                            .setCsvRowNumber(2)
+                            .setServiceId("WEEK")
+                            .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().minusDays(7)))
+                            .setEndDate(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()))
+                            .build());
+
+    GtfsCalendarTableContainer calendarTable =
+            GtfsCalendarTableContainer.forEntities(calendars, container);
+    var dateTable = new GtfsCalendarDateTableContainer(GtfsTableContainer.TableStatus.EMPTY_FILE);
+    new ExpiredCalendarValidator(new CurrentDateTime(TEST_NOW), calendarTable, dateTable)
+            .validate(container);
+    assertThat(container.getValidationNotices()).isEmpty();
+  }
 }
