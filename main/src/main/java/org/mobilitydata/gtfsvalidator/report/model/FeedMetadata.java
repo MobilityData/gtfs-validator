@@ -30,8 +30,7 @@ public class FeedMetadata {
           new Pair<>("Attributions", GtfsAttribution.FILENAME),
           new Pair<>("Translations", GtfsTranslation.FILENAME),
           new Pair<>("Fare Media", GtfsFareMedia.FILENAME),
-          new Pair<>("Zone-Based Fares", GtfsStopArea.FILENAME),
-          new Pair<>("Transfers", GtfsTransfer.FILENAME));
+          new Pair<>("Zone-Based Fares", GtfsStopArea.FILENAME));
 
   protected FeedMetadata() {}
 
@@ -113,7 +112,6 @@ public class FeedMetadata {
 
   private void loadSpecFeaturesBasedOnFieldPresence(GtfsFeedContainer feedContainer) {
     loadRouteNamesComponent(feedContainer);
-
     loadRouteColorsComponent(feedContainer);
     loadAgencyInformationComponent(feedContainer);
     loadHeadsignsComponent(feedContainer);

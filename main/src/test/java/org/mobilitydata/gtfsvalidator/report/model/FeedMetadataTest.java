@@ -287,4 +287,139 @@ public class FeedMetadataTest {
         true,
         ImmutableList.of(GtfsTransferTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
+
+  @Test
+  public void omitsTransfersComponentTest() throws IOException, InterruptedException {
+    String transfersContent = "from_stop_id,to_stop_id,transfer_type,min_transfer_time\n";
+    createDataFile(GtfsTransfer.FILENAME, transfersContent);
+    validateSpecFeature(
+        "Transfers",
+        false,
+        ImmutableList.of(GtfsTransferTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void containsFrequencyBasedTripComponentTest() throws IOException, InterruptedException {
+    String content =
+        "trip_id, start_time, end_time, headway_secs\n" + "dummy1, 01:01:01, 01:01:02, 1\n";
+    createDataFile(GtfsFrequency.FILENAME, content);
+    validateSpecFeature(
+        "Frequency-Based Trip",
+        true,
+        ImmutableList.of(GtfsFrequencyTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsFrequencyBasedTripComponentTest() throws IOException, InterruptedException {
+    String content = "trip_id, start_time, end_time, headway_secs\n";
+    createDataFile(GtfsFrequency.FILENAME, content);
+    validateSpecFeature(
+        "Frequency-Based Trip",
+        false,
+        ImmutableList.of(GtfsFrequencyTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void containsFeedInformationComponentTest() throws IOException, InterruptedException {
+    String content =
+        "feed_publisher_name, feed_publisher_url, feed_lang\n"
+            + "dummyPublisher, http://dummyurl.com, en\n";
+    createDataFile(GtfsFeedInfo.FILENAME, content);
+    validateSpecFeature(
+        "Feed Information",
+        true,
+        ImmutableList.of(GtfsFeedInfoTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsFeedInformationComponentTest() throws IOException, InterruptedException {
+    String content = "feed_publisher_name, feed_publisher_url, feed_lang\n";
+    createDataFile(GtfsFeedInfo.FILENAME, content);
+    validateSpecFeature(
+        "Feed Information",
+        false,
+        ImmutableList.of(GtfsFeedInfoTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void containsAttributionsComponentTest() throws IOException, InterruptedException {
+    String content = "organization_name\n" + "dummyAttribution\n";
+    createDataFile(GtfsAttribution.FILENAME, content);
+    validateSpecFeature(
+        "Attributions",
+        true,
+        ImmutableList.of(GtfsAttributionTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsAttributionsComponentTest() throws IOException, InterruptedException {
+    String content = "organization_name\n";
+    createDataFile(GtfsAttribution.FILENAME, content);
+    validateSpecFeature(
+        "Attributions",
+        false,
+        ImmutableList.of(GtfsAttributionTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void containsTranslationsComponentTest() throws IOException, InterruptedException {
+    String content =
+        "table_name, field_name, language, translation\n" + "agency, agency_name, fr, Agence\n";
+    createDataFile(GtfsTranslation.FILENAME, content);
+    validateSpecFeature(
+        "Translations",
+        true,
+        ImmutableList.of(GtfsTranslationTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsTranslationsComponentTest() throws IOException, InterruptedException {
+    String content = "table_name, field_name, language, translation\n";
+    createDataFile(GtfsTranslation.FILENAME, content);
+    validateSpecFeature(
+        "Translations",
+        false,
+        ImmutableList.of(GtfsTranslationTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void containsFareMediaComponentTest() throws IOException, InterruptedException {
+    String content = "fare_media_id, fare_media_type\n" + "dummyFareId, 0\n";
+    createDataFile(GtfsFareMedia.FILENAME, content);
+    validateSpecFeature(
+        "Fare Media",
+        true,
+        ImmutableList.of(GtfsFareMediaTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsFareMediaComponentTest() throws IOException, InterruptedException {
+    String content = "fare_media_id, fare_media_type\n";
+    createDataFile(GtfsFareMedia.FILENAME, content);
+    validateSpecFeature(
+        "Fare Media",
+        false,
+        ImmutableList.of(GtfsFareMediaTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  // Zone-Based Fares
+  @Test
+  public void containsZoneBasedFaresComponentTest() throws IOException, InterruptedException {
+    String content = "area_id, stop_id\n" + "dummyArea, dummyStop\n";
+    createDataFile(GtfsStopArea.FILENAME, content);
+    validateSpecFeature(
+        "Zone-Based Fares",
+        true,
+        ImmutableList.of(GtfsStopAreaTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsZoneBasedFaresComponentTest() throws IOException, InterruptedException {
+    String content = "area_id, stop_id\n";
+    createDataFile(GtfsStopArea.FILENAME, content);
+    validateSpecFeature(
+        "Zone-Based Fares",
+        false,
+        ImmutableList.of(GtfsStopAreaTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
 }
