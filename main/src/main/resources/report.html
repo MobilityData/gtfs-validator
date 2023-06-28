@@ -288,7 +288,7 @@
                 </h4>
                 <hr />
                 <div>
-                    <span class="spec-feature" th:each="feature: ${metadata.specFeatures}" th:if="${feature.value == 'Yes'}" th:text="${feature.key}" />
+                    <span class="spec-feature" th:each="feature: ${metadata.specFeatures}" th:if="${feature.value}" th:text="${feature.key}" />
                 </div>
             </div>
         </div>

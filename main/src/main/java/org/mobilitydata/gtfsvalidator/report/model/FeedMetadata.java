@@ -13,10 +13,25 @@ public class FeedMetadata {
 
   public Map<String, String> feedInfo = new LinkedHashMap<>();
 
-  public Map<String, String> specFeatures = new LinkedHashMap<>();
+  public Map<String, Boolean> specFeatures = new LinkedHashMap<>();
 
   public ArrayList<AgencyMetadata> agencies = new ArrayList<>();
   private ImmutableSortedSet<String> filenames;
+
+  private final List<Pair<String, String>> FILE_BASED_COMPONENTS =
+      List.of(
+          new Pair<>("Pathways", GtfsPathway.FILENAME),
+          new Pair<>("Transfers", GtfsTransfer.FILENAME),
+          new Pair<>("Fares V1", GtfsFareAttribute.FILENAME),
+          new Pair<>("Fares V2", GtfsFareProduct.FILENAME),
+          new Pair<>("Shapes", GtfsShape.FILENAME),
+          new Pair<>("Frequency-Based Trip", GtfsFrequency.FILENAME),
+          new Pair<>("Feed Information", GtfsFeedInfo.FILENAME),
+          new Pair<>("Attributions", GtfsAttribution.FILENAME),
+          new Pair<>("Translations", GtfsTranslation.FILENAME),
+          new Pair<>("Fare Media", GtfsFareMedia.FILENAME),
+          new Pair<>("Zone-Based Fares", GtfsStopArea.FILENAME),
+          new Pair<>("Transfers", GtfsTransfer.FILENAME));
 
   protected FeedMetadata() {}
 
@@ -91,170 +106,179 @@ public class FeedMetadata {
   }
 
   private void loadSpecFeaturesBasedOnFilePresence(GtfsFeedContainer feedContainer) {
-    List<Pair<String, String>> componentList =
-        List.of(
-            new Pair<>("Pathways", GtfsPathway.FILENAME),
-            new Pair<>("Transfers", GtfsTransfer.FILENAME),
-            new Pair<>("Fares V1", GtfsFareAttribute.FILENAME),
-            new Pair<>("Fares V2", GtfsFareProduct.FILENAME),
-            new Pair<>("Shapes", GtfsShape.FILENAME),
-            new Pair<>("Frequency-Based Trip", GtfsFrequency.FILENAME),
-            new Pair<>("Feed Information", GtfsFeedInfo.FILENAME),
-            new Pair<>("Attributions", GtfsAttribution.FILENAME),
-            new Pair<>("Translations", GtfsTranslation.FILENAME),
-            new Pair<>("Fare Media", GtfsFareMedia.FILENAME),
-            new Pair<>("Zone-Based Fares", GtfsStopArea.FILENAME),
-            new Pair<>("Transfers", GtfsTransfer.FILENAME));
-
-    for (Pair<String, String> entry : componentList) {
-      specFeatures.put(
-          entry.getKey(),
-          hasAtLeastOneRecordInFile(feedContainer, entry.getValue()) ? "Yes" : "No");
+    for (Pair<String, String> entry : FILE_BASED_COMPONENTS) {
+      specFeatures.put(entry.getKey(), hasAtLeastOneRecordInFile(feedContainer, entry.getValue()));
     }
   }
 
   private void loadSpecFeaturesBasedOnFieldPresence(GtfsFeedContainer feedContainer) {
-    specFeatures.put(
-        "Route Names",
-        hasAtLeastOneRecordForFields(
-                feedContainer,
-                GtfsRoute.FILENAME,
-                List.of(
-                    GtfsRoute::hasRouteShortName,
-                    (Function<GtfsRoute, Boolean>) GtfsRoute::hasRouteLongName))
-            ? "Yes"
-            : "No");
+    loadRouteNamesComponent(feedContainer);
 
-    specFeatures.put(
-        "Route Colors",
-        hasAtLeastOneRecordForFields(
-                    feedContainer,
-                    GtfsRoute.FILENAME,
-                    List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasRouteColor))
-                || hasAtLeastOneRecordForFields(
-                    feedContainer,
-                    GtfsRoute.FILENAME,
-                    List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasRouteTextColor))
-            ? "Yes"
-            : "No");
-    specFeatures.put(
-        "Agency Information",
-        hasAtLeastOneRecordForFields(
-                feedContainer,
-                GtfsAgency.FILENAME,
-                List.of(
-                    GtfsAgency::hasAgencyEmail,
-                    (Function<GtfsAgency, Boolean>) GtfsAgency::hasAgencyPhone))
-            ? "Yes"
-            : "No");
-    specFeatures.put(
-        "Headsigns",
-        hasAtLeastOneRecordForFields(
-                    feedContainer,
-                    GtfsTrip.FILENAME,
-                    List.of((Function<GtfsTrip, Boolean>) GtfsTrip::hasTripHeadsign))
-                || hasAtLeastOneRecordForFields(
-                    feedContainer,
-                    GtfsStopTime.FILENAME,
-                    List.of((Function<GtfsStopTime, Boolean>) GtfsStopTime::hasStopHeadsign))
-            ? "Yes"
-            : "No");
-    specFeatures.put(
-        "Wheelchair Accessibility",
-        hasAtLeastOneRecordForFields(
-                    feedContainer,
-                    GtfsTrip.FILENAME,
-                    List.of((Function<GtfsTrip, Boolean>) GtfsTrip::hasWheelchairAccessible))
-                || hasAtLeastOneRecordForFields(
-                    feedContainer,
-                    GtfsStop.FILENAME,
-                    List.of((Function<GtfsStop, Boolean>) GtfsStop::hasWheelchairBoarding))
-            ? "Yes"
-            : "No");
-    specFeatures.put(
-        "Text-To-Speech",
-        hasAtLeastOneRecordForFields(
-                feedContainer,
-                GtfsStop.FILENAME,
-                List.of(((Function<GtfsStop, Boolean>) GtfsStop::hasTtsStopName)))
-            ? "Yes"
-            : "No");
-    specFeatures.put(
-        "Bikes Allowance",
-        hasAtLeastOneRecordForFields(
-                feedContainer,
-                GtfsTrip.FILENAME,
-                List.of((Function<GtfsTrip, Boolean>) (GtfsTrip::hasBikesAllowed)))
-            ? "Yes"
-            : "No");
-    specFeatures.put(
-        "Location Types",
-        hasAtLeastOneRecordForFields(
-                feedContainer,
-                GtfsStop.FILENAME,
-                List.of((Function<GtfsStop, Boolean>) GtfsStop::hasLocationType))
-            ? "Yes"
-            : "No");
-    specFeatures.put(
-        "Traversal Time",
-        hasAtLeastOneRecordForFields(
-                feedContainer,
-                GtfsPathway.FILENAME,
-                List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasTraversalTime))
-            ? "Yes"
-            : "No");
-    specFeatures.put(
-        "Pathway Directions",
-        hasAtLeastOneRecordForFields(
-                feedContainer,
-                GtfsPathway.FILENAME,
-                List.of(
-                    GtfsPathway::hasSignpostedAs,
-                    (Function<GtfsPathway, Boolean>) GtfsPathway::hasReversedSignpostedAs))
-            ? "Yes"
-            : "No");
-    specFeatures.put(
-        "Blocks",
-        hasAtLeastOneRecordForFields(
-                feedContainer,
-                GtfsTrip.FILENAME,
-                List.of((Function<GtfsTrip, Boolean>) GtfsTrip::hasBlockId))
-            ? "Yes"
-            : "No");
-    specFeatures.put(
-        "Route-Based Fares",
-        hasAtLeastOneRecordForFields(
-                    feedContainer,
-                    GtfsFareLegRule.FILENAME,
-                    List.of(
-                        GtfsFareLegRule::hasFromAreaId,
-                        (Function<GtfsFareLegRule, Boolean>) GtfsFareLegRule::hasToAreaId))
-                && hasAtLeastOneRecordForFields(
-                    feedContainer,
-                    GtfsRoute.FILENAME,
-                    List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasNetworkId))
-            ? "Yes"
-            : "No");
+    loadRouteColorsComponent(feedContainer);
+    loadAgencyInformationComponent(feedContainer);
+    loadHeadsignsComponent(feedContainer);
+    loadWheelchairAccessibilityComponent(feedContainer);
+    loadTTSComponent(feedContainer);
+    loadBikeAllowanceComponent(feedContainer);
+    loadLocationTypesComponent(feedContainer);
+    loadTraversalTimeComponent(feedContainer);
+    loadPathwayDirectionsComponent(feedContainer);
+    loadBlocksComponent(feedContainer);
+    loadRouteBasedFaresComponent(feedContainer);
+    loadContinuousStopsComponent(feedContainer);
+  }
+
+  private void loadContinuousStopsComponent(GtfsFeedContainer feedContainer) {
     specFeatures.put(
         "Continuous Stops",
         hasAtLeastOneRecordForFields(
-                    feedContainer,
-                    GtfsRoute.FILENAME,
-                    List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasContinuousDropOff))
-                || hasAtLeastOneRecordForFields(
-                    feedContainer,
-                    GtfsRoute.FILENAME,
-                    List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasContinuousPickup))
-                || hasAtLeastOneRecordForFields(
-                    feedContainer,
-                    GtfsStopTime.FILENAME,
-                    List.of((Function<GtfsStopTime, Boolean>) GtfsStopTime::hasContinuousDropOff))
-                || hasAtLeastOneRecordForFields(
-                    feedContainer,
-                    GtfsStopTime.FILENAME,
-                    List.of((Function<GtfsStopTime, Boolean>) GtfsStopTime::hasContinuousPickup))
-            ? "Yes"
-            : "No");
+                feedContainer,
+                GtfsRoute.FILENAME,
+                List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasContinuousDropOff))
+            || hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsRoute.FILENAME,
+                List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasContinuousPickup))
+            || hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsStopTime.FILENAME,
+                List.of((Function<GtfsStopTime, Boolean>) GtfsStopTime::hasContinuousDropOff))
+            || hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsStopTime.FILENAME,
+                List.of((Function<GtfsStopTime, Boolean>) GtfsStopTime::hasContinuousPickup)));
+  }
+
+  private void loadRouteBasedFaresComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Route-Based Fares",
+        hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsFareLegRule.FILENAME,
+                List.of(
+                    GtfsFareLegRule::hasFromAreaId,
+                    (Function<GtfsFareLegRule, Boolean>) GtfsFareLegRule::hasToAreaId))
+            && hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsRoute.FILENAME,
+                List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasNetworkId)));
+  }
+
+  private void loadBlocksComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Blocks",
+        hasAtLeastOneRecordForFields(
+            feedContainer,
+            GtfsTrip.FILENAME,
+            List.of((Function<GtfsTrip, Boolean>) GtfsTrip::hasBlockId)));
+  }
+
+  private void loadPathwayDirectionsComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Pathway Directions",
+        hasAtLeastOneRecordForFields(
+            feedContainer,
+            GtfsPathway.FILENAME,
+            List.of(
+                GtfsPathway::hasSignpostedAs,
+                (Function<GtfsPathway, Boolean>) GtfsPathway::hasReversedSignpostedAs)));
+  }
+
+  private void loadTraversalTimeComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Traversal Time",
+        hasAtLeastOneRecordForFields(
+            feedContainer,
+            GtfsPathway.FILENAME,
+            List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasTraversalTime)));
+  }
+
+  private void loadLocationTypesComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Location Types",
+        hasAtLeastOneRecordForFields(
+            feedContainer,
+            GtfsStop.FILENAME,
+            List.of((Function<GtfsStop, Boolean>) GtfsStop::hasLocationType)));
+  }
+
+  private void loadBikeAllowanceComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Bikes Allowance",
+        hasAtLeastOneRecordForFields(
+            feedContainer,
+            GtfsTrip.FILENAME,
+            List.of((Function<GtfsTrip, Boolean>) (GtfsTrip::hasBikesAllowed))));
+  }
+
+  private void loadTTSComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Text-To-Speech",
+        hasAtLeastOneRecordForFields(
+            feedContainer,
+            GtfsStop.FILENAME,
+            List.of(((Function<GtfsStop, Boolean>) GtfsStop::hasTtsStopName))));
+  }
+
+  private void loadWheelchairAccessibilityComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Wheelchair Accessibility",
+        hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsTrip.FILENAME,
+                List.of((Function<GtfsTrip, Boolean>) GtfsTrip::hasWheelchairAccessible))
+            || hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsStop.FILENAME,
+                List.of((Function<GtfsStop, Boolean>) GtfsStop::hasWheelchairBoarding)));
+  }
+
+  private void loadHeadsignsComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Headsigns",
+        hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsTrip.FILENAME,
+                List.of((Function<GtfsTrip, Boolean>) GtfsTrip::hasTripHeadsign))
+            || hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsStopTime.FILENAME,
+                List.of((Function<GtfsStopTime, Boolean>) GtfsStopTime::hasStopHeadsign)));
+  }
+
+  private void loadAgencyInformationComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Agency Information",
+        hasAtLeastOneRecordForFields(
+            feedContainer,
+            GtfsAgency.FILENAME,
+            List.of(
+                GtfsAgency::hasAgencyEmail,
+                (Function<GtfsAgency, Boolean>) GtfsAgency::hasAgencyPhone)));
+  }
+
+  private void loadRouteColorsComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Route Colors",
+        hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsRoute.FILENAME,
+                List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasRouteColor))
+            || hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsRoute.FILENAME,
+                List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasRouteTextColor)));
+  }
+
+  private void loadRouteNamesComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Route Names",
+        hasAtLeastOneRecordForFields(
+            feedContainer,
+            GtfsRoute.FILENAME,
+            List.of(
+                GtfsRoute::hasRouteShortName,
+                (Function<GtfsRoute, Boolean>) GtfsRoute::hasRouteLongName)));
   }
 
   private void loadAgencyData(GtfsTableContainer<GtfsAgency> agencyTable) {

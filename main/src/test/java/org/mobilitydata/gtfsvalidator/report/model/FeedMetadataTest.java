@@ -53,7 +53,7 @@ public class FeedMetadataTest {
 
   private void validateSpecFeature(
       String specFeature,
-      String expectedValue,
+      Boolean expectedValue,
       ImmutableList<Class<? extends GtfsTableDescriptor<?>>> tableDescriptors)
       throws IOException, InterruptedException {
     feedLoaderMock = new GtfsFeedLoader(tableDescriptors);
@@ -77,7 +77,7 @@ public class FeedMetadataTest {
     createDataFile("routes.txt", routesContent);
     validateSpecFeature(
         "Route Names",
-        "Yes",
+        true,
         ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
@@ -90,7 +90,7 @@ public class FeedMetadataTest {
     createDataFile("routes.txt", routesContent);
     validateSpecFeature(
         "Route Names",
-        "No",
+        false,
         ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
@@ -103,7 +103,7 @@ public class FeedMetadataTest {
     createDataFile("routes.txt", routesContent);
     validateSpecFeature(
         "Route Names",
-        "No",
+        false,
         ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
@@ -116,7 +116,7 @@ public class FeedMetadataTest {
     createDataFile("routes.txt", routesContent);
     validateSpecFeature(
         "Route Names",
-        "No",
+        false,
         ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
@@ -133,7 +133,7 @@ public class FeedMetadataTest {
     createDataFile("routes.txt", routesContent);
     validateSpecFeature(
         "Route Colors",
-        "Yes",
+        true,
         ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
@@ -150,7 +150,7 @@ public class FeedMetadataTest {
     createDataFile("routes.txt", routesContent);
     validateSpecFeature(
         "Route Colors",
-        "No",
+        false,
         ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
@@ -167,7 +167,7 @@ public class FeedMetadataTest {
     createDataFile("routes.txt", routesContent);
     validateSpecFeature(
         "Route Colors",
-        "Yes",
+        true,
         ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
@@ -184,7 +184,7 @@ public class FeedMetadataTest {
     createDataFile("routes.txt", routesContent);
     validateSpecFeature(
         "Route Colors",
-        "Yes",
+        true,
         ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
@@ -201,7 +201,7 @@ public class FeedMetadataTest {
     createDataFile("routes.txt", routesContent);
     validateSpecFeature(
         "Route Colors",
-        "No",
+        false,
         ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
@@ -215,7 +215,7 @@ public class FeedMetadataTest {
     createDataFile("routes.txt", routesContent);
     validateSpecFeature(
         "Route Colors",
-        "No",
+        false,
         ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
@@ -228,7 +228,7 @@ public class FeedMetadataTest {
     createDataFile("pathways.txt", pathwayContent);
     validateSpecFeature(
         "Pathways",
-        "Yes",
+        true,
         ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
@@ -238,7 +238,7 @@ public class FeedMetadataTest {
     createDataFile("pathways.txt", pathwayContent);
     validateSpecFeature(
         "Pathways",
-        "No",
+        false,
         ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
@@ -246,23 +246,23 @@ public class FeedMetadataTest {
   public void omitsComponents() throws IOException, InterruptedException {
     validateSpecFeature(
         "Pathways",
-        "No",
+        false,
         ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
     validateSpecFeature(
         "Route Names",
-        "No",
+        false,
         ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
     validateSpecFeature(
         "Shapes",
-        "No",
+        false,
         ImmutableList.of(GtfsShapeTableDescriptor.class, GtfsAgencyTableDescriptor.class));
     validateSpecFeature(
         "Route Colors",
-        "No",
+        false,
         ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
     validateSpecFeature(
         "Transfers",
-        "No",
+        false,
         ImmutableList.of(GtfsTransferTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
@@ -273,7 +273,7 @@ public class FeedMetadataTest {
     createDataFile("shapes.txt", shapesContent);
     validateSpecFeature(
         "Shapes",
-        "Yes",
+        true,
         ImmutableList.of(GtfsShapeTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
@@ -284,7 +284,7 @@ public class FeedMetadataTest {
     createDataFile("transfers.txt", transfersContent);
     validateSpecFeature(
         "Transfers",
-        "Yes",
+        true,
         ImmutableList.of(GtfsTransferTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 }
