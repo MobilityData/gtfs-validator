@@ -23,7 +23,7 @@ public class FeedMetadata {
           new Pair<>("Pathways", GtfsPathway.FILENAME),
           new Pair<>("Transfers", GtfsTransfer.FILENAME),
           new Pair<>("Fares V1", GtfsFareAttribute.FILENAME),
-          new Pair<>("Fares V2", GtfsFareProduct.FILENAME),
+          new Pair<>("Fare Products", GtfsFareProduct.FILENAME),
           new Pair<>("Shapes", GtfsShape.FILENAME),
           new Pair<>("Frequency-Based Trip", GtfsFrequency.FILENAME),
           new Pair<>("Feed Information", GtfsFeedInfo.FILENAME),
