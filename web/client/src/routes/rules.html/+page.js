@@ -1,30 +1,29 @@
 /** @type {import('./$types').PageLoad} */
 
 export const load = async ({ fetch }) => {
-  let rulesMd = '';
+  let msgHeading, msgBody, rules = null;
 
   try {
-    // local copy of https://raw.githubusercontent.com/MobilityData/gtfs-validator/master/RULES.md
-    // we could fetch it directly instead, if desired
-    const response = await fetch('/RULES.md');
+    const response = await fetch('/rules.json');
 
     if (response.ok) {
-      rulesMd = await response.text();
+      rules = await response.json();
     } else {
       throw new Error(`HTTP Error: ${response.status}`);
     }
   }
   catch (error) {
-    let msg = 'Error';
+    let errorMsg = '';
 
     if (error instanceof Error && error.message) {
-      msg = error.message;
+      errorMsg = error.message;
     }
 
-    rulesMd = `# ${msg}\n\nThere was a problem loading the rules file. You can try accessing it directly at https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md.`;
+    msgHeading = errorMsg ?? 'Error';
+    msgBody = 'There was a problem loading the rules file.';
   }
 
-  return { rulesMd };
+  return { rules, msgHeading, msgBody };
 };
 
 export const prerender = true;

@@ -36,8 +36,13 @@
     @apply rounded;
   }
 
+  p {
+    max-width: 80ch;
+    @apply mb-4;
+  }
+
   ol, ul {
-    @apply my-3;
+    @apply my-4;
     @apply pl-6;
   }
 
@@ -49,14 +54,36 @@
     @apply list-disc;
   }
 
+  blockquote {
+    @apply border-l-2;
+    @apply my-4;
+    @apply pl-4;
+    @apply text-mobi-dark-blue/50;
+  }
+
   table {
     @apply my-2;
   }
 
   th, td {
     @apply align-baseline;
-    @apply px-3 py-2;
+    @apply px-4 py-3;
     @apply text-left;
+
+    p, table, ol, ul {
+      @apply mb-4;
+
+      &:last-child {
+        @apply m-0;
+      }
+    }
+  }
+
+  .table-sm table,
+  table table {
+    th, td {
+      @apply px-3 py-2;
+    }
   }
 
   th {
@@ -70,6 +97,27 @@
   thead tr,
   tbody tr:nth-child(even) {
     @apply bg-mobi-dark-blue/5;
+  }
+
+  .table-collapse-responsive {
+    @media (max-width: 1023px) {
+      > thead, > tfoot {
+        display: none;
+      }
+
+      > tbody {
+        > tr {
+          @apply bg-transparent;
+          display: block;
+
+          > td, > th {
+            @apply bg-none;
+            @apply px-0;
+            display: block;
+          }
+        }
+      }
+    }
   }
 
   a[href] {

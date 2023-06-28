@@ -53,15 +53,3 @@ dependencies {
     testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'
     testImplementation 'org.mockito:mockito-core:4.5.1'
 }
-
-// A custom task to copy RULES.md into the test resource directory so that we can reference it in
-// unit tests.  See NoticeDocumentationTest for more details.
-tasks.register('copyRulesMarkdown', Copy) {
-    from "$rootDir/RULES.md"
-    into "$projectDir/build/resources/test"
-}
-
-test {
-    // Make sure `copyRulesMarkdown` runs before we run any tests.
-    dependsOn 'copyRulesMarkdown'
-}

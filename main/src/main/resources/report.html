@@ -73,6 +73,7 @@
     .summary-cell {
         padding: 5px;
         box-sizing: border-box;
+        flex: 1;
     }
 
     .summary h4 {
@@ -129,10 +130,19 @@
         position: absolute;
         z-index: 1;
         bottom: 100%;
-        left: 50%;
-        margin-left: -60px;
+        transform: translateX(-50%);
         opacity: 0;
         transition: opacity 0.3s;
+        max-width: 400px;
+        min-width: 100px;
+        width: max-content;
+        white-space: normal;
+    }
+
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        cursor: help;
     }
 
     .tooltip:hover .tooltiptext {
@@ -262,7 +272,12 @@
                 </ul>
             </div>
             <div class="summary-cell summary_list">
-                <h4>GTFS Components included</h4>
+                <h4>
+                    GTFS Components included
+                    <a href="#" class="tooltip" onclick="event.preventDefault();"><span>(?)</span>
+                        <span class="tooltiptext" style="transform: translateX(-100%)">GTFS components provide a standardized vocabulary to define and describe features that are officially adopted in GTFS.</span>
+                    </a>
+                </h4>
                 <hr />
                 <div>
                     <span class="spec-feature" th:each="feature: ${metadata.specFeatures}" th:if="${feature.value == 'Yes'}" th:text="${feature.key}" />

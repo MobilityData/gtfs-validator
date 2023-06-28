@@ -186,12 +186,14 @@ public class TableDescriptorGenerator {
                   "GtfsColumnDescriptor.builder()\n"
                       + ".setColumnName($T.$L)\n"
                       + ".setHeaderRequired($L)\n"
+                      + ".setHeaderRecommended($L)\n"
                       + ".setFieldLevel($T.$L)\n"
                       + ".setIsMixedCase($L)\n"
                       + ".setIsCached($L)\n",
                   gtfsEntityType,
                   fieldNameField(field.name()),
                   field.isHeaderRequired(),
+                  field.columnRecommended(),
                   FieldLevelEnum.class,
                   getFieldLevel(field),
                   field.mixedCase(),
