@@ -201,19 +201,19 @@ public class ExpiredCalendarValidatorTest {
     NoticeContainer container = new NoticeContainer();
 
     List<GtfsCalendar> calendars =
-            ImmutableList.of(
-                    new GtfsCalendar.Builder()
-                            .setCsvRowNumber(2)
-                            .setServiceId("WEEK")
-                            .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().minusDays(7)))
-                            .setEndDate(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()))
-                            .build());
+        ImmutableList.of(
+            new GtfsCalendar.Builder()
+                .setCsvRowNumber(2)
+                .setServiceId("WEEK")
+                .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().minusDays(7)))
+                .setEndDate(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()))
+                .build());
 
     GtfsCalendarTableContainer calendarTable =
-            GtfsCalendarTableContainer.forEntities(calendars, container);
+        GtfsCalendarTableContainer.forEntities(calendars, container);
     var dateTable = new GtfsCalendarDateTableContainer(GtfsTableContainer.TableStatus.EMPTY_FILE);
     new ExpiredCalendarValidator(new CurrentDateTime(TEST_NOW), calendarTable, dateTable)
-            .validate(container);
+        .validate(container);
     assertThat(container.getValidationNotices()).isEmpty();
   }
 }
