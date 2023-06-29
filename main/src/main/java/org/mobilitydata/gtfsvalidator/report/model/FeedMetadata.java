@@ -2,6 +2,7 @@ package org.mobilitydata.gtfsvalidator.report.model;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
+import com.vladsch.flexmark.util.misc.Pair;
 import java.util.*;
 import java.util.function.Function;
 import org.mobilitydata.gtfsvalidator.table.*;
@@ -12,10 +13,24 @@ public class FeedMetadata {
 
   public Map<String, String> feedInfo = new LinkedHashMap<>();
 
-  public Map<String, String> specFeatures = new LinkedHashMap<>();
+  public Map<String, Boolean> specFeatures = new LinkedHashMap<>();
 
   public ArrayList<AgencyMetadata> agencies = new ArrayList<>();
   private ImmutableSortedSet<String> filenames;
+
+  private final List<Pair<String, String>> FILE_BASED_COMPONENTS =
+      List.of(
+          new Pair<>("Pathways", GtfsPathway.FILENAME),
+          new Pair<>("Transfers", GtfsTransfer.FILENAME),
+          new Pair<>("Fares V1", GtfsFareAttribute.FILENAME),
+          new Pair<>("Fare Products", GtfsFareProduct.FILENAME),
+          new Pair<>("Shapes", GtfsShape.FILENAME),
+          new Pair<>("Frequency-Based Trip", GtfsFrequency.FILENAME),
+          new Pair<>("Feed Information", GtfsFeedInfo.FILENAME),
+          new Pair<>("Attributions", GtfsAttribution.FILENAME),
+          new Pair<>("Translations", GtfsTranslation.FILENAME),
+          new Pair<>("Fare Media", GtfsFareMedia.FILENAME),
+          new Pair<>("Zone-Based Fares", GtfsStopArea.FILENAME));
 
   protected FeedMetadata() {}
 
@@ -85,23 +100,183 @@ public class FeedMetadata {
   }
 
   private void loadSpecFeatures(GtfsFeedContainer feedContainer) {
+    loadSpecFeaturesBasedOnFilePresence(feedContainer);
+    loadSpecFeaturesBasedOnFieldPresence(feedContainer);
+  }
+
+  private void loadSpecFeaturesBasedOnFilePresence(GtfsFeedContainer feedContainer) {
+    for (Pair<String, String> entry : FILE_BASED_COMPONENTS) {
+      specFeatures.put(entry.getKey(), hasAtLeastOneRecordInFile(feedContainer, entry.getValue()));
+    }
+  }
+
+  private void loadSpecFeaturesBasedOnFieldPresence(GtfsFeedContainer feedContainer) {
+    loadRouteNamesComponent(feedContainer);
+    loadRouteColorsComponent(feedContainer);
+    loadAgencyInformationComponent(feedContainer);
+    loadHeadsignsComponent(feedContainer);
+    loadWheelchairAccessibilityComponent(feedContainer);
+    loadTTSComponent(feedContainer);
+    loadBikeAllowanceComponent(feedContainer);
+    loadLocationTypesComponent(feedContainer);
+    loadTraversalTimeComponent(feedContainer);
+    loadPathwayDirectionsComponent(feedContainer);
+    loadBlocksComponent(feedContainer);
+    loadRouteBasedFaresComponent(feedContainer);
+    loadContinuousStopsComponent(feedContainer);
+  }
+
+  private void loadContinuousStopsComponent(GtfsFeedContainer feedContainer) {
     specFeatures.put(
-        "Pathways", hasOneRecordOfComponent(feedContainer, GtfsPathway.FILENAME) ? "Yes" : "No");
+        "Continuous Stops",
+        hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsRoute.FILENAME,
+                List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasContinuousDropOff))
+            || hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsRoute.FILENAME,
+                List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasContinuousPickup))
+            || hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsStopTime.FILENAME,
+                List.of((Function<GtfsStopTime, Boolean>) GtfsStopTime::hasContinuousDropOff))
+            || hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsStopTime.FILENAME,
+                List.of((Function<GtfsStopTime, Boolean>) GtfsStopTime::hasContinuousPickup)));
+  }
+
+  private void loadRouteBasedFaresComponent(GtfsFeedContainer feedContainer) {
     specFeatures.put(
-        "Transfers", hasOneRecordOfComponent(feedContainer, GtfsTransfer.FILENAME) ? "Yes" : "No");
-    var fareAttributesTable = feedContainer.getTableForFilename(GtfsFareAttribute.FILENAME);
-    boolean faresV1 =
-        fareAttributesTable.isPresent() && fareAttributesTable.get().entityCount() > 0;
-    specFeatures.put("Fares V1", faresV1 ? "Yes" : "No");
-    var fareProductsTable = feedContainer.getTableForFilename(GtfsFareProduct.FILENAME);
-    boolean faresV2 = fareProductsTable.isPresent() && fareProductsTable.get().entityCount() > 0;
-    specFeatures.put("Fares V2", faresV2 ? "Yes" : "No");
-    specFeatures.put("Route Names", hasRouteNamesComponent(feedContainer) ? "Yes" : "No");
-    specFeatures.put("Route Colors", hasRouteColorsComponent(feedContainer) ? "Yes" : "No");
+        "Route-Based Fares",
+        hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsFareLegRule.FILENAME,
+                List.of(
+                    GtfsFareLegRule::hasFromAreaId,
+                    (Function<GtfsFareLegRule, Boolean>) GtfsFareLegRule::hasToAreaId))
+            && hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsRoute.FILENAME,
+                List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasNetworkId)));
+  }
+
+  private void loadBlocksComponent(GtfsFeedContainer feedContainer) {
     specFeatures.put(
-        "Shapes", hasOneRecordOfComponent(feedContainer, GtfsShape.FILENAME) ? "Yes" : "No");
-    var stopTimesTable = feedContainer.getTableForFilename(GtfsStopTime.FILENAME);
-    // TODO: figure out Flex V1 & V2 checks
+        "Blocks",
+        hasAtLeastOneRecordForFields(
+            feedContainer,
+            GtfsTrip.FILENAME,
+            List.of((Function<GtfsTrip, Boolean>) GtfsTrip::hasBlockId)));
+  }
+
+  private void loadPathwayDirectionsComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Pathway Directions",
+        hasAtLeastOneRecordForFields(
+            feedContainer,
+            GtfsPathway.FILENAME,
+            List.of(
+                GtfsPathway::hasSignpostedAs,
+                (Function<GtfsPathway, Boolean>) GtfsPathway::hasReversedSignpostedAs)));
+  }
+
+  private void loadTraversalTimeComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Traversal Time",
+        hasAtLeastOneRecordForFields(
+            feedContainer,
+            GtfsPathway.FILENAME,
+            List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasTraversalTime)));
+  }
+
+  private void loadLocationTypesComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Location Types",
+        hasAtLeastOneRecordForFields(
+            feedContainer,
+            GtfsStop.FILENAME,
+            List.of((Function<GtfsStop, Boolean>) GtfsStop::hasLocationType)));
+  }
+
+  private void loadBikeAllowanceComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Bikes Allowance",
+        hasAtLeastOneRecordForFields(
+            feedContainer,
+            GtfsTrip.FILENAME,
+            List.of((Function<GtfsTrip, Boolean>) (GtfsTrip::hasBikesAllowed))));
+  }
+
+  private void loadTTSComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Text-To-Speech",
+        hasAtLeastOneRecordForFields(
+            feedContainer,
+            GtfsStop.FILENAME,
+            List.of(((Function<GtfsStop, Boolean>) GtfsStop::hasTtsStopName))));
+  }
+
+  private void loadWheelchairAccessibilityComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Wheelchair Accessibility",
+        hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsTrip.FILENAME,
+                List.of((Function<GtfsTrip, Boolean>) GtfsTrip::hasWheelchairAccessible))
+            || hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsStop.FILENAME,
+                List.of((Function<GtfsStop, Boolean>) GtfsStop::hasWheelchairBoarding)));
+  }
+
+  private void loadHeadsignsComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Headsigns",
+        hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsTrip.FILENAME,
+                List.of((Function<GtfsTrip, Boolean>) GtfsTrip::hasTripHeadsign))
+            || hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsStopTime.FILENAME,
+                List.of((Function<GtfsStopTime, Boolean>) GtfsStopTime::hasStopHeadsign)));
+  }
+
+  private void loadAgencyInformationComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Agency Information",
+        hasAtLeastOneRecordForFields(
+            feedContainer,
+            GtfsAgency.FILENAME,
+            List.of(
+                GtfsAgency::hasAgencyEmail,
+                (Function<GtfsAgency, Boolean>) GtfsAgency::hasAgencyPhone)));
+  }
+
+  private void loadRouteColorsComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Route Colors",
+        hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsRoute.FILENAME,
+                List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasRouteColor))
+            || hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsRoute.FILENAME,
+                List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasRouteTextColor)));
+  }
+
+  private void loadRouteNamesComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Route Names",
+        hasAtLeastOneRecordForFields(
+            feedContainer,
+            GtfsRoute.FILENAME,
+            List.of(
+                GtfsRoute::hasRouteShortName,
+                (Function<GtfsRoute, Boolean>) GtfsRoute::hasRouteLongName)));
   }
 
   private void loadAgencyData(GtfsTableContainer<GtfsAgency> agencyTable) {
@@ -126,34 +301,25 @@ public class FeedMetadata {
     }
   }
 
-  private boolean hasRouteColorsComponent(GtfsFeedContainer feedContainer) {
-    var routeContainer = feedContainer.getTableForFilename(GtfsRoute.FILENAME);
-    if (routeContainer.isPresent()) {
-      GtfsRouteTableContainer routeTable = (GtfsRouteTableContainer) routeContainer.get();
-      if (routeTable.hasColumn(GtfsRoute.ROUTE_COLOR_FIELD_NAME)
-          && routeTable.hasColumn(GtfsRoute.ROUTE_TEXT_COLOR_FIELD_NAME))
-        return routeTable.getEntities().stream()
-            .anyMatch(route -> route.hasRouteColor() || route.hasRouteTextColor());
-    }
-    return false;
-  }
-
-  private boolean hasRouteNamesComponent(GtfsFeedContainer feedContainer) {
-    var routeContainer = feedContainer.getTableForFilename(GtfsRoute.FILENAME);
-    if (routeContainer.isPresent()) {
-      GtfsRouteTableContainer routeTable = (GtfsRouteTableContainer) routeContainer.get();
-      if (routeTable.hasColumn(GtfsRoute.ROUTE_SHORT_NAME_FIELD_NAME)
-          && routeTable.hasColumn(GtfsRoute.ROUTE_LONG_NAME_FIELD_NAME))
-        return routeTable.getEntities().stream()
-            .anyMatch(route -> route.hasRouteShortName() && route.hasRouteLongName());
-    }
-    return false;
-  }
-
-  private boolean hasOneRecordOfComponent(
+  private boolean hasAtLeastOneRecordInFile(
       GtfsFeedContainer feedContainer, String componentFilename) {
     var table = feedContainer.getTableForFilename(componentFilename);
     return table.isPresent() && table.get().entityCount() > 0;
+  }
+
+  private <T extends GtfsEntity> boolean hasAtLeastOneRecordForFields(
+      GtfsFeedContainer feedContainer,
+      String componentFilename,
+      List<Function<T, Boolean>> conditions) {
+    return feedContainer
+        .getTableForFilename(componentFilename)
+        .map(
+            table ->
+                table.getEntities().stream()
+                    .anyMatch( // all values need to be defined for the same entry
+                        entity ->
+                            conditions.stream().allMatch(condition -> condition.apply((T) entity))))
+        .orElse(false);
   }
 
   public ArrayList<String> foundFiles() {
