@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Google LLC
+ * Copyright 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,48 +18,34 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.UNSUPPORTED;
 
+import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
+import org.mobilitydata.gtfsvalidator.annotation.EndRange;
 import org.mobilitydata.gtfsvalidator.annotation.FieldType;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
-import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.Index;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
-@GtfsTable("fare_leg_rules.txt")
-public interface GtfsFareLegRuleSchema extends GtfsEntity {
+@GtfsTable("timeframes.txt")
+public interface GtfsTimeframeSchema extends GtfsEntity {
+
   @FieldType(FieldTypeEnum.ID)
+  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
   @Index
-  String legGroupId();
+  String timeframeGroupId();
 
-  @FieldType(FieldTypeEnum.ID)
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)
-  @ForeignKey(table = "routes.txt", field = "network_id")
-  String networkId();
+  @ConditionallyRequired
+  @EndRange(field = "end_time", allowEqual = false)
+  GtfsTime startTime();
 
-  @FieldType(FieldTypeEnum.ID)
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)
-  @ForeignKey(table = "areas.txt", field = "area_id")
-  String fromAreaId();
+  @ConditionallyRequired
+  GtfsTime endTime();
 
-  @FieldType(FieldTypeEnum.ID)
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)
-  @ForeignKey(table = "areas.txt", field = "area_id")
-  String toAreaId();
-
-  @FieldType(FieldTypeEnum.ID)
-  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
-  @ForeignKey(table = "timeframes.txt", field = "timeframe_group_id")
-  String fromTimeframeGroupId();
-
-  @FieldType(FieldTypeEnum.ID)
-  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
-  @ForeignKey(table = "timeframes.txt", field = "timeframe_group_id")
-  String toTimeframeGroupId();
-
-  @FieldType(FieldTypeEnum.ID)
   @Required
-  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
-  @ForeignKey(table = "fare_products.txt", field = "fare_product_id")
-  String fareProductId();
+  String serviceId();
 }

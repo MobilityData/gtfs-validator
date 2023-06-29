@@ -182,6 +182,8 @@ public class NoticeFieldsTest {
             "stopUrl",
             "suggestedExpirationDate",
             "tableName",
+            "time",
+            "timeframeGroupId",
             "transferCount",
             "tripCsvRowNumber",
             "tripFieldName",
