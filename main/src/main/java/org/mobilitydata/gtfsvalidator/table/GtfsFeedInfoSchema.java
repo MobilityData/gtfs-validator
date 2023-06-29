@@ -50,11 +50,9 @@ public interface GtfsFeedInfoSchema extends GtfsEntity {
   @Recommended
   String feedVersion();
 
-  @Recommended
   @FieldType(FieldTypeEnum.EMAIL)
   String feedContactEmail();
 
-  @Recommended
   @FieldType(FieldTypeEnum.URL)
   String feedContactUrl();
 }
