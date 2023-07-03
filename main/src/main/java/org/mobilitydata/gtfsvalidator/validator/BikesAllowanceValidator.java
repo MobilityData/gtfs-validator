@@ -39,8 +39,7 @@ public class BikesAllowanceValidator extends FileValidator {
   private final GtfsRouteTableContainer routeTable;
 
   @Inject
-  BikesAllowanceValidator(
-      GtfsTripTableContainer tripTable, GtfsRouteTableContainer routeTable) {
+  BikesAllowanceValidator(GtfsTripTableContainer tripTable, GtfsRouteTableContainer routeTable) {
     this.tripTable = tripTable;
     this.routeTable = routeTable;
   }

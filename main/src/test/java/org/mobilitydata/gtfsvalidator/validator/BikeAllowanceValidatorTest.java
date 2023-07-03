@@ -31,7 +31,8 @@ public class BikeAllowanceValidatorTest {
   }
 
   private static List<GtfsRoute> createRouteTable(String routeId, GtfsRouteType routeType) {
-    return List.of(new GtfsRoute.Builder()
+    return List.of(
+        new GtfsRoute.Builder()
             .setCsvRowNumber(1)
             .setRouteId(routeId)
             .setRouteType(routeType)
