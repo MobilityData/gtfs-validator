@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,43 +16,36 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
-import java.util.Locale;
+import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.UNSUPPORTED;
+
+import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
 import org.mobilitydata.gtfsvalidator.annotation.EndRange;
 import org.mobilitydata.gtfsvalidator.annotation.FieldType;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.Recommended;
+import org.mobilitydata.gtfsvalidator.annotation.Index;
+import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
-import org.mobilitydata.gtfsvalidator.type.GtfsDate;
+import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
-@GtfsTable(value = "feed_info.txt", singleRow = true)
-@Recommended
-public interface GtfsFeedInfoSchema extends GtfsEntity {
+@GtfsTable("timeframes.txt")
+public interface GtfsTimeframeSchema extends GtfsEntity {
+
+  @FieldType(FieldTypeEnum.ID)
+  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
+  @Index
+  String timeframeGroupId();
+
+  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
+  @ConditionallyRequired
+  @EndRange(field = "end_time", allowEqual = false)
+  GtfsTime startTime();
+
+  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
+  @ConditionallyRequired
+  GtfsTime endTime();
+
+  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
   @Required
-  String feedPublisherName();
-
-  @Required
-  @FieldType(FieldTypeEnum.URL)
-  String feedPublisherUrl();
-
-  @Required
-  Locale feedLang();
-
-  Locale defaultLang();
-
-  @Recommended
-  @EndRange(field = "feed_end_date", allowEqual = true)
-  GtfsDate feedStartDate();
-
-  @Recommended
-  GtfsDate feedEndDate();
-
-  @Recommended
-  String feedVersion();
-
-  @FieldType(FieldTypeEnum.EMAIL)
-  String feedContactEmail();
-
-  @FieldType(FieldTypeEnum.URL)
-  String feedContactUrl();
+  String serviceId();
 }
