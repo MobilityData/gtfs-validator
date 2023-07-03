@@ -12,7 +12,7 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.*;
 
 @RunWith(JUnit4.class)
-public class BikeAllowanceInfoValidatorTest {
+public class BikeAllowanceValidatorTest {
 
   private static List<GtfsTrip> createTripTable(
       String routeId, String serviceId, GtfsBikesAllowed bikesAllowed, int rows) {
@@ -31,20 +31,17 @@ public class BikeAllowanceInfoValidatorTest {
   }
 
   private static List<GtfsRoute> createRouteTable(String routeId, GtfsRouteType routeType) {
-    ArrayList<GtfsRoute> routes = new ArrayList<>();
-    routes.add(
-        new GtfsRoute.Builder()
+    return List.of(new GtfsRoute.Builder()
             .setCsvRowNumber(1)
             .setRouteId(routeId)
             .setRouteType(routeType)
             .build());
-    return routes;
   }
 
   private static List<ValidationNotice> generateNotices(
       List<GtfsTrip> trips, List<GtfsRoute> routes) {
     NoticeContainer noticeContainer = new NoticeContainer();
-    new BikesAllowanceInfoValidator(
+    new BikesAllowanceValidator(
             GtfsTripTableContainer.forEntities(trips, noticeContainer),
             GtfsRouteTableContainer.forEntities(routes, noticeContainer))
         .validate(noticeContainer);

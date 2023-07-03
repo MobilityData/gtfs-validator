@@ -29,17 +29,17 @@ import org.mobilitydata.gtfsvalidator.table.*;
 /**
  * Validates that bikes_allowed information is present for ferry trips
  *
- * <p>Generated notice: {@link MissingBikeAllowanceInfoNotice}.
+ * <p>Generated notice: {@link MissingBikeAllowanceNotice}.
  */
 @GtfsValidator
-public class BikesAllowanceInfoValidator extends FileValidator {
+public class BikesAllowanceValidator extends FileValidator {
 
   private final GtfsTripTableContainer tripTable;
 
   private final GtfsRouteTableContainer routeTable;
 
   @Inject
-  BikesAllowanceInfoValidator(
+  BikesAllowanceValidator(
       GtfsTripTableContainer tripTable, GtfsRouteTableContainer routeTable) {
     this.tripTable = tripTable;
     this.routeTable = routeTable;
@@ -56,7 +56,7 @@ public class BikesAllowanceInfoValidator extends FileValidator {
           continue;
         }
         noticeContainer.addValidationNotice(
-            new MissingBikeAllowanceInfoNotice(trip.csvRowNumber(), trip.routeId(), trip.tripId()));
+            new MissingBikeAllowanceNotice(trip.csvRowNumber(), trip.routeId(), trip.tripId()));
       }
     }
   }
@@ -69,7 +69,7 @@ public class BikesAllowanceInfoValidator extends FileValidator {
   @GtfsValidationNotice(
       severity = WARNING,
       files = @FileRefs({GtfsRouteSchema.class, GtfsTripSchema.class}))
-  static class MissingBikeAllowanceInfoNotice extends ValidationNotice {
+  static class MissingBikeAllowanceNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */
     private final int csvRowNumber;
@@ -80,7 +80,7 @@ public class BikesAllowanceInfoValidator extends FileValidator {
     /** The faulty record's trip id. */
     private final String tripId;
 
-    MissingBikeAllowanceInfoNotice(int csvRowNumber, String routeId, String tripId) {
+    MissingBikeAllowanceNotice(int csvRowNumber, String routeId, String tripId) {
       this.csvRowNumber = csvRowNumber;
       this.routeId = routeId;
       this.tripId = tripId;
