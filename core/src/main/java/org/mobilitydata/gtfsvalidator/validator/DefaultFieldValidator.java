@@ -18,15 +18,10 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import org.apache.commons.validator.routines.EmailValidator;
-import org.apache.commons.validator.routines.UrlValidator;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
-import org.mobilitydata.gtfsvalidator.notice.InvalidEmailNotice;
-import org.mobilitydata.gtfsvalidator.notice.InvalidPhoneNumberNotice;
-import org.mobilitydata.gtfsvalidator.notice.InvalidUrlNotice;
-import org.mobilitydata.gtfsvalidator.notice.LeadingOrTrailingWhitespacesNotice;
-import org.mobilitydata.gtfsvalidator.notice.NewLineInValueNotice;
-import org.mobilitydata.gtfsvalidator.notice.NonAsciiOrNonPrintableCharNotice;
-import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.*;
+import org.mobilitydata.gtfsvalidator.util.UrlUtil;
+import org.mobilitydata.gtfsvalidator.util.UrlUtil.UrlStatus;
 
 /** Default implementation of {@link GtfsFieldValidator}. */
 public class DefaultFieldValidator implements GtfsFieldValidator {
@@ -73,11 +68,15 @@ public class DefaultFieldValidator implements GtfsFieldValidator {
   @Override
   public void validateUrl(
       String url, GtfsCellContext cellContext, NoticeContainer noticeContainer) {
-    if (!UrlValidator.getInstance().isValid(url)) {
+    UrlStatus status = UrlUtil.validateUrl(url);
+    if (status == UrlStatus.INVALID)
       noticeContainer.addValidationNotice(
           new InvalidUrlNotice(
               cellContext.filename(), cellContext.csvRowNumber(), cellContext.fieldName(), url));
-    }
+    else if (status == UrlStatus.NOT_FOUND)
+      noticeContainer.addValidationNotice(
+          new UrlNotFoundNotice(
+              cellContext.filename(), cellContext.csvRowNumber(), cellContext.fieldName(), url));
   }
 
   @Override
