@@ -17,17 +17,16 @@
 package org.mobilitydata.gtfsvalidator.input;
 
 import com.google.common.collect.ImmutableSet;
-import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+
+import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -61,6 +60,28 @@ public abstract class GtfsInput implements Closeable {
     // Load a remote ZIP file to memory.
     return new GtfsZipFileInput(
         new ZipFile(new SeekableInMemoryByteChannel(Files.readAllBytes(path))));
+  }
+
+  public static boolean hasSubfolderWithTxtFiles(File zipFile) throws IOException {
+    try (ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(zipFile))) {
+      ZipEntry entry;
+      while ((entry = zipInputStream.getNextEntry()) != null) {
+          if (entry.isDirectory()) {
+            // Found a subfolder
+            boolean hasTxtFile = false;
+            while (((entry = zipInputStream.getNextEntry()) != null)) {
+              if (!entry.isDirectory() && entry.getName().toLowerCase().endsWith(".txt")) {
+                hasTxtFile = true;
+                break;
+              }
+            }
+            if (hasTxtFile) {
+              return true;
+            }
+          }
+      }
+    }
+    return false;
   }
 
   /**
