@@ -41,8 +41,7 @@ public class UrlNotFoundNotice extends ValidationNotice {
   /** Faulty value. */
   private final String fieldValue;
 
-  public UrlNotFoundNotice(
-      String filename, int csvRowNumber, String fieldName, String fieldValue) {
+  public UrlNotFoundNotice(String filename, int csvRowNumber, String fieldName, String fieldValue) {
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.fieldName = fieldName;

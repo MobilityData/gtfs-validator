@@ -33,16 +33,16 @@ public class UrlUtil {
   }
   /**
    * Validates the provided URL for correctness and accessibility.
-   * <p>
-   * This method first checks if the provided URL string is in a valid format, then checks if the URL
-   * is accessible by making an HTTP connection and checking the response code. The status of the URL
-   * is determined based on these checks and returned as a UrlStatus enum value.
+   *
+   * <p>This method first checks if the provided URL string is in a valid format, then checks if the
+   * URL is accessible by making an HTTP connection and checking the response code. The status of
+   * the URL is determined based on these checks and returned as a UrlStatus enum value.
    *
    * @param urlString The URL string to be validated.
-   * @return UrlStatus - Returns the status of the URL.
-   *         - INVALID: If the URL is not in a valid format.
-   *         - NOT_FOUND: If the URL is in a valid format but is not accessible (i.e., it does not respond or throws an exception).
-   *         - VALID: If the URL is in a valid format and is accessible.
+   * @return UrlStatus - Returns the status of the URL. - INVALID: If the URL is not in a valid
+   *     format. - NOT_FOUND: If the URL is in a valid format but is not accessible (i.e., it does
+   *     not respond or throws an exception). - VALID: If the URL is in a valid format and is
+   *     accessible.
    */
   public static UrlStatus validateUrl(String urlString) {
     if (!UrlValidator.getInstance().isValid(urlString)) {
@@ -51,9 +51,7 @@ public class UrlUtil {
     try {
       URL url = new URL(urlString);
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-      return connection.getResponseCode() != URL_ERROR_CODE
-          ? UrlStatus.VALID
-          : UrlStatus.NOT_FOUND;
+      return connection.getResponseCode() != URL_ERROR_CODE ? UrlStatus.VALID : UrlStatus.NOT_FOUND;
     } catch (MalformedURLException e) {
       return UrlStatus.INVALID;
     } catch (IOException e) {
