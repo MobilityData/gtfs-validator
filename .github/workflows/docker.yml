@@ -2,7 +2,7 @@ name: Docker image
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, feat/multiple-docker-platforms ]
   release:
     types: [ prereleased, released ]
 
