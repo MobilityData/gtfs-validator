@@ -24,7 +24,8 @@ import org.apache.commons.validator.routines.UrlValidator;
 
 /** Utility functions for validating urls */
 public class UrlUtil {
-  private static final int URL_ERROR_CODE = 404;
+  private static final int LOWER_BOUND_RESPONSE_CODE = 200;
+  private static final int UPPER_BOUND_RESPONSE_CODE = 399;
 
   public enum UrlStatus {
     VALID,
@@ -51,7 +52,10 @@ public class UrlUtil {
     try {
       URL url = new URL(urlString);
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-      return connection.getResponseCode() != URL_ERROR_CODE ? UrlStatus.VALID : UrlStatus.NOT_FOUND;
+      int responseCode = connection.getResponseCode();
+      return responseCode >= LOWER_BOUND_RESPONSE_CODE && responseCode <= UPPER_BOUND_RESPONSE_CODE
+          ? UrlStatus.VALID
+          : UrlStatus.NOT_FOUND;
     } catch (MalformedURLException e) {
       return UrlStatus.INVALID;
     } catch (IOException e) {
