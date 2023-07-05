@@ -2,7 +2,7 @@ name: Docker image
 
 on:
   push:
-    branches: [ master, feat/multiple-docker-platforms ]
+    branches: [ master ]
   release:
     types: [ prereleased, released ]
 
@@ -183,7 +183,7 @@ jobs:
             VERSION_TAG=${{ steps.prep.outputs.version }}
           load: false
           platforms: linux/amd64, linux/arm64
-          tags: ${{ steps.prep.outputs.tags }}-test-multiplat
+          tags: ${{ steps.prep.outputs.tags }}
           labels: |
             org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY,,}.git
             org.opencontainers.image.created=${{ steps.prep.outputs.created }}
@@ -198,7 +198,7 @@ jobs:
             VERSION_TAG=${{ steps.prep.outputs.version }}
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: ${{ steps.prep.outputs.tags }}-test-multiplat
+          tags: ${{ steps.prep.outputs.tags }}
           labels: |
             org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY,,}.git
             org.opencontainers.image.created=${{ steps.prep.outputs.created }}
