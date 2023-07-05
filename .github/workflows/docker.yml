@@ -2,7 +2,7 @@ name: Docker image
 
 on:
   push:
-    branches: [ master, feat/multiple-docker-platforms ]
+    branches: [ master ]
   release:
     types: [ prereleased, released ]
 
@@ -41,7 +41,7 @@ jobs:
 
   build_test:
     needs: test
-    name: Build and test Docker
+    name: Build/test Docker image
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -119,6 +119,7 @@ jobs:
         run: docker run --rm ${{ steps.prep.outputs.tags }} --help
   push_multiplatform:
     name: Build/Push multi-platform image
+    needs: build_test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
