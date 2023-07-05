@@ -108,7 +108,7 @@ jobs:
           build-args: |
             VERSION_TAG=${{ steps.prep.outputs.version }}
           load: true
-          platforms: linux/amd64, linux/arm64
+          platforms: ${{ matrix.platform }}
           tags: ${{ steps.prep.outputs.tags }}
           labels: |
             org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY,,}.git
