@@ -24,6 +24,7 @@ import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -47,6 +48,7 @@ public abstract class GtfsInput implements Closeable {
    * @throws IOException any IO exception that occurred during loading
    */
   public static GtfsInput createFromPath(Path path) throws IOException {
+    ZipFile zipFile;
     if (!Files.exists(path)) {
       throw new FileNotFoundException(path.toString());
     }
@@ -55,30 +57,54 @@ public abstract class GtfsInput implements Closeable {
     }
     if (path.getFileSystem().equals(FileSystems.getDefault())) {
       // Read from a local ZIP file.
-      return new GtfsZipFileInput(new ZipFile(path.toFile()));
+      zipFile = new ZipFile(path.toFile());
+      if (!hasSubfolderWithTxtFile(zipFile)) {
+        return new GtfsZipFileInput(zipFile);
+      } else {
+        //invalid_input_GTFS_files_in_subfolders
+      }
     }
     // Load a remote ZIP file to memory.
-    return new GtfsZipFileInput(
-        new ZipFile(new SeekableInMemoryByteChannel(Files.readAllBytes(path))));
+    zipFile = new ZipFile(new SeekableInMemoryByteChannel(Files.readAllBytes(path)));
+    if (!hasSubfolderWithTxtFile(zipFile)) {
+      return new GtfsZipFileInput(zipFile);
+    } else {
+      //invalid_input_GTFS_files_in_subfolders
+    }
+    return null;
   }
 
-  public static boolean hasSubfolderWithTxtFiles(File zipFile) throws IOException {
-    try (ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(zipFile))) {
-      ZipEntry entry;
-      while ((entry = zipInputStream.getNextEntry()) != null) {
-          if (entry.isDirectory()) {
-            // Found a subfolder
-            boolean hasTxtFile = false;
-            while (((entry = zipInputStream.getNextEntry()) != null)) {
-              if (!entry.isDirectory() && entry.getName().toLowerCase().endsWith(".txt")) {
-                hasTxtFile = true;
-                break;
-              }
-            }
-            if (hasTxtFile) {
-              return true;
-            }
-          }
+  /**
+   * Check if a zip file contains a subfolder with .txt files
+   * @param zipFile
+   * @return
+   */
+  public static boolean hasSubfolderWithTxtFile(ZipFile zipFile) {
+    Enumeration<? extends ZipEntry> entries = zipFile.getEntries();
+    while (entries.hasMoreElements()) {
+      ZipEntry entry = entries.nextElement();
+      if (entry.isDirectory()) {
+        if (hasTxtFile(zipFile, entry.getName())) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Check if a subfolder contains .txt files
+   * @param zipFile
+   * @param folderName
+   * @return
+   */
+  private static boolean hasTxtFile(ZipFile zipFile, String folderName) {
+    Enumeration<? extends ZipEntry> entries = zipFile.getEntries();
+    while (entries.hasMoreElements()) {
+      ZipEntry entry = entries.nextElement();
+      System.out.println(entry.getName());
+      if (!entry.isDirectory() && entry.getName().startsWith(folderName) && entry.getName().toLowerCase().endsWith(".txt")) {
+        return true;
       }
     }
     return false;
