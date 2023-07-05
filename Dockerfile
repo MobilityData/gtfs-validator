@@ -1,5 +1,3 @@
-# FROM --platform=$BUILDPLATFORM gradle:7-jdk11-alpine AS build
-
 FROM --platform=$BUILDPLATFORM eclipse-temurin:11 AS build
 
 COPY --chown=gradle:gradle . /build
