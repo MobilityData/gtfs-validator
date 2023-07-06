@@ -42,10 +42,6 @@ jobs:
           # We use the zulu distribution, which is an OpenJDK distro.
           distribution: 'zulu'
 
-      - name: "Ubuntu - Install RPM tools"
-        if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get install -y rpm
-
       # We create a code-signing keychain on MacOS before building and packaging the app, as the
       # app will be signed as part of the jpackage build phase.
       - name: "MacOS - Import Certificate: Developer ID Application"
