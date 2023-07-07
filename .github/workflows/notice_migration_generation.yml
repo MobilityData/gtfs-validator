@@ -4,6 +4,8 @@ on:
   release:
     types: [ prereleased, released ]
 #  For testing
+  pull_request:
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
