@@ -24,4 +24,4 @@ jobs:
       - name: Validate python version
         run: which python3
       - name: Run script
-        run: python3 scripts/notice-migration-generator/notice_migration_generator.py
+        run: python3 scripts/notice-migration-generator/notice_migration_generator.py -r {{ github.ref_name }}
