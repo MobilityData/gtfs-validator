@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  generate_notice_migration:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
