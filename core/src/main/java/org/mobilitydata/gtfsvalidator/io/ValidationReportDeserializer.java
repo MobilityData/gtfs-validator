@@ -82,4 +82,32 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
     }
     return Notice.GSON.toJsonTree(new ValidationReport(noticeReports)).getAsJsonObject();
   }
+
+  public static <T extends Notice> ValidationReport createValidationReport(
+      List<ResolvedNotice<T>> resolvedNotices,
+      int maxExportsPerNoticeTypeAndSeverity,
+      Map<String, Integer> noticesCountPerTypeAndSeverity) {
+    Set<NoticeReport> noticeReports = new LinkedHashSet<>();
+    for (Collection<ResolvedNotice<T>> noticesOfType :
+        NoticeContainer.groupNoticesByTypeAndSeverity(resolvedNotices).asMap().values()) {
+      ResolvedNotice<T> firstNotice = noticesOfType.iterator().next();
+      ImmutableList.Builder<JsonElement> noticesToExport = ImmutableList.builder();
+      int i = 0;
+      for (ResolvedNotice<T> notice : noticesOfType) {
+        ++i;
+        if (i > maxExportsPerNoticeTypeAndSeverity) {
+          // Do not export too many notices for this type.
+          break;
+        }
+        noticesToExport.add(notice.getContext().toJsonTree());
+      }
+      noticeReports.add(
+          new NoticeReport(
+              firstNotice.getContext().getCode(),
+              firstNotice.getSeverityLevel(),
+              noticesCountPerTypeAndSeverity.get(firstNotice.getMappingKey()),
+              noticesToExport.build()));
+    }
+    return new ValidationReport(noticeReports);
+  }
 }
