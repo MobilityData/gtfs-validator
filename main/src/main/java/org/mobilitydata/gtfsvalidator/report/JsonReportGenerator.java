@@ -56,16 +56,16 @@ public class JsonReportGenerator {
             reportData.config.validationReportFileName(),
             reportData.config.htmlReportFileName(),
             reportData.config.countryCode().getCountryCode(),
-            reportData.feedMetadata.feedInfo,
-            reportData.feedMetadata.agencies,
-            reportData.feedMetadata.getFilenames(),
-            reportData.feedMetadata.counts,
-            reportData.feedMetadata.specFeatures);
+            reportData.feedMetadata == null ? null : reportData.feedMetadata.feedInfo,
+                reportData.feedMetadata == null ? null : reportData.feedMetadata.agencies,
+                reportData.feedMetadata == null ? null : reportData.feedMetadata.getFilenames(),
+                reportData.feedMetadata == null ? null : reportData.feedMetadata.counts,
+                reportData.feedMetadata == null ? null : reportData.feedMetadata.specFeatures);
 
     return gson.toJson(jsonReport);
   }
 
-  public class JsonReport {
+  public static class JsonReport {
     public Summary summary;
 
     public Set<NoticeReport> notices;
@@ -101,7 +101,7 @@ public class JsonReportGenerator {
       this.files = files;
       this.counts = counts;
       this.gtfsComponents =
-          gtfsComponentsMap.entrySet().stream()
+              gtfsComponentsMap == null ? null : gtfsComponentsMap.entrySet().stream()
               .filter(Map.Entry::getValue)
               .map(Map.Entry::getKey)
               .collect(Collectors.toList());
