@@ -57,10 +57,10 @@ public class JsonReportGenerator {
             reportData.config.htmlReportFileName(),
             reportData.config.countryCode().getCountryCode(),
             reportData.feedMetadata == null ? null : reportData.feedMetadata.feedInfo,
-                reportData.feedMetadata == null ? null : reportData.feedMetadata.agencies,
-                reportData.feedMetadata == null ? null : reportData.feedMetadata.getFilenames(),
-                reportData.feedMetadata == null ? null : reportData.feedMetadata.counts,
-                reportData.feedMetadata == null ? null : reportData.feedMetadata.specFeatures);
+            reportData.feedMetadata == null ? null : reportData.feedMetadata.agencies,
+            reportData.feedMetadata == null ? null : reportData.feedMetadata.getFilenames(),
+            reportData.feedMetadata == null ? null : reportData.feedMetadata.counts,
+            reportData.feedMetadata == null ? null : reportData.feedMetadata.specFeatures);
 
     return gson.toJson(jsonReport);
   }
@@ -101,10 +101,12 @@ public class JsonReportGenerator {
       this.files = files;
       this.counts = counts;
       this.gtfsComponents =
-              gtfsComponentsMap == null ? null : gtfsComponentsMap.entrySet().stream()
-              .filter(Map.Entry::getValue)
-              .map(Map.Entry::getKey)
-              .collect(Collectors.toList());
+          gtfsComponentsMap == null
+              ? null
+              : gtfsComponentsMap.entrySet().stream()
+                  .filter(Map.Entry::getValue)
+                  .map(Map.Entry::getKey)
+                  .collect(Collectors.toList());
     }
 
     String validatorVersion;
