@@ -2,7 +2,7 @@ from io import StringIO
 import pandas as pd
 
 
-def get_migration_file():
+def get_migration_table():
     notice_migration_file = "docs/NOTICE_MIGRATION.md"
     with open(notice_migration_file, 'r') as f:
         file_content = f.read()

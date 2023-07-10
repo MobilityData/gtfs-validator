@@ -3,7 +3,7 @@ import argparse
 import jsondiff
 import json
 import numpy as np
-from utils.utils import get_migration_file
+from utils.utils import get_migration_table
 
 
 def read_rule_file(filename):
@@ -27,7 +27,7 @@ if __name__ == '__main__':
     version = args.release.upper()
     output = f"# Automated update of NOTICE_MIGRATION.md for release {version.lower()}\n"
 
-    migration_table: pd.DataFrame = get_migration_file()
+    migration_table: pd.DataFrame = get_migration_table()
     migration_table.fillna('', inplace=True)
 
     previous_version = sorted(list(migration_table.columns))[-1]
