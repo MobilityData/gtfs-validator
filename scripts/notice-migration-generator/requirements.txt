@@ -6,3 +6,6 @@ pytz==2023.3
 tzdata==2023.3
 six==1.16.0
 zipp==3.15.0
+markdown
+tabulate
+jsondiff
