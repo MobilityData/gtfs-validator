@@ -25,6 +25,7 @@ jobs:
     name: Build and upload packaged app
     runs-on: ${{ matrix.os }}
     strategy:
+#     Adding fail-fast: false so at least some artifacts gets uploaded if others fail
       fail-fast: false
       matrix:
         os: [ macos-latest, windows-latest, ubuntu-latest ]
