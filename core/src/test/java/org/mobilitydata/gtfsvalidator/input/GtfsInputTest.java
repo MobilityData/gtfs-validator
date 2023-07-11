@@ -17,8 +17,7 @@
 package org.mobilitydata.gtfsvalidator.input;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,7 +27,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.zip.ZipEntry;
-import org.apache.commons.compress.archivers.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 import org.junit.Rule;
 import org.junit.Test;
@@ -77,16 +75,16 @@ public class GtfsInputTest {
   }
 
   @Test
-  public void zipInputHasSubfolderWithTxtFile() throws IOException {
+  public void zipInputHasFlatSubfolderWithTxtFile() throws IOException {
     File zipFile = tmpDir.newFile("archived.zip");
     try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFile))) {
       ZipEntry e = new ZipEntry("stops.txt");
       out.putNextEntry(e);
-      out.putNextEntry(new ZipEntry("nested/agency.txt"));
+      e = new ZipEntry("nested/agency.txt");
+      out.putNextEntry(e);
       out.closeEntry();
     }
-    System.out.println(zipFile.getPath());
-    System.out.println(GtfsInput.hasSubfolderWithTxtFile(zipFile.toPath()));
+    assertTrue(GtfsInput.containsSubfolderWithTxtFile(zipFile.toPath()));
   }
 
   @Test

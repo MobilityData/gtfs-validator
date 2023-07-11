@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.input;
 
 import com.google.common.collect.ImmutableSet;
-
+import com.google.common.flogger.FluentLogger;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -27,7 +27,7 @@ import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
+import javax.inject.Inject;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 import org.apache.commons.lang3.EnumUtils;
@@ -35,12 +35,19 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.mobilitydata.gtfsvalidator.notice.InvalidInputGTFSFilesInSubfolderNotice;
+import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 
 /**
  * GtfsInput provides a common interface for reading GTFS data, either from a ZIP archive or from a
  * directory.
  */
 public abstract class GtfsInput implements Closeable {
+  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  public static final String invalidInputMessage =
+      "Zip files containing dataset files in a subfolder are invalid";
+  @Inject private static NoticeContainer noticeContainer;
+
   /**
    * Creates a specific GtfsInput to read data from the given path.
    *
@@ -59,74 +66,82 @@ public abstract class GtfsInput implements Closeable {
     if (path.getFileSystem().equals(FileSystems.getDefault())) {
       // Read from a local ZIP file.
       zipFile = new ZipFile(path.toFile());
-      if (!hasSubfolderWithTxtFile(path)) {
+      if (!containsSubfolderWithTxtFile(path)) {
         return new GtfsZipFileInput(zipFile);
       } else {
-        //invalid_input_GTFS_files_in_subfolders
+        noticeContainer.addValidationNotice(
+            new InvalidInputGTFSFilesInSubfolderNotice(invalidInputMessage));
+        // invalid_input_GTFS_files_in_subfolders
       }
     }
     // Load a remote ZIP file to memory.
     zipFile = new ZipFile(new SeekableInMemoryByteChannel(Files.readAllBytes(path)));
-    if (!hasSubfolderWithTxtFile(path)) {
+    if (!containsSubfolderWithTxtFile(path)) {
       return new GtfsZipFileInput(zipFile);
     } else {
-      //invalid_input_GTFS_files_in_subfolders
+      noticeContainer.addValidationNotice(
+          new InvalidInputGTFSFilesInSubfolderNotice(invalidInputMessage));
+      // invalid_input_GTFS_files_in_subfolders
     }
     return null;
   }
 
   /**
    * Check if a zip file contains a subfolder with .txt files
+   *
    * @param path
    * @return
    */
-//  public static boolean hasSubfolderWithTxtFile(ZipFile zipFile) {
-//    Enumeration<? extends ZipEntry> entries = zipFile.getEntries();
-//    while (entries.hasMoreElements()) {
-//      ZipEntry entry = entries.nextElement();
-//      if (entry.isDirectory()) {
-//        //subfolders found
-//        entry =
-//      }
-//    }
-//    return false;
-//  }
-
-  public static boolean hasSubfolderWithTxtFile(Path path) throws IOException {
-    try (ZipInputStream zipInputStream = new ZipInputStream(new BufferedInputStream(
-            new FileInputStream(path.toFile())))) {
+  public static boolean containsSubfolderWithTxtFile(Path path) {
+    boolean containsGtfsFile = false;
+    try (ZipInputStream zipInputStream =
+        new ZipInputStream(new BufferedInputStream(new FileInputStream(path.toFile())))) {
       ZipEntry entry;
+
       while ((entry = zipInputStream.getNextEntry()) != null) {
-        if (entry.isDirectory()) {
-          // Found a subfolder
-          boolean hasTxtFile = false;
-          while (((entry = zipInputStream.getNextEntry()) != null)) {
-            if (!entry.isDirectory() && EnumUtils.isValidEnum(GrfsFileEnum.class, entry.getName())) {
-              hasTxtFile = true;
-              break;
-            }
-          }
-          if (hasTxtFile) {
-            return true;
+        System.out.println(entry.getName());
+        String entryName = entry.getName();
+
+        if (entryName.contains("/") && entryName.endsWith(".txt")) {
+          String[] files = entryName.split("/");
+          String lastElement = files[files.length - 1];
+          if (containsGtfsFile(lastElement)) {
+            containsGtfsFile = true;
           }
         }
+      }
+    } catch (IOException ioException) {
+      logger.atSevere().withCause(ioException).log(
+          "GtfsInput containsSubfolderWithTxtFile throws IOException");
+    } finally {
+      return containsGtfsFile;
+    }
+  }
+
+  public static boolean containsGtfsFile(String value) {
+    GtfsFiles[] files = GtfsFiles.values();
+    for (GtfsFiles f : files) {
+      if (f.getGtfsFileName().equals(value)) {
+        return true;
       }
     }
     return false;
   }
-
   /**
    * Check if a subfolder contains .txt files
+   *
    * @param zipFile
    * @return
    */
-  private static boolean hasGtfsFile(ZipFile zipFile) {
+  public static boolean containsGtfsFile(ZipFile zipFile) throws IOException {
     Enumeration<? extends ZipEntry> entries = zipFile.getEntries();
     while (entries.hasMoreElements()) {
       ZipEntry entry = entries.nextElement();
-      System.out.println(entry.getName());
-      if (!entry.isDirectory() && EnumUtils.isValidEnum(GrfsFileEnum.class, entry.getName())) {
-        return true;
+      if (entry.isDirectory()) {
+        entry = entries.nextElement();
+        if (!entry.isDirectory() && EnumUtils.isValidEnum(GtfsFiles.class, entry.getName())) {
+          return true;
+        }
       }
     }
     return false;
@@ -191,7 +206,6 @@ public abstract class GtfsInput implements Closeable {
       }
     }
   }
-
 
   /**
    * Lists all files inside the GTFS dataset, even if they are not CSV and do not have .txt
