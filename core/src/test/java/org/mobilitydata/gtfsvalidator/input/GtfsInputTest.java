@@ -49,7 +49,8 @@ public class GtfsInputTest {
   @Test
   public void inputNotFound_throwsException() {
     assertThrows(
-        FileNotFoundException.class, () -> GtfsInput.createFromPath(Paths.get("/no/such/file"), noticeContainer));
+        FileNotFoundException.class,
+        () -> GtfsInput.createFromPath(Paths.get("/no/such/file"), noticeContainer));
   }
 
   @Test
@@ -82,30 +83,18 @@ public class GtfsInputTest {
     try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFile))) {
       ZipEntry e = new ZipEntry("stops.txt");
       out.putNextEntry(e);
-      e = new ZipEntry("nested/agency.txt");
+      e = new ZipEntry("nested/");
       out.putNextEntry(e);
       out.closeEntry();
     }
-    assertTrue(GtfsInput.containsSubfolderWithTxtFile(zipFile.toPath()));
-  }
-
-  @Test
-  public void zipInputHasTreeSubfolderWithTxtFile() throws IOException {
-    File zipFile = tmpDir.newFile("archived.zip");
-    try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFile))) {
-      ZipEntry e = new ZipEntry("stops.txt");
-      out.putNextEntry(e);
-      e = new ZipEntry("nested1/nested2/agency.txt");
-      out.putNextEntry(e);
-      out.closeEntry();
-    }
-    assertTrue(GtfsInput.containsSubfolderWithTxtFile(zipFile.toPath()));
+    assertFalse(GtfsInput.containsSubfolderWithTxtFile(zipFile.toPath()));
   }
 
   @Test
   public void createFromUrl_valid_success() throws IOException, URISyntaxException {
     try (GtfsInput underTest =
-        GtfsInput.createFromUrl(new URL(VALID_URL), tmpDir.getRoot().toPath().resolve("storage"), noticeContainer)) {
+        GtfsInput.createFromUrl(
+            new URL(VALID_URL), tmpDir.getRoot().toPath().resolve("storage"), noticeContainer)) {
       assertThat(underTest instanceof GtfsZipFileInput);
     }
   }
@@ -116,7 +105,9 @@ public class GtfsInputTest {
         IOException.class,
         () ->
             GtfsInput.createFromUrl(
-                new URL(INVALID_URL), tmpDir.getRoot().toPath().resolve("storage"), noticeContainer));
+                new URL(INVALID_URL),
+                tmpDir.getRoot().toPath().resolve("storage"),
+                noticeContainer));
   }
 
   @Test

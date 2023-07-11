@@ -269,7 +269,9 @@ public class ValidationRunner {
       return GtfsInput.createFromUrlInMemory(source.toURL());
     } else {
       return GtfsInput.createFromUrl(
-          source.toURL(), config.storageDirectory().get().resolve(GTFS_ZIP_FILENAME), noticeContainer);
+          source.toURL(),
+          config.storageDirectory().get().resolve(GTFS_ZIP_FILENAME),
+          noticeContainer);
     }
   }
 }
