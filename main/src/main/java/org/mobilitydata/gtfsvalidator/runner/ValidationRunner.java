@@ -246,7 +246,11 @@ public class ValidationRunner {
       Files.write(
           config.outputDirectory().resolve(config.validationReportFileName()),
           gson.toJson(jsonReport).getBytes(StandardCharsets.UTF_8));
+    } catch (Exception ex) {
+      logger.atSevere().withCause(ex).log("Error creating JSON report");
+    }
 
+    try {
       htmlGenerator.generateReport(
           feedMetadata,
           noticeContainer,
