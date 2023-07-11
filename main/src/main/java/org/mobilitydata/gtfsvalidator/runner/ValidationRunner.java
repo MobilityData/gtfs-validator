@@ -38,7 +38,6 @@ import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
 import org.mobilitydata.gtfsvalidator.report.HtmlReportGenerator;
 import org.mobilitydata.gtfsvalidator.report.JsonReportGenerator;
 import org.mobilitydata.gtfsvalidator.report.model.FeedMetadata;
-import org.mobilitydata.gtfsvalidator.report.model.ReportData;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
 import org.mobilitydata.gtfsvalidator.util.VersionInfo;
@@ -234,16 +233,19 @@ public class ValidationRunner {
     Gson gson = createGson(config.prettyJson());
     HtmlReportGenerator htmlGenerator = new HtmlReportGenerator();
     JsonReportGenerator jsonGenerator = new JsonReportGenerator();
-    ReportData reportData = new ReportData(feedMetadata, noticeContainer, config, versionInfo);
     try {
-
-      String jsonReport = jsonGenerator.generateReport(gson, reportData);
+      String jsonReport =
+          jsonGenerator.generateReport(gson, feedMetadata, noticeContainer, config, versionInfo);
       Files.write(
           config.outputDirectory().resolve(config.validationReportFileName()),
           jsonReport.getBytes(StandardCharsets.UTF_8));
 
       htmlGenerator.generateReport(
-          reportData, config.outputDirectory().resolve(config.htmlReportFileName()));
+          feedMetadata,
+          noticeContainer,
+          config,
+          versionInfo,
+          config.outputDirectory().resolve(config.htmlReportFileName()));
       Files.write(
           config.outputDirectory().resolve(config.systemErrorsReportFileName()),
           gson.toJson(noticeContainer.exportSystemErrors()).getBytes(StandardCharsets.UTF_8));

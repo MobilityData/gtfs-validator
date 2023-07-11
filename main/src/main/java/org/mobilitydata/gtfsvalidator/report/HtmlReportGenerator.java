@@ -21,7 +21,11 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import org.mobilitydata.gtfsvalidator.report.model.ReportData;
+import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.report.model.FeedMetadata;
+import org.mobilitydata.gtfsvalidator.report.model.ReportSummary;
+import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
+import org.mobilitydata.gtfsvalidator.util.VersionInfo;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -31,11 +35,19 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 public class HtmlReportGenerator {
 
   /** Generate the HTML report using the class ReportSummary and the notice container. */
-  public void generateReport(ReportData reportData, Path reportPath) throws IOException {
+  public void generateReport(
+      FeedMetadata feedMetadata,
+      NoticeContainer noticeContainer,
+      ValidationRunnerConfig config,
+      VersionInfo versionInfo,
+      Path reportPath)
+      throws IOException {
     TemplateEngine templateEngine = new TemplateEngine();
     ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
     templateResolver.setTemplateMode(TemplateMode.HTML);
     templateEngine.setTemplateResolver(templateResolver);
+
+    ReportSummary summary = new ReportSummary(noticeContainer, versionInfo);
 
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
     Date now = new Date(System.currentTimeMillis());
@@ -43,9 +55,9 @@ public class HtmlReportGenerator {
 
     Context context = new Context();
     // TODO: handle null metadata
-    context.setVariable("metadata", reportData.feedMetadata);
-    context.setVariable("summary", reportData.reportSummary);
-    context.setVariable("config", reportData.config);
+    context.setVariable("metadata", feedMetadata);
+    context.setVariable("summary", summary);
+    context.setVariable("config", config);
     context.setVariable("date", date);
 
     try (FileWriter writer = new FileWriter(reportPath.toFile())) {

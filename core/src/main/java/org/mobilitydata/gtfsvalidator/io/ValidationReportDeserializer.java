@@ -48,6 +48,8 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
       JsonElement json, Type typoOfT, JsonDeserializationContext context) {
     Set<NoticeReport> notices = new LinkedHashSet<>();
     JsonObject rootObject = json.getAsJsonObject();
+    // Note that the json file contains the summary in addition to the notices, but it is ignored
+    // since currently the report comparison is only on the notices
     JsonArray noticesArray = rootObject.getAsJsonArray(NOTICES_MEMBER_NAME);
     for (JsonElement childObject : noticesArray) {
       notices.add(Notice.GSON.fromJson(childObject, NoticeReport.class));
