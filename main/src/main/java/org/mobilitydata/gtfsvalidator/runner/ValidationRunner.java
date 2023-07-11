@@ -25,9 +25,11 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
@@ -36,6 +38,7 @@ import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
 import org.mobilitydata.gtfsvalidator.report.HtmlReportGenerator;
+import org.mobilitydata.gtfsvalidator.report.JsonReport;
 import org.mobilitydata.gtfsvalidator.report.JsonReportGenerator;
 import org.mobilitydata.gtfsvalidator.report.model.FeedMetadata;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
@@ -230,22 +233,27 @@ public class ValidationRunner {
             "Error creating output directory: %s", config.outputDirectory());
       }
     }
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
+    Date now = new Date(System.currentTimeMillis());
+    String date = formatter.format(now);
+
     Gson gson = createGson(config.prettyJson());
     HtmlReportGenerator htmlGenerator = new HtmlReportGenerator();
     JsonReportGenerator jsonGenerator = new JsonReportGenerator();
     try {
-      String jsonReport =
-          jsonGenerator.generateReport(gson, feedMetadata, noticeContainer, config, versionInfo);
+      JsonReport jsonReport =
+          jsonGenerator.generateReport(feedMetadata, noticeContainer, config, versionInfo, date);
       Files.write(
           config.outputDirectory().resolve(config.validationReportFileName()),
-          jsonReport.getBytes(StandardCharsets.UTF_8));
+          gson.toJson(jsonReport).getBytes(StandardCharsets.UTF_8));
 
       htmlGenerator.generateReport(
           feedMetadata,
           noticeContainer,
           config,
           versionInfo,
-          config.outputDirectory().resolve(config.htmlReportFileName()));
+          config.outputDirectory().resolve(config.htmlReportFileName()),
+          date);
       Files.write(
           config.outputDirectory().resolve(config.systemErrorsReportFileName()),
           gson.toJson(noticeContainer.exportSystemErrors()).getBytes(StandardCharsets.UTF_8));

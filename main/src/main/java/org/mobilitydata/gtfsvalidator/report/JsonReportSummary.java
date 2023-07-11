@@ -1,7 +1,5 @@
 package org.mobilitydata.gtfsvalidator.report;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,10 +40,11 @@ public class JsonReportSummary {
   private List<String> gtfsComponents;
 
   public JsonReportSummary(
-      FeedMetadata feedMetadata, ValidationRunnerConfig config, VersionInfo versionInfo) {
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
-    Date now = new Date(System.currentTimeMillis());
-    this.validatedAt = formatter.format(now);
+      FeedMetadata feedMetadata,
+      ValidationRunnerConfig config,
+      VersionInfo versionInfo,
+      String date) {
+    this.validatedAt = date;
 
     this.validatorVersion = versionInfo.currentVersion().orElse(null);
 
