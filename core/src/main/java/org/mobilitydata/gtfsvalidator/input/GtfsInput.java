@@ -32,7 +32,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.mobilitydata.gtfsvalidator.notice.InvalidInputGTFSFilesInSubfolderNotice;
+import org.mobilitydata.gtfsvalidator.notice.InvalidInputFilesInSubfolderNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 
 /**
@@ -66,7 +66,7 @@ public abstract class GtfsInput implements Closeable {
       zipFile = new ZipFile(path.toFile());
       if (containsSubfolderWithTxtFile(path)) {
         noticeContainer.addValidationNotice(
-            new InvalidInputGTFSFilesInSubfolderNotice(invalidInputMessage));
+            new InvalidInputFilesInSubfolderNotice(invalidInputMessage));
       }
       return new GtfsZipFileInput(zipFile);
     }
@@ -74,7 +74,7 @@ public abstract class GtfsInput implements Closeable {
     zipFile = new ZipFile(new SeekableInMemoryByteChannel(Files.readAllBytes(path)));
     if (containsSubfolderWithTxtFile(path)) {
       noticeContainer.addValidationNotice(
-          new InvalidInputGTFSFilesInSubfolderNotice(invalidInputMessage));
+          new InvalidInputFilesInSubfolderNotice(invalidInputMessage));
     }
     return new GtfsZipFileInput(zipFile);
   }
