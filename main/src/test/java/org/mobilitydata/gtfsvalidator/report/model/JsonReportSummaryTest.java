@@ -99,8 +99,7 @@ public class JsonReportSummaryTest {
             + "\"htmlReportName\":\"/some/html/filename\","
             + "\"countryCode\":\"GB\"}";
 
-    JsonParser jsonParser = new JsonParser();
-    assertEquals(jsonParser.parse(expected), gson.toJsonTree(reportSummary));
+    assertEquals(JsonParser.parseString(expected), gson.toJsonTree(reportSummary));
   }
 
   @Test
@@ -128,8 +127,7 @@ public class JsonReportSummaryTest {
             + "\"counts\":{\"count1\":1,\"count2\":2},"
             + "\"gtfsComponents\":[\"Feature2\"]}";
 
-    JsonParser jsonParser = new JsonParser();
-    assertEquals(jsonParser.parse(expected), gson.toJsonTree(reportSummary));
+    assertEquals(JsonParser.parseString(expected), gson.toJsonTree(reportSummary));
   }
 
   @Test
@@ -150,7 +148,6 @@ public class JsonReportSummaryTest {
             + "\"counts\":{\"count1\":1,\"count2\":2},"
             + "\"gtfsComponents\":[\"Feature2\"]}";
 
-    JsonParser jsonParser = new JsonParser();
-    assertEquals(jsonParser.parse(expected), gson.toJsonTree(reportSummary));
+    assertEquals(JsonParser.parseString(expected), gson.toJsonTree(reportSummary));
   }
 }
