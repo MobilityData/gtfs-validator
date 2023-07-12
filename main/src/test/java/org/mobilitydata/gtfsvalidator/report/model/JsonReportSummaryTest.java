@@ -113,22 +113,22 @@ public class JsonReportSummaryTest {
 
     String qaz = gson.toJson(reportSummary);
     String expected =
-            "{\"validatorVersion\":\"1.0\"," +
-                    "\"validatedAt\":\"now\"," +
-                    "\"gtfsInput\":\"some_dataset_filename\"," +
-                    "\"threads\":1," +
-                    "\"outputDirectory\":\"some_output_directory\"," +
-                    "\"systemErrorsReportName\":\"some_error_filename\"," +
-                    "\"validationReportName\":\"some_report_filename\"," +
-                    "\"htmlReportName\":\"some_html_filename\"," +
-                    "\"countryCode\":\"GB\"," +
-                    "\"feedInfo\":{\"key1\":\"value1\",\"key2\":\"value2\"}," +
-                    "\"agencies\":[" +
-                    "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"}," +
-                    "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"}]," +
-                    "\"files\":[\"file1\",\"file2\"]," +
-                    "\"counts\":{\"count1\":1,\"count2\":2}," +
-                    "\"gtfsComponents\":[\"Feature2\"]}";
+        "{\"validatorVersion\":\"1.0\","
+            + "\"validatedAt\":\"now\","
+            + "\"gtfsInput\":\"some_dataset_filename\","
+            + "\"threads\":1,"
+            + "\"outputDirectory\":\"some_output_directory\","
+            + "\"systemErrorsReportName\":\"some_error_filename\","
+            + "\"validationReportName\":\"some_report_filename\","
+            + "\"htmlReportName\":\"some_html_filename\","
+            + "\"countryCode\":\"GB\","
+            + "\"feedInfo\":{\"key1\":\"value1\",\"key2\":\"value2\"},"
+            + "\"agencies\":["
+            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"},"
+            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"}],"
+            + "\"files\":[\"file1\",\"file2\"],"
+            + "\"counts\":{\"count1\":1,\"count2\":2},"
+            + "\"gtfsComponents\":[\"Feature2\"]}";
 
     assertEquals(JsonParser.parseString(expected), gson.toJsonTree(reportSummary));
   }
@@ -140,16 +140,16 @@ public class JsonReportSummaryTest {
     JsonReportSummary reportSummary = new JsonReportSummary(feedMetadata, null, versionInfo, "now");
     String qaz = gson.toJson(reportSummary);
     String expected =
-            "{\"validatorVersion\":\"1.0\"," +
-                    "\"validatedAt\":\"now\"," +
-                    "\"threads\":0," +
-                    "\"feedInfo\":{\"key1\":\"value1\",\"key2\":\"value2\"}," +
-                    "\"agencies\":[" +
-                    "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"}," +
-                    "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"}]," +
-                    "\"files\":[\"file1\",\"file2\"]," +
-                    "\"counts\":{\"count1\":1,\"count2\":2}," +
-                    "\"gtfsComponents\":[\"Feature2\"]}";
+        "{\"validatorVersion\":\"1.0\","
+            + "\"validatedAt\":\"now\","
+            + "\"threads\":0,"
+            + "\"feedInfo\":{\"key1\":\"value1\",\"key2\":\"value2\"},"
+            + "\"agencies\":["
+            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"},"
+            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"}],"
+            + "\"files\":[\"file1\",\"file2\"],"
+            + "\"counts\":{\"count1\":1,\"count2\":2},"
+            + "\"gtfsComponents\":[\"Feature2\"]}";
 
     assertEquals(JsonParser.parseString(expected), gson.toJsonTree(reportSummary));
   }
