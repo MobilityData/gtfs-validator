@@ -36,13 +36,13 @@ public class JsonReportSummaryTest {
     FeedMetadata feedMetaData;
     ValidationRunnerConfig.Builder builder = ValidationRunnerConfig.builder();
     builder.setCountryCode(CountryCode.forStringOrUnknown("GB"));
-    builder.setGtfsSource(new URI("file:///some/dataset/filename"));
-    builder.setHtmlReportFileName("/some/html/filaname");
-    builder.setOutputDirectory(Path.of("/some/output/direrctory"));
+    builder.setGtfsSource(new URI("some_dataset_filename"));
+    builder.setHtmlReportFileName("some_html_filename");
+    builder.setOutputDirectory(Path.of("some_output_directory"));
     builder.setNumThreads(1);
     builder.setPrettyJson(true);
-    builder.setSystemErrorsReportFileName("/some/error/filename");
-    builder.setValidationReportFileName("/some/report/filename");
+    builder.setSystemErrorsReportFileName("some_error_filename");
+    builder.setValidationReportFileName("some_report_filename");
 
     ValidationRunnerConfig config = builder.build();
 
@@ -54,14 +54,15 @@ public class JsonReportSummaryTest {
   private static ValidationRunnerConfig generateValidationRunnerConfig() throws Exception {
 
     ValidationRunnerConfig.Builder builder = ValidationRunnerConfig.builder();
+
     builder.setCountryCode(CountryCode.forStringOrUnknown("GB"));
-    builder.setGtfsSource(new URI("file:///some/dataset/filename"));
-    builder.setHtmlReportFileName("/some/html/filename");
-    builder.setOutputDirectory(Path.of("/some/output/directory"));
+    builder.setGtfsSource(new URI("some_dataset_filename"));
+    builder.setHtmlReportFileName("some_html_filename");
+    builder.setOutputDirectory(Path.of("some_output_directory"));
     builder.setNumThreads(1);
     builder.setPrettyJson(true);
-    builder.setSystemErrorsReportFileName("/some/error/filename");
-    builder.setValidationReportFileName("/some/report/filename");
+    builder.setSystemErrorsReportFileName("some_error_filename");
+    builder.setValidationReportFileName("some_report_filename");
 
     return builder.build();
   }
@@ -87,17 +88,18 @@ public class JsonReportSummaryTest {
     JsonReportSummary reportSummary =
         new JsonReportSummary(null, generateValidationRunnerConfig(), versionInfo, "now");
 
-    String qaz = gson.toJson(reportSummary);
     String expected =
-        "{\"validatorVersion\":\"1.0\","
+        "{"
+            + "\"validatorVersion\":\"1.0\","
             + "\"validatedAt\":\"now\","
-            + "\"gtfsInput\":\"file:///some/dataset/filename\","
+            + "\"gtfsInput\":\"some_dataset_filename\","
             + "\"threads\":1,"
-            + "\"outputDirectory\":\"/some/output/directory\","
-            + "\"systemErrorsReportName\":\"/some/error/filename\","
-            + "\"validationReportName\":\"/some/report/filename\","
-            + "\"htmlReportName\":\"/some/html/filename\","
-            + "\"countryCode\":\"GB\"}";
+            + "\"outputDirectory\":\"some_output_directory\","
+            + "\"systemErrorsReportName\":\"some_error_filename\","
+            + "\"validationReportName\":\"some_report_filename\","
+            + "\"htmlReportName\":\"some_html_filename\","
+            + "\"countryCode\":\"GB\""
+            + "}";
 
     assertEquals(JsonParser.parseString(expected), gson.toJsonTree(reportSummary));
   }
@@ -109,23 +111,24 @@ public class JsonReportSummaryTest {
     JsonReportSummary reportSummary =
         new JsonReportSummary(feedMetadata, generateValidationRunnerConfig(), versionInfo, "now");
 
+    String qaz = gson.toJson(reportSummary);
     String expected =
-        "{\"validatorVersion\":\"1.0\","
-            + "\"validatedAt\":\"now\","
-            + "\"gtfsInput\":\"file:///some/dataset/filename\","
-            + "\"threads\":1,"
-            + "\"outputDirectory\":\"/some/output/directory\","
-            + "\"systemErrorsReportName\":\"/some/error/filename\","
-            + "\"validationReportName\":\"/some/report/filename\","
-            + "\"htmlReportName\":\"/some/html/filename\","
-            + "\"countryCode\":\"GB\","
-            + "\"feedInfo\":{\"key1\":\"value1\",\"key2\":\"value2\"},"
-            + "\"agencies\":["
-            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"},"
-            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"}],"
-            + "\"files\":[\"file1\",\"file2\"],"
-            + "\"counts\":{\"count1\":1,\"count2\":2},"
-            + "\"gtfsComponents\":[\"Feature2\"]}";
+            "{\"validatorVersion\":\"1.0\"," +
+                    "\"validatedAt\":\"now\"," +
+                    "\"gtfsInput\":\"some_dataset_filename\"," +
+                    "\"threads\":1," +
+                    "\"outputDirectory\":\"some_output_directory\"," +
+                    "\"systemErrorsReportName\":\"some_error_filename\"," +
+                    "\"validationReportName\":\"some_report_filename\"," +
+                    "\"htmlReportName\":\"some_html_filename\"," +
+                    "\"countryCode\":\"GB\"," +
+                    "\"feedInfo\":{\"key1\":\"value1\",\"key2\":\"value2\"}," +
+                    "\"agencies\":[" +
+                    "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"}," +
+                    "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"}]," +
+                    "\"files\":[\"file1\",\"file2\"]," +
+                    "\"counts\":{\"count1\":1,\"count2\":2}," +
+                    "\"gtfsComponents\":[\"Feature2\"]}";
 
     assertEquals(JsonParser.parseString(expected), gson.toJsonTree(reportSummary));
   }
@@ -135,18 +138,18 @@ public class JsonReportSummaryTest {
 
     FeedMetadata feedMetadata = generateFeedMetaData();
     JsonReportSummary reportSummary = new JsonReportSummary(feedMetadata, null, versionInfo, "now");
-
+    String qaz = gson.toJson(reportSummary);
     String expected =
-        "{\"validatorVersion\":\"1.0\","
-            + "\"validatedAt\":\"now\","
-            + "\"threads\":0,"
-            + "\"feedInfo\":{\"key1\":\"value1\",\"key2\":\"value2\"},"
-            + "\"agencies\":["
-            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"},"
-            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"}],"
-            + "\"files\":[\"file1\",\"file2\"],"
-            + "\"counts\":{\"count1\":1,\"count2\":2},"
-            + "\"gtfsComponents\":[\"Feature2\"]}";
+            "{\"validatorVersion\":\"1.0\"," +
+                    "\"validatedAt\":\"now\"," +
+                    "\"threads\":0," +
+                    "\"feedInfo\":{\"key1\":\"value1\",\"key2\":\"value2\"}," +
+                    "\"agencies\":[" +
+                    "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"}," +
+                    "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"}]," +
+                    "\"files\":[\"file1\",\"file2\"]," +
+                    "\"counts\":{\"count1\":1,\"count2\":2}," +
+                    "\"gtfsComponents\":[\"Feature2\"]}";
 
     assertEquals(JsonParser.parseString(expected), gson.toJsonTree(reportSummary));
   }
