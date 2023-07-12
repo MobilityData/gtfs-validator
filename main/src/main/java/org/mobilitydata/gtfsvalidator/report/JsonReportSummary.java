@@ -16,18 +16,18 @@ import org.mobilitydata.gtfsvalidator.util.VersionInfo;
 @SuppressWarnings("unused") // The fields of this class are only read by Gson when serializing.
 public class JsonReportSummary {
 
-  private final String validatorVersion;
-  private final String validatedAt;
-  private final String gtfsInput;
+  private String validatorVersion;
+  private String validatedAt;
+  private String gtfsInput;
 
-  private final int threads;
+  private int threads;
 
-  private final String outputDirectory;
+  private String outputDirectory;
 
-  private final String systemErrorsReportName;
-  private final String validationReportName;
-  private final String htmlReportName;
-  private final String countryCode;
+  private String systemErrorsReportName;
+  private String validationReportName;
+  private String htmlReportName;
+  private String countryCode;
 
   private Map<String, String> feedInfo;
 
@@ -48,13 +48,15 @@ public class JsonReportSummary {
 
     this.validatorVersion = versionInfo.currentVersion().orElse(null);
 
-    this.gtfsInput = config.gtfsSource().toString();
-    this.threads = config.numThreads();
-    this.outputDirectory = config.outputDirectory().toString();
-    this.systemErrorsReportName = config.systemErrorsReportFileName();
-    this.validationReportName = config.validationReportFileName();
-    this.htmlReportName = config.htmlReportFileName();
-    this.countryCode = config.countryCode().getCountryCode();
+    if (config != null) {
+      this.gtfsInput = config.gtfsSource().toString();
+      this.threads = config.numThreads();
+      this.outputDirectory = config.outputDirectory().toString();
+      this.systemErrorsReportName = config.systemErrorsReportFileName();
+      this.validationReportName = config.validationReportFileName();
+      this.htmlReportName = config.htmlReportFileName();
+      this.countryCode = config.countryCode().getCountryCode();
+    }
 
     if (feedMetadata != null) {
       this.feedInfo = feedMetadata.feedInfo;
