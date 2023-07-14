@@ -93,8 +93,6 @@ public abstract class GtfsInput implements Closeable {
         new ZipInputStream(new BufferedInputStream(new FileInputStream(path.toFile())))) {
       ZipEntry entry;
       while ((entry = zipInputStream.getNextEntry()) != null) {
-        System.out.println("name: " + entry.getName());
-        System.out.println("isDirectory: " + entry.isDirectory());
         String entryName = entry.getName();
         if (entry.isDirectory()) {
           containsSubfolder = true;
@@ -124,8 +122,6 @@ public abstract class GtfsInput implements Closeable {
         new ZipInputStream(new BufferedInputStream(url.openStream()))) {
       ZipEntry entry;
       while ((entry = zipInputStream.getNextEntry()) != null) {
-        System.out.println("name: " + entry.getName());
-        System.out.println("isDirectory: " + entry.isDirectory());
         String entryName = entry.getName();
         if (entry.isDirectory()) {
           containsSubfolder = true;
