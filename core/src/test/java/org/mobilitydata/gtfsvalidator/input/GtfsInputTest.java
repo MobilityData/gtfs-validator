@@ -78,16 +78,9 @@ public class GtfsInputTest {
   }
 
   @Test
-  public void zipInputHasFlatSubfolderWithTxtFile() throws IOException {
-    File zipFile = tmpDir.newFile("archived.zip");
-    try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFile))) {
-      ZipEntry e = new ZipEntry("stops.txt");
-      out.putNextEntry(e);
-      e = new ZipEntry("nested/");
-      out.putNextEntry(e);
-      out.closeEntry();
-    }
-    assertFalse(GtfsInput.containsSubfolderWithTxtFile(zipFile.toPath()));
+  public void urlInputHasSubfolderWithGtfsFile() throws IOException {
+    URL url = new URL(VALID_URL);
+    assertFalse(GtfsInput.containsSubfolderWithGtfsFile(url));
   }
 
   @Test
@@ -112,13 +105,16 @@ public class GtfsInputTest {
 
   @Test
   public void createFromUrlInMemory_valid_success() throws IOException, URISyntaxException {
-    try (GtfsInput underTest = GtfsInput.createFromUrlInMemory(new URL(VALID_URL), noticeContainer)) {
+    try (GtfsInput underTest =
+        GtfsInput.createFromUrlInMemory(new URL(VALID_URL), noticeContainer)) {
       assertThat(underTest instanceof GtfsZipFileInput);
     }
   }
 
   @Test
   public void createFromUrlInMemory_invalid_throwsException() {
-    assertThrows(IOException.class, () -> GtfsInput.createFromUrlInMemory(new URL(INVALID_URL), noticeContainer));
+    assertThrows(
+        IOException.class,
+        () -> GtfsInput.createFromUrlInMemory(new URL(INVALID_URL), noticeContainer));
   }
 }
