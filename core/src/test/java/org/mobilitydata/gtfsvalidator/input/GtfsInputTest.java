@@ -112,13 +112,13 @@ public class GtfsInputTest {
 
   @Test
   public void createFromUrlInMemory_valid_success() throws IOException, URISyntaxException {
-    try (GtfsInput underTest = GtfsInput.createFromUrlInMemory(new URL(VALID_URL))) {
+    try (GtfsInput underTest = GtfsInput.createFromUrlInMemory(new URL(VALID_URL), noticeContainer)) {
       assertThat(underTest instanceof GtfsZipFileInput);
     }
   }
 
   @Test
   public void createFromUrlInMemory_invalid_throwsException() {
-    assertThrows(IOException.class, () -> GtfsInput.createFromUrlInMemory(new URL(INVALID_URL)));
+    assertThrows(IOException.class, () -> GtfsInput.createFromUrlInMemory(new URL(INVALID_URL), noticeContainer));
   }
 }

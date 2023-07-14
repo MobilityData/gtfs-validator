@@ -266,7 +266,7 @@ public class ValidationRunner {
     }
 
     if (config.storageDirectory().isEmpty()) {
-      return GtfsInput.createFromUrlInMemory(source.toURL());
+      return GtfsInput.createFromUrlInMemory(source.toURL(), noticeContainer);
     } else {
       return GtfsInput.createFromUrl(
           source.toURL(),

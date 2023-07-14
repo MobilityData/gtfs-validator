@@ -95,7 +95,6 @@ public abstract class GtfsInput implements Closeable {
       while ((entry = zipInputStream.getNextEntry()) != null) {
         System.out.println("name: " + entry.getName());
         System.out.println("isDirectory: " + entry.isDirectory());
-        System.out.println("contains slash: " + entry.getName().contains("/"));
         String entryName = entry.getName();
         if (entry.isDirectory()) {
           containsSubfolder = true;
@@ -112,6 +111,36 @@ public abstract class GtfsInput implements Closeable {
     } catch (IOException ioException) {
       logger.atSevere().withCause(ioException).log(
           "GtfsInput containsSubfolderWithTxtFile throws IOException");
+    } finally {
+      return containsGtfsFileInSubfolder;
+    }
+  }
+
+  public static boolean containsSubfolderWithTxtFile(URL url) {
+    boolean containsGtfsFileInSubfolder = false;
+    boolean containsSubfolder = false;
+    String subfolder = null;
+    try (ZipInputStream zipInputStream = new ZipInputStream(new BufferedInputStream(url.openStream()))) {
+      ZipEntry entry;
+      while ((entry = zipInputStream.getNextEntry()) != null) {
+        System.out.println("name: " + entry.getName());
+        System.out.println("isDirectory: " + entry.isDirectory());
+        String entryName = entry.getName();
+        if (entry.isDirectory()) {
+          containsSubfolder = true;
+          subfolder = entry.getName();
+        }
+        if (containsSubfolder && entryName.contains(subfolder) && entryName.endsWith(".txt")){
+          String[] files = entryName.split("/");
+          String lastElement = files[files.length - 1];
+          if (containsGtfsFile(lastElement)) {
+            containsGtfsFileInSubfolder = true;
+          }
+        }
+      }
+    } catch (IOException ioException) {
+      logger.atSevere().withCause(ioException).log(
+              "GtfsInput containsSubfolderWithTxtFile throws IOException");
     } finally {
       return containsGtfsFileInSubfolder;
     }
@@ -163,17 +192,21 @@ public abstract class GtfsInput implements Closeable {
    * Creates a specific GtfsInput to read data from the given URL. The loaded ZIP file is kept in
    * memory.
    *
-   * @param sourceUrl the fully qualified URL to download of the resource to download
+   * @param sourceUrl       the fully qualified URL to download of the resource to download
+   * @param noticeContainer
    * @return the {@code GtfsInput} created after download of the GTFS archive
-   * @throws IOException if no file could not be found at the specified location
+   * @throws IOException        if no file could not be found at the specified location
    * @throws URISyntaxException if URL is malformed
    */
-  public static GtfsInput createFromUrlInMemory(URL sourceUrl)
+  public static GtfsInput createFromUrlInMemory(URL sourceUrl, NoticeContainer noticeContainer)
       throws IOException, URISyntaxException {
     try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
       loadFromUrl(sourceUrl, outputStream);
-      return new GtfsZipFileInput(
-          new ZipFile(new SeekableInMemoryByteChannel(outputStream.toByteArray())));
+      if (containsSubfolderWithTxtFile(sourceUrl)) {
+        noticeContainer.addValidationNotice(
+                new InvalidInputFilesInSubfolderNotice(invalidInputMessage));
+      }
+      return new GtfsZipFileInput(new ZipFile(new SeekableInMemoryByteChannel(outputStream.toByteArray())));
     }
   }
 
