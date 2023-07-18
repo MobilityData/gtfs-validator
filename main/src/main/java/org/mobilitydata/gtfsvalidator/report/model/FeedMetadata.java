@@ -8,10 +8,10 @@ import java.util.function.Function;
 import org.mobilitydata.gtfsvalidator.table.*;
 
 public class FeedMetadata {
-  /**
-   * Use there strings as keys in the FeedInfo map. Also used to specify the info that will appear in the json report.
-   * Adding elements to feedInfo will not automatically be included
-   * in the json report and should be explicitly handled in the json report code.
+  /*
+   * Use these strings as keys in the FeedInfo map. Also used to specify the info that will appear
+   * in the json report. Adding elements to feedInfo will not automatically be included in the json
+   * report and should be explicitly handled in the json report code.
    */
   public static final String FEED_INFO_PUBLISHER_NAME = "Publisher Name";
   public static final String FEED_INFO_PUBLISHER_URL = "Publisher URL";
@@ -19,10 +19,10 @@ public class FeedMetadata {
   public static final String FEED_INFO_FEED_START_DATE = "Feed Start Date";
   public static final String FEED_INFO_FEED_END_DATE = "Feed End Date";
 
-  /**
-   * Use there strings as keys in the counts map. Also used to specify the info that will appear in the json report.
-   * Adding elements to feedInfo will not automatically be included
-   * in the json report and should be explicitly handled in the json report code.
+  /*
+   * Use these strings as keys in the counts map. Also used to specify the info that will appear in
+   * the json report. Adding elements to feedInfo will not automatically be included in the json
+   * report and should be explicitly handled in the json report code.
    */
   public static final String COUNTS_SHAPES = "Shapes";
   public static final String COUNTS_STOPS = "Stops";
