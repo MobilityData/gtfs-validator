@@ -19,8 +19,6 @@ package org.mobilitydata.gtfsvalidator.report;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.report.model.FeedMetadata;
 import org.mobilitydata.gtfsvalidator.report.model.ReportSummary;
@@ -40,7 +38,8 @@ public class HtmlReportGenerator {
       NoticeContainer noticeContainer,
       ValidationRunnerConfig config,
       VersionInfo versionInfo,
-      Path reportPath)
+      Path reportPath,
+      String date)
       throws IOException {
     TemplateEngine templateEngine = new TemplateEngine();
     ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
@@ -48,10 +47,6 @@ public class HtmlReportGenerator {
     templateEngine.setTemplateResolver(templateResolver);
 
     ReportSummary summary = new ReportSummary(noticeContainer, versionInfo);
-
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
-    Date now = new Date(System.currentTimeMillis());
-    String date = formatter.format(now);
 
     Context context = new Context();
     // TODO: handle null metadata
