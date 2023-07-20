@@ -42,7 +42,7 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 public abstract class GtfsInput implements Closeable {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   public static final String invalidInputMessage =
-      "Zip files containing dataset files in a subfolder are invalid";
+      "At least 1 GTFS file is in a subfolder. All GTFS files must reside at the root level directly.";
 
   /**
    * Creates a specific GtfsInput to read data from the given path.
