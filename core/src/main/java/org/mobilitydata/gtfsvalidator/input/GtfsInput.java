@@ -44,6 +44,7 @@ public abstract class GtfsInput implements Closeable {
   public static final String invalidInputMessage =
       "At least 1 GTFS file is in a subfolder. All GTFS files must reside at the root level directly.";
 
+  public static boolean isMacZip = false;
   /**
    * Creates a specific GtfsInput to read data from the given path.
    *
@@ -55,12 +56,14 @@ public abstract class GtfsInput implements Closeable {
   public static GtfsInput createFromPath(Path path, NoticeContainer noticeContainer)
       throws IOException {
     ZipFile zipFile;
+
     if (!Files.exists(path)) {
       throw new FileNotFoundException(path.toString());
     }
     if (Files.isDirectory(path)) {
       return new GtfsUnarchivedInput(path);
     }
+    String fileName = path.getFileName().toString().replace(".zip", "");
     if (path.getFileSystem().equals(FileSystems.getDefault())) {
       // Read from a local ZIP file.
       zipFile = new ZipFile(path.toFile());
@@ -68,7 +71,7 @@ public abstract class GtfsInput implements Closeable {
         noticeContainer.addValidationNotice(
             new InvalidInputFilesInSubfolderNotice(invalidInputMessage));
       }
-      return new GtfsZipFileInput(zipFile);
+      return new GtfsZipFileInput(zipFile, fileName, isMacZip);
     }
     // Load a remote ZIP file to memory.
     zipFile = new ZipFile(new SeekableInMemoryByteChannel(Files.readAllBytes(path)));
@@ -76,7 +79,7 @@ public abstract class GtfsInput implements Closeable {
       noticeContainer.addValidationNotice(
           new InvalidInputFilesInSubfolderNotice(invalidInputMessage));
     }
-    return new GtfsZipFileInput(zipFile);
+    return new GtfsZipFileInput(zipFile, fileName, isMacZip);
   }
 
   /**
@@ -89,14 +92,19 @@ public abstract class GtfsInput implements Closeable {
     boolean containsGtfsFileInSubfolder = false;
     boolean containsSubfolder = false;
     String subfolder = null;
+    String fileName = path.getFileName().toString().replace(".zip", "");
     try (ZipInputStream zipInputStream =
         new ZipInputStream(new BufferedInputStream(new FileInputStream(path.toFile())))) {
       ZipEntry entry;
       while ((entry = zipInputStream.getNextEntry()) != null) {
         String entryName = entry.getName();
+        // check if the first entry is a directory with the name of the zip file
+        if (entry.isDirectory() && fileName.equals(entryName.replaceFirst("/", ""))) {
+          isMacZip = true;
+        }
         if (entry.isDirectory()) {
+          subfolder = entryName;
           containsSubfolder = true;
-          subfolder = entry.getName();
         }
         if (containsSubfolder && entryName.contains(subfolder) && entryName.endsWith(".txt")) {
           String[] files = entryName.split("/");
@@ -114,7 +122,7 @@ public abstract class GtfsInput implements Closeable {
     }
   }
 
-  public static boolean containsSubfolderWithGtfsFile(URL url) {
+  public static boolean containsSubfolderWithGtfsFile(URL url, String fileName) {
     boolean containsGtfsFileInSubfolder = false;
     boolean containsSubfolder = false;
     String subfolder = null;
@@ -123,9 +131,13 @@ public abstract class GtfsInput implements Closeable {
       ZipEntry entry;
       while ((entry = zipInputStream.getNextEntry()) != null) {
         String entryName = entry.getName();
+        // check if the first entry is a directory with the name of the zip file
+        if (entry.isDirectory() && fileName.equals(entryName.replaceFirst("/", ""))) {
+          isMacZip = true;
+        }
         if (entry.isDirectory()) {
+          subfolder = entryName;
           containsSubfolder = true;
-          subfolder = entry.getName();
         }
         if (containsSubfolder && entryName.contains(subfolder) && entryName.endsWith(".txt")) {
           String[] files = entryName.split("/");
@@ -199,12 +211,16 @@ public abstract class GtfsInput implements Closeable {
       throws IOException, URISyntaxException {
     try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
       loadFromUrl(sourceUrl, outputStream);
-      if (containsSubfolderWithGtfsFile(sourceUrl)) {
+      File zipFile = new File(sourceUrl.toString());
+      String fileName = zipFile.getName().replace(".zip", "");
+      if (containsSubfolderWithGtfsFile(sourceUrl, fileName)) {
         noticeContainer.addValidationNotice(
             new InvalidInputFilesInSubfolderNotice(invalidInputMessage));
       }
       return new GtfsZipFileInput(
-          new ZipFile(new SeekableInMemoryByteChannel(outputStream.toByteArray())));
+          new ZipFile(new SeekableInMemoryByteChannel(outputStream.toByteArray())),
+          fileName,
+          isMacZip);
     }
   }
 
