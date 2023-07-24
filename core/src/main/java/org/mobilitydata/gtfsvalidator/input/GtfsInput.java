@@ -143,8 +143,6 @@ public abstract class GtfsInput implements Closeable {
     }
   }
 
-
-
   /**
    * Creates a specific GtfsInput to read a GTFS ZIP archive from the given URL.
    *
