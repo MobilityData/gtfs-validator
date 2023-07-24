@@ -101,7 +101,7 @@ public abstract class GtfsInput implements Closeable {
         if (containsSubfolder && entryName.contains(subfolder) && entryName.endsWith(".txt")) {
           String[] files = entryName.split("/");
           String lastElement = files[files.length - 1];
-          if (containsGtfsFile(lastElement)) {
+          if (GtfsFiles.containsGtfsFile(lastElement)) {
             containsGtfsFileInSubfolder = true;
           }
         }
@@ -130,7 +130,7 @@ public abstract class GtfsInput implements Closeable {
         if (containsSubfolder && entryName.contains(subfolder) && entryName.endsWith(".txt")) {
           String[] files = entryName.split("/");
           String lastElement = files[files.length - 1];
-          if (containsGtfsFile(lastElement)) {
+          if (GtfsFiles.containsGtfsFile(lastElement)) {
             containsGtfsFileInSubfolder = true;
           }
         }
@@ -143,21 +143,7 @@ public abstract class GtfsInput implements Closeable {
     }
   }
 
-  /**
-   * Check if a String value equals to Gtfs file name
-   *
-   * @param value
-   * @return
-   */
-  public static boolean containsGtfsFile(String value) {
-    GtfsFiles[] files = GtfsFiles.values();
-    for (GtfsFiles f : files) {
-      if (f.getGtfsFileName().equals(value)) {
-        return true;
-      }
-    }
-    return false;
-  }
+
 
   /**
    * Creates a specific GtfsInput to read a GTFS ZIP archive from the given URL.

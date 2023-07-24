@@ -34,4 +34,20 @@ public enum GtfsFiles {
   public String getGtfsFileName() {
     return gtfsFileName;
   }
+
+  /**
+   * Check if a String value equals to Gtfs file name
+   *
+   * @param value
+   * @return
+   */
+  public static boolean containsGtfsFile(String value) {
+    GtfsFiles[] files = GtfsFiles.values();
+    for (GtfsFiles f : files) {
+      if (f.getGtfsFileName().equals(value)) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
