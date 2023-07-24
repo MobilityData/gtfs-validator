@@ -78,7 +78,7 @@ public class GtfsInputTest {
   }
 
   @Test
-  public void urlInputHasSubfolderWithGtfsFile() throws IOException {
+  public void urlInputHasNoSubfolderWithGtfsFile() throws IOException {
     URL url = new URL(VALID_URL);
     assertFalse(GtfsInput.containsSubfolderWithGtfsFile(url));
   }
