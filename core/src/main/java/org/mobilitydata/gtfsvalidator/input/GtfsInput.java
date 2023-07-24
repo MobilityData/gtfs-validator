@@ -108,7 +108,7 @@ public abstract class GtfsInput implements Closeable {
       }
     } catch (IOException ioException) {
       logger.atSevere().withCause(ioException).log(
-          "GtfsInput containsSubfolderWithTxtFile throws IOException");
+          "GtfsInput containsSubfolderWithGtfsFile throws IOException");
     } finally {
       return containsGtfsFileInSubfolder;
     }
@@ -137,7 +137,7 @@ public abstract class GtfsInput implements Closeable {
       }
     } catch (IOException ioException) {
       logger.atSevere().withCause(ioException).log(
-          "GtfsInput containsSubfolderWithTxtFile throws IOException");
+          "GtfsInput containsSubfolderWithGtfsFile throws IOException");
     } finally {
       return containsGtfsFileInSubfolder;
     }
