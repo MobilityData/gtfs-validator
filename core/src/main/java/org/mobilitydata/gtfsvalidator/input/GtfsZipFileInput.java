@@ -46,7 +46,7 @@ public class GtfsZipFileInput extends GtfsInput {
     for (Enumeration<ZipArchiveEntry> entries = zipFile.getEntries(); entries.hasMoreElements(); ) {
       ZipArchiveEntry entry = entries.nextElement();
       Pair<String, Boolean> pair = isInsideZipDirectory(entry, macDirectory);
-      if (!pair.getRight() && !pair.getLeft().isBlank()) {
+      if (!pair.getLeft().isBlank() && !pair.getLeft().equals(".DS_Store") && !pair.getRight()) {
         filenamesBuilder.add(pair.getLeft());
       }
     }
