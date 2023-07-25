@@ -73,7 +73,6 @@ public abstract class GtfsInput implements Closeable {
       }
 
       return new GtfsZipFileInput(zipFile, fileName, isMacZip);
-
     }
     // Load a remote ZIP file to memory.
     zipFile = new ZipFile(new SeekableInMemoryByteChannel(Files.readAllBytes(path)));
@@ -82,7 +81,6 @@ public abstract class GtfsInput implements Closeable {
           new InvalidInputFilesInSubfolderNotice(invalidInputMessage));
     }
     return new GtfsZipFileInput(zipFile, fileName, isMacZip);
-
   }
 
   /**
@@ -110,7 +108,6 @@ public abstract class GtfsInput implements Closeable {
         if (entry.isDirectory()) {
           subfolder = entryName;
           containsSubfolder = true;
-
         }
         if (containsSubfolder && entryName.contains(subfolder) && entryName.endsWith(".txt")) {
           String[] files = entryName.split("/");
@@ -127,7 +124,6 @@ public abstract class GtfsInput implements Closeable {
           "GtfsInput containsSubfolderWithGtfsFile throws IOException");
     }
     return containsGtfsFileInSubfolder;
-
   }
 
   public static boolean containsSubfolderWithGtfsFile(URL url, String fileName) {
@@ -162,9 +158,7 @@ public abstract class GtfsInput implements Closeable {
           "GtfsInput containsSubfolderWithGtfsFile throws IOException");
     }
     return containsGtfsFileInSubfolder;
-
   }
-
 
   /**
    * Creates a specific GtfsInput to read a GTFS ZIP archive from the given URL.
