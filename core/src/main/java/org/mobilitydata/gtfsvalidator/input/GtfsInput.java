@@ -132,6 +132,7 @@ public abstract class GtfsInput implements Closeable {
           String lastElement = files[files.length - 1];
           if (GtfsFiles.containsGtfsFile(lastElement)) {
             containsGtfsFileInSubfolder = true;
+            break;
           }
         }
       }
