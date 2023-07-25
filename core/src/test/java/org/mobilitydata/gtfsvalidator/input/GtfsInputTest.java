@@ -78,11 +78,9 @@ public class GtfsInputTest {
   }
 
   @Test
-  public void urlInputHasSubfolderWithGtfsFile() throws IOException {
+  public void urlInputHasNoSubfolderWithGtfsFile() throws IOException {
     URL url = new URL(VALID_URL);
-    File zipFile = new File(url.toString());
-    String fileName = zipFile.getName().replace(".zip", "");
-    assertFalse(GtfsInput.containsSubfolderWithGtfsFile(url, fileName));
+    assertFalse(GtfsInput.containsSubfolderWithGtfsFile(url));
   }
 
   @Test
