@@ -52,6 +52,7 @@ public class ValidationRunner {
 
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private static final String GTFS_ZIP_FILENAME = "gtfs.zip";
+  private static NoticeContainer noticeContainer;
 
   private final VersionResolver versionResolver;
 
@@ -95,7 +96,7 @@ public class ValidationRunner {
     final long startNanos = System.nanoTime();
     // Input.
     feedLoader.setNumThreads(config.numThreads());
-    NoticeContainer noticeContainer = new NoticeContainer();
+    noticeContainer = new NoticeContainer();
     GtfsFeedContainer feedContainer;
     GtfsInput gtfsInput = null;
     try {
@@ -274,14 +275,16 @@ public class ValidationRunner {
       throws IOException, URISyntaxException {
     URI source = config.gtfsSource();
     if (source.getScheme().equals("file")) {
-      return GtfsInput.createFromPath(Paths.get(source));
+      return GtfsInput.createFromPath(Paths.get(source), noticeContainer);
     }
 
     if (config.storageDirectory().isEmpty()) {
-      return GtfsInput.createFromUrlInMemory(source.toURL());
+      return GtfsInput.createFromUrlInMemory(source.toURL(), noticeContainer);
     } else {
       return GtfsInput.createFromUrl(
-          source.toURL(), config.storageDirectory().get().resolve(GTFS_ZIP_FILENAME));
+          source.toURL(),
+          config.storageDirectory().get().resolve(GTFS_ZIP_FILENAME),
+          noticeContainer);
     }
   }
 }
