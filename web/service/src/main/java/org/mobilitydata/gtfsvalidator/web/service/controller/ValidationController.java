@@ -121,6 +121,15 @@ public class ValidationController {
     }
   }
 
+  @GetMapping("/version")
+  public String currentVersion() {
+    StringBuilder stringBuilder = new StringBuilder();
+    stringBuilder.append("Current Version: 4.1.0");
+    return stringBuilder.toString();
+    //https://gtfs-validator-web-mbzoxaljzq-ue.a.run.app/create-job
+    //     "This file determines the latest version of the validator app. Users of the app will be advised to upgrade if their local version does not match";
+  }
+
   @PostMapping("/error")
   public ResponseEntity Error() {
     try {
