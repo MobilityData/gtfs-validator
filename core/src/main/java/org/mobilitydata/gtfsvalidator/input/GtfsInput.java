@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.input;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.flogger.FluentLogger;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -185,8 +184,7 @@ public abstract class GtfsInput implements Closeable {
             new InvalidInputFilesInSubfolderNotice(invalidInputMessage));
       }
       return new GtfsZipFileInput(
-          new ZipFile(new SeekableInMemoryByteChannel(outputStream.toByteArray())),
-          fileName);
+          new ZipFile(new SeekableInMemoryByteChannel(outputStream.toByteArray())), fileName);
     }
   }
 

@@ -46,8 +46,7 @@ public class GtfsZipFileInputTest {
       out.closeEntry();
     }
 
-    try (GtfsZipFileInput gtfsInput =
-        new GtfsZipFileInput(new ZipFile(zipFile), "archived")) {
+    try (GtfsZipFileInput gtfsInput = new GtfsZipFileInput(new ZipFile(zipFile), "archived")) {
       assertThat(gtfsInput.getFilenames()).containsExactly("stops.txt");
     }
   }
@@ -60,8 +59,7 @@ public class GtfsZipFileInputTest {
       out.closeEntry();
     }
 
-    try (GtfsZipFileInput gtfsInput =
-        new GtfsZipFileInput(new ZipFile(zipFile), "archived")) {
+    try (GtfsZipFileInput gtfsInput = new GtfsZipFileInput(new ZipFile(zipFile), "archived")) {
       assertThat(gtfsInput.getFilenames()).containsExactly("noext");
     }
   }

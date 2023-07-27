@@ -57,7 +57,8 @@ public class GtfsZipFileInput extends GtfsInput {
     filenames = filenamesBuilder.build();
   }
 
-  Pair<String, Boolean> isInsideZipDirectory(ZipArchiveEntry entry, String macDirectory, String entryName) {
+  Pair<String, Boolean> isInsideZipDirectory(
+      ZipArchiveEntry entry, String macDirectory, String entryName) {
     // We do not use File.separator because the .zip file specification states:
     // All slashes MUST be forward slashes '/' as opposed to backwards slashes '\' for compatibility
     // with Amiga and
