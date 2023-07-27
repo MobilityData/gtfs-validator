@@ -80,7 +80,7 @@ public class GtfsInputTest {
   @Test
   public void urlInputHasNoSubfolderWithGtfsFile() throws IOException {
     URL url = new URL(VALID_URL);
-    assertFalse(GtfsInput.hasSubfolderWithGtfsFile(url, "valid_zip_sample.zip"));
+    assertFalse(GtfsInput.hasSubfolderWithGtfsFile(url));
   }
 
   @Test

@@ -35,9 +35,8 @@ public class GtfsZipFileInput extends GtfsInput {
   private final ZipFile zipFile;
   private boolean isMacZip;
 
-  public GtfsZipFileInput(ZipFile zipFile, String zipFileName, boolean isMacZip) {
+  public GtfsZipFileInput(ZipFile zipFile, String zipFileName) {
     this.zipFile = zipFile;
-    this.isMacZip = isMacZip;
     StringBuilder strBuilder = new StringBuilder();
     strBuilder.append(zipFileName);
     strBuilder.append("/");
@@ -45,7 +44,12 @@ public class GtfsZipFileInput extends GtfsInput {
     ImmutableSet.Builder<String> filenamesBuilder = new ImmutableSet.Builder<>();
     for (Enumeration<ZipArchiveEntry> entries = zipFile.getEntries(); entries.hasMoreElements(); ) {
       ZipArchiveEntry entry = entries.nextElement();
-      Pair<String, Boolean> pair = isInsideZipDirectory(entry, macDirectory);
+      String entryName = entry.getName();
+      // check if the first entry is a directory with the name of the zip file
+      if (entry.isDirectory() && zipFileName.equals(entryName.replaceFirst("/", ""))) {
+        isMacZip = true;
+      }
+      Pair<String, Boolean> pair = isInsideZipDirectory(entry, macDirectory, entryName);
       if (!pair.getLeft().isBlank() && !pair.getLeft().equals(".DS_Store") && !pair.getRight()) {
         filenamesBuilder.add(pair.getLeft());
       }
@@ -53,16 +57,15 @@ public class GtfsZipFileInput extends GtfsInput {
     filenames = filenamesBuilder.build();
   }
 
-  Pair<String, Boolean> isInsideZipDirectory(ZipArchiveEntry entry, String macFileName) {
+  Pair<String, Boolean> isInsideZipDirectory(ZipArchiveEntry entry, String macDirectory, String entryName) {
     // We do not use File.separator because the .zip file specification states:
     // All slashes MUST be forward slashes '/' as opposed to backwards slashes '\' for compatibility
     // with Amiga and
     // UNIX file systems etc.
     //
     // Directory names in end with '/'.
-    String entryName = entry.getName();
     if (isMacZip) {
-      entryName = entry.getName().replaceFirst(macFileName, "");
+      entryName = entry.getName().replaceFirst(macDirectory, "");
     }
     Pair<String, Boolean> pair = Pair.of(entryName, entryName.contains("/"));
     return pair;
