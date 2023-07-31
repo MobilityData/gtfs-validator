@@ -45,6 +45,7 @@ public class ValidationController {
 
   @Autowired private StorageHelper storageHelper;
   @Autowired private ValidationHandler validationHandler;
+
   @Autowired private VersionResolver checker;
   private static final Duration TIMEOUT = Duration.ofSeconds(5);
 
@@ -130,10 +131,10 @@ public class ValidationController {
   public String currentVersion() {
     // https://gtfs-validator-web-mbzoxaljzq-ue.a.run.app/version
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(
-        "This file determines the latest version of the validator app. Users of the app will be advised to upgrade if their local version does not match\n");
+    //stringBuilder.append(
+    //    "This file determines the latest version of the validator app. Users of the app will be advised to upgrade if their local version does not match\\n\");
     stringBuilder.append("Current Version: ");
-    // VersionResolver checker = new VersionResolver();
+     VersionResolver checker = new VersionResolver();
     VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT);
     stringBuilder.append(versionInfo.currentVersion());
     return stringBuilder.toString();
