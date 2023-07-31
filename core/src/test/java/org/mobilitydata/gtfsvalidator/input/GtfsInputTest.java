@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.input;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,6 +33,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 
 @RunWith(JUnit4.class)
 public class GtfsInputTest {
@@ -43,11 +44,13 @@ public class GtfsInputTest {
           + "valid_zip_sample.zip";
 
   @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
+  NoticeContainer noticeContainer = new NoticeContainer();
 
   @Test
   public void inputNotFound_throwsException() {
     assertThrows(
-        FileNotFoundException.class, () -> GtfsInput.createFromPath(Paths.get("/no/such/file")));
+        FileNotFoundException.class,
+        () -> GtfsInput.createFromPath(Paths.get("/no/such/file"), noticeContainer));
   }
 
   @Test
@@ -55,7 +58,7 @@ public class GtfsInputTest {
     File rootDir = tmpDir.newFolder("unarchived");
     tmpDir.newFile("unarchived/stops.txt");
 
-    try (GtfsInput gtfsInput = GtfsInput.createFromPath(rootDir.toPath())) {
+    try (GtfsInput gtfsInput = GtfsInput.createFromPath(rootDir.toPath(), noticeContainer)) {
       assertThat(gtfsInput.getFilenames()).containsExactly("stops.txt");
     }
   }
@@ -69,15 +72,22 @@ public class GtfsInputTest {
       out.closeEntry();
     }
 
-    try (GtfsInput gtfsInput = GtfsInput.createFromPath(zipFile.toPath())) {
+    try (GtfsInput gtfsInput = GtfsInput.createFromPath(zipFile.toPath(), noticeContainer)) {
       assertThat(gtfsInput.getFilenames()).containsExactly("stops.txt");
     }
   }
 
   @Test
+  public void urlInputHasNoSubfolderWithGtfsFile() throws IOException {
+    URL url = new URL(VALID_URL);
+    assertFalse(GtfsInput.containsSubfolderWithGtfsFile(url));
+  }
+
+  @Test
   public void createFromUrl_valid_success() throws IOException, URISyntaxException {
     try (GtfsInput underTest =
-        GtfsInput.createFromUrl(new URL(VALID_URL), tmpDir.getRoot().toPath().resolve("storage"))) {
+        GtfsInput.createFromUrl(
+            new URL(VALID_URL), tmpDir.getRoot().toPath().resolve("storage"), noticeContainer)) {
       assertThat(underTest instanceof GtfsZipFileInput);
     }
   }
@@ -88,18 +98,23 @@ public class GtfsInputTest {
         IOException.class,
         () ->
             GtfsInput.createFromUrl(
-                new URL(INVALID_URL), tmpDir.getRoot().toPath().resolve("storage")));
+                new URL(INVALID_URL),
+                tmpDir.getRoot().toPath().resolve("storage"),
+                noticeContainer));
   }
 
   @Test
   public void createFromUrlInMemory_valid_success() throws IOException, URISyntaxException {
-    try (GtfsInput underTest = GtfsInput.createFromUrlInMemory(new URL(VALID_URL))) {
+    try (GtfsInput underTest =
+        GtfsInput.createFromUrlInMemory(new URL(VALID_URL), noticeContainer)) {
       assertThat(underTest instanceof GtfsZipFileInput);
     }
   }
 
   @Test
   public void createFromUrlInMemory_invalid_throwsException() {
-    assertThrows(IOException.class, () -> GtfsInput.createFromUrlInMemory(new URL(INVALID_URL)));
+    assertThrows(
+        IOException.class,
+        () -> GtfsInput.createFromUrlInMemory(new URL(INVALID_URL), noticeContainer));
   }
 }

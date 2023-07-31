@@ -17,37 +17,44 @@
 package org.mobilitydata.gtfsvalidator.input;
 
 import com.google.common.collect.ImmutableSet;
-import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import com.google.common.flogger.FluentLogger;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.mobilitydata.gtfsvalidator.notice.InvalidInputFilesInSubfolderNotice;
+import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 
 /**
  * GtfsInput provides a common interface for reading GTFS data, either from a ZIP archive or from a
  * directory.
  */
 public abstract class GtfsInput implements Closeable {
+  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  public static final String invalidInputMessage =
+      "At least 1 GTFS file is in a subfolder. All GTFS files must reside at the root level directly.";
+
   /**
    * Creates a specific GtfsInput to read data from the given path.
    *
    * @param path the path to the resource
+   * @param noticeContainer
    * @return the {@code GtfsInput} created after processing the GTFS archive
    * @throws IOException any IO exception that occurred during loading
    */
-  public static GtfsInput createFromPath(Path path) throws IOException {
+  public static GtfsInput createFromPath(Path path, NoticeContainer noticeContainer)
+      throws IOException {
+    ZipFile zipFile;
     if (!Files.exists(path)) {
       throw new FileNotFoundException(path.toString());
     }
@@ -56,11 +63,83 @@ public abstract class GtfsInput implements Closeable {
     }
     if (path.getFileSystem().equals(FileSystems.getDefault())) {
       // Read from a local ZIP file.
-      return new GtfsZipFileInput(new ZipFile(path.toFile()));
+      zipFile = new ZipFile(path.toFile());
+      if (containsSubfolderWithGtfsFile(path)) {
+        noticeContainer.addValidationNotice(
+            new InvalidInputFilesInSubfolderNotice(invalidInputMessage));
+      }
+      return new GtfsZipFileInput(zipFile);
     }
     // Load a remote ZIP file to memory.
-    return new GtfsZipFileInput(
-        new ZipFile(new SeekableInMemoryByteChannel(Files.readAllBytes(path))));
+    zipFile = new ZipFile(new SeekableInMemoryByteChannel(Files.readAllBytes(path)));
+    if (containsSubfolderWithGtfsFile(path)) {
+      noticeContainer.addValidationNotice(
+          new InvalidInputFilesInSubfolderNotice(invalidInputMessage));
+    }
+    return new GtfsZipFileInput(zipFile);
+  }
+
+  /**
+   * Check if a zip file contains a subfolder with GTFS files
+   *
+   * @param path
+   * @return
+   */
+  public static boolean containsSubfolderWithGtfsFile(Path path) {
+    boolean containsGtfsFileInSubfolder = false;
+    boolean containsSubfolder = false;
+    String subfolder = null;
+    try (ZipInputStream zipInputStream =
+        new ZipInputStream(new BufferedInputStream(new FileInputStream(path.toFile())))) {
+      ZipEntry entry;
+      while ((entry = zipInputStream.getNextEntry()) != null) {
+        String entryName = entry.getName();
+        if (entry.isDirectory()) {
+          containsSubfolder = true;
+          subfolder = entry.getName();
+        }
+        if (containsSubfolder && entryName.contains(subfolder) && entryName.endsWith(".txt")) {
+          String[] files = entryName.split("/");
+          String lastElement = files[files.length - 1];
+          if (GtfsFiles.containsGtfsFile(lastElement)) {
+            containsGtfsFileInSubfolder = true;
+          }
+        }
+      }
+    } catch (IOException ioException) {
+      logger.atSevere().withCause(ioException).log(
+          "GtfsInput containsSubfolderWithGtfsFile throws IOException");
+    }
+    return containsGtfsFileInSubfolder;
+  }
+
+  public static boolean containsSubfolderWithGtfsFile(URL url) {
+    boolean containsGtfsFileInSubfolder = false;
+    boolean containsSubfolder = false;
+    String subfolder = null;
+    try (ZipInputStream zipInputStream =
+        new ZipInputStream(new BufferedInputStream(url.openStream()))) {
+      ZipEntry entry;
+      while ((entry = zipInputStream.getNextEntry()) != null) {
+        String entryName = entry.getName();
+        if (entry.isDirectory()) {
+          containsSubfolder = true;
+          subfolder = entry.getName();
+        }
+        if (containsSubfolder && entryName.contains(subfolder) && entryName.endsWith(".txt")) {
+          String[] files = entryName.split("/");
+          String lastElement = files[files.length - 1];
+          if (GtfsFiles.containsGtfsFile(lastElement)) {
+            containsGtfsFileInSubfolder = true;
+            break;
+          }
+        }
+      }
+    } catch (IOException ioException) {
+      logger.atSevere().withCause(ioException).log(
+          "GtfsInput containsSubfolderWithGtfsFile throws IOException");
+    }
+    return containsGtfsFileInSubfolder;
   }
 
   /**
@@ -70,11 +149,13 @@ public abstract class GtfsInput implements Closeable {
    *
    * @param sourceUrl the fully qualified URL to download of the resource to download
    * @param targetPath the path to store the downloaded GTFS archive
+   * @param noticeContainer
    * @return the {@code GtfsInput} created after download of the GTFS archive
    * @throws IOException if GTFS archive cannot be stored at the specified location
    * @throws URISyntaxException if URL is malformed
    */
-  public static GtfsInput createFromUrl(URL sourceUrl, Path targetPath)
+  public static GtfsInput createFromUrl(
+      URL sourceUrl, Path targetPath, NoticeContainer noticeContainer)
       throws IOException, URISyntaxException {
     // getParent() may return null if there is no parent, so call toAbsolutePath() first.
     Path targetDirectory = targetPath.toAbsolutePath().getParent();
@@ -84,7 +165,7 @@ public abstract class GtfsInput implements Closeable {
     try (OutputStream outputStream = Files.newOutputStream(targetPath)) {
       loadFromUrl(sourceUrl, outputStream);
     }
-    return createFromPath(targetPath);
+    return createFromPath(targetPath, noticeContainer);
   }
 
   /**
@@ -92,14 +173,19 @@ public abstract class GtfsInput implements Closeable {
    * memory.
    *
    * @param sourceUrl the fully qualified URL to download of the resource to download
+   * @param noticeContainer
    * @return the {@code GtfsInput} created after download of the GTFS archive
    * @throws IOException if no file could not be found at the specified location
    * @throws URISyntaxException if URL is malformed
    */
-  public static GtfsInput createFromUrlInMemory(URL sourceUrl)
+  public static GtfsInput createFromUrlInMemory(URL sourceUrl, NoticeContainer noticeContainer)
       throws IOException, URISyntaxException {
     try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
       loadFromUrl(sourceUrl, outputStream);
+      if (containsSubfolderWithGtfsFile(sourceUrl)) {
+        noticeContainer.addValidationNotice(
+            new InvalidInputFilesInSubfolderNotice(invalidInputMessage));
+      }
       return new GtfsZipFileInput(
           new ZipFile(new SeekableInMemoryByteChannel(outputStream.toByteArray())));
     }
