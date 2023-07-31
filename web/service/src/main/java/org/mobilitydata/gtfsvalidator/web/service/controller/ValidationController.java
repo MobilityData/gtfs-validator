@@ -22,7 +22,10 @@ import io.sentry.Sentry;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.*;
+import org.mobilitydata.gtfsvalidator.util.VersionInfo;
+import org.mobilitydata.gtfsvalidator.util.VersionResolver;
 import org.mobilitydata.gtfsvalidator.web.service.util.JobMetadata;
 import org.mobilitydata.gtfsvalidator.web.service.util.StorageHelper;
 import org.mobilitydata.gtfsvalidator.web.service.util.ValidationHandler;
@@ -42,6 +45,8 @@ public class ValidationController {
 
   @Autowired private StorageHelper storageHelper;
   @Autowired private ValidationHandler validationHandler;
+  @Autowired private VersionResolver checker;
+  private static final Duration TIMEOUT = Duration.ofSeconds(5);
 
   /**
    * Creates a new job id and returns it to the client. If a url is provided, the file is downloaded
@@ -123,11 +128,15 @@ public class ValidationController {
 
   @GetMapping("/version")
   public String currentVersion() {
+    // https://gtfs-validator-web-mbzoxaljzq-ue.a.run.app/version
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append("Current Version: 4.1.0");
+    stringBuilder.append(
+        "This file determines the latest version of the validator app. Users of the app will be advised to upgrade if their local version does not match\n");
+    stringBuilder.append("Current Version: ");
+    // VersionResolver checker = new VersionResolver();
+    VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT);
+    stringBuilder.append(versionInfo.currentVersion());
     return stringBuilder.toString();
-    //https://gtfs-validator-web-mbzoxaljzq-ue.a.run.app/create-job
-    //     "This file determines the latest version of the validator app. Users of the app will be advised to upgrade if their local version does not match";
   }
 
   @PostMapping("/error")
