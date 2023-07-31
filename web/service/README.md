@@ -111,7 +111,8 @@ Both `gtfs-validator-user-uploads` and `gtfs-validator-results` have been config
 
 ## Local Development
 
-A google cloud credentials file is requierd to start the web service. Either complete the steps above to provision a new Google Cloud project or reach out to the maintainers of the project to be granted access to the production instance credentials.
+To start the web service fully integrated with a Google Cloud Platform project a valid Google cloud credentials file is required to start the web service. Either complete the steps above to provision a new Google Cloud project or reach out to the maintainers of the project to be granted access to the production instance credentials.
+To start the web service without a Google cloud integration, use the `local` Spring Boot profile. To start the web service using the local profile add the following JVM parameters to the starting script, `-Dspring.profiles.active=local`.
 
 The location of credential key file is located in `web/service/src/main/resources/application.properties`.
 
@@ -136,6 +137,6 @@ gcloud builds submit
 
 ## Open API Spec
 
-:warning: **Subject to change**: This API spec may change at any time. We do not reccomend building any production systems that depend on this API directly.
+:warning: **Subject to change**: This API spec may change at any time. We do not recommend building any production systems that depend on this API directly.
 
-Open API Spec V3 documentation is avaliable at `web/service/open-api-spec.json`.
+Open API Spec V3 documentation is available at `web/service/open-api-spec.json`.
