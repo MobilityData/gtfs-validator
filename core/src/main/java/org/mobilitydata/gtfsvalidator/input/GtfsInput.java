@@ -87,7 +87,6 @@ public abstract class GtfsInput implements Closeable {
    * @throws IOException
    */
   public static boolean hasSubfolderWithGtfsFile(Path path) throws IOException {
-    String fileName = path.getFileName().toString().replace(".zip", "");
     ZipInputStream zipInputStream =
         new ZipInputStream(new BufferedInputStream(new FileInputStream(path.toFile())));
     return containsGtfsFileInSubfolder(zipInputStream);

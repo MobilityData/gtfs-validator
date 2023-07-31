@@ -23,7 +23,6 @@ import java.io.InputStream;
 import java.util.Enumeration;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
-import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Implements support for GTFS ZIP archives.
@@ -34,6 +33,8 @@ public class GtfsZipFileInput extends GtfsInput {
   private final ImmutableSet<String> filenames;
   private final ZipFile zipFile;
   private boolean isMacZip;
+
+  private final String MACOSX_FILE_IN_ZIP = ".DS_Store";
 
   public GtfsZipFileInput(ZipFile zipFile, String zipFileName) {
     this.zipFile = zipFile;
@@ -46,30 +47,22 @@ public class GtfsZipFileInput extends GtfsInput {
       ZipArchiveEntry entry = entries.nextElement();
       String entryName = entry.getName();
       // check if the first entry is a directory with the name of the zip file
-      if (entry.isDirectory() && zipFileName.equals(entryName.replaceFirst("/", ""))) {
+      String firstEntryName = entryName.replaceFirst("/", "");
+      if (entry.isDirectory() && zipFileName.equals(firstEntryName)) {
         isMacZip = true;
       }
-      Pair<String, Boolean> pair = isInsideZipDirectory(entry, macDirectory, entryName);
-      if (!pair.getLeft().isBlank() && !pair.getLeft().equals(".DS_Store") && !pair.getRight()) {
-        filenamesBuilder.add(pair.getLeft());
+      if (isMacZip) {
+        entryName = entry.getName().replaceFirst(macDirectory, "");
+      }
+      // Check for .DS_Store to prevent generating unknown_file notice.
+      // Directory names in end with '/'.
+      if (!entryName.isBlank()
+          && !entryName.equals(MACOSX_FILE_IN_ZIP)
+          && !entryName.contains("/")) {
+        filenamesBuilder.add(entryName);
       }
     }
     filenames = filenamesBuilder.build();
-  }
-
-  Pair<String, Boolean> isInsideZipDirectory(
-      ZipArchiveEntry entry, String macDirectory, String entryName) {
-    // We do not use File.separator because the .zip file specification states:
-    // All slashes MUST be forward slashes '/' as opposed to backwards slashes '\' for compatibility
-    // with Amiga and
-    // UNIX file systems etc.
-    //
-    // Directory names in end with '/'.
-    if (isMacZip) {
-      entryName = entry.getName().replaceFirst(macDirectory, "");
-    }
-    Pair<String, Boolean> pair = Pair.of(entryName, entryName.contains("/"));
-    return pair;
   }
 
   @Override
