@@ -32,7 +32,6 @@ import org.apache.commons.compress.archivers.zip.ZipFile;
 public class GtfsZipFileInput extends GtfsInput {
   private final ImmutableSet<String> filenames;
   private final ZipFile zipFile;
-  private boolean isMacZip;
 
   private final String MACOSX_FILE_IN_ZIP = ".DS_Store";
 
@@ -43,6 +42,7 @@ public class GtfsZipFileInput extends GtfsInput {
     strBuilder.append("/");
     String macDirectory = strBuilder.toString();
     ImmutableSet.Builder<String> filenamesBuilder = new ImmutableSet.Builder<>();
+    boolean isMacZip = false;
     for (Enumeration<ZipArchiveEntry> entries = zipFile.getEntries(); entries.hasMoreElements(); ) {
       ZipArchiveEntry entry = entries.nextElement();
       String entryName = entry.getName();
