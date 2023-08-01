@@ -133,6 +133,7 @@ public class NoticeFieldsTest {
             "prevShapeDistTraveled",
             "prevShapePtSequence",
             "prevStopSequence",
+            "prevShapeDistTraveled",
             "recordId",
             "recordSubId",
             "routeColor",
