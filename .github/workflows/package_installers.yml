@@ -40,7 +40,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           # We need a recent version of Java with jpackage included.
-          java-version: '17'
+          java-version: '17.0.7'
           # We use the zulu distribution, which is an OpenJDK distro.
           distribution: 'zulu'
 

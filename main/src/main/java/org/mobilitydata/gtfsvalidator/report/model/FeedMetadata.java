@@ -8,6 +8,29 @@ import java.util.function.Function;
 import org.mobilitydata.gtfsvalidator.table.*;
 
 public class FeedMetadata {
+  /*
+   * Use these strings as keys in the FeedInfo map. Also used to specify the info that will appear
+   * in the json report. Adding elements to feedInfo will not automatically be included in the json
+   * report and should be explicitly handled in the json report code.
+   */
+  public static final String FEED_INFO_PUBLISHER_NAME = "Publisher Name";
+  public static final String FEED_INFO_PUBLISHER_URL = "Publisher URL";
+  public static final String FEED_INFO_FEED_LANGUAGE = "Feed Language";
+  public static final String FEED_INFO_FEED_START_DATE = "Feed Start Date";
+  public static final String FEED_INFO_FEED_END_DATE = "Feed End Date";
+
+  /*
+   * Use these strings as keys in the counts map. Also used to specify the info that will appear in
+   * the json report. Adding elements to feedInfo will not automatically be included in the json
+   * report and should be explicitly handled in the json report code.
+   */
+  public static final String COUNTS_SHAPES = "Shapes";
+  public static final String COUNTS_STOPS = "Stops";
+  public static final String COUNTS_ROUTES = "Routes";
+  public static final String COUNTS_TRIPS = "Trips";
+  public static final String COUNTS_AGENCIES = "Agencies";
+  public static final String COUNTS_BLOCKS = "Blocks";
+
   private Map<String, TableMetadata> tableMetaData;
   public Map<String, Integer> counts = new TreeMap<>();
 
@@ -59,13 +82,17 @@ public class FeedMetadata {
   }
 
   private void setCounts(GtfsFeedContainer feedContainer) {
-    this.setCount("Shapes", feedContainer, GtfsShape.FILENAME, GtfsShape.class, GtfsShape::shapeId);
-    this.setCount("Stops", feedContainer, GtfsStop.FILENAME, GtfsStop.class, GtfsStop::stopId);
-    this.setCount("Routes", feedContainer, GtfsRoute.FILENAME, GtfsRoute.class, GtfsRoute::routeId);
-    this.setCount("Trips", feedContainer, GtfsTrip.FILENAME, GtfsTrip.class, GtfsTrip::tripId);
-    this.setCount(
-        "Agencies", feedContainer, GtfsAgency.FILENAME, GtfsAgency.class, GtfsAgency::agencyId);
-    this.setCount("Blocks", feedContainer, GtfsTrip.FILENAME, GtfsTrip.class, GtfsTrip::blockId);
+    setCount(COUNTS_SHAPES, feedContainer, GtfsShape.FILENAME, GtfsShape.class, GtfsShape::shapeId);
+    setCount(COUNTS_STOPS, feedContainer, GtfsStop.FILENAME, GtfsStop.class, GtfsStop::stopId);
+    setCount(COUNTS_ROUTES, feedContainer, GtfsRoute.FILENAME, GtfsRoute.class, GtfsRoute::routeId);
+    setCount(COUNTS_TRIPS, feedContainer, GtfsTrip.FILENAME, GtfsTrip.class, GtfsTrip::tripId);
+    setCount(
+        COUNTS_AGENCIES,
+        feedContainer,
+        GtfsAgency.FILENAME,
+        GtfsAgency.class,
+        GtfsAgency::agencyId);
+    setCount(COUNTS_BLOCKS, feedContainer, GtfsTrip.FILENAME, GtfsTrip.class, GtfsTrip::blockId);
   }
 
   private <T extends GtfsTableContainer<E>, E extends GtfsEntity> void setCount(
@@ -288,16 +315,19 @@ public class FeedMetadata {
   private void loadFeedInfo(GtfsTableContainer<GtfsFeedInfo> feedTable) {
     var info = feedTable.getEntities().isEmpty() ? null : feedTable.getEntities().get(0);
 
-    feedInfo.put("Publisher Name", info == null ? "N/A" : info.feedPublisherName());
-    feedInfo.put("Publisher URL", info == null ? "N/A" : info.feedPublisherUrl());
-    feedInfo.put("Feed Language", info == null ? "N/A" : info.feedLang().getDisplayLanguage());
+    feedInfo.put(FEED_INFO_PUBLISHER_NAME, info == null ? "N/A" : info.feedPublisherName());
+    feedInfo.put(FEED_INFO_PUBLISHER_URL, info == null ? "N/A" : info.feedPublisherUrl());
+    feedInfo.put(
+        FEED_INFO_FEED_LANGUAGE, info == null ? "N/A" : info.feedLang().getDisplayLanguage());
     if (feedTable.hasColumn(GtfsFeedInfo.FEED_START_DATE_FIELD_NAME)) {
       feedInfo.put(
-          "Feed Start Date", info == null ? "N/A" : info.feedStartDate().getLocalDate().toString());
+          FEED_INFO_FEED_START_DATE,
+          info == null ? "N/A" : info.feedStartDate().getLocalDate().toString());
     }
     if (feedTable.hasColumn(GtfsFeedInfo.FEED_END_DATE_FIELD_NAME)) {
       feedInfo.put(
-          "Feed End Date", info == null ? "N/A" : info.feedEndDate().getLocalDate().toString());
+          FEED_INFO_FEED_END_DATE,
+          info == null ? "N/A" : info.feedEndDate().getLocalDate().toString());
     }
   }
 

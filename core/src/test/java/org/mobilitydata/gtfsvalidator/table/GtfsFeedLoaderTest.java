@@ -29,6 +29,7 @@ public class GtfsFeedLoaderTest {
           GtfsTestEntityValidator.class, GtfsTestFileValidator.class, WholeFeedValidator.class);
 
   private MockGtfs mockGtfs;
+  private NoticeContainer noticeContainer = new NoticeContainer();
 
   @Before
   public void before() throws IOException {
@@ -38,7 +39,7 @@ public class GtfsFeedLoaderTest {
   @Test
   public void testEndToEnd() throws Exception {
     mockGtfs.putFileFromLines(GtfsTestEntity.FILENAME, "id,code", "1,alpha");
-    GtfsInput input = GtfsInput.createFromPath(mockGtfs.getPath());
+    GtfsInput input = GtfsInput.createFromPath(mockGtfs.getPath(), noticeContainer);
 
     ValidatorProvider provider =
         new DefaultValidatorProvider(
@@ -60,7 +61,7 @@ public class GtfsFeedLoaderTest {
   public void testInvalidDataInTable() throws Exception {
     // Missing `id` value in table, which is required.
     mockGtfs.putFileFromLines(GtfsTestEntity.FILENAME, "id,code", ",alpha");
-    GtfsInput input = GtfsInput.createFromPath(mockGtfs.getPath());
+    GtfsInput input = GtfsInput.createFromPath(mockGtfs.getPath(), noticeContainer);
 
     ValidatorProvider provider =
         new DefaultValidatorProvider(

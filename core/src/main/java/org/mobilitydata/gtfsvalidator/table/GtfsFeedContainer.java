@@ -80,6 +80,7 @@ public class GtfsFeedContainer {
   public String tableTotalsText() {
     List<String> totalList = new ArrayList<>();
     for (GtfsTableContainer<?> table : tables.values()) {
+      if (table.getTableStatus() == TableStatus.MISSING_FILE && !table.isRequired()) continue;
       totalList.add(
           table.gtfsFilename()
               + "\t"
