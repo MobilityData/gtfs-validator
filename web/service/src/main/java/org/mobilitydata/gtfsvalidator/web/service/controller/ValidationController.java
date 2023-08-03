@@ -128,16 +128,20 @@ public class ValidationController {
   }
 
   @GetMapping("/version")
-  public String currentVersion() {
+  public ResponseEntity currentVersion() {
     // https://gtfs-validator-web-mbzoxaljzq-ue.a.run.app/version
     StringBuilder stringBuilder = new StringBuilder();
-    //stringBuilder.append(
-    //    "This file determines the latest version of the validator app. Users of the app will be advised to upgrade if their local version does not match\\n\");
     stringBuilder.append("Current Version: ");
      VersionResolver checker = new VersionResolver();
     VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT);
     stringBuilder.append(versionInfo.currentVersion());
-    return stringBuilder.toString();
+    try {
+      Map<String, String> body = new HashMap<>();
+      body.put("message", stringBuilder.toString());
+      return new ResponseEntity<>(body, HttpStatus.OK);
+    } catch (Exception e) {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @PostMapping("/error")
