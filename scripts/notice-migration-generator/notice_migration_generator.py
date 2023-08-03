@@ -6,13 +6,23 @@ import numpy as np
 from utils.utils import get_migration_table
 
 
-def read_rule_file(filename):
-    with open(filename + "/rules.json", 'r') as f:
+def read_rule_file(filepath):
+    """
+    Reads and parses rules.json
+    :param filepath: Path containing rules.json
+    :return: dictionary where the key is the rule id and the value is the severity
+    """
+    with open(filepath + "/rules.json", 'r') as f:
         rules = json.load(f)
     return {key: rules[key]["severityLevel"] for key in rules}
 
 
 def get_severity_symbol(severity):
+    """
+    Links severity to symbol for the PR description formatting
+    :param severity: severity value
+    :return: associated symbol
+    """
     if severity == "WARNING":
         return '🟡'
     if severity == "ERROR":
@@ -21,23 +31,26 @@ def get_severity_symbol(severity):
 
 
 if __name__ == '__main__':
+    # Parse arguments
     parser = argparse.ArgumentParser(description="Automatic generation of NOTICE_MIGRATION.md")
     parser.add_argument('-r', '--release', help="Release Version", required=True)
     args = parser.parse_args()
     version = args.release.upper()
+
+    # Init the PR description output
     output = f"# Automated update of NOTICE_MIGRATION.md for release {version.lower()}\n"
 
     migration_table: pd.DataFrame = get_migration_table()
     migration_table.fillna('', inplace=True)
 
-    previous_version = sorted(list(migration_table.columns))[-1]
+    previous_version = sorted(list(migration_table.columns))[-1]  # Retrieve previous version
     migration_table.insert(0, version, migration_table[previous_version])
 
     # Read rules.json
     rules_1 = read_rule_file(f"rules-{version.lower()}")
     rules_2 = read_rule_file(f"rules-{previous_version.lower()}")
 
-    # Added Notices
+    # Process added notices
     diff = jsondiff.diff(rules_1, rules_2)
     new_notices = []
     try:
@@ -58,7 +71,7 @@ if __name__ == '__main__':
         output += "*No added notice. *\n"
     output += "\n"
 
-    # Deleted notices
+    # Process deleted notices
     diff = jsondiff.diff(rules_2, rules_1)
     try:
         deleted_notices = diff[jsondiff.delete]
@@ -75,7 +88,7 @@ if __name__ == '__main__':
         output += "*No deleted notice. *\n"
     output += "\n"
 
-    # Change in severity
+    # Process notices with severity update
     output += "## Notices change in severity level : \n"
     for notice, severity in diff.items():
         if notice in new_notices or notice == jsondiff.delete:

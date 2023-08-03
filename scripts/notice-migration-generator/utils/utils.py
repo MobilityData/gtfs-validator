@@ -3,6 +3,10 @@ import pandas as pd
 
 
 def get_migration_table():
+    """
+    Extract changes table from NOTICE_MIGRATION.md
+    :return: pandas dataframe representing of the release changes
+    """
     notice_migration_file = "docs/NOTICE_MIGRATION.md"
     with open(notice_migration_file, 'r') as f:
         file_content = f.read()
