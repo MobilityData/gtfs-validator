@@ -49,7 +49,7 @@ Remove the Needs triage label and replace it with the appropriate status label (
 
 **Core developers**
 
-Contributors who actively push to the project. They can perform code reviews, request changes, approve and merge Pull Requests. Core developers have Write permissions to the repository. The current core developers for this project are [David Gamez](https://github.com/davidgamez) and [Brian Ferris](https://github.com/bdferris-v2), [Kevin Clough](https://github.com/KClough), [Alexei Ababilov](https://github.com/aababilov) and [Artur Svechnikov](https://github.com/asvechnikov2).
+Contributors who actively push to the project. They can perform code reviews, request changes, approve and merge Pull Requests. Core developers have Write permissions to the repository. The current core developers for this project are [David Gamez Diaz](https://github.com/davidgamez), [Jean-Claude Pitre](https://github.com/jcpitre), [Jingsi Lu](https://github.com/qcdyx), [Chaimaa Khal](https://github.com/cka-y), [Brian Ferris](https://github.com/bdferris-v2), [Kevin Clough](https://github.com/KClough), [Alexei Ababilov](https://github.com/aababilov) and [Artur Svechnikov](https://github.com/asvechnikov2).
 @TODO how to become a core developer
 
 **Steering committee**
