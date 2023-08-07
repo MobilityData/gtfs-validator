@@ -84,8 +84,8 @@ public class AgencyConsistencyValidator extends FileValidator {
         GtfsAgency agency = agencyTable.getEntities().get(i);
         if (!commonTimezone.equals(agency.agencyTimezone())) {
           noticeContainer.addValidationNotice(
-                  new InconsistentAgencyTimezoneNotice(
-                          agency.csvRowNumber(), commonTimezone.getId(), agency.agencyTimezone().getId()));
+              new InconsistentAgencyTimezoneNotice(
+                  agency.csvRowNumber(), commonTimezone.getId(), agency.agencyTimezone().getId()));
         }
       }
     }
