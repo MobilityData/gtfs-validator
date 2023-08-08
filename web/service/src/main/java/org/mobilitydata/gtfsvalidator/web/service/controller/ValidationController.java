@@ -46,7 +46,7 @@ public class ValidationController {
   @Autowired private StorageHelper storageHelper;
   @Autowired private ValidationHandler validationHandler;
 
-  @Autowired private VersionResolver checker;
+  @Autowired private VersionResolver versionResolver;
   private static final Duration TIMEOUT = Duration.ofSeconds(5);
 
   /**
