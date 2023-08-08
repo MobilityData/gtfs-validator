@@ -131,8 +131,7 @@ public class ValidationController {
   public ResponseEntity currentVersion() {
     // https://gtfs-validator-web-mbzoxaljzq-ue.a.run.app/version
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append("Current Version: ");
-     VersionResolver checker = new VersionResolver();
+    VersionResolver checker = new VersionResolver();
     VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT);
     stringBuilder.append(versionInfo.currentVersion());
     try {
