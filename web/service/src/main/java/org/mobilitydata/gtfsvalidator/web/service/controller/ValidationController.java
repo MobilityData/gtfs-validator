@@ -128,7 +128,7 @@ public class ValidationController {
   }
 
   @GetMapping("/version")
-  public ResponseEntity currentVersion() {
+  public ResponseEntity<String> currentVersion() {
     // https://gtfs-validator-web-mbzoxaljzq-ue.a.run.app/version
     StringBuilder stringBuilder = new StringBuilder();
     VersionResolver checker = new VersionResolver();
