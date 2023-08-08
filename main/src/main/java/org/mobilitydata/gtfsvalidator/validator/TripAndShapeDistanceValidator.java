@@ -15,7 +15,7 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
-import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -89,7 +89,7 @@ public class TripAndShapeDistanceValidator extends FileValidator {
 
   /** The distance traveled by a trip should be less or equal to the max length of its shape. */
   @GtfsValidationNotice(
-      severity = WARNING,
+      severity = ERROR,
       files = @FileRefs({GtfsTrip.class, GtfsStopTime.class, GtfsShape.class}))
   static class TripDistanceExceedsShapeDistanceNotice extends ValidationNotice {
 
