@@ -57,6 +57,7 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
           noticeContainer.addValidationNotice(
               new DecreasingOrEqualStopTimeDistanceNotice(
                   curr.tripId(),
+                  curr.stopId(),
                   curr.csvRowNumber(),
                   curr.shapeDistTraveled(),
                   curr.stopSequence(),
@@ -81,6 +82,9 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
     /** The id of the faulty trip. */
     private final String tripId;
 
+    /** The id of the faulty stop. */
+    private final String stopId;
+
     /** The row number from `stop_times.txt`. */
     private final int csvRowNumber;
 
@@ -104,6 +108,7 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
 
     DecreasingOrEqualStopTimeDistanceNotice(
         String tripId,
+        String stopId,
         int csvRowNumber,
         double shapeDistTraveled,
         int stopSequence,
@@ -111,6 +116,7 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
         double prevStopTimeDistTraveled,
         int prevStopSequence) {
       this.tripId = tripId;
+      this.stopId = stopId;
       this.csvRowNumber = csvRowNumber;
       this.shapeDistTraveled = shapeDistTraveled;
       this.stopSequence = stopSequence;
