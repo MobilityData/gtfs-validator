@@ -24,6 +24,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.*;
+
 import org.mobilitydata.gtfsvalidator.util.VersionInfo;
 import org.mobilitydata.gtfsvalidator.util.VersionResolver;
 import org.mobilitydata.gtfsvalidator.web.service.util.JobMetadata;
@@ -128,19 +129,15 @@ public class ValidationController {
   }
 
   @GetMapping("/version")
-  public ResponseEntity<String> currentVersion() {
-    // https://gtfs-validator-web-mbzoxaljzq-ue.a.run.app/version
-    StringBuilder stringBuilder = new StringBuilder();
-    VersionResolver checker = new VersionResolver();
-    VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT);
-    stringBuilder.append(versionInfo.currentVersion());
+  public VersionResponse currentVersion() {
+    VersionResponse versionResponse;
     try {
-      Map<String, String> body = new HashMap<>();
-      body.put("message", stringBuilder.toString());
-      return new ResponseEntity<>(body, HttpStatus.OK);
-    } catch (Exception e) {
-      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      Optional<String> versionInfo = versionResolver.resolveCurrentVersion();
+      versionResponse = new VersionResponse(versionInfo.get());
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
+    return versionResponse;
   }
 
   @PostMapping("/error")
