@@ -6,5 +6,5 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class VersionResponse {
-    private String version;
+  private String version;
 }

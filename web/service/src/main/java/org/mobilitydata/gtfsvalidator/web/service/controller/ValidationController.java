@@ -24,8 +24,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.*;
-
-import org.mobilitydata.gtfsvalidator.util.VersionInfo;
 import org.mobilitydata.gtfsvalidator.util.VersionResolver;
 import org.mobilitydata.gtfsvalidator.web.service.util.JobMetadata;
 import org.mobilitydata.gtfsvalidator.web.service.util.StorageHelper;
@@ -129,10 +127,14 @@ public class ValidationController {
   }
 
   @GetMapping("/version")
-  public VersionResponse currentVersion()  {
+  public VersionResponse currentVersion() {
     VersionResponse versionResponse;
     try {
       Optional<String> versionInfo = versionResolver.resolveCurrentVersion();
+      if (versionInfo.isEmpty()) {
+        throw new ResponseStatusException(
+            HttpStatus.INTERNAL_SERVER_ERROR, "Current Version Not Found");
+      }
       versionResponse = new VersionResponse(versionInfo.get());
     } catch (IOException e) {
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error", e);
