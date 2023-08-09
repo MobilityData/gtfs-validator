@@ -129,13 +129,13 @@ public class ValidationController {
   }
 
   @GetMapping("/version")
-  public VersionResponse currentVersion() {
+  public VersionResponse currentVersion()  {
     VersionResponse versionResponse;
     try {
       Optional<String> versionInfo = versionResolver.resolveCurrentVersion();
       versionResponse = new VersionResponse(versionInfo.get());
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error", e);
     }
     return versionResponse;
   }
