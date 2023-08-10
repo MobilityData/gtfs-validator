@@ -47,9 +47,11 @@ public class GtfsZipFileInput extends GtfsInput {
       ZipArchiveEntry entry = entries.nextElement();
       String entryName = entry.getName();
       // check if the first entry is a directory with the name of the zip file
-      String firstEntryName = entryName.replaceFirst("/", "");
-      if (entry.isDirectory() && zipFileName.equals(firstEntryName)) {
-        isMacZip = true;
+      if (entryName.endsWith("/")) {
+        String firstEntryName = entryName.replaceFirst("/", "");
+        if (entry.isDirectory() && zipFileName.equals(firstEntryName)) {
+          isMacZip = true;
+        }
       }
       if (isMacZip) {
         entryName = entry.getName().replaceFirst(macDirectory, "");

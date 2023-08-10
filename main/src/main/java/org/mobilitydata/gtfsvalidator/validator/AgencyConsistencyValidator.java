@@ -78,17 +78,18 @@ public class AgencyConsistencyValidator extends FileValidator {
                   GtfsAgency.AGENCY_ID_FIELD_NAME));
         }
       }
-    }
-    // agency_timezone field is required and it must be the same for all agencies.
-    ZoneId commonTimezone = agencyTable.getEntities().get(0).agencyTimezone();
-    for (int i = 1; i < agencyCount; ++i) {
-      GtfsAgency agency = agencyTable.getEntities().get(i);
-      if (!commonTimezone.equals(agency.agencyTimezone())) {
-        noticeContainer.addValidationNotice(
-            new InconsistentAgencyTimezoneNotice(
-                agency.csvRowNumber(), commonTimezone.getId(), agency.agencyTimezone().getId()));
+      // agency_timezone field is required and it must be the same for all agencies.
+      ZoneId commonTimezone = agencyTable.getEntities().get(0).agencyTimezone();
+      for (int i = 1; i < agencyCount; ++i) {
+        GtfsAgency agency = agencyTable.getEntities().get(i);
+        if (!commonTimezone.equals(agency.agencyTimezone())) {
+          noticeContainer.addValidationNotice(
+              new InconsistentAgencyTimezoneNotice(
+                  agency.csvRowNumber(), commonTimezone.getId(), agency.agencyTimezone().getId()));
+        }
       }
     }
+
     // agency_lang field is optional. All provided values must be the same for all agencies.
     Locale commonLanguage = null;
     for (int i = 0; i < agencyCount; ++i) {
