@@ -56,8 +56,9 @@ public class FeedMetadataTest {
       Boolean expectedValue,
       ImmutableList<Class<? extends GtfsTableDescriptor<?>>> tableDescriptors)
       throws IOException, InterruptedException {
+    NoticeContainer noticeContainer = new NoticeContainer();
     feedLoaderMock = new GtfsFeedLoader(tableDescriptors);
-    try (GtfsInput gtfsInput = GtfsInput.createFromPath(rootDir.toPath())) {
+    try (GtfsInput gtfsInput = GtfsInput.createFromPath(rootDir.toPath(), noticeContainer)) {
       GtfsFeedContainer feedContainer =
           feedLoaderMock.loadAndValidate(
               gtfsInput,
