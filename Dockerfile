@@ -9,7 +9,7 @@ RUN ./gradlew shadowJar \
     -Prelease.forceVersion="${VERSION_TAG%-SNAPSHOT}"
 
 
-FROM --platform=$BUILDPLATFORM openjdk:11-slim
+FROM --platform=$TARGETPLATFORM openjdk:11-slim
 COPY --from=build /build/cli/build/libs/gtfs-validator-*-cli.jar /gtfs-validator-cli.jar
 WORKDIR /
 
