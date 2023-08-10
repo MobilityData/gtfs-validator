@@ -46,7 +46,6 @@ public class ValidationController {
   @Autowired private ValidationHandler validationHandler;
 
   @Autowired private VersionResolver versionResolver;
-  private static final Duration TIMEOUT = Duration.ofSeconds(5);
 
   /**
    * Creates a new job id and returns it to the client. If a url is provided, the file is downloaded
