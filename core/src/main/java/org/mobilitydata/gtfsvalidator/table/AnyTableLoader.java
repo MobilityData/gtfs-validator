@@ -46,6 +46,7 @@ public final class AnyTableLoader {
       csvFile = new CsvFile(csvInputStream, gtfsFilename, settings);
     } catch (TextParsingException e) {
       noticeContainer.addValidationNotice(new CsvParsingFailedNotice(gtfsFilename, e));
+      //todo
       return tableDescriptor.createContainerForInvalidStatus(
           GtfsTableContainer.TableStatus.INVALID_HEADERS);
     }

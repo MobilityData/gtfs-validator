@@ -50,7 +50,7 @@ public class GtfsFeedLoader {
 
   /**
    * The set of validators that were skipped during validation because their file dependencies had
-   * parse errors.
+   * parse errors plus validators that are optional.
    */
   private final List<Class<? extends FileValidator>> skippedValidators = new ArrayList<>();
 
