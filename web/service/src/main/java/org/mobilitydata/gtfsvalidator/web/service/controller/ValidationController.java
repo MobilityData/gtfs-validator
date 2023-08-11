@@ -22,7 +22,6 @@ import io.sentry.Sentry;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Path;
-import java.time.Duration;
 import java.util.*;
 import org.mobilitydata.gtfsvalidator.util.VersionResolver;
 import org.mobilitydata.gtfsvalidator.web.service.util.JobMetadata;
