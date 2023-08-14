@@ -2,10 +2,10 @@ name: Bug triage
 on:
   issues:
     types:
-      - labeled
+      - opened
 jobs:
   triage:
-    if: github.event.label.name == 'bug'
+    if: github.event.issue.labels.contains('bug')
     runs-on: ubuntu-latest
     steps:
       - name: Create card
@@ -13,7 +13,7 @@ jobs:
         with:
           project: Bug triage
           column: Requires investigation
-          repo-token: ${{ secrets.TRIAGE_TOKEN }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Comment issue
         uses: actions/github-script@v6
         with:
