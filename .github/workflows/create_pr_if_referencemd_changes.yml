@@ -1,0 +1,32 @@
+name: Check if Google's reference.md has changed, create new PR
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  check-file-changes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download file from URL
+        uses: actions/curl@v2
+        with:
+          url: https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md
+          output: reference.md
+
+      - name: Get changed commits
+        uses: tj-actions/changed-commits@v37
+        with:
+          files: |
+            file.txt
+
+      - name: Check if commits found
+        if: has_value(steps.changed-commits.outputs.all_changed_commits, 'commit_hash')
+        run: |
+          echo "Commits found, opening pull request..."
+          git fetch origin main
+          git checkout -b new-branch-$(date +'%Y-%m-%d')
+          git add reference.md
+          git commit -m "Changes made to `reference.md` from Google Transit's repo"
+          git push origin new-branch-$(date +'%Y-%m-%d')
+          hub pull-request -F "Changes made to `reference.md` from Google Transit's repo"
+          
