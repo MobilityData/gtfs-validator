@@ -1,4 +1,4 @@
-name: Docker image Creation
+name: Docker image
 
 on:
   push:
@@ -92,7 +92,7 @@ jobs:
             DOCKER_TAGS="${DOCKER_IMAGE}:${AXION_VERSION}"
           else
             # tag pushes to master as "latest"
-            DOCKER_TAGS="${DOCKER_IMAGE}:latest"
+            DOCKER_TAGS="${DOCKER_IMAGE}-${{ matrix.platform }}:latest"
           fi
           echo "Set DOCKER_TAGS=${DOCKER_TAGS}"
 
@@ -183,7 +183,7 @@ jobs:
             VERSION_TAG=${{ steps.prep.outputs.version }}
           load: false
           platforms: linux/amd64, linux/arm64
-          tags: ${{ steps.prep.outputs.tags }}
+          tags: ${{ steps.prep.outputs.tags }}-test-multiplat2
           labels: |
             org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY,,}.git
             org.opencontainers.image.created=${{ steps.prep.outputs.created }}
@@ -198,7 +198,7 @@ jobs:
             VERSION_TAG=${{ steps.prep.outputs.version }}
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: ${{ steps.prep.outputs.tags }}
+          tags: ${{ steps.prep.outputs.tags }}-test-multiplat2
           labels: |
             org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY,,}.git
             org.opencontainers.image.created=${{ steps.prep.outputs.created }}
