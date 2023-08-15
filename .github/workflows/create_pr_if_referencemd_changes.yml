@@ -1,32 +1,61 @@
 name: Check if Google's reference.md has changed, create new PR
+
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 4 * * *'  # This triggers the workflow every day at 4 AM UTC
 
 jobs:
-  check-file-changes:
+  check-file-commits:
     runs-on: ubuntu-latest
-    steps:
-      - name: Download file from URL
-        uses: actions/curl@v2
-        with:
-          url: https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md
-          output: reference.md
 
-      - name: Get changed commits
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get today's date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
+      - name: Check for changed commits
+        id: changed_commits
         uses: tj-actions/changed-commits@v37
         with:
-          files: |
-            file.txt
+          token: ${{ secrets.GTFS_VALIDATOR_CHECK_REFERENCE_MD_UPDATES }}
+          repository: google/transit  # Change this to the source repository
+          ref: master
+          path: gtfs/spec/en/reference.md
 
-      - name: Check if commits found
-        if: has_value(steps.changed-commits.outputs.all_changed_commits, 'commit_hash')
+      - name: Create branch
         run: |
-          echo "Commits found, opening pull request..."
-          git fetch origin main
-          git checkout -b new-branch-$(date +'%Y-%m-%d')
-          git add reference.md
-          git commit -m "Changes made to `reference.md` from Google Transit's repo"
-          git push origin new-branch-$(date +'%Y-%m-%d')
-          hub pull-request -F "Changes made to `reference.md` from Google Transit's repo"
-          
+          date=$(echo ${{ steps.date.outputs.date }})
+          branch_name="reference-md-commits-${date}"
+          git checkout -b $branch_name
+          git push origin $branch_name
+
+      - name: Create pull request
+        if: steps.changed_commits.outputs.commits == 'true'
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GTFS_VALIDATOR_CHECK_REFERENCE_MD_UPDATES }}
+          script: |
+            const title = "Changes made to `reference.md` from Google Transit's repo";
+            const body = "Commits have been made to the reference.md file in the last 24 hours. Automatically generated pull request.";
+            const head = "${{ steps.date.outputs.date }}";
+            const base = "master";  // Change this to your target branch
+            const changes = [
+              {
+                files: ["gtfs/spec/en/reference.md"],
+                commit: "Changes made to `reference.md`",
+                content: "... from Google Transit's repo in the last 24 hours."
+              }
+            ];
+            const pullRequest = await github.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body,
+              head,
+              base,
+              changes
+            });
+            console.log(`Pull request created: ${pullRequest.data.html_url}`);
