@@ -10,15 +10,15 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Get today's date
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
 
-      - name: Check for changed commits
-        id: changed_commits
-        uses: tj-actions/changed-commits@v37
+      - name: Changed Files
+        id: changed-files
+        uses: tj-actions/changed-files@v37.6.0
         with:
           token: ${{ secrets.GTFS_VALIDATOR_CHECK_REFERENCE_MD_UPDATES }}
           repository: google/transit  # Change this to the source repository
