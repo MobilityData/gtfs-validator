@@ -67,7 +67,8 @@ public class StopTimeIncreasingDistanceValidatorTest {
                     createStopTime(2, "first trip", "s1", 42, 45.0d),
                     createStopTime(3, "first trip", "s2", 46, 4.0d))))
         .containsExactly(
-            new DecreasingOrEqualStopTimeDistanceNotice("first trip", 3, 4.0d, 46, 2, 45.0d, 42));
+            new DecreasingOrEqualStopTimeDistanceNotice(
+                "first trip", "s2", 3, 4.0d, 46, 2, 45.0d, 42));
   }
 
   @Test
@@ -79,7 +80,8 @@ public class StopTimeIncreasingDistanceValidatorTest {
                     createStopTime(2, "first trip", "s1", 42, 45.0d),
                     createStopTime(3, "first trip", "s2", 46, 45.0d))))
         .containsExactly(
-            new DecreasingOrEqualStopTimeDistanceNotice("first trip", 3, 45.0d, 46, 2, 45.0d, 42));
+            new DecreasingOrEqualStopTimeDistanceNotice(
+                "first trip", "s2", 3, 45.0d, 46, 2, 45.0d, 42));
   }
 
   @Test
@@ -91,6 +93,7 @@ public class StopTimeIncreasingDistanceValidatorTest {
                     createStopTime(2, "first trip", "s1", 42, 8.6d),
                     createStopTime(3, "first trip", "s2", 46, 46.0d))))
         .containsExactly(
-            new DecreasingOrEqualStopTimeDistanceNotice("first trip", 2, 8.6d, 42, 1, 10.0d, 2));
+            new DecreasingOrEqualStopTimeDistanceNotice(
+                "first trip", "s1", 2, 8.6d, 42, 1, 10.0d, 2));
   }
 }
