@@ -81,4 +81,16 @@ public final class ResolvedNotice<T extends Notice> {
   public boolean isError() {
     return getSeverityLevel().ordinal() >= SeverityLevel.ERROR.ordinal();
   }
+
+  /**
+   * Tells if this notice is a {@code WARNING}.
+   *
+   * <p>This method is preferred to checking {@code severityLevel} directly since more levels may be
+   * added in the future.
+   *
+   * @return true if this notice is a warning, false otherwise
+   */
+  public boolean isWarning() {
+    return getSeverityLevel() == SeverityLevel.WARNING;
+  }
 }

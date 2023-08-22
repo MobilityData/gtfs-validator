@@ -59,6 +59,8 @@ public abstract class GtfsFieldDescriptor {
 
   public abstract boolean columnRequired();
 
+  public abstract boolean columnRecommended();
+
   public boolean isHeaderRequired() {
     return columnRequired() || valueRequired();
   }
@@ -80,6 +82,8 @@ public abstract class GtfsFieldDescriptor {
     public abstract Builder setValueRequired(boolean value);
 
     public abstract Builder setColumnRequired(boolean value);
+
+    public abstract Builder setColumnRecommended(boolean value);
 
     public abstract Builder setMixedCase(boolean value);
 

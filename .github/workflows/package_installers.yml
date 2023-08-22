@@ -25,6 +25,8 @@ jobs:
     name: Build and upload packaged app
     runs-on: ${{ matrix.os }}
     strategy:
+#     Adding fail-fast: false so at least some artifacts gets uploaded if others fail
+      fail-fast: false
       matrix:
         os: [ macos-latest, windows-latest, ubuntu-latest ]
     steps:
@@ -38,7 +40,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           # We need a recent version of Java with jpackage included.
-          java-version: '17'
+          java-version: '17.0.7'
           # We use the zulu distribution, which is an OpenJDK distro.
           distribution: 'zulu'
 
@@ -115,3 +117,33 @@ jobs:
             app/pkg/build/jpackage/*.dmg
             app/pkg/build/jpackage/*.pkg
             app/pkg/build/jpackage/*.deb
+
+      - name: "Upload assets to release"
+        if: github.event_name == 'prerelease' || github.event_name == 'release'
+        env:
+          OS_NAME: '${{ matrix.os }}'
+        uses: actions/github-script@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            console.log(`Running on OS ${process.env.OS_NAME}`);
+            console.log(`Uploading asset to release ID ${context.payload.release.id}`);
+            
+            const os = process.env.OS_NAME.split('-')[0]
+            const fs = require('fs').promises;
+            const { repo: { owner, repo }, sha } = context;
+
+            for (let file of await fs.readdir('./app/pkg/build/jpackage')) {
+              const extension = file.split('.').pop()
+              if (extension != "msi" && extension != "dmg" && extension != "pkg" && extension != "deb")
+                continue;
+            
+              console.log('Uploading', file);
+
+              await github.repos.uploadReleaseAsset({
+                owner, repo,
+                release_id: context.payload.release.id,
+                name: `Installer ${os}.${extension}`,
+                data: await fs.readFile(`./app/pkg/build/jpackage/${file}`)
+              });            
+            }

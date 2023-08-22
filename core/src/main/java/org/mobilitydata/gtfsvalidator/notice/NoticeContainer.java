@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.mobilitydata.gtfsvalidator.io.ValidationReportDeserializer;
+import org.mobilitydata.gtfsvalidator.model.ValidationReport;
 
 /**
  * Container for validation notices (errors and warnings).
@@ -58,6 +59,7 @@ public class NoticeContainer {
   private final List<ResolvedNotice<SystemError>> systemErrors = new ArrayList<>();
   private final Map<String, Integer> noticesCountPerTypeAndSeverity = new HashMap<>();
   private boolean hasValidationErrors = false;
+  private boolean hasValidationWarnings = false;
 
   /**
    * Used to specify limits on amount of notices in this {@code NoticeContainer}.
@@ -99,6 +101,10 @@ public class NoticeContainer {
     if (resolved.isError()) {
       hasValidationErrors = true;
     }
+    if (resolved.isWarning()) {
+      hasValidationWarnings = true;
+    }
+
     updateNoticeCount(resolved);
     if (validationNotices.size() >= maxTotalValidationNotices
         || noticesCountPerTypeAndSeverity.get(resolved.getMappingKey())
@@ -147,6 +153,7 @@ public class NoticeContainer {
     validationNotices.addAll(otherContainer.validationNotices);
     systemErrors.addAll(otherContainer.systemErrors);
     hasValidationErrors |= otherContainer.hasValidationErrors;
+    hasValidationWarnings |= otherContainer.hasValidationWarnings;
     for (Entry<String, Integer> entry : otherContainer.noticesCountPerTypeAndSeverity.entrySet()) {
       int count = noticesCountPerTypeAndSeverity.getOrDefault(entry.getKey(), 0);
       noticesCountPerTypeAndSeverity.put(entry.getKey(), count + entry.getValue());
@@ -156,6 +163,11 @@ public class NoticeContainer {
   /** Tells if this container has any {@code ValidationNotice} that is an error. */
   public boolean hasValidationErrors() {
     return hasValidationErrors;
+  }
+
+  /** Tells if this container has any {@code ValidationNotice} that is a warning. */
+  public boolean hasValidationWarnings() {
+    return hasValidationWarnings;
   }
 
   public List<ResolvedNotice<ValidationNotice>> getResolvedValidationNotices() {
@@ -184,6 +196,12 @@ public class NoticeContainer {
 
   public <T extends Notice> JsonObject exportJson(List<ResolvedNotice<T>> notices) {
     return ValidationReportDeserializer.serialize(
+        notices, maxExportsPerNoticeTypeAndSeverity, noticesCountPerTypeAndSeverity);
+  }
+
+  public <T extends Notice> ValidationReport createValidationReport(
+      List<ResolvedNotice<T>> notices) {
+    return ValidationReportDeserializer.createValidationReport(
         notices, maxExportsPerNoticeTypeAndSeverity, noticesCountPerTypeAndSeverity);
   }
 

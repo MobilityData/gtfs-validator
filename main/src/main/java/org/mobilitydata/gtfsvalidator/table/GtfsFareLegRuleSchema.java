@@ -48,6 +48,16 @@ public interface GtfsFareLegRuleSchema extends GtfsEntity {
   String toAreaId();
 
   @FieldType(FieldTypeEnum.ID)
+  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
+  @ForeignKey(table = "timeframes.txt", field = "timeframe_group_id")
+  String fromTimeframeGroupId();
+
+  @FieldType(FieldTypeEnum.ID)
+  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
+  @ForeignKey(table = "timeframes.txt", field = "timeframe_group_id")
+  String toTimeframeGroupId();
+
+  @FieldType(FieldTypeEnum.ID)
   @Required
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)
   @ForeignKey(table = "fare_products.txt", field = "fare_product_id")

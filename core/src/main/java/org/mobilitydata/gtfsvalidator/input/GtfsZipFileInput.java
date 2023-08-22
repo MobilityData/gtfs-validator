@@ -33,27 +33,38 @@ public class GtfsZipFileInput extends GtfsInput {
   private final ImmutableSet<String> filenames;
   private final ZipFile zipFile;
 
-  public GtfsZipFileInput(ZipFile zipFile) {
-    this.zipFile = zipFile;
+  private final String MACOSX_FILE_IN_ZIP = ".DS_Store";
 
+  public GtfsZipFileInput(ZipFile zipFile, String zipFileName) {
+    this.zipFile = zipFile;
+    StringBuilder strBuilder = new StringBuilder();
+    strBuilder.append(zipFileName);
+    strBuilder.append("/");
+    String macDirectory = strBuilder.toString();
     ImmutableSet.Builder<String> filenamesBuilder = new ImmutableSet.Builder<>();
+    boolean isMacZip = false;
     for (Enumeration<ZipArchiveEntry> entries = zipFile.getEntries(); entries.hasMoreElements(); ) {
       ZipArchiveEntry entry = entries.nextElement();
-      if (!isInsideZipDirectory(entry)) {
-        filenamesBuilder.add(entry.getName());
+      String entryName = entry.getName();
+      // check if the first entry is a directory with the name of the zip file
+      if (entryName.endsWith("/")) {
+        String firstEntryName = entryName.replaceFirst("/", "");
+        if (entry.isDirectory() && zipFileName.equals(firstEntryName)) {
+          isMacZip = true;
+        }
+      }
+      if (isMacZip) {
+        entryName = entry.getName().replaceFirst(macDirectory, "");
+      }
+      // Check for .DS_Store to prevent generating unknown_file notice.
+      // Directory names in end with '/'.
+      if (!entryName.isBlank()
+          && !entryName.equals(MACOSX_FILE_IN_ZIP)
+          && !entryName.contains("/")) {
+        filenamesBuilder.add(entryName);
       }
     }
     filenames = filenamesBuilder.build();
-  }
-
-  static boolean isInsideZipDirectory(ZipArchiveEntry entry) {
-    // We do not use File.separator because the .zip file specification states:
-    // All slashes MUST be forward slashes '/' as opposed to backwards slashes '\' for compatibility
-    // with Amiga and
-    // UNIX file systems etc.
-    //
-    // Directory names in end with '/'.
-    return entry.getName().contains("/");
   }
 
   @Override
