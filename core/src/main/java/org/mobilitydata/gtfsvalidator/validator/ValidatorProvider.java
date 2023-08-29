@@ -57,7 +57,7 @@ public interface ValidatorProvider {
    * @param <T> type of the GTFS entity
    */
   <T extends GtfsEntity> List<FileValidator> createSingleFileValidators(
-      GtfsTableContainer<T> table);
+      GtfsTableContainer<T> table, Consumer<Class<? extends FileValidator>> validatorsWithParsingErrors);
 
   /**
    * Creates a list of cross-table validators. Any validator that has a dependency with parse errors

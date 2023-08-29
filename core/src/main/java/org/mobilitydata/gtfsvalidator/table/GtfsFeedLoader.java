@@ -54,6 +54,7 @@ public class GtfsFeedLoader {
    */
   private final List<Class<? extends FileValidator>> skippedValidators = new ArrayList<>();
 
+
   public GtfsFeedLoader(
       ImmutableList<Class<? extends GtfsTableDescriptor<?>>> tableDescriptorClasses) {
     for (Class<? extends GtfsTableDescriptor<?>> clazz : tableDescriptorClasses) {
@@ -82,6 +83,7 @@ public class GtfsFeedLoader {
   public List<Class<? extends FileValidator>> getSkippedValidators() {
     return Collections.unmodifiableList(skippedValidators);
   }
+
 
   @SuppressWarnings("unchecked")
   public GtfsFeedContainer loadAndValidate(

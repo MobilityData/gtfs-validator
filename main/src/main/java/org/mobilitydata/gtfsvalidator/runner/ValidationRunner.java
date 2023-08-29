@@ -19,6 +19,8 @@ package org.mobilitydata.gtfsvalidator.runner;
 import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -41,6 +43,7 @@ import org.mobilitydata.gtfsvalidator.report.HtmlReportGenerator;
 import org.mobilitydata.gtfsvalidator.report.JsonReport;
 import org.mobilitydata.gtfsvalidator.report.JsonReportGenerator;
 import org.mobilitydata.gtfsvalidator.report.model.FeedMetadata;
+import org.mobilitydata.gtfsvalidator.table.AnyTableLoader;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
 import org.mobilitydata.gtfsvalidator.util.VersionInfo;
@@ -89,6 +92,7 @@ public class ValidationRunner {
       return Status.EXCEPTION;
     }
     GtfsFeedLoader feedLoader = new GtfsFeedLoader(ClassGraphDiscovery.discoverTables());
+    AnyTableLoader anyTableLoader = new AnyTableLoader();
 
     logger.atInfo().log("validation config:\n%s", config);
     logger.atInfo().log("validators:\n%s", validatorLoader.listValidators());
@@ -134,7 +138,7 @@ public class ValidationRunner {
 
     // Output
     exportReport(feedMetadata, noticeContainer, config, versionInfo);
-    printSummary(startNanos, feedContainer, feedLoader);
+    printSummary(startNanos, feedContainer, feedLoader, anyTableLoader);
     return Status.SUCCESS;
   }
 
@@ -145,7 +149,7 @@ public class ValidationRunner {
    * @param feedContainer the {@code GtfsFeedContainer}
    */
   public static void printSummary(
-      long startNanos, GtfsFeedContainer feedContainer, GtfsFeedLoader loader) {
+          long startNanos, GtfsFeedContainer feedContainer, GtfsFeedLoader loader, AnyTableLoader anyTableLoader) {
     final long endNanos = System.nanoTime();
     List<Class<? extends FileValidator>> skippedValidators = loader.getSkippedValidators();
     if (!skippedValidators.isEmpty()) {
@@ -157,6 +161,18 @@ public class ValidationRunner {
       b.append("Skipped validators: ");
       b.append(
           skippedValidators.stream().map(Class::getSimpleName).collect(Collectors.joining(",")));
+      logger.atSevere().log(b.toString());
+    }
+    List<Class<? extends FileValidator>> validatorsWithParsingErrors = anyTableLoader.getValidatorsWithParsingErrors();
+    if (!validatorsWithParsingErrors.isEmpty()) {
+      StringBuilder b = new StringBuilder();
+      b.append("\n");
+      b.append(" ----------------------------------------- \n");
+      b.append("|   The list of validators that couldn't run due to a parsing problem.   |\n");
+      b.append(" ----------------------------------------- \n");
+      b.append(" Validators with Parsing Errors: ");
+      b.append(
+              validatorsWithParsingErrors.stream().map(Class::getSimpleName).collect(Collectors.joining(",")));
       logger.atSevere().log(b.toString());
     }
     logger.atInfo().log("Validation took %.3f seconds%n", (endNanos - startNanos) / 1e9);

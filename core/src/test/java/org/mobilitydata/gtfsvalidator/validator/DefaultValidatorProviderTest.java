@@ -41,7 +41,8 @@ public class DefaultValidatorProviderTest {
                 .map(Object::getClass))
         .containsExactly(GtfsTestEntityValidator.class);
 
-    assertThat(provider.createSingleFileValidators(tableContainer).stream().map(Object::getClass))
+    List<Class<? extends FileValidator>> validatorsWithParsingErrors = new ArrayList<>();
+    assertThat(provider.createSingleFileValidators(tableContainer, validatorsWithParsingErrors::add).stream().map(Object::getClass))
         .containsExactly(GtfsTestFileValidator.class);
 
     List<Class<? extends FileValidator>> skippedValidators = new ArrayList<>();

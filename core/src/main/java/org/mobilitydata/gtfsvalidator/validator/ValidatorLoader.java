@@ -206,13 +206,12 @@ public class ValidatorLoader {
   }
 
   /** Instantiates a {@code FileValidator} for a single table. */
-  public static FileValidator createSingleFileValidator(
+  public static <T extends FileValidator> ValidatorWithDependencyStatus<T> createSingleFileValidator(
       Class<? extends FileValidator> clazz,
       GtfsTableContainer<?> table,
       ValidationContext validationContext)
       throws ReflectiveOperationException {
-    return createValidator(clazz, new DependencyResolver(validationContext, table, null))
-        .validator();
+    return (ValidatorWithDependencyStatus<T>) createValidator(clazz, new DependencyResolver(validationContext, table, null));
   }
 
   /** Instantiates a {@code FileValidator} for multiple tables in a given feed. */
