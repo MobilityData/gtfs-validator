@@ -59,7 +59,7 @@ public class ValidatorLoaderTest {
     GtfsTestFileValidator validator =
         (GtfsTestFileValidator)
             ValidatorLoader.createSingleFileValidator(
-                GtfsTestFileValidator.class, table, VALIDATION_CONTEXT);
+                GtfsTestFileValidator.class, table, VALIDATION_CONTEXT).validator();
 
     assertThat(validator.getCountryCode()).isEqualTo(VALIDATION_CONTEXT.countryCode());
     assertThat(validator.getCurrentDateTime()).isEqualTo(VALIDATION_CONTEXT.currentDateTime());
