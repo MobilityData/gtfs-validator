@@ -35,14 +35,22 @@ public class DefaultValidatorProviderTest {
     GtfsTestTableContainer tableContainer =
         new GtfsTestTableContainer(TableStatus.PARSABLE_HEADERS_AND_ROWS);
     GtfsFeedContainer feedContainer = new GtfsFeedContainer(ImmutableList.of(tableContainer));
-
+    List<Class<? extends SingleEntityValidator>> singleEntityValidatorsWithParsingErrors =
+        new ArrayList<>();
     assertThat(
-            provider.createSingleEntityValidators(GtfsTestEntity.class).stream()
+            provider
+                .createSingleEntityValidators(
+                    GtfsTestEntity.class, singleEntityValidatorsWithParsingErrors::add)
+                .stream()
                 .map(Object::getClass))
         .containsExactly(GtfsTestEntityValidator.class);
 
     List<Class<? extends FileValidator>> validatorsWithParsingErrors = new ArrayList<>();
-    assertThat(provider.createSingleFileValidators(tableContainer, validatorsWithParsingErrors::add).stream().map(Object::getClass))
+    assertThat(
+            provider
+                .createSingleFileValidators(tableContainer, validatorsWithParsingErrors::add)
+                .stream()
+                .map(Object::getClass))
         .containsExactly(GtfsTestFileValidator.class);
 
     List<Class<? extends FileValidator>> skippedValidators = new ArrayList<>();

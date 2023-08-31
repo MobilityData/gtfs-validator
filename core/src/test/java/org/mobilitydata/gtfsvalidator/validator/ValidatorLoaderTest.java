@@ -46,7 +46,7 @@ public class ValidatorLoaderTest {
   public void createValidatorWithContext_injectsContext() throws ReflectiveOperationException {
     GtfsTestEntityValidator validator =
         ValidatorLoader.createValidatorWithContext(
-            GtfsTestEntityValidator.class, VALIDATION_CONTEXT);
+            GtfsTestEntityValidator.class, VALIDATION_CONTEXT).validator();
 
     assertThat(validator.getCountryCode()).isEqualTo(VALIDATION_CONTEXT.countryCode());
     assertThat(validator.getCurrentDateTime()).isEqualTo(VALIDATION_CONTEXT.currentDateTime());
@@ -59,7 +59,8 @@ public class ValidatorLoaderTest {
     GtfsTestFileValidator validator =
         (GtfsTestFileValidator)
             ValidatorLoader.createSingleFileValidator(
-                GtfsTestFileValidator.class, table, VALIDATION_CONTEXT).validator();
+                    GtfsTestFileValidator.class, table, VALIDATION_CONTEXT)
+                .validator();
 
     assertThat(validator.getCountryCode()).isEqualTo(VALIDATION_CONTEXT.countryCode());
     assertThat(validator.getCurrentDateTime()).isEqualTo(VALIDATION_CONTEXT.currentDateTime());

@@ -128,7 +128,8 @@ public class AnyTableLoaderTest {
     when(validatorProvider.getTableHeaderValidator()).thenReturn(mock(TableHeaderValidator.class));
     when(validatorProvider.getFieldValidator()).thenReturn(mock(GtfsFieldValidator.class));
     GtfsTestFileValidator validator = mock(GtfsTestFileValidator.class);
-    when(validatorProvider.createSingleFileValidators(any(), validatorsWithParsingErrors::add)).thenReturn(List.of(validator));
+    when(validatorProvider.createSingleFileValidators(any(), validatorsWithParsingErrors::add))
+        .thenReturn(List.of(validator));
     InputStream inputStream = toInputStream("id,stop_lat,_no_name_\n" + "s1, 23.00, no_value\n");
 
     var loadedContainer =
