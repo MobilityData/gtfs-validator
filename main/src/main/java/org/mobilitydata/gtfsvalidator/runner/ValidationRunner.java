@@ -173,9 +173,9 @@ public class ValidationRunner {
         || !singleEntityValidatorsWithParsingErrors.isEmpty()) {
       StringBuilder b = new StringBuilder();
       b.append("\n");
-      b.append(" ----------------------------------------- \n");
+      b.append(" ------------------------------------------------------------------------- \n");
       b.append("|   The list of validators that couldn't run due to a parsing problem.   |\n");
-      b.append(" ----------------------------------------- \n");
+      b.append(" ------------------------------------------------------------------------- \n");
       b.append(" Validators with Parsing Errors: ");
       if (!validatorsWithParsingErrors.isEmpty()) {
         b.append(
