@@ -47,7 +47,7 @@ public interface ValidatorProvider {
    */
   <T extends GtfsEntity> List<SingleEntityValidator<T>> createSingleEntityValidators(
       Class<T> clazz,
-      Consumer<Class<? extends SingleEntityValidator>> singleEntityValidatorsWithParsingErrors);
+      Consumer<Class<? extends SingleEntityValidator<T>>> singleEntityValidatorsWithParsingErrors);
 
   /**
    * Creates a list of validators for the given table.

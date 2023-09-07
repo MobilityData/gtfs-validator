@@ -77,20 +77,21 @@ public class DefaultValidatorProvider implements ValidatorProvider {
   @SuppressWarnings("unchecked")
   public <T extends GtfsEntity> List<SingleEntityValidator<T>> createSingleEntityValidators(
       Class<T> clazz,
-      Consumer<Class<? extends SingleEntityValidator>> singleEntityValidatorsWithParsingErrors) {
+      Consumer<Class<? extends SingleEntityValidator<T>>> singleEntityValidatorsWithParsingErrors) {
     List<SingleEntityValidator<T>> validators = new ArrayList<>();
     for (Class<? extends SingleEntityValidator<?>> validatorClass :
         singleEntityValidators.get(clazz)) {
       try {
-        ValidatorWithDependencyStatus<? extends SingleEntityValidator>
+        ValidatorWithDependencyStatus<? extends SingleEntityValidator<?>>
             validatorWithDependencyStatus =
                 ValidatorLoader.createValidatorWithContext(
-                    ((Class<? extends SingleEntityValidator<T>>) validatorClass),
+                    ((Class<? extends SingleEntityValidator<?>>) validatorClass),
                     validationContext);
         if (validatorWithDependencyStatus.dependenciesHaveErrors()) {
-          singleEntityValidatorsWithParsingErrors.accept(validatorClass);
+          singleEntityValidatorsWithParsingErrors.accept(
+              (Class<? extends SingleEntityValidator<T>>) validatorClass);
         } else {
-          validators.add(validatorWithDependencyStatus.validator());
+          validators.add((SingleEntityValidator<T>) validatorWithDependencyStatus.validator());
         }
       } catch (ReflectiveOperationException e) {
         logger.atSevere().withCause(e).log(

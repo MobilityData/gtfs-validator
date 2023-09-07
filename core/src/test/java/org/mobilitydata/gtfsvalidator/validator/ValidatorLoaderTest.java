@@ -46,7 +46,8 @@ public class ValidatorLoaderTest {
   public void createValidatorWithContext_injectsContext() throws ReflectiveOperationException {
     GtfsTestEntityValidator validator =
         ValidatorLoader.createValidatorWithContext(
-            GtfsTestEntityValidator.class, VALIDATION_CONTEXT).validator();
+                GtfsTestEntityValidator.class, VALIDATION_CONTEXT)
+            .validator();
 
     assertThat(validator.getCountryCode()).isEqualTo(VALIDATION_CONTEXT.countryCode());
     assertThat(validator.getCurrentDateTime()).isEqualTo(VALIDATION_CONTEXT.currentDateTime());
