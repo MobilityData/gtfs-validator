@@ -199,8 +199,9 @@ public class ValidatorLoader {
    * @param <T> type of the validator to instantiate
    * @return a new validator
    */
-  public static <T extends SingleEntityValidator> ValidatorWithDependencyStatus<T> createValidatorWithContext(
-      Class<T> clazz, ValidationContext validationContext) throws ReflectiveOperationException {
+  public static <T extends SingleEntityValidator>
+      ValidatorWithDependencyStatus<T> createValidatorWithContext(
+          Class<T> clazz, ValidationContext validationContext) throws ReflectiveOperationException {
     return (ValidatorWithDependencyStatus<T>)
         createValidator(clazz, new DependencyResolver(validationContext, null, null));
   }
