@@ -146,7 +146,8 @@ public final class AnyTableLoader {
     GtfsTableContainer table =
         tableDescriptor.createContainerForHeaderAndEntities(header, entities, noticeContainer);
     ValidatorUtil.invokeSingleFileValidators(
-        validatorProvider.createSingleFileValidators(table, singleFileValidatorsWithParsingErrors::add),
+        validatorProvider.createSingleFileValidators(
+            table, singleFileValidatorsWithParsingErrors::add),
         noticeContainer);
     return table;
   }
@@ -211,7 +212,8 @@ public final class AnyTableLoader {
       noticeContainer.addValidationNotice(new MissingRequiredFileNotice(gtfsFilename));
     }
     ValidatorUtil.invokeSingleFileValidators(
-        validatorProvider.createSingleFileValidators(table, singleFileValidatorsWithParsingErrors::add),
+        validatorProvider.createSingleFileValidators(
+            table, singleFileValidatorsWithParsingErrors::add),
         noticeContainer);
     return table;
   }

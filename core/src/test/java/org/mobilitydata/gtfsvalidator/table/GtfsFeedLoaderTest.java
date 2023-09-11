@@ -74,6 +74,7 @@ public class GtfsFeedLoaderTest {
     GtfsTestTableContainer container = feedContainer.getTable(GtfsTestTableContainer.class);
     assertThat(container.getEntities()).isEmpty();
 
-    assertThat(loader.getSkippedValidators()).containsExactly(WholeFeedValidator.class);
+    assertThat(loader.getMultiFileValidatorsWithParsingErrors())
+        .containsExactly(WholeFeedValidator.class);
   }
 }
