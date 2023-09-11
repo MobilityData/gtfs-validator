@@ -30,14 +30,14 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorUtil;
 public final class AnyTableLoader {
 
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-  private static final List<Class<? extends FileValidator>> validatorsWithParsingErrors =
+  private static final List<Class<? extends FileValidator>> singleFileValidatorsWithParsingErrors =
       new ArrayList<>();
 
   private static final List<Class<? extends SingleEntityValidator>>
       singleEntityValidatorsWithParsingErrors = new ArrayList<>();
 
   public List<Class<? extends FileValidator>> getValidatorsWithParsingErrors() {
-    return Collections.unmodifiableList(validatorsWithParsingErrors);
+    return Collections.unmodifiableList(singleFileValidatorsWithParsingErrors);
   }
 
   public List<Class<? extends SingleEntityValidator>> getSingleEntityValidatorsWithParsingErrors() {
@@ -146,7 +146,7 @@ public final class AnyTableLoader {
     GtfsTableContainer table =
         tableDescriptor.createContainerForHeaderAndEntities(header, entities, noticeContainer);
     ValidatorUtil.invokeSingleFileValidators(
-        validatorProvider.createSingleFileValidators(table, validatorsWithParsingErrors::add),
+        validatorProvider.createSingleFileValidators(table, singleFileValidatorsWithParsingErrors::add),
         noticeContainer);
     return table;
   }
@@ -211,7 +211,7 @@ public final class AnyTableLoader {
       noticeContainer.addValidationNotice(new MissingRequiredFileNotice(gtfsFilename));
     }
     ValidatorUtil.invokeSingleFileValidators(
-        validatorProvider.createSingleFileValidators(table, validatorsWithParsingErrors::add),
+        validatorProvider.createSingleFileValidators(table, singleFileValidatorsWithParsingErrors::add),
         noticeContainer);
     return table;
   }
