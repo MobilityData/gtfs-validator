@@ -19,13 +19,18 @@ import org.springframework.stereotype.Component;
 /** Helper class for interacting with GCS. */
 @Component
 public class StorageHelper {
-  public static final String JOB_INFO_BUCKET_NAME = "gtfs-validator-results";
+  public String JOB_INFO_BUCKET_NAME =
+      System.getenv().getOrDefault("JOB_INFO_BUCKET_NAME", "gtfs-validator-results");
+
   static final String JOB_FILENAME_PREFIX = "job";
   static final String JOB_FILENAME_SUFFIX = ".json";
   public static final String JOB_FILENAME = JOB_FILENAME_PREFIX + JOB_FILENAME_SUFFIX;
-  public static final String TEMP_FOLDER_NAME = "gtfs-validator-temp";
-  static final String USER_UPLOAD_BUCKET_NAME = "gtfs-validator-user-uploads";
-  static final String RESULTS_BUCKET_NAME = "gtfs-validator-results";
+  public static final String TEMP_FOLDER_NAME =
+      System.getenv().getOrDefault("TEMP_FOLDER_NAME", "gtfs-validator-temp");
+  static final String USER_UPLOAD_BUCKET_NAME =
+      System.getenv().getOrDefault("USER_UPLOAD_BUCKET_NAME", "gtfs-validator-user-uploads");
+  static final String RESULTS_BUCKET_NAME =
+      System.getenv().getOrDefault("RESULTS_BUCKET_NAME", "gtfs-validator-results");
   static final String FILE_NAME = "gtfs-job.zip";
 
   private final Logger logger = LoggerFactory.getLogger(StorageHelper.class);
