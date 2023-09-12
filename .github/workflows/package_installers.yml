@@ -38,7 +38,7 @@ jobs:
     name: Build and upload packaged app
     runs-on: ${{ matrix.os }}
     strategy:
-#     Adding fail-fast: false so at least some artifacts gets uploaded if others fail
+      # Adding fail-fast: false so at least some artifacts gets uploaded if others fail
       fail-fast: false
       matrix:
         os: [ macos-latest, windows-latest, ubuntu-latest ]
@@ -113,7 +113,7 @@ jobs:
           xcrun stapler staple "${{ env.MACOS_TARGET_PATH }}"
 
 
-#      # Now that we have a notarized app, we can package it.
+      # Now that we have a notarized app, we can package it.
       - name: "Mac OS - Package the app"
         if: matrix.os == 'macos-latest'
         shell: bash
