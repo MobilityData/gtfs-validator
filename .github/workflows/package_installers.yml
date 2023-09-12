@@ -146,7 +146,7 @@ jobs:
           # Finally, we need to "attach the staple" to our executable, which will allow our app to be
           # validated by macOS even when an internet connection is not available.
           echo "Attach staple"
-          xcrun stapler staple ${{ env.MACOS_TARGET_PATH }}
+          xcrun stapler staple "${{ env.MACOS_TARGET_PATH }}"
 
 
 #      # Now that we have a notarized app, we can package it.
