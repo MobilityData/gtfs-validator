@@ -118,8 +118,8 @@ public class MissingCalendarAndCalendarDateValidatorTest {
   public void bothMissingFilesShouldGenerateNotice() {
     assertThat(
             generateNotices(
-                new GtfsCalendarTableContainer(TableStatus.MISSING_FILE),
-                new GtfsCalendarDateTableContainer(TableStatus.MISSING_FILE)))
+                GtfsCalendarTableContainer.forStatus(TableStatus.MISSING_FILE),
+                GtfsCalendarDateTableContainer.forStatus(TableStatus.MISSING_FILE)))
         .containsExactly(new MissingCalendarAndCalendarDateFilesNotice());
   }
 }
