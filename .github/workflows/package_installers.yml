@@ -17,7 +17,6 @@ env:
   MACOS_APP_NAME: "GTFS Validator"
   MACOS_NOTARIZATION_NAME: "notarization.zip"
   MACOS_TARGET_PATH: "app/pkg/build/jpackage/GTFS Validator.app"
-#  MACOS_TARGET_PATH_ESCAPED: "app/pkg/build/jpackage/GTFS\ Validator.app"
   MACOS_TARGET_DEST_PATH: "app/pkg/build/jpackage"
   MACOS_CERTIFICATE: ${{ secrets.MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE_P12_BASE64 }}
   MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD }}
@@ -73,20 +72,6 @@ jobs:
           security unlock-keychain -p "${MACOS_CI_KEYCHAIN_PWD}" build.keychain
           security import certificate.p12 -k build.keychain -P "${MACOS_CERTIFICATE_PWD}" -T /usr/bin/codesign
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "${MACOS_CI_KEYCHAIN_PWD}" build.keychain
-      
-
-#      - name: "MacOS - Import Certificate: Developer ID Application"
-#        if: matrix.os == 'macos-latest' && (github.event_name == 'push' || github.event_name == 'release')
-#        uses: devbotsxyz/import-signing-certificate@v1
-#        with:
-#          # This should be a certificate + private key, exported as a p12 file and base64 encoded as
-#          # a GitHub secret.  The certificate should be the:
-#          # 'Developer ID Application: The International Data Organization For Transport (BF2U75HN4D)'
-#          # certificate, locked with the specified passphrase.
-#          certificate-data: ${{ secrets.MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE_P12_BASE64 }}
-#          certificate-passphrase: ${{ secrets.MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD }}
-#          # The resulting keychain will be locked with this separate password.
-#          keychain-password: ${{ secrets.MACOS_KEYCHAIN_PASSWORD }}
 
       - name: "Package GUI app installer with Gradle"
         uses: gradle/gradle-build-action@v2
@@ -98,27 +83,6 @@ jobs:
       # On MacOS, we now submit the app for "notarization", where Apple will scan the app for
       # malware and other issues.  This step can take a few minutes or more; the action will wait
       # until the report is available.
-
-#      - name: "MacOS - Notarize Release Build"
-#        if: matrix.os == 'macos-latest' && (github.event_name == 'push' || github.event_name == 'release')
-#        uses: devbotsxyz/xcode-notarize@v1
-#        with:
-#          product-path: "app/pkg/build/jpackage/GTFS Validator.app"
-#          # The Apple developer account used to run notarization.  This account will receive an
-#          # email every time notarization is run.
-#          appstore-connect-username: ${{ secrets.MACOS_NOTARIZATION_USERNAME }}
-#          # The app-specific password configured for the Apple developer account that will be used
-#          # for authentication (different from the main password for the dev account).
-#          appstore-connect-password: ${{ secrets.MACOS_NOTARIZATION_PASSWORD }}
-#
-#      # Now that we have a notarization report, we attach it to the app binary.
-#      - name: "Mac OS - Staple Release Build"
-#        if: matrix.os == 'macos-latest' && (github.event_name == 'push' || github.event_name == 'release')
-#        uses: devbotsxyz/xcode-staple@v1
-#        with:
-#          product-path: "app/pkg/build/jpackage/GTFS Validator.app"
-#
-
       - name: "MacOS - Notarize & Staple Release Build"
         if: matrix.os == 'macos-latest' && (github.event_name == 'push' || github.event_name == 'release')
         id: notarize_staple_macos_app
@@ -158,26 +122,26 @@ jobs:
           appVersion=${appVersion//-SNAPSHOT/}
           jpackage \
            --type dmg \
-           --name 'GTFS Validator' \
+           --name "${{ env.MACOS_APP_NAME }}" \
            --app-version ${appVersion} \
-           --app-image app/pkg/build/jpackage/GTFS\ Validator.app \
-           --dest app/pkg/build/jpackage
+           --app-image "${{ env.MACOS_TARGET_PATH }}" \
+           --dest ${{ env.MACOS_TARGET_DEST_PATH }}
           jpackage \
            --type pkg \
            --name 'GTFS Validator' \
            --app-version ${appVersion} \
-           --app-image app/pkg/build/jpackage/GTFS\ Validator.app \
-           --dest app/pkg/build/jpackage
+           --app-image "${{ env.MACOS_TARGET_PATH }}" \
+           --dest ${{ env.MACOS_TARGET_DEST_PATH }}
 
       - name: "Upload Installer"
         uses: actions/upload-artifact@v3
         with:
           name: Installer - ${{matrix.os}}
           path: |
-            app/pkg/build/jpackage/*.msi
-            app/pkg/build/jpackage/*.dmg
-            app/pkg/build/jpackage/*.pkg
-            app/pkg/build/jpackage/*.deb
+            ${{ env.MACOS_TARGET_DEST_PATH }}/*.msi
+            ${{ env.MACOS_TARGET_DEST_PATH }}/*.dmg
+            ${{ env.MACOS_TARGET_DEST_PATH }}/*.pkg
+            ${{ env.MACOS_TARGET_DEST_PATH }}/*.deb
 
       - name: "Upload assets to release"
         if: github.event_name == 'prerelease' || github.event_name == 'release'
