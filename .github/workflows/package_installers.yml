@@ -16,7 +16,7 @@ on:
 env:
   MACOS_APP_NAME: "GTFS Validator"
   MACOS_NOTARIZATION_NAME: "notarization.zip"
-  MACOS_TARGET_PATH: "app/pkg/build/jpackage/GTFS\ Validator.app"
+  MACOS_TARGET_PATH: "app/pkg/build/jpackage/GTFS Validator.app"
 #  MACOS_TARGET_PATH_ESCAPED: "app/pkg/build/jpackage/GTFS\ Validator.app"
   MACOS_TARGET_DEST_PATH: "app/pkg/build/jpackage"
   MACOS_CERTIFICATE: ${{ secrets.MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE_P12_BASE64 }}
@@ -133,7 +133,7 @@ jobs:
           # notarization service
           
           echo "Creating temp notarization archive"
-          ditto -c -k --keepParent ${{ env.MACOS_TARGET_PATH }} "${{ env.MACOS_NOTARIZATION_NAME }}"
+          ditto -c -k --keepParent "${{ env.MACOS_TARGET_PATH }}" ${{ env.MACOS_NOTARIZATION_NAME }}
           
           # Here we send the notarization request to the Apple's Notarization service, waiting for the result.
           # This typically takes a few seconds inside a CI environment, but it might take more depending on the App
