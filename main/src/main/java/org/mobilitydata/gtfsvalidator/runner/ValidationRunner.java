@@ -152,7 +152,7 @@ public class ValidationRunner {
       GtfsFeedLoader loader,
       AnyTableLoader anyTableLoader) {
     final long endNanos = System.nanoTime();
-    List<Class<? extends FileValidator>> skippedValidators =
+    List<Class<? extends FileValidator>> multiFileValidatorsWithParsingErrors =
         loader.getMultiFileValidatorsWithParsingErrors();
     List<Class<? extends FileValidator>> singleFileValidatorsWithParsingErrors =
         anyTableLoader.getValidatorsWithParsingErrors();
@@ -160,16 +160,16 @@ public class ValidationRunner {
         anyTableLoader.getSingleEntityValidatorsWithParsingErrors();
     if (!singleFileValidatorsWithParsingErrors.isEmpty()
         || !singleEntityValidatorsWithParsingErrors.isEmpty()
-        || !skippedValidators.isEmpty()) {
+        || !multiFileValidatorsWithParsingErrors.isEmpty()) {
       StringBuilder b = new StringBuilder();
       b.append("\n");
       b.append(" ------------------------------------------------------------------------- \n");
       b.append("|   Some validators were skipped due to parsing problems.   |\n");
       b.append(" ------------------------------------------------------------------------- \n");
       b.append(" Validators with Parsing Errors: ");
-      if (!skippedValidators.isEmpty()) {
+      if (!multiFileValidatorsWithParsingErrors.isEmpty()) {
         b.append(
-            skippedValidators.stream().map(Class::getSimpleName).collect(Collectors.joining(",")));
+            multiFileValidatorsWithParsingErrors.stream().map(Class::getSimpleName).collect(Collectors.joining(",")));
       }
       if (!singleFileValidatorsWithParsingErrors.isEmpty()) {
         b.append(
