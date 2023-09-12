@@ -23,9 +23,9 @@ env:
   MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD }}
   MACOS_CERTIFICATE_NAME: ${{ secrets.MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE_NAME }}
   MACOS_CI_KEYCHAIN_PWD: ${{ secrets.MACOS_KEYCHAIN_PASSWORD }}
-  PROD_MACOS_NOTARIZATION_APPLE_ID: ${{ secrets.MACOS_NOTARIZATION_USERNAME }}
-  PROD_MACOS_NOTARIZATION_TEAM_ID: ${{ secrets.MACOS_NOTARIZATION_TEAM_ID }}
-  PROD_MACOS_NOTARIZATION_PWD: ${{ secrets.MACOS_NOTARIZATION_PASSWORD }}
+  MACOS_NOTARIZATION_APPLE_ID: ${{ secrets.MACOS_NOTARIZATION_USERNAME }}
+  MACOS_NOTARIZATION_TEAM_ID: ${{ secrets.MACOS_NOTARIZATION_TEAM_ID }}
+  MACOS_NOTARIZATION_PWD: ${{ secrets.MACOS_NOTARIZATION_PASSWORD }}
 
 jobs:
   validate_gradle_wrapper:
@@ -60,7 +60,7 @@ jobs:
 
       # We create a code-signing keychain on MacOS before building and packaging the app, as the
       # app will be signed as part of the jpackage build phase.
-      - name: "macOS — Codesign app bundle"
+      - name: "MacOS - Import Certificate: Developer ID Application"
         id: codesign
         if: matrix.os == 'macos-latest' && (github.event_name == 'push' || github.event_name == 'release')
         run: |
@@ -118,35 +118,66 @@ jobs:
 #        with:
 #          product-path: "app/pkg/build/jpackage/GTFS Validator.app"
 #
+
+      - name: "MacOS - Notarize & Staple Release Build"
+        if: matrix.os == 'macos-latest' && (github.event_name == 'push' || github.event_name == 'release')
+        id: notarize_staple_macos_app
+        run: |
+          # Store the notarization credentials so that we can prevent a UI password dialog from blocking the CI
+          
+          echo "Create keychain profile"
+          xcrun notarytool store-credentials "notarytool-profile" --apple-id "${MACOS_NOTARIZATION_APPLE_ID}" --team-id "${MACOS_NOTARIZATION_TEAM_ID}" --password "${MACOS_NOTARIZATION_PWD}"
+          
+          # We can't notarize an app bundle directly, but we need to compress it as an archive.
+          # Therefore, we create a zip file containing our app bundle, so that we can send it to the
+          # notarization service
+          
+          echo "Creating temp notarization archive"
+          ditto -c -k --keepParent ${{ env.MACOS_TARGET_PATH }} "${{ env.MACOS_NOTARIZATION_NAME }}"
+          
+          # Here we send the notarization request to the Apple's Notarization service, waiting for the result.
+          # This typically takes a few seconds inside a CI environment, but it might take more depending on the App
+          # characteristics. Visit the Notarization docs for more information and strategies on how to optimize it if
+          # you're curious
+          
+          echo "Notarize app"
+          xcrun notarytool submit "${{ env.MACOS_NOTARIZATION_NAME }}" --keychain-profile "notarytool-profile" --wait
+          
+          # Finally, we need to "attach the staple" to our executable, which will allow our app to be
+          # validated by macOS even when an internet connection is not available.
+          echo "Attach staple"
+          xcrun stapler staple ${{ env.MACOS_TARGET_PATH }}
+
+
 #      # Now that we have a notarized app, we can package it.
-#      - name: "Mac OS - Package the app"
-#        if: matrix.os == 'macos-latest'
-#        shell: bash
-#        run: |
-#          appVersion=$(./gradlew cV -q -Prelease.quiet)
-#          appVersion=${appVersion//-SNAPSHOT/}
-#          jpackage \
-#           --type dmg \
-#           --name 'GTFS Validator' \
-#           --app-version ${appVersion} \
-#           --app-image app/pkg/build/jpackage/GTFS\ Validator.app \
-#           --dest app/pkg/build/jpackage
-#          jpackage \
-#           --type pkg \
-#           --name 'GTFS Validator' \
-#           --app-version ${appVersion} \
-#           --app-image app/pkg/build/jpackage/GTFS\ Validator.app \
-#           --dest app/pkg/build/jpackage
-#
-#      - name: "Upload Installer"
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: Installer - ${{matrix.os}}
-#          path: |
-#            app/pkg/build/jpackage/*.msi
-#            app/pkg/build/jpackage/*.dmg
-#            app/pkg/build/jpackage/*.pkg
-#            app/pkg/build/jpackage/*.deb
+      - name: "Mac OS - Package the app"
+        if: matrix.os == 'macos-latest'
+        shell: bash
+        run: |
+          appVersion=$(./gradlew cV -q -Prelease.quiet)
+          appVersion=${appVersion//-SNAPSHOT/}
+          jpackage \
+           --type dmg \
+           --name 'GTFS Validator' \
+           --app-version ${appVersion} \
+           --app-image app/pkg/build/jpackage/GTFS\ Validator.app \
+           --dest app/pkg/build/jpackage
+          jpackage \
+           --type pkg \
+           --name 'GTFS Validator' \
+           --app-version ${appVersion} \
+           --app-image app/pkg/build/jpackage/GTFS\ Validator.app \
+           --dest app/pkg/build/jpackage
+
+      - name: "Upload Installer"
+        uses: actions/upload-artifact@v3
+        with:
+          name: Installer - ${{matrix.os}}
+          path: |
+            app/pkg/build/jpackage/*.msi
+            app/pkg/build/jpackage/*.dmg
+            app/pkg/build/jpackage/*.pkg
+            app/pkg/build/jpackage/*.deb
 
       - name: "Upload assets to release"
         if: github.event_name == 'prerelease' || github.event_name == 'release'
