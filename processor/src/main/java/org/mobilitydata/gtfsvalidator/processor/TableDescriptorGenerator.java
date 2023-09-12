@@ -105,6 +105,8 @@ public class TableDescriptorGenerator {
             .addAnnotation(Generated.class)
             .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
+    typeSpec.addMethod(generateConstructor());
+
     typeSpec.addMethod(generateCreateContainerForInvalidStatusMethod());
     typeSpec.addMethod(generateCreateContainerForHeaderAndEntitiesMethod());
     typeSpec.addMethod(generateCreateEntityBuilderMethod());
@@ -114,10 +116,16 @@ public class TableDescriptorGenerator {
 
     typeSpec.addMethod(generateGtfsFilenameMethod());
     typeSpec.addMethod(generateIsRecommendedMethod());
-    typeSpec.addMethod(generateIsRequiredMethod());
     typeSpec.addMethod(generateMaxCharsPerColumnMethod());
 
     return typeSpec.build();
+  }
+
+  private MethodSpec generateConstructor() {
+    return MethodSpec.constructorBuilder()
+        .addModifiers(Modifier.PUBLIC)
+        .addStatement("setRequired($L)", fileDescriptor.required())
+        .build();
   }
 
   private MethodSpec generateCreateContainerForHeaderAndEntitiesMethod() {
@@ -132,7 +140,7 @@ public class TableDescriptorGenerator {
         .addParameter(NoticeContainer.class, "noticeContainer")
         .returns(GtfsTableContainer.class)
         .addStatement(
-            "return $T.forHeaderAndEntities(header, entities, noticeContainer)",
+            "return $T.forHeaderAndEntities(this, header, entities, noticeContainer)",
             classNames.tableContainerTypeName())
         .build();
   }
@@ -143,7 +151,7 @@ public class TableDescriptorGenerator {
         .addModifiers(Modifier.PUBLIC)
         .addParameter(GtfsTableContainer.TableStatus.class, "tableStatus")
         .returns(GtfsTableContainer.class)
-        .addStatement("return new $T(tableStatus)", classNames.tableContainerTypeName())
+        .addStatement("return new $T(this, tableStatus)", classNames.tableContainerTypeName())
         .build();
   }
 
@@ -300,15 +308,6 @@ public class TableDescriptorGenerator {
         .returns(boolean.class)
         .addAnnotation(Override.class)
         .addStatement("return $L", fileDescriptor.recommended())
-        .build();
-  }
-
-  private MethodSpec generateIsRequiredMethod() {
-    return MethodSpec.methodBuilder("isRequired")
-        .addModifiers(Modifier.PUBLIC)
-        .returns(boolean.class)
-        .addAnnotation(Override.class)
-        .addStatement("return $L", fileDescriptor.required())
         .build();
   }
 

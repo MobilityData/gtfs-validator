@@ -77,8 +77,8 @@ public class MatchingFeedAndAgencyLangValidatorTest {
   public void noFeedInfoShouldNotGenerateNotice() {
     assertThat(
             generateNotices(
-                new GtfsAgencyTableContainer(TableStatus.EMPTY_FILE),
-                new GtfsFeedInfoTableContainer(TableStatus.EMPTY_FILE)))
+                GtfsAgencyTableContainer.forStatus(TableStatus.EMPTY_FILE),
+                GtfsFeedInfoTableContainer.forStatus(TableStatus.EMPTY_FILE)))
         .isEmpty();
   }
 

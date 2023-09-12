@@ -18,6 +18,7 @@ import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.*;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.util.CalendarUtilTest;
 
@@ -85,8 +86,8 @@ public class DateTripsValidatorTest {
             ImmutableSet.copyOf(DayOfWeek.values()));
     var calendarTable =
         GtfsCalendarTableContainer.forEntities(ImmutableList.of(calendar), noticeContainer);
-    var dateTable = new GtfsCalendarDateTableContainer(GtfsTableContainer.TableStatus.EMPTY_FILE);
-    var frequencyTable = new GtfsFrequencyTableContainer(GtfsTableContainer.TableStatus.EMPTY_FILE);
+    var dateTable = GtfsCalendarDateTableContainer.forStatus(TableStatus.EMPTY_FILE);
+    var frequencyTable = GtfsFrequencyTableContainer.forStatus(TableStatus.EMPTY_FILE);
 
     var tripBlock = createTripBlock(serviceId, 6, "b1");
     var tripContainer = GtfsTripTableContainer.forEntities(tripBlock, noticeContainer);
