@@ -154,30 +154,23 @@ public class ValidationRunner {
     final long endNanos = System.nanoTime();
     List<Class<? extends FileValidator>> skippedValidators =
         loader.getMultiFileValidatorsWithParsingErrors();
-    if (!skippedValidators.isEmpty()) {
-      StringBuilder b = new StringBuilder();
-      b.append("\n");
-      b.append(" ----------------------------------------- \n");
-      b.append("|   Some validators were never invoked.   |\n");
-      b.append(" ----------------------------------------- \n");
-      b.append("Skipped validators: ");
-      b.append(
-          skippedValidators.stream().map(Class::getSimpleName).collect(Collectors.joining(",")));
-      logger.atSevere().log(b.toString());
-    }
-
     List<Class<? extends FileValidator>> singleFileValidatorsWithParsingErrors =
         anyTableLoader.getValidatorsWithParsingErrors();
     List<Class<? extends SingleEntityValidator>> singleEntityValidatorsWithParsingErrors =
         anyTableLoader.getSingleEntityValidatorsWithParsingErrors();
     if (!singleFileValidatorsWithParsingErrors.isEmpty()
-        || !singleEntityValidatorsWithParsingErrors.isEmpty()) {
+        || !singleEntityValidatorsWithParsingErrors.isEmpty()
+        || !skippedValidators.isEmpty()) {
       StringBuilder b = new StringBuilder();
       b.append("\n");
       b.append(" ------------------------------------------------------------------------- \n");
-      b.append("|   The list of validators that couldn't run due to a parsing problem.   |\n");
+      b.append("|   Some validators were skipped due to parsing problems.   |\n");
       b.append(" ------------------------------------------------------------------------- \n");
       b.append(" Validators with Parsing Errors: ");
+      if (!skippedValidators.isEmpty()) {
+        b.append(
+            skippedValidators.stream().map(Class::getSimpleName).collect(Collectors.joining(",")));
+      }
       if (!singleFileValidatorsWithParsingErrors.isEmpty()) {
         b.append(
             singleFileValidatorsWithParsingErrors.stream()
@@ -190,6 +183,7 @@ public class ValidationRunner {
                 .map(Class::getSimpleName)
                 .collect(Collectors.joining(",")));
       }
+
       logger.atSevere().log(b.toString());
     }
     logger.atInfo().log("Validation took %.3f seconds%n", (endNanos - startNanos) / 1e9);
