@@ -111,7 +111,7 @@ public class VersionResolver {
    *
    * @throws IOException
    */
-  private Optional<String> resolveCurrentVersion() throws IOException {
+  public Optional<String> resolveCurrentVersion() throws IOException {
     ScanResult scan = new ClassGraph().scan();
     Optional<String> gtfsValidatorCoreVersion = Optional.empty();
     for (Resource resource : scan.getResourcesWithPath("META-INF/MANIFEST.MF")) {

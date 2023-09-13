@@ -12,7 +12,7 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsTimeframe;
 import org.mobilitydata.gtfsvalidator.table.GtfsTimeframeTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
-import org.mobilitydata.gtfsvalidator.validator.TimeframeOverlapValidator.TimeframeOverlapNoice;
+import org.mobilitydata.gtfsvalidator.validator.TimeframeOverlapValidator.TimeframeOverlapNotice;
 
 @RunWith(JUnit4.class)
 public class TimeframeOverlapValidatorTest {
@@ -92,7 +92,7 @@ public class TimeframeOverlapValidatorTest {
                     .setCsvRowNumber(3)
                     .build()))
         .containsExactly(
-            new TimeframeOverlapNoice(
+            new TimeframeOverlapNotice(
                 2,
                 GtfsTime.fromString("09:00:00"),
                 3,

@@ -30,6 +30,11 @@ public class Main {
 
   @Bean
   public ValidationRunner validationRunner() {
-    return new ValidationRunner(new VersionResolver());
+    return new ValidationRunner(versionResolver());
+  }
+
+  @Bean
+  public VersionResolver versionResolver() {
+    return new VersionResolver();
   }
 }
