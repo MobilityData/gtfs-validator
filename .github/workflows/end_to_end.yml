@@ -74,7 +74,7 @@ jobs:
         run: |
           DATASETS=$(python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d scripts/mobility-database-harvester/datasets_metadata -l gtfs_latest_versions.json -s)
           echo $DATASETS
-          echo "::set-output name=matrix::$DATASETS"
+          echo "matrix=$DATASETS" >> $GITHUB_OUTPUT
       - name: Persist metadata
         if: always()
         uses: actions/upload-artifact@v3
