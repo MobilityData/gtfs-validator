@@ -29,6 +29,7 @@ public interface GtfsTripSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
   @Required
   @ForeignKey(table = "routes.txt", field = "route_id")
+  @Index
   String routeId();
 
   @FieldType(FieldTypeEnum.ID)

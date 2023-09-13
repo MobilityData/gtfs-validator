@@ -21,7 +21,7 @@ public class GtfsTestTableDescriptor extends GtfsTableDescriptor<GtfsTestEntity>
   @Override
   public GtfsTableContainer createContainerForHeaderAndEntities(
       CsvHeader header, List<GtfsTestEntity> entities, NoticeContainer noticeContainer) {
-    return GtfsTestTableContainer.forHeaderAndEntities(header, entities, noticeContainer);
+    return GtfsTestTableContainer.forHeaderAndEntities(this, header, entities, noticeContainer);
   }
 
   @Override

@@ -8,6 +8,10 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 
 public abstract class GtfsTableDescriptor<T extends GtfsEntity> {
+
+  // True if the specified file is required in a feed.
+  private boolean required;
+
   public abstract GtfsTableContainer createContainerForInvalidStatus(
       GtfsTableContainer.TableStatus tableStatus);
 
@@ -24,7 +28,13 @@ public abstract class GtfsTableDescriptor<T extends GtfsEntity> {
 
   public abstract boolean isRecommended();
 
-  public abstract boolean isRequired();
+  public boolean isRequired() {
+    return this.required;
+  }
+
+  public void setRequired(boolean required) {
+    this.required = required;
+  }
 
   public abstract Optional<Integer> maxCharsPerColumn();
 

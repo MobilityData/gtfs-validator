@@ -33,13 +33,21 @@ import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
  */
 public abstract class GtfsTableContainer<T extends GtfsEntity> {
 
+  private final GtfsTableDescriptor<T> descriptor;
+
   private final TableStatus tableStatus;
 
   private final CsvHeader header;
 
-  public GtfsTableContainer(TableStatus tableStatus, CsvHeader header) {
+  public GtfsTableContainer(
+      GtfsTableDescriptor<T> descriptor, TableStatus tableStatus, CsvHeader header) {
+    this.descriptor = descriptor;
     this.tableStatus = tableStatus;
     this.header = header;
+  }
+
+  public GtfsTableDescriptor<T> getDescriptor() {
+    return descriptor;
   }
 
   public TableStatus getTableStatus() {
@@ -97,24 +105,6 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
   }
 
   /**
-   * Tells if the file is recommended according to GTFS.
-   *
-   * <p>Note that a recommended file may be empty.
-   *
-   * @return true if the file is recommended, false otherwise
-   */
-  public abstract boolean isRecommended();
-
-  /**
-   * Tells if the file is required according to GTFS.
-   *
-   * <p>Note that a required file may be empty.
-   *
-   * @return true if the file is required, false otherwise
-   */
-  public abstract boolean isRequired();
-
-  /**
    * Tells if the file was successfully parsed.
    *
    * <p>If all files in the feed were successfully parsed, then file validators may be executed.
@@ -135,7 +125,7 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
       case PARSABLE_HEADERS_AND_ROWS:
         return true;
       case MISSING_FILE:
-        return !isRequired();
+        return !descriptor.isRequired();
       default:
         return false;
     }
