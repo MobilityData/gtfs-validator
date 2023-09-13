@@ -26,8 +26,8 @@ public class FeedContactValidator extends SingleEntityValidator<GtfsFeedInfo> {
    */
   @Override
   public void validate(GtfsFeedInfo entity, NoticeContainer noticeContainer) {
-    if (!entity.hasFeedContactEmail() && !entity.hasFeedContactUrl()
-        || entity.feedContactEmail().isBlank() && entity.feedContactUrl().isBlank()) {
+    if ((!entity.hasFeedContactEmail() || entity.feedContactEmail().isBlank())
+        && (!entity.hasFeedContactUrl() || entity.feedContactUrl().isBlank())) {
       noticeContainer.addValidationNotice(
           new MissingFeedContactEmailAndUrlNotice(entity.csvRowNumber()));
     }
@@ -49,10 +49,10 @@ public class FeedContactValidator extends SingleEntityValidator<GtfsFeedInfo> {
       })
   static class MissingFeedContactEmailAndUrlNotice extends ValidationNotice {
     /** The row number of the validated record. */
-    private final int rowNumber;
+    private final int csvRowNumber;
 
-    MissingFeedContactEmailAndUrlNotice(int rowNumber) {
-      this.rowNumber = rowNumber;
+    MissingFeedContactEmailAndUrlNotice(int csvRowNumber) {
+      this.csvRowNumber = csvRowNumber;
     }
   }
 }
