@@ -45,10 +45,11 @@ public class DefaultValidatorProviderTest {
                 .map(Object::getClass))
         .containsExactly(GtfsTestEntityValidator.class);
 
-    List<Class<? extends FileValidator>> singleFilreValidatorsWithParsingErrors = new ArrayList<>();
+    List<Class<? extends FileValidator>> singleFileValidatorsWithParsingErrors = new ArrayList<>();
     assertThat(
             provider
-                .createSingleFileValidators(tableContainer, singleFilreValidatorsWithParsingErrors::add)
+                .createSingleFileValidators(
+                    tableContainer, singleFileValidatorsWithParsingErrors::add)
                 .stream()
                 .map(Object::getClass))
         .containsExactly(GtfsTestFileValidator.class);
@@ -77,7 +78,10 @@ public class DefaultValidatorProviderTest {
     GtfsFeedContainer feedContainer = new GtfsFeedContainer(ImmutableList.of(tableContainer));
 
     List<Class<? extends FileValidator>> multiFileValidatorsWithParsingErrors = new ArrayList<>();
-    assertThat(provider.createMultiFileValidators(feedContainer, multiFileValidatorsWithParsingErrors::add)).isEmpty();
+    assertThat(
+            provider.createMultiFileValidators(
+                feedContainer, multiFileValidatorsWithParsingErrors::add))
+        .isEmpty();
     assertThat(multiFileValidatorsWithParsingErrors).containsExactly(WholeFeedValidator.class);
   }
 }

@@ -169,7 +169,9 @@ public class ValidationRunner {
       b.append(" Validators with Parsing Errors: ");
       if (!multiFileValidatorsWithParsingErrors.isEmpty()) {
         b.append(
-            multiFileValidatorsWithParsingErrors.stream().map(Class::getSimpleName).collect(Collectors.joining(",")));
+            multiFileValidatorsWithParsingErrors.stream()
+                .map(Class::getSimpleName)
+                .collect(Collectors.joining(",")));
       }
       if (!singleFileValidatorsWithParsingErrors.isEmpty()) {
         b.append(
