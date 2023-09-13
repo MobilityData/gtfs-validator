@@ -31,6 +31,7 @@ import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.*;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
 @RunWith(JUnit4.class)
@@ -66,7 +67,7 @@ public class ExpiredCalendarValidatorTest {
     GtfsCalendarTableContainer calendarTable =
         GtfsCalendarTableContainer.forEntities(calendars, container);
 
-    var dateTable = new GtfsCalendarDateTableContainer(GtfsTableContainer.TableStatus.EMPTY_FILE);
+    var dateTable = GtfsCalendarDateTableContainer.forStatus(TableStatus.EMPTY_FILE);
     new ExpiredCalendarValidator(new CurrentDateTime(TEST_NOW), calendarTable, dateTable)
         .validate(container);
     assertThat(container.getValidationNotices())
@@ -93,7 +94,7 @@ public class ExpiredCalendarValidatorTest {
     GtfsCalendarTableContainer calendarTable =
         GtfsCalendarTableContainer.forEntities(calendars, container);
 
-    var dateTable = new GtfsCalendarDateTableContainer(GtfsTableContainer.TableStatus.EMPTY_FILE);
+    var dateTable = GtfsCalendarDateTableContainer.forStatus(TableStatus.EMPTY_FILE);
     new ExpiredCalendarValidator(new CurrentDateTime(TEST_NOW), calendarTable, dateTable)
         .validate(container);
     assertThat(container.getValidationNotices()).isEmpty();
@@ -119,7 +120,7 @@ public class ExpiredCalendarValidatorTest {
     GtfsCalendarTableContainer calendarTable =
         GtfsCalendarTableContainer.forEntities(calendars, container);
 
-    var dateTable = new GtfsCalendarDateTableContainer(GtfsTableContainer.TableStatus.EMPTY_FILE);
+    var dateTable = GtfsCalendarDateTableContainer.forStatus(TableStatus.EMPTY_FILE);
     new ExpiredCalendarValidator(new CurrentDateTime(TEST_NOW), calendarTable, dateTable)
         .validate(container);
     assertThat(container.getValidationNotices()).isEmpty();
@@ -211,7 +212,7 @@ public class ExpiredCalendarValidatorTest {
 
     GtfsCalendarTableContainer calendarTable =
         GtfsCalendarTableContainer.forEntities(calendars, container);
-    var dateTable = new GtfsCalendarDateTableContainer(GtfsTableContainer.TableStatus.EMPTY_FILE);
+    var dateTable = GtfsCalendarDateTableContainer.forStatus(TableStatus.EMPTY_FILE);
     new ExpiredCalendarValidator(new CurrentDateTime(TEST_NOW), calendarTable, dateTable)
         .validate(container);
     assertThat(container.getValidationNotices()).isEmpty();
