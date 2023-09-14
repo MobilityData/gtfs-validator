@@ -93,9 +93,9 @@ jobs:
           fi
           echo "Set DOCKER_TAGS=${DOCKER_TAGS}"
 
-          echo ::set-output name=version::${AXION_VERSION}
-          echo ::set-output name=tags::${DOCKER_TAGS}
-          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          echo "version=${AXION_VERSION}" >> $GITHUB_OUTPUT
+          echo "tags=${DOCKER_TAGS}" >> $GITHUB_OUTPUT
+          echo "created=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
 
       # Build and push steps are split up in order to test the built contaire image in between
       # - build-args and labels inputs _must_ be kept matching between both to prevent rebuild
