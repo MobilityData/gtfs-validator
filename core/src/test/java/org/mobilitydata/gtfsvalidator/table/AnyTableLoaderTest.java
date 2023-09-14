@@ -17,7 +17,7 @@ import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
 import org.mobilitydata.gtfsvalidator.notice.*;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntity;
-import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestFileValidator;
+import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestSingleFileValidator;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestTableDescriptor;
 import org.mobilitydata.gtfsvalidator.validator.FileValidator;
 import org.mobilitydata.gtfsvalidator.validator.GtfsFieldValidator;
@@ -128,7 +128,7 @@ public class AnyTableLoaderTest {
     var testTableDescriptor = new GtfsTestTableDescriptor();
     when(validatorProvider.getTableHeaderValidator()).thenReturn(mock(TableHeaderValidator.class));
     when(validatorProvider.getFieldValidator()).thenReturn(mock(GtfsFieldValidator.class));
-    GtfsTestFileValidator validator = mock(GtfsTestFileValidator.class);
+    GtfsTestSingleFileValidator validator = mock(GtfsTestSingleFileValidator.class);
     ArgumentCaptor<Consumer<Class<? extends FileValidator>>> captor =
         ArgumentCaptor.forClass(Consumer.class);
     when(validatorProvider.createSingleFileValidators(ArgumentMatchers.any(), captor.capture()))

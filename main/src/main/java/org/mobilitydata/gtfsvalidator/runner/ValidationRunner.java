@@ -156,6 +156,8 @@ public class ValidationRunner {
         loader.getMultiFileValidatorsWithParsingErrors();
     List<Class<? extends FileValidator>> singleFileValidatorsWithParsingErrors =
         anyTableLoader.getValidatorsWithParsingErrors();
+    // In theory single entity validators do not depend on files so there should not be any of these
+    // with parsing errors
     List<Class<? extends SingleEntityValidator>> singleEntityValidatorsWithParsingErrors =
         anyTableLoader.getSingleEntityValidatorsWithParsingErrors();
     if (!singleFileValidatorsWithParsingErrors.isEmpty()
@@ -163,27 +165,34 @@ public class ValidationRunner {
         || !multiFileValidatorsWithParsingErrors.isEmpty()) {
       StringBuilder b = new StringBuilder();
       b.append("\n");
-      b.append(" ------------------------------------------------------------------------- \n");
-      b.append("|   Some validators were skipped due to parsing problems.   |\n");
-      b.append(" ------------------------------------------------------------------------- \n");
-      b.append(" Validators with Parsing Errors: ");
+      b.append(
+          "---------------------------------------------------------------------------------------- \n");
+      b.append(
+          "| Some validators were skipped because the GTFS files they rely on could not be parsed | \n");
+      b.append(
+          "---------------------------------------------------------------------------------------- \n");
       if (!multiFileValidatorsWithParsingErrors.isEmpty()) {
+        // Add some spaces to the delimiter so the validator names are indented. Easier to read.
+        b.append("Multi-file validators:\n   ");
         b.append(
             multiFileValidatorsWithParsingErrors.stream()
                 .map(Class::getSimpleName)
-                .collect(Collectors.joining(",")));
+                .collect(Collectors.joining("\n   ")));
       }
+
       if (!singleFileValidatorsWithParsingErrors.isEmpty()) {
+        b.append("Single-file validators:\n   ");
         b.append(
             singleFileValidatorsWithParsingErrors.stream()
                 .map(Class::getSimpleName)
-                .collect(Collectors.joining(",")));
+                .collect(Collectors.joining("\n   ")));
       }
       if (!singleEntityValidatorsWithParsingErrors.isEmpty()) {
+        b.append("Single-entity validators:\n   ");
         b.append(
             singleEntityValidatorsWithParsingErrors.stream()
                 .map(Class::getSimpleName)
-                .collect(Collectors.joining(",")));
+                .collect(Collectors.joining("\n   ")));
       }
 
       logger.atSevere().log(b.toString());
