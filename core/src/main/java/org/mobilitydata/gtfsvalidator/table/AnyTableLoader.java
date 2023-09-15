@@ -7,6 +7,7 @@ import com.univocity.parsers.common.TextParsingException;
 import com.univocity.parsers.csv.CsvParserSettings;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,6 +22,7 @@ import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.parsing.CsvRow;
 import org.mobilitydata.gtfsvalidator.parsing.FieldCache;
 import org.mobilitydata.gtfsvalidator.parsing.RowParser;
+import org.mobilitydata.gtfsvalidator.validator.FileValidator;
 import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorUtil;
@@ -28,6 +30,19 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorUtil;
 public final class AnyTableLoader {
 
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  private static final List<Class<? extends FileValidator>> singleFileValidatorsWithParsingErrors =
+      new ArrayList<>();
+
+  private static final List<Class<? extends SingleEntityValidator>>
+      singleEntityValidatorsWithParsingErrors = new ArrayList<>();
+
+  public List<Class<? extends FileValidator>> getValidatorsWithParsingErrors() {
+    return Collections.unmodifiableList(singleFileValidatorsWithParsingErrors);
+  }
+
+  public List<Class<? extends SingleEntityValidator>> getSingleEntityValidatorsWithParsingErrors() {
+    return Collections.unmodifiableList(singleEntityValidatorsWithParsingErrors);
+  }
 
   public static GtfsTableContainer load(
       GtfsTableDescriptor tableDescriptor,
@@ -84,7 +99,8 @@ public final class AnyTableLoader {
     final List<GtfsEntity> entities = new ArrayList<>();
     boolean hasUnparsableRows = false;
     final List<SingleEntityValidator<GtfsEntity>> singleEntityValidators =
-        validatorProvider.createSingleEntityValidators(tableDescriptor.getEntityClass());
+        validatorProvider.createSingleEntityValidators(
+            tableDescriptor.getEntityClass(), singleEntityValidatorsWithParsingErrors::add);
     try {
       for (CsvRow row : csvFile) {
         if (row.getRowNumber() % 200000 == 0) {
@@ -130,7 +146,9 @@ public final class AnyTableLoader {
     GtfsTableContainer table =
         tableDescriptor.createContainerForHeaderAndEntities(header, entities, noticeContainer);
     ValidatorUtil.invokeSingleFileValidators(
-        validatorProvider.createSingleFileValidators(table), noticeContainer);
+        validatorProvider.createSingleFileValidators(
+            table, singleFileValidatorsWithParsingErrors::add),
+        noticeContainer);
     return table;
   }
 
@@ -194,7 +212,9 @@ public final class AnyTableLoader {
       noticeContainer.addValidationNotice(new MissingRequiredFileNotice(gtfsFilename));
     }
     ValidatorUtil.invokeSingleFileValidators(
-        validatorProvider.createSingleFileValidators(table), noticeContainer);
+        validatorProvider.createSingleFileValidators(
+            table, singleFileValidatorsWithParsingErrors::add),
+        noticeContainer);
     return table;
   }
 }
