@@ -33,7 +33,7 @@ jobs:
       - name: "[Pull Request] Get commit message"
         if: github.event_name == 'pull_request'
         id: pr_get_commit_message
-        run: echo "pr_commit_message=\"$(git log --format=%B -n 1 HEAD^2)\"" >> $GITHUB_OUTPUT
+        run: echo "pr_commit_message=$(git log --format=%B -n 1 HEAD^2)" >> $GITHUB_OUTPUT
 
     # For **Pull Request** events this will resolve to something like "$( [ -z "commit message pr" ] && echo "" || echo "commit message pr" )" which then resolves to just "commit message pr"
     outputs:
