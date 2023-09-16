@@ -15,6 +15,7 @@ on:
       - 'triage.yml'
       - 'acceptance_test.yml'
       - 'web/**'
+      - '.github/workflows/**'
   pull_request:
     branches: [ master ]
     paths-ignore:
@@ -29,6 +30,7 @@ on:
       - 'triage.yml'
       - 'acceptance_test.yml'
       - 'web/**'
+      - '.github/workflows/**'
 jobs:
   validate_gradle_wrapper:
     runs-on: ubuntu-latest
