@@ -36,7 +36,7 @@ jobs:
         # Obtain the last commit from the branch to merge (hence the HEAD^2).
         # In case of multi-line commit messages, remove any \n, because the GITHUB_OUTPUT method
         # of sending data to other jobs does not like them.
-        run: echo "pr_commit_message=\"$(git log --format=%B -n 1 HEAD^2 | tr '\n' ' '))\"" >> $GITHUB_OUTPUT
+        run: echo "pr_commit_message=$(git log --format=%B -n 1 HEAD^2 | tr '\n' ' ')" >> $GITHUB_OUTPUT
 
     # For **Pull Request** events this will resolve to something like "$( [ -z "commit message pr" ] && echo "" || echo "commit message pr" )" which then resolves to just "commit message pr"
     outputs:
