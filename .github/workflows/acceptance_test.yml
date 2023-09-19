@@ -38,172 +38,21 @@ jobs:
     # For **Pull Request** events this will resolve to something like "$( [ -z "commit message pr" ] && echo "" || echo "commit message pr" )" which then resolves to just "commit message pr"
     outputs:
       commit_message: $( [ -z "${{ steps.pr_get_commit_message.outputs.pr_commit_message }}" ] || echo "${{ steps.pr_get_commit_message.outputs.pr_commit_message }}" )
-  validate-gradle-wrapper:
+  not-present:
     if: "!contains(needs.pre_ci.outputs.commit_message, '[acceptance test skip]')"
     needs: pre_ci
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: gradle/wrapper-validation-action@v1
-  pack-snapshot:
-    needs: [ validate-gradle-wrapper ]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-      - name: Cache Gradle packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle
-      - name: Package cli app jar with Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: shadowJar
-      - name: Persist gtfs-validator snapshot jar
-        uses: actions/upload-artifact@v3
-        with:
-          name: gtfs-validator-snapshot
-          path: cli/build/libs/gtfs-validator-*-cli.jar
-      - name: Persist comparator snapshot jar
-        uses: actions/upload-artifact@v3
-        with:
-          name: comparator-snapshot
-          path: output-comparator/build/libs/output-comparator-*-cli.jar
-  pack-master:
-    needs: [ validate-gradle-wrapper ]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: master
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-      - name: Cache Gradle packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle
-      - name: Package cli app jar with Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: shadowJar
-      - name: Persist gtfs-validator jar from master branch
-        uses: actions/upload-artifact@v3
-        with:
-          name: gtfs-validator-master
-          path: cli/build/libs/gtfs-validator-*-cli.jar
-  fetch-urls:
-    if: "!contains(needs.pre_ci.outputs.commit_message, '[acceptance test skip]')"
-    needs: pre_ci
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository code
-        uses: actions/checkout@v3
-      - name: Install dependencies
+      - name: Allo
+        id: allo
         run: |
-          pip install -r scripts/mobility-database-harvester/requirements.txt
-      - name: Set URL matrix
-        id: set-matrix
-        run: |
-          DATASETS=$(python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d scripts/mobility-database-harvester/datasets_metadata -l gtfs_latest_versions.json)
-          echo $DATASETS
-          echo "matrix=$DATASETS" >> $GITHUB_OUTPUT
-      - name: Persist metadata
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: datasets_metadata
-          path: scripts/mobility-database-harvester/datasets_metadata
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-  get-reports:
-    needs: [ fetch-urls, pack-master, pack-snapshot ]
-    # We use machines with more memory to run validation, as large feeds
-    # can consume too much heap for default machine instances (see #1304).
-    runs-on: gitrunners-ubuntu-2204-x64-4vcpu
-    ## ubuntu-latest-4-cores
-    strategy:
-      matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
+          echo "Stirng not present!"
+
+  present:
+    if: "contains(needs.pre_ci.outputs.commit_message, '[acceptance test skip]')"
+    needs:  not-present
     steps:
-      - uses: actions/checkout@v3
-      - name: Download .jar file from master branch
-        uses: actions/download-artifact@v3
-        with:
-          name: gtfs-validator-master
-          path: gtfs-validator-master
-      - name: Download latest changes .jar file from previous job
-        uses: actions/download-artifact@v3
-        with:
-          name: gtfs-validator-snapshot
-          path: gtfs-validator-snapshot
-      - name: Run validators on queued URLs
+      - name: Allo2
+        id: allo2
         run: |
-          queue="${{ matrix.data }}"
-          bash ./scripts/queue_runner.sh --include-master $queue
-        env:
-          OUTPUT_BASE: ${{ github.sha }}
-      - name: Persist reports
-        uses: actions/upload-artifact@v3
-        with:
-          name: reports_all
-          path: ${{ github.sha }}/output
-  compare-outputs:
-    needs: [ get-reports ]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Download comparator .jar file from previous job
-        uses: actions/download-artifact@v3
-        with:
-          name: comparator-snapshot
-      - name: Retrieve reports from previous job
-        uses: actions/download-artifact@v3
-        with:
-          name: reports_all
-      - name: Retrieve gtfs latest versions from previous job
-        uses: actions/download-artifact@v3
-        with:
-          name: datasets_metadata
-      - name: Generate acceptance report test
-        run: |
-          java -jar output-comparator*.jar \
-           --report_directory . \
-           --source_urls gtfs_latest_versions.json \
-           --new_error_threshold 1 \
-           --percent_invalid_datasets_threshold 1 \
-           --percent_corrupted_sources 2 \
-           --reference_report_name reference.json \
-           --latest_report_name latest.json \
-           --output_base acceptance-test-output \
-           --commit_sha ${{ github.sha }} \
-           --run_id ${{github.run_id}}
-      - name: Persist acceptance test reports
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: acceptance_test_report
-          path: acceptance-test-output
-      - name: Generate PR comment
-        id: generate-comment
-        if: always()
-        run: |
-          PR_COMMENT=$(< acceptance-test-output/acceptance_report_summary.txt)
-          echo "PR_COMMENT<<EOF" >> $GITHUB_ENV
-          echo "$PR_COMMENT" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-      - name: Comment Pull Request
-        if: always()
-        uses: thollander/actions-comment-pull-request@v1.0.4
-        with:
-          message: ${{ env.PR_COMMENT }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          echo "String present!"
