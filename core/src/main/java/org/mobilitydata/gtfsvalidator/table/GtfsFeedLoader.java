@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.flogger.FluentLogger;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -70,6 +71,10 @@ public class GtfsFeedLoader {
       }
       tableDescriptors.put(descriptor.gtfsFilename(), descriptor);
     }
+  }
+
+  public Collection<GtfsTableDescriptor<?>> getTableDescriptors() {
+    return Collections.unmodifiableCollection(tableDescriptors.values());
   }
 
   public String listTableDescriptors() {
