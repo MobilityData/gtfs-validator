@@ -51,9 +51,10 @@ public class GtfsFeedLoader {
 
   /**
    * The set of validators that were skipped during validation because their file dependencies had
-   * parse errors.
+   * parse errors plus validators that are optional.
    */
-  private final List<Class<? extends FileValidator>> skippedValidators = new ArrayList<>();
+  private final List<Class<? extends FileValidator>> multiFileValidatorsWithParsingErrors =
+      new ArrayList<>();
 
   public GtfsFeedLoader(
       ImmutableList<Class<? extends GtfsTableDescriptor<?>>> tableDescriptorClasses) {
@@ -84,8 +85,8 @@ public class GtfsFeedLoader {
     this.numThreads = numThreads;
   }
 
-  public List<Class<? extends FileValidator>> getSkippedValidators() {
-    return Collections.unmodifiableList(skippedValidators);
+  public List<Class<? extends FileValidator>> getMultiFileValidatorsWithParsingErrors() {
+    return Collections.unmodifiableList(multiFileValidatorsWithParsingErrors);
   }
 
   @SuppressWarnings("unchecked")
@@ -152,7 +153,8 @@ public class GtfsFeedLoader {
       // Validators with parser-error dependencies will not be returned here, but instead added to
       // the skippedValidators list.
       for (FileValidator validator :
-          validatorProvider.createMultiFileValidators(feed, skippedValidators::add)) {
+          validatorProvider.createMultiFileValidators(
+              feed, multiFileValidatorsWithParsingErrors::add)) {
         validatorCallables.add(
             () -> {
               NoticeContainer validatorNotices = new NoticeContainer();

@@ -169,7 +169,11 @@ public class ValidatorLoader {
             validatorClass.getCanonicalName()));
   }
 
-  /** Instantiates a validator of given class and injects its dependencies. */
+  /**
+   * Instantiates a validator of given class and injects its dependencies. A dependency is typically
+   * a table that is used by the validator. If any of the dependencies have errors, we put this
+   * information in the returned {@link ValidatorWithDependencyStatus}.
+   */
   private static <T> ValidatorWithDependencyStatus<T> createValidator(
       Class<T> clazz, DependencyResolver dependencyResolver) throws ReflectiveOperationException {
     Constructor<T> chosenConstructor;
@@ -199,20 +203,22 @@ public class ValidatorLoader {
    * @param <T> type of the validator to instantiate
    * @return a new validator
    */
-  public static <T> T createValidatorWithContext(
-      Class<T> clazz, ValidationContext validationContext) throws ReflectiveOperationException {
-    return createValidator(clazz, new DependencyResolver(validationContext, null, null))
-        .validator();
+  public static <T extends SingleEntityValidator>
+      ValidatorWithDependencyStatus<T> createValidatorWithContext(
+          Class<T> clazz, ValidationContext validationContext) throws ReflectiveOperationException {
+    return (ValidatorWithDependencyStatus<T>)
+        createValidator(clazz, new DependencyResolver(validationContext, null, null));
   }
 
   /** Instantiates a {@code FileValidator} for a single table. */
-  public static FileValidator createSingleFileValidator(
-      Class<? extends FileValidator> clazz,
-      GtfsTableContainer<?> table,
-      ValidationContext validationContext)
-      throws ReflectiveOperationException {
-    return createValidator(clazz, new DependencyResolver(validationContext, table, null))
-        .validator();
+  public static <T extends FileValidator>
+      ValidatorWithDependencyStatus<T> createSingleFileValidator(
+          Class<? extends FileValidator> clazz,
+          GtfsTableContainer<?> table,
+          ValidationContext validationContext)
+          throws ReflectiveOperationException {
+    return (ValidatorWithDependencyStatus<T>)
+        createValidator(clazz, new DependencyResolver(validationContext, table, null));
   }
 
   /** Instantiates a {@code FileValidator} for multiple tables in a given feed. */
@@ -244,6 +250,13 @@ public class ValidatorLoader {
       this.feedContainer = feedContainer;
     }
 
+    /**
+     * This is typically called to obtain the container related to each parameter in a validator's
+     * constructor or a basic type related to country code or date.
+     *
+     * @param parameterClass The parameter of the constructor we want to examine.
+     * @return
+     */
     public Object resolveDependency(Class<?> parameterClass) {
       if (feedContainer != null && parameterClass.isAssignableFrom(GtfsFeedContainer.class)) {
         if (!feedContainer.isParsedSuccessfully()) {

@@ -46,7 +46,8 @@ public interface ValidatorProvider {
    * @return a list of validators
    */
   <T extends GtfsEntity> List<SingleEntityValidator<T>> createSingleEntityValidators(
-      Class<T> clazz);
+      Class<T> clazz,
+      Consumer<Class<? extends SingleEntityValidator<T>>> singleEntityValidatorsWithParsingErrors);
 
   /**
    * Creates a list of validators for the given table.
@@ -57,7 +58,8 @@ public interface ValidatorProvider {
    * @param <T> type of the GTFS entity
    */
   <T extends GtfsEntity> List<FileValidator> createSingleFileValidators(
-      GtfsTableContainer<T> table);
+      GtfsTableContainer<T> table,
+      Consumer<Class<? extends FileValidator>> validatorsWithParsingErrors);
 
   /**
    * Creates a list of cross-table validators. Any validator that has a dependency with parse errors

@@ -18,26 +18,26 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 public class FeedContactValidator extends SingleEntityValidator<GtfsFeedInfo> {
 
   /**
-   * Best Practices https://gtfs.org/schedule/best-practices/#feed_infotxt suggest providing at
-   * least one of feed_contact_email and feed_contact_url
+   * Only generates a warning when both feed_contact_email and feed_contact_url are unset
+   *
+   * <p>There should be no warning generated when the dataset has one of feed_contact_email and
+   * feed_contact_url.
    *
    * @param entity
    * @param noticeContainer
    */
   @Override
   public void validate(GtfsFeedInfo entity, NoticeContainer noticeContainer) {
-    if (!entity.hasFeedContactEmail() && !entity.hasFeedContactUrl()
-        || entity.feedContactEmail().isBlank() && entity.feedContactUrl().isBlank()) {
+    if ((!entity.hasFeedContactEmail() || entity.feedContactEmail().isBlank())
+        && (!entity.hasFeedContactUrl() || entity.feedContactUrl().isBlank())) {
       noticeContainer.addValidationNotice(
           new MissingFeedContactEmailAndUrlNotice(entity.csvRowNumber()));
     }
   }
 
   /**
-   * Only generates a warning when both feed_contact_email and feed_contact_url are unset
-   *
-   * <p>There should be no warning generated when the dataset has one of feed_contact_email and
-   * feed_contact_url.
+   * Best Practices for `feed_info.txt` suggest providing at least one of `feed_contact_email` and
+   * `feed_contact_url`.
    */
   @GtfsValidationNotice(
       severity = WARNING,
@@ -49,10 +49,10 @@ public class FeedContactValidator extends SingleEntityValidator<GtfsFeedInfo> {
       })
   static class MissingFeedContactEmailAndUrlNotice extends ValidationNotice {
     /** The row number of the validated record. */
-    private final int rowNumber;
+    private final int csvRowNumber;
 
-    MissingFeedContactEmailAndUrlNotice(int rowNumber) {
-      this.rowNumber = rowNumber;
+    MissingFeedContactEmailAndUrlNotice(int csvRowNumber) {
+      this.csvRowNumber = csvRowNumber;
     }
   }
 }

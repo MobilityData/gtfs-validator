@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableList;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -16,11 +17,14 @@ import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
 import org.mobilitydata.gtfsvalidator.notice.*;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntity;
-import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestFileValidator;
+import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestSingleFileValidator;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestTableDescriptor;
+import org.mobilitydata.gtfsvalidator.validator.FileValidator;
 import org.mobilitydata.gtfsvalidator.validator.GtfsFieldValidator;
 import org.mobilitydata.gtfsvalidator.validator.TableHeaderValidator;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
+import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -124,8 +128,11 @@ public class AnyTableLoaderTest {
     var testTableDescriptor = new GtfsTestTableDescriptor();
     when(validatorProvider.getTableHeaderValidator()).thenReturn(mock(TableHeaderValidator.class));
     when(validatorProvider.getFieldValidator()).thenReturn(mock(GtfsFieldValidator.class));
-    GtfsTestFileValidator validator = mock(GtfsTestFileValidator.class);
-    when(validatorProvider.createSingleFileValidators(any())).thenReturn(List.of(validator));
+    GtfsTestSingleFileValidator validator = mock(GtfsTestSingleFileValidator.class);
+    ArgumentCaptor<Consumer<Class<? extends FileValidator>>> captor =
+        ArgumentCaptor.forClass(Consumer.class);
+    when(validatorProvider.createSingleFileValidators(ArgumentMatchers.any(), captor.capture()))
+        .thenReturn((List.of(validator)));
     InputStream inputStream = toInputStream("id,stop_lat,_no_name_\n" + "s1, 23.00, no_value\n");
 
     var loadedContainer =
