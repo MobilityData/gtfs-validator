@@ -69,7 +69,11 @@ public class NoticeView {
    * @return description text
    */
   public String getCommentForField(String field) {
-    return comments.getFieldComment(field);
+    if (field.isBlank()) {
+      return field;
+    } else {
+      return comments.getFieldComment(field);
+    }
   }
   /**
    * Returns the description text for the notice.
