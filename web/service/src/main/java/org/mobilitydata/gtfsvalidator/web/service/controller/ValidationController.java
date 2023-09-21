@@ -23,6 +23,7 @@ import java.io.*;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
+import org.mobilitydata.gtfsvalidator.util.VersionResolver;
 import org.mobilitydata.gtfsvalidator.web.service.util.JobMetadata;
 import org.mobilitydata.gtfsvalidator.web.service.util.StorageHelper;
 import org.mobilitydata.gtfsvalidator.web.service.util.ValidationHandler;
@@ -42,6 +43,8 @@ public class ValidationController {
 
   @Autowired private StorageHelper storageHelper;
   @Autowired private ValidationHandler validationHandler;
+
+  @Autowired private VersionResolver versionResolver;
 
   /**
    * Creates a new job id and returns it to the client. If a url is provided, the file is downloaded
@@ -119,6 +122,22 @@ public class ValidationController {
         outputPath.toFile().delete();
       }
     }
+  }
+
+  @GetMapping("/version")
+  public VersionResponse currentVersion() {
+    VersionResponse versionResponse;
+    try {
+      Optional<String> versionInfo = versionResolver.resolveCurrentVersion();
+      if (versionInfo.isEmpty()) {
+        throw new ResponseStatusException(
+            HttpStatus.INTERNAL_SERVER_ERROR, "Current Version Not Found");
+      }
+      versionResponse = new VersionResponse(versionInfo.get());
+    } catch (IOException e) {
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error", e);
+    }
+    return versionResponse;
   }
 
   @PostMapping("/error")

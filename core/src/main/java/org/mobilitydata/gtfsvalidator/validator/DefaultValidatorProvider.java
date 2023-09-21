@@ -76,14 +76,23 @@ public class DefaultValidatorProvider implements ValidatorProvider {
   @Override
   @SuppressWarnings("unchecked")
   public <T extends GtfsEntity> List<SingleEntityValidator<T>> createSingleEntityValidators(
-      Class<T> clazz) {
+      Class<T> clazz,
+      Consumer<Class<? extends SingleEntityValidator<T>>> singleEntityValidatorsWithParsingErrors) {
     List<SingleEntityValidator<T>> validators = new ArrayList<>();
     for (Class<? extends SingleEntityValidator<?>> validatorClass :
         singleEntityValidators.get(clazz)) {
       try {
-        validators.add(
-            ValidatorLoader.createValidatorWithContext(
-                ((Class<? extends SingleEntityValidator<T>>) validatorClass), validationContext));
+        ValidatorWithDependencyStatus<? extends SingleEntityValidator<?>>
+            validatorWithDependencyStatus =
+                ValidatorLoader.createValidatorWithContext(
+                    ((Class<? extends SingleEntityValidator<?>>) validatorClass),
+                    validationContext);
+        if (validatorWithDependencyStatus.dependenciesHaveErrors()) {
+          singleEntityValidatorsWithParsingErrors.accept(
+              (Class<? extends SingleEntityValidator<T>>) validatorClass);
+        } else {
+          validators.add((SingleEntityValidator<T>) validatorWithDependencyStatus.validator());
+        }
       } catch (ReflectiveOperationException e) {
         logger.atSevere().withCause(e).log(
             "Cannot instantiate validator %s", validatorClass.getCanonicalName());
@@ -95,13 +104,19 @@ public class DefaultValidatorProvider implements ValidatorProvider {
   @Override
   @SuppressWarnings("unchecked")
   public <T extends GtfsEntity> List<FileValidator> createSingleFileValidators(
-      GtfsTableContainer<T> table) {
+      GtfsTableContainer<T> table,
+      Consumer<Class<? extends FileValidator>> validatorsWithParsingErrors) {
     List<FileValidator> validators = new ArrayList<>();
     for (Class<? extends FileValidator> validatorClass :
         singleFileValidators.get((Class<? extends GtfsTableContainer<?>>) table.getClass())) {
       try {
-        validators.add(
-            ValidatorLoader.createSingleFileValidator(validatorClass, table, validationContext));
+        ValidatorWithDependencyStatus<? extends FileValidator> validatorWithStatus =
+            ValidatorLoader.createSingleFileValidator(validatorClass, table, validationContext);
+        if (validatorWithStatus.dependenciesHaveErrors()) {
+          validatorsWithParsingErrors.accept(validatorClass);
+        } else {
+          validators.add(validatorWithStatus.validator());
+        }
       } catch (ReflectiveOperationException e) {
         logger.atSevere().withCause(e).log(
             "Cannot instantiate validator %s", validatorClass.getCanonicalName());

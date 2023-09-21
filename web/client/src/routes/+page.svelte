@@ -15,6 +15,7 @@
   import { fly } from 'svelte/transition';
   import { onMount, tick } from 'svelte';
   import { quintOut } from 'svelte/easing';
+  import { env } from '$env/dynamic/public';
 
   /**
    * @typedef CreateJobParameters
@@ -35,7 +36,7 @@
 
   let showDocs = true;
 
-  const apiRoot = 'https://gtfs-validator-web-mbzoxaljzq-ue.a.run.app';
+  const apiRoot = `${env.PUBLIC_CLIENT_API_ROOT}`;
 
   /** @type {HTMLInputElement} */
   let fileInput;
@@ -67,7 +68,7 @@
   /** @type {HTMLDialogElement} */
   let statusModal;
 
-  $: reportUrl = `https://gtfs-validator-results.mobilitydata.org/${jobId}/report.html`;
+  $: reportUrl = `${env.PUBLIC_CLIENT_REPORTS_ROOT}/${jobId}/report.html`;
 
   function clearErrors() {
     errors = [];

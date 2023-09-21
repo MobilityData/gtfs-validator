@@ -1,0 +1,111 @@
+name: Fetch Commits on reference.md and create an issue with details
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs daily at midnight UTC
+
+jobs:
+  fetch-and-create-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout master of gtfs-validator repo
+        uses: actions/checkout@v4.0.0
+        with:
+          ref: master
+          fetch-depth: 0
+          token: ${{ secrets.GENERIC_ACTION_REPO_SCOPE }} 
+
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v3.8.1
+        with:
+          node-version: '16.x'
+
+      - name: Install Node.js dependencies
+        run: npm install @actions/github
+
+      - name: Set up Git
+        id: git-setup
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          echo "reviewer=emmambd" >> $GITHUB_OUTPUT 
+          echo "assigned=emmambd" >> $GITHUB_OUTPUT
+        # Comma-separated list of reviewers and assignees
+
+      - name: Calculate Dates
+        id: dates
+        run: |
+          echo "yesterday=$(date -d '-1 day' '+%Y-%m-%d')" >> $GITHUB_OUTPUT
+          echo "today=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+      - name: Fetch commits and process JSON
+        id: process_json
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GENERIC_ACTION_REPO_SCOPE }}
+          script: |
+            const response = await github.request('GET /repos/google/transit/commits', {
+              owner: 'google',
+              repo: 'transit',
+              path: 'gtfs/spec/en/reference.md',
+              since: '${{ steps.dates.outputs.yesterday}}T00:00:00Z',
+            });
+            
+            const commits = response.data;
+            core.setOutput('commits_data', commits);
+            core.setOutput('commits_length', commits.length);
+      
+            if (commits.length > 0) {
+              const extractedData = commits.map(item => ({
+                author: item.commit.author.name,
+                username: item.author.login,
+                date: item.commit.author.date,
+                message: item.commit.message.replace(/\n\s*\n/g, '\n'),
+                html_url: item.html_url
+              }));
+
+              const formattedExtractedData = extractedData.map((item, index) => {
+              const dateObjectUTC = new Date(item.date);
+              const dateObjectETC = new Date(dateObjectUTC.toLocaleString('en-US', { timeZone: 'America/Toronto' }));
+
+              const formattedDateETC = dateObjectETC.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              });
+
+              const formattedTimeUTC = dateObjectUTC.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZoneName: 'short',
+              });
+
+              const formattedTimeETC = dateObjectETC.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+              });
+
+              const counter = index + 1;
+
+              return `# \`Commit Nº ${counter}\`\n## AUTHOR × DATE\n* **${item.author}** ( _${item.username}_ )\n* **${formattedDateETC}**   @   ${formattedTimeETC} ETC (${formattedTimeUTC})\n## MESSAGE\n\`\`\`\n${item.message}\n\`\`\`\n## FILES CHANGED\n> ### ${item.html_url}\n\n\`\`\`\n${item.html_url}\n\`\`\`\n---\n`;
+              }).join('\n');
+              
+              core.setOutput('extracted_data', formattedExtractedData);
+              core.setOutput('condition_met', 'true');
+
+            } else {
+              core.setOutput('extracted_data', '');
+              core.setOutput('condition_met', 'false');
+            }
+
+      - name: Create Issue
+        if: steps.process_json.outputs.condition_met == 'true'
+        uses: dacbd/create-issue-action@main
+        with:
+          token: ${{ secrets.GENERIC_ACTION_REPO_SCOPE }}
+          title: ${{ steps.dates.outputs.today }} — ${{ steps.process_json.outputs.commits_length }} new commit(s) made to `reference.md` in Google Transit's repo
+          body: |
+            ${{ steps.process_json.outputs.extracted_data }}
+          assignees: ${{ steps.git-setup.outputs.assigned }}

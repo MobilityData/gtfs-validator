@@ -11,17 +11,18 @@ import org.mobilitydata.gtfsvalidator.parsing.FieldCache;
 import org.mobilitydata.gtfsvalidator.parsing.RowParser;
 import org.mobilitydata.gtfsvalidator.table.*;
 
-public class GtfsTestTableDescriptor extends GtfsTableDescriptor<GtfsTestEntity> {
+// We need a second test table descriptor to test multi file contaioners
+public class GtfsTestTableDescriptor2 extends GtfsTableDescriptor<GtfsTestEntity> {
   @Override
   public GtfsTableContainer createContainerForInvalidStatus(
       GtfsTableContainer.TableStatus tableStatus) {
-    return new GtfsTestTableContainer(tableStatus);
+    return new GtfsTestTableContainer2(tableStatus);
   }
 
   @Override
   public GtfsTableContainer createContainerForHeaderAndEntities(
       CsvHeader header, List<GtfsTestEntity> entities, NoticeContainer noticeContainer) {
-    return GtfsTestTableContainer.forHeaderAndEntities(this, header, entities, noticeContainer);
+    return GtfsTestTableContainer2.forHeaderAndEntities(this, header, entities, noticeContainer);
   }
 
   @Override
@@ -94,7 +95,7 @@ public class GtfsTestTableDescriptor extends GtfsTableDescriptor<GtfsTestEntity>
 
   @Override
   public String gtfsFilename() {
-    return GtfsTestEntity.FILENAME;
+    return GtfsTestEntity.FILENAME + "2";
   }
 
   @Override

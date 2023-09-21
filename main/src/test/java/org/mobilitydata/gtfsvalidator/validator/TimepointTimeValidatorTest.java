@@ -38,6 +38,7 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableDescriptor;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 import org.mobilitydata.gtfsvalidator.validator.TimepointTimeValidator.MissingTimepointValueNotice;
 import org.mobilitydata.gtfsvalidator.validator.TimepointTimeValidator.StopTimeTimepointWithoutTimesNotice;
@@ -46,7 +47,8 @@ public class TimepointTimeValidatorTest {
 
   private static GtfsStopTimeTableContainer createTable(
       CsvHeader header, List<GtfsStopTime> stopTimes, NoticeContainer noticeContainer) {
-    return GtfsStopTimeTableContainer.forHeaderAndEntities(header, stopTimes, noticeContainer);
+    return GtfsStopTimeTableContainer.forHeaderAndEntities(
+        new GtfsStopTimeTableDescriptor(), header, stopTimes, noticeContainer);
   }
 
   private static List<ValidationNotice> generateNotices(

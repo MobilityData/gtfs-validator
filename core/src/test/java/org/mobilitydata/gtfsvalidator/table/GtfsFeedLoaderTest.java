@@ -13,7 +13,7 @@ import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntity;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntityValidator;
-import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestFileValidator;
+import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestSingleFileValidator;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestTableContainer;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestTableDescriptor;
 import org.mobilitydata.gtfsvalidator.testgtfs.WholeFeedValidator;
@@ -26,7 +26,9 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
 public class GtfsFeedLoaderTest {
   private static final ImmutableList<Class<?>> VALIDATOR_CLASSES =
       ImmutableList.of(
-          GtfsTestEntityValidator.class, GtfsTestFileValidator.class, WholeFeedValidator.class);
+          GtfsTestEntityValidator.class,
+          GtfsTestSingleFileValidator.class,
+          WholeFeedValidator.class);
 
   private MockGtfs mockGtfs;
   private NoticeContainer noticeContainer = new NoticeContainer();
@@ -74,6 +76,7 @@ public class GtfsFeedLoaderTest {
     GtfsTestTableContainer container = feedContainer.getTable(GtfsTestTableContainer.class);
     assertThat(container.getEntities()).isEmpty();
 
-    assertThat(loader.getSkippedValidators()).containsExactly(WholeFeedValidator.class);
+    assertThat(loader.getMultiFileValidatorsWithParsingErrors())
+        .containsExactly(WholeFeedValidator.class);
   }
 }

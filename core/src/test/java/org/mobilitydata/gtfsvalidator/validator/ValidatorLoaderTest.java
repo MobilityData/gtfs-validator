@@ -27,7 +27,7 @@ import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntityValidator;
-import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestFileValidator;
+import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestSingleFileValidator;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestTableContainer;
 import org.mobilitydata.gtfsvalidator.testgtfs.WholeFeedValidator;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader.ValidatorWithDependencyStatus;
@@ -46,7 +46,8 @@ public class ValidatorLoaderTest {
   public void createValidatorWithContext_injectsContext() throws ReflectiveOperationException {
     GtfsTestEntityValidator validator =
         ValidatorLoader.createValidatorWithContext(
-            GtfsTestEntityValidator.class, VALIDATION_CONTEXT);
+                GtfsTestEntityValidator.class, VALIDATION_CONTEXT)
+            .validator();
 
     assertThat(validator.getCountryCode()).isEqualTo(VALIDATION_CONTEXT.countryCode());
     assertThat(validator.getCurrentDateTime()).isEqualTo(VALIDATION_CONTEXT.currentDateTime());
@@ -56,10 +57,11 @@ public class ValidatorLoaderTest {
   public void createSingleFileValidator_injectsTableContainerAndContext()
       throws ReflectiveOperationException {
     GtfsTestTableContainer table = new GtfsTestTableContainer(TableStatus.EMPTY_FILE);
-    GtfsTestFileValidator validator =
-        (GtfsTestFileValidator)
+    GtfsTestSingleFileValidator validator =
+        (GtfsTestSingleFileValidator)
             ValidatorLoader.createSingleFileValidator(
-                GtfsTestFileValidator.class, table, VALIDATION_CONTEXT);
+                    GtfsTestSingleFileValidator.class, table, VALIDATION_CONTEXT)
+                .validator();
 
     assertThat(validator.getCountryCode()).isEqualTo(VALIDATION_CONTEXT.countryCode());
     assertThat(validator.getCurrentDateTime()).isEqualTo(VALIDATION_CONTEXT.currentDateTime());
@@ -90,9 +92,9 @@ public class ValidatorLoaderTest {
     GtfsTestTableContainer table = new GtfsTestTableContainer(TableStatus.UNPARSABLE_ROWS);
     GtfsFeedContainer feedContainer = new GtfsFeedContainer(ImmutableList.of(table));
 
-    ValidatorWithDependencyStatus<GtfsTestFileValidator> validatorWithStatus =
+    ValidatorWithDependencyStatus<GtfsTestSingleFileValidator> validatorWithStatus =
         ValidatorLoader.createMultiFileValidator(
-            GtfsTestFileValidator.class, feedContainer, VALIDATION_CONTEXT);
+            GtfsTestSingleFileValidator.class, feedContainer, VALIDATION_CONTEXT);
 
     assertThat(validatorWithStatus.dependenciesHaveErrors()).isTrue();
     assertThat(validatorWithStatus.validator().getStopTable()).isEqualTo(table);

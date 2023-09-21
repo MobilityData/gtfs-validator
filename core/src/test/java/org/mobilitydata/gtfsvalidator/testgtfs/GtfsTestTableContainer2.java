@@ -24,20 +24,21 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 
-public class GtfsTestTableContainer extends GtfsTableContainer<GtfsTestEntity> {
+// We need a second test table class to test multi file validators.
+public class GtfsTestTableContainer2 extends GtfsTableContainer<GtfsTestEntity> {
   private static final ImmutableList<String> KEY_COLUMN_NAMES =
       ImmutableList.of(GtfsTestEntity.ID_FIELD_NAME);
 
   private List<GtfsTestEntity> entities;
 
-  private GtfsTestTableContainer(
-      GtfsTestTableDescriptor descriptor, CsvHeader header, List<GtfsTestEntity> entities) {
+  private GtfsTestTableContainer2(
+      GtfsTestTableDescriptor2 descriptor, CsvHeader header, List<GtfsTestEntity> entities) {
     super(descriptor, TableStatus.PARSABLE_HEADERS_AND_ROWS, header);
     this.entities = entities;
   }
 
-  public GtfsTestTableContainer(TableStatus tableStatus) {
-    super(new GtfsTestTableDescriptor(), tableStatus, CsvHeader.EMPTY);
+  public GtfsTestTableContainer2(TableStatus tableStatus) {
+    super(new GtfsTestTableDescriptor2(), tableStatus, CsvHeader.EMPTY);
     this.entities = new ArrayList<>();
   }
 
@@ -48,7 +49,7 @@ public class GtfsTestTableContainer extends GtfsTableContainer<GtfsTestEntity> {
 
   @Override
   public String gtfsFilename() {
-    return GtfsTestEntity.FILENAME;
+    return GtfsTestEntity.FILENAME + "2";
   }
 
   @Override
@@ -57,12 +58,12 @@ public class GtfsTestTableContainer extends GtfsTableContainer<GtfsTestEntity> {
   }
 
   /** Creates a table with given header and entities */
-  public static GtfsTestTableContainer forHeaderAndEntities(
-      GtfsTestTableDescriptor descriptor,
+  public static GtfsTestTableContainer2 forHeaderAndEntities(
+      GtfsTestTableDescriptor2 descriptor,
       CsvHeader header,
       List<GtfsTestEntity> entities,
       NoticeContainer noticeContainer) {
-    GtfsTestTableContainer table = new GtfsTestTableContainer(descriptor, header, entities);
+    GtfsTestTableContainer2 table = new GtfsTestTableContainer2(descriptor, header, entities);
     return table;
   }
 
