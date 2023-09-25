@@ -192,7 +192,9 @@ public class NoticeFieldsTest {
             "tripIdB",
             "tripIdFieldName",
             "validator",
-            "value");
+            "value",
+            "maxShapeDistanceTraveled",
+            "maxTripDistanceTraveled");
   }
 
   private static List<String> discoverValidationNoticeFieldNames() {
