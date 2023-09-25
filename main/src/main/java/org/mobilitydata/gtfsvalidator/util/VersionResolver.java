@@ -1,9 +1,12 @@
 package org.mobilitydata.gtfsvalidator.util;
 
+import com.google.common.base.Strings;
 import com.google.common.flogger.FluentLogger;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.SettableFuture;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.Resource;
 import io.github.classgraph.ScanResult;
@@ -18,8 +21,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.jar.Manifest;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Methods to resolve the {@link VersionInfo} for the current validator instance. Since resolving
@@ -30,11 +31,9 @@ public class VersionResolver {
 
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
-  /** We look up the latest release version at the following wiki page. */
-  private static final String LATEST_RELEASE_VERSION_PAGE_URL =
-      "https://raw.githubusercontent.com/wiki/MobilityData/gtfs-validator/Current-Version.md";
-
-  private static final Pattern VERSION_PATTERN = Pattern.compile("version=(\\d+\\.\\d+\\.\\d+)");
+  /** We look up the latest release version at the JSON api endpoint. */
+  private static final String LATEST_RELEASE_VERSION_URL =
+      "https://stg-gtfs-validator-web-mbzoxaljzq-ue.a.run.app/version";
 
   private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
@@ -104,7 +103,7 @@ public class VersionResolver {
    * resolution is slightly complicated, depending on our deployment environment. For the
    * application shadow jar, there will be a single MANIFEST.MF entry, with an Implementation-Title
    * of `gtfs-validator`. In a non-shadow-jar deployment (e.g. unit-test or gradle :run), there will
-   * be multiple MANIFEST.MF entries (different jars on the classpath can provide there own), so we
+   * be multiple MANIFEST.MF entries (different jars on the classpath can provide their own), so we
    * look for the `gtfs-validator-core` MANIFEST.MF, since the shadow jar won't be present.
    *
    * <p>The return value is Optional because it's possible no version info is found.
@@ -140,16 +139,20 @@ public class VersionResolver {
   }
 
   private Optional<String> resolveLatestReleaseVersion() throws IOException {
-    URL url = new URL(LATEST_RELEASE_VERSION_PAGE_URL);
+    URL url = new URL(LATEST_RELEASE_VERSION_URL);
     try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()))) {
-      String line = null;
-      while ((line = in.readLine()) != null) {
-        Matcher m = VERSION_PATTERN.matcher(line);
-        if (m.matches()) {
-          return Optional.of(m.group(1));
-        }
+      Gson gson = new GsonBuilder().create();
+      VersionResponse response = gson.fromJson(in, VersionResponse.class);
+      if (response != null && !Strings.isNullOrEmpty(response.version)) {
+        logger.atInfo().log("resolved release version=%s", response.version);
+        return Optional.of(response.version);
       }
     }
     return Optional.empty();
+  }
+
+  /** Serialization object for parsing the /version API response. */
+  class VersionResponse {
+    String version;
   }
 }

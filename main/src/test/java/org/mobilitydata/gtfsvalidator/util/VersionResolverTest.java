@@ -39,12 +39,7 @@ public class VersionResolverTest {
 
   @Test
   public void testResolveLatestReleaseVersion() throws IOException {
-    StringBuilder b = new StringBuilder();
-    b.append("Version Information from the wiki\n");
-    b.append("```\n");
-    b.append("version=10.0.5\n");
-    b.append("```\n");
-    mockStreamHandler.setContent(b.toString());
+    mockStreamHandler.setContent("{\"version\":\"10.0.5\"}");
 
     VersionResolver checker = new VersionResolver();
     VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT);
@@ -54,9 +49,7 @@ public class VersionResolverTest {
 
   @Test
   public void testLatestReleaseVersionNotFound() throws IOException {
-    StringBuilder b = new StringBuilder();
-    b.append("Page not found");
-    mockStreamHandler.setContent(b.toString());
+    mockStreamHandler.setContent("Page not found");
 
     VersionResolver checker = new VersionResolver();
     VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT);
@@ -78,9 +71,7 @@ public class VersionResolverTest {
 
   @Test
   public void testVersionCallback() throws IOException, InterruptedException {
-    StringBuilder b = new StringBuilder();
-    b.append("version=10.0.5\n");
-    mockStreamHandler.setContent(b.toString());
+    mockStreamHandler.setContent("{\"version\":\"10.0.5\"}");
 
     // A dummy callback that captures the updated version info and triggers a countdown latch
     // that our test can wait for.
