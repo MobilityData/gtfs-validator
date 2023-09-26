@@ -33,7 +33,7 @@ public class VersionResolver {
 
   /** We look up the latest release version at the JSON api endpoint. */
   private static final String LATEST_RELEASE_VERSION_URL =
-      "https://stg-gtfs-validator-web-mbzoxaljzq-ue.a.run.app/version";
+      "https://gtfs-validator.mobilitydata.org/api/version";
 
   private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
