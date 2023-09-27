@@ -31,7 +31,10 @@ AUTHENTICATION_TYPE = "urls.authentication_type"
 MDB_SOURCE_ID = "mdb_source_id"
 
 # Sources to exclude because they are too big for the workflow.
-SOURCES_TO_EXCLUDE = ["de-unknown-rursee-schifffahrt-kg-gtfs-784"]
+SOURCES_TO_EXCLUDE = [
+    "de-unknown-rursee-schifffahrt-kg-gtfs-784",
+    "de-unknown-ulmer-eisenbahnfreunde-gtfs-1081"
+]
 
 # Google Cloud constants
 URL_PREFIX = "https://storage.googleapis.com/storage/v1/b/mdb-latest/o/"
