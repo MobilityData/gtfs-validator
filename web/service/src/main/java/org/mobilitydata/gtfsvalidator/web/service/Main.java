@@ -15,6 +15,7 @@
  */
 package org.mobilitydata.gtfsvalidator.web.service;
 
+import org.mobilitydata.gtfsvalidator.runner.ApplicationType;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunner;
 import org.mobilitydata.gtfsvalidator.util.VersionResolver;
 import org.springframework.boot.SpringApplication;
@@ -35,6 +36,6 @@ public class Main {
 
   @Bean
   public VersionResolver versionResolver() {
-    return new VersionResolver();
+    return new VersionResolver(ApplicationType.WEB);
   }
 }

@@ -25,6 +25,7 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import org.mobilitydata.gtfsvalidator.runner.ApplicationType;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunner;
 import org.mobilitydata.gtfsvalidator.util.VersionResolver;
 
@@ -75,7 +76,7 @@ public class Main {
       logger.atSevere().withCause(e).log("Error setting system look-and-feel");
     }
 
-    VersionResolver resolver = new VersionResolver();
+    VersionResolver resolver = new VersionResolver(ApplicationType.DESKTOP);
     ValidationDisplay display = new ValidationDisplay();
     MonitoredValidationRunner runner =
         new MonitoredValidationRunner(new ValidationRunner(resolver), display);
