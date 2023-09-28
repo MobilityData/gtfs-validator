@@ -31,7 +31,15 @@ AUTHENTICATION_TYPE = "urls.authentication_type"
 MDB_SOURCE_ID = "mdb_source_id"
 
 # Sources to exclude because they are too big for the workflow.
-SOURCES_TO_EXCLUDE = ["de-unknown-rursee-schifffahrt-kg-gtfs-784"]
+SOURCES_TO_EXCLUDE = [
+    "de-unknown-rursee-schifffahrt-kg-gtfs-784",
+    "de-unknown-ulmer-eisenbahnfreunde-gtfs-1081",
+    "no-unknown-agder-kollektivtrafikk-as-gtfs-1078",
+    "hu-unknown-volanbusz-gtfs-1836",
+    "de-baden-wurttemberg-verkehrsverbund-rhein-neckar-gtfs-1173",
+    "de-baden-wurttemberg-db-zugbus-regionalverkehr-alb-bodensee-gtfs-773",
+    "au-new-south-wales-train-replacement-bus-operators-gtfs-1322"
+]
 
 # Google Cloud constants
 URL_PREFIX = "https://storage.googleapis.com/storage/v1/b/mdb-latest/o/"
