@@ -21,6 +21,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mobilitydata.gtfsvalidator.runner.ApplicationType;
 
 @RunWith(JUnit4.class)
 public class VersionResolverTest {
@@ -41,7 +42,7 @@ public class VersionResolverTest {
   public void testResolveLatestReleaseVersion() throws IOException {
     mockStreamHandler.setContent("{\"version\":\"10.0.5\"}");
 
-    VersionResolver checker = new VersionResolver();
+    VersionResolver checker = new VersionResolver(ApplicationType.CLI);
     VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT);
 
     assertThat(versionInfo.latestReleaseVersion()).hasValue("10.0.5");
@@ -51,10 +52,21 @@ public class VersionResolverTest {
   public void testLatestReleaseVersionNotFound() throws IOException {
     mockStreamHandler.setContent("Page not found");
 
-    VersionResolver checker = new VersionResolver();
+    VersionResolver checker = new VersionResolver(ApplicationType.CLI);
     VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT);
 
     assertThat(versionInfo.latestReleaseVersion()).isEmpty();
+  }
+
+  @Test
+  public void testReleaseVersionUrlParams() throws IOException {
+    mockStreamHandler.setContent("{\"version\":\"10.0.5\"}");
+
+    VersionResolver checker = new VersionResolver(ApplicationType.WEB);
+    VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT);
+
+    assertThat(mockStreamHandler.url).isNotNull();
+    assertThat(mockStreamHandler.url.getQuery()).isEqualTo("application_type=WEB");
   }
 
   @Test
@@ -63,7 +75,7 @@ public class VersionResolverTest {
     String expectedVersion = System.getProperty("gtfsValidatorVersionForTest");
     assertThat(expectedVersion).isNotEmpty();
 
-    VersionResolver checker = new VersionResolver();
+    VersionResolver checker = new VersionResolver(ApplicationType.CLI);
     VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT);
 
     assertThat(versionInfo.currentVersion()).hasValue(expectedVersion);
@@ -83,7 +95,7 @@ public class VersionResolverTest {
           callbackLatch.countDown();
         };
 
-    VersionResolver checker = new VersionResolver();
+    VersionResolver checker = new VersionResolver(ApplicationType.CLI);
     checker.addCallback(callback);
 
     // Wait until the callback is actually triggered.
@@ -96,13 +108,20 @@ public class VersionResolverTest {
 
     private URLConnection connection = mock(URLConnection.class);
 
+    private URL url = null;
+
     public void setContent(String content) throws IOException {
       when(connection.getInputStream())
           .thenReturn(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
     }
 
+    public URL getUrl() {
+      return this.url;
+    }
+
     @Override
     protected URLConnection openConnection(URL u) throws IOException {
+      this.url = u;
       return connection;
     }
   }

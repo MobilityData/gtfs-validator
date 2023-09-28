@@ -21,6 +21,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.jar.Manifest;
+import org.mobilitydata.gtfsvalidator.runner.ApplicationType;
 
 /**
  * Methods to resolve the {@link VersionInfo} for the current validator instance. Since resolving
@@ -36,10 +37,15 @@ public class VersionResolver {
       "https://gtfs-validator.mobilitydata.org/api/version";
 
   private final ExecutorService executor = Executors.newSingleThreadExecutor();
+  private final ApplicationType applicationType;
 
   private SettableFuture<VersionInfo> resolvedVersionInfo = SettableFuture.create();
 
   private boolean resolutionStarted = false;
+
+  public VersionResolver(ApplicationType applicationType) {
+    this.applicationType = applicationType;
+  }
 
   /**
    * Attempts to resolve the application {@link VersionInfo} within the specified timeout. If the
@@ -139,7 +145,9 @@ public class VersionResolver {
   }
 
   private Optional<String> resolveLatestReleaseVersion() throws IOException {
-    URL url = new URL(LATEST_RELEASE_VERSION_URL);
+    URL url =
+        new URL(
+            String.format("%s?application_type=%s", LATEST_RELEASE_VERSION_URL, applicationType));
     try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()))) {
       Gson gson = new GsonBuilder().create();
       VersionResponse response = gson.fromJson(in, VersionResponse.class);
