@@ -93,7 +93,7 @@ public class VersionResolver {
         () -> {
           try {
             Optional<String> currentVersion = resolveCurrentVersion();
-            Optional<String> latestReleaseVersion = resolveLatestReleaseVersion();
+            Optional<String> latestReleaseVersion = resolveLatestReleaseVersion(currentVersion);
             VersionInfo info = VersionInfo.create(currentVersion, latestReleaseVersion);
             resolvedVersionInfo.set(info);
             return info;
@@ -144,10 +144,13 @@ public class VersionResolver {
     return gtfsValidatorCoreVersion;
   }
 
-  private Optional<String> resolveLatestReleaseVersion() throws IOException {
+  private Optional<String> resolveLatestReleaseVersion(Optional<String> currentVersion)
+      throws IOException {
     URL url =
         new URL(
-            String.format("%s?application_type=%s", LATEST_RELEASE_VERSION_URL, applicationType));
+            String.format(
+                "%s?application_type=%s&current_version=%s",
+                LATEST_RELEASE_VERSION_URL, applicationType, currentVersion.orElse("Ï")));
     try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()))) {
       Gson gson = new GsonBuilder().create();
       VersionResponse response = gson.fromJson(in, VersionResponse.class);

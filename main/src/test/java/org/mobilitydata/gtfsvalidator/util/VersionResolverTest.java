@@ -60,13 +60,18 @@ public class VersionResolverTest {
 
   @Test
   public void testReleaseVersionUrlParams() throws IOException {
+    // This property is set via gradle test { } stanza.
+    String expectedVersion = System.getProperty("gtfsValidatorVersionForTest");
+    assertThat(expectedVersion).isNotEmpty();
+
     mockStreamHandler.setContent("{\"version\":\"10.0.5\"}");
 
     VersionResolver checker = new VersionResolver(ApplicationType.WEB);
     VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT);
 
     assertThat(mockStreamHandler.url).isNotNull();
-    assertThat(mockStreamHandler.url.getQuery()).isEqualTo("application_type=WEB");
+    assertThat(mockStreamHandler.url.getQuery())
+        .isEqualTo("application_type=WEB&current_version=" + expectedVersion);
   }
 
   @Test
