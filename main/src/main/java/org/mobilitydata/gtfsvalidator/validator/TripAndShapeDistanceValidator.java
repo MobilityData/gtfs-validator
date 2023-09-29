@@ -53,12 +53,6 @@ public class TripAndShapeDistanceValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    List<String> uniqueShapeIds =
-        shapeTable.getEntities().stream()
-            .map(GtfsShape::shapeId)
-            .distinct()
-            .collect(Collectors.toList());
-
     shapeTable
         .byShapeIdMap()
         .forEach(
