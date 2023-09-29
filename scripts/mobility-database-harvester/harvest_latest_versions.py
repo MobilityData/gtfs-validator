@@ -33,7 +33,6 @@ MDB_SOURCE_ID = "mdb_source_id"
 # Sources to exclude because they are too big for the workflow.
 SOURCES_TO_EXCLUDE = [
     "de-unknown-rursee-schifffahrt-kg-gtfs-784",
-    "de-unknown-ulmer-eisenbahnfreunde-gtfs-1081",
     "no-unknown-agder-kollektivtrafikk-as-gtfs-1078",
     "hu-unknown-volanbusz-gtfs-1836",
     "de-baden-wurttemberg-verkehrsverbund-rhein-neckar-gtfs-1173",

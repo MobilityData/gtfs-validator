@@ -59,32 +59,33 @@ public class TripAndShapeDistanceValidator extends FileValidator {
             .distinct()
             .collect(Collectors.toList());
 
-    uniqueShapeIds.forEach(
-        shapeId -> {
-          double maxShapeDist =
-              shapeTable.getEntities().stream()
-                  .filter(s -> s.shapeId().equals(shapeId))
-                  .mapToDouble(GtfsShape::shapeDistTraveled)
-                  .max()
-                  .orElse(Double.NEGATIVE_INFINITY);
+    shapeTable
+        .byShapeIdMap()
+        .forEach(
+            (shapeId, shape) -> {
+              double maxShapeDist =
+                  shapeTable.byShapeId(shapeId).stream()
+                      .mapToDouble(GtfsShape::shapeDistTraveled)
+                      .max()
+                      .orElse(Double.NEGATIVE_INFINITY);
 
-          tripTable
-              .byShapeId(shapeId)
-              .forEach(
-                  trip -> {
-                    double maxStopTimeDist =
-                        stopTimeTable.byTripId(trip.tripId()).stream()
-                            .mapToDouble(GtfsStopTime::shapeDistTraveled)
-                            .max()
-                            .orElse(Double.NEGATIVE_INFINITY);
+              tripTable
+                  .byShapeId(shapeId)
+                  .forEach(
+                      trip -> {
+                        double maxStopTimeDist =
+                            stopTimeTable.byTripId(trip.tripId()).stream()
+                                .mapToDouble(GtfsStopTime::shapeDistTraveled)
+                                .max()
+                                .orElse(Double.NEGATIVE_INFINITY);
 
-                    if (maxStopTimeDist > maxShapeDist) {
-                      noticeContainer.addValidationNotice(
-                          new TripDistanceExceedsShapeDistanceNotice(
-                              trip.tripId(), shapeId, maxStopTimeDist, maxShapeDist));
-                    }
-                  });
-        });
+                        if (maxStopTimeDist > maxShapeDist) {
+                          noticeContainer.addValidationNotice(
+                              new TripDistanceExceedsShapeDistanceNotice(
+                                  trip.tripId(), shapeId, maxStopTimeDist, maxShapeDist));
+                        }
+                      });
+            });
   }
 
   /** The distance traveled by a trip should be less or equal to the max length of its shape. */
