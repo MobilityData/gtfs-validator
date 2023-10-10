@@ -32,12 +32,7 @@ MDB_SOURCE_ID = "mdb_source_id"
 
 # Sources to exclude because they are too big for the workflow.
 SOURCES_TO_EXCLUDE = [
-    "de-unknown-rursee-schifffahrt-kg-gtfs-784",
-    "no-unknown-agder-kollektivtrafikk-as-gtfs-1078",
-    "hu-unknown-volanbusz-gtfs-1836",
-    "de-baden-wurttemberg-verkehrsverbund-rhein-neckar-gtfs-1173",
-    "de-baden-wurttemberg-db-zugbus-regionalverkehr-alb-bodensee-gtfs-773",
-    "au-new-south-wales-train-replacement-bus-operators-gtfs-1322"
+    "de-unknown-rursee-schifffahrt-kg-gtfs-784"
 ]
 
 # Google Cloud constants
