@@ -17,8 +17,6 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
@@ -53,38 +51,33 @@ public class TripAndShapeDistanceValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    List<String> uniqueShapeIds =
-        shapeTable.getEntities().stream()
-            .map(GtfsShape::shapeId)
-            .distinct()
-            .collect(Collectors.toList());
+    shapeTable
+        .byShapeIdMap()
+        .forEach(
+            (shapeId, shape) -> {
+              double maxShapeDist =
+                  shapeTable.byShapeId(shapeId).stream()
+                      .mapToDouble(GtfsShape::shapeDistTraveled)
+                      .max()
+                      .orElse(Double.NEGATIVE_INFINITY);
 
-    uniqueShapeIds.forEach(
-        shapeId -> {
-          double maxShapeDist =
-              shapeTable.getEntities().stream()
-                  .filter(s -> s.shapeId().equals(shapeId))
-                  .mapToDouble(GtfsShape::shapeDistTraveled)
-                  .max()
-                  .orElse(Double.NEGATIVE_INFINITY);
+              tripTable
+                  .byShapeId(shapeId)
+                  .forEach(
+                      trip -> {
+                        double maxStopTimeDist =
+                            stopTimeTable.byTripId(trip.tripId()).stream()
+                                .mapToDouble(GtfsStopTime::shapeDistTraveled)
+                                .max()
+                                .orElse(Double.NEGATIVE_INFINITY);
 
-          tripTable
-              .byShapeId(shapeId)
-              .forEach(
-                  trip -> {
-                    double maxStopTimeDist =
-                        stopTimeTable.byTripId(trip.tripId()).stream()
-                            .mapToDouble(GtfsStopTime::shapeDistTraveled)
-                            .max()
-                            .orElse(Double.NEGATIVE_INFINITY);
-
-                    if (maxStopTimeDist > maxShapeDist) {
-                      noticeContainer.addValidationNotice(
-                          new TripDistanceExceedsShapeDistanceNotice(
-                              trip.tripId(), shapeId, maxStopTimeDist, maxShapeDist));
-                    }
-                  });
-        });
+                        if (maxStopTimeDist > maxShapeDist) {
+                          noticeContainer.addValidationNotice(
+                              new TripDistanceExceedsShapeDistanceNotice(
+                                  trip.tripId(), shapeId, maxStopTimeDist, maxShapeDist));
+                        }
+                      });
+            });
   }
 
   /** The distance traveled by a trip should be less or equal to the max length of its shape. */
