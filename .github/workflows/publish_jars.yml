@@ -41,6 +41,7 @@ jobs:
 
       - name: Import GPG key
         run: |
+          cat modified_key.asc
           gpg --batch --import modified_key.asc
           gpg --list-keys
 #
