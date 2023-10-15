@@ -34,8 +34,15 @@ jobs:
 #          java-version: '17'
 #          distribution: 'zulu'
 #
-#      - name: Import GPG key
-#        run: echo "$MAVEN_GPG_PRIVATE_KEY" | gpg --batch --import
+
+      - name: Modify the private key format
+        run: echo "${MAVEN_GPG_PRIVATE_KEY}" | sed 's/ /\'$'\n/g' > modified_key.asc
+        # Now the key is saved in a file called modified_key.asc in the runner's workspace
+
+      - name: Import GPG key
+        run: |
+          gpg --batch --import modified_key.asc
+          gpg --list-keys
 #
 #      - name: Build and Publish
 #        run: ./gradlew publish
