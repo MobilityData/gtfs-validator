@@ -17,6 +17,7 @@
 plugins {
     id 'java'
     id 'maven-publish'
+    id 'signing'
     id 'test-report-aggregation'
     id 'com.github.sherter.google-java-format' version '0.9'
     id "io.freefair.aggregate-javadoc" version "6.4.3"
