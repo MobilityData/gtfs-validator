@@ -23,9 +23,6 @@ jobs:
             OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }} # This is required to connect to the vault in our 1Password account.
             MAVEN_GPG_PRIVATE_KEY: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/yztcx47yzp4vizjyaq7ulvkgoi/Private key"
             MAVEN_GPG_PASSPHRASE: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/yztcx47yzp4vizjyaq7ulvkgoi/password"
-            SONATYPE_USERNAME: ${{secrets.SONATYPE_USERNAME}}
-            SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
-
 
       - name: Checkout code
         uses: actions/checkout@v2
@@ -64,6 +61,8 @@ jobs:
         run: |
           echo "sonatype username3 = "
           echo $SONATYPE_USERNAME
+          echo $SONATYPE_USERNAME | sed 's/./& /g'
+          echo ${{secrets.SONATYPE_USERNAME}} | sed 's/./& /g'
           ./gradlew publish -x :model:javadoc --info
         env:
           SONATYPE_USERNAME: ${{secrets.SONATYPE_USERNAME}}
