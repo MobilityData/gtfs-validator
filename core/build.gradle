@@ -89,7 +89,7 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
 }
 
-
+publish.dependsOn printVersion
 
 publishing {
 
