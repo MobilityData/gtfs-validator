@@ -62,8 +62,9 @@ jobs:
 
       - name: Build and Publish
         run: |
-          echo "sonatype username3 = $SONATYPE_USERNAME"
-          ./gradlew publish -x :model:javadoc
+          echo "sonatype username3 = "
+          echo $SONATYPE_USERNAME
+          ./gradlew publish -x :model:javadoc --info
         env:
           SONATYPE_USERNAME: ${{secrets.SONATYPE_USERNAME}}
           SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
