@@ -2,7 +2,9 @@ name: Upload Release Jars to Sonatype
 
 on:
   push:
-    branches: [ 1588-publish-to-maven-central ]
+    tags:
+      - '*-TEST'
+#    branches: [ 1588-publish-to-maven-central ]
 #  release:
 #    types: [ prereleased, released ]
 
