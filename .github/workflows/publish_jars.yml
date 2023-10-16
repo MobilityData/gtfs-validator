@@ -41,7 +41,7 @@ jobs:
           footer="-----END PGP PRIVATE KEY BLOCK-----"
           
           # Extract the content between the header and footer
-          content=$(echo "FLATTENED_MAVEN_GPG_PRIVATE_KEY" | sed -e "s/^${header}//" -e "s/${footer}$//")
+          content=$(echo "$FLATTENED_MAVEN_GPG_PRIVATE_KEY" | sed -e "s/^${header}//" -e "s/${footer}$//")
           
           # Replace spaces in the content with newlines
           converted_content=$(echo "$content" | tr ' ' '\n')
