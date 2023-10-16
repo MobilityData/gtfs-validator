@@ -66,7 +66,6 @@ jobs:
           SONATYPE_USERNAME: ${{secrets.SONATYPE_USERNAME}}
           SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
 
-
 #      - name: Print trucs
 #        run: |
 #          echo "Hello World!"
