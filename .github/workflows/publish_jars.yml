@@ -1,4 +1,4 @@
-name: Upload Release Assets
+name: Upload Release Jars to Sonatype
 
 on:
   push:
@@ -37,6 +37,7 @@ jobs:
 
       - name: Modify the private key format
         run: |
+          echo "Sonatype username = $SONATYPE_USERNAME"
           # The key obtained from 1password is flattened, i.e. its on one line. Put it back as multiline
           header="-----BEGIN PGP PRIVATE KEY BLOCK-----"
           footer="-----END PGP PRIVATE KEY BLOCK-----"
@@ -53,9 +54,9 @@ jobs:
 
       - name: Import GPG key
         run: |
-          echo "modified key"
-          cat gpg_private_key.asc
-          echo "modified key end"
+#          echo "modified key"
+#          cat gpg_private_key.asc
+#          echo "modified key end"
           gpg --batch --import gpg_private_key.asc
           echo "List of keys"
           gpg --list-keys
