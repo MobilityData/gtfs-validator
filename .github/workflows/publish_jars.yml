@@ -36,7 +36,7 @@ jobs:
 
       - name: Modify the private key format
         run: |
-          echo "sonatype username = $SONATYPE_USERNAME"
+          echo "sonatype username = ${{secrets.SONATYPE_USERNAME}}"
           # The key obtained from 1password is flattened, i.e. its on one line. Put it back as multiline
           header="-----BEGIN PGP PRIVATE KEY BLOCK-----"
           footer="-----END PGP PRIVATE KEY BLOCK-----"
