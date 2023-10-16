@@ -16,6 +16,7 @@
 
 plugins {
     id 'java'
+    id 'maven-publish'
     id 'test-report-aggregation'
     id 'com.github.sherter.google-java-format' version '0.9'
     id "io.freefair.aggregate-javadoc" version "6.4.3"
@@ -64,7 +65,101 @@ allprojects {
         // Any project with a test should be added to test report aggregation in the root project.
         rootProject.dependencies.add('testReportAggregation', project)
     }
+//    ext.sharedPublishingRepos = {
+//        repositories {
+//            publishing {
+//                repositories {
+//                    maven {
+//                  //      url = 'https://s01.oss.sonatype.org/content/repositories/staging/
+//                  //      url = 'https://s01.oss.sonatype.org/content/groups/staging/'
+//                   //     url = 'https://s01.oss.sonatype.org/content/repositories/staging/'
+//                        url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2'
+// //                       mavenLocal()
+////                        credentials {
+////                            username = 'mobilitydata'
+////                            password = ''
+////                        }
+//                    }
+//                }
+//            }
+//
+//        }
+//    }
+
 }
+
+subprojects {
+//    apply plugin: 'maven-publish'
+
+//    // Define sourcesJar task
+//    task sourcesJar(type: Jar, dependsOn: classes) {
+//        classifier = 'sources'
+//        from sourceSets.main.allSource
+//    }
+//
+//    // If you also have a reference to javadocJar, you can define it similarly:
+//    task javadocJar(type: Jar, dependsOn: javadoc) {
+//        classifier = 'javadoc'
+//        from javadoc.destinationDir
+//    }
+
+    // Add these JARs to the artifacts
+//    artifacts {
+//        add('default', sourcesJar)
+//        add('default', javadocJar)
+////        archives sourcesJar
+////        archives javadocJar
+//    }
+
+//    afterEvaluate { // This ensures the evaluation happens after all other configurations
+//        if (plugins.hasPlugin('java')) {
+//            publishing {
+//
+//                publications {
+//                    mavenJava(MavenPublication) {
+//                        from components.java
+//
+//                        artifact sourcesJar
+//                        artifact javadocJar
+////                        if (project.name == 'gtfs-validator-main') {
+////                            artifactId = 'gtfs-validator-main'
+////                        } else if (project.name == 'gtfs-validator-core') {
+////                            artifactId = 'gtfs-validator-core'
+////                        } else {
+////                            artifactId = project.name
+////                        }
+//
+//                        pom {
+//                            name = project.name
+//                            description = 'A description of your project'
+//                            url = 'https://github.com/MobilityData/gtfs-validator'
+//                            licenses {
+//                                license {
+//                                    name = 'The Apache License, Version 2.0'
+//                                    url = 'https://github.com/MobilityData/gtfs-validator/blob/master/LICENSE'
+//                                }
+//                            }
+//                            developers {
+//                                developer {
+//                                    id = 'jcpitre'
+//                                    name = 'jcpitre'
+//                                    email = 'jcpitre@mobilitydata.org'
+//                                }
+//                            }
+//                            scm {
+//                                connection = 'scm:git:git://github.com/MobilityData/gtfs-validator.git'
+//                                developerConnection = 'scm:git:ssh://github.com/MobilityData/gtfs-validator.git'
+//                                url = 'https://github.com/MobilityData/gtfs-validator'
+//                            }
+//                        }
+//                    }
+//                }
+//
+//            }
+        //}
+    //}
+}
+
 
 reporting {
     reports {
@@ -80,4 +175,10 @@ task copyRulesToWebClient (type: Copy) {
     into "./web/client/static"
 }
 
+
+task comps {
+    afterEvaluate {
+        println("Components: " + components*.name)
+    }
+}
 build.dependsOn copyRulesToWebClient
