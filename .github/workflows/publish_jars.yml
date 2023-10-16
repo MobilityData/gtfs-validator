@@ -53,9 +53,6 @@ jobs:
 
       - name: Import GPG key
         run: |
-#          echo "modified key"
-#          cat gpg_private_key.asc
-#          echo "modified key end"
           gpg --batch --import gpg_private_key.asc
           echo "List of keys"
           gpg --list-keys
