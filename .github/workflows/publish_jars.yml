@@ -40,21 +40,20 @@ jobs:
           header="-----BEGIN PGP PRIVATE KEY BLOCK-----"
           footer="-----END PGP PRIVATE KEY BLOCK-----"
           
-          # Extract the content between the header and footer
-          content=$(echo "$FLATTENED_MAVEN_GPG_PRIVATE_KEY" | sed -e "s/^${header}//" -e "s/${footer}$//")
-          
+          # Remove the header and footer from the flattened key
+          content="${FLATTENED_MAVEN_GPG_PRIVATE_KEY//$header/}"
+          content="${content//$footer/}"
+      
           # Replace spaces in the content with newlines
           converted_content=$(echo "$content" | tr ' ' '\n')
-                    
-          unflattened_key="-----BEGIN PGP PRIVATE KEY BLOCK-----\n${converted_content}\n-----END PGP PRIVATE KEY BLOCK-----"
-#          echo "MAVEN_GPG_PRIVATE_KEY=$unflattened_key" >> $GITHUB_ENV
-
-          echo "MAVEN_GPG_PRIVATE_KEY<<EOF" >> $GITHUB_ENV
-          echo "$unflattened_key" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-
-#          echo -e "$header\n$converted_content\n$footer" > gpg_private_key.asc
-
+      
+          # Construct the final key
+          unflattened_key="$header\n$converted_content\n$footer"
+      
+          # Append it to the environment variable using HereDoc format
+          cat <<EOF >>$GITHUB_ENV
+          MAVEN_GPG_PRIVATE_KEY=$unflattened_key
+          EOF
 
 #      - name: Import GPG key
 #        run: |
