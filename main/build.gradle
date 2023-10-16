@@ -21,29 +21,17 @@ plugins {
 }
 
 
-signing {
-    sign configurations.archives
- //   sign publishing.publications['mavenJava']
+//signing {
+//    sign configurations.archives
+// //   sign publishing.publications['mavenJava']
+//
+//}
 
+signing {
+    useInMemoryPgpKeys(System.getenv('MAVEN_GPG_PRIVATE_KEY'), System.getenv('MAVEN_GPG_PASSPHRASE'))
+    sign publishing.publications.mavenJava
 }
 
-//task sourcesJar(type: Jar) {
-//    from sourceSets.main.allSource
-//    archiveClassifier = 'sources'
-//}
-//
-//task javadocJar(type: Jar, dependsOn: javadoc) {
-//    from javadoc.destinationDir
-//    archiveClassifier = 'javadoc'
-//}
-
-//publishing {
-//    publications {
-//        mavenJava(MavenPublication) {
-//            artifactId = 'gtfs-validator-main'
-//        }
-//    }
-//}
 
 task comps {
     afterEvaluate {
@@ -51,45 +39,6 @@ task comps {
     }
 }
 
-//
-//publishing {
-//    publications {
-//        mavenJava(MavenPublication) {
-//            artifactId = 'gtfs-validator-main'
-//
-//            from components.java
-//
-//            artifact sourcesJar
-//            artifact javadocJar
-//
-//            // Here, you can further customize your POM for Maven Central's requirements
-//            pom {
-//                name = 'gtfs-validator-main'
-//                description = 'A description of your project'
-//                url = 'https://github.com/MobilityData/gtfs-validator'
-//                licenses {
-//                    license {
-//                        name = 'The Apache License, Version 2.0'
-//                        url = 'https://github.com/MobilityData/gtfs-validator/blob/master/LICENSE'
-//                    }
-//                }
-//                developers {
-//                    developer {
-//                        id = 'jcpitre'
-//                        name = 'jcpitre'
-//                        email = 'jcpitre@mobilitydata.org'
-//                    }
-//                }
-//                scm {
-//                    connection = 'scm:git:git://github.com/MobilityData/gtfs-validator.git'
-//                    developerConnection = 'scm:git:ssh://github.com/MobilityData/gtfs-validator.git'
-//                    url = 'https://github.com/MobilityData/gtfs-validator'
-//                }
-//            }
-//
-//        }
-//    }
-//}
 
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
@@ -100,8 +49,6 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
 }
-
-
 
 publishing {
 
@@ -155,58 +102,6 @@ publishing {
         }
     }
 }
-
-
-
-//publishing {
-//    sharedPublishingRepos.delegate = this
-//    sharedPublishingRepos.call()
-//    publications {
-//        mavenJava(MavenPublication) {
-//            artifactId = 'gtfs-validator-main'
-//
-//            from components.java
-//        }
-//    }
-//
-//}
-//publishing {
-//    publications {
-//        mavenJava(MavenPublication) {
-//            from components.java
-//            artifactId = 'gtfs-validator-main'
-//
-//            artifact sourcesJar
-//            artifact javadocJar
-//
-//
-//            pom {
-//                name = 'gtfs-validator-main'
-//                description = 'A description of your project'
-//                url = 'https://github.com/MobilityData/gtfs-validator'
-//                licenses {
-//                    license {
-//                        name = 'The Apache License, Version 2.0'
-//                        url = 'https://github.com/MobilityData/gtfs-validator/blob/master/LICENSE'
-//                    }
-//                }
-//                developers {
-//                    developer {
-//                        id = 'jcpitre'
-//                        name = 'jcpitre'
-//                        email = 'jcpitre@mobilitydata.org'
-//                    }
-//                }
-//                scm {
-//                    connection = 'scm:git:git://github.com/MobilityData/gtfs-validator.git'
-//                    developerConnection = 'scm:git:ssh://github.com/MobilityData/gtfs-validator.git'
-//                    url = 'https://github.com/MobilityData/gtfs-validator'
-//                }
-//            }
-//        }
-//    }
-//}
-
 
 dependencies {
     annotationProcessor project(':processor:notices')

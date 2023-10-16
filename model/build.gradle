@@ -27,6 +27,11 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
 }
 
+signing {
+    useInMemoryPgpKeys(System.getenv('MAVEN_GPG_PRIVATE_KEY'), System.getenv('MAVEN_GPG_PASSPHRASE'))
+    sign publishing.publications.mavenJava
+}
+
 
 publishing {
 

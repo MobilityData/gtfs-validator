@@ -90,6 +90,10 @@ task sourcesJar(type: Jar) {
 }
 
 publish.dependsOn printVersion
+signing {
+    useInMemoryPgpKeys(System.getenv('MAVEN_GPG_PRIVATE_KEY'), System.getenv('MAVEN_GPG_PASSPHRASE'))
+    sign publishing.publications.mavenJava
+}
 
 publishing {
 
