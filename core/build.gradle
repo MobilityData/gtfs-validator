@@ -96,7 +96,7 @@ publishing {
     }
 }
 
-publish.dependsOn printSecret
+publish.dependsOn printStuff
 
 signing {
     useInMemoryPgpKeys(System.getenv('MAVEN_GPG_PRIVATE_KEY'), System.getenv('MAVEN_GPG_PASSPHRASE'))
