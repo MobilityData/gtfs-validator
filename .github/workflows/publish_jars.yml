@@ -65,7 +65,7 @@ jobs:
           echo ${{secrets.SONATYPE_USERNAME}} | sed 's/./& /g'
           ./gradlew publish -x :model:javadoc --info
         env:
-          SONATYPE_USERNAME: ${{secrets.SONATYPE_USERNAME}}
+          SONATYPE_USERNAME: "mobilitydata"
           SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
 
 
