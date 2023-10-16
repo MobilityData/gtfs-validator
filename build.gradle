@@ -92,7 +92,7 @@ allprojects {
         doLast {
             println "Project version: ${project.version}"
             println "My Environment Variable: "
-            println System.getenv('SONATYPE_USERNAME')
+            println System.getenv('SONATYPE_NAME')
         }
     }
 }
