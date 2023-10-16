@@ -25,14 +25,14 @@ jobs:
             SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
 
 
-#      - name: Checkout code
-#        uses: actions/checkout@v2
-#
-#      - name: Set up JDK 17
-#        uses: actions/setup-java@v3
-#        with:
-#          java-version: '17'
-#          distribution: 'zulu'
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'zulu'
 
       - name: Modify the private key format
         run: |
