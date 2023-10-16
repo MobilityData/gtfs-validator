@@ -47,10 +47,12 @@ jobs:
           converted_content=$(echo "$content" | tr ' ' '\n')
                     
           unflattened_key="-----BEGIN PGP PRIVATE KEY BLOCK-----\n${converted_content}\n-----END PGP PRIVATE KEY BLOCK-----"
-          echo "MAVEN_GPG_PRIVATE_KEY=$unflattened_key" >> $GITHUB_ENV
-      
+#          echo "MAVEN_GPG_PRIVATE_KEY=$unflattened_key" >> $GITHUB_ENV
 
-      #          # Output the combined values to a file that we can then use to import in the temporary GPG keyring
+          echo "MAVEN_GPG_PRIVATE_KEY<<EOF" >> $GITHUB_ENV
+          echo "$unflattened_key" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
 #          echo -e "$header\n$converted_content\n$footer" > gpg_private_key.asc
 
 
