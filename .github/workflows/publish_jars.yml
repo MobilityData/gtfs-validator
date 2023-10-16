@@ -36,26 +36,43 @@ jobs:
 #
 
       - name: Modify the private key format
-        run: echo "${MAVEN_GPG_PRIVATE_KEY}" | sed 's/ /\'$'\n/g' > modified_key.asc
-        # Now the key is saved in a file called modified_key.asc in the runner's workspace
+        run: |
+          # The key obtained fro 1password is flattened, i.e. its on one line. Put it back as multiline
+          header="-----BEGIN PGP PRIVATE KEY BLOCK-----"
+          footer="-----END PGP PRIVATE KEY BLOCK-----"
+          
+          # Extract the content between the header and footer
+          content=$(echo "$MAVEN_GPG_PRIVATE_KEY" | sed -e "s/^${header}//" -e "s/${footer}$//")
+          
+          # Replace spaces in the content with newlines
+          converted_content=$(echo "$content" | tr ' ' '\n')
+          
+          # Combine everything into the complete key
+          echo "$header" > restored_key.asc
+          echo "$converted_content" >> restored_key.asc
+          echo "$footer" >> restored_key.asc
+          
+          # Output the combined values to a file that we can then use to import in the temporary GPG keyring
+          echo -e "$header\n$converted_content\n$footer" > gpg_private_key.asc
+
 
       - name: Import GPG key
         run: |
           echo "modified key"
-          cat modified_key.asc
+          cat gpg_private_key.asc
           echo "modified key end"
-          gpg --batch --import modified_key.asc
+          gpg --batch --import gpg_private_key.asc
           gpg --list-keys
 #
 #      - name: Build and Publish
 #        run: ./gradlew publish
 
-      - name: Print trucs
-        run: |
-          echo "Hello World!"
-          echo "truc1"
-          echo $MAVEN_GPG_PASSPHRASE
-          echo "truc2"
-          echo $MAVEN_GPG_PRIVATE_KEY
+#      - name: Print trucs
+#        run: |
+#          echo "Hello World!"
+#          echo "truc1"
+#          echo $MAVEN_GPG_PASSPHRASE
+#          echo "truc2"
+#          echo $MAVEN_GPG_PRIVATE_KEY
 
 
