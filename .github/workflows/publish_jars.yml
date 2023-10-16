@@ -59,7 +59,12 @@ jobs:
           gpg --list-keys
 
       - name: Build and Publish
-        run: ./gradlew publish -x :model:javadoc
+        run: |
+          echo "sonatype username3 = $SONATYPE_USERNAME"
+          ./gradlew publish -x :model:javadoc
+        env:
+          SONATYPE_USERNAME: ${{secrets.SONATYPE_USERNAME}}
+          SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
 
 #      - name: Print trucs
 #        run: |
