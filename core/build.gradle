@@ -20,30 +20,7 @@ plugins {
     id 'signing'
 }
 
-dependencies {
-    implementation project(':model')
-    annotationProcessor project(':processor:notices')
-    annotationProcessor 'com.google.auto.value:auto-value:1.7.4'
-    compileOnly 'com.google.auto.value:auto-value-annotations:1.7.4'
-    implementation 'org.apache.commons:commons-compress:1.20'
-    implementation 'org.apache.commons:commons-lang3:3.0'
-    implementation 'javax.inject:javax.inject:1'
-    implementation 'org.apache.httpcomponents:httpclient:4.5.2'
-    implementation 'commons-io:commons-io:2.8.0'
-    implementation 'com.univocity:univocity-parsers:2.9.0'
-    implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'com.google.geometry:s2-geometry:2.0.0'
-    implementation 'com.google.guava:guava:31.0.1-jre'
-    implementation 'commons-validator:commons-validator:1.6'
-    implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.13'
-    implementation 'com.google.flogger:flogger:0.6'
-    implementation 'io.github.classgraph:classgraph:4.8.146'
-    testImplementation 'com.google.flogger:flogger-system-backend:0.6'
-    testImplementation group: 'junit', name: 'junit', version: '4.13'
-    testImplementation "com.google.truth:truth:1.0.1"
-    testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'
-    testImplementation 'org.mockito:mockito-core:4.5.1'
-}
+
 
 jar {
     manifest {
@@ -52,33 +29,6 @@ jar {
     }
 }
 
-//publishing {
-//    publications {
-//        sharedPublishingRepos.delegate = this
-//        sharedPublishingRepos.call()
-//
-//
-//        mavenJava(MavenPublication) {
-//            artifactId = 'gtfs-validator-core'
-//
-//            from components.java
-//        }
-//    }
-//}
-
-//publishing {
-//    publications {
-//        mavenJava(MavenPublication) {
-//            artifactId = 'gtfs-validator-core'
-//        }
-//    }
-//}
-
-task comps {
-    afterEvaluate {
-        println("Components: " + components*.name)
-    }
-}
 
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
@@ -90,21 +40,11 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
 }
 
-publish.dependsOn printVersion
-signing {
-    useInMemoryPgpKeys(System.getenv('MAVEN_GPG_PRIVATE_KEY'), System.getenv('MAVEN_GPG_PASSPHRASE'))
-    sign publishing.publications.mavenJava
-}
-
 publishing {
 
     repositories {
         maven {
-            //      url = 'https://s01.oss.sonatype.org/content/repositories/staging/
-            //      url = 'https://s01.oss.sonatype.org/content/groups/staging/'
-            //     url = 'https://s01.oss.sonatype.org/content/repositories/staging/'
-            url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2'
-            //                       mavenLocal()
+            url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2'//                       mavenLocal()
             credentials {
                 username System.getenv("SONATYPE_USERNAME")
                 password System.getenv("SONATYPE_PASSWORD")
@@ -112,8 +52,6 @@ publishing {
         }
     }
     publications {
-//        sharedPublishingRepos.delegate = this
-//        sharedPublishingRepos.call()
         mavenJava(MavenPublication) {
             from components.java
             artifactId = 'gtfs-validator-core'
@@ -149,10 +87,40 @@ publishing {
     }
 }
 
+signing {
+    useInMemoryPgpKeys(System.getenv('MAVEN_GPG_PRIVATE_KEY'), System.getenv('MAVEN_GPG_PASSPHRASE'))
+    sign publishing.publications.mavenJava
+}
+
 compileJava {
     options.compilerArgs << '-parameters'
 }
 
 compileTestJava {
     options.compilerArgs << '-parameters'
+}
+
+dependencies {
+    implementation project(':model')
+    annotationProcessor project(':processor:notices')
+    annotationProcessor 'com.google.auto.value:auto-value:1.7.4'
+    compileOnly 'com.google.auto.value:auto-value-annotations:1.7.4'
+    implementation 'org.apache.commons:commons-compress:1.20'
+    implementation 'org.apache.commons:commons-lang3:3.0'
+    implementation 'javax.inject:javax.inject:1'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.2'
+    implementation 'commons-io:commons-io:2.8.0'
+    implementation 'com.univocity:univocity-parsers:2.9.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.google.geometry:s2-geometry:2.0.0'
+    implementation 'com.google.guava:guava:31.0.1-jre'
+    implementation 'commons-validator:commons-validator:1.6'
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.13'
+    implementation 'com.google.flogger:flogger:0.6'
+    implementation 'io.github.classgraph:classgraph:4.8.146'
+    testImplementation 'com.google.flogger:flogger-system-backend:0.6'
+    testImplementation group: 'junit', name: 'junit', version: '4.13'
+    testImplementation "com.google.truth:truth:1.0.1"
+    testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'
+    testImplementation 'org.mockito:mockito-core:4.5.1'
 }
