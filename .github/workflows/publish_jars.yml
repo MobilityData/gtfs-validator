@@ -49,20 +49,19 @@ jobs:
           
           # Output the combined values to a file that we can then use to import in the temporary GPG keyring
           echo -e "$header\n$converted_content\n$footer" > gpg_private_key.asc
+          
+          echo "MULTI_LINES_TEXT_ENV_VAR<<EOF" >> $GITHUB_ENV
+          echo -e "$header\n$converted_content\n$footer" >> $GITHUB_ENV
 
-
-      - name: Import GPG key
-        run: |
-          gpg --batch --import gpg_private_key.asc
-          echo "List of keys"
-          gpg --list-keys
-
-
+          echo "EOF" >> $GITHUB_ENV
+#
 #      - name: Import GPG key
 #        run: |
 #          gpg --batch --import gpg_private_key.asc
 #          echo "List of keys"
 #          gpg --list-keys
+
+
 
       - name: Build and Publish
         run: |

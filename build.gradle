@@ -187,9 +187,4 @@ task copyRulesToWebClient (type: Copy) {
 }
 
 
-task comps {
-    afterEvaluate {
-        println("Components: " + components*.name)
-    }
-}
 build.dependsOn copyRulesToWebClient
