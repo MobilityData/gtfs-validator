@@ -16,7 +16,7 @@
 
 plugins {
     id 'java'
-    id 'maven-publish'
+//    id 'maven-publish'
     id 'signing'
     id 'test-report-aggregation'
     id 'com.github.sherter.google-java-format' version '0.9'
@@ -67,26 +67,6 @@ allprojects {
         // Any project with a test should be added to test report aggregation in the root project.
         rootProject.dependencies.add('testReportAggregation', project)
     }
-//    ext.sharedPublishingRepos = {
-//        repositories {
-//            publishing {
-//                repositories {
-//                    maven {
-//                  //      url = 'https://s01.oss.sonatype.org/content/repositories/staging/
-//                  //      url = 'https://s01.oss.sonatype.org/content/groups/staging/'
-//                   //     url = 'https://s01.oss.sonatype.org/content/repositories/staging/'
-//                        url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2'
-// //                       mavenLocal()
-////                        credentials {
-////                            username = 'mobilitydata'
-////                            password = ''
-////                        }
-//                    }
-//                }
-//            }
-//
-//        }
-//    }
 
     task printVersion {
         doLast {

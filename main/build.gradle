@@ -21,14 +21,6 @@ plugins {
 }
 
 
-//signing {
-//    sign configurations.archives
-// //   sign publishing.publications['mavenJava']
-//
-//}
-
-
-
 task comps {
     afterEvaluate {
         println("Components: " + components*.name)
