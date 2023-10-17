@@ -23,6 +23,7 @@ jobs:
             OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }} # This is required to connect to the vault in our 1Password account.
             FLATTENED_MAVEN_GPG_PRIVATE_KEY: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/yztcx47yzp4vizjyaq7ulvkgoi/Private key"
             MAVEN_GPG_PASSPHRASE: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/yztcx47yzp4vizjyaq7ulvkgoi/password"
+            MAVEN_GPG_KEYID: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/yztcx47yzp4vizjyaq7ulvkgoi/Key"
 
       - name: Checkout code
         uses: actions/checkout@v2
@@ -36,6 +37,7 @@ jobs:
       - name: Modify the private key format
         run: |
           echo "sonatype username2 = $SONATYPE_USERNAME"
+          echo "keyID = $MAVEN_GPG_KEYID"
           # The key obtained from 1password is flattened, i.e. its on one line. Put it back as multiline
           header="-----BEGIN PGP PRIVATE KEY BLOCK-----"
           footer="-----END PGP PRIVATE KEY BLOCK-----"
@@ -47,13 +49,14 @@ jobs:
           # Replace spaces in the content with newlines
           converted_content=$(echo "$content" | tr ' ' '\n')
           
-          # Output the combined values to a file that we can then use to import in the temporary GPG keyring
-          echo -e "$header\n$converted_content\n$footer" > gpg_private_key.asc
+#          # Output the combined values to a file that we can then use to import in the temporary GPG keyring
+#          echo -e "$header\n$converted_content\n$footer" > gpg_private_key.asc
+          echo -e "$header\n$converted_content\n$footer" | gpg --batch --import
           
-          echo "MAVEN_GPG_PRIVATE_KEY<<EOF" >> $GITHUB_ENV
-          echo -e "$header\n$converted_content\n$footer" >> $GITHUB_ENV
-
-          echo "EOF" >> $GITHUB_ENV
+#          echo "MAVEN_GPG_PRIVATE_KEY<<EOF" >> $GITHUB_ENV
+#          echo -e "$header\n$converted_content\n$footer" >> $GITHUB_ENV
+#
+#          echo "EOF" >> $GITHUB_ENV
 #
 #      - name: Import GPG key
 #        run: |
@@ -63,15 +66,15 @@ jobs:
 
 
 
-      - name: Build and Publish
-        run: |
-          echo "sonatype username3 = "
-          echo $SONATYPE_USERNAME
-          echo $SONATYPE_USERNAME | sed 's/./& /g'
-          ./gradlew publish -x :model:javadoc --info
-        env:
-          SONATYPE_USERNAME: ${{secrets.SONATYPE_USERNAME}}
-          SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
+#      - name: Build and Publish
+#        run: |
+#          echo "sonatype username3 = "
+#          echo $SONATYPE_USERNAME
+#          echo $SONATYPE_USERNAME | sed 's/./& /g'
+#          ./gradlew publish -x :model:javadoc --info
+#        env:
+#          SONATYPE_USERNAME: ${{secrets.SONATYPE_USERNAME}}
+#          SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
 
 
 #      - name: Print trucs
