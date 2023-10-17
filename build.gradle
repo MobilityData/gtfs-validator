@@ -23,8 +23,8 @@ plugins {
     id "io.freefair.aggregate-javadoc" version "6.4.3"
     id "pl.allegro.tech.build.axion-release" version "1.13.6"
 }
-ext.gpgKey = new File('gpg_private_key.asc').text.trim()
-//def gpgKey = new File('gpg_private_key.asc').text.trim()
+//ext.gpgKey = new File('gpg_private_key.asc').text.trim()
+
 
 // Setup and configure properties that are consistent across all projects, including sub-modules.
 allprojects {
