@@ -46,14 +46,17 @@ jobs:
       
           # Replace spaces in the content with newlines
           converted_content=$(echo "$content" | tr ' ' '\n')
-      
-          # Construct the final key
-          unflattened_key="$header\n$converted_content\n$footer"
-      
-          # Append it to the environment variable using HereDoc format
-          cat <<EOF >>$GITHUB_ENV
-          MAVEN_GPG_PRIVATE_KEY=$unflattened_key
-          EOF
+          
+          # Output the combined values to a file that we can then use to import in the temporary GPG keyring
+          echo -e "$header\n$converted_content\n$footer" > gpg_private_key.asc
+
+
+      - name: Import GPG key
+        run: |
+          gpg --batch --import gpg_private_key.asc
+          echo "List of keys"
+          gpg --list-keys
+
 
 #      - name: Import GPG key
 #        run: |

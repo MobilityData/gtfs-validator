@@ -29,6 +29,8 @@ plugins {
 // Setup and configure properties that are consistent across all projects, including sub-modules.
 allprojects {
     group 'org.mobilitydata'
+    // Top of build.gradle
+    def gpgKey = new File('gpg_private_key.asc').text.trim()
 
     // Per the axion-release plugin, this computes the project version based
     // on the most recent tag in the repo.
