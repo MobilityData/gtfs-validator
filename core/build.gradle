@@ -40,15 +40,6 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
 }
 
-task printStuff {
-    doLast {
-        String secret = System.getenv("MAVEN_GPG_PRIVATE_KEY")
-        String spacedSecret = secret.collect { "$it " }.join()
-        println "Trucs:"
-        println spacedSecret
-    }
-}
-
 publishing {
 
     repositories {
@@ -96,11 +87,8 @@ publishing {
     }
 }
 
-publish.dependsOn printStuff
-
 signing {
     useInMemoryPgpKeys(System.getenv('MAVEN_GPG_PRIVATE_KEY'), System.getenv('MAVEN_GPG_PASSPHRASE'))
-//    useInMemoryPgpKeys(project.gpgKey, System.getenv('MAVEN_GPG_PASSPHRASE'))
     sign publishing.publications.mavenJava
 }
 

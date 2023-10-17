@@ -33,53 +33,10 @@ jobs:
           java-version: '17'
           distribution: 'zulu'
 
-#      - name: Modify the private key format
-#        run: |
-#          echo "sonatype username2 = $SONATYPE_USERNAME"
-#          # The key obtained from 1password is flattened, i.e. its on one line. Put it back as multiline
-#          header="-----BEGIN PGP PRIVATE KEY BLOCK-----"
-#          footer="-----END PGP PRIVATE KEY BLOCK-----"
-#
-#          # Remove the header and footer from the flattened key
-#          content="${FLATTENED_MAVEN_GPG_PRIVATE_KEY//$header/}"
-#          content="${content//$footer/}"
-#
-#          # Replace spaces in the content with newlines
-#          converted_content=$(echo "$content" | tr ' ' '\n')
-#
-#          # Output the combined values to a file that we can then use to import in the temporary GPG keyring
-#          echo -e "$header\n$converted_content\n$footer" > gpg_private_key.asc
-#
-#          echo "MAVEN_GPG_PRIVATE_KEY<<EOF" >> $GITHUB_ENV
-#          echo -e "$header\n$converted_content\n$footer" >> $GITHUB_ENV
-#
-#          echo "EOF" >> $GITHUB_ENV
-#
-#      - name: Import GPG key
-#        run: |
-#          gpg --batch --import gpg_private_key.asc
-#          echo "List of keys"
-#          gpg --list-keys
-
-
-
       - name: Build and Publish
         run: |
-          echo "sonatype username3 = "
-          echo $SONATYPE_USERNAME
-          echo $SONATYPE_USERNAME | sed 's/./& /g'
-          ./gradlew publish -x :model:javadoc --info
+          ./gradlew publish -x :model:javadoc
         env:
           SONATYPE_USERNAME: ${{secrets.SONATYPE_USERNAME}}
           SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
-
-
-#      - name: Print trucs
-#        run: |
-#          echo "Hello World!"
-#          echo "truc1"
-#          echo $MAVEN_GPG_PASSPHRASE
-#          echo "truc2"
-#          echo $MAVEN_GPG_PRIVATE_KEY
-
 
