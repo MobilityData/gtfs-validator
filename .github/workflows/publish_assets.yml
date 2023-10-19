@@ -1,9 +1,9 @@
 name: Upload Release Assets
 
 on:
-  push:
-    tags:
-      - 'v[0-9]*'
+  release:
+    types: [ prereleased, released ]
+  workflow_dispatch:
 
 jobs:
   upload-release-assets:
@@ -22,9 +22,11 @@ jobs:
           distribution: 'zulu'
 
       - name: Generate CLI jar
+        if: github.event_name == 'release'
         run: ./gradlew shadowJar
 
       - name: Upload JAR Asset
+        if: github.event_name == 'release'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -35,9 +37,11 @@ jobs:
           asset_content_type: application/java-archive
 
       - name: Generate rules.json
+        if: github.event_name == 'release'
         run: ./gradlew webClientRulesJSON
 
       - name: Upload rules.json asset
+        if: github.event_name == 'release'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -48,12 +52,15 @@ jobs:
           asset_content_type: application/json
 
       - name: Generate JavaDocs
+        if: github.event_name == 'release'
         run: ./gradlew aggregateJavadoc
 
       - name: Zip JavaDocs
+        if: github.event_name == 'release'
         run: zip -r javadocs.zip build/docs/aggregateJavadoc
 
       - name: Upload zipped Javadocs
+        if: github.event_name == 'release'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -70,7 +77,7 @@ jobs:
       # gradle will build, sign then upload artifacts to a Sonatype staging repo.
       # See https://s01.oss.sonatype.org for accessing these repos.
       # At this point it should manually be closed, which will trigger acceptance tests for maven central (but not transfer yet)
-      # Once closed, thew repo is available for testing.
+      # Once closed, the repo is available for testing.
       # After testing, it can be manually promoted on the sonatype site, which will then publish to maven central.
       # Note than once in maven central a release cannot be removed or altered.
 
@@ -84,7 +91,7 @@ jobs:
           MAVEN_GPG_PRIVATE_KEY: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/yztcx47yzp4vizjyaq7ulvkgoi/Private Key"
           MAVEN_GPG_PASSPHRASE: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/yztcx47yzp4vizjyaq7ulvkgoi/password"
 
-      - name: Build and Publish
+      - name: Build and Publish to Sonatype
         run: |
           # The gradle java verifying plugin does not work with java 17.
           # Don't verify since it has already been done when the PR was created.
