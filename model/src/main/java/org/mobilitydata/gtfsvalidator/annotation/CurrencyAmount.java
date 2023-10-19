@@ -17,8 +17,8 @@
 package org.mobilitydata.gtfsvalidator.annotation;
 
 /**
- * Generates a InvalidCurrencyAmountNotice for a
- * currency amount value that does not match the specification of its currency code.
+ * Generates a InvalidCurrencyAmountNotice for a currency amount value that does not match the
+ * specification of its currency code.
  *
  * <p>Example.
  *
