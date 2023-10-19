@@ -1,12 +1,18 @@
+# This action will publish jars that can be used by third parties.
+# Pretty much everything is done through gradle.
+# The version used will be according to the axion-release-plugin, meaning it will take a tag if present,
+# if not it will create a SNAPSHOT version.
+# gradle will compile, sign then upload artifacts to a Sonatype staging repo.
+# See https://s01.oss.sonatype.org for accessing these repos.
+# At this point it should manually be closed, which will trigger acceptance tests for maven central (but not transfer yet)
+# Once closed, thew repo is available for testing.
+# After testing, it can be manually promoted on the sonatype site, which will then publish to maven central.
 name: Upload Release Jars to Sonatype
 
 on:
-  push:
-    tags:
-      - '*-TEST'
-#    branches: [ 1588-publish-to-maven-central ]
-#  release:
-#    types: [ prereleased, released ]
+  release:
+    types: [ prereleased, released ]
+    workflow_dispatch:
 
 jobs:
   build-jars:
@@ -35,7 +41,7 @@ jobs:
 
       - name: Build and Publish
         run: |
-          ./gradlew publish -x :model:javadoc
+          ./gradlew publish
         env:
           SONATYPE_USERNAME: ${{secrets.SONATYPE_USERNAME}}
           SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}

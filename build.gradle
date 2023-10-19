@@ -16,7 +16,7 @@
 
 plugins {
     id 'java'
-//    id 'maven-publish'
+    id 'maven-publish'
     id 'signing'
     id 'test-report-aggregation'
     id 'com.github.sherter.google-java-format' version '0.9'
@@ -27,7 +27,6 @@ plugins {
 // Setup and configure properties that are consistent across all projects, including sub-modules.
 allprojects {
     group 'org.mobilitydata.gtfs-validator'
-
 
     // Per the axion-release plugin, this computes the project version based
     // on the most recent tag in the repo.
@@ -67,88 +66,106 @@ allprojects {
         // Any project with a test should be added to test report aggregation in the root project.
         rootProject.dependencies.add('testReportAggregation', project)
     }
-
-    task printVersion {
-        doLast {
-            println "Project version: ${project.version}"
-            println "My Environment Variable: "
-            println System.getenv('SONATYPE_USERNAME')
-        }
-    }
 }
 
 subprojects {
-//    apply plugin: 'maven-publish'
+    apply plugin: 'java'
 
-//    // Define sourcesJar task
-//    task sourcesJar(type: Jar, dependsOn: classes) {
-//        classifier = 'sources'
-//        from sourceSets.main.allSource
-//    }
-//
-//    // If you also have a reference to javadocJar, you can define it similarly:
-//    task javadocJar(type: Jar, dependsOn: javadoc) {
-//        classifier = 'javadoc'
-//        from javadoc.destinationDir
-//    }
+    // Cannot publish a SNAPSHOT. The provided sonatype url will not accept it.
+    tasks.withType(PublishToMavenRepository).all { task ->
+        task.onlyIf {
+            if (project.version.toString().contains('SNAPSHOT')) {
+                throw new GradleException("Publishing is not allowed for SNAPSHOT versions. Currently " + project.version)
+            }
+            true
+        }
+    }
 
-    // Add these JARs to the artifacts
-//    artifacts {
-//        add('default', sourcesJar)
-//        add('default', javadocJar)
-////        archives sourcesJar
-////        archives javadocJar
-//    }
+    task javadocJar(type: Jar) {
+        archiveClassifier.set('javadoc')
+        from javadoc
+    }
 
-//    afterEvaluate { // This ensures the evaluation happens after all other configurations
-//        if (plugins.hasPlugin('java')) {
-//            publishing {
-//
-//                publications {
-//                    mavenJava(MavenPublication) {
-//                        from components.java
-//
-//                        artifact sourcesJar
-//                        artifact javadocJar
-////                        if (project.name == 'gtfs-validator-main') {
-////                            artifactId = 'gtfs-validator-main'
-////                        } else if (project.name == 'gtfs-validator-core') {
-////                            artifactId = 'gtfs-validator-core'
-////                        } else {
-////                            artifactId = project.name
-////                        }
-//
-//                        pom {
-//                            name = project.name
-//                            description = 'A description of your project'
-//                            url = 'https://github.com/MobilityData/gtfs-validator'
-//                            licenses {
-//                                license {
-//                                    name = 'The Apache License, Version 2.0'
-//                                    url = 'https://github.com/MobilityData/gtfs-validator/blob/master/LICENSE'
-//                                }
-//                            }
-//                            developers {
-//                                developer {
-//                                    id = 'jcpitre'
-//                                    name = 'jcpitre'
-//                                    email = 'jcpitre@mobilitydata.org'
-//                                }
-//                            }
-//                            scm {
-//                                connection = 'scm:git:git://github.com/MobilityData/gtfs-validator.git'
-//                                developerConnection = 'scm:git:ssh://github.com/MobilityData/gtfs-validator.git'
-//                                url = 'https://github.com/MobilityData/gtfs-validator'
-//                            }
-//                        }
-//                    }
-//                }
-//
-//            }
-        //}
-    //}
+    task sourcesJar(type: Jar) {
+        archiveClassifier.set('sources')
+        from sourceSets.main.allSource
+    }
+
+    // These modules require the same publishing configuration, apart from the name of the module
+    // Also we want to limit artefact publishing to these modules.
+    if (project.name == 'main' ||
+            project.name == 'core' ||
+            project.name == 'model') {
+        def fullProjectName = 'gtfs-validator-' + project.name
+
+        afterEvaluate {
+            publishing {
+                repositories {
+                    // This is the sonatype staging repo for maven.
+                    // Once uploaded, the repo needs to be manually closed, which will trigger acceptance tests for
+                    // maven central (but not transfer yet).
+                    // Once successfully closed, the repo is available for testing.
+                    // After testing, it can be manually promoted on the sonatype site, which will then publish to maven central.
+                    maven {
+                        url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2'
+                        credentials {
+                            username System.getenv("SONATYPE_USERNAME")
+                            password System.getenv("SONATYPE_PASSWORD")
+                        }
+                    }
+                }
+
+                publications {
+                    mavenJava(MavenPublication) {
+                        from components.java
+                        artifactId = fullProjectName
+
+                        artifact sourcesJar
+                        artifact javadocJar
+
+                        // Definition of the pom that will be included with the uploaded artifacts.
+                        pom {
+                            name = fullProjectName
+                            description = 'The ' + project.name + " artifacts from the gtfs validator"
+                            url = 'https://github.com/MobilityData/gtfs-validator'
+                            licenses {
+                                license {
+                                    name = 'The Apache License, Version 2.0'
+                                    url = 'https://github.com/MobilityData/gtfs-validator/blob/master/LICENSE'
+                                }
+                            }
+                            developers {
+                                developer {
+                                    id = 'dev'
+                                    name = 'Dev group'
+                                    email = 'it@mobilitydata.org'
+                                }
+                            }
+                            scm {
+                                connection = 'scm:git:git://github.com/MobilityData/gtfs-validator.git'
+                                developerConnection = 'scm:git:ssh://github.com/MobilityData/gtfs-validator.git'
+                                url = 'https://github.com/MobilityData/gtfs-validator'
+                            }
+                        }
+                    }
+                }
+            }
+            signing {
+                useInMemoryPgpKeys(System.getenv('MAVEN_GPG_PRIVATE_KEY'), System.getenv('MAVEN_GPG_PASSPHRASE'))
+                sign publishing.publications.mavenJava
+            }
+        }
+
+    }
+    compileJava {
+        options.compilerArgs << '-parameters'
+    }
+
+    compileTestJava {
+        options.compilerArgs << '-parameters'
+    }
+
 }
-
 
 reporting {
     reports {
@@ -163,6 +180,5 @@ task copyRulesToWebClient (type: Copy) {
     from "./RULES.md"
     into "./web/client/static"
 }
-
 
 build.dependsOn copyRulesToWebClient

@@ -20,79 +20,9 @@ plugins {
     id 'signing'
 }
 
-
-task comps {
-    afterEvaluate {
-        println("Components: " + components*.name)
-    }
-}
-
-
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-publishing {
-
-    repositories {
-        maven {
-
-            url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2'
-            //                       mavenLocal()
-            credentials {
-                username System.getenv("SONATYPE_USERNAME")
-                password System.getenv("SONATYPE_PASSWORD")
-            }
-        }
-    }
-    publications {
-
-        mavenJava(MavenPublication) {
-            from components.java
-            artifactId = 'gtfs-validator-main'
-
-            artifact sourcesJar
-            artifact javadocJar
-
-
-            pom {
-                name = 'gtfs-validator-main'
-                description = 'A description of your project'
-                url = 'https://github.com/MobilityData/gtfs-validator'
-                licenses {
-                    license {
-                        name = 'The Apache License, Version 2.0'
-                        url = 'https://github.com/MobilityData/gtfs-validator/blob/master/LICENSE'
-                    }
-                }
-                developers {
-                    developer {
-                        id = 'jcpitre'
-                        name = 'jcpitre'
-                        email = 'jcpitre@mobilitydata.org'
-                    }
-                }
-                scm {
-                    connection = 'scm:git:git://github.com/MobilityData/gtfs-validator.git'
-                    developerConnection = 'scm:git:ssh://github.com/MobilityData/gtfs-validator.git'
-                    url = 'https://github.com/MobilityData/gtfs-validator'
-                }
-            }
-        }
-    }
-}
-
-signing {
-    useInMemoryPgpKeys(System.getenv('MAVEN_GPG_PRIVATE_KEY'), System.getenv('MAVEN_GPG_PASSPHRASE'))
-    sign publishing.publications.mavenJava
-}
-
+//publishing {
+//    publishing and signing are done in gtfs-validator build.gradle to minimize repetition
+//}
 
 dependencies {
     annotationProcessor project(':processor:notices')

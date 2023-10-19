@@ -20,85 +20,9 @@ plugins {
     id 'signing'
 }
 
-
-
-jar {
-    manifest {
-        attributes('Implementation-Title': 'gtfs-validator-core',
-                'Implementation-Version': project.version)
-    }
-}
-
-
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-publishing {
-
-    repositories {
-        maven {
-            url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2'//                       mavenLocal()
-            credentials {
-                username System.getenv("SONATYPE_USERNAME")
-                password System.getenv("SONATYPE_PASSWORD")
-            }
-        }
-    }
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifactId = 'gtfs-validator-core'
-
-            artifact sourcesJar
-            artifact javadocJar
-
-
-            pom {
-                name = 'gtfs-validator-core'
-                description = 'A description of your project'
-                url = 'https://github.com/MobilityData/gtfs-validator'
-                licenses {
-                    license {
-                        name = 'The Apache License, Version 2.0'
-                        url = 'https://github.com/MobilityData/gtfs-validator/blob/master/LICENSE'
-                    }
-                }
-                developers {
-                    developer {
-                        id = 'jcpitre'
-                        name = 'jcpitre'
-                        email = 'jcpitre@mobilitydata.org'
-                    }
-                }
-                scm {
-                    connection = 'scm:git:git://github.com/MobilityData/gtfs-validator.git'
-                    developerConnection = 'scm:git:ssh://github.com/MobilityData/gtfs-validator.git'
-                    url = 'https://github.com/MobilityData/gtfs-validator'
-                }
-            }
-        }
-    }
-}
-
-signing {
-    useInMemoryPgpKeys(System.getenv('MAVEN_GPG_PRIVATE_KEY'), System.getenv('MAVEN_GPG_PASSPHRASE'))
-    sign publishing.publications.mavenJava
-}
-
-compileJava {
-    options.compilerArgs << '-parameters'
-}
-
-compileTestJava {
-    options.compilerArgs << '-parameters'
-}
+//publishing {
+//    publishing and signing are done in gtfs-validator build.gradle to minimize repetition
+//}
 
 dependencies {
     implementation project(':model')
@@ -123,4 +47,11 @@ dependencies {
     testImplementation "com.google.truth:truth:1.0.1"
     testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'
     testImplementation 'org.mockito:mockito-core:4.5.1'
+}
+
+jar {
+    manifest {
+        attributes('Implementation-Title': 'gtfs-validator-core',
+                'Implementation-Version': project.version)
+    }
 }
