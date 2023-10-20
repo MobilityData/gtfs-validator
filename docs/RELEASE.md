@@ -72,4 +72,4 @@ to be available on the release page itself (see for example [Release 4.1.0 asset
 ![image](https://github.com/MobilityData/gtfs-validator/assets/106176106/c809c1ca-67d7-4c45-bfa5-47441e163d2f)
 
 * Once satisfied with the testing, the repo can be released to Maven Central.
-* Note that once a release is depoyed on Maven Central, it cannot be removed or modified. If problems are detected after this stage, a new release with a different version has to be created.
+* Note that once a release is deployed on Maven Central, it cannot be removed or modified. If problems are detected after this stage, a new release with a different version has to be created.
