@@ -13,9 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+/*
+ * A note about publishing and signing.
+ * Maven central requires that artifacts be signed. And upload is done to Sonatype.
+ * To publish you will need these environment variables defined:
+ *       SONATYPE_USERNAME
+ *       SONATYPE_PASSWORD
+ *       MAVEN_GPG_PRIVATE_KEY
+ *       MAVEN_GPG_PASSPHRASE
+ * Suggestion is to put these in a shell script with restricted read permissions, then source it before calling
+ * ./gradlew publish.
+ */
 plugins {
     id 'java'
+    id 'maven-publish'
+    id 'signing'
     id 'test-report-aggregation'
     id 'com.github.sherter.google-java-format' version '0.9'
     id "io.freefair.aggregate-javadoc" version "6.4.3"
@@ -24,7 +36,7 @@ plugins {
 
 // Setup and configure properties that are consistent across all projects, including sub-modules.
 allprojects {
-    group 'org.mobilitydata'
+    group 'org.mobilitydata.gtfs-validator'
 
     // Per the axion-release plugin, this computes the project version based
     // on the most recent tag in the repo.
@@ -64,6 +76,105 @@ allprojects {
         // Any project with a test should be added to test report aggregation in the root project.
         rootProject.dependencies.add('testReportAggregation', project)
     }
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    // Cannot publish a SNAPSHOT. The provided sonatype url will not accept it.
+    tasks.withType(PublishToMavenRepository).all { task ->
+        task.onlyIf {
+            if (project.version.toString().contains('SNAPSHOT')) {
+                throw new GradleException("Publishing is not allowed for SNAPSHOT versions. Currently " + project.version)
+            }
+            true
+        }
+    }
+
+    task javadocJar(type: Jar) {
+        archiveClassifier.set('javadoc')
+        from javadoc
+    }
+
+    task sourcesJar(type: Jar) {
+        archiveClassifier.set('sources')
+        from sourceSets.main.allSource
+    }
+
+    // These modules require the same publishing configuration, apart from the name of the module
+    // Also we want to limit artefact publishing to these modules.
+    if (project.name == 'main' ||
+            project.name == 'core' ||
+            project.name == 'model') {
+        def fullProjectName = 'gtfs-validator-' + project.name
+
+        afterEvaluate {
+            publishing {
+                repositories {
+                    // This is the sonatype staging repo for maven.
+                    // Once uploaded, the repo needs to be manually closed, which will trigger acceptance tests for
+                    // maven central (but not transfer yet).
+                    // Once successfully closed, the repo is available for testing.
+                    // After testing, it can be manually promoted on the sonatype site, which will then publish to maven central.
+                    maven {
+                        url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2'
+                        credentials {
+                            username System.getenv("SONATYPE_USERNAME")
+                            password System.getenv("SONATYPE_PASSWORD")
+                        }
+                    }
+                }
+
+                publications {
+                    mavenJava(MavenPublication) {
+                        from components.java
+                        artifactId = fullProjectName
+
+                        artifact sourcesJar
+                        artifact javadocJar
+
+                        // Definition of the pom that will be included with the uploaded artifacts.
+                        pom {
+                            name = fullProjectName
+                            description = 'The ' + project.name + " artifacts from the gtfs validator"
+                            url = 'https://github.com/MobilityData/gtfs-validator'
+                            licenses {
+                                license {
+                                    name = 'The Apache License, Version 2.0'
+                                    url = 'https://github.com/MobilityData/gtfs-validator/blob/master/LICENSE'
+                                }
+                            }
+                            developers {
+                                developer {
+                                    id = 'dev'
+                                    name = 'Dev group'
+                                    email = 'it@mobilitydata.org'
+                                }
+                            }
+                            scm {
+                                connection = 'scm:git:git://github.com/MobilityData/gtfs-validator.git'
+                                developerConnection = 'scm:git:ssh://github.com/MobilityData/gtfs-validator.git'
+                                url = 'https://github.com/MobilityData/gtfs-validator'
+                            }
+                        }
+                    }
+                }
+            }
+            signing {
+                useInMemoryPgpKeys(System.getenv('MAVEN_GPG_PRIVATE_KEY'), System.getenv('MAVEN_GPG_PASSPHRASE'))
+                sign publishing.publications.mavenJava
+            }
+        }
+
+    }
+    compileJava {
+        options.compilerArgs << '-parameters'
+    }
+
+    compileTestJava {
+        options.compilerArgs << '-parameters'
+    }
+
 }
 
 reporting {

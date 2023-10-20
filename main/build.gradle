@@ -17,17 +17,12 @@
 plugins {
     id 'java'
     id 'maven-publish'
+    id 'signing'
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId = 'gtfs-validator-main'
-
-            from components.java
-        }
-    }
-}
+//publishing {
+//    publishing and signing are done in gtfs-validator build.gradle to minimize repetition
+//}
 
 dependencies {
     annotationProcessor project(':processor:notices')

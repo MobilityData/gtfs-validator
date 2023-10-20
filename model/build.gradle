@@ -1,18 +1,17 @@
 plugins {
     id 'java'
+    id 'maven-publish'
+    id 'signing'
 }
+
+//publishing {
+//    publishing and signing are done in gtfs-validator build.gradle to minimize repetition
+//}
+
 
 dependencies {
     annotationProcessor 'com.google.auto.value:auto-value:1.7.4'
     compileOnly 'com.google.auto.value:auto-value-annotations:1.7.4'
     implementation 'org.jetbrains:annotations:20.1.0'
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
-}
-
-compileJava {
-    options.compilerArgs << '-parameters'
-}
-
-compileTestJava {
-    options.compilerArgs << '-parameters'
 }
