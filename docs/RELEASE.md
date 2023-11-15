@@ -1,7 +1,6 @@
 # Release instructions
 ### 1. Update documentation
 Update the [README.md](/README.md) to match the latest developments. The documentation should accurately reflect the use of the `jar` that is to be released. 
-If the release contains changes in the notices (new notices, dropped notices, a change in severities, update the [NOTICE_MIGRATION.md](/docs/NOTICE_MIGRATION.md) and add a column.
 
 ### 2. Do a pre relase
 1. Go to the release section of GitHub ![step 1](https://user-images.githubusercontent.com/35747326/99820876-567dd600-2b1f-11eb-87d2-eef132b3016a.png)
