@@ -1,20 +1,31 @@
 name: Update Credits upon opening PR
+
 on:
   pull_request:
     types:
       - opened
+      - synchronize
 
 jobs:
   update-credits:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v2
 
       - name: Update Credits
         run: |
-          contributor="${{ github.event.pull_request.user.login }}"
-          echo "- $contributor" >> credits.md
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          contributor_name=$(jq -r '.pull_request.user.login' $GITHUB_EVENT_PATH)
+          pr_description=$(jq -r '.pull_request.body' $GITHUB_EVENT_PATH)
+          
+          echo "### Contributor: $contributor_name" >> credits.md
+          echo "#### PR Description:" >> credits.md
+          echo "$pr_description" >> credits.md
+          echo "" >> credits.md
+          
+          git add credits.md
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -m "Update credits.md with contributor information" || exit 0
+          git push
