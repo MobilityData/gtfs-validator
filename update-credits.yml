@@ -1,0 +1,20 @@
+name: Update Credits upon opening PR
+on:
+  pull_request:
+    types:
+      - opened
+
+jobs:
+  update-credits:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Update Credits
+        run: |
+          contributor="${{ github.event.pull_request.user.login }}"
+          echo "- $contributor" >> credits.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
