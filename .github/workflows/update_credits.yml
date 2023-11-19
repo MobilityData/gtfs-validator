@@ -9,13 +9,9 @@ on:
 jobs:
   update-credits:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Update Credits
-        run: |
+      - uses: actions/checkout@v2
+      - run: |
           contributor_name=$(jq -r '.pull_request.user.login' $GITHUB_EVENT_PATH)
           pr_description=$(jq -r '.pull_request.body' $GITHUB_EVENT_PATH)
 
