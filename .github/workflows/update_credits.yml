@@ -27,7 +27,7 @@ jobs:
           echo "${{ github.event.pull_request.title }}" >> .github/credits.md
           echo "############################################" >> .github/credits.md
           
-          git add credits.md
+          git add .github/credits.md
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git commit -m "Update credits.md with contributor information" || exit 0
