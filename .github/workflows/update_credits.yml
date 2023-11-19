@@ -18,7 +18,7 @@ jobs:
         run: |
           contributor_name=$(jq -r '.pull_request.user.login' $GITHUB_EVENT_PATH)
           pr_description=$(jq -r '.pull_request.body' $GITHUB_EVENT_PATH)
-          
+
           echo "### Timestamp:" >> .github/credits.md
           echo "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> .github/credits.md
           echo "### Contributor:" >> .github/credits.md
@@ -26,11 +26,11 @@ jobs:
           echo "#### PR Title:" >> .github/credits.md
           echo "${{ github.event.pull_request.title }}" >> .github/credits.md
           echo "############################################" >> .github/credits.md
-          
+
           git add .github/credits.md
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git commit -m "Update credits.md with contributor information" || exit 0
-          git push origin HEAD:<name-of-remote-branch>
+          git push origin ${{ github.event.pull_request.head.ref }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
