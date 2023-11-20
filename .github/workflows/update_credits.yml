@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: master
+          ref: ${{ github.event.pull_request.head.ref }}
       - run: |
           echo "### Timestamp:" >> .github/credits.md
           echo "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> .github/credits.md
@@ -28,6 +28,6 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git commit -m "Update credits.md with contributor information"
-          git push origin HEAD
+          git push origin ${{ github.event.pull_request.head.ref}}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
