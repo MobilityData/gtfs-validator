@@ -1,9 +1,12 @@
-name: Update Credits upon merging PR
+name: Update Credits upon creating PR
 
 on:
   pull_request:
+    branches:
+      - master
     types:
       - opened
+      - synchronize
 
 jobs:
   update-credits:
