@@ -38,9 +38,11 @@ is:pr is:closed merged:>2020-07-28 base:master sort:updated-desc
 ![grhc preview](https://user-images.githubusercontent.com/35747326/100006687-e1b5d080-2d98-11eb-846d-af12fbd7ca9f.png)
 **⚠️ Note: this manipulation can only be done by someone whose GitHub account has `Admin` access rights over the `gtfs-validator` package.** 
 
-### 5. Update the release number in the wiki
-By updating the version number in the project's wiki, users of the app will be advised to upgrade if their local version does not match.
+### 5. Update the release number in the wiki and on gtfs.org
+The version number in the project's wiki is used to inform users of the Desktop app that a new version is available, and will prompt them to upgrade if their local version does not match.
 Update [this page](https://github.com/MobilityData/gtfs-validator/wiki/Current-Version) with the new version.
+
+The version number on [gtfs.org/schedule/validate/](https://gtfs.org/schedule/validate/) is used to inform validator users of which version is currently running on [gtfs-validator.mobilitydata.org/](https://gtfs-validator.mobilitydata.org/). Update by opening a Pull Request on [github.com/MobilityData/gtfs.org](https://github.com/MobilityData/gtfs.org).
 
 ### 6. Publishing to Maven Central
 * Maven central is a repository used by developers to download libraries that can be used in their own development.
