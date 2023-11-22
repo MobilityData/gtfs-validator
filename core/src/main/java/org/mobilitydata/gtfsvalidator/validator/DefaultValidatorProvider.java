@@ -93,7 +93,7 @@ public class DefaultValidatorProvider implements ValidatorProvider {
         } else {
           validators.add((SingleEntityValidator<T>) validatorWithDependencyStatus.validator());
         }
-      } catch (ReflectiveOperationException e) {
+      } catch (ReflectiveOperationException | ValidatorLoaderException e) {
         logger.atSevere().withCause(e).log(
             "Cannot instantiate validator %s", validatorClass.getCanonicalName());
       }
@@ -117,7 +117,7 @@ public class DefaultValidatorProvider implements ValidatorProvider {
         } else {
           validators.add(validatorWithStatus.validator());
         }
-      } catch (ReflectiveOperationException e) {
+      } catch (ReflectiveOperationException | ValidatorLoaderException e) {
         logger.atSevere().withCause(e).log(
             "Cannot instantiate validator %s", validatorClass.getCanonicalName());
       }
@@ -139,7 +139,7 @@ public class DefaultValidatorProvider implements ValidatorProvider {
         } else {
           validators.add(validatorWithStatus.validator());
         }
-      } catch (ReflectiveOperationException e) {
+      } catch (ReflectiveOperationException | ValidatorLoaderException e) {
         logger.atSevere().withCause(e).log(
             "Cannot instantiate validator %s", validatorClass.getCanonicalName());
       }
