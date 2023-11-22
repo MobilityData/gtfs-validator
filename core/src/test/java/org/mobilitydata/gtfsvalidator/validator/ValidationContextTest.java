@@ -54,6 +54,16 @@ public final class ValidationContextTest {
         IllegalArgumentException.class, () -> VALIDATION_CONTEXT.get(ChildCurrentDateTime.class));
   }
 
+  @Test
+  public void get_extraIntegerObject_successful() {
+    assertThat(
+            ValidationContext.builder()
+                .set(Integer.class, new Integer(10))
+                .build()
+                .get(Integer.class))
+        .isEqualTo(10);
+  }
+
   private static class ChildCurrentDateTime extends CurrentDateTime {
 
     public ChildCurrentDateTime(ZonedDateTime now) {

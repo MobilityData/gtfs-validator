@@ -43,7 +43,8 @@ public class ValidatorLoaderTest {
           .build();
 
   @Test
-  public void createValidatorWithContext_injectsContext() throws ReflectiveOperationException {
+  public void createValidatorWithContext_injectsContext()
+      throws ReflectiveOperationException, ValidatorLoaderException {
     GtfsTestEntityValidator validator =
         ValidatorLoader.createValidatorWithContext(
                 GtfsTestEntityValidator.class, VALIDATION_CONTEXT)
@@ -55,7 +56,7 @@ public class ValidatorLoaderTest {
 
   @Test
   public void createSingleFileValidator_injectsTableContainerAndContext()
-      throws ReflectiveOperationException {
+      throws ReflectiveOperationException, ValidatorLoaderException {
     GtfsTestTableContainer table = new GtfsTestTableContainer(TableStatus.EMPTY_FILE);
     GtfsTestSingleFileValidator validator =
         (GtfsTestSingleFileValidator)
@@ -70,7 +71,7 @@ public class ValidatorLoaderTest {
 
   @Test
   public void createMultiFileValidator_injectsFeedContainerAndContext()
-      throws ReflectiveOperationException {
+      throws ReflectiveOperationException, ValidatorLoaderException {
     GtfsTestTableContainer stopTable =
         new GtfsTestTableContainer(TableStatus.PARSABLE_HEADERS_AND_ROWS);
     GtfsFeedContainer feedContainer = new GtfsFeedContainer(ImmutableList.of(stopTable));
@@ -88,7 +89,7 @@ public class ValidatorLoaderTest {
 
   @Test
   public void createMultiFileValidator_singleContainer_dependenciesHaveErrors()
-      throws ReflectiveOperationException {
+      throws ReflectiveOperationException, ValidatorLoaderException {
     GtfsTestTableContainer table = new GtfsTestTableContainer(TableStatus.UNPARSABLE_ROWS);
     GtfsFeedContainer feedContainer = new GtfsFeedContainer(ImmutableList.of(table));
 
