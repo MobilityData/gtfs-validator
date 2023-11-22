@@ -36,9 +36,9 @@ public class ValidationContext {
   }
 
   /**
-   * Represents a name of a GTFS feed, such as "nl-openov".
+   * Represents the country code of a GTFS feed, such as US or NL.
    *
-   * @return the @code{GtfsFeedName} representing the feed's name
+   * @return the @code{CountryCode} representing the feed's country code
    */
   public CountryCode countryCode() {
     return get(CountryCode.class);
