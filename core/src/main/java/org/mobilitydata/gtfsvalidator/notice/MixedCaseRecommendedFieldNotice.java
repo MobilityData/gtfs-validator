@@ -23,7 +23,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
       @UrlRef(
           label = "Best Practices for All Files",
           url =
-              "https://gtfs.org/schedule/best-practices/#practice-recommendations-organized-by-file")
+              "https://gtfs.org/schedule/reference/#file-requirements")
     })
 public class MixedCaseRecommendedFieldNotice extends ValidationNotice {
 
