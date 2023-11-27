@@ -101,7 +101,7 @@ context('GTFS Validator - Confirm error messaging', () => {
   it('Confirm error "HTTP Error: 404"', () => {
     // Setup intercept aliases
     cy.intercept(
-        'https://gtfs-validator.mobilitydata.org/RULES.md',
+        'https://gtfs-validator.mobilitydata.org/rules.json',
         (req) => {
           req.reply({
             statusCode: 404
@@ -121,10 +121,7 @@ context('GTFS Validator - Confirm error messaging', () => {
       .should('be.visible')
       .within((div) => {
         cy.get('h1').should('contain.text', 'HTTP Error: 404');
-        cy.get('p').should('contain.text', 'There was a problem loading the rules file. You can try accessing it directly at');
-        cy.get('a')
-          .should('contain.text', 'https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md')
-          .and('have.attr', 'href', 'https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md');
+        cy.get('p').should('contain.text', 'There was a problem loading the rules file.');
       })
   });
 });
