@@ -2,7 +2,7 @@
 
 context('GTFS Validator - Confirm error messaging', () => {
   beforeEach(() => {
-    cy.visit('https://gtfs-validator.mobilitydata.org/')
+    cy.visit('https://gtfs-validator-staging.mobilitydata.org/')
   });
 
   it('Confirm error "Error authorizing upload"', () => {
@@ -35,7 +35,7 @@ context('GTFS Validator - Confirm error messaging', () => {
     // Setup intercept aliases
     cy.intercept(
       'PUT',
-      'https://storage.googleapis.com/gtfs-validator-user-uploads/*/gtfs-job.zip?*',
+      'https://storage.googleapis.com/stg-gtfs-validator-user-uploads/*/gtfs-job.zip?*',
       { forceNetworkError: true }
     )
     .as('putFile');
@@ -78,7 +78,7 @@ context('GTFS Validator - Confirm error messaging', () => {
 
     cy.intercept(
       'HEAD',
-      'https://gtfs-validator-results.mobilitydata.org/*/report.html',
+      'https://staging-gtfs-validator-results.mobilitydata.org/*/report.html',
       { forceNetworkError: true }
       )
       .as('awaitJob');
@@ -101,7 +101,7 @@ context('GTFS Validator - Confirm error messaging', () => {
   it('Confirm error "HTTP Error: 404"', () => {
     // Setup intercept aliases
     cy.intercept(
-        'https://gtfs-validator.mobilitydata.org/rules.json',
+        'https://gtfs-validator-staging.mobilitydata.org/rules.json',
         (req) => {
           req.reply({
             statusCode: 404
