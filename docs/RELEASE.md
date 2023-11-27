@@ -12,7 +12,11 @@ Update the [README.md](/README.md) to match the latest developments. The documen
 1. Publish the prerelease
 ![publish](https://user-images.githubusercontent.com/35747326/99821598-3ef31d00-2b20-11eb-9f5e-26f6583ad6c9.png)
 
-### 3. Do the release
+### 3. Run analytics comparing the pre-release with the last release. 
+1. Generate analytics based on the acceptance tests to identify any performance concerns or problems with new notices. [Example report here](https://docs.google.com/spreadsheets/d/1AH4fELPPIB3R3w_TPGUBzSn_T6cVuYpmekW-er1Xogg/edit#gid=0). 
+2. Identify if any critical issues should be resolved before release. 
+
+### 4. Do the release
 1. While CI is running to create the artifacts, you can work on the release description. ![edit](https://user-images.githubusercontent.com/35747326/99821184-ba080380-2b1f-11eb-8efe-57be80a0bd29.png)
 
 
