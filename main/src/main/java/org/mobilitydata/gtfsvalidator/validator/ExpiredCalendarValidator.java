@@ -75,7 +75,7 @@ public class ExpiredCalendarValidator extends FileValidator {
       urls = {
         @UrlRef(
             label = "Dataset Publishing & General Practices",
-            url = "https://gtfs.org/schedule/best-practices/#dataset-publishing-general-practices")
+            url = "https://gtfs.org/schedule/reference/#dataset-publishing-general-practices")
       })
   static class ExpiredCalendarNotice extends ValidationNotice {
 
