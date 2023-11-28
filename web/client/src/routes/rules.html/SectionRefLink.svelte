@@ -13,7 +13,7 @@
     },
     'dataset-publishing-general-practices': {
       label: 'Dataset Publishing & General Practices',
-      url: 'https://gtfs.org/schedule/best-practices/#dataset-publishing-general-practices',
+      url: 'https://gtfs.org/schedule/reference/#dataset-publishing-general-practices',
     },
     'field-definitions': {
       label: 'Field Definitions',
