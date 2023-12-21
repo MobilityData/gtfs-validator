@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - 1620-fix-validator-version-displayed-in-validator-report-summary
 
 jobs:
 
