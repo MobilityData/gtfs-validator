@@ -124,8 +124,8 @@ public class Arguments {
     }
     if (dateString != null) {
       builder.setZonedDateTime(
-          ZonedDateTime.parse(dateString,
-                              DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.systemDefault())));
+          ZonedDateTime.parse(
+              dateString, DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.systemDefault())));
     }
     if (validationReportName != null) {
       builder.setValidationReportFileName(validationReportName);
