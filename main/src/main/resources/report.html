@@ -229,6 +229,7 @@
         <span th:text="${config.gtfsSource}"></span><span
                 th:text="${config.countryCode.isUnknown()} ? '. No country code was provided.' : ', with the country code: ' + ${config.countryCode} + '.'"></span>
         </br>
+        <span th:if="${is_different_date}" th:text="'The date and time used during validation was ' + ${config.zonedDateTime.toLocalDateTime()} + '.'"></span></p>
 
     <p>Use this report alongside our <a href="https://gtfs-validator.mobilitydata.org/rules.html">documentation</a>.</p>
 

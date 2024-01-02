@@ -18,6 +18,8 @@ package org.mobilitydata.gtfsvalidator.runner;
 import com.google.auto.value.AutoValue;
 import java.net.URI;
 import java.nio.file.Path;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 
@@ -56,6 +58,9 @@ public abstract class ValidationRunnerConfig {
   // validated.
   public abstract CountryCode countryCode();
 
+  // The date and time to use for validation.
+  public abstract ZonedDateTime zonedDateTime();
+
   // If true, any output json will be pretty-printed.
   public abstract boolean prettyJson();
 
@@ -67,7 +72,8 @@ public abstract class ValidationRunnerConfig {
         .setSystemErrorsReportFileName("system_errors.json")
         .setNumThreads(1)
         .setPrettyJson(false)
-        .setCountryCode(CountryCode.forStringOrUnknown(CountryCode.ZZ));
+        .setCountryCode(CountryCode.forStringOrUnknown(CountryCode.ZZ))
+        .setZonedDateTime(ZonedDateTime.now(ZoneId.systemDefault()));
   }
 
   @AutoValue.Builder
@@ -87,6 +93,8 @@ public abstract class ValidationRunnerConfig {
     public abstract Builder setNumThreads(int numThreads);
 
     public abstract Builder setCountryCode(CountryCode countryCode);
+
+    public abstract Builder setZonedDateTime(ZonedDateTime zonedDateTime);
 
     public abstract Builder setPrettyJson(boolean prettyJson);
 
