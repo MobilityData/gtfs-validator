@@ -25,10 +25,10 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.input.DateForValidation;
@@ -267,9 +267,9 @@ public class ValidationRunner {
             "Error creating output directory: %s", config.outputDirectory());
       }
     }
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
-    Date now = new Date(System.currentTimeMillis());
-    String date = formatter.format(now);
+    ZonedDateTime now = ZonedDateTime.now();
+    String date = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd 'at' HH:mm:ss z"));
+    boolean is_different_date = !now.toLocalDate().equals(config.zonedDateTime().toLocalDate());
 
     Gson gson = createGson(config.prettyJson());
     HtmlReportGenerator htmlGenerator = new HtmlReportGenerator();
@@ -291,7 +291,8 @@ public class ValidationRunner {
           config,
           versionInfo,
           config.outputDirectory().resolve(config.htmlReportFileName()),
-          date);
+          date,
+          is_different_date);
       Files.write(
           config.outputDirectory().resolve(config.systemErrorsReportFileName()),
           gson.toJson(noticeContainer.exportSystemErrors()).getBytes(StandardCharsets.UTF_8));
