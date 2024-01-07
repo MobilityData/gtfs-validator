@@ -56,7 +56,7 @@ public class Arguments {
   private String countryCode;
 
   @Parameter(
-      names = {"--date"},
+      names = {"-d", "--date"},
       description =
           "Date to simulate when validating, in ISO_LOCAL_DATE_TIME format like "
               + "'2001-01-30T12:34'. By default, the current date is used. "
