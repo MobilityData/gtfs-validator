@@ -69,3 +69,8 @@ To generate Javadocs for the project, run:
 ```
 ./gradlew aggregateJavadocs
 ```
+
+# Linking the validator jars
+
+The jars for the validator are released to [maven central](https://repo.maven.apache.org/maven2/org/mobilitydata/gtfs-validator/).
+See the example project [gtfs-validator-example](https://github.com/MobilityData/gtfs-validator-example) for details on how to use these jars.
