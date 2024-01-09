@@ -101,7 +101,7 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
      * Actual distance traveled along the shape from the first shape point to the previous stop
      * time.
      */
-    private final double prevStopTimeDistTraveled;
+    private final double prevShapeDistTraveled;
 
     /** The previous record's `stop_times.stop_sequence`. */
     private final int prevStopSequence;
@@ -113,7 +113,7 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
         double shapeDistTraveled,
         int stopSequence,
         long prevCsvRowNumber,
-        double prevStopTimeDistTraveled,
+        double prevShapeDistTraveled,
         int prevStopSequence) {
       this.tripId = tripId;
       this.stopId = stopId;
@@ -121,7 +121,7 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
       this.shapeDistTraveled = shapeDistTraveled;
       this.stopSequence = stopSequence;
       this.prevCsvRowNumber = prevCsvRowNumber;
-      this.prevStopTimeDistTraveled = prevStopTimeDistTraveled;
+      this.prevShapeDistTraveled = prevShapeDistTraveled;
       this.prevStopSequence = prevStopSequence;
     }
   }
