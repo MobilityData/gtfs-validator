@@ -42,6 +42,8 @@ public abstract class GtfsInput implements Closeable {
   public static final String invalidInputMessage =
       "At least 1 GTFS file is in a subfolder. All GTFS files must reside at the root level directly.";
 
+  public static final String USER_AGENT = "MobilityData GTFS-Validator";
+
   /**
    * Creates a specific GtfsInput to read data from the given path.
    *
@@ -199,6 +201,7 @@ public abstract class GtfsInput implements Closeable {
       throws IOException, URISyntaxException {
     try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
       HttpGet httpGet = new HttpGet(sourceUrl.toURI());
+      httpGet.setHeader("User-Agent", USER_AGENT);
       try (CloseableHttpResponse httpResponse = httpClient.execute(httpGet)) {
         httpResponse.getEntity().writeTo(outputStream);
       }
