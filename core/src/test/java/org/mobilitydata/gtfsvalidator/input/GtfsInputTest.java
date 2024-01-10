@@ -87,7 +87,10 @@ public class GtfsInputTest {
   public void createFromUrl_valid_success() throws IOException, URISyntaxException {
     try (GtfsInput underTest =
         GtfsInput.createFromUrl(
-            new URL(VALID_URL), tmpDir.getRoot().toPath().resolve("storage"), noticeContainer)) {
+            new URL(VALID_URL),
+            tmpDir.getRoot().toPath().resolve("storage"),
+            noticeContainer,
+            "1.0.1")) {
       assertThat(underTest instanceof GtfsZipFileInput);
     }
   }
@@ -100,13 +103,14 @@ public class GtfsInputTest {
             GtfsInput.createFromUrl(
                 new URL(INVALID_URL),
                 tmpDir.getRoot().toPath().resolve("storage"),
-                noticeContainer));
+                noticeContainer,
+                "1.0.1"));
   }
 
   @Test
   public void createFromUrlInMemory_valid_success() throws IOException, URISyntaxException {
     try (GtfsInput underTest =
-        GtfsInput.createFromUrlInMemory(new URL(VALID_URL), noticeContainer)) {
+        GtfsInput.createFromUrlInMemory(new URL(VALID_URL), noticeContainer, "1.0.1")) {
       assertThat(underTest instanceof GtfsZipFileInput);
     }
   }
@@ -115,6 +119,6 @@ public class GtfsInputTest {
   public void createFromUrlInMemory_invalid_throwsException() {
     assertThrows(
         IOException.class,
-        () -> GtfsInput.createFromUrlInMemory(new URL(INVALID_URL), noticeContainer));
+        () -> GtfsInput.createFromUrlInMemory(new URL(INVALID_URL), noticeContainer, "1.0.1"));
   }
 }
