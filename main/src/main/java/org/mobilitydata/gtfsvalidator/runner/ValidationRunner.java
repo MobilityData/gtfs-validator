@@ -305,7 +305,7 @@ public class ValidationRunner {
    * Creates a {@code GtfsInput}
    *
    * @param config used to retrieve information needed to the creation of the {@code GtfsInput}
-   * @param s
+   * @param validatorVersion version of the validator
    * @return the {@code GtfsInput} generated after
    * @throws IOException in case of error while loading a file
    * @throws URISyntaxException in case of error in the {@code URL} syntax
