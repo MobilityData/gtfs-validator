@@ -21,14 +21,13 @@ import static com.google.common.truth.Truth.assertThat;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.time.DayOfWeek;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.*;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
@@ -44,8 +43,7 @@ public class ExpiredCalendarValidatorTest {
           DayOfWeek.WEDNESDAY,
           DayOfWeek.THURSDAY,
           DayOfWeek.FRIDAY);
-  private static final ZonedDateTime TEST_NOW =
-      ZonedDateTime.of(2021, 1, 1, 14, 30, 0, 0, ZoneOffset.UTC);
+  private static final LocalDate TEST_NOW = LocalDate.of(2021, 1, 1);
 
   @Test
   public void calendarEndDateOneDayAgoShouldGenerateNotice() {
@@ -56,8 +54,8 @@ public class ExpiredCalendarValidatorTest {
             new GtfsCalendar.Builder()
                 .setCsvRowNumber(2)
                 .setServiceId("WEEK")
-                .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().minusDays(7)))
-                .setEndDate(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().minusDays(1)))
+                .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(7)))
+                .setEndDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(1)))
                 .setMonday(1)
                 .setTuesday(1)
                 .setWednesday(1)
@@ -68,7 +66,7 @@ public class ExpiredCalendarValidatorTest {
         GtfsCalendarTableContainer.forEntities(calendars, container);
 
     var dateTable = GtfsCalendarDateTableContainer.forStatus(TableStatus.EMPTY_FILE);
-    new ExpiredCalendarValidator(new CurrentDateTime(TEST_NOW), calendarTable, dateTable)
+    new ExpiredCalendarValidator(new DateForValidation(TEST_NOW), calendarTable, dateTable)
         .validate(container);
     assertThat(container.getValidationNotices())
         .containsExactly(new ExpiredCalendarValidator.ExpiredCalendarNotice(2, "WEEK"));
@@ -83,8 +81,8 @@ public class ExpiredCalendarValidatorTest {
             new GtfsCalendar.Builder()
                 .setCsvRowNumber(2)
                 .setServiceId("WEEK")
-                .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().minusDays(7)))
-                .setEndDate(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()))
+                .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(7)))
+                .setEndDate(GtfsDate.fromLocalDate(TEST_NOW))
                 .setMonday(1)
                 .setTuesday(1)
                 .setWednesday(1)
@@ -95,7 +93,7 @@ public class ExpiredCalendarValidatorTest {
         GtfsCalendarTableContainer.forEntities(calendars, container);
 
     var dateTable = GtfsCalendarDateTableContainer.forStatus(TableStatus.EMPTY_FILE);
-    new ExpiredCalendarValidator(new CurrentDateTime(TEST_NOW), calendarTable, dateTable)
+    new ExpiredCalendarValidator(new DateForValidation(TEST_NOW), calendarTable, dateTable)
         .validate(container);
     assertThat(container.getValidationNotices()).isEmpty();
   }
@@ -109,8 +107,8 @@ public class ExpiredCalendarValidatorTest {
             new GtfsCalendar.Builder()
                 .setCsvRowNumber(2)
                 .setServiceId("WEEK")
-                .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().minusDays(7)))
-                .setEndDate(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(1)))
+                .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(7)))
+                .setEndDate(GtfsDate.fromLocalDate(TEST_NOW.plusDays(1)))
                 .setMonday(1)
                 .setTuesday(1)
                 .setWednesday(1)
@@ -121,7 +119,7 @@ public class ExpiredCalendarValidatorTest {
         GtfsCalendarTableContainer.forEntities(calendars, container);
 
     var dateTable = GtfsCalendarDateTableContainer.forStatus(TableStatus.EMPTY_FILE);
-    new ExpiredCalendarValidator(new CurrentDateTime(TEST_NOW), calendarTable, dateTable)
+    new ExpiredCalendarValidator(new DateForValidation(TEST_NOW), calendarTable, dateTable)
         .validate(container);
     assertThat(container.getValidationNotices()).isEmpty();
   }
@@ -135,8 +133,8 @@ public class ExpiredCalendarValidatorTest {
             new GtfsCalendar.Builder()
                 .setCsvRowNumber(2)
                 .setServiceId("WEEK")
-                .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().minusDays(7)))
-                .setEndDate(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().minusDays(1)))
+                .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(7)))
+                .setEndDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(1)))
                 .setMonday(1)
                 .setTuesday(1)
                 .setWednesday(1)
@@ -152,11 +150,11 @@ public class ExpiredCalendarValidatorTest {
                 new GtfsCalendarDate.Builder()
                     .setCsvRowNumber(2)
                     .setServiceId("WEEK")
-                    .setDate(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()))
+                    .setDate(GtfsDate.fromLocalDate(TEST_NOW))
                     .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_ADDED)
                     .build()),
             container);
-    new ExpiredCalendarValidator(new CurrentDateTime(TEST_NOW), calendarTable, dateTable)
+    new ExpiredCalendarValidator(new DateForValidation(TEST_NOW), calendarTable, dateTable)
         .validate(container);
     assertThat(container.getValidationNotices()).isEmpty();
   }
@@ -170,8 +168,8 @@ public class ExpiredCalendarValidatorTest {
             new GtfsCalendar.Builder()
                 .setCsvRowNumber(2)
                 .setServiceId("WEEK")
-                .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().minusDays(7)))
-                .setEndDate(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()))
+                .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(7)))
+                .setEndDate(GtfsDate.fromLocalDate(TEST_NOW))
                 .setMonday(1)
                 .setTuesday(1)
                 .setWednesday(1)
@@ -187,11 +185,11 @@ public class ExpiredCalendarValidatorTest {
                 new GtfsCalendarDate.Builder()
                     .setCsvRowNumber(2)
                     .setServiceId("WEEK")
-                    .setDate(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()))
+                    .setDate(GtfsDate.fromLocalDate(TEST_NOW))
                     .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_REMOVED)
                     .build()),
             container);
-    new ExpiredCalendarValidator(new CurrentDateTime(TEST_NOW), calendarTable, dateTable)
+    new ExpiredCalendarValidator(new DateForValidation(TEST_NOW), calendarTable, dateTable)
         .validate(container);
     assertThat(container.getValidationNotices())
         .containsExactly(new ExpiredCalendarValidator.ExpiredCalendarNotice(2, "WEEK"));
@@ -206,14 +204,14 @@ public class ExpiredCalendarValidatorTest {
             new GtfsCalendar.Builder()
                 .setCsvRowNumber(2)
                 .setServiceId("WEEK")
-                .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().minusDays(7)))
-                .setEndDate(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()))
+                .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(7)))
+                .setEndDate(GtfsDate.fromLocalDate(TEST_NOW))
                 .build());
 
     GtfsCalendarTableContainer calendarTable =
         GtfsCalendarTableContainer.forEntities(calendars, container);
     var dateTable = GtfsCalendarDateTableContainer.forStatus(TableStatus.EMPTY_FILE);
-    new ExpiredCalendarValidator(new CurrentDateTime(TEST_NOW), calendarTable, dateTable)
+    new ExpiredCalendarValidator(new DateForValidation(TEST_NOW), calendarTable, dateTable)
         .validate(container);
     assertThat(container.getValidationNotices()).isEmpty();
   }
