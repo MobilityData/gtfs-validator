@@ -24,7 +24,7 @@ import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.*;
@@ -37,27 +37,26 @@ public class ExpiredCalendarValidator extends FileValidator {
 
   private final GtfsCalendarDateTableContainer calendarDateTable;
 
-  private final CurrentDateTime currentDateTime;
+  private final DateForValidation dateForValidation;
 
   @Inject
   ExpiredCalendarValidator(
-      CurrentDateTime currentDateTime,
+      DateForValidation dateForValidation,
       GtfsCalendarTableContainer calendarTable,
       GtfsCalendarDateTableContainer calendarDateTable) {
-    this.currentDateTime = currentDateTime;
+    this.dateForValidation = dateForValidation;
     this.calendarTable = calendarTable;
     this.calendarDateTable = calendarDateTable;
   }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    LocalDate now = currentDateTime.getNow().toLocalDate();
     final Map<String, SortedSet<LocalDate>> servicePeriodMap =
         CalendarUtil.servicePeriodToServiceDatesMap(
             CalendarUtil.buildServicePeriodMap(calendarTable, calendarDateTable));
     for (var serviceId : servicePeriodMap.keySet()) {
       SortedSet<LocalDate> serviceDates = servicePeriodMap.get(serviceId);
-      if (!serviceDates.isEmpty() && serviceDates.last().isBefore(now)) {
+      if (!serviceDates.isEmpty() && serviceDates.last().isBefore(dateForValidation.getDate())) {
         int csvRowNumber = calendarTable.byServiceId(serviceId).get().csvRowNumber();
         noticeContainer.addValidationNotice(new ExpiredCalendarNotice(csvRowNumber, serviceId));
       }

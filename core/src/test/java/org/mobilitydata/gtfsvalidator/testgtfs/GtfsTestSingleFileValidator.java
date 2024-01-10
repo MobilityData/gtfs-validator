@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.testgtfs;
 
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
-import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.validator.FileValidator;
 
@@ -26,14 +26,14 @@ public class GtfsTestSingleFileValidator extends FileValidator {
 
   private final GtfsTestTableContainer table;
   private final CountryCode countryCode;
-  private final CurrentDateTime currentDateTime;
+  private final DateForValidation dateForValidation;
 
   @Inject
   public GtfsTestSingleFileValidator(
-      GtfsTestTableContainer table, CountryCode countryCode, CurrentDateTime currentDateTime) {
+      GtfsTestTableContainer table, CountryCode countryCode, DateForValidation dateForValidation) {
     this.table = table;
     this.countryCode = countryCode;
-    this.currentDateTime = currentDateTime;
+    this.dateForValidation = dateForValidation;
   }
 
   @Override
@@ -47,7 +47,7 @@ public class GtfsTestSingleFileValidator extends FileValidator {
     return countryCode;
   }
 
-  public CurrentDateTime getCurrentDateTime() {
-    return currentDateTime;
+  public DateForValidation getDateForValidation() {
+    return dateForValidation;
   }
 }

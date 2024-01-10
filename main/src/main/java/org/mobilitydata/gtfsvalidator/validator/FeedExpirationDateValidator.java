@@ -18,13 +18,12 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.BEST_PRACTICES_DATASET_PUBLISHING;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
-import java.time.LocalDate;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
@@ -46,20 +45,19 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 @GtfsValidator
 public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedInfo> {
 
-  private final CurrentDateTime currentDateTime;
+  private final DateForValidation dateForValidation;
 
   @Inject
-  FeedExpirationDateValidator(CurrentDateTime currentDateTime) {
-    this.currentDateTime = currentDateTime;
+  FeedExpirationDateValidator(DateForValidation dateForValidation) {
+    this.dateForValidation = dateForValidation;
   }
 
   @Override
   public void validate(GtfsFeedInfo entity, NoticeContainer noticeContainer) {
     if (entity.hasFeedEndDate()) {
-      LocalDate now = currentDateTime.getNow().toLocalDate();
-      GtfsDate currentDate = GtfsDate.fromLocalDate(now);
-      GtfsDate currentDatePlusSevenDays = GtfsDate.fromLocalDate(now.plusDays(7));
-      GtfsDate currentDatePlusThirtyDays = GtfsDate.fromLocalDate(now.plusDays(30));
+      GtfsDate currentDate = GtfsDate.fromLocalDate(dateForValidation.getDate());
+      GtfsDate currentDatePlusSevenDays = GtfsDate.fromLocalDate(dateForValidation.getDate().plusDays(7));
+      GtfsDate currentDatePlusThirtyDays = GtfsDate.fromLocalDate(dateForValidation.getDate().plusDays(30));
       if (entity.feedEndDate().compareTo(currentDatePlusSevenDays) <= 0) {
         noticeContainer.addValidationNotice(
             new FeedExpirationDate7DaysNotice(

@@ -18,13 +18,13 @@ package org.mobilitydata.gtfsvalidator.testing;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
-import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.AnyTableLoader;
@@ -41,7 +41,7 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
 public class LoadingHelper {
 
   private CountryCode countryCode = CountryCode.forStringOrUnknown("ca");
-  private ZonedDateTime currentTime = ZonedDateTime.of(2021, 1, 1, 14, 30, 0, 0, ZoneOffset.UTC);
+  private LocalDate dateForValidation = LocalDate.of(2021, 1, 1);
 
   private NoticeContainer noticeContainer = new NoticeContainer();
 
@@ -68,7 +68,7 @@ public class LoadingHelper {
     ValidationContext context =
         ValidationContext.builder()
             .setCountryCode(countryCode)
-            .setCurrentDateTime(new CurrentDateTime(currentTime))
+            .setDateForValidation(new DateForValidation(dateForValidation))
             .build();
     ValidatorProvider provider = new DefaultValidatorProvider(context, validatorLoader);
     return (Y) AnyTableLoader.load(tableDescriptor, provider, in, noticeContainer);

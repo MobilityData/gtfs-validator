@@ -25,7 +25,7 @@ import java.util.SortedSet;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.*;
@@ -55,16 +55,16 @@ public class DateTripsValidator extends FileValidator {
 
   private final GtfsFrequencyTableContainer frequencyTable;
 
-  private final CurrentDateTime currentDateTime;
+  private final DateForValidation dateForValidation;
 
   @Inject
   DateTripsValidator(
-      CurrentDateTime currentDateTime,
+      DateForValidation dateForValidation,
       GtfsCalendarDateTableContainer calendarDateTable,
       GtfsCalendarTableContainer calendarTable,
       GtfsTripTableContainer tripContainer,
       GtfsFrequencyTableContainer frequencyTable) {
-    this.currentDateTime = currentDateTime;
+    this.dateForValidation = dateForValidation;
     this.calendarTable = calendarTable;
     this.calendarDateTable = calendarDateTable;
     this.tripContainer = tripContainer;
@@ -73,7 +73,6 @@ public class DateTripsValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    LocalDate now = currentDateTime.getNow().toLocalDate();
     final Map<String, SortedSet<LocalDate>> servicePeriodMap =
         CalendarUtil.servicePeriodToServiceDatesMap(
             CalendarUtil.buildServicePeriodMap(calendarTable, calendarDateTable));
@@ -82,15 +81,15 @@ public class DateTripsValidator extends FileValidator {
             servicePeriodMap, tripContainer, frequencyTable);
     Optional<TripCalendarUtil.DateInterval> majorityServiceDates =
         TripCalendarUtil.computeMajorityServiceCoverage(tripCounts);
-    LocalDate currentDatePlusSevenDays = now.plusDays(7);
+    LocalDate currentDatePlusSevenDays = dateForValidation.getDate().plusDays(7);
     if (!majorityServiceDates.isEmpty()) {
       LocalDate serviceWindowStartDate = majorityServiceDates.get().startDate();
       LocalDate serviceWindowEndDate = majorityServiceDates.get().endDate();
-      if (serviceWindowStartDate.isAfter(now)
+      if (serviceWindowStartDate.isAfter(dateForValidation.getDate())
           || serviceWindowEndDate.isBefore(currentDatePlusSevenDays)) {
         noticeContainer.addValidationNotice(
             new TripCoverageNotActiveForNext7DaysNotice(
-                GtfsDate.fromLocalDate(now),
+                GtfsDate.fromLocalDate(dateForValidation.getDate()),
                 GtfsDate.fromLocalDate(serviceWindowStartDate),
                 GtfsDate.fromLocalDate(serviceWindowEndDate)));
       }

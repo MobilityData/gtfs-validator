@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
-import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 
 /**
  * A read-only context passed to particular validator objects. It gives information relevant for
@@ -57,8 +57,8 @@ public class ValidationContext {
    *
    * @return The time when validation started as @code{ZonedDateTime}
    */
-  public CurrentDateTime currentDateTime() {
-    return get(CurrentDateTime.class);
+  public DateForValidation dateForValidation() {
+    return get(DateForValidation.class);
   }
 
   /** Returns a member of the context with requested class. */
@@ -82,8 +82,8 @@ public class ValidationContext {
     }
 
     /** Sets the current time. */
-    public Builder setCurrentDateTime(CurrentDateTime currentDateTime) {
-      return set(CurrentDateTime.class, currentDateTime);
+    public Builder setDateForValidation(DateForValidation dateForValidation) {
+      return set(DateForValidation.class, dateForValidation);
     }
 
     /** Sets a member of the context with requested class. */
