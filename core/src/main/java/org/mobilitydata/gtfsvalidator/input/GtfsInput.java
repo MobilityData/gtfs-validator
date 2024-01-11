@@ -95,18 +95,6 @@ public abstract class GtfsInput implements Closeable {
   }
 
   /**
-   * Check if an input zip file from an URL contains a subfolder with GTFS files
-   *
-   * @param url
-   * @return
-   * @throws IOException
-   */
-  public static boolean hasSubfolderWithGtfsFile(URL url) throws IOException {
-    ZipInputStream zipInputStream = new ZipInputStream(new BufferedInputStream(url.openStream()));
-    return containsGtfsFileInSubfolder(zipInputStream);
-  }
-
-  /**
    * Common method used by two overloaded hasSubfolderWithGtfsFile methods
    *
    * @param zipInputStream

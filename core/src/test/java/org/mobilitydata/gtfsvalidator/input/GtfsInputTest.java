@@ -78,12 +78,6 @@ public class GtfsInputTest {
   }
 
   @Test
-  public void urlInputHasNoSubfolderWithGtfsFile() throws IOException {
-    URL url = new URL(VALID_URL);
-    assertFalse(GtfsInput.hasSubfolderWithGtfsFile(url));
-  }
-
-  @Test
   public void createFromUrl_valid_success() throws IOException, URISyntaxException {
     try (GtfsInput underTest =
         GtfsInput.createFromUrl(
