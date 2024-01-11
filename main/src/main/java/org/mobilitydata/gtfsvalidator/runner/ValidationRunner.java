@@ -102,7 +102,7 @@ public class ValidationRunner {
     GtfsFeedContainer feedContainer;
     GtfsInput gtfsInput = null;
     try {
-      gtfsInput = createGtfsInput(config);
+      gtfsInput = createGtfsInput(config, versionInfo.currentVersion().get());
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot load GTFS feed");
       noticeContainer.addSystemError(new IOError(e));
@@ -305,11 +305,12 @@ public class ValidationRunner {
    * Creates a {@code GtfsInput}
    *
    * @param config used to retrieve information needed to the creation of the {@code GtfsInput}
+   * @param validatorVersion version of the validator
    * @return the {@code GtfsInput} generated after
    * @throws IOException in case of error while loading a file
    * @throws URISyntaxException in case of error in the {@code URL} syntax
    */
-  public static GtfsInput createGtfsInput(ValidationRunnerConfig config)
+  public static GtfsInput createGtfsInput(ValidationRunnerConfig config, String validatorVersion)
       throws IOException, URISyntaxException {
     URI source = config.gtfsSource();
     if (source.getScheme().equals("file")) {
@@ -317,12 +318,13 @@ public class ValidationRunner {
     }
 
     if (config.storageDirectory().isEmpty()) {
-      return GtfsInput.createFromUrlInMemory(source.toURL(), noticeContainer);
+      return GtfsInput.createFromUrlInMemory(source.toURL(), noticeContainer, validatorVersion);
     } else {
       return GtfsInput.createFromUrl(
           source.toURL(),
           config.storageDirectory().get().resolve(GTFS_ZIP_FILENAME),
-          noticeContainer);
+          noticeContainer,
+          validatorVersion);
     }
   }
 }
