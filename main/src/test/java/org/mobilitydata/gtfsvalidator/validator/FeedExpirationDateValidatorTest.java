@@ -18,12 +18,11 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
@@ -32,12 +31,11 @@ import org.mobilitydata.gtfsvalidator.validator.FeedExpirationDateValidator.Feed
 import org.mobilitydata.gtfsvalidator.validator.FeedExpirationDateValidator.FeedExpirationDate7DaysNotice;
 
 public class FeedExpirationDateValidatorTest {
-  private static final ZonedDateTime TEST_NOW =
-      ZonedDateTime.of(2021, 1, 1, 14, 30, 0, 0, ZoneOffset.UTC);
+  private static final LocalDate TEST_NOW = LocalDate.of(2021, 1, 1);
 
   private List<ValidationNotice> validateFeedInfo(GtfsFeedInfo feedInfo) {
     NoticeContainer container = new NoticeContainer();
-    new FeedExpirationDateValidator(new CurrentDateTime(TEST_NOW)).validate(feedInfo, container);
+    new FeedExpirationDateValidator(new DateForValidation(TEST_NOW)).validate(feedInfo, container);
     return container.getValidationNotices();
   }
 
@@ -53,61 +51,51 @@ public class FeedExpirationDateValidatorTest {
 
   @Test
   public void feedExpiringInFiveDaysFromNowShouldGenerateNotice() {
-    assertThat(
-            validateFeedInfo(
-                createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(3)))))
+    assertThat(validateFeedInfo(createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.plusDays(3)))))
         .containsExactly(
             new FeedExpirationDate7DaysNotice(
                 1,
-                GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()),
-                GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(3)),
-                GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(7))));
+                GtfsDate.fromLocalDate(TEST_NOW),
+                GtfsDate.fromLocalDate(TEST_NOW.plusDays(3)),
+                GtfsDate.fromLocalDate(TEST_NOW.plusDays(7))));
   }
 
   @Test
   public void feedExpiringInSevenDaysFromNowShouldGenerateNotice() {
-    assertThat(
-            validateFeedInfo(
-                createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(7)))))
+    assertThat(validateFeedInfo(createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.plusDays(7)))))
         .containsExactly(
             new FeedExpirationDate7DaysNotice(
                 1,
-                GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()),
-                GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(7)),
-                GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(7))));
+                GtfsDate.fromLocalDate(TEST_NOW),
+                GtfsDate.fromLocalDate(TEST_NOW.plusDays(7)),
+                GtfsDate.fromLocalDate(TEST_NOW.plusDays(7))));
   }
 
   @Test
   public void feedExpiring7to30DaysFromNowShouldGenerateNotice() {
-    assertThat(
-            validateFeedInfo(
-                createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(23)))))
+    assertThat(validateFeedInfo(createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.plusDays(23)))))
         .containsExactly(
             new FeedExpirationDate30DaysNotice(
                 1,
-                GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()),
-                GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(23)),
-                GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(30))));
+                GtfsDate.fromLocalDate(TEST_NOW),
+                GtfsDate.fromLocalDate(TEST_NOW.plusDays(23)),
+                GtfsDate.fromLocalDate(TEST_NOW.plusDays(30))));
   }
 
   @Test
   public void feedExpiring30DaysFromNowShouldGenerateNotice() {
-    assertThat(
-            validateFeedInfo(
-                createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(30)))))
+    assertThat(validateFeedInfo(createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.plusDays(30)))))
         .containsExactly(
             new FeedExpirationDate30DaysNotice(
                 1,
-                GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()),
-                GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(30)),
-                GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(30))));
+                GtfsDate.fromLocalDate(TEST_NOW),
+                GtfsDate.fromLocalDate(TEST_NOW.plusDays(30)),
+                GtfsDate.fromLocalDate(TEST_NOW.plusDays(30))));
   }
 
   @Test
   public void feedExpiringInMoreThan30DaysFromNowShouldNotGenerateNotice() {
-    assertThat(
-            validateFeedInfo(
-                createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.toLocalDate().plusDays(45)))))
+    assertThat(validateFeedInfo(createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.plusDays(45)))))
         .isEmpty();
   }
 }

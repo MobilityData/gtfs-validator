@@ -27,12 +27,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -121,7 +120,7 @@ public class ValidationRunner {
     ValidationContext validationContext =
         ValidationContext.builder()
             .setCountryCode(config.countryCode())
-            .setCurrentDateTime(new CurrentDateTime(ZonedDateTime.now(ZoneId.systemDefault())))
+            .setDateForValidation(new DateForValidation(LocalDate.now()))
             .build();
     try {
       feedContainer =

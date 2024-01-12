@@ -7,14 +7,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
-import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.*;
@@ -27,7 +26,7 @@ public class FeedMetadataTest {
   ValidationContext validationContext =
       ValidationContext.builder()
           .setCountryCode(CountryCode.forStringOrUnknown("CA"))
-          .setCurrentDateTime(new CurrentDateTime(ZonedDateTime.now(ZoneId.systemDefault())))
+          .setDateForValidation(new DateForValidation(LocalDate.now()))
           .build();
   ValidatorLoader validatorLoader;
   File rootDir;
