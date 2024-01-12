@@ -42,6 +42,8 @@ public abstract class GtfsInput implements Closeable {
   public static final String invalidInputMessage =
       "At least 1 GTFS file is in a subfolder. All GTFS files must reside at the root level directly.";
 
+  public static final String USER_AGENT_PREFIX = "MobilityData GTFS-Validator";
+
   /**
    * Creates a specific GtfsInput to read data from the given path.
    *
@@ -93,18 +95,6 @@ public abstract class GtfsInput implements Closeable {
   }
 
   /**
-   * Check if an input zip file from an URL contains a subfolder with GTFS files
-   *
-   * @param url
-   * @return
-   * @throws IOException
-   */
-  public static boolean hasSubfolderWithGtfsFile(URL url) throws IOException {
-    ZipInputStream zipInputStream = new ZipInputStream(new BufferedInputStream(url.openStream()));
-    return containsGtfsFileInSubfolder(zipInputStream);
-  }
-
-  /**
    * Common method used by two overloaded hasSubfolderWithGtfsFile methods
    *
    * @param zipInputStream
@@ -143,12 +133,13 @@ public abstract class GtfsInput implements Closeable {
    * @param sourceUrl the fully qualified URL to download of the resource to download
    * @param targetPath the path to store the downloaded GTFS archive
    * @param noticeContainer
+   * @param validatorVersion
    * @return the {@code GtfsInput} created after download of the GTFS archive
    * @throws IOException if GTFS archive cannot be stored at the specified location
    * @throws URISyntaxException if URL is malformed
    */
   public static GtfsInput createFromUrl(
-      URL sourceUrl, Path targetPath, NoticeContainer noticeContainer)
+      URL sourceUrl, Path targetPath, NoticeContainer noticeContainer, String validatorVersion)
       throws IOException, URISyntaxException {
     // getParent() may return null if there is no parent, so call toAbsolutePath() first.
     Path targetDirectory = targetPath.toAbsolutePath().getParent();
@@ -156,7 +147,7 @@ public abstract class GtfsInput implements Closeable {
       Files.createDirectories(targetDirectory);
     }
     try (OutputStream outputStream = Files.newOutputStream(targetPath)) {
-      loadFromUrl(sourceUrl, outputStream);
+      loadFromUrl(sourceUrl, outputStream, validatorVersion);
     }
     return createFromPath(targetPath, noticeContainer);
   }
@@ -171,14 +162,15 @@ public abstract class GtfsInput implements Closeable {
    * @throws IOException if no file could not be found at the specified location
    * @throws URISyntaxException if URL is malformed
    */
-  public static GtfsInput createFromUrlInMemory(URL sourceUrl, NoticeContainer noticeContainer)
+  public static GtfsInput createFromUrlInMemory(
+      URL sourceUrl, NoticeContainer noticeContainer, String validatorVersion)
       throws IOException, URISyntaxException {
     try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-      loadFromUrl(sourceUrl, outputStream);
+      loadFromUrl(sourceUrl, outputStream, validatorVersion);
       File zipFile = new File(sourceUrl.toString());
       String fileName = zipFile.getName().replace(".zip", "");
-      if (hasSubfolderWithGtfsFile(sourceUrl)) {
-
+      if (containsGtfsFileInSubfolder(
+          new ZipInputStream(new ByteArrayInputStream(outputStream.toByteArray())))) {
         noticeContainer.addValidationNotice(
             new InvalidInputFilesInSubfolderNotice(invalidInputMessage));
       }
@@ -192,17 +184,33 @@ public abstract class GtfsInput implements Closeable {
    *
    * @param sourceUrl the fully qualified URL
    * @param outputStream the output stream
+   * @param validatorVersion
    * @throws IOException if no file could not be found at the specified location
    * @throws URISyntaxException if URL is malformed
    */
-  private static void loadFromUrl(URL sourceUrl, OutputStream outputStream)
+  private static void loadFromUrl(URL sourceUrl, OutputStream outputStream, String validatorVersion)
       throws IOException, URISyntaxException {
     try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
       HttpGet httpGet = new HttpGet(sourceUrl.toURI());
+      httpGet.setHeader("User-Agent", getUserAgent(validatorVersion));
       try (CloseableHttpResponse httpResponse = httpClient.execute(httpGet)) {
         httpResponse.getEntity().writeTo(outputStream);
       }
     }
+  }
+
+  /**
+   * @param validatorVersion version of the validator
+   * @return the user agent string in the format: "MobilityData GTFS-Validator/{validatorVersion}
+   *     (Java {java version})"
+   */
+  private static String getUserAgent(String validatorVersion) {
+    return USER_AGENT_PREFIX
+        + "/"
+        + (validatorVersion != null ? validatorVersion : "")
+        + " (Java "
+        + System.getProperty("java.version")
+        + ")";
   }
 
   /**

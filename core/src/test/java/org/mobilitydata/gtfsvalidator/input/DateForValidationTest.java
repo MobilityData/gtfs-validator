@@ -18,26 +18,23 @@ package org.mobilitydata.gtfsvalidator.input;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import org.junit.Test;
 
-public class CurrentDateTimeTest {
-  private static final ZonedDateTime TEST_NOW =
-      ZonedDateTime.of(2021, 1, 1, 14, 30, 0, 0, ZoneOffset.UTC);
-  private static final ZonedDateTime OTHER_DATE_TIME =
-      ZonedDateTime.of(2021, 4, 1, 14, 30, 0, 0, ZoneOffset.UTC);
+public class DateForValidationTest {
+  private static final LocalDate TEST_NOW = LocalDate.of(2021, 1, 1);
+  private static final LocalDate OTHER_DATE_TIME = LocalDate.of(2021, 4, 1);
 
   @Test
-  public void getNow() {
-    CurrentDateTime currentDateTime = new CurrentDateTime(TEST_NOW);
-    assertThat(currentDateTime.getNow()).isEqualTo(TEST_NOW);
+  public void getDate() {
+    DateForValidation dateForValidation = new DateForValidation(TEST_NOW);
+    assertThat(dateForValidation.getDate()).isEqualTo(TEST_NOW);
   }
 
   @Test
   public void testEquals() {
-    assertThat(new CurrentDateTime(TEST_NOW).equals(new CurrentDateTime(TEST_NOW))).isTrue();
-    assertThat(new CurrentDateTime(TEST_NOW).equals(new CurrentDateTime(OTHER_DATE_TIME)))
+    assertThat(new DateForValidation(TEST_NOW).equals(new DateForValidation(TEST_NOW))).isTrue();
+    assertThat(new DateForValidation(TEST_NOW).equals(new DateForValidation(OTHER_DATE_TIME)))
         .isFalse();
   }
 }

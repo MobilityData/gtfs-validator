@@ -30,7 +30,8 @@ public class ValidationRunnerTest {
 
     // We are testing path parsing here only. We expect a FileNotFoundException but NOT a
     // InvalidPathException. This should catch issues such as #1158.
-    assertThrows(FileNotFoundException.class, () -> ValidationRunner.createGtfsInput(config));
+    assertThrows(
+        FileNotFoundException.class, () -> ValidationRunner.createGtfsInput(config, "1.1.0"));
   }
 
   @Test
@@ -39,6 +40,7 @@ public class ValidationRunnerTest {
 
     // We are testing path parsing here only. We expect a FileNotFoundException but NOT a
     // InvalidPathException. This should catch issues such as #1158.
-    assertThrows(FileNotFoundException.class, () -> ValidationRunner.createGtfsInput(config));
+    assertThrows(
+        FileNotFoundException.class, () -> ValidationRunner.createGtfsInput(config, "1.1.0"));
   }
 }
