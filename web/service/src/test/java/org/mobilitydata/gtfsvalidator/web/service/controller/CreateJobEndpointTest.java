@@ -4,9 +4,12 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mobilitydata.gtfsvalidator.util.VersionResolver;
 import org.mobilitydata.gtfsvalidator.web.service.util.JobMetadata;
 import org.mobilitydata.gtfsvalidator.web.service.util.StorageHelper;
 import org.mobilitydata.gtfsvalidator.web.service.util.ValidationHandler;
@@ -32,9 +35,13 @@ public class CreateJobEndpointTest {
 
   @Captor ArgumentCaptor<JobMetadata> jobMetadataCaptor;
 
+  @MockBean private VersionResolver versionResolver;
+
   private final ObjectMapper mapper = new ObjectMapper();
   private String testJobId;
   private String testUploadUrl;
+
+  private final String VALIDATOR_TEST_VERSION = "1.0.0";
 
   private void makeCreateJobRequestAndCheckResult(
       CreateJobRequest request, String expectedJobId, String expectedUploadUrl) throws Exception {
@@ -51,10 +58,11 @@ public class CreateJobEndpointTest {
   }
 
   @BeforeEach
-  public void setUp() {
+  public void setUp() throws IOException {
     testJobId = "123";
     testUploadUrl = "https://gcs.io/bucket/123";
     doReturn(testJobId).when(storageHelper).createNewJobId();
+    doReturn(Optional.of(VALIDATOR_TEST_VERSION)).when(versionResolver).resolveCurrentVersion();
   }
 
   @Test
@@ -67,7 +75,7 @@ public class CreateJobEndpointTest {
     // should not call saveJobMetadata
     verify(storageHelper, times(0)).saveJobMetadata(any(JobMetadata.class));
     // should not call saveJobFileFromUrl
-    verify(storageHelper, times(0)).saveJobFileFromUrl(anyString(), anyString());
+    verify(storageHelper, times(0)).saveJobFileFromUrl(anyString(), anyString(), anyString());
   }
 
   @Test
@@ -85,7 +93,7 @@ public class CreateJobEndpointTest {
     assert jobMetadata.getCountryCode().equals("US");
 
     // should not call saveJobFileFromUrl
-    verify(storageHelper, times(0)).saveJobFileFromUrl(anyString(), anyString());
+    verify(storageHelper, times(0)).saveJobFileFromUrl(anyString(), anyString(), anyString());
   }
 
   @Test
@@ -99,7 +107,7 @@ public class CreateJobEndpointTest {
     // should not call saveJobMetadata
     verify(storageHelper, times(0)).saveJobMetadata(any(JobMetadata.class));
     // should saveJobFileFromUrl
-    verify(storageHelper, times(1)).saveJobFileFromUrl(testJobId, url);
+    verify(storageHelper, times(1)).saveJobFileFromUrl(testJobId, url, VALIDATOR_TEST_VERSION);
   }
 
   @Test
@@ -117,7 +125,7 @@ public class CreateJobEndpointTest {
     assert jobMetadata.getJobId().equals(testJobId);
     assert jobMetadata.getCountryCode().equals("US");
     // should saveJobFileFromUrl
-    verify(storageHelper, times(1)).saveJobFileFromUrl(testJobId, url);
+    verify(storageHelper, times(1)).saveJobFileFromUrl(testJobId, url, VALIDATOR_TEST_VERSION);
   }
 
   @Test
@@ -140,7 +148,7 @@ public class CreateJobEndpointTest {
     doReturn(testJobId).when(storageHelper).createNewJobId();
     doThrow(new RuntimeException("test exception"))
         .when(storageHelper)
-        .saveJobFileFromUrl(any(), any());
+        .saveJobFileFromUrl(anyString(), anyString(), anyString());
     String url = "http://myfilehost.com/myfile.zip";
     var request = new CreateJobRequest("US", url);
     var json = mapper.writeValueAsString(request);

@@ -62,7 +62,8 @@ public class ValidationController {
           storageHelper.saveJobMetadata(new JobMetadata(jobId, body.getCountryCode()));
         }
         if (!Strings.isNullOrEmpty(body.getUrl())) {
-          storageHelper.saveJobFileFromUrl(jobId, body.getUrl());
+          var validatorVersion = versionResolver.resolveCurrentVersion();
+          storageHelper.saveJobFileFromUrl(jobId, body.getUrl(), validatorVersion.orElse(null));
         } else {
           uploadUrl = storageHelper.generateUniqueUploadUrl(jobId);
         }

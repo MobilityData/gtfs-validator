@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-
 import org.mobilitydata.gtfsvalidator.util.HttpGetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,17 +102,19 @@ public class StorageHelper {
    *
    * @param jobId
    * @param url
+   * @param validatorVersion
    * @throws Exception
    */
-  public void saveJobFileFromUrl(String jobId, String url) throws Exception {
+  public void saveJobFileFromUrl(String jobId, String url, String validatorVersion)
+      throws Exception {
     // Read file into memory
     try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-        HttpGetUtil.loadFromUrl(new URL(url), outputStream, null);
-        var blobId = BlobId.of(USER_UPLOAD_BUCKET_NAME, jobId + "/" + FILE_NAME);
-        var mimeType = "application/zip";
-        var blobInfo = BlobInfo.newBuilder(blobId).setContentType(mimeType).build();
-        var fileBytes = outputStream.toByteArray();
-        storage.create(blobInfo, fileBytes);
+      HttpGetUtil.loadFromUrl(new URL(url), outputStream, validatorVersion);
+      var blobId = BlobId.of(USER_UPLOAD_BUCKET_NAME, jobId + "/" + FILE_NAME);
+      var mimeType = "application/zip";
+      var blobInfo = BlobInfo.newBuilder(blobId).setContentType(mimeType).build();
+      var fileBytes = outputStream.toByteArray();
+      storage.create(blobInfo, fileBytes);
     }
   }
 
