@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
+import org.mobilitydata.gtfsvalidator.util.HttpGetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -105,14 +107,14 @@ public class StorageHelper {
    */
   public void saveJobFileFromUrl(String jobId, String url) throws Exception {
     // Read file into memory
-    var urlInputStream = new BufferedInputStream(new URL(url).openStream());
-
-    // Upload to GCS
-    var blobId = BlobId.of(USER_UPLOAD_BUCKET_NAME, jobId + "/" + jobId + ".zip");
-    var mimeType = "application/zip";
-    var blobInfo = BlobInfo.newBuilder(blobId).setContentType(mimeType).build();
-    var fileBytes = urlInputStream.readAllBytes();
-    storage.create(blobInfo, fileBytes);
+    try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+        HttpGetUtil.loadFromUrl(new URL(url), outputStream, null);
+        var blobId = BlobId.of(USER_UPLOAD_BUCKET_NAME, jobId + "/" + FILE_NAME);
+        var mimeType = "application/zip";
+        var blobInfo = BlobInfo.newBuilder(blobId).setContentType(mimeType).build();
+        var fileBytes = outputStream.toByteArray();
+        storage.create(blobInfo, fileBytes);
+    }
   }
 
   /** Generates a job-specific signed URL for uploading a file to GCS. */
