@@ -31,7 +31,9 @@ public class WholeFeedValidator extends FileValidator {
 
   @Inject
   public WholeFeedValidator(
-      GtfsFeedContainer feedContainer, CountryCode countryCode, DateForValidation dateForValidation) {
+      GtfsFeedContainer feedContainer,
+      CountryCode countryCode,
+      DateForValidation dateForValidation) {
     this.feedContainer = feedContainer;
     this.countryCode = countryCode;
     this.dateForValidation = dateForValidation;

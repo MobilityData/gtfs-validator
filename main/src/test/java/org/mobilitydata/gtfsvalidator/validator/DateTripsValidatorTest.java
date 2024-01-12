@@ -91,7 +91,11 @@ public class DateTripsValidatorTest {
 
     var validator =
         new DateTripsValidator(
-            new DateForValidation(TEST_NOW), dateTable, calendarTable, tripContainer, frequencyTable);
+            new DateForValidation(TEST_NOW),
+            dateTable,
+            calendarTable,
+            tripContainer,
+            frequencyTable);
 
     validator.validate(noticeContainer);
 

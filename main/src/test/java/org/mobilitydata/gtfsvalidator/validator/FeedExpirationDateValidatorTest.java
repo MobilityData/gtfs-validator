@@ -51,9 +51,7 @@ public class FeedExpirationDateValidatorTest {
 
   @Test
   public void feedExpiringInFiveDaysFromNowShouldGenerateNotice() {
-    assertThat(
-            validateFeedInfo(
-                createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.plusDays(3)))))
+    assertThat(validateFeedInfo(createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.plusDays(3)))))
         .containsExactly(
             new FeedExpirationDate7DaysNotice(
                 1,
@@ -64,9 +62,7 @@ public class FeedExpirationDateValidatorTest {
 
   @Test
   public void feedExpiringInSevenDaysFromNowShouldGenerateNotice() {
-    assertThat(
-            validateFeedInfo(
-                createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.plusDays(7)))))
+    assertThat(validateFeedInfo(createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.plusDays(7)))))
         .containsExactly(
             new FeedExpirationDate7DaysNotice(
                 1,
@@ -77,9 +73,7 @@ public class FeedExpirationDateValidatorTest {
 
   @Test
   public void feedExpiring7to30DaysFromNowShouldGenerateNotice() {
-    assertThat(
-            validateFeedInfo(
-                createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.plusDays(23)))))
+    assertThat(validateFeedInfo(createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.plusDays(23)))))
         .containsExactly(
             new FeedExpirationDate30DaysNotice(
                 1,
@@ -90,9 +84,7 @@ public class FeedExpirationDateValidatorTest {
 
   @Test
   public void feedExpiring30DaysFromNowShouldGenerateNotice() {
-    assertThat(
-            validateFeedInfo(
-                createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.plusDays(30)))))
+    assertThat(validateFeedInfo(createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.plusDays(30)))))
         .containsExactly(
             new FeedExpirationDate30DaysNotice(
                 1,
@@ -103,9 +95,7 @@ public class FeedExpirationDateValidatorTest {
 
   @Test
   public void feedExpiringInMoreThan30DaysFromNowShouldNotGenerateNotice() {
-    assertThat(
-            validateFeedInfo(
-                createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.plusDays(45)))))
+    assertThat(validateFeedInfo(createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.plusDays(45)))))
         .isEmpty();
   }
 }

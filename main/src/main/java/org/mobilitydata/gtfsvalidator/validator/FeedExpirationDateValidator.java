@@ -56,8 +56,10 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
   public void validate(GtfsFeedInfo entity, NoticeContainer noticeContainer) {
     if (entity.hasFeedEndDate()) {
       GtfsDate currentDate = GtfsDate.fromLocalDate(dateForValidation.getDate());
-      GtfsDate currentDatePlusSevenDays = GtfsDate.fromLocalDate(dateForValidation.getDate().plusDays(7));
-      GtfsDate currentDatePlusThirtyDays = GtfsDate.fromLocalDate(dateForValidation.getDate().plusDays(30));
+      GtfsDate currentDatePlusSevenDays =
+          GtfsDate.fromLocalDate(dateForValidation.getDate().plusDays(7));
+      GtfsDate currentDatePlusThirtyDays =
+          GtfsDate.fromLocalDate(dateForValidation.getDate().plusDays(30));
       if (entity.feedEndDate().compareTo(currentDatePlusSevenDays) <= 0) {
         noticeContainer.addValidationNotice(
             new FeedExpirationDate7DaysNotice(
