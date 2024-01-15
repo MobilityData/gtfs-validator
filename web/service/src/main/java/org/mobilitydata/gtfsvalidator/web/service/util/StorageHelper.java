@@ -1,9 +1,11 @@
 package org.mobilitydata.gtfsvalidator.web.service.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.cloud.WriteChannel;
 import com.google.cloud.storage.*;
 import java.io.*;
 import java.net.URL;
+import java.nio.channels.Channels;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -107,14 +109,14 @@ public class StorageHelper {
    */
   public void saveJobFileFromUrl(String jobId, String url, String validatorVersion)
       throws Exception {
-    // Read file into memory
-    try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+    var blobId = BlobId.of(USER_UPLOAD_BUCKET_NAME, jobId + "/" + FILE_NAME);
+    var blobInfo = BlobInfo.newBuilder(blobId).setContentType("application/zip").build();
+    URL signedURL =
+        storage.signUrl(
+            blobInfo, 1, TimeUnit.HOURS, Storage.SignUrlOption.httpMethod(HttpMethod.POST));
+    try (WriteChannel writer = storage.writer(signedURL)) {
+      OutputStream outputStream = Channels.newOutputStream(writer);
       HttpGetUtil.loadFromUrl(new URL(url), outputStream, validatorVersion);
-      var blobId = BlobId.of(USER_UPLOAD_BUCKET_NAME, jobId + "/" + FILE_NAME);
-      var mimeType = "application/zip";
-      var blobInfo = BlobInfo.newBuilder(blobId).setContentType(mimeType).build();
-      var fileBytes = outputStream.toByteArray();
-      storage.create(blobInfo, fileBytes);
     }
   }
 
