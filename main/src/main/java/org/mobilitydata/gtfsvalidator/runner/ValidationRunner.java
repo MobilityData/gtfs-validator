@@ -26,7 +26,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -120,7 +119,7 @@ public class ValidationRunner {
     ValidationContext validationContext =
         ValidationContext.builder()
             .setCountryCode(config.countryCode())
-            .setDateForValidation(new DateForValidation(LocalDate.now()))
+            .setCurrentDateTime(new CurrentDateTime(config.zonedDateTime()))
             .build();
     try {
       feedContainer =
