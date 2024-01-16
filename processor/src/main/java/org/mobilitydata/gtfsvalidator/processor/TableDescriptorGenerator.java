@@ -20,11 +20,9 @@ import static org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum.OPTIONAL;
 import static org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum.RECOMMENDED;
 import static org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum.REQUIRED;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldNameField;
-import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_PACKAGE_NAME;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.JavaFile;
@@ -38,13 +36,15 @@ import javax.lang.model.element.Modifier;
 import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
+import org.mobilitydata.gtfsvalidator.columns.GtfsColumnBasedEntityBuilder;
+import org.mobilitydata.gtfsvalidator.columns.GtfsColumnStore;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
-import org.mobilitydata.gtfsvalidator.parsing.FieldCache;
 import org.mobilitydata.gtfsvalidator.parsing.RowParser;
 import org.mobilitydata.gtfsvalidator.table.GtfsColumnDescriptor;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntityBuilder;
-import org.mobilitydata.gtfsvalidator.table.GtfsFieldLoader;
+import org.mobilitydata.gtfsvalidator.table.GtfsEnumDescriptor;
+import org.mobilitydata.gtfsvalidator.table.GtfsSetter;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableDescriptor;
 
@@ -92,7 +92,8 @@ public class TableDescriptorGenerator {
   }
 
   public JavaFile generateGtfsDescriptorJavaFile() {
-    return JavaFile.builder(TABLE_PACKAGE_NAME, generateGtfsTableDescriptorClass()).build();
+    return JavaFile.builder(fileDescriptor.packageName(), generateGtfsTableDescriptorClass())
+        .build();
   }
 
   public TypeSpec generateGtfsTableDescriptorClass() {
@@ -100,8 +101,7 @@ public class TableDescriptorGenerator {
         TypeSpec.classBuilder(classNames.tableDescriptorSimpleName())
             .superclass(
                 ParameterizedTypeName.get(
-                    ClassName.get(GtfsTableDescriptor.class),
-                    classNames.entityImplementationTypeName()))
+                    ClassName.get(GtfsTableDescriptor.class), classNames.entityTypeName()))
             .addAnnotation(Generated.class)
             .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
@@ -110,9 +110,9 @@ public class TableDescriptorGenerator {
     typeSpec.addMethod(generateCreateContainerForInvalidStatusMethod());
     typeSpec.addMethod(generateCreateContainerForHeaderAndEntitiesMethod());
     typeSpec.addMethod(generateCreateEntityBuilderMethod());
+    typeSpec.addMethod(generateCreateColumnBasedEntityBuilderMethod());
     typeSpec.addMethod(generateGetEntityClassMethod());
     typeSpec.addMethod(generateGetColumnsMethod());
-    typeSpec.addMethod(generateGetFieldLoadersMethod());
 
     typeSpec.addMethod(generateGtfsFilenameMethod());
     typeSpec.addMethod(generateIsRecommendedMethod());
@@ -134,8 +134,7 @@ public class TableDescriptorGenerator {
         .addModifiers(Modifier.PUBLIC)
         .addParameter(CsvHeader.class, "header")
         .addParameter(
-            ParameterizedTypeName.get(
-                ClassName.get(List.class), classNames.entityImplementationTypeName()),
+            ParameterizedTypeName.get(ClassName.get(List.class), classNames.entityTypeName()),
             "entities")
         .addParameter(NoticeContainer.class, "noticeContainer")
         .returns(GtfsTableContainer.class)
@@ -164,12 +163,23 @@ public class TableDescriptorGenerator {
         .build();
   }
 
+  private MethodSpec generateCreateColumnBasedEntityBuilderMethod() {
+    return MethodSpec.methodBuilder("createColumnBasedEntityBuilder")
+        .addAnnotation(Override.class)
+        .addModifiers(Modifier.PUBLIC)
+        .addParameter(ClassName.get(GtfsColumnStore.class), "store")
+        .returns(GtfsColumnBasedEntityBuilder.class)
+        .addStatement(
+            "return new $T.Builder(store)", classNames.columnBasedEntityImplementationTypeName())
+        .build();
+  }
+
   private MethodSpec generateGetEntityClassMethod() {
     return MethodSpec.methodBuilder("getEntityClass")
         .addAnnotation(Override.class)
         .addModifiers(Modifier.PUBLIC)
         .returns(Class.class)
-        .addStatement("return $T.class", classNames.entityImplementationTypeName())
+        .addStatement("return $T.class", classNames.entityTypeName())
         .build();
   }
 
@@ -186,26 +196,47 @@ public class TableDescriptorGenerator {
                 ImmutableList.class,
                 GtfsColumnDescriptor.class,
                 ImmutableList.class);
-    TypeName gtfsEntityType = classNames.entityImplementationTypeName();
+    TypeName gtfsEntityType = classNames.entityTypeName();
+    ClassName gtfsEntityBuilderClassName = classNames.entityBuilderTypeName();
+    ClassName columnBasedGtfsEntityBuilderClassName = classNames.columnBasedEntityBuilderTypeName();
     for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
+      TypeName nameThisSomethingBetter =
+          (field.type() == FieldTypeEnum.ENUM) ? ClassName.INT : ClassName.get(field.javaType());
       CodeBlock.Builder descriptor =
           CodeBlock.builder()
+              .add("GtfsColumnDescriptor.builder()\n")
+              .add(".setColumnName($T.$L)\n", gtfsEntityType, fieldNameField(field.name()))
+              .add(".setHeaderRequired($L)\n", field.isHeaderRequired())
+              .add(".setHeaderRecommended($L)\n", field.columnRecommended())
+              .add(".setFieldLevel($T.$L)\n", FieldLevelEnum.class, getFieldLevel(field))
+              .add(".setJavaType($T.class)\n", ClassName.get(field.javaType()))
+              .add(".setFieldType($T.$L)\n", ClassName.get(FieldTypeEnum.class), field.type())
               .add(
-                  "GtfsColumnDescriptor.builder()\n"
-                      + ".setColumnName($T.$L)\n"
-                      + ".setHeaderRequired($L)\n"
-                      + ".setHeaderRecommended($L)\n"
-                      + ".setFieldLevel($T.$L)\n"
-                      + ".setIsMixedCase($L)\n"
-                      + ".setIsCached($L)\n",
-                  gtfsEntityType,
-                  fieldNameField(field.name()),
-                  field.isHeaderRequired(),
-                  field.columnRecommended(),
-                  FieldLevelEnum.class,
-                  getFieldLevel(field),
-                  field.mixedCase(),
-                  cachingEnabled(field));
+                  ".setEntityBuilderSetter(($T) $T::$L)\n",
+                  ParameterizedTypeName.get(
+                      ClassName.get(GtfsSetter.class),
+                      gtfsEntityBuilderClassName,
+                      nameThisSomethingBetter.box()),
+                  gtfsEntityBuilderClassName,
+                  FieldNameConverter.setterMethodName(field.name()))
+              .add(
+                  ".setColumnBasedEntityBuilderSetter(($T) $T::$L)\n",
+                  ParameterizedTypeName.get(
+                      ClassName.get(GtfsSetter.class),
+                      columnBasedGtfsEntityBuilderClassName,
+                      nameThisSomethingBetter.box()),
+                  columnBasedGtfsEntityBuilderClassName,
+                  FieldNameConverter.setterMethodName(field.name()))
+              .add(".setIsMixedCase($L)\n", field.mixedCase())
+              .add(".setIsCached($L)\n", cachingEnabled(field));
+
+      if (field.type() == FieldTypeEnum.ENUM) {
+        descriptor.add(
+            ".setEnumDescriptor($T.create($T::forNumber, $T.UNRECOGNIZED))",
+            GtfsEnumDescriptor.class,
+            ClassName.get(field.javaType()),
+            ClassName.get(field.javaType()));
+      }
       field
           .numberBounds()
           .ifPresent(
@@ -213,77 +244,6 @@ public class TableDescriptorGenerator {
                   descriptor.add(
                       ".setNumberBounds($T.$L)\n", RowParser.NumberBounds.class, bounds));
       method.addStatement("builder.add($L.build())", descriptor.build());
-    }
-    method.addStatement("return builder.build()");
-    return method.build();
-  }
-
-  private MethodSpec generateGetFieldLoadersMethod() {
-    MethodSpec.Builder method =
-        MethodSpec.methodBuilder("getFieldLoaders")
-            .addAnnotation(Override.class)
-            .addModifiers(Modifier.PUBLIC)
-            .returns(
-                ParameterizedTypeName.get(
-                    ClassName.get(ImmutableMap.class),
-                    ClassName.get(String.class),
-                    ClassName.get(GtfsFieldLoader.class)))
-            .addStatement(
-                "$T.Builder<$T, $T> builder = $T.builder()",
-                ImmutableMap.class,
-                String.class,
-                GtfsFieldLoader.class,
-                ImmutableMap.class);
-    ClassName gtfsEntityType = classNames.entityImplementationTypeName();
-    for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
-      TypeName boxedType =
-          field.type() == FieldTypeEnum.ENUM
-              ? ClassName.get(Integer.class)
-              : ClassName.get(field.javaType()).box();
-      TypeSpec.Builder loaderClass =
-          TypeSpec.anonymousClassBuilder("")
-              .addSuperinterface(
-                  ParameterizedTypeName.get(
-                      ClassName.get(GtfsFieldLoader.class),
-                      gtfsEntityType.nestedClass("Builder"),
-                      boxedType));
-      MethodSpec.Builder loadMethod =
-          MethodSpec.methodBuilder("load")
-              .addAnnotation(Override.class)
-              .addModifiers(Modifier.PUBLIC)
-              .addParameter(RowParser.class, "rowParser")
-              .addParameter(int.class, "columnIndex")
-              .addParameter(GtfsColumnDescriptor.class, "columnDescriptor")
-              .addParameter(
-                  ParameterizedTypeName.get(ClassName.get(FieldCache.class), boxedType),
-                  "fieldCache")
-              .addParameter(gtfsEntityType.nestedClass("Builder"), "builder");
-
-      CodeBlock fieldValue =
-          field.type() == FieldTypeEnum.ENUM
-              ? CodeBlock.of(
-                  "rowParser.asEnum(columnIndex, columnDescriptor, $T::forNumber,"
-                      + " $T.UNRECOGNIZED)",
-                  ClassName.get(field.javaType()),
-                  ClassName.get(field.javaType()))
-              : CodeBlock.of(
-                  "rowParser.$L(columnIndex, columnDescriptor$L)",
-                  gtfsTypeToParserMethod(field.type()),
-                  field.numberBounds().isPresent()
-                      ? ", RowParser.NumberBounds." + field.numberBounds().get()
-                      : "");
-
-      loadMethod.addStatement(
-          "builder.$L(\naddToCacheIfPresent(\n$L, fieldCache))",
-          FieldNameConverter.setterMethodName(field.name()),
-          fieldValue);
-      loaderClass.addMethod(loadMethod.build());
-
-      method.addStatement(
-          "builder.put($T.$L, $L)",
-          gtfsEntityType,
-          fieldNameField(field.name()),
-          loaderClass.build());
     }
     method.addStatement("return builder.build()");
     return method.build();
@@ -298,7 +258,7 @@ public class TableDescriptorGenerator {
         .addAnnotation(Override.class)
         .addModifiers(Modifier.PUBLIC)
         .returns(String.class)
-        .addStatement("return $T.FILENAME", classNames.entityImplementationTypeName())
+        .addStatement("return $T.FILENAME", classNames.entityTypeName())
         .build();
   }
 

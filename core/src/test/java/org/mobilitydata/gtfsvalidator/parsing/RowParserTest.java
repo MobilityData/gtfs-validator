@@ -21,15 +21,16 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.function.Function;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
+import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.notice.*;
 import org.mobilitydata.gtfsvalidator.table.GtfsColumnDescriptor;
+import org.mobilitydata.gtfsvalidator.table.GtfsSetter;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
@@ -45,42 +46,18 @@ public class RowParserTest {
   private static GtfsFieldValidator FIELD_VALIDATOR = new DefaultFieldValidator(TEST_COUNTRY_CODE);
 
   private static GtfsColumnDescriptor GTFS_COLUMN_DESCRIPTOR =
-      new GtfsColumnDescriptor() {
-        @Override
-        public String columnName() {
-          return "column name";
-        }
-
-        @Override
-        public boolean headerRequired() {
-          return false;
-        }
-
-        @Override
-        public boolean headerRecommended() {
-          return false;
-        }
-
-        @Override
-        public FieldLevelEnum fieldLevel() {
-          return FieldLevelEnum.REQUIRED;
-        }
-
-        @Override
-        public Optional<RowParser.NumberBounds> numberBounds() {
-          return Optional.empty();
-        }
-
-        @Override
-        public boolean isCached() {
-          return false;
-        }
-
-        @Override
-        public boolean isMixedCase() {
-          return false;
-        }
-      };
+      GtfsColumnDescriptor.builder()
+          .setColumnName("column name")
+          .setHeaderRequired(false)
+          .setHeaderRecommended(false)
+          .setFieldLevel(FieldLevelEnum.REQUIRED)
+          .setJavaType(String.class)
+          .setFieldType(FieldTypeEnum.TEXT)
+          .setEntityBuilderSetter(GtfsSetter.noopSetter())
+          .setColumnBasedEntityBuilderSetter(GtfsSetter.noopSetter())
+          .setIsCached(false)
+          .setIsMixedCase(false)
+          .build();
 
   private static RowParser createParser(String cellValue) {
     NoticeContainer noticeContainer = new NoticeContainer();
@@ -143,14 +120,7 @@ public class RowParserTest {
   public void asString_recommended_missing() {
     RowParser parser = createParser(null);
     GtfsColumnDescriptor tempColumnDescriptor =
-        GtfsColumnDescriptor.builder()
-            .setColumnName("column name")
-            .setHeaderRequired(false)
-            .setHeaderRecommended(false)
-            .setFieldLevel(FieldLevelEnum.RECOMMENDED)
-            .setIsMixedCase(false)
-            .setIsCached(false)
-            .build();
+        GTFS_COLUMN_DESCRIPTOR.toBuilder().setFieldLevel(FieldLevelEnum.RECOMMENDED).build();
 
     assertThat(parser.asString(0, tempColumnDescriptor)).isEqualTo(null);
     MissingRecommendedFieldNotice notice =

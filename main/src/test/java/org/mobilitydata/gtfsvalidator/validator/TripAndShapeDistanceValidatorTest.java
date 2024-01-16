@@ -18,7 +18,7 @@ public class TripAndShapeDistanceValidatorTest {
     ArrayList<GtfsTrip> trips = new ArrayList<>();
     for (int i = 0; i < rows; i++) {
       trips.add(
-          new GtfsTrip.Builder()
+          GtfsTrip.builder()
               .setCsvRowNumber(i + 1)
               .setTripId("t" + i)
               .setServiceId("sr" + i)
@@ -34,7 +34,7 @@ public class TripAndShapeDistanceValidatorTest {
     ArrayList<GtfsShape> shapes = new ArrayList<>();
     for (int i = 0; i < rows; i++) {
       shapes.add(
-          new GtfsShape.Builder()
+          GtfsShape.builder()
               .setCsvRowNumber(i + 1)
               .setShapeId("s" + i)
               .setShapePtLat(lonLat)
@@ -50,7 +50,7 @@ public class TripAndShapeDistanceValidatorTest {
     ArrayList<GtfsStopTime> stopTimes = new ArrayList<>();
     for (int i = 0; i < rows; i++) {
       stopTimes.add(
-          new GtfsStopTime.Builder()
+          GtfsStopTime.builder()
               .setCsvRowNumber(i + 1)
               .setTripId("t" + i)
               .setStopSequence(0)
@@ -65,7 +65,7 @@ public class TripAndShapeDistanceValidatorTest {
     ArrayList<GtfsStop> stops = new ArrayList<>();
     for (int i = 0; i < rows; i++) {
       stops.add(
-          new GtfsStop.Builder()
+          GtfsStop.builder()
               .setCsvRowNumber(i + 1)
               .setStopId("st" + i)
               .setStopLat(0.0)

@@ -45,7 +45,7 @@ public class GtfsFrequencyEndRangeValidatorTest {
   public void inOrder_yieldsNoNotice() {
     assertThat(
             generateNotices(
-                new GtfsFrequency.Builder()
+                GtfsFrequency.builder()
                     .setCsvRowNumber(2)
                     .setStartTime(GtfsTime.fromString("10:00:00"))
                     .setEndTime(GtfsTime.fromString("11:00:00"))
@@ -57,7 +57,7 @@ public class GtfsFrequencyEndRangeValidatorTest {
   public void outOfOrder_yieldsNotice() {
     assertThat(
             generateNotices(
-                new GtfsFrequency.Builder()
+                GtfsFrequency.builder()
                     .setCsvRowNumber(2)
                     .setStartTime(GtfsTime.fromString("11:00:00"))
                     .setEndTime(GtfsTime.fromString("10:00:00"))
@@ -71,7 +71,7 @@ public class GtfsFrequencyEndRangeValidatorTest {
   public void equal_yieldsNotice() {
     assertThat(
             generateNotices(
-                new GtfsFrequency.Builder()
+                GtfsFrequency.builder()
                     .setCsvRowNumber(2)
                     .setStartTime(GtfsTime.fromString("10:00:00"))
                     .setEndTime(GtfsTime.fromString("10:00:00"))
@@ -87,14 +87,14 @@ public class GtfsFrequencyEndRangeValidatorTest {
     // handles missing fields gracefully anyway.
     assertThat(
             generateNotices(
-                new GtfsFrequency.Builder()
+                GtfsFrequency.builder()
                     .setCsvRowNumber(2)
                     .setStartTime(GtfsTime.fromString("10:00:00"))
                     .build()))
         .isEmpty();
     assertThat(
             generateNotices(
-                new GtfsFrequency.Builder()
+                GtfsFrequency.builder()
                     .setCsvRowNumber(2)
                     .setEndTime(GtfsTime.fromString("10:00:00"))
                     .build()))

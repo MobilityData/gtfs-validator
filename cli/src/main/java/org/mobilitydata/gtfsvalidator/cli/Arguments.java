@@ -110,6 +110,11 @@ public class Arguments {
       description = "Skips check for new validator version")
   private boolean skipValidatorUpdate = false;
 
+  @Parameter(
+      names = {"-cbs", "--column_based_storage"},
+      description = "Use column-based storage")
+  private boolean useColumnBasedStorage = false;
+
   ValidationRunnerConfig toConfig() throws URISyntaxException {
     ValidationRunnerConfig.Builder builder = ValidationRunnerConfig.builder();
     if (input != null) {
@@ -141,6 +146,7 @@ public class Arguments {
     builder.setNumThreads(numThreads);
     builder.setPrettyJson(pretty);
     builder.setSkipValidatorUpdate(skipValidatorUpdate);
+    builder.setUseColumnBasedStorage(useColumnBasedStorage);
     return builder.build();
   }
 

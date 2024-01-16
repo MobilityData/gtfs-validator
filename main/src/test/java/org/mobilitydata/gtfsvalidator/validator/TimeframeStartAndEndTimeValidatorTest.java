@@ -36,7 +36,7 @@ public class TimeframeStartAndEndTimeValidatorTest {
   public void testExplicitFullDayInterval() {
     assertThat(
             validate(
-                new GtfsTimeframe.Builder()
+                GtfsTimeframe.builder()
                     .setStartTime(GtfsTime.fromString("00:00:00"))
                     .setEndTime(GtfsTime.fromString("24:00:00"))
                     .build()))
@@ -45,14 +45,14 @@ public class TimeframeStartAndEndTimeValidatorTest {
 
   @Test
   public void testImplicitFullDayInterval() {
-    assertThat(validate(new GtfsTimeframe.Builder().build())).isEmpty();
+    assertThat(validate(GtfsTimeframe.builder().build())).isEmpty();
   }
 
   @Test
   public void testBeyondTwentyFourHours() {
     assertThat(
             validate(
-                new GtfsTimeframe.Builder()
+                GtfsTimeframe.builder()
                     .setCsvRowNumber(2)
                     .setStartTime(GtfsTime.fromString("00:00:00"))
                     .setEndTime(GtfsTime.fromString("24:00:01"))
@@ -66,7 +66,7 @@ public class TimeframeStartAndEndTimeValidatorTest {
   public void testOnlyStartTimeSpecified() {
     assertThat(
             validate(
-                new GtfsTimeframe.Builder()
+                GtfsTimeframe.builder()
                     .setStartTime(GtfsTime.fromString("00:00:00"))
                     .setCsvRowNumber(2)
                     .build()))
@@ -77,7 +77,7 @@ public class TimeframeStartAndEndTimeValidatorTest {
   public void testOnlyEndTimeSpecified() {
     assertThat(
             validate(
-                new GtfsTimeframe.Builder()
+                GtfsTimeframe.builder()
                     .setEndTime(GtfsTime.fromString("10:00:00"))
                     .setCsvRowNumber(2)
                     .build()))

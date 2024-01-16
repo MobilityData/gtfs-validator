@@ -101,7 +101,7 @@ public class TimepointTimeValidatorTest {
   public void timepointWithNoTimeShouldGenerateNotices() {
     List<GtfsStopTime> stopTimes = new ArrayList<>();
     stopTimes.add(
-        new GtfsStopTime.Builder()
+        GtfsStopTime.builder()
             .setCsvRowNumber(1)
             .setTripId("first trip id")
             .setArrivalTime(null)
@@ -120,7 +120,7 @@ public class TimepointTimeValidatorTest {
   public void timepointWithBothTimesShouldNotGenerateNotice() {
     List<GtfsStopTime> stopTimes = new ArrayList<>();
     stopTimes.add(
-        new GtfsStopTime.Builder()
+        GtfsStopTime.builder()
             .setCsvRowNumber(1)
             .setTripId("first trip id")
             .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
@@ -136,7 +136,7 @@ public class TimepointTimeValidatorTest {
   public void timepoint_missingDepartureTimeShouldGenerateNotice() {
     List<GtfsStopTime> stopTimes = new ArrayList<>();
     stopTimes.add(
-        new GtfsStopTime.Builder()
+        GtfsStopTime.builder()
             .setCsvRowNumber(1)
             .setTripId("first trip id")
             .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
@@ -154,7 +154,7 @@ public class TimepointTimeValidatorTest {
   public void timepoint_missingArrivalTimeShouldGenerateNotice() {
     List<GtfsStopTime> stopTimes = new ArrayList<>();
     stopTimes.add(
-        new GtfsStopTime.Builder()
+        GtfsStopTime.builder()
             .setCsvRowNumber(1)
             .setTripId("first trip id")
             .setArrivalTime(null)
@@ -172,7 +172,7 @@ public class TimepointTimeValidatorTest {
   public void nonTimepoint_noTimeProvided_shouldNotGenerateNotice() {
     List<GtfsStopTime> stopTimes = new ArrayList<>();
     stopTimes.add(
-        new GtfsStopTime.Builder()
+        GtfsStopTime.builder()
             .setCsvRowNumber(1)
             .setTripId("first trip id")
             .setArrivalTime(null)
@@ -188,7 +188,7 @@ public class TimepointTimeValidatorTest {
   public void nonTimepoint_timesProvided_shouldNotGenerateNotice() {
     List<GtfsStopTime> stopTimes = new ArrayList<>();
     stopTimes.add(
-        new GtfsStopTime.Builder()
+        GtfsStopTime.builder()
             .setCsvRowNumber(1)
             .setTripId("first trip id")
             .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))
@@ -206,7 +206,7 @@ public class TimepointTimeValidatorTest {
     // (even if the timepoint value is included in header)
     List<GtfsStopTime> stopTimes = new ArrayList<>();
     stopTimes.add(
-        new GtfsStopTime.Builder()
+        GtfsStopTime.builder()
             .setCsvRowNumber(1)
             .setTripId("first trip id")
             .setArrivalTime(null)
@@ -225,7 +225,7 @@ public class TimepointTimeValidatorTest {
     // (even if the timepoint value is included in header)
     List<GtfsStopTime> stopTimes = new ArrayList<>();
     stopTimes.add(
-        new GtfsStopTime.Builder()
+        GtfsStopTime.builder()
             .setCsvRowNumber(1)
             .setTripId("first trip id")
             .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(450))

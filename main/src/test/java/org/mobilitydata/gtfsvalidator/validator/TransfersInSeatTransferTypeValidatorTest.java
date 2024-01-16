@@ -11,7 +11,6 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransfer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTransfer.Builder;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransferTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransferType;
 import org.mobilitydata.gtfsvalidator.validator.TransfersInSeatTransferTypeValidator.TransferWithSuspiciousMidTripInSeatNotice;
@@ -27,43 +26,21 @@ public class TransfersInSeatTransferTypeValidatorTest {
     GtfsStopTableContainer stops =
         GtfsStopTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsStop.Builder()
-                    .setStopId("s0")
-                    .setLocationType(GtfsLocationType.STOP)
-                    .build(),
-                new GtfsStop.Builder()
-                    .setStopId("s1")
-                    .setLocationType(GtfsLocationType.STOP)
-                    .build()),
+                GtfsStop.builder().setStopId("s0").setLocationType(GtfsLocationType.STOP).build(),
+                GtfsStop.builder().setStopId("s1").setLocationType(GtfsLocationType.STOP).build()),
             noticeContainer);
     GtfsStopTimeTableContainer stopTimes =
         GtfsStopTimeTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsStopTime.Builder()
-                    .setTripId("t0")
-                    .setStopId("s?")
-                    .setStopSequence(0)
-                    .build(),
-                new GtfsStopTime.Builder()
-                    .setTripId("t0")
-                    .setStopId("s0")
-                    .setStopSequence(1)
-                    .build(),
-                new GtfsStopTime.Builder()
-                    .setTripId("t1")
-                    .setStopId("s1")
-                    .setStopSequence(0)
-                    .build(),
-                new GtfsStopTime.Builder()
-                    .setTripId("t1")
-                    .setStopId("s?")
-                    .setStopSequence(1)
-                    .build()),
+                GtfsStopTime.builder().setTripId("t0").setStopId("s?").setStopSequence(0).build(),
+                GtfsStopTime.builder().setTripId("t0").setStopId("s0").setStopSequence(1).build(),
+                GtfsStopTime.builder().setTripId("t1").setStopId("s1").setStopSequence(0).build(),
+                GtfsStopTime.builder().setTripId("t1").setStopId("s?").setStopSequence(1).build()),
             noticeContainer);
     GtfsTransferTableContainer transfers =
         GtfsTransferTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsTransfer.Builder()
+                GtfsTransfer.builder()
                     .setCsvRowNumber(2)
                     .setFromStopId("s0")
                     .setToStopId("s1")
@@ -84,11 +61,8 @@ public class TransfersInSeatTransferTypeValidatorTest {
     GtfsStopTableContainer stops =
         GtfsStopTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsStop.Builder()
-                    .setStopId("s0")
-                    .setLocationType(GtfsLocationType.STOP)
-                    .build(),
-                new GtfsStop.Builder()
+                GtfsStop.builder().setStopId("s0").setLocationType(GtfsLocationType.STOP).build(),
+                GtfsStop.builder()
                     .setStopId("s1")
                     .setLocationType(GtfsLocationType.STATION)
                     .build()),
@@ -96,29 +70,13 @@ public class TransfersInSeatTransferTypeValidatorTest {
     GtfsStopTimeTableContainer stopTimes =
         GtfsStopTimeTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsStopTime.Builder()
-                    .setTripId("t0")
-                    .setStopId("s?")
-                    .setStopSequence(0)
-                    .build(),
-                new GtfsStopTime.Builder()
-                    .setTripId("t0")
-                    .setStopId("s0")
-                    .setStopSequence(1)
-                    .build(),
-                new GtfsStopTime.Builder()
-                    .setTripId("t1")
-                    .setStopId("s1")
-                    .setStopSequence(0)
-                    .build(),
-                new GtfsStopTime.Builder()
-                    .setTripId("t1")
-                    .setStopId("s?")
-                    .setStopSequence(1)
-                    .build()),
+                GtfsStopTime.builder().setTripId("t0").setStopId("s?").setStopSequence(0).build(),
+                GtfsStopTime.builder().setTripId("t0").setStopId("s0").setStopSequence(1).build(),
+                GtfsStopTime.builder().setTripId("t1").setStopId("s1").setStopSequence(0).build(),
+                GtfsStopTime.builder().setTripId("t1").setStopId("s?").setStopSequence(1).build()),
             noticeContainer);
     GtfsTransfer transfer =
-        new Builder()
+        GtfsTransfer.builder()
             .setCsvRowNumber(2)
             .setFromStopId("s0")
             .setToStopId("s1")
@@ -143,41 +101,19 @@ public class TransfersInSeatTransferTypeValidatorTest {
     GtfsStopTableContainer stops =
         GtfsStopTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsStop.Builder()
-                    .setStopId("s0")
-                    .setLocationType(GtfsLocationType.STOP)
-                    .build(),
-                new GtfsStop.Builder()
-                    .setStopId("s1")
-                    .setLocationType(GtfsLocationType.STOP)
-                    .build()),
+                GtfsStop.builder().setStopId("s0").setLocationType(GtfsLocationType.STOP).build(),
+                GtfsStop.builder().setStopId("s1").setLocationType(GtfsLocationType.STOP).build()),
             noticeContainer);
     GtfsStopTimeTableContainer stopTimes =
         GtfsStopTimeTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsStopTime.Builder()
-                    .setTripId("t0")
-                    .setStopId("s0")
-                    .setStopSequence(0)
-                    .build(),
-                new GtfsStopTime.Builder()
-                    .setTripId("t0")
-                    .setStopId("s?")
-                    .setStopSequence(1)
-                    .build(),
-                new GtfsStopTime.Builder()
-                    .setTripId("t1")
-                    .setStopId("s?")
-                    .setStopSequence(0)
-                    .build(),
-                new GtfsStopTime.Builder()
-                    .setTripId("t1")
-                    .setStopId("s1")
-                    .setStopSequence(1)
-                    .build()),
+                GtfsStopTime.builder().setTripId("t0").setStopId("s0").setStopSequence(0).build(),
+                GtfsStopTime.builder().setTripId("t0").setStopId("s?").setStopSequence(1).build(),
+                GtfsStopTime.builder().setTripId("t1").setStopId("s?").setStopSequence(0).build(),
+                GtfsStopTime.builder().setTripId("t1").setStopId("s1").setStopSequence(1).build()),
             noticeContainer);
     GtfsTransfer transfer =
-        new Builder()
+        GtfsTransfer.builder()
             .setCsvRowNumber(2)
             .setFromStopId("s0")
             .setToStopId("s1")

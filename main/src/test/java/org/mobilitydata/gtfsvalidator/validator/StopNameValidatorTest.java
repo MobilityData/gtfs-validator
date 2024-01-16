@@ -41,7 +41,7 @@ public class StopNameValidatorTest {
   public void sameStopNameAndDesc_generatesNotice() {
     assertThat(
             generateNotices(
-                new GtfsStop.Builder()
+                GtfsStop.builder()
                     .setCsvRowNumber(4)
                     .setStopId("stop id value")
                     .setLocationType(GtfsLocationType.STOP)
@@ -56,7 +56,7 @@ public class StopNameValidatorTest {
   public void differentStopNameAndDesc_noNotice() {
     assertThat(
             generateNotices(
-                new GtfsStop.Builder()
+                GtfsStop.builder()
                     .setCsvRowNumber(4)
                     .setStopId("stop id value")
                     .setLocationType(GtfsLocationType.STOP)
@@ -70,7 +70,7 @@ public class StopNameValidatorTest {
   public void missingStopNameForStop_generatesNotice() {
     assertThat(
             generateNotices(
-                new GtfsStop.Builder()
+                GtfsStop.builder()
                     .setCsvRowNumber(4)
                     .setStopId("stop id value")
                     .setLocationType(GtfsLocationType.STOP)
@@ -84,7 +84,7 @@ public class StopNameValidatorTest {
   public void missingStopNameForStation_generatesNotice() {
     assertThat(
             generateNotices(
-                new GtfsStop.Builder()
+                GtfsStop.builder()
                     .setCsvRowNumber(4)
                     .setStopId("stop id value")
                     .setLocationType(GtfsLocationType.STATION)
@@ -99,7 +99,7 @@ public class StopNameValidatorTest {
   public void missingStopNameForEntrance_generatesNotice() {
     assertThat(
             generateNotices(
-                new GtfsStop.Builder()
+                GtfsStop.builder()
                     .setCsvRowNumber(4)
                     .setStopId("stop id value")
                     .setLocationType(GtfsLocationType.ENTRANCE)
@@ -114,7 +114,7 @@ public class StopNameValidatorTest {
   public void missingStopNameForGenericNode_noNotice() {
     assertThat(
             generateNotices(
-                new GtfsStop.Builder()
+                GtfsStop.builder()
                     .setCsvRowNumber(4)
                     .setStopId("stop id value")
                     .setLocationType(GtfsLocationType.GENERIC_NODE)
@@ -127,7 +127,7 @@ public class StopNameValidatorTest {
   public void missingStopNameForBoardingArea_noNotice() {
     assertThat(
             generateNotices(
-                new GtfsStop.Builder()
+                GtfsStop.builder()
                     .setCsvRowNumber(4)
                     .setStopId("stop id value")
                     .setLocationType(GtfsLocationType.BOARDING_AREA)
@@ -140,7 +140,7 @@ public class StopNameValidatorTest {
   public void missingStopNameForUnrecognizedLocationType_noNotice() {
     assertThat(
             generateNotices(
-                new GtfsStop.Builder()
+                GtfsStop.builder()
                     .setCsvRowNumber(4)
                     .setStopId("stop id value")
                     .setLocationType(GtfsLocationType.UNRECOGNIZED)
@@ -153,7 +153,7 @@ public class StopNameValidatorTest {
   public void missingStopDesc_noNotice() {
     assertThat(
             generateNotices(
-                new GtfsStop.Builder()
+                GtfsStop.builder()
                     .setCsvRowNumber(4)
                     .setStopId("stop id value")
                     .setLocationType(GtfsLocationType.STOP)

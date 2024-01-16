@@ -13,11 +13,11 @@ import org.mobilitydata.gtfsvalidator.TestUtils;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntity;
+import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntity2TableContainer;
+import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntityTableContainer;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntityValidator;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestMultiFileValidator;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestSingleFileValidator;
-import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestTableContainer;
-import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestTableContainer2;
 import org.mobilitydata.gtfsvalidator.testgtfs.WholeFeedValidator;
 
 @RunWith(JUnit4.class)
@@ -34,8 +34,8 @@ public class DefaultValidatorProviderTest {
                     GtfsTestSingleFileValidator.class,
                     WholeFeedValidator.class)));
 
-    GtfsTestTableContainer tableContainer =
-        new GtfsTestTableContainer(TableStatus.PARSABLE_HEADERS_AND_ROWS);
+    GtfsTestEntityTableContainer tableContainer =
+        GtfsTestEntityTableContainer.forStatus(TableStatus.PARSABLE_HEADERS_AND_ROWS);
     GtfsFeedContainer feedContainer = new GtfsFeedContainer(ImmutableList.of(tableContainer));
     List<Class<? extends SingleEntityValidator>> singleEntityValidatorsWithParsingErrors =
         new ArrayList<>();
@@ -78,9 +78,10 @@ public class DefaultValidatorProviderTest {
 
     // Create 2 tables, one with errors and the other not.
     // This will let us test the multi-file validator.
-    GtfsTestTableContainer tableContainer = new GtfsTestTableContainer(TableStatus.UNPARSABLE_ROWS);
-    GtfsTestTableContainer2 tableContainer2 =
-        new GtfsTestTableContainer2(TableStatus.PARSABLE_HEADERS_AND_ROWS);
+    GtfsTestEntityTableContainer tableContainer =
+        GtfsTestEntityTableContainer.forStatus(TableStatus.UNPARSABLE_ROWS);
+    GtfsTestEntity2TableContainer tableContainer2 =
+        GtfsTestEntity2TableContainer.forStatus(TableStatus.PARSABLE_HEADERS_AND_ROWS);
 
     GtfsFeedContainer feedContainer =
         new GtfsFeedContainer(ImmutableList.of(tableContainer, tableContainer2));

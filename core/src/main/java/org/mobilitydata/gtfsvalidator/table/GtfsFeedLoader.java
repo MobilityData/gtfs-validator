@@ -49,6 +49,8 @@ public class GtfsFeedLoader {
   private final HashMap<String, GtfsTableDescriptor<?>> tableDescriptors = new HashMap<>();
   private int numThreads = 1;
 
+  private boolean useColumnBasedEntities = true;
+
   /**
    * The set of validators that were skipped during validation because their file dependencies had
    * parse errors plus validators that are optional.
@@ -148,6 +150,7 @@ public class GtfsFeedLoader {
           addThreadExecutionError(e, noticeContainer);
         }
       }
+
       GtfsFeedContainer feed = new GtfsFeedContainer(tableContainers);
       List<Callable<NoticeContainer>> validatorCallables = new ArrayList<>();
       // Validators with parser-error dependencies will not be returned here, but instead added to

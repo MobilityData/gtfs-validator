@@ -21,6 +21,7 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.TypeSpec.Builder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +31,7 @@ import java.util.Optional;
 import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
 import org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType;
+import org.mobilitydata.gtfsvalidator.columns.GtfsColumnBasedCollectionFactory;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyNotice;
 import org.mobilitydata.gtfsvalidator.notice.MoreThanOneEntityNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -51,14 +53,16 @@ class TableContainerIndexGenerator {
     this.classNames = new GtfsEntityClasses(fileDescriptor);
   }
 
-  void generateMethods(TypeSpec.Builder typeSpec) {
+  CodeBlock generateMethods(TypeSpec.Builder typeSpec) {
+    InitializerBlocks initBlocks = new InitializerBlocks();
+
     if (fileDescriptor.singleRow()) {
       typeSpec.addMethod(
           MethodSpec.methodBuilder("getSingleEntity")
               .addModifiers(Modifier.PUBLIC)
               .returns(
                   ParameterizedTypeName.get(
-                      ClassName.get(Optional.class), classNames.entityImplementationTypeName()))
+                      ClassName.get(Optional.class), classNames.entityTypeName()))
               .addStatement(
                   "return entities.isEmpty() ? Optional.empty() : Optional.of(entities.get(0))")
               .build());
@@ -66,9 +70,10 @@ class TableContainerIndexGenerator {
       addMapWithGetter(
           typeSpec,
           fileDescriptor.getSingleColumnPrimaryKey(),
-          classNames.entityImplementationTypeName());
+          classNames.entityTypeName(),
+          initBlocks);
     } else if (fileDescriptor.hasMultiColumnPrimaryKey()) {
-      addMapByCompositeKey(typeSpec, classNames.entityImplementationTypeName());
+      addMapByCompositeKey(typeSpec, classNames.entityTypeName(), initBlocks);
     }
 
     for (GtfsFieldDescriptor indexField : fileDescriptor.indices()) {
@@ -76,7 +81,8 @@ class TableContainerIndexGenerator {
           typeSpec,
           indexField,
           resolveSequenceField(indexField),
-          classNames.entityImplementationTypeName());
+          classNames.entityTypeName(),
+          initBlocks);
     }
 
     typeSpec.addMethod(generateByTranslationKeyMethod());
@@ -88,6 +94,8 @@ class TableContainerIndexGenerator {
     if (fileDescriptor.hasMultiColumnPrimaryKey()) {
       typeSpec.addType(compositeKeyClass());
     }
+
+    return generateInitializerCodeBlock(initBlocks);
   }
 
   private Optional<GtfsFieldDescriptor> resolveSequenceField(GtfsFieldDescriptor indexField) {
@@ -107,16 +115,24 @@ class TableContainerIndexGenerator {
       TypeSpec.Builder typeSpec,
       GtfsFieldDescriptor indexField,
       Optional<GtfsFieldDescriptor> sequenceField,
-      TypeName entityTypeName) {
+      TypeName entityTypeName,
+      InitializerBlocks initBlocks) {
     TypeName keyMapType =
         ParameterizedTypeName.get(
             ClassName.get(ListMultimap.class), TypeName.get(indexField.javaType()), entityTypeName);
     String methodName = byKeyMethodName(indexField.name());
     String fieldName = byKeyMapName(indexField.name());
-    typeSpec.addField(
-        FieldSpec.builder(keyMapType, fieldName, Modifier.PRIVATE)
-            .initializer("$T.create()", ParameterizedTypeName.get(ArrayListMultimap.class))
-            .build());
+    typeSpec.addField(keyMapType, fieldName, Modifier.PRIVATE);
+    initBlocks.simple.addStatement(
+        "this.$L = $T.create()", fieldName, ParameterizedTypeName.get(ArrayListMultimap.class));
+    initBlocks.columnBased.addStatement(
+        "this.$L = $T.<$T, $T>newListMultimap(new $T<>(), factory::createSomeEntitiesList)",
+        fieldName,
+        Multimaps.class,
+        TypeName.get(indexField.javaType()),
+        ParameterizedTypeName.get(ClassName.get(List.class), entityTypeName),
+        HashMap.class);
+
     String sortedBy =
         sequenceField
             .map((f) -> " sorted by " + FieldNameConverter.gtfsColumnName(f.name()))
@@ -144,16 +160,19 @@ class TableContainerIndexGenerator {
   }
 
   private static void addMapWithGetter(
-      TypeSpec.Builder typeSpec, GtfsFieldDescriptor indexField, TypeName entityTypeName) {
+      Builder typeSpec,
+      GtfsFieldDescriptor indexField,
+      TypeName entityTypeName,
+      InitializerBlocks initBlocks) {
     String methodName = byKeyMethodName(indexField.name());
     String fieldName = byKeyMapName(indexField.name());
     TypeName keyMapType =
         ParameterizedTypeName.get(
             ClassName.get(Map.class), TypeName.get(indexField.javaType()), entityTypeName);
-    typeSpec.addField(
-        FieldSpec.builder(keyMapType, fieldName, Modifier.PRIVATE)
-            .initializer("new $T<>()", ParameterizedTypeName.get(HashMap.class))
-            .build());
+    typeSpec.addField(keyMapType, fieldName, Modifier.PRIVATE);
+    initBlocks.simple.addStatement(
+        "this.$L = new $T<>()", fieldName, ParameterizedTypeName.get(HashMap.class));
+    initBlocks.columnBased.addStatement("this.$L = factory.createSomeEntitiesMap()", fieldName);
     typeSpec.addMethod(
         MethodSpec.methodBuilder(methodName)
             .addModifiers(Modifier.PUBLIC)
@@ -163,15 +182,19 @@ class TableContainerIndexGenerator {
             .build());
   }
 
-  private static void addMapByCompositeKey(TypeSpec.Builder typeSpec, TypeName entityTypeName) {
+  private static void addMapByCompositeKey(
+      Builder typeSpec, TypeName entityTypeName, InitializerBlocks initBlocks) {
     // Field: Map<CompositeKey, EntityType?> byCompositeKeyMap;
     TypeName keyMapType =
         ParameterizedTypeName.get(
             ClassName.get(Map.class), ClassName.get("", "CompositeKey"), entityTypeName);
-    typeSpec.addField(
-        FieldSpec.builder(keyMapType, BY_COMPOSITE_KEY_MAP_FIELD_NAME, Modifier.PRIVATE)
-            .initializer("new $T<>()", ParameterizedTypeName.get(HashMap.class))
-            .build());
+    typeSpec.addField(keyMapType, BY_COMPOSITE_KEY_MAP_FIELD_NAME, Modifier.PRIVATE);
+    initBlocks.simple.addStatement(
+        "this.$L = new $T<>()",
+        BY_COMPOSITE_KEY_MAP_FIELD_NAME,
+        ParameterizedTypeName.get(HashMap.class));
+    initBlocks.columnBased.addStatement(
+        "this.$L = factory.createSomeEntitiesMap()", BY_COMPOSITE_KEY_MAP_FIELD_NAME);
   }
 
   private FieldSpec generateKeyColumnNames() {
@@ -186,11 +209,7 @@ class TableContainerIndexGenerator {
         "ImmutableList.of($L)",
         fileDescriptor.primaryKeys().stream()
             .map(
-                (f) ->
-                    CodeBlock.of(
-                        "$T.$L",
-                        classNames.entityImplementationTypeName(),
-                        fieldNameField(f.name())))
+                (f) -> CodeBlock.of("$T.$L", classNames.entityTypeName(), fieldNameField(f.name())))
             .collect(CodeBlock.joining(",\n")));
     return field.build();
   }
@@ -217,7 +236,7 @@ class TableContainerIndexGenerator {
             .addModifiers(Modifier.PUBLIC)
             .returns(
                 ParameterizedTypeName.get(
-                    ClassName.get(Optional.class), classNames.entityImplementationTypeName()))
+                    ClassName.get(Optional.class), classNames.entityTypeName()))
             .addParameter(String.class, "recordId")
             .addParameter(String.class, "recordSubId");
     if (fileDescriptor.hasSingleColumnPrimaryKey()) {
@@ -287,7 +306,7 @@ class TableContainerIndexGenerator {
   }
 
   private MethodSpec generateSetupIndicesMethod() {
-    TypeName gtfsEntityType = classNames.entityImplementationTypeName();
+    TypeName gtfsEntityType = classNames.entityTypeName();
     MethodSpec.Builder method =
         MethodSpec.methodBuilder("setupIndices")
             .addModifiers(Modifier.PRIVATE)
@@ -316,7 +335,7 @@ class TableContainerIndexGenerator {
                   .collect(CodeBlock.joining("\n")))
           .addStatement(
               "$T oldEntity = $L.getOrDefault(key, null)",
-              classNames.entityImplementationTypeName(),
+              classNames.entityTypeName(),
               BY_COMPOSITE_KEY_MAP_FIELD_NAME)
           .beginControlFlow("if (oldEntity != null)")
           .addStatement(
@@ -347,7 +366,7 @@ class TableContainerIndexGenerator {
           .endControlFlow()
           .addStatement(
               "$T oldEntity = $L.getOrDefault(newEntity.$L(), null)",
-              classNames.entityImplementationTypeName(),
+              classNames.entityTypeName(),
               byKeyMap,
               primaryKey.name())
           .beginControlFlow("if (oldEntity != null)")
@@ -457,5 +476,26 @@ class TableContainerIndexGenerator {
    */
   private static boolean isKeyTypeNullable(GtfsFieldDescriptor field) {
     return !field.javaType().getKind().isPrimitive();
+  }
+
+  private CodeBlock generateInitializerCodeBlock(InitializerBlocks initBlocks) {
+    return CodeBlock.builder()
+        .addStatement(
+            "$T<$T> optFactory = $T.getForList(entities)",
+            Optional.class,
+            GtfsColumnBasedCollectionFactory.class,
+            GtfsColumnBasedCollectionFactory.class)
+        .beginControlFlow("if (optFactory.isPresent())")
+        .addStatement("$T factory = optFactory.get()", GtfsColumnBasedCollectionFactory.class)
+        .add(initBlocks.columnBased.build())
+        .nextControlFlow("else")
+        .add(initBlocks.simple.build())
+        .endControlFlow()
+        .build();
+  }
+
+  private static class InitializerBlocks {
+    private final CodeBlock.Builder simple = CodeBlock.builder();
+    private final CodeBlock.Builder columnBased = CodeBlock.builder();
   }
 }

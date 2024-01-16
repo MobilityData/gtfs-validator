@@ -2,6 +2,7 @@ package org.mobilitydata.gtfsvalidator.processor;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import com.squareup.javapoet.TypeName;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -10,7 +11,11 @@ import org.junit.runners.JUnit4;
 public class EnumGeneratorTest {
   @Test
   public void testGetMinMaxValue() {
-    GtfsEnumDescriptor.Builder builder = GtfsEnumDescriptor.builder().setName("MyEnum");
+    GtfsEnumDescriptor.Builder builder =
+        GtfsEnumDescriptor.builder()
+            .setName("MyEnum")
+            .setPackageName("")
+            .setFieldType(TypeName.INT);
     builder
         .valuesBuilder()
         .add(GtfsEnumValueDescriptor.create("STOP", 0))

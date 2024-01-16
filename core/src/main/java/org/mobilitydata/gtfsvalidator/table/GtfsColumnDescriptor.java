@@ -3,6 +3,7 @@ package org.mobilitydata.gtfsvalidator.table;
 import com.google.auto.value.AutoValue;
 import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
+import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.parsing.RowParser;
 
 @AutoValue
@@ -14,6 +15,16 @@ public abstract class GtfsColumnDescriptor {
   public abstract boolean headerRecommended();
 
   public abstract FieldLevelEnum fieldLevel();
+
+  public abstract Class<?> javaType();
+
+  public abstract FieldTypeEnum fieldType();
+
+  public abstract Optional<GtfsEnumDescriptor> enumDescriptor();
+
+  public abstract GtfsSetter<? extends GtfsEntityBuilder, ?> entityBuilderSetter();
+
+  public abstract GtfsSetter<? extends GtfsEntityBuilder, ?> columnBasedEntityBuilderSetter();
 
   public abstract Optional<RowParser.NumberBounds> numberBounds();
 
@@ -29,6 +40,8 @@ public abstract class GtfsColumnDescriptor {
     return new AutoValue_GtfsColumnDescriptor.Builder();
   }
 
+  public abstract Builder toBuilder();
+
   @AutoValue.Builder
   public abstract static class Builder {
     public abstract Builder setColumnName(String value);
@@ -38,6 +51,18 @@ public abstract class GtfsColumnDescriptor {
     public abstract Builder setHeaderRecommended(boolean value);
 
     public abstract Builder setFieldLevel(FieldLevelEnum value);
+
+    public abstract Builder setJavaType(Class<?> javaType);
+
+    public abstract Builder setFieldType(FieldTypeEnum fieldType);
+
+    public abstract Builder setEnumDescriptor(GtfsEnumDescriptor enumDescriptor);
+
+    public abstract Builder setEntityBuilderSetter(
+        GtfsSetter<? extends GtfsEntityBuilder, ?> setterMethod);
+
+    public abstract Builder setColumnBasedEntityBuilderSetter(
+        GtfsSetter<? extends GtfsEntityBuilder, ?> setterMethod);
 
     public abstract Builder setNumberBounds(Optional<RowParser.NumberBounds> value);
 

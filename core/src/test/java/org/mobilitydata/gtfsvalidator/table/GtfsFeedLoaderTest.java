@@ -12,10 +12,10 @@ import org.mobilitydata.gtfsvalidator.TestUtils;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntity;
+import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntityTableContainer;
+import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntityTableDescriptor;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntityValidator;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestSingleFileValidator;
-import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestTableContainer;
-import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestTableDescriptor;
 import org.mobilitydata.gtfsvalidator.testgtfs.WholeFeedValidator;
 import org.mobilitydata.gtfsvalidator.testing.MockGtfs;
 import org.mobilitydata.gtfsvalidator.validator.DefaultValidatorProvider;
@@ -48,10 +48,12 @@ public class GtfsFeedLoaderTest {
             TestUtils.contextForTest(), ValidatorLoader.createForClasses(VALIDATOR_CLASSES));
     NoticeContainer notices = new NoticeContainer();
 
-    GtfsFeedLoader loader = new GtfsFeedLoader(ImmutableList.of(GtfsTestTableDescriptor.class));
+    GtfsFeedLoader loader =
+        new GtfsFeedLoader(ImmutableList.of(GtfsTestEntityTableDescriptor.class));
     GtfsFeedContainer feedContainer = loader.loadAndValidate(input, provider, notices);
 
-    GtfsTestTableContainer container = feedContainer.getTable(GtfsTestTableContainer.class);
+    GtfsTestEntityTableContainer container =
+        feedContainer.getTable(GtfsTestEntityTableContainer.class);
     assertThat(container.getEntities()).hasSize(1);
 
     GtfsTestEntity entity = container.getEntities().get(0);
@@ -70,10 +72,12 @@ public class GtfsFeedLoaderTest {
             TestUtils.contextForTest(), ValidatorLoader.createForClasses(VALIDATOR_CLASSES));
     NoticeContainer notices = new NoticeContainer();
 
-    GtfsFeedLoader loader = new GtfsFeedLoader(ImmutableList.of(GtfsTestTableDescriptor.class));
+    GtfsFeedLoader loader =
+        new GtfsFeedLoader(ImmutableList.of(GtfsTestEntityTableDescriptor.class));
     GtfsFeedContainer feedContainer = loader.loadAndValidate(input, provider, notices);
 
-    GtfsTestTableContainer container = feedContainer.getTable(GtfsTestTableContainer.class);
+    GtfsTestEntityTableContainer container =
+        feedContainer.getTable(GtfsTestEntityTableContainer.class);
     assertThat(container.getEntities()).isEmpty();
 
     assertThat(loader.getMultiFileValidatorsWithParsingErrors())

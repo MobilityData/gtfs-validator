@@ -66,15 +66,14 @@ public class LatLonValidatorGenerator {
             .addAnnotation(GtfsValidator.class)
             .superclass(
                 ParameterizedTypeName.get(
-                    ClassName.get(SingleEntityValidator.class),
-                    entityClasses.entityImplementationTypeName()));
+                    ClassName.get(SingleEntityValidator.class), entityClasses.entityTypeName()));
 
     MethodSpec.Builder validateMethod =
         MethodSpec.methodBuilder("validate")
             .addModifiers(Modifier.PUBLIC)
             .addAnnotation(Override.class)
             .returns(void.class)
-            .addParameter(entityClasses.entityImplementationTypeName(), "entity")
+            .addParameter(entityClasses.entityTypeName(), "entity")
             .addParameter(NoticeContainer.class, "noticeContainer");
 
     for (LatLonDescriptor latLonDescriptor : fileDescriptor.latLonFields()) {
@@ -117,8 +116,7 @@ public class LatLonValidatorGenerator {
 
   private static CodeBlock generateNoticeContext(
       GtfsFileDescriptor fileDescriptor, LatLonDescriptor latLonDescriptor) {
-    TypeName gtfsEntityTypeName =
-        new GtfsEntityClasses(fileDescriptor).entityImplementationTypeName();
+    TypeName gtfsEntityTypeName = new GtfsEntityClasses(fileDescriptor).entityTypeName();
     CodeBlock.Builder block =
         CodeBlock.builder().add("$T.FILENAME, entity.csvRowNumber(), ", gtfsEntityTypeName);
     if (fileDescriptor.hasSingleColumnPrimaryKey()) {
