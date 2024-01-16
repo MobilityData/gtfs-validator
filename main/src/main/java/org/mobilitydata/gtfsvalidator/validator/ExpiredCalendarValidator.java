@@ -56,7 +56,9 @@ public class ExpiredCalendarValidator extends FileValidator {
             CalendarUtil.buildServicePeriodMap(calendarTable, calendarDateTable));
     for (var serviceId : servicePeriodMap.keySet()) {
       SortedSet<LocalDate> serviceDates = servicePeriodMap.get(serviceId);
-      if (!serviceDates.isEmpty() && serviceDates.last().isBefore(dateForValidation.getDate())) {
+      if (!serviceDates.isEmpty()
+          && serviceDates.last().isBefore(dateForValidation.getDate())
+          && calendarTable.byServiceId(serviceId).isPresent()) {
         int csvRowNumber = calendarTable.byServiceId(serviceId).get().csvRowNumber();
         noticeContainer.addValidationNotice(new ExpiredCalendarNotice(csvRowNumber, serviceId));
       }

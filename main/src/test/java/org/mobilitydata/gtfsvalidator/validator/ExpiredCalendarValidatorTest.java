@@ -215,4 +215,34 @@ public class ExpiredCalendarValidatorTest {
         .validate(container);
     assertThat(container.getValidationNotices()).isEmpty();
   }
+
+  @Test
+  public void calendarDateWithInvalidServiceIdShouldNotThrowExceptionAndShouldNotGenerateNotice() {
+    NoticeContainer container = new NoticeContainer();
+
+    List<GtfsCalendar> calendars =
+        ImmutableList.of(
+            new GtfsCalendar.Builder()
+                .setCsvRowNumber(2)
+                .setServiceId("SERVICE_ID")
+                .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(7)))
+                .setEndDate(GtfsDate.fromLocalDate(TEST_NOW))
+                .build());
+
+    GtfsCalendarTableContainer calendarTable =
+        GtfsCalendarTableContainer.forEntities(calendars, container);
+    var calendarDateTable =
+        GtfsCalendarDateTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsCalendarDate.Builder()
+                    .setCsvRowNumber(2)
+                    .setServiceId("NOT_SERVICE_ID")
+                    .setDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(1)))
+                    .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_ADDED)
+                    .build()),
+            container);
+    new ExpiredCalendarValidator(new DateForValidation(TEST_NOW), calendarTable, calendarDateTable)
+        .validate(container);
+    assertThat(container.getValidationNotices()).isEmpty();
+  }
 }
