@@ -27,12 +27,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.mobilitydata.gtfsvalidator.notice.InvalidInputFilesInSubfolderNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.util.HttpGetUtil;
 
 /**
  * GtfsInput provides a common interface for reading GTFS data, either from a ZIP archive or from a
@@ -41,8 +38,6 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 public abstract class GtfsInput implements Closeable {
   public static final String invalidInputMessage =
       "At least 1 GTFS file is in a subfolder. All GTFS files must reside at the root level directly.";
-
-  public static final String USER_AGENT_PREFIX = "MobilityData GTFS-Validator";
 
   /**
    * Creates a specific GtfsInput to read data from the given path.
@@ -147,7 +142,7 @@ public abstract class GtfsInput implements Closeable {
       Files.createDirectories(targetDirectory);
     }
     try (OutputStream outputStream = Files.newOutputStream(targetPath)) {
-      loadFromUrl(sourceUrl, outputStream, validatorVersion);
+      HttpGetUtil.loadFromUrl(sourceUrl, outputStream, validatorVersion);
     }
     return createFromPath(targetPath, noticeContainer);
   }
@@ -166,7 +161,7 @@ public abstract class GtfsInput implements Closeable {
       URL sourceUrl, NoticeContainer noticeContainer, String validatorVersion)
       throws IOException, URISyntaxException {
     try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-      loadFromUrl(sourceUrl, outputStream, validatorVersion);
+      HttpGetUtil.loadFromUrl(sourceUrl, outputStream, validatorVersion);
       File zipFile = new File(sourceUrl.toString());
       String fileName = zipFile.getName().replace(".zip", "");
       if (containsGtfsFileInSubfolder(
@@ -177,40 +172,6 @@ public abstract class GtfsInput implements Closeable {
       return new GtfsZipFileInput(
           new ZipFile(new SeekableInMemoryByteChannel(outputStream.toByteArray())), fileName);
     }
-  }
-
-  /**
-   * Downloads data from network.
-   *
-   * @param sourceUrl the fully qualified URL
-   * @param outputStream the output stream
-   * @param validatorVersion
-   * @throws IOException if no file could not be found at the specified location
-   * @throws URISyntaxException if URL is malformed
-   */
-  private static void loadFromUrl(URL sourceUrl, OutputStream outputStream, String validatorVersion)
-      throws IOException, URISyntaxException {
-    try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-      HttpGet httpGet = new HttpGet(sourceUrl.toURI());
-      httpGet.setHeader("User-Agent", getUserAgent(validatorVersion));
-      try (CloseableHttpResponse httpResponse = httpClient.execute(httpGet)) {
-        httpResponse.getEntity().writeTo(outputStream);
-      }
-    }
-  }
-
-  /**
-   * @param validatorVersion version of the validator
-   * @return the user agent string in the format: "MobilityData GTFS-Validator/{validatorVersion}
-   *     (Java {java version})"
-   */
-  private static String getUserAgent(String validatorVersion) {
-    return USER_AGENT_PREFIX
-        + "/"
-        + (validatorVersion != null ? validatorVersion : "")
-        + " (Java "
-        + System.getProperty("java.version")
-        + ")";
   }
 
   /**
