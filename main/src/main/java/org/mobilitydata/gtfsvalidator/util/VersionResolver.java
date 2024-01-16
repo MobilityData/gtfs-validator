@@ -5,8 +5,8 @@ import com.google.common.flogger.FluentLogger;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.SettableFuture;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.Resource;
 import io.github.classgraph.ScanResult;
@@ -151,23 +151,19 @@ public class VersionResolver {
             String.format(
                 "%s?application_type=%s&current_version=%s",
                 LATEST_RELEASE_VERSION_URL, applicationType, currentVersion.orElse("Ï")));
-    String jsonString = null;
     try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()))) {
-
-      // We expect the REST call to return something like :
-      // {"version":"1.4.0"}
-      jsonString = in.readLine();
-      if (Strings.isNullOrEmpty(jsonString)) {
-        return Optional.empty();
+      Gson gson = new GsonBuilder().create();
+      VersionResponse response = gson.fromJson(in, VersionResponse.class);
+      if (response != null && !Strings.isNullOrEmpty(response.version)) {
+        logger.atInfo().log("resolved release version=%s", response.version);
+        return Optional.of(response.version);
       }
-
-      JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
-      String version = json.get("version").getAsString();
-      return Optional.of(version);
-    } catch (Exception e) {
-      logger.atInfo().log("error parsing response=%s", jsonString);
     }
-
     return Optional.empty();
+  }
+
+  /** Serialization object for parsing the /version API response. */
+  public static class VersionResponse {
+    String version;
   }
 }
