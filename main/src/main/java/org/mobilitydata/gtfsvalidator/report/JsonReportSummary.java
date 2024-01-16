@@ -56,7 +56,7 @@ public class JsonReportSummary {
       this.validationReportName = config.validationReportFileName();
       this.htmlReportName = config.htmlReportFileName();
       this.countryCode = config.countryCode().getCountryCode();
-      this.dateForValidation = config.zonedDateTime().toString();
+      this.dateForValidation = config.dateForValidation().toString();
     } else {
       logger.atSevere().log(
           "No validation configuration for JSON report, there will be missing data in the report.");

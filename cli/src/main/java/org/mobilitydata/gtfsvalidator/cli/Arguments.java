@@ -21,8 +21,7 @@ import com.google.common.flogger.FluentLogger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
@@ -58,8 +57,8 @@ public class Arguments {
   @Parameter(
       names = {"-d", "--date"},
       description =
-          "Date to simulate when validating, in ISO_LOCAL_DATE_TIME format like "
-              + "'2001-01-30T12:34'. By default, the current date is used. "
+          "Date to simulate when validating, in ISO_LOCAL_DATE format like "
+              + "'2001-01-30'. By default, the current date is used. "
               + "This option enables debugging rules like feed expiration.")
   private String dateString;
 
@@ -123,9 +122,7 @@ public class Arguments {
       builder.setCountryCode(CountryCode.forStringOrUnknown(countryCode));
     }
     if (dateString != null) {
-      builder.setZonedDateTime(
-          ZonedDateTime.parse(
-              dateString, DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.systemDefault())));
+      builder.setDateForValidation(LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE));
     }
     if (validationReportName != null) {
       builder.setValidationReportFileName(validationReportName);

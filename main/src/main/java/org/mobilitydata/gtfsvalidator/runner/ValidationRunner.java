@@ -119,7 +119,7 @@ public class ValidationRunner {
     ValidationContext validationContext =
         ValidationContext.builder()
             .setCountryCode(config.countryCode())
-            .setCurrentDateTime(new CurrentDateTime(config.zonedDateTime()))
+            .setDateForValidation(new DateForValidation(config.dateForValidation()))
             .build();
     try {
       feedContainer =
@@ -268,7 +268,7 @@ public class ValidationRunner {
     }
     ZonedDateTime now = ZonedDateTime.now();
     String date = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd 'at' HH:mm:ss z"));
-    boolean is_different_date = !now.toLocalDate().equals(config.zonedDateTime().toLocalDate());
+    boolean is_different_date = !now.toLocalDate().equals(config.dateForValidation());
 
     Gson gson = createGson(config.prettyJson());
     HtmlReportGenerator htmlGenerator = new HtmlReportGenerator();
