@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.processor;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
+import com.squareup.javapoet.TypeName;
 
 /** Describes a GTFS enumeration that consists of several integer constants. */
 @AutoValue
@@ -28,13 +29,21 @@ public abstract class GtfsEnumDescriptor {
 
   public abstract String name();
 
+  public abstract String packageName();
+
   public abstract ImmutableList<GtfsEnumValueDescriptor> values();
+
+  public abstract TypeName fieldType();
 
   @AutoValue.Builder
   public abstract static class Builder {
     public abstract Builder setName(String value);
 
+    public abstract Builder setPackageName(String value);
+
     public abstract ImmutableList.Builder<GtfsEnumValueDescriptor> valuesBuilder();
+
+    public abstract Builder setFieldType(TypeName value);
 
     public abstract GtfsEnumDescriptor build();
   }

@@ -60,7 +60,7 @@ public class PathwayEndpointTypeValidatorTest {
 
   static GtfsPathway createPathway(int fromStopRow, int toStopRow) {
     int row = fromStopRow * 1000 + toStopRow;
-    return new GtfsPathway.Builder()
+    return GtfsPathway.builder()
         .setCsvRowNumber(row)
         .setPathwayId(rowToPathwayId(row))
         .setFromStopId(rowToStopId(fromStopRow))
@@ -69,7 +69,7 @@ public class PathwayEndpointTypeValidatorTest {
   }
 
   static GtfsStop createStop(int csvRowNumber, GtfsLocationType locationType) {
-    return new GtfsStop.Builder()
+    return GtfsStop.builder()
         .setCsvRowNumber(csvRowNumber)
         .setStopId(rowToStopId(csvRowNumber))
         .setLocationType(locationType)
@@ -77,7 +77,7 @@ public class PathwayEndpointTypeValidatorTest {
   }
 
   static GtfsStop createBoardingArea(int csvRowNumber, int parentRow) {
-    return new GtfsStop.Builder()
+    return GtfsStop.builder()
         .setCsvRowNumber(csvRowNumber)
         .setStopId(rowToStopId(csvRowNumber))
         .setLocationType(BOARDING_AREA)

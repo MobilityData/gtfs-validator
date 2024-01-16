@@ -22,7 +22,7 @@ public class StopRequiredLocationValidatorTest {
   public void missingLatLongForStop_generatesNotice() {
     assertThat(
             generateNotices(
-                new GtfsStop.Builder()
+                GtfsStop.builder()
                     .setCsvRowNumber(4)
                     .setStopId("stop id value")
                     .setLocationType(GtfsLocationType.STOP)
@@ -34,7 +34,7 @@ public class StopRequiredLocationValidatorTest {
   public void missingLatLongForStation_generatesNotice() {
     assertThat(
             generateNotices(
-                new GtfsStop.Builder()
+                GtfsStop.builder()
                     .setCsvRowNumber(4)
                     .setStopId("stop id value")
                     .setLocationType(GtfsLocationType.STATION)
@@ -47,7 +47,7 @@ public class StopRequiredLocationValidatorTest {
   public void missingLatLongForEntrance_generatesNotice() {
     assertThat(
             generateNotices(
-                new GtfsStop.Builder()
+                GtfsStop.builder()
                     .setCsvRowNumber(4)
                     .setStopId("stop id value")
                     .setLocationType(GtfsLocationType.ENTRANCE)
@@ -61,7 +61,7 @@ public class StopRequiredLocationValidatorTest {
   public void missingLatLongForGenericNode_generatesNoNotice() {
     assertThat(
             generateNotices(
-                new GtfsStop.Builder()
+                GtfsStop.builder()
                     .setCsvRowNumber(4)
                     .setStopId("stop id value")
                     .setLocationType(GtfsLocationType.GENERIC_NODE)
@@ -73,7 +73,7 @@ public class StopRequiredLocationValidatorTest {
   public void missingLatLongForBoardingArea_generatesNoNotice() {
     assertThat(
             generateNotices(
-                new GtfsStop.Builder()
+                GtfsStop.builder()
                     .setCsvRowNumber(4)
                     .setStopId("stop id value")
                     .setLocationType(GtfsLocationType.BOARDING_AREA)
@@ -86,7 +86,7 @@ public class StopRequiredLocationValidatorTest {
   public void givenLatLongForStop_generatesNoNotice() {
     assertThat(
             generateNotices(
-                new GtfsStop.Builder()
+                GtfsStop.builder()
                     .setCsvRowNumber(4)
                     .setStopId("stop id value")
                     .setStopLat(25.25)
@@ -100,7 +100,7 @@ public class StopRequiredLocationValidatorTest {
   public void givenLatLongForStation_generatesNoNotice() {
     assertThat(
             generateNotices(
-                new GtfsStop.Builder()
+                GtfsStop.builder()
                     .setCsvRowNumber(4)
                     .setStopId("stop id value")
                     .setStopLat(25.25)
@@ -114,7 +114,7 @@ public class StopRequiredLocationValidatorTest {
   public void givenLatLongForEntrance_generatesNoNotice() {
     assertThat(
             generateNotices(
-                new GtfsStop.Builder()
+                GtfsStop.builder()
                     .setCsvRowNumber(4)
                     .setStopId("stop id value")
                     .setStopLat(25.25)
@@ -129,7 +129,7 @@ public class StopRequiredLocationValidatorTest {
   public void givenLatButMissingLongForStop_generatesNoNotice() {
     assertThat(
             generateNotices(
-                new GtfsStop.Builder()
+                GtfsStop.builder()
                     .setCsvRowNumber(4)
                     .setStopId("stop id value")
                     .setStopLat(25.25)
@@ -142,7 +142,7 @@ public class StopRequiredLocationValidatorTest {
   public void givenLongButMissingLatForStop_generatesNoNotice() {
     assertThat(
             generateNotices(
-                new GtfsStop.Builder()
+                GtfsStop.builder()
                     .setCsvRowNumber(4)
                     .setStopId("stop id value")
                     .setStopLon(25.25)
@@ -155,7 +155,7 @@ public class StopRequiredLocationValidatorTest {
   public void givenLatButMissingLongForStation_generatesNoNotice() {
     assertThat(
             generateNotices(
-                new GtfsStop.Builder()
+                GtfsStop.builder()
                     .setCsvRowNumber(4)
                     .setStopId("stop id value")
                     .setStopLat(25.25)
@@ -169,7 +169,7 @@ public class StopRequiredLocationValidatorTest {
   public void givenLongButMissingLatForStation_generatesNoNotice() {
     assertThat(
             generateNotices(
-                new GtfsStop.Builder()
+                GtfsStop.builder()
                     .setCsvRowNumber(4)
                     .setStopId("stop id value")
                     .setStopLon(25.25)
@@ -183,7 +183,7 @@ public class StopRequiredLocationValidatorTest {
   public void givenLatButMissingLongForEntrance_generatesNoNotice() {
     assertThat(
             generateNotices(
-                new GtfsStop.Builder()
+                GtfsStop.builder()
                     .setCsvRowNumber(4)
                     .setStopId("stop id value")
                     .setStopLat(25.25)
@@ -197,7 +197,7 @@ public class StopRequiredLocationValidatorTest {
   public void givenLongButMissingLatForEntrance_generatesNoNotice() {
     assertThat(
             generateNotices(
-                new GtfsStop.Builder()
+                GtfsStop.builder()
                     .setCsvRowNumber(4)
                     .setStopId("stop id value")
                     .setStopLon(25.25)

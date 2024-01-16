@@ -113,8 +113,7 @@ public class ForeignKeyValidatorGenerator {
             .returns(void.class)
             .addParameter(NoticeContainer.class, "noticeContainer")
             .beginControlFlow(
-                "for ($T childEntity: childContainer.getEntities())",
-                childClasses.entityImplementationTypeName())
+                "for ($T childEntity: childContainer.getEntities())", childClasses.entityTypeName())
             .beginControlFlow(
                 "if (!childEntity.$L())", FieldNameConverter.hasMethodName(childField.name()))
             .addStatement("continue")

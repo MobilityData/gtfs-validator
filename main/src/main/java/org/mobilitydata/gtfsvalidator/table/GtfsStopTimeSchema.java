@@ -31,6 +31,7 @@ import org.mobilitydata.gtfsvalidator.annotation.NonNegative;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.RecommendedColumn;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.UnusedValue;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 @GtfsTable("stop_times.txt")
@@ -62,16 +63,21 @@ public interface GtfsStopTimeSchema extends GtfsEntity {
   int stopSequence();
 
   @CachedField
+  @UnusedValue
   String stopHeadsign();
 
+  @UnusedValue
   GtfsPickupDropOff pickupType();
 
+  @UnusedValue
   GtfsPickupDropOff dropOffType();
 
   @DefaultValue("1")
+  @UnusedValue
   GtfsContinuousPickupDropOff continuousPickup();
 
   @DefaultValue("1")
+  @UnusedValue
   GtfsContinuousPickupDropOff continuousDropOff();
 
   @NonNegative

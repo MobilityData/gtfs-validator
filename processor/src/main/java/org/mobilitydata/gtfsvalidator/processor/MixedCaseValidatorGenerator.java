@@ -55,15 +55,14 @@ public class MixedCaseValidatorGenerator {
             .addAnnotation(GtfsValidator.class)
             .superclass(
                 ParameterizedTypeName.get(
-                    ClassName.get(SingleEntityValidator.class),
-                    entityClasses.entityImplementationTypeName()));
+                    ClassName.get(SingleEntityValidator.class), entityClasses.entityTypeName()));
 
     MethodSpec.Builder validateMethod =
         MethodSpec.methodBuilder("validate")
             .addModifiers(Modifier.PUBLIC)
             .addAnnotation(Override.class)
             .returns(void.class)
-            .addParameter(entityClasses.entityImplementationTypeName(), "entity")
+            .addParameter(entityClasses.entityTypeName(), "entity")
             .addParameter(NoticeContainer.class, "noticeContainer");
 
     for (GtfsFieldDescriptor mixedCaseField : fileDescriptor.fields()) {

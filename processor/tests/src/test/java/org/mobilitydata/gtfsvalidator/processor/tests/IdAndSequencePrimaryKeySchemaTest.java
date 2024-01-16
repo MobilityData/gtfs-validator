@@ -23,9 +23,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.table.IdAndSequencePrimaryKey;
-import org.mobilitydata.gtfsvalidator.table.IdAndSequencePrimaryKeyTableContainer;
-import org.mobilitydata.gtfsvalidator.table.IdAndSequencePrimaryKeyTableDescriptor;
 import org.mobilitydata.gtfsvalidator.testing.LoadingHelper;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 

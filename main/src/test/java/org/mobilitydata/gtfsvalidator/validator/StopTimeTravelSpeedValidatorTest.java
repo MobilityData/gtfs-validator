@@ -65,7 +65,7 @@ public final class StopTimeTravelSpeedValidatorTest {
   private static final String TEST_TRIP_ID = "trip0";
 
   private static GtfsRoute createRoute(GtfsRouteType routeType) {
-    return new GtfsRoute.Builder()
+    return GtfsRoute.builder()
         .setCsvRowNumber(2)
         .setRouteId(TEST_ROUTE_ID)
         .setRouteType(routeType)
@@ -73,7 +73,7 @@ public final class StopTimeTravelSpeedValidatorTest {
   }
 
   private static GtfsTrip createTrip() {
-    return new GtfsTrip.Builder()
+    return GtfsTrip.builder()
         .setCsvRowNumber(2)
         .setTripId(TEST_TRIP_ID)
         .setRouteId(TEST_ROUTE_ID)
@@ -84,7 +84,7 @@ public final class StopTimeTravelSpeedValidatorTest {
     List<GtfsStop> stops = new ArrayList<>(points.size());
     for (int i = 0; i < points.size(); ++i) {
       stops.add(
-          new GtfsStop.Builder()
+          GtfsStop.builder()
               .setCsvRowNumber(i + 2)
               .setStopId("s" + i)
               .setStopName("Stop " + i)
@@ -99,7 +99,7 @@ public final class StopTimeTravelSpeedValidatorTest {
     List<GtfsStopTime> stopTimes = new ArrayList<>(times.size());
     for (int i = 0; i < times.size(); ++i) {
       stopTimes.add(
-          new GtfsStopTime.Builder()
+          GtfsStopTime.builder()
               .setCsvRowNumber(i + 2)
               .setTripId(TEST_TRIP_ID)
               .setStopId("s" + i)

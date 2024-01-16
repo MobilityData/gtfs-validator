@@ -5,13 +5,12 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.table.ManyFields;
 
 @RunWith(JUnit4.class)
 public class ManyFieldsSchemaTest {
   @Test
   public void testHasField() {
-    ManyFields manyFields = new ManyFields.Builder().setField2(2).setField8(9).build();
+    ManyFields manyFields = ManyFields.builder().setField2(2).setField8(9).build();
 
     assertThat(manyFields.hasField1()).isFalse();
     assertThat(manyFields.hasField2()).isTrue();

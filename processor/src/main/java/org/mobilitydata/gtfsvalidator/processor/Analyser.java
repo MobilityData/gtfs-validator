@@ -20,6 +20,8 @@ import static javax.lang.model.util.ElementFilter.methodsIn;
 import static org.mobilitydata.gtfsvalidator.processor.EnumGenerator.createEnumName;
 import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.entityImplementationSimpleName;
 
+import com.google.common.collect.ImmutableMap;
+import com.squareup.javapoet.TypeName;
 import java.math.BigDecimal;
 import java.time.ZoneId;
 import java.util.Currency;
@@ -29,6 +31,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
 import javax.lang.model.util.SimpleTypeVisitor8;
 import org.mobilitydata.gtfsvalidator.annotation.*;
 import org.mobilitydata.gtfsvalidator.parsing.RowParser.NumberBounds;
@@ -47,7 +50,14 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
  */
 public class Analyser {
 
-  public GtfsFileDescriptor analyzeGtfsFileType(TypeElement type) {
+  private final Elements elements;
+
+  public Analyser(Elements elements) {
+    this.elements = elements;
+  }
+
+  public GtfsFileDescriptor analyzeGtfsFileType(
+      TypeElement type, ImmutableMap<String, GtfsEnumDescriptor> enumDescriptorsByName) {
     GtfsFileDescriptor.Builder fileBuilder = GtfsFileDescriptor.builder();
     GtfsTable gtfsFileAnnotation = type.getAnnotation(GtfsTable.class);
     fileBuilder.setFilename(gtfsFileAnnotation.value().toLowerCase());
@@ -57,6 +67,7 @@ public class Analyser {
     }
     fileBuilder.interfacesBuilder().add(type.asType());
     fileBuilder.setClassName(entityImplementationSimpleName(type.getSimpleName().toString()));
+    fileBuilder.setPackageName(elements.getPackageOf(type).getQualifiedName().toString());
     fileBuilder.setRecommended(type.getAnnotation(Recommended.class) != null);
     fileBuilder.setRequired(type.getAnnotation(Required.class) != null);
     for (ExecutableElement method : methodsIn(type.getEnclosedElements())) {
@@ -64,13 +75,24 @@ public class Analyser {
       fieldBuilder.setName(method.getSimpleName().toString());
       fieldBuilder.setJavaType(method.getReturnType());
       FieldType fieldTypeAnnotation = method.getAnnotation(FieldType.class);
-      fieldBuilder.setType(
+      FieldTypeEnum fieldType =
           fieldTypeAnnotation != null
               ? fieldTypeAnnotation.value()
-              : javaTypeToGtfsType(method.getReturnType()));
+              : javaTypeToGtfsType(method.getReturnType());
+      fieldBuilder.setType(fieldType);
+      if (fieldType == FieldTypeEnum.ENUM) {
+        String enumTypeName =
+            ((DeclaredType) method.getReturnType()).asElement().getSimpleName().toString();
+        GtfsEnumDescriptor enumDescriptor = enumDescriptorsByName.get(enumTypeName);
+        if (enumDescriptor == null) {
+          throw new IllegalStateException("Field references unknown enum type: " + enumTypeName);
+        }
+        fieldBuilder.setEnumDescriptor(enumDescriptor);
+      }
       fieldBuilder.setRecommended(method.getAnnotation(Recommended.class) != null);
       fieldBuilder.setColumnRequired(method.getAnnotation(RequiredColumn.class) != null);
       fieldBuilder.setValueRequired(method.getAnnotation(Required.class) != null);
+      fieldBuilder.setUnusedValue(method.getAnnotation(UnusedValue.class) != null);
       fieldBuilder.setColumnRecommended(method.getAnnotation(RecommendedColumn.class) != null);
       fieldBuilder.setMixedCase(method.getAnnotation(MixedCase.class) != null);
       PrimaryKey primaryKey = method.getAnnotation(PrimaryKey.class);
@@ -173,15 +195,18 @@ public class Analyser {
   public GtfsEnumDescriptor analyzeGtfsEnumType(TypeElement type) {
     GtfsEnumDescriptor.Builder enumBuilder = GtfsEnumDescriptor.builder();
     enumBuilder.setName(createEnumName(type.getSimpleName().toString()));
+    enumBuilder.setPackageName(elements.getPackageOf(type).getQualifiedName().toString());
     GtfsEnumValues valuesAnnotation = type.getAnnotation(GtfsEnumValues.class);
     if (valuesAnnotation != null) {
       // A typical enum has multiple values.
       for (GtfsEnumValue value : valuesAnnotation.value()) {
         addEnumValue(value, enumBuilder);
       }
+      enumBuilder.setFieldType(getFieldTypeForEnumValues(valuesAnnotation));
     } else {
       // A trivial enum has a single values.
       addEnumValue(type.getAnnotation(GtfsEnumValue.class), enumBuilder);
+      enumBuilder.setFieldType(TypeName.BYTE);
     }
     return enumBuilder.build();
   }
@@ -190,5 +215,21 @@ public class Analyser {
     enumBuilder
         .valuesBuilder()
         .add(GtfsEnumValueDescriptor.create(value.name().toUpperCase(), value.value()));
+  }
+
+  private static TypeName getFieldTypeForEnumValues(GtfsEnumValues valuesAnnotation) {
+    int minValue = 0;
+    int maxValue = 0;
+    for (GtfsEnumValue value : valuesAnnotation.value()) {
+      minValue = Math.min(minValue, value.value());
+      maxValue = Math.max(maxValue, value.value());
+    }
+    if (minValue >= Byte.MIN_VALUE && maxValue <= Byte.MAX_VALUE) {
+      return TypeName.BYTE;
+    }
+    if (minValue >= Short.MIN_VALUE && maxValue <= Short.MAX_VALUE) {
+      return TypeName.SHORT;
+    }
+    return TypeName.INT;
   }
 }

@@ -25,9 +25,9 @@ import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
+import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntityTableContainer;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntityValidator;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestSingleFileValidator;
-import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestTableContainer;
 import org.mobilitydata.gtfsvalidator.testgtfs.WholeFeedValidator;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader.ValidatorWithDependencyStatus;
 
@@ -56,7 +56,8 @@ public class ValidatorLoaderTest {
   @Test
   public void createSingleFileValidator_injectsTableContainerAndContext()
       throws ReflectiveOperationException, ValidatorLoaderException {
-    GtfsTestTableContainer table = new GtfsTestTableContainer(TableStatus.EMPTY_FILE);
+    GtfsTestEntityTableContainer table =
+        GtfsTestEntityTableContainer.forStatus(TableStatus.EMPTY_FILE);
     GtfsTestSingleFileValidator validator =
         (GtfsTestSingleFileValidator)
             ValidatorLoader.createSingleFileValidator(
@@ -71,8 +72,8 @@ public class ValidatorLoaderTest {
   @Test
   public void createMultiFileValidator_injectsFeedContainerAndContext()
       throws ReflectiveOperationException, ValidatorLoaderException {
-    GtfsTestTableContainer stopTable =
-        new GtfsTestTableContainer(TableStatus.PARSABLE_HEADERS_AND_ROWS);
+    GtfsTestEntityTableContainer stopTable =
+        GtfsTestEntityTableContainer.forStatus(TableStatus.PARSABLE_HEADERS_AND_ROWS);
     GtfsFeedContainer feedContainer = new GtfsFeedContainer(ImmutableList.of(stopTable));
 
     ValidatorWithDependencyStatus<WholeFeedValidator> validatorWithStatus =
@@ -89,7 +90,8 @@ public class ValidatorLoaderTest {
   @Test
   public void createMultiFileValidator_singleContainer_dependenciesHaveErrors()
       throws ReflectiveOperationException, ValidatorLoaderException {
-    GtfsTestTableContainer table = new GtfsTestTableContainer(TableStatus.UNPARSABLE_ROWS);
+    GtfsTestEntityTableContainer table =
+        GtfsTestEntityTableContainer.forStatus(TableStatus.UNPARSABLE_ROWS);
     GtfsFeedContainer feedContainer = new GtfsFeedContainer(ImmutableList.of(table));
 
     ValidatorWithDependencyStatus<GtfsTestSingleFileValidator> validatorWithStatus =

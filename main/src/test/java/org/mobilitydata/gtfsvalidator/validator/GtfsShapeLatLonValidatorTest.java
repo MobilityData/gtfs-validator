@@ -43,7 +43,7 @@ public class GtfsShapeLatLonValidatorTest {
   public void validPoint_yieldsNoNotice() {
     assertThat(
             generateNotices(
-                new GtfsShape.Builder()
+                GtfsShape.builder()
                     .setCsvRowNumber(2)
                     .setShapePtLat(45.0)
                     .setShapePtLon(45.0)
@@ -55,7 +55,7 @@ public class GtfsShapeLatLonValidatorTest {
   public void origin_yieldsNotice() {
     assertThat(
             generateNotices(
-                new GtfsShape.Builder()
+                GtfsShape.builder()
                     .setCsvRowNumber(2)
                     .setShapePtLat(0.0)
                     .setShapePtLon(0.1)
@@ -68,7 +68,7 @@ public class GtfsShapeLatLonValidatorTest {
   public void poles_yieldsNotice() {
     assertThat(
             generateNotices(
-                new GtfsShape.Builder()
+                GtfsShape.builder()
                     .setCsvRowNumber(2)
                     .setShapePtLat(90.0)
                     .setShapePtLon(0.0)
@@ -78,7 +78,7 @@ public class GtfsShapeLatLonValidatorTest {
 
     assertThat(
             generateNotices(
-                new GtfsShape.Builder()
+                GtfsShape.builder()
                     .setCsvRowNumber(2)
                     .setShapePtLat(-90.0)
                     .setShapePtLon(0.0)

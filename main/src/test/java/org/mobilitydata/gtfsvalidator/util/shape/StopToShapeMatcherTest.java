@@ -48,7 +48,7 @@ public class StopToShapeMatcherTest {
 
   private static GtfsShape createGtfsShape(
       int ptSequence, double latDegrees, double lngDegrees, Double shapeDistTraveled) {
-    return new GtfsShape.Builder()
+    return GtfsShape.builder()
         .setCsvRowNumber(ptSequence + 2)
         .setShapePtSequence(ptSequence)
         .setShapePtLat(latDegrees)
@@ -77,7 +77,7 @@ public class StopToShapeMatcherTest {
   }
 
   private static GtfsStop createStop(int number, double stopLat, double stopLon) {
-    return new GtfsStop.Builder()
+    return GtfsStop.builder()
         .setCsvRowNumber(2 + number)
         .setStopId(numberToStopId(number))
         .setStopName("Stop " + number)
@@ -98,7 +98,7 @@ public class StopToShapeMatcherTest {
     List<GtfsStopTime> stopTimes = new ArrayList<>(shapeDistTraveled.length);
     for (int i = 0; i < shapeDistTraveled.length; ++i) {
       stopTimes.add(
-          new GtfsStopTime.Builder()
+          GtfsStopTime.builder()
               .setCsvRowNumber(i + 2)
               .setStopId(numberToStopId(i))
               .setStopSequence(i)

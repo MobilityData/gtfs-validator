@@ -41,7 +41,7 @@ public class RouteNameValidatorTest {
   }
 
   private GtfsRoute createRoute(String shortName, String longName, String desc) {
-    return new GtfsRoute.Builder()
+    return GtfsRoute.builder()
         .setRouteId("r1")
         .setCsvRowNumber(1)
         .setRouteShortName(shortName)

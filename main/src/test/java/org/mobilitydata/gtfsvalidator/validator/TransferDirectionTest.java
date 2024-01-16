@@ -6,7 +6,6 @@ import static org.mobilitydata.gtfsvalidator.validator.TransferDirection.TRANSFE
 
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransfer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTransfer.Builder;
 
 public class TransferDirectionTest {
 
@@ -24,7 +23,7 @@ public class TransferDirectionTest {
 
   @Test
   public void testHasMethodsForEmptyTransfer() {
-    GtfsTransfer emptyTransfer = new Builder().build();
+    GtfsTransfer emptyTransfer = GtfsTransfer.builder().build();
 
     assertThat(TRANSFER_FROM.hasStopId(emptyTransfer)).isFalse();
     assertThat(TRANSFER_TO.hasStopId(emptyTransfer)).isFalse();
@@ -38,24 +37,21 @@ public class TransferDirectionTest {
 
   @Test
   public void testHasMethods() {
-    assertThat(TRANSFER_FROM.hasStopId(new GtfsTransfer.Builder().setFromStopId("a").build()))
-        .isTrue();
-    assertThat(TRANSFER_TO.hasStopId(new GtfsTransfer.Builder().setToStopId("a").build())).isTrue();
+    assertThat(TRANSFER_FROM.hasStopId(GtfsTransfer.builder().setFromStopId("a").build())).isTrue();
+    assertThat(TRANSFER_TO.hasStopId(GtfsTransfer.builder().setToStopId("a").build())).isTrue();
 
-    assertThat(TRANSFER_FROM.hasRouteId(new GtfsTransfer.Builder().setFromRouteId("a").build()))
+    assertThat(TRANSFER_FROM.hasRouteId(GtfsTransfer.builder().setFromRouteId("a").build()))
         .isTrue();
-    assertThat(TRANSFER_TO.hasRouteId(new GtfsTransfer.Builder().setToRouteId("a").build()))
-        .isTrue();
+    assertThat(TRANSFER_TO.hasRouteId(GtfsTransfer.builder().setToRouteId("a").build())).isTrue();
 
-    assertThat(TRANSFER_FROM.hasTripId(new GtfsTransfer.Builder().setFromTripId("a").build()))
-        .isTrue();
-    assertThat(TRANSFER_TO.hasTripId(new GtfsTransfer.Builder().setToTripId("a").build())).isTrue();
+    assertThat(TRANSFER_FROM.hasTripId(GtfsTransfer.builder().setFromTripId("a").build())).isTrue();
+    assertThat(TRANSFER_TO.hasTripId(GtfsTransfer.builder().setToTripId("a").build())).isTrue();
   }
 
   @Test
   public void testIdMethods() {
     GtfsTransfer transfer =
-        new Builder()
+        GtfsTransfer.builder()
             .setFromStopId("stopA")
             .setFromRouteId("routeA")
             .setFromTripId("tripA")

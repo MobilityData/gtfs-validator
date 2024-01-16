@@ -50,7 +50,7 @@ public final class LocationHasStopTimesValidatorTest {
   }
 
   private static GtfsStop createLocation(GtfsLocationType locationType) {
-    return new GtfsStop.Builder()
+    return GtfsStop.builder()
         .setCsvRowNumber(2)
         .setStopId("location1")
         .setStopName("Location 1")
@@ -59,7 +59,7 @@ public final class LocationHasStopTimesValidatorTest {
   }
 
   private static GtfsStopTime createStopTimeFor(GtfsStop stop) {
-    return new GtfsStopTime.Builder().setStopId(stop.stopId()).build();
+    return GtfsStopTime.builder().setStopId(stop.stopId()).build();
   }
 
   @Test

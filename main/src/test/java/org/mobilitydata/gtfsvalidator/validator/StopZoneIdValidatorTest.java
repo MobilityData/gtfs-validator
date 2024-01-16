@@ -34,7 +34,7 @@ public class StopZoneIdValidatorTest {
 
   private static GtfsStop createStop(
       int csvRowNumber, GtfsLocationType locationType, String zoneId) {
-    return new GtfsStop.Builder()
+    return GtfsStop.builder()
         .setCsvRowNumber(csvRowNumber)
         .setStopId(toLocationId(locationType, csvRowNumber))
         .setLocationType(locationType)
@@ -54,7 +54,7 @@ public class StopZoneIdValidatorTest {
    */
   private static GtfsFareRule createFareRule(
       int csvRowNumber, boolean route, boolean origin, boolean destination, boolean contains) {
-    return new GtfsFareRule.Builder()
+    return GtfsFareRule.builder()
         .setCsvRowNumber(csvRowNumber)
         .setFareId(toFareRuleId(csvRowNumber))
         .setRouteId(route ? toRouteId(csvRowNumber) : null)
@@ -71,7 +71,11 @@ public class StopZoneIdValidatorTest {
    * @return a `GtfsFareRule` with only fare_rule_id and origin_id defined
    */
   private static GtfsFareRule createFareRuleWithZoneStructure(int csvRowNumber) {
-    return createFareRule(csvRowNumber, false, true, false, false);
+    return GtfsFareRule.builder()
+        .setCsvRowNumber(csvRowNumber)
+        .setFareId(toFareRuleId(csvRowNumber))
+        .setOriginId("origin id")
+        .build();
   }
 
   /**
@@ -81,7 +85,11 @@ public class StopZoneIdValidatorTest {
    * @return a `GtfsFareRule` with only fare_rule_id and route_id defined
    */
   private static GtfsFareRule createFareRuleWithoutZoneStructure(int csvRowNumber) {
-    return createFareRule(csvRowNumber, true, false, false, false);
+    return GtfsFareRule.builder()
+        .setCsvRowNumber(csvRowNumber)
+        .setFareId(toFareRuleId(csvRowNumber))
+        .setRouteId("route id value")
+        .build();
   }
 
   /**
@@ -208,20 +216,20 @@ public class StopZoneIdValidatorTest {
     List<GtfsStop> stops = ImmutableList.of(stop);
     List<GtfsRoute> routes =
         ImmutableList.of(
-            new GtfsRoute.Builder()
+            GtfsRoute.builder()
                 .setCsvRowNumber(csvRowNumber)
                 .setRouteId(toRouteId(csvRowNumber))
                 .build());
     List<GtfsTrip> trips =
         ImmutableList.of(
-            new GtfsTrip.Builder()
+            GtfsTrip.builder()
                 .setCsvRowNumber(csvRowNumber)
                 .setTripId(toTripId(csvRowNumber))
                 .setRouteId(toRouteId(csvRowNumber))
                 .build());
     List<GtfsStopTime> stopTimes =
         ImmutableList.of(
-            new GtfsStopTime.Builder()
+            GtfsStopTime.builder()
                 .setCsvRowNumber(csvRowNumber)
                 .setStopId(stop.stopId())
                 .setTripId(toTripId(csvRowNumber))
@@ -233,7 +241,7 @@ public class StopZoneIdValidatorTest {
   public void stop_zoneIdNotProvided_routeNotInFareRules_noNotice() {
     int csvRowNumber = 0;
     GtfsStop stop =
-        new GtfsStop.Builder()
+        GtfsStop.builder()
             .setCsvRowNumber(csvRowNumber)
             .setLocationType(GtfsLocationType.STOP)
             .setZoneId(null)
@@ -251,7 +259,7 @@ public class StopZoneIdValidatorTest {
   public void stop_zoneIdNotProvided_routeInFareRulesWithoutZoneFields_noNotice() {
     int csvRowNumber = 0;
     GtfsStop stop =
-        new GtfsStop.Builder()
+        GtfsStop.builder()
             .setCsvRowNumber(csvRowNumber)
             .setLocationType(GtfsLocationType.STOP)
             .setZoneId(null)
@@ -265,7 +273,7 @@ public class StopZoneIdValidatorTest {
   public void stop_zoneIdNotProvided_routeInFareRulesWithOriginId_yieldsNotice() {
     int csvRowNumber = 0;
     GtfsStop stop =
-        new GtfsStop.Builder()
+        GtfsStop.builder()
             .setCsvRowNumber(csvRowNumber)
             .setLocationType(GtfsLocationType.STOP)
             .setZoneId(null)
@@ -280,7 +288,7 @@ public class StopZoneIdValidatorTest {
   public void stop_zoneIdNotProvided_routeInFareRulesWithDestinationId_yieldsNotice() {
     int csvRowNumber = 0;
     GtfsStop stop =
-        new GtfsStop.Builder()
+        GtfsStop.builder()
             .setCsvRowNumber(csvRowNumber)
             .setLocationType(GtfsLocationType.STOP)
             .setZoneId(null)
@@ -295,7 +303,7 @@ public class StopZoneIdValidatorTest {
   public void stop_zoneIdNotProvided_routeInFareRulesWithContainsId_yieldsNotice() {
     int csvRowNumber = 0;
     GtfsStop stop =
-        new GtfsStop.Builder()
+        GtfsStop.builder()
             .setCsvRowNumber(csvRowNumber)
             .setLocationType(GtfsLocationType.STOP)
             .setZoneId(null)
@@ -310,7 +318,7 @@ public class StopZoneIdValidatorTest {
   public void stop_zoneIdNotProvided_routeInFareRulesWithAndWithoutZoneFields_yieldsNotice() {
     int csvRowNumber = 0;
     GtfsStop stop =
-        new GtfsStop.Builder()
+        GtfsStop.builder()
             .setCsvRowNumber(csvRowNumber)
             .setLocationType(GtfsLocationType.STOP)
             .setZoneId(null)
@@ -327,7 +335,7 @@ public class StopZoneIdValidatorTest {
   public void stop_zoneIdProvided_noNotice() {
     int csvRowNumber = 0;
     GtfsStop stop =
-        new GtfsStop.Builder()
+        GtfsStop.builder()
             .setCsvRowNumber(csvRowNumber)
             .setLocationType(GtfsLocationType.STOP)
             .setZoneId(toZoneId(csvRowNumber))
@@ -359,7 +367,7 @@ public class StopZoneIdValidatorTest {
         assertThat(
                 generateNoticesFromStopAndFareRules(
                     csvRowNumber,
-                    new GtfsStop.Builder()
+                    GtfsStop.builder()
                         .setCsvRowNumber(csvRowNumber)
                         .setLocationType(locationType)
                         .setZoneId(null)
@@ -369,7 +377,7 @@ public class StopZoneIdValidatorTest {
         assertThat(
                 generateNoticesFromStopAndFareRules(
                     csvRowNumber,
-                    new GtfsStop.Builder()
+                    GtfsStop.builder()
                         .setCsvRowNumber(csvRowNumber)
                         .setLocationType(locationType)
                         .setZoneId(toZoneId(csvRowNumber))
@@ -389,7 +397,7 @@ public class StopZoneIdValidatorTest {
                 assertThat(
                         generateNoticesFromStopAndFareRules(
                             csvRowNumber,
-                            new GtfsStop.Builder()
+                            GtfsStop.builder()
                                 .setCsvRowNumber(csvRowNumber)
                                 .setLocationType(gtfsLocationType)
                                 .setZoneId(null)
@@ -407,7 +415,7 @@ public class StopZoneIdValidatorTest {
                 assertThat(
                         generateNoticesFromStopAndFareRules(
                             csvRowNumber,
-                            new GtfsStop.Builder()
+                            GtfsStop.builder()
                                 .setCsvRowNumber(csvRowNumber)
                                 .setLocationType(gtfsLocationType)
                                 .setZoneId(toStopId(csvRowNumber))
