@@ -87,7 +87,8 @@ public class ArgumentsTest {
       "--input", "/tmp/gtfs.zip",
       "--output_base", "/tmp/output",
       "--country_code", "ca",
-      "--threads", "4"
+      "--threads", "4",
+      "--date", "2020-01-02"
     };
 
     Arguments underTest = new Arguments();
@@ -100,6 +101,7 @@ public class ArgumentsTest {
     assertThat(config.validationReportFileName()).matches("report.json");
     assertThat(config.htmlReportFileName()).matches("report.html");
     assertThat(config.systemErrorsReportFileName()).matches("system_errors.json");
+    assertThat(config.dateForValidation().toString()).matches("2020-01-02");
   }
 
   @Test

@@ -21,6 +21,8 @@ import com.google.common.flogger.FluentLogger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 
@@ -51,6 +53,14 @@ public class Arguments {
           "Country code of the feed, e.g., `nl`. "
               + "It must be a two-letter country code (ISO 3166-1 alpha-2)")
   private String countryCode;
+
+  @Parameter(
+      names = {"-d", "--date"},
+      description =
+          "Date to simulate when validating, in ISO_LOCAL_DATE format like "
+              + "'2001-01-30'. By default, the current date is used. "
+              + "This option enables debugging rules like feed expiration.")
+  private String dateString;
 
   @Parameter(
       names = {"-u", "--url"},
@@ -110,6 +120,9 @@ public class Arguments {
     }
     if (countryCode != null) {
       builder.setCountryCode(CountryCode.forStringOrUnknown(countryCode));
+    }
+    if (dateString != null) {
+      builder.setDateForValidation(LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE));
     }
     if (validationReportName != null) {
       builder.setValidationReportFileName(validationReportName);

@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import java.net.URI;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
@@ -41,6 +42,7 @@ public class JsonReportSummaryTest {
     builder.setPrettyJson(true);
     builder.setSystemErrorsReportFileName("some_error_filename");
     builder.setValidationReportFileName("some_report_filename");
+    builder.setDateForValidation(LocalDate.parse("2020-01-02"));
 
     return builder.build();
   }
@@ -91,7 +93,8 @@ public class JsonReportSummaryTest {
             + "\"systemErrorsReportName\":\"some_error_filename\","
             + "\"validationReportName\":\"some_report_filename\","
             + "\"htmlReportName\":\"some_html_filename\","
-            + "\"countryCode\":\"GB\"}";
+            + "\"countryCode\":\"GB\","
+            + "\"dateForValidation\":\"2020-01-02\"}";
 
     assertEquals(JsonParser.parseString(expected), gson.toJsonTree(reportSummary));
   }
@@ -113,6 +116,7 @@ public class JsonReportSummaryTest {
             + "\"validationReportName\":\"some_report_filename\","
             + "\"htmlReportName\":\"some_html_filename\","
             + "\"countryCode\":\"GB\","
+            + "\"dateForValidation\":\"2020-01-02\","
             + "\"feedInfo\":{\"publisherName\":\"value1\",\"publisherUrl\":\"value2\"},"
             + "\"agencies\":["
             + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"},"
