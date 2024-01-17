@@ -163,7 +163,7 @@ public class VersionResolver {
   }
 
   /** Serialization object for parsing the /version API response. */
-  class VersionResponse {
+  public static class VersionResponse {
     String version;
   }
 }
