@@ -192,7 +192,7 @@ public class FeedMetadata {
             && (hasAtLeastOneRecordForFields(
                 feedContainer,
                 GtfsRoute.FILENAME,
-                List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasNetworkId)) || hasAtLeastOneRecordInFile(feedContainer, GtfsNetworks.FILENAME));
+                List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasNetworkId)) || hasAtLeastOneRecordInFile(feedContainer, GtfsNetwork.FILENAME)));
   }
 
   private void loadBlocksComponent(GtfsFeedContainer feedContainer) {
