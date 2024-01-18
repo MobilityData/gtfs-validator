@@ -18,8 +18,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import java.time.LocalDate;
-import java.util.Map;
-import java.util.SortedSet;
+import java.util.*;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
@@ -56,10 +55,18 @@ public class ExpiredCalendarValidator extends FileValidator {
             CalendarUtil.buildServicePeriodMap(calendarTable, calendarDateTable));
     for (var serviceId : servicePeriodMap.keySet()) {
       SortedSet<LocalDate> serviceDates = servicePeriodMap.get(serviceId);
-      if (!serviceDates.isEmpty()
-          && serviceDates.last().isBefore(dateForValidation.getDate())
-          && calendarTable.byServiceId(serviceId).isPresent()) {
-        int csvRowNumber = calendarTable.byServiceId(serviceId).get().csvRowNumber();
+      if (!serviceDates.isEmpty() && serviceDates.last().isBefore(dateForValidation.getDate())) {
+        int csvRowNumber;
+        if (calendarTable.byServiceId(serviceId).isPresent()) {
+          csvRowNumber = calendarTable.byServiceId(serviceId).get().csvRowNumber();
+        } else {
+          //          Taking the first of the calendar dates for the service id.
+          //          This is the case of foreign key violation or calendar.txt not provided.
+          Optional<GtfsCalendarDate> firstCalendarDate =
+              calendarDateTable.byServiceId(serviceId).stream()
+                  .min(Comparator.comparingInt(GtfsCalendarDate::csvRowNumber));
+          csvRowNumber = firstCalendarDate.map(GtfsCalendarDate::csvRowNumber).orElse(0);
+        }
         noticeContainer.addValidationNotice(new ExpiredCalendarNotice(csvRowNumber, serviceId));
       }
     }

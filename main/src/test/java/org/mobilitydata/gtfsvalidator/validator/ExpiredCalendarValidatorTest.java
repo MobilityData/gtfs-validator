@@ -217,7 +217,7 @@ public class ExpiredCalendarValidatorTest {
   }
 
   @Test
-  public void calendarDateWithInvalidServiceIdShouldNotThrowExceptionAndShouldNotGenerateNotice() {
+  public void calendarDateWithForeignKeyViolationShouldGenerateNotice() {
     NoticeContainer container = new NoticeContainer();
 
     List<GtfsCalendar> calendars =
@@ -235,7 +235,19 @@ public class ExpiredCalendarValidatorTest {
         GtfsCalendarDateTableContainer.forEntities(
             ImmutableList.of(
                 new GtfsCalendarDate.Builder()
+                    .setCsvRowNumber(3)
+                    .setServiceId("NOT_SERVICE_ID")
+                    .setDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(2)))
+                    .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_REMOVED)
+                    .build(),
+                new GtfsCalendarDate.Builder()
                     .setCsvRowNumber(2)
+                    .setServiceId("NOT_SERVICE_ID")
+                    .setDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(3)))
+                    .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_ADDED)
+                    .build(),
+                new GtfsCalendarDate.Builder()
+                    .setCsvRowNumber(4)
                     .setServiceId("NOT_SERVICE_ID")
                     .setDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(1)))
                     .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_ADDED)
@@ -243,6 +255,7 @@ public class ExpiredCalendarValidatorTest {
             container);
     new ExpiredCalendarValidator(new DateForValidation(TEST_NOW), calendarTable, calendarDateTable)
         .validate(container);
-    assertThat(container.getValidationNotices()).isEmpty();
+    assertThat(container.getValidationNotices())
+        .containsExactly(new ExpiredCalendarValidator.ExpiredCalendarNotice(2, "NOT_SERVICE_ID"));
   }
 }
