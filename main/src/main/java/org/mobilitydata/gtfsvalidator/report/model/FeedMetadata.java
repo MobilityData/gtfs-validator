@@ -212,7 +212,11 @@ public class FeedMetadata {
             GtfsPathway.FILENAME,
             List.of(
                 GtfsPathway::hasSignpostedAs,
-                (Function<GtfsPathway, Boolean>) GtfsPathway::hasReversedSignpostedAs)));
+                (Function<GtfsPathway, Boolean>) GtfsPathway::hasReversedSignpostedAs,
+                GtfsPathway::hasMaxSlope,
+                GtfsPathway::hasMinWidth,
+                GtfsPathway::hasLength,
+                GtfsPathway::hasStairCount)));
   }
 
   private void loadTraversalTimeComponent(GtfsFeedContainer feedContainer) {
@@ -315,7 +319,7 @@ public class FeedMetadata {
   private void loadZoneBasedComponent(GtfsFeedContainer feedContainer) {
     specFeatures.put(
         "Zone-Based Fares",
-        hasAtLeastOneRecordInFile(feedContainer, GtfsStopArea.FILENAME));
+        hasAtLeastOneRecordInFile(feedContainer, GtfsArea.FILENAME));
   }
 
   private void loadTimeFramesComponent(GtfsFeedContainer feedContainer) {
