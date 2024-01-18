@@ -3,14 +3,7 @@ package org.mobilitydata.gtfsvalidator.util;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Multimaps;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
@@ -36,8 +29,8 @@ public final class CalendarUtil {
   public static ServicePeriod createServicePeriod(
       @Nullable GtfsCalendar calendar, @Nonnull List<GtfsCalendarDate> calendarDates) {
     // Store service period from calendar.txt, if provided.
-    LocalDate serviceStart;
-    LocalDate serviceEnd;
+    LocalDate serviceStart = null;
+    LocalDate serviceEnd = null;
     byte weeklyPattern;
     if (calendar != null) {
       serviceStart = calendar.startDate().getLocalDate();
@@ -56,8 +49,6 @@ public final class CalendarUtil {
               calendar.saturdayValue(),
               calendar.sundayValue());
     } else {
-      serviceStart = LocalDate.EPOCH;
-      serviceEnd = LocalDate.EPOCH;
       weeklyPattern = 0;
     }
 
@@ -65,12 +56,24 @@ public final class CalendarUtil {
     Set<LocalDate> addedDays = new HashSet<>();
     Set<LocalDate> removedDays = new HashSet<>();
     for (GtfsCalendarDate calendarDate : calendarDates) {
+      if (calendar == null) {
+        LocalDate date = calendarDate.date().getLocalDate();
+        if (calendarDate.exceptionType() == GtfsCalendarDateExceptionType.SERVICE_ADDED
+            && (serviceStart == null || serviceStart.isAfter(date))) {
+          serviceStart = date;
+        }
+        if (calendarDate.exceptionType() == GtfsCalendarDateExceptionType.SERVICE_ADDED
+            && (serviceEnd == null || serviceEnd.isBefore(date))) {
+          serviceEnd = date;
+        }
+      }
       (calendarDate.exceptionType() == GtfsCalendarDateExceptionType.SERVICE_ADDED
               ? addedDays
               : removedDays)
           .add(calendarDate.date().getLocalDate());
     }
-
+    serviceStart = serviceStart == null ? LocalDate.EPOCH : serviceStart;
+    serviceEnd = serviceEnd == null ? LocalDate.EPOCH : serviceEnd;
     return new ServicePeriod(serviceStart, serviceEnd, weeklyPattern, addedDays, removedDays);
   }
 
