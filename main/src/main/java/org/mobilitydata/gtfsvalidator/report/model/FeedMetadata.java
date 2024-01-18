@@ -48,12 +48,14 @@ public class FeedMetadata {
           new Pair<>("Fares V1", GtfsFareAttribute.FILENAME),
           new Pair<>("Fare Products", GtfsFareProduct.FILENAME),
           new Pair<>("Shapes", GtfsShape.FILENAME),
-          new Pair<>("Frequency-Based Trip", GtfsFrequency.FILENAME),
+          new Pair<>("Frequencies", GtfsFrequency.FILENAME),
           new Pair<>("Feed Information", GtfsFeedInfo.FILENAME),
           new Pair<>("Attributions", GtfsAttribution.FILENAME),
           new Pair<>("Translations", GtfsTranslation.FILENAME),
           new Pair<>("Fare Media", GtfsFareMedia.FILENAME),
-          new Pair<>("Zone-Based Fares", GtfsStopArea.FILENAME));
+          new Pair<>("Zone-Based Fares", GtfsStopArea.FILENAME),
+          new Pair<>("Time-Based Fares", GtfsTimeframe.FILENAME),
+          new Pair<>("Levels", GtfsLevel.FILENAME));
 
   protected FeedMetadata() {}
 
@@ -151,6 +153,10 @@ public class FeedMetadata {
     loadBlocksComponent(feedContainer);
     loadRouteBasedFaresComponent(feedContainer);
     loadContinuousStopsComponent(feedContainer);
+    loadZoneBasedComponent(feedContainer);
+    loadTimeFramesComponent(feedContainer);
+    loadTransferComponent(feedContainer);
+    loadLevelsComponent(feedContainer);
   }
 
   private void loadContinuousStopsComponent(GtfsFeedContainer feedContainer) {
@@ -183,10 +189,10 @@ public class FeedMetadata {
                 List.of(
                     GtfsFareLegRule::hasFromAreaId,
                     (Function<GtfsFareLegRule, Boolean>) GtfsFareLegRule::hasToAreaId))
-            && hasAtLeastOneRecordForFields(
+            && (hasAtLeastOneRecordForFields(
                 feedContainer,
                 GtfsRoute.FILENAME,
-                List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasNetworkId)));
+                List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasNetworkId)) || hasAtLeastOneRecordInFile(feedContainer, GtfsNetworks.FILENAME));
   }
 
   private void loadBlocksComponent(GtfsFeedContainer feedContainer) {
@@ -304,6 +310,30 @@ public class FeedMetadata {
             List.of(
                 GtfsRoute::hasRouteShortName,
                 (Function<GtfsRoute, Boolean>) GtfsRoute::hasRouteLongName)));
+  }
+
+  private void loadZoneBasedComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Zone-Based Fares",
+        hasAtLeastOneRecordInFile(feedContainer, GtfsStopArea.FILENAME));
+  }
+
+  private void loadTimeFramesComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Time-Based Fares",
+        hasAtLeastOneRecordInFile(feedContainer, GtfsTimeframe.FILENAME));
+  }
+
+  private void loadTransferComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Transfers",
+        hasAtLeastOneRecordInFile(feedContainer, GtfsTransfer.FILENAME));
+  }
+
+  private void loadLevelsComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Levels",
+        hasAtLeastOneRecordInFile(feedContainer, GtfsLevel.FILENAME));
   }
 
   private void loadAgencyData(GtfsTableContainer<GtfsAgency> agencyTable) {
