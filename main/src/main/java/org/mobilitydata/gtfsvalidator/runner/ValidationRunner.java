@@ -30,6 +30,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
@@ -51,7 +52,6 @@ public class ValidationRunner {
 
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private static final String GTFS_ZIP_FILENAME = "gtfs.zip";
-  private static NoticeContainer noticeContainer;
 
   private final VersionResolver versionResolver;
 
@@ -96,11 +96,11 @@ public class ValidationRunner {
     final long startNanos = System.nanoTime();
     // Input.
     feedLoader.setNumThreads(config.numThreads());
-    noticeContainer = new NoticeContainer();
+    NoticeContainer noticeContainer = new NoticeContainer();
     GtfsFeedContainer feedContainer;
     GtfsInput gtfsInput = null;
     try {
-      gtfsInput = createGtfsInput(config, versionInfo.currentVersion().get());
+      gtfsInput = createGtfsInput(config, versionInfo.currentVersion().get(), noticeContainer);
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot load GTFS feed");
       noticeContainer.addSystemError(new IOError(e));
@@ -310,6 +310,14 @@ public class ValidationRunner {
    * @throws URISyntaxException in case of error in the {@code URL} syntax
    */
   public static GtfsInput createGtfsInput(ValidationRunnerConfig config, String validatorVersion)
+      throws IOException, URISyntaxException {
+    return createGtfsInput(config, validatorVersion, new NoticeContainer());
+  }
+
+  private static GtfsInput createGtfsInput(
+      ValidationRunnerConfig config,
+      String validatorVersion,
+      @Nonnull NoticeContainer noticeContainer)
       throws IOException, URISyntaxException {
     URI source = config.gtfsSource();
     if (source.getScheme().equals("file")) {
