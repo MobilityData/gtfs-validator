@@ -29,6 +29,7 @@ import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
@@ -100,7 +101,10 @@ public class ValidationRunner {
     GtfsFeedContainer feedContainer;
     GtfsInput gtfsInput = null;
     try {
-      gtfsInput = createGtfsInput(config, versionInfo.currentVersion().get());
+      Optional<String> optionalValue = versionInfo.currentVersion();
+      if (optionalValue.isPresent()) {
+         gtfsInput = createGtfsInput(config, versionInfo.currentVersion().get());
+      }
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot load GTFS feed");
       noticeContainer.addSystemError(new IOError(e));
