@@ -304,7 +304,7 @@ public class FeedMetadataTest {
         "trip_id, start_time, end_time, headway_secs\n" + "dummy1, 01:01:01, 01:01:02, 1\n";
     createDataFile(GtfsFrequency.FILENAME, content);
     validateSpecFeature(
-        "Frequency-Based Trip",
+        "Frequencies",
         true,
         ImmutableList.of(GtfsFrequencyTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
@@ -314,7 +314,7 @@ public class FeedMetadataTest {
     String content = "trip_id, start_time, end_time, headway_secs\n";
     createDataFile(GtfsFrequency.FILENAME, content);
     validateSpecFeature(
-        "Frequency-Based Trip",
+        "Frequencies",
         false,
         ImmutableList.of(GtfsFrequencyTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
@@ -406,11 +406,11 @@ public class FeedMetadataTest {
   @Test
   public void containsZoneBasedFaresComponentTest() throws IOException, InterruptedException {
     String content = "area_id, stop_id\n" + "dummyArea, dummyStop\n";
-    createDataFile(GtfsStopArea.FILENAME, content);
+    createDataFile(GtfsArea.FILENAME, content);
     validateSpecFeature(
         "Zone-Based Fares",
         true,
-        ImmutableList.of(GtfsStopAreaTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+        ImmutableList.of(GtfsAreaTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
   @Test

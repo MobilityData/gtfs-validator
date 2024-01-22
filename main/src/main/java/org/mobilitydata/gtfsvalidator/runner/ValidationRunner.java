@@ -103,7 +103,7 @@ public class ValidationRunner {
     try {
       Optional<String> optionalValue = versionInfo.currentVersion();
       if (optionalValue.isPresent()) {
-         gtfsInput = createGtfsInput(config, versionInfo.currentVersion().get(), noticeContainer);
+        gtfsInput = createGtfsInput(config, versionInfo.currentVersion().get(), noticeContainer);
       }
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot load GTFS feed");

@@ -330,7 +330,8 @@ public class FeedMetadata {
   }
 
   private void loadTransferRulesComponent(GtfsFeedContainer feedContainer) {
-    specFeatures.put("Transfer Rules", hasAtLeastOneRecordInFile(feedContainer, GtfsFareTransferRule.FILENAME));
+    specFeatures.put(
+        "Transfer Rules", hasAtLeastOneRecordInFile(feedContainer, GtfsFareTransferRule.FILENAME));
   }
 
   private void loadLevelsComponent(GtfsFeedContainer feedContainer) {
