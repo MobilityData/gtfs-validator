@@ -55,7 +55,6 @@ public class FeedMetadata {
           new Pair<>("Translations", GtfsTranslation.FILENAME),
           new Pair<>("Fare Media", GtfsFareMedia.FILENAME),
           new Pair<>("Zone-Based Fares", GtfsArea.FILENAME),
-          // new Pair<>("Route-Based Fares", GtfsNetwork.FILENAME),
           new Pair<>("Transfer Fares", GtfsFareTransferRule.FILENAME),
           new Pair<>("Time-Based Fares", GtfsTimeframe.FILENAME),
           new Pair<>("Levels", GtfsLevel.FILENAME));
@@ -188,17 +187,9 @@ public class FeedMetadata {
     specFeatures.put(
         "Route-Based Fares",
         hasAtLeastOneRecordForFields(
-                feedContainer,
-                GtfsFareLegRule.FILENAME,
-                List.of(
-                    GtfsFareLegRule::hasFromAreaId,
-                    (Function<GtfsFareLegRule, Boolean>) GtfsFareLegRule::hasToAreaId))
-            && (hasAtLeastOneRecordForFields(
-                feedContainer,
-                GtfsRoute.FILENAME,
-                List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasNetworkId))
-            // || hasAtLeastOneRecordInFile(feedContainer, GtfsNetwork.FILENAME)
-            ));
+            feedContainer,
+            GtfsRoute.FILENAME,
+            List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasNetworkId)));
   }
 
   private void loadBlocksComponent(GtfsFeedContainer feedContainer) {
