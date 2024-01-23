@@ -43,7 +43,7 @@ public class FeedMetadata {
 
   private final List<Pair<String, String>> FILE_BASED_COMPONENTS =
       List.of(
-          new Pair<>("Pathways", GtfsPathway.FILENAME),
+          new Pair<>("Pathways (basic)", GtfsPathway.FILENAME),
           new Pair<>("Pathways (extra)", GtfsPathway.FILENAME),
           new Pair<>("Transfers", GtfsTransfer.FILENAME),
           new Pair<>("Fares V1", GtfsFareAttribute.FILENAME),
@@ -230,11 +230,11 @@ public class FeedMetadata {
         hasAtLeastOneRecordForFields(
             feedContainer,
             GtfsPathway.FILENAME,
-            List.of(
-                (Function<GtfsPathway, Boolean>) GtfsPathway::hasMaxSlope,
-                GtfsPathway::hasMinWidth,
-                GtfsPathway::hasLength,
-                GtfsPathway::hasStairCount)));
+                List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasMaxSlope))
+        || hasAtLeastOneRecordForFields(feedContainer, GtfsPathway.FILENAME, List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasMinWidth))
+        || hasAtLeastOneRecordForFields(feedContainer, GtfsPathway.FILENAME, List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasLength))
+        || hasAtLeastOneRecordForFields(feedContainer, GtfsPathway.FILENAME, List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasStairCount))
+    );
   }
 
   private void loadTraversalTimeComponent(GtfsFeedContainer feedContainer) {
