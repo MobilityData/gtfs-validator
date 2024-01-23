@@ -55,7 +55,7 @@ public class FeedMetadata {
           new Pair<>("Translations", GtfsTranslation.FILENAME),
           new Pair<>("Fare Media", GtfsFareMedia.FILENAME),
           new Pair<>("Zone-Based Fares", GtfsArea.FILENAME),
-          new Pair<>("Route-Based Fares", GtfsNetwork.FILENAME),
+          //new Pair<>("Route-Based Fares", GtfsNetwork.FILENAME),
           new Pair<>("Transfer Fares", GtfsFareTransferRule.FILENAME),
           new Pair<>("Time-Based Fares", GtfsTimeframe.FILENAME),
           new Pair<>("Levels", GtfsLevel.FILENAME));
@@ -197,7 +197,8 @@ public class FeedMetadata {
                     feedContainer,
                     GtfsRoute.FILENAME,
                     List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasNetworkId))
-                || hasAtLeastOneRecordInFile(feedContainer, GtfsNetwork.FILENAME)));
+                //|| hasAtLeastOneRecordInFile(feedContainer, GtfsNetwork.FILENAME)
+        ));
   }
 
   private void loadBlocksComponent(GtfsFeedContainer feedContainer) {
