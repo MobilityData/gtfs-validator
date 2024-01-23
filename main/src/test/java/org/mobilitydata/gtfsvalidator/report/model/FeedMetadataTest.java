@@ -227,7 +227,7 @@ public class FeedMetadataTest {
             + "pathway2,stop2,stop3,2,0\n";
     createDataFile("pathways.txt", pathwayContent);
     validateSpecFeature(
-        "Pathways",
+        "Pathways (basic))",
         true,
         ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
@@ -237,7 +237,7 @@ public class FeedMetadataTest {
     String pathwayContent = "pathway_id,from_stop_id,to_stop_id,pathway_mode,is_bidirectional\n";
     createDataFile("pathways.txt", pathwayContent);
     validateSpecFeature(
-        "Pathways",
+        "Pathways (basic)",
         false,
         ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
@@ -245,7 +245,7 @@ public class FeedMetadataTest {
   @Test
   public void omitsComponents() throws IOException, InterruptedException {
     validateSpecFeature(
-        "Pathways",
+        "Pathways (basic))",
         false,
         ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
     validateSpecFeature(

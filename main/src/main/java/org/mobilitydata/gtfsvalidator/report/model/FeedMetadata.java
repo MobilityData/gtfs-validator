@@ -228,13 +228,21 @@ public class FeedMetadata {
     specFeatures.put(
         "Pathway (extra)",
         hasAtLeastOneRecordForFields(
-            feedContainer,
-            GtfsPathway.FILENAME,
+                feedContainer,
+                GtfsPathway.FILENAME,
                 List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasMaxSlope))
-        || hasAtLeastOneRecordForFields(feedContainer, GtfsPathway.FILENAME, List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasMinWidth))
-        || hasAtLeastOneRecordForFields(feedContainer, GtfsPathway.FILENAME, List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasLength))
-        || hasAtLeastOneRecordForFields(feedContainer, GtfsPathway.FILENAME, List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasStairCount))
-    );
+            || hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsPathway.FILENAME,
+                List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasMinWidth))
+            || hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsPathway.FILENAME,
+                List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasLength))
+            || hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsPathway.FILENAME,
+                List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasStairCount)));
   }
 
   private void loadTraversalTimeComponent(GtfsFeedContainer feedContainer) {
