@@ -55,7 +55,7 @@ public class FeedMetadata {
           new Pair<>("Translations", GtfsTranslation.FILENAME),
           new Pair<>("Fare Media", GtfsFareMedia.FILENAME),
           new Pair<>("Zone-Based Fares", GtfsArea.FILENAME),
-          //new Pair<>("Route-Based Fares", GtfsNetwork.FILENAME),
+          // new Pair<>("Route-Based Fares", GtfsNetwork.FILENAME),
           new Pair<>("Transfer Fares", GtfsFareTransferRule.FILENAME),
           new Pair<>("Time-Based Fares", GtfsTimeframe.FILENAME),
           new Pair<>("Levels", GtfsLevel.FILENAME));
@@ -194,11 +194,11 @@ public class FeedMetadata {
                     GtfsFareLegRule::hasFromAreaId,
                     (Function<GtfsFareLegRule, Boolean>) GtfsFareLegRule::hasToAreaId))
             && (hasAtLeastOneRecordForFields(
-                    feedContainer,
-                    GtfsRoute.FILENAME,
-                    List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasNetworkId))
-                //|| hasAtLeastOneRecordInFile(feedContainer, GtfsNetwork.FILENAME)
-        ));
+                feedContainer,
+                GtfsRoute.FILENAME,
+                List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasNetworkId))
+            // || hasAtLeastOneRecordInFile(feedContainer, GtfsNetwork.FILENAME)
+            ));
   }
 
   private void loadBlocksComponent(GtfsFeedContainer feedContainer) {
@@ -218,11 +218,7 @@ public class FeedMetadata {
             GtfsPathway.FILENAME,
             List.of(
                 GtfsPathway::hasSignpostedAs,
-                (Function<GtfsPathway, Boolean>) GtfsPathway::hasReversedSignpostedAs,
-                GtfsPathway::hasMaxSlope,
-                GtfsPathway::hasMinWidth,
-                GtfsPathway::hasLength,
-                GtfsPathway::hasStairCount)));
+                (Function<GtfsPathway, Boolean>) GtfsPathway::hasReversedSignpostedAs)));
   }
 
   private void loadPathwayExtraComponent(GtfsFeedContainer feedContainer) {
