@@ -78,17 +78,15 @@ public class MatchingFeedAndAgencyLangValidator extends FileValidator {
       return;
     }
 
-    if (agencyTable != null) {
-      for (GtfsAgency agency : agencyTable.getEntities()) {
-        if (agency.hasAgencyLang() && !feedLang.equals(agency.agencyLang())) {
-          noticeContainer.addValidationNotice(
-              new FeedInfoLangAndAgencyLangMismatchNotice(
-                  agency.csvRowNumber(),
-                  agency.agencyId(),
-                  agency.agencyName(),
-                  agency.agencyLang().toLanguageTag(),
-                  feedLang.toLanguageTag()));
-        }
+    for (GtfsAgency agency : agencyTable.getEntities()) {
+      if (agency.hasAgencyLang() && !feedLang.equals(agency.agencyLang())) {
+        noticeContainer.addValidationNotice(
+            new FeedInfoLangAndAgencyLangMismatchNotice(
+                agency.csvRowNumber(),
+                agency.agencyId(),
+                agency.agencyName(),
+                agency.agencyLang().toLanguageTag(),
+                feedLang.toLanguageTag()));
       }
     }
   }

@@ -2,7 +2,7 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import org.mobilitydata.gtfsvalidator.annotation.*;
 
-@GtfsTable("agency.txt")
+@GtfsTable("networks.txt")
 @Required
 public interface GtfsNetworkSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)

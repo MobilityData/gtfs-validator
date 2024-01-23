@@ -43,11 +43,9 @@ public class FareAttributeAgencyIdValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    int totalAgencies = 0;
     // routes.agency_id is required when there are multiple agencies
-    if (agencyTable != null) {
-      totalAgencies = agencyTable.entityCount();
-    }
+    int totalAgencies = agencyTable.entityCount();
+
     for (GtfsFareAttribute fare : attributeTable.getEntities()) {
       if (!fare.hasAgencyId()) {
         if (totalAgencies > 1) {
