@@ -21,7 +21,7 @@
 | `-e`       | `--system_errors_report_name` | Optional               | Name of the system errors report (including `.json` extension).                                                                                                                                                                                              |
 | `-n`       | `--export_notices_schema`     | Optional               | Export notice schema as a json file.                                                                                                                                                                                                                         |
 | `-p`       | `--pretty`                    | Optional               | Pretty JSON validation report. If specified, the JSON validation report will be printed using JSON Pretty print. This does not impact data parsing.                                                                                                          |
-| `-d`       | `--date`                      | Optional               | Date to simulate when validating, in ISO_LOCAL_DATE format like '2001-01-30'. By default, the current date is used.                                                                                                                                          |
+| `-d`       | `--date`                      | Optional               | The date used to validate the feed for time-based rules, e.g feed_expiration_30_days, in ISO_LOCAL_DATE format like '2001-01-30'. By default, the current date is used.                                                                                      |
 
 ⚠️ Note that exactly one of the following options must be provided: `--url` or `--input`.
 
