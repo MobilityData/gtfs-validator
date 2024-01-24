@@ -59,7 +59,7 @@ public class Arguments {
       description =
           "Date to simulate when validating, in ISO_LOCAL_DATE format like "
               + "'2001-01-30'. By default, the current date is used. "
-              + "This option enables debugging rules like feed expiration.")
+              + "This option can be used to debug rules like feed expiration.")
   private String dateString;
 
   @Parameter(
