@@ -22,7 +22,7 @@
 - We will call them feature branches for the rest of this document.
 - They stem from main, are usually short-lived and are merged back to main.
 
-## Msintannce branches
+## Maintenance branches
 - In general we will try not to create long-lived release branches.
 - A long-lived release branch will be created only if any merge to main that came after the previous release is deemed not suitable to go in the maintenance release.
 - For example the change could be too extensive, or introduce an undue risk in the maintenance release.
