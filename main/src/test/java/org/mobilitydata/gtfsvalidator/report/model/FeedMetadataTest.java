@@ -227,7 +227,7 @@ public class FeedMetadataTest {
             + "pathway2,stop2,stop3,2,0\n";
     createDataFile("pathways.txt", pathwayContent);
     validateSpecFeature(
-        "Pathways",
+        "Pathways (basic)",
         true,
         ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
@@ -237,7 +237,7 @@ public class FeedMetadataTest {
     String pathwayContent = "pathway_id,from_stop_id,to_stop_id,pathway_mode,is_bidirectional\n";
     createDataFile("pathways.txt", pathwayContent);
     validateSpecFeature(
-        "Pathways",
+        "Pathways (basic)",
         false,
         ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
@@ -245,7 +245,7 @@ public class FeedMetadataTest {
   @Test
   public void omitsComponents() throws IOException, InterruptedException {
     validateSpecFeature(
-        "Pathways",
+        "Pathways (basic)",
         false,
         ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
     validateSpecFeature(
@@ -304,7 +304,7 @@ public class FeedMetadataTest {
         "trip_id, start_time, end_time, headway_secs\n" + "dummy1, 01:01:01, 01:01:02, 1\n";
     createDataFile(GtfsFrequency.FILENAME, content);
     validateSpecFeature(
-        "Frequency-Based Trip",
+        "Frequencies",
         true,
         ImmutableList.of(GtfsFrequencyTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
@@ -314,7 +314,7 @@ public class FeedMetadataTest {
     String content = "trip_id, start_time, end_time, headway_secs\n";
     createDataFile(GtfsFrequency.FILENAME, content);
     validateSpecFeature(
-        "Frequency-Based Trip",
+        "Frequencies",
         false,
         ImmutableList.of(GtfsFrequencyTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
@@ -406,11 +406,11 @@ public class FeedMetadataTest {
   @Test
   public void containsZoneBasedFaresComponentTest() throws IOException, InterruptedException {
     String content = "area_id, stop_id\n" + "dummyArea, dummyStop\n";
-    createDataFile(GtfsStopArea.FILENAME, content);
+    createDataFile(GtfsArea.FILENAME, content);
     validateSpecFeature(
         "Zone-Based Fares",
         true,
-        ImmutableList.of(GtfsStopAreaTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+        ImmutableList.of(GtfsAreaTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
   @Test

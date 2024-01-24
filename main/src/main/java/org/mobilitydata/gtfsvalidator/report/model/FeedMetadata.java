@@ -43,17 +43,21 @@ public class FeedMetadata {
 
   private final List<Pair<String, String>> FILE_BASED_COMPONENTS =
       List.of(
-          new Pair<>("Pathways", GtfsPathway.FILENAME),
+          new Pair<>("Pathways (basic)", GtfsPathway.FILENAME),
+          new Pair<>("Pathways (extra)", GtfsPathway.FILENAME),
           new Pair<>("Transfers", GtfsTransfer.FILENAME),
           new Pair<>("Fares V1", GtfsFareAttribute.FILENAME),
           new Pair<>("Fare Products", GtfsFareProduct.FILENAME),
           new Pair<>("Shapes", GtfsShape.FILENAME),
-          new Pair<>("Frequency-Based Trip", GtfsFrequency.FILENAME),
+          new Pair<>("Frequencies", GtfsFrequency.FILENAME),
           new Pair<>("Feed Information", GtfsFeedInfo.FILENAME),
           new Pair<>("Attributions", GtfsAttribution.FILENAME),
           new Pair<>("Translations", GtfsTranslation.FILENAME),
           new Pair<>("Fare Media", GtfsFareMedia.FILENAME),
-          new Pair<>("Zone-Based Fares", GtfsStopArea.FILENAME));
+          new Pair<>("Zone-Based Fares", GtfsArea.FILENAME),
+          new Pair<>("Transfer Fares", GtfsFareTransferRule.FILENAME),
+          new Pair<>("Time-Based Fares", GtfsTimeframe.FILENAME),
+          new Pair<>("Levels", GtfsLevel.FILENAME));
 
   protected FeedMetadata() {}
 
@@ -148,9 +152,14 @@ public class FeedMetadata {
     loadLocationTypesComponent(feedContainer);
     loadTraversalTimeComponent(feedContainer);
     loadPathwayDirectionsComponent(feedContainer);
+    loadPathwayExtraComponent(feedContainer);
     loadBlocksComponent(feedContainer);
     loadRouteBasedFaresComponent(feedContainer);
     loadContinuousStopsComponent(feedContainer);
+    loadZoneBasedComponent(feedContainer);
+    loadTimeBasedFaresComponent(feedContainer);
+    loadTransferFaresComponent(feedContainer);
+    loadLevelsComponent(feedContainer);
   }
 
   private void loadContinuousStopsComponent(GtfsFeedContainer feedContainer) {
@@ -178,15 +187,9 @@ public class FeedMetadata {
     specFeatures.put(
         "Route-Based Fares",
         hasAtLeastOneRecordForFields(
-                feedContainer,
-                GtfsFareLegRule.FILENAME,
-                List.of(
-                    GtfsFareLegRule::hasFromAreaId,
-                    (Function<GtfsFareLegRule, Boolean>) GtfsFareLegRule::hasToAreaId))
-            && hasAtLeastOneRecordForFields(
-                feedContainer,
-                GtfsRoute.FILENAME,
-                List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasNetworkId)));
+            feedContainer,
+            GtfsRoute.FILENAME,
+            List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasNetworkId)));
   }
 
   private void loadBlocksComponent(GtfsFeedContainer feedContainer) {
@@ -207,6 +210,27 @@ public class FeedMetadata {
             List.of(
                 GtfsPathway::hasSignpostedAs,
                 (Function<GtfsPathway, Boolean>) GtfsPathway::hasReversedSignpostedAs)));
+  }
+
+  private void loadPathwayExtraComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Pathway (extra)",
+        hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsPathway.FILENAME,
+                List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasMaxSlope))
+            || hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsPathway.FILENAME,
+                List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasMinWidth))
+            || hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsPathway.FILENAME,
+                List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasLength))
+            || hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsPathway.FILENAME,
+                List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasStairCount)));
   }
 
   private void loadTraversalTimeComponent(GtfsFeedContainer feedContainer) {
@@ -304,6 +328,25 @@ public class FeedMetadata {
             List.of(
                 GtfsRoute::hasRouteShortName,
                 (Function<GtfsRoute, Boolean>) GtfsRoute::hasRouteLongName)));
+  }
+
+  private void loadZoneBasedComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Zone-Based Fares", hasAtLeastOneRecordInFile(feedContainer, GtfsArea.FILENAME));
+  }
+
+  private void loadTimeBasedFaresComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Time-Based Fares", hasAtLeastOneRecordInFile(feedContainer, GtfsTimeframe.FILENAME));
+  }
+
+  private void loadTransferFaresComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Transfer Fares", hasAtLeastOneRecordInFile(feedContainer, GtfsFareTransferRule.FILENAME));
+  }
+
+  private void loadLevelsComponent(GtfsFeedContainer feedContainer) {
+    specFeatures.put("Levels", hasAtLeastOneRecordInFile(feedContainer, GtfsLevel.FILENAME));
   }
 
   private void loadAgencyData(GtfsTableContainer<GtfsAgency> agencyTable) {
