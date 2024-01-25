@@ -188,9 +188,9 @@ public class FeedMetadata {
     specFeatures.put(
         "Route-Based Fares",
         hasAtLeastOneRecordForFields(
-            feedContainer,
-            GtfsRoute.FILENAME,
-            List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasNetworkId))
+                feedContainer,
+                GtfsRoute.FILENAME,
+                List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasNetworkId))
             || hasAtLeastOneRecordInFile(feedContainer, GtfsNetwork.FILENAME));
   }
 

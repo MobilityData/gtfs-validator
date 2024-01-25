@@ -5,11 +5,11 @@ import org.mobilitydata.gtfsvalidator.annotation.*;
 @GtfsTable("networks.txt")
 @Required
 public interface GtfsNetworkSchema extends GtfsEntity {
- @FieldType(FieldTypeEnum.ID)
- @PrimaryKey
- @Required
- String networkId();
+  @FieldType(FieldTypeEnum.ID)
+  @PrimaryKey
+  @Required
+  String networkId();
 
- @MixedCase
- String networkName();
+  @MixedCase
+  String networkName();
 }
