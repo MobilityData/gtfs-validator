@@ -53,22 +53,32 @@ public class ExpiredCalendarValidator extends FileValidator {
     final Map<String, SortedSet<LocalDate>> servicePeriodMap =
         CalendarUtil.servicePeriodToServiceDatesMap(
             CalendarUtil.buildServicePeriodMap(calendarTable, calendarDateTable));
+    boolean isCalendarTableEmpty = !calendarTable.getEntities().isEmpty();
+    List<ExpiredCalendarNotice> expiredCalendarDatesNotices = new ArrayList<>();
+    boolean allCalendarAreExpired = true;
     for (var serviceId : servicePeriodMap.keySet()) {
       SortedSet<LocalDate> serviceDates = servicePeriodMap.get(serviceId);
       if (!serviceDates.isEmpty() && serviceDates.last().isBefore(dateForValidation.getDate())) {
-        int csvRowNumber;
         if (calendarTable.byServiceId(serviceId).isPresent()) {
-          csvRowNumber = calendarTable.byServiceId(serviceId).get().csvRowNumber();
-        } else {
+          noticeContainer.addValidationNotice(
+              new ExpiredCalendarNotice(
+                  calendarTable.byServiceId(serviceId).get().csvRowNumber(), serviceId));
+        } else if (isCalendarTableEmpty && allCalendarAreExpired) {
           //          Taking the first of the calendar dates for the service id.
           //          This is the case of foreign key violation or calendar.txt not provided.
           Optional<GtfsCalendarDate> firstCalendarDate =
               calendarDateTable.byServiceId(serviceId).stream()
                   .min(Comparator.comparingInt(GtfsCalendarDate::csvRowNumber));
-          csvRowNumber = firstCalendarDate.map(GtfsCalendarDate::csvRowNumber).orElse(0);
+          expiredCalendarDatesNotices.add(
+              new ExpiredCalendarNotice(
+                  firstCalendarDate.map(GtfsCalendarDate::csvRowNumber).orElse(0), serviceId));
         }
-        noticeContainer.addValidationNotice(new ExpiredCalendarNotice(csvRowNumber, serviceId));
+      } else {
+        allCalendarAreExpired = false;
       }
+    }
+    if (isCalendarTableEmpty && allCalendarAreExpired) {
+      noticeContainer.addValidationNotices(expiredCalendarDatesNotices);
     }
   }
 

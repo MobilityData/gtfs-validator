@@ -58,16 +58,16 @@ public final class CalendarUtil {
     for (GtfsCalendarDate calendarDate : calendarDates) {
       if (calendar == null) {
         LocalDate date = calendarDate.date().getLocalDate();
-        if (calendarDate.exceptionType() == GtfsCalendarDateExceptionType.SERVICE_ADDED
+        if (GtfsCalendarDateExceptionType.SERVICE_ADDED.equals(calendarDate.exceptionType())
             && (serviceStart == null || serviceStart.isAfter(date))) {
           serviceStart = date;
         }
-        if (calendarDate.exceptionType() == GtfsCalendarDateExceptionType.SERVICE_ADDED
+        if (GtfsCalendarDateExceptionType.SERVICE_REMOVED.equals(calendarDate.exceptionType())
             && (serviceEnd == null || serviceEnd.isBefore(date))) {
           serviceEnd = date;
         }
       }
-      (calendarDate.exceptionType() == GtfsCalendarDateExceptionType.SERVICE_ADDED
+      (GtfsCalendarDateExceptionType.SERVICE_ADDED.equals(calendarDate.exceptionType())
               ? addedDays
               : removedDays)
           .add(calendarDate.date().getLocalDate());
