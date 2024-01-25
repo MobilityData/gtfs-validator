@@ -142,9 +142,7 @@ public class FeedMetadata {
   }
 
   private void loadSpecFeaturesBasedOnFieldPresence(GtfsFeedContainer feedContainer) {
-    loadRouteNamesComponent(feedContainer);
     loadRouteColorsComponent(feedContainer);
-    loadAgencyInformationComponent(feedContainer);
     loadHeadsignsComponent(feedContainer);
     loadWheelchairAccessibilityComponent(feedContainer);
     loadTTSComponent(feedContainer);
@@ -295,17 +293,6 @@ public class FeedMetadata {
                 List.of((Function<GtfsStopTime, Boolean>) GtfsStopTime::hasStopHeadsign)));
   }
 
-  private void loadAgencyInformationComponent(GtfsFeedContainer feedContainer) {
-    specFeatures.put(
-        "Agency Information",
-        hasAtLeastOneRecordForFields(
-            feedContainer,
-            GtfsAgency.FILENAME,
-            List.of(
-                GtfsAgency::hasAgencyEmail,
-                (Function<GtfsAgency, Boolean>) GtfsAgency::hasAgencyPhone)));
-  }
-
   private void loadRouteColorsComponent(GtfsFeedContainer feedContainer) {
     specFeatures.put(
         "Route Colors",
@@ -317,17 +304,6 @@ public class FeedMetadata {
                 feedContainer,
                 GtfsRoute.FILENAME,
                 List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasRouteTextColor)));
-  }
-
-  private void loadRouteNamesComponent(GtfsFeedContainer feedContainer) {
-    specFeatures.put(
-        "Route Names",
-        hasAtLeastOneRecordForFields(
-            feedContainer,
-            GtfsRoute.FILENAME,
-            List.of(
-                GtfsRoute::hasRouteShortName,
-                (Function<GtfsRoute, Boolean>) GtfsRoute::hasRouteLongName)));
   }
 
   private void loadZoneBasedComponent(GtfsFeedContainer feedContainer) {
