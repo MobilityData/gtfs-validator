@@ -69,58 +69,6 @@ public class FeedMetadataTest {
   }
 
   @Test
-  public void containsRouteNamesComponentTest() throws IOException, InterruptedException {
-    String routesContent =
-        "route_id,agency_id,route_short_name,route_long_name,route_type\n"
-            + "1,1,Short Name,Long Name,1\n"
-            + "2,1,,,1\n";
-    createDataFile("routes.txt", routesContent);
-    validateSpecFeature(
-        "Route Names",
-        true,
-        ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
-  }
-
-  @Test
-  public void omitsRouteNamesComponentTest1() throws IOException, InterruptedException {
-    String routesContent =
-        "route_id,agency_id,route_short_name,route_long_name,route_type\n"
-            + "1,1,,,1\n"
-            + "2,1,,,1\n";
-    createDataFile("routes.txt", routesContent);
-    validateSpecFeature(
-        "Route Names",
-        false,
-        ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
-  }
-
-  @Test
-  public void omitsRouteNamesComponentTest2() throws IOException, InterruptedException {
-    String routesContent =
-        "route_id,agency_id,route_short_name,route_long_name,route_type\n"
-            + "1,1,Short Name,,1\n"
-            + "2,1,,,1\n";
-    createDataFile("routes.txt", routesContent);
-    validateSpecFeature(
-        "Route Names",
-        false,
-        ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
-  }
-
-  @Test
-  public void omitsRouteNamesComponentTest3() throws IOException, InterruptedException {
-    String routesContent =
-        "route_id,agency_id,route_short_name,route_long_name,route_type\n"
-            + "1,1,,Long Name,1\n"
-            + "2,1,,,1\n";
-    createDataFile("routes.txt", routesContent);
-    validateSpecFeature(
-        "Route Names",
-        false,
-        ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
-  }
-
-  @Test
   /**
    * This method is to test when both route_color and route_text_color are present in routes.txt,
    * and they each have two records
@@ -248,10 +196,6 @@ public class FeedMetadataTest {
         "Pathways (basic)",
         false,
         ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
-    validateSpecFeature(
-        "Route Names",
-        false,
-        ImmutableList.of(GtfsRouteTableDescriptor.class, GtfsAgencyTableDescriptor.class));
     validateSpecFeature(
         "Shapes",
         false,
@@ -421,48 +365,6 @@ public class FeedMetadataTest {
         "Zone-Based Fares",
         false,
         ImmutableList.of(GtfsStopAreaTableDescriptor.class, GtfsAgencyTableDescriptor.class));
-  }
-
-  @Test
-  public void containsAgencyInformationComponent() throws IOException, InterruptedException {
-    tmpDir.delete();
-    rootDir = tmpDir.newFolder("data");
-    String agencyContent =
-        "agency_id, agency_name, agency_url, agency_timezone, agency_phone, agency_email\n"
-            + "1, name, https://dummy.ca, America/Los_Angeles, 1234567890, dummy@dummy.ca\n";
-    createDataFile(GtfsAgency.FILENAME, agencyContent);
-    validateSpecFeature(
-        "Agency Information", true, ImmutableList.of(GtfsAgencyTableDescriptor.class));
-  }
-
-  @Test
-  public void omitsAgencyInformationComponent1() throws IOException, InterruptedException {
-    tmpDir.delete();
-    rootDir = tmpDir.newFolder("data");
-    String agencyContent =
-        "agency_id, agency_name, agency_url, agency_timezone, agency_phone, agency_email\n"
-            + "1, name, https://dummy.ca, America/Los_Angeles, , dummy@dummy.ca\n";
-    createDataFile(GtfsAgency.FILENAME, agencyContent);
-    validateSpecFeature(
-        "Agency Information", false, ImmutableList.of(GtfsAgencyTableDescriptor.class));
-  }
-
-  @Test
-  public void omitsAgencyInformationComponent2() throws IOException, InterruptedException {
-    tmpDir.delete();
-    rootDir = tmpDir.newFolder("data");
-    String agencyContent =
-        "agency_id, agency_name, agency_url, agency_timezone, agency_phone, agency_email\n"
-            + "1, name, https://dummy.ca, America/Los_Angeles, 1234567890, \n";
-    createDataFile(GtfsAgency.FILENAME, agencyContent);
-    validateSpecFeature(
-        "Agency Information", false, ImmutableList.of(GtfsAgencyTableDescriptor.class));
-  }
-
-  @Test
-  public void omitsAgencyInformationComponent3() throws IOException, InterruptedException {
-    validateSpecFeature(
-        "Agency Information", false, ImmutableList.of(GtfsAgencyTableDescriptor.class));
   }
 
   @Test
