@@ -62,7 +62,7 @@ public final class CalendarUtil {
             && (serviceStart == null || serviceStart.isAfter(date))) {
           serviceStart = date;
         }
-        if (GtfsCalendarDateExceptionType.SERVICE_REMOVED.equals(calendarDate.exceptionType())
+        if (GtfsCalendarDateExceptionType.SERVICE_ADDED.equals(calendarDate.exceptionType())
             && (serviceEnd == null || serviceEnd.isBefore(date))) {
           serviceEnd = date;
         }
@@ -73,7 +73,7 @@ public final class CalendarUtil {
           .add(calendarDate.date().getLocalDate());
     }
     serviceStart = serviceStart == null ? LocalDate.EPOCH : serviceStart;
-    serviceEnd = serviceEnd == null ? LocalDate.EPOCH : serviceEnd;
+    serviceEnd = serviceEnd == null ? serviceStart : serviceEnd;
     return new ServicePeriod(serviceStart, serviceEnd, weeklyPattern, addedDays, removedDays);
   }
 

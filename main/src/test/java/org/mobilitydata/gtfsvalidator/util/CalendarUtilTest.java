@@ -166,7 +166,7 @@ public class CalendarUtilTest {
             "s3",
             new ServicePeriod(
                 LocalDate.of(2021, 3, 8),
-                LocalDate.of(2021, 3, 9),
+                LocalDate.of(2021, 3, 8),
                 (byte) 0,
                 ImmutableSet.of(LocalDate.of(2021, 3, 8)),
                 ImmutableSet.of(LocalDate.of(2021, 3, 9))));
