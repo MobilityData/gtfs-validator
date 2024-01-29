@@ -69,6 +69,7 @@ public class ExpiredCalendarValidator extends FileValidator {
         } else if (isCalendarTableEmpty && allCalendarAreExpired) {
           //          Taking the first of the calendar dates for the service id.
           //          This is the case of foreign key violation or calendar.txt not provided.
+          //            In this case all serviceId need to be expired to report the notices.
           Optional<GtfsCalendarDate> firstCalendarDate =
               calendarDateTable.byServiceId(serviceId).stream()
                   .min(Comparator.comparingInt(GtfsCalendarDate::csvRowNumber));
