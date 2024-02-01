@@ -46,10 +46,12 @@
             - Commit F is tagged as the maintenance release and the maintenance release is built from there.
     - If a merge on the master branch cannot be included in the maintenance release (See for example commit I) then we have no choice but to create a maintenance branch
         - Create a maintenance branch stemming from the last commit of master that can go in the maintenance release. Commit F in our example.
+          - This branch becomes a long-lived branch that can be used for further maintenance releases and should be protected from deletion.
+          - This branch should require pull request do add commits to it.
         - After that, master cannot be merged into the maintenance branch, since it would introduce undesirable commits.
         - Also create a hotfix branch stemming from the same commit (commit F in our example)
         - Once fixed, merge the hotfix branch into the maintenance branch. This creates commit K, that should be tagged and used for the maintenance release.
         - Also merge the maintenance branch into master.
-            - Do not delete the maintenance branch. It becomes a long-lived branch that can be used for further maintenance releases.
+            - Do not delete the maintenance branch. It can be used for further maintenance releases.
             - Merging into master creates commit L in the diagram. Note that at this point there could be conflicts so it becomes important to merge carefully.
  
