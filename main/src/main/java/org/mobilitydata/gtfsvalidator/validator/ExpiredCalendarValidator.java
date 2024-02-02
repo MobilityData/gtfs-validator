@@ -18,8 +18,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import java.time.LocalDate;
-import java.util.Map;
-import java.util.SortedSet;
+import java.util.*;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
@@ -54,12 +53,36 @@ public class ExpiredCalendarValidator extends FileValidator {
     final Map<String, SortedSet<LocalDate>> servicePeriodMap =
         CalendarUtil.servicePeriodToServiceDatesMap(
             CalendarUtil.buildServicePeriodMap(calendarTable, calendarDateTable));
+    boolean isCalendarTableEmpty = calendarTable.getEntities().isEmpty();
+    List<ExpiredCalendarNotice> expiredCalendarDatesNotices = new ArrayList<>();
+    boolean allCalendarAreExpired = true;
     for (var serviceId : servicePeriodMap.keySet()) {
       SortedSet<LocalDate> serviceDates = servicePeriodMap.get(serviceId);
-      if (!serviceDates.isEmpty() && serviceDates.last().isBefore(dateForValidation.getDate())) {
-        int csvRowNumber = calendarTable.byServiceId(serviceId).get().csvRowNumber();
-        noticeContainer.addValidationNotice(new ExpiredCalendarNotice(csvRowNumber, serviceId));
+      if (serviceDates.isEmpty()) {
+        continue;
       }
+      if (serviceDates.last().isBefore(dateForValidation.getDate())) {
+        if (calendarTable.byServiceId(serviceId).isPresent()) {
+          noticeContainer.addValidationNotice(
+              new ExpiredCalendarNotice(
+                  calendarTable.byServiceId(serviceId).get().csvRowNumber(), serviceId));
+        } else if (isCalendarTableEmpty && allCalendarAreExpired) {
+          //          Taking the first of the calendar dates for the service id.
+          //          This is the case of foreign key violation or calendar.txt not provided.
+          //            In this case all serviceId need to be expired to report the notices.
+          Optional<GtfsCalendarDate> firstCalendarDate =
+              calendarDateTable.byServiceId(serviceId).stream()
+                  .min(Comparator.comparingInt(GtfsCalendarDate::csvRowNumber));
+          expiredCalendarDatesNotices.add(
+              new ExpiredCalendarNotice(
+                  firstCalendarDate.map(GtfsCalendarDate::csvRowNumber).orElse(0), serviceId));
+        }
+      } else {
+        allCalendarAreExpired = false;
+      }
+    }
+    if (isCalendarTableEmpty && allCalendarAreExpired) {
+      noticeContainer.addValidationNotices(expiredCalendarDatesNotices);
     }
   }
 
