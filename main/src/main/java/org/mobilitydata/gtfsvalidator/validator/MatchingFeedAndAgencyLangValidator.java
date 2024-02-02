@@ -77,6 +77,7 @@ public class MatchingFeedAndAgencyLangValidator extends FileValidator {
       // A multilanguage feed may have different agency_lang.
       return;
     }
+
     for (GtfsAgency agency : agencyTable.getEntities()) {
       if (agency.hasAgencyLang() && !feedLang.equals(agency.agencyLang())) {
         noticeContainer.addValidationNotice(

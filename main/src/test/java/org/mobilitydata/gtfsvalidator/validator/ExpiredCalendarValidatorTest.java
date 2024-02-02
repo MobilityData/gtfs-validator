@@ -215,4 +215,120 @@ public class ExpiredCalendarValidatorTest {
         .validate(container);
     assertThat(container.getValidationNotices()).isEmpty();
   }
+
+  @Test
+  public void calendarDateWithForeignKeyViolationShouldNotGenerateNotice() {
+    NoticeContainer container = new NoticeContainer();
+
+    List<GtfsCalendar> calendars =
+        ImmutableList.of(
+            new GtfsCalendar.Builder()
+                .setCsvRowNumber(2)
+                .setServiceId("SERVICE_ID")
+                .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(7)))
+                .setEndDate(GtfsDate.fromLocalDate(TEST_NOW))
+                .build());
+
+    GtfsCalendarTableContainer calendarTable =
+        GtfsCalendarTableContainer.forEntities(calendars, container);
+    var calendarDateTable =
+        GtfsCalendarDateTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsCalendarDate.Builder()
+                    .setCsvRowNumber(3)
+                    .setServiceId("NOT_SERVICE_ID")
+                    .setDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(2)))
+                    .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_REMOVED)
+                    .build(),
+                new GtfsCalendarDate.Builder()
+                    .setCsvRowNumber(2)
+                    .setServiceId("NOT_SERVICE_ID")
+                    .setDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(3)))
+                    .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_ADDED)
+                    .build(),
+                new GtfsCalendarDate.Builder()
+                    .setCsvRowNumber(4)
+                    .setServiceId("NOT_SERVICE_ID")
+                    .setDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(1)))
+                    .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_ADDED)
+                    .build()),
+            container);
+    new ExpiredCalendarValidator(new DateForValidation(TEST_NOW), calendarTable, calendarDateTable)
+        .validate(container);
+    assertThat(container.getValidationNotices()).isEmpty();
+  }
+
+  @Test
+  public void calendarDateWithAtLeastCalendarDateNotExpiredShouldNotGenerateNotice() {
+    NoticeContainer container = new NoticeContainer();
+
+    List<GtfsCalendar> calendars = ImmutableList.of();
+
+    GtfsCalendarTableContainer calendarTable =
+        GtfsCalendarTableContainer.forEntities(calendars, container);
+    var calendarDateTable =
+        GtfsCalendarDateTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsCalendarDate.Builder()
+                    .setCsvRowNumber(3)
+                    .setServiceId("SERVICE_ID_1")
+                    .setDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(2)))
+                    .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_ADDED)
+                    .build(),
+                new GtfsCalendarDate.Builder()
+                    .setCsvRowNumber(2)
+                    .setServiceId("SERVICE_ID_2")
+                    .setDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(3)))
+                    .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_ADDED)
+                    .build(),
+                new GtfsCalendarDate.Builder()
+                    .setCsvRowNumber(4)
+                    .setServiceId("SERVICE_ID_3")
+                    .setDate(GtfsDate.fromLocalDate(TEST_NOW.plusDays(1)))
+                    .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_ADDED)
+                    .build()),
+            container);
+    new ExpiredCalendarValidator(new DateForValidation(TEST_NOW), calendarTable, calendarDateTable)
+        .validate(container);
+    assertThat(container.getValidationNotices()).isEmpty();
+  }
+
+  @Test
+  public void calendarDateWithAllCalendarDatesExpiredShouldGenerateNotice() {
+    NoticeContainer container = new NoticeContainer();
+
+    List<GtfsCalendar> calendars = ImmutableList.of();
+
+    GtfsCalendarTableContainer calendarTable =
+        GtfsCalendarTableContainer.forEntities(calendars, container);
+    var calendarDateTable =
+        GtfsCalendarDateTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsCalendarDate.Builder()
+                    .setCsvRowNumber(3)
+                    .setServiceId("SERVICE_ID_3")
+                    .setDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(2)))
+                    .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_ADDED)
+                    .build(),
+                new GtfsCalendarDate.Builder()
+                    .setCsvRowNumber(2)
+                    .setServiceId("SERVICE_ID_2")
+                    .setDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(3)))
+                    .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_ADDED)
+                    .build(),
+                new GtfsCalendarDate.Builder()
+                    .setCsvRowNumber(1)
+                    .setServiceId("SERVICE_ID_1")
+                    .setDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(1)))
+                    .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_ADDED)
+                    .build()),
+            container);
+    new ExpiredCalendarValidator(new DateForValidation(TEST_NOW), calendarTable, calendarDateTable)
+        .validate(container);
+    assertThat(container.getValidationNotices())
+        .containsExactly(
+            new ExpiredCalendarValidator.ExpiredCalendarNotice(3, "SERVICE_ID_3"),
+            new ExpiredCalendarValidator.ExpiredCalendarNotice(2, "SERVICE_ID_2"),
+            new ExpiredCalendarValidator.ExpiredCalendarNotice(1, "SERVICE_ID_1"));
+  }
 }
