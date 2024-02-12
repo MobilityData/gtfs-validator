@@ -109,56 +109,56 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
     }
   }
 
-/**
- * Long name should not contain short name for a single route.
- *
- * <p>In routes.txt, `route_long_name` should not contain the value for `route_short_name`,
- * because when both are provided, they are often combined by transit applications. Note that only
- * one of the two fields is required. If there is no short name used for a route, use
- * `route_long_name` only.
- *
- * <p>Good examples:
- *
- * <table>
- *   <tr>
- *     <th>route_short_name/route_long_name</th>
- *     <th>Dataset</th>
- *   </tr>
- *   <tr>
- *     <td>"N"/"Judah"</td>
- *     <td><a href="https://www.sfmta.com/getting-around/transit/routes-stops/n-judah">Muni San Fransisco</a></td>
- *   </tr>
- *   <tr>
- *     <td>"6"/"ML King Jr Blvd"</td>
- *     <td><a href="https://trimet.org/schedules/r006.htm">Trimet Portland Streetcar</a></td>
- *   </tr>
- *   <tr>
- *     <td>"55"/"Boulevard Saint Laurent"</td>
- *     <td><a href="https://www.stm.info/en/info/networks/bus/local/line-55-north">STM Montreal</a></td>
- *   </tr>
- *   <tr>
- *     <td>"1"/"Rangiora/Cashmere"</td>
- *     <td><a href="https://www.metroinfo.co.nz/timetables/1-rangiora-cashmere/">Metro Christchurch</a></td>
- *   </tr>
- * </table>
- *
- * <p>Bad examples:
- *
- * <table>
- *   <tr>
- *     <th>route_short_name/route_long_name</th>
- *   </tr>
- *   <tr>
- *     <td>"604"/"604"</td>
- *   </tr>
- *   <tr>
- *     <td>"14"/"Route 14"</td>
- *   </tr>
- *   <tr>
- *     <td>"2"/"Route 2: Bellows Falls In-Town"</td>
- *   </tr>
- * </table>
- */
+  /**
+   * Long name should not contain short name for a single route.
+   *
+   * <p>In routes.txt, `route_long_name` should not contain the value for `route_short_name`,
+   * because when both are provided, they are often combined by transit applications. Note that only
+   * one of the two fields is required. If there is no short name used for a route, use
+   * `route_long_name` only.
+   *
+   * <p>Good examples:
+   *
+   * <table>
+   *   <tr>
+   *     <th>route_short_name/route_long_name</th>
+   *     <th>Dataset</th>
+   *   </tr>
+   *   <tr>
+   *     <td>"N"/"Judah"</td>
+   *     <td><a href="https://www.sfmta.com/getting-around/transit/routes-stops/n-judah">Muni San Fransisco</a></td>
+   *   </tr>
+   *   <tr>
+   *     <td>"6"/"ML King Jr Blvd"</td>
+   *     <td><a href="https://trimet.org/schedules/r006.htm">Trimet Portland Streetcar</a></td>
+   *   </tr>
+   *   <tr>
+   *     <td>"55"/"Boulevard Saint Laurent"</td>
+   *     <td><a href="https://www.stm.info/en/info/networks/bus/local/line-55-north">STM Montreal</a></td>
+   *   </tr>
+   *   <tr>
+   *     <td>"1"/"Rangiora/Cashmere"</td>
+   *     <td><a href="https://www.metroinfo.co.nz/timetables/1-rangiora-cashmere/">Metro Christchurch</a></td>
+   *   </tr>
+   * </table>
+   *
+   * <p>Bad examples:
+   *
+   * <table>
+   *   <tr>
+   *     <th>route_short_name/route_long_name</th>
+   *   </tr>
+   *   <tr>
+   *     <td>"604"/"604"</td>
+   *   </tr>
+   *   <tr>
+   *     <td>"14"/"Route 14"</td>
+   *   </tr>
+   *   <tr>
+   *     <td>"2"/"Route 2: Bellows Falls In-Town"</td>
+   *   </tr>
+   * </table>
+   */
   @GtfsValidationNotice(
       severity = WARNING,
       files = @FileRefs(GtfsRouteSchema.class),
