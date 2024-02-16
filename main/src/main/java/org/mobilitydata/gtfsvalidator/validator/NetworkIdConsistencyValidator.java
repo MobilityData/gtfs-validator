@@ -32,15 +32,17 @@ public class NetworkIdConsistencyValidator extends FileValidator {
     // Validate the presence of network_id in routes and its specification in either route_network
     // or network files
     boolean hasNetworkIdField = this.routeTableContainer.hasColumn(GtfsRoute.NETWORK_ID_FIELD_NAME);
-    if (hasNetworkIdField && !this.routeNetworkTableContainer.isMissingFile()) {
-      noticeContainer.addValidationNotice(
-          new RouteNetworksSpecifiedInMoreThanOneFileNotice(
-              GtfsRoute.FILENAME, GtfsRouteNetwork.FILENAME));
-    }
-    if (!this.networkTableContainer.isMissingFile() && hasNetworkIdField) {
-      noticeContainer.addValidationNotice(
-          new RouteNetworksSpecifiedInMoreThanOneFileNotice(
-              GtfsRoute.FILENAME, GtfsNetwork.FILENAME));
+    if (hasNetworkIdField) {
+      if (!this.routeNetworkTableContainer.isMissingFile()) {
+        noticeContainer.addValidationNotice(
+            new RouteNetworksSpecifiedInMoreThanOneFileNotice(
+                GtfsRoute.FILENAME, GtfsRouteNetwork.FILENAME));
+      }
+      if (!this.networkTableContainer.isMissingFile()) {
+        noticeContainer.addValidationNotice(
+            new RouteNetworksSpecifiedInMoreThanOneFileNotice(
+                GtfsRoute.FILENAME, GtfsNetwork.FILENAME));
+      }
     }
 
     // Validate the uniqueness of route_id and network_id association
