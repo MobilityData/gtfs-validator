@@ -72,8 +72,12 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
         }
         // equal shape_dist_traveled and different coordinates
         if (!(curr.shapePtLon() == prev.shapePtLon() && curr.shapePtLat() == prev.shapePtLat())) {
-          noticeContainer.addValidationNotice(
-              new EqualShapeDistanceDiffCoordinatesNotice(prev, curr));
+          double distanceBetweenShapePoints =
+              getDistanceMeters(curr.shapePtLatLon(), prev.shapePtLatLon());
+          if (distanceBetweenShapePoints > 1.11) {
+            noticeContainer.addValidationNotice(
+                new EqualShapeDistanceDiffCoordinatesNotice(prev, curr));
+          }
         } else {
           // equal shape_dist_traveled and same coordinates
           noticeContainer.addValidationNotice(
