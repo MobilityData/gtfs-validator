@@ -29,19 +29,23 @@ public class NetworkIdConsistencyValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
+    // Validate the presence of network_id in routes and its specification in either route_network
+    // or network files
     boolean hasNetworkIdField = this.routeTableContainer.hasColumn(GtfsRoute.NETWORK_ID_FIELD_NAME);
-
     if (hasNetworkIdField && !this.routeNetworkTableContainer.isMissingFile()) {
       noticeContainer.addValidationNotice(
-          new ConditionalForbiddenFileNotice(
-              GtfsRoute.FILENAME, GtfsRoute.NETWORK_ID_FIELD_NAME, GtfsRouteNetwork.FILENAME));
+          new RouteNetworksSpecifiedInMoreThanOneFileNotice(
+              GtfsRoute.FILENAME, GtfsRouteNetwork.FILENAME));
     }
     if (!this.networkTableContainer.isMissingFile() && hasNetworkIdField) {
       noticeContainer.addValidationNotice(
-          new ConditionalForbiddenFileNotice(
-              GtfsRoute.FILENAME, GtfsRoute.NETWORK_ID_FIELD_NAME, GtfsNetwork.FILENAME));
+          new RouteNetworksSpecifiedInMoreThanOneFileNotice(
+              GtfsRoute.FILENAME, GtfsNetwork.FILENAME));
     }
-    validateUniqueRouteNetworkAssociation(noticeContainer);
+
+    // Validate the uniqueness of route_id and network_id association
+    if (!this.routeNetworkTableContainer.isMissingFile())
+      validateUniqueRouteNetworkAssociation(noticeContainer);
   }
 
   private void validateUniqueRouteNetworkAssociation(NoticeContainer noticeContainer) {
@@ -55,10 +59,9 @@ public class NetworkIdConsistencyValidator extends FileValidator {
       if (existingRouteNetworkId != null
           && !existingRouteNetworkId.equals(networkId)
           && networkId.length() > 0) {
-        int csvRowNumber =
-            routeNetworkTableContainer.byRouteIdMap().get(routeId).get(0).csvRowNumber();
+        int csvRowNumber = routeNetworkTableContainer.byRouteId(routeId).get().csvRowNumber();
         noticeContainer.addValidationNotice(
-            new RouteNetworkAssociationDuplicateNotice(
+            new DuplicateRouteNetworkAssociationNotice(
                 routeId,
                 GtfsRouteNetwork.FILENAME,
                 csvRowNumber,
@@ -72,25 +75,33 @@ public class NetworkIdConsistencyValidator extends FileValidator {
 
   private Map<String, String> buildRouteNetworkMap(NoticeContainer noticeContainer) {
     Map<String, String> routeNetworkMap = new HashMap<>();
-    for (Map.Entry<String, Collection<GtfsRouteNetwork>> entry :
-        routeNetworkTableContainer.byRouteIdMap().asMap().entrySet()) {
+
+    // Build a map of route_id associations with network_id
+    Map<String, Collection<GtfsRouteNetwork>> byRouteIdMap = new HashMap<>();
+    for (GtfsRouteNetwork routeNetwork : routeNetworkTableContainer.getEntities()) {
+      byRouteIdMap
+          .computeIfAbsent(routeNetwork.routeId(), k -> new ArrayList<>())
+          .add(routeNetwork);
+    }
+
+    // Validate the uniqueness of route_id and network_id association
+    for (Map.Entry<String, Collection<GtfsRouteNetwork>> entry : byRouteIdMap.entrySet()) {
       String routeId = entry.getKey();
       Collection<GtfsRouteNetwork> routeNetworks = entry.getValue();
       List<GtfsRouteNetwork> routeNetworksList = new ArrayList<>(routeNetworks);
       if (routeNetworksList.size() > 1) {
-        for (int i = 1; i < routeNetworksList.size(); ++i) {
-          for (int j = i; j < routeNetworksList.size(); ++j) {
-            if (routeNetworksList.get(i).networkId().equals(routeNetworksList.get(j).networkId())) {
-              noticeContainer.addValidationNotice(
-                  new RouteNetworkAssociationDuplicateNotice(
-                      routeId,
-                      GtfsRouteNetwork.FILENAME,
-                      routeNetworksList.get(i).csvRowNumber(),
-                      routeNetworksList.get(i).networkId(),
-                      GtfsRouteNetwork.FILENAME,
-                      routeNetworksList.get(j).csvRowNumber(),
-                      routeNetworksList.get(j).networkId()));
-            }
+        for (int i = 1; i < routeNetworksList.size() - 1; ++i) {
+          int j = i + 1;
+          if (routeNetworksList.get(i).networkId().equals(routeNetworksList.get(j).networkId())) {
+            noticeContainer.addValidationNotice(
+                new DuplicateRouteNetworkAssociationNotice(
+                    routeId,
+                    GtfsRouteNetwork.FILENAME,
+                    routeNetworksList.get(i).csvRowNumber(),
+                    routeNetworksList.get(i).networkId(),
+                    GtfsRouteNetwork.FILENAME,
+                    routeNetworksList.get(j).csvRowNumber(),
+                    routeNetworksList.get(j).networkId()));
           }
         }
       }
@@ -100,11 +111,12 @@ public class NetworkIdConsistencyValidator extends FileValidator {
   }
 
   /**
-   * Validates the conditional restriction on file presence based on the existence of a specific
-   * field in another file.
+   * Indicates that route network identifiers are specified across multiple files.
    *
-   * <p>This validation rule asserts that the presence of a particular file (referred to as `file2`)
-   * is prohibited if a certain field (`field1`) exists in another specified file (`file1`).
+   * <p>This notice highlights a data integrity issue where route network specifications are
+   * redundantly defined in more than one file. According to specifications, a route network
+   * identifier should be uniquely defined in a single file. Any additional definitions of route
+   * network specifications in other files are considered conditionally forbidden.
    */
   @GtfsValidationNotice(
       severity = ERROR,
@@ -114,26 +126,22 @@ public class NetworkIdConsistencyValidator extends FileValidator {
             GtfsRouteNetworkSchema.class,
             GtfsNetworkSchema.class
           }))
-  static class ConditionalForbiddenFileNotice extends ValidationNotice {
-    /** The name of the file containing `fieldA`. */
+  static class RouteNetworksSpecifiedInMoreThanOneFileNotice extends ValidationNotice {
+    /** The name of the file containing `network_id`. */
     private final String filenameA;
 
-    /** The name of the field which presence conditionally forbids the presence of `filenameB`. */
-    private final String fieldNameA;
-
-    /** The name of the file which presence is conditionally forbidden. */
+    /** The name of the file which presence duplicates route networks specification. */
     private final String filenameB;
 
-    ConditionalForbiddenFileNotice(String filename1, String filedName1, String filename2) {
+    RouteNetworksSpecifiedInMoreThanOneFileNotice(String filename1, String filename2) {
       this.filenameA = filename1;
       this.filenameB = filename2;
-      this.fieldNameA = filedName1;
     }
   }
 
   /** A `route_id` is associated with multiple `network_id`s. */
   @GtfsValidationNotice(severity = ERROR)
-  static class RouteNetworkAssociationDuplicateNotice extends ValidationNotice {
+  static class DuplicateRouteNetworkAssociationNotice extends ValidationNotice {
     /** `route_id` associated with multiple `network_id`s. */
     private final String routeId;
 
@@ -155,7 +163,7 @@ public class NetworkIdConsistencyValidator extends FileValidator {
     /** The `network_id` associated with `routeId` in `filenameB`. */
     private final String networkIdB;
 
-    RouteNetworkAssociationDuplicateNotice(
+    DuplicateRouteNetworkAssociationNotice(
         String routeId,
         String filenameA,
         int csvRowNumberA,

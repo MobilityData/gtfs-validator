@@ -55,12 +55,12 @@ public class NetworkIdConsistencyValidatorTest {
             routeTableContainer, routeNetworkTableContainer, networkTableContainer);
     validator.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices().size() == 1);
-    NetworkIdConsistencyValidator.ConditionalForbiddenFileNotice notice =
-        (NetworkIdConsistencyValidator.ConditionalForbiddenFileNotice)
+    NetworkIdConsistencyValidator.RouteNetworksSpecifiedInMoreThanOneFileNotice notice =
+        (NetworkIdConsistencyValidator.RouteNetworksSpecifiedInMoreThanOneFileNotice)
             noticeContainer.getValidationNotices().get(0);
-    NetworkIdConsistencyValidator.ConditionalForbiddenFileNotice expectedNotice =
-        new NetworkIdConsistencyValidator.ConditionalForbiddenFileNotice(
-            "routes.txt", "network_id", "route_networks.txt");
+    NetworkIdConsistencyValidator.RouteNetworksSpecifiedInMoreThanOneFileNotice expectedNotice =
+        new NetworkIdConsistencyValidator.RouteNetworksSpecifiedInMoreThanOneFileNotice(
+            "routes.txt", "route_networks.txt");
     assertThat(notice.toString().equals(expectedNotice.toString()));
   }
 
@@ -75,12 +75,12 @@ public class NetworkIdConsistencyValidatorTest {
             routeTableContainer, routeNetworkTableContainer, networkTableContainer);
     validator.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices().size() == 1);
-    NetworkIdConsistencyValidator.ConditionalForbiddenFileNotice notice =
-        (NetworkIdConsistencyValidator.ConditionalForbiddenFileNotice)
+    NetworkIdConsistencyValidator.RouteNetworksSpecifiedInMoreThanOneFileNotice notice =
+        (NetworkIdConsistencyValidator.RouteNetworksSpecifiedInMoreThanOneFileNotice)
             noticeContainer.getValidationNotices().get(0);
-    NetworkIdConsistencyValidator.ConditionalForbiddenFileNotice expectedNotice =
-        new NetworkIdConsistencyValidator.ConditionalForbiddenFileNotice(
-            "routes.txt", "network_id", "networks.txt");
+    NetworkIdConsistencyValidator.RouteNetworksSpecifiedInMoreThanOneFileNotice expectedNotice =
+        new NetworkIdConsistencyValidator.RouteNetworksSpecifiedInMoreThanOneFileNotice(
+            "routes.txt", "networks.txt");
     assertThat(notice.toString().equals(expectedNotice.toString()));
   }
 
@@ -97,11 +97,11 @@ public class NetworkIdConsistencyValidatorTest {
 
     validator.validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices().size() == 2);
-    NetworkIdConsistencyValidator.RouteNetworkAssociationDuplicateNotice notice =
-        (NetworkIdConsistencyValidator.RouteNetworkAssociationDuplicateNotice)
+    NetworkIdConsistencyValidator.DuplicateRouteNetworkAssociationNotice notice =
+        (NetworkIdConsistencyValidator.DuplicateRouteNetworkAssociationNotice)
             noticeContainer.getValidationNotices().get(1);
-    NetworkIdConsistencyValidator.RouteNetworkAssociationDuplicateNotice expectedNotice =
-        new NetworkIdConsistencyValidator.RouteNetworkAssociationDuplicateNotice(
+    NetworkIdConsistencyValidator.DuplicateRouteNetworkAssociationNotice expectedNotice =
+        new NetworkIdConsistencyValidator.DuplicateRouteNetworkAssociationNotice(
             "123", "route_networks.txt", 0, "network2", "routes.txt", 0, "network1");
     assertThat(notice.toString().equals(expectedNotice.toString()));
   }
