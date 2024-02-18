@@ -51,32 +51,33 @@ public class TripAndShapeDistanceValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    shapeTable
-        .byShapeIdMap()
+    tripTable
+        .getEntities()
         .forEach(
-            (shapeId, shape) -> {
+            trip -> {
+              String shapeId = trip.shapeId();
+              // Get distance for trip
+              int nbStopTimes = stopTimeTable.byTripId(trip.tripId()).size();
+              if (nbStopTimes == 0) {
+                  return;
+              }
+              double maxStopTimeDist =
+                  stopTimeTable
+                      .byTripId(trip.tripId())
+                      .get(nbStopTimes - 1)
+                      .shapeDistTraveled();
+
+              // Get max shape distance for trip
               double maxShapeDist =
                   shapeTable.byShapeId(shapeId).stream()
                       .mapToDouble(GtfsShape::shapeDistTraveled)
                       .max()
                       .orElse(Double.NEGATIVE_INFINITY);
-
-              tripTable
-                  .byShapeId(shapeId)
-                  .forEach(
-                      trip -> {
-                        double maxStopTimeDist =
-                            stopTimeTable.byTripId(trip.tripId()).stream()
-                                .mapToDouble(GtfsStopTime::shapeDistTraveled)
-                                .max()
-                                .orElse(Double.NEGATIVE_INFINITY);
-
-                        if (maxStopTimeDist > maxShapeDist) {
-                          noticeContainer.addValidationNotice(
-                              new TripDistanceExceedsShapeDistanceNotice(
-                                  trip.tripId(), shapeId, maxStopTimeDist, maxShapeDist));
-                        }
-                      });
+              if (maxStopTimeDist > maxShapeDist) {
+                noticeContainer.addValidationNotice(
+                    new TripDistanceExceedsShapeDistanceNotice(
+                        trip.tripId(), shapeId, maxStopTimeDist, maxShapeDist));
+              }
             });
   }
 
