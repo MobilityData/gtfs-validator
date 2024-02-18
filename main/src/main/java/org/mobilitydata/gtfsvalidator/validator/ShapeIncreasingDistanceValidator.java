@@ -47,6 +47,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
 public class ShapeIncreasingDistanceValidator extends FileValidator {
 
   private final GtfsShapeTableContainer table;
+  private final double distanceThreshold = 1.11;
 
   @Inject
   ShapeIncreasingDistanceValidator(GtfsShapeTableContainer table) {
@@ -74,9 +75,12 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
         if (!(curr.shapePtLon() == prev.shapePtLon() && curr.shapePtLat() == prev.shapePtLat())) {
           double distanceBetweenShapePoints =
               getDistanceMeters(curr.shapePtLatLon(), prev.shapePtLatLon());
-          if (distanceBetweenShapePoints > 1.11) {
+          if (distanceBetweenShapePoints > distanceThreshold) {
             noticeContainer.addValidationNotice(
                 new EqualShapeDistanceDiffCoordinatesNotice(prev, curr));
+          } else {
+            noticeContainer.addValidationNotice(
+                new EqualShapeDistanceDiffCoordinatesWarningNotice(prev, curr));
           }
         } else {
           // equal shape_dist_traveled and same coordinates
@@ -181,7 +185,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
 
   /**
    * Two consecutive points have equal `shape_dist_traveled` and different lat/lon coordinates in
-   * `shapes.txt`.
+   * `shapes.txt` and the distance between the two points is greater than the 1.11m.
    *
    * <p>When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` must increase
    * along a shape. Two consecutive points with equal values for `shape_dist_traveled` and different
@@ -218,6 +222,58 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
     private final double actualDistanceBetweenShapePoints;
 
     EqualShapeDistanceDiffCoordinatesNotice(GtfsShape previous, GtfsShape current) {
+      this.shapeId = current.shapeId();
+      this.csvRowNumber = current.csvRowNumber();
+      this.shapeDistTraveled = current.shapeDistTraveled();
+      this.shapePtSequence = current.shapePtSequence();
+      this.prevCsvRowNumber = previous.csvRowNumber();
+      this.prevShapeDistTraveled = previous.shapeDistTraveled();
+      this.prevShapePtSequence = previous.shapePtSequence();
+      this.actualDistanceBetweenShapePoints =
+          getDistanceMeters(current.shapePtLatLon(), previous.shapePtLatLon());
+    }
+  }
+
+  /**
+   * Two consecutive points have equal `shape_dist_traveled` and different lat/lon coordinates in
+   * `shapes.txt` and the distance between the two points is less than 1.11m.
+   *
+   * <p>When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` must increase
+   * along a shape. Two consecutive points with equal values for `shape_dist_traveled` and different
+   * coordinates indicate an error.
+   */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs({GtfsShapeSchema.class, GtfsStopSchema.class}))
+  static class EqualShapeDistanceDiffCoordinatesWarningNotice extends ValidationNotice {
+
+    /** The id of the faulty shape. */
+    private final String shapeId;
+
+    /** The row number from `shapes.txt`. */
+    private final int csvRowNumber;
+
+    /** The faulty record's `shape_dist_traveled` value. */
+    private final double shapeDistTraveled;
+
+    /** The faulty record's `shapes.shape_pt_sequence`. */
+    private final int shapePtSequence;
+
+    /** The row number from `shapes.txt` of the previous shape point. */
+    private final long prevCsvRowNumber;
+
+    /** The previous shape point's `shape_dist_traveled` value. */
+    private final double prevShapeDistTraveled;
+
+    /** The previous record's `shapes.shape_pt_sequence`. */
+    private final int prevShapePtSequence;
+
+    /**
+     * Actual distance traveled along the shape from the first shape point to the previous shape.
+     */
+    private final double actualDistanceBetweenShapePoints;
+
+    EqualShapeDistanceDiffCoordinatesWarningNotice(GtfsShape previous, GtfsShape current) {
       this.shapeId = current.shapeId();
       this.csvRowNumber = current.csvRowNumber();
       this.shapeDistTraveled = current.shapeDistTraveled();
