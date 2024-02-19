@@ -59,13 +59,10 @@ public class TripAndShapeDistanceValidator extends FileValidator {
               // Get distance for trip
               int nbStopTimes = stopTimeTable.byTripId(trip.tripId()).size();
               if (nbStopTimes == 0) {
-                  return;
+                return;
               }
               double maxStopTimeDist =
-                  stopTimeTable
-                      .byTripId(trip.tripId())
-                      .get(nbStopTimes - 1)
-                      .shapeDistTraveled();
+                  stopTimeTable.byTripId(trip.tripId()).get(nbStopTimes - 1).shapeDistTraveled();
 
               // Get max shape distance for trip
               double maxShapeDist =
