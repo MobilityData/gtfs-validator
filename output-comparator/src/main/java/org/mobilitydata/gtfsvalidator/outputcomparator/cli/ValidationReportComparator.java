@@ -164,7 +164,7 @@ public class ValidationReportComparator {
     if (args.getRunId().isPresent()) {
       b.append(
           String.format(
-              "Download the full acceptance test report [here](%s/%s) (report will disappear after 90 days).\n",
+              "Download the full acceptance test report [here](%s/%s#artifacts) (report will disappear after 90 days).\n",
               "https://github.com/MobilityData/gtfs-validator/actions/runs",
               args.getRunId().get()));
     }

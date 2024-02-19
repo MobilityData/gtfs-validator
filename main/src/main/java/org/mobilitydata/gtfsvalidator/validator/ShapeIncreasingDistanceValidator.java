@@ -41,13 +41,14 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
  *   <li>{@link DecreasingShapeDistanceNotice}
  *   <li>{@link EqualShapeDistanceSameCoordinatesNotice}
  *   <li>{@link EqualShapeDistanceDiffCoordinatesNotice}
+ *   <li>{@link EqualShapeDistanceDiffCoordinatesWarningNotice}
  * </ul>
  */
 @GtfsValidator
 public class ShapeIncreasingDistanceValidator extends FileValidator {
 
   private final GtfsShapeTableContainer table;
-  private final double distanceThreshold = 1.11;
+  private final double DISTANCE_THRESHOLD = 1.11;
 
   @Inject
   ShapeIncreasingDistanceValidator(GtfsShapeTableContainer table) {
@@ -75,7 +76,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
         if (!(curr.shapePtLon() == prev.shapePtLon() && curr.shapePtLat() == prev.shapePtLat())) {
           double distanceBetweenShapePoints =
               getDistanceMeters(curr.shapePtLatLon(), prev.shapePtLatLon());
-          if (distanceBetweenShapePoints > distanceThreshold) {
+          if (distanceBetweenShapePoints >= DISTANCE_THRESHOLD) {
             noticeContainer.addValidationNotice(
                 new EqualShapeDistanceDiffCoordinatesNotice(prev, curr));
           } else if (distanceBetweenShapePoints > 0) {
