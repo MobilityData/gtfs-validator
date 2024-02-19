@@ -78,7 +78,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
           if (distanceBetweenShapePoints > distanceThreshold) {
             noticeContainer.addValidationNotice(
                 new EqualShapeDistanceDiffCoordinatesNotice(prev, curr));
-          } else {
+          } else if (distanceBetweenShapePoints > 0) {
             noticeContainer.addValidationNotice(
                 new EqualShapeDistanceDiffCoordinatesWarningNotice(prev, curr));
           }
