@@ -85,14 +85,16 @@ public class TripAndShapeDistanceValidator extends FileValidator {
               double maxShapeDist = maxShape.shapeDistTraveled();
               double distanceInMeters =
                   getDistanceMeters(maxShape.shapePtLatLon(), stop.stopLatLon());
-              if (distanceInMeters > DISTANCE_THRESHOLD) {
-                noticeContainer.addValidationNotice(
-                    new TripDistanceExceedsShapeDistanceNotice(
-                        trip.tripId(), shapeId, maxStopTimeDist, maxShapeDist, distanceInMeters));
-              } else if (distanceInMeters > 0) {
-                noticeContainer.addValidationNotice(
-                    new TripDistanceExceedsShapeDistanceWarningNotice(
-                        trip.tripId(), shapeId, maxStopTimeDist, maxShapeDist, distanceInMeters));
+              if (maxStopTimeDist > maxShapeDist) {
+                if (distanceInMeters > DISTANCE_THRESHOLD) {
+                  noticeContainer.addValidationNotice(
+                      new TripDistanceExceedsShapeDistanceNotice(
+                          trip.tripId(), shapeId, maxStopTimeDist, maxShapeDist, distanceInMeters));
+                } else if (distanceInMeters > 0) {
+                  noticeContainer.addValidationNotice(
+                      new TripDistanceExceedsShapeDistanceWarningNotice(
+                          trip.tripId(), shapeId, maxStopTimeDist, maxShapeDist, distanceInMeters));
+                }
               }
             });
   }
