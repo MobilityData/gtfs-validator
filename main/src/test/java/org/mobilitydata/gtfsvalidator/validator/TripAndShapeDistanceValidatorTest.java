@@ -29,15 +29,16 @@ public class TripAndShapeDistanceValidatorTest {
     return trips;
   }
 
-  private static List<GtfsShape> createShapeTable(int rows, double shapeDistTraveled) {
+  private static List<GtfsShape> createShapeTable(
+      int rows, double shapeDistTraveled, double lonLat) {
     ArrayList<GtfsShape> shapes = new ArrayList<>();
     for (int i = 0; i < rows; i++) {
       shapes.add(
           new GtfsShape.Builder()
               .setCsvRowNumber(i + 1)
               .setShapeId("s" + i)
-              .setShapePtLat(1.0)
-              .setShapePtLon(1.0)
+              .setShapePtLat(lonLat)
+              .setShapePtLon(lonLat)
               .setShapePtSequence(0)
               .setShapeDistTraveled(shapeDistTraveled + i)
               .build());
@@ -60,12 +61,30 @@ public class TripAndShapeDistanceValidatorTest {
     return stopTimes;
   }
 
+  private static List<GtfsStop> createStopTable(int rows) {
+    ArrayList<GtfsStop> stops = new ArrayList<>();
+    for (int i = 0; i < rows; i++) {
+      stops.add(
+          new GtfsStop.Builder()
+              .setCsvRowNumber(i + 1)
+              .setStopId("st" + i)
+              .setStopLat(0.0)
+              .setStopLon(0.0)
+              .build());
+    }
+    return stops;
+  }
+
   private static List<ValidationNotice> generateNotices(
-      List<GtfsTrip> trips, List<GtfsStopTime> stopTimes, List<GtfsShape> shapes) {
+      List<GtfsTrip> trips,
+      List<GtfsStopTime> stopTimes,
+      List<GtfsShape> shapes,
+      List<GtfsStop> stops) {
     NoticeContainer noticeContainer = new NoticeContainer();
     new TripAndShapeDistanceValidator(
             GtfsTripTableContainer.forEntities(trips, noticeContainer),
             GtfsStopTimeTableContainer.forEntities(stopTimes, noticeContainer),
+            GtfsStopTableContainer.forEntities(stops, noticeContainer),
             GtfsShapeTableContainer.forEntities(shapes, noticeContainer))
         .validate(noticeContainer);
     return noticeContainer.getValidationNotices();
@@ -73,25 +92,38 @@ public class TripAndShapeDistanceValidatorTest {
 
   @Test
   public void testTripDistanceExceedsShapeDistance() {
-    assertThat(
-            generateNotices(
-                createTripTable(1), createStopTimesTable(1, 10.0), createShapeTable(1, 9.0)))
-        .isNotEmpty();
+    List<ValidationNotice> notices =
+        generateNotices(
+            createTripTable(2),
+            createStopTimesTable(1, 10.0),
+            createShapeTable(1, 9.0, 10.0),
+            createStopTable(1));
+    boolean found =
+        notices.stream()
+            .anyMatch(
+                notice ->
+                    notice
+                        instanceof
+                        TripAndShapeDistanceValidator.TripDistanceExceedsShapeDistanceNotice);
+    assertThat(found).isTrue();
   }
 
   @Test
-  public void testValidTripVsShapeDistance1() {
-    assertThat(
-            generateNotices(
-                createTripTable(1), createStopTimesTable(1, 10.0), createShapeTable(1, 10.0)))
-        .isEmpty();
-  }
-
-  @Test
-  public void testValidTripVsShapeDistance2() {
-    assertThat(
-            generateNotices(
-                createTripTable(1), createStopTimesTable(1, 9.0), createShapeTable(1, 10.0)))
-        .isEmpty();
+  public void testTripDistanceExceedsShapeDistanceWarning() {
+    List<ValidationNotice> notices =
+        generateNotices(
+            createTripTable(2),
+            createStopTimesTable(1, 10.0),
+            createShapeTable(1, 9.0, 0.000001),
+            createStopTable(1));
+    boolean found =
+        notices.stream()
+            .anyMatch(
+                notice ->
+                    notice
+                        instanceof
+                        TripAndShapeDistanceValidator
+                            .TripDistanceExceedsShapeDistanceWarningNotice);
+    assertThat(found).isTrue();
   }
 }
