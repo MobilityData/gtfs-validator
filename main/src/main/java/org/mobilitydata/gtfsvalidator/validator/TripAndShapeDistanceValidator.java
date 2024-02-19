@@ -72,7 +72,7 @@ public class TripAndShapeDistanceValidator extends FileValidator {
                   shapeTable.byShapeId(shapeId).stream()
                       .mapToDouble(GtfsShape::shapeDistTraveled)
                       .max()
-                      .orElse(Double.NEGATIVE_INFINITY);
+                      .orElse(Double.POSITIVE_INFINITY);
               if (maxStopTimeDist > maxShapeDist) {
                 noticeContainer.addValidationNotice(
                     new TripDistanceExceedsShapeDistanceNotice(
