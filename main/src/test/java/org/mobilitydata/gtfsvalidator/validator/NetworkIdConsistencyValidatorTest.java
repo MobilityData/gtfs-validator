@@ -60,7 +60,7 @@ public class NetworkIdConsistencyValidatorTest {
             noticeContainer.getValidationNotices().get(0);
     NetworkIdConsistencyValidator.RouteNetworksSpecifiedInMoreThanOneFileNotice expectedNotice =
         new NetworkIdConsistencyValidator.RouteNetworksSpecifiedInMoreThanOneFileNotice(
-            "routes.txt", "route_networks.txt");
+            "routes.txt", "route_networks.txt", "network_id");
     assertThat(notice.toString().equals(expectedNotice.toString()));
   }
 
@@ -80,29 +80,7 @@ public class NetworkIdConsistencyValidatorTest {
             noticeContainer.getValidationNotices().get(0);
     NetworkIdConsistencyValidator.RouteNetworksSpecifiedInMoreThanOneFileNotice expectedNotice =
         new NetworkIdConsistencyValidator.RouteNetworksSpecifiedInMoreThanOneFileNotice(
-            "routes.txt", "networks.txt");
-    assertThat(notice.toString().equals(expectedNotice.toString()));
-  }
-
-  @Test
-  public void validatesUniqueRouteNetworkAssociation() {
-    routeNetworkTableContainer =
-        GtfsRouteNetworkTableContainer.forEntities(
-            ImmutableList.of(
-                new GtfsRouteNetwork.Builder().setRouteId("123").setNetworkId("network2").build()),
-            noticeContainer);
-    NetworkIdConsistencyValidator validator =
-        new NetworkIdConsistencyValidator(
-            routeTableContainer, routeNetworkTableContainer, networkTableContainer);
-
-    validator.validate(noticeContainer);
-    assertThat(noticeContainer.getValidationNotices().size() == 2);
-    NetworkIdConsistencyValidator.DuplicateRouteNetworkAssociationNotice notice =
-        (NetworkIdConsistencyValidator.DuplicateRouteNetworkAssociationNotice)
-            noticeContainer.getValidationNotices().get(1);
-    NetworkIdConsistencyValidator.DuplicateRouteNetworkAssociationNotice expectedNotice =
-        new NetworkIdConsistencyValidator.DuplicateRouteNetworkAssociationNotice(
-            "123", "route_networks.txt", 0, "network2", "routes.txt", 0, "network1");
+            "routes.txt", "networks.txt", "network_id");
     assertThat(notice.toString().equals(expectedNotice.toString()));
   }
 }
