@@ -41,7 +41,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
  *   <li>{@link DecreasingShapeDistanceNotice}
  *   <li>{@link EqualShapeDistanceSameCoordinatesNotice}
  *   <li>{@link EqualShapeDistanceDiffCoordinatesNotice}
- *   <li>{@link EqualShapeDistanceDiffCoordinatesWarningNotice}
+ *   <li>{@link EqualShapeDistanceDiffCoordinatesDistanceBelowThresholdNotice}
  * </ul>
  */
 @GtfsValidator
@@ -81,7 +81,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
                 new EqualShapeDistanceDiffCoordinatesNotice(prev, curr));
           } else if (distanceBetweenShapePoints > 0) {
             noticeContainer.addValidationNotice(
-                new EqualShapeDistanceDiffCoordinatesWarningNotice(prev, curr));
+                new EqualShapeDistanceDiffCoordinatesDistanceBelowThresholdNotice(prev, curr));
           }
         } else {
           // equal shape_dist_traveled and same coordinates
@@ -246,7 +246,8 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
   @GtfsValidationNotice(
       severity = WARNING,
       files = @FileRefs({GtfsShapeSchema.class, GtfsStopSchema.class}))
-  static class EqualShapeDistanceDiffCoordinatesWarningNotice extends ValidationNotice {
+  static class EqualShapeDistanceDiffCoordinatesDistanceBelowThresholdNotice
+      extends ValidationNotice {
 
     /** The id of the faulty shape. */
     private final String shapeId;
@@ -274,7 +275,8 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
      */
     private final double actualDistanceBetweenShapePoints;
 
-    EqualShapeDistanceDiffCoordinatesWarningNotice(GtfsShape previous, GtfsShape current) {
+    EqualShapeDistanceDiffCoordinatesDistanceBelowThresholdNotice(
+        GtfsShape previous, GtfsShape current) {
       this.shapeId = current.shapeId();
       this.csvRowNumber = current.csvRowNumber();
       this.shapeDistTraveled = current.shapeDistTraveled();
