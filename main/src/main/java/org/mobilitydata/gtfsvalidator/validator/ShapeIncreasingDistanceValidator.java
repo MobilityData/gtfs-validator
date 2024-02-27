@@ -218,8 +218,10 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
     /** The previous record's `shapes.shape_pt_sequence`. */
     private final int prevShapePtSequence;
 
-    // Actual distance traveled along the shape from the first shape point to the previous shape
-    /** point. */
+    /**
+     * Actual distance traveled along the shape from the first shape point to the previous shape
+     * point.
+     */
     private final double actualDistanceBetweenShapePoints;
 
     EqualShapeDistanceDiffCoordinatesNotice(GtfsShape previous, GtfsShape current) {
@@ -271,7 +273,8 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
     private final int prevShapePtSequence;
 
     /**
-     * Actual distance traveled along the shape from the first shape point to the previous shape.
+     * Actual distance traveled along the shape from the first shape point to the previous shape
+     * point.
      */
     private final double actualDistanceBetweenShapePoints;
 
