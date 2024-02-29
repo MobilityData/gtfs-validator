@@ -18,29 +18,24 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import javax.inject.Inject;
+
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
-import org.mobilitydata.gtfsvalidator.table.GtfsFareRule;
-import org.mobilitydata.gtfsvalidator.table.GtfsFareRuleSchema;
-import org.mobilitydata.gtfsvalidator.table.GtfsFareRuleTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
-import org.mobilitydata.gtfsvalidator.table.GtfsStop;
-import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
-import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
+import org.mobilitydata.gtfsvalidator.table.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * Checks that all stops and platforms (location_type = 0) have {@code stops.zone_id} assigned.
- * assigned if {@code fare_rules.txt} is provided and at least one of the following fields is
- * provided:
- *
- * <ul>
- *   <li>{@code fare_rules.origin_id}
- *   <li>{@code fare_rules.contains_id}
- *   <li>{@code fare_rules.destination_id}
- * </ul>
+ * If {@code fare_rules.txt} is provided, checks that all stops and platforms (location_type = 0)
+ * have {@code stops.zone_id} defined if the stop is defined as part of a {@code trip_id} in {@code
+ * stop_times.txt} whose {@code route_id} defines an {@code origin_id}, {@code destination_id}, or
+ * {@code contains_id} in {@code fare_rules.txt}.
  *
  * <p>Generated notice: {@link StopWithoutZoneIdNotice}.
  */
@@ -48,13 +43,23 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 public class StopZoneIdValidator extends FileValidator {
 
   private final GtfsStopTableContainer stopTable;
-
   private final GtfsFareRuleTableContainer fareRuleTable;
+  private final GtfsStopTimeTableContainer stopTimeTable;
+  private final GtfsTripTableContainer tripTable;
+  private final GtfsRouteTableContainer routeTable;
 
   @Inject
-  StopZoneIdValidator(GtfsStopTableContainer stopTable, GtfsFareRuleTableContainer fareRuleTable) {
+  StopZoneIdValidator(
+      GtfsStopTableContainer stopTable,
+      GtfsFareRuleTableContainer fareRuleTable,
+      GtfsStopTimeTableContainer stopTimeTable,
+      GtfsTripTableContainer tripTable,
+      GtfsRouteTableContainer routeTable) {
     this.stopTable = stopTable;
     this.fareRuleTable = fareRuleTable;
+    this.stopTimeTable = stopTimeTable;
+    this.tripTable = tripTable;
+    this.routeTable = routeTable;
   }
 
   @Override
@@ -65,12 +70,27 @@ public class StopZoneIdValidator extends FileValidator {
     if (!hasFareZoneStructure(fareRuleTable)) {
       return;
     }
+
+    Multimap<String, GtfsFareRule> routesWithZoneFieldsDefined =
+        Multimaps.filterValues(
+            fareRuleTable.byRouteIdMap(),
+            fareRule ->
+                fareRule.hasOriginId() || fareRule.hasDestinationId() || fareRule.hasContainsId());
     for (GtfsStop stop : stopTable.getEntities()) {
       if (!stop.locationType().equals(GtfsLocationType.STOP)) {
         continue;
       }
-      if (!stop.hasZoneId()) {
-        noticeContainer.addValidationNotice(new StopWithoutZoneIdNotice(stop));
+      if (stop.hasZoneId()) {
+        continue;
+      }
+
+      // check that a stop without zone_id does not have a route_id in a fare_rule with
+      // zone-dependent fields
+      for (GtfsRoute route : getRoutesIncludingStop(stop)) {
+        if (routesWithZoneFieldsDefined.containsKey(route.routeId())) {
+          noticeContainer.addValidationNotice(new StopWithoutZoneIdNotice(stop));
+          break;
+        }
       }
     }
   }
@@ -93,11 +113,43 @@ public class StopZoneIdValidator extends FileValidator {
   }
 
   /**
-   * Stop without value for `stops.zone_id`.
+   * Gets a deduplicated set of all trips which contain a stop. A trip "contains" a stop if an entry
+   * in {@code stop_times.txt} defines the stop and the trip.
+   *
+   * @param stop the {@code GtfsStop} for which to get containing {@code GtfsTrip}s
+   * @return a {@code Set} of {@code GtfsTrip}s containing {@code stop}
+   */
+  private Set<GtfsTrip> getTripsIncludingStop(GtfsStop stop) {
+    Set<GtfsTrip> trips = new HashSet<>();
+    for (GtfsStopTime stopTime : stopTimeTable.byStopId(stop.stopId())) {
+      tripTable.byTripId(stopTime.tripId()).ifPresent(trips::add);
+    }
+    return trips;
+  }
+
+  /**
+   * Gets a deduplicated set of all routes which contain a stop. A route "contains" a stop if an
+   * entry in {@code trips.txt} defines the route and a trip which contains the stop.
+   *
+   * @param stop the {@code GtfsStop} for which to get containing {@code GtfsRoute}s
+   * @return a {@code Set} of {@code GtfsRoute}s containing {@code stop}
+   */
+  private Set<GtfsRoute> getRoutesIncludingStop(GtfsStop stop) {
+    Set<GtfsRoute> routes = new HashSet<>();
+    for (GtfsTrip trip : getTripsIncludingStop(stop)) {
+      routeTable.byRouteId(trip.routeId()).ifPresent(routes::add);
+    }
+    return routes;
+  }
+
+  /**
+   * Stop without value for `stops.zone_id` contained in a route with a zone-dependent fare rule.
    *
    * <p>If `fare_rules.txt` is provided, and `fare_rules.txt` uses at least one column among
    * `origin_id`, `destination_id`, and `contains_id`, then all stops and platforms (location_type =
-   * 0) must have `stops.zone_id` assigned.
+   * 0) must have `stops.zone_id` assigned if they are defined in a trip defined in a route defined
+   * in a fare rule which also defines at least one of `origin_id`, `destination_id`, or
+   * `contains_id`.
    */
   @GtfsValidationNotice(
       severity = ERROR,
