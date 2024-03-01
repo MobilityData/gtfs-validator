@@ -17,19 +17,17 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
-import javax.inject.Inject;
-
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
+import java.util.HashSet;
+import java.util.Set;
+import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.*;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * If {@code fare_rules.txt} is provided, checks that all stops and platforms (location_type = 0)
