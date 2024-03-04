@@ -63,7 +63,7 @@ public abstract class ValidationRunnerConfig {
   // If true, any output json will be pretty-printed.
   public abstract boolean prettyJson();
 
-  // If true, the validator will not validate the latest version.
+  // If true, the validator will not check for a new validator version
   public abstract boolean skipValidatorUpdate();
 
   public static Builder builder() {
