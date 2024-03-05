@@ -4,9 +4,6 @@ const url = 'https://developers.google.com/static/transit/gtfs/examples/sample-f
 const jobId = '8f6be6fb-1fee-41f8-b401-b2b4b552e177-sample';
 
 context('GTFS Validator - Confirm error messaging', () => {
-  beforeEach(() => {
-    cy.visit('/')
-  });
 
   it('Confirm error "Error authorizing upload"', () => {
     // Setup intercept aliases
@@ -16,6 +13,8 @@ context('GTFS Validator - Confirm error messaging', () => {
       { forceNetworkError: true }
     )
     .as('createJob');
+
+    cy.visit('/')
 
     // Upload .zip file
     cy.get('input#file')
@@ -62,6 +61,8 @@ context('GTFS Validator - Confirm error messaging', () => {
       }
     )
     .as('createJob');
+
+    cy.visit('/')
 
     // Upload .zip file
     cy.get('input#file')
@@ -110,6 +111,8 @@ context('GTFS Validator - Confirm error messaging', () => {
       )
       .as('awaitJob');
 
+    cy.visit('/')
+
     // Enter URL to .zip file
     cy.get('input#url').type(url);
 
@@ -139,6 +142,8 @@ context('GTFS Validator - Confirm error messaging', () => {
       )
       .as('getDocMarkdown');
 
+    cy.visit('/')
+    
     // Click "See Documentation" button
     cy.get('a:contains("See Documentation")').click();
 

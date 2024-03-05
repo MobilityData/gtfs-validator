@@ -6,10 +6,6 @@ const jobId = '8f6be6fb-1fee-41f8-b401-b2b4b552e177-sample';
 context('GTFS Validator - Core Workflow', () => {
   let numReportCalls = 0;
 
-  beforeEach(() => {
-    cy.visit('/')
-  });
-
   it('Validate GTFS .zip file', () => {
     // Setup intercept aliases
     cy.intercept(
@@ -61,6 +57,8 @@ context('GTFS Validator - Core Workflow', () => {
         numReportCalls++;
       });
 
+    cy.visit('/')
+    
     // Enter URL to .zip file
     cy.get('input#url')
       .type(url);

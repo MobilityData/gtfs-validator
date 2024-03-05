@@ -27,3 +27,15 @@ jobs:
           start: npx vite --host 127.0.0.1 --port 5173
           wait-on: "npx wait-on --timeout 120000 http://127.0.0.1:5173"
           working-directory: web/client
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: web/client/cypress/screenshots
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cypress-videos
+          path: web/client/cypress/videos
