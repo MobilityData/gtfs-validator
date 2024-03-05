@@ -39,7 +39,7 @@ public class TripAndShapeDistanceValidator extends FileValidator {
   private final GtfsStopTimeTableContainer stopTimeTable;
   private final GtfsStopTableContainer stopTable;
   private final GtfsShapeTableContainer shapeTable;
-  private final double DISTANCE_THRESHOLD = 1.11; // distance in meters
+  private final double DISTANCE_THRESHOLD = 11.1; // distance in meters
 
   @Inject
   TripAndShapeDistanceValidator(
@@ -92,7 +92,7 @@ public class TripAndShapeDistanceValidator extends FileValidator {
                           trip.tripId(), shapeId, maxStopTimeDist, maxShapeDist, distanceInMeters));
                 } else if (distanceInMeters > 0) {
                   noticeContainer.addValidationNotice(
-                      new TripDistanceExceedsShapeDistanceWarningNotice(
+                      new TripDistanceExceedsShapeDistanceBellowThresholdNotice(
                           trip.tripId(), shapeId, maxStopTimeDist, maxShapeDist, distanceInMeters));
                 }
               }
@@ -102,7 +102,7 @@ public class TripAndShapeDistanceValidator extends FileValidator {
   /**
    * The distance traveled by a trip should be less or equal to the max length of its shape.
    *
-   * <p>The distance is greater or equal to the 1.11m threshold.
+   * <p>The distance is greater or equal to the 11.1m threshold.
    */
   @GtfsValidationNotice(
       severity = ERROR,
@@ -141,12 +141,12 @@ public class TripAndShapeDistanceValidator extends FileValidator {
   /**
    * The distance traveled by a trip should be less or equal to the max length of its shape.
    *
-   * <p>The distance is less than the 1.11m threshold.
+   * <p>The distance is less than the 11.1m threshold.
    */
   @GtfsValidationNotice(
       severity = WARNING,
       files = @FileRefs({GtfsTrip.class, GtfsStopTime.class, GtfsShape.class}))
-  static class TripDistanceExceedsShapeDistanceWarningNotice extends ValidationNotice {
+  static class TripDistanceExceedsShapeDistanceBellowThresholdNotice extends ValidationNotice {
 
     /** The faulty record's trip id. */
     private final String tripId;
@@ -163,7 +163,7 @@ public class TripAndShapeDistanceValidator extends FileValidator {
     /** The distance in meters between the shape and the stop. */
     private final double distance;
 
-    TripDistanceExceedsShapeDistanceWarningNotice(
+    TripDistanceExceedsShapeDistanceBellowThresholdNotice(
         String tripId,
         String shapeId,
         double maxTripDistanceTraveled,

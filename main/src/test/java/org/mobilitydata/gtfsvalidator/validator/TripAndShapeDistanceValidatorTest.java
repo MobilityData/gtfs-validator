@@ -122,8 +122,7 @@ public class TripAndShapeDistanceValidatorTest {
                 notice ->
                     notice
                         instanceof
-                        TripAndShapeDistanceValidator
-                            .TripDistanceExceedsShapeDistanceWarningNotice);
+                            TripAndShapeDistanceValidator.TripDistanceExceedsShapeDistanceBellowThresholdNotice);
     assertThat(found).isTrue();
   }
 }
