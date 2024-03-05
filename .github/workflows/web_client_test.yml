@@ -24,8 +24,8 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          start: npx vite --host 127.0.0.1 --port 5173
-          wait-on: "npx wait-on --timeout 120000 http://127.0.0.1:5173"
+          start: npx vite --config vite.config-cypress.js
+          wait-on: "npx wait-on --timeout 2000 http://127.0.0.1:5173"
           working-directory: web/client
 
       - uses: actions/upload-artifact@v4
