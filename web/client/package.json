@@ -10,7 +10,9 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
     "lint": "prettier --plugin-search-dir . --check . && eslint .",
-    "format": "prettier --plugin-search-dir . --write ."
+    "format": "prettier --plugin-search-dir . --write .",
+    "cypress:run": "cypress run",
+    "cypress:open": "cypress open"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "^1.0.0",
@@ -18,7 +20,7 @@
     "@types/lodash": "^4.14.194",
     "@types/marked": "^4.0.8",
     "autoprefixer": "^10.4.13",
-    "cypress": "^12.10.0",
+    "cypress": "^13.6.6",
     "eslint": "^8.28.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-svelte3": "^4.0.0",
