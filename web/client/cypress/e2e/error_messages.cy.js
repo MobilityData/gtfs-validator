@@ -133,10 +133,14 @@ context('GTFS Validator - Confirm error messaging', () => {
   it('Confirm error "HTTP Error: 404"', () => {
     // Setup intercept aliases
     cy.intercept(
-        '/rules.json',
+        'rules.json',
         (req) => {
           req.reply({
-            statusCode: 404
+            statusCode: 404,
+            headers: {
+              "access-control-allow-origin": '*',
+              "Access-Control-Allow-Credentials": "true",
+            },            
           });
         }
       )
