@@ -17,11 +17,8 @@ import org.mockito.Captor;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-
 @ActiveProfiles("test")
 @SpringBootTest
-@ContextConfiguration
 public class ValidationHandlerTest {
   @MockBean private ValidationRunner runner;
   @Captor ArgumentCaptor<ValidationRunnerConfig> configCaptor;
