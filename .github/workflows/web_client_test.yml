@@ -8,14 +8,22 @@ on:
 
 jobs:
   cypress-run:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: web/client
 
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
           start: npx vite --host 127.0.0.1 --port 5173
           wait-on: "npx wait-on --timeout 120000 http://127.0.0.1:5173"
-          working-directory: ./web/client
+          working-directory: web/client
