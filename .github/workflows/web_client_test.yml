@@ -6,6 +6,9 @@ on:
       paths:
         - 'web/client/**'
 
+env:
+  NODE_VERSION: "20"
+
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
@@ -15,7 +18,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install dependencies
         run: npm ci

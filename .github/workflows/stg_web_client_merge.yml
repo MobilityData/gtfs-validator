@@ -5,6 +5,9 @@ on:
     branches:
       - master
 
+env:
+  NODE_VERSION: "20"
+
 jobs:
 
   web_cd:
@@ -34,7 +37,7 @@ jobs:
       # for npm
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: ${{ env.NODE_VERSION }}
 
       - uses: google-github-actions/auth@v1
         with:
