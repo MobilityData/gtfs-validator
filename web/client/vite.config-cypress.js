@@ -5,7 +5,7 @@ const config = {
   plugins: [sveltekit()],
   optimizeDeps: {
     noDiscovery: true,
-    include: [],
+    include: ['lodash', 'marked', 'svelte'],
   },
   server: {
     expose: true,

@@ -7,6 +7,9 @@ const config = {
     expose: true,
     port: 5173,
   },
+  optimizeDeps: {
+    include: ['lodash', 'marked', 'svelte'],
+  },
 };
 
 export default config;

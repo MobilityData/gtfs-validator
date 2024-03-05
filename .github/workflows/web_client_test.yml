@@ -24,7 +24,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          start: npx vite --config vite.config-cypress.js
+          start: npn run start:cypress:config
           wait-on: "npx wait-on --timeout 2000 http://127.0.0.1:5173"
           working-directory: web/client
 
