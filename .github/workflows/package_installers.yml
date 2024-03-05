@@ -30,8 +30,8 @@ jobs:
   validate_gradle_wrapper:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: gradle/wrapper-validation-action@v1
+      - uses: actions/checkout@v4
+      - uses: gradle/wrapper-validation-action@v2
 
   build_push:
     needs: [ validate_gradle_wrapper ]
@@ -43,14 +43,17 @@ jobs:
       matrix:
         os: [ macos-latest, windows-latest, ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           # We need to download all tags so that the axion-release-plugin
           # can resolve the most recent version tag.
           fetch-depth: 0
 
+      - name: Get short commit hash
+        run: echo "SHORT_SHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
+
       - name: Set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           # We need a recent version of Java with jpackage included.
           java-version: '17.0.7'
@@ -74,7 +77,7 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "${MACOS_CI_KEYCHAIN_PWD}" build.keychain
 
       - name: "Package GUI app installer with Gradle"
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@v3
         with:
           arguments: |
             jpackage
@@ -133,8 +136,21 @@ jobs:
            --app-image "${{ env.MACOS_TARGET_PATH }}" \
            --dest ${{ env.MACOS_TARGET_DEST_PATH }}
 
+      - name: Package cli app jar with Gradle
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          arguments: shadowJar
+
+      - name: Persist cli app jar
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: "gtfs-validator-cli-${{ env.SHORT_SHA }}.zip"
+          path: cli/build/libs/gtfs-validator-*-cli.jar
+
       - name: "Upload Installer"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Installer - ${{matrix.os}}
           path: |

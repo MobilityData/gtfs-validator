@@ -51,9 +51,9 @@ public class VersionResolver {
    * Attempts to resolve the application {@link VersionInfo} within the specified timeout. If the
    * version info can't be resolved in the specified timeout, an empty info will be returned.
    */
-  public VersionInfo getVersionInfoWithTimeout(Duration timeout) {
+  public VersionInfo getVersionInfoWithTimeout(Duration timeout, boolean skipValidatorUpdate) {
     try {
-      resolve();
+      resolve(skipValidatorUpdate);
       return resolvedVersionInfo.get(timeout.toMillis(), TimeUnit.MILLISECONDS);
     } catch (Throwable ex) {
       return VersionInfo.empty();
@@ -65,7 +65,7 @@ public class VersionResolver {
    * becomes available.
    */
   public void addCallback(Consumer<VersionInfo> callback) {
-    resolve();
+    resolve(false);
     Futures.addCallback(
         resolvedVersionInfo,
         new FutureCallback<>() {
@@ -83,7 +83,7 @@ public class VersionResolver {
   }
 
   /** Starts version resolution on a background thread. */
-  public synchronized void resolve() {
+  public synchronized void resolve(boolean skipValidatorUpdate) {
     if (resolutionStarted) {
       return;
     }
@@ -93,7 +93,10 @@ public class VersionResolver {
         () -> {
           try {
             Optional<String> currentVersion = resolveCurrentVersion();
-            Optional<String> latestReleaseVersion = resolveLatestReleaseVersion(currentVersion);
+            Optional<String> latestReleaseVersion = Optional.empty();
+            if (!skipValidatorUpdate) {
+              latestReleaseVersion = resolveLatestReleaseVersion(currentVersion);
+            }
             VersionInfo info = VersionInfo.create(currentVersion, latestReleaseVersion);
             resolvedVersionInfo.set(info);
             return info;
