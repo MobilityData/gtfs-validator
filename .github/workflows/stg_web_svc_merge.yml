@@ -3,7 +3,7 @@ name: Web service staging CD
 on:
   push:
     branches:
-      - 1651-web-validator-retries-with-bad-zip-file-2
+      - master
 
 jobs:
   web_cd:
