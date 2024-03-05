@@ -1,27 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
-            </pattern>
-        </encoder>
-    </appender>
-    <appender name="CONSOLE_JSON" class="ch.qos.logback.core.ConsoleAppender">
-       <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-            <layout class="com.google.cloud.spring.logging.StackdriverJsonLayout">
-                <includeTraceId>true</includeTraceId>
-                <includeSpanId>true</includeSpanId>
-                <includeLevel>true</includeLevel>
-                <includeThreadName>true</includeThreadName>
-                <includeMDC>true</includeMDC>
-                <includeLoggerName>true</includeLoggerName>
-            </layout>
-         </encoder>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
-       </appender>
+    <springProfile name="local">
+        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
+        <root level="INFO">
+            <appender-ref ref="STDOUT" />
+        </root>
+    </springProfile>
 
-    <root level="INFO">
-        <appender-ref ref="STDOUT" />
-        <appender-ref ref="CONSOLE_JSON" />
-    </root>
+    <springProfile name="cloud">
+        <appender name="CONSOLE_JSON" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+                <layout class="com.google.cloud.spring.logging.StackdriverJsonLayout">
+                    <includeTraceId>true</includeTraceId>
+                    <includeSpanId>true</includeSpanId>
+                    <includeLevel>true</includeLevel>
+                    <includeThreadName>true</includeThreadName>
+                    <includeMDC>true</includeMDC>
+                    <includeLoggerName>true</includeLoggerName>
+                </layout>
+            </encoder>
+        </appender>
+        <root level="INFO">
+            <appender-ref ref="CONSOLE_JSON" />
+        </root>
+    </springProfile>
 </configuration>
