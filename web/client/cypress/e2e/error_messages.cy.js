@@ -143,12 +143,11 @@ context('GTFS Validator - Confirm error messaging', () => {
       .as('getDocMarkdown');
 
     cy.visit('/')
-    
+
     // Click "See Documentation" button
     cy.get('a:contains("See Documentation")').click();
-
-    // Wait for response
-    cy.wait('@getDocMarkdown');
+    
+    cy.location('pathname', {timeout: 60000}).should('include', '/rules.html');
 
     // Confirm error content
     cy.get('.container .markdown')
