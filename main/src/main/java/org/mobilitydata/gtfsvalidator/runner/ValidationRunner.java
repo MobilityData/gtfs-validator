@@ -72,7 +72,9 @@ public class ValidationRunner {
   }
 
   public Status run(ValidationRunnerConfig config) {
-    VersionInfo versionInfo = versionResolver.getVersionInfoWithTimeout(Duration.ofSeconds(5));
+    VersionInfo versionInfo =
+        versionResolver.getVersionInfoWithTimeout(
+            Duration.ofSeconds(5), config.skipValidatorUpdate());
     logger.atInfo().log("VersionInfo: %s", versionInfo);
     if (versionInfo.updateAvailable()) {
       logger.atInfo().log("A new version of the validator is available!");
