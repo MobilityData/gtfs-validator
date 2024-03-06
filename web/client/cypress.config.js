@@ -1,5 +1,5 @@
 import { defineConfig } from "cypress";
-
+// Base URL, API root and reports are set to 127.0.0.1 instead of localhost to be able to run cypress on GitHub actions.
 export default defineConfig({
   watchForFileChanges: false,
   defaultCommandTimeout: 10000,

@@ -48,4 +48,27 @@ npm run build
 gcloud storage cp --recursive ./build/* gs://gtfs-validator-web/
 ```
 
+# Component and E2E tests
+
+Component and E2E tests are executed with [Cypress](https://docs.cypress.io/). Cypress tests are located in the _cypress_ folder.
+
+Steps to run cypress tests locally:
+ - Open a terminal and start the web application with Cypress profile
+ ```
+ npm run start:cypress:config
+ ```
+ - In another terminal, run cypress headless cypress or cypress dashboard:
+ headless:
+ ```
+npm run cypress:run
+ ```
+dashboard:
+ ```
+npm run cypress:open
+ ```
+
+## Cypress feedback on GitHub actions
+
+Cypress is configured to capture videos of the test executions and get screenshots(on error). To debug Cypress fails on the pipeline, check the Cypress GitHub workflow artifacts for videos and screenshots.
+
 *This project is powered by [`SvelteKit`](https://kit.svelte.dev/).*
