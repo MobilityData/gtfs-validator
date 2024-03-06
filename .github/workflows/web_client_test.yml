@@ -6,14 +6,40 @@ on:
       paths:
         - 'web/client/**'
 
+env:
+  NODE_VERSION: "20"
+
 jobs:
   cypress-run:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+    name: Cypress e2e tests
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: web/client
 
       - name: Cypress run
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v6
         with:
-          working-directory: ./web/client
+          start: npm run start:cypress:config
+          wait-on: "npx wait-on --timeout 2000 http://127.0.0.1:5173"
+          working-directory: web/client
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: web/client/cypress/screenshots
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cypress-videos
+          path: web/client/cypress/videos
