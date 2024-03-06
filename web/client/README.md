@@ -1,5 +1,9 @@
 # GTFS Web Validator Client
 
+## Node version
+
+Node version: 20+
+
 ## Developing
 
 Once you've created a project and installed dependencies with `npm install`, start a development server:
