@@ -18,6 +18,8 @@ package org.mobilitydata.gtfsvalidator.web.service.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import io.sentry.Sentry;
 import java.io.*;
 import java.net.URL;
@@ -108,12 +110,13 @@ public class ValidationController {
 
       // upload the extracted files and the validation results from outputPath to GCS
       storageHelper.uploadFilesToStorage(jobId, outputPath);
-
+      new ExecutionResult("success", "").writeToFile();
       return new ResponseEntity(HttpStatus.OK);
     } catch (Exception exc) {
       logger.error("Error", exc);
       Sentry.captureException(exc);
-      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error", exc);
+      new ExecutionResult("error", exc.getMessage()).writeToFile();
+      return new ResponseEntity(HttpStatus.OK);
     } finally {
       // delete the temp file and directory
       if (tempFile != null) {
@@ -121,6 +124,27 @@ public class ValidationController {
       }
       if (outputPath != null) {
         outputPath.toFile().delete();
+      }
+    }
+  }
+
+  class ExecutionResult {
+    private String status;
+    private String error;
+
+    // Constructor
+    public ExecutionResult(String status, String error) {
+      this.status = status;
+      this.error = error;
+    }
+
+    public void writeToFile() {
+      Gson gson = new GsonBuilder().setPrettyPrinting().create();
+      try (FileWriter fileWriter = new FileWriter("execution_result.json")) {
+        gson.toJson(this, fileWriter);
+        System.out.println("JSON file created successfully.");
+      } catch (IOException e) {
+        e.printStackTrace();
       }
     }
   }
