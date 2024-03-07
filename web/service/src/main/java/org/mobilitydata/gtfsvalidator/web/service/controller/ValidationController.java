@@ -23,6 +23,8 @@ import com.google.gson.GsonBuilder;
 import io.sentry.Sentry;
 import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import org.mobilitydata.gtfsvalidator.util.VersionResolver;
@@ -110,12 +112,12 @@ public class ValidationController {
 
       // upload the extracted files and the validation results from outputPath to GCS
       storageHelper.uploadFilesToStorage(jobId, outputPath);
-      new ExecutionResult("success", "").writeToFile();
+      new ExecutionResult("success", "").writeToFile(outputPath);
       return new ResponseEntity(HttpStatus.OK);
     } catch (Exception exc) {
       logger.error("Error", exc);
       Sentry.captureException(exc);
-      new ExecutionResult("error", exc.getMessage()).writeToFile();
+      new ExecutionResult("error", exc.getMessage()).writeToFile(outputPath);
       return new ResponseEntity(HttpStatus.OK);
     } finally {
       // delete the temp file and directory
@@ -138,11 +140,13 @@ public class ValidationController {
       this.error = error;
     }
 
-    public void writeToFile() {
+    public void writeToFile(Path outputPath) {
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
-      try (FileWriter fileWriter = new FileWriter("execution_result.json")) {
-        gson.toJson(this, fileWriter);
-        System.out.println("JSON file created successfully.");
+
+      try {
+        Files.write(
+            outputPath.resolve("execution_result.json"),
+            gson.toJson(this).getBytes(StandardCharsets.UTF_8));
       } catch (IOException e) {
         e.printStackTrace();
       }
