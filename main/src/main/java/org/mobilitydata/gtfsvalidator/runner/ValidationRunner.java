@@ -269,7 +269,7 @@ public class ValidationRunner {
       }
     }
     ZonedDateTime now = ZonedDateTime.now();
-    String date = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd 'at' HH:mm:ss z"));
+    String date = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX"));
     boolean is_different_date = !now.toLocalDate().equals(config.dateForValidation());
 
     Gson gson = createGson(config.prettyJson());
