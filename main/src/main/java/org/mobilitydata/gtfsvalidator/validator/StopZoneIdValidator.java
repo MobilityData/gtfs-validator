@@ -15,7 +15,7 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
-import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.INFO;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
@@ -150,7 +150,7 @@ public class StopZoneIdValidator extends FileValidator {
    * `contains_id`.
    */
   @GtfsValidationNotice(
-      severity = ERROR,
+      severity = INFO,
       files = @FileRefs({GtfsStopSchema.class, GtfsFareRuleSchema.class}))
   static class StopWithoutZoneIdNotice extends ValidationNotice {
 
