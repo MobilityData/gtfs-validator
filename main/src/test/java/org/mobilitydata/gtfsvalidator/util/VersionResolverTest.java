@@ -43,7 +43,7 @@ public class VersionResolverTest {
     mockStreamHandler.setContent("{\"version\":\"10.0.5\"}");
 
     VersionResolver checker = new VersionResolver(ApplicationType.CLI);
-    VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT);
+    VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT, false);
 
     assertThat(versionInfo.latestReleaseVersion()).hasValue("10.0.5");
   }
@@ -53,7 +53,7 @@ public class VersionResolverTest {
     mockStreamHandler.setContent("Page not found");
 
     VersionResolver checker = new VersionResolver(ApplicationType.CLI);
-    VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT);
+    VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT, false);
 
     assertThat(versionInfo.latestReleaseVersion()).isEmpty();
   }
@@ -67,7 +67,7 @@ public class VersionResolverTest {
     mockStreamHandler.setContent("{\"version\":\"10.0.5\"}");
 
     VersionResolver checker = new VersionResolver(ApplicationType.WEB);
-    VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT);
+    VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT, false);
 
     assertThat(mockStreamHandler.url).isNotNull();
     assertThat(mockStreamHandler.url.getQuery())
@@ -81,7 +81,7 @@ public class VersionResolverTest {
     assertThat(expectedVersion).isNotEmpty();
 
     VersionResolver checker = new VersionResolver(ApplicationType.CLI);
-    VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT);
+    VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT, false);
 
     assertThat(versionInfo.currentVersion()).hasValue(expectedVersion);
   }
