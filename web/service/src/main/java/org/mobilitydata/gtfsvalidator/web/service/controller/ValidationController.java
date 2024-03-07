@@ -45,6 +45,8 @@ public class ValidationController {
 
   private final Logger logger = LoggerFactory.getLogger(ValidationController.class);
 
+  private static String executionResultFile = "execution_result.json";
+
   @Autowired private StorageHelper storageHelper;
   @Autowired private ValidationHandler validationHandler;
 
@@ -89,6 +91,7 @@ public class ValidationController {
       @RequestBody GoogleCloudPubsubMessage googleCloudPubsubMessage) {
     File tempFile = null;
     Path outputPath = null;
+    String jobId = null;
     try {
       var message = googleCloudPubsubMessage.getMessage();
       if (message == null) {
@@ -97,28 +100,38 @@ public class ValidationController {
       }
 
       ValidationJobMetaData jobData = getFeedFileMetaData(message);
-      var jobId = jobData.getJobId();
+      jobId = jobData.getJobId();
+      outputPath = storageHelper.createOutputFolderForJob(jobId);
       var fileName = jobData.getFileName();
 
       var countryCode = storageHelper.getJobMetadata(jobId).getCountryCode();
 
       // copy the file from GCS to a temp directory
       tempFile = storageHelper.downloadFeedFileFromStorage(jobId, fileName);
-      outputPath = storageHelper.createOutputFolderForJob(jobId);
 
       // extracts feed files from zip to temp output directory, validates, and returns
       // the path to the output directory
       validationHandler.validateFeed(tempFile, outputPath, countryCode);
 
+      logger.info("Validation successful. Writing " + executionResultFile + " file");
+      new ExecutionResult("success", "").writeToFile(outputPath);
       // upload the extracted files and the validation results from outputPath to GCS
       storageHelper.uploadFilesToStorage(jobId, outputPath);
-      new ExecutionResult("success", "").writeToFile(outputPath);
+
       return new ResponseEntity(HttpStatus.OK);
     } catch (Exception exc) {
       logger.error("Error", exc);
       Sentry.captureException(exc);
+      logger.info("Validation failed. Writing " + executionResultFile + " file");
       new ExecutionResult("error", exc.getMessage()).writeToFile(outputPath);
-      return new ResponseEntity(HttpStatus.OK);
+      try {
+        // There was a failure but we still try to upload the execution_result file.
+        storageHelper.uploadFilesToStorage(jobId, outputPath);
+      } catch (IOException e) {
+        logger.error("Error: Could not upload to file storage", e);
+      }
+      return ResponseEntity.ok(
+          "These was an error during validation. Details in " + executionResultFile);
     } finally {
       // delete the temp file and directory
       if (tempFile != null) {
@@ -141,13 +154,19 @@ public class ValidationController {
     }
 
     public void writeToFile(Path outputPath) {
+      if (outputPath == null) {
+        logger.error("Error: outputPath is null, cannot write execution result file");
+        return;
+      }
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
+      Path executionResultPath = outputPath.resolve(executionResultFile);
       try {
-        Files.write(
-            outputPath.resolve("execution_result.json"),
-            gson.toJson(this).getBytes(StandardCharsets.UTF_8));
+        logger.info("Writing executionResult file to " + executionResultFile);
+        Files.write(executionResultPath, gson.toJson(this).getBytes(StandardCharsets.UTF_8));
+        logger.info(executionResultFile + " file written successfully");
       } catch (IOException e) {
+        logger.error("Error writing to file " + executionResultFile);
         e.printStackTrace();
       }
     }
