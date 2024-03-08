@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - 1688-create-execution_resultjson-file-for-web-validator-jobs
   workflow_dispatch:
 
 env:
