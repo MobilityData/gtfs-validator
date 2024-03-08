@@ -340,21 +340,68 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
    *
    * <p>The speed threshold depends on route type:
    *
-   * <pre>
-   * | Route type | Description | Threshold, km/h |
-   * |------------|-------------|-----------------|
-   * | 0          | Light rail  | 100             |
-   * | 1          | Subway      | 150             |
-   * | 2          | Rail        | 500             |
-   * | 3          | Bus         | 150             |
-   * | 4          | Ferry       |  80             |
-   * | 5          | Cable tram  |  30             |
-   * | 6          | Aerial lift |  50             |
-   * | 7          | Funicular   |  50             |
-   * | 11         | Trolleybus  | 150             |
-   * | 12         | Monorail    | 150             |
-   * | -          | Unknown     | 200             |
-   * </pre>
+   * <table style="width: auto; table-layout: auto;">
+   *      <tr>
+   *        <th>Route type</th>
+   *        <th>Description</th>
+   *        <th>Threshold, km/h</th>
+   *      </tr>
+   *      <tr>
+   *        <td>0</td>
+   *        <td>Light rail</td>
+   *        <td>100</td>
+   *      </tr>
+   *      <tr>
+   *        <td>1</td>
+   *        <td>Subway</td>
+   *        <td>150</td>
+   *      </tr>
+   *      <tr>
+   *        <td>2</td>
+   *        <td>Rail</td>
+   *        <td>500</td>
+   *      </tr>
+   *      <tr>
+   *        <td>3</td>
+   *        <td>Bus</td>
+   *        <td>150</td>
+   *      </tr>
+   *      <tr>
+   *        <td>4</td>
+   *        <td>Ferry</td>
+   *        <td>80</td>
+   *      </tr>
+   *      <tr>
+   *        <td>5</td>
+   *        <td>Cable tram</td>
+   *        <td>30</td>
+   *      </tr>
+   *      <tr>
+   *        <td>6</td>
+   *        <td>Aerial lift</td>
+   *        <td>50</td>
+   *      </tr>
+   *      <tr>
+   *        <td>7</td>
+   *        <td>Funicular</td>
+   *        <td>50</td>
+   *      </tr>
+   *      <tr>
+   *        <td>11</td>
+   *        <td>Trolleybus</td>
+   *        <td>150</td>
+   *      </tr>
+   *      <tr>
+   *        <td>12</td>
+   *        <td>Monorail</td>
+   *        <td>150</td>
+   *      </tr>
+   *      <tr>
+   *        <td>-</td>
+   *        <td>Unknown</td>
+   *        <td>200</td>
+   *      </tr>
+   *    </table>
    */
   @GtfsValidationNotice(
       severity = WARNING,

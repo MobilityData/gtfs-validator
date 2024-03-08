@@ -1,18 +1,20 @@
 /// <reference types="cypress" />
 
+const url = 'https://developers.google.com/static/transit/gtfs/examples/sample-feed.zip';
+const jobId = '8f6be6fb-1fee-41f8-b401-b2b4b552e177-sample';
+
 context('GTFS Validator - Confirm error messaging', () => {
-  beforeEach(() => {
-    cy.visit('https://gtfs-validator.mobilitydata.org/')
-  });
 
   it('Confirm error "Error authorizing upload"', () => {
     // Setup intercept aliases
     cy.intercept(
       'POST',
-      'https://*/create-job',
+      `${Cypress.env("PUBLIC_CLIENT_API_ROOT")}/create-job`,
       { forceNetworkError: true }
     )
     .as('createJob');
+
+    cy.visit('/')
 
     // Upload .zip file
     cy.get('input#file')
@@ -35,10 +37,32 @@ context('GTFS Validator - Confirm error messaging', () => {
     // Setup intercept aliases
     cy.intercept(
       'PUT',
-      'https://storage.googleapis.com/gtfs-validator-user-uploads/*/gtfs-job.zip?*',
+      `https://storage.googleapis.com/stg-validator-user-uploads/${jobId}/gtfs-job.zip?X-Goog-Algorithm=GOOG4-RSA-SHA256`,
       { forceNetworkError: true }
     )
     .as('putFile');
+
+    cy.intercept(
+      'POST',
+      `${Cypress.env("PUBLIC_CLIENT_API_ROOT")}/create-job`,
+      (req) => {
+        req.reply({
+          statusCode: 200,
+          statusMessage: "OK",
+          headers: {
+            "access-control-allow-origin": '*',
+            "Access-Control-Allow-Credentials": "true",
+          },
+          body: {
+            jobId: jobId,
+            url: `https://storage.googleapis.com/stg-validator-user-uploads/${jobId}/gtfs-job.zip?X-Goog-Algorithm=GOOG4-RSA-SHA256`
+          }
+        });
+      }
+    )
+    .as('createJob');
+
+    cy.visit('/')
 
     // Upload .zip file
     cy.get('input#file')
@@ -46,6 +70,8 @@ context('GTFS Validator - Confirm error messaging', () => {
 
     // Submit
     cy.get('button[type=submit]').click();
+
+    cy.wait('@createJob').its('response.statusCode').should('equal', 200);
 
     // Wait for response error
     cy.wait('@putFile', { timeout: 10000 });
@@ -57,31 +83,35 @@ context('GTFS Validator - Confirm error messaging', () => {
   });
 
   it('Confirm error "Error processing report"', () => {
-    const url = 'https://developers.google.com/static/transit/gtfs/examples/sample-feed.zip';
-    const jobId = '8f6be6fb-1fee-41f8-b401-b2b4b552e177';
-
     // Setup intercept aliases
     cy.intercept(
-        'POST',
-        'https://*/create-job',
-        (req) => {
-          req.reply({
-            statusCode: 200,
-            statusMessage: "OK",
-            body: {
-              jobId: jobId
-            }
-          });
-        }
-      )
-      .as('createJob');
+      'POST',
+      `${Cypress.env("PUBLIC_CLIENT_API_ROOT")}/create-job`,
+      (req) => {
+        req.reply({
+          statusCode: 200,
+          statusMessage: "OK",
+          headers: {
+            "access-control-allow-origin": '*',
+            "Access-Control-Allow-Credentials": "true",
+          },
+          body: {
+            jobId: jobId,
+            url: `https://storage.googleapis.com/stg-validator-user-uploads/${jobId}/gtfs-job.zip?X-Goog-Algorithm=GOOG4-RSA-SHA256`
+          }
+        });
+      }
+    )
+    .as('createJob');
 
     cy.intercept(
       'HEAD',
-      'https://gtfs-validator-results.mobilitydata.org/*/report.html',
+      `${Cypress.env("PUBLIC_CLIENT_REPORTS_ROOT")}/*/report.html`,
       { forceNetworkError: true }
       )
       .as('awaitJob');
+
+    cy.visit('/')
 
     // Enter URL to .zip file
     cy.get('input#url').type(url);
@@ -89,8 +119,10 @@ context('GTFS Validator - Confirm error messaging', () => {
     // Submit
     cy.get('button[type=submit]').click();
 
+    cy.wait('@createJob').its('response.statusCode').should('equal', 200);
+
     // Wait for responses
-    cy.wait(['@createJob', '@awaitJob']);
+    cy.wait('@awaitJob');
 
     // Confirm "Error processing report"
     cy.get('.alert')
@@ -101,30 +133,32 @@ context('GTFS Validator - Confirm error messaging', () => {
   it('Confirm error "HTTP Error: 404"', () => {
     // Setup intercept aliases
     cy.intercept(
-        'https://gtfs-validator.mobilitydata.org/RULES.md',
+        'rules.json',
         (req) => {
           req.reply({
-            statusCode: 404
+            statusCode: 404,
+            headers: {
+              "access-control-allow-origin": '*',
+              "Access-Control-Allow-Credentials": "true",
+            },            
           });
         }
       )
       .as('getDocMarkdown');
 
+    cy.visit('/')
+
     // Click "See Documentation" button
     cy.get('a:contains("See Documentation")').click();
-
-    // Wait for response
-    cy.wait('@getDocMarkdown');
+    
+    cy.location('pathname', {timeout: 60000}).should('include', '/rules.html');
 
     // Confirm error content
     cy.get('.container .markdown')
       .should('be.visible')
       .within((div) => {
         cy.get('h1').should('contain.text', 'HTTP Error: 404');
-        cy.get('p').should('contain.text', 'There was a problem loading the rules file. You can try accessing it directly at');
-        cy.get('a')
-          .should('contain.text', 'https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md')
-          .and('have.attr', 'href', 'https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md');
+        cy.get('p').should('contain.text', 'There was a problem loading the rules file.');
       })
   });
 });

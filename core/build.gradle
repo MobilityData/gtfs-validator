@@ -17,7 +17,12 @@
 plugins {
     id 'java'
     id 'maven-publish'
+    id 'signing'
 }
+
+//publishing {
+//    publishing and signing are done in gtfs-validator build.gradle to minimize repetition
+//}
 
 dependencies {
     implementation project(':model')
@@ -49,22 +54,4 @@ jar {
         attributes('Implementation-Title': 'gtfs-validator-core',
                 'Implementation-Version': project.version)
     }
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId = 'gtfs-validator-core'
-
-            from components.java
-        }
-    }
-}
-
-compileJava {
-    options.compilerArgs << '-parameters'
-}
-
-compileTestJava {
-    options.compilerArgs << '-parameters'
 }

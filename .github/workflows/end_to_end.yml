@@ -15,6 +15,7 @@ on:
       - 'triage.yml'
       - 'acceptance_test.yml'
       - 'web/**'
+      - '.github/workflows/**'
   pull_request:
     branches: [ master ]
     paths-ignore:
@@ -29,6 +30,7 @@ on:
       - 'triage.yml'
       - 'acceptance_test.yml'
       - 'web/**'
+      - '.github/workflows/**'
 jobs:
   validate_gradle_wrapper:
     runs-on: ubuntu-latest
@@ -61,8 +63,7 @@ jobs:
           name: gtfs-validator-snapshot
           path: cli/build/libs/gtfs-validator-*-cli.jar
   fetch-urls:
-    runs-on: gitrunners-ubuntu-2204-x64-4vcpu
-    ## ubuntu-latest-4-cores
+    runs-on: ubuntu-latest-4-cores
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v3
@@ -87,7 +88,7 @@ jobs:
     needs: [ fetch-urls, pack-snapshot ]
     # We use machines with more memory to run validation, as large feeds
     # can consume too much heap for default machine instances (see #1304).
-    runs-on: gitrunners-ubuntu-2204-x64-4vcpu
+    runs-on: ubuntu-latest-4-cores
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:

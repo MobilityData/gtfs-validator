@@ -19,11 +19,10 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.collect.ImmutableList;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
-import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntityValidator;
@@ -34,28 +33,29 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader.ValidatorWithDep
 
 public class ValidatorLoaderTest {
   private static final CountryCode COUNTRY_CODE = CountryCode.forStringOrUnknown("AU");
-  private static final CurrentDateTime CURRENT_DATE_TIME =
-      new CurrentDateTime(ZonedDateTime.of(2021, 1, 1, 14, 30, 0, 0, ZoneOffset.UTC));
+  private static final DateForValidation CURRENT_DATE =
+      new DateForValidation(LocalDate.of(2021, 1, 1));
   private static final ValidationContext VALIDATION_CONTEXT =
       ValidationContext.builder()
           .setCountryCode(COUNTRY_CODE)
-          .setCurrentDateTime(CURRENT_DATE_TIME)
+          .setDateForValidation(CURRENT_DATE)
           .build();
 
   @Test
-  public void createValidatorWithContext_injectsContext() throws ReflectiveOperationException {
+  public void createValidatorWithContext_injectsContext()
+      throws ReflectiveOperationException, ValidatorLoaderException {
     GtfsTestEntityValidator validator =
         ValidatorLoader.createValidatorWithContext(
                 GtfsTestEntityValidator.class, VALIDATION_CONTEXT)
             .validator();
 
     assertThat(validator.getCountryCode()).isEqualTo(VALIDATION_CONTEXT.countryCode());
-    assertThat(validator.getCurrentDateTime()).isEqualTo(VALIDATION_CONTEXT.currentDateTime());
+    assertThat(validator.getDateForValidation()).isEqualTo(VALIDATION_CONTEXT.dateForValidation());
   }
 
   @Test
   public void createSingleFileValidator_injectsTableContainerAndContext()
-      throws ReflectiveOperationException {
+      throws ReflectiveOperationException, ValidatorLoaderException {
     GtfsTestTableContainer table = new GtfsTestTableContainer(TableStatus.EMPTY_FILE);
     GtfsTestSingleFileValidator validator =
         (GtfsTestSingleFileValidator)
@@ -64,13 +64,13 @@ public class ValidatorLoaderTest {
                 .validator();
 
     assertThat(validator.getCountryCode()).isEqualTo(VALIDATION_CONTEXT.countryCode());
-    assertThat(validator.getCurrentDateTime()).isEqualTo(VALIDATION_CONTEXT.currentDateTime());
+    assertThat(validator.getDateForValidation()).isEqualTo(VALIDATION_CONTEXT.dateForValidation());
     assertThat(validator.getStopTable()).isEqualTo(table);
   }
 
   @Test
   public void createMultiFileValidator_injectsFeedContainerAndContext()
-      throws ReflectiveOperationException {
+      throws ReflectiveOperationException, ValidatorLoaderException {
     GtfsTestTableContainer stopTable =
         new GtfsTestTableContainer(TableStatus.PARSABLE_HEADERS_AND_ROWS);
     GtfsFeedContainer feedContainer = new GtfsFeedContainer(ImmutableList.of(stopTable));
@@ -82,13 +82,13 @@ public class ValidatorLoaderTest {
 
     WholeFeedValidator validator = validatorWithStatus.validator();
     assertThat(validator.getCountryCode()).isEqualTo(VALIDATION_CONTEXT.countryCode());
-    assertThat(validator.getCurrentDateTime()).isEqualTo(VALIDATION_CONTEXT.currentDateTime());
+    assertThat(validator.getDateForValidation()).isEqualTo(VALIDATION_CONTEXT.dateForValidation());
     assertThat(validator.getFeedContainer()).isEqualTo(feedContainer);
   }
 
   @Test
   public void createMultiFileValidator_singleContainer_dependenciesHaveErrors()
-      throws ReflectiveOperationException {
+      throws ReflectiveOperationException, ValidatorLoaderException {
     GtfsTestTableContainer table = new GtfsTestTableContainer(TableStatus.UNPARSABLE_ROWS);
     GtfsFeedContainer feedContainer = new GtfsFeedContainer(ImmutableList.of(table));
 

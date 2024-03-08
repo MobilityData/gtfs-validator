@@ -25,14 +25,13 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
+import javax.annotation.Nonnull;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -53,7 +52,6 @@ public class ValidationRunner {
 
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private static final String GTFS_ZIP_FILENAME = "gtfs.zip";
-  private static NoticeContainer noticeContainer;
 
   private final VersionResolver versionResolver;
 
@@ -74,7 +72,9 @@ public class ValidationRunner {
   }
 
   public Status run(ValidationRunnerConfig config) {
-    VersionInfo versionInfo = versionResolver.getVersionInfoWithTimeout(Duration.ofSeconds(5));
+    VersionInfo versionInfo =
+        versionResolver.getVersionInfoWithTimeout(
+            Duration.ofSeconds(5), config.skipValidatorUpdate());
     logger.atInfo().log("VersionInfo: %s", versionInfo);
     if (versionInfo.updateAvailable()) {
       logger.atInfo().log("A new version of the validator is available!");
@@ -98,11 +98,11 @@ public class ValidationRunner {
     final long startNanos = System.nanoTime();
     // Input.
     feedLoader.setNumThreads(config.numThreads());
-    noticeContainer = new NoticeContainer();
+    NoticeContainer noticeContainer = new NoticeContainer();
     GtfsFeedContainer feedContainer;
     GtfsInput gtfsInput = null;
     try {
-      gtfsInput = createGtfsInput(config);
+      gtfsInput = createGtfsInput(config, versionInfo.currentVersion().get(), noticeContainer);
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot load GTFS feed");
       noticeContainer.addSystemError(new IOError(e));
@@ -121,7 +121,7 @@ public class ValidationRunner {
     ValidationContext validationContext =
         ValidationContext.builder()
             .setCountryCode(config.countryCode())
-            .setCurrentDateTime(new CurrentDateTime(ZonedDateTime.now(ZoneId.systemDefault())))
+            .setDateForValidation(new DateForValidation(config.dateForValidation()))
             .build();
     try {
       feedContainer =
@@ -268,9 +268,9 @@ public class ValidationRunner {
             "Error creating output directory: %s", config.outputDirectory());
       }
     }
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
-    Date now = new Date(System.currentTimeMillis());
-    String date = formatter.format(now);
+    ZonedDateTime now = ZonedDateTime.now();
+    String date = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX"));
+    boolean is_different_date = !now.toLocalDate().equals(config.dateForValidation());
 
     Gson gson = createGson(config.prettyJson());
     HtmlReportGenerator htmlGenerator = new HtmlReportGenerator();
@@ -292,7 +292,8 @@ public class ValidationRunner {
           config,
           versionInfo,
           config.outputDirectory().resolve(config.htmlReportFileName()),
-          date);
+          date,
+          is_different_date);
       Files.write(
           config.outputDirectory().resolve(config.systemErrorsReportFileName()),
           gson.toJson(noticeContainer.exportSystemErrors()).getBytes(StandardCharsets.UTF_8));
@@ -305,11 +306,20 @@ public class ValidationRunner {
    * Creates a {@code GtfsInput}
    *
    * @param config used to retrieve information needed to the creation of the {@code GtfsInput}
+   * @param validatorVersion version of the validator
    * @return the {@code GtfsInput} generated after
    * @throws IOException in case of error while loading a file
    * @throws URISyntaxException in case of error in the {@code URL} syntax
    */
-  public static GtfsInput createGtfsInput(ValidationRunnerConfig config)
+  public static GtfsInput createGtfsInput(ValidationRunnerConfig config, String validatorVersion)
+      throws IOException, URISyntaxException {
+    return createGtfsInput(config, validatorVersion, new NoticeContainer());
+  }
+
+  private static GtfsInput createGtfsInput(
+      ValidationRunnerConfig config,
+      String validatorVersion,
+      @Nonnull NoticeContainer noticeContainer)
       throws IOException, URISyntaxException {
     URI source = config.gtfsSource();
     if (source.getScheme().equals("file")) {
@@ -317,12 +327,13 @@ public class ValidationRunner {
     }
 
     if (config.storageDirectory().isEmpty()) {
-      return GtfsInput.createFromUrlInMemory(source.toURL(), noticeContainer);
+      return GtfsInput.createFromUrlInMemory(source.toURL(), noticeContainer, validatorVersion);
     } else {
       return GtfsInput.createFromUrl(
           source.toURL(),
           config.storageDirectory().get().resolve(GTFS_ZIP_FILENAME),
-          noticeContainer);
+          noticeContainer,
+          validatorVersion);
     }
   }
 }

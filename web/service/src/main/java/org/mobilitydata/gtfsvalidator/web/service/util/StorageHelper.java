@@ -1,9 +1,11 @@
 package org.mobilitydata.gtfsvalidator.web.service.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.cloud.WriteChannel;
 import com.google.cloud.storage.*;
 import java.io.*;
 import java.net.URL;
+import java.nio.channels.Channels;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -11,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import org.mobilitydata.gtfsvalidator.util.HttpGetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -101,18 +104,20 @@ public class StorageHelper {
    *
    * @param jobId
    * @param url
+   * @param validatorVersion
    * @throws Exception
    */
-  public void saveJobFileFromUrl(String jobId, String url) throws Exception {
-    // Read file into memory
-    var urlInputStream = new BufferedInputStream(new URL(url).openStream());
-
-    // Upload to GCS
-    var blobId = BlobId.of(USER_UPLOAD_BUCKET_NAME, jobId + "/" + jobId + ".zip");
-    var mimeType = "application/zip";
-    var blobInfo = BlobInfo.newBuilder(blobId).setContentType(mimeType).build();
-    var fileBytes = urlInputStream.readAllBytes();
-    storage.create(blobInfo, fileBytes);
+  public void saveJobFileFromUrl(String jobId, String url, String validatorVersion)
+      throws Exception {
+    var blobId = BlobId.of(USER_UPLOAD_BUCKET_NAME, jobId + "/" + FILE_NAME);
+    var blobInfo = BlobInfo.newBuilder(blobId).setContentType("application/zip").build();
+    URL signedURL =
+        storage.signUrl(
+            blobInfo, 1, TimeUnit.HOURS, Storage.SignUrlOption.httpMethod(HttpMethod.POST));
+    try (WriteChannel writer = storage.writer(signedURL)) {
+      OutputStream outputStream = Channels.newOutputStream(writer);
+      HttpGetUtil.loadFromUrl(new URL(url), outputStream, validatorVersion);
+    }
   }
 
   /** Generates a job-specific signed URL for uploading a file to GCS. */

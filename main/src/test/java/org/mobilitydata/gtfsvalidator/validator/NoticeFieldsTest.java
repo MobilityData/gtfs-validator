@@ -133,7 +133,6 @@ public class NoticeFieldsTest {
             "prevShapeDistTraveled",
             "prevShapePtSequence",
             "prevStopSequence",
-            "prevStopTimeDistTraveled",
             "recordId",
             "recordSubId",
             "routeColor",
@@ -192,7 +191,11 @@ public class NoticeFieldsTest {
             "tripIdB",
             "tripIdFieldName",
             "validator",
-            "value");
+            "value",
+            "maxShapeDistanceTraveled",
+            "maxTripDistanceTraveled",
+            "fileNameA",
+            "fileNameB");
   }
 
   private static List<String> discoverValidationNoticeFieldNames() {

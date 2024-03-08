@@ -108,4 +108,5 @@ jobs:
           title: ${{ steps.dates.outputs.today }} — ${{ steps.process_json.outputs.commits_length }} new commit(s) made to `reference.md` in Google Transit's repo
           body: |
             ${{ steps.process_json.outputs.extracted_data }}
+          labels: 'status: Needs triage'
           assignees: ${{ steps.git-setup.outputs.assigned }}
