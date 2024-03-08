@@ -151,7 +151,14 @@ public class StopZoneIdValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = INFO,
-      files = @FileRefs({GtfsStopSchema.class, GtfsFareRuleSchema.class}))
+      files =
+          @FileRefs({
+            GtfsStopSchema.class,
+            GtfsStopTimeSchema.class,
+            GtfsTripSchema.class,
+            GtfsRouteSchema.class,
+            GtfsFareRuleSchema.class
+          }))
   static class StopWithoutZoneIdNotice extends ValidationNotice {
 
     /** The faulty record's id. */
