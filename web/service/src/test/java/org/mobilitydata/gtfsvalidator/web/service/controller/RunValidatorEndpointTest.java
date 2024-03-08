@@ -44,7 +44,6 @@ public class RunValidatorEndpointTest {
     jobMetaData = new JobMetadata(testJobId, "US");
     mockFeedFile = mock(File.class);
     mockOutputPath = mock(Path.class);
-    // mockOutputPath = Paths.get("");
     mockOutputPathToFile = mock(File.class);
 
     var filePath = testJobId + "/feedFile.zip";
@@ -58,6 +57,9 @@ public class RunValidatorEndpointTest {
     doReturn(mockOutputPath).when(storageHelper).createOutputFolderForJob(testJobId);
     doReturn(mockOutputPathToFile).when(mockOutputPath).toFile();
     doReturn(Path.of("./execution_result.json")).when(mockOutputPath).resolve(anyString());
+    doCallRealMethod()
+        .when(storageHelper)
+        .writeExecutionResultFile(any(ValidationController.ExecutionResult.class), any(Path.class));
   }
 
   public boolean executionResultIs(String result) throws Exception {
@@ -109,15 +111,22 @@ public class RunValidatorEndpointTest {
         .when(storageHelper)
         .downloadFeedFileFromStorage(anyString(), anyString());
 
-    mockMvc.perform(
-        MockMvcRequestBuilders.post("/run-validator")
-            .content(mapper.writeValueAsString(pubSubMessage))
-            .contentType(MediaType.APPLICATION_JSON));
-
-    assertTrue(executionResultIsError());
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.post("/run-validator")
+                .content(mapper.writeValueAsString(pubSubMessage))
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().is5xxServerError());
 
     // should not have attempted validation
     verify(validationHandler, times(0)).validateFeed(any(File.class), any(Path.class), anyString());
+
+    // should not have uploaded to storage
+    verify(storageHelper, times(0)).uploadFilesToStorage(anyString(), any(Path.class));
+
+    // should not have tried to delete temp files
+    verify(mockFeedFile, times(0)).delete();
+    verify(mockOutputPathToFile, times(0)).delete();
   }
 
   @Test
@@ -130,10 +139,12 @@ public class RunValidatorEndpointTest {
         .when(storageHelper)
         .downloadFeedFileFromStorage(anyString(), anyString());
 
-    mockMvc.perform(
-        MockMvcRequestBuilders.post("/run-validator")
-            .content(mapper.writeValueAsString(pubSubMessage))
-            .contentType(MediaType.APPLICATION_JSON));
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.post("/run-validator")
+                .content(mapper.writeValueAsString(pubSubMessage))
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isOk());
 
     assertTrue(executionResultIsError());
   }
