@@ -42,7 +42,7 @@ public class ReportSummary {
             .collect(
                 Collectors.groupingBy(
                     NoticeView::getSeverityLevel,
-                    () -> new TreeMap<>(Comparator.comparingInt(SeverityLevel::getOrder)),
+                    () -> new TreeMap<>(Comparator.reverseOrder()),
                     Collectors.groupingBy(NoticeView::getCode, TreeMap::new, Collectors.toList())));
     this.versionInfo = versionInfo;
   }
