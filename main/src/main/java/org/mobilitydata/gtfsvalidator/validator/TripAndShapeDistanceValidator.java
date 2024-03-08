@@ -60,13 +60,14 @@ public class TripAndShapeDistanceValidator extends FileValidator {
         .forEach(
             trip -> {
               String shapeId = trip.shapeId();
+              String tripId = trip.tripId();
+
               // Get distance for trip
-              int nbStopTimes = stopTimeTable.byTripId(trip.tripId()).size();
+              int nbStopTimes = stopTimeTable.byTripId(tripId).size();
               if (nbStopTimes == 0) {
                 return;
               }
-              GtfsStopTime lastStopTime =
-                  stopTimeTable.byTripId(trip.tripId()).get(nbStopTimes - 1);
+              GtfsStopTime lastStopTime = stopTimeTable.byTripId(tripId).get(nbStopTimes - 1);
               GtfsStop stop = stopTable.byStopId(lastStopTime.stopId()).orElse(null);
               if (stop == null) {
                 return;
@@ -89,20 +90,19 @@ public class TripAndShapeDistanceValidator extends FileValidator {
                 if (distanceInMeters > DISTANCE_THRESHOLD) {
                   noticeContainer.addValidationNotice(
                       new TripDistanceExceedsShapeDistanceNotice(
-                          trip.tripId(), shapeId, maxStopTimeDist, maxShapeDist, distanceInMeters));
+                          tripId, shapeId, maxStopTimeDist, maxShapeDist, distanceInMeters));
                 } else if (distanceInMeters > 0) {
                   noticeContainer.addValidationNotice(
-                      new TripDistanceExceedsShapeDistanceBellowThresholdNotice(
-                          trip.tripId(), shapeId, maxStopTimeDist, maxShapeDist, distanceInMeters));
+                      new TripDistanceExceedsShapeDistanceBelowThresholdNotice(
+                          tripId, shapeId, maxStopTimeDist, maxShapeDist, distanceInMeters));
                 }
               }
             });
   }
 
   /**
-   * The distance traveled by a trip should be less or equal to the max length of its shape.
-   *
-   * <p>The distance is greater or equal to the 11.1m threshold.
+   * The distance between the last shape point and last stop point is greater than or equal to the
+   * 11.1m threshold.
    */
   @GtfsValidationNotice(
       severity = ERROR,
@@ -122,31 +122,29 @@ public class TripAndShapeDistanceValidator extends FileValidator {
     private final double maxShapeDistanceTraveled;
 
     /** The distance in meters between the shape and the stop. */
-    private final double distance;
+    private final double geoDistanceToShape;
 
     TripDistanceExceedsShapeDistanceNotice(
         String tripId,
         String shapeId,
         double maxTripDistanceTraveled,
         double maxShapeDistanceTraveled,
-        double distance) {
+        double geoDistanceToShape) {
       this.tripId = tripId;
       this.shapeId = shapeId;
       this.maxShapeDistanceTraveled = maxShapeDistanceTraveled;
       this.maxTripDistanceTraveled = maxTripDistanceTraveled;
-      this.distance = distance;
+      this.geoDistanceToShape = geoDistanceToShape;
     }
   }
 
   /**
-   * The distance traveled by a trip should be less or equal to the max length of its shape.
-   *
-   * <p>The distance is less than the 11.1m threshold.
+   * The distance between the last shape point and last stop point is less than the 11.1m threshold.
    */
   @GtfsValidationNotice(
       severity = WARNING,
       files = @FileRefs({GtfsTrip.class, GtfsStopTime.class, GtfsShape.class}))
-  static class TripDistanceExceedsShapeDistanceBellowThresholdNotice extends ValidationNotice {
+  static class TripDistanceExceedsShapeDistanceBelowThresholdNotice extends ValidationNotice {
 
     /** The faulty record's trip id. */
     private final String tripId;
@@ -161,19 +159,19 @@ public class TripAndShapeDistanceValidator extends FileValidator {
     private final double maxShapeDistanceTraveled;
 
     /** The distance in meters between the shape and the stop. */
-    private final double distance;
+    private final double geoDistanceToShape;
 
-    TripDistanceExceedsShapeDistanceBellowThresholdNotice(
+    TripDistanceExceedsShapeDistanceBelowThresholdNotice(
         String tripId,
         String shapeId,
         double maxTripDistanceTraveled,
         double maxShapeDistanceTraveled,
-        double distance) {
+        double geoDistanceToShape) {
       this.tripId = tripId;
       this.shapeId = shapeId;
       this.maxShapeDistanceTraveled = maxShapeDistanceTraveled;
       this.maxTripDistanceTraveled = maxTripDistanceTraveled;
-      this.distance = distance;
+      this.geoDistanceToShape = geoDistanceToShape;
     }
   }
 }

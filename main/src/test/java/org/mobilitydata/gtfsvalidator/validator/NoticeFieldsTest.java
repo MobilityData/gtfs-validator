@@ -194,7 +194,6 @@ public class NoticeFieldsTest {
             "value",
             "maxShapeDistanceTraveled",
             "maxTripDistanceTraveled",
-            "distance",
             "fileNameA",
             "fileNameB");
   }
