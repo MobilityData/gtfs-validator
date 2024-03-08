@@ -39,17 +39,4 @@ public enum SeverityLevel {
    * (https://tools.ietf.org/html/rfc2119) to interpret the language in the GTFS spec.
    */
   ERROR;
-
-  public static int getOrder(SeverityLevel severityLevel) {
-    switch (severityLevel) {
-      case INFO:
-        return 2;
-      case WARNING:
-        return 1;
-      case ERROR:
-        return 0;
-      default:
-        throw new IllegalStateException("Unexpected value: " + severityLevel);
-    }
-  }
 }
