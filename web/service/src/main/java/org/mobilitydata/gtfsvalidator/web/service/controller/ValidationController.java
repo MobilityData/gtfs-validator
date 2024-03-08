@@ -140,7 +140,7 @@ public class ValidationController {
       // cloud storage. We return 500 in that case so the GCP retry mechanism can do its magic.
       logger.error("Error", exc);
       Sentry.captureException(exc);
-      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not validate");
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error", exc);
     } finally {
       // delete the temp file and directory
       if (tempFile != null) {
