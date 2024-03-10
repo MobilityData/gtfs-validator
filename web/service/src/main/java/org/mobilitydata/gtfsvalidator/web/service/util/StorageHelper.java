@@ -3,9 +3,12 @@ package org.mobilitydata.gtfsvalidator.web.service.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.WriteChannel;
 import com.google.cloud.storage.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.*;
 import java.net.URL;
 import java.nio.channels.Channels;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,6 +17,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.mobilitydata.gtfsvalidator.util.HttpGetUtil;
+import org.mobilitydata.gtfsvalidator.web.service.controller.ValidationController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -36,7 +40,8 @@ public class StorageHelper {
       System.getenv().getOrDefault("RESULTS_BUCKET_NAME", "gtfs-validator-results");
   static final String FILE_NAME = "gtfs-job.zip";
 
-  private final Logger logger = LoggerFactory.getLogger(StorageHelper.class);
+  private static final Logger logger = LoggerFactory.getLogger(StorageHelper.class);
+
   private Storage storage;
   private ApplicationContext applicationContext;
 
@@ -185,5 +190,27 @@ public class StorageHelper {
 
   public Path createOutputFolderForJob(String jobId) throws IOException {
     return Files.createTempDirectory(StorageHelper.TEMP_FOLDER_NAME + jobId);
+  }
+
+  private static final String executionResultFile = "execution_result.json";
+
+  public void writeExecutionResultFile(
+      ValidationController.ExecutionResult executionResult, Path outputPath) {
+    if (outputPath == null) {
+      logger.error("Error: outputPath is null, cannot write execution result file");
+      return;
+    }
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+    Path executionResultPath = outputPath.resolve(executionResultFile);
+    try {
+      logger.info("Writing executionResult file to " + executionResultFile);
+      Files.write(
+          executionResultPath, gson.toJson(executionResult).getBytes(StandardCharsets.UTF_8));
+      logger.info(executionResultFile + " file written successfully");
+    } catch (IOException e) {
+      logger.error("Error writing to file " + executionResultFile);
+      e.printStackTrace();
+    }
   }
 }
