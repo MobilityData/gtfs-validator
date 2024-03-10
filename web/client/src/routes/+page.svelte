@@ -69,6 +69,7 @@
   let statusModal;
 
   $: reportUrl = `${env.PUBLIC_CLIENT_REPORTS_ROOT}/${jobId}/report.html`;
+  $: executionResultUrl = `${env.PUBLIC_CLIENT_REPORTS_ROOT}/${jobId}/execution_result.json`;
 
   function clearErrors() {
     errors = [];
@@ -270,7 +271,7 @@
 
       do {
         try {
-          jobInProgress = !(await reportExists());
+          jobInProgress = !(await reportExecutionFinished());
           if (jobInProgress) {
             await sleep(2500);
           }
@@ -292,6 +293,35 @@
       xhr.onload = () => resolve(xhr.status === 200);
       xhr.onerror = reject;
       xhr.open('HEAD', reportUrl);
+      xhr.send();
+    });
+  }
+
+  function reportExecutionFinished() {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+
+      xhr.onload = () => resolve(xhr.status === 200);
+      xhr.onerror = reject;
+      xhr.open('HEAD', executionResultUrl);
+      xhr.send();
+    });
+  }
+
+  function reportExecutionResult() {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+
+      xhr.responseType = 'json';
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          resolve(xhr.response);
+        } else {
+          reject('Error fetching report execution result.');
+        }
+      };
+      xhr.onerror = reject;
+      xhr.open('GET', executionResultUrl);
       xhr.send();
     });
   }
@@ -338,6 +368,19 @@
     // poll for report ready
     if (canContinue) {
       await waitForJob().catch((error) => {
+        addError(error);
+        canContinue = false;
+      });
+    }
+
+    if (canContinue) {
+      await reportExecutionResult()
+      .then((result) => {
+        if (result?.status != "success") {
+          addError(result.error || 'Error processing report.');
+          canContinue = false;
+        }
+      }).catch((error) => {
         addError(error);
         canContinue = false;
       });
