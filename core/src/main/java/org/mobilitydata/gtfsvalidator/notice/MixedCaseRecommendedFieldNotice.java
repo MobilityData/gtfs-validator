@@ -15,8 +15,25 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  * (e.g. “JFK Airport”). Abbreviations may be problematic for accessibility by screen reader
  * software and voice user interfaces.
  *
- * @see org.mobilitydata.gtfsvalidator.annotation.MixedCase
+ * <p>Good examples:
+ *    <pre>
+ *      | `Field Text`/`Dataset`                                                                | Dataset                                                                                                                                                                |
+ *      | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+ *      | ["Schwerin, Hauptbahnhof"]               | [Verkehrsverbund Berlin-Brandenburg](http://vbb.de/vbbgtfs) |
+ *      | ["Red Hook/Atlantic Basin"](http://nycferry.connexionz.net/rtt/public/utility/gtfs.aspx) |                                                                                                                           |
+ *      | ["Campo Grande Norte"] | [Carris](https://gateway.carris.pt/gateway/gtfs/api/v2.8/GTFS) |
+ *    </pre>
+ *
+ *    Bad examples:
+ *    <pre>
+ *      | `Field Text` |
+ *      |-------------------------------------------|
+ *      | "GALLERIA MALl"                           |
+ *      | "3427 GG 17"                           |
+ *      | "21 Clark Rd Est"      |
+ *     </pre>
  */
+
 @GtfsValidationNotice(
     severity = WARNING,
     urls = {
