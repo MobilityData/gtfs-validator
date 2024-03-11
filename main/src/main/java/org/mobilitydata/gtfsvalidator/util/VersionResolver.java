@@ -102,6 +102,7 @@ public class VersionResolver {
             logger.atSevere().withCause(ex).log("Error resolving version info");
           }
           VersionInfo info = VersionInfo.create(currentVersion, latestReleaseVersion);
+          Thread.sleep(5100);
           resolvedVersionInfo.set(info);
           return info;
         }
