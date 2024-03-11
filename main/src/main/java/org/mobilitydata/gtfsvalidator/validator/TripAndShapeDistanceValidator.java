@@ -91,7 +91,7 @@ public class TripAndShapeDistanceValidator extends FileValidator {
                   noticeContainer.addValidationNotice(
                       new TripDistanceExceedsShapeDistanceNotice(
                           tripId, shapeId, maxStopTimeDist, maxShapeDist, distanceInMeters));
-                } else if (distanceInMeters > 0) {
+                } else {
                   noticeContainer.addValidationNotice(
                       new TripDistanceExceedsShapeDistanceBelowThresholdNotice(
                           tripId, shapeId, maxStopTimeDist, maxShapeDist, distanceInMeters));
