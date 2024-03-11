@@ -16,6 +16,8 @@ on:
       - 'web/**'
       - '.github/workflows/web_**.yml'
       - '.github/workflows/stg_web_**.yml'
+#      TODO remove before merging
+      - '.github/workflows/**.yml'
 concurrency:
   group: ${{ github.head_ref }}
   cancel-in-progress: true
