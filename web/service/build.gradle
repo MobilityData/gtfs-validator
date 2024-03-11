@@ -64,13 +64,14 @@ dependencies {
   implementation 'org.projectlombok:lombok:1.18.22'
   implementation 'io.sentry:sentry-spring-boot-starter:6.18.1'
   implementation 'io.sentry:sentry-logback:6.18.1'
+  implementation 'com.google.cloud:spring-cloud-gcp-starter-logging:3.7.9'
+
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 dependencyManagement {
 	imports {
 		mavenBom "com.google.cloud:spring-cloud-gcp-dependencies:${springCloudGcpVersion}"
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
 	}
 }
 
