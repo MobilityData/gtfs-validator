@@ -14,6 +14,8 @@ on:
       - 'triage.yml'
       - 'end_to_end.yml'
       - 'web/**'
+      - '.github/workflows/web_**.yml'
+      - '.github/workflows/stg_web_**.yml'
 concurrency:
   group: ${{ github.head_ref }}
   cancel-in-progress: true
