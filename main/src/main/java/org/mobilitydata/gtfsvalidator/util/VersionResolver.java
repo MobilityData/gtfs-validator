@@ -91,20 +91,22 @@ public class VersionResolver {
 
     executor.submit(
         () -> {
+          Optional<String> currentVersion = Optional.empty();
+          Optional<String> latestReleaseVersion = Optional.empty();
           try {
-            Optional<String> currentVersion = resolveCurrentVersion();
-            Optional<String> latestReleaseVersion = Optional.empty();
+            currentVersion = resolveCurrentVersion();
             if (!skipValidatorUpdate) {
               latestReleaseVersion = resolveLatestReleaseVersion(currentVersion);
             }
-            VersionInfo info = VersionInfo.create(currentVersion, latestReleaseVersion);
-            resolvedVersionInfo.set(info);
-            return info;
           } catch (Throwable ex) {
             logger.atSevere().withCause(ex).log("Error resolving version info");
           }
-          return VersionInfo.empty();
-        });
+          VersionInfo info = VersionInfo.create(currentVersion, latestReleaseVersion);
+          resolvedVersionInfo.set(info);
+          return info;
+        }
+    );
+
   }
 
   /**
