@@ -167,7 +167,7 @@
     if (reportId) {
       jobId = reportId;
       await tick();
-      const exists = await reportExists().catch(() => false);
+      const exists = await remoteFileExists(reportUrl).catch(() => false);
       updateStatus(exists ? 'ready' : 'error');
     } else {
       // if there's no id, clear status modal
@@ -271,7 +271,7 @@
 
       do {
         try {
-          jobInProgress = !(await reportExecutionFinished());
+          jobInProgress = !(await remoteFileExists(executionResultUrl));
           if (jobInProgress) {
             await sleep(2500);
           }
@@ -286,45 +286,19 @@
     });
   }
 
-  function reportExists() {
+  /**
+   * @param {RequestInfo | URL} url
+   */
+  function remoteFileExists(url) {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
 
       xhr.onload = () => resolve(xhr.status === 200);
       xhr.onerror = reject;
-      xhr.open('HEAD', reportUrl);
+      xhr.open('HEAD', url.toString());
       xhr.send();
     });
-  }
-
-  function reportExecutionFinished() {
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-
-      xhr.onload = () => resolve(xhr.status === 200);
-      xhr.onerror = reject;
-      xhr.open('HEAD', executionResultUrl);
-      xhr.send();
-    });
-  }
-
-  function reportExecutionResult() {
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-
-      xhr.responseType = 'json';
-      xhr.onload = () => {
-        if (xhr.status === 200) {
-          resolve(xhr.response);
-        } else {
-          reject('Error fetching report execution result.');
-        }
-      };
-      xhr.onerror = reject;
-      xhr.open('GET', executionResultUrl);
-      xhr.send();
-    });
-  }
+}
 
   /** @param {string} errorText */
   function addError(errorText) {
@@ -374,7 +348,7 @@
     }
 
     if (canContinue) {
-      await reportExecutionResult()
+      await remoteFileExists(executionResultUrl)
       .then((result) => {
         if (result?.status != "success") {
           addError(result.error || 'Error processing report.');
