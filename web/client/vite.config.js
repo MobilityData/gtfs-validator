@@ -5,6 +5,10 @@ const config = {
   plugins: [sveltekit()],
   server: {
     expose: true,
+    port: 5173,
+  },
+  optimizeDeps: {
+    include: ['lodash', 'marked', 'svelte'],
   },
 };
 

@@ -16,10 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.report.model;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ResolvedNotice;
@@ -45,7 +42,7 @@ public class ReportSummary {
             .collect(
                 Collectors.groupingBy(
                     NoticeView::getSeverityLevel,
-                    LinkedHashMap::new,
+                    () -> new TreeMap<>(Comparator.reverseOrder()),
                     Collectors.groupingBy(NoticeView::getCode, TreeMap::new, Collectors.toList())));
     this.versionInfo = versionInfo;
   }

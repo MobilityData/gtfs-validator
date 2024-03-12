@@ -123,7 +123,7 @@ public class JsonReportSummaryTest {
             + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"}],"
             + "\"files\":[\"file1\",\"file2\"],"
             + "\"counts\":{\"Shapes\":1,\"Trips\":2},"
-            + "\"gtfsComponents\":[\"Feature2\"]}";
+            + "\"gtfsFeatures\":[\"Feature2\"]}";
 
     assertEquals(JsonParser.parseString(expected), gson.toJsonTree(reportSummary));
   }
@@ -144,7 +144,7 @@ public class JsonReportSummaryTest {
             + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"}],"
             + "\"files\":[\"file1\",\"file2\"],"
             + "\"counts\":{\"Shapes\":1,\"Trips\":2},"
-            + "\"gtfsComponents\":[\"Feature2\"]}";
+            + "\"gtfsFeatures\":[\"Feature2\"]}";
 
     assertEquals(JsonParser.parseString(expected), gson.toJsonTree(reportSummary));
   }
