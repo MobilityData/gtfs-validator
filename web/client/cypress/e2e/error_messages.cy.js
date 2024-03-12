@@ -2,6 +2,7 @@
 const url =
   'https://developers.google.com/static/transit/gtfs/examples/sample-feed.zip';
 const jobId = '8f6be6fb-1fee-41f8-b401-b2b4b552e177-sample';
+const execution_result_json = "execution_result.json"
 
 context('GTFS Validator - Confirm error messaging', () => {
   it('Confirm error "Error authorizing upload"', () => {
@@ -79,7 +80,7 @@ context('GTFS Validator - Confirm error messaging', () => {
       .and('contain.text', 'Error uploading file');
   });
 
-  it('Confirm error "Error processing report"', () => {
+  it('Confirm error "Error processing report" when network fails with the execution_results file', () => {
     // Setup intercept aliases
     cy.intercept(
       'POST',
@@ -100,27 +101,12 @@ context('GTFS Validator - Confirm error messaging', () => {
       }
     ).as('createJob');
 
-    // Intercept HEAD request to execution_results.json - error processing error
-    // report failing - error processing error
-    cy.intercept('HEAD', './execution_result.json', (req) => {
-      req.reply({
-        statusCode: 500, // Change the status code to represent an error
-        statusMessage: 'Internal Server Error', // Change the status message to represent an error
-        headers: {
-          'access-control-allow-origin': '*',
-          'Access-Control-Allow-Credentials': 'true',
-        },
-        body: {
-          error: 'Error processing report.', // Add an error message to the body
-        },
-      });
-    }).as('awaitReport');
-
     cy.intercept(
       'HEAD',
-      `${Cypress.env('PUBLIC_CLIENT_REPORTS_ROOT')}/*/report.html`,
+      `${Cypress.env("PUBLIC_CLIENT_REPORTS_ROOT")}/*/${execution_result_json}`,
       { forceNetworkError: true }
-    ).as('awaitJob');
+      )
+      .as('awaitExecutionResults');
 
     cy.visit('/');
 
@@ -133,7 +119,124 @@ context('GTFS Validator - Confirm error messaging', () => {
     cy.wait('@createJob').its('response.statusCode').should('equal', 200);
 
     // Wait for responses
-    cy.wait('@awaitJob');
+    cy.wait('@awaitExecutionResults');
+
+    // Confirm "Error processing report"
+    cy.get('.alert')
+      .should('be.visible')
+      .and('contain.text', 'Error processing report');
+  });
+
+  it('Confirm error "Error processing report" when network fails with the html report', () => {
+    // Setup intercept aliases
+    cy.intercept(
+      'POST',
+      `${Cypress.env('PUBLIC_CLIENT_API_ROOT')}/create-job`,
+      (req) => {
+        req.reply({
+          statusCode: 200,
+          statusMessage: 'OK',
+          headers: {
+            'access-control-allow-origin': '*',
+            'Access-Control-Allow-Credentials': 'true',
+          },
+          body: {
+            jobId: jobId,
+            url: `https://storage.googleapis.com/stg-validator-user-uploads/${jobId}/gtfs-job.zip?X-Goog-Algorithm=GOOG4-RSA-SHA256`,
+          },
+        });
+      }
+    ).as('createJob');
+
+    cy.intercept('HEAD', `${Cypress.env("PUBLIC_CLIENT_REPORTS_ROOT")}/*/${execution_result_json}`, {
+      statusCode: 200
+    })
+    .as('awaitExecutionResultsHead')
+
+    cy.intercept('GET', `${Cypress.env("PUBLIC_CLIENT_REPORTS_ROOT")}/*/${execution_result_json}`, {
+      statusCode: 200,
+      body: {
+        status: 'success',
+      },
+    })
+    .as('awaitExecutionResults')
+
+    cy.intercept(
+      'HEAD',
+      `${Cypress.env("PUBLIC_CLIENT_REPORTS_ROOT")}/*/report.html`,
+      { forceNetworkError: true }
+      )
+      .as('awaitReportFailing');
+
+    cy.visit('/');
+
+    // Enter URL to .zip file
+    cy.get('input#url').type(url);
+
+    // Submit
+    cy.get('button[type=submit]').click();
+
+    cy.wait('@createJob').its('response.statusCode').should('equal', 200);
+
+    // Wait for responses
+    cy.wait('@awaitExecutionResultsHead');
+    cy.wait('@awaitExecutionResults');
+
+    cy.wait('@awaitReportFailing');
+
+    // Confirm "Error processing report"
+    cy.get('.alert')
+      .should('be.visible')
+      .and('contain.text', 'Error processing report');
+  });
+
+  it('Confirm error "Error processing report" when the execution result status is error', () => {
+    // Setup intercept aliases
+    cy.intercept(
+      'POST',
+      `${Cypress.env('PUBLIC_CLIENT_API_ROOT')}/create-job`,
+      (req) => {
+        req.reply({
+          statusCode: 200,
+          statusMessage: 'OK',
+          headers: {
+            'access-control-allow-origin': '*',
+            'Access-Control-Allow-Credentials': 'true',
+          },
+          body: {
+            jobId: jobId,
+            url: `https://storage.googleapis.com/stg-validator-user-uploads/${jobId}/gtfs-job.zip?X-Goog-Algorithm=GOOG4-RSA-SHA256`,
+          },
+        });
+      }
+    ).as('createJob');
+
+    cy.intercept('HEAD', `${Cypress.env("PUBLIC_CLIENT_REPORTS_ROOT")}/*/${execution_result_json}`, {
+      statusCode: 200
+    })
+    .as('awaitExecutionResultsHead')
+
+    cy.intercept('GET', `${Cypress.env("PUBLIC_CLIENT_REPORTS_ROOT")}/*/${execution_result_json}`, {
+      statusCode: 200,
+      body: {
+        status: 'error',
+      },
+    })
+    .as('awaitExecutionResults')
+
+    cy.visit('/');
+
+    // Enter URL to .zip file
+    cy.get('input#url').type(url);
+
+    // Submit
+    cy.get('button[type=submit]').click();
+
+    cy.wait('@createJob').its('response.statusCode').should('equal', 200);
+
+    // Wait for responses
+    cy.wait('@awaitExecutionResultsHead');
+    cy.wait('@awaitExecutionResults');
 
     // Confirm "Error processing report"
     cy.get('.alert')
