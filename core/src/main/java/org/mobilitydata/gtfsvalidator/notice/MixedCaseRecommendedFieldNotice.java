@@ -17,23 +17,41 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  *
  * <p>Good examples:
  *
- * <pre>
- * | `Field Text`|`Dataset`|
- * | --------------------------|----------------------------------------------------------------------------|
- * | ["Schwerin, Hauptbahnhof"]| [Verkehrsverbund Berlin-Brandenburg](http://vbb.de/vbbgtfs) |
- * | ["Red Hook/Atlantic Basin"](http://nycferry.connexionz.net/rtt/public/utility/gtfs.aspx) |  NYC Ferry |                                                                                                                        |
- * | ["Campo Grande Norte"] | [Carris](https://gateway.carris.pt/gateway/gtfs/api/v2.8/GTFS) |
- * </pre>
+ * <table style="table-layout:auto; width:auto;">
+ *   <tr>
+ *     <th><code>Field Text</code></th>
+ *     <th><code>Dataset</code></th>
+ *   </tr>
+ *   <tr>
+ *     <td>"Schwerin, Hauptbahnhof"</td>
+ *     <td><a href="http://vbb.de/vbbgtfs">Verkehrsverbund Berlin-Brandenburg</a></td>
+ *   </tr>
+ *    <tr>
+ *     <td>"Red Hook/Atlantic Basin"</td>
+ *     <td><a href="http://nycferry.connexionz.net/rtt/public/utility/gtfs.aspx">NYC Ferry</a></td>
+ *   </tr>
+ *   <tr>
+ *     <td>"Campo Grande Norte"</td>
+ *     <td><a href="https://gateway.carris.pt/gateway/gtfs/api/v2.8/GTFS">Carris</a></td>
+ *   </tr>
+ * </table>
  *
  * Bad examples:
  *
- * <pre>
- * | `Field Text`      |
- * |-------------------|
- * | "GALLERIA MALl"   |
- * | "3427 GG 17"      |
- * | "21 Clark Rd Est" |
- * </pre>
+ * <table style="table-layout:auto; width:auto;">
+ *   <tr>
+ *     <th><code>Field Text</code></th>
+ *   </tr>
+ *   <tr>
+ *     <td>"GALLERIA MALL"</td>
+ *   </tr>
+ *   <tr>
+ *     <td>"3427 GG 17"</td>
+ *   </tr>
+ *   <tr>
+ *     <td>"21 Clark Rd Est"</td>
+ *   </tr>
+ * </table>
  */
 @GtfsValidationNotice(
     severity = WARNING,
