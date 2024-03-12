@@ -105,7 +105,7 @@ context('GTFS Validator - Confirm error messaging', () => {
 
     // Intercept HEAD request to execution_results.json - error processing error
     // report failing - error processing error
-    cy.intercept('HEAD', 'executionResultUrl', (req) => {
+    cy.intercept('HEAD', './execution_result.json', (req) => {
       req.reply({
         statusCode: 500, // Change the status code to represent an error
         statusMessage: 'Internal Server Error', // Change the status message to represent an error
