@@ -209,7 +209,7 @@
         display: table-row;
     }
 
-    #gtfs-components-container > div {
+    #gtfs-features-container > div {
         display: flex;
         justify-content: center;
         align-content: center;
@@ -285,11 +285,11 @@
                     <li th:each="count: ${metadata.counts}"><span th:text="${count.key} + ': ' + ${count.value}" /></li>
                 </ul>
             </div>
-            <div class="summary-cell summary_list" id="gtfs-components-container">
+            <div class="summary-cell summary_list" id="gtfs-features-container">
                 <h4>
-                    GTFS Components included
+                    GTFS Features included
                     <a href="#" class="tooltip" onclick="event.preventDefault();"><span>(?)</span>
-                        <span class="tooltiptext" style="transform: translateX(-100%)">GTFS components provide a standardized vocabulary to define and describe features that are officially adopted in GTFS.</span>
+                        <span class="tooltiptext" style="transform: translateX(-100%)">GTFS features provide a standardized vocabulary to define and describe features that are officially adopted in GTFS.</span>
                     </a>
                 </h4>
                 <hr />
