@@ -1,10 +1,7 @@
 /// <reference types="cypress" />
-import { env } from '$env/dynamic/public';
-
 const url =
   'https://developers.google.com/static/transit/gtfs/examples/sample-feed.zip';
 const jobId = '8f6be6fb-1fee-41f8-b401-b2b4b552e177-sample';
-const executionResultUrl = `${env.PUBLIC_CLIENT_REPORTS_ROOT}/${jobId}/execution_result.json`;
 
 context('GTFS Validator - Confirm error messaging', () => {
   it('Confirm error "Error authorizing upload"', () => {
