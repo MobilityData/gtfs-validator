@@ -47,4 +47,35 @@ public class VersionInfo {
       Optional<String> currentVersion, Optional<String> latestReleaseVersion) {
     return new VersionInfo(currentVersion, latestReleaseVersion);
   }
+
+  public String toString() {
+    return "VersionInfo{"
+        + "currentVersion="
+        + currentVersion
+        + ", "
+        + "latestReleaseVersion="
+        + latestReleaseVersion
+        + "}";
+  }
+
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    }
+    if (o instanceof VersionInfo) {
+      VersionInfo that = (VersionInfo) o;
+      return this.currentVersion.equals(that.currentVersion())
+          && this.latestReleaseVersion.equals(that.latestReleaseVersion());
+    }
+    return false;
+  }
+
+  public int hashCode() {
+    int h$ = 1;
+    h$ *= 1000003;
+    h$ ^= currentVersion.hashCode();
+    h$ *= 1000003;
+    h$ ^= latestReleaseVersion.hashCode();
+    return h$;
+  }
 }
