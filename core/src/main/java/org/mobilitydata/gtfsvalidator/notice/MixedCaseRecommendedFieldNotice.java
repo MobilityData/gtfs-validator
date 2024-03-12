@@ -15,9 +15,8 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  * (e.g. “JFK Airport”). Abbreviations may be problematic for accessibility by screen reader
  * software and voice user interfaces.
  *
- * <p>Good examples:
- *
  * <table style="table-layout:auto; width:auto;">
+ *   <caption>Good examples</caption>
  *   <tr>
  *     <th><code>Field Text</code></th>
  *     <th><code>Dataset</code></th>
@@ -36,9 +35,8 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  *   </tr>
  * </table>
  *
- * Bad examples:
- *
  * <table style="table-layout:auto; width:auto;">
+ *   <caption>Bad examples</caption>
  *   <tr>
  *     <th><code>Field Text</code></th>
  *   </tr>
