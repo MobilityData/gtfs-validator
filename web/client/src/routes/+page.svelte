@@ -279,7 +279,7 @@
           jobInProgress = false;
           reject('Error processing report.');
         }
-      } while (jobInProgress);
+      } while (jobInProgress); //TODO if report.html is not found, this will loop forever
 
       jobInProgress = false;
       resolve(!jobInProgress);
