@@ -1,8 +1,10 @@
 /// <reference types="cypress" />
+import { env } from '$env/dynamic/public';
 
 const url =
   'https://developers.google.com/static/transit/gtfs/examples/sample-feed.zip';
 const jobId = '8f6be6fb-1fee-41f8-b401-b2b4b552e177-sample';
+const executionResultUrl = `${env.PUBLIC_CLIENT_REPORTS_ROOT}/${jobId}/execution_result.json`;
 
 context('GTFS Validator - Confirm error messaging', () => {
   it('Confirm error "Error authorizing upload"', () => {
@@ -80,63 +82,42 @@ context('GTFS Validator - Confirm error messaging', () => {
       .and('contain.text', 'Error uploading file');
   });
 
-  // it('Confirm error "Error processing report"', () => {
-  //   // Setup intercept aliases
-  //   cy.intercept(
-  //     'POST',
-  //     `${Cypress.env('PUBLIC_CLIENT_API_ROOT')}/create-job`,
-  //     (req) => {
-  //       req.reply({
-  //         statusCode: 200,
-  //         statusMessage: 'OK',
-  //         headers: {
-  //           'access-control-allow-origin': '*',
-  //           'Access-Control-Allow-Credentials': 'true',
-  //         },
-  //         body: {
-  //           jobId: jobId,
-  //           url: `https://storage.googleapis.com/stg-validator-user-uploads/${jobId}/gtfs-job.zip?X-Goog-Algorithm=GOOG4-RSA-SHA256`,
-  //         },
-  //       });
-  //     }
-  //   ).as('createJob');
-
-  let shouldFail = false;
-
   it('Confirm error "Error processing report"', () => {
     // Setup intercept aliases
     cy.intercept(
       'POST',
       `${Cypress.env('PUBLIC_CLIENT_API_ROOT')}/create-job`,
       (req) => {
-        if (shouldFail) {
-          req.reply({
-            statusCode: 500,
-            statusMessage: 'Internal Server Error',
-            headers: {
-              'access-control-allow-origin': '*',
-              'Access-Control-Allow-Credentials': 'true',
-            },
-            body: {
-              error: 'Error processing report.',
-            },
-          });
-        } else {
-          req.reply({
-            statusCode: 200,
-            statusMessage: 'OK',
-            headers: {
-              'access-control-allow-origin': '*',
-              'Access-Control-Allow-Credentials': 'true',
-            },
-            body: {
-              jobId: jobId,
-              url: `https://storage.googleapis.com/stg-validator-user-uploads/${jobId}/gtfs-job.zip?X-Goog-Algorithm=GOOG4-RSA-SHA256`,
-            },
-          });
-        }
+        req.reply({
+          statusCode: 200,
+          statusMessage: 'OK',
+          headers: {
+            'access-control-allow-origin': '*',
+            'Access-Control-Allow-Credentials': 'true',
+          },
+          body: {
+            jobId: jobId,
+            url: `https://storage.googleapis.com/stg-validator-user-uploads/${jobId}/gtfs-job.zip?X-Goog-Algorithm=GOOG4-RSA-SHA256`,
+          },
+        });
       }
-    ).as('awaitJob');
+    ).as('createJob');
+
+    // Intercept HEAD request to execution_results.json - error processing error
+    // report failing - error processing error
+    cy.intercept('HEAD', 'executionResultUrl', (req) => {
+      req.reply({
+        statusCode: 500, // Change the status code to represent an error
+        statusMessage: 'Internal Server Error', // Change the status message to represent an error
+        headers: {
+          'access-control-allow-origin': '*',
+          'Access-Control-Allow-Credentials': 'true',
+        },
+        body: {
+          error: 'Error processing report.', // Add an error message to the body
+        },
+      });
+    }).as('awaitReport');
 
     cy.intercept(
       'HEAD',
