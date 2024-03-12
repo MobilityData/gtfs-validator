@@ -1,13 +1,19 @@
 <script>
   import { marked } from 'marked';
   import { page } from '$app/stores';
-  import _ from 'lodash';
+  import _, {fromPairs} from 'lodash';
 
   import SectionRefLink from './SectionRefLink.svelte';
 
   const rules = $page.data.rules;
 
-  $: categories = _.groupBy(rules, 'severityLevel');
+  // Group rules by severity level
+  $: categories = _.chain(rules)
+    .groupBy('severityLevel')
+    .toPairs()
+    .sortBy(([severityLevel]) => ['ERROR', 'WARNING', 'INFO'].indexOf(severityLevel))
+    .fromPairs()
+    .value();
 
   /** @param {string} filename */
   function getSpecRef(filename) {
