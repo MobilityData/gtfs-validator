@@ -62,7 +62,9 @@ public class AgencyConsistencyValidator extends FileValidator {
       if (!agency.hasAgencyId()) {
         noticeContainer.addValidationNotice(
             new MissingRecommendedFieldNotice(
-                agencyTable.gtfsFilename(), agency.csvRowNumber(), agency.agencyName()));
+                agencyTable.gtfsFilename(),
+                agency.csvRowNumber(),
+                GtfsAgency.AGENCY_ID_FIELD_NAME));
       }
       // no further validation required
       return;
