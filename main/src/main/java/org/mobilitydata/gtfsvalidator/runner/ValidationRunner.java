@@ -102,7 +102,8 @@ public class ValidationRunner {
     GtfsFeedContainer feedContainer;
     GtfsInput gtfsInput = null;
     try {
-      gtfsInput = createGtfsInput(config, versionInfo.currentVersion().orElse(null), noticeContainer);
+      gtfsInput =
+          createGtfsInput(config, versionInfo.currentVersion().orElse(null), noticeContainer);
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot load GTFS feed");
       noticeContainer.addSystemError(new IOError(e));
