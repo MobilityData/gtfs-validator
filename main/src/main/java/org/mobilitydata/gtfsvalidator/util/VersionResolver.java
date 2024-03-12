@@ -62,7 +62,7 @@ public class VersionResolver {
     try {
       versionInfo = resolvedVersionInfo.get(timeout.toMillis(), TimeUnit.MILLISECONDS);
     } catch (Throwable ex) {
-      logger.atSevere().withCause(ex).log("Error resolving release version");
+      logger.atSevere().withCause(ex).log("Error obtaining release version");
     }
     return versionInfo;
   }
@@ -110,10 +110,9 @@ public class VersionResolver {
               var version = resolveLatestReleaseVersion(versionInfo.currentVersion());
               versionInfo.setLatestReleaseVersion(version);
             } catch (Throwable ex) {
-              logger.atSevere().withCause(ex).log("Error obtaining release version info");
+              logger.atSevere().withCause(ex).log("Error obtaining release version info from endpoint");
             }
           }
-          Thread.sleep(5100);
           resolvedVersionInfo.set(versionInfo);
           return versionInfo;
         });
