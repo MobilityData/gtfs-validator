@@ -110,7 +110,8 @@ public class VersionResolver {
               var version = resolveLatestReleaseVersion(versionInfo.currentVersion());
               versionInfo.setLatestReleaseVersion(version);
             } catch (Throwable ex) {
-              logger.atSevere().withCause(ex).log("Error obtaining release version info from endpoint");
+              logger.atSevere().withCause(ex).log(
+                  "Error obtaining release version info from endpoint");
             }
           }
           resolvedVersionInfo.set(versionInfo);
