@@ -3,23 +3,21 @@ name: Web client staging CD
 on:
   push:
     branches:
-      - master
+      - 1689-web-validator-app-consumes-execution_resultsjson
 
 env:
   NODE_VERSION: "20"
 
 jobs:
-
   web_cd:
     name: Deploy web client
     runs-on: ubuntu-latest
 
     env:
-      ENV_NAME              : stg
-      CLOUDSDK_CORE_PROJECT : web-based-gtfs-validator
+      ENV_NAME: stg
+      CLOUDSDK_CORE_PROJECT: web-based-gtfs-validator
 
     steps:
-
       - uses: actions/checkout@v4
         with:
           # We need to download all tags so that the axion-release-plugin
@@ -30,9 +28,9 @@ jobs:
         uses: actions/setup-java@v4
         with:
           # We need a recent version of Java with jpackage included.
-          java-version: '17'
+          java-version: "17"
           # We use the zulu distribution, which is an OpenJDK distro.
-          distribution: 'zulu'
+          distribution: "zulu"
 
       # for npm
       - uses: actions/setup-node@v4
@@ -45,7 +43,7 @@ jobs:
 
       - uses: google-github-actions/setup-gcloud@v2
         with:
-          version: '>= 390.0.0'
+          version: ">= 390.0.0"
 
       - name: run gradle tasks
         shell: bash
