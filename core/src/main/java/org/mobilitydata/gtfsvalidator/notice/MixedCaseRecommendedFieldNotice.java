@@ -16,7 +16,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  * software and voice user interfaces.
  *
  * <table style="table-layout:auto; width:auto;">
- *   <caption>Good examples</caption>
+ *   <caption>Good examples:</caption>
  *   <tr>
  *     <th><code>Field Text</code></th>
  *     <th><code>Dataset</code></th>
@@ -36,7 +36,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  * </table>
  *
  * <table style="table-layout:auto; width:auto;">
- *   <caption>Bad examples</caption>
+ *   <caption>Bad examples:</caption>
  *   <tr>
  *     <th><code>Field Text</code></th>
  *   </tr>
