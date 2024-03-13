@@ -3,7 +3,7 @@ name: Web client staging CD
 on:
   push:
     branches:
-      - 1689-web-validator-app-consumes-execution_resultsjson
+      - master
 
 env:
   NODE_VERSION: "20"

@@ -3,7 +3,7 @@ name: Web service staging CD
 on:
   push:
     branches:
-      - 1689-web-validator-app-consumes-execution_resultsjson
+      - master
   workflow_dispatch:
 
 env:
