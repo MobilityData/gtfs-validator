@@ -69,6 +69,9 @@
   let statusModal;
 
   $: reportUrl = `${env.PUBLIC_CLIENT_REPORTS_ROOT}/${jobId}/report.html`;
+  $: executionResultUrl = `${env.PUBLIC_CLIENT_REPORTS_ROOT}/${jobId}/execution_result.json`;
+
+  const generalValidationErrorMessage = "Critical error ocurred while computing the validation results";
 
   function clearErrors() {
     errors = [];
@@ -166,7 +169,7 @@
     if (reportId) {
       jobId = reportId;
       await tick();
-      const exists = await reportExists().catch(() => false);
+      const exists = await remoteFileExists(reportUrl).catch(() => false);
       updateStatus(exists ? 'ready' : 'error');
     } else {
       // if there's no id, clear status modal
@@ -263,14 +266,16 @@
     });
   }
 
-  async function waitForJob() {
+  /**
+   * @param {string} url
+   */
+  async function waitForJob(url) {
     return new Promise(async (resolve, reject) => {
-      updateStatus('processing');
       jobInProgress = true;
 
       do {
         try {
-          jobInProgress = !(await reportExists());
+          jobInProgress = !(await remoteFileExists(url));
           if (jobInProgress) {
             await sleep(2500);
           }
@@ -285,21 +290,49 @@
     });
   }
 
-  function reportExists() {
+  /**
+   * Download and check the status of the job
+   */
+   async function verifyExecutionResultsFile() {
+    const response = await fetch(executionResultUrl);
+    if (!response.ok) {
+      throw new Error('Error processing report');
+    }
+    const result = await response.json();
+    if (result?.status.trim().toUpperCase() !== "SUCCESS") {
+      throw new Error('Error processing report');
+    }
+}
+
+  /**
+   * @param {string} url
+   */
+  function remoteFileExists(url) {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
 
       xhr.onload = () => resolve(xhr.status === 200);
       xhr.onerror = reject;
-      xhr.open('HEAD', reportUrl);
+      xhr.open('HEAD', url);
       xhr.send();
     });
-  }
+}
 
   /** @param {string} errorText */
   function addError(errorText) {
     // use assignment because .push() doesn't always trigger reactivity
     errors = [...errors, errorText];
+  }
+
+  /**
+   * @param {Error | string | unknown} error
+   */
+  function addErrorMessage(error) {
+    let message = typeof error === 'string'? error : generalValidationErrorMessage
+    if (error instanceof Error && error.message) {
+      message = error.message;
+    }
+    addError(message);
   }
 
   /** @param {number} ms */
@@ -309,53 +342,69 @@
 
   /** @param {File|string} source */
   async function generateReport(source) {
-    let canContinue = true;
-
     // if source is a URL, pass it to createJob
     const url = typeof source === 'string' ? source : undefined;
 
     // get a job id from the server
-    const job = await createJob(url).catch((error) => {
-      addError(error);
-      canContinue = false;
-    });
-
-    if (canContinue) {
-      jobId = job.jobId;
-
-      // push a url with the ID so it can be referred to later (see handleUrlParams)
-      history.pushState(null, '', `?report=${jobId}`);
-
-      // upload the file (if applicable)
-      if (source instanceof File) {
-        await putFile(job.url, source).catch((error) => {
-          addError(error);
-          canContinue = false;
-        });
-      }
-    }
-
-    // poll for report ready
-    if (canContinue) {
-      await waitForJob().catch((error) => {
-        addError(error);
-        canContinue = false;
-      });
-    }
-
-    // clean up
-    if (canContinue) {
-      updateStatus('ready');
-
-      if (form) {
-        form.reset();
-        clearFile();
-      }
-    }
-
-    // hide progress modal if there's an error
-    if (!canContinue) {
+    let job
+    try {
+      job = await createJob(url);
+    } catch (error) {
+      addError( typeof error === 'string'? error : generalValidationErrorMessage);
       statusModal.close();
+      return;      
+    }
+
+    jobId = job.jobId;
+
+    // push a url with the ID so it can be referred to later (see handleUrlParams)
+    history.pushState(null, '', `?report=${jobId}`);
+
+    // upload the file (if applicable)
+    if (source instanceof File) {
+      try {
+        await putFile(job.url, source)
+      } catch (error) {
+        console.log("the error " + error)
+        addErrorMessage(error);
+        statusModal.close();
+        return;
+      }
+    }
+
+    updateStatus('processing');
+    // poll for execution results ready
+    try {
+      await waitForJob(executionResultUrl);
+    } catch (error) {
+      addErrorMessage(error);
+      statusModal.close();
+      return;
+    }
+
+    // check job status
+    try {
+      await verifyExecutionResultsFile();
+    } catch (error) {
+      addErrorMessage(error);
+      statusModal.close();
+      return;
+    }
+
+    // poll for execution results ready
+    try {
+      await waitForJob(reportUrl);
+    } catch (error) {
+      addErrorMessage(error);
+      statusModal.close();
+      return;
+    }
+    // clean up
+    updateStatus('ready');
+
+    if (form) {
+      form.reset();
+      clearFile();
     }
   }
 
