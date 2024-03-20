@@ -2,9 +2,8 @@ name: Web client staging CD
 
 on:
   push:
-#    branches:
-#      - master
-#      - '*'
+    branches:
+      - master
   workflow_dispatch:
 
 env:
