@@ -352,10 +352,11 @@
     } catch (error) {
       addError( typeof error === 'string'? error : generalValidationErrorMessage);
       statusModal.close();
-      return;      
+      return;
     }
 
     jobId = job.jobId;
+    await tick();
 
     // push a url with the ID so it can be referred to later (see handleUrlParams)
     history.pushState(null, '', `?report=${jobId}`);
