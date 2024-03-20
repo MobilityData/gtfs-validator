@@ -228,7 +228,6 @@
       xhr.onerror = () => reject('Error authorizing upload.');
       xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 300) {
-          jobId = xhr.response.jobId;
           resolve(xhr.response);
         } else {
           reject('Error authorizing upload.');
@@ -357,6 +356,7 @@
     }
 
     jobId = job.jobId;
+    await tick();
 
     // push a url with the ID so it can be referred to later (see handleUrlParams)
     history.pushState(null, '', `?report=${jobId}`);
