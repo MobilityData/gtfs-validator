@@ -228,6 +228,7 @@
       xhr.onerror = () => reject('Error authorizing upload.');
       xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 300) {
+          jobId = xhr.response.jobId;
           resolve(xhr.response);
         } else {
           reject('Error authorizing upload.');
@@ -352,7 +353,7 @@
     } catch (error) {
       addError( typeof error === 'string'? error : generalValidationErrorMessage);
       statusModal.close();
-      return;      
+      return;
     }
 
     jobId = job.jobId;
@@ -375,6 +376,7 @@
     updateStatus('processing');
     // poll for execution results ready
     try {
+      console.log(executionResultUrl);
       await waitForJob(executionResultUrl);
     } catch (error) {
       addErrorMessage(error);
