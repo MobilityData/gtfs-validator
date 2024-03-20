@@ -376,7 +376,6 @@
     updateStatus('processing');
     // poll for execution results ready
     try {
-      console.log(executionResultUrl);
       await waitForJob(executionResultUrl);
     } catch (error) {
       addErrorMessage(error);
