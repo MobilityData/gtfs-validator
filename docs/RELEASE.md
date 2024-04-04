@@ -6,7 +6,7 @@ Update the [README.md](/README.md) to match the latest developments. The documen
 - [NOTICE_MIGRATION.md](https://github.com/MobilityData/gtfs-validator/blob/master/docs/NOTICE_MIGRATION.md) is a file that is committed in git. To change it, you need a pull request.
 - Modifying the file and creating the PR can be done automatically by executing the `Update NOTICE_MIGRATION.md` GitHub action (found [here](https://github.com/MobilityData/gtfs-validator/actions/workflows/notice_migration_generation.yml)).
 - When running the Github action, you need to specify the new version that will soon be released (e.g. v5.0.2).
-- The action will modify the file and create a pull request
+- The action will modify the file and create a pull request with this title: `docs: Automated update of NOTICE_MIGRATION.md`
 - Examine the pull request and if satisfactory merge it.
 
 ### 2. Do a pre relase
