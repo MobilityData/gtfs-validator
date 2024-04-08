@@ -159,6 +159,13 @@ jobs:
             ${{ env.MACOS_TARGET_DEST_PATH }}/*.pkg
             ${{ env.MACOS_TARGET_DEST_PATH }}/*.deb
 
+      - name: "Create zip files"
+        shell: bash
+        run: |
+          filename=${{ matrix.os }}.zip
+          zip -j "$filename" "app/pkg/build/jpackage/*"
+          mv "$filename" "app/pkg/build/jpackage/"
+
       - name: "Upload assets to release"
         if: github.event_name == 'prerelease' || github.event_name == 'release'
         env:
@@ -176,7 +183,11 @@ jobs:
 
             for (let file of await fs.readdir('./app/pkg/build/jpackage')) {
               const extension = file.split('.').pop()
-              if (extension != "msi" && extension != "dmg" && extension != "pkg" && extension != "deb")
+              if (extension != "msi" 
+                && extension != "dmg"
+                && extension != "pkg" 
+                && extension != "deb"
+                && extension != "zip"
                 continue;
             
               console.log('Uploading', file);
