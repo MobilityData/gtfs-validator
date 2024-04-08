@@ -162,9 +162,18 @@ jobs:
       - name: "Create zip files"
         shell: bash
         run: |
+          # The created zip file will be uploaded to the release along with installers in app/pkg/build/jpackage in the
+          # next step.
           filename=${{ matrix.os }}.zip
-          zip -j "$filename" "app/pkg/build/jpackage/*"
-          mv "$filename" "app/pkg/build/jpackage/"
+          pushd app/pkg/build/jpackage
+          # The windows runner does not have zip, but has 7zip.
+          if [ "${{ matrix.os }}" == "windows-latest" ]; then
+            7z a -tzip $filename *.msi
+          else
+            # Normally there should be either .deb or (.pkg and .dmg) Just capture all.
+            zip -j $filename *.deb *.dmg *.pkg
+          fi
+          popd
 
       - name: "Upload assets to release"
         if: github.event_name == 'prerelease' || github.event_name == 'release'
@@ -187,7 +196,7 @@ jobs:
                 && extension != "dmg"
                 && extension != "pkg" 
                 && extension != "deb"
-                && extension != "zip"
+                && extension != "zip")
                 continue;
             
               console.log('Uploading', file);
