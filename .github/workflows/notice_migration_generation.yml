@@ -1,8 +1,11 @@
 name: Update NOTICE_MIGRATION.md
 
 on:
-  release:
-    types: [ prereleased, released ]
+  workflow_dispatch:
+    inputs:
+      NEW_VERSION:
+        description: 'The release version to add to NOTICE_MIGRATION.md. e.g. v5.0.2'
+        required: true
 
 jobs:
   update_notice_migration:
@@ -26,6 +29,7 @@ jobs:
           distribution: 'zulu'
 
       - name: Get previous release version
+        # The script will set the PREVIOUS_VERSION environment variable
         run: python3 scripts/notice-migration-generator/get_previous_release.py
 
       - name: Checkout previous version
@@ -53,7 +57,7 @@ jobs:
       - name: Upload current rules.json
         uses: actions/upload-artifact@v3
         with:
-          name: rules-${{ github.event.release.tag_name }}
+          name: rules-${{ github.event.inputs.NEW_VERSION }}
           path: web/client/static/rules.json
 
       - name: Download all workflow artifacts
@@ -65,7 +69,7 @@ jobs:
       - name: Run update script
         run: |
           echo "CHANGED_NOTICES<<EOF" >> $GITHUB_ENV
-          python3 scripts/notice-migration-generator/notice_migration_generator.py -r ${{ github.event.release.tag_name }} >> $GITHUB_ENV
+          python3 scripts/notice-migration-generator/notice_migration_generator.py -r ${{ github.event.inputs.NEW_VERSION }} >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
       - name: Create PR

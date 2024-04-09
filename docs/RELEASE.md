@@ -2,6 +2,13 @@
 ### 1. Update documentation
 Update the [README.md](/README.md) to match the latest developments. The documentation should accurately reflect the use of the `jar` that is to be released. 
 
+### 2. Update NOTICE_MIGRATION.md file
+- [NOTICE_MIGRATION.md](https://github.com/MobilityData/gtfs-validator/blob/master/docs/NOTICE_MIGRATION.md) is a file that is committed in git. To change it, you need a pull request.
+- Modifying the file and creating the PR can be done automatically by executing the `Update NOTICE_MIGRATION.md` GitHub action (found [here](https://github.com/MobilityData/gtfs-validator/actions/workflows/notice_migration_generation.yml)).
+- When running the Github action, you need to specify the new version that will soon be released (e.g. v5.0.2).
+- The action will modify the file and create a pull request with this title: `docs: Automated update of NOTICE_MIGRATION.md`
+- Examine the pull request and if satisfactory merge it.
+
 ### 2. Do a pre relase
 1. Go to the release section of GitHub ![step 1](https://user-images.githubusercontent.com/35747326/99820876-567dd600-2b1f-11eb-87d2-eef132b3016a.png)
 

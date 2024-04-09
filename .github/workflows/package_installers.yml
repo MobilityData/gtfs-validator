@@ -159,6 +159,22 @@ jobs:
             ${{ env.MACOS_TARGET_DEST_PATH }}/*.pkg
             ${{ env.MACOS_TARGET_DEST_PATH }}/*.deb
 
+      - name: "Create zip files"
+        shell: bash
+        run: |
+          # The created zip file will be uploaded to the release along with installers in app/pkg/build/jpackage in the
+          # next step.
+          filename=${{ matrix.os }}.zip
+          pushd app/pkg/build/jpackage
+          # The windows runner does not have zip, but has 7zip.
+          if [ "${{ matrix.os }}" == "windows-latest" ]; then
+            7z a -tzip $filename *.msi
+          else
+            # Normally there should be either .deb or (.pkg and .dmg) Just capture all.
+            zip -j $filename *.deb *.dmg *.pkg
+          fi
+          popd
+
       - name: "Upload assets to release"
         if: github.event_name == 'prerelease' || github.event_name == 'release'
         env:
@@ -176,7 +192,11 @@ jobs:
 
             for (let file of await fs.readdir('./app/pkg/build/jpackage')) {
               const extension = file.split('.').pop()
-              if (extension != "msi" && extension != "dmg" && extension != "pkg" && extension != "deb")
+              if (extension != "msi" 
+                && extension != "dmg"
+                && extension != "pkg" 
+                && extension != "deb"
+                && extension != "zip")
                 continue;
             
               console.log('Uploading', file);
