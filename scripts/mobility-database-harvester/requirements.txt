@@ -1,7 +1,7 @@
 cachetools==4.2.2
 certifi==2022.12.7
 charset-normalizer==2.0.4
-idna==3.2
+idna==3.7
 pandas==1.4.3
 packaging==21.0
 protobuf==3.18.3
