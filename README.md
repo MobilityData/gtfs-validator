@@ -45,6 +45,13 @@ Validation reports have a unique URL link that can be shared and are available 3
 
 The GTFS Web Validator contains two main components: the GTFS Web Validator Client and the GTFS Validator Web Service. More information about these components can be found in [GTFS Web Validator Client](./web/client/README.md) and [GTFS Validator Web Service](./web/service/README.md).
 
+Several users have reported issues with the validator when processing their GTFS feeds. These issues arise due to the configuration of their websites, which may not be set up to handle:
+
+1. Requests that come with custom user agents.
+2. Requests originating from non-browser sources.
+
+To facilitate easier debugging and logging, we have made our user agent header explicit. The user agent string follows the format: "MobilityData GTFS-Validator/{validatorVersion} (Java {java version})". In cases where the `validatorVersion` is null, the `{validatorVersion}` segment in the user agent string will be left blank.
+
 # Using the Desktop app
 ### Setup
 1. Navigate to the [Releases page](https://github.com/MobilityData/gtfs-validator/releases) and download the latest `Gtfs Validator` installer for your operating system:
