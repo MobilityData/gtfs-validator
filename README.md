@@ -50,7 +50,7 @@ Several users have reported issues with the validator when processing their GTFS
 1. Requests that come with custom user agents.
 2. Requests originating from non-browser sources.
 
-To facilitate easier debugging and logging, we have made our user agent header explicit. The user agent string follows the format: "MobilityData GTFS-Validator/{validatorVersion} (Java {java version})". In cases where the `validatorVersion` is null, the `{validatorVersion}` segment in the user agent string will be left blank.
+To facilitate easier debugging and logging, we have made our user agent header explicit. The user agent string follows the format: "MobilityData GTFS-Validator/{validatorVersion} (Java {java version})". In cases where the `validatorVersion` is null, the `{validatorVersion}` segment in the user agent string will be left blank. The string "MobilityData GTFS-Validator/5.0.1 (Java 11.0.1)" serves as an example of the User Agent string.
 
 # Using the Desktop app
 ### Setup
