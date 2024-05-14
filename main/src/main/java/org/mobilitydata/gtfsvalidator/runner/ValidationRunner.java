@@ -72,7 +72,9 @@ public class ValidationRunner {
   }
 
   public Status run(ValidationRunnerConfig config) {
-    VersionInfo versionInfo = versionResolver.getVersionInfoWithTimeout(Duration.ofSeconds(5));
+    VersionInfo versionInfo =
+        versionResolver.getVersionInfoWithTimeout(
+            Duration.ofSeconds(5), config.skipValidatorUpdate());
     logger.atInfo().log("VersionInfo: %s", versionInfo);
     if (versionInfo.updateAvailable()) {
       logger.atInfo().log("A new version of the validator is available!");
@@ -100,7 +102,8 @@ public class ValidationRunner {
     GtfsFeedContainer feedContainer;
     GtfsInput gtfsInput = null;
     try {
-      gtfsInput = createGtfsInput(config, versionInfo.currentVersion().get(), noticeContainer);
+      gtfsInput =
+          createGtfsInput(config, versionInfo.currentVersion().orElse(null), noticeContainer);
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot load GTFS feed");
       noticeContainer.addSystemError(new IOError(e));
@@ -267,7 +270,7 @@ public class ValidationRunner {
       }
     }
     ZonedDateTime now = ZonedDateTime.now();
-    String date = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd 'at' HH:mm:ss z"));
+    String date = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX"));
     boolean is_different_date = !now.toLocalDate().equals(config.dateForValidation());
 
     Gson gson = createGson(config.prettyJson());

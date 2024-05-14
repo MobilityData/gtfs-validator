@@ -51,13 +51,20 @@ public class VersionResolver {
    * Attempts to resolve the application {@link VersionInfo} within the specified timeout. If the
    * version info can't be resolved in the specified timeout, an empty info will be returned.
    */
-  public VersionInfo getVersionInfoWithTimeout(Duration timeout) {
+  public VersionInfo getVersionInfoWithTimeout(Duration timeout, boolean skipValidatorUpdate) {
+    VersionInfo versionInfo = VersionInfo.empty();
     try {
-      resolve();
-      return resolvedVersionInfo.get(timeout.toMillis(), TimeUnit.MILLISECONDS);
+      versionInfo = resolve(skipValidatorUpdate);
     } catch (Throwable ex) {
-      return VersionInfo.empty();
+      logger.atSevere().withCause(ex).log("Error resolving version");
     }
+
+    try {
+      versionInfo = resolvedVersionInfo.get(timeout.toMillis(), TimeUnit.MILLISECONDS);
+    } catch (Throwable ex) {
+      logger.atSevere().withCause(ex).log("Error obtaining release version");
+    }
+    return versionInfo;
   }
 
   /**
@@ -65,7 +72,7 @@ public class VersionResolver {
    * becomes available.
    */
   public void addCallback(Consumer<VersionInfo> callback) {
-    resolve();
+    resolve(false);
     Futures.addCallback(
         resolvedVersionInfo,
         new FutureCallback<>() {
@@ -82,26 +89,35 @@ public class VersionResolver {
         executor);
   }
 
-  /** Starts version resolution on a background thread. */
-  public synchronized void resolve() {
+  /** Starts release version resolution on a background thread. */
+  public synchronized VersionInfo resolve(boolean skipValidatorUpdate) {
     if (resolutionStarted) {
-      return;
+      return VersionInfo.empty();
     }
     resolutionStarted = true;
 
+    final VersionInfo versionInfo = VersionInfo.empty();
+    try {
+      versionInfo.setCurrentVersion(resolveCurrentVersion());
+    } catch (IOException ex) {
+      logger.atSevere().withCause(ex).log("Error resolving version info");
+    }
+
     executor.submit(
         () -> {
-          try {
-            Optional<String> currentVersion = resolveCurrentVersion();
-            Optional<String> latestReleaseVersion = resolveLatestReleaseVersion(currentVersion);
-            VersionInfo info = VersionInfo.create(currentVersion, latestReleaseVersion);
-            resolvedVersionInfo.set(info);
-            return info;
-          } catch (Throwable ex) {
-            logger.atSevere().withCause(ex).log("Error resolving version info");
+          if (!skipValidatorUpdate) {
+            try {
+              var version = resolveLatestReleaseVersion(versionInfo.currentVersion());
+              versionInfo.setLatestReleaseVersion(version);
+            } catch (Throwable ex) {
+              logger.atSevere().withCause(ex).log(
+                  "Error obtaining release version info from endpoint");
+            }
           }
-          return VersionInfo.empty();
+          resolvedVersionInfo.set(versionInfo);
+          return versionInfo;
         });
+    return versionInfo;
   }
 
   /**
@@ -150,7 +166,7 @@ public class VersionResolver {
         new URL(
             String.format(
                 "%s?application_type=%s&current_version=%s",
-                LATEST_RELEASE_VERSION_URL, applicationType, currentVersion.orElse("Ï")));
+                LATEST_RELEASE_VERSION_URL, applicationType, currentVersion.orElse("")));
     try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()))) {
       Gson gson = new GsonBuilder().create();
       VersionResponse response = gson.fromJson(in, VersionResponse.class);

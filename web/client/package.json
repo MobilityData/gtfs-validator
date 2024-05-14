@@ -5,25 +5,28 @@
   "scripts": {
     "start": "npm run dev",
     "dev": "vite dev",
+    "start:cypress:config": "vite --config vite.config-cypress.js",
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
     "lint": "prettier --plugin-search-dir . --check . && eslint .",
-    "format": "prettier --plugin-search-dir . --write ."
+    "format": "prettier --plugin-search-dir . --write .",
+    "cypress:run": "cypress run",
+    "cypress:open": "cypress open"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "^1.0.0",
     "@sveltejs/kit": "^1.15.1",
-    "@types/lodash": "^4.14.194",
+    "@types/lodash": "^4.14.202",
     "@types/marked": "^4.0.8",
     "autoprefixer": "^10.4.13",
-    "cypress": "^12.10.0",
+    "cypress": "^13.6.6",
     "eslint": "^8.28.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-svelte3": "^4.0.0",
     "lodash": "^4.17.21",
-    "marked": "^4.2.12",
+    "marked": "^12.0.0",
     "postcss": "^8.4.20",
     "postcss-import": "^15.1.0",
     "prettier": "^2.8.0",
@@ -32,7 +35,8 @@
     "svelte-check": "^2.9.2",
     "tailwindcss": "^3.2.4",
     "typescript": "^4.9.3",
-    "vite": "^4.0.0"
+    "vite": "^4.5.2",
+    "wait-on": "^7.2.0"
   },
   "type": "module"
 }

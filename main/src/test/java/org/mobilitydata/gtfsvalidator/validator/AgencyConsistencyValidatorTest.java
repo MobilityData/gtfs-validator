@@ -72,7 +72,9 @@ public class AgencyConsistencyValidatorTest {
                     ZoneId.of("America/Montreal"),
                     Locale.CANADA)));
     assertThat(notices)
-        .containsExactly(new MissingRecommendedFieldNotice("agency.txt", 0, "agency name"));
+        .containsExactly(
+            new MissingRecommendedFieldNotice(
+                GtfsAgency.FILENAME, 0, GtfsAgency.AGENCY_ID_FIELD_NAME));
   }
 
   @Test
@@ -95,7 +97,9 @@ public class AgencyConsistencyValidatorTest {
                     ZoneId.of("America/Montreal"),
                     Locale.CANADA)));
     assertThat(notices)
-        .containsExactly(new MissingRequiredFieldNotice("agency.txt", 1, "agency_id"));
+        .containsExactly(
+            new MissingRequiredFieldNotice(
+                GtfsAgency.FILENAME, 1, GtfsAgency.AGENCY_ID_FIELD_NAME));
   }
 
   @Test

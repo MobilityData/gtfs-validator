@@ -37,7 +37,7 @@ public class JsonReportSummary {
   @SerializedName("counts")
   private JsonReportCounts jsonReportCounts;
 
-  private List<String> gtfsComponents;
+  private List<String> gtfsFeatures;
 
   public JsonReportSummary(
       FeedMetadata feedMetadata,
@@ -89,7 +89,7 @@ public class JsonReportSummary {
                 + ", there will be missing data in the report.");
       }
 
-      this.gtfsComponents =
+      this.gtfsFeatures =
           feedMetadata.specFeatures == null
               ? null
               : feedMetadata.specFeatures.entrySet().stream()

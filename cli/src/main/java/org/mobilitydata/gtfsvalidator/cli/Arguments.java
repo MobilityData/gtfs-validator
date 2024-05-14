@@ -105,6 +105,11 @@ public class Arguments {
       description = "Export notices schema")
   private boolean exportNoticeSchema = false;
 
+  @Parameter(
+      names = {"-svu", "--skip_validator_update"},
+      description = "Skips check for new validator version")
+  private boolean skipValidatorUpdate = false;
+
   ValidationRunnerConfig toConfig() throws URISyntaxException {
     ValidationRunnerConfig.Builder builder = ValidationRunnerConfig.builder();
     if (input != null) {
@@ -135,6 +140,7 @@ public class Arguments {
     }
     builder.setNumThreads(numThreads);
     builder.setPrettyJson(pretty);
+    builder.setSkipValidatorUpdate(skipValidatorUpdate);
     return builder.build();
   }
 
