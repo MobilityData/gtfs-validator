@@ -22,14 +22,12 @@
 
 - Feature/fix branch are created for every feature we want to add to the software (or bug we want to fix).
 - They stem from master, are usually short-lived and are merged back to master.
-- We already use these for adding features or fixing bugs in the master branch. 
 
 ## Maintenance/release branches
 - In general we will try not to create long-lived release branches.
 - A long-lived release branch will be created only if any merge to master that came after the previous release is deemed not suitable to go in the maintenance release.
 - For example the change could be too extensive, or introduce an undue risk in the maintenance release. 
   - This is true in particular if the testing infrastructure is not sufficient, meaning it's more difficult to know if a change is safe.
-
 
 ## Hotfixes
 - We should strive to not do hotfixes, but sometimes it's inevitable.
@@ -47,7 +45,7 @@
     - If a merge on the master branch cannot be included in the maintenance release (See for example commit I) then we have no choice but to create a maintenance branch
         - Create a maintenance branch stemming from the last commit of master that can go in the maintenance release. Commit F in our example.
           - This branch becomes a long-lived branch that can be used for further maintenance releases and should be protected from deletion.
-          - This branch should require pull request do add commits to it.
+          - This branch should require pull request to add commits to it.
         - After that, master cannot be merged into the maintenance branch, since it would introduce undesirable commits.
         - Also create a hotfix branch stemming from the same commit (commit F in our example)
         - Once fixed, merge the hotfix branch into the maintenance branch. This creates commit K, that should be tagged and used for the maintenance release.
