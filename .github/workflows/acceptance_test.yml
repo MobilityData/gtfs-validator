@@ -157,9 +157,10 @@ jobs:
         env:
           OUTPUT_BASE: ${{ github.sha }}
       - name: Extract ID
-        id: extract-id
         run: |
-          echo "ID=$(jq -r '.id' <<< '${{ matrix.data }}' | tr -cd '[:alnum:]-_')" >> $GITHUB_ENV
+          id=$(jq -r '.id' <<< '${{ matrix.data }}')
+          last_number=$(echo "$id" | grep -oE '[0-9]+$')
+          echo "ID=$last_number" >> $GITHUB_ENV
       - name: Persist reports
         uses: actions/upload-artifact@v4
         with:
