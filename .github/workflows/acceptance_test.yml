@@ -156,10 +156,14 @@ jobs:
           bash ./scripts/queue_runner.sh --include-master $queue
         env:
           OUTPUT_BASE: ${{ github.sha }}
+      - name: Extract ID
+        id: extract-id
+        run: |
+          echo "ID=$(jq -r '.id' <<< '${{ matrix.data }}' | tr -cd '[:alnum:]-_')" >> $GITHUB_ENV
       - name: Persist reports
         uses: actions/upload-artifact@v4
         with:
-          name: reports_${{ matrix.data }}
+          name: reports_${{ env.ID }}
           path: ${{ github.sha }}/output
   merge-reports-artifacts:
      runs-on: ubuntu-latest
