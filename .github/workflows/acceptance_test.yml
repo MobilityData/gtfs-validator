@@ -159,9 +159,17 @@ jobs:
       - name: Persist reports
         uses: actions/upload-artifact@v4
         with:
-          name: reports_all
+          name: reports_${{ matrix.data }}
           path: ${{ github.sha }}/output
-          merge-multiple: true
+  merge-reports-artifacts:
+     runs-on: ubuntu-latest
+     needs: [ get-reports ]
+     steps:
+       - name: Merge Artifacts
+         uses: actions/upload-artifact/merge@v4
+         with:
+           name: reports_all
+           pattern: reports_*
   compare-outputs:
     needs: [ get-reports ]
     runs-on: ubuntu-latest
