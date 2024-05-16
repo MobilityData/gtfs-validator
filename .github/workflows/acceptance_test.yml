@@ -156,15 +156,24 @@ jobs:
           bash ./scripts/queue_runner.sh --include-master $queue
         env:
           OUTPUT_BASE: ${{ github.sha }}
-      - name: Extract ID
+      - name: Extract and concatenate IDs
         run: |
-          id=$(jq -r '.id' <<< '${{ matrix.data }}')
-          last_number=$(echo "$id" | grep -oE '[0-9]+$')
-          echo "ID=$last_number" >> $GITHUB_ENV
+          ids=$(echo '${{ matrix.data }}' | jq -r '.[].id')
+          concatenated_ids=""
+          for id in $ids; do
+            number=$(echo "$id" | grep -oE '[0-9]+$')
+            if [ -z "$concatenated_ids" ]; then
+              concatenated_ids="$number"
+            else
+              concatenated_ids="${concatenated_ids}_$number"
+            fi
+          done
+          echo "CONCATENATED_ID=$concatenated_ids" >> $GITHUB_ENV
+
       - name: Persist reports
         uses: actions/upload-artifact@v4
         with:
-          name: reports_${{ env.ID }}
+          name: reports_${{ env.CONCATENATED_ID }}
           path: ${{ github.sha }}/output
   merge-reports-artifacts:
      runs-on: ubuntu-latest
