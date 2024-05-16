@@ -1,5 +1,5 @@
 name: Rule acceptance tests
-
+# TODO: remove this comment
 on:
   pull_request:
     branches: [ master ]
