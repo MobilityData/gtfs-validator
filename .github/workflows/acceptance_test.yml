@@ -1,5 +1,4 @@
 name: Rule acceptance tests
-# TODO: remove this comment
 on:
   pull_request:
     branches: [ master ]
@@ -162,6 +161,7 @@ jobs:
         with:
           name: reports_all
           path: ${{ github.sha }}/output
+          merge-multiple: true
   compare-outputs:
     needs: [ get-reports ]
     runs-on: ubuntu-latest
