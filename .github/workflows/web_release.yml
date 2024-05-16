@@ -51,3 +51,19 @@ jobs:
         run: |
           ENV_FILE=web/pipeline/${ENV_NAME}.env source web/pipeline/env-file.sh
           ./gradlew webCD
+
+      - name: Load secrets from 1Password to be used for sending notification
+        id: onepw_secrets
+        uses: 1password/load-secrets-action@v1.3.1
+        with:
+          export-env: true # Export loaded secrets as environment variables
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          CREDENTIALS: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/ifkeehu5gzi7wy5ub5qvwkaire/credential"
+
+      - name: Send a notification to mobility-feed-api
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ env.CREDENTIALS }}
+          repository: MobilityData/mobility-feed-api
+          event-type: gtfs-validator-release
