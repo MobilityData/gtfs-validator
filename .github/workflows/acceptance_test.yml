@@ -158,7 +158,8 @@ jobs:
           OUTPUT_BASE: ${{ github.sha }}
       - name: Extract and concatenate IDs
         run: |
-          ids=$(echo '${{ matrix.data }}' | jq -r '.[].id')
+          matrix_data='[${{ matrix.data }}]'
+          ids=$(echo "$matrix_data" | jq -r '.[].id')
           concatenated_ids=""
           for id in $ids; do
             number=$(echo "$id" | grep -oE '[0-9]+$')
