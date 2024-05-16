@@ -52,9 +52,16 @@ public interface GtfsStopTimeSchema extends GtfsEntity {
 
   @FieldType(FieldTypeEnum.ID)
   @Index
-  @Required
+  @ConditionallyRequired
   @ForeignKey(table = "stops.txt", field = "stop_id")
   String stopId();
+
+
+  @FieldType(FieldTypeEnum.ID)
+  @ConditionallyRequired
+  @ForeignKey(table = "location_groups.txt", field = "location_group_id")
+  String locationGroupId();
+
 
   @PrimaryKey(isSequenceUsedForSorting = true, translationRecordIdType = RECORD_SUB_ID)
   @Required
