@@ -33,6 +33,7 @@ public class JsonReportSummary {
   private JsonReportFeedInfo feedInfo;
   private List<JsonReportAgencyMetadata> agencies;
   private Set<String> files;
+  private double validationTimeSeconds;
 
   @SerializedName("counts")
   private JsonReportCounts jsonReportCounts;
@@ -57,6 +58,7 @@ public class JsonReportSummary {
       this.htmlReportName = config.htmlReportFileName();
       this.countryCode = config.countryCode().getCountryCode();
       this.dateForValidation = config.dateForValidation().toString();
+      this.validationTimeSeconds = feedMetadata.validationTimeSeconds;
     } else {
       logger.atSevere().log(
           "No validation configuration for JSON report, there will be missing data in the report.");

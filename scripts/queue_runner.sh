@@ -1,15 +1,13 @@
 #!/bin/bash
-closing_curly_bracket="}"
+
+source "$(dirname "$0")/common.sh"
+
 master="$1"
 raw_queue_string="${@:2}"
 IFS=" " read -a queue <<< $raw_queue_string
 for item in "${queue[@]}"
 do
-   item=${item//\{id/\{\"id\"}
-   item=${item//,/\",}
-   item=${item//\,url/\,\"url\"}
-   item=${item//\":/\":\"}
-   item=${item//$closing_curly_bracket/\"$closing_curly_bracket}
+   item=$(format_json "$item")
 
    ID=$(jq '.id' <<< "$item")
    URL=$(jq '.url' <<< "$item")
