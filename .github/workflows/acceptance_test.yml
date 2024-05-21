@@ -15,14 +15,20 @@ on:
       - 'web/**'
       - '.github/workflows/web_**.yml'
       - '.github/workflows/stg_web_**.yml'
-    types: [review_requested, ready_for_review]
+    types: [ opened, synchronize, reopened, ready_for_review ]
 concurrency:
   group: ${{ github.head_ref }}
   cancel-in-progress: true
 jobs:
+  fail_if_pull_request_is_draft: # Fails in order to indicate that pull request needs to be marked as ready to review to pass.
+    if: github.event.pull_request.draft == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if PR is a draft
+        run: exit 1
   pre_ci:
     name: Prepare CI environment
-    if: github.event.pull_request.draft == false
+    if: github.event.pull_request.draft == false # Skip this job and its dependencies if the PR is draft
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Project
