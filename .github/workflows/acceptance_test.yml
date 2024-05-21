@@ -150,16 +150,17 @@ jobs:
         with:
           name: gtfs-validator-snapshot
           path: gtfs-validator-snapshot
+      - name: Extract and concatenate IDs
+        run: |
+          concatenated_ids=$(bash ./scripts/extract_ids.sh '${{ matrix.data }}')
+          echo "CONCATENATED_IDS=$concatenated_ids" >> $GITHUB_ENV
+          echo "CONCATENATED_IDS=$concatenated_ids"
       - name: Run validators on queued URLs
         run: |
           queue="${{ matrix.data }}"
           bash ./scripts/queue_runner.sh --include-master $queue
         env:
           OUTPUT_BASE: ${{ github.sha }}
-      - name: Extract and concatenate IDs
-        run: |
-          concatenated_ids=$(bash ./scripts/extract_ids.sh '${{ matrix.data }}')
-          echo "CONCATENATED_IDS=$concatenated_ids" >> $GITHUB_ENV
       - name: Persist reports
         uses: actions/upload-artifact@v4
         with:
