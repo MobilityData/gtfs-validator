@@ -11,10 +11,13 @@ function format_json() {
     raw_data=${raw_data//\":/\":\"}
     raw_data=${raw_data//$closing_curly_bracket/\"$closing_curly_bracket}
 
+    # Correct the improperly escaped double quotes
+    raw_data=${raw_data//\"\"/\"}
+
     echo "$raw_data"
 }
 
 function extract_last_number() {
     local id="$1"
-    echo "$id" | grep -oE '[0-9]+$'
+    results=$(echo "$id" | grep -oE '[0-9]+$')
 }

@@ -15,6 +15,7 @@ on:
       - 'web/**'
       - '.github/workflows/web_**.yml'
       - '.github/workflows/stg_web_**.yml'
+    types: [review_requested, ready_for_review]
 concurrency:
   group: ${{ github.head_ref }}
   cancel-in-progress: true
