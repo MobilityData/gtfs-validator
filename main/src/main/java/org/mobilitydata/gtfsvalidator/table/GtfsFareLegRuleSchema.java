@@ -21,6 +21,7 @@ import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.
 import org.mobilitydata.gtfsvalidator.annotation.FieldType;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
+import org.mobilitydata.gtfsvalidator.annotation.ForeignKeys;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.Index;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
@@ -34,7 +35,10 @@ public interface GtfsFareLegRuleSchema extends GtfsEntity {
 
   @FieldType(FieldTypeEnum.ID)
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)
-  @ForeignKey(table = "routes.txt", field = "network_id")
+  @ForeignKeys({
+    @ForeignKey(table = "routes.txt", field = "network_id"),
+    @ForeignKey(table = "networks.txt", field = "network_id")
+  })
   String networkId();
 
   @FieldType(FieldTypeEnum.ID)
