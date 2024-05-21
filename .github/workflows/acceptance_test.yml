@@ -66,10 +66,10 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
-      - name: Package cli app jar with Gradle
+      - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3
-        with:
-          arguments: shadowJar
+      - name: Package cli app jar with Gradle
+        run: ./gradlew shadowJar
       - name: Persist gtfs-validator snapshot jar
         uses: actions/upload-artifact@v4
         with:
@@ -98,10 +98,10 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
-      - name: Package cli app jar with Gradle
+      - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3
-        with:
-          arguments: shadowJar
+      - name: Package cli app jar with Gradle
+        run: ./gradlew shadowJar
       - name: Persist gtfs-validator jar from master branch
         uses: actions/upload-artifact@v4
         with:
