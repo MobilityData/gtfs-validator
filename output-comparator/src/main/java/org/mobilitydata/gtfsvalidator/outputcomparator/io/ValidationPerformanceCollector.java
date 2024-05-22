@@ -89,7 +89,8 @@ public class ValidationPerformanceCollector {
     allKeys.addAll(latestTimes.keySet());
 
     for (String groupId : allKeys) {
-      List<Double> referenceTimes = this.referenceTimes.get(groupId);
+      List<Double> referenceTimes =
+          this.referenceTimes.getOrDefault(groupId, Collections.emptyList());
       List<Double> latestTimes = this.latestTimes.getOrDefault(groupId, Collections.emptyList());
 
       if (referenceTimes.isEmpty() || latestTimes.isEmpty()) {
