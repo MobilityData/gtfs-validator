@@ -107,13 +107,41 @@ public class ValidationReportComparatorTest {
 
     assertThat(result.reportSummary())
         .isEqualTo(
-            "❌ Invalid acceptance test.\n"
-                + "New Errors: 1 out of 2 datasets (~50%) are invalid due to code change, which is above the provided threshold of 25%.\n"
-                + "Dropped Errors: 0 out of 2 datasets (~0%) are invalid due to code change, which is less than the provided threshold of 25%.\n"
-                + "New Warnings: 0 out of 2 datasets (~0%) are invalid due to code change, which is less than the provided threshold of 25%.\n"
-                + "Dropped Warnings: 0 out of 2 datasets (~0%) are invalid due to code change, which is less than the provided threshold of 25%.\n"
-                + "0 out of 2 sources (~0 %) are corrupted.\n"
-                + "❌ Invalid acceptance test.\n");
+            "## \uD83D\uDCDD Acceptance Test Report\n"
+                + "### \uD83D\uDCCB Summary\n"
+                + "❌ The rule acceptance test has failed.\n"
+                + "### \uD83D\uDCCA Notices Comparison\n"
+                + "<details>\n"
+                + "<summary><strong>New Errors</strong> (1 out of 2 datasets, ~50%) ❌</summary>\n"
+                + "<p>Details of new errors due to code change, which is above the provided threshold of 25%.</p>\n"
+                + "\n"
+                + "| Dataset | Notice Code |\n"
+                + "|---------|-------------|\n"
+                + "| feed-id-b | missing_required_file |\n"
+                + "</details>\n"
+                + "<details>\n"
+                + "<summary><strong>Dropped Errors</strong> (0 out of 2 datasets, ~0%) ✅</summary>\n"
+                + "<p>No changes were detected due to the code change.</p>\n"
+                + "</details>\n"
+                + "<details>\n"
+                + "<summary><strong>New Warnings</strong> (0 out of 2 datasets, ~0%) ✅</summary>\n"
+                + "<p>No changes were detected due to the code change.</p>\n"
+                + "</details>\n"
+                + "<details>\n"
+                + "<summary><strong>Dropped Warnings</strong> (0 out of 2 datasets, ~0%) ✅</summary>\n"
+                + "<p>No changes were detected due to the code change.</p>\n"
+                + "</details>\n"
+                + "\n"
+                + "### \uD83D\uDEE1\uFE0F Corruption Check\n"
+                + "0 out of 2 sources (~0 %) are corrupted.\n\n\n\n"
+                + "### ⏱️ Performance Assessment\n\n"
+                + "<details>\n"
+                + "<summary><strong>📈 Validation Time</strong></summary>\n"
+                + "<p>Assess the performance in terms of seconds taken for the validation process.</p>\n"
+                + "\n"
+                + "| Time Metric                      | Dataset ID        | Reference (s)  | Latest (s)     | Difference (s) |\n"
+                + "|-----------------------------|-------------------|----------------|----------------|----------------|\n"
+                + "</details>\n\n\n");
   }
 
   @Test

@@ -109,20 +109,50 @@ public class ChangedNoticesCollector {
     return computeInvalidDatasetPercentage() >= this.percentInvalidDatasetsThreshold;
   }
 
-  /** Returns a human-readable string summarizing the number of invalid datasets. */
-  public String generateLogString() {
+  /**
+   * Returns a human-readable string summarizing the number of invalid datasets.
+   *
+   * @param severityLevelName the name of the severity level
+   */
+  public String generateLogString(String severityLevelName) {
     StringBuilder b = new StringBuilder();
+    b.append("<details>\n<summary><strong>").append(severityLevelName).append("</strong> ");
     b.append(
         String.format(
-            "%d out of %d datasets (~%.0f%%) are invalid due to code change, which is ",
+            "(%d out of %d datasets, ~%.0f%%)",
             invalidDatasetCount, totalDatasetCount, computeInvalidDatasetPercentage()));
     if (isAboveThreshold()) {
-      b.append("above");
+      b.append(" ❌</summary>\n");
     } else {
-      b.append("less than");
+      b.append(" ✅</summary>\n");
     }
-    b.append(
-        String.format(" the provided threshold of %.0f%%.", this.percentInvalidDatasetsThreshold));
+
+    List<ChangedNotice> changedNotices = getChangedNotices();
+    if (!changedNotices.isEmpty()) {
+      if (isAboveThreshold()) {
+        b.append("<p>Details of new errors due to code change, which is above");
+      } else {
+        b.append("<p>Details of new errors due to code change, which is less than");
+      }
+      b.append(
+          String.format(
+              " the provided threshold of %.0f%%.</p>\n", this.percentInvalidDatasetsThreshold));
+      b.append("\n| Dataset | Notice Code |\n");
+      b.append("|---------|-------------|\n");
+      for (ChangedNotice notice : changedNotices) {
+        for (AffectedSource source : notice.getAffectedSources()) {
+          b.append("| ")
+              .append(source.sourceId())
+              .append(" | ")
+              .append(notice.noticeCode())
+              .append(" |\n");
+        }
+      }
+    } else {
+      b.append("<p>No changes were detected due to the code change.</p>\n");
+    }
+
+    b.append("</details>");
     return b.toString();
   }
 

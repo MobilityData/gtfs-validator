@@ -223,7 +223,7 @@ jobs:
         id: generate-comment
         if: always()
         run: |
-          PR_COMMENT=$(< acceptance-test-output/acceptance_report_summary.txt)
+          PR_COMMENT=$(< acceptance-test-output/acceptance_report_summary.md)
           echo "PR_COMMENT<<EOF" >> $GITHUB_ENV
           echo "$PR_COMMENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV

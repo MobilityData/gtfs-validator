@@ -42,6 +42,8 @@ import org.mobilitydata.gtfsvalidator.notice.ResolvedNotice;
 public class ValidationReportDeserializer implements JsonDeserializer<ValidationReport> {
 
   private static final String NOTICES_MEMBER_NAME = "notices";
+  private static final String SUMMARY_MEMBER_NAME = "summary";
+  private static final String VALIDATION_TIME_MEMBER_NAME = "validationTimeSeconds";
 
   @Override
   public ValidationReport deserialize(
@@ -50,11 +52,18 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
     JsonObject rootObject = json.getAsJsonObject();
     // Note that the json file contains the summary in addition to the notices, but it is ignored
     // since currently the report comparison is only on the notices
+    Double validationTimeSeconds = null;
+    if (rootObject.has(SUMMARY_MEMBER_NAME)) {
+      JsonObject summaryObject = rootObject.getAsJsonObject(SUMMARY_MEMBER_NAME);
+      if (summaryObject.has(VALIDATION_TIME_MEMBER_NAME)) {
+        validationTimeSeconds = summaryObject.get(VALIDATION_TIME_MEMBER_NAME).getAsDouble();
+      }
+    }
     JsonArray noticesArray = rootObject.getAsJsonArray(NOTICES_MEMBER_NAME);
     for (JsonElement childObject : noticesArray) {
       notices.add(Notice.GSON.fromJson(childObject, NoticeReport.class));
     }
-    return new ValidationReport(notices);
+    return new ValidationReport(notices, validationTimeSeconds);
   }
 
   public static <T extends Notice> JsonObject serialize(
