@@ -1,10 +1,6 @@
 package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import org.mobilitydata.gtfsvalidator.model.ValidationReport;
 
 public class ValidationPerformanceCollector {
@@ -68,9 +64,9 @@ public class ValidationPerformanceCollector {
       String arrow = difference > 0 ? "⬆️+" : "⬇️";
       diff = String.format("%s%.2f", arrow, difference);
     }
-    return String.format("| %s | %s | %.2f | %.2f | %s |\n", metric, datasetId, reference, latest, diff);
+    return String.format(
+        "| %s | %s | %.2f | %.2f | %s |\n", metric, datasetId, reference, latest, diff);
   }
-
 
   public String generateLogString() {
     StringBuilder b = new StringBuilder();
@@ -89,8 +85,10 @@ public class ValidationPerformanceCollector {
     List<String> warnings = new ArrayList<>();
     List<Double> allReferenceTimes = new ArrayList<>();
     List<Double> allLatestTimes = new ArrayList<>();
+    Set<String> allKeys = new HashSet<>(referenceTimes.keySet());
+    allKeys.addAll(latestTimes.keySet());
 
-    for (String groupId : referenceTimes.keySet()) {
+    for (String groupId : allKeys) {
       List<Double> referenceTimes = this.referenceTimes.get(groupId);
       List<Double> latestTimes = this.latestTimes.getOrDefault(groupId, Collections.emptyList());
 
