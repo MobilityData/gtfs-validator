@@ -30,12 +30,12 @@ public class ValidationPerformanceCollectorTest {
             + "\n"
             + "| Time Metric                      | Dataset ID        | Reference (s)  | Latest (s)     | Difference (s) |\n"
             + "|-----------------------------|-------------------|----------------|----------------|----------------|\n"
-            + "| Average | -- | 15.33 | 18.67 | ⬆️+3.33 |\n"
-            + "| Median | -- | 14.00 | 18.00 | ⬆️+4.00 |\n"
-            + "| Standard Deviation | -- | 3.40 | 2.49 | ⬇️-0.90 |\n"
-            + "| Minimum in References Reports | feed-id-a | 12.00 | 16.00 | ⬆️+4.00 |\n"
+            + "| Average | -- | 17.00 | 20.00 | ⬆\uFE0F+3.00 |\n"
+            + "| Median | -- | 17.00 | 20.00 | ⬆\uFE0F+3.00 |\n"
+            + "| Standard Deviation | -- | 3.00 | 2.00 | ⬇\uFE0F-1.00 |\n"
+            + "| Minimum in References Reports | feed-id-a | 14.00 | 18.00 | ⬆\uFE0F+4.00 |\n"
             + "| Maximum in Reference Reports | feed-id-b | 20.00 | 22.00 | ⬆️+2.00 |\n"
-            + "| Minimum in Latest Reports | feed-id-a | 12.00 | 16.00 | ⬆️+4.00 |\n"
+            + "| Minimum in Latest Reports | feed-id-a | 14.00 | 18.00 | ⬆\uFE0F+4.00 |\n"
             + "| Maximum in Latest Reports | feed-id-b | 20.00 | 22.00 | ⬆️+2.00 |\n"
             + "</details>\n\n";
     // Assert that the generated log string matches the expected log string

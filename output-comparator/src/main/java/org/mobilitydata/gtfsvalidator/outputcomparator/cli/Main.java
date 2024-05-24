@@ -40,7 +40,11 @@ public class Main {
   private static final int IO_EXCEPTION_EXIT_CODE = 1;
   private static final int COMPARISON_FAILURE_EXIT_CODE = 2;
   private static final Gson GSON =
-      new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
+      new GsonBuilder()
+          .serializeNulls()
+          .disableHtmlEscaping()
+          .serializeSpecialFloatingPointValues()
+          .create();
 
   public static void main(String[] argv) {
     int rc = run(argv);

@@ -116,7 +116,8 @@ public class ValidationReportComparator {
             droppedErrors.getChangedNotices(),
             newWarnings.getChangedNotices(),
             droppedWarnings.getChangedNotices(),
-            corruptedSources.toReport());
+            corruptedSources.toReport(),
+            validationPerformanceCollector.toReport());
 
     boolean failure =
         newErrors.isAboveThreshold()

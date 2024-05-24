@@ -9,5 +9,6 @@
     "corruptedSources": [],
     "percentCorruptedSourcesThreshold": 5.0,
     "aboveThreshold": false
-  }
+  },
+  "validationPerformance": []
 }

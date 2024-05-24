@@ -2,11 +2,12 @@ package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
 import java.util.*;
 import org.mobilitydata.gtfsvalidator.model.ValidationReport;
+import org.mobilitydata.gtfsvalidator.outputcomparator.model.report.ValidationPerformance;
 
 public class ValidationPerformanceCollector {
 
-  private final Map<String, List<Double>> referenceTimes;
-  private final Map<String, List<Double>> latestTimes;
+  private final Map<String, Double> referenceTimes;
+  private final Map<String, Double> latestTimes;
 
   public ValidationPerformanceCollector() {
     this.referenceTimes = new HashMap<>();
@@ -14,11 +15,11 @@ public class ValidationPerformanceCollector {
   }
 
   public void addReferenceTime(String sourceId, Double time) {
-    referenceTimes.computeIfAbsent(sourceId, k -> new ArrayList<>()).add(time);
+    referenceTimes.put(sourceId, time);
   }
 
   public void addLatestTime(String sourceId, Double time) {
-    latestTimes.computeIfAbsent(sourceId, k -> new ArrayList<>()).add(time);
+    latestTimes.put(sourceId, time);
   }
 
   private Double computeAverage(List<Double> times) {
@@ -89,17 +90,16 @@ public class ValidationPerformanceCollector {
     allKeys.addAll(latestTimes.keySet());
 
     for (String groupId : allKeys) {
-      List<Double> referenceTimes =
-          this.referenceTimes.getOrDefault(groupId, Collections.emptyList());
-      List<Double> latestTimes = this.latestTimes.getOrDefault(groupId, Collections.emptyList());
+      Double referenceTimes = this.referenceTimes.getOrDefault(groupId, Double.NaN);
+      Double latestTimes = this.latestTimes.getOrDefault(groupId, Double.NaN);
 
-      if (referenceTimes.isEmpty() || latestTimes.isEmpty()) {
+      if (Double.isNaN(referenceTimes) || Double.isNaN(latestTimes)) {
         warnings.add(groupId);
         continue;
       }
 
-      allReferenceTimes.addAll(referenceTimes);
-      allLatestTimes.addAll(latestTimes);
+      allReferenceTimes.add(referenceTimes);
+      allLatestTimes.add(latestTimes);
     }
 
     if (!allReferenceTimes.isEmpty() && !allLatestTimes.isEmpty()) {
@@ -119,7 +119,7 @@ public class ValidationPerformanceCollector {
       Double minReference = computeMin(allReferenceTimes);
       String minReferenceId =
           referenceTimes.entrySet().stream()
-              .filter(entry -> entry.getValue().contains(minReference))
+              .filter(entry -> Objects.equals(entry.getValue(), minReference))
               .map(Map.Entry::getKey)
               .findFirst()
               .orElse("N/A");
@@ -127,15 +127,13 @@ public class ValidationPerformanceCollector {
       Double maxReference = computeMax(allReferenceTimes);
       String maxReferenceId =
           referenceTimes.entrySet().stream()
-              .filter(entry -> entry.getValue().contains(maxReference))
+              .filter(entry -> Objects.equals(entry.getValue(), maxReference))
               .map(Map.Entry::getKey)
               .findFirst()
               .orElse("N/A");
 
-      Double minLatest =
-          latestTimes.getOrDefault(minReferenceId, Collections.singletonList(Double.NaN)).get(0);
-      Double maxLatest =
-          latestTimes.getOrDefault(maxReferenceId, Collections.singletonList(Double.NaN)).get(0);
+      Double minLatest = latestTimes.getOrDefault(minReferenceId, Double.NaN);
+      Double maxLatest = latestTimes.getOrDefault(maxReferenceId, Double.NaN);
 
       b.append(
               formatMetrics(
@@ -149,7 +147,7 @@ public class ValidationPerformanceCollector {
       Double minLatest = computeMin(allLatestTimes);
       String minLatestId =
           latestTimes.entrySet().stream()
-              .filter(entry -> entry.getValue().contains(minLatest))
+              .filter(entry -> Objects.equals(entry.getValue(), minLatest))
               .map(Map.Entry::getKey)
               .findFirst()
               .orElse("N/A");
@@ -157,15 +155,13 @@ public class ValidationPerformanceCollector {
       Double maxLatest = computeMax(allLatestTimes);
       String maxLatestId =
           latestTimes.entrySet().stream()
-              .filter(entry -> entry.getValue().contains(maxLatest))
+              .filter(entry -> Objects.equals(entry.getValue(), maxLatest))
               .map(Map.Entry::getKey)
               .findFirst()
               .orElse("N/A");
 
-      Double minReference =
-          referenceTimes.getOrDefault(minLatestId, Collections.singletonList(Double.NaN)).get(0);
-      Double maxReference =
-          referenceTimes.getOrDefault(maxLatestId, Collections.singletonList(Double.NaN)).get(0);
+      Double minReference = referenceTimes.getOrDefault(minLatestId, Double.NaN);
+      Double maxReference = referenceTimes.getOrDefault(maxLatestId, Double.NaN);
 
       b.append(formatMetrics("Minimum in Latest Reports", minLatestId, minReference, minLatest))
           .append(formatMetrics("Maximum in Latest Reports", maxLatestId, maxReference, maxLatest));
@@ -192,5 +188,19 @@ public class ValidationPerformanceCollector {
     if (latestReport.getValidationTimeSeconds() != null) {
       addLatestTime(sourceId, latestReport.getValidationTimeSeconds());
     }
+  }
+
+  public List<ValidationPerformance> toReport() {
+    List<ValidationPerformance> affectedSources = new ArrayList<>();
+    for (String sourceId : referenceTimes.keySet()) {
+      Double referenceTime = referenceTimes.getOrDefault(sourceId, Double.NaN);
+      Double latestTime = latestTimes.getOrDefault(sourceId, Double.NaN);
+      if (!(referenceTime.isNaN() && latestTime.isNaN())) {
+        affectedSources.add(
+            ValidationPerformance.create(
+                sourceId, referenceTime, latestTime, latestTime - referenceTime));
+      }
+    }
+    return affectedSources;
   }
 }
