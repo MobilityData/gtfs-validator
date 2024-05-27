@@ -1,6 +1,8 @@
 name: Rule acceptance tests
 
 on:
+  push:
+    branches: [ 1358-test ]
   pull_request:
     branches: [ master ]
     paths-ignore:
