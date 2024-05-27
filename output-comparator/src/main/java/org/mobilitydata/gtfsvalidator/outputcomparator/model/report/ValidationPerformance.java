@@ -2,9 +2,7 @@ package org.mobilitydata.gtfsvalidator.outputcomparator.model.report;
 
 import com.google.auto.value.AutoValue;
 
-/**
- * Represents the performance of the validation process for a specific source.
- */
+/** Represents the performance of the validation process for a specific source. */
 @AutoValue
 public abstract class ValidationPerformance {
   public abstract String sourceId();
