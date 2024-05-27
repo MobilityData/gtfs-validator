@@ -3,8 +3,7 @@ package org.mobilitydata.gtfsvalidator.outputcomparator.model.report;
 import com.google.auto.value.AutoValue;
 
 /**
- * A dataset source that had a different number of validation errors of a particular type in the
- * comparison set.
+ * Represents the performance of the validation process for a specific source.
  */
 @AutoValue
 public abstract class ValidationPerformance {

@@ -51,7 +51,7 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
     Set<NoticeReport> notices = new LinkedHashSet<>();
     JsonObject rootObject = json.getAsJsonObject();
     // Note that the json file contains the summary in addition to the notices, but it is ignored
-    // since currently the report comparison is only on the notices
+    // since currently the report comparison is only on the notices and the validation time.
     Double validationTimeSeconds = null;
     if (rootObject.has(SUMMARY_MEMBER_NAME)) {
       JsonObject summaryObject = rootObject.getAsJsonObject(SUMMARY_MEMBER_NAME);

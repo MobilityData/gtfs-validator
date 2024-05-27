@@ -167,6 +167,7 @@ public class ValidationPerformanceCollector {
           .append(formatMetrics("Maximum in Latest Reports", maxLatestId, maxReference, maxLatest));
     }
 
+    // Add warning message for feeds that are missing validation times either in reference or latest
     if (!warnings.isEmpty()) {
       b.append("#### ⚠️ Warnings\n")
           .append("\n")
