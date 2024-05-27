@@ -19,7 +19,7 @@ on:
       - '.github/workflows/web_**.yml'
       - '.github/workflows/stg_web_**.yml'
 concurrency:
-  group: ${{ github.head_ref }}
+  group: '1358-test'
   cancel-in-progress: true
 jobs:
   pre_ci:
