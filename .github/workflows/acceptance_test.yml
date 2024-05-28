@@ -73,12 +73,12 @@ jobs:
         with:
           arguments: shadowJar
       - name: Persist gtfs-validator snapshot jar
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: gtfs-validator-snapshot
           path: cli/build/libs/gtfs-validator-*-cli.jar
       - name: Persist comparator snapshot jar
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: comparator-snapshot
           path: output-comparator/build/libs/output-comparator-*-cli.jar
@@ -105,7 +105,7 @@ jobs:
         with:
           arguments: shadowJar
       - name: Persist gtfs-validator jar from master branch
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: gtfs-validator-master
           path: cli/build/libs/gtfs-validator-*-cli.jar
@@ -127,7 +127,7 @@ jobs:
           echo "matrix=$DATASETS" >> $GITHUB_OUTPUT
       - name: Persist metadata
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: datasets_metadata
           path: scripts/mobility-database-harvester/datasets_metadata
@@ -159,7 +159,7 @@ jobs:
         env:
           OUTPUT_BASE: ${{ github.sha }}
       - name: Persist reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: reports_all
           path: ${{ github.sha }}/output
@@ -195,7 +195,7 @@ jobs:
            --run_id ${{github.run_id}}
       - name: Persist acceptance test reports
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: acceptance_test_report
           path: acceptance-test-output
