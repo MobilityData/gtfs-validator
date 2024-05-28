@@ -50,7 +50,7 @@ public class TransferStopIdsConditionalValidator extends FileValidator {
   public void validate(NoticeContainer noticeContainer) {
     for (GtfsTransfer transfer : transfersContainer.getEntities()) {
       if (transfer.hasTransferType()) {
-        validateEntity(transfer, noticeContainer);
+        validateTransferEntity(transfer, noticeContainer);
       }
     }
   }
@@ -60,7 +60,7 @@ public class TransferStopIdsConditionalValidator extends FileValidator {
         || IN_SEAT_TRANSFER_NOT_ALLOWED.equals(transfer.transferType());
   }
 
-  private void validateEntity(GtfsTransfer transfer, NoticeContainer noticeContainer) {
+  private void validateTransferEntity(GtfsTransfer transfer, NoticeContainer noticeContainer) {
     if (!isTransferTypeInSeat(transfer)) {
       if (!transfer.hasFromStopId()) {
         noticeContainer.addValidationNotice(
