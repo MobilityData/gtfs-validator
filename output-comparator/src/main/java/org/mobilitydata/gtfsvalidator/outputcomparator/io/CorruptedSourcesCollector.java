@@ -1,7 +1,6 @@
 package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import org.mobilitydata.gtfsvalidator.outputcomparator.model.report.CorruptedSources;
 
@@ -14,7 +13,7 @@ public class CorruptedSourcesCollector {
   private final float percentCorruptedSourcesThreshold;
 
   private int sourceIdCount = 0;
-  private final List<String> corruptedSourceIds = new ArrayList<>();
+  private final List<CorruptedSourceDetail> corruptedSourceDetails = new ArrayList<>();
 
   public CorruptedSourcesCollector(float percentCorruptedSourcesThreshold) {
     this.percentCorruptedSourcesThreshold = percentCorruptedSourcesThreshold;
@@ -22,7 +21,11 @@ public class CorruptedSourcesCollector {
 
   /** Returns a {@link CorruptedSources} object summarizing the collected corrupted sources. */
   public CorruptedSources toReport() {
-    Collections.sort(this.corruptedSourceIds);
+    this.corruptedSourceDetails.sort((a, b) -> a.sourceId.compareTo(b.sourceId));
+    List<String> corruptedSourceIds = new ArrayList<>();
+    for (CorruptedSourceDetail detail : corruptedSourceDetails) {
+      corruptedSourceIds.add(detail.sourceId);
+    }
     return CorruptedSources.builder()
         .setSourceIdCount(sourceIdCount)
         .setCorruptedSourcesCount(corruptedSourceIds.size())
@@ -36,8 +39,14 @@ public class CorruptedSourcesCollector {
     this.sourceIdCount++;
   }
 
-  public void addCorruptedSource(String sourceId) {
-    this.corruptedSourceIds.add(sourceId);
+  public void addCorruptedSource(
+      String sourceId,
+      Boolean refExists,
+      Boolean refReadable,
+      Boolean latestExists,
+      Boolean latestReadable) {
+    this.corruptedSourceDetails.add(
+        new CorruptedSourceDetail(sourceId, refExists, refReadable, latestExists, latestReadable));
   }
 
   public boolean isAboveThreshold() {
@@ -46,24 +55,34 @@ public class CorruptedSourcesCollector {
 
   public String generateLogString() {
     StringBuilder b = new StringBuilder();
-    b.append(
-        String.format(
-            "%d out of %d sources (~%.0f %%) are corrupted",
-            corruptedSourceIds.size(), sourceIdCount, computeCorruptedSourcesPercentage()));
-    if (isAboveThreshold()) {
+    b.append("### 🛡️ Corruption Check\n");
+    if (corruptedSourceDetails.isEmpty()) {
       b.append(
           String.format(
-              ", which is greater than or equal to the provided threshold of %.0f%%",
-              percentCorruptedSourcesThreshold));
+              "%d out of %d sources (~%.0f %%) are corrupted.\n\n",
+              0, sourceIdCount, computeCorruptedSourcesPercentage()));
+      return b.toString();
     }
-    b.append(".");
-    if (!corruptedSourceIds.isEmpty()) {
-      b.append("\n");
-      b.append("Corrupted sources:");
-      for (String sourceId : corruptedSourceIds) {
-        b.append("\n").append(sourceId);
-      }
+    b.append(
+        String.format(
+            "<details>\n<summary><strong>%d out of %d sources (~%.0f %%) are corrupted.</summary>\n\n",
+            corruptedSourceDetails.size(), sourceIdCount, computeCorruptedSourcesPercentage()));
+    b.append(
+        "| Dataset   | Ref Report Exists | Ref Report Readable | Latest Report Exists | Latest Report Readable |\n");
+    b.append(
+        "|-----------|-------------------|---------------------|----------------------|------------------------|\n");
+
+    for (CorruptedSourceDetail detail : corruptedSourceDetails) {
+      b.append(
+          String.format(
+              "| %s | %s | %s | %s | %s |\n",
+              detail.sourceId,
+              detail.refExists ? "✅" : "❌",
+              detail.refReadable == null ? "N/A" : (detail.refReadable ? "✅" : "❌"),
+              detail.latestExists ? "✅" : "❌",
+              detail.latestReadable == null ? "N/A" : (detail.latestReadable ? "✅" : "❌")));
     }
+    b.append("</details>");
     return b.toString();
   }
 
@@ -72,6 +91,27 @@ public class CorruptedSourcesCollector {
     if (sourceIdCount == 0) {
       return 0f;
     }
-    return 100f * corruptedSourceIds.size() / sourceIdCount;
+    return 100f * corruptedSourceDetails.size() / sourceIdCount;
+  }
+
+  private static class CorruptedSourceDetail {
+    String sourceId;
+    Boolean refExists;
+    Boolean refReadable;
+    Boolean latestExists;
+    Boolean latestReadable;
+
+    CorruptedSourceDetail(
+        String sourceId,
+        Boolean refExists,
+        Boolean refReadable,
+        Boolean latestExists,
+        Boolean latestReadable) {
+      this.sourceId = sourceId;
+      this.refExists = refExists;
+      this.refReadable = refReadable;
+      this.latestExists = latestExists;
+      this.latestReadable = latestReadable;
+    }
   }
 }

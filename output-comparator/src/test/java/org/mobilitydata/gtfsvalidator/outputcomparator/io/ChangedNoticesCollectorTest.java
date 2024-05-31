@@ -33,9 +33,12 @@ public class ChangedNoticesCollectorTest {
     assertThat(collector.isAboveThreshold()).isFalse();
     assertThat(collector.computeInvalidDatasetPercentage()).isWithin(1f).of(0f);
     assertThat(collector.getChangedNotices()).isEmpty();
-    assertThat(collector.generateLogString())
+    assertThat(collector.generateLogString("Test"))
         .isEqualTo(
-            "0 out of 1 datasets (~0%) are invalid due to code change, which is less than the provided threshold of 25%.");
+            "<details>\n"
+                + "<summary><strong>Test</strong> (0 out of 1 datasets, ~0%) ✅</summary>\n"
+                + "<p>No changes were detected due to the code change.</p>\n"
+                + "</details>");
 
     // Second source has an additional error.
     collector.compareValidationReports(
@@ -50,9 +53,16 @@ public class ChangedNoticesCollectorTest {
         .containsExactly(
             new ChangedNotice("error_b")
                 .addAffectedSource(AffectedSource.create("source-b", "source-b-url", 2)));
-    assertThat(collector.generateLogString())
+    assertThat(collector.generateLogString("Test"))
         .isEqualTo(
-            "1 out of 2 datasets (~50%) are invalid due to code change, which is above the provided threshold of 25%.");
+            "<details>\n"
+                + "<summary><strong>Test</strong> (1 out of 2 datasets, ~50%) ❌</summary>\n"
+                + "<p>Details of new errors due to code change, which is above the provided threshold of 25%.</p>\n"
+                + "\n"
+                + "| Dataset | Notice Code |\n"
+                + "|---------|-------------|\n"
+                + "| source-b | error_b |\n"
+                + "</details>");
   }
 
   @Test
@@ -74,9 +84,16 @@ public class ChangedNoticesCollectorTest {
         .containsExactly(
             new ChangedNotice("error_b")
                 .addAffectedSource(AffectedSource.create("source-a", "source-a-url", 5)));
-    assertThat(collector.generateLogString())
+    assertThat(collector.generateLogString("Test"))
         .isEqualTo(
-            "0 out of 1 datasets (~0%) are invalid due to code change, which is less than the provided threshold of 25%.");
+            "<details>\n"
+                + "<summary><strong>Test</strong> (0 out of 1 datasets, ~0%) ✅</summary>\n"
+                + "<p>Details of new errors due to code change, which is less than the provided threshold of 25%.</p>\n"
+                + "\n"
+                + "| Dataset | Notice Code |\n"
+                + "|---------|-------------|\n"
+                + "| source-a | error_b |\n"
+                + "</details>");
   }
 
   private ValidationReport report(ImmutableMap<String, Integer> error_codes_and_counts) {

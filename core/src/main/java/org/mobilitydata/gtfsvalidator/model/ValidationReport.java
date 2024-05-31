@@ -41,6 +41,7 @@ public class ValidationReport {
           .serializeSpecialFloatingPointValues()
           .create();
   private final Set<NoticeReport> notices;
+  private final Double validationTimeSeconds;
 
   /**
    * Public constructor needed for deserialization by {@code ValidationReportDeserializer}. Only
@@ -49,7 +50,19 @@ public class ValidationReport {
    * @param noticeReports set of {@code NoticeReport}s
    */
   public ValidationReport(Set<NoticeReport> noticeReports) {
+    this(noticeReports, null);
+  }
+
+  /**
+   * Public constructor needed for deserialization by {@code ValidationReportDeserializer}. Only
+   * stores information for error {@code NoticeReport}.
+   *
+   * @param noticeReports set of {@code NoticeReport}s
+   * @param validationTimeSeconds the time taken to validate the GTFS dataset
+   */
+  public ValidationReport(Set<NoticeReport> noticeReports, Double validationTimeSeconds) {
     this.notices = Collections.unmodifiableSet(noticeReports);
+    this.validationTimeSeconds = validationTimeSeconds;
   }
 
   /**
@@ -67,6 +80,10 @@ public class ValidationReport {
 
   public Set<NoticeReport> getNotices() {
     return notices;
+  }
+
+  public Double getValidationTimeSeconds() {
+    return validationTimeSeconds;
   }
 
   /**
