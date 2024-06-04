@@ -33,6 +33,7 @@ public class JsonReportSummary {
   private JsonReportFeedInfo feedInfo;
   private List<JsonReportAgencyMetadata> agencies;
   private Set<String> files;
+  private Double validationTimeSeconds;
 
   @SerializedName("counts")
   private JsonReportCounts jsonReportCounts;
@@ -65,6 +66,7 @@ public class JsonReportSummary {
     if (feedMetadata != null) {
       if (feedMetadata.feedInfo != null) {
         this.feedInfo = new JsonReportFeedInfo(feedMetadata.feedInfo);
+        this.validationTimeSeconds = feedMetadata.validationTimeSeconds;
       } else {
         logger.atSevere().log(
             "No feed info for feed "

@@ -17,13 +17,21 @@ public abstract class AcceptanceReport {
 
   public abstract CorruptedSources corruptedSources();
 
+  public abstract List<ValidationPerformance> validationPerformance();
+
   public static AcceptanceReport create(
       List<ChangedNotice> newErrors,
       List<ChangedNotice> droppedErrors,
       List<ChangedNotice> newWarnings,
       List<ChangedNotice> droppedWarnings,
-      CorruptedSources corruptedSources) {
+      CorruptedSources corruptedSources,
+      List<ValidationPerformance> validationPerformance) {
     return new AutoValue_AcceptanceReport(
-        newErrors, droppedErrors, newWarnings, droppedWarnings, corruptedSources);
+        newErrors,
+        droppedErrors,
+        newWarnings,
+        droppedWarnings,
+        corruptedSources,
+        validationPerformance);
   }
 }

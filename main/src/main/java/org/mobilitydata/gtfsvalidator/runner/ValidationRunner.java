@@ -134,21 +134,22 @@ public class ValidationRunner {
     }
     FeedMetadata feedMetadata = FeedMetadata.from(feedContainer, gtfsInput.getFilenames());
     closeGtfsInput(gtfsInput, noticeContainer);
+    feedMetadata.validationTimeSeconds = (System.nanoTime() - startNanos) / 1e9;
 
     // Output
     exportReport(feedMetadata, noticeContainer, config, versionInfo);
-    printSummary(startNanos, feedContainer, feedLoader, anyTableLoader);
+    printSummary(feedMetadata, feedContainer, feedLoader, anyTableLoader);
     return Status.SUCCESS;
   }
 
   /**
    * Prints validation metadata.
    *
-   * @param startNanos start time as nanoseconds
+   * @param feedMetadata the {@code FeedMetadata}
    * @param feedContainer the {@code GtfsFeedContainer}
    */
   public static void printSummary(
-      long startNanos,
+      FeedMetadata feedMetadata,
       GtfsFeedContainer feedContainer,
       GtfsFeedLoader loader,
       AnyTableLoader anyTableLoader) {
@@ -198,7 +199,7 @@ public class ValidationRunner {
 
       logger.atSevere().log(b.toString());
     }
-    logger.atInfo().log("Validation took %.3f seconds%n", (endNanos - startNanos) / 1e9);
+    logger.atInfo().log("Validation took %.3f seconds%n", feedMetadata.validationTimeSeconds);
     logger.atInfo().log(feedContainer.tableTotalsText());
   }
 

@@ -75,6 +75,7 @@ public class JsonReportSummaryTest {
             3 // Should not be present in the resulting GSON
             );
     feedMetadata.specFeatures = Map.of("Feature1", false, "Feature2", true);
+    feedMetadata.validationTimeSeconds = 100.0;
     return feedMetadata;
   }
 
@@ -118,6 +119,7 @@ public class JsonReportSummaryTest {
             + "\"countryCode\":\"GB\","
             + "\"dateForValidation\":\"2020-01-02\","
             + "\"feedInfo\":{\"publisherName\":\"value1\",\"publisherUrl\":\"value2\"},"
+            + "\"validationTimeSeconds\":100.0,"
             + "\"agencies\":["
             + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"},"
             + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"}],"
@@ -139,6 +141,7 @@ public class JsonReportSummaryTest {
             + "\"validatedAt\":\"now\","
             + "\"threads\":0,"
             + "\"feedInfo\":{\"publisherName\":\"value1\",\"publisherUrl\":\"value2\"},"
+            + "\"validationTimeSeconds\":100.0,"
             + "\"agencies\":["
             + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"},"
             + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"}],"

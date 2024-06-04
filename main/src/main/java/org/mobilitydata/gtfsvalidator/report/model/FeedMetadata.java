@@ -41,6 +41,8 @@ public class FeedMetadata {
   public ArrayList<AgencyMetadata> agencies = new ArrayList<>();
   private ImmutableSortedSet<String> filenames;
 
+  public double validationTimeSeconds;
+
   // List of features that only require checking the presence of one record in the file.
   private final List<Pair<String, String>> FILE_BASED_FEATURES =
       List.of(
