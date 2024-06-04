@@ -1,5 +1,10 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+
+import java.util.HashMap;
+import java.util.Map;
+import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -7,12 +12,6 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
-
-import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 /**
  * Validates that every shape (identified by shape_id) has more than one shape_point
