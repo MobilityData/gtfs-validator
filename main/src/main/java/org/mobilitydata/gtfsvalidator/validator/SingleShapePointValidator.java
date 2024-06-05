@@ -49,8 +49,7 @@ public class SingleShapePointValidator extends FileValidator {
   /**
    * The shape within `shapes.txt` contains a single shape point.
    *
-   * <p>A shape should contain more than one shape point to visualize the route on any GIS software
-   * (which require LineString).
+   * <p>A shape should contain more than one shape point to visualize the route
    */
   @GtfsValidationNotice(
       severity = WARNING,
