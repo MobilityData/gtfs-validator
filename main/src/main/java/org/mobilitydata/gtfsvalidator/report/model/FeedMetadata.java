@@ -156,10 +156,18 @@ public class FeedMetadata {
     loadRouteBasedFaresFeature(feedContainer);
     loadContinuousStopsFeature(feedContainer);
     loadBookingRulesFeature(feedContainer);
+    loadFixedStopsDemandResponsiveTransitFeature(feedContainer);
+  }
+
+  private void loadFixedStopsDemandResponsiveTransitFeature(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Fixed Stops Demand-Responsive",
+        hasAtLeastOneRecordInFile(feedContainer, GtfsLocationGroups.FILENAME));
   }
 
   private void loadBookingRulesFeature(GtfsFeedContainer feedContainer) {
-    specFeatures.put("Booking Rules",hasAtLeastOneRecordInFile(feedContainer, GtfsBookingRules.FILENAME));
+    specFeatures.put(
+        "Booking Rules", hasAtLeastOneRecordInFile(feedContainer, GtfsBookingRules.FILENAME));
   }
 
   private void loadContinuousStopsFeature(GtfsFeedContainer feedContainer) {
