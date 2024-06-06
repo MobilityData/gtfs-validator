@@ -10,50 +10,50 @@ import org.mobilitydata.gtfsvalidator.annotation.Required;
 
 @GtfsTable("booking_rules.txt")
 public interface GtfsBookingRulesSchema extends GtfsEntity {
-    @FieldType(FieldTypeEnum.ID)
-    @PrimaryKey
-    @Required
-    String bookingRuleId();
+  @FieldType(FieldTypeEnum.ID)
+  @PrimaryKey
+  @Required
+  String bookingRuleId();
 
-    @Required
-    GtfsBookingTypeEnum bookingType();
+  @Required
+  GtfsBookingTypeEnum bookingType();
 
-    @ConditionallyRequired
-    Integer priorNoticeDurationMin();
+  @ConditionallyRequired
+  Integer priorNoticeDurationMin();
 
-    @ConditionallyRequired
-    Integer priorNoticeDurationMax();
+  @ConditionallyRequired
+  Integer priorNoticeDurationMax();
 
-    @ConditionallyRequired
-    Integer priorNoticeStartDay();
+  @ConditionallyRequired
+  Integer priorNoticeStartDay();
 
-    @ConditionallyRequired
-    String priorNoticeStartTime();
+  @ConditionallyRequired
+  String priorNoticeStartTime();
 
-    @ConditionallyRequired
-    Integer priorNoticeLastDay();
+  @ConditionallyRequired
+  Integer priorNoticeLastDay();
 
-    @ConditionallyRequired
-    String priorNoticeLastTime();
+  @ConditionallyRequired
+  String priorNoticeLastTime();
 
-    @ConditionallyRequired
-    String priorNoticeServiceId();
+  @ConditionallyRequired
+  String priorNoticeServiceId();
 
-    @MixedCase
-    String message();
+  @MixedCase
+  String message();
 
-    @MixedCase
-    String pickupMessage();
+  @MixedCase
+  String pickupMessage();
 
-    @MixedCase
-    String dropOffMessage();
+  @MixedCase
+  String dropOffMessage();
 
-    @FieldType(FieldTypeEnum.PHONE_NUMBER)
-    String phoneNumber();
+  @FieldType(FieldTypeEnum.PHONE_NUMBER)
+  String phoneNumber();
 
-    @FieldType(FieldTypeEnum.URL)
-    String infoUrl();
+  @FieldType(FieldTypeEnum.URL)
+  String infoUrl();
 
-    @FieldType(FieldTypeEnum.URL)
-    String bookingUrl();
+  @FieldType(FieldTypeEnum.URL)
+  String bookingUrl();
 }

@@ -155,6 +155,11 @@ public class FeedMetadata {
     loadPathwayExtraFeature(feedContainer);
     loadRouteBasedFaresFeature(feedContainer);
     loadContinuousStopsFeature(feedContainer);
+    loadBookingRulesFeature(feedContainer);
+  }
+
+  private void loadBookingRulesFeature(GtfsFeedContainer feedContainer) {
+    specFeatures.put("Booking Rules",hasAtLeastOneRecordInFile(feedContainer, GtfsBookingRules.FILENAME));
   }
 
   private void loadContinuousStopsFeature(GtfsFeedContainer feedContainer) {

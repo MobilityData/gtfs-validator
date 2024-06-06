@@ -1,4 +1,5 @@
 package org.mobilitydata.gtfsvalidator.table;
+
 import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValue;
 
 @GtfsEnumValue(name = "REALTIME", value = 0)
