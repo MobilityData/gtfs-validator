@@ -157,12 +157,63 @@ public class FeedMetadata {
     loadContinuousStopsFeature(feedContainer);
     loadBookingRulesFeature(feedContainer);
     loadFixedStopsDemandResponsiveTransitFeature(feedContainer);
+    loadZoneBasedDemandResponsiveTransitFeature(feedContainer);
+    loadDeviatedFixedRouteFeature(feedContainer);
+  }
+
+  private void loadDeviatedFixedRouteFeature(GtfsFeedContainer feedContainer) {
+    specFeatures.put("Deviated Fixed Route", hasAtLeastOneTripWithAllFields(feedContainer));
+  }
+
+  private boolean hasAtLeastOneTripWithAllFields(GtfsFeedContainer feedContainer) {
+    Optional<GtfsTableContainer<?>> optionalStopTimeTable =
+        feedContainer.getTableForFilename(GtfsStopTime.FILENAME);
+    if (optionalStopTimeTable.isPresent()) {
+      for (GtfsEntity entity : optionalStopTimeTable.get().getEntities()) {
+        if (entity instanceof GtfsStopTime) {
+          GtfsStopTime stopTime = (GtfsStopTime) entity;
+          if (stopTime.tripId() != null
+              && stopTime.locationId() != null
+              && stopTime.stopId() != null
+              && stopTime.arrivalTime() != null
+              && stopTime.departureTime() != null) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
   }
 
   private void loadFixedStopsDemandResponsiveTransitFeature(GtfsFeedContainer feedContainer) {
     specFeatures.put(
-        "Fixed Stops Demand-Responsive",
+        "Fixed-Stops Demand Responsive Transit",
         hasAtLeastOneRecordInFile(feedContainer, GtfsLocationGroups.FILENAME));
+  }
+
+  private void loadZoneBasedDemandResponsiveTransitFeature(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Zone-Based Demand Responsive Transit", hasAtLeastOneTripWithOnlyLocationId(feedContainer));
+  }
+
+  private boolean hasAtLeastOneTripWithOnlyLocationId(GtfsFeedContainer feedContainer) {
+    Optional<GtfsTableContainer<?>> optionalStopTimeTable =
+        feedContainer.getTableForFilename(GtfsStopTime.FILENAME);
+    if (optionalStopTimeTable.isPresent()) {
+      for (GtfsEntity entity : optionalStopTimeTable.get().getEntities()) {
+        if (entity instanceof GtfsStopTime) {
+          GtfsStopTime stopTime = (GtfsStopTime) entity;
+          if (stopTime.tripId() != null
+              && stopTime.locationId() != null
+              && stopTime.stopId() == null
+              && stopTime.arrivalTime() == null
+              && stopTime.departureTime() == null) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
   }
 
   private void loadBookingRulesFeature(GtfsFeedContainer feedContainer) {

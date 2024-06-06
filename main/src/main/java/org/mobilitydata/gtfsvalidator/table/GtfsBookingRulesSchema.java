@@ -7,6 +7,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.MixedCase;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 @GtfsTable("booking_rules.txt")
 public interface GtfsBookingRulesSchema extends GtfsEntity {
@@ -28,13 +29,13 @@ public interface GtfsBookingRulesSchema extends GtfsEntity {
   Integer priorNoticeStartDay();
 
   @ConditionallyRequired
-  String priorNoticeStartTime();
+  GtfsTime priorNoticeStartTime();
 
   @ConditionallyRequired
   Integer priorNoticeLastDay();
 
   @ConditionallyRequired
-  String priorNoticeLastTime();
+  GtfsTime priorNoticeLastTime();
 
   @ConditionallyRequired
   String priorNoticeServiceId();
