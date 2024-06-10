@@ -172,11 +172,11 @@ public class FeedMetadata {
       for (GtfsEntity entity : optionalStopTimeTable.get().getEntities()) {
         if (entity instanceof GtfsStopTime) {
           GtfsStopTime stopTime = (GtfsStopTime) entity;
-          if (stopTime.tripId() != null
-              && stopTime.locationId() != null
-              && stopTime.stopId() != null
-              && stopTime.arrivalTime() != null
-              && stopTime.departureTime() != null) {
+          if (stopTime.hasTripId() && stopTime.tripId() != null
+              && stopTime.hasLocationId() && stopTime.locationId() != null
+              && stopTime.hasStopId() && stopTime.stopId() != null
+              && stopTime.hasArrivalTime() && stopTime.arrivalTime() != null
+              && stopTime.hasDepartureTime() && stopTime.departureTime() != null) {
             return true;
           }
         }
