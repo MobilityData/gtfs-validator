@@ -17,22 +17,22 @@ public interface GtfsBookingRulesSchema extends GtfsEntity {
   String bookingRuleId();
 
   @Required
-  GtfsBookingTypeEnum bookingType();
+  GtfsBookingType bookingType();
 
   @ConditionallyRequired
-  Integer priorNoticeDurationMin();
+  int priorNoticeDurationMin();
 
   @ConditionallyRequired
-  Integer priorNoticeDurationMax();
+  int priorNoticeDurationMax();
 
   @ConditionallyRequired
-  Integer priorNoticeStartDay();
+  int priorNoticeStartDay();
 
   @ConditionallyRequired
   GtfsTime priorNoticeStartTime();
 
   @ConditionallyRequired
-  Integer priorNoticeLastDay();
+  int priorNoticeLastDay();
 
   @ConditionallyRequired
   GtfsTime priorNoticeLastTime();
