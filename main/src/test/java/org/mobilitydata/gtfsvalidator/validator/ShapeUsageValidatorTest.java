@@ -38,7 +38,7 @@ public class ShapeUsageValidatorTest {
       double shapePtLon,
       int shapePtSequence,
       double shapeDistTraveled) {
-    return new GtfsShape.Builder()
+    return GtfsShape.builder()
         .setCsvRowNumber(csvRowNumber)
         .setShapeId(shapeId)
         .setShapePtLat(shapePtLat)
@@ -50,7 +50,7 @@ public class ShapeUsageValidatorTest {
 
   public static GtfsTrip createTrip(
       int csvRowNumber, String routeId, String serviceId, String tripId, String shapeId) {
-    return new GtfsTrip.Builder()
+    return GtfsTrip.builder()
         .setCsvRowNumber(csvRowNumber)
         .setRouteId(routeId)
         .setServiceId(serviceId)

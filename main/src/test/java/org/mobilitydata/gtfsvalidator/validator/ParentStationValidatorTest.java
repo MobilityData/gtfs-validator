@@ -40,14 +40,14 @@ public class ParentStationValidatorTest {
     new ParentStationValidator(
             GtfsStopTableContainer.forEntities(
                 ImmutableList.of(
-                    new GtfsStop.Builder()
+                    GtfsStop.builder()
                         .setCsvRowNumber(1)
                         .setStopId("child")
                         .setStopName("Child location")
                         .setLocationType(childType)
                         .setParentStation("parent")
                         .build(),
-                    new GtfsStop.Builder()
+                    GtfsStop.builder()
                         .setCsvRowNumber(2)
                         .setStopId("parent")
                         .setStopName("Parent location")
@@ -63,7 +63,7 @@ public class ParentStationValidatorTest {
     new ParentStationValidator(
             GtfsStopTableContainer.forEntities(
                 ImmutableList.of(
-                    new GtfsStop.Builder()
+                    GtfsStop.builder()
                         .setCsvRowNumber(1)
                         .setStopId("child")
                         .setLocationType(locationType)
@@ -163,20 +163,20 @@ public class ParentStationValidatorTest {
     new ParentStationValidator(
             GtfsStopTableContainer.forEntities(
                 ImmutableList.of(
-                    new GtfsStop.Builder()
+                    GtfsStop.builder()
                         .setCsvRowNumber(1)
                         .setStopId("child")
                         .setStopName("Child location")
                         .setLocationType(GtfsLocationType.STOP)
                         .setParentStation("used_station")
                         .build(),
-                    new GtfsStop.Builder()
+                    GtfsStop.builder()
                         .setCsvRowNumber(2)
                         .setStopId("unused_station")
                         .setStopName("Unused station")
                         .setLocationType(GtfsLocationType.STATION)
                         .build(),
-                    new GtfsStop.Builder()
+                    GtfsStop.builder()
                         .setCsvRowNumber(3)
                         .setStopId("used_station")
                         .setStopName("Used station")
@@ -194,7 +194,7 @@ public class ParentStationValidatorTest {
     new ParentStationValidator(
             GtfsStopTableContainer.forEntities(
                 ImmutableList.of(
-                    new GtfsStop.Builder()
+                    GtfsStop.builder()
                         .setCsvRowNumber(1)
                         .setStopId("child")
                         .setStopName("Child location")

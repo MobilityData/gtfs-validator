@@ -26,7 +26,7 @@ public class FeedServiceDateValidatorTest {
       Locale feedLang,
       GtfsDate feedStartDate,
       GtfsDate feedEndDate) {
-    return new GtfsFeedInfo.Builder()
+    return GtfsFeedInfo.builder()
         .setCsvRowNumber(csvRowNumber)
         .setFeedPublisherName(feedPublisherName)
         .setFeedPublisherUrl(feedPublisherUrl)

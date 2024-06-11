@@ -24,13 +24,15 @@ import org.mobilitydata.gtfsvalidator.validator.FileValidator;
 
 public class GtfsTestSingleFileValidator extends FileValidator {
 
-  private final GtfsTestTableContainer table;
+  private final GtfsTestEntityTableContainer table;
   private final CountryCode countryCode;
   private final DateForValidation dateForValidation;
 
   @Inject
   public GtfsTestSingleFileValidator(
-      GtfsTestTableContainer table, CountryCode countryCode, DateForValidation dateForValidation) {
+      GtfsTestEntityTableContainer table,
+      CountryCode countryCode,
+      DateForValidation dateForValidation) {
     this.table = table;
     this.countryCode = countryCode;
     this.dateForValidation = dateForValidation;
@@ -39,7 +41,7 @@ public class GtfsTestSingleFileValidator extends FileValidator {
   @Override
   public void validate(NoticeContainer noticeContainer) {}
 
-  public GtfsTestTableContainer getStopTable() {
+  public GtfsTestEntityTableContainer getStopTable() {
     return table;
   }
 

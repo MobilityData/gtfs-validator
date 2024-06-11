@@ -42,7 +42,7 @@ public class StopPointsTest {
 
   private static GtfsStop createStop(
       String stopId, String stopName, double stopLat, double stopLon) {
-    return new GtfsStop.Builder()
+    return GtfsStop.builder()
         .setCsvRowNumber(stopId.hashCode())
         .setStopId(stopId)
         .setStopName(stopName)
@@ -60,9 +60,9 @@ public class StopPointsTest {
 
   private static ImmutableList<GtfsStopTime> createStopTimes() {
     return ImmutableList.of(
-        new GtfsStopTime.Builder().setStopId("zuerichHB").build(),
-        new GtfsStopTime.Builder().setStopId("selnau").setShapeDistTraveled(10.0).build(),
-        new GtfsStopTime.Builder().setStopId("giesshuebel").setShapeDistTraveled(20.0).build());
+        GtfsStopTime.builder().setStopId("zuerichHB").build(),
+        GtfsStopTime.builder().setStopId("selnau").setShapeDistTraveled(10.0).build(),
+        GtfsStopTime.builder().setStopId("giesshuebel").setShapeDistTraveled(20.0).build());
   }
 
   @Test

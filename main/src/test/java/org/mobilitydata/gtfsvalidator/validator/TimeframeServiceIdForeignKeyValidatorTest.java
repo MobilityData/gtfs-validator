@@ -42,7 +42,7 @@ public class TimeframeServiceIdForeignKeyValidatorTest {
   public void timeframeServiceIdInCalendarTableShouldNotGenerateNotice() {
     assertThat(
             generateNotices(
-                ImmutableList.of(new GtfsTimeframe.Builder().setServiceId("WEEK").build()),
+                ImmutableList.of(GtfsTimeframe.builder().setServiceId("WEEK").build()),
                 ImmutableList.of(
                     CalendarUtilTest.createGtfsCalendar(
                         "WEEK",
@@ -62,10 +62,10 @@ public class TimeframeServiceIdForeignKeyValidatorTest {
   public void tripServiceIdInCalendarDateTableShouldNotGenerateNotice() {
     assertThat(
             generateNotices(
-                ImmutableList.of(new GtfsTimeframe.Builder().setServiceId("WEEK").build()),
+                ImmutableList.of(GtfsTimeframe.builder().setServiceId("WEEK").build()),
                 ImmutableList.of(),
                 ImmutableList.of(
-                    new GtfsCalendarDate.Builder()
+                    GtfsCalendarDate.builder()
                         .setCsvRowNumber(2)
                         .setServiceId("WEEK")
                         .setDate(GtfsDate.fromEpochDay(24354))
@@ -79,7 +79,7 @@ public class TimeframeServiceIdForeignKeyValidatorTest {
     assertThat(
             generateNotices(
                 ImmutableList.of(
-                    new GtfsTimeframe.Builder().setServiceId("WEEK").setCsvRowNumber(1).build()),
+                    GtfsTimeframe.builder().setServiceId("WEEK").setCsvRowNumber(1).build()),
                 ImmutableList.of(),
                 ImmutableList.of()))
         .containsExactly(

@@ -21,7 +21,7 @@ public class TimeframeOverlapValidatorTest {
   public void testSingleTimeframe() {
     assertThat(
             validate(
-                new GtfsTimeframe.Builder()
+                GtfsTimeframe.builder()
                     .setTimeframeGroupId("PEAK")
                     .setServiceId("WEEKDAY")
                     .setStartTime(GtfsTime.fromString("00:00:00"))
@@ -35,14 +35,14 @@ public class TimeframeOverlapValidatorTest {
   public void testNoOverlap() {
     assertThat(
             validate(
-                new GtfsTimeframe.Builder()
+                GtfsTimeframe.builder()
                     .setTimeframeGroupId("PEAK")
                     .setServiceId("WEEKDAY")
                     .setStartTime(GtfsTime.fromString("08:00:00"))
                     .setEndTime(GtfsTime.fromString("09:00:00"))
                     .setCsvRowNumber(2)
                     .build(),
-                new GtfsTimeframe.Builder()
+                GtfsTimeframe.builder()
                     .setTimeframeGroupId("PEAK")
                     .setServiceId("WEEKDAY")
                     .setStartTime(GtfsTime.fromString("17:00:00"))
@@ -56,14 +56,14 @@ public class TimeframeOverlapValidatorTest {
   public void testNoOverlapButAdjacent() {
     assertThat(
             validate(
-                new GtfsTimeframe.Builder()
+                GtfsTimeframe.builder()
                     .setTimeframeGroupId("PEAK")
                     .setServiceId("WEEKDAY")
                     .setStartTime(GtfsTime.fromString("08:00:00"))
                     .setEndTime(GtfsTime.fromString("09:00:00"))
                     .setCsvRowNumber(2)
                     .build(),
-                new GtfsTimeframe.Builder()
+                GtfsTimeframe.builder()
                     .setTimeframeGroupId("PEAK")
                     .setServiceId("WEEKDAY")
                     .setStartTime(GtfsTime.fromString("09:00:00"))
@@ -77,14 +77,14 @@ public class TimeframeOverlapValidatorTest {
   public void testOverlap() {
     assertThat(
             validate(
-                new GtfsTimeframe.Builder()
+                GtfsTimeframe.builder()
                     .setTimeframeGroupId("PEAK")
                     .setServiceId("WEEKDAY")
                     .setStartTime(GtfsTime.fromString("08:00:00"))
                     .setEndTime(GtfsTime.fromString("09:00:00"))
                     .setCsvRowNumber(2)
                     .build(),
-                new GtfsTimeframe.Builder()
+                GtfsTimeframe.builder()
                     .setTimeframeGroupId("PEAK")
                     .setServiceId("WEEKDAY")
                     .setStartTime(GtfsTime.fromString("08:30:00"))
@@ -105,14 +105,14 @@ public class TimeframeOverlapValidatorTest {
   public void testWithDifferentServiceIds() {
     assertThat(
             validate(
-                new GtfsTimeframe.Builder()
+                GtfsTimeframe.builder()
                     .setTimeframeGroupId("PEAK")
                     .setServiceId("WEEKDAY")
                     .setStartTime(GtfsTime.fromString("08:00:00"))
                     .setEndTime(GtfsTime.fromString("09:00:00"))
                     .setCsvRowNumber(2)
                     .build(),
-                new GtfsTimeframe.Builder()
+                GtfsTimeframe.builder()
                     .setTimeframeGroupId("PEAK")
                     .setServiceId("WEEKEND")
                     .setStartTime(GtfsTime.fromString("08:00:00"))
@@ -126,14 +126,14 @@ public class TimeframeOverlapValidatorTest {
   public void testWithDifferentGroupIds() {
     assertThat(
             validate(
-                new GtfsTimeframe.Builder()
+                GtfsTimeframe.builder()
                     .setTimeframeGroupId("PEAK")
                     .setServiceId("WEEKDAY")
                     .setStartTime(GtfsTime.fromString("08:00:00"))
                     .setEndTime(GtfsTime.fromString("09:00:00"))
                     .setCsvRowNumber(2)
                     .build(),
-                new GtfsTimeframe.Builder()
+                GtfsTimeframe.builder()
                     .setTimeframeGroupId("NON-PEAK")
                     .setServiceId("WEEKDAY")
                     .setStartTime(GtfsTime.fromString("08:00:00"))

@@ -24,7 +24,7 @@ public class DuplicateRouteNameValidatorTest {
       @Nullable String shortName,
       @Nullable String longName,
       GtfsRouteType routeType) {
-    return new GtfsRoute.Builder()
+    return GtfsRoute.builder()
         .setCsvRowNumber(csvRowNumber)
         .setRouteId(routeId)
         .setAgencyId(agencyId)

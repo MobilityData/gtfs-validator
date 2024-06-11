@@ -107,7 +107,7 @@ public class DateTripsValidatorTest {
     ArrayList<GtfsTrip> trips = new ArrayList<>();
     for (int i = 0; i < tripsPerDay; i++) {
       trips.add(
-          new GtfsTrip.Builder()
+          GtfsTrip.builder()
               .setCsvRowNumber(i + 1)
               .setTripId("t" + i)
               .setServiceId(serviceId)

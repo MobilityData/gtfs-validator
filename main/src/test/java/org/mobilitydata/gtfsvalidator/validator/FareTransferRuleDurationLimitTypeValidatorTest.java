@@ -27,10 +27,7 @@ public class FareTransferRuleDurationLimitTypeValidatorTest {
   public void durationWithoutTypeShouldGenerateNotice() {
     assertThat(
             generateNotices(
-                new GtfsFareTransferRule.Builder()
-                    .setCsvRowNumber(2)
-                    .setDurationLimit(120)
-                    .build()))
+                GtfsFareTransferRule.builder().setCsvRowNumber(2).setDurationLimit(120).build()))
         .containsExactly(new FareTransferRuleDurationLimitWithoutTypeNotice(2));
   }
 
@@ -38,7 +35,7 @@ public class FareTransferRuleDurationLimitTypeValidatorTest {
   public void durationLimitTypeWithoutDurationLimitShouldGenerateNotice() {
     assertThat(
             generateNotices(
-                new GtfsFareTransferRule.Builder()
+                GtfsFareTransferRule.builder()
                     .setCsvRowNumber(2)
                     .setDurationLimitType(GtfsDurationLimitType.ARRIVAL_TO_ARRIVAL)
                     .build()))
@@ -49,7 +46,7 @@ public class FareTransferRuleDurationLimitTypeValidatorTest {
   public void durationWithTypeShouldNotGenerateNotice() {
     assertThat(
             generateNotices(
-                new GtfsFareTransferRule.Builder()
+                GtfsFareTransferRule.builder()
                     .setCsvRowNumber(2)
                     .setDurationLimit(120)
                     .setDurationLimitType(GtfsDurationLimitType.ARRIVAL_TO_ARRIVAL)

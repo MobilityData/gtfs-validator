@@ -38,7 +38,7 @@ public final class PathwayLoopValidatorTest {
   @Test
   public void loop_yieldsNotice() {
     GtfsPathway pathway =
-        new GtfsPathway.Builder()
+        GtfsPathway.builder()
             .setCsvRowNumber(2)
             .setPathwayId("pw1")
             .setFromStopId("platform1")
@@ -51,7 +51,7 @@ public final class PathwayLoopValidatorTest {
   public void noLoop_yieldsNoNotice() {
     assertThat(
             generateNotices(
-                new GtfsPathway.Builder()
+                GtfsPathway.builder()
                     .setCsvRowNumber(2)
                     .setPathwayId("pw1")
                     .setFromStopId("platform1")
@@ -63,8 +63,7 @@ public final class PathwayLoopValidatorTest {
   @Test
   public void noEndpoints_yieldsNoNotice() {
     assertThat(
-            generateNotices(
-                new GtfsPathway.Builder().setCsvRowNumber(2).setPathwayId("pw1").build()))
+            generateNotices(GtfsPathway.builder().setCsvRowNumber(2).setPathwayId("pw1").build()))
         .isEmpty();
   }
 }

@@ -18,7 +18,6 @@ package org.mobilitydata.gtfsvalidator.processor;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
-import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_PACKAGE_NAME;
 
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -54,7 +53,7 @@ public class EnumGenerator {
   }
 
   public JavaFile generateEnumJavaFile() {
-    return JavaFile.builder(TABLE_PACKAGE_NAME, generateEnumClass()).build();
+    return JavaFile.builder(enumDescriptor.packageName(), generateEnumClass()).build();
   }
 
   /** Returns the integer value for the special {@code UNRECOGNIZED} constant */

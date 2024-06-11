@@ -19,7 +19,7 @@ public class BikeAllowanceValidatorTest {
     ArrayList<GtfsTrip> trips = new ArrayList<>();
     for (int i = 0; i < rows; i++) {
       trips.add(
-          new GtfsTrip.Builder()
+          GtfsTrip.builder()
               .setCsvRowNumber(i + 1)
               .setTripId("t" + i)
               .setServiceId(serviceId)
@@ -32,11 +32,7 @@ public class BikeAllowanceValidatorTest {
 
   private static List<GtfsRoute> createRouteTable(String routeId, GtfsRouteType routeType) {
     return List.of(
-        new GtfsRoute.Builder()
-            .setCsvRowNumber(1)
-            .setRouteId(routeId)
-            .setRouteType(routeType)
-            .build());
+        GtfsRoute.builder().setCsvRowNumber(1).setRouteId(routeId).setRouteType(routeType).build());
   }
 
   private static List<ValidationNotice> generateNotices(

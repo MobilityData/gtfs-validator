@@ -21,8 +21,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.table.SingleColumnPrimaryKeyTableContainer;
-import org.mobilitydata.gtfsvalidator.table.SingleColumnPrimaryKeyTableDescriptor;
 import org.mobilitydata.gtfsvalidator.testing.LoadingHelper;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 

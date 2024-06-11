@@ -25,20 +25,22 @@ import com.squareup.javapoet.ClassName;
  */
 public final class GtfsEntityClasses {
 
-  public static final String TABLE_PACKAGE_NAME = "org.mobilitydata.gtfsvalidator.table";
   public static final String VALIDATOR_PACKAGE_NAME = "org.mobilitydata.gtfsvalidator.validator";
 
   public static final String SCHEMA_SUFFIX = "Schema";
 
+  private final String packageName;
+
   /** Upper camelcase name, e.g., GtfsStopTime. */
   private final String className;
 
-  public GtfsEntityClasses(String className) {
+  public GtfsEntityClasses(String packageName, String className) {
+    this.packageName = packageName;
     this.className = className;
   }
 
   public GtfsEntityClasses(GtfsFileDescriptor fileDescriptor) {
-    this(fileDescriptor.className());
+    this(fileDescriptor.packageName(), fileDescriptor.className());
   }
 
   public static String entityImplementationSimpleName(String schemaName) {
@@ -48,8 +50,16 @@ public final class GtfsEntityClasses {
     return schemaName.substring(0, schemaName.length() - SCHEMA_SUFFIX.length());
   }
 
-  public String entityImplementationSimpleName() {
+  public String entitySimpleName() {
     return className;
+  }
+
+  public String entityImplementationSimpleName() {
+    return className + "Impl";
+  }
+
+  public String columnBasedEntityImplementationSimpleName() {
+    return className + "ColumnBased";
   }
 
   public String tableDescriptorSimpleName() {
@@ -60,19 +70,35 @@ public final class GtfsEntityClasses {
     return className + "TableContainer";
   }
 
+  public String tableContainerColumnBasedSimpleName() {
+    return className + "ColumnBasedTableContainer";
+  }
+
+  public ClassName entityTypeName() {
+    return ClassName.get(packageName, entitySimpleName());
+  }
+
   public ClassName entityImplementationTypeName() {
-    return ClassName.get(TABLE_PACKAGE_NAME, entityImplementationSimpleName());
+    return ClassName.get(packageName, entityImplementationSimpleName());
+  }
+
+  public ClassName columnBasedEntityImplementationTypeName() {
+    return ClassName.get(packageName, columnBasedEntityImplementationSimpleName());
   }
 
   public ClassName entityBuilderTypeName() {
-    return ClassName.get(TABLE_PACKAGE_NAME, entityImplementationSimpleName() + ".Builder");
+    return ClassName.get(packageName, entityImplementationSimpleName() + ".Builder");
+  }
+
+  public ClassName columnBasedEntityBuilderTypeName() {
+    return ClassName.get(packageName, columnBasedEntityImplementationSimpleName() + ".Builder");
   }
 
   public ClassName tableDescriptorTypeName() {
-    return ClassName.get(TABLE_PACKAGE_NAME, tableDescriptorSimpleName());
+    return ClassName.get(packageName, tableDescriptorSimpleName());
   }
 
   public ClassName tableContainerTypeName() {
-    return ClassName.get(TABLE_PACKAGE_NAME, tableContainerSimpleName());
+    return ClassName.get(packageName, tableContainerSimpleName());
   }
 }

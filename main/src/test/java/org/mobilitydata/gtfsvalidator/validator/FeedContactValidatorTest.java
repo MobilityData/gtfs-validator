@@ -20,7 +20,7 @@ public class FeedContactValidatorTest {
       String feedVersion,
       String feedContactEmail,
       String feedContactUrl) {
-    return new GtfsFeedInfo.Builder()
+    return GtfsFeedInfo.builder()
         .setCsvRowNumber(csvRowNumber)
         .setFeedPublisherName(feedPublisherName)
         .setFeedPublisherUrl(feedPublisherUrl)

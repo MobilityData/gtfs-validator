@@ -36,7 +36,7 @@ public class MissingTripEdgeValidatorTest {
       GtfsTime arrivalTime,
       GtfsTime departureTime,
       int stopSequence) {
-    return new GtfsStopTime.Builder()
+    return GtfsStopTime.builder()
         .setCsvRowNumber(csvRowNumber)
         .setTripId(tripId)
         .setArrivalTime(arrivalTime)
@@ -47,7 +47,7 @@ public class MissingTripEdgeValidatorTest {
   }
 
   public static GtfsTrip createTrip(int csvRowNumber, String tripId) {
-    return new GtfsTrip.Builder()
+    return GtfsTrip.builder()
         .setCsvRowNumber(csvRowNumber)
         .setRouteId("route id value")
         .setTripId(tripId)
