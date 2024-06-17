@@ -205,7 +205,7 @@ public class FeedMetadata {
           GtfsStopTime stopTime = (GtfsStopTime) entity;
           if (stopTime.hasTripId() && stopTime.tripId() != null
               && stopTime.hasLocationId() && stopTime.locationId() != null
-              && stopTime.hasStopId() && stopTime.stopId() == null) {
+              && (!stopTime.hasStopId() || stopTime.stopId() == null)) {
             return true;
           }
         }
