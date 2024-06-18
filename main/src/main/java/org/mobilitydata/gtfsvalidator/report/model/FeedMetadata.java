@@ -181,7 +181,7 @@ public class FeedMetadata {
               && stopTime.hasArrivalTime()
               && stopTime.arrivalTime() != null
               && stopTime.hasDepartureTime()
-              && stopTime.departureTime() != null
+              && stopTime.departureTime() != null;
         }
       }
     }
