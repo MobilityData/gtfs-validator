@@ -12,3 +12,4 @@ vite.config.ts.timestamp-*
 rules.json
 cypress/screenshots/
 cypress/videos/
+web/client/static
