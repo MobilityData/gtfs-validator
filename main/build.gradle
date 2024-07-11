@@ -43,6 +43,8 @@ dependencies {
     implementation 'org.thymeleaf:thymeleaf:3.0.15.RELEASE'
     implementation 'com.vladsch.flexmark:flexmark-all:0.64.8'
     implementation 'io.github.classgraph:classgraph:4.8.146'
+    implementation 'org.geotools:gt-main:22.2'
+    implementation 'org.geotools:gt-shapefile:22.2'
     testImplementation group: 'junit', name: 'junit', version: '4.13'
     testImplementation 'com.google.truth:truth:1.0.1'
     testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'

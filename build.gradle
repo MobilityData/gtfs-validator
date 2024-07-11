@@ -43,8 +43,13 @@ allprojects {
     version scmVersion.version
 
     repositories {
+        maven {
+            url 'https://repo.osgeo.org/repository/release/'
+        }
         mavenCentral()
     }
+
+}
 
     tasks.withType(JavaCompile) {
         // All Java projects should target the same compatibility version.
@@ -76,7 +81,6 @@ allprojects {
         // Any project with a test should be added to test report aggregation in the root project.
         rootProject.dependencies.add('testReportAggregation', project)
     }
-}
 
 subprojects {
     apply plugin: 'java'
