@@ -18,6 +18,9 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.flogger.FluentLogger;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,6 +33,17 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import org.geotools.api.data.DataStore;
+import org.geotools.api.data.FileDataStore;
+import org.geotools.api.data.FileDataStoreFinder;
+import org.geotools.api.data.SimpleFeatureSource;
+import org.geotools.feature.FeatureIterator;
+import org.geotools.geojson.*;
+import org.geotools.api.feature.simple.SimpleFeature;
+import org.geotools.data.simple.SimpleFeatureCollection;
+import org.geotools.data.simple.SimpleFeatureIterator;
+import org.geotools.geojson.feature.FeatureJSON;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.RuntimeExceptionInLoaderError;
@@ -55,6 +69,7 @@ public class GtfsFeedLoader {
    */
   private final List<Class<? extends FileValidator>> multiFileValidatorsWithParsingErrors =
       new ArrayList<>();
+  private DataStore dataStore;
 
   public GtfsFeedLoader(
       ImmutableList<Class<? extends GtfsTableDescriptor<?>>> tableDescriptorClasses) {
@@ -102,7 +117,11 @@ public class GtfsFeedLoader {
     for (String filename : gtfsInput.getFilenames()) {
       GtfsTableDescriptor<?> tableDescriptor = remainingDescriptors.remove(filename.toLowerCase());
       if (tableDescriptor == null) {
-        noticeContainer.addValidationNotice(new UnknownFileNotice(filename));
+        if (filename.equals("locations.geojson")) {
+          readGeoJsonFile();
+        } else {
+          noticeContainer.addValidationNotice(new UnknownFileNotice(filename));
+        }
       } else {
         loaderCallables.add(
             () -> {
@@ -176,6 +195,71 @@ public class GtfsFeedLoader {
     } finally {
       exec.shutdown();
     }
+  }
+
+  private void readGeoJsonFile() {
+    File file = new File("/Users/jingsi/Downloads/browncounty-mn-us--flex-v2/locations.geojson");
+
+    FeatureJSON fjson = new FeatureJSON();
+
+    // Read the GeoJSON file
+    try (FileReader reader = new FileReader(file)) {
+      SimpleFeatureCollection featureCollection = (SimpleFeatureCollection) fjson.readFeatureCollection(reader);
+
+      // Iterate over the features and print them
+      try (FeatureIterator<SimpleFeature> features = featureCollection.features()) {
+        while (features.hasNext()) {
+          SimpleFeature feature = features.next();
+          System.out.println("Feature: "+feature);
+        }
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+//    SimpleFeatureIterator iterator = null;
+//    try {
+//      FileDataStore dataStore = FileDataStoreFinder.getDataStore(geoJsonFile);
+//
+//
+//    Map<String, Object> map = new HashMap<>();
+//    try {
+//      map.put("url", geoJsonFile.toURI().toURL());
+//      System.out.println("url: " + map.get("url").toString());
+//    } catch (MalformedURLException e) {
+//      throw new RuntimeException(e);
+//    }
+//
+//    DataStore dataStore = null;
+//    FeatureIterator<SimpleFeature> iterator = null;
+//    try {
+//      dataStore = DataStoreFinder.getDataStore(map);
+//      if (dataStore == null) {
+//        throw new IOException("Could not connect to data store");
+//      }
+
+//      String typeName = dataStore.getTypeNames()[0];
+//      SimpleFeatureSource featureSource = dataStore.getFeatureSource(typeName);
+//      SimpleFeatureCollection collection = featureSource.getFeatures();
+//      iterator = collection.features();
+//
+//      while (iterator.hasNext()) {
+//        SimpleFeature feature = iterator.next();
+//        System.out.println("Feature ID: " + feature.getID());
+//        System.out.println("Geometry: " + feature.getDefaultGeometry());
+//        System.out.println("Properties: " + feature.getProperties());
+//      }
+//
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    } finally {
+//      if (iterator != null) {
+//        iterator.close();
+//      }
+//      if (dataStore != null) {
+//        dataStore.dispose();
+//      }
+//    }
   }
 
   /** Adds a ThreadExecutionError to the notice container. */
