@@ -56,7 +56,7 @@ jobs:
 
       - name: Load secrets from 1Password to be used for sending notification
         id: onepw_secrets
-        uses: 1password/load-secrets-action@v1.3.1
+        uses: 1password/load-secrets-action@v2.0.0
         with:
           export-env: true # Export loaded secrets as environment variables
         env:
