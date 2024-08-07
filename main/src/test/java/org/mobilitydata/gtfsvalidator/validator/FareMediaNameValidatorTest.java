@@ -19,7 +19,7 @@ public class FareMediaNameValidatorTest {
   public void testTransitCard() {
     assertThat(
             validationNoticesFor(
-                new GtfsFareMedia.Builder()
+                GtfsFareMedia.builder()
                     .setCsvRowNumber(2)
                     .setFareMediaName("Go! Pass")
                     .setFareMediaType(GtfsFareMediaType.TRANSIT_CARD)
@@ -27,7 +27,7 @@ public class FareMediaNameValidatorTest {
         .isEmpty();
     assertThat(
             validationNoticesFor(
-                new GtfsFareMedia.Builder()
+                GtfsFareMedia.builder()
                     .setCsvRowNumber(2)
                     .setFareMediaType(GtfsFareMediaType.TRANSIT_CARD)
                     .build()))
@@ -38,7 +38,7 @@ public class FareMediaNameValidatorTest {
   public void testPaperTicket() {
     assertThat(
             validationNoticesFor(
-                new GtfsFareMedia.Builder()
+                GtfsFareMedia.builder()
                     .setCsvRowNumber(2)
                     .setFareMediaName("Some Ticket")
                     .setFareMediaType(GtfsFareMediaType.PAPER_TICKET)
@@ -46,7 +46,7 @@ public class FareMediaNameValidatorTest {
         .isEmpty();
     assertThat(
             validationNoticesFor(
-                new GtfsFareMedia.Builder()
+                GtfsFareMedia.builder()
                     .setCsvRowNumber(2)
                     .setFareMediaType(GtfsFareMediaType.PAPER_TICKET)
                     .build()))

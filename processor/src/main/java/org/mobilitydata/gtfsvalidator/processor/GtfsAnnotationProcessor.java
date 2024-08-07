@@ -16,10 +16,12 @@
 
 package org.mobilitydata.gtfsvalidator.processor;
 
+import static java.util.function.Function.identity;
 import static javax.lang.model.util.ElementFilter.typesIn;
 import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.VALIDATOR_PACKAGE_NAME;
 
 import com.google.auto.service.AutoService;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.squareup.javapoet.JavaFile;
@@ -36,6 +38,9 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.PrimitiveType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValue;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValues;
@@ -48,8 +53,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
  */
 @AutoService(Processor.class)
 public class GtfsAnnotationProcessor extends AbstractProcessor {
-
-  private final Analyser analyser = new Analyser();
 
   /**
    * Sanitizes the result of {@link RoundEnvironment#getElementsAnnotatedWith}, which otherwise can
@@ -84,6 +87,11 @@ public class GtfsAnnotationProcessor extends AbstractProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    Analyser analyser = new Analyser(processingEnv.getElementUtils());
+
+    Types typeUtils = processingEnv.getTypeUtils();
+    PrimitiveType primitiveIntType = typeUtils.getPrimitiveType(TypeKind.INT);
+
     List<GtfsEnumDescriptor> enumDescriptors = new ArrayList<>();
     for (TypeElement type : typesIn(annotatedElementsIn(roundEnv, GtfsEnumValues.class))) {
       enumDescriptors.add(analyser.analyzeGtfsEnumType(type));
@@ -95,14 +103,19 @@ public class GtfsAnnotationProcessor extends AbstractProcessor {
     for (GtfsEnumDescriptor enumDescriptor : enumDescriptors) {
       writeJavaFile(new EnumGenerator(enumDescriptor).generateEnumJavaFile());
     }
+    ImmutableMap<String, GtfsEnumDescriptor> enumDescriptorsByName =
+        enumDescriptors.stream()
+            .collect(ImmutableMap.toImmutableMap(GtfsEnumDescriptor::name, identity()));
 
     List<GtfsFileDescriptor> fileDescriptors = new ArrayList<>();
     for (TypeElement type : typesIn(annotatedElementsIn(roundEnv, GtfsTable.class))) {
-      fileDescriptors.add(analyser.analyzeGtfsFileType(type));
+      fileDescriptors.add(analyser.analyzeGtfsFileType(type, enumDescriptorsByName));
     }
     for (GtfsFileDescriptor fileDescriptor : fileDescriptors) {
+      writeJavaFile(new EntityGenerator(fileDescriptor).generateGtfsEntityJavaFile());
+      writeJavaFile(new EntityImplementationGenerator(fileDescriptor).generateGtfsEntityJavaFile());
       writeJavaFile(
-          new EntityImplementationGenerator(fileDescriptor, enumDescriptors)
+          new ColumnBasedEntityImplementationGenerator(fileDescriptor, primitiveIntType)
               .generateGtfsEntityJavaFile());
       writeJavaFile(new TableDescriptorGenerator(fileDescriptor).generateGtfsDescriptorJavaFile());
       writeJavaFile(new TableContainerGenerator(fileDescriptor).generateGtfsContainerJavaFile());

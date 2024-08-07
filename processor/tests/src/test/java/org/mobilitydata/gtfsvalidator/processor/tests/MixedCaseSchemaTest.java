@@ -25,8 +25,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.mobilitydata.gtfsvalidator.notice.MixedCaseRecommendedFieldNotice;
-import org.mobilitydata.gtfsvalidator.table.MixedCaseTest;
-import org.mobilitydata.gtfsvalidator.table.MixedCaseTestTableDescriptor;
 import org.mobilitydata.gtfsvalidator.testing.LoadingHelper;
 import org.mobilitydata.gtfsvalidator.validator.MixedCaseTestMixedCaseValidator;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;

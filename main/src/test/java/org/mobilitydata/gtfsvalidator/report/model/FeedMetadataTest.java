@@ -62,7 +62,7 @@ public class FeedMetadataTest {
           feedLoaderMock.loadAndValidate(
               gtfsInput,
               new DefaultValidatorProvider(validationContext, validatorLoader),
-              new NoticeContainer());
+              noticeContainer);
       FeedMetadata feedMetadata = FeedMetadata.from(feedContainer, gtfsInput.getFilenames());
       assertThat(feedMetadata.specFeatures.get(specFeature)).isEqualTo(expectedValue);
     }

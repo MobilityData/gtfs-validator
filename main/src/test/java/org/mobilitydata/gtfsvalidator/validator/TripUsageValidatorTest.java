@@ -41,7 +41,7 @@ public class TripUsageValidatorTest {
 
   public static GtfsTrip createTrip(
       int csvRowNumber, String routeId, String serviceId, String tripId) {
-    return new GtfsTrip.Builder()
+    return GtfsTrip.builder()
         .setCsvRowNumber(csvRowNumber)
         .setRouteId(routeId)
         .setServiceId(serviceId)
@@ -51,7 +51,7 @@ public class TripUsageValidatorTest {
 
   public static GtfsStopTime createStopTime(
       int csvRowNumber, String tripId, String time, String stopId, int stopSequence) {
-    return new GtfsStopTime.Builder()
+    return GtfsStopTime.builder()
         .setCsvRowNumber(csvRowNumber)
         .setTripId(tripId)
         .setArrivalTime(GtfsTime.fromString(time))

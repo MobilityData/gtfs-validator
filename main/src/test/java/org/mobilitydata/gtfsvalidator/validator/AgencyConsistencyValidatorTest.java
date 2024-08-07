@@ -49,7 +49,7 @@ public class AgencyConsistencyValidatorTest {
       String agencyUrl,
       ZoneId agencyTimezone,
       @Nullable Locale agencyLang) {
-    return new GtfsAgency.Builder()
+    return GtfsAgency.builder()
         .setCsvRowNumber(csvRowNumber)
         .setAgencyId(agencyId)
         .setAgencyName(agencyName)

@@ -59,7 +59,7 @@ public final class PathwayDanglingGenericNodeValidatorTest {
 
   static GtfsPathway createPathway(int fromStopRow, int toStopRow) {
     int row = fromStopRow * 1000 + toStopRow;
-    return new GtfsPathway.Builder()
+    return GtfsPathway.builder()
         .setCsvRowNumber(row)
         .setPathwayId(rowToPathwayId(row))
         .setFromStopId(rowToStopId(fromStopRow))
@@ -68,7 +68,7 @@ public final class PathwayDanglingGenericNodeValidatorTest {
   }
 
   static GtfsStop createLocation(int csvRowNumber, GtfsLocationType locationType) {
-    return new GtfsStop.Builder()
+    return GtfsStop.builder()
         .setCsvRowNumber(csvRowNumber)
         .setStopId(rowToStopId(csvRowNumber))
         .setLocationType(locationType.getNumber())
@@ -77,7 +77,7 @@ public final class PathwayDanglingGenericNodeValidatorTest {
 
   static GtfsStop createChildLocation(
       int csvRowNumber, GtfsLocationType locationType, int parentRow) {
-    return new GtfsStop.Builder()
+    return GtfsStop.builder()
         .setCsvRowNumber(csvRowNumber)
         .setStopId(rowToStopId(csvRowNumber))
         .setLocationType(locationType.getNumber())

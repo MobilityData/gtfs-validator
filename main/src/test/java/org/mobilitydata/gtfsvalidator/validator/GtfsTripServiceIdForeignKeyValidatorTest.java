@@ -53,7 +53,7 @@ public class GtfsTripServiceIdForeignKeyValidatorTest {
 
   public static GtfsTrip createTrip(
       int csvRowNumber, String routeId, String serviceId, String tripId, String shapeId) {
-    return new GtfsTrip.Builder()
+    return GtfsTrip.builder()
         .setCsvRowNumber(csvRowNumber)
         .setRouteId(routeId)
         .setServiceId(serviceId)
@@ -69,7 +69,7 @@ public class GtfsTripServiceIdForeignKeyValidatorTest {
 
   public static GtfsCalendarDate createCalendarDate(
       int csvRowNumber, String serviceId, GtfsDate date, int exceptionType) {
-    return new GtfsCalendarDate.Builder()
+    return GtfsCalendarDate.builder()
         .setCsvRowNumber(csvRowNumber)
         .setServiceId(serviceId)
         .setDate(date)

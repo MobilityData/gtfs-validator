@@ -66,6 +66,10 @@ public abstract class ValidationRunnerConfig {
   // If true, the validator will not check for a new validator version
   public abstract boolean skipValidatorUpdate();
 
+  public abstract boolean useColumnBasedStorage();
+
+  public abstract boolean pauseAfterReading();
+
   public static Builder builder() {
     // Set reasonable defaults where appropriate.
     return new AutoValue_ValidationRunnerConfig.Builder()
@@ -76,7 +80,9 @@ public abstract class ValidationRunnerConfig {
         .setPrettyJson(false)
         .setCountryCode(CountryCode.forStringOrUnknown(CountryCode.ZZ))
         .setDateForValidation(LocalDate.now())
-        .setSkipValidatorUpdate(false);
+        .setSkipValidatorUpdate(false)
+        .setUseColumnBasedStorage(false)
+        .setPauseAfterReading(false);
   }
 
   @AutoValue.Builder
@@ -102,6 +108,10 @@ public abstract class ValidationRunnerConfig {
     public abstract Builder setPrettyJson(boolean prettyJson);
 
     public abstract Builder setSkipValidatorUpdate(boolean skipValidatorUpdate);
+
+    public abstract Builder setUseColumnBasedStorage(boolean useColumnBasedStorage);
+
+    public abstract Builder setPauseAfterReading(boolean value);
 
     public abstract ValidationRunnerConfig build();
   }

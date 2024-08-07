@@ -44,11 +44,11 @@ import org.mobilitydata.gtfsvalidator.validator.TranslationFieldAndReferenceVali
 
 @RunWith(JUnit4.class)
 public final class TranslationFieldAndReferenceValidatorTest {
-  private static final GtfsAgency AGENCY = new GtfsAgency.Builder().setAgencyId("agency0").build();
+  private static final GtfsAgency AGENCY = GtfsAgency.builder().setAgencyId("agency0").build();
   private static final GtfsStopTime STOP_TIME =
-      new GtfsStopTime.Builder().setTripId("trip0").setStopSequence(0).build();
+      GtfsStopTime.builder().setTripId("trip0").setStopSequence(0).build();
   private static final GtfsFeedInfo FEED_INFO =
-      new GtfsFeedInfo.Builder().setFeedLang(Locale.CANADA).build();
+      GtfsFeedInfo.builder().setFeedLang(Locale.CANADA).build();
 
   private static final String[] NEW_FORMAT_CSV_HEADERS =
       new String[] {
@@ -83,13 +83,13 @@ public final class TranslationFieldAndReferenceValidatorTest {
 
   @Test
   public void legacyFormat_yieldsNoNotice() {
-    GtfsTranslation translation = new GtfsTranslation.Builder().setCsvRowNumber(2).build();
+    GtfsTranslation translation = GtfsTranslation.builder().setCsvRowNumber(2).build();
     assertThat(generateNotices(CsvHeader.EMPTY, ImmutableList.of(translation))).isEmpty();
   }
 
   @Test
   public void missingRequiredStandardFields_yieldsNotice() {
-    GtfsTranslation translation = new GtfsTranslation.Builder().setCsvRowNumber(2).build();
+    GtfsTranslation translation = GtfsTranslation.builder().setCsvRowNumber(2).build();
     assertThat(
             generateNotices(new CsvHeader(NEW_FORMAT_CSV_HEADERS), ImmutableList.of(translation)))
         .containsExactly(
@@ -101,7 +101,7 @@ public final class TranslationFieldAndReferenceValidatorTest {
   @Test
   public void wrongTableName_yieldsNotice() {
     GtfsTranslation translation =
-        new GtfsTranslation.Builder()
+        GtfsTranslation.builder()
             .setCsvRowNumber(2)
             .setTableName("wrong")
             .setFieldName("any")
@@ -115,7 +115,7 @@ public final class TranslationFieldAndReferenceValidatorTest {
   @Test
   public void fieldValueDefined_yieldsNoNotice() {
     GtfsTranslation translation =
-        new GtfsTranslation.Builder()
+        GtfsTranslation.builder()
             .setCsvRowNumber(2)
             .setTableName("agency")
             .setFieldName("any")
@@ -130,7 +130,7 @@ public final class TranslationFieldAndReferenceValidatorTest {
   @Test
   public void recordIdAndFieldValueDefined_yieldsNotice() {
     GtfsTranslation translation =
-        new GtfsTranslation.Builder()
+        GtfsTranslation.builder()
             .setCsvRowNumber(2)
             .setTableName("agency")
             .setFieldName("any")
@@ -146,7 +146,7 @@ public final class TranslationFieldAndReferenceValidatorTest {
   @Test
   public void recordSubIdAndFieldValueDefined_yieldsNotice() {
     GtfsTranslation translation =
-        new GtfsTranslation.Builder()
+        GtfsTranslation.builder()
             .setCsvRowNumber(2)
             .setTableName("agency")
             .setFieldName("any")
@@ -163,7 +163,7 @@ public final class TranslationFieldAndReferenceValidatorTest {
   @Test
   public void noRecordIdForStopTable_yieldsNotice() {
     GtfsTranslation translation =
-        new GtfsTranslation.Builder()
+        GtfsTranslation.builder()
             .setCsvRowNumber(2)
             .setTableName("agency")
             .setFieldName("any")
@@ -177,7 +177,7 @@ public final class TranslationFieldAndReferenceValidatorTest {
   @Test
   public void wrongRecordIdForStopTable_yieldsNotice() {
     GtfsTranslation translation =
-        new GtfsTranslation.Builder()
+        GtfsTranslation.builder()
             .setCsvRowNumber(2)
             .setTableName("agency")
             .setFieldName("any")
@@ -192,7 +192,7 @@ public final class TranslationFieldAndReferenceValidatorTest {
   @Test
   public void feedInfoTranslation_yieldsNoNotice() {
     GtfsTranslation translation =
-        new GtfsTranslation.Builder()
+        GtfsTranslation.builder()
             .setCsvRowNumber(2)
             .setTableName("feed_info")
             .setFieldName("any")
@@ -206,7 +206,7 @@ public final class TranslationFieldAndReferenceValidatorTest {
   @Test
   public void unexpectedRecordIdForFeedInfo_yieldsNotice() {
     GtfsTranslation translation =
-        new GtfsTranslation.Builder()
+        GtfsTranslation.builder()
             .setCsvRowNumber(2)
             .setTableName("feed_info")
             .setFieldName("any")
@@ -221,7 +221,7 @@ public final class TranslationFieldAndReferenceValidatorTest {
   @Test
   public void agencyTranslation_yieldsNoNotice() {
     GtfsTranslation translation =
-        new GtfsTranslation.Builder()
+        GtfsTranslation.builder()
             .setCsvRowNumber(2)
             .setTableName("agency")
             .setFieldName("any")
@@ -236,7 +236,7 @@ public final class TranslationFieldAndReferenceValidatorTest {
   @Test
   public void stopTimeTranslation_yieldsNoNotice() {
     GtfsTranslation translation =
-        new GtfsTranslation.Builder()
+        GtfsTranslation.builder()
             .setCsvRowNumber(2)
             .setTableName("stop_times")
             .setFieldName("any")
@@ -252,7 +252,7 @@ public final class TranslationFieldAndReferenceValidatorTest {
   @Test
   public void unparsableIntegerForStopTime_yieldsNotice() {
     GtfsTranslation translation =
-        new GtfsTranslation.Builder()
+        GtfsTranslation.builder()
             .setCsvRowNumber(2)
             .setTableName("stop_times")
             .setFieldName("any")

@@ -63,7 +63,7 @@ public final class PathwayReachableLocationValidatorTest {
   static GtfsPathway createPathway(
       int fromStopRow, int toStopRow, GtfsPathwayIsBidirectional isBidirectional) {
     int pathwayRow = fromStopRow * 1000 + toStopRow;
-    return new GtfsPathway.Builder()
+    return GtfsPathway.builder()
         .setCsvRowNumber(pathwayRow)
         .setPathwayId(rowToPathwayId(pathwayRow))
         .setFromStopId(rowToStopId(fromStopRow))
@@ -73,7 +73,7 @@ public final class PathwayReachableLocationValidatorTest {
   }
 
   static GtfsStop createLocation(int csvRowNumber, GtfsLocationType locationType) {
-    return new GtfsStop.Builder()
+    return GtfsStop.builder()
         .setCsvRowNumber(csvRowNumber)
         .setStopId(rowToStopId(csvRowNumber))
         .setLocationType(locationType)
@@ -83,7 +83,7 @@ public final class PathwayReachableLocationValidatorTest {
 
   static GtfsStop createChildLocation(
       int csvRowNumber, GtfsLocationType locationType, int parentRow) {
-    return new GtfsStop.Builder()
+    return GtfsStop.builder()
         .setCsvRowNumber(csvRowNumber)
         .setStopId(rowToStopId(csvRowNumber))
         .setLocationType(locationType)

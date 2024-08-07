@@ -6,7 +6,7 @@ import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
-import org.mobilitydata.gtfsvalidator.table.GtfsStop.Builder;
+import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransfer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransferTableContainer;
@@ -23,13 +23,16 @@ public class TransfersStopTypeValidatorTest {
     GtfsStopTableContainer stops =
         GtfsStopTableContainer.forEntities(
             ImmutableList.of(
-                new Builder().setStopId("s0").setLocationType(GtfsLocationType.STOP).build(),
-                new Builder().setStopId("s1").setLocationType(GtfsLocationType.STATION).build()),
+                GtfsStop.builder().setStopId("s0").setLocationType(GtfsLocationType.STOP).build(),
+                GtfsStop.builder()
+                    .setStopId("s1")
+                    .setLocationType(GtfsLocationType.STATION)
+                    .build()),
             noticeContainer);
     GtfsTransferTableContainer transfers =
         GtfsTransferTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsTransfer.Builder()
+                GtfsTransfer.builder()
                     .setFromStopId("s0")
                     .setToStopId("s1")
                     .setTransferType(GtfsTransferType.RECOMMENDED)
@@ -47,14 +50,17 @@ public class TransfersStopTypeValidatorTest {
     GtfsStopTableContainer stops =
         GtfsStopTableContainer.forEntities(
             ImmutableList.of(
-                new Builder().setStopId("s0").setLocationType(GtfsLocationType.ENTRANCE).build(),
-                new Builder()
+                GtfsStop.builder()
+                    .setStopId("s0")
+                    .setLocationType(GtfsLocationType.ENTRANCE)
+                    .build(),
+                GtfsStop.builder()
                     .setStopId("s1")
                     .setLocationType(GtfsLocationType.GENERIC_NODE)
                     .build()),
             noticeContainer);
     GtfsTransfer transfer =
-        new GtfsTransfer.Builder()
+        GtfsTransfer.builder()
             .setCsvRowNumber(2)
             .setFromStopId("s0")
             .setToStopId("s1")

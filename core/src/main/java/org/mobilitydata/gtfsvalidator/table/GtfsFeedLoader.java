@@ -48,6 +48,7 @@ public class GtfsFeedLoader {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private final HashMap<String, GtfsTableDescriptor<?>> tableDescriptors = new HashMap<>();
   private int numThreads = 1;
+  private boolean pauseAfterReading = false;
 
   /**
    * The set of validators that were skipped during validation because their file dependencies had
@@ -83,6 +84,10 @@ public class GtfsFeedLoader {
 
   public void setNumThreads(int numThreads) {
     this.numThreads = numThreads;
+  }
+
+  public void setPauseAfterReading(boolean pauseAfterReading) {
+    this.pauseAfterReading = pauseAfterReading;
   }
 
   public List<Class<? extends FileValidator>> getMultiFileValidatorsWithParsingErrors() {
@@ -148,6 +153,12 @@ public class GtfsFeedLoader {
           addThreadExecutionError(e, noticeContainer);
         }
       }
+
+      if (pauseAfterReading) {
+        logger.atInfo().log("Pausing after loading data...");
+        Thread.sleep(10 * 60 * 1000);
+      }
+
       GtfsFeedContainer feed = new GtfsFeedContainer(tableContainers);
       List<Callable<NoticeContainer>> validatorCallables = new ArrayList<>();
       // Validators with parser-error dependencies will not be returned here, but instead added to

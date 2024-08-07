@@ -19,6 +19,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDate;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateExceptionType;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsCalendarImpl;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
@@ -26,8 +27,8 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 public class CalendarUtilTest {
   public static GtfsCalendar createGtfsCalendar(
       String serviceId, LocalDate startDate, LocalDate endDate, Set<DayOfWeek> days) {
-    GtfsCalendar.Builder calendar =
-        new GtfsCalendar.Builder()
+    GtfsCalendarImpl.Builder calendar =
+        GtfsCalendar.builder()
             .setServiceId(serviceId)
             .setStartDate(GtfsDate.fromLocalDate(startDate))
             .setEndDate(GtfsDate.fromLocalDate(endDate));
@@ -56,7 +57,7 @@ public class CalendarUtilTest {
   }
 
   private static GtfsCalendarDate addedCalendarDate(String serviceId, LocalDate date) {
-    return new GtfsCalendarDate.Builder()
+    return GtfsCalendarDate.builder()
         .setServiceId(serviceId)
         .setDate(GtfsDate.fromLocalDate(date))
         .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_ADDED)
@@ -64,7 +65,7 @@ public class CalendarUtilTest {
   }
 
   private static GtfsCalendarDate removedCalendarDate(String serviceId, LocalDate date) {
-    return new GtfsCalendarDate.Builder()
+    return GtfsCalendarDate.builder()
         .setServiceId(serviceId)
         .setDate(GtfsDate.fromLocalDate(date))
         .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_REMOVED)

@@ -46,7 +46,7 @@ public class MissingLevelIdValidatorTest {
   }
 
   private static GtfsStop createStop(int csvRowNumber, String levelId) {
-    return new GtfsStop.Builder()
+    return GtfsStop.builder()
         .setStopId(toStopId(csvRowNumber))
         .setCsvRowNumber(csvRowNumber)
         .setLevelId(levelId)
@@ -58,7 +58,7 @@ public class MissingLevelIdValidatorTest {
   }
 
   private static GtfsPathway createPathway(int csvRowNumber, GtfsPathwayMode pathwayMode) {
-    return new GtfsPathway.Builder()
+    return GtfsPathway.builder()
         .setPathwayId(toPathwayId(pathwayMode, csvRowNumber))
         .setCsvRowNumber(csvRowNumber)
         .setFromStopId(toStopId(csvRowNumber - 1))

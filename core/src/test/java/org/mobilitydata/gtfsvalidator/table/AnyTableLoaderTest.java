@@ -13,12 +13,10 @@ import java.util.function.Consumer;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
 import org.mobilitydata.gtfsvalidator.notice.*;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
-import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntity;
+import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntityTableDescriptor;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestSingleFileValidator;
-import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestTableDescriptor;
 import org.mobilitydata.gtfsvalidator.validator.FileValidator;
 import org.mobilitydata.gtfsvalidator.validator.GtfsFieldValidator;
 import org.mobilitydata.gtfsvalidator.validator.TableHeaderValidator;
@@ -108,24 +106,18 @@ public class AnyTableLoaderTest {
 
   @Test
   public void invalidRowLengthNotice() {
-    var testTableDescriptor = spy(new GtfsTestTableDescriptor());
-    when(testTableDescriptor.createContainerForInvalidStatus(
-            GtfsTableContainer.TableStatus.UNPARSABLE_ROWS))
-        .thenReturn(mockContainer);
+    var testTableDescriptor = new GtfsTestEntityTableDescriptor();
     when(validatorProvider.getTableHeaderValidator()).thenReturn(mock(TableHeaderValidator.class));
     InputStream inputStream = toInputStream("id,code\n" + "s1\n");
 
-    var loadedContainer =
-        AnyTableLoader.load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
-
+    AnyTableLoader.load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
     assertThat(loaderNotices.getValidationNotices())
         .containsExactly(new InvalidRowLengthNotice("filename.txt", 2, 1, 2));
-    assertThat(loadedContainer).isEqualTo(mockContainer);
   }
 
   @Test
   public void parsableTableRows() {
-    var testTableDescriptor = new GtfsTestTableDescriptor();
+    var testTableDescriptor = new GtfsTestEntityTableDescriptor();
     when(validatorProvider.getTableHeaderValidator()).thenReturn(mock(TableHeaderValidator.class));
     when(validatorProvider.getFieldValidator()).thenReturn(mock(GtfsFieldValidator.class));
     GtfsTestSingleFileValidator validator = mock(GtfsTestSingleFileValidator.class);
@@ -145,38 +137,16 @@ public class AnyTableLoaderTest {
 
   @Test
   public void missingRequiredField() {
-    var testTableDescriptor = spy(new GtfsTestTableDescriptor());
-    when(testTableDescriptor.getColumns())
-        .thenReturn(
-            ImmutableList.of(
-                GtfsColumnDescriptor.builder()
-                    .setColumnName(GtfsTestEntity.ID_FIELD_NAME)
-                    .setHeaderRequired(true)
-                    .setHeaderRecommended(false)
-                    .setFieldLevel(FieldLevelEnum.REQUIRED)
-                    .setIsMixedCase(false)
-                    .setIsCached(false)
-                    .build(),
-                GtfsColumnDescriptor.builder()
-                    .setColumnName(GtfsTestEntity.CODE_FIELD_NAME)
-                    .setHeaderRequired(false)
-                    .setHeaderRecommended(false)
-                    .setFieldLevel(FieldLevelEnum.REQUIRED)
-                    .setIsMixedCase(false)
-                    .setIsCached(false)
-                    .build()));
-    when(testTableDescriptor.createContainerForInvalidStatus(
-            GtfsTableContainer.TableStatus.UNPARSABLE_ROWS))
-        .thenReturn(mockContainer);
+    // The `id` field is required for GtfsTestEntity
+    var testTableDescriptor = new GtfsTestEntityTableDescriptor();
     when(validatorProvider.getTableHeaderValidator()).thenReturn(mock(TableHeaderValidator.class));
     when(validatorProvider.getFieldValidator()).thenReturn(mock(GtfsFieldValidator.class));
-    InputStream inputStream = toInputStream("id,code\n" + "s1,\n");
+    InputStream inputStream = toInputStream("id,code\n" + ",some code\n");
 
     var loadedContainer =
         AnyTableLoader.load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
     assertThat(loaderNotices.getValidationNotices())
-        .contains(new MissingRequiredFieldNotice("filename.txt", 2, "code"));
-    assertThat(loadedContainer).isEqualTo(mockContainer);
+        .contains(new MissingRequiredFieldNotice("filename.txt", 2, "id"));
   }
 }

@@ -67,7 +67,7 @@ public final class TripCalendarUtilTest {
                         LocalDate.of(2021, 2, 28))),
                 GtfsTripTableContainer.forEntities(
                     ImmutableList.of(
-                        new GtfsTrip.Builder()
+                        GtfsTrip.builder()
                             .setCsvRowNumber(2)
                             .setTripId("trip1")
                             .setServiceId("WEEK")
@@ -149,12 +149,12 @@ public final class TripCalendarUtilTest {
                     ImmutableSortedSet.of(LocalDate.of(2021, 2, 28))),
                 GtfsTripTableContainer.forEntities(
                     ImmutableList.of(
-                        new GtfsTrip.Builder()
+                        GtfsTrip.builder()
                             .setCsvRowNumber(2)
                             .setTripId("trip1")
                             .setServiceId("service1")
                             .build(),
-                        new GtfsTrip.Builder()
+                        GtfsTrip.builder()
                             .setCsvRowNumber(2)
                             .setTripId("trip2")
                             .setServiceId("service2")
@@ -162,7 +162,7 @@ public final class TripCalendarUtilTest {
                     noticeContainer),
                 GtfsFrequencyTableContainer.forEntities(
                     ImmutableList.of(
-                        new GtfsFrequency.Builder()
+                        GtfsFrequency.builder()
                             .setCsvRowNumber(2)
                             .setTripId("trip2")
                             .setStartTime(GtfsTime.fromString("12:00:00"))

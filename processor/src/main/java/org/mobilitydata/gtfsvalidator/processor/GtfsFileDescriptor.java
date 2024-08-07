@@ -40,6 +40,8 @@ public abstract class GtfsFileDescriptor {
 
   public abstract String className();
 
+  public abstract String packageName();
+
   public abstract boolean recommended();
 
   public abstract boolean required();
@@ -84,6 +86,8 @@ public abstract class GtfsFileDescriptor {
     public abstract String filename();
 
     public abstract Builder setClassName(String value);
+
+    public abstract Builder setPackageName(String value);
 
     public abstract Builder setRecommended(boolean value);
 

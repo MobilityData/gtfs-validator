@@ -23,7 +23,7 @@ public class FareTransferRuleTransferCountValidatorTest {
   public void validTransferCount() {
     assertThat(
             generateNotices(
-                new GtfsFareTransferRule.Builder()
+                GtfsFareTransferRule.builder()
                     .setCsvRowNumber(2)
                     .setFromLegGroupId("a")
                     .setToLegGroupId("a")
@@ -33,7 +33,7 @@ public class FareTransferRuleTransferCountValidatorTest {
 
     assertThat(
             generateNotices(
-                new GtfsFareTransferRule.Builder()
+                GtfsFareTransferRule.builder()
                     .setCsvRowNumber(2)
                     .setFromLegGroupId("a")
                     .setToLegGroupId("a")
@@ -46,7 +46,7 @@ public class FareTransferRuleTransferCountValidatorTest {
   public void invalidTransferCount() {
     assertThat(
             generateNotices(
-                new GtfsFareTransferRule.Builder()
+                GtfsFareTransferRule.builder()
                     .setCsvRowNumber(2)
                     .setFromLegGroupId("a")
                     .setToLegGroupId("a")
@@ -59,7 +59,7 @@ public class FareTransferRuleTransferCountValidatorTest {
   public void invalidNegativeTransferCount() {
     assertThat(
             generateNotices(
-                new GtfsFareTransferRule.Builder()
+                GtfsFareTransferRule.builder()
                     .setCsvRowNumber(2)
                     .setFromLegGroupId("a")
                     .setToLegGroupId("a")
@@ -72,7 +72,7 @@ public class FareTransferRuleTransferCountValidatorTest {
   public void missingRequiredTransferCount() {
     assertThat(
             generateNotices(
-                new GtfsFareTransferRule.Builder()
+                GtfsFareTransferRule.builder()
                     .setCsvRowNumber(2)
                     .setFromLegGroupId("a")
                     .setToLegGroupId("a")
@@ -84,7 +84,7 @@ public class FareTransferRuleTransferCountValidatorTest {
   public void validUnspecifiedTransferCount() {
     assertThat(
             generateNotices(
-                new GtfsFareTransferRule.Builder()
+                GtfsFareTransferRule.builder()
                     .setCsvRowNumber(2)
                     .setFromLegGroupId("a")
                     .setToLegGroupId("b")
@@ -96,7 +96,7 @@ public class FareTransferRuleTransferCountValidatorTest {
   public void forbiddenTransferCount() {
     assertThat(
             generateNotices(
-                new GtfsFareTransferRule.Builder()
+                GtfsFareTransferRule.builder()
                     .setCsvRowNumber(2)
                     .setFromLegGroupId("a")
                     .setToLegGroupId("b")
