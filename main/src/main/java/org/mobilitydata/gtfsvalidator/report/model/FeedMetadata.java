@@ -312,13 +312,13 @@ public class FeedMetadata {
     if (feedTable.hasColumn(GtfsFeedInfo.FEED_START_DATE_FIELD_NAME)) {
       LocalDate localDate = info.feedStartDate().getLocalDate();
       String displayDate =
-          localDate.equals(LocalDate.of(1970, 1, 1)) ? "N/A" : localDate.toString();
+          localDate.equals(GtfsFeedInfo.DEFAULT_FEED_START_DATE) ? "N/A" : localDate.toString();
       feedInfo.put(FEED_INFO_FEED_START_DATE, info == null ? "N/A" : displayDate);
     }
     if (feedTable.hasColumn(GtfsFeedInfo.FEED_END_DATE_FIELD_NAME)) {
       LocalDate localDate = info.feedEndDate().getLocalDate();
       String displayDate =
-          localDate.equals(LocalDate.of(1970, 1, 1)) ? "N/A" : localDate.toString();
+          localDate.equals(GtfsFeedInfo.DEFAULT_FEED_END_DATE) ? "N/A" : localDate.toString();
       feedInfo.put(FEED_INFO_FEED_END_DATE, info == null ? "N/A" : displayDate);
     }
   }
