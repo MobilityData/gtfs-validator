@@ -125,7 +125,7 @@ public class FeedMetadata {
       if (entity != null) {
         E castedEntity = clazz.cast(entity);
         String id = idExtractor.apply(castedEntity);
-        if (id != null) {
+        if (id != null && !id.isEmpty()) {
           uniqueIds.add(id);
         }
       }
