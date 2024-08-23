@@ -12,6 +12,9 @@ public abstract class GtfsTableDescriptor<T extends GtfsEntity> {
   // True if the specified file is required in a feed.
   private boolean required;
 
+  // True if the specified file is conditionally required.
+  private boolean conditionallyRequired;
+
   public abstract GtfsTableContainer createContainerForInvalidStatus(
       GtfsTableContainer.TableStatus tableStatus);
 
@@ -34,6 +37,14 @@ public abstract class GtfsTableDescriptor<T extends GtfsEntity> {
 
   public void setRequired(boolean required) {
     this.required = required;
+  }
+
+  public boolean isConditionallyRequired() {
+    return this.conditionallyRequired;
+  }
+
+  public void setConditionallyRequired(boolean conditionallyRequired) {
+    this.conditionallyRequired = conditionallyRequired;
   }
 
   public abstract Optional<Integer> maxCharsPerColumn();
