@@ -38,7 +38,6 @@ public final class AnyTableLoader {
 
   public static void setHasTranslations(boolean translations) {
     hasTranslations = translations;
-    System.out.println("hasTranslations: " + translations);
   }
 
   public List<Class<? extends FileValidator>> getValidatorsWithParsingErrors() {
