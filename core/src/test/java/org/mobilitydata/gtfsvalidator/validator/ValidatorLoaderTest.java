@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
+import org.mobilitydata.gtfsvalidator.table.TableStatus;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntityValidator;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestSingleFileValidator;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestTableContainer;

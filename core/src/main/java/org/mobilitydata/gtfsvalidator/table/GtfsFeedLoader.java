@@ -107,7 +107,7 @@ public class GtfsFeedLoader {
         loaderCallables.add(
             () -> {
               NoticeContainer loaderNotices = new NoticeContainer();
-              GtfsTableContainer<?> tableContainer;
+              GtfsContainer<?, ?> tableContainer;
               try (InputStream inputStream = gtfsInput.getFile(filename)) {
                 try {
                   tableContainer =
@@ -130,7 +130,7 @@ public class GtfsFeedLoader {
             });
       }
     }
-    ArrayList<GtfsTableContainer<?>> tableContainers = new ArrayList<>();
+    ArrayList<GtfsContainer<?, ?>> tableContainers = new ArrayList<>();
     tableContainers.ensureCapacity(tableDescriptors.size());
     for (GtfsTableDescriptor<?> tableDescriptor : remainingDescriptors.values()) {
       tableContainers.add(
@@ -186,11 +186,10 @@ public class GtfsFeedLoader {
   }
 
   static class TableAndNoticeContainers {
-    final GtfsTableContainer tableContainer;
+    final GtfsContainer tableContainer;
     final NoticeContainer noticeContainer;
 
-    public TableAndNoticeContainers(
-        GtfsTableContainer tableContainer, NoticeContainer noticeContainer) {
+    public TableAndNoticeContainers(GtfsContainer tableContainer, NoticeContainer noticeContainer) {
       this.tableContainer = tableContainer;
       this.noticeContainer = noticeContainer;
     }

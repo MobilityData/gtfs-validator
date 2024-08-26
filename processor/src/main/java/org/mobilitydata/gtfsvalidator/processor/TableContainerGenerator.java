@@ -32,6 +32,7 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableDescriptor;
+import org.mobilitydata.gtfsvalidator.table.TableStatus;
 
 /**
  * Generates code for a container for a loaded GTFS table.
@@ -126,7 +127,7 @@ public class TableContainerGenerator {
     return MethodSpec.constructorBuilder()
         .addModifiers(Modifier.PUBLIC)
         .addParameter(tableDescriptorType, "descriptor")
-        .addParameter(GtfsTableContainer.TableStatus.class, "tableStatus")
+        .addParameter(TableStatus.class, "tableStatus")
         .addStatement("super(descriptor, tableStatus, $T.EMPTY)", CsvHeader.class)
         .addStatement("this.entities = new $T<>()", ArrayList.class)
         .build();
@@ -182,7 +183,7 @@ public class TableContainerGenerator {
             "Creates a table with the given TableStatus. This method is intended to be"
                 + " used in tests.")
         .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-        .addParameter(GtfsTableContainer.TableStatus.class, "tableStatus")
+        .addParameter(TableStatus.class, "tableStatus")
         .addStatement(
             "return new $T(new $T(), tableStatus)",
             tableContainerTypeName,

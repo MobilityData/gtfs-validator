@@ -13,8 +13,7 @@ import org.mobilitydata.gtfsvalidator.table.*;
 
 public class GtfsTestTableDescriptor extends GtfsTableDescriptor<GtfsTestEntity> {
   @Override
-  public GtfsTableContainer createContainerForInvalidStatus(
-      GtfsTableContainer.TableStatus tableStatus) {
+  public GtfsTableContainer createContainerForInvalidStatus(TableStatus tableStatus) {
     return new GtfsTestTableContainer(tableStatus);
   }
 

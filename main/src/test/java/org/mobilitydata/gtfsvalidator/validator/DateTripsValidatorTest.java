@@ -16,7 +16,6 @@ import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.*;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.util.CalendarUtilTest;
 

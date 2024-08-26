@@ -125,7 +125,7 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
                 translation, GtfsTranslation.RECORD_SUB_ID_FIELD_NAME, translation.recordSubId()));
       }
     }
-    Optional<GtfsTableContainer<?>> parentTable =
+    Optional<GtfsTableContainer<?, ?>> parentTable =
         feedContainer.getTableForFilename(translation.tableName() + ".txt");
     if (parentTable.isEmpty() || parentTable.get().isMissingFile()) {
       noticeContainer.addValidationNotice(new TranslationUnknownTableNameNotice(translation));

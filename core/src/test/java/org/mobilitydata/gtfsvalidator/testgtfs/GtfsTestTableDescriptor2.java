@@ -14,8 +14,7 @@ import org.mobilitydata.gtfsvalidator.table.*;
 // We need a second test table descriptor to test multi file contaioners
 public class GtfsTestTableDescriptor2 extends GtfsTableDescriptor<GtfsTestEntity> {
   @Override
-  public GtfsTableContainer createContainerForInvalidStatus(
-      GtfsTableContainer.TableStatus tableStatus) {
+  public GtfsTableContainer createContainerForInvalidStatus(TableStatus tableStatus) {
     return new GtfsTestTableContainer2(tableStatus);
   }
 

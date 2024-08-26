@@ -18,7 +18,6 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import com.google.common.base.Ascii;
 import java.util.*;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
 
 /**
  * Container for a whole parsed GTFS feed with all its tables.
@@ -26,12 +25,12 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
  * <p>The tables are kept as {@code GtfsTableContainer} instances.
  */
 public class GtfsFeedContainer {
-  private final Map<String, GtfsTableContainer<?>> tables = new HashMap<>();
-  private final Map<Class<? extends GtfsTableContainer>, GtfsTableContainer<?>> tablesByClass =
+  private final Map<String, GtfsContainer<?, ?>> tables = new HashMap<>();
+  private final Map<Class<? extends GtfsContainer>, GtfsContainer<?, ?>> tablesByClass =
       new HashMap<>();
 
-  public GtfsFeedContainer(List<GtfsTableContainer<?>> tableContainerList) {
-    for (GtfsTableContainer<?> table : tableContainerList) {
+  public GtfsFeedContainer(List<GtfsContainer<?, ?>> tableContainerList) {
+    for (GtfsContainer<?, ?> table : tableContainerList) {
       tables.put(table.gtfsFilename(), table);
       tablesByClass.put(table.getClass(), table);
     }
@@ -49,11 +48,11 @@ public class GtfsFeedContainer {
    * @param filename file name, including ".txt" extension
    * @return GTFS table or empty if the table is not supported by schema
    */
-  public Optional<GtfsTableContainer<?>> getTableForFilename(String filename) {
+  public Optional<GtfsContainer<?, ?>> getTableForFilename(String filename) {
     return Optional.ofNullable(tables.getOrDefault(Ascii.toLowerCase(filename), null));
   }
 
-  public <T extends GtfsTableContainer<?>> T getTable(Class<T> clazz) {
+  public <T extends GtfsContainer<?, ?>> T getTable(Class<T> clazz) {
     return (T) tablesByClass.get(clazz);
   }
 
@@ -65,7 +64,7 @@ public class GtfsFeedContainer {
    * @return true if all files were successfully parsed, false otherwise
    */
   public boolean isParsedSuccessfully() {
-    for (GtfsTableContainer<?> table : tables.values()) {
+    for (GtfsContainer<?, ?> table : tables.values()) {
       if (!table.isParsedSuccessfully()) {
         return false;
       }
@@ -73,13 +72,13 @@ public class GtfsFeedContainer {
     return true;
   }
 
-  public Collection<GtfsTableContainer<?>> getTables() {
+  public Collection<GtfsContainer<?, ?>> getTables() {
     return tables.values();
   }
 
   public String tableTotalsText() {
     List<String> totalList = new ArrayList<>();
-    for (GtfsTableContainer<?> table : tables.values()) {
+    for (GtfsContainer<?, ?> table : tables.values()) {
       if (table.getTableStatus() == TableStatus.MISSING_FILE
           && !table.getDescriptor().isRequired()) {
         continue;

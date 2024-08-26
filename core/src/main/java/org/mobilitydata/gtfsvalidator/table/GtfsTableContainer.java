@@ -17,9 +17,6 @@
 package org.mobilitydata.gtfsvalidator.table;
 
 import com.google.common.collect.ImmutableList;
-import java.util.List;
-import java.util.Optional;
-import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 
 /**
@@ -31,42 +28,19 @@ import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
  *
  * @param <T> subclass of {@code GtfsEntity}
  */
-public abstract class GtfsTableContainer<T extends GtfsEntity> {
-
-  private final GtfsTableDescriptor<T> descriptor;
-
-  private final TableStatus tableStatus;
+public abstract class GtfsTableContainer<T extends GtfsEntity, D extends GtfsTableDescriptor<T>>
+    extends GtfsContainer<T, D> {
 
   private final CsvHeader header;
 
-  public GtfsTableContainer(
-      GtfsTableDescriptor<T> descriptor, TableStatus tableStatus, CsvHeader header) {
-    this.descriptor = descriptor;
-    this.tableStatus = tableStatus;
+  public GtfsTableContainer(D descriptor, TableStatus tableStatus, CsvHeader header) {
+    super(descriptor, tableStatus);
     this.header = header;
-  }
-
-  public GtfsTableDescriptor<T> getDescriptor() {
-    return descriptor;
-  }
-
-  public TableStatus getTableStatus() {
-    return tableStatus;
   }
 
   public CsvHeader getHeader() {
     return header;
   }
-
-  public abstract Class<T> getEntityClass();
-
-  public int entityCount() {
-    return getEntities().size();
-  }
-
-  public abstract List<T> getEntities();
-
-  public abstract String gtfsFilename();
 
   public boolean hasColumn(String columnName) {
     return header.hasColumn(columnName);
@@ -80,88 +54,4 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
    * org.mobilitydata.gtfsvalidator.annotation.PrimaryKey}.
    */
   public abstract ImmutableList<String> getKeyColumnNames();
-
-  /**
-   * Finds an entity with the given translation record ids.
-   *
-   * <p>The mapping between translation record ids and primary key columns is table-specific. See
-   * {@link PrimaryKey#translationRecordIdType()} for details on configuration. An internal method
-   * is generated to construct the proper entity key from the specified String record ids. For
-   * single-column primary keys, the <code>recordSubId</code> will be ignored.
-   *
-   * @param recordId corresponds to translations.txt record_id field.
-   * @param recordSubId corresponds translations.txt record_sub_id field.
-   * @return entity with the given translation record id, if any
-   */
-  public abstract Optional<T> byTranslationKey(String recordId, String recordSubId);
-
-  /**
-   * Tells if the file is missing.
-   *
-   * @return true if the file is missing, false otherwise
-   */
-  public boolean isMissingFile() {
-    return tableStatus == TableStatus.MISSING_FILE;
-  }
-
-  /**
-   * Tells if the file was successfully parsed.
-   *
-   * <p>If all files in the feed were successfully parsed, then file validators may be executed.
-   *
-   * <p>A successfully parsed file must meet the following conditions:
-   *
-   * <ul>
-   *   <li>the file was successfully parsed as CSV;
-   *   <li>all headers are valid, required headers are present;
-   *   <li>all rows are successfully parsed;
-   *   <li>if the file is required, it is present in the feed.
-   * </ul>
-   *
-   * @return true if file was successfully parsed, false otherwise
-   */
-  public boolean isParsedSuccessfully() {
-    switch (tableStatus) {
-      case PARSABLE_HEADERS_AND_ROWS:
-        return true;
-      case MISSING_FILE:
-        return !descriptor.isRequired();
-      default:
-        return false;
-    }
-  }
-
-  /**
-   * Status of loading this table. This is includes parsing of the CSV file and validation of the
-   * single file, but does not include any cross-file validations.
-   */
-  public enum TableStatus {
-    /** The file is completely empty, i.e. it has no rows and even no headers. */
-    EMPTY_FILE,
-
-    /** The file is missing in the GTFS feed. */
-    MISSING_FILE,
-
-    /** The file was parsed successfully. It has headers and 0, 1 or many rows. */
-    PARSABLE_HEADERS_AND_ROWS,
-
-    /**
-     * The file has invalid headers, e.g., they failed to parse or some required headers are
-     * missing. The other rows were not scanned.
-     *
-     * <p>Note that unknown headers are not considered invalid.
-     */
-    INVALID_HEADERS,
-
-    /**
-     * Some of the rows failed to parse, e.g., they have missing required fields or invalid field
-     * values.
-     *
-     * <p>However, the headers are valid.
-     *
-     * <p>This does not include cross-file or cross-row validation. This also does not include
-     * single-entity validation.
-     */
-    UNPARSABLE_ROWS,
-  }
 }

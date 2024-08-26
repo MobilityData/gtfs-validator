@@ -1,24 +1,16 @@
 package org.mobilitydata.gtfsvalidator.processor.notices;
 
-import static javax.lang.model.util.ElementFilter.typesIn;
-
 import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Optional;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
-import javax.tools.FileObject;
-import javax.tools.StandardLocation;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeDocComments;
 
@@ -52,32 +44,33 @@ public class NoticesProcessor extends AbstractProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    for (TypeElement element :
-        typesIn(roundEnv.getElementsAnnotatedWith(GtfsValidationNotice.class))) {
-      Optional<NoticeDocComments> comments = docCommentsFactory.create(element);
-      if (comments.isEmpty()) {
-        continue;
-      }
-
-      PackageElement packageElement = processingEnv.getElementUtils().getPackageOf(element);
-      String resourceName = NoticeDocComments.getResourceNameForTypeElement(element);
-
-      try {
-        FileObject resource =
-            processingEnv
-                .getFiler()
-                .createResource(
-                    StandardLocation.CLASS_OUTPUT,
-                    packageElement.getQualifiedName(),
-                    resourceName,
-                    element);
-        try (Writer writer = resource.openWriter()) {
-          GSON.toJson(comments.get(), writer);
-        }
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-    }
     return false;
+    //    for (TypeElement element :
+    //        typesIn(roundEnv.getElementsAnnotatedWith(GtfsValidationNotice.class))) {
+    //      Optional<NoticeDocComments> comments = docCommentsFactory.create(element);
+    //      if (comments.isEmpty()) {
+    //        continue;
+    //      }
+    //
+    //      PackageElement packageElement = processingEnv.getElementUtils().getPackageOf(element);
+    //      String resourceName = NoticeDocComments.getResourceNameForTypeElement(element);
+    //
+    //      try {
+    //        FileObject resource =
+    //            processingEnv
+    //                .getFiler()
+    //                .createResource(
+    //                    StandardLocation.CLASS_OUTPUT,
+    //                    packageElement.getQualifiedName(),
+    //                    resourceName,
+    //                    element);
+    //        try (Writer writer = resource.openWriter()) {
+    //          GSON.toJson(comments.get(), writer);
+    //        }
+    //      } catch (IOException e) {
+    //        throw new RuntimeException(e);
+    //      }
+    //    }
+    //    return false;
   }
 }
