@@ -1,27 +1,23 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+import static com.google.common.truth.Truth.assertThat;
+
+import java.util.List;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.*;
 
-import java.io.InputStream;
-import java.util.List;
-import java.util.Locale;
-
-
-import static com.google.common.truth.Truth.assertThat;
-
 public class MissingFeedInfoValidatorTest {
 
-  private static List<ValidationNotice> generateNotices(GtfsFeedInfoTableContainer feedInfoTableContainer, GtfsTranslationTableContainer translationTableContainer) {
+  private static List<ValidationNotice> generateNotices(
+      GtfsFeedInfoTableContainer feedInfoTableContainer,
+      GtfsTranslationTableContainer translationTableContainer) {
     NoticeContainer noticeContainer = new NoticeContainer();
-    new MissingFeedInfoValidator(feedInfoTableContainer, translationTableContainer).validate(noticeContainer);
+    new MissingFeedInfoValidator(feedInfoTableContainer, translationTableContainer)
+        .validate(noticeContainer);
     return noticeContainer.getValidationNotices();
   }
 
@@ -29,18 +25,19 @@ public class MissingFeedInfoValidatorTest {
   public void missingFeedInfoTranslationTableNotPresent() {
     assertThat(
             generateNotices(
-                    GtfsFeedInfoTableContainer.forStatus(GtfsTableContainer.TableStatus.MISSING_FILE),
-                    GtfsTranslationTableContainer.forStatus(GtfsTableContainer.TableStatus.MISSING_FILE)))
-            .containsExactly(new MissingRecommendedFileNotice(GtfsFeedInfo.FILENAME));
+                GtfsFeedInfoTableContainer.forStatus(GtfsTableContainer.TableStatus.MISSING_FILE),
+                GtfsTranslationTableContainer.forStatus(
+                    GtfsTableContainer.TableStatus.MISSING_FILE)))
+        .containsExactly(new MissingRecommendedFileNotice(GtfsFeedInfo.FILENAME));
   }
 
   @Test
   public void missingFeedInfoWhenTranslationTableIsPresent() {
     assertThat(
             generateNotices(
-                    GtfsFeedInfoTableContainer.forStatus(GtfsTableContainer.TableStatus.MISSING_FILE),
-                    GtfsTranslationTableContainer.forStatus(GtfsTableContainer.TableStatus.PARSABLE_HEADERS_AND_ROWS)
-            )).contains(new MissingRequiredFileNotice(GtfsFeedInfo.FILENAME));
-
+                GtfsFeedInfoTableContainer.forStatus(GtfsTableContainer.TableStatus.MISSING_FILE),
+                GtfsTranslationTableContainer.forStatus(
+                    GtfsTableContainer.TableStatus.PARSABLE_HEADERS_AND_ROWS)))
+        .contains(new MissingRequiredFileNotice(GtfsFeedInfo.FILENAME));
   }
 }
