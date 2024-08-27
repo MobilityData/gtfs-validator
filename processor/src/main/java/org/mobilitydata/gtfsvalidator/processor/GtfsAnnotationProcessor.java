@@ -51,6 +51,9 @@ public class GtfsAnnotationProcessor extends AbstractProcessor {
 
   private final Analyser analyser = new Analyser();
 
+  public GtfsAnnotationProcessor() {
+    super();
+  }
   /**
    * Sanitizes the result of {@link RoundEnvironment#getElementsAnnotatedWith}, which otherwise can
    * contain elements annotated with annotations of ERROR type.

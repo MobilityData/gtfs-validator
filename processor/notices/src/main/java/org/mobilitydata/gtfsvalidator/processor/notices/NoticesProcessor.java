@@ -52,31 +52,35 @@ public class NoticesProcessor extends AbstractProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    for (TypeElement element :
-        typesIn(roundEnv.getElementsAnnotatedWith(GtfsValidationNotice.class))) {
-      Optional<NoticeDocComments> comments = docCommentsFactory.create(element);
-      if (comments.isEmpty()) {
-        continue;
-      }
-
-      PackageElement packageElement = processingEnv.getElementUtils().getPackageOf(element);
-      String resourceName = NoticeDocComments.getResourceNameForTypeElement(element);
-
-      try {
-        FileObject resource =
-            processingEnv
-                .getFiler()
-                .createResource(
-                    StandardLocation.CLASS_OUTPUT,
-                    packageElement.getQualifiedName(),
-                    resourceName,
-                    element);
-        try (Writer writer = resource.openWriter()) {
-          GSON.toJson(comments.get(), writer);
+    try {
+      for (TypeElement element :
+          typesIn(roundEnv.getElementsAnnotatedWith(GtfsValidationNotice.class))) {
+        Optional<NoticeDocComments> comments = docCommentsFactory.create(element);
+        if (comments.isEmpty()) {
+          continue;
         }
-      } catch (IOException e) {
-        throw new RuntimeException(e);
+
+        PackageElement packageElement = processingEnv.getElementUtils().getPackageOf(element);
+        String resourceName = NoticeDocComments.getResourceNameForTypeElement(element);
+
+        try {
+          FileObject resource =
+              processingEnv
+                  .getFiler()
+                  .createResource(
+                      StandardLocation.CLASS_OUTPUT,
+                      packageElement.getQualifiedName(),
+                      resourceName,
+                      element);
+          try (Writer writer = resource.openWriter()) {
+            GSON.toJson(comments.get(), writer);
+          }
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
       }
+    } catch (Exception e) {
+      System.out.println("Error: " + e);
     }
     return false;
   }

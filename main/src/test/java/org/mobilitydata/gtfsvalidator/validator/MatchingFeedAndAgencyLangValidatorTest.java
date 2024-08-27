@@ -31,7 +31,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
+import org.mobilitydata.gtfsvalidator.table.TableStatus;
 import org.mobilitydata.gtfsvalidator.validator.MatchingFeedAndAgencyLangValidator.FeedInfoLangAndAgencyLangMismatchNotice;
 
 @RunWith(JUnit4.class)

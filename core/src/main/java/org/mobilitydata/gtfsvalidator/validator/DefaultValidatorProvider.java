@@ -21,9 +21,7 @@ import com.google.common.flogger.FluentLogger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
-import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
+import org.mobilitydata.gtfsvalidator.table.*;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader.ValidatorWithDependencyStatus;
 
 /** Default implementation of {@link ValidatorProvider}. */
@@ -35,7 +33,7 @@ public class DefaultValidatorProvider implements ValidatorProvider {
   private final TableHeaderValidator tableHeaderValidator;
   private final ListMultimap<Class<? extends GtfsEntity>, Class<? extends SingleEntityValidator<?>>>
       singleEntityValidators;
-  private final ListMultimap<Class<? extends GtfsTableContainer<?>>, Class<? extends FileValidator>>
+  private final ListMultimap<Class<? extends GtfsContainer<?, ?>>, Class<? extends FileValidator>>
       singleFileValidators;
   private final List<Class<? extends FileValidator>> multiFileValidators;
 
@@ -103,12 +101,13 @@ public class DefaultValidatorProvider implements ValidatorProvider {
 
   @Override
   @SuppressWarnings("unchecked")
-  public <T extends GtfsEntity> List<FileValidator> createSingleFileValidators(
-      GtfsTableContainer<T> table,
-      Consumer<Class<? extends FileValidator>> validatorsWithParsingErrors) {
+  public <T extends GtfsEntity, D extends GtfsTableDescriptor>
+      List<FileValidator> createSingleFileValidators(
+          GtfsTableContainer<T, D> table,
+          Consumer<Class<? extends FileValidator>> validatorsWithParsingErrors) {
     List<FileValidator> validators = new ArrayList<>();
     for (Class<? extends FileValidator> validatorClass :
-        singleFileValidators.get((Class<? extends GtfsTableContainer<?>>) table.getClass())) {
+        singleFileValidators.get((Class<? extends GtfsTableContainer<?, ?>>) table.getClass())) {
       try {
         ValidatorWithDependencyStatus<? extends FileValidator> validatorWithStatus =
             ValidatorLoader.createSingleFileValidator(validatorClass, table, validationContext);

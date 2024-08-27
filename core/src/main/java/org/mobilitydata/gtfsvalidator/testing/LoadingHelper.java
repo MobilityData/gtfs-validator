@@ -58,7 +58,7 @@ public class LoadingHelper {
     this.validatorLoader = validatorLoader;
   }
 
-  public <X extends GtfsEntity, Y extends GtfsTableContainer<X>> Y load(
+  public <X extends GtfsEntity, Y extends GtfsTableContainer<X, ?>> Y load(
       GtfsTableDescriptor<X> tableDescriptor, String... lines) throws ValidatorLoaderException {
     String content = Arrays.stream(lines).collect(Collectors.joining("\n"));
     InputStream in = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));

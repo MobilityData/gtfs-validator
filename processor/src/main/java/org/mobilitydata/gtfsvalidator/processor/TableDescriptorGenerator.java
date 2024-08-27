@@ -42,11 +42,7 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.parsing.FieldCache;
 import org.mobilitydata.gtfsvalidator.parsing.RowParser;
-import org.mobilitydata.gtfsvalidator.table.GtfsColumnDescriptor;
-import org.mobilitydata.gtfsvalidator.table.GtfsEntityBuilder;
-import org.mobilitydata.gtfsvalidator.table.GtfsFieldLoader;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableDescriptor;
+import org.mobilitydata.gtfsvalidator.table.*;
 
 /**
  * Generates code for a GtfsTableDescriptor subclass for a specific GTFS table.
@@ -149,7 +145,7 @@ public class TableDescriptorGenerator {
     return MethodSpec.methodBuilder("createContainerForInvalidStatus")
         .addAnnotation(Override.class)
         .addModifiers(Modifier.PUBLIC)
-        .addParameter(GtfsTableContainer.TableStatus.class, "tableStatus")
+        .addParameter(TableStatus.class, "tableStatus")
         .returns(GtfsTableContainer.class)
         .addStatement("return new $T(this, tableStatus)", classNames.tableContainerTypeName())
         .build();

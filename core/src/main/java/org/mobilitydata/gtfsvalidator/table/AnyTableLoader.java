@@ -61,13 +61,11 @@ public final class AnyTableLoader {
       csvFile = new CsvFile(csvInputStream, gtfsFilename, settings);
     } catch (TextParsingException e) {
       noticeContainer.addValidationNotice(new CsvParsingFailedNotice(gtfsFilename, e));
-      return tableDescriptor.createContainerForInvalidStatus(
-          GtfsTableContainer.TableStatus.INVALID_HEADERS);
+      return tableDescriptor.createContainerForInvalidStatus(TableStatus.INVALID_HEADERS);
     }
     if (csvFile.isEmpty()) {
       noticeContainer.addValidationNotice(new EmptyFileNotice(gtfsFilename));
-      return tableDescriptor.createContainerForInvalidStatus(
-          GtfsTableContainer.TableStatus.EMPTY_FILE);
+      return tableDescriptor.createContainerForInvalidStatus(TableStatus.EMPTY_FILE);
     }
     final CsvHeader header = csvFile.getHeader();
     final ImmutableList<GtfsColumnDescriptor> columnDescriptors = tableDescriptor.getColumns();
@@ -75,8 +73,7 @@ public final class AnyTableLoader {
         validateHeaders(validatorProvider, gtfsFilename, header, columnDescriptors);
     noticeContainer.addAll(headerNotices);
     if (headerNotices.hasValidationErrors()) {
-      return tableDescriptor.createContainerForInvalidStatus(
-          GtfsTableContainer.TableStatus.INVALID_HEADERS);
+      return tableDescriptor.createContainerForInvalidStatus(TableStatus.INVALID_HEADERS);
     }
     final int nColumns = columnDescriptors.size();
     final ImmutableMap<String, GtfsFieldLoader> fieldLoadersMap = tableDescriptor.getFieldLoaders();
@@ -133,15 +130,13 @@ public final class AnyTableLoader {
       }
     } catch (TextParsingException e) {
       noticeContainer.addValidationNotice(new CsvParsingFailedNotice(gtfsFilename, e));
-      return tableDescriptor.createContainerForInvalidStatus(
-          GtfsTableContainer.TableStatus.UNPARSABLE_ROWS);
+      return tableDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS);
     } finally {
       logFieldCacheStats(gtfsFilename, fieldCaches, columnDescriptors);
     }
     if (hasUnparsableRows) {
       logger.atSevere().log("Failed to parse some rows in %s", gtfsFilename);
-      return tableDescriptor.createContainerForInvalidStatus(
-          GtfsTableContainer.TableStatus.UNPARSABLE_ROWS);
+      return tableDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS);
     }
     GtfsTableContainer table =
         tableDescriptor.createContainerForHeaderAndEntities(header, entities, noticeContainer);
@@ -203,8 +198,7 @@ public final class AnyTableLoader {
       NoticeContainer noticeContainer) {
     String gtfsFilename = tableDescriptor.gtfsFilename();
     GtfsTableContainer table =
-        tableDescriptor.createContainerForInvalidStatus(
-            GtfsTableContainer.TableStatus.MISSING_FILE);
+        tableDescriptor.createContainerForInvalidStatus(TableStatus.MISSING_FILE);
     if (tableDescriptor.isRecommended()) {
       noticeContainer.addValidationNotice(new MissingRecommendedFileNotice(gtfsFilename));
     }

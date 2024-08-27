@@ -23,8 +23,10 @@ import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
+import org.mobilitydata.gtfsvalidator.table.TableStatus;
 
-public class GtfsTestTableContainer extends GtfsTableContainer<GtfsTestEntity> {
+public class GtfsTestTableContainer
+    extends GtfsTableContainer<GtfsTestEntity, GtfsTestTableDescriptor> {
   private static final ImmutableList<String> KEY_COLUMN_NAMES =
       ImmutableList.of(GtfsTestEntity.ID_FIELD_NAME);
 

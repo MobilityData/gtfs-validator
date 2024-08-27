@@ -78,12 +78,10 @@ public class FeedMetadata {
 
     if (feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).isPresent()) {
       feedMetadata.loadFeedInfo(
-          (GtfsTableContainer<GtfsFeedInfo>)
-              feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).get());
+          (GtfsContainer) feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).get());
     }
     feedMetadata.loadAgencyData(
-        (GtfsTableContainer<GtfsAgency>)
-            feedContainer.getTableForFilename(GtfsAgency.FILENAME).get());
+        (GtfsContainer) feedContainer.getTableForFilename(GtfsAgency.FILENAME).get());
     feedMetadata.loadSpecFeatures(feedContainer);
     return feedMetadata;
   }
@@ -102,7 +100,7 @@ public class FeedMetadata {
     setCount(COUNTS_BLOCKS, feedContainer, GtfsTrip.FILENAME, GtfsTrip.class, GtfsTrip::blockId);
   }
 
-  private <T extends GtfsTableContainer<E>, E extends GtfsEntity> void setCount(
+  private <T extends GtfsContainer, E extends GtfsEntity> void setCount(
       String countName,
       GtfsFeedContainer feedContainer,
       String fileName,
@@ -112,13 +110,11 @@ public class FeedMetadata {
     var table = feedContainer.getTableForFilename(fileName);
     this.counts.put(
         countName,
-        table
-            .map(gtfsTableContainer -> loadUniqueCount(gtfsTableContainer, clazz, idExtractor))
-            .orElse(0));
+        table.map(GtfsContainer -> loadUniqueCount(GtfsContainer, clazz, idExtractor)).orElse(0));
   }
 
   private <E extends GtfsEntity> int loadUniqueCount(
-      GtfsTableContainer<?> table, Class<E> clazz, Function<E, String> idExtractor) {
+      GtfsContainer<?, ?> table, Class<E> clazz, Function<E, String> idExtractor) {
     // Iterate through entities and count unique IDs
     Set<String> uniqueIds = new HashSet<>();
     for (GtfsEntity entity : table.getEntities()) {
@@ -296,13 +292,13 @@ public class FeedMetadata {
                 List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasRouteTextColor)));
   }
 
-  private void loadAgencyData(GtfsTableContainer<GtfsAgency> agencyTable) {
+  private void loadAgencyData(GtfsContainer agencyTable) {
     for (GtfsAgency agency : agencyTable.getEntities()) {
       agencies.add(AgencyMetadata.from(agency));
     }
   }
 
-  private void loadFeedInfo(GtfsTableContainer<GtfsFeedInfo> feedTable) {
+  private void loadFeedInfo(GtfsContainer feedTable) {
     var info = feedTable.getEntities().isEmpty() ? null : feedTable.getEntities().get(0);
 
     feedInfo.put(FEED_INFO_PUBLISHER_NAME, info == null ? "N/A" : info.feedPublisherName());
@@ -347,7 +343,7 @@ public class FeedMetadata {
   public ArrayList<String> foundFiles() {
     var foundFiles = new ArrayList<String>();
     for (var table : tableMetaData.values()) {
-      if (table.getTableStatus() != GtfsTableContainer.TableStatus.MISSING_FILE) {
+      if (table.getTableStatus() != TableStatus.MISSING_FILE) {
         foundFiles.add(table.getFilename());
       }
     }

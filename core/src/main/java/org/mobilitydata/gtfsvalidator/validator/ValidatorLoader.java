@@ -29,9 +29,9 @@ import java.util.Map.Entry;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 
 /**
  * A {@code ValidatorLoader} object locates all validators registered with {@code @GtfsValidator}
@@ -43,7 +43,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 public class ValidatorLoader {
   private final ListMultimap<Class<? extends GtfsEntity>, Class<? extends SingleEntityValidator<?>>>
       singleEntityValidators = ArrayListMultimap.create();
-  private final ListMultimap<Class<? extends GtfsTableContainer<?>>, Class<? extends FileValidator>>
+  private final ListMultimap<Class<? extends GtfsContainer<?, ?>>, Class<? extends FileValidator>>
       singleFileValidators = ArrayListMultimap.create();
   private final List<Class<? extends FileValidator>> multiFileValidators = new ArrayList<>();
 
@@ -75,7 +75,7 @@ public class ValidatorLoader {
   }
 
   /** Loaded single-file validator classes keyed by table container class. */
-  public ListMultimap<Class<? extends GtfsTableContainer<?>>, Class<? extends FileValidator>>
+  public ListMultimap<Class<? extends GtfsContainer<?, ?>>, Class<? extends FileValidator>>
       getSingleFileValidators() {
     return singleFileValidators;
   }
@@ -113,14 +113,14 @@ public class ValidatorLoader {
     // Indicates that the full GtfsFeedContainer needs to be injected.
     boolean injectFeedContainer = false;
     // Find out which GTFS tables need to be injected.
-    List<Class<? extends GtfsTableContainer<?>>> injectedTables = new ArrayList<>();
+    List<Class<? extends GtfsContainer<?, ?>>> injectedTables = new ArrayList<>();
     for (Class<?> parameterType : constructor.getParameterTypes()) {
       if (GtfsFeedContainer.class.isAssignableFrom(parameterType)) {
         injectFeedContainer = true;
         continue;
       }
-      if (GtfsTableContainer.class.isAssignableFrom(parameterType)) {
-        injectedTables.add((Class<? extends GtfsTableContainer<?>>) parameterType);
+      if (GtfsContainer.class.isAssignableFrom(parameterType)) {
+        injectedTables.add((Class<? extends GtfsContainer<?, ?>>) parameterType);
       }
     }
 
@@ -201,7 +201,7 @@ public class ValidatorLoader {
   public static <T extends FileValidator>
       ValidatorWithDependencyStatus<T> createSingleFileValidator(
           Class<? extends FileValidator> clazz,
-          GtfsTableContainer<?> table,
+          GtfsContainer<?, ?> table,
           ValidationContext validationContext)
           throws ReflectiveOperationException, ValidatorLoaderException {
     return (ValidatorWithDependencyStatus<T>)
@@ -222,7 +222,7 @@ public class ValidatorLoader {
    */
   private static class DependencyResolver {
     private final ValidationContext context;
-    @Nullable private final GtfsTableContainer<?> tableContainer;
+    @Nullable private final GtfsContainer<?, ?> tableContainer;
     @Nullable private final GtfsFeedContainer feedContainer;
 
     /** This will be set to true if a resolved dependency was not parsed successfully. */
@@ -230,7 +230,7 @@ public class ValidatorLoader {
 
     public DependencyResolver(
         ValidationContext context,
-        @Nullable GtfsTableContainer<?> tableContainer,
+        @Nullable GtfsContainer<?, ?> tableContainer,
         @Nullable GtfsFeedContainer feedContainer) {
       this.context = context;
       this.tableContainer = tableContainer;
@@ -257,9 +257,9 @@ public class ValidatorLoader {
         }
         return tableContainer;
       }
-      if (feedContainer != null && GtfsTableContainer.class.isAssignableFrom(parameterClass)) {
-        GtfsTableContainer<?> container =
-            feedContainer.getTable((Class<? extends GtfsTableContainer<?>>) parameterClass);
+      if (feedContainer != null && GtfsContainer.class.isAssignableFrom(parameterClass)) {
+        GtfsContainer<?, ?> container =
+            feedContainer.getTable((Class<? extends GtfsContainer<?, ?>>) parameterClass);
         if (container != null && !container.isParsedSuccessfully()) {
           dependenciesHaveErrors = true;
         }
@@ -305,7 +305,7 @@ public class ValidatorLoader {
     if (!singleFileValidators.isEmpty()) {
       builder.append("Single-file validators\n");
       for (Map.Entry<
-              Class<? extends GtfsTableContainer<?>>, Collection<Class<? extends FileValidator>>>
+              Class<? extends GtfsContainer<?, ?>>, Collection<Class<? extends FileValidator>>>
           entry : singleFileValidators.asMap().entrySet()) {
         builder.append("\t").append(entry.getKey().getSimpleName()).append(": ");
         for (Class<? extends FileValidator> validatorClass : entry.getValue()) {
