@@ -32,13 +32,8 @@ public final class AnyTableLoader {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private static final List<Class<? extends FileValidator>> singleFileValidatorsWithParsingErrors =
       new ArrayList<>();
-  private static boolean hasTranslations = false;
   private static final List<Class<? extends SingleEntityValidator>>
       singleEntityValidatorsWithParsingErrors = new ArrayList<>();
-
-  public static void setHasTranslations(boolean translations) {
-    hasTranslations = translations;
-  }
 
   public List<Class<? extends FileValidator>> getValidatorsWithParsingErrors() {
     return Collections.unmodifiableList(singleFileValidatorsWithParsingErrors);
@@ -210,11 +205,7 @@ public final class AnyTableLoader {
         tableDescriptor.createContainerForInvalidStatus(
             GtfsTableContainer.TableStatus.MISSING_FILE);
     if (tableDescriptor.isRecommended()) {
-      if (hasTranslations && gtfsFilename.contains("feed_info")) {
-        noticeContainer.addValidationNotice(new MissingRequiredFileNotice(gtfsFilename));
-      } else {
-        noticeContainer.addValidationNotice(new MissingRecommendedFileNotice(gtfsFilename));
-      }
+      noticeContainer.addValidationNotice(new MissingRecommendedFileNotice(gtfsFilename));
     }
     if (tableDescriptor.isRequired()) {
       noticeContainer.addValidationNotice(new MissingRequiredFileNotice(gtfsFilename));

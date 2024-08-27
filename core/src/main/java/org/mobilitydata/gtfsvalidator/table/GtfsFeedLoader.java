@@ -100,11 +100,6 @@ public class GtfsFeedLoader {
     Map<String, GtfsTableDescriptor<?>> remainingDescriptors =
         (Map<String, GtfsTableDescriptor<?>>) tableDescriptors.clone();
     for (String filename : gtfsInput.getFilenames()) {
-      if (filename.contains("translations")) {
-        AnyTableLoader.setHasTranslations(true);
-      }
-    }
-    for (String filename : gtfsInput.getFilenames()) {
       GtfsTableDescriptor<?> tableDescriptor = remainingDescriptors.remove(filename.toLowerCase());
       if (tableDescriptor == null) {
         noticeContainer.addValidationNotice(new UnknownFileNotice(filename));
