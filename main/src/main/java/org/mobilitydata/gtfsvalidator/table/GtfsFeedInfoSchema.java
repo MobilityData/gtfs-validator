@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.table;
 
 import java.util.Locale;
-
 import org.mobilitydata.gtfsvalidator.annotation.*;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
