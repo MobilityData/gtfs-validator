@@ -103,6 +103,8 @@ public class GtfsFeedLoader {
       if (filename.contains("translations")) {
         AnyTableLoader.setHasTranslations(true);
       }
+    }
+    for (String filename : gtfsInput.getFilenames()) {
       GtfsTableDescriptor<?> tableDescriptor = remainingDescriptors.remove(filename.toLowerCase());
       if (tableDescriptor == null) {
         noticeContainer.addValidationNotice(new UnknownFileNotice(filename));
