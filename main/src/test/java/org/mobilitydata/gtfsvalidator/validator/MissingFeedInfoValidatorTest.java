@@ -40,4 +40,15 @@ public class MissingFeedInfoValidatorTest {
                     GtfsTableContainer.TableStatus.PARSABLE_HEADERS_AND_ROWS)))
         .contains(new MissingRequiredFileNotice(GtfsFeedInfo.FILENAME));
   }
+
+  @Test
+  public void feedInfoPresentShouldGenerateNoNotice() {
+    assertThat(
+            generateNotices(
+                GtfsFeedInfoTableContainer.forStatus(
+                    GtfsTableContainer.TableStatus.PARSABLE_HEADERS_AND_ROWS),
+                GtfsTranslationTableContainer.forStatus(
+                    GtfsTableContainer.TableStatus.PARSABLE_HEADERS_AND_ROWS)))
+        .isEmpty();
+  }
 }
