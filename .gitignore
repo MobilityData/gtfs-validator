@@ -104,3 +104,4 @@ app/pkg/bin/
 processor/notices/bin/
 processor/notices/tests/bin/
 web/service/bin/
+/web/service/execution_result.json
