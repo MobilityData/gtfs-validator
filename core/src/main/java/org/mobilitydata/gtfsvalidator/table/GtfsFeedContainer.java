@@ -48,8 +48,9 @@ public class GtfsFeedContainer {
    * @param filename file name, including ".txt" extension
    * @return GTFS table or empty if the table is not supported by schema
    */
-  public Optional<GtfsContainer<?, ?>> getTableForFilename(String filename) {
-    return Optional.ofNullable(tables.getOrDefault(Ascii.toLowerCase(filename), null));
+  public <T extends GtfsContainer<?, ?>> Optional<T> getTableForFilename(String filename) {
+    return (Optional<T>)
+        Optional.ofNullable(tables.getOrDefault(Ascii.toLowerCase(filename), null));
   }
 
   public <T extends GtfsContainer<?, ?>> T getTable(Class<T> clazz) {

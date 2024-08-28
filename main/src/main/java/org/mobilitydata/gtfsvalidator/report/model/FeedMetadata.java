@@ -77,11 +77,15 @@ public class FeedMetadata {
     feedMetadata.setCounts(feedContainer);
 
     if (feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).isPresent()) {
-      feedMetadata.loadFeedInfo(
-          (GtfsContainer) feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).get());
+      Optional<GtfsTableContainer<GtfsFeedInfo, GtfsFeedInfoTableDescriptor>>
+          feedInfoTableOptional = feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME);
+      feedMetadata.loadFeedInfo(feedInfoTableOptional.get());
     }
-    feedMetadata.loadAgencyData(
-        (GtfsContainer) feedContainer.getTableForFilename(GtfsAgency.FILENAME).get());
+    if (feedContainer.getTableForFilename(GtfsAgency.FILENAME).isPresent()) {
+      Optional<GtfsTableContainer<GtfsAgency, GtfsAgencyTableDescriptor>> agencyTableOptional =
+          feedContainer.getTableForFilename(GtfsAgency.FILENAME);
+      feedMetadata.loadAgencyData(agencyTableOptional.get());
+    }
     feedMetadata.loadSpecFeatures(feedContainer);
     return feedMetadata;
   }
@@ -292,13 +296,14 @@ public class FeedMetadata {
                 List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasRouteTextColor)));
   }
 
-  private void loadAgencyData(GtfsContainer agencyTable) {
+  private void loadAgencyData(GtfsContainer<GtfsAgency, GtfsAgencyTableDescriptor> agencyTable) {
     for (GtfsAgency agency : agencyTable.getEntities()) {
       agencies.add(AgencyMetadata.from(agency));
     }
   }
 
-  private void loadFeedInfo(GtfsContainer feedTable) {
+  private void loadFeedInfo(
+      GtfsTableContainer<GtfsFeedInfo, GtfsFeedInfoTableDescriptor> feedTable) {
     var info = feedTable.getEntities().isEmpty() ? null : feedTable.getEntities().get(0);
 
     feedInfo.put(FEED_INFO_PUBLISHER_NAME, info == null ? "N/A" : info.feedPublisherName());
