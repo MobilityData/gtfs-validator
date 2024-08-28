@@ -34,21 +34,11 @@ import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 public abstract class GtfsTableContainer<T extends GtfsEntity, D extends GtfsTableDescriptor>
     extends GtfsContainer<T, D> {
 
-  private final D descriptor;
-
-  private final TableStatus tableStatus;
-
   private final CsvHeader header;
 
   public GtfsTableContainer(D descriptor, TableStatus tableStatus, CsvHeader header) {
     super(descriptor, tableStatus);
-    this.descriptor = descriptor;
-    this.tableStatus = tableStatus;
     this.header = header;
-  }
-
-  public TableStatus getTableStatus() {
-    return tableStatus;
   }
 
   public CsvHeader getHeader() {
@@ -91,40 +81,4 @@ public abstract class GtfsTableContainer<T extends GtfsEntity, D extends GtfsTab
    * @return entity with the given translation record id, if any
    */
   public abstract Optional<T> byTranslationKey(String recordId, String recordSubId);
-
-  /**
-   * Tells if the file is missing.
-   *
-   * @return true if the file is missing, false otherwise
-   */
-  public boolean isMissingFile() {
-    return tableStatus == TableStatus.MISSING_FILE;
-  }
-
-  /**
-   * Tells if the file was successfully parsed.
-   *
-   * <p>If all files in the feed were successfully parsed, then file validators may be executed.
-   *
-   * <p>A successfully parsed file must meet the following conditions:
-   *
-   * <ul>
-   *   <li>the file was successfully parsed as CSV;
-   *   <li>all headers are valid, required headers are present;
-   *   <li>all rows are successfully parsed;
-   *   <li>if the file is required, it is present in the feed.
-   * </ul>
-   *
-   * @return true if file was successfully parsed, false otherwise
-   */
-  public boolean isParsedSuccessfully() {
-    switch (tableStatus) {
-      case PARSABLE_HEADERS_AND_ROWS:
-        return true;
-      case MISSING_FILE:
-        return !descriptor.isRequired();
-      default:
-        return false;
-    }
-  }
 }
