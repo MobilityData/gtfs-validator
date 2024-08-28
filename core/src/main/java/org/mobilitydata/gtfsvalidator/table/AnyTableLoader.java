@@ -32,7 +32,7 @@ public final class AnyTableLoader {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private static final List<Class<? extends FileValidator>> singleFileValidatorsWithParsingErrors =
       new ArrayList<>();
-  
+
   private static final List<Class<? extends SingleEntityValidator>>
       singleEntityValidatorsWithParsingErrors = new ArrayList<>();
 
