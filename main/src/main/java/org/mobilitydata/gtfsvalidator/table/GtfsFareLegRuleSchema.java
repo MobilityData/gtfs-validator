@@ -32,9 +32,13 @@ public interface GtfsFareLegRuleSchema extends GtfsEntity {
   @Index
   String legGroupId();
 
+  /**
+   * There is actually a foreign key validation on this field, but since it needs to check 2 files
+   * to establish the presence of the key a custom validator was written. See {@link
+   * org.mobilitydata.gtfsvalidator.annotation.ForeignKey} and {@link
+   * org.mobilitydata.gtfsvalidator.validator.GtfsFareLegRuleNetworkIdForeignKeyValidator}.
+   */
   @FieldType(FieldTypeEnum.ID)
-  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
-  @ForeignKey(table = "routes.txt", field = "network_id")
   String networkId();
 
   @FieldType(FieldTypeEnum.ID)
