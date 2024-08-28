@@ -104,7 +104,7 @@ public class GtfsFeedLoader {
     Map<String, GtfsTableDescriptor<?>> remainingDescriptors =
         (Map<String, GtfsTableDescriptor<?>>) tableDescriptors.clone();
     for (String filename : gtfsInput.getFilenames()) {
-      GtfsTableDescriptor<?> tableDescriptor = remainingDescriptors.remove(filename.toLowerCase());
+      GtfsDescriptor<?> tableDescriptor = remainingDescriptors.remove(filename.toLowerCase());
       if (tableDescriptor == null) {
         noticeContainer.addValidationNotice(new UnknownFileNotice(filename));
       } else {
@@ -114,9 +114,26 @@ public class GtfsFeedLoader {
               GtfsContainer<?, ?> tableContainer;
               try (InputStream inputStream = gtfsInput.getFile(filename)) {
                 try {
-                  tableContainer =
-                      AnyTableLoader.load(
-                          tableDescriptor, validatorProvider, inputStream, loaderNotices);
+                  if (tableDescriptor instanceof GtfsTableDescriptor) {
+                    tableContainer =
+                        AnyTableLoader.load(
+                            (GtfsTableDescriptor) tableDescriptor,
+                            validatorProvider,
+                            inputStream,
+                            loaderNotices);
+                  } else if (tableDescriptor instanceof GtfsJsonDescriptor) {
+                    tableContainer =
+                        JsonFileLoader.load(
+                            (GtfsJsonDescriptor) tableDescriptor,
+                            validatorProvider,
+                            inputStream,
+                            loaderNotices);
+                  } else {
+                    logger.atSevere().log(
+                        "Runtime exception table descriptor not supported: %s",
+                        tableDescriptor.getClass().getName());
+                    throw new RuntimeException("Table descriptor is not a supported type");
+                  }
                 } catch (RuntimeException e) {
                   // This handler should prevent ExecutionException for
                   // this thread. We catch an exception here for storing
@@ -137,15 +154,7 @@ public class GtfsFeedLoader {
     ArrayList<GtfsContainer<?, ?>> tableContainers = new ArrayList<>();
     tableContainers.ensureCapacity(tableDescriptors.size());
     for (GtfsDescriptor<?> tableDescriptor : remainingDescriptors.values()) {
-      if (tableDescriptor instanceof GtfsTableDescriptor) {
-        tableContainers.add(
-            AnyTableLoader.loadMissingFile(tableDescriptor, validatorProvider, noticeContainer));
-      } else {
-        //        TODO Load JSON file here
-        logger.atWarning().log(
-            "Table descriptor %s is not a GtfsTableDescriptor, skipping",
-            tableDescriptor.getClass().getCanonicalName());
-      }
+      AnyTableLoader.loadMissingFile(tableDescriptor, validatorProvider, noticeContainer);
     }
     try {
       for (Future<TableAndNoticeContainers> futureContainer : exec.invokeAll(loaderCallables)) {
