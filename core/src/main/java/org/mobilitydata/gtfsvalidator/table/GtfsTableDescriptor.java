@@ -9,6 +9,7 @@ import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 
 public abstract class GtfsTableDescriptor<T extends GtfsEntity> extends GtfsDescriptor<T> {
 
+  @Override
   public abstract GtfsTableContainer createContainerForInvalidStatus(TableStatus tableStatus);
 
   public abstract GtfsTableContainer createContainerForHeaderAndEntities(

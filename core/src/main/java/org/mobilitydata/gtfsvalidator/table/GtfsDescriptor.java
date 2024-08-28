@@ -2,6 +2,10 @@ package org.mobilitydata.gtfsvalidator.table;
 
 // TODO: review class name maybe GtfsFileDescriptor
 public abstract class GtfsDescriptor<T extends GtfsEntity> {
+
+  public abstract <C extends GtfsContainer> C createContainerForInvalidStatus(
+      TableStatus tableStatus);
+
   // True if the specified file is required in a feed.
   private boolean required;
 

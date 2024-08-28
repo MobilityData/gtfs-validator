@@ -103,7 +103,7 @@ public class DefaultValidatorProvider implements ValidatorProvider {
   @SuppressWarnings("unchecked")
   public <T extends GtfsEntity, D extends GtfsTableDescriptor>
       List<FileValidator> createSingleFileValidators(
-          GtfsTableContainer<T, D> table,
+          GtfsContainer<T, D> table,
           Consumer<Class<? extends FileValidator>> validatorsWithParsingErrors) {
     List<FileValidator> validators = new ArrayList<>();
     for (Class<? extends FileValidator> validatorClass :

@@ -46,7 +46,7 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorUtil;
  */
 public class GtfsFeedLoader {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-  private final HashMap<String, GtfsTableDescriptor<?>> tableDescriptors = new HashMap<>();
+  private final HashMap<String, GtfsDescriptor<?>> tableDescriptors = new HashMap<>();
   private int numThreads = 1;
 
   /**
@@ -56,12 +56,11 @@ public class GtfsFeedLoader {
   private final List<Class<? extends FileValidator>> multiFileValidatorsWithParsingErrors =
       new ArrayList<>();
 
-  public GtfsFeedLoader(
-      ImmutableList<Class<? extends GtfsTableDescriptor<?>>> tableDescriptorClasses) {
-    for (Class<? extends GtfsTableDescriptor<?>> clazz : tableDescriptorClasses) {
-      GtfsTableDescriptor<?> descriptor;
+  public GtfsFeedLoader(ImmutableList<Class<? extends GtfsDescriptor<?>>> tableDescriptorClasses) {
+    for (Class<? extends GtfsDescriptor<?>> clazz : tableDescriptorClasses) {
+      GtfsDescriptor<?> descriptor;
       try {
-        descriptor = clazz.asSubclass(GtfsTableDescriptor.class).getConstructor().newInstance();
+        descriptor = clazz.asSubclass(GtfsDescriptor.class).getConstructor().newInstance();
       } catch (ReflectiveOperationException e) {
         logger.atSevere().withCause(e).log(
             "Possible bug in GTFS annotation processor: expected a constructor without parameters"
@@ -73,7 +72,7 @@ public class GtfsFeedLoader {
     }
   }
 
-  public Collection<GtfsTableDescriptor<?>> getTableDescriptors() {
+  public Collection<GtfsDescriptor<?>> getTableDescriptors() {
     return Collections.unmodifiableCollection(tableDescriptors.values());
   }
 
@@ -132,9 +131,16 @@ public class GtfsFeedLoader {
     }
     ArrayList<GtfsContainer<?, ?>> tableContainers = new ArrayList<>();
     tableContainers.ensureCapacity(tableDescriptors.size());
-    for (GtfsTableDescriptor<?> tableDescriptor : remainingDescriptors.values()) {
-      tableContainers.add(
-          AnyTableLoader.loadMissingFile(tableDescriptor, validatorProvider, noticeContainer));
+    for (GtfsDescriptor<?> tableDescriptor : remainingDescriptors.values()) {
+      if (tableDescriptor instanceof GtfsTableDescriptor) {
+        tableContainers.add(
+            AnyTableLoader.loadMissingFile(tableDescriptor, validatorProvider, noticeContainer));
+      } else {
+        //        TODO Load JSON file here
+        logger.atWarning().log(
+            "Table descriptor %s is not a GtfsTableDescriptor, skipping",
+            tableDescriptor.getClass().getCanonicalName());
+      }
     }
     try {
       for (Future<TableAndNoticeContainers> futureContainer : exec.invokeAll(loaderCallables)) {
