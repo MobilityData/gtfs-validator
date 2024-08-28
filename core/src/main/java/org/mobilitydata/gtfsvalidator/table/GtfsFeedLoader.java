@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.table;
 import com.google.common.collect.ImmutableList;
 import com.google.common.flogger.FluentLogger;
 import java.io.InputStream;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -60,6 +61,10 @@ public class GtfsFeedLoader {
     for (Class<? extends GtfsDescriptor<?>> clazz : tableDescriptorClasses) {
       GtfsDescriptor<?> descriptor;
       try {
+        //        Skipping abstract classes. Example: GtfsTableDescriptor.
+        if (Modifier.isAbstract(clazz.getModifiers())) {
+          continue;
+        }
         descriptor = clazz.asSubclass(GtfsDescriptor.class).getConstructor().newInstance();
       } catch (ReflectiveOperationException e) {
         logger.atSevere().withCause(e).log(
