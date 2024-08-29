@@ -4,18 +4,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathway;
 import org.mobilitydata.gtfsvalidator.table.GtfsPathwayIsBidirectional;
-import org.mobilitydata.gtfsvalidator.table.GtfsPathwayMode;
 
-
-import java.util.List;
 
 import static com.google.common.truth.Truth.assertThat;
 
 @RunWith(JUnit4.class)
-public class PathwayBidirectionalExitGatesValidatorTest {
+public class BidirectionalExitGateValidatorTest {
   public static GtfsPathway createPathway(int csvRowNumber,  Integer pathwayMode, GtfsPathwayIsBidirectional gtfsPathwayIsBidirectional) {
     return new GtfsPathway.Builder()
             .setCsvRowNumber(csvRowNumber)
@@ -28,20 +24,20 @@ public class PathwayBidirectionalExitGatesValidatorTest {
    * Tests that a pathway with bidirectional exit gates generates a notice.
    */
   @Test
-  public void isBidirectionalExitGatesShouldGenerateNotice() {
+  public void isBidirectionalExitGateShouldGenerateNotice() {
     GtfsPathway entity = createPathway(1, 7, GtfsPathwayIsBidirectional.BIDIRECTIONAL);
     NoticeContainer noticeContainer = new NoticeContainer();
-    new PathwayBidirectionalExitGatesValidator()
+    new BidirectionalExitGateValidator()
             .validate(entity, noticeContainer);
     assertThat(noticeContainer.getValidationNotices()).containsExactly(
-            new PathwayBidirectionalExitGatesValidator.PathwayBidirectionalExitGatesNotice(entity));
+            new BidirectionalExitGateValidator.BidirectionalExitGatesNotice(entity));
   }
 
   @Test
-  public void isNotBidirectionalExitGatesShouldNotGenerateNotice() {
+  public void isNotBidirectionalExitGateShouldNotGenerateNotice() {
     GtfsPathway entity = createPathway(1, 7, GtfsPathwayIsBidirectional.UNIDIRECTIONAL);
     NoticeContainer noticeContainer = new NoticeContainer();
-    new PathwayBidirectionalExitGatesValidator()
+    new BidirectionalExitGateValidator()
             .validate(entity, noticeContainer);
     assertThat(noticeContainer.getValidationNotices()).isEmpty();
   }

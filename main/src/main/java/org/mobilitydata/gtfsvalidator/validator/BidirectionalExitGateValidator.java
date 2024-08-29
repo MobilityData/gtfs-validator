@@ -17,12 +17,12 @@ import org.mobilitydata.gtfsvalidator.table.*;
  * </ul>
  */
 @GtfsValidator
-public class PathwayBidirectionalExitGatesValidator extends SingleEntityValidator<GtfsPathway> {
+public class BidirectionalExitGateValidator extends SingleEntityValidator<GtfsPathway> {
 
   @Override
   public void validate(GtfsPathway entity, NoticeContainer noticeContainer) {
     if (entity.pathwayMode().getNumber() == 7 && entity.isBidirectional().getNumber() == 1) {
-      noticeContainer.addValidationNotice(new PathwayBidirectionalExitGatesNotice(entity));
+      noticeContainer.addValidationNotice(new BidirectionalExitGatesNotice(entity));
     }
   }
 
@@ -32,18 +32,18 @@ public class PathwayBidirectionalExitGatesValidator extends SingleEntityValidato
    * <p>Exit gates (pathway_mode=7) must not be bidirectional.
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs({GtfsPathwaySchema.class}))
-  static class PathwayBidirectionalExitGatesNotice extends ValidationNotice {
+  static class BidirectionalExitGatesNotice extends ValidationNotice {
     /** The row number of the validated record. */
     private final int csvRowNumber;
     /** The pathway mode. */
-    private final GtfsPathwayMode pathwayMode;
+    private final int pathwayMode;
     /** Whether the pathway is bidirectional. */
-    private final GtfsPathwayIsBidirectional isBidirectional;
+    private final int isBidirectional;
 
-    PathwayBidirectionalExitGatesNotice(GtfsPathway pathway) {
+    BidirectionalExitGatesNotice(GtfsPathway pathway) {
       this.csvRowNumber = pathway.csvRowNumber();
-      this.pathwayMode = pathway.pathwayMode();
-      this.isBidirectional = pathway.isBidirectional();
+      this.pathwayMode = pathway.pathwayMode().getNumber();
+      this.isBidirectional = pathway.isBidirectional().getNumber();
     }
   }
 }
