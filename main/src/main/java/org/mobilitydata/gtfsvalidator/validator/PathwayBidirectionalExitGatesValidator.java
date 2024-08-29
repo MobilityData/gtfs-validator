@@ -2,7 +2,6 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
-import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
@@ -11,20 +10,12 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.*;
 
 @GtfsValidator
-public class PathwayBidirectionalExitGatesValidator extends FileValidator {
-  private final GtfsPathwayTableContainer pathwayTable;
-
-  @Inject
-  public PathwayBidirectionalExitGatesValidator(GtfsPathwayTableContainer pathwayTable) {
-    this.pathwayTable = pathwayTable;
-  }
+public class PathwayBidirectionalExitGatesValidator extends SingleEntityValidator<GtfsPathway> {
 
   @Override
-  public void validate(NoticeContainer noticeContainer) {
-    for (GtfsPathway pathway : pathwayTable.getEntities()) {
-      if (pathway.pathwayMode().getNumber() == 7 && pathway.isBidirectional().getNumber() == 1) {
-        noticeContainer.addValidationNotice(new PathwayBidirectionalExitGatesNotice(pathway));
-      }
+  public void validate(GtfsPathway entity, NoticeContainer noticeContainer) {
+    if (entity.pathwayMode().getNumber() == 7 && entity.isBidirectional().getNumber() == 1) {
+      noticeContainer.addValidationNotice(new PathwayBidirectionalExitGatesNotice(entity));
     }
   }
 
