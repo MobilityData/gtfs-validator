@@ -3,14 +3,14 @@ package org.mobilitydata.gtfsvalidator.table;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public final class GtfsJson implements GtfsEntity {
+public final class GtfsGeojsonFeature implements GtfsEntity {
   public static final String FILENAME = "locations.geojson";
 
   public static final String LOCATION_ID_FIELD_NAME = "location_id";
 
-  private String locationId;   // The id of a feature in the GeoJSON file.
+  private String locationId; // The id of a feature in the GeoJSON file.
 
-  public GtfsJson() {}
+  public GtfsGeojsonFeature() {}
 
   @Override
   public int csvRowNumber() {

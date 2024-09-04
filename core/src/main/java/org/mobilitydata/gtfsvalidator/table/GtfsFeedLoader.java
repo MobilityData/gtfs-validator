@@ -121,10 +121,10 @@ public class GtfsFeedLoader {
                             validatorProvider,
                             inputStream,
                             loaderNotices);
-                  } else if (tableDescriptor instanceof GtfsJsonDescriptor) {
+                  } else if (tableDescriptor instanceof GtfsGeojsonFeatureDescriptor) {
                     tableContainer =
                         JsonFileLoader.load(
-                            (GtfsJsonDescriptor) tableDescriptor,
+                            (GtfsGeojsonFeatureDescriptor) tableDescriptor,
                             validatorProvider,
                             inputStream,
                             loaderNotices);

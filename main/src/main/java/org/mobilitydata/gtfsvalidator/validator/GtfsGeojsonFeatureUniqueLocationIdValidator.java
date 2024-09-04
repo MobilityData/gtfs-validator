@@ -21,36 +21,39 @@ import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.UniqueLocationIdViolationNotice;
-import org.mobilitydata.gtfsvalidator.table.GtfsJson;
-import org.mobilitydata.gtfsvalidator.table.GtfsJsonContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsJsonDescriptor;
+import org.mobilitydata.gtfsvalidator.table.GtfsGeojsonFeature;
+import org.mobilitydata.gtfsvalidator.table.GtfsGeojsonFeaturesContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsGeojsonFeatureDescriptor;
 import org.mobilitydata.gtfsvalidator.table.GtfsNetworkTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 
 /**
- * Validates that the location id from "locations.geojson" is not a duplicate of any stop_id from
- * "stops.txt" or location_group_id from "location_gorups.txt"
+ * Validates that the feature id from "locations.geojson" is not a duplicate of any stop_id from
+ * "stops.txt" or location_group_id from "location_groups.txt"
  *
  * <p>Generated notice: {@link UniqueLocationIdViolationNotice}.
  */
 @GtfsValidator
-public class GtfsJsonUniqueLocationIdValidator extends FileValidator {
+public class GtfsGeojsonFeatureUniqueLocationIdValidator extends FileValidator {
   private final GtfsStopTableContainer stopTableContainer;
 
   // Remove comments when the location_group_stops.txt file is added to the GTFS schema
   // private final GtfsLocationGroupStopsTableContainer  locationGroupStopsTableContainer;
 
-  private final GtfsJsonContainer<GtfsJson, GtfsJsonDescriptor<GtfsJson>> jsonContainer;
+  private final GtfsGeojsonFeaturesContainer<GtfsGeojsonFeature, GtfsGeojsonFeatureDescriptor<GtfsGeojsonFeature>>
+          geojsonFeatureContainer;
 
   @Inject
-  GtfsJsonUniqueLocationIdValidator(
-      GtfsJsonContainer<GtfsJson, GtfsJsonDescriptor<GtfsJson>> jsonContainer,
+  GtfsGeojsonFeatureUniqueLocationIdValidator(
+      GtfsGeojsonFeaturesContainer<
+                    GtfsGeojsonFeature, GtfsGeojsonFeatureDescriptor<GtfsGeojsonFeature>>
+              geojsonFeatureContainer,
       GtfsStopTableContainer stopTableContainer
       //        , GtfsLocationGroupStopsTableContainer locationGroupStopsTableContainer
       ) {
-    this.jsonContainer = jsonContainer;
+    this.geojsonFeatureContainer = geojsonFeatureContainer;
 
     this.stopTableContainer = stopTableContainer;
     //    this.locationGroupStopsTableContainer = locationGroupStopsTableContainer;
@@ -58,7 +61,7 @@ public class GtfsJsonUniqueLocationIdValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    for (GtfsJson json : jsonContainer.getEntities()) {
+    for (GtfsGeojsonFeature json : geojsonFeatureContainer.getEntities()) {
       String locationId = json.locationId();
       if (locationId.isEmpty()) {
         continue;
@@ -76,11 +79,4 @@ public class GtfsJsonUniqueLocationIdValidator extends FileValidator {
     }
   }
 
-  private boolean hasReferencedKey(
-      String foreignKey,
-      GtfsRouteTableContainer routeContainer,
-      GtfsNetworkTableContainer networkContainer) {
-    return !(routeContainer.byNetworkId(foreignKey).isEmpty()
-        && networkContainer.byNetworkId(foreignKey).isEmpty());
-  }
 }

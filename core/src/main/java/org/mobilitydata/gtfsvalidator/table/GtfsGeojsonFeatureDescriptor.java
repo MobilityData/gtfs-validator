@@ -3,18 +3,19 @@ package org.mobilitydata.gtfsvalidator.table;
 import java.util.List;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 
-public class GtfsJsonDescriptor<T extends GtfsEntity> extends GtfsDescriptor<GtfsJson>
+public class GtfsGeojsonFeatureDescriptor<T extends GtfsEntity>
+    extends GtfsDescriptor<GtfsGeojsonFeature>
 //        GtfsDescriptor<T>
 {
 
-  public GtfsJsonContainer createContainerForEntities(
+  public GtfsGeojsonFeaturesContainer createContainerForEntities(
       List<T> entities, NoticeContainer noticeContainer) {
-    return new GtfsJsonContainer(this, entities, noticeContainer);
+    return new GtfsGeojsonFeaturesContainer(this, entities, noticeContainer);
   }
 
   @Override
   public <C extends GtfsContainer> C createContainerForInvalidStatus(TableStatus tableStatus) {
-    return (C) new GtfsJsonContainer(this, tableStatus);
+    return (C) new GtfsGeojsonFeaturesContainer(this, tableStatus);
   }
 
   @Override
@@ -23,8 +24,8 @@ public class GtfsJsonDescriptor<T extends GtfsEntity> extends GtfsDescriptor<Gtf
   }
 
   @Override
-  public Class<GtfsJson> getEntityClass() {
-    return GtfsJson.class;
+  public Class<GtfsGeojsonFeature> getEntityClass() {
+    return GtfsGeojsonFeature.class;
   }
 
   @Override

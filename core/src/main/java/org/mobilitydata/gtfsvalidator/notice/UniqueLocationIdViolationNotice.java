@@ -23,7 +23,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /**
- * Location id from locations.geojson already exists.
+ * Feature id from locations.geojson already used.
  *
  * <p>The id of one of the features of the locations.geojson file already exists in stops.txt or
  * location_groups.txt

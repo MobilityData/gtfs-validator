@@ -15,50 +15,51 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
 
 public class JsonFileLoader {
 
-  public static GtfsJsonContainer load(
-      GtfsJsonDescriptor tableDescriptor,
+  public static GtfsGeojsonFeaturesContainer load(
+      GtfsGeojsonFeatureDescriptor tableDescriptor,
       ValidatorProvider validatorProvider,
       InputStream inputStream,
       NoticeContainer noticeContainer) {
     try {
-      List<GtfsJson> entities = extractFeaturesFromStream(inputStream, noticeContainer);
-//      List<String> locationIds = extractIdsFromStream(inputStream);
+      List<GtfsGeojsonFeature> entities = extractFeaturesFromStream(inputStream, noticeContainer);
+      //      List<String> locationIds = extractIdsFromStream(inputStream);
 
+      //      for (String locationId : locationIds) {
+      //        GtfsJson entity = new GtfsJson();
+      //        entity.setLocationId(locationId);
+      //        // builder.setLocationId(locationId);
+      //        entities.add(entity);
+      //      }
 
-//      for (String locationId : locationIds) {
-//        GtfsJson entity = new GtfsJson();
-//        entity.setLocationId(locationId);
-//        // builder.setLocationId(locationId);
-//        entities.add(entity);
-//      }
-
-      GtfsJsonContainer<GtfsJson, GtfsJsonDescriptor> container =
+      GtfsGeojsonFeaturesContainer<GtfsGeojsonFeature, GtfsGeojsonFeatureDescriptor> container =
           tableDescriptor.createContainerForEntities(entities, noticeContainer);
       return container;
     } catch (IOException ioex) {
       noticeContainer.addSystemError(new IOError(ioex));
-      return (GtfsJsonContainer)
+      return (GtfsGeojsonFeaturesContainer)
           tableDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS);
     }
   }
 
-  public static List<GtfsJson> extractFeaturesFromStream(InputStream inputStream, NoticeContainer noticeContainer) throws IOException {
-    List<GtfsJson> features = new ArrayList<>();
+  public static List<GtfsGeojsonFeature> extractFeaturesFromStream(
+      InputStream inputStream, NoticeContainer noticeContainer) throws IOException {
+    List<GtfsGeojsonFeature> features = new ArrayList<>();
     try (InputStreamReader reader = new InputStreamReader(inputStream)) {
       JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
       JsonArray featuresArray = jsonObject.getAsJsonArray("features");
       for (JsonElement feature : featuresArray) {
-        GtfsJson gtfsJson = extractFeature(feature, noticeContainer);
-        if (gtfsJson != null) {
-          features.add(gtfsJson);
+        GtfsGeojsonFeature gtfsGeojsonFeature = extractFeature(feature, noticeContainer);
+        if (gtfsGeojsonFeature != null) {
+          features.add(gtfsGeojsonFeature);
         }
       }
     }
     return features;
   }
 
-  public static GtfsJson extractFeature(JsonElement feature, NoticeContainer noticeContainer) {
-    GtfsJson gtfsJson = new GtfsJson();
+  public static GtfsGeojsonFeature extractFeature(
+      JsonElement feature, NoticeContainer noticeContainer) {
+    GtfsGeojsonFeature gtfsGeojsonFeature = new GtfsGeojsonFeature();
     if (feature.isJsonObject()) {
       JsonObject featureObject = feature.getAsJsonObject();
       if (featureObject.has("properties")) {
@@ -68,7 +69,7 @@ public class JsonFileLoader {
         // Add a notice because properties is required
       }
       if (featureObject.has("id")) {
-        gtfsJson.setLocationId(featureObject.get("id").getAsString());
+        gtfsGeojsonFeature.setLocationId(featureObject.get("id").getAsString());
       } else {
         // Add a notice because id is required
       }
@@ -89,7 +90,7 @@ public class JsonFileLoader {
         // Add a notice because geometry is required
       }
     }
-    return gtfsJson;
+    return gtfsGeojsonFeature;
   }
 
   public static List<String> extractIdsFromStream(InputStream inputStream) throws IOException {
