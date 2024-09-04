@@ -195,7 +195,10 @@ public class NoticeFieldsTest {
             "maxShapeDistanceTraveled",
             "maxTripDistanceTraveled",
             "fileNameA",
-            "fileNameB");
+            "fileNameB",
+            "id",
+            "fileWithIdAlreadyPresent",
+            "fieldNameInFile");
   }
 
   private static List<String> discoverValidationNoticeFieldNames() {
