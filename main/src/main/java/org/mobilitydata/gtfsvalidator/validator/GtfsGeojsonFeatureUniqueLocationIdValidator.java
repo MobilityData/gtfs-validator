@@ -22,10 +22,8 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.UniqueLocationIdViolationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsGeojsonFeature;
-import org.mobilitydata.gtfsvalidator.table.GtfsGeojsonFeaturesContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsGeojsonFeatureDescriptor;
-import org.mobilitydata.gtfsvalidator.table.GtfsNetworkTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsGeojsonFeaturesContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 
@@ -39,17 +37,18 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 public class GtfsGeojsonFeatureUniqueLocationIdValidator extends FileValidator {
   private final GtfsStopTableContainer stopTableContainer;
 
-  // Remove comments when the location_group_stops.txt file is added to the GTFS schema
+  // Remove this comment when the location_group_stops.txt file is added to the GTFS schema
   // private final GtfsLocationGroupStopsTableContainer  locationGroupStopsTableContainer;
 
-  private final GtfsGeojsonFeaturesContainer<GtfsGeojsonFeature, GtfsGeojsonFeatureDescriptor<GtfsGeojsonFeature>>
-          geojsonFeatureContainer;
+  private final GtfsGeojsonFeaturesContainer<
+          GtfsGeojsonFeature, GtfsGeojsonFeatureDescriptor<GtfsGeojsonFeature>>
+      geojsonFeatureContainer;
 
   @Inject
   GtfsGeojsonFeatureUniqueLocationIdValidator(
       GtfsGeojsonFeaturesContainer<
-                    GtfsGeojsonFeature, GtfsGeojsonFeatureDescriptor<GtfsGeojsonFeature>>
-              geojsonFeatureContainer,
+              GtfsGeojsonFeature, GtfsGeojsonFeatureDescriptor<GtfsGeojsonFeature>>
+          geojsonFeatureContainer,
       GtfsStopTableContainer stopTableContainer
       //        , GtfsLocationGroupStopsTableContainer locationGroupStopsTableContainer
       ) {
@@ -78,5 +77,4 @@ public class GtfsGeojsonFeatureUniqueLocationIdValidator extends FileValidator {
       }
     }
   }
-
 }
