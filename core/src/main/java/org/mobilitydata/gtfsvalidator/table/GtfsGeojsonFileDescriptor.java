@@ -4,9 +4,7 @@ import java.util.List;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 
 public class GtfsGeojsonFileDescriptor<T extends GtfsEntity>
-    extends GtfsFileDescriptor<GtfsGeojsonFeature>
-//        GtfsDescriptor<T>
-{
+    extends GtfsFileDescriptor<GtfsGeojsonFeature> {
 
   public GtfsGeojsonFeaturesContainer createContainerForEntities(
       List<T> entities, NoticeContainer noticeContainer) {
