@@ -47,7 +47,7 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorUtil;
  */
 public class GtfsFeedLoader {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-  private final HashMap<String, GtfsDescriptor<?>> tableDescriptors = new HashMap<>();
+  private final HashMap<String, GtfsFileDescriptor<?>> tableDescriptors = new HashMap<>();
   private int numThreads = 1;
 
   /**
@@ -57,15 +57,16 @@ public class GtfsFeedLoader {
   private final List<Class<? extends FileValidator>> multiFileValidatorsWithParsingErrors =
       new ArrayList<>();
 
-  public GtfsFeedLoader(ImmutableList<Class<? extends GtfsDescriptor<?>>> tableDescriptorClasses) {
-    for (Class<? extends GtfsDescriptor<?>> clazz : tableDescriptorClasses) {
-      GtfsDescriptor<?> descriptor;
+  public GtfsFeedLoader(
+      ImmutableList<Class<? extends GtfsFileDescriptor<?>>> tableDescriptorClasses) {
+    for (Class<? extends GtfsFileDescriptor<?>> clazz : tableDescriptorClasses) {
+      GtfsFileDescriptor<?> descriptor;
       try {
         //        Skipping abstract classes. Example: GtfsTableDescriptor.
         if (Modifier.isAbstract(clazz.getModifiers())) {
           continue;
         }
-        descriptor = clazz.asSubclass(GtfsDescriptor.class).getConstructor().newInstance();
+        descriptor = clazz.asSubclass(GtfsFileDescriptor.class).getConstructor().newInstance();
       } catch (ReflectiveOperationException e) {
         logger.atSevere().withCause(e).log(
             "Possible bug in GTFS annotation processor: expected a constructor without parameters"
@@ -77,7 +78,7 @@ public class GtfsFeedLoader {
     }
   }
 
-  public Collection<GtfsDescriptor<?>> getTableDescriptors() {
+  public Collection<GtfsFileDescriptor<?>> getTableDescriptors() {
     return Collections.unmodifiableCollection(tableDescriptors.values());
   }
 
@@ -104,14 +105,14 @@ public class GtfsFeedLoader {
     Map<String, GtfsTableDescriptor<?>> remainingDescriptors =
         (Map<String, GtfsTableDescriptor<?>>) tableDescriptors.clone();
     for (String filename : gtfsInput.getFilenames()) {
-      GtfsDescriptor<?> tableDescriptor = remainingDescriptors.remove(filename.toLowerCase());
+      GtfsFileDescriptor<?> tableDescriptor = remainingDescriptors.remove(filename.toLowerCase());
       if (tableDescriptor == null) {
         noticeContainer.addValidationNotice(new UnknownFileNotice(filename));
       } else {
         loaderCallables.add(
             () -> {
               NoticeContainer loaderNotices = new NoticeContainer();
-              GtfsContainer<?, ?> tableContainer;
+              GtfsEntityContainer<?, ?> tableContainer;
               try (InputStream inputStream = gtfsInput.getFile(filename)) {
                 try {
                   if (tableDescriptor instanceof GtfsTableDescriptor) {
@@ -121,10 +122,10 @@ public class GtfsFeedLoader {
                             validatorProvider,
                             inputStream,
                             loaderNotices);
-                  } else if (tableDescriptor instanceof GtfsGeojsonFeatureDescriptor) {
+                  } else if (tableDescriptor instanceof GtfsGeojsonFileDescriptor) {
                     tableContainer =
                         JsonFileLoader.load(
-                            (GtfsGeojsonFeatureDescriptor) tableDescriptor,
+                            (GtfsGeojsonFileDescriptor) tableDescriptor,
                             validatorProvider,
                             inputStream,
                             loaderNotices);
@@ -151,9 +152,9 @@ public class GtfsFeedLoader {
             });
       }
     }
-    ArrayList<GtfsContainer<?, ?>> tableContainers = new ArrayList<>();
+    ArrayList<GtfsEntityContainer<?, ?>> tableContainers = new ArrayList<>();
     tableContainers.ensureCapacity(tableDescriptors.size());
-    for (GtfsDescriptor<?> tableDescriptor : remainingDescriptors.values()) {
+    for (GtfsFileDescriptor<?> tableDescriptor : remainingDescriptors.values()) {
       tableContainers.add(
           AnyTableLoader.loadMissingFile(tableDescriptor, validatorProvider, noticeContainer));
     }
@@ -207,10 +208,11 @@ public class GtfsFeedLoader {
   }
 
   static class TableAndNoticeContainers {
-    final GtfsContainer tableContainer;
+    final GtfsEntityContainer tableContainer;
     final NoticeContainer noticeContainer;
 
-    public TableAndNoticeContainers(GtfsContainer tableContainer, NoticeContainer noticeContainer) {
+    public TableAndNoticeContainers(
+        GtfsEntityContainer tableContainer, NoticeContainer noticeContainer) {
       this.tableContainer = tableContainer;
       this.noticeContainer = noticeContainer;
     }

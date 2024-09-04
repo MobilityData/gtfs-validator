@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 
-public abstract class GtfsTableDescriptor<T extends GtfsEntity> extends GtfsDescriptor<T> {
+public abstract class GtfsTableDescriptor<T extends GtfsEntity> extends GtfsFileDescriptor<T> {
 
   @Override
   public abstract GtfsTableContainer createContainerForInvalidStatus(TableStatus tableStatus);

@@ -16,22 +16,14 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
 public class JsonFileLoader {
 
   public static GtfsGeojsonFeaturesContainer load(
-      GtfsGeojsonFeatureDescriptor tableDescriptor,
+      GtfsGeojsonFileDescriptor tableDescriptor,
       ValidatorProvider validatorProvider,
       InputStream inputStream,
       NoticeContainer noticeContainer) {
     try {
       List<GtfsGeojsonFeature> entities = extractFeaturesFromStream(inputStream, noticeContainer);
-      //      List<String> locationIds = extractIdsFromStream(inputStream);
 
-      //      for (String locationId : locationIds) {
-      //        GtfsJson entity = new GtfsJson();
-      //        entity.setLocationId(locationId);
-      //        // builder.setLocationId(locationId);
-      //        entities.add(entity);
-      //      }
-
-      GtfsGeojsonFeaturesContainer<GtfsGeojsonFeature, GtfsGeojsonFeatureDescriptor> container =
+      GtfsGeojsonFeaturesContainer<GtfsGeojsonFeature, GtfsGeojsonFileDescriptor> container =
           tableDescriptor.createContainerForEntities(entities, noticeContainer);
       return container;
     } catch (IOException ioex) {
@@ -91,20 +83,5 @@ public class JsonFileLoader {
       }
     }
     return gtfsGeojsonFeature;
-  }
-
-  public static List<String> extractIdsFromStream(InputStream inputStream) throws IOException {
-    List<String> ids = new ArrayList<>();
-    try (InputStreamReader reader = new InputStreamReader(inputStream)) {
-      JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
-      JsonArray features = jsonObject.getAsJsonArray("features");
-      for (JsonElement feature : features) {
-        JsonObject featureObject = feature.getAsJsonObject();
-        if (featureObject.has("id")) {
-          ids.add(featureObject.get("id").getAsString());
-        }
-      }
-    }
-    return ids;
   }
 }

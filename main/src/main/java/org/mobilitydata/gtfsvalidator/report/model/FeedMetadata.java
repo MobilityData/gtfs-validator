@@ -104,7 +104,7 @@ public class FeedMetadata {
     setCount(COUNTS_BLOCKS, feedContainer, GtfsTrip.FILENAME, GtfsTrip.class, GtfsTrip::blockId);
   }
 
-  private <T extends GtfsContainer, E extends GtfsEntity> void setCount(
+  private <T extends GtfsEntityContainer, E extends GtfsEntity> void setCount(
       String countName,
       GtfsFeedContainer feedContainer,
       String fileName,
@@ -118,7 +118,7 @@ public class FeedMetadata {
   }
 
   private <E extends GtfsEntity> int loadUniqueCount(
-      GtfsContainer<?, ?> table, Class<E> clazz, Function<E, String> idExtractor) {
+      GtfsEntityContainer<?, ?> table, Class<E> clazz, Function<E, String> idExtractor) {
     // Iterate through entities and count unique IDs
     Set<String> uniqueIds = new HashSet<>();
     for (GtfsEntity entity : table.getEntities()) {
@@ -296,7 +296,8 @@ public class FeedMetadata {
                 List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasRouteTextColor)));
   }
 
-  private void loadAgencyData(GtfsContainer<GtfsAgency, GtfsAgencyTableDescriptor> agencyTable) {
+  private void loadAgencyData(
+      GtfsEntityContainer<GtfsAgency, GtfsAgencyTableDescriptor> agencyTable) {
     for (GtfsAgency agency : agencyTable.getEntities()) {
       agencies.add(AgencyMetadata.from(agency));
     }

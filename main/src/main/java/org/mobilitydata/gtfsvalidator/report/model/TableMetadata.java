@@ -1,6 +1,6 @@
 package org.mobilitydata.gtfsvalidator.report.model;
 
-import org.mobilitydata.gtfsvalidator.table.GtfsContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsEntityContainer;
 import org.mobilitydata.gtfsvalidator.table.TableStatus;
 
 public class TableMetadata {
@@ -15,7 +15,7 @@ public class TableMetadata {
     this.entityCount = entityCount;
   }
 
-  public static TableMetadata from(GtfsContainer<?, ?> table) {
+  public static TableMetadata from(GtfsEntityContainer<?, ?> table) {
     return new TableMetadata(table.gtfsFilename(), table.getTableStatus(), table.entityCount());
   }
 

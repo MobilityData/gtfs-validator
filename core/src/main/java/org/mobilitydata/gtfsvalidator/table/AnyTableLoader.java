@@ -192,12 +192,13 @@ public final class AnyTableLoader {
     }
   }
 
-  public static GtfsContainer loadMissingFile(
-      GtfsDescriptor tableDescriptor,
+  public static GtfsEntityContainer loadMissingFile(
+      GtfsFileDescriptor tableDescriptor,
       ValidatorProvider validatorProvider,
       NoticeContainer noticeContainer) {
     String gtfsFilename = tableDescriptor.gtfsFilename();
-    GtfsContainer table = tableDescriptor.createContainerForInvalidStatus(TableStatus.MISSING_FILE);
+    GtfsEntityContainer table =
+        tableDescriptor.createContainerForInvalidStatus(TableStatus.MISSING_FILE);
     if (tableDescriptor.isRecommended()) {
       noticeContainer.addValidationNotice(new MissingRecommendedFileNotice(gtfsFilename));
     }

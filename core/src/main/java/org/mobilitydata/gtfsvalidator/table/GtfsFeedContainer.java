@@ -25,12 +25,12 @@ import java.util.*;
  * <p>The tables are kept as {@code GtfsContainer} instances.
  */
 public class GtfsFeedContainer {
-  private final Map<String, GtfsContainer<?, ?>> tables = new HashMap<>();
-  private final Map<Class<? extends GtfsContainer>, GtfsContainer<?, ?>> tablesByClass =
+  private final Map<String, GtfsEntityContainer<?, ?>> tables = new HashMap<>();
+  private final Map<Class<? extends GtfsEntityContainer>, GtfsEntityContainer<?, ?>> tablesByClass =
       new HashMap<>();
 
-  public GtfsFeedContainer(List<GtfsContainer<?, ?>> tableContainerList) {
-    for (GtfsContainer<?, ?> table : tableContainerList) {
+  public GtfsFeedContainer(List<GtfsEntityContainer<?, ?>> tableContainerList) {
+    for (GtfsEntityContainer<?, ?> table : tableContainerList) {
       tables.put(table.gtfsFilename(), table);
       tablesByClass.put(table.getClass(), table);
     }
@@ -48,12 +48,12 @@ public class GtfsFeedContainer {
    * @param filename file name, including ".txt" extension
    * @return GTFS table or empty if the table is not supported by schema
    */
-  public <T extends GtfsContainer<?, ?>> Optional<T> getTableForFilename(String filename) {
+  public <T extends GtfsEntityContainer<?, ?>> Optional<T> getTableForFilename(String filename) {
     return (Optional<T>)
         Optional.ofNullable(tables.getOrDefault(Ascii.toLowerCase(filename), null));
   }
 
-  public <T extends GtfsContainer<?, ?>> T getTable(Class<T> clazz) {
+  public <T extends GtfsEntityContainer<?, ?>> T getTable(Class<T> clazz) {
     return (T) tablesByClass.get(clazz);
   }
 
@@ -65,7 +65,7 @@ public class GtfsFeedContainer {
    * @return true if all files were successfully parsed, false otherwise
    */
   public boolean isParsedSuccessfully() {
-    for (GtfsContainer<?, ?> table : tables.values()) {
+    for (GtfsEntityContainer<?, ?> table : tables.values()) {
       if (!table.isParsedSuccessfully()) {
         return false;
       }
@@ -73,13 +73,13 @@ public class GtfsFeedContainer {
     return true;
   }
 
-  public Collection<GtfsContainer<?, ?>> getTables() {
+  public Collection<GtfsEntityContainer<?, ?>> getTables() {
     return tables.values();
   }
 
   public String tableTotalsText() {
     List<String> totalList = new ArrayList<>();
-    for (GtfsContainer<?, ?> table : tables.values()) {
+    for (GtfsEntityContainer<?, ?> table : tables.values()) {
       if (table.getTableStatus() == TableStatus.MISSING_FILE
           && !table.getDescriptor().isRequired()) {
         continue;

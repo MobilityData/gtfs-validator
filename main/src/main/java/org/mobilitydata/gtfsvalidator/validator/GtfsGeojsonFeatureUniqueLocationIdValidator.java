@@ -22,8 +22,8 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.UniqueLocationIdViolationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsGeojsonFeature;
-import org.mobilitydata.gtfsvalidator.table.GtfsGeojsonFeatureDescriptor;
 import org.mobilitydata.gtfsvalidator.table.GtfsGeojsonFeaturesContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsGeojsonFileDescriptor;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 
@@ -41,13 +41,13 @@ public class GtfsGeojsonFeatureUniqueLocationIdValidator extends FileValidator {
   // private final GtfsLocationGroupStopsTableContainer  locationGroupStopsTableContainer;
 
   private final GtfsGeojsonFeaturesContainer<
-          GtfsGeojsonFeature, GtfsGeojsonFeatureDescriptor<GtfsGeojsonFeature>>
+          GtfsGeojsonFeature, GtfsGeojsonFileDescriptor<GtfsGeojsonFeature>>
       geojsonFeatureContainer;
 
   @Inject
   GtfsGeojsonFeatureUniqueLocationIdValidator(
       GtfsGeojsonFeaturesContainer<
-              GtfsGeojsonFeature, GtfsGeojsonFeatureDescriptor<GtfsGeojsonFeature>>
+              GtfsGeojsonFeature, GtfsGeojsonFileDescriptor<GtfsGeojsonFeature>>
           geojsonFeatureContainer,
       GtfsStopTableContainer stopTableContainer
       //        , GtfsLocationGroupStopsTableContainer locationGroupStopsTableContainer

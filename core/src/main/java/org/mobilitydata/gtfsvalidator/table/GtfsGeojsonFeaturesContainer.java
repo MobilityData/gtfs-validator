@@ -8,8 +8,9 @@ import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 
-public class GtfsGeojsonFeaturesContainer<T extends GtfsGeojsonFeature, D extends GtfsDescriptor>
-    extends GtfsContainer<T, D> {
+public class GtfsGeojsonFeaturesContainer<
+        T extends GtfsGeojsonFeature, D extends GtfsFileDescriptor>
+    extends GtfsEntityContainer<T, D> {
 
   private final Map<String, GtfsGeojsonFeature> byLocationIdMap = new HashMap<>();
 
@@ -23,7 +24,7 @@ public class GtfsGeojsonFeaturesContainer<T extends GtfsGeojsonFeature, D extend
   }
 
   public GtfsGeojsonFeaturesContainer(
-      GtfsDescriptor<GtfsGeojsonFeature> descriptor, TableStatus tableStatus) {
+      GtfsFileDescriptor<GtfsGeojsonFeature> descriptor, TableStatus tableStatus) {
     super((D) descriptor, tableStatus);
     this.entities = new ArrayList<>();
   }

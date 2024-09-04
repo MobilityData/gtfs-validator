@@ -33,7 +33,8 @@ public class DefaultValidatorProvider implements ValidatorProvider {
   private final TableHeaderValidator tableHeaderValidator;
   private final ListMultimap<Class<? extends GtfsEntity>, Class<? extends SingleEntityValidator<?>>>
       singleEntityValidators;
-  private final ListMultimap<Class<? extends GtfsContainer<?, ?>>, Class<? extends FileValidator>>
+  private final ListMultimap<
+          Class<? extends GtfsEntityContainer<?, ?>>, Class<? extends FileValidator>>
       singleFileValidators;
   private final List<Class<? extends FileValidator>> multiFileValidators;
 
@@ -103,7 +104,7 @@ public class DefaultValidatorProvider implements ValidatorProvider {
   @SuppressWarnings("unchecked")
   public <T extends GtfsEntity, D extends GtfsTableDescriptor>
       List<FileValidator> createSingleFileValidators(
-          GtfsContainer<T, D> table,
+          GtfsEntityContainer<T, D> table,
           Consumer<Class<? extends FileValidator>> validatorsWithParsingErrors) {
     List<FileValidator> validators = new ArrayList<>();
     for (Class<? extends FileValidator> validatorClass :

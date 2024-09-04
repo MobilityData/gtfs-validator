@@ -3,8 +3,8 @@ package org.mobilitydata.gtfsvalidator.table;
 import java.util.List;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 
-public class GtfsGeojsonFeatureDescriptor<T extends GtfsEntity>
-    extends GtfsDescriptor<GtfsGeojsonFeature>
+public class GtfsGeojsonFileDescriptor<T extends GtfsEntity>
+    extends GtfsFileDescriptor<GtfsGeojsonFeature>
 //        GtfsDescriptor<T>
 {
 
@@ -14,7 +14,8 @@ public class GtfsGeojsonFeatureDescriptor<T extends GtfsEntity>
   }
 
   @Override
-  public <C extends GtfsContainer> C createContainerForInvalidStatus(TableStatus tableStatus) {
+  public <C extends GtfsEntityContainer> C createContainerForInvalidStatus(
+      TableStatus tableStatus) {
     return (C) new GtfsGeojsonFeaturesContainer(this, tableStatus);
   }
 

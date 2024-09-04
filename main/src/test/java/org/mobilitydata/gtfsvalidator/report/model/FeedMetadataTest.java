@@ -53,7 +53,7 @@ public class FeedMetadataTest {
   private void validateSpecFeature(
       String specFeature,
       Boolean expectedValue,
-      ImmutableList<Class<? extends GtfsDescriptor<?>>> tableDescriptors)
+      ImmutableList<Class<? extends GtfsFileDescriptor<?>>> tableDescriptors)
       throws IOException, InterruptedException {
     NoticeContainer noticeContainer = new NoticeContainer();
     feedLoaderMock = new GtfsFeedLoader(tableDescriptors);

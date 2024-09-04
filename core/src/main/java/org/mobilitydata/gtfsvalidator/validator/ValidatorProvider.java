@@ -57,7 +57,7 @@ public interface ValidatorProvider {
    */
   <T extends GtfsEntity, D extends GtfsTableDescriptor>
       List<FileValidator> createSingleFileValidators(
-          GtfsContainer<T, D> table,
+          GtfsEntityContainer<T, D> table,
           Consumer<Class<? extends FileValidator>> validatorsWithParsingErrors);
 
   /**

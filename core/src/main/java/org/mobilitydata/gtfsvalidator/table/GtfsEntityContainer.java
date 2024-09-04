@@ -3,12 +3,20 @@ package org.mobilitydata.gtfsvalidator.table;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class GtfsContainer<T extends GtfsEntity, D extends GtfsDescriptor> {
+/**
+ * This class is the parent of the containers holding table (csv) entities and containers holding
+ * geojson entities
+ *
+ * @param <T> The entity for this container (e.g. GtfsCalendarDate or {@link GtfsGeojsonFeature} )
+ * @param <D> The descriptor for the table for the container (e.g. GtfsCalendarDateTableDescriptor
+ *     or {@link GtfsGeojsonFileDescriptor})
+ */
+public abstract class GtfsEntityContainer<T extends GtfsEntity, D extends GtfsFileDescriptor> {
 
   private final D descriptor;
   private final TableStatus tableStatus;
 
-  public GtfsContainer(D descriptor, TableStatus tableStatus) {
+  public GtfsEntityContainer(D descriptor, TableStatus tableStatus) {
     this.tableStatus = tableStatus;
     this.descriptor = descriptor;
   }
