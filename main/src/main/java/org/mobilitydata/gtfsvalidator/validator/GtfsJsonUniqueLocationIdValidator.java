@@ -1,0 +1,86 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.mobilitydata.gtfsvalidator.validator;
+
+import java.util.Optional;
+import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
+import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.UniqueLocationIdViolationNotice;
+import org.mobilitydata.gtfsvalidator.table.GtfsJson;
+import org.mobilitydata.gtfsvalidator.table.GtfsJsonContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsJsonDescriptor;
+import org.mobilitydata.gtfsvalidator.table.GtfsNetworkTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsStop;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
+
+/**
+ * Validates that the location id from "locations.geojson" is not a duplicate of any stop_id from
+ * "stops.txt" or location_group_id from "location_gorups.txt"
+ *
+ * <p>Generated notice: {@link UniqueLocationIdViolationNotice}.
+ */
+@GtfsValidator
+public class GtfsJsonUniqueLocationIdValidator extends FileValidator {
+  private final GtfsStopTableContainer stopTableContainer;
+
+  // Remove comments when the location_group_stops.txt file is added to the GTFS schema
+  // private final GtfsLocationGroupStopsTableContainer  locationGroupStopsTableContainer;
+
+  private final GtfsJsonContainer<GtfsJson, GtfsJsonDescriptor<GtfsJson>> jsonContainer;
+
+  @Inject
+  GtfsJsonUniqueLocationIdValidator(
+      GtfsJsonContainer<GtfsJson, GtfsJsonDescriptor<GtfsJson>> jsonContainer,
+      GtfsStopTableContainer stopTableContainer
+      //        , GtfsLocationGroupStopsTableContainer locationGroupStopsTableContainer
+      ) {
+    this.jsonContainer = jsonContainer;
+
+    this.stopTableContainer = stopTableContainer;
+    //    this.locationGroupStopsTableContainer = locationGroupStopsTableContainer;
+  }
+
+  @Override
+  public void validate(NoticeContainer noticeContainer) {
+    for (GtfsJson json : jsonContainer.getEntities()) {
+      String locationId = json.locationId();
+      if (locationId.isEmpty()) {
+        continue;
+      }
+
+      Optional<GtfsStop> stop = stopTableContainer.byStopId(locationId);
+      if (stop.isPresent()) {
+        noticeContainer.addValidationNotice(
+            new UniqueLocationIdViolationNotice(
+                locationId,
+                GtfsStop.FILENAME,
+                GtfsStop.STOP_ID_FIELD_NAME,
+                stop.get().csvRowNumber()));
+      }
+    }
+  }
+
+  private boolean hasReferencedKey(
+      String foreignKey,
+      GtfsRouteTableContainer routeContainer,
+      GtfsNetworkTableContainer networkContainer) {
+    return !(routeContainer.byNetworkId(foreignKey).isEmpty()
+        && networkContainer.byNetworkId(foreignKey).isEmpty());
+  }
+}

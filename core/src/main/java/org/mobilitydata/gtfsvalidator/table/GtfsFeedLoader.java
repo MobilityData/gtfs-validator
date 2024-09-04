@@ -154,7 +154,8 @@ public class GtfsFeedLoader {
     ArrayList<GtfsContainer<?, ?>> tableContainers = new ArrayList<>();
     tableContainers.ensureCapacity(tableDescriptors.size());
     for (GtfsDescriptor<?> tableDescriptor : remainingDescriptors.values()) {
-      tableContainers.add(AnyTableLoader.loadMissingFile(tableDescriptor, validatorProvider, noticeContainer));
+      tableContainers.add(
+          AnyTableLoader.loadMissingFile(tableDescriptor, validatorProvider, noticeContainer));
     }
     try {
       for (Future<TableAndNoticeContainers> futureContainer : exec.invokeAll(loaderCallables)) {
