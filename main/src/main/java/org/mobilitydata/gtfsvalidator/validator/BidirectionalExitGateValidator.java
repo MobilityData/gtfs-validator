@@ -22,7 +22,7 @@ public class BidirectionalExitGateValidator extends SingleEntityValidator<GtfsPa
   @Override
   public void validate(GtfsPathway entity, NoticeContainer noticeContainer) {
     if (entity.pathwayMode().getNumber() == 7 && entity.isBidirectional().getNumber() == 1) {
-      noticeContainer.addValidationNotice(new BidirectionalExitGatesNotice(entity));
+      noticeContainer.addValidationNotice(new BidirectionalExitGateNotice(entity));
     }
   }
 
@@ -32,7 +32,7 @@ public class BidirectionalExitGateValidator extends SingleEntityValidator<GtfsPa
    * <p>Exit gates (pathway_mode=7) must not be bidirectional.
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs({GtfsPathwaySchema.class}))
-  static class BidirectionalExitGatesNotice extends ValidationNotice {
+  static class BidirectionalExitGateNotice extends ValidationNotice {
     /** The row number of the validated record. */
     private final int csvRowNumber;
     /** The pathway mode. */
@@ -40,7 +40,7 @@ public class BidirectionalExitGateValidator extends SingleEntityValidator<GtfsPa
     /** Whether the pathway is bidirectional. */
     private final int isBidirectional;
 
-    BidirectionalExitGatesNotice(GtfsPathway pathway) {
+    BidirectionalExitGateNotice(GtfsPathway pathway) {
       this.csvRowNumber = pathway.csvRowNumber();
       this.pathwayMode = pathway.pathwayMode().getNumber();
       this.isBidirectional = pathway.isBidirectional().getNumber();

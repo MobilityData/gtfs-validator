@@ -29,7 +29,7 @@ public class BidirectionalExitGateValidatorTest {
     NoticeContainer noticeContainer = new NoticeContainer();
     new BidirectionalExitGateValidator().validate(entity, noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new BidirectionalExitGateValidator.BidirectionalExitGatesNotice(entity));
+        .containsExactly(new BidirectionalExitGateValidator.BidirectionalExitGateNotice(entity));
   }
 
   @Test
