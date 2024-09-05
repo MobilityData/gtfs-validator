@@ -19,6 +19,7 @@ public class FeedMetadata {
   public static final String FEED_INFO_FEED_LANGUAGE = "Feed Language";
   public static final String FEED_INFO_FEED_START_DATE = "Feed Start Date";
   public static final String FEED_INFO_FEED_END_DATE = "Feed End Date";
+  public static final String FEED_INFO_SERVICE_WINDOW = "Service Date Range";
 
   /*
    * Use these strings as keys in the counts map. Also used to specify the info that will appear in
@@ -79,7 +80,7 @@ public class FeedMetadata {
     if (feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).isPresent()) {
       feedMetadata.loadFeedInfo(
           (GtfsTableContainer<GtfsFeedInfo>)
-              feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).get());
+              feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).get(), (GtfsTableContainer<GtfsTrip>) feedContainer.getTableForFilename(GtfsTrip.FILENAME).get(), (GtfsTableContainer<GtfsCalendar>) feedContainer.getTableForFilename(GtfsCalendar.FILENAME).get(), (GtfsTableContainer<GtfsCalendarDate>) feedContainer.getTableForFilename(GtfsCalendarDate.FILENAME).get());
     }
     feedMetadata.loadAgencyData(
         (GtfsTableContainer<GtfsAgency>)
@@ -302,7 +303,7 @@ public class FeedMetadata {
     }
   }
 
-  private void loadFeedInfo(GtfsTableContainer<GtfsFeedInfo> feedTable) {
+  private void loadFeedInfo(GtfsTableContainer<GtfsFeedInfo> feedTable, GtfsTableContainer<GtfsTrip> tripContainer, GtfsTableContainer<GtfsCalendar> calendarTable, GtfsTableContainer<GtfsCalendarDate> calendarDateTable) {
     var info = feedTable.getEntities().isEmpty() ? null : feedTable.getEntities().get(0);
 
     feedInfo.put(FEED_INFO_PUBLISHER_NAME, info == null ? "N/A" : info.feedPublisherName());
@@ -321,6 +322,59 @@ public class FeedMetadata {
           localDate.equals(GtfsFeedInfo.DEFAULT_FEED_END_DATE) ? "N/A" : localDate.toString();
       feedInfo.put(FEED_INFO_FEED_END_DATE, info == null ? "N/A" : displayDate);
     }
+
+    loadServiceWindow(tripContainer, calendarTable, calendarDateTable);
+  }
+
+  private void loadServiceWindow(GtfsTableContainer<GtfsTrip> tripContainer, GtfsTableContainer<GtfsCalendar> calendarTable, GtfsTableContainer<GtfsCalendarDate> calendarDateTable) {
+    List<GtfsTrip> trips = tripContainer.getEntities();
+
+    LocalDate earliestStartDate = null;
+    LocalDate latestEndDate = null;
+    if (calendarDateTable.isMissingFile() && calendarTable.isParsedSuccessfully()) {
+      List<GtfsCalendar> calendars = calendarTable.getEntities();
+      for (GtfsTrip trip : trips) {
+        String serviceId = trip.serviceId();
+        for (GtfsCalendar calendar : calendars) {
+          if (calendar.serviceId().equals(serviceId)) {
+            LocalDate startDate = calendar.startDate().getLocalDate();
+            LocalDate endDate = calendar.endDate().getLocalDate();
+
+            if (startDate != null && endDate != null) {
+              if (earliestStartDate == null || startDate.isBefore(earliestStartDate)) {
+                earliestStartDate = startDate;
+              }
+              if (latestEndDate == null || endDate.isAfter(latestEndDate)) {
+                latestEndDate = endDate;
+              }
+            }
+          }
+        }
+      }
+    } else if (calendarDateTable.isParsedSuccessfully() && calendarTable.isMissingFile()) {
+      List<GtfsCalendarDate> calendarDates = calendarDateTable.getEntities();
+      for (GtfsTrip trip : trips) {
+        String serviceId = trip.serviceId();
+        for (GtfsCalendarDate calendarDate : calendarDates) {
+          if (calendarDate.serviceId().equals(serviceId)) {
+            LocalDate date = calendarDate.date().getLocalDate();
+            if (date != null) {
+              if (earliestStartDate == null || date.isBefore(earliestStartDate)) {
+                earliestStartDate = date;
+              }
+              if (latestEndDate == null || date.isAfter(latestEndDate)) {
+                latestEndDate = date;
+              }
+            }
+          }
+        }
+      }
+    }
+    StringBuilder serviceWindow = new StringBuilder();
+    serviceWindow.append(earliestStartDate);
+    serviceWindow.append(" to ");
+    serviceWindow.append(latestEndDate);
+    feedInfo.put(FEED_INFO_SERVICE_WINDOW, serviceWindow.toString());
   }
 
   private boolean hasAtLeastOneRecordInFile(
