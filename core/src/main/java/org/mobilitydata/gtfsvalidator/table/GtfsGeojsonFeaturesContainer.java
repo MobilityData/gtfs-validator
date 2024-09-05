@@ -8,35 +8,36 @@ import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 
-public class GtfsGeojsonFeaturesContainer<
-        T extends GtfsGeojsonFeature, D extends GtfsFileDescriptor>
-    extends GtfsEntityContainer<T, D> {
+public class GtfsGeojsonFeaturesContainer
+    extends GtfsEntityContainer<GtfsGeojsonFeature, GtfsGeojsonFileDescriptor> {
 
   private final Map<String, GtfsGeojsonFeature> byLocationIdMap = new HashMap<>();
 
-  private final List<T> entities;
+  private final List<GtfsGeojsonFeature> entities;
 
   public GtfsGeojsonFeaturesContainer(
-      D descriptor, List<T> entities, NoticeContainer noticeContainer) {
+      GtfsGeojsonFileDescriptor descriptor,
+      List<GtfsGeojsonFeature> entities,
+      NoticeContainer noticeContainer) {
     super(descriptor, TableStatus.PARSABLE_HEADERS_AND_ROWS);
     this.entities = entities;
     setupIndices(noticeContainer);
   }
 
   public GtfsGeojsonFeaturesContainer(
-      GtfsFileDescriptor<GtfsGeojsonFeature> descriptor, TableStatus tableStatus) {
-    super((D) descriptor, tableStatus);
+      GtfsGeojsonFileDescriptor descriptor, TableStatus tableStatus) {
+    super(descriptor, tableStatus);
     this.entities = new ArrayList<>();
   }
 
   @Override
-  public Class<T> getEntityClass() {
-    return (Class<T>) GtfsGeojsonFeature.class;
+  public Class<GtfsGeojsonFeature> getEntityClass() {
+    return GtfsGeojsonFeature.class;
   }
 
   @Override
-  public List<T> getEntities() {
-    return (List<T>) entities;
+  public List<GtfsGeojsonFeature> getEntities() {
+    return entities;
   }
 
   @Override
@@ -45,7 +46,7 @@ public class GtfsGeojsonFeaturesContainer<
   }
 
   @Override
-  public Optional<T> byTranslationKey(String recordId, String recordSubId) {
+  public Optional<GtfsGeojsonFeature> byTranslationKey(String recordId, String recordSubId) {
     return Optional.empty();
   }
 

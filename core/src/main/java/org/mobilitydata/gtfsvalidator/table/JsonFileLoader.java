@@ -16,20 +16,16 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
 public class JsonFileLoader {
 
   public static GtfsGeojsonFeaturesContainer load(
-      GtfsGeojsonFileDescriptor tableDescriptor,
+      GtfsGeojsonFileDescriptor fileDescriptor,
       ValidatorProvider validatorProvider,
       InputStream inputStream,
       NoticeContainer noticeContainer) {
     try {
       List<GtfsGeojsonFeature> entities = extractFeaturesFromStream(inputStream, noticeContainer);
-
-      GtfsGeojsonFeaturesContainer<GtfsGeojsonFeature, GtfsGeojsonFileDescriptor> container =
-          tableDescriptor.createContainerForEntities(entities, noticeContainer);
-      return container;
+      return fileDescriptor.createContainerForEntities(entities, noticeContainer);
     } catch (IOException ioex) {
       noticeContainer.addSystemError(new IOError(ioex));
-      return (GtfsGeojsonFeaturesContainer)
-          tableDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS);
+      return fileDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS);
     }
   }
 
@@ -51,7 +47,7 @@ public class JsonFileLoader {
 
   public static GtfsGeojsonFeature extractFeature(
       JsonElement feature, NoticeContainer noticeContainer) {
-    GtfsGeojsonFeature gtfsGeojsonFeature = new GtfsGeojsonFeature();
+    GtfsGeojsonFeature gtfsGeojsonFeature = null;
     if (feature.isJsonObject()) {
       JsonObject featureObject = feature.getAsJsonObject();
       if (featureObject.has("properties")) {
@@ -61,6 +57,7 @@ public class JsonFileLoader {
         // Add a notice because properties is required
       }
       if (featureObject.has("id")) {
+        gtfsGeojsonFeature = new GtfsGeojsonFeature();
         gtfsGeojsonFeature.setLocationId(featureObject.get("id").getAsString());
       } else {
         // Add a notice because id is required

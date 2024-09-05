@@ -23,7 +23,6 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.UniqueLocationIdViolationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsGeojsonFeature;
 import org.mobilitydata.gtfsvalidator.table.GtfsGeojsonFeaturesContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsGeojsonFileDescriptor;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 
@@ -40,15 +39,11 @@ public class GtfsGeojsonFeatureUniqueLocationIdValidator extends FileValidator {
   // Remove this comment when the location_group_stops.txt file is added to the GTFS schema
   // private final GtfsLocationGroupStopsTableContainer  locationGroupStopsTableContainer;
 
-  private final GtfsGeojsonFeaturesContainer<
-          GtfsGeojsonFeature, GtfsGeojsonFileDescriptor<GtfsGeojsonFeature>>
-      geojsonFeatureContainer;
+  private final GtfsGeojsonFeaturesContainer geojsonFeatureContainer;
 
   @Inject
   GtfsGeojsonFeatureUniqueLocationIdValidator(
-      GtfsGeojsonFeaturesContainer<
-              GtfsGeojsonFeature, GtfsGeojsonFileDescriptor<GtfsGeojsonFeature>>
-          geojsonFeatureContainer,
+      GtfsGeojsonFeaturesContainer geojsonFeatureContainer,
       GtfsStopTableContainer stopTableContainer
       //        , GtfsLocationGroupStopsTableContainer locationGroupStopsTableContainer
       ) {
@@ -67,14 +62,14 @@ public class GtfsGeojsonFeatureUniqueLocationIdValidator extends FileValidator {
       }
 
       Optional<GtfsStop> stop = stopTableContainer.byStopId(locationId);
-      if (stop.isPresent()) {
-        noticeContainer.addValidationNotice(
-            new UniqueLocationIdViolationNotice(
-                locationId,
-                GtfsStop.FILENAME,
-                GtfsStop.STOP_ID_FIELD_NAME,
-                stop.get().csvRowNumber()));
-      }
+      stop.ifPresent(
+          gtfsStop ->
+              noticeContainer.addValidationNotice(
+                  new UniqueLocationIdViolationNotice(
+                      locationId,
+                      GtfsStop.FILENAME,
+                      GtfsStop.STOP_ID_FIELD_NAME,
+                      gtfsStop.csvRowNumber())));
     }
   }
 }

@@ -20,7 +20,6 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /**
  * Feature id from locations.geojson already used.
@@ -28,14 +27,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  * <p>The id of one of the features of the locations.geojson file already exists in stops.txt or
  * location_groups.txt
  */
-@GtfsValidationNotice(
-    severity = ERROR,
-    sections = @SectionRefs(FILE_REQUIREMENTS),
-    urls = {
-      @UrlRef(
-          label = "Original Python validator implementation",
-          url = "https://github.com/google/transitfeed")
-    })
+@GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILE_REQUIREMENTS))
 public class UniqueLocationIdViolationNotice extends ValidationNotice {
 
   /** The id that already exists. */
