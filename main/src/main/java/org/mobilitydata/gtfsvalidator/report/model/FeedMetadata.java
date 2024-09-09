@@ -326,11 +326,11 @@ public class FeedMetadata {
       feedInfo.put(FEED_INFO_FEED_END_DATE, info == null ? "N/A" : displayDate);
     }
 
-    loadServiceWindow(tripContainer, calendarTable, calendarDateTable);
+    loadServiceDateRange(tripContainer, calendarTable, calendarDateTable);
   }
 
   /**
-   * Loads the service window by determining the earliest start date and the latest end date
+   * Loads the service date range by determining the earliest start date and the latest end date
    * for all services referenced with a trip\_id in `trips.txt`. It handles three cases:
    * 1. When only `calendars.txt` is used.
    * 2. When only `calendar\_dates.txt` is used.
@@ -340,7 +340,7 @@ public class FeedMetadata {
    * @param calendarTable the container for `calendars.txt` data
    * @param calendarDateTable the container for `calendar\_dates.txt` data
    */
-  private void loadServiceWindow(GtfsTableContainer<GtfsTrip> tripContainer, GtfsTableContainer<GtfsCalendar> calendarTable, GtfsTableContainer<GtfsCalendarDate> calendarDateTable) {
+  private void loadServiceDateRange(GtfsTableContainer<GtfsTrip> tripContainer, GtfsTableContainer<GtfsCalendar> calendarTable, GtfsTableContainer<GtfsCalendarDate> calendarDateTable) {
     List<GtfsTrip> trips = tripContainer.getEntities();
 
     LocalDate earliestStartDate = null;
