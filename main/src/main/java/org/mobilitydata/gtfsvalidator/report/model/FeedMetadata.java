@@ -3,6 +3,7 @@ package org.mobilitydata.gtfsvalidator.report.model;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
 import com.vladsch.flexmark.util.misc.Pair;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
 import org.mobilitydata.gtfsvalidator.table.*;
@@ -126,7 +127,7 @@ public class FeedMetadata {
       if (entity != null) {
         E castedEntity = clazz.cast(entity);
         String id = idExtractor.apply(castedEntity);
-        if (id != null) {
+        if (id != null && !id.isEmpty()) {
           uniqueIds.add(id);
         }
       }
@@ -365,14 +366,16 @@ public class FeedMetadata {
     feedInfo.put(
         FEED_INFO_FEED_LANGUAGE, info == null ? "N/A" : info.feedLang().getDisplayLanguage());
     if (feedTable.hasColumn(GtfsFeedInfo.FEED_START_DATE_FIELD_NAME)) {
-      feedInfo.put(
-          FEED_INFO_FEED_START_DATE,
-          info == null ? "N/A" : info.feedStartDate().getLocalDate().toString());
+      LocalDate localDate = info.feedStartDate().getLocalDate();
+      String displayDate =
+          localDate.equals(GtfsFeedInfo.DEFAULT_FEED_START_DATE) ? "N/A" : localDate.toString();
+      feedInfo.put(FEED_INFO_FEED_START_DATE, info == null ? "N/A" : displayDate);
     }
     if (feedTable.hasColumn(GtfsFeedInfo.FEED_END_DATE_FIELD_NAME)) {
-      feedInfo.put(
-          FEED_INFO_FEED_END_DATE,
-          info == null ? "N/A" : info.feedEndDate().getLocalDate().toString());
+      LocalDate localDate = info.feedEndDate().getLocalDate();
+      String displayDate =
+          localDate.equals(GtfsFeedInfo.DEFAULT_FEED_END_DATE) ? "N/A" : localDate.toString();
+      feedInfo.put(FEED_INFO_FEED_END_DATE, info == null ? "N/A" : displayDate);
     }
   }
 
