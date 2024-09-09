@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
 import com.vladsch.flexmark.util.misc.Pair;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Function;
 import org.mobilitydata.gtfsvalidator.table.*;
@@ -433,15 +434,19 @@ public class FeedMetadata {
         }
       }
     }
-
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
     if ((earliestStartDate == null) && (latestEndDate == null)
         || earliestStartDate.isAfter(latestEndDate)) {
       feedInfo.put(FEED_INFO_SERVICE_WINDOW, "N/A");
+    } else if (earliestStartDate == null && latestEndDate != null) {
+      feedInfo.put(FEED_INFO_SERVICE_WINDOW, latestEndDate.format(formatter));
+    } else if (latestEndDate == null && earliestStartDate != null) {
+      feedInfo.put(FEED_INFO_SERVICE_WINDOW, earliestStartDate.format(formatter));
     } else {
       StringBuilder serviceWindow = new StringBuilder();
-      serviceWindow.append(earliestStartDate.toString());
+      serviceWindow.append(earliestStartDate);
       serviceWindow.append(" to ");
-      serviceWindow.append(latestEndDate.toString());
+      serviceWindow.append(latestEndDate);
       feedInfo.put(FEED_INFO_SERVICE_WINDOW, serviceWindow.toString());
     }
   }
