@@ -77,6 +77,7 @@ public final class CalendarUtil {
     return new ServicePeriod(serviceStart, serviceEnd, weeklyPattern, addedDays, removedDays);
   }
 
+
   /**
    * Builds a service id to {@code ServicePeriod} mapping using the given <i>calendar.txt</i> and
    * <i>calendar_dates.txt</i> tables.

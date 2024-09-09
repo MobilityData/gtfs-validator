@@ -1,5 +1,6 @@
 package org.mobilitydata.gtfsvalidator.report.model;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
 import com.vladsch.flexmark.util.misc.Pair;
@@ -7,6 +8,8 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
 import org.mobilitydata.gtfsvalidator.table.*;
+import org.mobilitydata.gtfsvalidator.util.CalendarUtil;
+import org.mobilitydata.gtfsvalidator.util.ServicePeriod;
 
 public class FeedMetadata {
   /*
@@ -326,12 +329,25 @@ public class FeedMetadata {
     loadServiceWindow(tripContainer, calendarTable, calendarDateTable);
   }
 
+  /**
+   * Loads the service window by determining the earliest start date and the latest end date
+   * for all services referenced with a trip\_id in `trips.txt`. It handles three cases:
+   * 1. When only `calendars.txt` is used.
+   * 2. When only `calendar\_dates.txt` is used.
+   * 3. When both `calendars.txt` and `calendar\_dates.txt` are used.
+   *
+   * @param tripContainer the container for `trips.txt` data
+   * @param calendarTable the container for `calendars.txt` data
+   * @param calendarDateTable the container for `calendar\_dates.txt` data
+   */
   private void loadServiceWindow(GtfsTableContainer<GtfsTrip> tripContainer, GtfsTableContainer<GtfsCalendar> calendarTable, GtfsTableContainer<GtfsCalendarDate> calendarDateTable) {
     List<GtfsTrip> trips = tripContainer.getEntities();
 
     LocalDate earliestStartDate = null;
     LocalDate latestEndDate = null;
     if (calendarDateTable.isMissingFile() && calendarTable.isParsedSuccessfully()) {
+      //When only calendars.txt is used
+      System.out.println("Only calendars.txt is used");
       List<GtfsCalendar> calendars = calendarTable.getEntities();
       for (GtfsTrip trip : trips) {
         String serviceId = trip.serviceId();
@@ -352,6 +368,8 @@ public class FeedMetadata {
         }
       }
     } else if (calendarDateTable.isParsedSuccessfully() && calendarTable.isMissingFile()) {
+      //When only calendar_dates.txt is used
+      System.out.println("Only calendar_dates.txt is used");
       List<GtfsCalendarDate> calendarDates = calendarDateTable.getEntities();
       for (GtfsTrip trip : trips) {
         String serviceId = trip.serviceId();
@@ -369,11 +387,49 @@ public class FeedMetadata {
           }
         }
       }
+    } else if (calendarTable.isParsedSuccessfully() && calendarDateTable.isParsedSuccessfully()) {
+      //When both calendars.txt and calendar_dates.txt are used
+      System.out.println("Both calendars.txt and calendar_dates.txt are used");
+      Preconditions.checkNotNull(calendarTable);
+      Preconditions.checkNotNull(calendarDateTable);
+
+      Map<String, ServicePeriod> servicePeriods =
+          CalendarUtil.buildServicePeriodMap(
+              (GtfsCalendarTableContainer) calendarTable,
+              (GtfsCalendarDateTableContainer) calendarDateTable);
+
+      for (GtfsTrip trip : trips) {
+        String serviceId = trip.serviceId();
+        ServicePeriod servicePeriod = servicePeriods.get(serviceId);
+        if (servicePeriod != null) {
+          LocalDate startDate = servicePeriod.getServiceStart();
+          LocalDate endDate = servicePeriod.getServiceEnd();
+
+          if (startDate != null && endDate != null) {
+            if (earliestStartDate == null || startDate.isBefore(earliestStartDate)) {
+              earliestStartDate = startDate;
+            }
+            if (latestEndDate == null || endDate.isAfter(latestEndDate)) {
+              latestEndDate = endDate;
+            }
+          }
+
+          for (LocalDate date : servicePeriod.getRemovedDays()) {
+            System.out.println("Removed date: " + date);
+            if (date.isEqual(earliestStartDate)) {
+              earliestStartDate = date.plusDays(1);
+            }
+            if (date.isEqual(latestEndDate)) {
+              latestEndDate = date.minusDays(1);
+            }
+          }
+        }
+      }
     }
     StringBuilder serviceWindow = new StringBuilder();
-    serviceWindow.append(earliestStartDate);
+    serviceWindow.append(earliestStartDate.toString());
     serviceWindow.append(" to ");
-    serviceWindow.append(latestEndDate);
+    serviceWindow.append(latestEndDate.toString());
     feedInfo.put(FEED_INFO_SERVICE_WINDOW, serviceWindow.toString());
   }
 
