@@ -62,6 +62,8 @@ public class JsonReportSummaryTest {
             "value1",
             FeedMetadata.FEED_INFO_PUBLISHER_URL,
             "value2",
+            FeedMetadata.FEED_INFO_FEED_CONTACT_EMAIL,
+            "me@foo.com",
             "Illegal Key",
             "Some Value" // Should not be present in the resulting GSON
             );
@@ -118,7 +120,7 @@ public class JsonReportSummaryTest {
             + "\"htmlReportName\":\"some_html_filename\","
             + "\"countryCode\":\"GB\","
             + "\"dateForValidation\":\"2020-01-02\","
-            + "\"feedInfo\":{\"publisherName\":\"value1\",\"publisherUrl\":\"value2\"},"
+            + "\"feedInfo\":{\"publisherName\":\"value1\",\"publisherUrl\":\"value2\",\"feedContactEmail\":\"me@foo.com\"},"
             + "\"validationTimeSeconds\":100.0,"
             + "\"agencies\":["
             + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"},"
@@ -140,7 +142,7 @@ public class JsonReportSummaryTest {
         "{\"validatorVersion\":\"1.0\","
             + "\"validatedAt\":\"now\","
             + "\"threads\":0,"
-            + "\"feedInfo\":{\"publisherName\":\"value1\",\"publisherUrl\":\"value2\"},"
+            + "\"feedInfo\":{\"publisherName\":\"value1\",\"publisherUrl\":\"value2\",\"feedContactEmail\":\"me@foo.com\"},"
             + "\"validationTimeSeconds\":100.0,"
             + "\"agencies\":["
             + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"},"
