@@ -349,15 +349,15 @@ public class FeedMetadata {
    * @param calendarTable the container for `calendars.txt` data
    * @param calendarDateTable the container for `calendar\_dates.txt` data
    */
-  private void loadServiceDateRange(
-      GtfsTableContainer<GtfsTrip> tripContainer,
-      GtfsTableContainer<GtfsCalendar> calendarTable,
-      GtfsTableContainer<GtfsCalendarDate> calendarDateTable) {
+  public void loadServiceDateRange(
+          GtfsTableContainer<GtfsTrip> tripContainer,
+          GtfsTableContainer<GtfsCalendar> calendarTable,
+          GtfsTableContainer<GtfsCalendarDate> calendarDateTable) {
     List<GtfsTrip> trips = tripContainer.getEntities();
 
     LocalDate earliestStartDate = null;
     LocalDate latestEndDate = null;
-    if (calendarDateTable.isMissingFile() && calendarTable.isParsedSuccessfully()) {
+    if ((calendarDateTable == null) && (calendarTable != null)) {
       // When only calendars.txt is used
       List<GtfsCalendar> calendars = calendarTable.getEntities();
       for (GtfsTrip trip : trips) {
@@ -378,7 +378,7 @@ public class FeedMetadata {
           }
         }
       }
-    } else if (calendarDateTable.isParsedSuccessfully() && calendarTable.isMissingFile()) {
+    } else if ((calendarDateTable != null) && (calendarTable == null)) {
       // When only calendar_dates.txt is used
       List<GtfsCalendarDate> calendarDates = calendarDateTable.getEntities();
       for (GtfsTrip trip : trips) {
@@ -397,40 +397,36 @@ public class FeedMetadata {
           }
         }
       }
-    } else if (calendarTable.isParsedSuccessfully() && calendarDateTable.isParsedSuccessfully()) {
+    } else if ((calendarTable != null) && (calendarDateTable != null)) {
       // When both calendars.txt and calendar_dates.txt are used
-      Preconditions.checkNotNull(calendarTable);
-      Preconditions.checkNotNull(calendarDateTable);
-
       Map<String, ServicePeriod> servicePeriods =
           CalendarUtil.buildServicePeriodMap(
               (GtfsCalendarTableContainer) calendarTable,
               (GtfsCalendarDateTableContainer) calendarDateTable);
-
+      List<LocalDate> removedDates = new ArrayList<>();
       for (GtfsTrip trip : trips) {
         String serviceId = trip.serviceId();
         ServicePeriod servicePeriod = servicePeriods.get(serviceId);
-        if (servicePeriod != null) {
-          LocalDate startDate = servicePeriod.getServiceStart();
-          LocalDate endDate = servicePeriod.getServiceEnd();
+        LocalDate startDate = servicePeriod.getServiceStart();
+        LocalDate endDate = servicePeriod.getServiceEnd();
 
-          if (startDate != null && endDate != null) {
-            if (earliestStartDate == null || startDate.isBefore(earliestStartDate)) {
-              earliestStartDate = startDate;
-            }
-            if (latestEndDate == null || endDate.isAfter(latestEndDate)) {
-              latestEndDate = endDate;
-            }
+        if (startDate != null && endDate != null) {
+          if (earliestStartDate == null || startDate.isBefore(earliestStartDate)) {
+            earliestStartDate = startDate;
           }
-          for (LocalDate date : servicePeriod.getRemovedDays()) {
-            System.out.println("Removed date: " + date);
-            if (date.isEqual(earliestStartDate)) {
-              earliestStartDate = date.plusDays(1);
-            }
-            if (date.isEqual(latestEndDate)) {
-              latestEndDate = date.minusDays(1);
-            }
+          if (latestEndDate == null || endDate.isAfter(latestEndDate)) {
+            latestEndDate = endDate;
           }
+        }
+        removedDates.addAll(servicePeriod.getRemovedDays());
+      }
+
+      for (LocalDate date : removedDates) {
+        if (date.isEqual(earliestStartDate)) {
+          earliestStartDate = date.plusDays(1);
+        }
+        if (date.isEqual(latestEndDate)) {
+          latestEndDate = date.minusDays(1);
         }
       }
     }
