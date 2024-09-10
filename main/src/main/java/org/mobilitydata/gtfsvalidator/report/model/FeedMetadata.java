@@ -1,6 +1,5 @@
 package org.mobilitydata.gtfsvalidator.report.model;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
 import com.vladsch.flexmark.util.misc.Pair;
@@ -350,9 +349,9 @@ public class FeedMetadata {
    * @param calendarDateTable the container for `calendar\_dates.txt` data
    */
   public void loadServiceDateRange(
-          GtfsTableContainer<GtfsTrip> tripContainer,
-          GtfsTableContainer<GtfsCalendar> calendarTable,
-          GtfsTableContainer<GtfsCalendarDate> calendarDateTable) {
+      GtfsTableContainer<GtfsTrip> tripContainer,
+      GtfsTableContainer<GtfsCalendar> calendarTable,
+      GtfsTableContainer<GtfsCalendarDate> calendarDateTable) {
     List<GtfsTrip> trips = tripContainer.getEntities();
 
     LocalDate earliestStartDate = null;

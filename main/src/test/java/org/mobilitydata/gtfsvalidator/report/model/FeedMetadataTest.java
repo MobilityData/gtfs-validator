@@ -3,7 +3,6 @@ package org.mobilitydata.gtfsvalidator.report.model;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableList;
 import java.io.BufferedWriter;
@@ -12,7 +11,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -63,53 +61,78 @@ public class FeedMetadataTest {
         ValidatorLoader.createForClasses(ClassGraphDiscovery.discoverValidatorsInDefaultPackage());
   }
 
-  public static GtfsTrip createTrip(
-          int csvRowNumber, String serviceId) {
-    return new GtfsTrip.Builder()
-            .setCsvRowNumber(csvRowNumber)
-            .setServiceId(serviceId)
-            .build();
+  public static GtfsTrip createTrip(int csvRowNumber, String serviceId) {
+    return new GtfsTrip.Builder().setCsvRowNumber(csvRowNumber).setServiceId(serviceId).build();
   }
 
-  public static GtfsCalendar createCalendar(int csvRowNumber, String serviceId, GtfsDate startDate, GtfsDate endDate) {
+  public static GtfsCalendar createCalendar(
+      int csvRowNumber, String serviceId, GtfsDate startDate, GtfsDate endDate) {
     return new GtfsCalendar.Builder()
-            .setCsvRowNumber(csvRowNumber)
-            .setServiceId(serviceId)
-            .setStartDate(startDate)
-            .setEndDate(endDate)
-            .build();
+        .setCsvRowNumber(csvRowNumber)
+        .setServiceId(serviceId)
+        .setStartDate(startDate)
+        .setEndDate(endDate)
+        .build();
   }
 
-  public static GtfsCalendarDate createCalendarDate(int csvRowNumber, String serviceId, GtfsDate date, GtfsCalendarDateExceptionType exceptionType) {
+  public static GtfsCalendarDate createCalendarDate(
+      int csvRowNumber,
+      String serviceId,
+      GtfsDate date,
+      GtfsCalendarDateExceptionType exceptionType) {
     return new GtfsCalendarDate.Builder()
-            .setCsvRowNumber(csvRowNumber)
-            .setServiceId(serviceId)
-            .setDate(date)
-            .setExceptionType(exceptionType)
-            .build();
+        .setCsvRowNumber(csvRowNumber)
+        .setServiceId(serviceId)
+        .setDate(date)
+        .setExceptionType(exceptionType)
+        .build();
   }
 
   @Test
   public void testLoadServiceDateRange() {
     GtfsTrip trip1 = createTrip(1, "JUN24-MVS-SUB-Weekday-01");
     GtfsTrip trip2 = createTrip(2, "JUN24-MVS-SUB-Weekday-02");
-    //when(tripContainer.getEntities()).thenReturn(List.of(trip1, trip2));
+    // when(tripContainer.getEntities()).thenReturn(List.of(trip1, trip2));
     tripContainer = GtfsTripTableContainer.forEntities(List.of(trip1, trip2), noticeContainer);
-    GtfsCalendar calendar1 = createCalendar(1, "JUN24-MVS-SUB-Weekday-01", GtfsDate.fromLocalDate(LocalDate.of(2024, 1, 1)), GtfsDate.fromLocalDate(LocalDate.of(2024, 12, 20)));
-    GtfsCalendar calendar2 = createCalendar(2, "JUN24-MVS-SUB-Weekday-02", GtfsDate.fromLocalDate(LocalDate.of(2024, 6, 1)), GtfsDate.fromLocalDate(LocalDate.of(2024, 12, 31)));
+    GtfsCalendar calendar1 =
+        createCalendar(
+            1,
+            "JUN24-MVS-SUB-Weekday-01",
+            GtfsDate.fromLocalDate(LocalDate.of(2024, 1, 1)),
+            GtfsDate.fromLocalDate(LocalDate.of(2024, 12, 20)));
+    GtfsCalendar calendar2 =
+        createCalendar(
+            2,
+            "JUN24-MVS-SUB-Weekday-02",
+            GtfsDate.fromLocalDate(LocalDate.of(2024, 6, 1)),
+            GtfsDate.fromLocalDate(LocalDate.of(2024, 12, 31)));
     // when(calendarTable.getEntities()).thenReturn(List.of(calendar1, calendar2));
-    calendarTable = GtfsCalendarTableContainer.forEntities(List.of(calendar1, calendar2), noticeContainer);
-    GtfsCalendarDate calendarDate1 = createCalendarDate(1, "JUN24-MVS-SUB-Weekday-01", GtfsDate.fromLocalDate(LocalDate.of(2024, 1, 1)), GtfsCalendarDateExceptionType.SERVICE_REMOVED);
-    GtfsCalendarDate calendarDate2 = createCalendarDate(2, "JUN24-MVS-SUB-Weekday-02", GtfsDate.fromLocalDate(LocalDate.of(2024, 6, 1)), GtfsCalendarDateExceptionType.SERVICE_ADDED);
-    //when(calendarDateTable.getEntities()).thenReturn(List.of(calendarDate1, calendarDate2));
-    calendarDateTable = GtfsCalendarDateTableContainer.forEntities(List.of(calendarDate1, calendarDate2), noticeContainer);
+    calendarTable =
+        GtfsCalendarTableContainer.forEntities(List.of(calendar1, calendar2), noticeContainer);
+    GtfsCalendarDate calendarDate1 =
+        createCalendarDate(
+            1,
+            "JUN24-MVS-SUB-Weekday-01",
+            GtfsDate.fromLocalDate(LocalDate.of(2024, 1, 1)),
+            GtfsCalendarDateExceptionType.SERVICE_REMOVED);
+    GtfsCalendarDate calendarDate2 =
+        createCalendarDate(
+            2,
+            "JUN24-MVS-SUB-Weekday-02",
+            GtfsDate.fromLocalDate(LocalDate.of(2024, 6, 1)),
+            GtfsCalendarDateExceptionType.SERVICE_ADDED);
+    // when(calendarDateTable.getEntities()).thenReturn(List.of(calendarDate1, calendarDate2));
+    calendarDateTable =
+        GtfsCalendarDateTableContainer.forEntities(
+            List.of(calendarDate1, calendarDate2), noticeContainer);
 
     // Call the method
     feedMetadata.loadServiceDateRange(tripContainer, calendarTable, calendarDateTable);
 
     // Verify the result
     String expectedServiceWindow = "2024-01-02 to 2024-12-31";
-    assertEquals(expectedServiceWindow, feedMetadata.feedInfo.get(FeedMetadata.FEED_INFO_SERVICE_WINDOW));
+    assertEquals(
+        expectedServiceWindow, feedMetadata.feedInfo.get(FeedMetadata.FEED_INFO_SERVICE_WINDOW));
   }
 
   private void validateSpecFeature(
