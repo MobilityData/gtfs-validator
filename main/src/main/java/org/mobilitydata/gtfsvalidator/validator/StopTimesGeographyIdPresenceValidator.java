@@ -16,7 +16,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.ForbiddenGeograaphyIdNotice;
+import org.mobilitydata.gtfsvalidator.notice.ForbiddenGeographyIdNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
@@ -27,7 +27,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
  *
  * <p>Generated notice: {@link MissingRequiredFieldNotice}.
  *
- * <p>Generated notice: {@link ForbiddenGeograaphyIdNotice}.
+ * <p>Generated notice: {@link ForbiddenGeographyIdNotice}.
  */
 @GtfsValidator
 public class StopTimesGeographyIdPresenceValidator extends SingleEntityValidator<GtfsStopTime> {
@@ -54,7 +54,7 @@ public class StopTimesGeographyIdPresenceValidator extends SingleEntityValidator
     } else if (presenceCount > 1) {
       // More than one geography ID is present, but only one is allowed
       noticeContainer.addValidationNotice(
-          new ForbiddenGeograaphyIdNotice(
+          new ForbiddenGeographyIdNotice(
               stopTime.csvRowNumber(),
               stopTime.stopId(),
               stopTime.locationGroupId(),

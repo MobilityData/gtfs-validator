@@ -28,7 +28,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
  * for given entry.
  */
 @GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILE_REQUIREMENTS))
-public class ForbiddenGeograaphyIdNotice extends ValidationNotice {
+public class ForbiddenGeographyIdNotice extends ValidationNotice {
 
   /** The row of the faulty record. */
   private final int csvRowNumber;
@@ -42,7 +42,7 @@ public class ForbiddenGeograaphyIdNotice extends ValidationNotice {
   /** The id that already exists. */
   private final String locationId;
 
-  public ForbiddenGeograaphyIdNotice(
+  public ForbiddenGeographyIdNotice(
       int csvRowNumber, String stopId, String locationGroupId, String locationId) {
     this.csvRowNumber = csvRowNumber;
     this.stopId = stopId;
