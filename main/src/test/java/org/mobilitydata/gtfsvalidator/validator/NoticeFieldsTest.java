@@ -195,7 +195,9 @@ public class NoticeFieldsTest {
             "maxShapeDistanceTraveled",
             "maxTripDistanceTraveled",
             "fileNameA",
-            "fileNameB");
+            "fileNameB",
+            "pathwayMode",
+            "isBidirectional");
   }
 
   private static List<String> discoverValidationNoticeFieldNames() {
