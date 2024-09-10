@@ -73,10 +73,8 @@ public interface GtfsStopTimeSchema extends GtfsEntity {
   @CachedField
   String stopHeadsign();
 
-  @ConditionallyRequired
   GtfsTime startPickupDropOffWindow();
 
-  @ConditionallyRequired
   GtfsTime endPickupDropOffWindow();
 
   GtfsPickupDropOff pickupType();
