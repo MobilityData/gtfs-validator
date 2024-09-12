@@ -2,7 +2,6 @@ package org.mobilitydata.gtfsvalidator.report.model;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 
 import com.google.common.collect.ImmutableList;
 import java.io.BufferedWriter;
@@ -36,7 +35,8 @@ public class FeedMetadataTest {
   File rootDir;
 
   // Mock data for trips
-  NoticeContainer noticeContainer = mock(NoticeContainer.class);
+  NoticeContainer noticeContainer = new NoticeContainer();
+  ;
   private GtfsTableContainer<GtfsTrip> tripContainer;
   private GtfsTableContainer<GtfsCalendar> calendarTable;
   private GtfsTableContainer<GtfsCalendarDate> calendarDateTable;
@@ -140,7 +140,6 @@ public class FeedMetadataTest {
       Boolean expectedValue,
       ImmutableList<Class<? extends GtfsTableDescriptor<?>>> tableDescriptors)
       throws IOException, InterruptedException {
-    NoticeContainer noticeContainer = new NoticeContainer();
     feedLoaderMock = new GtfsFeedLoader(tableDescriptors);
     try (GtfsInput gtfsInput = GtfsInput.createFromPath(rootDir.toPath(), noticeContainer)) {
       GtfsFeedContainer feedContainer =

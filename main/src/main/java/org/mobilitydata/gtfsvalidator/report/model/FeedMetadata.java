@@ -82,7 +82,10 @@ public class FeedMetadata {
 
     feedMetadata.setCounts(feedContainer);
 
-    if (feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).isPresent()) {
+    if (feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).isPresent()
+        && feedContainer.getTableForFilename(GtfsTrip.FILENAME).isPresent()
+        && feedContainer.getTableForFilename(GtfsCalendar.FILENAME).isPresent()
+        && feedContainer.getTableForFilename(GtfsCalendarDate.FILENAME).isPresent()) {
       feedMetadata.loadFeedInfo(
           (GtfsTableContainer<GtfsFeedInfo>)
               feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).get(),
