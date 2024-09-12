@@ -24,7 +24,7 @@ public class NetworkIdConsistencyValidatorTest {
             new GtfsRouteTableDescriptor(),
             new CsvHeader(ImmutableList.of("route_id", "network_id").toArray(new String[0])),
             ImmutableList.of(
-                new GtfsRoute.Builder().setRouteId("123").setNetworkId("network1").build()),
+                GtfsRoute.builder().setRouteId("123").setNetworkId("network1").build()),
             noticeContainer);
     routeNetworkTableContainer =
         new GtfsRouteNetworkTableContainer(
@@ -48,7 +48,7 @@ public class NetworkIdConsistencyValidatorTest {
     routeNetworkTableContainer =
         GtfsRouteNetworkTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsRouteNetwork.Builder().setRouteId("123").setNetworkId("network1").build()),
+                GtfsRouteNetwork.builder().setRouteId("123").setNetworkId("network1").build()),
             noticeContainer);
     NetworkIdConsistencyValidator validator =
         new NetworkIdConsistencyValidator(
@@ -68,7 +68,7 @@ public class NetworkIdConsistencyValidatorTest {
   public void validatesConditionalForbiddenFilePresence2() {
     networkTableContainer =
         GtfsNetworkTableContainer.forEntities(
-            ImmutableList.of(new GtfsNetwork.Builder().setNetworkId("network1").build()),
+            ImmutableList.of(GtfsNetwork.builder().setNetworkId("network1").build()),
             noticeContainer);
     NetworkIdConsistencyValidator validator =
         new NetworkIdConsistencyValidator(

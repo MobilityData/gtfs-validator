@@ -46,7 +46,7 @@ public class StopUtilTest {
 
   private static GtfsStop createStop(
       int id, @Nullable Double stopLat, @Nullable Double stopLon, @Nullable String parentStation) {
-    return new GtfsStop.Builder()
+    return GtfsStop.builder()
         .setCsvRowNumber(id)
         .setStopId(numberToStopId(id))
         .setStopLat(stopLat)
@@ -107,7 +107,7 @@ public class StopUtilTest {
 
   private static GtfsStop createStop(
       int id, GtfsLocationType locationType, @Nullable String parentStation) {
-    return new GtfsStop.Builder()
+    return GtfsStop.builder()
         .setCsvRowNumber(id)
         .setStopId(numberToStopId(id))
         .setLocationType(locationType)

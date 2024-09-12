@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.processor;
 
 import com.google.auto.value.AutoValue;
+import com.squareup.javapoet.TypeName;
 import java.util.Optional;
 import javax.lang.model.type.TypeMirror;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
@@ -28,7 +29,15 @@ import org.mobilitydata.gtfsvalidator.parsing.RowParser;
 public abstract class GtfsFieldDescriptor {
 
   public static GtfsFieldDescriptor.Builder builder() {
-    return new AutoValue_GtfsFieldDescriptor.Builder();
+    return new AutoValue_GtfsFieldDescriptor.Builder()
+        .setCached(false)
+        .setColumnRecommended(false)
+        .setColumnRequired(false)
+        .setIndex(false)
+        .setMixedCase(false)
+        .setRecommended(false)
+        .setValueRequired(false)
+        .setUnusedValue(false);
   }
 
   // Static properties.
@@ -37,6 +46,15 @@ public abstract class GtfsFieldDescriptor {
   public abstract FieldTypeEnum type();
 
   public abstract TypeMirror javaType();
+
+  public abstract Optional<GtfsEnumDescriptor> enumDescriptor();
+
+  public TypeName resolvedFieldTypeName() {
+    if (type() == FieldTypeEnum.ENUM) {
+      return enumDescriptor().get().fieldType();
+    }
+    return TypeName.get(javaType());
+  }
 
   public abstract Optional<PrimaryKey> primaryKey();
 
@@ -56,6 +74,8 @@ public abstract class GtfsFieldDescriptor {
   public abstract boolean recommended();
 
   public abstract boolean valueRequired();
+
+  public abstract boolean unusedValue();
 
   public abstract boolean columnRequired();
 
@@ -77,9 +97,13 @@ public abstract class GtfsFieldDescriptor {
 
     public abstract Builder setJavaType(TypeMirror value);
 
+    public abstract Builder setEnumDescriptor(GtfsEnumDescriptor enumDescriptor);
+
     public abstract Builder setRecommended(boolean value);
 
     public abstract Builder setValueRequired(boolean value);
+
+    public abstract Builder setUnusedValue(boolean unusedValue);
 
     public abstract Builder setColumnRequired(boolean value);
 

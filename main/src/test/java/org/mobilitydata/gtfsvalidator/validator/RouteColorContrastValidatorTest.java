@@ -39,7 +39,7 @@ public class RouteColorContrastValidatorTest {
       GtfsColor routeTextColor,
       int continuousPickup,
       int continuousDropOff) {
-    return new GtfsRoute.Builder()
+    return GtfsRoute.builder()
         .setCsvRowNumber(csvRowNumber)
         .setRouteId(routeId)
         .setAgencyId(agencyId)

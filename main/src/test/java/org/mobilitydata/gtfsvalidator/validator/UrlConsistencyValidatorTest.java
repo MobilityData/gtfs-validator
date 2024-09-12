@@ -53,7 +53,7 @@ public class UrlConsistencyValidatorTest {
   }
 
   private static GtfsAgency createAgency(int csvRowNumber, String agencyName, String agencyUrl) {
-    return new GtfsAgency.Builder()
+    return GtfsAgency.builder()
         .setCsvRowNumber(csvRowNumber)
         .setAgencyName(agencyName)
         .setAgencyUrl(agencyUrl)
@@ -63,7 +63,7 @@ public class UrlConsistencyValidatorTest {
   }
 
   private static GtfsRoute createRoute(int csvRowNumber, String agencyId, String routeUrl) {
-    return new GtfsRoute.Builder()
+    return GtfsRoute.builder()
         .setCsvRowNumber(csvRowNumber)
         .setRouteUrl(routeUrl)
         .setRouteId(String.format("route id %s", csvRowNumber))
@@ -75,7 +75,7 @@ public class UrlConsistencyValidatorTest {
   }
 
   private static GtfsStop createStop(int csvRowNumber, String stopUrl) {
-    return new GtfsStop.Builder()
+    return GtfsStop.builder()
         .setCsvRowNumber(csvRowNumber)
         .setStopId(String.format("stop id %s", csvRowNumber))
         .setStopUrl(stopUrl)

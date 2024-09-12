@@ -16,9 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.processor;
 
-import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_PACKAGE_NAME;
-
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
@@ -52,15 +51,15 @@ public class TableContainerGenerator {
     this.indexGenerator = new TableContainerIndexGenerator(fileDescriptor);
     this.tableDescriptorType =
         ParameterizedTypeName.get(
-            ClassName.get(GtfsTableDescriptor.class), classNames.entityImplementationTypeName());
+            ClassName.get(GtfsTableDescriptor.class), classNames.entityTypeName());
   }
 
   public JavaFile generateGtfsContainerJavaFile() {
-    return JavaFile.builder(TABLE_PACKAGE_NAME, generateGtfsContainerClass()).build();
+    return JavaFile.builder(fileDescriptor.packageName(), generateGtfsContainerClass()).build();
   }
 
   public TypeSpec generateGtfsContainerClass() {
-    TypeName gtfsEntityType = classNames.entityImplementationTypeName();
+    TypeName gtfsEntityType = classNames.entityTypeName();
     TypeSpec.Builder typeSpec =
         TypeSpec.classBuilder(classNames.tableContainerSimpleName())
             .superclass(
@@ -81,7 +80,7 @@ public class TableContainerGenerator {
             .addAnnotation(Override.class)
             .addModifiers(Modifier.PUBLIC)
             .returns(String.class)
-            .addStatement("return $T.FILENAME", classNames.entityImplementationTypeName())
+            .addStatement("return $T.FILENAME", classNames.entityTypeName())
             .build());
 
     typeSpec.addField(
@@ -103,7 +102,8 @@ public class TableContainerGenerator {
     typeSpec.addMethod(generateForEntitiesMethod());
     typeSpec.addMethod(generateForStatusMethod());
 
-    indexGenerator.generateMethods(typeSpec);
+    CodeBlock initializers = indexGenerator.generateMethods(typeSpec);
+    typeSpec.addMethod(generateInternalConstructor(initializers));
 
     return typeSpec.build();
   }
@@ -114,11 +114,9 @@ public class TableContainerGenerator {
         .addParameter(tableDescriptorType, "descriptor")
         .addParameter(CsvHeader.class, "header")
         .addParameter(
-            ParameterizedTypeName.get(
-                ClassName.get(List.class), classNames.entityImplementationTypeName()),
+            ParameterizedTypeName.get(ClassName.get(List.class), classNames.entityTypeName()),
             "entities")
-        .addStatement("super(descriptor, TableStatus.PARSABLE_HEADERS_AND_ROWS, header)")
-        .addStatement("this.entities = entities")
+        .addStatement("this(descriptor, TableStatus.PARSABLE_HEADERS_AND_ROWS, header, entities)")
         .build();
   }
 
@@ -127,8 +125,23 @@ public class TableContainerGenerator {
         .addModifiers(Modifier.PUBLIC)
         .addParameter(tableDescriptorType, "descriptor")
         .addParameter(GtfsTableContainer.TableStatus.class, "tableStatus")
-        .addStatement("super(descriptor, tableStatus, $T.EMPTY)", CsvHeader.class)
-        .addStatement("this.entities = new $T<>()", ArrayList.class)
+        .addStatement(
+            "this(descriptor, tableStatus, $T.EMPTY, new $T<>())", CsvHeader.class, ArrayList.class)
+        .build();
+  }
+
+  private MethodSpec generateInternalConstructor(CodeBlock initializers) {
+    return MethodSpec.constructorBuilder()
+        .addModifiers(Modifier.PRIVATE)
+        .addParameter(tableDescriptorType, "descriptor")
+        .addParameter(GtfsTableContainer.TableStatus.class, "tableStatus")
+        .addParameter(CsvHeader.class, "header")
+        .addParameter(
+            ParameterizedTypeName.get(ClassName.get(List.class), classNames.entityTypeName()),
+            "entities")
+        .addStatement("super(descriptor, tableStatus, header)")
+        .addStatement("this.entities = entities")
+        .addCode(initializers)
         .build();
   }
 
@@ -141,8 +154,7 @@ public class TableContainerGenerator {
         .addParameter(tableDescriptorType, "descriptor")
         .addParameter(CsvHeader.class, "header")
         .addParameter(
-            ParameterizedTypeName.get(
-                ClassName.get(List.class), classNames.entityImplementationTypeName()),
+            ParameterizedTypeName.get(ClassName.get(List.class), classNames.entityTypeName()),
             "entities")
         .addParameter(NoticeContainer.class, "noticeContainer")
         .addStatement(
@@ -163,8 +175,7 @@ public class TableContainerGenerator {
                 + " used in tests.")
         .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         .addParameter(
-            ParameterizedTypeName.get(
-                ClassName.get(List.class), classNames.entityImplementationTypeName()),
+            ParameterizedTypeName.get(ClassName.get(List.class), classNames.entityTypeName()),
             "entities")
         .addParameter(NoticeContainer.class, "noticeContainer")
         .addStatement(

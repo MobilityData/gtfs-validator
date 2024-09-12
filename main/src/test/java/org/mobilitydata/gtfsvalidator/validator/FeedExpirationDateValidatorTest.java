@@ -40,7 +40,7 @@ public class FeedExpirationDateValidatorTest {
   }
 
   private GtfsFeedInfo createFeedInfo(GtfsDate feedEndDate) {
-    return new GtfsFeedInfo.Builder()
+    return GtfsFeedInfo.builder()
         .setCsvRowNumber(1)
         .setFeedPublisherName("feed publisher name value")
         .setFeedPublisherUrl("https://www.mobilitydata.org")

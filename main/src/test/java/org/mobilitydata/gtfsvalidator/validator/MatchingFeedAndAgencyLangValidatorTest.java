@@ -56,7 +56,7 @@ public class MatchingFeedAndAgencyLangValidatorTest {
 
   public static GtfsAgency createAgency(
       int csvRowNumber, String agencyId, @Nullable Locale agencyLang) {
-    return new GtfsAgency.Builder()
+    return GtfsAgency.builder()
         .setAgencyId(agencyId)
         .setCsvRowNumber(csvRowNumber)
         .setAgencyLang(agencyLang)
@@ -65,7 +65,7 @@ public class MatchingFeedAndAgencyLangValidatorTest {
   }
 
   public static GtfsFeedInfo createFeedInfo(int csvRowNumber, @Nullable Locale feedLang) {
-    return new GtfsFeedInfo.Builder()
+    return GtfsFeedInfo.builder()
         .setCsvRowNumber(csvRowNumber)
         .setFeedPublisherName("feed publisher name")
         .setFeedPublisherUrl("www.mobilitydata.org")

@@ -3,6 +3,7 @@ package org.mobilitydata.gtfsvalidator.table;
 import com.google.auto.value.AutoValue;
 import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
+import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.parsing.RowParser;
 
 @AutoValue
@@ -15,11 +16,23 @@ public abstract class GtfsColumnDescriptor {
 
   public abstract FieldLevelEnum fieldLevel();
 
+  public abstract Class<?> javaType();
+
+  public abstract FieldTypeEnum fieldType();
+
+  public abstract Optional<GtfsEnumDescriptor> enumDescriptor();
+
+  public abstract GtfsSetter<? extends GtfsEntityBuilder, ?> entityBuilderSetter();
+
+  public abstract GtfsSetter<? extends GtfsEntityBuilder, ?> columnBasedEntityBuilderSetter();
+
   public abstract Optional<RowParser.NumberBounds> numberBounds();
 
   public abstract boolean isCached();
 
   public abstract boolean isMixedCase();
+
+  public abstract boolean unusedValue();
 
   public boolean isRequired() {
     return FieldLevelEnum.REQUIRED.equals(fieldLevel());
@@ -28,6 +41,8 @@ public abstract class GtfsColumnDescriptor {
   public static GtfsColumnDescriptor.Builder builder() {
     return new AutoValue_GtfsColumnDescriptor.Builder();
   }
+
+  public abstract Builder toBuilder();
 
   @AutoValue.Builder
   public abstract static class Builder {
@@ -39,6 +54,18 @@ public abstract class GtfsColumnDescriptor {
 
     public abstract Builder setFieldLevel(FieldLevelEnum value);
 
+    public abstract Builder setJavaType(Class<?> javaType);
+
+    public abstract Builder setFieldType(FieldTypeEnum fieldType);
+
+    public abstract Builder setEnumDescriptor(GtfsEnumDescriptor enumDescriptor);
+
+    public abstract Builder setEntityBuilderSetter(
+        GtfsSetter<? extends GtfsEntityBuilder, ?> setterMethod);
+
+    public abstract Builder setColumnBasedEntityBuilderSetter(
+        GtfsSetter<? extends GtfsEntityBuilder, ?> setterMethod);
+
     public abstract Builder setNumberBounds(Optional<RowParser.NumberBounds> value);
 
     public abstract Builder setNumberBounds(RowParser.NumberBounds value);
@@ -46,6 +73,8 @@ public abstract class GtfsColumnDescriptor {
     public abstract Builder setIsCached(boolean value);
 
     public abstract Builder setIsMixedCase(boolean value);
+
+    public abstract Builder setUnusedValue(boolean value);
 
     public abstract GtfsColumnDescriptor build();
   }

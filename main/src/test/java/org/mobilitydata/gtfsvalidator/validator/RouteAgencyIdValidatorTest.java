@@ -18,12 +18,12 @@ public class RouteAgencyIdValidatorTest {
     GtfsAgencyTableContainer agencyTable =
         GtfsAgencyTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsAgency.Builder()
+                GtfsAgency.builder()
                     .setCsvRowNumber(0)
                     .setAgencyId("Agency 1")
                     .setAgencyName("Agency 1")
                     .build(),
-                new GtfsAgency.Builder()
+                GtfsAgency.builder()
                     .setCsvRowNumber(1)
                     .setAgencyId("Agency 2")
                     .setAgencyName("Agency 2")
@@ -33,13 +33,13 @@ public class RouteAgencyIdValidatorTest {
     GtfsRouteTableContainer routeTable =
         GtfsRouteTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsRoute.Builder()
+                GtfsRoute.builder()
                     .setCsvRowNumber(0)
                     .setAgencyId("agency0")
                     .setRouteId("route_0")
                     .setRouteShortName("Route 0")
                     .build(),
-                new GtfsRoute.Builder()
+                GtfsRoute.builder()
                     .setCsvRowNumber(1)
                     .setAgencyId(null)
                     .setRouteId("route_1")
@@ -60,7 +60,7 @@ public class RouteAgencyIdValidatorTest {
     GtfsAgencyTableContainer agencyTable =
         GtfsAgencyTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsAgency.Builder()
+                GtfsAgency.builder()
                     .setCsvRowNumber(1)
                     .setAgencyId(null)
                     .setAgencyName("Agency with no ID")
@@ -70,7 +70,7 @@ public class RouteAgencyIdValidatorTest {
     GtfsRouteTableContainer routeTable =
         GtfsRouteTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsRoute.Builder()
+                GtfsRoute.builder()
                     .setCsvRowNumber(0)
                     .setAgencyId(null)
                     .setRouteId("route_0")
@@ -91,7 +91,7 @@ public class RouteAgencyIdValidatorTest {
     GtfsAgencyTableContainer agencyTable =
         GtfsAgencyTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsAgency.Builder()
+                GtfsAgency.builder()
                     .setCsvRowNumber(0)
                     .setAgencyId("agency1")
                     .setAgencyName("Agency 1")
@@ -101,13 +101,13 @@ public class RouteAgencyIdValidatorTest {
     GtfsRouteTableContainer routeTable =
         GtfsRouteTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsRoute.Builder()
+                GtfsRoute.builder()
                     .setCsvRowNumber(0)
                     .setAgencyId("agency1")
                     .setRouteId("route_0")
                     .setRouteShortName("Route 0")
                     .build(),
-                new GtfsRoute.Builder()
+                GtfsRoute.builder()
                     .setCsvRowNumber(1)
                     .setAgencyId("agency1")
                     .setRouteId("route_1")
@@ -125,12 +125,12 @@ public class RouteAgencyIdValidatorTest {
     GtfsAgencyTableContainer agencyTable =
         GtfsAgencyTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsAgency.Builder()
+                GtfsAgency.builder()
                     .setCsvRowNumber(0)
                     .setAgencyId("agency1")
                     .setAgencyName("Agency 1")
                     .build(),
-                new GtfsAgency.Builder()
+                GtfsAgency.builder()
                     .setCsvRowNumber(1)
                     .setAgencyId("agency2")
                     .setAgencyName("Agency 2")
@@ -140,13 +140,13 @@ public class RouteAgencyIdValidatorTest {
     GtfsRouteTableContainer routeTable =
         GtfsRouteTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsRoute.Builder()
+                GtfsRoute.builder()
                     .setCsvRowNumber(0)
                     .setAgencyId("agency1")
                     .setRouteId("route_0")
                     .setRouteShortName("Route 0")
                     .build(),
-                new GtfsRoute.Builder()
+                GtfsRoute.builder()
                     .setCsvRowNumber(1)
                     .setAgencyId("agency2")
                     .setRouteId("route_1")

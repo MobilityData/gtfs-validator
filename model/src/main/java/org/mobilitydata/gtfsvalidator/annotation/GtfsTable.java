@@ -20,6 +20,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 
 /**
  * Annotates an interface that defines schema for a single GTFS table, such as "stops.txt".
@@ -48,4 +49,6 @@ public @interface GtfsTable {
    * for the CSV Parser.
    */
   int maxCharsPerColumn() default 0;
+
+  Class<? extends GtfsEntity> extensionOf() default GtfsEntity.class;
 }

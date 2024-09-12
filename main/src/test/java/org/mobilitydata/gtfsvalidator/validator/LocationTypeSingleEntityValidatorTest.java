@@ -26,6 +26,7 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopImpl;
 import org.mobilitydata.gtfsvalidator.validator.LocationTypeSingleEntityValidator.LocationWithoutParentStationNotice;
 import org.mobilitydata.gtfsvalidator.validator.LocationTypeSingleEntityValidator.PlatformWithoutParentStationNotice;
 import org.mobilitydata.gtfsvalidator.validator.LocationTypeSingleEntityValidator.StationWithParentStationNotice;
@@ -41,8 +42,8 @@ public class LocationTypeSingleEntityValidatorTest {
 
   @Test
   public void stationWithParentStation() {
-    GtfsStop.Builder builder =
-        new GtfsStop.Builder()
+    GtfsStopImpl.Builder builder =
+        GtfsStop.builder()
             .setStopId("s0")
             .setCsvRowNumber(1)
             .setStopName("Stop 0")
@@ -58,8 +59,8 @@ public class LocationTypeSingleEntityValidatorTest {
   @Test
   public void platformWithoutParentStation() {
     // A GTFS stop with platform_code field should have parent_station.
-    GtfsStop.Builder builder =
-        new GtfsStop.Builder()
+    GtfsStopImpl.Builder builder =
+        GtfsStop.builder()
             .setStopId("s0")
             .setCsvRowNumber(1)
             .setStopName("Stop 0")
@@ -84,8 +85,8 @@ public class LocationTypeSingleEntityValidatorTest {
         new GtfsLocationType[] {
           GtfsLocationType.ENTRANCE, GtfsLocationType.GENERIC_NODE, GtfsLocationType.BOARDING_AREA
         }) {
-      GtfsStop.Builder builder =
-          new GtfsStop.Builder()
+      GtfsStopImpl.Builder builder =
+          GtfsStop.builder()
               .setStopId("s0")
               .setCsvRowNumber(1)
               .setStopName("Stop 0")

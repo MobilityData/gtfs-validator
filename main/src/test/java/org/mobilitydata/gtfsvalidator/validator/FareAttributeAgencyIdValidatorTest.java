@@ -21,12 +21,12 @@ public class FareAttributeAgencyIdValidatorTest {
     GtfsAgencyTableContainer agencyTable =
         GtfsAgencyTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsAgency.Builder()
+                GtfsAgency.builder()
                     .setCsvRowNumber(0)
                     .setAgencyId("agency1")
                     .setAgencyName("Agency 1")
                     .build(),
-                new GtfsAgency.Builder()
+                GtfsAgency.builder()
                     .setCsvRowNumber(1)
                     .setAgencyId("agency2")
                     .setAgencyName("Agency 2")
@@ -36,12 +36,12 @@ public class FareAttributeAgencyIdValidatorTest {
     GtfsFareAttributeTableContainer fareTable =
         GtfsFareAttributeTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsFareAttribute.Builder()
+                GtfsFareAttribute.builder()
                     .setCsvRowNumber(0)
                     .setAgencyId("agency1")
                     .setFareId("fare 0")
                     .build(),
-                new GtfsFareAttribute.Builder()
+                GtfsFareAttribute.builder()
                     .setCsvRowNumber(1)
                     .setAgencyId(null)
                     .setFareId("fare_1")
@@ -61,7 +61,7 @@ public class FareAttributeAgencyIdValidatorTest {
     GtfsAgencyTableContainer agencyTable =
         GtfsAgencyTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsAgency.Builder()
+                GtfsAgency.builder()
                     .setCsvRowNumber(1)
                     .setAgencyId(null)
                     .setAgencyName("Agency with no ID")
@@ -71,7 +71,7 @@ public class FareAttributeAgencyIdValidatorTest {
     GtfsFareAttributeTableContainer fareTable =
         GtfsFareAttributeTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsFareAttribute.Builder()
+                GtfsFareAttribute.builder()
                     .setCsvRowNumber(0)
                     .setAgencyId(null)
                     .setFareId("fare_0")
@@ -91,12 +91,12 @@ public class FareAttributeAgencyIdValidatorTest {
     GtfsAgencyTableContainer agencyTable =
         GtfsAgencyTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsAgency.Builder()
+                GtfsAgency.builder()
                     .setCsvRowNumber(0)
                     .setAgencyId("agency1")
                     .setAgencyName("Agency 1")
                     .build(),
-                new GtfsAgency.Builder()
+                GtfsAgency.builder()
                     .setCsvRowNumber(1)
                     .setAgencyId("Agency 2")
                     .setAgencyName("Agency 2")
@@ -106,12 +106,12 @@ public class FareAttributeAgencyIdValidatorTest {
     GtfsFareAttributeTableContainer fareTable =
         GtfsFareAttributeTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsFareAttribute.Builder()
+                GtfsFareAttribute.builder()
                     .setCsvRowNumber(0)
                     .setAgencyId("agency1")
                     .setFareId("fare 0")
                     .build(),
-                new GtfsFareAttribute.Builder()
+                GtfsFareAttribute.builder()
                     .setCsvRowNumber(1)
                     .setAgencyId("agency2")
                     .setFareId("fare_1")
@@ -128,7 +128,7 @@ public class FareAttributeAgencyIdValidatorTest {
     GtfsAgencyTableContainer agencyTable =
         GtfsAgencyTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsAgency.Builder()
+                GtfsAgency.builder()
                     .setCsvRowNumber(0)
                     .setAgencyId("agency1")
                     .setAgencyName("Agency 1")
@@ -138,12 +138,12 @@ public class FareAttributeAgencyIdValidatorTest {
     GtfsFareAttributeTableContainer fareTable =
         GtfsFareAttributeTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsFareAttribute.Builder()
+                GtfsFareAttribute.builder()
                     .setCsvRowNumber(0)
                     .setAgencyId("agency1")
                     .setFareId("fare 0")
                     .build(),
-                new GtfsFareAttribute.Builder()
+                GtfsFareAttribute.builder()
                     .setCsvRowNumber(1)
                     .setAgencyId("agency1")
                     .setFareId("fare_1")

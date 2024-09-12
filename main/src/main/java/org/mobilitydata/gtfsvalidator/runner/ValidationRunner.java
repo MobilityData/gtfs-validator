@@ -80,6 +80,11 @@ public class ValidationRunner {
       logger.atInfo().log("A new version of the validator is available!");
     }
 
+    if (config.useColumnBasedStorage()) {
+      logger.atInfo().log("Column-based storage enabled");
+      AnyTableLoader.setUseColumnBasedStorage(config.useColumnBasedStorage());
+    }
+
     ValidatorLoader validatorLoader;
     try {
       validatorLoader =
@@ -98,6 +103,7 @@ public class ValidationRunner {
     final long startNanos = System.nanoTime();
     // Input.
     feedLoader.setNumThreads(config.numThreads());
+    feedLoader.setPauseAfterReading(config.pauseAfterReading());
     NoticeContainer noticeContainer = new NoticeContainer();
     GtfsFeedContainer feedContainer;
     GtfsInput gtfsInput = null;

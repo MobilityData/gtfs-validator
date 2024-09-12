@@ -28,13 +28,13 @@ public class DuplicateFareMediaValidatorTest {
   public void testUniqueEntries() {
     ImmutableList<GtfsFareMedia> media =
         ImmutableList.of(
-            new GtfsFareMedia.Builder()
+            GtfsFareMedia.builder()
                 .setCsvRowNumber(1)
                 .setFareMediaId("a")
                 .setFareMediaName("Transit Card")
                 .setFareMediaType(GtfsFareMediaType.TRANSIT_CARD)
                 .build(),
-            new GtfsFareMedia.Builder()
+            GtfsFareMedia.builder()
                 .setCsvRowNumber(2)
                 .setFareMediaId("b")
                 .setFareMediaName("Transit App")
@@ -48,13 +48,13 @@ public class DuplicateFareMediaValidatorTest {
   public void testDuplicateEntriesTransitCard() {
     ImmutableList<GtfsFareMedia> media =
         ImmutableList.of(
-            new GtfsFareMedia.Builder()
+            GtfsFareMedia.builder()
                 .setCsvRowNumber(1)
                 .setFareMediaId("a")
                 .setFareMediaName("Transit Card")
                 .setFareMediaType(GtfsFareMediaType.TRANSIT_CARD)
                 .build(),
-            new GtfsFareMedia.Builder()
+            GtfsFareMedia.builder()
                 .setCsvRowNumber(2)
                 .setFareMediaId("b")
                 .setFareMediaName("Transit Card")
@@ -69,13 +69,13 @@ public class DuplicateFareMediaValidatorTest {
   public void testTransitCardsWithDifferentNames() {
     ImmutableList<GtfsFareMedia> media =
         ImmutableList.of(
-            new GtfsFareMedia.Builder()
+            GtfsFareMedia.builder()
                 .setCsvRowNumber(1)
                 .setFareMediaId("a")
                 .setFareMediaName("Transit Card A")
                 .setFareMediaType(GtfsFareMediaType.TRANSIT_CARD)
                 .build(),
-            new GtfsFareMedia.Builder()
+            GtfsFareMedia.builder()
                 .setCsvRowNumber(2)
                 .setFareMediaId("b")
                 .setFareMediaName("Transit Card B")

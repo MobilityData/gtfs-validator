@@ -22,11 +22,12 @@ import org.mobilitydata.gtfsvalidator.validator.FileValidator;
 
 public class GtfsTestMultiFileValidator extends FileValidator {
 
-  private final GtfsTestTableContainer table;
-  private final GtfsTestTableContainer2 unparsableTable;
+  private final GtfsTestEntityTableContainer table;
+  private final GtfsTestEntity2TableContainer unparsableTable;
 
   @Inject
-  public GtfsTestMultiFileValidator(GtfsTestTableContainer table, GtfsTestTableContainer2 table2) {
+  public GtfsTestMultiFileValidator(
+      GtfsTestEntityTableContainer table, GtfsTestEntity2TableContainer table2) {
     this.table = table;
     this.unparsableTable = table2;
   }

@@ -42,10 +42,7 @@ public class AttributionWithoutRoleValidatorTest {
   public void attributionWithoutRoleShouldGenerateNotice() {
     assertThat(
             generateNotices(
-                new GtfsAttribution.Builder()
-                    .setCsvRowNumber(2)
-                    .setAttributionId("attr-1")
-                    .build()))
+                GtfsAttribution.builder().setCsvRowNumber(2).setAttributionId("attr-1").build()))
         .containsExactly(new AttributionWithoutRoleNotice(2, "attr-1"));
   }
 
@@ -53,7 +50,7 @@ public class AttributionWithoutRoleValidatorTest {
   public void attributionWithoutRoleAndNoIdShouldGenerateNotice() {
     assertThat(
             generateNotices(
-                new GtfsAttribution.Builder().setCsvRowNumber(2).setAttributionId("").build()))
+                GtfsAttribution.builder().setCsvRowNumber(2).setAttributionId("").build()))
         .containsExactly(new AttributionWithoutRoleNotice(2, ""));
   }
 
@@ -61,15 +58,15 @@ public class AttributionWithoutRoleValidatorTest {
   public void attributionWithRoleShouldNotGenerateNotice() {
     assertThat(
             generateNotices(
-                new GtfsAttribution.Builder().setCsvRowNumber(2).setIsAuthority(ASSIGNED).build()))
+                GtfsAttribution.builder().setCsvRowNumber(2).setIsAuthority(ASSIGNED).build()))
         .isEmpty();
     assertThat(
             generateNotices(
-                new GtfsAttribution.Builder().setCsvRowNumber(2).setIsOperator(ASSIGNED).build()))
+                GtfsAttribution.builder().setCsvRowNumber(2).setIsOperator(ASSIGNED).build()))
         .isEmpty();
     assertThat(
             generateNotices(
-                new GtfsAttribution.Builder().setCsvRowNumber(2).setIsProducer(ASSIGNED).build()))
+                GtfsAttribution.builder().setCsvRowNumber(2).setIsProducer(ASSIGNED).build()))
         .isEmpty();
   }
 
@@ -77,7 +74,7 @@ public class AttributionWithoutRoleValidatorTest {
   public void attributionWithAllRolesShouldNotGenerateNotice() {
     assertThat(
             generateNotices(
-                new GtfsAttribution.Builder()
+                GtfsAttribution.builder()
                     .setCsvRowNumber(2)
                     .setIsAuthority(ASSIGNED)
                     .setIsOperator(ASSIGNED)

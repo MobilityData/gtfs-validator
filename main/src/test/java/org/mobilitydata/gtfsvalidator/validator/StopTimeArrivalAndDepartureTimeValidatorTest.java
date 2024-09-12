@@ -37,7 +37,7 @@ public class StopTimeArrivalAndDepartureTimeValidatorTest {
       GtfsTime departureTime,
       String stopId,
       int stopSequence) {
-    return new GtfsStopTime.Builder()
+    return GtfsStopTime.builder()
         .setCsvRowNumber(csvRowNumber)
         .setTripId(tripId)
         .setArrivalTime(arrivalTime)

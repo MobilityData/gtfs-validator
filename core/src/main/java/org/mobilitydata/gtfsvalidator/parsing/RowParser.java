@@ -42,6 +42,7 @@ import org.mobilitydata.gtfsvalidator.notice.UnexpectedEnumValueNotice;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsColumnDescriptor;
 import org.mobilitydata.gtfsvalidator.table.GtfsEnum;
+import org.mobilitydata.gtfsvalidator.table.GtfsEnumDescriptor;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
@@ -123,6 +124,54 @@ public class RowParser {
       return false;
     }
     return true;
+  }
+
+  @Nullable
+  public Object parseValue(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
+    switch (columnDescriptor.fieldType()) {
+      case COLOR:
+        return asColor(columnIndex, columnDescriptor);
+      case CURRENCY_CODE:
+        return asCurrencyCode(columnIndex, columnDescriptor);
+      case DATE:
+        return asDate(columnIndex, columnDescriptor);
+      case DECIMAL:
+        return asDecimal(columnIndex, columnDescriptor);
+      case EMAIL:
+        return asEmail(columnIndex, columnDescriptor);
+      case ENUM:
+        {
+          GtfsEnumDescriptor enumDescriptor = columnDescriptor.enumDescriptor().get();
+          return asEnum(
+              columnIndex,
+              columnDescriptor,
+              enumDescriptor.creator(),
+              enumDescriptor.defaultValue());
+        }
+      case FLOAT:
+        return asFloat(columnIndex, columnDescriptor);
+      case ID:
+        return asId(columnIndex, columnDescriptor);
+      case INTEGER:
+        return asInteger(columnIndex, columnDescriptor);
+      case LANGUAGE_CODE:
+        return asLanguageCode(columnIndex, columnDescriptor);
+      case LATITUDE:
+        return asLatitude(columnIndex, columnDescriptor);
+      case LONGITUDE:
+        return asLongitude(columnIndex, columnDescriptor);
+      case PHONE_NUMBER:
+        return asPhoneNumber(columnIndex, columnDescriptor);
+      case TEXT:
+        return asText(columnIndex, columnDescriptor);
+      case TIME:
+        return asTime(columnIndex, columnDescriptor);
+      case TIMEZONE:
+        return asTimezone(columnIndex, columnDescriptor);
+      case URL:
+        return asUrl(columnIndex, columnDescriptor);
+    }
+    throw new IllegalArgumentException("Unhandled field type: " + columnDescriptor.fieldType());
   }
 
   @Nullable

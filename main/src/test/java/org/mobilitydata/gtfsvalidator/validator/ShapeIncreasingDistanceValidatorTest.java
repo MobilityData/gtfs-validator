@@ -37,7 +37,7 @@ public class ShapeIncreasingDistanceValidatorTest {
       double shapePtLon,
       int shapePtSequence,
       Double shapeDistTraveled) {
-    return new GtfsShape.Builder()
+    return GtfsShape.builder()
         .setCsvRowNumber(csvRowNumber)
         .setShapeId(shapeId)
         .setShapePtLat(shapePtLat)

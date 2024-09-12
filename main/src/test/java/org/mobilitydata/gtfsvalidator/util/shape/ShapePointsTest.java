@@ -42,7 +42,7 @@ public class ShapePointsTest {
 
   private static GtfsShape createGtfsShape(
       double latDegrees, double lngDegrees, Double shapeDistTraveled) {
-    return new GtfsShape.Builder()
+    return GtfsShape.builder()
         .setShapePtLat(latDegrees)
         .setShapePtLon(lngDegrees)
         .setShapeDistTraveled(shapeDistTraveled)

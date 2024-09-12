@@ -13,7 +13,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransfer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransferTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTransferType;
-import org.mobilitydata.gtfsvalidator.table.GtfsTrip.Builder;
+import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 import org.mobilitydata.gtfsvalidator.validator.TransfersTripReferenceValidator.TransferWithInvalidTripAndRouteNotice;
 import org.mobilitydata.gtfsvalidator.validator.TransfersTripReferenceValidator.TransferWithInvalidTripAndStopNotice;
@@ -29,15 +29,15 @@ public class TransfersTripReferenceValidatorTest {
     GtfsTripTableContainer trips =
         GtfsTripTableContainer.forEntities(
             ImmutableList.of(
-                new Builder().setTripId("t0").setRouteId("r0").build(),
-                new Builder().setTripId("t1").setRouteId("r1").build()),
+                GtfsTrip.builder().setTripId("t0").setRouteId("r0").build(),
+                GtfsTrip.builder().setTripId("t1").setRouteId("r1").build()),
             noticeContainer);
     GtfsStopTableContainer stops =
         GtfsStopTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsStop.Builder().setStopId("s0").build(),
-                new GtfsStop.Builder().setStopId("s1_stop").setParentStation("s1_station").build(),
-                new GtfsStop.Builder()
+                GtfsStop.builder().setStopId("s0").build(),
+                GtfsStop.builder().setStopId("s1_stop").setParentStation("s1_station").build(),
+                GtfsStop.builder()
                     .setStopId("s1_station")
                     .setLocationType(GtfsLocationType.STATION)
                     .build()),
@@ -45,13 +45,13 @@ public class TransfersTripReferenceValidatorTest {
     GtfsStopTimeTableContainer stopTimes =
         GtfsStopTimeTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsStopTime.Builder().setTripId("t0").setStopId("s0").build(),
-                new GtfsStopTime.Builder().setTripId("t1").setStopId("s1_stop").build()),
+                GtfsStopTime.builder().setTripId("t0").setStopId("s0").build(),
+                GtfsStopTime.builder().setTripId("t1").setStopId("s1_stop").build()),
             noticeContainer);
     GtfsTransferTableContainer transfers =
         GtfsTransferTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsTransfer.Builder()
+                GtfsTransfer.builder()
                     .setCsvRowNumber(2)
                     .setFromStopId("s0")
                     .setFromRouteId("r0")
@@ -77,24 +77,24 @@ public class TransfersTripReferenceValidatorTest {
     GtfsTripTableContainer trips =
         GtfsTripTableContainer.forEntities(
             ImmutableList.of(
-                new Builder().setTripId("t0").setRouteId("r0").build(),
-                new Builder().setTripId("t1").setRouteId("r1").build()),
+                GtfsTrip.builder().setTripId("t0").setRouteId("r0").build(),
+                GtfsTrip.builder().setTripId("t1").setRouteId("r1").build()),
             noticeContainer);
     GtfsStopTableContainer stops =
         GtfsStopTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsStop.Builder().setStopId("s0").build(),
-                new GtfsStop.Builder().setStopId("s1").build(),
-                new GtfsStop.Builder().setStopId("s2").build()),
+                GtfsStop.builder().setStopId("s0").build(),
+                GtfsStop.builder().setStopId("s1").build(),
+                GtfsStop.builder().setStopId("s2").build()),
             noticeContainer);
     GtfsStopTimeTableContainer stopTimes =
         GtfsStopTimeTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsStopTime.Builder().setTripId("t0").setStopId("s0").build(),
-                new GtfsStopTime.Builder().setTripId("t1").setStopId("s1").build()),
+                GtfsStopTime.builder().setTripId("t0").setStopId("s0").build(),
+                GtfsStopTime.builder().setTripId("t1").setStopId("s1").build()),
             noticeContainer);
     GtfsTransfer transfer =
-        new GtfsTransfer.Builder()
+        GtfsTransfer.builder()
             .setCsvRowNumber(2)
             .setFromStopId("s0")
             // This is not the expected route id.

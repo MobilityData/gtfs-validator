@@ -106,7 +106,7 @@ public class ShapeToStopMatchingValidatorTest {
   }
 
   private static GtfsTrip createTrip() {
-    return new GtfsTrip.Builder()
+    return GtfsTrip.builder()
         .setCsvRowNumber(2)
         .setTripId(TEST_TRIP_ID)
         .setRouteId(TEST_ROUTE_ID)
@@ -115,7 +115,7 @@ public class ShapeToStopMatchingValidatorTest {
   }
 
   private static GtfsRoute createRoute() {
-    return new GtfsRoute.Builder()
+    return GtfsRoute.builder()
         .setCsvRowNumber(2)
         .setRouteId(TEST_ROUTE_ID)
         .setRouteType(GtfsRouteType.BUS)
@@ -124,7 +124,7 @@ public class ShapeToStopMatchingValidatorTest {
 
   private static GtfsShape createGtfsShape(
       int ptSequence, double latDegrees, double lngDegrees, Double shapeDistTraveled) {
-    return new GtfsShape.Builder()
+    return GtfsShape.builder()
         .setShapeId(TEST_SHAPE_ID)
         .setCsvRowNumber(ptSequence + 2)
         .setShapePtSequence(ptSequence)
@@ -153,7 +153,7 @@ public class ShapeToStopMatchingValidatorTest {
   }
 
   private static GtfsStop createStop(int number, double stopLat, double stopLon) {
-    return new GtfsStop.Builder()
+    return GtfsStop.builder()
         .setCsvRowNumber(2 + number)
         .setStopId(numberToStopId(number))
         .setStopName("Stop " + number)
@@ -174,7 +174,7 @@ public class ShapeToStopMatchingValidatorTest {
     List<GtfsStopTime> stopTimes = new ArrayList<>(shapeDistTraveled.length);
     for (int i = 0; i < shapeDistTraveled.length; ++i) {
       stopTimes.add(
-          new GtfsStopTime.Builder()
+          GtfsStopTime.builder()
               .setCsvRowNumber(i + 2)
               .setStopId(numberToStopId(i))
               .setTripId(TEST_TRIP_ID)

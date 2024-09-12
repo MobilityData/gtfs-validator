@@ -51,7 +51,7 @@ public class ExpiredCalendarValidatorTest {
 
     List<GtfsCalendar> calendars =
         ImmutableList.of(
-            new GtfsCalendar.Builder()
+            GtfsCalendar.builder()
                 .setCsvRowNumber(2)
                 .setServiceId("WEEK")
                 .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(7)))
@@ -78,7 +78,7 @@ public class ExpiredCalendarValidatorTest {
 
     List<GtfsCalendar> calendars =
         ImmutableList.of(
-            new GtfsCalendar.Builder()
+            GtfsCalendar.builder()
                 .setCsvRowNumber(2)
                 .setServiceId("WEEK")
                 .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(7)))
@@ -104,7 +104,7 @@ public class ExpiredCalendarValidatorTest {
 
     List<GtfsCalendar> calendars =
         ImmutableList.of(
-            new GtfsCalendar.Builder()
+            GtfsCalendar.builder()
                 .setCsvRowNumber(2)
                 .setServiceId("WEEK")
                 .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(7)))
@@ -130,7 +130,7 @@ public class ExpiredCalendarValidatorTest {
 
     List<GtfsCalendar> calendars =
         ImmutableList.of(
-            new GtfsCalendar.Builder()
+            GtfsCalendar.builder()
                 .setCsvRowNumber(2)
                 .setServiceId("WEEK")
                 .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(7)))
@@ -147,7 +147,7 @@ public class ExpiredCalendarValidatorTest {
     var dateTable =
         GtfsCalendarDateTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsCalendarDate.Builder()
+                GtfsCalendarDate.builder()
                     .setCsvRowNumber(2)
                     .setServiceId("WEEK")
                     .setDate(GtfsDate.fromLocalDate(TEST_NOW))
@@ -165,7 +165,7 @@ public class ExpiredCalendarValidatorTest {
 
     List<GtfsCalendar> calendars =
         ImmutableList.of(
-            new GtfsCalendar.Builder()
+            GtfsCalendar.builder()
                 .setCsvRowNumber(2)
                 .setServiceId("WEEK")
                 .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(7)))
@@ -182,7 +182,7 @@ public class ExpiredCalendarValidatorTest {
     var dateTable =
         GtfsCalendarDateTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsCalendarDate.Builder()
+                GtfsCalendarDate.builder()
                     .setCsvRowNumber(2)
                     .setServiceId("WEEK")
                     .setDate(GtfsDate.fromLocalDate(TEST_NOW))
@@ -201,7 +201,7 @@ public class ExpiredCalendarValidatorTest {
 
     List<GtfsCalendar> calendars =
         ImmutableList.of(
-            new GtfsCalendar.Builder()
+            GtfsCalendar.builder()
                 .setCsvRowNumber(2)
                 .setServiceId("WEEK")
                 .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(7)))
@@ -222,7 +222,7 @@ public class ExpiredCalendarValidatorTest {
 
     List<GtfsCalendar> calendars =
         ImmutableList.of(
-            new GtfsCalendar.Builder()
+            GtfsCalendar.builder()
                 .setCsvRowNumber(2)
                 .setServiceId("SERVICE_ID")
                 .setStartDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(7)))
@@ -234,19 +234,19 @@ public class ExpiredCalendarValidatorTest {
     var calendarDateTable =
         GtfsCalendarDateTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsCalendarDate.Builder()
+                GtfsCalendarDate.builder()
                     .setCsvRowNumber(3)
                     .setServiceId("NOT_SERVICE_ID")
                     .setDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(2)))
                     .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_REMOVED)
                     .build(),
-                new GtfsCalendarDate.Builder()
+                GtfsCalendarDate.builder()
                     .setCsvRowNumber(2)
                     .setServiceId("NOT_SERVICE_ID")
                     .setDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(3)))
                     .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_ADDED)
                     .build(),
-                new GtfsCalendarDate.Builder()
+                GtfsCalendarDate.builder()
                     .setCsvRowNumber(4)
                     .setServiceId("NOT_SERVICE_ID")
                     .setDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(1)))
@@ -269,19 +269,19 @@ public class ExpiredCalendarValidatorTest {
     var calendarDateTable =
         GtfsCalendarDateTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsCalendarDate.Builder()
+                GtfsCalendarDate.builder()
                     .setCsvRowNumber(3)
                     .setServiceId("SERVICE_ID_1")
                     .setDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(2)))
                     .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_ADDED)
                     .build(),
-                new GtfsCalendarDate.Builder()
+                GtfsCalendarDate.builder()
                     .setCsvRowNumber(2)
                     .setServiceId("SERVICE_ID_2")
                     .setDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(3)))
                     .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_ADDED)
                     .build(),
-                new GtfsCalendarDate.Builder()
+                GtfsCalendarDate.builder()
                     .setCsvRowNumber(4)
                     .setServiceId("SERVICE_ID_3")
                     .setDate(GtfsDate.fromLocalDate(TEST_NOW.plusDays(1)))
@@ -304,19 +304,19 @@ public class ExpiredCalendarValidatorTest {
     var calendarDateTable =
         GtfsCalendarDateTableContainer.forEntities(
             ImmutableList.of(
-                new GtfsCalendarDate.Builder()
+                GtfsCalendarDate.builder()
                     .setCsvRowNumber(3)
                     .setServiceId("SERVICE_ID_3")
                     .setDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(2)))
                     .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_ADDED)
                     .build(),
-                new GtfsCalendarDate.Builder()
+                GtfsCalendarDate.builder()
                     .setCsvRowNumber(2)
                     .setServiceId("SERVICE_ID_2")
                     .setDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(3)))
                     .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_ADDED)
                     .build(),
-                new GtfsCalendarDate.Builder()
+                GtfsCalendarDate.builder()
                     .setCsvRowNumber(1)
                     .setServiceId("SERVICE_ID_1")
                     .setDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(1)))
