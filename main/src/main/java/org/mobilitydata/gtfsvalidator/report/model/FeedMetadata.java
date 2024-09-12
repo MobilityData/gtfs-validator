@@ -82,19 +82,15 @@ public class FeedMetadata {
 
     feedMetadata.setCounts(feedContainer);
 
-    if (feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).isPresent()
-        && feedContainer.getTableForFilename(GtfsTrip.FILENAME).isPresent()
-        && feedContainer.getTableForFilename(GtfsCalendar.FILENAME).isPresent()
-        && feedContainer.getTableForFilename(GtfsCalendarDate.FILENAME).isPresent()) {
-      feedMetadata.loadFeedInfo(
-          (GtfsTableContainer<GtfsFeedInfo>)
-              feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).get(),
-          (GtfsTableContainer<GtfsTrip>) feedContainer.getTableForFilename(GtfsTrip.FILENAME).get(),
-          (GtfsTableContainer<GtfsCalendar>)
-              feedContainer.getTableForFilename(GtfsCalendar.FILENAME).get(),
-          (GtfsTableContainer<GtfsCalendarDate>)
-              feedContainer.getTableForFilename(GtfsCalendarDate.FILENAME).get());
-    }
+    feedMetadata.loadFeedInfo(
+        (GtfsTableContainer<GtfsFeedInfo>)
+            feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).get(),
+        (GtfsTableContainer<GtfsTrip>) feedContainer.getTableForFilename(GtfsTrip.FILENAME).get(),
+        (GtfsTableContainer<GtfsCalendar>)
+            feedContainer.getTableForFilename(GtfsCalendar.FILENAME).get(),
+        (GtfsTableContainer<GtfsCalendarDate>)
+            feedContainer.getTableForFilename(GtfsCalendarDate.FILENAME).get());
+
     feedMetadata.loadAgencyData(
         (GtfsTableContainer<GtfsAgency>)
             feedContainer.getTableForFilename(GtfsAgency.FILENAME).get());
