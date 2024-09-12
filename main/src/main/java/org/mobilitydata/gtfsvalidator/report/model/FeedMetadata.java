@@ -94,6 +94,13 @@ public class FeedMetadata {
     feedMetadata.loadAgencyData(
         (GtfsTableContainer<GtfsAgency>)
             feedContainer.getTableForFilename(GtfsAgency.FILENAME).get());
+
+    feedMetadata.loadServiceDateRange(
+            (GtfsTableContainer<GtfsTrip>) feedContainer.getTableForFilename(GtfsTrip.FILENAME).get(),
+            (GtfsTableContainer<GtfsCalendar>)
+                    feedContainer.getTableForFilename(GtfsCalendar.FILENAME).get(),
+            (GtfsTableContainer<GtfsCalendarDate>)
+                    feedContainer.getTableForFilename(GtfsCalendarDate.FILENAME).get());
     feedMetadata.loadSpecFeatures(feedContainer);
     return feedMetadata;
   }
@@ -389,8 +396,6 @@ public class FeedMetadata {
           localDate.equals(GtfsFeedInfo.DEFAULT_FEED_END_DATE) ? "N/A" : localDate.toString();
       feedInfo.put(FEED_INFO_FEED_END_DATE, info == null ? "N/A" : displayDate);
     }
-
-    loadServiceDateRange(tripContainer, calendarTable, calendarDateTable);
   }
 
   /**
