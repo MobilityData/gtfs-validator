@@ -58,6 +58,7 @@ public interface GtfsStopTimeSchema extends GtfsEntity {
 
   @FieldType(FieldTypeEnum.ID)
   @ConditionallyRequired
+  @ForeignKey(table = "location_groups.txt", field = "location_group_id")
   String locationGroupId();
 
   @FieldType(FieldTypeEnum.ID)
@@ -93,8 +94,11 @@ public interface GtfsStopTimeSchema extends GtfsEntity {
   @RecommendedColumn
   GtfsStopTimeTimepoint timepoint();
 
+  @FieldType(FieldTypeEnum.ID)
+  @ForeignKey(table = "booking_rules.txt", field = "booking_rule_id")
   String pickupBookingRuleId();
 
-
+  @FieldType(FieldTypeEnum.ID)
+  @ForeignKey(table = "booking_rules.txt", field = "booking_rule_id")
   String dropOffBookingRuleId();
 }

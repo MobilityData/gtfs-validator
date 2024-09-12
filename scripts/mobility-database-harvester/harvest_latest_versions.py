@@ -134,7 +134,10 @@ def harvest_latest_versions(to_sample):
 
     for index, latest_url in catalogs_gtfs[LATEST_URL].items():
         source_file_name = latest_url.replace(URL_PREFIX, "").replace(URL_SUFFIX, "")
-        latest_versions[source_file_name] = latest_url
+        # Only keep the source that contains gb-unknown-uk-aggregate-feed-gtfs-2014 for testing
+        # Remove before merging
+        if "gb-unknown-uk-aggregate-feed-gtfs-2014" in source_file_name:
+            latest_versions[source_file_name] = latest_url
 
     # Some sources/datasets are too big for the workflow so we are excluding them.
     for source in SOURCES_TO_EXCLUDE:
