@@ -3,6 +3,9 @@ package org.mobilitydata.gtfsvalidator.table;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+/**
+ * This class contains the information from one feature in the geojson file.
+ */
 public final class GtfsGeojsonFeature implements GtfsEntity {
   public static final String FILENAME = "locations.geojson";
 
@@ -12,6 +15,7 @@ public final class GtfsGeojsonFeature implements GtfsEntity {
 
   public GtfsGeojsonFeature() {}
 
+  // TODO: Change the interface hierarchy so we dont need this. It's not relevant for geojson
   @Override
   public int csvRowNumber() {
     return 0;

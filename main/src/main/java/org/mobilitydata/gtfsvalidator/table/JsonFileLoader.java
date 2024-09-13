@@ -13,16 +13,18 @@ import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
 
-public class JsonFileLoader {
+public class JsonFileLoader extends TableLoader {
 
-  public static GtfsGeojsonFeaturesContainer load(
-      GtfsGeojsonFileDescriptor fileDescriptor,
+  @Override
+  public GtfsEntityContainer load(
+      GtfsFileDescriptor fileDescriptor,
       ValidatorProvider validatorProvider,
       InputStream inputStream,
       NoticeContainer noticeContainer) {
+    GtfsGeojsonFileDescriptor geojsonFileDescriptor = (GtfsGeojsonFileDescriptor) fileDescriptor;
     try {
       List<GtfsGeojsonFeature> entities = extractFeaturesFromStream(inputStream, noticeContainer);
-      return fileDescriptor.createContainerForEntities(entities, noticeContainer);
+      return geojsonFileDescriptor.createContainerForEntities(entities, noticeContainer);
     } catch (IOException ioex) {
       noticeContainer.addSystemError(new IOError(ioex));
       return fileDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS);
@@ -81,4 +83,5 @@ public class JsonFileLoader {
     }
     return gtfsGeojsonFeature;
   }
+
 }

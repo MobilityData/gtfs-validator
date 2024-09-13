@@ -50,7 +50,8 @@ public class AnyTableLoaderTest {
         .thenReturn(mockContainer);
 
     var loadedContainer =
-        AnyTableLoader.load(testTableDescriptor, validatorProvider, null, loaderNotices);
+        AnyTableLoader.getInstance()
+            .load(testTableDescriptor, validatorProvider, null, loaderNotices);
 
     assertThat(validationNoticeTypes(loaderNotices)).containsExactly(CsvParsingFailedNotice.class);
     assertThat(loadedContainer).isEqualTo(mockContainer);
@@ -65,7 +66,8 @@ public class AnyTableLoaderTest {
     InputStream csvInputStream = toInputStream("");
 
     var loadedContainer =
-        AnyTableLoader.load(testTableDescriptor, validatorProvider, csvInputStream, loaderNotices);
+        AnyTableLoader.getInstance()
+            .load(testTableDescriptor, validatorProvider, csvInputStream, loaderNotices);
 
     assertThat(loaderNotices.getValidationNotices())
         .containsExactly(new EmptyFileNotice("filename"));
@@ -97,7 +99,8 @@ public class AnyTableLoaderTest {
     when(validatorProvider.getTableHeaderValidator()).thenReturn(tableHeaderValidator);
 
     var loadedContainer =
-        AnyTableLoader.load(testTableDescriptor, validatorProvider, csvInputStream, loaderNotices);
+        AnyTableLoader.getInstance()
+            .load(testTableDescriptor, validatorProvider, csvInputStream, loaderNotices);
 
     assertThat(loaderNotices.getValidationNotices()).containsExactly(headerValidationNotice);
     assertThat(loadedContainer).isEqualTo(mockContainer);
@@ -112,7 +115,8 @@ public class AnyTableLoaderTest {
     InputStream inputStream = toInputStream("id,code\n" + "s1\n");
 
     var loadedContainer =
-        AnyTableLoader.load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
+        AnyTableLoader.getInstance()
+            .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
     assertThat(loaderNotices.getValidationNotices())
         .containsExactly(new InvalidRowLengthNotice("filename.txt", 2, 1, 2));
@@ -132,7 +136,8 @@ public class AnyTableLoaderTest {
     InputStream inputStream = toInputStream("id,stop_lat,_no_name_\n" + "s1, 23.00, no_value\n");
 
     var loadedContainer =
-        AnyTableLoader.load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
+        AnyTableLoader.getInstance()
+            .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
     assertThat(loadedContainer.getTableStatus()).isEqualTo(TableStatus.PARSABLE_HEADERS_AND_ROWS);
     verify(validator, times(1)).validate(any());
@@ -167,7 +172,8 @@ public class AnyTableLoaderTest {
     InputStream inputStream = toInputStream("id,code\n" + "s1,\n");
 
     var loadedContainer =
-        AnyTableLoader.load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
+        AnyTableLoader.getInstance()
+            .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
     assertThat(loaderNotices.getValidationNotices())
         .contains(new MissingRequiredFieldNotice("filename.txt", 2, "code"));

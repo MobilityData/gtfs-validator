@@ -1,11 +1,11 @@
 package org.mobilitydata.gtfsvalidator.table;
 
 /**
- * This class provides soem info about the different files within a GTFS dataset. Its children
+ * This class provides some info about the different files within a GTFS dataset. Its children
  * relate to either a csv table or a geojson file.
  *
  * @param <T> The entity that will be extracted from the file. For example, GtfsCalendarDate or
- *     {@link GtfsGeojsonFeature}
+ *     GtfsGeojsonFeature
  */
 public abstract class GtfsFileDescriptor<T extends GtfsEntity> {
 
@@ -29,5 +29,9 @@ public abstract class GtfsFileDescriptor<T extends GtfsEntity> {
 
   public void setRequired(boolean required) {
     this.required = required;
+  }
+
+  public TableLoader getTableLoader() {
+    return AnyTableLoader.getInstance();
   }
 }

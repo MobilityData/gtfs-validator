@@ -113,22 +113,14 @@ public class GtfsFeedLoader {
             () -> {
               NoticeContainer loaderNotices = new NoticeContainer();
               GtfsEntityContainer<?, ?> tableContainer;
+              // The descriptor knows what loader to use to load the file
+              TableLoader tableLoader = tableDescriptor.getTableLoader();
               try (InputStream inputStream = gtfsInput.getFile(filename)) {
                 try {
-                  if (tableDescriptor instanceof GtfsTableDescriptor) {
+                  if (tableLoader != null) {
                     tableContainer =
-                        AnyTableLoader.load(
-                            (GtfsTableDescriptor) tableDescriptor,
-                            validatorProvider,
-                            inputStream,
-                            loaderNotices);
-                  } else if (tableDescriptor instanceof GtfsGeojsonFileDescriptor) {
-                    tableContainer =
-                        JsonFileLoader.load(
-                            (GtfsGeojsonFileDescriptor) tableDescriptor,
-                            validatorProvider,
-                            inputStream,
-                            loaderNotices);
+                        tableLoader.load(
+                            tableDescriptor, validatorProvider, inputStream, loaderNotices);
                   } else {
                     logger.atSevere().log(
                         "Runtime exception table descriptor not supported: %s",
@@ -143,8 +135,9 @@ public class GtfsFeedLoader {
                   loaderNotices.addSystemError(new RuntimeExceptionInLoaderError(filename, e));
                   // Since the file was not loaded successfully, we treat
                   // it as missing for continuing validation.
+                  //                  tableLoader = tableDescriptor.getTableLoader();
                   tableContainer =
-                      AnyTableLoader.loadMissingFile(
+                      tableLoader.loadMissingFile(
                           tableDescriptor, validatorProvider, loaderNotices);
                 }
               }
@@ -155,8 +148,9 @@ public class GtfsFeedLoader {
     ArrayList<GtfsEntityContainer<?, ?>> tableContainers = new ArrayList<>();
     tableContainers.ensureCapacity(tableDescriptors.size());
     for (GtfsFileDescriptor<?> tableDescriptor : remainingDescriptors.values()) {
+      TableLoader tableLoader = tableDescriptor.getTableLoader();
       tableContainers.add(
-          AnyTableLoader.loadMissingFile(tableDescriptor, validatorProvider, noticeContainer));
+          tableLoader.loadMissingFile(tableDescriptor, validatorProvider, noticeContainer));
     }
     try {
       for (Future<TableAndNoticeContainers> futureContainer : exec.invokeAll(loaderCallables)) {

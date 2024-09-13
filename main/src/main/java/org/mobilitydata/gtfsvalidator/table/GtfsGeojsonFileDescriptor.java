@@ -29,4 +29,8 @@ public class GtfsGeojsonFileDescriptor extends GtfsFileDescriptor<GtfsGeojsonFea
   public String gtfsFilename() {
     return "locations.geojson";
   }
+
+  public TableLoader getTableLoader() {
+    return new JsonFileLoader();
+  }
 }

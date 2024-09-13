@@ -70,6 +70,6 @@ public class LoadingHelper {
             .setDateForValidation(new DateForValidation(dateForValidation))
             .build();
     ValidatorProvider provider = new DefaultValidatorProvider(context, validatorLoader);
-    return (Y) AnyTableLoader.load(tableDescriptor, provider, in, noticeContainer);
+    return (Y) AnyTableLoader.getInstance().load(tableDescriptor, provider, in, noticeContainer);
   }
 }
