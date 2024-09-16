@@ -43,6 +43,11 @@
         width: 100%;
     }
 
+    table caption {
+        text-align: left;
+        margin: 0.5em 0;
+    }
+
     table th {
         text-align: left;
         border-bottom: 2px solid #000;
@@ -209,7 +214,7 @@
         display: table-row;
     }
 
-    #gtfs-components-container > div {
+    #gtfs-features-container > div {
         display: flex;
         justify-content: center;
         align-content: center;
@@ -229,6 +234,7 @@
         <span th:text="${config.gtfsSource}"></span><span
                 th:text="${config.countryCode.isUnknown()} ? '. No country code was provided.' : ', with the country code: ' + ${config.countryCode} + '.'"></span>
         </br>
+        <span th:if="${is_different_date}" th:text="'The date used during validation was ' + ${config.dateForValidation} + '.'"></span></p>
 
     <p>Use this report alongside our <a href="https://gtfs-validator.mobilitydata.org/rules.html">documentation</a>.</p>
 
@@ -284,11 +290,11 @@
                     <li th:each="count: ${metadata.counts}"><span th:text="${count.key} + ': ' + ${count.value}" /></li>
                 </ul>
             </div>
-            <div class="summary-cell summary_list" id="gtfs-components-container">
+            <div class="summary-cell summary_list" id="gtfs-features-container">
                 <h4>
-                    GTFS Components included
+                    GTFS Features included
                     <a href="#" class="tooltip" onclick="event.preventDefault();"><span>(?)</span>
-                        <span class="tooltiptext" style="transform: translateX(-100%)">GTFS components provide a standardized vocabulary to define and describe features that are officially adopted in GTFS.</span>
+                        <span class="tooltiptext" style="transform: translateX(-100%)">GTFS features provide a standardized vocabulary to define and describe features that are officially adopted in GTFS.</span>
                     </a>
                 </h4>
                 <hr />
@@ -331,7 +337,7 @@
                             <h3 th:text="${noticesByCode.key}" />
                             <p th:utext="${noticesByCode.value[0].description}" />
                             <p> You can see more about this notice <a
-                                    th:href="@{'https://gtfs-validator.mobilitydata.org/rules.html#' + ${noticesByCode.key}}">here</a>.
+                                    th:href="@{'https://gtfs-validator.mobilitydata.org/rules.html#' + ${noticesByCode.key} + '-rule'}">here</a>.
                             </p>
                              <p th:if="${noticesByCode.value.size > 50}">Only the first 50 of <span th:text="${noticesByCode.value.size}"></span> affected records are displayed below.</p>
                             <table>

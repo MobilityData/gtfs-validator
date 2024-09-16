@@ -19,23 +19,22 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
-import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 
 @RunWith(JUnit4.class)
 public final class ValidationContextTest {
   private static final CountryCode COUNTRY_CODE = CountryCode.forStringOrUnknown("AU");
-  private static final CurrentDateTime CURRENT_DATE_TIME =
-      new CurrentDateTime(ZonedDateTime.of(2021, 1, 1, 14, 30, 0, 0, ZoneOffset.UTC));
+  private static final DateForValidation CURRENT_DATE =
+      new DateForValidation(LocalDate.of(2021, 1, 1));
   private static final ValidationContext VALIDATION_CONTEXT =
       ValidationContext.builder()
           .setCountryCode(COUNTRY_CODE)
-          .setCurrentDateTime(CURRENT_DATE_TIME)
+          .setDateForValidation(CURRENT_DATE)
           .build();
 
   @Test
@@ -44,20 +43,30 @@ public final class ValidationContextTest {
   }
 
   @Test
-  public void get_currentDateTime_successful() {
-    assertThat(VALIDATION_CONTEXT.get(CurrentDateTime.class)).isEqualTo(CURRENT_DATE_TIME);
+  public void get_dateForValidation_successful() {
+    assertThat(VALIDATION_CONTEXT.get(DateForValidation.class)).isEqualTo(CURRENT_DATE);
   }
 
   @Test
   public void get_unsupported_throws() {
     assertThrows(
-        IllegalArgumentException.class, () -> VALIDATION_CONTEXT.get(ChildCurrentDateTime.class));
+        IllegalArgumentException.class, () -> VALIDATION_CONTEXT.get(ChildDateForValidation.class));
   }
 
-  private static class ChildCurrentDateTime extends CurrentDateTime {
+  @Test
+  public void get_extraIntegerObject_successful() {
+    assertThat(
+            ValidationContext.builder()
+                .set(Integer.class, new Integer(10))
+                .build()
+                .get(Integer.class))
+        .isEqualTo(10);
+  }
 
-    public ChildCurrentDateTime(ZonedDateTime now) {
-      super(now);
+  private static class ChildDateForValidation extends DateForValidation {
+
+    public ChildDateForValidation(LocalDate date) {
+      super(date);
     }
   }
 }

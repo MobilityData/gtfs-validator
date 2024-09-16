@@ -18,13 +18,12 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import java.time.LocalDate;
-import java.util.Map;
-import java.util.SortedSet;
+import java.util.*;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.*;
@@ -37,30 +36,53 @@ public class ExpiredCalendarValidator extends FileValidator {
 
   private final GtfsCalendarDateTableContainer calendarDateTable;
 
-  private final CurrentDateTime currentDateTime;
+  private final DateForValidation dateForValidation;
 
   @Inject
   ExpiredCalendarValidator(
-      CurrentDateTime currentDateTime,
+      DateForValidation dateForValidation,
       GtfsCalendarTableContainer calendarTable,
       GtfsCalendarDateTableContainer calendarDateTable) {
-    this.currentDateTime = currentDateTime;
+    this.dateForValidation = dateForValidation;
     this.calendarTable = calendarTable;
     this.calendarDateTable = calendarDateTable;
   }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    LocalDate now = currentDateTime.getNow().toLocalDate();
     final Map<String, SortedSet<LocalDate>> servicePeriodMap =
         CalendarUtil.servicePeriodToServiceDatesMap(
             CalendarUtil.buildServicePeriodMap(calendarTable, calendarDateTable));
+    boolean isCalendarTableEmpty = calendarTable.getEntities().isEmpty();
+    List<ExpiredCalendarNotice> expiredCalendarDatesNotices = new ArrayList<>();
+    boolean allCalendarAreExpired = true;
     for (var serviceId : servicePeriodMap.keySet()) {
       SortedSet<LocalDate> serviceDates = servicePeriodMap.get(serviceId);
-      if (!serviceDates.isEmpty() && serviceDates.last().isBefore(now)) {
-        int csvRowNumber = calendarTable.byServiceId(serviceId).get().csvRowNumber();
-        noticeContainer.addValidationNotice(new ExpiredCalendarNotice(csvRowNumber, serviceId));
+      if (serviceDates.isEmpty()) {
+        continue;
       }
+      if (serviceDates.last().isBefore(dateForValidation.getDate())) {
+        if (calendarTable.byServiceId(serviceId).isPresent()) {
+          noticeContainer.addValidationNotice(
+              new ExpiredCalendarNotice(
+                  calendarTable.byServiceId(serviceId).get().csvRowNumber(), serviceId));
+        } else if (isCalendarTableEmpty && allCalendarAreExpired) {
+          //          Taking the first of the calendar dates for the service id.
+          //          This is the case of foreign key violation or calendar.txt not provided.
+          //            In this case all serviceId need to be expired to report the notices.
+          Optional<GtfsCalendarDate> firstCalendarDate =
+              calendarDateTable.byServiceId(serviceId).stream()
+                  .min(Comparator.comparingInt(GtfsCalendarDate::csvRowNumber));
+          expiredCalendarDatesNotices.add(
+              new ExpiredCalendarNotice(
+                  firstCalendarDate.map(GtfsCalendarDate::csvRowNumber).orElse(0), serviceId));
+        }
+      } else {
+        allCalendarAreExpired = false;
+      }
+    }
+    if (isCalendarTableEmpty && allCalendarAreExpired) {
+      noticeContainer.addValidationNotices(expiredCalendarDatesNotices);
     }
   }
 
@@ -75,7 +97,7 @@ public class ExpiredCalendarValidator extends FileValidator {
       urls = {
         @UrlRef(
             label = "Dataset Publishing & General Practices",
-            url = "https://gtfs.org/schedule/best-practices/#dataset-publishing-general-practices")
+            url = "https://gtfs.org/schedule/reference/#dataset-publishing-general-practices")
       })
   static class ExpiredCalendarNotice extends ValidationNotice {
 

@@ -36,11 +36,15 @@ public class Main {
 
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   static final String ACCEPTANCE_REPORT_JSON = "acceptance_report.json";
-  static final String ACCEPTANCE_REPORT_SUMMARY_TXT = "acceptance_report_summary.txt";
+  static final String ACCEPTANCE_REPORT_SUMMARY_MD = "acceptance_report_summary.md";
   private static final int IO_EXCEPTION_EXIT_CODE = 1;
   private static final int COMPARISON_FAILURE_EXIT_CODE = 2;
   private static final Gson GSON =
-      new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
+      new GsonBuilder()
+          .serializeNulls()
+          .disableHtmlEscaping()
+          .serializeSpecialFloatingPointValues()
+          .create();
 
   public static void main(String[] argv) {
     int rc = run(argv);
@@ -122,7 +126,7 @@ public class Main {
   private static void exportReportSummary(String reportSummary, String outputBase) {
     try {
       Files.write(
-          Paths.get(outputBase, ACCEPTANCE_REPORT_SUMMARY_TXT),
+          Paths.get(outputBase, ACCEPTANCE_REPORT_SUMMARY_MD),
           reportSummary.getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store acceptance test report summary file");

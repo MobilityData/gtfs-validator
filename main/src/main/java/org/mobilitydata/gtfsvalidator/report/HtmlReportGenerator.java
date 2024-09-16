@@ -39,7 +39,8 @@ public class HtmlReportGenerator {
       ValidationRunnerConfig config,
       VersionInfo versionInfo,
       Path reportPath,
-      String date)
+      String date,
+      boolean is_different_date)
       throws IOException {
     TemplateEngine templateEngine = new TemplateEngine();
     ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
@@ -54,6 +55,7 @@ public class HtmlReportGenerator {
     context.setVariable("summary", summary);
     context.setVariable("config", config);
     context.setVariable("date", date);
+    context.setVariable("is_different_date", is_different_date);
 
     try (FileWriter writer = new FileWriter(reportPath.toFile())) {
       templateEngine.process("report.html", context, writer);

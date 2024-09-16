@@ -10,6 +10,7 @@ import org.mobilitydata.gtfsvalidator.model.ValidationReport;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.outputcomparator.io.ChangedNoticesCollector;
 import org.mobilitydata.gtfsvalidator.outputcomparator.io.CorruptedSourcesCollector;
+import org.mobilitydata.gtfsvalidator.outputcomparator.io.ValidationPerformanceCollector;
 import org.mobilitydata.gtfsvalidator.outputcomparator.model.SourceUrlContainer;
 import org.mobilitydata.gtfsvalidator.outputcomparator.model.report.AcceptanceReport;
 
@@ -57,6 +58,8 @@ public class ValidationReportComparator {
             args.getPercentInvalidDatasetsThreshold());
     CorruptedSourcesCollector corruptedSources =
         new CorruptedSourcesCollector(args.getPercentCorruptedSourcesThreshold());
+    ValidationPerformanceCollector validationPerformanceCollector =
+        new ValidationPerformanceCollector();
 
     for (File file : reportDirs) {
       String sourceId = file.getName();
@@ -73,24 +76,38 @@ public class ValidationReportComparator {
       // in case a validation report does not exist for a sourceId we add the sourceId to
       // the list of corrupted sources
       if (!(referenceReportPath.toFile().exists() && latestReportPath.toFile().exists())) {
-        corruptedSources.addCorruptedSource(sourceId);
+        corruptedSources.addCorruptedSource(
+            sourceId,
+            referenceReportPath.toFile().exists(),
+            null,
+            latestReportPath.toFile().exists(),
+            null);
         continue;
       }
       ValidationReport referenceReport;
       ValidationReport latestReport;
       try {
         referenceReport = ValidationReport.fromPath(referenceReportPath);
+      } catch (IOException ioException) {
+        logger.atSevere().withCause(ioException).log("Error reading reference validation report");
+        // in case a file is corrupted, add the sourceId to the list of corrupted sources
+        corruptedSources.addCorruptedSource(sourceId, true, false, true, null);
+        continue;
+      }
+      try {
         latestReport = ValidationReport.fromPath(latestReportPath);
       } catch (IOException ioException) {
-        logger.atSevere().withCause(ioException).log("Error reading validation reports");
+        logger.atSevere().withCause(ioException).log("Error reading latest validation report");
         // in case a file is corrupted, add the sourceId to the list of corrupted sources
-        corruptedSources.addCorruptedSource(sourceId);
+        corruptedSources.addCorruptedSource(sourceId, true, true, true, false);
         continue;
       }
       newErrors.compareValidationReports(sourceId, sourceUrl, referenceReport, latestReport);
       droppedErrors.compareValidationReports(sourceId, sourceUrl, latestReport, referenceReport);
       newWarnings.compareValidationReports(sourceId, sourceUrl, referenceReport, latestReport);
       droppedWarnings.compareValidationReports(sourceId, sourceUrl, latestReport, referenceReport);
+      validationPerformanceCollector.compareValidationReports(
+          sourceId, referenceReport, latestReport);
     }
 
     AcceptanceReport report =
@@ -99,7 +116,8 @@ public class ValidationReportComparator {
             droppedErrors.getChangedNotices(),
             newWarnings.getChangedNotices(),
             droppedWarnings.getChangedNotices(),
-            corruptedSources.toReport());
+            corruptedSources.toReport(),
+            validationPerformanceCollector.toReport());
 
     boolean failure =
         newErrors.isAboveThreshold()
@@ -116,6 +134,7 @@ public class ValidationReportComparator {
             newWarnings,
             droppedWarnings,
             corruptedSources,
+            validationPerformanceCollector,
             args);
 
     return Result.create(report, reportSummaryString, failure);
@@ -149,17 +168,18 @@ public class ValidationReportComparator {
       ChangedNoticesCollector newWarnings,
       ChangedNoticesCollector droppedWarnings,
       CorruptedSourcesCollector corruptedSources,
+      ValidationPerformanceCollector validationPerformanceCollector,
       Arguments args) {
     StringBuilder b = new StringBuilder();
-    String status = failure ? "❌ Invalid acceptance test." : "✅ Rule acceptance tests passed.";
-    b.append(status).append('\n');
-    b.append("New Errors: ").append(newErrors.generateLogString()).append('\n');
-    b.append("Dropped Errors: ").append(droppedErrors.generateLogString()).append('\n');
-    b.append("New Warnings: ").append(newWarnings.generateLogString()).append('\n');
-    b.append("Dropped Warnings: ").append(droppedWarnings.generateLogString()).append('\n');
-    b.append(corruptedSources.generateLogString()).append("\n");
+    b.append("## \uD83D\uDCDD Acceptance Test Report\n");
+    b.append("### \uD83D\uDCCB Summary\n");
+    String status =
+        failure ? "❌ The rule acceptance test has failed" : "✅ The rule acceptance has passed";
+    b.append(status);
     if (args.getCommitSha().isPresent()) {
-      b.append("Commit: ").append(args.getCommitSha().get()).append("\n");
+      b.append(" for commit ").append(args.getCommitSha().get()).append('\n');
+    } else {
+      b.append(".\n");
     }
     if (args.getRunId().isPresent()) {
       b.append(
@@ -168,7 +188,14 @@ public class ValidationReportComparator {
               "https://github.com/MobilityData/gtfs-validator/actions/runs",
               args.getRunId().get()));
     }
-    b.append(status).append('\n');
+
+    b.append("### \uD83D\uDCCA Notices Comparison\n");
+    b.append(newErrors.generateLogString("New Errors")).append('\n');
+    b.append(droppedErrors.generateLogString("Dropped Errors")).append('\n');
+    b.append(newWarnings.generateLogString("New Warnings")).append('\n');
+    b.append(droppedWarnings.generateLogString("Dropped Warnings")).append("\n\n");
+    b.append(corruptedSources.generateLogString()).append("\n").append("\n");
+    b.append(validationPerformanceCollector.generateLogString()).append("\n");
     return b.toString();
   }
 }

@@ -97,3 +97,12 @@ web/service/src/main/resources/application.properties
 web/service/newrelic/newrelic.yml
 
 processor/tests/bin
+
+.vscode/
+app/gui/bin/
+app/pkg/bin/
+processor/notices/bin/
+processor/notices/tests/bin/
+web/service/bin/
+
+RULES.md

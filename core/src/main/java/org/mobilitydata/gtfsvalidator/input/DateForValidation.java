@@ -16,19 +16,19 @@
 
 package org.mobilitydata.gtfsvalidator.input;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 
-/** Represents the current date and time */
-public class CurrentDateTime {
+/** The date to be used for validation rules. */
+public class DateForValidation {
 
-  private final ZonedDateTime now;
+  private final LocalDate date;
 
-  public CurrentDateTime(ZonedDateTime now) {
-    this.now = now;
+  public DateForValidation(LocalDate date) {
+    this.date = date;
   }
 
-  public ZonedDateTime getNow() {
-    return now;
+  public LocalDate getDate() {
+    return date;
   }
 
   @Override
@@ -36,14 +36,14 @@ public class CurrentDateTime {
     if (this == other) {
       return true;
     }
-    if (other instanceof CurrentDateTime) {
-      return this.now.equals(((CurrentDateTime) other).now);
+    if (other instanceof DateForValidation) {
+      return this.date.equals(((DateForValidation) other).date);
     }
     return false;
   }
 
   @Override
   public int hashCode() {
-    return now.hashCode();
+    return date.hashCode();
   }
 }

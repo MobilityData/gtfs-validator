@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import java.net.URI;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
@@ -41,6 +42,7 @@ public class JsonReportSummaryTest {
     builder.setPrettyJson(true);
     builder.setSystemErrorsReportFileName("some_error_filename");
     builder.setValidationReportFileName("some_report_filename");
+    builder.setDateForValidation(LocalDate.parse("2020-01-02"));
 
     return builder.build();
   }
@@ -73,6 +75,7 @@ public class JsonReportSummaryTest {
             3 // Should not be present in the resulting GSON
             );
     feedMetadata.specFeatures = Map.of("Feature1", false, "Feature2", true);
+    feedMetadata.validationTimeSeconds = 100.0;
     return feedMetadata;
   }
 
@@ -91,7 +94,8 @@ public class JsonReportSummaryTest {
             + "\"systemErrorsReportName\":\"some_error_filename\","
             + "\"validationReportName\":\"some_report_filename\","
             + "\"htmlReportName\":\"some_html_filename\","
-            + "\"countryCode\":\"GB\"}";
+            + "\"countryCode\":\"GB\","
+            + "\"dateForValidation\":\"2020-01-02\"}";
 
     assertEquals(JsonParser.parseString(expected), gson.toJsonTree(reportSummary));
   }
@@ -113,13 +117,15 @@ public class JsonReportSummaryTest {
             + "\"validationReportName\":\"some_report_filename\","
             + "\"htmlReportName\":\"some_html_filename\","
             + "\"countryCode\":\"GB\","
+            + "\"dateForValidation\":\"2020-01-02\","
             + "\"feedInfo\":{\"publisherName\":\"value1\",\"publisherUrl\":\"value2\"},"
+            + "\"validationTimeSeconds\":100.0,"
             + "\"agencies\":["
             + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"},"
             + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"}],"
             + "\"files\":[\"file1\",\"file2\"],"
             + "\"counts\":{\"Shapes\":1,\"Trips\":2},"
-            + "\"gtfsComponents\":[\"Feature2\"]}";
+            + "\"gtfsFeatures\":[\"Feature2\"]}";
 
     assertEquals(JsonParser.parseString(expected), gson.toJsonTree(reportSummary));
   }
@@ -135,12 +141,13 @@ public class JsonReportSummaryTest {
             + "\"validatedAt\":\"now\","
             + "\"threads\":0,"
             + "\"feedInfo\":{\"publisherName\":\"value1\",\"publisherUrl\":\"value2\"},"
+            + "\"validationTimeSeconds\":100.0,"
             + "\"agencies\":["
             + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"},"
             + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"}],"
             + "\"files\":[\"file1\",\"file2\"],"
             + "\"counts\":{\"Shapes\":1,\"Trips\":2},"
-            + "\"gtfsComponents\":[\"Feature2\"]}";
+            + "\"gtfsFeatures\":[\"Feature2\"]}";
 
     assertEquals(JsonParser.parseString(expected), gson.toJsonTree(reportSummary));
   }

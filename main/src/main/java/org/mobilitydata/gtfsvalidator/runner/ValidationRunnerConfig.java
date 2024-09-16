@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.runner;
 import com.google.auto.value.AutoValue;
 import java.net.URI;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 
@@ -56,8 +57,14 @@ public abstract class ValidationRunnerConfig {
   // validated.
   public abstract CountryCode countryCode();
 
+  // The date to use for validation.
+  public abstract LocalDate dateForValidation();
+
   // If true, any output json will be pretty-printed.
   public abstract boolean prettyJson();
+
+  // If true, the validator will not check for a new validator version
+  public abstract boolean skipValidatorUpdate();
 
   public static Builder builder() {
     // Set reasonable defaults where appropriate.
@@ -67,7 +74,9 @@ public abstract class ValidationRunnerConfig {
         .setSystemErrorsReportFileName("system_errors.json")
         .setNumThreads(1)
         .setPrettyJson(false)
-        .setCountryCode(CountryCode.forStringOrUnknown(CountryCode.ZZ));
+        .setCountryCode(CountryCode.forStringOrUnknown(CountryCode.ZZ))
+        .setDateForValidation(LocalDate.now())
+        .setSkipValidatorUpdate(false);
   }
 
   @AutoValue.Builder
@@ -88,7 +97,11 @@ public abstract class ValidationRunnerConfig {
 
     public abstract Builder setCountryCode(CountryCode countryCode);
 
+    public abstract Builder setDateForValidation(LocalDate dateForValidation);
+
     public abstract Builder setPrettyJson(boolean prettyJson);
+
+    public abstract Builder setSkipValidatorUpdate(boolean skipValidatorUpdate);
 
     public abstract ValidationRunnerConfig build();
   }

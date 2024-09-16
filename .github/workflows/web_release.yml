@@ -4,6 +4,9 @@ on:
   release:
     types: [ released ]
 
+env:
+  NODE_VERSION: "20"
+
 jobs:
 
   web_pipeline:
@@ -16,14 +19,14 @@ jobs:
 
     steps:
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           # We need to download all tags so that the axion-release-plugin
           # can resolve the most recent version tag.
           fetch-depth: 0
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           # We need a recent version of Java with jpackage included.
           java-version: '17'
@@ -31,15 +34,15 @@ jobs:
           distribution: 'zulu'
 
       # for npm
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: ${{ env.NODE_VERSION }}
 
-      - uses: google-github-actions/auth@v1
+      - uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_WEB_VALIDATOR_SA_KEY }}
 
-      - uses: google-github-actions/setup-gcloud@v1
+      - uses: google-github-actions/setup-gcloud@v2
         with:
           version: '>= 390.0.0'
 
@@ -48,3 +51,19 @@ jobs:
         run: |
           ENV_FILE=web/pipeline/${ENV_NAME}.env source web/pipeline/env-file.sh
           ./gradlew webCD
+
+      - name: Load secrets from 1Password to be used for sending notification
+        id: onepw_secrets
+        uses: 1password/load-secrets-action@v2.0.0
+        with:
+          export-env: true # Export loaded secrets as environment variables
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          CREDENTIALS: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/ifkeehu5gzi7wy5ub5qvwkaire/credential"
+
+      - name: Send a notification to mobility-feed-api
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ env.CREDENTIALS }}
+          repository: MobilityData/mobility-feed-api
+          event-type: gtfs-validator-release

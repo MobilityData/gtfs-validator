@@ -2,6 +2,13 @@
 ### 1. Update documentation
 Update the [README.md](/README.md) to match the latest developments. The documentation should accurately reflect the use of the `jar` that is to be released. 
 
+### 2. Update NOTICE_MIGRATION.md file
+- [NOTICE_MIGRATION.md](https://github.com/MobilityData/gtfs-validator/blob/master/docs/NOTICE_MIGRATION.md) is a file that is committed in git. To change it, you need a pull request.
+- Modifying the file and creating the PR can be done automatically by executing the `Update NOTICE_MIGRATION.md` GitHub action (found [here](https://github.com/MobilityData/gtfs-validator/actions/workflows/notice_migration_generation.yml)).
+- When running the Github action, you need to specify the new version that will soon be released (e.g. v5.0.2).
+- The action will modify the file and create a pull request with this title: `docs: Automated update of NOTICE_MIGRATION.md`
+- Examine the pull request and if satisfactory merge it.
+
 ### 2. Do a pre relase
 1. Go to the release section of GitHub ![step 1](https://user-images.githubusercontent.com/35747326/99820876-567dd600-2b1f-11eb-87d2-eef132b3016a.png)
 
@@ -12,7 +19,11 @@ Update the [README.md](/README.md) to match the latest developments. The documen
 1. Publish the prerelease
 ![publish](https://user-images.githubusercontent.com/35747326/99821598-3ef31d00-2b20-11eb-9f5e-26f6583ad6c9.png)
 
-### 3. Do the release
+### 3. Run analytics comparing the pre-release with the last release. 
+1. Generate analytics based on the acceptance tests to identify any performance concerns or problems with new notices. [Example report here](https://docs.google.com/spreadsheets/d/1AH4fELPPIB3R3w_TPGUBzSn_T6cVuYpmekW-er1Xogg/edit#gid=0). 
+2. Identify if any critical issues should be resolved before release. 
+
+### 4. Do the release
 1. While CI is running to create the artifacts, you can work on the release description. ![edit](https://user-images.githubusercontent.com/35747326/99821184-ba080380-2b1f-11eb-8efe-57be80a0bd29.png)
 
 

@@ -21,6 +21,8 @@ import com.google.common.flogger.FluentLogger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 
@@ -51,6 +53,14 @@ public class Arguments {
           "Country code of the feed, e.g., `nl`. "
               + "It must be a two-letter country code (ISO 3166-1 alpha-2)")
   private String countryCode;
+
+  @Parameter(
+      names = {"-d", "--date"},
+      description =
+          "The date used to validate the feed for time-based rules, e.g feed_expiration_30_days, "
+              + "in ISO_LOCAL_DATE format like '2001-01-30'. By default, the current date is used. "
+              + "This option can be used to debug rules like feed expiration.")
+  private String dateString;
 
   @Parameter(
       names = {"-u", "--url"},
@@ -95,6 +105,11 @@ public class Arguments {
       description = "Export notices schema")
   private boolean exportNoticeSchema = false;
 
+  @Parameter(
+      names = {"-svu", "--skip_validator_update"},
+      description = "Skips check for new validator version")
+  private boolean skipValidatorUpdate = false;
+
   ValidationRunnerConfig toConfig() throws URISyntaxException {
     ValidationRunnerConfig.Builder builder = ValidationRunnerConfig.builder();
     if (input != null) {
@@ -111,6 +126,9 @@ public class Arguments {
     if (countryCode != null) {
       builder.setCountryCode(CountryCode.forStringOrUnknown(countryCode));
     }
+    if (dateString != null) {
+      builder.setDateForValidation(LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE));
+    }
     if (validationReportName != null) {
       builder.setValidationReportFileName(validationReportName);
     }
@@ -122,6 +140,7 @@ public class Arguments {
     }
     builder.setNumThreads(numThreads);
     builder.setPrettyJson(pretty);
+    builder.setSkipValidatorUpdate(skipValidatorUpdate);
     return builder.build();
   }
 

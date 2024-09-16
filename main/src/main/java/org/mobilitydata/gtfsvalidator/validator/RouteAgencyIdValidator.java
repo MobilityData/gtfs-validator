@@ -42,7 +42,6 @@ public class RouteAgencyIdValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-
     // routes.agency_id is required when there are multiple agencies
     int totalAgencies = agencyTable.entityCount();
 

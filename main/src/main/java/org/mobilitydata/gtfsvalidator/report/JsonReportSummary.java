@@ -29,14 +29,16 @@ public class JsonReportSummary {
   private String validationReportName;
   private String htmlReportName;
   private String countryCode;
+  private String dateForValidation;
   private JsonReportFeedInfo feedInfo;
   private List<JsonReportAgencyMetadata> agencies;
   private Set<String> files;
+  private Double validationTimeSeconds;
 
   @SerializedName("counts")
   private JsonReportCounts jsonReportCounts;
 
-  private List<String> gtfsComponents;
+  private List<String> gtfsFeatures;
 
   public JsonReportSummary(
       FeedMetadata feedMetadata,
@@ -55,6 +57,7 @@ public class JsonReportSummary {
       this.validationReportName = config.validationReportFileName();
       this.htmlReportName = config.htmlReportFileName();
       this.countryCode = config.countryCode().getCountryCode();
+      this.dateForValidation = config.dateForValidation().toString();
     } else {
       logger.atSevere().log(
           "No validation configuration for JSON report, there will be missing data in the report.");
@@ -63,6 +66,7 @@ public class JsonReportSummary {
     if (feedMetadata != null) {
       if (feedMetadata.feedInfo != null) {
         this.feedInfo = new JsonReportFeedInfo(feedMetadata.feedInfo);
+        this.validationTimeSeconds = feedMetadata.validationTimeSeconds;
       } else {
         logger.atSevere().log(
             "No feed info for feed "
@@ -87,7 +91,7 @@ public class JsonReportSummary {
                 + ", there will be missing data in the report.");
       }
 
-      this.gtfsComponents =
+      this.gtfsFeatures =
           feedMetadata.specFeatures == null
               ? null
               : feedMetadata.specFeatures.entrySet().stream()
