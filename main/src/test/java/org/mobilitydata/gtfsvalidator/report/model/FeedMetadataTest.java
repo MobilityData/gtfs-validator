@@ -33,10 +33,8 @@ public class FeedMetadataTest {
           .build();
   ValidatorLoader validatorLoader;
   File rootDir;
-
-  // Mock data for trips
   NoticeContainer noticeContainer = new NoticeContainer();
-  ;
+
   private GtfsTableContainer<GtfsTrip> tripContainer;
   private GtfsTableContainer<GtfsCalendar> calendarTable;
   private GtfsTableContainer<GtfsCalendarDate> calendarDateTable;
