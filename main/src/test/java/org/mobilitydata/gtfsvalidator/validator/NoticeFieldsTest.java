@@ -197,7 +197,9 @@ public class NoticeFieldsTest {
             "fileNameA",
             "fileNameB",
             "pathwayMode",
-            "isBidirectional");
+            "isBidirectional",
+            "locationGroupId",
+            "locationId");
   }
 
   private static List<String> discoverValidationNoticeFieldNames() {
