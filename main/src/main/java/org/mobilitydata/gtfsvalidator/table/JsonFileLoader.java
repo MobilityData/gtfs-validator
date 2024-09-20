@@ -83,5 +83,4 @@ public class JsonFileLoader extends TableLoader {
     }
     return gtfsGeojsonFeature;
   }
-
 }

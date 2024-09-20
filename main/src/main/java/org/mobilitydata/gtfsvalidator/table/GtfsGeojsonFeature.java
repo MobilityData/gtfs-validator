@@ -3,9 +3,7 @@ package org.mobilitydata.gtfsvalidator.table;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**
- * This class contains the information from one feature in the geojson file.
- */
+/** This class contains the information from one feature in the geojson file. */
 public final class GtfsGeojsonFeature implements GtfsEntity {
   public static final String FILENAME = "locations.geojson";
 
