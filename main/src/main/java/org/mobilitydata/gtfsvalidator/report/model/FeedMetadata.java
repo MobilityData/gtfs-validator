@@ -427,7 +427,9 @@ public class FeedMetadata {
           if (calendar.serviceId().equals(serviceId)) {
             LocalDate startDate = calendar.startDate().getLocalDate();
             LocalDate endDate = calendar.endDate().getLocalDate();
-
+            if (startDate.equals(GtfsFeedInfo.DEFAULT_FEED_START_DATE) || endDate.equals(GtfsFeedInfo.DEFAULT_FEED_END_DATE)) {
+              continue;
+            }
             if (startDate != null || endDate != null) {
               if (earliestStartDate == null || startDate.isBefore(earliestStartDate)) {
                 earliestStartDate = startDate;
@@ -447,7 +449,7 @@ public class FeedMetadata {
         for (GtfsCalendarDate calendarDate : calendarDates) {
           if (calendarDate.serviceId().equals(serviceId)) {
             LocalDate date = calendarDate.date().getLocalDate();
-            if (date != null) {
+            if (date != null && !date.equals(GtfsFeedInfo.DEFAULT_FEED_START_DATE)) {
               if (earliestStartDate == null || date.isBefore(earliestStartDate)) {
                 earliestStartDate = date;
               }
@@ -470,7 +472,9 @@ public class FeedMetadata {
         ServicePeriod servicePeriod = servicePeriods.get(serviceId);
         LocalDate startDate = servicePeriod.getServiceStart();
         LocalDate endDate = servicePeriod.getServiceEnd();
-
+        if (startDate.equals(GtfsFeedInfo.DEFAULT_FEED_START_DATE) || endDate.equals(GtfsFeedInfo.DEFAULT_FEED_END_DATE)) {
+          continue;
+        }
         if (startDate != null && endDate != null) {
           if (earliestStartDate == null || startDate.isBefore(earliestStartDate)) {
             earliestStartDate = startDate;
