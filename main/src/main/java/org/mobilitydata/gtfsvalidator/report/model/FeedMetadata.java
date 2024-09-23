@@ -19,6 +19,7 @@ public class FeedMetadata {
    */
   public static final String FEED_INFO_PUBLISHER_NAME = "Publisher Name";
   public static final String FEED_INFO_PUBLISHER_URL = "Publisher URL";
+  public static final String FEED_INFO_FEED_CONTACT_EMAIL = "Feed Email";
   public static final String FEED_INFO_FEED_LANGUAGE = "Feed Language";
   public static final String FEED_INFO_FEED_START_DATE = "Feed Start Date";
   public static final String FEED_INFO_FEED_END_DATE = "Feed End Date";
@@ -380,6 +381,7 @@ public class FeedMetadata {
 
     feedInfo.put(FEED_INFO_PUBLISHER_NAME, info == null ? "N/A" : info.feedPublisherName());
     feedInfo.put(FEED_INFO_PUBLISHER_URL, info == null ? "N/A" : info.feedPublisherUrl());
+    feedInfo.put(FEED_INFO_FEED_CONTACT_EMAIL, info == null ? "N/A" : info.feedContactEmail());
     feedInfo.put(
         FEED_INFO_FEED_LANGUAGE, info == null ? "N/A" : info.feedLang().getDisplayLanguage());
     if (feedTable.hasColumn(GtfsFeedInfo.FEED_START_DATE_FIELD_NAME)) {
