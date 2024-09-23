@@ -114,6 +114,7 @@ public class JsonReportSummary {
     public JsonReportFeedInfo(Map<String, String> feedInfo) {
       publisherName = feedInfo.get(FeedMetadata.FEED_INFO_PUBLISHER_NAME);
       publisherUrl = feedInfo.get(FeedMetadata.FEED_INFO_PUBLISHER_URL);
+      feedEmail = feedInfo.get(FeedMetadata.FEED_INFO_FEED_CONTACT_EMAIL);
       feedLanguage = feedInfo.get(FeedMetadata.FEED_INFO_FEED_LANGUAGE);
       feedStartDate = feedInfo.get(FeedMetadata.FEED_INFO_FEED_START_DATE);
       feedEndDate = feedInfo.get(FeedMetadata.FEED_INFO_FEED_END_DATE);
@@ -124,6 +125,7 @@ public class JsonReportSummary {
     String feedLanguage;
     String feedStartDate;
     String feedEndDate;
+    String feedEmail;
   }
 
   private static class JsonReportAgencyMetadata {

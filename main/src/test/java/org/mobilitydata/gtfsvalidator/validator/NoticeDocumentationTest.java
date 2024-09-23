@@ -115,7 +115,7 @@ public class NoticeDocumentationTest {
             .map(f -> f.getDeclaringClass().getSimpleName() + "." + f.getName())
             .collect(Collectors.toList());
     assertWithMessage(
-            "Every field of a validation notice much be documented with a JavaDoc comment (aka /** */, not //).  The following fields are undocumented:")
+            "Every field of a validation notice must be documented with a JavaDoc comment (aka /** */, not //).  The following fields are undocumented:")
         .that(fieldsWithoutComments)
         .isEmpty();
   }
