@@ -85,12 +85,7 @@ public class FeedMetadata {
     if (feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).isPresent()) {
       feedMetadata.loadFeedInfo(
           (GtfsTableContainer<GtfsFeedInfo>)
-              feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).get(),
-          (GtfsTableContainer<GtfsTrip>) feedContainer.getTableForFilename(GtfsTrip.FILENAME).get(),
-          (GtfsTableContainer<GtfsCalendar>)
-              feedContainer.getTableForFilename(GtfsCalendar.FILENAME).get(),
-          (GtfsTableContainer<GtfsCalendarDate>)
-              feedContainer.getTableForFilename(GtfsCalendarDate.FILENAME).get());
+              feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).get());
     }
 
     feedMetadata.loadAgencyData(
@@ -375,11 +370,7 @@ public class FeedMetadata {
     }
   }
 
-  private void loadFeedInfo(
-      GtfsTableContainer<GtfsFeedInfo> feedTable,
-      GtfsTableContainer<GtfsTrip> tripContainer,
-      GtfsTableContainer<GtfsCalendar> calendarTable,
-      GtfsTableContainer<GtfsCalendarDate> calendarDateTable) {
+  private void loadFeedInfo(GtfsTableContainer<GtfsFeedInfo> feedTable) {
     var info = feedTable.getEntities().isEmpty() ? null : feedTable.getEntities().get(0);
 
     feedInfo.put(FEED_INFO_PUBLISHER_NAME, info == null ? "N/A" : info.feedPublisherName());
@@ -427,7 +418,8 @@ public class FeedMetadata {
           if (calendar.serviceId().equals(serviceId)) {
             LocalDate startDate = calendar.startDate().getLocalDate();
             LocalDate endDate = calendar.endDate().getLocalDate();
-            if (startDate.equals(GtfsFeedInfo.DEFAULT_FEED_START_DATE) || endDate.equals(GtfsFeedInfo.DEFAULT_FEED_END_DATE)) {
+            if (startDate.equals(GtfsFeedInfo.DEFAULT_FEED_START_DATE)
+                || endDate.equals(GtfsFeedInfo.DEFAULT_FEED_END_DATE)) {
               continue;
             }
             if (startDate != null || endDate != null) {
@@ -472,7 +464,8 @@ public class FeedMetadata {
         ServicePeriod servicePeriod = servicePeriods.get(serviceId);
         LocalDate startDate = servicePeriod.getServiceStart();
         LocalDate endDate = servicePeriod.getServiceEnd();
-        if (startDate.equals(GtfsFeedInfo.DEFAULT_FEED_START_DATE) || endDate.equals(GtfsFeedInfo.DEFAULT_FEED_END_DATE)) {
+        if (startDate.equals(GtfsFeedInfo.DEFAULT_FEED_START_DATE)
+            || endDate.equals(GtfsFeedInfo.DEFAULT_FEED_END_DATE)) {
           continue;
         }
         if (startDate != null && endDate != null) {
