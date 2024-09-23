@@ -64,7 +64,8 @@ public class FeedMetadataTest {
               new DefaultValidatorProvider(validationContext, validatorLoader),
               new NoticeContainer());
       FeedMetadata feedMetadata = FeedMetadata.from(feedContainer, gtfsInput.getFilenames());
-      assertThat(feedMetadata.specFeatures.get(specFeature)).isEqualTo(expectedValue);
+      assertThat(feedMetadata.specFeatures.get(new FeatureMetadata(specFeature, null)))
+          .isEqualTo(expectedValue);
     }
   }
 
@@ -168,24 +169,24 @@ public class FeedMetadataTest {
   }
 
   @Test
-  public void containsPathwaysFeatureTest() throws IOException, InterruptedException {
+  public void containsPathwayConnectionFeatureTest() throws IOException, InterruptedException {
     String pathwayContent =
         "pathway_id,from_stop_id,to_stop_id,pathway_mode,is_bidirectional\n"
             + "pathway1,stop1,stop2,1,1\n"
             + "pathway2,stop2,stop3,2,0\n";
     createDataFile("pathways.txt", pathwayContent);
     validateSpecFeature(
-        "Pathways (basic)",
+        "Pathway Connections",
         true,
         ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
   @Test
-  public void omitsPathwaysFeatureTest() throws IOException, InterruptedException {
+  public void omitsPathwayConnectionsFeatureTest() throws IOException, InterruptedException {
     String pathwayContent = "pathway_id,from_stop_id,to_stop_id,pathway_mode,is_bidirectional\n";
     createDataFile("pathways.txt", pathwayContent);
     validateSpecFeature(
-        "Pathways (basic)",
+        "Pathway Connections",
         false,
         ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
@@ -193,7 +194,7 @@ public class FeedMetadataTest {
   @Test
   public void omitsFeatures() throws IOException, InterruptedException {
     validateSpecFeature(
-        "Pathways (basic)",
+        "Pathway Connections",
         false,
         ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
     validateSpecFeature(
@@ -426,7 +427,7 @@ public class FeedMetadataTest {
     String content = "route_id, service_id, trip_id, wheelchair_accessible\n" + "1, 2, 3, 1\n";
     createDataFile(GtfsTrip.FILENAME, content);
     validateSpecFeature(
-        "Wheelchair Accessibility",
+        "Trips Wheelchair Accessibility",
         true,
         ImmutableList.of(GtfsAgencyTableDescriptor.class, GtfsTripTableDescriptor.class));
   }

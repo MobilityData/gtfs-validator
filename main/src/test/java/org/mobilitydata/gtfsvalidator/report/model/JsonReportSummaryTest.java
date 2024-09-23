@@ -76,7 +76,12 @@ public class JsonReportSummaryTest {
             "Illegal Key",
             3 // Should not be present in the resulting GSON
             );
-    feedMetadata.specFeatures = Map.of("Feature1", false, "Feature2", true);
+    feedMetadata.specFeatures =
+        Map.of(
+            new FeatureMetadata("Feature1", null),
+            false,
+            new FeatureMetadata("Feature2", null),
+            true);
     feedMetadata.validationTimeSeconds = 100.0;
     return feedMetadata;
   }
