@@ -92,12 +92,17 @@ public class FeedMetadata {
         (GtfsTableContainer<GtfsAgency>)
             feedContainer.getTableForFilename(GtfsAgency.FILENAME).get());
 
-    feedMetadata.loadServiceDateRange(
-        (GtfsTableContainer<GtfsTrip>) feedContainer.getTableForFilename(GtfsTrip.FILENAME).get(),
-        (GtfsTableContainer<GtfsCalendar>)
-            feedContainer.getTableForFilename(GtfsCalendar.FILENAME).get(),
-        (GtfsTableContainer<GtfsCalendarDate>)
-            feedContainer.getTableForFilename(GtfsCalendarDate.FILENAME).get());
+    if (feedContainer.getTableForFilename(GtfsTrip.FILENAME).isPresent()
+        && (feedContainer.getTableForFilename(GtfsCalendar.FILENAME).isPresent()
+            || feedContainer.getTableForFilename(GtfsCalendarDate.FILENAME).isPresent())) {
+      feedMetadata.loadServiceDateRange(
+          (GtfsTableContainer<GtfsTrip>) feedContainer.getTableForFilename(GtfsTrip.FILENAME).get(),
+          (GtfsTableContainer<GtfsCalendar>)
+              feedContainer.getTableForFilename(GtfsCalendar.FILENAME).get(),
+          (GtfsTableContainer<GtfsCalendarDate>)
+              feedContainer.getTableForFilename(GtfsCalendarDate.FILENAME).get());
+    }
+
     feedMetadata.loadSpecFeatures(feedContainer);
     return feedMetadata;
   }
