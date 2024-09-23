@@ -414,6 +414,7 @@ public class FeedMetadata {
       List<GtfsCalendar> calendars = calendarTable.getEntities();
       for (GtfsTrip trip : trips) {
         String serviceId = trip.serviceId();
+        //Optional<GtfsCalendar> calendar = ((GtfsCalendarTableContainer) calendarTable).byServiceId(serviceId);
         for (GtfsCalendar calendar : calendars) {
           if (calendar.serviceId().equals(serviceId)) {
             LocalDate startDate = calendar.startDate().getLocalDate();
@@ -488,14 +489,18 @@ public class FeedMetadata {
         }
       }
     }
+
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
-    if ((earliestStartDate == null) && (latestEndDate == null)
-        || earliestStartDate.isAfter(latestEndDate)) {
+    if ((earliestStartDate == null) && (latestEndDate == null)) {
       feedInfo.put(FEED_INFO_SERVICE_WINDOW, "N/A");
     } else if (earliestStartDate == null && latestEndDate != null) {
       feedInfo.put(FEED_INFO_SERVICE_WINDOW, latestEndDate.format(formatter));
     } else if (latestEndDate == null && earliestStartDate != null) {
-      feedInfo.put(FEED_INFO_SERVICE_WINDOW, earliestStartDate.format(formatter));
+      if (earliestStartDate.isAfter(latestEndDate)) {
+        feedInfo.put(FEED_INFO_SERVICE_WINDOW, "N/A");
+      } else {
+        feedInfo.put(FEED_INFO_SERVICE_WINDOW, earliestStartDate.format(formatter));
+      }
     } else {
       StringBuilder serviceWindow = new StringBuilder();
       serviceWindow.append(earliestStartDate);
