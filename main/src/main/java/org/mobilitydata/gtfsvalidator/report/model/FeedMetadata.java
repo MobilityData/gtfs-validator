@@ -421,7 +421,6 @@ public class FeedMetadata {
       List<GtfsCalendar> calendars = calendarTable.getEntities();
       for (GtfsTrip trip : trips) {
         String serviceId = trip.serviceId();
-        //Optional<GtfsCalendar> calendar = ((GtfsCalendarTableContainer) calendarTable).byServiceId(serviceId);
         for (GtfsCalendar calendar : calendars) {
           if (calendar.serviceId().equals(serviceId)) {
             LocalDate startDate = calendar.startDate().getLocalDate();
