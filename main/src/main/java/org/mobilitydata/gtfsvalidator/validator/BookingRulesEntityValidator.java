@@ -13,8 +13,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsBookingRulesSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsBookingType;
 
 @GtfsValidator
-public class ForbiddenRealTimeBookingFieldValidator
-    extends SingleEntityValidator<GtfsBookingRules> {
+public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBookingRules> {
 
   @Override
   public void validate(GtfsBookingRules entity, NoticeContainer noticeContainer) {
@@ -29,7 +28,7 @@ public class ForbiddenRealTimeBookingFieldValidator
     // If there are any forbidden fields, add a validation notice
     if (!forbiddenFields.isEmpty()) {
       noticeContainer.addValidationNotice(
-          new ForbiddenRealTimeBookingFieldNotice(entity, forbiddenFields));
+          new ForbiddenRealTimeBookingFieldValueNotice(entity, forbiddenFields));
     }
   }
 
@@ -63,11 +62,11 @@ public class ForbiddenRealTimeBookingFieldValidator
     return fields;
   }
 
-  /** A forbidden field is present for a real-time booking rule. */
+  /** A forbidden field value is present for a real-time booking rule in `booking_rules.txt`. */
   @GtfsValidationNotice(
       severity = SeverityLevel.ERROR,
       files = @FileRefs(GtfsBookingRulesSchema.class))
-  static class ForbiddenRealTimeBookingFieldNotice extends ValidationNotice {
+  static class ForbiddenRealTimeBookingFieldValueNotice extends ValidationNotice {
     /** The row number of the faulty record. */
     private final int csvRowNumber;
 
@@ -77,7 +76,7 @@ public class ForbiddenRealTimeBookingFieldValidator
     /** The names of the forbidden fields comma-separated. */
     private final String fieldNames;
 
-    ForbiddenRealTimeBookingFieldNotice(
+    ForbiddenRealTimeBookingFieldValueNotice(
         GtfsBookingRules bookingRule, List<String> forbiddenFields) {
       this.csvRowNumber = bookingRule.csvRowNumber();
       this.bookingRuleId = bookingRule.bookingRuleId();

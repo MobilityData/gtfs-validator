@@ -12,14 +12,14 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsBookingRules;
 import org.mobilitydata.gtfsvalidator.table.GtfsBookingType;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
-import org.mobilitydata.gtfsvalidator.validator.ForbiddenRealTimeBookingFieldValidator.ForbiddenRealTimeBookingFieldNotice;
+import org.mobilitydata.gtfsvalidator.validator.BookingRulesEntityValidator.ForbiddenRealTimeBookingFieldValueNotice;
 
 @RunWith(JUnit4.class)
-public class ForbiddenRealTimeBookingFieldValidatorTest {
+public class BookingRulesEntityValidatorTest {
 
   private static List<ValidationNotice> generateNotices(GtfsBookingRules bookingRule) {
     NoticeContainer noticeContainer = new NoticeContainer();
-    ForbiddenRealTimeBookingFieldValidator validator = new ForbiddenRealTimeBookingFieldValidator();
+    BookingRulesEntityValidator validator = new BookingRulesEntityValidator();
     validator.validate(bookingRule, noticeContainer);
     return noticeContainer.getValidationNotices();
   }
@@ -37,7 +37,7 @@ public class ForbiddenRealTimeBookingFieldValidatorTest {
 
     assertThat(generateNotices(bookingRule))
         .containsExactly(
-            new ForbiddenRealTimeBookingFieldNotice(
+            new ForbiddenRealTimeBookingFieldValueNotice(
                 bookingRule,
                 List.of(
                     GtfsBookingRules.PRIOR_NOTICE_DURATION_MIN_FIELD_NAME,
@@ -82,7 +82,7 @@ public class ForbiddenRealTimeBookingFieldValidatorTest {
 
     assertThat(generateNotices(bookingRule))
         .containsExactly(
-            new ForbiddenRealTimeBookingFieldNotice(
+            new ForbiddenRealTimeBookingFieldValueNotice(
                 bookingRule,
                 List.of(
                     GtfsBookingRules.PRIOR_NOTICE_DURATION_MAX_FIELD_NAME,
