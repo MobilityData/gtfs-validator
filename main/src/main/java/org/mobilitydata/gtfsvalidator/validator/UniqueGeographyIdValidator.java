@@ -27,6 +27,8 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsGeojsonFeature;
 import org.mobilitydata.gtfsvalidator.table.GtfsGeojsonFeaturesContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsLocationGroupStops;
+import org.mobilitydata.gtfsvalidator.table.GtfsLocationGroupStopsTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationGroupsSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationsSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
@@ -35,29 +37,28 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
 
 /**
  * Validates that the feature id from "locations.geojson" is not a duplicate of any stop_id from
- * "stops.txt" or location_group_id from "location_groups.txt"
+ * "stops.txt" or location_group_id from "location_group_stops.txt"
  *
- * <p>Generated notice: {@link UniqueLocationIdViolationNotice}.
+ * <p>Generated notice: {@link DuplicateGeographyIdNotice}.
  */
 @GtfsValidator
-public class GtfsGeojsonFeatureUniqueLocationIdValidator extends FileValidator {
+public class UniqueGeographyIdValidator extends FileValidator {
   private final GtfsStopTableContainer stopTableContainer;
 
   // Remove this comment when the location_group_stops.txt file is added to the GTFS schema
-  // private final GtfsLocationGroupStopsTableContainer  locationGroupStopsTableContainer;
+  private final GtfsLocationGroupStopsTableContainer locationGroupStopsTableContainer;
 
   private final GtfsGeojsonFeaturesContainer geojsonFeatureContainer;
 
   @Inject
-  GtfsGeojsonFeatureUniqueLocationIdValidator(
+  UniqueGeographyIdValidator(
       GtfsGeojsonFeaturesContainer geojsonFeatureContainer,
-      GtfsStopTableContainer stopTableContainer
-      //        , GtfsLocationGroupStopsTableContainer locationGroupStopsTableContainer
-      ) {
+      GtfsStopTableContainer stopTableContainer,
+      GtfsLocationGroupStopsTableContainer locationGroupStopsTableContainer) {
     this.geojsonFeatureContainer = geojsonFeatureContainer;
 
     this.stopTableContainer = stopTableContainer;
-    //    this.locationGroupStopsTableContainer = locationGroupStopsTableContainer;
+    this.locationGroupStopsTableContainer = locationGroupStopsTableContainer;
   }
 
   @Override
@@ -72,12 +73,24 @@ public class GtfsGeojsonFeatureUniqueLocationIdValidator extends FileValidator {
       stop.ifPresent(
           gtfsStop ->
               noticeContainer.addValidationNotice(
-                  new UniqueLocationIdViolationNotice(
+                  new DuplicateGeographyIdNotice(
                       locationId,
                       GtfsStop.FILENAME,
                       GtfsStop.STOP_ID_FIELD_NAME,
                       gtfsStop.csvRowNumber())));
+
+      // Result is a list since we have not specified unicity for that field (i.e. PrimaryKey)
+      var locationGroupStopList = locationGroupStopsTableContainer.byLocationGroupId(locationId);
+      if (!locationGroupStopList.isEmpty()) {
+        noticeContainer.addValidationNotice(
+            new DuplicateGeographyIdNotice(
+                locationId,
+                GtfsLocationGroupStops.FILENAME,
+                GtfsLocationGroupStops.LOCATION_GROUP_ID_FIELD_NAME,
+                locationGroupStopList.get(0).csvRowNumber()));
+      }
     }
+    // TODO: Add detection of duplicates between stops and location_group_stops
   }
 
   /**
@@ -95,7 +108,7 @@ public class GtfsGeojsonFeatureUniqueLocationIdValidator extends FileValidator {
             GtfsLocationGroupsSchema.class
           }),
       sections = @GtfsValidationNotice.SectionRefs(FILE_REQUIREMENTS))
-  public static class UniqueLocationIdViolationNotice extends ValidationNotice {
+  public static class DuplicateGeographyIdNotice extends ValidationNotice {
 
     /** The id that already exists. */
     private final String id;
@@ -109,7 +122,7 @@ public class GtfsGeojsonFeatureUniqueLocationIdValidator extends FileValidator {
     /** The row of the record in the file where the id is already present. */
     private final int csvRowNumber;
 
-    public UniqueLocationIdViolationNotice(
+    public DuplicateGeographyIdNotice(
         String id, String fileWithIdAlreadyPresent, String fieldNameInFile, int csvRowNumber) {
 
       this.id = id;
