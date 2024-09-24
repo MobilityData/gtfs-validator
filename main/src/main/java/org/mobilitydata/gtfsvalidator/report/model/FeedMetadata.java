@@ -383,19 +383,30 @@ public class FeedMetadata {
     feedInfo.put(FEED_INFO_PUBLISHER_URL, info == null ? "N/A" : info.feedPublisherUrl());
     feedInfo.put(FEED_INFO_FEED_CONTACT_EMAIL, info == null ? "N/A" : info.feedContactEmail());
     feedInfo.put(
-        FEED_INFO_FEED_LANGUAGE, info == null ? "N/A" : info.feedLang().getDisplayLanguage());
+            FEED_INFO_FEED_LANGUAGE, info == null ? "N/A" : info.feedLang().getDisplayLanguage());
     if (feedTable.hasColumn(GtfsFeedInfo.FEED_START_DATE_FIELD_NAME)) {
-      LocalDate localDate = info.feedStartDate().getLocalDate();
-      String displayDate =
-          localDate.equals(GtfsFeedInfo.DEFAULT_FEED_START_DATE) ? "N/A" : localDate.toString();
-      feedInfo.put(FEED_INFO_FEED_START_DATE, info == null ? "N/A" : displayDate);
+      if (info != null) {
+        LocalDate localDate = info.feedStartDate().getLocalDate();
+        feedInfo.put(FEED_INFO_FEED_START_DATE, checkLocalDate(localDate));
+      }
     }
     if (feedTable.hasColumn(GtfsFeedInfo.FEED_END_DATE_FIELD_NAME)) {
-      LocalDate localDate = info.feedEndDate().getLocalDate();
-      String displayDate =
-          localDate.equals(GtfsFeedInfo.DEFAULT_FEED_END_DATE) ? "N/A" : localDate.toString();
-      feedInfo.put(FEED_INFO_FEED_END_DATE, info == null ? "N/A" : displayDate);
+      if (info != null) {
+        LocalDate localDate = info.feedEndDate().getLocalDate();
+        feedInfo.put(FEED_INFO_FEED_END_DATE, checkLocalDate(localDate));
+      }
     }
+  }
+
+  private String checkLocalDate(LocalDate localDate) {
+    String displayDate;
+    if (localDate.toString().equals(LocalDate.EPOCH.toString())) {
+      displayDate = "N/A";
+    } else {
+      displayDate = localDate.toString();
+
+    }
+    return displayDate;
   }
 
   /**
