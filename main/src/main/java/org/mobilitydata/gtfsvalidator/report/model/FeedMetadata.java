@@ -64,10 +64,10 @@ public class FeedMetadata {
               new FeatureMetadata("Fares Transfers", "Fares"), GtfsFareTransferRule.FILENAME),
           new Pair<>(new FeatureMetadata("Time-Based Fares", "Fares"), GtfsTimeframe.FILENAME),
           new Pair<>(
-              new FeatureMetadata("Booking Rules", "Flexible Services"), GtfsTimeframe.FILENAME),
+              new FeatureMetadata("Booking Rules", "Flexible Services"), GtfsBookingRules.FILENAME),
           new Pair<>(
               new FeatureMetadata("Fixed-Stops Demand Responsive Transit", "Flexible Services"),
-              GtfsTimeframe.FILENAME));
+              GtfsLocationGroups.FILENAME));
 
   protected FeedMetadata() {}
 
