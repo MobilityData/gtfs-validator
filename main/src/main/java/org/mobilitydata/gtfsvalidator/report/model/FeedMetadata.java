@@ -383,7 +383,7 @@ public class FeedMetadata {
     feedInfo.put(FEED_INFO_PUBLISHER_URL, info == null ? "N/A" : info.feedPublisherUrl());
     feedInfo.put(FEED_INFO_FEED_CONTACT_EMAIL, info == null ? "N/A" : info.feedContactEmail());
     feedInfo.put(
-            FEED_INFO_FEED_LANGUAGE, info == null ? "N/A" : info.feedLang().getDisplayLanguage());
+        FEED_INFO_FEED_LANGUAGE, info == null ? "N/A" : info.feedLang().getDisplayLanguage());
     if (feedTable.hasColumn(GtfsFeedInfo.FEED_START_DATE_FIELD_NAME)) {
       if (info != null) {
         LocalDate localDate = info.feedStartDate().getLocalDate();
@@ -404,7 +404,6 @@ public class FeedMetadata {
       displayDate = "N/A";
     } else {
       displayDate = localDate.toString();
-
     }
     return displayDate;
   }
