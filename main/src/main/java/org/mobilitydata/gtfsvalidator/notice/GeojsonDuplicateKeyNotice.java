@@ -20,13 +20,17 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
+import org.mobilitydata.gtfsvalidator.table.GtfsLocationsSchema;
 
 /**
  * Duplicated feature id.
  *
  * <p>One of the feature id of the locations.geojson file appears twice or more in the file.
  */
-@GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILE_REQUIREMENTS))
+@GtfsValidationNotice(
+    severity = ERROR,
+    files = @GtfsValidationNotice.FileRefs(GtfsLocationsSchema.class),
+    sections = @SectionRefs(FILE_REQUIREMENTS))
 public class GeojsonDuplicateKeyNotice extends ValidationNotice {
 
   /** The name of the faulty file. */
