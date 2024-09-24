@@ -271,7 +271,12 @@
                             <a th:href="${info.value}" target="_blank" th:text="${info.value}" />
                         </span>
                             <span th:if="${info.key.contains('URL') and info.value == 'N/A'}" th:text="${info.value}"></span>
-                            <span th:unless="${info.key.contains('URL')}" th:text="${info.value}" />
+                            <span th:unless="${info.key.contains('URL')}" th:text="${info.value}"/>
+                            <span th:if="${info.key.contains('Service Dates')}" >
+                                 <a href="#" class="tooltip" onclick="event.preventDefault();"><span>(?)</span>
+                                    <span class="tooltiptext" style="transform: translateX(-100%)">The range of service dates covered by the feed, based on trips with an associated service_id in calendar.txt and/or calendar_dates.txt</span>
+                                </a>
+                            </span>
                         </dt>
                     </div>
                 </dl>
