@@ -23,7 +23,7 @@ public class FeedMetadata {
   public static final String FEED_INFO_FEED_LANGUAGE = "Feed Language";
   public static final String FEED_INFO_FEED_START_DATE = "Feed Start Date";
   public static final String FEED_INFO_FEED_END_DATE = "Feed End Date";
-  public static final String FEED_INFO_SERVICE_WINDOW = "Service Date Range";
+  public static final String FEED_INFO_SERVICE_WINDOW = "Service Dates";
 
   /*
    * Use these strings as keys in the counts map. Also used to specify the info that will appear in
