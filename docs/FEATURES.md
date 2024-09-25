@@ -30,3 +30,36 @@ The validator will produce the [list of components](https://docs.google.com/spre
 | Transfers                | Transfers                 | One line of data in [transfers.txt](https://gtfs.org/schedule/reference/#transferstxt)     | https://gtfs.org/getting_started/features/base_add-ons/#transfers                                                                                                                                                                                                                                                                                                                                                      |
 | Frequency-based Services | Frequencies               | One line of data in [frequencies.txt](https://gtfs.org/schedule/reference/#frequenciestxt)    | https://gtfs.org/getting_started/features/base_add-ons/#frequency-based-service                                                                                                                                                                                                                                                                                                                                                    |
 
+# Feature migration
+
+Overview of the list of features for each release. Only the releases that affect the list of features are included in this table: if a release number isn't in this table, it means the features were not affected.  
+If a feature is dropped from one older release to a newer release; it means it has been replaced by one or more new features.
+
+
+| 5.0 | 4.2 | 
+|--------------------------|---------------------------|
+|Frequencies|Frequency-Based Trip|
+||Feed Information|
+||Attributions|
+||Fares V1|
+||Fare Products|
+||Fare Media|
+||Zone-Based Fares|
+|Route-Based Fares||
+|Time-Based Fares||
+|Transfer Fares||
+||Text-to-Speech|
+||Wheelchair accessibility|
+||Route Colors|
+||Bike Allowed|
+||Headsigns|
+||Transfers|
+|Pathways (basic)* |Pathways|
+|Pathways (extra)||
+|Levels||
+||Route Names|
+||Agency Information|
+||Translations|
+||Continuous Stops|
+||Location types|
+
