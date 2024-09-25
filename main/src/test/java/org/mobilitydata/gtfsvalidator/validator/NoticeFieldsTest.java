@@ -199,7 +199,9 @@ public class NoticeFieldsTest {
             "pathwayMode",
             "isBidirectional",
             "locationGroupId",
-            "locationId");
+            "locationId",
+            "bookingRuleId",
+            "fieldNames");
   }
 
   private static List<String> discoverValidationNoticeFieldNames() {
