@@ -52,9 +52,18 @@ public interface GtfsStopTimeSchema extends GtfsEntity {
 
   @FieldType(FieldTypeEnum.ID)
   @Index
-  @Required
+  @ConditionallyRequired
   @ForeignKey(table = "stops.txt", field = "stop_id")
   String stopId();
+
+  @FieldType(FieldTypeEnum.ID)
+  @ConditionallyRequired
+  @ForeignKey(table = "location_groups.txt", field = "location_group_id")
+  String locationGroupId();
+
+  @FieldType(FieldTypeEnum.ID)
+  @ConditionallyRequired
+  String locationId();
 
   @PrimaryKey(isSequenceUsedForSorting = true, translationRecordIdType = RECORD_SUB_ID)
   @Required
@@ -63,6 +72,10 @@ public interface GtfsStopTimeSchema extends GtfsEntity {
 
   @CachedField
   String stopHeadsign();
+
+  GtfsTime startPickupDropOffWindow();
+
+  GtfsTime endPickupDropOffWindow();
 
   GtfsPickupDropOff pickupType();
 
@@ -80,4 +93,12 @@ public interface GtfsStopTimeSchema extends GtfsEntity {
   @DefaultValue("1")
   @RecommendedColumn
   GtfsStopTimeTimepoint timepoint();
+
+  @FieldType(FieldTypeEnum.ID)
+  @ForeignKey(table = "booking_rules.txt", field = "booking_rule_id")
+  String pickupBookingRuleId();
+
+  @FieldType(FieldTypeEnum.ID)
+  @ForeignKey(table = "booking_rules.txt", field = "booking_rule_id")
+  String dropOffBookingRuleId();
 }

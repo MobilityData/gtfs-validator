@@ -195,7 +195,13 @@ public class NoticeFieldsTest {
             "maxShapeDistanceTraveled",
             "maxTripDistanceTraveled",
             "fileNameA",
-            "fileNameB");
+            "fileNameB",
+            "pathwayMode",
+            "isBidirectional",
+            "locationGroupId",
+            "locationId",
+            "bookingRuleId",
+            "fieldNames");
   }
 
   private static List<String> discoverValidationNoticeFieldNames() {

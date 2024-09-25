@@ -16,6 +16,7 @@ public class FeedMetadata {
    */
   public static final String FEED_INFO_PUBLISHER_NAME = "Publisher Name";
   public static final String FEED_INFO_PUBLISHER_URL = "Publisher URL";
+  public static final String FEED_INFO_FEED_CONTACT_EMAIL = "Feed Email";
   public static final String FEED_INFO_FEED_LANGUAGE = "Feed Language";
   public static final String FEED_INFO_FEED_START_DATE = "Feed Start Date";
   public static final String FEED_INFO_FEED_END_DATE = "Feed End Date";
@@ -60,7 +61,9 @@ public class FeedMetadata {
           new Pair<>("Zone-Based Fares", GtfsArea.FILENAME),
           new Pair<>("Transfer Fares", GtfsFareTransferRule.FILENAME),
           new Pair<>("Time-Based Fares", GtfsTimeframe.FILENAME),
-          new Pair<>("Levels", GtfsLevel.FILENAME));
+          new Pair<>("Levels", GtfsLevel.FILENAME),
+          new Pair<>("Booking Rules", GtfsBookingRules.FILENAME),
+          new Pair<>("Fixed-Stops Demand Responsive Transit", GtfsLocationGroups.FILENAME));
 
   protected FeedMetadata() {}
 
@@ -156,6 +159,60 @@ public class FeedMetadata {
     loadPathwayExtraFeature(feedContainer);
     loadRouteBasedFaresFeature(feedContainer);
     loadContinuousStopsFeature(feedContainer);
+    loadZoneBasedDemandResponsiveTransitFeature(feedContainer);
+    loadDeviatedFixedRouteFeature(feedContainer);
+  }
+
+  private void loadDeviatedFixedRouteFeature(GtfsFeedContainer feedContainer) {
+    specFeatures.put("Deviated Fixed Route", hasAtLeastOneTripWithAllFields(feedContainer));
+  }
+
+  private boolean hasAtLeastOneTripWithAllFields(GtfsFeedContainer feedContainer) {
+    Optional<GtfsTableContainer<?>> optionalStopTimeTable =
+        feedContainer.getTableForFilename(GtfsStopTime.FILENAME);
+    if (optionalStopTimeTable.isPresent()) {
+      for (GtfsEntity entity : optionalStopTimeTable.get().getEntities()) {
+        if (entity instanceof GtfsStopTime) {
+          GtfsStopTime stopTime = (GtfsStopTime) entity;
+          return stopTime.hasTripId()
+              && stopTime.tripId() != null
+              && stopTime.hasLocationId()
+              && stopTime.locationId() != null
+              && stopTime.hasStopId()
+              && stopTime.stopId() != null
+              && stopTime.hasArrivalTime()
+              && stopTime.arrivalTime() != null
+              && stopTime.hasDepartureTime()
+              && stopTime.departureTime() != null;
+        }
+      }
+    }
+    return false;
+  }
+
+  private void loadZoneBasedDemandResponsiveTransitFeature(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        "Zone-Based Demand Responsive Transit", hasAtLeastOneTripWithOnlyLocationId(feedContainer));
+  }
+
+  private boolean hasAtLeastOneTripWithOnlyLocationId(GtfsFeedContainer feedContainer) {
+    Optional<GtfsTableContainer<?>> optionalStopTimeTable =
+        feedContainer.getTableForFilename(GtfsStopTime.FILENAME);
+    if (optionalStopTimeTable.isPresent()) {
+      for (GtfsEntity entity : optionalStopTimeTable.get().getEntities()) {
+        if (entity instanceof GtfsStopTime) {
+          GtfsStopTime stopTime = (GtfsStopTime) entity;
+          if (stopTime.hasTripId()
+              && stopTime.tripId() != null
+              && stopTime.hasLocationId()
+              && stopTime.locationId() != null
+              && (!stopTime.hasStopId() || stopTime.stopId() == null)) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
   }
 
   private void loadContinuousStopsFeature(GtfsFeedContainer feedContainer) {
@@ -307,6 +364,7 @@ public class FeedMetadata {
 
     feedInfo.put(FEED_INFO_PUBLISHER_NAME, info == null ? "N/A" : info.feedPublisherName());
     feedInfo.put(FEED_INFO_PUBLISHER_URL, info == null ? "N/A" : info.feedPublisherUrl());
+    feedInfo.put(FEED_INFO_FEED_CONTACT_EMAIL, info == null ? "N/A" : info.feedContactEmail());
     feedInfo.put(
         FEED_INFO_FEED_LANGUAGE, info == null ? "N/A" : info.feedLang().getDisplayLanguage());
     if (feedTable.hasColumn(GtfsFeedInfo.FEED_START_DATE_FIELD_NAME)) {
