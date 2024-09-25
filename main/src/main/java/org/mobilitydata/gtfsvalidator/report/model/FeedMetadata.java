@@ -441,7 +441,7 @@ public class FeedMetadata {
               LocalDate endDate = calendar.endDate().getLocalDate();
               if (startDate != null || endDate != null) {
                 if (startDate.toString().equals(LocalDate.EPOCH.toString())
-                        || endDate.toString().equals(LocalDate.EPOCH.toString())) {
+                    || endDate.toString().equals(LocalDate.EPOCH.toString())) {
                   continue;
                 }
                 if (earliestStartDate == null || startDate.isBefore(earliestStartDate)) {
@@ -476,9 +476,9 @@ public class FeedMetadata {
       } else if ((calendarTable != null) && (calendarDateTable != null)) {
         // When both calendars.txt and calendar_dates.txt are used
         Map<String, ServicePeriod> servicePeriods =
-                CalendarUtil.buildServicePeriodMap(
-                        (GtfsCalendarTableContainer) calendarTable,
-                        (GtfsCalendarDateTableContainer) calendarDateTable);
+            CalendarUtil.buildServicePeriodMap(
+                (GtfsCalendarTableContainer) calendarTable,
+                (GtfsCalendarDateTableContainer) calendarDateTable);
         List<LocalDate> removedDates = new ArrayList<>();
         for (GtfsTrip trip : trips) {
           String serviceId = trip.serviceId();
@@ -487,7 +487,7 @@ public class FeedMetadata {
           LocalDate endDate = servicePeriod.getServiceEnd();
           if (startDate != null && endDate != null) {
             if (startDate.toString().equals(LocalDate.EPOCH.toString())
-                    || endDate.toString().equals(LocalDate.EPOCH.toString())) {
+                || endDate.toString().equals(LocalDate.EPOCH.toString())) {
               continue;
             }
             if (earliestStartDate == null || startDate.isBefore(earliestStartDate)) {
