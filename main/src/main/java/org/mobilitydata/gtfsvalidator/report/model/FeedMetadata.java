@@ -198,7 +198,7 @@ public class FeedMetadata {
 
   private void loadZoneBasedDemandResponsiveTransitFeature(GtfsFeedContainer feedContainer) {
     specFeatures.put(
-        new FeatureMetadata("Zone-based Demand Responsive Services", "Flexible Services"),
+        new FeatureMetadata("Zone-Based Demand Responsive Services", "Flexible Services"),
         hasAtLeastOneTripWithOnlyLocationId(feedContainer));
   }
 
@@ -287,7 +287,7 @@ public class FeedMetadata {
 
   private void loadTraversalTimeFeature(GtfsFeedContainer feedContainer) {
     specFeatures.put(
-        new FeatureMetadata("In-station traversal time", "Pathways"),
+        new FeatureMetadata("In-station Traversal Time", "Pathways"),
         hasAtLeastOneRecordForFields(
             feedContainer,
             GtfsPathway.FILENAME,
