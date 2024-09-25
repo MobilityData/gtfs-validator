@@ -36,30 +36,35 @@ Overview of the list of features for each release. Only the releases that affect
 If a feature is dropped from one older release to a newer release; it means it has been replaced by one or more new features.
 
 
-| 5.0 | 4.2 | 
-|--------------------------|---------------------------|
-|Frequencies|Frequency-Based Trip|
-||Feed Information|
-||Attributions|
-||Fares V1|
-||Fare Products|
-||Fare Media|
-||Zone-Based Fares|
-|Route-Based Fares||
-|Time-Based Fares||
-|Transfer Fares||
-||Text-to-Speech|
-||Wheelchair accessibility|
-||Route Colors|
-||Bike Allowed|
-||Headsigns|
-||Transfers|
-|Pathways (basic)* |Pathways|
-|Pathways (extra)||
-|Levels||
-||Route Names|
-||Agency Information|
-||Translations|
-||Continuous Stops|
-||Location types|
+| 6.0 | 5.0 | 4.2 | 
+|-----|-----|-----|
+|Text-to-Speech|Text-to-Speech|Text-to-Speech|
+||Wheelchair accessibility|Wheelchair accessibility|
+|Stops Wheelchair Accessibility||
+|Trips Wheelchair Accessibility||
+|Route Colors|Route Colors|Route Colors|
+|Bike Allowed||Bike Allowed|Bike Allowed|
+|Translations|Translations|Translations|
+|Headsigns|Headsigns|Headsigns|
+|Fare Products|Fare Products|Fare Products|
+|Fare Media|Fare Media|Fare Media|
+|Route-Based Fares|Route-Based Fares||
+|Time-Based Fares|Time-Based Fares||
+|Zone-Based Fares|Zone-Based Fares|Zone-Based Fares|
+|Fares Transfers|Transfer Fares||
+|Fares V1|Fares V1|Fares V1|
+|Pathway Connections|Pathways (basic)* |Pathways|
+|Pathway Details|Pathways (extra)* ||
+|Levels|Levels||
+|In-station traversal time|In-station traversal time|In-station traversal time|
+|Pathway Signs|Pathways directions||
+|Location types|Location types|Location types|
+|Feed Information|Feed Information|Feed Information|
+|Attributions|Attributions|Attributions|
+|Continuous Stops|Continuous Stops|Continuous Stops|
+|Shapes|Shapes|Shapes|
+|Transfers|Transfers|Transfers|
+|Frequencies|Frequencies|Frequency-Based Trip|
+|||Route Names|
+|||Agency Information|
 
