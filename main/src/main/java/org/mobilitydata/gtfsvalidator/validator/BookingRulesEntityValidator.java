@@ -17,6 +17,12 @@ public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBooki
 
   @Override
   public void validate(GtfsBookingRules entity, NoticeContainer noticeContainer) {
+    validateForbiddenRealTimeFields(entity, noticeContainer);
+    validateSameDayFields(entity, noticeContainer);
+  }
+
+  private static void validateForbiddenRealTimeFields(
+      GtfsBookingRules entity, NoticeContainer noticeContainer) {
     // Only validate entities with REALTIME booking type
     if (entity.bookingType() != GtfsBookingType.REALTIME) {
       return;
@@ -32,11 +38,47 @@ public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBooki
     }
   }
 
+  private static void validateSameDayFields(
+      GtfsBookingRules entity, NoticeContainer noticeContainer) {
+    // Only validate entities with SAME_DAY booking type
+    if (entity.bookingType() != GtfsBookingType.SAMEDAY) {
+      return;
+    }
+
+    // Retrieve the list of forbidden fields
+    List<String> forbiddenFields = findForbiddenSameDayFields(entity);
+
+    // If there are any forbidden fields, add a validation notice
+    if (!forbiddenFields.isEmpty()) {
+      noticeContainer.addValidationNotice(
+          new ForbiddenSameDayBookingFieldValueNotice(entity, forbiddenFields));
+    }
+  }
+
+  private static List<String> findForbiddenSameDayFields(GtfsBookingRules bookingRule) {
+    List<String> fields = new ArrayList<>();
+
+    // Check each forbidden field and add its name to the list if it's present
+    if (bookingRule.hasPriorNoticeLastDay()) {
+      fields.add(GtfsBookingRules.PRIOR_NOTICE_LAST_DAY_FIELD_NAME);
+    }
+    if (bookingRule.hasPriorNoticeLastTime()) {
+      fields.add(GtfsBookingRules.PRIOR_NOTICE_LAST_TIME_FIELD_NAME);
+    }
+    if (bookingRule.hasPriorNoticeStartTime()) {
+      fields.add(GtfsBookingRules.PRIOR_NOTICE_START_TIME_FIELD_NAME);
+    }
+    if (bookingRule.hasPriorNoticeServiceId()) {
+      fields.add(GtfsBookingRules.PRIOR_NOTICE_SERVICE_ID_FIELD_NAME);
+    }
+    return fields;
+  }
+
   /** Finds forbidden fields that should not be present for real-time booking rules. */
   public static List<String> findForbiddenRealTimeFields(GtfsBookingRules bookingRule) {
     List<String> fields = new ArrayList<>();
 
-    // Check each field and add its name to the list if it's present
+    // Check each forbidden field and add its name to the list if it's present
     if (bookingRule.hasPriorNoticeDurationMin()) {
       fields.add(GtfsBookingRules.PRIOR_NOTICE_DURATION_MIN_FIELD_NAME);
     }
@@ -77,6 +119,28 @@ public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBooki
     private final String fieldNames;
 
     ForbiddenRealTimeBookingFieldValueNotice(
+        GtfsBookingRules bookingRule, List<String> forbiddenFields) {
+      this.csvRowNumber = bookingRule.csvRowNumber();
+      this.bookingRuleId = bookingRule.bookingRuleId();
+      this.fieldNames = String.join(", ", forbiddenFields);
+    }
+  }
+
+  /** A forbidden field value is present for a same-day booking rule in `booking_rules.txt`. */
+  @GtfsValidationNotice(
+      severity = SeverityLevel.ERROR,
+      files = @FileRefs(GtfsBookingRulesSchema.class))
+  static class ForbiddenSameDayBookingFieldValueNotice extends ValidationNotice {
+    /** The row number of the faulty record. */
+    private final int csvRowNumber;
+
+    /** The `booking_rules.booking_rule_id` of the faulty record. */
+    private final String bookingRuleId;
+
+    /** The names of the forbidden fields comma-separated. */
+    private final String fieldNames;
+
+    ForbiddenSameDayBookingFieldValueNotice(
         GtfsBookingRules bookingRule, List<String> forbiddenFields) {
       this.csvRowNumber = bookingRule.csvRowNumber();
       this.bookingRuleId = bookingRule.bookingRuleId();
