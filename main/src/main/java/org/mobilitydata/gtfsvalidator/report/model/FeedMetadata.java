@@ -2,6 +2,7 @@ package org.mobilitydata.gtfsvalidator.report.model;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.flogger.FluentLogger;
 import com.vladsch.flexmark.util.misc.Pair;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -24,6 +25,8 @@ public class FeedMetadata {
   public static final String FEED_INFO_FEED_START_DATE = "Feed Start Date";
   public static final String FEED_INFO_FEED_END_DATE = "Feed End Date";
   public static final String FEED_INFO_SERVICE_WINDOW = "Service Window";
+
+  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
   /*
    * Use these strings as keys in the counts map. Also used to specify the info that will appear in
@@ -96,7 +99,7 @@ public class FeedMetadata {
     if (feedContainer.getTableForFilename(GtfsTrip.FILENAME).isPresent()
         && (feedContainer.getTableForFilename(GtfsCalendar.FILENAME).isPresent()
             || feedContainer.getTableForFilename(GtfsCalendarDate.FILENAME).isPresent())) {
-      feedMetadata.loadServiceDateRange(
+      feedMetadata.loadServiceWindow(
           (GtfsTableContainer<GtfsTrip>) feedContainer.getTableForFilename(GtfsTrip.FILENAME).get(),
           (GtfsTableContainer<GtfsCalendar>)
               feedContainer.getTableForFilename(GtfsCalendar.FILENAME).get(),
@@ -418,7 +421,7 @@ public class FeedMetadata {
    * @param calendarTable the container for `calendars.txt` data
    * @param calendarDateTable the container for `calendar\_dates.txt` data
    */
-  public void loadServiceDateRange(
+  public void loadServiceWindow(
       GtfsTableContainer<GtfsTrip> tripContainer,
       GtfsTableContainer<GtfsCalendar> calendarTable,
       GtfsTableContainer<GtfsCalendarDate> calendarDateTable) {
@@ -426,103 +429,107 @@ public class FeedMetadata {
 
     LocalDate earliestStartDate = null;
     LocalDate latestEndDate = null;
-    if ((calendarDateTable == null) && (calendarTable != null)) {
-      // When only calendars.txt is used
-      List<GtfsCalendar> calendars = calendarTable.getEntities();
-      for (GtfsTrip trip : trips) {
-        String serviceId = trip.serviceId();
-        for (GtfsCalendar calendar : calendars) {
-          if (calendar.serviceId().equals(serviceId)) {
-            LocalDate startDate = calendar.startDate().getLocalDate();
-            LocalDate endDate = calendar.endDate().getLocalDate();
-            if (startDate != null || endDate != null) {
-              if (startDate.toString().equals(LocalDate.EPOCH.toString())
-                  || endDate.toString().equals(LocalDate.EPOCH.toString())) {
-                continue;
-              }
-              if (earliestStartDate == null || startDate.isBefore(earliestStartDate)) {
-                earliestStartDate = startDate;
-              }
-              if (latestEndDate == null || endDate.isAfter(latestEndDate)) {
-                latestEndDate = endDate;
-              }
-            }
-          }
-        }
-      }
-    } else if ((calendarDateTable != null) && (calendarTable == null)) {
-      // When only calendar_dates.txt is used
-      List<GtfsCalendarDate> calendarDates = calendarDateTable.getEntities();
-      for (GtfsTrip trip : trips) {
-        String serviceId = trip.serviceId();
-        for (GtfsCalendarDate calendarDate : calendarDates) {
-          if (calendarDate.serviceId().equals(serviceId)) {
-            LocalDate date = calendarDate.date().getLocalDate();
-            if (date != null && !date.toString().equals(LocalDate.EPOCH.toString())) {
-              if (earliestStartDate == null || date.isBefore(earliestStartDate)) {
-                earliestStartDate = date;
-              }
-              if (latestEndDate == null || date.isAfter(latestEndDate)) {
-                latestEndDate = date;
+    try {
+      if ((calendarDateTable == null) && (calendarTable != null)) {
+        // When only calendars.txt is used
+        List<GtfsCalendar> calendars = calendarTable.getEntities();
+        for (GtfsTrip trip : trips) {
+          String serviceId = trip.serviceId();
+          for (GtfsCalendar calendar : calendars) {
+            if (calendar.serviceId().equals(serviceId)) {
+              LocalDate startDate = calendar.startDate().getLocalDate();
+              LocalDate endDate = calendar.endDate().getLocalDate();
+              if (startDate != null || endDate != null) {
+                if (startDate.toString().equals(LocalDate.EPOCH.toString())
+                        || endDate.toString().equals(LocalDate.EPOCH.toString())) {
+                  continue;
+                }
+                if (earliestStartDate == null || startDate.isBefore(earliestStartDate)) {
+                  earliestStartDate = startDate;
+                }
+                if (latestEndDate == null || endDate.isAfter(latestEndDate)) {
+                  latestEndDate = endDate;
+                }
               }
             }
           }
         }
-      }
-    } else if ((calendarTable != null) && (calendarDateTable != null)) {
-      // When both calendars.txt and calendar_dates.txt are used
-      Map<String, ServicePeriod> servicePeriods =
-          CalendarUtil.buildServicePeriodMap(
-              (GtfsCalendarTableContainer) calendarTable,
-              (GtfsCalendarDateTableContainer) calendarDateTable);
-      List<LocalDate> removedDates = new ArrayList<>();
-      for (GtfsTrip trip : trips) {
-        String serviceId = trip.serviceId();
-        ServicePeriod servicePeriod = servicePeriods.get(serviceId);
-        LocalDate startDate = servicePeriod.getServiceStart();
-        LocalDate endDate = servicePeriod.getServiceEnd();
-        if (startDate != null && endDate != null) {
-          if (startDate.toString().equals(LocalDate.EPOCH.toString())
-              || endDate.toString().equals(LocalDate.EPOCH.toString())) {
-            continue;
-          }
-          if (earliestStartDate == null || startDate.isBefore(earliestStartDate)) {
-            earliestStartDate = startDate;
-          }
-          if (latestEndDate == null || endDate.isAfter(latestEndDate)) {
-            latestEndDate = endDate;
+      } else if ((calendarDateTable != null) && (calendarTable == null)) {
+        // When only calendar_dates.txt is used
+        List<GtfsCalendarDate> calendarDates = calendarDateTable.getEntities();
+        for (GtfsTrip trip : trips) {
+          String serviceId = trip.serviceId();
+          for (GtfsCalendarDate calendarDate : calendarDates) {
+            if (calendarDate.serviceId().equals(serviceId)) {
+              LocalDate date = calendarDate.date().getLocalDate();
+              if (date != null && !date.toString().equals(LocalDate.EPOCH.toString())) {
+                if (earliestStartDate == null || date.isBefore(earliestStartDate)) {
+                  earliestStartDate = date;
+                }
+                if (latestEndDate == null || date.isAfter(latestEndDate)) {
+                  latestEndDate = date;
+                }
+              }
+            }
           }
         }
-        removedDates.addAll(servicePeriod.getRemovedDays());
-      }
+      } else if ((calendarTable != null) && (calendarDateTable != null)) {
+        // When both calendars.txt and calendar_dates.txt are used
+        Map<String, ServicePeriod> servicePeriods =
+                CalendarUtil.buildServicePeriodMap(
+                        (GtfsCalendarTableContainer) calendarTable,
+                        (GtfsCalendarDateTableContainer) calendarDateTable);
+        List<LocalDate> removedDates = new ArrayList<>();
+        for (GtfsTrip trip : trips) {
+          String serviceId = trip.serviceId();
+          ServicePeriod servicePeriod = servicePeriods.get(serviceId);
+          LocalDate startDate = servicePeriod.getServiceStart();
+          LocalDate endDate = servicePeriod.getServiceEnd();
+          if (startDate != null && endDate != null) {
+            if (startDate.toString().equals(LocalDate.EPOCH.toString())
+                    || endDate.toString().equals(LocalDate.EPOCH.toString())) {
+              continue;
+            }
+            if (earliestStartDate == null || startDate.isBefore(earliestStartDate)) {
+              earliestStartDate = startDate;
+            }
+            if (latestEndDate == null || endDate.isAfter(latestEndDate)) {
+              latestEndDate = endDate;
+            }
+          }
+          removedDates.addAll(servicePeriod.getRemovedDays());
+        }
 
-      for (LocalDate date : removedDates) {
-        if (date.isEqual(earliestStartDate)) {
-          earliestStartDate = date.plusDays(1);
-        }
-        if (date.isEqual(latestEndDate)) {
-          latestEndDate = date.minusDays(1);
+        for (LocalDate date : removedDates) {
+          if (date.isEqual(earliestStartDate)) {
+            earliestStartDate = date.plusDays(1);
+          }
+          if (date.isEqual(latestEndDate)) {
+            latestEndDate = date.minusDays(1);
+          }
         }
       }
-    }
-
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
-    if ((earliestStartDate == null) && (latestEndDate == null)) {
-      feedInfo.put(FEED_INFO_SERVICE_WINDOW, "N/A");
-    } else if (earliestStartDate == null && latestEndDate != null) {
-      feedInfo.put(FEED_INFO_SERVICE_WINDOW, latestEndDate.format(formatter));
-    } else if (latestEndDate == null && earliestStartDate != null) {
-      if (earliestStartDate.isAfter(latestEndDate)) {
+    } catch (Exception e) {
+      logger.atSevere().withCause(e).log("Error while loading Service Window");
+    } finally {
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
+      if ((earliestStartDate == null) && (latestEndDate == null)) {
         feedInfo.put(FEED_INFO_SERVICE_WINDOW, "N/A");
+      } else if (earliestStartDate == null && latestEndDate != null) {
+        feedInfo.put(FEED_INFO_SERVICE_WINDOW, latestEndDate.format(formatter));
+      } else if (latestEndDate == null && earliestStartDate != null) {
+        if (earliestStartDate.isAfter(latestEndDate)) {
+          feedInfo.put(FEED_INFO_SERVICE_WINDOW, "N/A");
+        } else {
+          feedInfo.put(FEED_INFO_SERVICE_WINDOW, earliestStartDate.format(formatter));
+        }
       } else {
-        feedInfo.put(FEED_INFO_SERVICE_WINDOW, earliestStartDate.format(formatter));
+        StringBuilder serviceWindow = new StringBuilder();
+        serviceWindow.append(earliestStartDate);
+        serviceWindow.append(" to ");
+        serviceWindow.append(latestEndDate);
+        feedInfo.put(FEED_INFO_SERVICE_WINDOW, serviceWindow.toString());
       }
-    } else {
-      StringBuilder serviceWindow = new StringBuilder();
-      serviceWindow.append(earliestStartDate);
-      serviceWindow.append(" to ");
-      serviceWindow.append(latestEndDate);
-      feedInfo.put(FEED_INFO_SERVICE_WINDOW, serviceWindow.toString());
     }
   }
 

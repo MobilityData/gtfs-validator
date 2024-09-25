@@ -87,7 +87,7 @@ public class FeedMetadataTest {
   }
 
   @Test
-  public void testLoadServiceDateRange() {
+  public void testLoadServiceWindow() {
     GtfsTrip trip1 = createTrip(1, "JUN24-MVS-SUB-Weekday-01");
     GtfsTrip trip2 = createTrip(2, "JUN24-MVS-SUB-Weekday-02");
     // when(tripContainer.getEntities()).thenReturn(List.of(trip1, trip2));
@@ -125,7 +125,7 @@ public class FeedMetadataTest {
             List.of(calendarDate1, calendarDate2), noticeContainer);
 
     // Call the method
-    feedMetadata.loadServiceDateRange(tripContainer, calendarTable, calendarDateTable);
+    feedMetadata.loadServiceWindow(tripContainer, calendarTable, calendarDateTable);
 
     // Verify the result
     String expectedServiceWindow = "2024-01-02 to 2024-12-31";
