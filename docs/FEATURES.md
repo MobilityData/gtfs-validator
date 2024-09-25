@@ -1,6 +1,6 @@
-# Discovery of component in feeds
+# Discovery of features in feeds
 
-The validator will produce the [list of components](https://docs.google.com/spreadsheets/d/1kpbKOzlHtsJIPo3B4ABYu-Nxwvqutjcdcvgpa0wZvtA) that it finds in the processed feed according to this table:
+The validator will produce the [list of features](https://gtfs.org/getting_started/features/overview/) that it finds in the processed feed according to this table:
 
 | Component                | Feature                   | How is the presence of a feature determined (minimum requirements)  |   Documentation Link                                                                                                                                                                                                                                                                                                                                                                            |
 |--------------------------|---------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---|
