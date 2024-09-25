@@ -56,37 +56,43 @@ public class MissingTripEdgeValidator extends FileValidator {
       List<GtfsStopTime> stopTimesForTrip = entry.getValue();
       GtfsStopTime tripFirstStop = stopTimesForTrip.get(0);
       GtfsStopTime tripLastStop = stopTimesForTrip.get(stopTimesForTrip.size() - 1);
-      if (!tripFirstStop.hasArrivalTime()) {
-        noticeContainer.addValidationNotice(
-            new MissingTripEdgeNotice(
-                tripFirstStop.csvRowNumber(),
-                tripFirstStop.stopSequence(),
-                tripId,
-                ARRIVAL_TIME_FIELD_NAME));
+      if (!tripFirstStop.hasStartPickupDropOffWindow()
+          && !tripFirstStop.hasEndPickupDropOffWindow()) {
+        if (!tripFirstStop.hasArrivalTime()) {
+          noticeContainer.addValidationNotice(
+              new MissingTripEdgeNotice(
+                  tripFirstStop.csvRowNumber(),
+                  tripFirstStop.stopSequence(),
+                  tripId,
+                  ARRIVAL_TIME_FIELD_NAME));
+        }
+        if (!tripFirstStop.hasDepartureTime()) {
+          noticeContainer.addValidationNotice(
+              new MissingTripEdgeNotice(
+                  tripFirstStop.csvRowNumber(),
+                  tripFirstStop.stopSequence(),
+                  tripId,
+                  DEPARTURE_TIME_FIELD_NAME));
+        }
       }
-      if (!tripFirstStop.hasDepartureTime()) {
-        noticeContainer.addValidationNotice(
-            new MissingTripEdgeNotice(
-                tripFirstStop.csvRowNumber(),
-                tripFirstStop.stopSequence(),
-                tripId,
-                DEPARTURE_TIME_FIELD_NAME));
-      }
-      if (!tripLastStop.hasArrivalTime()) {
-        noticeContainer.addValidationNotice(
-            new MissingTripEdgeNotice(
-                tripLastStop.csvRowNumber(),
-                tripLastStop.stopSequence(),
-                tripId,
-                ARRIVAL_TIME_FIELD_NAME));
-      }
-      if (!tripLastStop.hasDepartureTime()) {
-        noticeContainer.addValidationNotice(
-            new MissingTripEdgeNotice(
-                tripLastStop.csvRowNumber(),
-                tripLastStop.stopSequence(),
-                tripId,
-                DEPARTURE_TIME_FIELD_NAME));
+      if (!tripLastStop.hasStartPickupDropOffWindow()
+          && !tripLastStop.hasEndPickupDropOffWindow()) {
+        if (!tripLastStop.hasArrivalTime()) {
+          noticeContainer.addValidationNotice(
+              new MissingTripEdgeNotice(
+                  tripLastStop.csvRowNumber(),
+                  tripLastStop.stopSequence(),
+                  tripId,
+                  ARRIVAL_TIME_FIELD_NAME));
+        }
+        if (!tripLastStop.hasDepartureTime()) {
+          noticeContainer.addValidationNotice(
+              new MissingTripEdgeNotice(
+                  tripLastStop.csvRowNumber(),
+                  tripLastStop.stopSequence(),
+                  tripId,
+                  DEPARTURE_TIME_FIELD_NAME));
+        }
       }
     }
   }

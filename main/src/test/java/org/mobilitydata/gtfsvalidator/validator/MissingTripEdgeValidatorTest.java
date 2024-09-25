@@ -46,6 +46,26 @@ public class MissingTripEdgeValidatorTest {
         .build();
   }
 
+  public static GtfsStopTime createStopTimeWithPickupDropOffWindow(
+      int csvRowNumber,
+      String tripId,
+      GtfsTime arrivalTime,
+      GtfsTime departureTime,
+      int stopSequence,
+      GtfsTime startPickupDropOffWindow,
+      GtfsTime endPickupDropOffWindow) {
+    return new GtfsStopTime.Builder()
+        .setCsvRowNumber(csvRowNumber)
+        .setTripId(tripId)
+        .setArrivalTime(arrivalTime)
+        .setDepartureTime(departureTime)
+        .setStopSequence(stopSequence)
+        .setStopId("stop id")
+        .setStartPickupDropOffWindow(startPickupDropOffWindow)
+        .setEndPickupDropOffWindow(endPickupDropOffWindow)
+        .build();
+  }
+
   public static GtfsTrip createTrip(int csvRowNumber, String tripId) {
     return new GtfsTrip.Builder()
         .setCsvRowNumber(csvRowNumber)
@@ -153,6 +173,30 @@ public class MissingTripEdgeValidatorTest {
                         GtfsTime.fromSecondsSinceMidnight(456),
                         GtfsTime.fromSecondsSinceMidnight(3556467),
                         4))))
+        .isEmpty();
+  }
+
+  @Test
+  public void tripWithPickupDropOffWindowShouldNotGenerateNotice() {
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createStopTimeWithPickupDropOffWindow(
+                        2,
+                        "trip id value",
+                        null,
+                        null,
+                        1,
+                        GtfsTime.fromSecondsSinceMidnight(1),
+                        GtfsTime.fromSecondsSinceMidnight(2)),
+                    createStopTimeWithPickupDropOffWindow(
+                        3,
+                        "trip id value 2",
+                        null,
+                        null,
+                        1,
+                        GtfsTime.fromSecondsSinceMidnight(1),
+                        GtfsTime.fromSecondsSinceMidnight(2)))))
         .isEmpty();
   }
 }
