@@ -13,7 +13,7 @@ import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
 
-public class JsonFileLoader extends TableLoader {
+public class GeoJsonFileLoader extends TableLoader {
 
   @Override
   public GtfsEntityContainer load(
@@ -60,7 +60,7 @@ public class JsonFileLoader extends TableLoader {
       }
       if (featureObject.has("id")) {
         gtfsGeojsonFeature = new GtfsGeojsonFeature();
-        gtfsGeojsonFeature.setLocationId(featureObject.get("id").getAsString());
+        gtfsGeojsonFeature.setFeatureId(featureObject.get("id").getAsString());
       } else {
         // Add a notice because id is required
       }

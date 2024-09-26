@@ -24,13 +24,13 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorUtil;
 
 /** This class loads csv files specifically. */
-public final class AnyTableLoader extends TableLoader {
+public final class CsvFileLoader extends TableLoader {
 
-  private AnyTableLoader() {}
+  private CsvFileLoader() {}
   // Create the singleton and add a method to obtain it
-  private static final AnyTableLoader INSTANCE = new AnyTableLoader();
+  private static final CsvFileLoader INSTANCE = new CsvFileLoader();
 
-  public static AnyTableLoader getInstance() {
+  public static CsvFileLoader getInstance() {
     return INSTANCE;
   }
 

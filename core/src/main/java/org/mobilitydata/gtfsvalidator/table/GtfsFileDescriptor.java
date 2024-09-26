@@ -32,6 +32,6 @@ public abstract class GtfsFileDescriptor<T extends GtfsEntity> {
   }
 
   public TableLoader getTableLoader() {
-    return AnyTableLoader.getInstance();
+    return CsvFileLoader.getInstance();
   }
 }

@@ -30,7 +30,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.mockito.quality.Strictness;
 
-public class AnyTableLoaderTest {
+public class CsvTableLoaderTest {
 
   @Rule public MockitoRule rule = MockitoJUnit.rule().strictness(Strictness.STRICT_STUBS);
   @Mock private GtfsTableContainer mockContainer;
@@ -50,7 +50,7 @@ public class AnyTableLoaderTest {
         .thenReturn(mockContainer);
 
     var loadedContainer =
-        AnyTableLoader.getInstance()
+        CsvFileLoader.getInstance()
             .load(testTableDescriptor, validatorProvider, null, loaderNotices);
 
     assertThat(validationNoticeTypes(loaderNotices)).containsExactly(CsvParsingFailedNotice.class);
@@ -66,7 +66,7 @@ public class AnyTableLoaderTest {
     InputStream csvInputStream = toInputStream("");
 
     var loadedContainer =
-        AnyTableLoader.getInstance()
+        CsvFileLoader.getInstance()
             .load(testTableDescriptor, validatorProvider, csvInputStream, loaderNotices);
 
     assertThat(loaderNotices.getValidationNotices())
@@ -99,7 +99,7 @@ public class AnyTableLoaderTest {
     when(validatorProvider.getTableHeaderValidator()).thenReturn(tableHeaderValidator);
 
     var loadedContainer =
-        AnyTableLoader.getInstance()
+        CsvFileLoader.getInstance()
             .load(testTableDescriptor, validatorProvider, csvInputStream, loaderNotices);
 
     assertThat(loaderNotices.getValidationNotices()).containsExactly(headerValidationNotice);
@@ -115,7 +115,7 @@ public class AnyTableLoaderTest {
     InputStream inputStream = toInputStream("id,code\n" + "s1\n");
 
     var loadedContainer =
-        AnyTableLoader.getInstance()
+        CsvFileLoader.getInstance()
             .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
     assertThat(loaderNotices.getValidationNotices())
@@ -136,7 +136,7 @@ public class AnyTableLoaderTest {
     InputStream inputStream = toInputStream("id,stop_lat,_no_name_\n" + "s1, 23.00, no_value\n");
 
     var loadedContainer =
-        AnyTableLoader.getInstance()
+        CsvFileLoader.getInstance()
             .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
     assertThat(loadedContainer.getTableStatus()).isEqualTo(TableStatus.PARSABLE_HEADERS_AND_ROWS);
@@ -172,7 +172,7 @@ public class AnyTableLoaderTest {
     InputStream inputStream = toInputStream("id,code\n" + "s1,\n");
 
     var loadedContainer =
-        AnyTableLoader.getInstance()
+        CsvFileLoader.getInstance()
             .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
     assertThat(loaderNotices.getValidationNotices())

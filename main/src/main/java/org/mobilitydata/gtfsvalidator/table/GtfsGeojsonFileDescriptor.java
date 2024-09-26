@@ -31,6 +31,6 @@ public class GtfsGeojsonFileDescriptor extends GtfsFileDescriptor<GtfsGeojsonFea
   }
 
   public TableLoader getTableLoader() {
-    return new JsonFileLoader();
+    return new GeoJsonFileLoader();
   }
 }

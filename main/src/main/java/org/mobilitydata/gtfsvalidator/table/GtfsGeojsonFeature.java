@@ -7,9 +7,9 @@ import javax.annotation.Nullable;
 public final class GtfsGeojsonFeature implements GtfsEntity {
   public static final String FILENAME = "locations.geojson";
 
-  public static final String LOCATION_ID_FIELD_NAME = "location_id";
+  public static final String FEATURE_ID_FIELD_NAME = "feature_id";
 
-  private String locationId; // The id of a feature in the GeoJSON file.
+  private String featureId; // The id of a feature in the GeoJSON file.
 
   public GtfsGeojsonFeature() {}
 
@@ -20,15 +20,15 @@ public final class GtfsGeojsonFeature implements GtfsEntity {
   }
 
   @Nonnull
-  public String locationId() {
-    return locationId;
+  public String featureId() {
+    return featureId;
   }
 
-  public boolean hasLocationId() {
-    return locationId != null;
+  public boolean hasFeatureId() {
+    return featureId != null;
   }
 
-  public void setLocationId(@Nullable String locationId) {
-    this.locationId = locationId;
+  public void setFeatureId(@Nullable String featureId) {
+    this.featureId = featureId;
   }
 }

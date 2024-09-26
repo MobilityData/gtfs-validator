@@ -5,11 +5,11 @@ import java.util.Optional;
 
 /**
  * This class is the parent of the containers holding table (csv) entities and containers holding
- * geojson entities
+ * JSON entities
  *
- * @param <T> The entity for this container (e.g. GtfsCalendarDate or {@link GtfsGeojsonFeature} )
+ * @param <T> The entity for this container (e.g. GtfsCalendarDate or GtfsGeojsonFeature )
  * @param <D> The descriptor for the table for the container (e.g. GtfsCalendarDateTableDescriptor
- *     or {@link GtfsGeojsonFileDescriptor})
+ *     or GtfsGeojsonFileDescriptor)
  */
 public abstract class GtfsEntityContainer<T extends GtfsEntity, D extends GtfsFileDescriptor> {
 

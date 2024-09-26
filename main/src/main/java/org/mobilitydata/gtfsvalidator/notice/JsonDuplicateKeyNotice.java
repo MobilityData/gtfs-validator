@@ -31,16 +31,20 @@ import org.mobilitydata.gtfsvalidator.table.GtfsLocationsSchema;
     severity = ERROR,
     files = @GtfsValidationNotice.FileRefs(GtfsLocationsSchema.class),
     sections = @SectionRefs(FILE_REQUIREMENTS))
-public class GeojsonDuplicateKeyNotice extends ValidationNotice {
+public class JsonDuplicateKeyNotice extends ValidationNotice {
 
   /** The name of the faulty file. */
   private final String filename;
 
-  /** The feature that is duplicated. */
-  private final String featureId;
+  /** The field that is duplicated. */
+  private final String fieldName;
 
-  public GeojsonDuplicateKeyNotice(String filename, String featureId) {
+  /** The duplicate value of the field. */
+  private final String fieldValue;
+
+  public JsonDuplicateKeyNotice(String filename, String fieldName, String fieldValue) {
     this.filename = filename;
-    this.featureId = featureId;
+    this.fieldName = fieldName;
+    this.fieldValue = fieldValue;
   }
 }

@@ -117,7 +117,7 @@ public class FeedMetadata {
     var table = feedContainer.getTableForFilename(fileName);
     this.counts.put(
         countName,
-        table.map(GtfsContainer -> loadUniqueCount(GtfsContainer, clazz, idExtractor)).orElse(0));
+        table.map(gtfsContainer -> loadUniqueCount(gtfsContainer, clazz, idExtractor)).orElse(0));
   }
 
   private <E extends GtfsEntity> int loadUniqueCount(

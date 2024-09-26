@@ -22,7 +22,7 @@ import java.util.*;
 /**
  * Container for a whole parsed GTFS feed with all its tables.
  *
- * <p>The tables are kept as {@code GtfsContainer} instances.
+ * <p>The tables are kept as {@link GtfsEntityContainer} instances.
  */
 public class GtfsFeedContainer {
   private final Map<String, GtfsEntityContainer<?, ?>> tables = new HashMap<>();

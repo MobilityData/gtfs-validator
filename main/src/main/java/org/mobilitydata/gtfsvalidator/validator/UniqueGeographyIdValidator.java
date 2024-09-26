@@ -64,27 +64,27 @@ public class UniqueGeographyIdValidator extends FileValidator {
   @Override
   public void validate(NoticeContainer noticeContainer) {
     for (GtfsGeojsonFeature json : geojsonFeatureContainer.getEntities()) {
-      String locationId = json.locationId();
-      if (locationId.isEmpty()) {
+      String featureId = json.featureId();
+      if (featureId.isEmpty()) {
         continue;
       }
 
-      Optional<GtfsStop> stop = stopTableContainer.byStopId(locationId);
+      Optional<GtfsStop> stop = stopTableContainer.byStopId(featureId);
       stop.ifPresent(
           gtfsStop ->
               noticeContainer.addValidationNotice(
                   new DuplicateGeographyIdNotice(
-                      locationId,
+                      featureId,
                       GtfsStop.FILENAME,
                       GtfsStop.STOP_ID_FIELD_NAME,
                       gtfsStop.csvRowNumber())));
 
       // Result is a list since we have not specified unicity for that field (i.e. PrimaryKey)
-      var locationGroupStopList = locationGroupStopsTableContainer.byLocationGroupId(locationId);
+      var locationGroupStopList = locationGroupStopsTableContainer.byLocationGroupId(featureId);
       if (!locationGroupStopList.isEmpty()) {
         noticeContainer.addValidationNotice(
             new DuplicateGeographyIdNotice(
-                locationId,
+                featureId,
                 GtfsLocationGroupStops.FILENAME,
                 GtfsLocationGroupStops.LOCATION_GROUP_ID_FIELD_NAME,
                 locationGroupStopList.get(0).csvRowNumber()));
