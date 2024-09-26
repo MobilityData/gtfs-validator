@@ -532,14 +532,11 @@ public class FeedMetadata {
         serviceWindow.append(latestEndDate);
         feedInfo.put(FEED_INFO_SERVICE_WINDOW, serviceWindow.toString());
       }
-      if (earliestStartDate == null) {
-        feedInfo.put(FEED_INFO_SERVICE_WINDOW_START, "");
-      } else if (latestEndDate == null) {
-        feedInfo.put(FEED_INFO_SERVICE_WINDOW_END, "");
-      } else {
-        feedInfo.put(FEED_INFO_SERVICE_WINDOW_START, earliestStartDate.toString());
-        feedInfo.put(FEED_INFO_SERVICE_WINDOW_END, latestEndDate.toString());
-      }
+      feedInfo.put(
+          FEED_INFO_SERVICE_WINDOW_START,
+          earliestStartDate == null ? "" : earliestStartDate.toString());
+      feedInfo.put(
+          FEED_INFO_SERVICE_WINDOW_END, latestEndDate == null ? "" : latestEndDate.toString());
     }
   }
 
