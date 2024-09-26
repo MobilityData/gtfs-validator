@@ -534,7 +534,7 @@ public class FeedMetadata {
       }
       if (earliestStartDate == null) {
         feedInfo.put(FEED_INFO_SERVICE_WINDOW_START, "");
-      } else if (latestEndDate == null){
+      } else if (latestEndDate == null) {
         feedInfo.put(FEED_INFO_SERVICE_WINDOW_END, "");
       } else {
         feedInfo.put(FEED_INFO_SERVICE_WINDOW_START, earliestStartDate.toString());
