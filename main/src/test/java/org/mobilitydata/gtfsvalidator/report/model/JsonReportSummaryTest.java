@@ -67,7 +67,7 @@ public class JsonReportSummaryTest {
             FeedMetadata.FEED_INFO_SERVICE_WINDOW_START,
             "2024-01-02",
             FeedMetadata.FEED_INFO_SERVICE_WINDOW_END,
-            "2024-11-03",
+            "2024-11-06",
             "Illegal Key",
             "Some Value" // Should not be present in the resulting GSON
             );
@@ -146,7 +146,7 @@ public class JsonReportSummaryTest {
         "{\"validatorVersion\":\"1.0\","
             + "\"validatedAt\":\"now\","
             + "\"threads\":0,"
-            + "\"feedInfo\":{\"publisherName\":\"value1\",\"publisherUrl\":\"value2\",\"feedEmail\":\"me@foo.com\",\"feedServiceWindow\":\"2024-01-02\", \"feedServiceWindowEnd\":\"2024-11-06\"},"
+            + "\"feedInfo\":{\"publisherName\":\"value1\",\"publisherUrl\":\"value2\",\"feedEmail\":\"me@foo.com\",\"feedServiceWindowStart\":\"2024-01-02\", \"feedServiceWindowEnd\":\"2024-11-06\"},"
             + "\"validationTimeSeconds\":100.0,"
             + "\"agencies\":["
             + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"},"
