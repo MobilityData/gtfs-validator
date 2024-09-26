@@ -118,7 +118,8 @@ public class JsonReportSummary {
       feedLanguage = feedInfo.get(FeedMetadata.FEED_INFO_FEED_LANGUAGE);
       feedStartDate = feedInfo.get(FeedMetadata.FEED_INFO_FEED_START_DATE);
       feedEndDate = feedInfo.get(FeedMetadata.FEED_INFO_FEED_END_DATE);
-      feedServiceWindow = feedInfo.get(FeedMetadata.FEED_INFO_SERVICE_WINDOW);
+      feedServiceWindowStart = feedInfo.get(FeedMetadata.FEED_INFO_SERVICE_WINDOW_START);
+      feedServiceWindowEnd = feedInfo.get(FeedMetadata.FEED_INFO_SERVICE_WINDOW_END);
     }
 
     String publisherName;
@@ -127,7 +128,8 @@ public class JsonReportSummary {
     String feedStartDate;
     String feedEndDate;
     String feedEmail;
-    String feedServiceWindow;
+    String feedServiceWindowStart;
+    String feedServiceWindowEnd;
   }
 
   private static class JsonReportAgencyMetadata {
