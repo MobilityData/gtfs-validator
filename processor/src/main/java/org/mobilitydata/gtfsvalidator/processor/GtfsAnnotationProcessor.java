@@ -37,7 +37,10 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
-import org.mobilitydata.gtfsvalidator.annotation.*;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValue;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValues;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 
 /**
  * Processor that generates data classes, loaders and validators based on annotations on GTFS schema
@@ -48,9 +51,6 @@ public class GtfsAnnotationProcessor extends AbstractProcessor {
 
   private final Analyser analyser = new Analyser();
 
-  public GtfsAnnotationProcessor() {
-    super();
-  }
   /**
    * Sanitizes the result of {@link RoundEnvironment#getElementsAnnotatedWith}, which otherwise can
    * contain elements annotated with annotations of ERROR type.

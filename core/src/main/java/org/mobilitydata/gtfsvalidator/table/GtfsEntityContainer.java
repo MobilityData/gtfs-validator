@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * This class is the parent of the containers holding table (csv) entities and containers holding
- * JSON entities
+ * This class is the parent of containers holding table (csv) entities and containers holding JSON
+ * entities
  *
  * @param <T> The entity for this container (e.g. GtfsCalendarDate or GtfsGeojsonFeature )
- * @param <D> The descriptor for the table for the container (e.g. GtfsCalendarDateTableDescriptor
- *     or GtfsGeojsonFileDescriptor)
+ * @param <D> The descriptor for the file for the container (e.g. GtfsCalendarDateTableDescriptor or
+ *     GtfsGeojsonFileDescriptor)
  */
 public abstract class GtfsEntityContainer<T extends GtfsEntity, D extends GtfsFileDescriptor> {
 

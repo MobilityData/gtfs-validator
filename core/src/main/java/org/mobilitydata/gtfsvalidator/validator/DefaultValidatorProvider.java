@@ -21,7 +21,11 @@ import com.google.common.flogger.FluentLogger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import org.mobilitydata.gtfsvalidator.table.*;
+import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
+import org.mobilitydata.gtfsvalidator.table.GtfsEntityContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableDescriptor;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader.ValidatorWithDependencyStatus;
 
 /** Default implementation of {@link ValidatorProvider}. */

@@ -151,9 +151,9 @@ public class NoticeSchemaGenerator {
     return Optional.ofNullable(table).map(GtfsTable::value);
   }
 
-  private static Optional<String> getFileIdForJsonClass(Class<? extends GtfsEntity> tableClass) {
-    GtfsJson table = tableClass.getAnnotation(GtfsJson.class);
-    return Optional.ofNullable(table).map(GtfsJson::value);
+  private static Optional<String> getFileIdForJsonClass(Class<? extends GtfsEntity> entityClass) {
+    GtfsJson annotation = entityClass.getAnnotation(GtfsJson.class);
+    return Optional.ofNullable(annotation).map(GtfsJson::value);
   }
 
   private static UrlReference convertUrlRef(UrlRef ref) {

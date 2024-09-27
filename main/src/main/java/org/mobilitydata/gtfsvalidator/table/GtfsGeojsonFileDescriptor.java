@@ -1,9 +1,18 @@
 package org.mobilitydata.gtfsvalidator.table;
 
 import java.util.List;
+import javax.annotation.Nonnull;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 
+/**
+ * File descriptor for geojson file. Contrarily to the csv file descriptor, this class is not auto
+ * generated since we have only one such class.
+ */
 public class GtfsGeojsonFileDescriptor extends GtfsFileDescriptor<GtfsGeojsonFeature> {
+
+  public GtfsGeojsonFileDescriptor() {
+    setRequired(false);
+  }
 
   public GtfsGeojsonFeaturesContainer createContainerForEntities(
       List<GtfsGeojsonFeature> entities, NoticeContainer noticeContainer) {
@@ -30,6 +39,7 @@ public class GtfsGeojsonFileDescriptor extends GtfsFileDescriptor<GtfsGeojsonFea
     return "locations.geojson";
   }
 
+  @Nonnull
   public TableLoader getTableLoader() {
     return new GeoJsonFileLoader();
   }

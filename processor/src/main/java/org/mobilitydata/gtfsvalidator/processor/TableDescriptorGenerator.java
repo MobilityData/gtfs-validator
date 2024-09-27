@@ -42,7 +42,12 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.parsing.FieldCache;
 import org.mobilitydata.gtfsvalidator.parsing.RowParser;
-import org.mobilitydata.gtfsvalidator.table.*;
+import org.mobilitydata.gtfsvalidator.table.GtfsColumnDescriptor;
+import org.mobilitydata.gtfsvalidator.table.GtfsEntityBuilder;
+import org.mobilitydata.gtfsvalidator.table.GtfsFieldLoader;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableDescriptor;
+import org.mobilitydata.gtfsvalidator.table.TableStatus;
 
 /**
  * Generates code for a GtfsTableDescriptor subclass for a specific GTFS table.

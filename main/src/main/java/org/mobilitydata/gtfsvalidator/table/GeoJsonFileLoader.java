@@ -13,6 +13,7 @@ import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
 
+/** This class knows how to load a geojson file. */
 public class GeoJsonFileLoader extends TableLoader {
 
   @Override
@@ -31,7 +32,7 @@ public class GeoJsonFileLoader extends TableLoader {
     }
   }
 
-  public static List<GtfsGeojsonFeature> extractFeaturesFromStream(
+  public List<GtfsGeojsonFeature> extractFeaturesFromStream(
       InputStream inputStream, NoticeContainer noticeContainer) throws IOException {
     List<GtfsGeojsonFeature> features = new ArrayList<>();
     try (InputStreamReader reader = new InputStreamReader(inputStream)) {
@@ -47,8 +48,7 @@ public class GeoJsonFileLoader extends TableLoader {
     return features;
   }
 
-  public static GtfsGeojsonFeature extractFeature(
-      JsonElement feature, NoticeContainer noticeContainer) {
+  public GtfsGeojsonFeature extractFeature(JsonElement feature, NoticeContainer noticeContainer) {
     GtfsGeojsonFeature gtfsGeojsonFeature = null;
     if (feature.isJsonObject()) {
       JsonObject featureObject = feature.getAsJsonObject();

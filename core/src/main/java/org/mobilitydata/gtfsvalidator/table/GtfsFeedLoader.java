@@ -117,16 +117,9 @@ public class GtfsFeedLoader {
               TableLoader tableLoader = tableDescriptor.getTableLoader();
               try (InputStream inputStream = gtfsInput.getFile(filename)) {
                 try {
-                  if (tableLoader != null) {
-                    tableContainer =
-                        tableLoader.load(
-                            tableDescriptor, validatorProvider, inputStream, loaderNotices);
-                  } else {
-                    logger.atSevere().log(
-                        "Runtime exception table descriptor not supported: %s",
-                        tableDescriptor.getClass().getName());
-                    throw new RuntimeException("Table descriptor is not a supported type");
-                  }
+                  tableContainer =
+                      tableLoader.load(
+                          tableDescriptor, validatorProvider, inputStream, loaderNotices);
                 } catch (RuntimeException e) {
                   // This handler should prevent ExecutionException for
                   // this thread. We catch an exception here for storing
@@ -135,7 +128,7 @@ public class GtfsFeedLoader {
                   loaderNotices.addSystemError(new RuntimeExceptionInLoaderError(filename, e));
                   // Since the file was not loaded successfully, we treat
                   // it as missing for continuing validation.
-                  //                  tableLoader = tableDescriptor.getTableLoader();
+
                   tableContainer =
                       tableLoader.loadMissingFile(
                           tableDescriptor, validatorProvider, loaderNotices);

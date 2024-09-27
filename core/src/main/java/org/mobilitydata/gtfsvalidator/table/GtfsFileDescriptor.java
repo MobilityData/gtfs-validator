@@ -1,5 +1,7 @@
 package org.mobilitydata.gtfsvalidator.table;
 
+import javax.annotation.Nonnull;
+
 /**
  * This class provides some info about the different files within a GTFS dataset. Its children
  * relate to either a csv table or a geojson file.
@@ -31,6 +33,12 @@ public abstract class GtfsFileDescriptor<T extends GtfsEntity> {
     this.required = required;
   }
 
+  /**
+   * Get the looder for the file described by this file descriptor.
+   *
+   * @return the appropriate file loader.
+   */
+  @Nonnull
   public TableLoader getTableLoader() {
     return CsvFileLoader.getInstance();
   }

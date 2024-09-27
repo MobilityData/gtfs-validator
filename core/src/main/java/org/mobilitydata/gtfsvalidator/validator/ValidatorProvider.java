@@ -18,7 +18,10 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import java.util.List;
 import java.util.function.Consumer;
-import org.mobilitydata.gtfsvalidator.table.*;
+import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
+import org.mobilitydata.gtfsvalidator.table.GtfsEntityContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableDescriptor;
 
 /**
  * Provider of all kinds of validators for fields, entities and files.

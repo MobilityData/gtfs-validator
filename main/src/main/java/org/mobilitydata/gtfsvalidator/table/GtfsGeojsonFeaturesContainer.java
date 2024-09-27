@@ -22,6 +22,10 @@ import java.util.Map;
 import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 
+/**
+ * Container for geojson features. Contrarily to the csv containers, this class is not auto
+ * generated since we have only one such class.
+ */
 public class GtfsGeojsonFeaturesContainer
     extends GtfsEntityContainer<GtfsGeojsonFeature, GtfsGeojsonFileDescriptor> {
 

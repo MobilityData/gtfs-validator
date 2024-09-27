@@ -1,8 +1,8 @@
 package org.mobilitydata.gtfsvalidator.table;
 
 /**
- * Status of loading this table. This is includes parsing of the CSV file and validation of the
- * single file, but does not include any cross-file validations.
+ * Status of loading this table. This includes parsing of the CSV file and validation of the single
+ * file, but does not include any cross-file validations.
  */
 public enum TableStatus {
   /** The file is completely empty, i.e. it has no rows and even no headers. */
