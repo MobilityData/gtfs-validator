@@ -25,6 +25,8 @@ public class FeedMetadata {
   public static final String FEED_INFO_FEED_START_DATE = "Feed Start Date";
   public static final String FEED_INFO_FEED_END_DATE = "Feed End Date";
   public static final String FEED_INFO_SERVICE_WINDOW = "Service Window";
+  public static final String FEED_INFO_SERVICE_WINDOW_START = "Service Window Start";
+  public static final String FEED_INFO_SERVICE_WINDOW_END = "Service Window End";
 
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
@@ -530,6 +532,11 @@ public class FeedMetadata {
         serviceWindow.append(latestEndDate);
         feedInfo.put(FEED_INFO_SERVICE_WINDOW, serviceWindow.toString());
       }
+      feedInfo.put(
+          FEED_INFO_SERVICE_WINDOW_START,
+          earliestStartDate == null ? "" : earliestStartDate.toString());
+      feedInfo.put(
+          FEED_INFO_SERVICE_WINDOW_END, latestEndDate == null ? "" : latestEndDate.toString());
     }
   }
 
