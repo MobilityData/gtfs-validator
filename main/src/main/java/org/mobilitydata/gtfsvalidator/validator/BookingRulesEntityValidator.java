@@ -30,6 +30,13 @@ public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBooki
       noticeContainer.addValidationNotice(
           new ForbiddenRealTimeBookingFieldValueNotice(entity, forbiddenFields));
     }
+
+    // Check if prior_notice_last_day is greater than prior_notice_start_day
+    if (entity.hasPriorNoticeLastDay() && entity.hasPriorNoticeStartDay() &&
+            entity.priorNoticeLastDay() > entity.priorNoticeStartDay()) {
+      noticeContainer.addValidationNotice(
+              new PriorNoticeLastDayAfterStartDayNotice(entity));
+    }
   }
 
   /** Finds forbidden fields that should not be present for real-time booking rules. */
@@ -81,6 +88,37 @@ public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBooki
       this.csvRowNumber = bookingRule.csvRowNumber();
       this.bookingRuleId = bookingRule.bookingRuleId();
       this.fieldNames = String.join(", ", forbiddenFields);
+    }
+  }
+
+  /**
+   * Validation notice for when the prior notice last day is greater than the prior notice start day.
+   * This notice is triggered when the value of `prior_notice_last_day` is greater than the value of `prior_notice_start_day`
+   * in the `booking_rules.txt` file.
+   */
+  @GtfsValidationNotice(
+          severity = SeverityLevel.ERROR,
+          files = @FileRefs(GtfsBookingRulesSchema.class))
+  static class PriorNoticeLastDayAfterStartDayNotice extends ValidationNotice {
+
+    /** The row number of the faulty record. */
+    private final int csvRowNumber;
+
+    /** The value of the `prior_notice_last_day` of the faulty field. */
+    private final int priorNoticeLastDay;
+
+    /** The value of the `prior_notice_start_day` of the faulty field. */
+    private final int priorNoticeStartDay;
+
+    /**
+     * Constructs a new validation notice.
+     *
+     * @param bookingRule the booking rule entity that triggered this notice
+     */
+    PriorNoticeLastDayAfterStartDayNotice(GtfsBookingRules bookingRule) {
+      this.csvRowNumber = bookingRule.csvRowNumber();
+      this.priorNoticeLastDay = bookingRule.priorNoticeLastDay();
+      this.priorNoticeStartDay = bookingRule.priorNoticeStartDay();
     }
   }
 }
