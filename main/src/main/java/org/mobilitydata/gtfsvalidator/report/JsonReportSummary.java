@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
 import org.mobilitydata.gtfsvalidator.report.model.AgencyMetadata;
 import org.mobilitydata.gtfsvalidator.report.model.FeedMetadata;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
@@ -34,6 +35,7 @@ public class JsonReportSummary {
   private List<JsonReportAgencyMetadata> agencies;
   private Set<String> files;
   private Double validationTimeSeconds;
+  public List<MemoryUsage> memoryUsageRecords;
 
   @SerializedName("counts")
   private JsonReportCounts jsonReportCounts;
@@ -67,6 +69,7 @@ public class JsonReportSummary {
       if (feedMetadata.feedInfo != null) {
         this.feedInfo = new JsonReportFeedInfo(feedMetadata.feedInfo);
         this.validationTimeSeconds = feedMetadata.validationTimeSeconds;
+        this.memoryUsageRecords = feedMetadata.memoryUsageRecords;
       } else {
         logger.atSevere().log(
             "No feed info for feed "

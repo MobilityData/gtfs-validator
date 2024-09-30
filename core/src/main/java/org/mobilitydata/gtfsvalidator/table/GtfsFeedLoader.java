@@ -35,6 +35,8 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.RuntimeExceptionInLoaderError;
 import org.mobilitydata.gtfsvalidator.notice.ThreadExecutionError;
 import org.mobilitydata.gtfsvalidator.notice.UnknownFileNotice;
+import org.mobilitydata.gtfsvalidator.performance.MemoryMonitor;
+import org.mobilitydata.gtfsvalidator.performance.MemoryUsageRegister;
 import org.mobilitydata.gtfsvalidator.validator.FileValidator;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorUtil;
@@ -90,6 +92,7 @@ public class GtfsFeedLoader {
   }
 
   @SuppressWarnings("unchecked")
+  @MemoryMonitor()
   public GtfsFeedContainer loadAndValidate(
       GtfsInput gtfsInput, ValidatorProvider validatorProvider, NoticeContainer noticeContainer)
       throws InterruptedException {
@@ -137,44 +140,82 @@ public class GtfsFeedLoader {
           AnyTableLoader.loadMissingFile(tableDescriptor, validatorProvider, noticeContainer));
     }
     try {
-      for (Future<TableAndNoticeContainers> futureContainer : exec.invokeAll(loaderCallables)) {
-        try {
-          TableAndNoticeContainers containers = futureContainer.get();
-          tableContainers.add(containers.tableContainer);
-          noticeContainer.addAll(containers.noticeContainer);
-        } catch (ExecutionException e) {
-          // All runtime exceptions should be caught above.
-          // ExecutionException is not expected to happen.
-          addThreadExecutionError(e, noticeContainer);
-        }
-      }
+      var beforeLoading =
+          MemoryUsageRegister.getInstance()
+              .getMemoryUsageSnapshot("GtfsFeedLoader.loadTables", null);
+      loadTables(noticeContainer, exec, loaderCallables, tableContainers);
+      MemoryUsageRegister.getInstance()
+          .registerMemoryUsage("GtfsFeedLoader.loadTables", beforeLoading);
+
       GtfsFeedContainer feed = new GtfsFeedContainer(tableContainers);
-      List<Callable<NoticeContainer>> validatorCallables = new ArrayList<>();
-      // Validators with parser-error dependencies will not be returned here, but instead added to
-      // the skippedValidators list.
-      for (FileValidator validator :
-          validatorProvider.createMultiFileValidators(
-              feed, multiFileValidatorsWithParsingErrors::add)) {
-        validatorCallables.add(
-            () -> {
-              NoticeContainer validatorNotices = new NoticeContainer();
-              ValidatorUtil.safeValidate(
-                  validator::validate, validator.getClass(), validatorNotices);
-              return validatorNotices;
-            });
-      }
-      for (Future<NoticeContainer> futureContainer : exec.invokeAll(validatorCallables)) {
-        try {
-          noticeContainer.addAll(futureContainer.get());
-        } catch (ExecutionException e) {
-          // All runtime exceptions should be caught above.
-          // ExecutionException is not expected to happen.
-          addThreadExecutionError(e, noticeContainer);
-        }
-      }
+      var beforeMultiFileValidators =
+          MemoryUsageRegister.getInstance()
+              .getMemoryUsageSnapshot("GtfsFeedLoader.executeMultiFileValidators", null);
+      executeMultiFileValidators(validatorProvider, noticeContainer, feed, exec);
+      MemoryUsageRegister.getInstance()
+          .registerMemoryUsage(
+              "GtfsFeedLoader.executeMultiFileValidators", beforeMultiFileValidators);
+
       return feed;
     } finally {
       exec.shutdown();
+    }
+  }
+
+  private static void loadTables(
+      NoticeContainer noticeContainer,
+      ExecutorService exec,
+      List<Callable<TableAndNoticeContainers>> loaderCallables,
+      ArrayList<GtfsTableContainer<?>> tableContainers)
+      throws InterruptedException {
+    for (Future<TableAndNoticeContainers> futureContainer : exec.invokeAll(loaderCallables)) {
+      try {
+        TableAndNoticeContainers containers = futureContainer.get();
+        tableContainers.add(containers.tableContainer);
+        noticeContainer.addAll(containers.noticeContainer);
+      } catch (ExecutionException e) {
+        // All runtime exceptions should be caught above.
+        // ExecutionException is not expected to happen.
+        addThreadExecutionError(e, noticeContainer);
+      }
+    }
+  }
+
+  private void executeMultiFileValidators(
+      ValidatorProvider validatorProvider,
+      NoticeContainer noticeContainer,
+      GtfsFeedContainer feed,
+      ExecutorService exec)
+      throws InterruptedException {
+    List<Callable<NoticeContainer>> validatorCallables = new ArrayList<>();
+    // Validators with parser-error dependencies will not be returned here, but instead added to
+    // the skippedValidators list.
+    for (FileValidator validator :
+        validatorProvider.createMultiFileValidators(
+            feed, multiFileValidatorsWithParsingErrors::add)) {
+      validatorCallables.add(
+          () -> {
+            NoticeContainer validatorNotices = new NoticeContainer();
+            ValidatorUtil.safeValidate(validator::validate, validator.getClass(), validatorNotices);
+            return validatorNotices;
+          });
+    }
+    collectMultiFileValidationNotices(noticeContainer, exec, validatorCallables);
+  }
+
+  private static void collectMultiFileValidationNotices(
+      NoticeContainer noticeContainer,
+      ExecutorService exec,
+      List<Callable<NoticeContainer>> validatorCallables)
+      throws InterruptedException {
+    for (Future<NoticeContainer> futureContainer : exec.invokeAll(validatorCallables)) {
+      try {
+        noticeContainer.addAll(futureContainer.get());
+      } catch (ExecutionException e) {
+        // All runtime exceptions should be caught above.
+        // ExecutionException is not expected to happen.
+        addThreadExecutionError(e, noticeContainer);
+      }
     }
   }
 
