@@ -265,19 +265,21 @@
                 <hr />
                 <dl>
                     <div th:each="info: ${metadata.feedInfo}">
-                        <dd th:if="${info.key != 'Service Window Start' and info.key != 'Service Window End'}" th:text="${info.key} + ':'" />
-                        <dt th:if="${info.key != 'Service Window Start' and info.key != 'Service Window End'}">
-                        <span th:if="${info.key.contains('URL') and info.value != 'N/A'}">
-                            <a th:href="${info.value}" target="_blank" th:text="${info.value}" />
-                        </span>
-                            <span th:if="${info.key.contains('URL') and info.value == 'N/A'}" th:text="${info.value}"></span>
-                            <span th:unless="${info.key.contains('URL')}" th:text="${info.value}"/>
-                            <span th:if="${info.key == 'Service Window'}" >
-                                 <a href="#" class="tooltip" onclick="event.preventDefault();"><span>(?)</span>
-                                    <span class="tooltiptext" style="transform: translateX(-100%)">The range of service dates covered by the feed, based on trips with an associated service_id in calendar.txt and/or calendar_dates.txt</span>
-                                </a>
+                        <div th:with="isNotServiceWindow=${info.key != 'Service Window Start' and info.key != 'Service Window End'}">
+                            <dd th:if="${isNotServiceWindow}" th:text="${info.key} + ':'" />
+                            <dt th:if="${isNotServiceWindow}">
+                            <span th:if="${info.key.contains('URL') and info.value != 'N/A'}">
+                                <a th:href="${info.value}" target="_blank" th:text="${info.value}" />
                             </span>
-                        </dt>
+                                <span th:if="${info.key.contains('URL') and info.value == 'N/A'}" th:text="${info.value}"></span>
+                                <span th:unless="${info.key.contains('URL')}" th:text="${info.value}"/>
+                                <span th:if="${info.key == 'Service Window'}" >
+                                     <a href="#" class="tooltip" onclick="event.preventDefault();"><span>(?)</span>
+                                        <span class="tooltiptext" style="transform: translateX(-100%)">The range of service dates covered by the feed, based on trips with an associated service_id in calendar.txt and/or calendar_dates.txt</span>
+                                    </a>
+                                </span>
+                            </dt>
+                        </div>
                     </div>
                 </dl>
             </div>
