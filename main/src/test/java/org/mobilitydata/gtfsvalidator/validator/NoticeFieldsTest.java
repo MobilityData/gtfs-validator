@@ -201,7 +201,10 @@ public class NoticeFieldsTest {
             "locationGroupId",
             "locationId",
             "bookingRuleId",
-            "fieldNames");
+            "fieldNames",
+            "priorNoticeDurationMin",
+            "priorNoticeDurationMax",
+            "priorNoticeStartDay");
   }
 
   private static List<String> discoverValidationNoticeFieldNames() {
