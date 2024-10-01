@@ -591,4 +591,12 @@ public class FeedMetadata {
   public ImmutableSortedSet<String> getFilenames() {
     return filenames;
   }
+
+  public Boolean hasFlexFeatures() {
+    return specFeatures.keySet().stream()
+        .anyMatch(
+            feature ->
+                feature.getFeatureGroup() != null
+                    && feature.getFeatureGroup().equals("Flexible Services"));
+  }
 }

@@ -221,6 +221,14 @@
         align-content: center;
         flex-wrap: wrap;
     }
+
+    .warning-display {
+        padding: 10px;
+        border: solid 2px orange;
+        border-radius: 11px;
+        width: fit-content;
+        font-weight: bold;
+    }
 </style>
 
 </head>
@@ -238,6 +246,11 @@
         <span th:if="${is_different_date}" th:text="'The date used during validation was ' + ${config.dateForValidation} + '.'"></span></p>
 
     <p>Use this report alongside our <a href="https://gtfs-validator.mobilitydata.org/rules.html">documentation</a>.</p>
+
+    <p class="warning-display" th:if="${metadata.hasFlexFeatures}">
+        &#9888; This feed contains GTFS Flex features. Please note that the GTFS Flex validation support is still in development.
+        You can manually review all the validation rules for Flex data <a href="https://docs.google.com/document/d/1QABoIeOdR6lAB7A6_X6WIbZwC7EnAIZvm_hRNwNQeoI/edit#heading=h.mky28yjwt08z">here</a>.
+    </p>
 
     <p class="version-update" th:if="${summary.newVersionOfValidatorAvailable}">A new version of the <a
             href="https://github.com/MobilityData/gtfs-validator/releases">Canonical GTFS Schedule validator</a> is available!
