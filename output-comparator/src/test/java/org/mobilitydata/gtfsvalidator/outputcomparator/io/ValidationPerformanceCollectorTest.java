@@ -2,7 +2,11 @@ package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import java.util.Arrays;
+import java.util.Collections;
 import org.junit.Test;
+import org.mobilitydata.gtfsvalidator.model.ValidationReport;
+import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
 
 public class ValidationPerformanceCollectorTest {
 
@@ -11,13 +15,43 @@ public class ValidationPerformanceCollectorTest {
     ValidationPerformanceCollector collector = new ValidationPerformanceCollector();
 
     // Adding some sample data
-    collector.addReferenceTime("feed-id-a", 12.0);
-    collector.addReferenceTime("feed-id-a", 14.0);
-    collector.addLatestTime("feed-id-a", 16.0);
-    collector.addLatestTime("feed-id-a", 18.0);
+    long baseMemory = 1000000;
+    //    Memory usage latest null
+    collector.compareValidationReports(
+        "feed-id-a",
+        new ValidationReport(
+            Collections.EMPTY_SET,
+            12.0,
+            Arrays.asList(
+                MemoryUsage.create("key1", baseMemory, baseMemory, 200, 50L),
+                MemoryUsage.create("key2", baseMemory, baseMemory, 200, 50L))),
+        new ValidationReport(Collections.EMPTY_SET, 16.0, Collections.EMPTY_LIST));
+    //    Memory usage decreased
+    collector.compareValidationReports(
+        "feed-id-a",
+        new ValidationReport(
+            Collections.EMPTY_SET,
+            14.0,
+            Arrays.asList(
+                MemoryUsage.create("key3", baseMemory, baseMemory - 1000, 200, 50L),
+                MemoryUsage.create("key4", baseMemory, baseMemory - 1000, 200, 50L))),
+        new ValidationReport(
+            Collections.EMPTY_SET,
+            18.0,
+            Arrays.asList(
+                MemoryUsage.create("key3", baseMemory, baseMemory - baseMemory / 2, 200, null),
+                MemoryUsage.create("key4", baseMemory, baseMemory - baseMemory / 2, 200, null))));
 
-    collector.addReferenceTime("feed-id-b", 20.0);
-    collector.addLatestTime("feed-id-b", 22.0);
+    //    Memory usage decreased
+    collector.compareValidationReports(
+        "feed-id-b",
+        new ValidationReport(
+            Collections.EMPTY_SET,
+            20.0,
+            Arrays.asList(
+                MemoryUsage.create("key3", baseMemory, baseMemory * 2, 200, null),
+                MemoryUsage.create("key4", baseMemory, baseMemory * 2, 200, null))),
+        new ValidationReport(Collections.EMPTY_SET, 22.0, Collections.EMPTY_LIST));
 
     // Generating the log string
     String logString = collector.generateLogString();
@@ -37,6 +71,25 @@ public class ValidationPerformanceCollectorTest {
             + "| Maximum in Reference Reports | feed-id-b | 20.00 | 22.00 | ⬆️+2.00 |\n"
             + "| Minimum in Latest Reports | feed-id-a | 14.00 | 18.00 | ⬆\uFE0F+4.00 |\n"
             + "| Maximum in Latest Reports | feed-id-b | 20.00 | 22.00 | ⬆️+2.00 |\n"
+            + "<summary><strong>📜 Memory Consumption</strong></summary>\n"
+            + "<p>List of 20 datasets where memory has decreased .</p>\n\n"
+            + "| Key(Used Memory)                      | Dataset ID        | Reference (s)  | Latest (s)     | Difference (s) |\n"
+            + "|-----------------------------|-------------------|----------------|----------------|----------------|\n"
+            + "| key1 | feed-id-a | 0 | - | N/A |\n"
+            + "| key2 | feed-id-a | 0 | - | N/A |\n"
+            + "| key4 | feed-id-a | 1000 | 500000 | ⬆️+487.30 KiB |\n"
+            + "| key3 | feed-id-a | 1000 | 500000 | ⬆️+487.30 KiB |\n"
+            + "| key3 | feed-id-b | -1000000 | - | N/A |\n"
+            + "| key4 | feed-id-b | -1000000 | - | N/A |\n"
+            + "<p>List of 20 datasets where memory has increased .</p>\n\n"
+            + "| Key(Used Memory)                      | Dataset ID        | Reference (s)  | Latest (s)     | Difference (s) |\n"
+            + "|-----------------------------|-------------------|----------------|----------------|----------------|\n"
+            + "| key3 | feed-id-a | 1000 | 500000 | ⬆️+487.30 KiB |\n"
+            + "| key4 | feed-id-a | 1000 | 500000 | ⬆️+487.30 KiB |\n"
+            + "| key1 | feed-id-a | 0 | - | N/A |\n"
+            + "| key2 | feed-id-a | 0 | - | N/A |\n"
+            + "| key3 | feed-id-b | -1000000 | - | N/A |\n"
+            + "| key4 | feed-id-b | -1000000 | - | N/A |\n"
             + "</details>\n\n";
     // Assert that the generated log string matches the expected log string
     assertThat(logString).isEqualTo(expectedLogString);

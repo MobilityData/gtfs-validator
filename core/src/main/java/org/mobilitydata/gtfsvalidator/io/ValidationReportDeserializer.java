@@ -23,16 +23,13 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import org.mobilitydata.gtfsvalidator.model.NoticeReport;
 import org.mobilitydata.gtfsvalidator.model.ValidationReport;
 import org.mobilitydata.gtfsvalidator.notice.Notice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ResolvedNotice;
+import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
 
 /**
  * Used to (de)serialize a JSON validation report. This represents a validation report as a list of
@@ -44,6 +41,7 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
   private static final String NOTICES_MEMBER_NAME = "notices";
   private static final String SUMMARY_MEMBER_NAME = "summary";
   private static final String VALIDATION_TIME_MEMBER_NAME = "validationTimeSeconds";
+  private static final String MEMORY_USAGE_RECORDS_MEMBER_NAME = "memoryUsageRecords";
 
   @Override
   public ValidationReport deserialize(
@@ -53,17 +51,26 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
     // Note that the json file contains the summary in addition to the notices, but it is ignored
     // since currently the report comparison is only on the notices and the validation time.
     Double validationTimeSeconds = null;
+    List<MemoryUsage> memoryUsageRecords = null;
     if (rootObject.has(SUMMARY_MEMBER_NAME)) {
       JsonObject summaryObject = rootObject.getAsJsonObject(SUMMARY_MEMBER_NAME);
       if (summaryObject.has(VALIDATION_TIME_MEMBER_NAME)) {
         validationTimeSeconds = summaryObject.get(VALIDATION_TIME_MEMBER_NAME).getAsDouble();
+      }
+      if (summaryObject.has(MEMORY_USAGE_RECORDS_MEMBER_NAME)) {
+        JsonArray memoryUsageArray = summaryObject.getAsJsonArray(MEMORY_USAGE_RECORDS_MEMBER_NAME);
+        memoryUsageRecords = new ArrayList<>();
+        for (JsonElement element : memoryUsageArray) {
+          MemoryUsage memoryUsage = Notice.GSON.fromJson(element, MemoryUsage.class);
+          memoryUsageRecords.add(memoryUsage);
+        }
       }
     }
     JsonArray noticesArray = rootObject.getAsJsonArray(NOTICES_MEMBER_NAME);
     for (JsonElement childObject : noticesArray) {
       notices.add(Notice.GSON.fromJson(childObject, NoticeReport.class));
     }
-    return new ValidationReport(notices, validationTimeSeconds);
+    return new ValidationReport(notices, validationTimeSeconds, memoryUsageRecords);
   }
 
   public static <T extends Notice> JsonObject serialize(

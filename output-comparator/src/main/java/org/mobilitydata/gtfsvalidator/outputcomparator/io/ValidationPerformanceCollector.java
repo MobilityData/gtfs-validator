@@ -1,17 +1,26 @@
 package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.model.ValidationReport;
 import org.mobilitydata.gtfsvalidator.outputcomparator.model.report.ValidationPerformance;
+import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
 
 public class ValidationPerformanceCollector {
 
+  private static final int MEMORY_USAGE_COMPARE_MAX = 20;
   private final Map<String, Double> referenceTimes;
   private final Map<String, Double> latestTimes;
+  private final Map<String, BoundedPriorityQueue<DatasetMemoryUsage>>
+      largestFirstMemoryUsageBySourceId;
+  private final Map<String, BoundedPriorityQueue<DatasetMemoryUsage>>
+      smallestFirstMemoryMapBySourceId;
 
   public ValidationPerformanceCollector() {
     this.referenceTimes = new HashMap<>();
     this.latestTimes = new HashMap<>();
+    this.largestFirstMemoryUsageBySourceId = new HashMap<>();
+    this.smallestFirstMemoryMapBySourceId = new HashMap<>();
   }
 
   public void addReferenceTime(String sourceId, Double time) {
@@ -67,6 +76,21 @@ public class ValidationPerformanceCollector {
     }
     return String.format(
         "| %s | %s | %.2f | %.2f | %s |\n", metric, datasetId, reference, latest, diff);
+  }
+
+  private static String getMemoryDiff(Long reference, Long latest) {
+    String diff;
+    if (reference == null || latest == null) {
+      diff = "N/A";
+    } else {
+      long difference = latest - reference;
+      if (difference == 0) {
+        return "-";
+      }
+      String arrow = difference > 0 ? "⬆️+" : "⬇️";
+      diff = String.format("%s%s", arrow, MemoryUsage.convertToHumanReadableMemory(difference));
+    }
+    return diff;
   }
 
   public String generateLogString() {
@@ -176,9 +200,70 @@ public class ValidationPerformanceCollector {
           .append(String.join(", ", warnings))
           .append("\n\n");
     }
+
+    if (smallestFirstMemoryMapBySourceId.size() > 0
+        || largestFirstMemoryUsageBySourceId.size() > 0) {
+      b.append("<summary><strong>📜 Memory Consumption</strong></summary>\n");
+      addMemoryUsageReport(smallestFirstMemoryMapBySourceId, "decreased", b);
+      addMemoryUsageReport(largestFirstMemoryUsageBySourceId, "increased", b);
+    }
+
     b.append("</details>\n\n");
 
     return b.toString();
+  }
+
+  private void addMemoryUsageReport(
+      Map<String, BoundedPriorityQueue<DatasetMemoryUsage>> queueMap,
+      String order,
+      StringBuilder b) {
+    b.append(
+            String.format(
+                "<p>List of %s datasets where memory has %s .</p>\n",
+                MEMORY_USAGE_COMPARE_MAX, order))
+        .append("\n")
+        .append(
+            "| Key(Used Memory)                      | Dataset ID        | Reference (s)  | Latest (s)     | Difference (s) |\n")
+        .append(
+            "|-----------------------------|-------------------|----------------|----------------|----------------|\n");
+
+    queueMap.keySet().stream()
+        .forEachOrdered(
+            sourceId -> {
+              var pq = queueMap.get(sourceId);
+              List<DatasetMemoryUsage> datasetMemoryUsages =
+                  Arrays.asList(pq.toArray(new DatasetMemoryUsage[pq.size()]));
+              Collections.sort(datasetMemoryUsages, pq.comparator());
+              generateMemoryLogByKey(datasetMemoryUsages, b);
+            });
+  }
+
+  private static void generateMemoryLogByKey(
+      List<DatasetMemoryUsage> memoryIncreases, StringBuilder b) {
+    memoryIncreases.stream()
+        .forEachOrdered(
+            item -> {
+              String usedMemoryDiff =
+                  getMemoryDiff(
+                      item.getReferenceMemoryUsage() != null
+                          ? item.getReferenceMemoryUsage().usedMemory()
+                          : null,
+                      item.getLatestMemoryUsage() != null
+                          ? item.getLatestMemoryUsage().usedMemory()
+                          : null);
+              b.append(
+                  String.format(
+                      "| %s | %s | %s | %s | %s |\n",
+                      item.getKey(),
+                      item.getDatasetId(),
+                      item.getReferenceMemoryUsage() != null
+                          ? item.getReferenceMemoryUsage().usedMemory()
+                          : "-",
+                      item.getLatestMemoryUsage() != null
+                          ? item.getLatestMemoryUsage().usedMemory()
+                          : "-",
+                      usedMemoryDiff));
+            });
   }
 
   public void compareValidationReports(
@@ -189,6 +274,60 @@ public class ValidationPerformanceCollector {
     if (latestReport.getValidationTimeSeconds() != null) {
       addLatestTime(sourceId, latestReport.getValidationTimeSeconds());
     }
+
+    compareValidationReportMemoryUsage(sourceId, referenceReport, latestReport);
+  }
+
+  private void compareValidationReportMemoryUsage(
+      String sourceId, ValidationReport referenceReport, ValidationReport latestReport) {
+    Set<String> keys =
+        referenceReport.getMemoryUsageRecords() != null
+            ? referenceReport.getMemoryUsageRecords().stream()
+                .map(MemoryUsage::key)
+                .collect(Collectors.toSet())
+            : Collections.EMPTY_SET;
+    if (latestReport.getMemoryUsageRecords() != null) {
+      keys.addAll(
+          latestReport.getMemoryUsageRecords().stream()
+              .map(MemoryUsage::key)
+              .collect(Collectors.toSet()));
+    }
+    Map<String, MemoryUsage> referenceMap =
+        referenceReport.getMemoryUsageRecords() != null
+            ? referenceReport.getMemoryUsageRecords().stream()
+                .collect(Collectors.toMap(MemoryUsage::key, memoryUsage -> memoryUsage))
+            : new HashMap<>();
+    Map<String, MemoryUsage> latestMap =
+        referenceReport.getMemoryUsageRecords() != null
+            ? latestReport.getMemoryUsageRecords().stream()
+                .collect(Collectors.toMap(MemoryUsage::key, memoryUsage -> memoryUsage))
+            : new HashMap<>();
+    keys.stream()
+        .forEachOrdered(
+            key -> {
+              var datasetMemoryUsage =
+                  new DatasetMemoryUsage(sourceId, referenceMap.get(key), latestMap.get(key));
+              BoundedPriorityQueue<DatasetMemoryUsage> decreasingQueue =
+                  largestFirstMemoryUsageBySourceId.get(sourceId);
+              BoundedPriorityQueue<DatasetMemoryUsage> increasingQueue =
+                  smallestFirstMemoryMapBySourceId.get(sourceId);
+              if (decreasingQueue == null) {
+                decreasingQueue =
+                    new BoundedPriorityQueue<>(
+                        MEMORY_USAGE_COMPARE_MAX,
+                        2,
+                        (new MemoryUsageUsedMemoryComparator()).reversed());
+                largestFirstMemoryUsageBySourceId.put(sourceId, decreasingQueue);
+                increasingQueue =
+                    new BoundedPriorityQueue<>(
+                        MEMORY_USAGE_COMPARE_MAX, 2, new MemoryUsageUsedMemoryComparator());
+                smallestFirstMemoryMapBySourceId.put(sourceId, increasingQueue);
+              }
+              if (referenceMap.containsKey(key) || latestMap.containsKey(key)) {
+                increasingQueue.offer(datasetMemoryUsage);
+                decreasingQueue.offer(datasetMemoryUsage);
+              }
+            });
   }
 
   public List<ValidationPerformance> toReport() {
