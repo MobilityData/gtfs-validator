@@ -597,6 +597,7 @@ public class FeedMetadata {
         .anyMatch(
             feature ->
                 feature.getFeatureGroup() != null
-                    && feature.getFeatureGroup().equals("Flexible Services"));
+                    && feature.getFeatureGroup().equals("Flexible Services")
+                    && specFeatures.get(feature));
   }
 }
