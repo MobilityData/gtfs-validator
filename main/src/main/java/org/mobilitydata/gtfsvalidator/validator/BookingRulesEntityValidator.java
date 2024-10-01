@@ -154,23 +154,17 @@ public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBooki
 
   /** Booking Rule prior notice last day should not be greater than the prior notice start day. */
   @GtfsValidationNotice(
-          severity = SeverityLevel.ERROR,
-          files = @FileRefs(GtfsBookingRulesSchema.class))
+      severity = SeverityLevel.ERROR,
+      files = @FileRefs(GtfsBookingRulesSchema.class))
   static class PriorNoticeLastDayAfterStartDayNotice extends ValidationNotice {
 
-    /**
-     * The row number of the faulty record.
-     */
+    /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    /**
-     * The value of the `prior_notice_last_day` of the faulty field.
-     */
+    /** The value of the `prior_notice_last_day` of the faulty field. */
     private final int priorNoticeLastDay;
 
-    /**
-     * The value of the `prior_notice_start_day` of the faulty field.
-     */
+    /** The value of the `prior_notice_start_day` of the faulty field. */
     private final int priorNoticeStartDay;
 
     /**
