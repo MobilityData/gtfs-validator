@@ -61,7 +61,7 @@ public class FeedMetadata {
           new Pair<>(new FeatureMetadata("Levels", "Pathways"), GtfsLevel.FILENAME),
           new Pair<>(new FeatureMetadata("Transfers", null), GtfsTransfer.FILENAME),
           new Pair<>(new FeatureMetadata("Shapes", null), GtfsShape.FILENAME),
-          new Pair<>(new FeatureMetadata("Frequencies", null), GtfsFrequency.FILENAME),
+          new Pair<>(new FeatureMetadata("Frequency-Based Service", null), GtfsFrequency.FILENAME),
           new Pair<>(new FeatureMetadata("Feed Information", null), GtfsFeedInfo.FILENAME),
           new Pair<>(new FeatureMetadata("Attributions", null), GtfsAttribution.FILENAME),
           new Pair<>(new FeatureMetadata("Translations", null), GtfsTranslation.FILENAME),
