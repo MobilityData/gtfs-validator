@@ -1,6 +1,7 @@
 package org.mobilitydata.gtfsvalidator.report.model;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import com.google.common.collect.ImmutableList;
 import java.io.BufferedWriter;
@@ -8,6 +9,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,6 +19,7 @@ import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.*;
+import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.validator.*;
 
 public class FeedMetadataTest {
@@ -30,6 +33,12 @@ public class FeedMetadataTest {
           .build();
   ValidatorLoader validatorLoader;
   File rootDir;
+  NoticeContainer noticeContainer = new NoticeContainer();
+
+  private GtfsTableContainer<GtfsTrip> tripContainer;
+  private GtfsTableContainer<GtfsCalendar> calendarTable;
+  private GtfsTableContainer<GtfsCalendarDate> calendarDateTable;
+  private FeedMetadata feedMetadata = new FeedMetadata();
 
   private void createDataFile(String filename, String content) throws IOException {
     File dataFile = tmpDir.newFile("data/" + filename);
@@ -50,12 +59,85 @@ public class FeedMetadataTest {
         ValidatorLoader.createForClasses(ClassGraphDiscovery.discoverValidatorsInDefaultPackage());
   }
 
+  public static GtfsTrip createTrip(int csvRowNumber, String serviceId) {
+    return new GtfsTrip.Builder().setCsvRowNumber(csvRowNumber).setServiceId(serviceId).build();
+  }
+
+  public static GtfsCalendar createCalendar(
+      int csvRowNumber, String serviceId, GtfsDate startDate, GtfsDate endDate) {
+    return new GtfsCalendar.Builder()
+        .setCsvRowNumber(csvRowNumber)
+        .setServiceId(serviceId)
+        .setStartDate(startDate)
+        .setEndDate(endDate)
+        .build();
+  }
+
+  public static GtfsCalendarDate createCalendarDate(
+      int csvRowNumber,
+      String serviceId,
+      GtfsDate date,
+      GtfsCalendarDateExceptionType exceptionType) {
+    return new GtfsCalendarDate.Builder()
+        .setCsvRowNumber(csvRowNumber)
+        .setServiceId(serviceId)
+        .setDate(date)
+        .setExceptionType(exceptionType)
+        .build();
+  }
+
+  @Test
+  public void testLoadServiceWindow() {
+    GtfsTrip trip1 = createTrip(1, "JUN24-MVS-SUB-Weekday-01");
+    GtfsTrip trip2 = createTrip(2, "JUN24-MVS-SUB-Weekday-02");
+    // when(tripContainer.getEntities()).thenReturn(List.of(trip1, trip2));
+    tripContainer = GtfsTripTableContainer.forEntities(List.of(trip1, trip2), noticeContainer);
+    GtfsCalendar calendar1 =
+        createCalendar(
+            1,
+            "JUN24-MVS-SUB-Weekday-01",
+            GtfsDate.fromLocalDate(LocalDate.of(2024, 1, 1)),
+            GtfsDate.fromLocalDate(LocalDate.of(2024, 12, 20)));
+    GtfsCalendar calendar2 =
+        createCalendar(
+            2,
+            "JUN24-MVS-SUB-Weekday-02",
+            GtfsDate.fromLocalDate(LocalDate.of(2024, 6, 1)),
+            GtfsDate.fromLocalDate(LocalDate.of(2024, 12, 31)));
+    // when(calendarTable.getEntities()).thenReturn(List.of(calendar1, calendar2));
+    calendarTable =
+        GtfsCalendarTableContainer.forEntities(List.of(calendar1, calendar2), noticeContainer);
+    GtfsCalendarDate calendarDate1 =
+        createCalendarDate(
+            1,
+            "JUN24-MVS-SUB-Weekday-01",
+            GtfsDate.fromLocalDate(LocalDate.of(2024, 1, 1)),
+            GtfsCalendarDateExceptionType.SERVICE_REMOVED);
+    GtfsCalendarDate calendarDate2 =
+        createCalendarDate(
+            2,
+            "JUN24-MVS-SUB-Weekday-02",
+            GtfsDate.fromLocalDate(LocalDate.of(2024, 6, 1)),
+            GtfsCalendarDateExceptionType.SERVICE_ADDED);
+    // when(calendarDateTable.getEntities()).thenReturn(List.of(calendarDate1, calendarDate2));
+    calendarDateTable =
+        GtfsCalendarDateTableContainer.forEntities(
+            List.of(calendarDate1, calendarDate2), noticeContainer);
+
+    // Call the method
+    feedMetadata.loadServiceWindow(tripContainer, calendarTable, calendarDateTable);
+
+    // Verify the result
+    String expectedServiceWindow = "2024-01-02 to 2024-12-31";
+    assertEquals(
+        expectedServiceWindow, feedMetadata.feedInfo.get(FeedMetadata.FEED_INFO_SERVICE_WINDOW));
+  }
+
   private void validateSpecFeature(
       String specFeature,
       Boolean expectedValue,
       ImmutableList<Class<? extends GtfsTableDescriptor<?>>> tableDescriptors)
       throws IOException, InterruptedException {
-    NoticeContainer noticeContainer = new NoticeContainer();
     feedLoaderMock = new GtfsFeedLoader(tableDescriptors);
     try (GtfsInput gtfsInput = GtfsInput.createFromPath(rootDir.toPath(), noticeContainer)) {
       GtfsFeedContainer feedContainer =
@@ -64,7 +146,8 @@ public class FeedMetadataTest {
               new DefaultValidatorProvider(validationContext, validatorLoader),
               new NoticeContainer());
       FeedMetadata feedMetadata = FeedMetadata.from(feedContainer, gtfsInput.getFilenames());
-      assertThat(feedMetadata.specFeatures.get(specFeature)).isEqualTo(expectedValue);
+      assertThat(feedMetadata.specFeatures.get(new FeatureMetadata(specFeature, null)))
+          .isEqualTo(expectedValue);
     }
   }
 
@@ -168,24 +251,24 @@ public class FeedMetadataTest {
   }
 
   @Test
-  public void containsPathwaysFeatureTest() throws IOException, InterruptedException {
+  public void containsPathwayConnectionFeatureTest() throws IOException, InterruptedException {
     String pathwayContent =
         "pathway_id,from_stop_id,to_stop_id,pathway_mode,is_bidirectional\n"
             + "pathway1,stop1,stop2,1,1\n"
             + "pathway2,stop2,stop3,2,0\n";
     createDataFile("pathways.txt", pathwayContent);
     validateSpecFeature(
-        "Pathways (basic)",
+        "Pathway Connections",
         true,
         ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
   @Test
-  public void omitsPathwaysFeatureTest() throws IOException, InterruptedException {
+  public void omitsPathwayConnectionsFeatureTest() throws IOException, InterruptedException {
     String pathwayContent = "pathway_id,from_stop_id,to_stop_id,pathway_mode,is_bidirectional\n";
     createDataFile("pathways.txt", pathwayContent);
     validateSpecFeature(
-        "Pathways (basic)",
+        "Pathway Connections",
         false,
         ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
@@ -193,7 +276,7 @@ public class FeedMetadataTest {
   @Test
   public void omitsFeatures() throws IOException, InterruptedException {
     validateSpecFeature(
-        "Pathways (basic)",
+        "Pathway Connections",
         false,
         ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
     validateSpecFeature(
@@ -248,7 +331,7 @@ public class FeedMetadataTest {
         "trip_id, start_time, end_time, headway_secs\n" + "dummy1, 01:01:01, 01:01:02, 1\n";
     createDataFile(GtfsFrequency.FILENAME, content);
     validateSpecFeature(
-        "Frequencies",
+        "Frequency-Based Service",
         true,
         ImmutableList.of(GtfsFrequencyTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
@@ -258,7 +341,7 @@ public class FeedMetadataTest {
     String content = "trip_id, start_time, end_time, headway_secs\n";
     createDataFile(GtfsFrequency.FILENAME, content);
     validateSpecFeature(
-        "Frequencies",
+        "Frequency-Based Service",
         false,
         ImmutableList.of(GtfsFrequencyTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
@@ -426,7 +509,7 @@ public class FeedMetadataTest {
     String content = "route_id, service_id, trip_id, wheelchair_accessible\n" + "1, 2, 3, 1\n";
     createDataFile(GtfsTrip.FILENAME, content);
     validateSpecFeature(
-        "Wheelchair Accessibility",
+        "Trips Wheelchair Accessibility",
         true,
         ImmutableList.of(GtfsAgencyTableDescriptor.class, GtfsTripTableDescriptor.class));
   }
