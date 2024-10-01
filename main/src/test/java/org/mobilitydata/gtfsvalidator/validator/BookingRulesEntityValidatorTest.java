@@ -94,13 +94,13 @@ public class BookingRulesEntityValidatorTest {
   @Test
   public void priorNoticeLastDayAfterStartDayShouldGenerateNotice() {
     GtfsBookingRules bookingRule =
-            new GtfsBookingRules.Builder()
-                    .setCsvRowNumber(1)
-                    .setPriorNoticeLastDay(5)
-                    .setPriorNoticeStartDay(3)
-                    .build();
+        new GtfsBookingRules.Builder()
+            .setCsvRowNumber(1)
+            .setPriorNoticeLastDay(5)
+            .setPriorNoticeStartDay(3)
+            .build();
 
     assertThat(generateNotices(bookingRule))
-            .contains(new PriorNoticeLastDayAfterStartDayNotice(bookingRule));
+        .contains(new PriorNoticeLastDayAfterStartDayNotice(bookingRule));
   }
 }

@@ -91,9 +91,7 @@ public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBooki
     }
   }
 
-  /**
-   * Booking Rule prior notice last day should not be greater than the prior notice start day.
-   */
+  /** Booking Rule prior notice last day should not be greater than the prior notice start day. */
   @GtfsValidationNotice(
       severity = SeverityLevel.ERROR,
       files = @FileRefs(GtfsBookingRulesSchema.class))
