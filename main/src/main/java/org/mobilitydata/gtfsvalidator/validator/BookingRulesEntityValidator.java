@@ -24,8 +24,8 @@ public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBooki
 
   private void validatePriorNotice(GtfsBookingRules entity, NoticeContainer noticeContainer) {
     if (entity.hasPriorNoticeLastDay()
-            && entity.hasPriorNoticeStartDay()
-            && entity.priorNoticeLastDay() > entity.priorNoticeStartDay()) {
+        && entity.hasPriorNoticeStartDay()
+        && entity.priorNoticeLastDay() > entity.priorNoticeStartDay()) {
       noticeContainer.addValidationNotice(new PriorNoticeLastDayAfterStartDayNotice(entity));
     }
   }
