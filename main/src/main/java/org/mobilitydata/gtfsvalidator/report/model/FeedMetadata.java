@@ -196,26 +196,39 @@ public class FeedMetadata {
   }
 
   private boolean hasAtLeastOneTripWithAllFields(GtfsFeedContainer feedContainer) {
-    Optional<GtfsTableContainer<?>> optionalStopTimeTable =
-        feedContainer.getTableForFilename(GtfsStopTime.FILENAME);
-    if (optionalStopTimeTable.isPresent()) {
-      for (GtfsEntity entity : optionalStopTimeTable.get().getEntities()) {
-        if (entity instanceof GtfsStopTime) {
-          GtfsStopTime stopTime = (GtfsStopTime) entity;
-          return stopTime.hasTripId()
-              && stopTime.tripId() != null
-              && stopTime.hasLocationId()
-              && stopTime.locationId() != null
-              && stopTime.hasStopId()
-              && stopTime.stopId() != null
-              && stopTime.hasArrivalTime()
-              && stopTime.arrivalTime() != null
-              && stopTime.hasDepartureTime()
-              && stopTime.departureTime() != null;
-        }
-      }
-    }
-    return false;
+    return feedContainer
+        .getTableForFilename(GtfsStopTime.FILENAME)
+        .map(table -> (GtfsStopTimeTableContainer) table)
+        .map(GtfsStopTimeTableContainer::byTripIdMap)
+        .map(
+            byTripIdMap ->
+                byTripIdMap.keySet().stream()
+                    .anyMatch(
+                        tripId -> {
+                          boolean hasTripId = false,
+                              hasLocationId = false,
+                              hasStopId = false,
+                              hasArrivalTime = false,
+                              hasDepartureTime = false;
+
+                          for (GtfsStopTime stopTime : byTripIdMap.get(tripId)) {
+                            hasTripId |= stopTime.hasTripId();
+                            hasLocationId |= stopTime.hasLocationId();
+                            hasStopId |= stopTime.hasStopId();
+                            hasArrivalTime |= stopTime.hasArrivalTime();
+                            hasDepartureTime |= stopTime.hasDepartureTime();
+
+                            if (hasTripId
+                                && hasLocationId
+                                && hasStopId
+                                && hasArrivalTime
+                                && hasDepartureTime) {
+                              return true; // Early return if all fields are found for this trip
+                            }
+                          }
+                          return false; // Continue checking other trips
+                        }))
+        .orElse(false);
   }
 
   private void loadZoneBasedDemandResponsiveTransitFeature(GtfsFeedContainer feedContainer) {
@@ -231,11 +244,7 @@ public class FeedMetadata {
       for (GtfsEntity entity : optionalStopTimeTable.get().getEntities()) {
         if (entity instanceof GtfsStopTime) {
           GtfsStopTime stopTime = (GtfsStopTime) entity;
-          if (stopTime.hasTripId()
-              && stopTime.tripId() != null
-              && stopTime.hasLocationId()
-              && stopTime.locationId() != null
-              && (!stopTime.hasStopId() || stopTime.stopId() == null)) {
+          if (stopTime.hasTripId() && stopTime.hasLocationId() && (!stopTime.hasStopId())) {
             return true;
           }
         }
