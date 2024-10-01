@@ -104,10 +104,7 @@ public class BookingRulesEntityValidatorTest {
     assertThat(generateNotices(bookingRule))
         .containsExactly(
             new BookingRulesEntityValidator.ForbiddenSameDayBookingFieldValueNotice(
-                bookingRule,
-                List.of(
-                    GtfsBookingRules.PRIOR_NOTICE_LAST_DAY_FIELD_NAME,
-                    GtfsBookingRules.PRIOR_NOTICE_START_TIME_FIELD_NAME)));
+                bookingRule, List.of(GtfsBookingRules.PRIOR_NOTICE_LAST_DAY_FIELD_NAME)));
   }
 
   @Test
