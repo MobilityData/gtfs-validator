@@ -65,9 +65,6 @@ public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBooki
     if (bookingRule.hasPriorNoticeLastTime()) {
       fields.add(GtfsBookingRules.PRIOR_NOTICE_LAST_TIME_FIELD_NAME);
     }
-    if (bookingRule.hasPriorNoticeStartTime()) {
-      fields.add(GtfsBookingRules.PRIOR_NOTICE_START_TIME_FIELD_NAME);
-    }
     if (bookingRule.hasPriorNoticeServiceId()) {
       fields.add(GtfsBookingRules.PRIOR_NOTICE_SERVICE_ID_FIELD_NAME);
     }
