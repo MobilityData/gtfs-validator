@@ -19,6 +19,15 @@ public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBooki
   public void validate(GtfsBookingRules entity, NoticeContainer noticeContainer) {
     validateForbiddenRealTimeFields(entity, noticeContainer);
     validateSameDayFields(entity, noticeContainer);
+    validatePriorNotice(entity, noticeContainer);
+  }
+
+  private void validatePriorNotice(GtfsBookingRules entity, NoticeContainer noticeContainer) {
+    if (entity.hasPriorNoticeLastDay()
+            && entity.hasPriorNoticeStartDay()
+            && entity.priorNoticeLastDay() > entity.priorNoticeStartDay()) {
+      noticeContainer.addValidationNotice(new PriorNoticeLastDayAfterStartDayNotice(entity));
+    }
   }
 
   private static void validateForbiddenRealTimeFields(
@@ -35,13 +44,6 @@ public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBooki
     if (!forbiddenFields.isEmpty()) {
       noticeContainer.addValidationNotice(
           new ForbiddenRealTimeBookingFieldValueNotice(entity, forbiddenFields));
-    }
-
-    // Check if prior_notice_last_day is greater than prior_notice_start_day
-    if (entity.hasPriorNoticeLastDay()
-        && entity.hasPriorNoticeStartDay()
-        && entity.priorNoticeLastDay() > entity.priorNoticeStartDay()) {
-      noticeContainer.addValidationNotice(new PriorNoticeLastDayAfterStartDayNotice(entity));
     }
   }
 
