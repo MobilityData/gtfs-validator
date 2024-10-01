@@ -198,7 +198,7 @@ public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBooki
   }
 
   /**
-   * An invalid `prior_notice_duration_min` value is present in a prior-day booking rule.
+   * An invalid `prior_notice_duration_min` value is present in a booking rule.
    *
    * <p>The `prior_notice_duration_max` field value needs to be greater or equal to the
    * `prior_notice_duration_min` field value.
