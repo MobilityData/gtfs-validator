@@ -23,26 +23,24 @@ public class MemoryUsage {
     this.diffMemory = diffMemory;
   }
 
-  public static String convertToHumanReadableMemory(Long size) {
-    if (size == null) {
+  public static String convertToHumanReadableMemory(Long bytes) {
+    if (bytes == null) {
       return "N/A";
     }
-    if (size <= 0) {
-      return "0";
-    }
+    long size = Math.abs(bytes);
     if (size < 1024) {
-      return size + " bytes";
+      return bytes + " bytes";
     }
     if (size < 1048576) {
-      return TWO_DECIMAL_FORMAT.format(size / 1024.0) + " KiB";
+      return TWO_DECIMAL_FORMAT.format(Math.copySign(size / 1024.0, bytes)) + " KiB";
     }
     if (size < 1073741824) {
-      return TWO_DECIMAL_FORMAT.format(size / 1048576.0) + " MiB";
+      return TWO_DECIMAL_FORMAT.format(Math.copySign(size / 1048576.0, bytes)) + " MiB";
     }
     if (size < 1099511627776L) {
-      return TWO_DECIMAL_FORMAT.format(size / 1073741824.0) + " GiB";
+      return TWO_DECIMAL_FORMAT.format(Math.copySign(size / 1073741824.0, bytes)) + " GiB";
     }
-    return TWO_DECIMAL_FORMAT.format(size / 1099511627776L) + " TiB";
+    return TWO_DECIMAL_FORMAT.format(Math.copySign(size / 1099511627776L, bytes)) + " TiB";
   }
 
   public long usedMemory() {
