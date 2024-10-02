@@ -175,7 +175,7 @@ public class GtfsFeedLoader {
       NoticeContainer noticeContainer,
       ExecutorService exec,
       List<Callable<TableAndNoticeContainers>> loaderCallables,
-      ArrayList<GtfsTableContainer<?>> tableContainers)
+      ArrayList<GtfsEntityContainer<?, ?>> tableContainers)
       throws InterruptedException {
     for (Future<TableAndNoticeContainers> futureContainer : exec.invokeAll(loaderCallables)) {
       try {
