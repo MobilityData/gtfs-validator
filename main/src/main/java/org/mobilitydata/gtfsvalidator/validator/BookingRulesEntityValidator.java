@@ -38,6 +38,7 @@ public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBooki
         noticeContainer);
     validatePriorNoticeDurationMin(entity, noticeContainer);
     validatePriorNoticeStartDay(entity, noticeContainer);
+    validatePriorNoticeDayRange(entity, noticeContainer);
   }
 
   private static void validatePriorNoticeDurationMin(
@@ -123,6 +124,15 @@ public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBooki
       }
     }
     return fields;
+  }
+
+  private static void validatePriorNoticeDayRange(
+      GtfsBookingRules entity, NoticeContainer noticeContainer) {
+    if (entity.hasPriorNoticeLastDay()
+        && entity.hasPriorNoticeStartDay()
+        && entity.priorNoticeLastDay() > entity.priorNoticeStartDay()) {
+      noticeContainer.addValidationNotice(new PriorNoticeLastDayAfterStartDayNotice(entity));
+    }
   }
 
   // Abstract Notice Creation using Functional Interface
@@ -228,9 +238,7 @@ public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBooki
     }
   }
 
-  /**
-   * An invalid `prior_notice_start_day` value is present when `prior_notice_duration_max` is set.
-   */
+  /** `prior_notice_start_day` value is forbidden when `prior_notice_duration_max` is set. */
   @GtfsValidationNotice(
       severity = SeverityLevel.ERROR,
       files = @FileRefs(GtfsBookingRulesSchema.class))
@@ -253,6 +261,36 @@ public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBooki
       this.bookingRuleId = bookingRule.bookingRuleId();
       this.priorNoticeStartDay = priorNoticeStartDay;
       this.priorNoticeDurationMax = priorNoticeDurationMax;
+    }
+  }
+
+  /**
+   * Prior notice last day should not be greater than the prior notice start day in
+   * booking_rules.txt.
+   */
+  @GtfsValidationNotice(
+      severity = SeverityLevel.ERROR,
+      files = @FileRefs(GtfsBookingRulesSchema.class))
+  static class PriorNoticeLastDayAfterStartDayNotice extends ValidationNotice {
+
+    /** The row number of the faulty record. */
+    private final int csvRowNumber;
+
+    /** The value of the `prior_notice_last_day` of the faulty field. */
+    private final int priorNoticeLastDay;
+
+    /** The value of the `prior_notice_start_day` of the faulty field. */
+    private final int priorNoticeStartDay;
+
+    /**
+     * Constructs a new validation notice.
+     *
+     * @param bookingRule the booking rule entity that triggered this notice
+     */
+    PriorNoticeLastDayAfterStartDayNotice(GtfsBookingRules bookingRule) {
+      this.csvRowNumber = bookingRule.csvRowNumber();
+      this.priorNoticeLastDay = bookingRule.priorNoticeLastDay();
+      this.priorNoticeStartDay = bookingRule.priorNoticeStartDay();
     }
   }
 }

@@ -204,7 +204,8 @@ public class NoticeFieldsTest {
             "fieldNames",
             "priorNoticeDurationMin",
             "priorNoticeDurationMax",
-            "priorNoticeStartDay");
+            "priorNoticeStartDay",
+            "priorNoticeLastDay");
   }
 
   private static List<String> discoverValidationNoticeFieldNames() {
