@@ -91,7 +91,6 @@ public interface GtfsStopTimeSchema extends GtfsEntity {
   double shapeDistTraveled();
 
   @DefaultValue("1")
-  @RecommendedColumn
   GtfsStopTimeTimepoint timepoint();
 
   @FieldType(FieldTypeEnum.ID)
