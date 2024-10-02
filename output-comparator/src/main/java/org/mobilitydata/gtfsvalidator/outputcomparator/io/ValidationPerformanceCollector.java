@@ -285,7 +285,7 @@ public class ValidationPerformanceCollector {
             ? referenceReport.getMemoryUsageRecords().stream()
                 .map(MemoryUsage::getKey)
                 .collect(Collectors.toSet())
-            : Collections.EMPTY_SET;
+            : new HashSet<>();
     if (latestReport.getMemoryUsageRecords() != null) {
       keys.addAll(
           latestReport.getMemoryUsageRecords().stream()
