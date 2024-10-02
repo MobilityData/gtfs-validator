@@ -127,6 +127,7 @@ public class NoticeSchemaGenerator {
     ReferencesSchema schema = new ReferencesSchema();
     Arrays.stream(noticeAnnotation.files().value())
         .map(
+            // Both Table and Json annotations specify a file name, collect them all.
             fileClass -> {
               Optional<String> fileId = getFileIdForTableClass(fileClass);
               return fileId.or(() -> getFileIdForJsonClass(fileClass));

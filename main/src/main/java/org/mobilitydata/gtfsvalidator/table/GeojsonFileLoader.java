@@ -15,7 +15,12 @@ import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
 
-/** This class knows how to load a geojson file. */
+/**
+ * This class knows how to load a geojson file. Typical geojson file: { "type": "FeatureCollection",
+ * "features": [ { "id": "area_548", "type": "Feature", "geometry": { "type": "Polygon",
+ * "coordinates": [ [ [ -122.4112929, 48.0834848 ], ... ] ] }, "properties": { "stop_name": "Some
+ * name", "stop_desc": "Some description" } }, ... ] }
+ */
 public class GeojsonFileLoader extends TableLoader {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 

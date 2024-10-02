@@ -12,6 +12,7 @@ import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorUtil;
 
+/** Parent class for the different file loaders. */
 public abstract class TableLoader {
 
   private static final List<Class<? extends SingleEntityValidator>>
@@ -29,6 +30,15 @@ public abstract class TableLoader {
     return Collections.unmodifiableList(singleEntityValidatorsWithParsingErrors);
   }
 
+  /**
+   * Load the file
+   *
+   * @param fileDescriptor Description of the file
+   * @param validatorProvider Will provide validators to run on the file.
+   * @param csvInputStream Stream to load from
+   * @param noticeContainer Where to put the notices if errors occur during the loading.
+   * @return A container for the loaded entities
+   */
   abstract GtfsEntityContainer load(
       GtfsFileDescriptor fileDescriptor,
       ValidatorProvider validatorProvider,
