@@ -99,7 +99,7 @@ public class BookingRulesEntityValidatorTest {
             .setBookingRuleId("rule-5")
             .setBookingType(GtfsBookingType.SAMEDAY)
             .setPriorNoticeLastDay(2) // Forbidden field
-            .setPriorNoticeStartTime(GtfsTime.fromSecondsSinceMidnight(5000)) // Forbidden field
+            .setPriorNoticeStartTime(GtfsTime.fromSecondsSinceMidnight(5000))
             .build();
 
     assertThat(generateNotices(bookingRule))
@@ -118,6 +118,59 @@ public class BookingRulesEntityValidatorTest {
             .build();
 
     assertThat(generateNotices(bookingRule)).isEmpty();
+  }
+
+  @Test
+  public void priorDayBookingWithForbiddenFieldsShouldGenerateNotice() {
+    GtfsBookingRules bookingRule =
+        new GtfsBookingRules.Builder()
+            .setCsvRowNumber(1)
+            .setBookingRuleId("rule-7")
+            .setBookingType(GtfsBookingType.PRIORDAY)
+            .setPriorNoticeDurationMin(30) // Forbidden field
+            .setPriorNoticeDurationMax(60) // Forbidden field
+            .build();
+
+    assertThat(generateNotices(bookingRule))
+        .containsExactly(
+            new BookingRulesEntityValidator.ForbiddenPriorDayBookingFieldValueNotice(
+                bookingRule,
+                List.of(
+                    GtfsBookingRules.PRIOR_NOTICE_DURATION_MIN_FIELD_NAME,
+                    GtfsBookingRules.PRIOR_NOTICE_DURATION_MAX_FIELD_NAME)));
+  }
+
+  @Test
+  public void invalidPriorNoticeDurationMinShouldGenerateNotice() {
+    GtfsBookingRules bookingRule =
+        new GtfsBookingRules.Builder()
+            .setCsvRowNumber(1)
+            .setBookingRuleId("rule-8")
+            .setBookingType(GtfsBookingType.SAMEDAY)
+            .setPriorNoticeDurationMin(60) // Invalid: greater than max
+            .setPriorNoticeDurationMax(30)
+            .build();
+
+    assertThat(generateNotices(bookingRule))
+        .containsExactly(
+            new BookingRulesEntityValidator.InvalidPriorNoticeDurationMinNotice(
+                bookingRule, 60, 30));
+  }
+
+  @Test
+  public void forbiddenPriorNoticeStartDayShouldGenerateNotice() {
+    GtfsBookingRules bookingRule =
+        new GtfsBookingRules.Builder()
+            .setCsvRowNumber(1)
+            .setBookingRuleId("rule-9")
+            .setBookingType(GtfsBookingType.SAMEDAY)
+            .setPriorNoticeDurationMax(30) // Duration max is set
+            .setPriorNoticeStartDay(5) // Forbidden when duration max is set
+            .build();
+
+    assertThat(generateNotices(bookingRule))
+        .containsExactly(
+            new BookingRulesEntityValidator.ForbiddenPriorNoticeStartDayNotice(bookingRule, 5, 30));
   }
 
   @Test
