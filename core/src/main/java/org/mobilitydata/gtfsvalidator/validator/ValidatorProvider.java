@@ -19,8 +19,9 @@ package org.mobilitydata.gtfsvalidator.validator;
 import java.util.List;
 import java.util.function.Consumer;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
+import org.mobilitydata.gtfsvalidator.table.GtfsEntityContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableDescriptor;
 
 /**
  * Provider of all kinds of validators for fields, entities and files.
@@ -57,9 +58,10 @@ public interface ValidatorProvider {
    * @param table GTFS table to validate
    * @param <T> type of the GTFS entity
    */
-  <T extends GtfsEntity> List<FileValidator> createSingleFileValidators(
-      GtfsTableContainer<T> table,
-      Consumer<Class<? extends FileValidator>> validatorsWithParsingErrors);
+  <T extends GtfsEntity, D extends GtfsTableDescriptor>
+      List<FileValidator> createSingleFileValidators(
+          GtfsEntityContainer<T, D> table,
+          Consumer<Class<? extends FileValidator>> validatorsWithParsingErrors);
 
   /**
    * Creates a list of cross-table validators. Any validator that has a dependency with parse errors
