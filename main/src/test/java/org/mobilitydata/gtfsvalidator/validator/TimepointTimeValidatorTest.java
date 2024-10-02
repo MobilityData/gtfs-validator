@@ -201,7 +201,7 @@ public class TimepointTimeValidatorTest {
   }
 
   @Test
-  public void emptyTimepoint_noTimesProvided_shouldGenerateNotice() {
+  public void emptyTimepoint_noArrivalTime_noDepartureTime_noTimesProvided_shouldNotGenerateNotice() {
     // setting .setTimepoint(null) is used to define a missing value
     // (even if the timepoint value is included in header)
     List<GtfsStopTime> stopTimes = new ArrayList<>();
@@ -216,7 +216,7 @@ public class TimepointTimeValidatorTest {
             .setTimepoint((Integer) null)
             .build());
     assertThat(generateNotices(createHeaderWithTimepointColumn(), stopTimes))
-        .containsExactly(new MissingTimepointValueNotice(stopTimes.get(0)));
+        .doesNotContain(new MissingTimepointValueNotice(stopTimes.get(0)));
   }
 
   @Test
