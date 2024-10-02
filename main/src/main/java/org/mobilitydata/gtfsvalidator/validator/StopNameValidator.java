@@ -40,6 +40,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
 @GtfsValidator
 public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
 
+  private static final String REPLACEMENT_CHAR = "\uFFFD";
+
   @Override
   public void validate(GtfsStop stop, NoticeContainer noticeContainer) {
     if (stop.locationType() == GtfsLocationType.STOP
@@ -57,6 +59,11 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
       noticeContainer.addValidationNotice(
           new SameNameAndDescriptionForStopNotice(
               stop.csvRowNumber(), stop.stopId(), stop.stopDesc()));
+    }
+
+    if (stop.stopName() != null && stop.stopName().contains(REPLACEMENT_CHAR)) {
+      noticeContainer.addValidationNotice(
+              new StopNameInvalidCharacterNotice(stop.csvRowNumber(), stop.stopId(), stop.stopName()));
     }
   }
 
@@ -115,6 +122,31 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
       this.stopId = stopId;
       this.csvRowNumber = csvRowNumber;
       this.stopDesc = stopDesc;
+    }
+  }
+
+  /**
+   * Validation notice for invalid characters in the stop name.
+   *
+   * <p>This notice is generated when the stop name contains the replacement character (\uFFFD in Unicode),
+   * indicating that the stop name has invalid Unicode characters.
+   */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopSchema.class))
+  static class StopNameInvalidCharacterNotice extends ValidationNotice {
+
+    /** The row number of the faulty record. */
+    private final long csvRowNumber;
+
+    /** The ID of the faulty stop. */
+    private final String stopId;
+
+    /** The stop name containing invalid characters. */
+    private final String stopName;
+
+    StopNameInvalidCharacterNotice(long csvRowNumber, String stopId, String stopName) {
+      this.csvRowNumber = csvRowNumber;
+      this.stopId = stopId;
+      this.stopName = stopName;
     }
   }
 }
