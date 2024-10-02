@@ -1,17 +1,26 @@
 package org.mobilitydata.gtfsvalidator.performance;
 
-import com.google.auto.value.AutoValue;
 import java.text.DecimalFormat;
-import javax.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 
-@AutoValue
-public abstract class MemoryUsage {
+public class MemoryUsage {
   private static final DecimalFormat TWO_DECIMAL_FORMAT = new DecimalFormat("0.00");
 
-  public static MemoryUsage create(
-      String key, long totalMemory, long freeMemory, long maxMemory, Long memoryDiff) {
-    return new AutoValue_MemoryUsage(key, totalMemory, freeMemory, maxMemory, memoryDiff);
+  private String key;
+  private long totalMemory;
+  private long freeMemory;
+  private long maxMemory;
+  private Long diffMemory;
+
+  public MemoryUsage() {}
+
+  public MemoryUsage(
+      String key, long totalMemory, long freeMemory, long maxMemory, Long diffMemory) {
+    this.key = key;
+    this.totalMemory = totalMemory;
+    this.freeMemory = freeMemory;
+    this.maxMemory = maxMemory;
+    this.diffMemory = diffMemory;
   }
 
   public static String convertToHumanReadableMemory(Long size) {
@@ -36,34 +45,117 @@ public abstract class MemoryUsage {
     return TWO_DECIMAL_FORMAT.format(size / 1099511627776L) + " TiB";
   }
 
-  public abstract String key();
-
-  public abstract long totalMemory();
-
-  public abstract long freeMemory();
-
-  public abstract long maxMemory();
-
-  @Nullable
-  public abstract Long diffMemory();
-
   public long usedMemory() {
-    return totalMemory() - freeMemory();
+    return totalMemory - freeMemory;
   }
 
   public String humanReadablePrint() {
     StringBuffer result = new StringBuffer();
     result.append("Memory usage registered");
-    if (StringUtils.isNotBlank(key())) {
-      result.append(" for key: ").append(key());
+    if (StringUtils.isNotBlank(key)) {
+      result.append(" for key: ").append(key);
     } else {
       result.append(":");
     }
-    result.append(" Max: ").append(convertToHumanReadableMemory(maxMemory()));
-    result.append(" Total: ").append(convertToHumanReadableMemory(totalMemory()));
-    result.append(" Free: ").append(convertToHumanReadableMemory(freeMemory()));
+    result.append(" Max: ").append(convertToHumanReadableMemory(maxMemory));
+    result.append(" Total: ").append(convertToHumanReadableMemory(totalMemory));
+    result.append(" Free: ").append(convertToHumanReadableMemory(freeMemory));
     result.append(" Used: ").append(convertToHumanReadableMemory(usedMemory()));
-    result.append(" Diff: ").append(convertToHumanReadableMemory(diffMemory()));
+    result.append(" Diff: ").append(convertToHumanReadableMemory(diffMemory));
     return result.toString();
+  }
+
+  public String getKey() {
+    return key;
+  }
+
+  public void setKey(String key) {
+    this.key = key;
+  }
+
+  public long getTotalMemory() {
+    return totalMemory;
+  }
+
+  public void setTotalMemory(long totalMemory) {
+    this.totalMemory = totalMemory;
+  }
+
+  public long getFreeMemory() {
+    return freeMemory;
+  }
+
+  public void setFreeMemory(long freeMemory) {
+    this.freeMemory = freeMemory;
+  }
+
+  public long getMaxMemory() {
+    return maxMemory;
+  }
+
+  public void setMaxMemory(long maxMemory) {
+    this.maxMemory = maxMemory;
+  }
+
+  public Long getDiffMemory() {
+    return diffMemory;
+  }
+
+  public void setDiffMemory(Long diffMemory) {
+    this.diffMemory = diffMemory;
+  }
+
+  @Override
+  public String toString() {
+    return "MemoryUsage{"
+        + "key="
+        + key
+        + ", "
+        + "totalMemory="
+        + totalMemory
+        + ", "
+        + "freeMemory="
+        + freeMemory
+        + ", "
+        + "maxMemory="
+        + maxMemory
+        + ", "
+        + "diffMemory="
+        + diffMemory
+        + "}";
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    }
+    if (o instanceof MemoryUsage) {
+      MemoryUsage that = (MemoryUsage) o;
+      return this.key.equals(that.getKey())
+          && this.totalMemory == that.getTotalMemory()
+          && this.freeMemory == that.getFreeMemory()
+          && this.maxMemory == that.getMaxMemory()
+          && (this.diffMemory == null
+              ? that.getDiffMemory() == null
+              : this.getDiffMemory().equals(that.getDiffMemory()));
+    }
+    return false;
+  }
+
+  @Override
+  public int hashCode() {
+    int h$ = 1;
+    h$ *= 1000003;
+    h$ ^= key.hashCode();
+    h$ *= 1000003;
+    h$ ^= (int) ((totalMemory >>> 32) ^ totalMemory);
+    h$ *= 1000003;
+    h$ ^= (int) ((freeMemory >>> 32) ^ freeMemory);
+    h$ *= 1000003;
+    h$ ^= (int) ((maxMemory >>> 32) ^ maxMemory);
+    h$ *= 1000003;
+    h$ ^= (diffMemory == null) ? 0 : diffMemory.hashCode();
+    return h$;
   }
 }

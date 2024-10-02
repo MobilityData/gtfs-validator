@@ -283,24 +283,24 @@ public class ValidationPerformanceCollector {
     Set<String> keys =
         referenceReport.getMemoryUsageRecords() != null
             ? referenceReport.getMemoryUsageRecords().stream()
-                .map(MemoryUsage::key)
+                .map(MemoryUsage::getKey)
                 .collect(Collectors.toSet())
             : Collections.EMPTY_SET;
     if (latestReport.getMemoryUsageRecords() != null) {
       keys.addAll(
           latestReport.getMemoryUsageRecords().stream()
-              .map(MemoryUsage::key)
+              .map(MemoryUsage::getKey)
               .collect(Collectors.toSet()));
     }
     Map<String, MemoryUsage> referenceMap =
         referenceReport.getMemoryUsageRecords() != null
             ? referenceReport.getMemoryUsageRecords().stream()
-                .collect(Collectors.toMap(MemoryUsage::key, memoryUsage -> memoryUsage))
+                .collect(Collectors.toMap(MemoryUsage::getKey, memoryUsage -> memoryUsage))
             : new HashMap<>();
     Map<String, MemoryUsage> latestMap =
         referenceReport.getMemoryUsageRecords() != null
             ? latestReport.getMemoryUsageRecords().stream()
-                .collect(Collectors.toMap(MemoryUsage::key, memoryUsage -> memoryUsage))
+                .collect(Collectors.toMap(MemoryUsage::getKey, memoryUsage -> memoryUsage))
             : new HashMap<>();
     keys.stream()
         .forEachOrdered(

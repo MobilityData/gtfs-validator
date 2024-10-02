@@ -23,8 +23,8 @@ public class ValidationPerformanceCollectorTest {
             Collections.EMPTY_SET,
             12.0,
             Arrays.asList(
-                MemoryUsage.create("key1", baseMemory, baseMemory, 200, 50L),
-                MemoryUsage.create("key2", baseMemory, baseMemory, 200, 50L))),
+                new MemoryUsage("key1", baseMemory, baseMemory, 200, 50L),
+                new MemoryUsage("key2", baseMemory, baseMemory, 200, 50L))),
         new ValidationReport(Collections.EMPTY_SET, 16.0, Collections.EMPTY_LIST));
     //    Memory usage decreased
     collector.compareValidationReports(
@@ -33,14 +33,14 @@ public class ValidationPerformanceCollectorTest {
             Collections.EMPTY_SET,
             14.0,
             Arrays.asList(
-                MemoryUsage.create("key3", baseMemory, baseMemory - 1000, 200, 50L),
-                MemoryUsage.create("key4", baseMemory, baseMemory - 1000, 200, 50L))),
+                new MemoryUsage("key3", baseMemory, baseMemory - 1000, 200, 50L),
+                new MemoryUsage("key4", baseMemory, baseMemory - 1000, 200, 50L))),
         new ValidationReport(
             Collections.EMPTY_SET,
             18.0,
             Arrays.asList(
-                MemoryUsage.create("key3", baseMemory, baseMemory - baseMemory / 2, 200, null),
-                MemoryUsage.create("key4", baseMemory, baseMemory - baseMemory / 2, 200, null))));
+                new MemoryUsage("key3", baseMemory, baseMemory - baseMemory / 2, 200, null),
+                new MemoryUsage("key4", baseMemory, baseMemory - baseMemory / 2, 200, null))));
 
     //    Memory usage decreased
     collector.compareValidationReports(
@@ -49,8 +49,8 @@ public class ValidationPerformanceCollectorTest {
             Collections.EMPTY_SET,
             20.0,
             Arrays.asList(
-                MemoryUsage.create("key3", baseMemory, baseMemory * 2, 200, null),
-                MemoryUsage.create("key4", baseMemory, baseMemory * 2, 200, null))),
+                new MemoryUsage("key3", baseMemory, baseMemory * 2, 200, null),
+                new MemoryUsage("key4", baseMemory, baseMemory * 2, 200, null))),
         new ValidationReport(Collections.EMPTY_SET, 22.0, Collections.EMPTY_LIST));
 
     // Generating the log string

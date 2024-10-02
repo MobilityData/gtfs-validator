@@ -27,9 +27,9 @@ public class MemoryUsageRegister {
   public MemoryUsage getMemoryUsageSnapshot(String key, MemoryUsage previous) {
     Long memoryDiff = null;
     if (previous != null) {
-      memoryDiff = runtime.freeMemory() - previous.freeMemory();
+      memoryDiff = runtime.freeMemory() - previous.getFreeMemory();
     }
-    return MemoryUsage.create(
+    return new MemoryUsage(
         key, runtime.totalMemory(), runtime.freeMemory(), runtime.maxMemory(), memoryDiff);
   }
 
