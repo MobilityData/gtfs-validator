@@ -204,6 +204,7 @@ public class NoticeFieldsTest {
             "fieldNames",
             "priorNoticeDurationMin",
             "priorNoticeDurationMax",
+            "priorNoticeStartTime",
             "priorNoticeStartDay",
             "priorNoticeLastDay");
   }
