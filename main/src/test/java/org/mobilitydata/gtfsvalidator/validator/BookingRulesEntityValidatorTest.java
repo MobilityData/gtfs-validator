@@ -13,6 +13,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsBookingRules;
 import org.mobilitydata.gtfsvalidator.table.GtfsBookingType;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 import org.mobilitydata.gtfsvalidator.validator.BookingRulesEntityValidator.ForbiddenRealTimeBookingFieldValueNotice;
+import org.mobilitydata.gtfsvalidator.validator.BookingRulesEntityValidator.PriorNoticeLastDayAfterStartDayNotice;
 
 @RunWith(JUnit4.class)
 public class BookingRulesEntityValidatorTest {
@@ -88,5 +89,47 @@ public class BookingRulesEntityValidatorTest {
                     GtfsBookingRules.PRIOR_NOTICE_DURATION_MAX_FIELD_NAME,
                     GtfsBookingRules.PRIOR_NOTICE_START_TIME_FIELD_NAME,
                     GtfsBookingRules.PRIOR_NOTICE_SERVICE_ID_FIELD_NAME)));
+  }
+
+  @Test
+  public void sameDayBookingWithForbiddenFieldsShouldGenerateNotice() {
+    GtfsBookingRules bookingRule =
+        new GtfsBookingRules.Builder()
+            .setCsvRowNumber(1)
+            .setBookingRuleId("rule-5")
+            .setBookingType(GtfsBookingType.SAMEDAY)
+            .setPriorNoticeLastDay(2) // Forbidden field
+            .setPriorNoticeStartTime(GtfsTime.fromSecondsSinceMidnight(5000)) // Forbidden field
+            .build();
+
+    assertThat(generateNotices(bookingRule))
+        .containsExactly(
+            new BookingRulesEntityValidator.ForbiddenSameDayBookingFieldValueNotice(
+                bookingRule, List.of(GtfsBookingRules.PRIOR_NOTICE_LAST_DAY_FIELD_NAME)));
+  }
+
+  @Test
+  public void sameDayBookingWithoutForbiddenFieldsShouldNotGenerateNotice() {
+    GtfsBookingRules bookingRule =
+        new GtfsBookingRules.Builder()
+            .setCsvRowNumber(1)
+            .setBookingRuleId("rule-6")
+            .setBookingType(GtfsBookingType.SAMEDAY)
+            .build();
+
+    assertThat(generateNotices(bookingRule)).isEmpty();
+  }
+
+  @Test
+  public void priorNoticeLastDayAfterStartDayShouldGenerateNotice() {
+    GtfsBookingRules bookingRule =
+        new GtfsBookingRules.Builder()
+            .setCsvRowNumber(1)
+            .setPriorNoticeLastDay(5)
+            .setPriorNoticeStartDay(3)
+            .build();
+
+    assertThat(generateNotices(bookingRule))
+        .contains(new PriorNoticeLastDayAfterStartDayNotice(bookingRule));
   }
 }

@@ -49,7 +49,7 @@ public class NoticeFieldsTest {
             "Is this test failing? That likely means you've added a new field name to a "
                 + "`Notice` that hasn't been used before. See `NoticeFieldsTest` for instructions.")
         .that(discoverValidationNoticeFieldNames())
-        // Keep the list of field names in sorted order.
+        // Keep the list of field names is in sorted order.
         .containsExactly(
             "actual",
             "actualDistanceBetweenShapePoints",
@@ -143,6 +143,8 @@ public class NoticeFieldsTest {
             "prevShapeDistTraveled",
             "prevShapePtSequence",
             "prevStopSequence",
+            "priorNoticeLastDay",
+            "priorNoticeStartDay",
             "recordId",
             "recordSubId",
             "routeColor",
