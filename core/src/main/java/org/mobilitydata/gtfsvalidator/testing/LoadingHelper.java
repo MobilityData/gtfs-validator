@@ -26,7 +26,7 @@ import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
-import org.mobilitydata.gtfsvalidator.table.AnyTableLoader;
+import org.mobilitydata.gtfsvalidator.table.CsvFileLoader;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableDescriptor;
@@ -58,7 +58,7 @@ public class LoadingHelper {
     this.validatorLoader = validatorLoader;
   }
 
-  public <X extends GtfsEntity, Y extends GtfsTableContainer<X>> Y load(
+  public <X extends GtfsEntity, Y extends GtfsTableContainer<X, ?>> Y load(
       GtfsTableDescriptor<X> tableDescriptor, String... lines) throws ValidatorLoaderException {
     String content = Arrays.stream(lines).collect(Collectors.joining("\n"));
     InputStream in = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
@@ -70,6 +70,6 @@ public class LoadingHelper {
             .setDateForValidation(new DateForValidation(dateForValidation))
             .build();
     ValidatorProvider provider = new DefaultValidatorProvider(context, validatorLoader);
-    return (Y) AnyTableLoader.load(tableDescriptor, provider, in, noticeContainer);
+    return (Y) CsvFileLoader.getInstance().load(tableDescriptor, provider, in, noticeContainer);
   }
 }

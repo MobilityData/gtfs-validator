@@ -25,9 +25,8 @@ public class MissingFeedInfoValidatorTest {
   public void missingFeedInfoTranslationTableNotPresent() {
     assertThat(
             generateNotices(
-                GtfsFeedInfoTableContainer.forStatus(GtfsTableContainer.TableStatus.MISSING_FILE),
-                GtfsTranslationTableContainer.forStatus(
-                    GtfsTableContainer.TableStatus.MISSING_FILE)))
+                GtfsFeedInfoTableContainer.forStatus(TableStatus.MISSING_FILE),
+                GtfsTranslationTableContainer.forStatus(TableStatus.MISSING_FILE)))
         .containsExactly(new MissingRecommendedFileNotice(GtfsFeedInfo.FILENAME));
   }
 
@@ -35,9 +34,8 @@ public class MissingFeedInfoValidatorTest {
   public void missingFeedInfoWhenTranslationTableIsPresent() {
     assertThat(
             generateNotices(
-                GtfsFeedInfoTableContainer.forStatus(GtfsTableContainer.TableStatus.MISSING_FILE),
-                GtfsTranslationTableContainer.forStatus(
-                    GtfsTableContainer.TableStatus.PARSABLE_HEADERS_AND_ROWS)))
+                GtfsFeedInfoTableContainer.forStatus(TableStatus.MISSING_FILE),
+                GtfsTranslationTableContainer.forStatus(TableStatus.PARSABLE_HEADERS_AND_ROWS)))
         .contains(new MissingRequiredFileNotice(GtfsFeedInfo.FILENAME));
   }
 
@@ -45,10 +43,8 @@ public class MissingFeedInfoValidatorTest {
   public void feedInfoPresentShouldGenerateNoNotice() {
     assertThat(
             generateNotices(
-                GtfsFeedInfoTableContainer.forStatus(
-                    GtfsTableContainer.TableStatus.PARSABLE_HEADERS_AND_ROWS),
-                GtfsTranslationTableContainer.forStatus(
-                    GtfsTableContainer.TableStatus.PARSABLE_HEADERS_AND_ROWS)))
+                GtfsFeedInfoTableContainer.forStatus(TableStatus.PARSABLE_HEADERS_AND_ROWS),
+                GtfsTranslationTableContainer.forStatus(TableStatus.PARSABLE_HEADERS_AND_ROWS)))
         .isEmpty();
   }
 }

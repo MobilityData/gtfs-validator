@@ -7,7 +7,7 @@ import io.github.classgraph.ScanResult;
 import java.util.List;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.Notice;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableDescriptor;
+import org.mobilitydata.gtfsvalidator.table.GtfsFileDescriptor;
 
 /** Discovers GTFS table descriptor and validator classes in the given Java packages. */
 public class ClassGraphDiscovery {
@@ -23,8 +23,8 @@ public class ClassGraphDiscovery {
 
   /** Discovers GtfsTableDescriptor subclasses in the default table package. */
   @SuppressWarnings("unchecked")
-  public static ImmutableList<Class<? extends GtfsTableDescriptor<?>>> discoverTables() {
-    ImmutableList.Builder<Class<? extends GtfsTableDescriptor<?>>> tableDescriptors =
+  public static ImmutableList<Class<? extends GtfsFileDescriptor<?>>> discoverTables() {
+    ImmutableList.Builder<Class<? extends GtfsFileDescriptor<?>>> tableDescriptors =
         ImmutableList.builder();
     try (ScanResult scanResult =
         new ClassGraph()
@@ -32,8 +32,8 @@ public class ClassGraphDiscovery {
             .enableAnnotationInfo()
             .acceptPackages(DEFAULT_TABLE_PACKAGE)
             .scan()) {
-      for (ClassInfo classInfo : scanResult.getSubclasses(GtfsTableDescriptor.class)) {
-        tableDescriptors.add((Class<? extends GtfsTableDescriptor<?>>) classInfo.loadClass());
+      for (ClassInfo classInfo : scanResult.getSubclasses(GtfsFileDescriptor.class)) {
+        tableDescriptors.add((Class<? extends GtfsFileDescriptor<?>>) classInfo.loadClass());
       }
     }
     return tableDescriptors.build();
