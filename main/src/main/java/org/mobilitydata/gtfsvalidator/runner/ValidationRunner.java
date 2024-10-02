@@ -42,9 +42,9 @@ import org.mobilitydata.gtfsvalidator.report.HtmlReportGenerator;
 import org.mobilitydata.gtfsvalidator.report.JsonReport;
 import org.mobilitydata.gtfsvalidator.report.JsonReportGenerator;
 import org.mobilitydata.gtfsvalidator.report.model.FeedMetadata;
-import org.mobilitydata.gtfsvalidator.table.AnyTableLoader;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
+import org.mobilitydata.gtfsvalidator.table.TableLoader;
 import org.mobilitydata.gtfsvalidator.util.VersionInfo;
 import org.mobilitydata.gtfsvalidator.util.VersionResolver;
 import org.mobilitydata.gtfsvalidator.validator.*;
@@ -96,7 +96,6 @@ public class ValidationRunner {
       return Status.EXCEPTION;
     }
     GtfsFeedLoader feedLoader = new GtfsFeedLoader(ClassGraphDiscovery.discoverTables());
-    AnyTableLoader anyTableLoader = new AnyTableLoader();
 
     logger.atInfo().log("validation config:\n%s", config);
     logger.atInfo().log("validators:\n%s", validatorLoader.listValidators());
@@ -150,7 +149,7 @@ public class ValidationRunner {
 
     // Output
     exportReport(feedMetadata, noticeContainer, config, versionInfo);
-    printSummary(feedMetadata, feedContainer, feedLoader, anyTableLoader);
+    printSummary(feedMetadata, feedContainer, feedLoader);
     return Status.SUCCESS;
   }
 
@@ -161,19 +160,16 @@ public class ValidationRunner {
    * @param feedContainer the {@code GtfsFeedContainer}
    */
   public static void printSummary(
-      FeedMetadata feedMetadata,
-      GtfsFeedContainer feedContainer,
-      GtfsFeedLoader loader,
-      AnyTableLoader anyTableLoader) {
+      FeedMetadata feedMetadata, GtfsFeedContainer feedContainer, GtfsFeedLoader loader) {
     final long endNanos = System.nanoTime();
     List<Class<? extends FileValidator>> multiFileValidatorsWithParsingErrors =
         loader.getMultiFileValidatorsWithParsingErrors();
     List<Class<? extends FileValidator>> singleFileValidatorsWithParsingErrors =
-        anyTableLoader.getValidatorsWithParsingErrors();
+        TableLoader.getValidatorsWithParsingErrors();
     // In theory single entity validators do not depend on files so there should not be any of these
     // with parsing errors
     List<Class<? extends SingleEntityValidator>> singleEntityValidatorsWithParsingErrors =
-        anyTableLoader.getSingleEntityValidatorsWithParsingErrors();
+        TableLoader.getSingleEntityValidatorsWithParsingErrors();
     if (!singleFileValidatorsWithParsingErrors.isEmpty()
         || !singleEntityValidatorsWithParsingErrors.isEmpty()
         || !multiFileValidatorsWithParsingErrors.isEmpty()) {

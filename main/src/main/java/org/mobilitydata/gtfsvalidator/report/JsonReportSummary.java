@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
 import org.mobilitydata.gtfsvalidator.report.model.AgencyMetadata;
+import org.mobilitydata.gtfsvalidator.report.model.FeatureMetadata;
 import org.mobilitydata.gtfsvalidator.report.model.FeedMetadata;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 import org.mobilitydata.gtfsvalidator.util.VersionInfo;
@@ -100,6 +101,7 @@ public class JsonReportSummary {
               : feedMetadata.specFeatures.entrySet().stream()
                   .filter(Map.Entry::getValue)
                   .map(Map.Entry::getKey)
+                  .map(FeatureMetadata::getFeatureName)
                   .collect(Collectors.toList());
     } else {
       logger.atSevere().log(

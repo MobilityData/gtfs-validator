@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.table;
 import com.google.common.collect.ImmutableList;
 import com.google.common.flogger.FluentLogger;
 import java.io.InputStream;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -48,7 +49,7 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorUtil;
  */
 public class GtfsFeedLoader {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-  private final HashMap<String, GtfsTableDescriptor<?>> tableDescriptors = new HashMap<>();
+  private final HashMap<String, GtfsFileDescriptor<?>> tableDescriptors = new HashMap<>();
   private int numThreads = 1;
 
   /**
@@ -59,11 +60,15 @@ public class GtfsFeedLoader {
       new ArrayList<>();
 
   public GtfsFeedLoader(
-      ImmutableList<Class<? extends GtfsTableDescriptor<?>>> tableDescriptorClasses) {
-    for (Class<? extends GtfsTableDescriptor<?>> clazz : tableDescriptorClasses) {
-      GtfsTableDescriptor<?> descriptor;
+      ImmutableList<Class<? extends GtfsFileDescriptor<?>>> tableDescriptorClasses) {
+    for (Class<? extends GtfsFileDescriptor<?>> clazz : tableDescriptorClasses) {
+      GtfsFileDescriptor<?> descriptor;
       try {
-        descriptor = clazz.asSubclass(GtfsTableDescriptor.class).getConstructor().newInstance();
+        //        Skipping abstract classes. Example: GtfsTableDescriptor.
+        if (Modifier.isAbstract(clazz.getModifiers())) {
+          continue;
+        }
+        descriptor = clazz.asSubclass(GtfsFileDescriptor.class).getConstructor().newInstance();
       } catch (ReflectiveOperationException e) {
         logger.atSevere().withCause(e).log(
             "Possible bug in GTFS annotation processor: expected a constructor without parameters"
@@ -75,7 +80,7 @@ public class GtfsFeedLoader {
     }
   }
 
-  public Collection<GtfsTableDescriptor<?>> getTableDescriptors() {
+  public Collection<GtfsFileDescriptor<?>> getTableDescriptors() {
     return Collections.unmodifiableCollection(tableDescriptors.values());
   }
 
@@ -103,18 +108,20 @@ public class GtfsFeedLoader {
     Map<String, GtfsTableDescriptor<?>> remainingDescriptors =
         (Map<String, GtfsTableDescriptor<?>>) tableDescriptors.clone();
     for (String filename : gtfsInput.getFilenames()) {
-      GtfsTableDescriptor<?> tableDescriptor = remainingDescriptors.remove(filename.toLowerCase());
+      GtfsFileDescriptor<?> tableDescriptor = remainingDescriptors.remove(filename.toLowerCase());
       if (tableDescriptor == null) {
         noticeContainer.addValidationNotice(new UnknownFileNotice(filename));
       } else {
         loaderCallables.add(
             () -> {
               NoticeContainer loaderNotices = new NoticeContainer();
-              GtfsTableContainer<?> tableContainer;
+              GtfsEntityContainer<?, ?> tableContainer;
+              // The descriptor knows what loader to use to load the file
+              TableLoader tableLoader = tableDescriptor.getTableLoader();
               try (InputStream inputStream = gtfsInput.getFile(filename)) {
                 try {
                   tableContainer =
-                      AnyTableLoader.load(
+                      tableLoader.load(
                           tableDescriptor, validatorProvider, inputStream, loaderNotices);
                 } catch (RuntimeException e) {
                   // This handler should prevent ExecutionException for
@@ -124,8 +131,9 @@ public class GtfsFeedLoader {
                   loaderNotices.addSystemError(new RuntimeExceptionInLoaderError(filename, e));
                   // Since the file was not loaded successfully, we treat
                   // it as missing for continuing validation.
+
                   tableContainer =
-                      AnyTableLoader.loadMissingFile(
+                      tableLoader.loadMissingFile(
                           tableDescriptor, validatorProvider, loaderNotices);
                 }
               }
@@ -133,11 +141,12 @@ public class GtfsFeedLoader {
             });
       }
     }
-    ArrayList<GtfsTableContainer<?>> tableContainers = new ArrayList<>();
+    ArrayList<GtfsEntityContainer<?, ?>> tableContainers = new ArrayList<>();
     tableContainers.ensureCapacity(tableDescriptors.size());
-    for (GtfsTableDescriptor<?> tableDescriptor : remainingDescriptors.values()) {
+    for (GtfsFileDescriptor<?> tableDescriptor : remainingDescriptors.values()) {
+      TableLoader tableLoader = tableDescriptor.getTableLoader();
       tableContainers.add(
-          AnyTableLoader.loadMissingFile(tableDescriptor, validatorProvider, noticeContainer));
+          tableLoader.loadMissingFile(tableDescriptor, validatorProvider, noticeContainer));
     }
     try {
       var beforeLoading =
@@ -227,11 +236,11 @@ public class GtfsFeedLoader {
   }
 
   static class TableAndNoticeContainers {
-    final GtfsTableContainer tableContainer;
+    final GtfsEntityContainer tableContainer;
     final NoticeContainer noticeContainer;
 
     public TableAndNoticeContainers(
-        GtfsTableContainer tableContainer, NoticeContainer noticeContainer) {
+        GtfsEntityContainer tableContainer, NoticeContainer noticeContainer) {
       this.tableContainer = tableContainer;
       this.noticeContainer = noticeContainer;
     }
