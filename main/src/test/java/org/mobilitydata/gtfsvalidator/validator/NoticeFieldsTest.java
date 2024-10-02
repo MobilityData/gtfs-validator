@@ -143,6 +143,8 @@ public class NoticeFieldsTest {
             "prevShapeDistTraveled",
             "prevShapePtSequence",
             "prevStopSequence",
+            "priorNoticeDurationMax",
+            "priorNoticeDurationMin",
             "priorNoticeLastDay",
             "priorNoticeStartDay",
             "recordId",
