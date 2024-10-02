@@ -30,7 +30,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.mockito.quality.Strictness;
 
-public class AnyTableLoaderTest {
+public class CsvTableLoaderTest {
 
   @Rule public MockitoRule rule = MockitoJUnit.rule().strictness(Strictness.STRICT_STUBS);
   @Mock private GtfsTableContainer mockContainer;
@@ -46,12 +46,12 @@ public class AnyTableLoaderTest {
   public void invalidInputStream() {
     var testTableDescriptor = mock(GtfsTableDescriptor.class);
     when(testTableDescriptor.gtfsFilename()).thenReturn("_not_a_valid_file_");
-    when(testTableDescriptor.createContainerForInvalidStatus(
-            GtfsTableContainer.TableStatus.INVALID_HEADERS))
+    when(testTableDescriptor.createContainerForInvalidStatus(TableStatus.INVALID_HEADERS))
         .thenReturn(mockContainer);
 
     var loadedContainer =
-        AnyTableLoader.load(testTableDescriptor, validatorProvider, null, loaderNotices);
+        CsvFileLoader.getInstance()
+            .load(testTableDescriptor, validatorProvider, null, loaderNotices);
 
     assertThat(validationNoticeTypes(loaderNotices)).containsExactly(CsvParsingFailedNotice.class);
     assertThat(loadedContainer).isEqualTo(mockContainer);
@@ -61,13 +61,13 @@ public class AnyTableLoaderTest {
   public void emptyInputStream() {
     var testTableDescriptor = mock(GtfsTableDescriptor.class);
     when(testTableDescriptor.gtfsFilename()).thenReturn("filename");
-    when(testTableDescriptor.createContainerForInvalidStatus(
-            GtfsTableContainer.TableStatus.EMPTY_FILE))
+    when(testTableDescriptor.createContainerForInvalidStatus(TableStatus.EMPTY_FILE))
         .thenReturn(mockContainer);
     InputStream csvInputStream = toInputStream("");
 
     var loadedContainer =
-        AnyTableLoader.load(testTableDescriptor, validatorProvider, csvInputStream, loaderNotices);
+        CsvFileLoader.getInstance()
+            .load(testTableDescriptor, validatorProvider, csvInputStream, loaderNotices);
 
     assertThat(loaderNotices.getValidationNotices())
         .containsExactly(new EmptyFileNotice("filename"));
@@ -79,8 +79,7 @@ public class AnyTableLoaderTest {
     var testTableDescriptor = mock(GtfsTableDescriptor.class);
     when(testTableDescriptor.gtfsFilename()).thenReturn("filename");
     when(testTableDescriptor.getColumns()).thenReturn(ImmutableList.of());
-    when(testTableDescriptor.createContainerForInvalidStatus(
-            GtfsTableContainer.TableStatus.INVALID_HEADERS))
+    when(testTableDescriptor.createContainerForInvalidStatus(TableStatus.INVALID_HEADERS))
         .thenReturn(mockContainer);
     InputStream csvInputStream = toInputStream("A file with no headers");
     ValidationNotice headerValidationNotice = new EmptyColumnNameNotice("stops.txt", 0);
@@ -100,7 +99,8 @@ public class AnyTableLoaderTest {
     when(validatorProvider.getTableHeaderValidator()).thenReturn(tableHeaderValidator);
 
     var loadedContainer =
-        AnyTableLoader.load(testTableDescriptor, validatorProvider, csvInputStream, loaderNotices);
+        CsvFileLoader.getInstance()
+            .load(testTableDescriptor, validatorProvider, csvInputStream, loaderNotices);
 
     assertThat(loaderNotices.getValidationNotices()).containsExactly(headerValidationNotice);
     assertThat(loadedContainer).isEqualTo(mockContainer);
@@ -109,14 +109,14 @@ public class AnyTableLoaderTest {
   @Test
   public void invalidRowLengthNotice() {
     var testTableDescriptor = spy(new GtfsTestTableDescriptor());
-    when(testTableDescriptor.createContainerForInvalidStatus(
-            GtfsTableContainer.TableStatus.UNPARSABLE_ROWS))
+    when(testTableDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS))
         .thenReturn(mockContainer);
     when(validatorProvider.getTableHeaderValidator()).thenReturn(mock(TableHeaderValidator.class));
     InputStream inputStream = toInputStream("id,code\n" + "s1\n");
 
     var loadedContainer =
-        AnyTableLoader.load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
+        CsvFileLoader.getInstance()
+            .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
     assertThat(loaderNotices.getValidationNotices())
         .containsExactly(new InvalidRowLengthNotice("filename.txt", 2, 1, 2));
@@ -136,10 +136,10 @@ public class AnyTableLoaderTest {
     InputStream inputStream = toInputStream("id,stop_lat,_no_name_\n" + "s1, 23.00, no_value\n");
 
     var loadedContainer =
-        AnyTableLoader.load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
+        CsvFileLoader.getInstance()
+            .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
-    assertThat(loadedContainer.getTableStatus())
-        .isEqualTo(GtfsTableContainer.TableStatus.PARSABLE_HEADERS_AND_ROWS);
+    assertThat(loadedContainer.getTableStatus()).isEqualTo(TableStatus.PARSABLE_HEADERS_AND_ROWS);
     verify(validator, times(1)).validate(any());
   }
 
@@ -165,15 +165,15 @@ public class AnyTableLoaderTest {
                     .setIsMixedCase(false)
                     .setIsCached(false)
                     .build()));
-    when(testTableDescriptor.createContainerForInvalidStatus(
-            GtfsTableContainer.TableStatus.UNPARSABLE_ROWS))
+    when(testTableDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS))
         .thenReturn(mockContainer);
     when(validatorProvider.getTableHeaderValidator()).thenReturn(mock(TableHeaderValidator.class));
     when(validatorProvider.getFieldValidator()).thenReturn(mock(GtfsFieldValidator.class));
     InputStream inputStream = toInputStream("id,code\n" + "s1,\n");
 
     var loadedContainer =
-        AnyTableLoader.load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
+        CsvFileLoader.getInstance()
+            .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
     assertThat(loaderNotices.getValidationNotices())
         .contains(new MissingRequiredFieldNotice("filename.txt", 2, "code"));

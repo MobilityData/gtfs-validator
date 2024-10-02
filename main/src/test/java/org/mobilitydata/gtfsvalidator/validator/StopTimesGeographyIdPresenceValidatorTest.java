@@ -51,6 +51,13 @@ public class StopTimesGeographyIdPresenceValidatorTest {
   }
 
   @Test
+  public void NoGeographyIdShouldGenerateNotice() {
+    assertThat(validationNoticesFor(new GtfsStopTime.Builder().setCsvRowNumber(2).build()))
+        .containsExactly(new MissingRequiredFieldNotice("stop_times.txt", 2, "stop_id"));
+  }
+
+  // TODO: Put back when this notice is ready to be published.
+  //  @Test
   public void MultipleGeographyIdShouldGenerateNotice() {
     assertThat(
             validationNoticesFor(
