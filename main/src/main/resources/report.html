@@ -123,6 +123,7 @@
         padding: 2px 5px;
         margin-right: 2px;
         margin-bottom: 2px;
+        text-align: center;
     }
 
     .tooltip {
@@ -306,7 +307,9 @@
                 </h4>
                 <hr />
                 <div>
-                    <span class="spec-feature" th:each="feature: ${metadata.specFeatures}" th:if="${feature.value}" th:text="${feature.key}" />
+                    <span class="spec-feature" th:each="feature: ${metadata.specFeatures}" th:if="${feature.value}">
+                        <a th:href="${feature.key.getDocUrl()}" th:text="${feature.key.getFeatureName()}" target="_blank"></a>
+                    </span>
                 </div>
             </div>
         </div>
