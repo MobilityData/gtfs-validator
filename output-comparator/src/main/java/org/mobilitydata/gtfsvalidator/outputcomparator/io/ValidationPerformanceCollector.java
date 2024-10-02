@@ -298,7 +298,7 @@ public class ValidationPerformanceCollector {
                 .collect(Collectors.toMap(MemoryUsage::getKey, memoryUsage -> memoryUsage))
             : new HashMap<>();
     Map<String, MemoryUsage> latestMap =
-        referenceReport.getMemoryUsageRecords() != null
+        latestReport.getMemoryUsageRecords() != null
             ? latestReport.getMemoryUsageRecords().stream()
                 .collect(Collectors.toMap(MemoryUsage::getKey, memoryUsage -> memoryUsage))
             : new HashMap<>();

@@ -12,8 +12,10 @@ public class DatasetMemoryUsage {
   public DatasetMemoryUsage(
       String datasetId, MemoryUsage referenceMemoryUsage, MemoryUsage latestMemoryUsage) {
     this.datasetId = datasetId;
-    this.key =
-        referenceMemoryUsage != null ? referenceMemoryUsage.getKey() : latestMemoryUsage.getKey();
+    this.key = referenceMemoryUsage != null ? referenceMemoryUsage.getKey() : null;
+    if (key == null) {
+      this.key = latestMemoryUsage.getKey() != null ? latestMemoryUsage.getKey() : null;
+    }
     this.referenceMemoryUsage = referenceMemoryUsage;
     this.latestMemoryUsage = latestMemoryUsage;
   }
