@@ -1,23 +1,37 @@
 package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
 
 public class DatasetMemoryUsage {
 
   private String datasetId;
-  private String key;
-  private MemoryUsage referenceMemoryUsage;
-  private MemoryUsage latestMemoryUsage;
+  private List<MemoryUsage> referenceMemoryUsage;
+  private List<MemoryUsage> latestMemoryUsage;
+  private Map<String, Long> referenceUsedMemoryByKey = Collections.unmodifiableMap(new HashMap<>());
+  private Map<String, Long> latestUsedMemoryByKey = Collections.unmodifiableMap(new HashMap<>());
 
   public DatasetMemoryUsage(
-      String datasetId, MemoryUsage referenceMemoryUsage, MemoryUsage latestMemoryUsage) {
+      String datasetId,
+      List<MemoryUsage> referenceMemoryUsage,
+      List<MemoryUsage> latestMemoryUsage) {
     this.datasetId = datasetId;
-    this.key = referenceMemoryUsage != null ? referenceMemoryUsage.getKey() : null;
-    if (key == null) {
-      this.key = latestMemoryUsage.getKey() != null ? latestMemoryUsage.getKey() : null;
-    }
     this.referenceMemoryUsage = referenceMemoryUsage;
     this.latestMemoryUsage = latestMemoryUsage;
+    if (referenceMemoryUsage != null) {
+      this.referenceUsedMemoryByKey =
+          referenceMemoryUsage.stream()
+              .collect(Collectors.toUnmodifiableMap(MemoryUsage::getKey, MemoryUsage::usedMemory));
+    }
+    if (latestMemoryUsage != null) {
+      this.latestUsedMemoryByKey =
+          latestMemoryUsage.stream()
+              .collect(Collectors.toUnmodifiableMap(MemoryUsage::getKey, MemoryUsage::usedMemory));
+    }
   }
 
   public String getDatasetId() {
@@ -28,23 +42,27 @@ public class DatasetMemoryUsage {
     this.datasetId = datasetId;
   }
 
-  public MemoryUsage getReferenceMemoryUsage() {
+  public List<MemoryUsage> getReferenceMemoryUsage() {
     return referenceMemoryUsage;
   }
 
-  public void setReferenceMemoryUsage(MemoryUsage referenceMemoryUsage) {
+  public void setReferenceMemoryUsage(List<MemoryUsage> referenceMemoryUsage) {
     this.referenceMemoryUsage = referenceMemoryUsage;
   }
 
-  public MemoryUsage getLatestMemoryUsage() {
+  public List<MemoryUsage> getLatestMemoryUsage() {
     return latestMemoryUsage;
   }
 
-  public void setLatestMemoryUsage(MemoryUsage latestMemoryUsage) {
+  public void setLatestMemoryUsage(List<MemoryUsage> latestMemoryUsage) {
     this.latestMemoryUsage = latestMemoryUsage;
   }
 
-  public String getKey() {
-    return key;
+  public Map<String, Long> getReferenceUsedMemoryByKey() {
+    return referenceUsedMemoryByKey;
+  }
+
+  public Map<String, Long> getLatestUsedMemoryByKey() {
+    return latestUsedMemoryByKey;
   }
 }

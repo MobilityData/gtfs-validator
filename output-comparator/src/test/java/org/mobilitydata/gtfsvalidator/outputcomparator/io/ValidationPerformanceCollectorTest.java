@@ -15,44 +15,57 @@ public class ValidationPerformanceCollectorTest {
     ValidationPerformanceCollector collector = new ValidationPerformanceCollector();
 
     // Adding some sample data
+    collector.addReferenceTime("feed-id-a", 12.0);
+    collector.addReferenceTime("feed-id-a", 14.0);
+    collector.addLatestTime("feed-id-a", 16.0);
+    collector.addLatestTime("feed-id-a", 18.0);
+
+    collector.addReferenceTime("feed-id-b", 20.0);
+    collector.addLatestTime("feed-id-b", 22.0);
+
+    // Adding some sample data
     long baseMemory = 1000000;
     //    Memory usage latest null
     collector.compareValidationReports(
-        "feed-id-a",
+        "feed-id-m1",
         new ValidationReport(
             Collections.EMPTY_SET,
-            12.0,
+            null,
             Arrays.asList(
                 new MemoryUsage("key1", baseMemory, baseMemory, 200, 50L),
                 new MemoryUsage("key2", baseMemory, baseMemory, 200, 50L))),
         new ValidationReport(Collections.EMPTY_SET, 16.0, Collections.EMPTY_LIST));
-    //    Memory usage decreased
+    //    Memory usage increased as there is less free memory
     collector.compareValidationReports(
-        "feed-id-a",
+        "feed-id-m2",
         new ValidationReport(
             Collections.EMPTY_SET,
-            14.0,
+            null,
             Arrays.asList(
-                new MemoryUsage("key3", baseMemory, baseMemory - 1000, 200, 50L),
-                new MemoryUsage("key4", baseMemory, baseMemory - 1000, 200, 50L))),
+                new MemoryUsage("key1", baseMemory, baseMemory, 200, 50L),
+                new MemoryUsage("key2", baseMemory, baseMemory, 200, 50L))),
         new ValidationReport(
             Collections.EMPTY_SET,
-            18.0,
+            null,
             Arrays.asList(
-                new MemoryUsage("key3", baseMemory, baseMemory - baseMemory / 2, 200, null),
-                new MemoryUsage("key4", baseMemory, baseMemory - baseMemory / 2, 200, null))));
+                new MemoryUsage("key1", baseMemory, baseMemory - baseMemory / 2, 200, null),
+                new MemoryUsage("key2", baseMemory, baseMemory - baseMemory / 2, 200, null))));
 
-    //    Memory usage decreased
+    //    //    Memory usage decreased as there is more free memory
     collector.compareValidationReports(
-        "feed-id-b",
+        "feed-id-m3",
         new ValidationReport(
             Collections.EMPTY_SET,
-            20.0,
+            null,
+            Arrays.asList(
+                new MemoryUsage("key3", baseMemory, baseMemory + 100, 200, null),
+                new MemoryUsage("key4", baseMemory, baseMemory + 100, 200, null))),
+        new ValidationReport(
+            Collections.EMPTY_SET,
+            null,
             Arrays.asList(
                 new MemoryUsage("key3", baseMemory, baseMemory * 2, 200, null),
-                new MemoryUsage("key4", baseMemory, baseMemory * 2, 200, null))),
-        new ValidationReport(Collections.EMPTY_SET, 22.0, Collections.EMPTY_LIST));
-
+                new MemoryUsage("key4", baseMemory, baseMemory * 2, 200, null))));
     // Generating the log string
     String logString = collector.generateLogString();
     String expectedLogString =
@@ -71,26 +84,35 @@ public class ValidationPerformanceCollectorTest {
             + "| Maximum in Reference Reports | feed-id-b | 20.00 | 22.00 | ⬆️+2.00 |\n"
             + "| Minimum in Latest Reports | feed-id-a | 14.00 | 18.00 | ⬆\uFE0F+4.00 |\n"
             + "| Maximum in Latest Reports | feed-id-b | 20.00 | 22.00 | ⬆️+2.00 |\n"
+            + "#### ⚠️ Warnings\n\n"
+            + "The following dataset IDs are missing validation times either in reference or latest:\n"
+            + "feed-id-m1\n\n"
+            + "</details>\n\n"
+            + "<details>\n"
             + "<summary><strong>📜 Memory Consumption</strong></summary>\n"
-            + "<p>List of 20 datasets where memory has decreased .</p>\n\n"
-            + "| Key(Used Memory)                      | Dataset ID        | Reference (s)  | Latest (s)     | Difference (s) |\n"
+            + "<p>List of "
+            + ValidationPerformanceCollector.MEMORY_USAGE_COMPARE_MAX
+            + " datasets where memory has increased.</p>\n"
+            + "| Dataset ID                  | Snapshot Key(Used Memory)  | Reference (s)  | Latest (s)     | Difference (s) |\n"
             + "|-----------------------------|-------------------|----------------|----------------|----------------|\n"
-            + "| key1 | feed-id-a | 0 | - | N/A |\n"
-            + "| key2 | feed-id-a | 0 | - | N/A |\n"
-            + "| key4 | feed-id-a | 1000 | 500000 | ⬆️+487.30 KiB |\n"
-            + "| key3 | feed-id-a | 1000 | 500000 | ⬆️+487.30 KiB |\n"
-            + "| key3 | feed-id-b | -1000000 | - | N/A |\n"
-            + "| key4 | feed-id-b | -1000000 | - | N/A |\n"
-            + "<p>List of 20 datasets where memory has increased .</p>\n\n"
-            + "| Key(Used Memory)                      | Dataset ID        | Reference (s)  | Latest (s)     | Difference (s) |\n"
+            + "| feed-id-m2 |  |  |  |  |\n"
+            + "| | key1 | 0 | 500000 | ⬆\uFE0F+488.28 KiB |\n"
+            + "| | key2 | 0 | 500000 | ⬆\uFE0F+488.28 KiB |\n"
+            + "| feed-id-m3 |  |  |  |  |\n"
+            + "| | key3 | -100 | -1000000 | ⬇\uFE0F-976.46 KiB |\n"
+            + "| | key4 | -100 | -1000000 | ⬇\uFE0F-976.46 KiB |\n"
+            + "<p>List of "
+            + ValidationPerformanceCollector.MEMORY_USAGE_COMPARE_MAX
+            + " datasets where memory has decreased.</p>\n"
+            + "| Dataset ID                  | Snapshot Key(Used Memory)  | Reference (s)  | Latest (s)     | Difference (s) |\n"
             + "|-----------------------------|-------------------|----------------|----------------|----------------|\n"
-            + "| key3 | feed-id-a | 1000 | 500000 | ⬆️+487.30 KiB |\n"
-            + "| key4 | feed-id-a | 1000 | 500000 | ⬆️+487.30 KiB |\n"
-            + "| key1 | feed-id-a | 0 | - | N/A |\n"
-            + "| key2 | feed-id-a | 0 | - | N/A |\n"
-            + "| key3 | feed-id-b | -1000000 | - | N/A |\n"
-            + "| key4 | feed-id-b | -1000000 | - | N/A |\n"
-            + "</details>\n\n";
+            + "| feed-id-m3 |  |  |  |  |\n"
+            + "| | key3 | -100 | -1000000 | ⬇️-976.46 KiB |\n"
+            + "| | key4 | -100 | -1000000 | ⬇️-976.46 KiB |\n"
+            + "| feed-id-m2 |  |  |  |  |\n"
+            + "| | key1 | 0 | 500000 | ⬆️+488.28 KiB |\n"
+            + "| | key2 | 0 | 500000 | ⬆️+488.28 KiB |\n"
+            + "</details>\n";
     // Assert that the generated log string matches the expected log string
     assertThat(logString).isEqualTo(expectedLogString);
   }
