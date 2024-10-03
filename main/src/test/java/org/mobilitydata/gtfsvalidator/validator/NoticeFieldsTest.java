@@ -147,6 +147,7 @@ public class NoticeFieldsTest {
             "priorNoticeDurationMin",
             "priorNoticeLastDay",
             "priorNoticeStartDay",
+            "priorNoticeStartTime",
             "recordId",
             "recordSubId",
             "routeColor",
