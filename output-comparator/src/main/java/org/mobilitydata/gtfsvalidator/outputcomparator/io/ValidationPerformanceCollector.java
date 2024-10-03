@@ -211,22 +211,26 @@ public class ValidationPerformanceCollector {
 
     b.append("</details>\n\n");
 
-    b.append("<details>\n");
-    b.append("<summary><strong>📜 Memory Consumption</strong></summary>\n");
-    if (datasetsIncreasedMemoryUsage.size() > 0) {
-      List<DatasetMemoryUsage> increasedMemoryUsages =
-          getDatasetMemoryUsages(datasetsIncreasedMemoryUsage);
-      addMemoryUsageReport(increasedMemoryUsages, "memory has increased", b);
+    if (datasetsIncreasedMemoryUsage.size() > 0
+        || datasetsDecreasedMemoryUsage.size() > 0
+        || datasetsMemoryUsageNoReference.size() > 0) {
+      b.append("<details>\n");
+      b.append("<summary><strong>📜 Memory Consumption</strong></summary>\n");
+      if (datasetsIncreasedMemoryUsage.size() > 0) {
+        List<DatasetMemoryUsage> increasedMemoryUsages =
+            getDatasetMemoryUsages(datasetsIncreasedMemoryUsage);
+        addMemoryUsageReport(increasedMemoryUsages, "memory has increased", b);
+      }
+      if (datasetsDecreasedMemoryUsage.size() > 0) {
+        List<DatasetMemoryUsage> decreasedMemoryUsages =
+            getDatasetMemoryUsages(datasetsDecreasedMemoryUsage);
+        addMemoryUsageReport(decreasedMemoryUsages, "memory has decreased", b);
+      }
+      if (datasetsMemoryUsageNoReference.size() > 0) {
+        addMemoryUsageReport(datasetsMemoryUsageNoReference, "no reference available", b);
+      }
+      b.append("</details>\n");
     }
-    if (datasetsDecreasedMemoryUsage.size() > 0) {
-      List<DatasetMemoryUsage> decreasedMemoryUsages =
-          getDatasetMemoryUsages(datasetsDecreasedMemoryUsage);
-      addMemoryUsageReport(decreasedMemoryUsages, "memory has decreased", b);
-    }
-    if (datasetsMemoryUsageNoReference.size() > 0) {
-      addMemoryUsageReport(datasetsMemoryUsageNoReference, "no reference available", b);
-    }
-    b.append("</details>\n");
     return b.toString();
   }
 
