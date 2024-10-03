@@ -391,13 +391,13 @@ public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBooki
     /** The `booking_rules.booking_rule_id` of the faulty record. */
     private final String bookingRuleId;
 
-    /** The value of the `prior_notice_start_time` field. */
-    private final GtfsTime priorNoticeStartTime;
+    /** The value of the `prior_notice_start_day` field. */
+    private final int priorNoticeStartDay;
 
     MissingPriorNoticeStartTimeNotice(GtfsBookingRules bookingRule) {
       this.csvRowNumber = bookingRule.csvRowNumber();
       this.bookingRuleId = bookingRule.bookingRuleId();
-      this.priorNoticeStartTime = bookingRule.priorNoticeStartTime();
+      this.priorNoticeStartDay = bookingRule.priorNoticeStartDay();
     }
   }
 }
