@@ -7,6 +7,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
 
+/**
+ * Represents memory usage information for a dataset. This class contains the information associated
+ * with the memory usage of a dataset when running the validation process.
+ */
 public class DatasetMemoryUsage {
 
   private String datasetId;

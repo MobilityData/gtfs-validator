@@ -227,7 +227,13 @@ public class ValidationPerformanceCollector {
         addMemoryUsageReport(decreasedMemoryUsages, "memory has decreased", b, true);
       }
       if (datasetsMemoryUsageNoReference.size() > 0) {
-        addMemoryUsageReport(datasetsMemoryUsageNoReference, "no reference available", b, false);
+        datasetsMemoryUsageNoReference.sort(new LatestReportUsedMemoryIncreasedComparator());
+        addMemoryUsageReport(
+            datasetsMemoryUsageNoReference.subList(
+                0, Math.min(datasetsMemoryUsageNoReference.size(), MEMORY_USAGE_COMPARE_MAX)),
+            "no reference available",
+            b,
+            false);
       }
       b.append("</details>\n");
     }

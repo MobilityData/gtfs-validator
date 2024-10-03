@@ -23,11 +23,17 @@ public class UsedMemoryIncreasedComparator implements Comparator<DatasetMemoryUs
     if (o1 == null || o2 == null) {
       return o1 == null ? -1 : 1;
     }
-    if (o1.getReferenceMemoryUsage() == null && o2.getLatestMemoryUsage() == null) {
+    if (o1.getReferenceMemoryUsage() == null
+        && o1.getLatestMemoryUsage() == null
+        && o2.getReferenceMemoryUsage() == null
+        && o2.getLatestMemoryUsage() == null) {
       return 0;
     }
-    if (o1.getReferenceMemoryUsage() == null || o2.getLatestMemoryUsage() == null) {
+    if (o1.getReferenceMemoryUsage() == null || o2.getReferenceMemoryUsage() == null) {
       return o1.getReferenceMemoryUsage() == null ? -1 : 1;
+    }
+    if (o1.getLatestMemoryUsage() == null || o2.getLatestMemoryUsage() == null) {
+      return o1.getLatestMemoryUsage() == null ? -1 : 1;
     }
     long o1MinDiff =
         getMinimumDifferenceByKey(o1.getReferenceUsedMemoryByKey(), o1.getLatestUsedMemoryByKey());
@@ -47,10 +53,5 @@ public class UsedMemoryIncreasedComparator implements Comparator<DatasetMemoryUs
         .mapToLong(key -> referenceMemoryUsage.get(key) - latestMemoryUsage.get(key))
         .min()
         .orElse(Long.MAX_VALUE);
-  }
-
-  @Override
-  public Comparator<DatasetMemoryUsage> reversed() {
-    return Comparator.super.reversed();
   }
 }
