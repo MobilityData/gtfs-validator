@@ -23,9 +23,11 @@ import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
+import org.mobilitydata.gtfsvalidator.table.TableStatus;
 
 // We need a second test table class to test multi file validators.
-public class GtfsTestTableContainer2 extends GtfsTableContainer<GtfsTestEntity> {
+public class GtfsTestTableContainer2
+    extends GtfsTableContainer<GtfsTestEntity, GtfsTestTableDescriptor2> {
   private static final ImmutableList<String> KEY_COLUMN_NAMES =
       ImmutableList.of(GtfsTestEntity.ID_FIELD_NAME);
 

@@ -28,10 +28,9 @@ public class NetworkIdConsistencyValidatorTest {
             noticeContainer);
     routeNetworkTableContainer =
         new GtfsRouteNetworkTableContainer(
-            new GtfsRouteNetworkTableDescriptor(), GtfsTableContainer.TableStatus.MISSING_FILE);
+            new GtfsRouteNetworkTableDescriptor(), TableStatus.MISSING_FILE);
     networkTableContainer =
-        new GtfsNetworkTableContainer(
-            new GtfsNetworkTableDescriptor(), GtfsTableContainer.TableStatus.MISSING_FILE);
+        new GtfsNetworkTableContainer(new GtfsNetworkTableDescriptor(), TableStatus.MISSING_FILE);
   }
 
   @Test

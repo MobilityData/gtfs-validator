@@ -35,9 +35,9 @@ public class FeedMetadataTest {
   File rootDir;
   NoticeContainer noticeContainer = new NoticeContainer();
 
-  private GtfsTableContainer<GtfsTrip> tripContainer;
-  private GtfsTableContainer<GtfsCalendar> calendarTable;
-  private GtfsTableContainer<GtfsCalendarDate> calendarDateTable;
+  private GtfsTableContainer<GtfsTrip, ?> tripContainer;
+  private GtfsTableContainer<GtfsCalendar, ?> calendarTable;
+  private GtfsTableContainer<GtfsCalendarDate, ?> calendarDateTable;
   private FeedMetadata feedMetadata = new FeedMetadata();
 
   private void createDataFile(String filename, String content) throws IOException {
@@ -136,7 +136,7 @@ public class FeedMetadataTest {
   private void validateSpecFeature(
       String specFeature,
       Boolean expectedValue,
-      ImmutableList<Class<? extends GtfsTableDescriptor<?>>> tableDescriptors)
+      ImmutableList<Class<? extends GtfsFileDescriptor<?>>> tableDescriptors)
       throws IOException, InterruptedException {
     feedLoaderMock = new GtfsFeedLoader(tableDescriptors);
     try (GtfsInput gtfsInput = GtfsInput.createFromPath(rootDir.toPath(), noticeContainer)) {
