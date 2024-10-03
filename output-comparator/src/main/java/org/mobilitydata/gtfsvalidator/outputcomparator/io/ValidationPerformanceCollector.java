@@ -219,15 +219,15 @@ public class ValidationPerformanceCollector {
       if (datasetsIncreasedMemoryUsage.size() > 0) {
         List<DatasetMemoryUsage> increasedMemoryUsages =
             getDatasetMemoryUsages(datasetsIncreasedMemoryUsage);
-        addMemoryUsageReport(increasedMemoryUsages, "memory has increased", b);
+        addMemoryUsageReport(increasedMemoryUsages, "memory has increased", b, true);
       }
       if (datasetsDecreasedMemoryUsage.size() > 0) {
         List<DatasetMemoryUsage> decreasedMemoryUsages =
             getDatasetMemoryUsages(datasetsDecreasedMemoryUsage);
-        addMemoryUsageReport(decreasedMemoryUsages, "memory has decreased", b);
+        addMemoryUsageReport(decreasedMemoryUsages, "memory has decreased", b, true);
       }
       if (datasetsMemoryUsageNoReference.size() > 0) {
-        addMemoryUsageReport(datasetsMemoryUsageNoReference, "no reference available", b);
+        addMemoryUsageReport(datasetsMemoryUsageNoReference, "no reference available", b, false);
       }
       b.append("</details>\n");
     }
@@ -242,22 +242,33 @@ public class ValidationPerformanceCollector {
   }
 
   private void addMemoryUsageReport(
-      List<DatasetMemoryUsage> memoryUsages, String order, StringBuilder b) {
+      List<DatasetMemoryUsage> memoryUsages,
+      String order,
+      StringBuilder b,
+      boolean includeDifference) {
     b.append(String.format("<p>List of %s datasets(%s).</p>", MEMORY_USAGE_COMPARE_MAX, order))
-        .append("\n")
+        .append("\n\n")
         .append(
-            "| Dataset ID                  | Snapshot Key(Used Memory)  | Reference (s)  | Latest (s)     | Difference (s) |\n")
-        .append(
-            "|-----------------------------|-------------------|----------------|----------------|----------------|\n");
+            "| Dataset ID                  | Snapshot Key(Used Memory)  | Reference  | Latest     |");
+    if (includeDifference) {
+      b.append(" Difference |");
+    }
+    b.append("\n");
+    b.append(
+        "|-----------------------------|-------------------|----------------|----------------|");
+    if (includeDifference) {
+      b.append("----------------|");
+    }
+    b.append("\n");
     memoryUsages.stream()
         .forEachOrdered(
             datasetMemoryUsage -> {
-              generateMemoryLogByKey(datasetMemoryUsage, b);
+              generateMemoryLogByKey(datasetMemoryUsage, b, includeDifference);
             });
   }
 
   private static void generateMemoryLogByKey(
-      DatasetMemoryUsage datasetMemoryUsage, StringBuilder b) {
+      DatasetMemoryUsage datasetMemoryUsage, StringBuilder b, boolean includeDifference) {
     AtomicBoolean isFirst = new AtomicBoolean(true);
     Set<String> keys = new HashSet<>();
     keys.addAll(datasetMemoryUsage.getReferenceUsedMemoryByKey().keySet());
@@ -268,21 +279,26 @@ public class ValidationPerformanceCollector {
               var reference = datasetMemoryUsage.getReferenceUsedMemoryByKey().get(key);
               var latest = datasetMemoryUsage.getLatestUsedMemoryByKey().get(key);
               if (isFirst.get()) {
-                b.append(String.format("| %s |  |  |  |  |\n", datasetMemoryUsage.getDatasetId()));
+                b.append(String.format("| %s |  |  |  |", datasetMemoryUsage.getDatasetId()));
+                if (includeDifference) {
+                  b.append("  |");
+                }
+                b.append("\n");
                 isFirst.set(false);
               }
-              //              if (reference != null && latest != null) {
               String usedMemoryDiff = getMemoryDiff(reference, latest);
               b.append(
                   String.format(
-                      "| | %s | %s | %s | %s |\n",
+                      "| | %s | %s | %s |",
                       key,
                       reference != null
                           ? MemoryUsage.convertToHumanReadableMemory(reference)
                           : "N/A",
-                      latest != null ? MemoryUsage.convertToHumanReadableMemory(latest) : "N/A",
-                      usedMemoryDiff));
-              //              }
+                      latest != null ? MemoryUsage.convertToHumanReadableMemory(latest) : "N/A"));
+              if (includeDifference) {
+                b.append(String.format(" %s |", usedMemoryDiff));
+              }
+              b.append("\n");
             });
   }
 

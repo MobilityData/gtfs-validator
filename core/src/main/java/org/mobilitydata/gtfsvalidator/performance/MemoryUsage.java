@@ -3,6 +3,7 @@ package org.mobilitydata.gtfsvalidator.performance;
 import java.text.DecimalFormat;
 import org.apache.commons.lang3.StringUtils;
 
+/** Represents memory usage information. */
 public class MemoryUsage {
   private static final DecimalFormat TWO_DECIMAL_FORMAT = new DecimalFormat("0.00");
 
@@ -23,6 +24,12 @@ public class MemoryUsage {
     this.diffMemory = diffMemory;
   }
 
+  /**
+   * Converts bytes to human-readable memory.
+   *
+   * @param bytes
+   * @return human-readable memory, e.g., "1.23 GiB"
+   */
   public static String convertToHumanReadableMemory(Long bytes) {
     if (bytes == null) {
       return "N/A";
@@ -43,10 +50,20 @@ public class MemoryUsage {
     return TWO_DECIMAL_FORMAT.format(Math.copySign(size / 1099511627776L, bytes)) + " TiB";
   }
 
+  /**
+   * The memory used is computed as the difference between the total memory and the free memory.
+   *
+   * @return the memory used.
+   */
   public long usedMemory() {
     return totalMemory - freeMemory;
   }
 
+  /**
+   * Returns a human-readable string representation of the memory usage.
+   *
+   * @return a human-readable string representation of the memory usage.
+   */
   public String humanReadablePrint() {
     StringBuffer result = new StringBuffer();
     result.append("Memory usage registered");

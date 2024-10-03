@@ -92,8 +92,8 @@ public class ValidationPerformanceCollectorTest {
             + "<summary><strong>📜 Memory Consumption</strong></summary>\n"
             + "<p>List of "
             + ValidationPerformanceCollector.MEMORY_USAGE_COMPARE_MAX
-            + " datasets(memory has increased).</p>\n"
-            + "| Dataset ID                  | Snapshot Key(Used Memory)  | Reference (s)  | Latest (s)     | Difference (s) |\n"
+            + " datasets(memory has increased).</p>\n\n"
+            + "| Dataset ID                  | Snapshot Key(Used Memory)  | Reference  | Latest     | Difference |\n"
             + "|-----------------------------|-------------------|----------------|----------------|----------------|\n"
             + "| feed-id-m2 |  |  |  |  |\n"
             + "| | key1 | 0 bytes | 488.28 KiB | ⬆\uFE0F+488.28 KiB |\n"
@@ -103,8 +103,8 @@ public class ValidationPerformanceCollectorTest {
             + "| | key4 | -100 bytes | -976.56 KiB | ⬇\uFE0F-976.46 KiB |\n"
             + "<p>List of "
             + ValidationPerformanceCollector.MEMORY_USAGE_COMPARE_MAX
-            + " datasets(memory has decreased).</p>\n"
-            + "| Dataset ID                  | Snapshot Key(Used Memory)  | Reference (s)  | Latest (s)     | Difference (s) |\n"
+            + " datasets(memory has decreased).</p>\n\n"
+            + "| Dataset ID                  | Snapshot Key(Used Memory)  | Reference  | Latest     | Difference |\n"
             + "|-----------------------------|-------------------|----------------|----------------|----------------|\n"
             + "| feed-id-m3 |  |  |  |  |\n"
             + "| | key3 | -100 bytes | -976.56 KiB | ⬇️-976.46 KiB |\n"
@@ -114,12 +114,12 @@ public class ValidationPerformanceCollectorTest {
             + "| | key2 | 0 bytes | 488.28 KiB | ⬆️+488.28 KiB |\n"
             + "<p>List of "
             + ValidationPerformanceCollector.MEMORY_USAGE_COMPARE_MAX
-            + " datasets(no reference available).</p>\n"
-            + "| Dataset ID                  | Snapshot Key(Used Memory)  | Reference (s)  | Latest (s)     | Difference (s) |\n"
-            + "|-----------------------------|-------------------|----------------|----------------|----------------|\n"
-            + "| feed-id-m1 |  |  |  |  |\n"
-            + "| | key1 | -9.54 MiB | N/A | N/A |\n"
-            + "| | key2 | 0 bytes | N/A | N/A |\n"
+            + " datasets(no reference available).</p>\n\n"
+            + "| Dataset ID                  | Snapshot Key(Used Memory)  | Reference  | Latest     |\n"
+            + "|-----------------------------|-------------------|----------------|----------------|\n"
+            + "| feed-id-m1 |  |  |  |\n"
+            + "| | key1 | -9.54 MiB | N/A |\n"
+            + "| | key2 | 0 bytes | N/A |\n"
             + "</details>\n";
     // Assert that the generated log string matches the expected log string
     assertThat(logString).isEqualTo(expectedLogString);
