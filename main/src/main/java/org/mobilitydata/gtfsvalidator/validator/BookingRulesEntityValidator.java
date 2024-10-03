@@ -12,6 +12,7 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsBookingRules;
 import org.mobilitydata.gtfsvalidator.table.GtfsBookingRulesSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsBookingType;
+import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 @GtfsValidator
 public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBookingRules> {
@@ -39,25 +40,46 @@ public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBooki
     validatePriorNoticeDurationMin(entity, noticeContainer);
     validatePriorNoticeStartDay(entity, noticeContainer);
     validatePriorNoticeDayRange(entity, noticeContainer);
+    validateMissingPriorDayBookingFields(entity, noticeContainer);
+    validatePriorNoticeStartTime(entity, noticeContainer);
   }
 
   private static void validatePriorNoticeDurationMin(
       GtfsBookingRules entity, NoticeContainer noticeContainer) {
+    // Check if prior_notice_duration_min is set for booking_type SAMEDAY
+    if (entity.bookingType() == GtfsBookingType.SAMEDAY && !entity.hasPriorNoticeDurationMin()) {
+      noticeContainer.addValidationNotice(new MissingPriorNoticeDurationMinNotice(entity));
+    }
+    // Check if prior_notice_duration_min is less than prior_notice_duration_max
     if (entity.hasPriorNoticeDurationMin() && entity.hasPriorNoticeDurationMax()) {
       if (entity.priorNoticeDurationMax() < entity.priorNoticeDurationMin()) {
-        noticeContainer.addValidationNotice(
-            new InvalidPriorNoticeDurationMinNotice(
-                entity, entity.priorNoticeDurationMin(), entity.priorNoticeDurationMax()));
+        noticeContainer.addValidationNotice(new InvalidPriorNoticeDurationMinNotice(entity));
       }
+    }
+  }
+
+  private static void validateMissingPriorDayBookingFields(
+      GtfsBookingRules entity, NoticeContainer noticeContainer) {
+    if (entity.bookingType() == GtfsBookingType.PRIORDAY
+        && (!entity.hasPriorNoticeLastDay() || !entity.hasPriorNoticeLastTime())) {
+      noticeContainer.addValidationNotice(new MissingPriorDayBookingFieldValueNotice(entity));
+    }
+  }
+
+  private static void validatePriorNoticeStartTime(
+      GtfsBookingRules entity, NoticeContainer noticeContainer) {
+    if (entity.hasPriorNoticeStartTime() && !entity.hasPriorNoticeStartDay()) {
+      noticeContainer.addValidationNotice(new ForbiddenPriorNoticeStartTimeNotice(entity));
+    }
+    if (!entity.hasPriorNoticeStartTime() && entity.hasPriorNoticeStartDay()) {
+      noticeContainer.addValidationNotice(new MissingPriorNoticeStartTimeNotice(entity));
     }
   }
 
   private static void validatePriorNoticeStartDay(
       GtfsBookingRules entity, NoticeContainer noticeContainer) {
     if (entity.hasPriorNoticeDurationMax() && entity.hasPriorNoticeStartDay()) {
-      noticeContainer.addValidationNotice(
-          new ForbiddenPriorNoticeStartDayNotice(
-              entity, entity.priorNoticeStartDay(), entity.priorNoticeDurationMax()));
+      noticeContainer.addValidationNotice(new ForbiddenPriorNoticeStartDayNotice(entity));
     }
   }
 
@@ -229,12 +251,30 @@ public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBooki
     /** The value of the `prior_notice_duration_max` field. */
     private final int priorNoticeDurationMax;
 
-    InvalidPriorNoticeDurationMinNotice(
-        GtfsBookingRules bookingRule, int priorNoticeDurationMin, int priorNoticeDurationMax) {
+    InvalidPriorNoticeDurationMinNotice(GtfsBookingRules bookingRule) {
       this.csvRowNumber = bookingRule.csvRowNumber();
       this.bookingRuleId = bookingRule.bookingRuleId();
-      this.priorNoticeDurationMin = priorNoticeDurationMin;
-      this.priorNoticeDurationMax = priorNoticeDurationMax;
+      this.priorNoticeDurationMin = bookingRule.priorNoticeDurationMin();
+      this.priorNoticeDurationMax = bookingRule.priorNoticeDurationMax();
+    }
+  }
+
+  /**
+   * `prior_notice_duration_min` value is required for same day `booking_type` in booking_rules.txt.
+   */
+  @GtfsValidationNotice(
+      severity = SeverityLevel.ERROR,
+      files = @FileRefs(GtfsBookingRulesSchema.class))
+  static class MissingPriorNoticeDurationMinNotice extends ValidationNotice {
+    /** The row number of the faulty record. */
+    private final int csvRowNumber;
+
+    /** The `booking_rules.booking_rule_id` of the faulty record. */
+    private final String bookingRuleId;
+
+    MissingPriorNoticeDurationMinNotice(GtfsBookingRules bookingRule) {
+      this.csvRowNumber = bookingRule.csvRowNumber();
+      this.bookingRuleId = bookingRule.bookingRuleId();
     }
   }
 
@@ -255,12 +295,11 @@ public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBooki
     /** The value of the `prior_notice_duration_max` field. */
     private final int priorNoticeDurationMax;
 
-    ForbiddenPriorNoticeStartDayNotice(
-        GtfsBookingRules bookingRule, int priorNoticeStartDay, int priorNoticeDurationMax) {
+    ForbiddenPriorNoticeStartDayNotice(GtfsBookingRules bookingRule) {
       this.csvRowNumber = bookingRule.csvRowNumber();
       this.bookingRuleId = bookingRule.bookingRuleId();
-      this.priorNoticeStartDay = priorNoticeStartDay;
-      this.priorNoticeDurationMax = priorNoticeDurationMax;
+      this.priorNoticeStartDay = bookingRule.priorNoticeStartDay();
+      this.priorNoticeDurationMax = bookingRule.priorNoticeDurationMax();
     }
   }
 
@@ -290,6 +329,74 @@ public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBooki
     PriorNoticeLastDayAfterStartDayNotice(GtfsBookingRules bookingRule) {
       this.csvRowNumber = bookingRule.csvRowNumber();
       this.priorNoticeLastDay = bookingRule.priorNoticeLastDay();
+      this.priorNoticeStartDay = bookingRule.priorNoticeStartDay();
+    }
+  }
+
+  /**
+   * `prior_notice_last_day` and `prior_notice_last_time` values are required for prior day
+   * `booking_type` in booking_rules.txt.
+   */
+  @GtfsValidationNotice(
+      severity = SeverityLevel.ERROR,
+      files = @FileRefs(GtfsBookingRulesSchema.class))
+  static class MissingPriorDayBookingFieldValueNotice extends ValidationNotice {
+    /** The row number of the faulty record. */
+    private final int csvRowNumber;
+
+    /** The `booking_rules.booking_rule_id` of the faulty record. */
+    private final String bookingRuleId;
+
+    MissingPriorDayBookingFieldValueNotice(GtfsBookingRules bookingRule) {
+      this.csvRowNumber = bookingRule.csvRowNumber();
+      this.bookingRuleId = bookingRule.bookingRuleId();
+    }
+  }
+
+  /**
+   * `prior_notice_start_time` value is forbidden when `prior_notice_start_day` value is not set in
+   * booking_rules.txt.
+   */
+  @GtfsValidationNotice(
+      severity = SeverityLevel.ERROR,
+      files = @FileRefs(GtfsBookingRulesSchema.class))
+  static class ForbiddenPriorNoticeStartTimeNotice extends ValidationNotice {
+    /** The row number of the faulty record. */
+    private final int csvRowNumber;
+
+    /** The `booking_rules.booking_rule_id` of the faulty record. */
+    private final String bookingRuleId;
+
+    /** The value of the `prior_notice_start_time` field. */
+    private final GtfsTime priorNoticeStartTime;
+
+    ForbiddenPriorNoticeStartTimeNotice(GtfsBookingRules bookingRule) {
+      this.csvRowNumber = bookingRule.csvRowNumber();
+      this.bookingRuleId = bookingRule.bookingRuleId();
+      this.priorNoticeStartTime = bookingRule.priorNoticeStartTime();
+    }
+  }
+
+  /**
+   * `prior_notice_start_time` value is required when `prior_notice_start_day` value is set in
+   * booking_rules.txt.
+   */
+  @GtfsValidationNotice(
+      severity = SeverityLevel.ERROR,
+      files = @FileRefs(GtfsBookingRulesSchema.class))
+  static class MissingPriorNoticeStartTimeNotice extends ValidationNotice {
+    /** The row number of the faulty record. */
+    private final int csvRowNumber;
+
+    /** The `booking_rules.booking_rule_id` of the faulty record. */
+    private final String bookingRuleId;
+
+    /** The value of the `prior_notice_start_day` field. */
+    private final int priorNoticeStartDay;
+
+    MissingPriorNoticeStartTimeNotice(GtfsBookingRules bookingRule) {
+      this.csvRowNumber = bookingRule.csvRowNumber();
+      this.bookingRuleId = bookingRule.bookingRuleId();
       this.priorNoticeStartDay = bookingRule.priorNoticeStartDay();
     }
   }
