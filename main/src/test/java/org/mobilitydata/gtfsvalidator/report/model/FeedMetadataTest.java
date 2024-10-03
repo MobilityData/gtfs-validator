@@ -513,4 +513,25 @@ public class FeedMetadataTest {
         true,
         ImmutableList.of(GtfsAgencyTableDescriptor.class, GtfsTripTableDescriptor.class));
   }
+
+  @Test
+  public void containsDeviatedFixedRouteFeatureTest() throws IOException, InterruptedException {
+    // Create stop times with various field combinations for the same trip
+    String stopTimesContent =
+        "trip_id, stop_sequence, arrival_time, departure_time, stop_id, location_id\n"
+            + "trip1,1,01:00:00,01:30:00,stop1,location1\n"
+            + "trip1,2,,02:30:00,,location2\n"
+            + "trip1,3,02:00:00,,stop2,location2";
+
+    createDataFile(GtfsStopTime.FILENAME, stopTimesContent);
+
+    // Validate that the feature is present
+    validateSpecFeature(
+        "Predefined Routes with Deviation",
+        true,
+        ImmutableList.of(
+            GtfsAgencyTableDescriptor.class,
+            GtfsStopTimeTableDescriptor.class,
+            GtfsTripTableDescriptor.class));
+  }
 }
