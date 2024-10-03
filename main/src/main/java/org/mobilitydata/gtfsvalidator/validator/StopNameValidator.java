@@ -44,6 +44,10 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
 
   @Override
   public void validate(GtfsStop stop, NoticeContainer noticeContainer) {
+    if (stop.hasStopName() && stop.stopName().contains(REPLACEMENT_CHAR)) {
+      noticeContainer.addValidationNotice(
+          new StopNameInvalidCharacterNotice(stop.csvRowNumber(), stop.stopName()));
+    }
     if (stop.locationType() == GtfsLocationType.STOP
         || stop.locationType() == GtfsLocationType.STATION
         || stop.locationType() == GtfsLocationType.ENTRANCE) {
@@ -59,11 +63,6 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
       noticeContainer.addValidationNotice(
           new SameNameAndDescriptionForStopNotice(
               stop.csvRowNumber(), stop.stopId(), stop.stopDesc()));
-    }
-
-    if (stop.stopName() != null && stop.stopName().contains(REPLACEMENT_CHAR)) {
-      noticeContainer.addValidationNotice(
-              new StopNameInvalidCharacterNotice(stop.csvRowNumber(), stop.stopId(), stop.stopName()));
     }
   }
 
@@ -128,24 +127,20 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
   /**
    * Validation notice for invalid characters in the stop name.
    *
-   * <p>This notice is generated when the stop name contains the replacement character (\uFFFD in Unicode),
-   * indicating that the stop name has invalid Unicode characters.
+   * <p>This notice is generated when the stop name contains the replacement character (\uFFFD in
+   * Unicode), indicating that the stop name has invalid Unicode characters.
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopSchema.class))
   static class StopNameInvalidCharacterNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */
-    private final long csvRowNumber;
-
-    /** The ID of the faulty stop. */
-    private final String stopId;
+    private final int csvRowNumber;
 
     /** The stop name containing invalid characters. */
     private final String stopName;
 
-    StopNameInvalidCharacterNotice(long csvRowNumber, String stopId, String stopName) {
+    StopNameInvalidCharacterNotice(int csvRowNumber, String stopName) {
       this.csvRowNumber = csvRowNumber;
-      this.stopId = stopId;
       this.stopName = stopName;
     }
   }

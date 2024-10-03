@@ -27,6 +27,7 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.validator.StopNameValidator.SameNameAndDescriptionForStopNotice;
+import org.mobilitydata.gtfsvalidator.validator.StopNameValidator.StopNameInvalidCharacterNotice;
 
 @RunWith(JUnit4.class)
 public class StopNameValidatorTest {
@@ -160,6 +161,22 @@ public class StopNameValidatorTest {
                     .setStopName("stop name value")
                     .setStopDesc(null)
                     .build()))
+        .isEmpty();
+  }
+
+  @Test
+  public void stopNameWithInvalidCharacter_generatesNotice() {
+    assertThat(
+            generateNotices(
+                new GtfsStop.Builder().setCsvRowNumber(4).setStopName("\uFFFD").build()))
+        .contains(new StopNameInvalidCharacterNotice(4, "\uFFFD"));
+  }
+
+  @Test
+  public void stopNameWithoutInvalidCharacter_noNotice() {
+    assertThat(
+            generateNotices(
+                new GtfsStop.Builder().setCsvRowNumber(4).setStopName("stop A").build()))
         .isEmpty();
   }
 }
