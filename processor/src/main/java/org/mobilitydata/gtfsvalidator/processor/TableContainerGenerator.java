@@ -32,6 +32,7 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableDescriptor;
+import org.mobilitydata.gtfsvalidator.table.TableStatus;
 
 /**
  * Generates code for a container for a loaded GTFS table.
@@ -64,7 +65,12 @@ public class TableContainerGenerator {
     TypeSpec.Builder typeSpec =
         TypeSpec.classBuilder(classNames.tableContainerSimpleName())
             .superclass(
-                ParameterizedTypeName.get(ClassName.get(GtfsTableContainer.class), gtfsEntityType))
+                ParameterizedTypeName.get(
+                    ClassName.get(GtfsTableContainer.class),
+                    classNames.entityImplementationTypeName(),
+                    ParameterizedTypeName.get(
+                        ClassName.get(GtfsTableDescriptor.class),
+                        classNames.entityImplementationTypeName())))
             .addAnnotation(Generated.class)
             .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
@@ -126,7 +132,7 @@ public class TableContainerGenerator {
     return MethodSpec.constructorBuilder()
         .addModifiers(Modifier.PUBLIC)
         .addParameter(tableDescriptorType, "descriptor")
-        .addParameter(GtfsTableContainer.TableStatus.class, "tableStatus")
+        .addParameter(TableStatus.class, "tableStatus")
         .addStatement("super(descriptor, tableStatus, $T.EMPTY)", CsvHeader.class)
         .addStatement("this.entities = new $T<>()", ArrayList.class)
         .build();
@@ -182,7 +188,7 @@ public class TableContainerGenerator {
             "Creates a table with the given TableStatus. This method is intended to be"
                 + " used in tests.")
         .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-        .addParameter(GtfsTableContainer.TableStatus.class, "tableStatus")
+        .addParameter(TableStatus.class, "tableStatus")
         .addStatement(
             "return new $T(new $T(), tableStatus)",
             tableContainerTypeName,

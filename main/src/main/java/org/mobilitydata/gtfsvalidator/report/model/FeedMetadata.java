@@ -93,23 +93,25 @@ public class FeedMetadata {
     feedMetadata.setCounts(feedContainer);
 
     if (feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).isPresent()) {
-      feedMetadata.loadFeedInfo(
-          (GtfsTableContainer<GtfsFeedInfo>)
-              feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME).get());
+      Optional<GtfsTableContainer<GtfsFeedInfo, GtfsFeedInfoTableDescriptor>>
+          feedInfoTableOptional = feedContainer.getTableForFilename(GtfsFeedInfo.FILENAME);
+      feedMetadata.loadFeedInfo(feedInfoTableOptional.get());
     }
-
-    feedMetadata.loadAgencyData(
-        (GtfsTableContainer<GtfsAgency>)
-            feedContainer.getTableForFilename(GtfsAgency.FILENAME).get());
+    if (feedContainer.getTableForFilename(GtfsAgency.FILENAME).isPresent()) {
+      Optional<GtfsTableContainer<GtfsAgency, GtfsAgencyTableDescriptor>> agencyTableOptional =
+          feedContainer.getTableForFilename(GtfsAgency.FILENAME);
+      feedMetadata.loadAgencyData(agencyTableOptional.get());
+    }
 
     if (feedContainer.getTableForFilename(GtfsTrip.FILENAME).isPresent()
         && (feedContainer.getTableForFilename(GtfsCalendar.FILENAME).isPresent()
             || feedContainer.getTableForFilename(GtfsCalendarDate.FILENAME).isPresent())) {
       feedMetadata.loadServiceWindow(
-          (GtfsTableContainer<GtfsTrip>) feedContainer.getTableForFilename(GtfsTrip.FILENAME).get(),
-          (GtfsTableContainer<GtfsCalendar>)
+          (GtfsTableContainer<GtfsTrip, ?>)
+              feedContainer.getTableForFilename(GtfsTrip.FILENAME).get(),
+          (GtfsTableContainer<GtfsCalendar, ?>)
               feedContainer.getTableForFilename(GtfsCalendar.FILENAME).get(),
-          (GtfsTableContainer<GtfsCalendarDate>)
+          (GtfsTableContainer<GtfsCalendarDate, ?>)
               feedContainer.getTableForFilename(GtfsCalendarDate.FILENAME).get());
     }
 
@@ -131,7 +133,7 @@ public class FeedMetadata {
     setCount(COUNTS_BLOCKS, feedContainer, GtfsTrip.FILENAME, GtfsTrip.class, GtfsTrip::blockId);
   }
 
-  private <T extends GtfsTableContainer<E>, E extends GtfsEntity> void setCount(
+  private <T extends GtfsEntityContainer, E extends GtfsEntity> void setCount(
       String countName,
       GtfsFeedContainer feedContainer,
       String fileName,
@@ -141,13 +143,11 @@ public class FeedMetadata {
     var table = feedContainer.getTableForFilename(fileName);
     this.counts.put(
         countName,
-        table
-            .map(gtfsTableContainer -> loadUniqueCount(gtfsTableContainer, clazz, idExtractor))
-            .orElse(0));
+        table.map(gtfsContainer -> loadUniqueCount(gtfsContainer, clazz, idExtractor)).orElse(0));
   }
 
   private <E extends GtfsEntity> int loadUniqueCount(
-      GtfsTableContainer<?> table, Class<E> clazz, Function<E, String> idExtractor) {
+      GtfsEntityContainer<?, ?> table, Class<E> clazz, Function<E, String> idExtractor) {
     // Iterate through entities and count unique IDs
     Set<String> uniqueIds = new HashSet<>();
     for (GtfsEntity entity : table.getEntities()) {
@@ -202,31 +202,33 @@ public class FeedMetadata {
         .map(GtfsStopTimeTableContainer::byTripIdMap)
         .map(
             byTripIdMap ->
-                byTripIdMap.keySet().stream()
+                byTripIdMap.asMap().values().stream()
                     .anyMatch(
-                        tripId -> {
+                        gtfsStopTimes -> {
                           boolean hasTripId = false,
                               hasLocationId = false,
                               hasStopId = false,
                               hasArrivalTime = false,
                               hasDepartureTime = false;
 
-                          for (GtfsStopTime stopTime : byTripIdMap.get(tripId)) {
+                          for (GtfsStopTime stopTime : gtfsStopTimes) {
                             hasTripId |= stopTime.hasTripId();
                             hasLocationId |= stopTime.hasLocationId();
                             hasStopId |= stopTime.hasStopId();
                             hasArrivalTime |= stopTime.hasArrivalTime();
                             hasDepartureTime |= stopTime.hasDepartureTime();
 
+                            // Early return if all fields are found for this trip
                             if (hasTripId
                                 && hasLocationId
                                 && hasStopId
                                 && hasArrivalTime
                                 && hasDepartureTime) {
-                              return true; // Early return if all fields are found for this trip
+                              return true;
                             }
                           }
-                          return false; // Continue checking other trips
+                          // Continue checking other trips
+                          return false;
                         }))
         .orElse(false);
   }
@@ -238,8 +240,7 @@ public class FeedMetadata {
   }
 
   private boolean hasAtLeastOneTripWithOnlyLocationId(GtfsFeedContainer feedContainer) {
-    Optional<GtfsTableContainer<?>> optionalStopTimeTable =
-        feedContainer.getTableForFilename(GtfsStopTime.FILENAME);
+    var optionalStopTimeTable = feedContainer.getTableForFilename(GtfsStopTime.FILENAME);
     if (optionalStopTimeTable.isPresent()) {
       for (GtfsEntity entity : optionalStopTimeTable.get().getEntities()) {
         if (entity instanceof GtfsStopTime) {
@@ -393,13 +394,15 @@ public class FeedMetadata {
                 List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasRouteTextColor)));
   }
 
-  private void loadAgencyData(GtfsTableContainer<GtfsAgency> agencyTable) {
+  private void loadAgencyData(
+      GtfsEntityContainer<GtfsAgency, GtfsAgencyTableDescriptor> agencyTable) {
     for (GtfsAgency agency : agencyTable.getEntities()) {
       agencies.add(AgencyMetadata.from(agency));
     }
   }
 
-  private void loadFeedInfo(GtfsTableContainer<GtfsFeedInfo> feedTable) {
+  private void loadFeedInfo(
+      GtfsTableContainer<GtfsFeedInfo, GtfsFeedInfoTableDescriptor> feedTable) {
     var info = feedTable.getEntities().isEmpty() ? null : feedTable.getEntities().get(0);
 
     feedInfo.put(FEED_INFO_PUBLISHER_NAME, info == null ? "N/A" : info.feedPublisherName());
@@ -442,9 +445,9 @@ public class FeedMetadata {
    * @param calendarDateTable the container for `calendar\_dates.txt` data
    */
   public void loadServiceWindow(
-      GtfsTableContainer<GtfsTrip> tripContainer,
-      GtfsTableContainer<GtfsCalendar> calendarTable,
-      GtfsTableContainer<GtfsCalendarDate> calendarDateTable) {
+      GtfsTableContainer<GtfsTrip, ?> tripContainer,
+      GtfsTableContainer<GtfsCalendar, ?> calendarTable,
+      GtfsTableContainer<GtfsCalendarDate, ?> calendarDateTable) {
     List<GtfsTrip> trips = tripContainer.getEntities();
 
     LocalDate earliestStartDate = null;
@@ -582,7 +585,7 @@ public class FeedMetadata {
   public ArrayList<String> foundFiles() {
     var foundFiles = new ArrayList<String>();
     for (var table : tableMetaData.values()) {
-      if (table.getTableStatus() != GtfsTableContainer.TableStatus.MISSING_FILE) {
+      if (table.getTableStatus() != TableStatus.MISSING_FILE) {
         foundFiles.add(table.getFilename());
       }
     }
@@ -599,5 +602,14 @@ public class FeedMetadata {
 
   public ImmutableSortedSet<String> getFilenames() {
     return filenames;
+  }
+
+  public Boolean hasFlexFeatures() {
+    return specFeatures.keySet().stream()
+        .anyMatch(
+            feature ->
+                feature.getFeatureGroup() != null
+                    && feature.getFeatureGroup().equals("Flexible Services")
+                    && specFeatures.get(feature));
   }
 }

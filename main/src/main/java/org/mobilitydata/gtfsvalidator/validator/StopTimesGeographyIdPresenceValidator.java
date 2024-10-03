@@ -51,14 +51,16 @@ public class StopTimesGeographyIdPresenceValidator extends SingleEntityValidator
       noticeContainer.addValidationNotice(
           new MissingRequiredFieldNotice(
               GtfsStopTime.FILENAME, stopTime.csvRowNumber(), GtfsStopTime.STOP_ID_FIELD_NAME));
-    } else if (presenceCount > 1) {
-      // More than one geography ID is present, but only one is allowed
-      noticeContainer.addValidationNotice(
-          new ForbiddenGeographyIdNotice(
-              stopTime.csvRowNumber(),
-              stopTime.stopId(),
-              stopTime.locationGroupId(),
-              stopTime.locationId()));
     }
+    // TODO: Put this back once we are ready to publish this notice.
+    //    else if (presenceCount > 1) {
+    //      // More than one geography ID is present, but only one is allowed
+    //      noticeContainer.addValidationNotice(
+    //          new ForbiddenGeographyIdNotice(
+    //              stopTime.csvRowNumber(),
+    //              stopTime.stopId(),
+    //              stopTime.locationGroupId(),
+    //              stopTime.locationId()));
+    //    }
   }
 }
