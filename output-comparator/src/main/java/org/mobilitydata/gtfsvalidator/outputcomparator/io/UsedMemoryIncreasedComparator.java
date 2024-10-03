@@ -29,7 +29,6 @@ public class UsedMemoryIncreasedComparator implements Comparator<DatasetMemoryUs
     if (o1.getReferenceMemoryUsage() == null || o2.getLatestMemoryUsage() == null) {
       return o1.getReferenceMemoryUsage() == null ? -1 : 1;
     }
-
     long o1MinDiff =
         getMinimumDifferenceByKey(o1.getReferenceUsedMemoryByKey(), o1.getLatestUsedMemoryByKey());
     long o2MinDiff =
