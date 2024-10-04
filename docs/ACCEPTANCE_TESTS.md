@@ -120,6 +120,12 @@ The memory consumption section contains three tables.
 - The second, list the first 25 datasets that the difference decreased memory comparing with the main branch.
 - The third, list(not always visible) the first 25 datasets that were not available for comparison as the main branch didn't contain the memory usage information.
 
+Memory usage is collected in critical points and persists in the JSON report. The added snapshot points are:
+- _GtfsFeedLoader.loadTables_: This is taken after the validator loads all files.
+- _GtfsFeedLoader.executeMultiFileValidators_: This is taken after the validator executed all multi-file validators
+- _org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader.loadAndValidate_: This is taken for the complete load and validation method.
+- _ValidationRunner.run_: This is taken for the complete run of the validator, excluding report generation
+
 ## Instructions to run the pipeline
 
 1. Provide code changes by creating a new PR on the [GitHub repository](https://github.com/MobilityData/gtfs-validator);
