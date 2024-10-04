@@ -227,7 +227,7 @@ public class ValidationPerformanceCollector {
         addMemoryUsageReport(decreasedMemoryUsages, "memory has decreased", b, true);
       }
       if (datasetsMemoryUsageNoReference.size() > 0) {
-        datasetsMemoryUsageNoReference.sort(new LatestReportUsedMemoryIncreasedComparator());
+        datasetsMemoryUsageNoReference.sort(new LatestReportUsedMemoryComparator());
         addMemoryUsageReport(
             datasetsMemoryUsageNoReference.subList(
                 0, Math.min(datasetsMemoryUsageNoReference.size(), MEMORY_USAGE_COMPARE_MAX)),

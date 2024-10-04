@@ -104,6 +104,22 @@ We follow this process:
 
 <img src="/docs/Acceptance-test-process.jpg" width="750">
 
+## Performance metrics within the acceptance reports
+
+There are two man metrics added to the acceptance report comment at the PR level, _Validation Time_ and _Memory Consumption_.
+The performance metrics are **not a blocker** as performance might vary due to external factors including GitHub infrastructure performance.
+However, large jumps in performance values should be investigated before approving a PR.
+
+### Validation Time
+The validation time consists in general metrics like average, median, standard deviation, minimums and maximums.
+This metrics can be affected by addition of new validators than introduce a penalty in processing time.
+
+### Memory Consumption
+The memory consumption section contains three tables.
+- The first, list the first 25 datasets that the difference increased memory comparing with the main branch.
+- The second, list the first 25 datasets that the difference decreased memory comparing with the main branch.
+- The third, list(not always visible) the first 25 datasets that were not available for comparison as the main branch didn't contain the memory usage information.
+
 ## Instructions to run the pipeline
 
 1. Provide code changes by creating a new PR on the [GitHub repository](https://github.com/MobilityData/gtfs-validator);
