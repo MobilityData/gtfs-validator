@@ -117,6 +117,7 @@ public class FeedMetadata {
           (GtfsTableContainer<GtfsCalendarDate, ?>)
               feedContainer.getTableForFilename(GtfsCalendarDate.FILENAME).get());
     }
+
     feedMetadata.loadSpecFeatures(feedContainer);
     feedMetadata.memoryUsageRecords = MemoryUsageRegister.getInstance().getRegistry();
     return feedMetadata;
@@ -199,25 +200,41 @@ public class FeedMetadata {
   }
 
   private boolean hasAtLeastOneTripWithAllFields(GtfsFeedContainer feedContainer) {
-    var optionalStopTimeTable = feedContainer.getTableForFilename(GtfsStopTime.FILENAME);
-    if (optionalStopTimeTable.isPresent()) {
-      for (GtfsEntity entity : optionalStopTimeTable.get().getEntities()) {
-        if (entity instanceof GtfsStopTime) {
-          GtfsStopTime stopTime = (GtfsStopTime) entity;
-          return stopTime.hasTripId()
-              && stopTime.tripId() != null
-              && stopTime.hasLocationId()
-              && stopTime.locationId() != null
-              && stopTime.hasStopId()
-              && stopTime.stopId() != null
-              && stopTime.hasArrivalTime()
-              && stopTime.arrivalTime() != null
-              && stopTime.hasDepartureTime()
-              && stopTime.departureTime() != null;
-        }
-      }
-    }
-    return false;
+    return feedContainer
+        .getTableForFilename(GtfsStopTime.FILENAME)
+        .map(table -> (GtfsStopTimeTableContainer) table)
+        .map(GtfsStopTimeTableContainer::byTripIdMap)
+        .map(
+            byTripIdMap ->
+                byTripIdMap.asMap().values().stream()
+                    .anyMatch(
+                        gtfsStopTimes -> {
+                          boolean hasTripId = false,
+                              hasLocationId = false,
+                              hasStopId = false,
+                              hasArrivalTime = false,
+                              hasDepartureTime = false;
+
+                          for (GtfsStopTime stopTime : gtfsStopTimes) {
+                            hasTripId |= stopTime.hasTripId();
+                            hasLocationId |= stopTime.hasLocationId();
+                            hasStopId |= stopTime.hasStopId();
+                            hasArrivalTime |= stopTime.hasArrivalTime();
+                            hasDepartureTime |= stopTime.hasDepartureTime();
+
+                            // Early return if all fields are found for this trip
+                            if (hasTripId
+                                && hasLocationId
+                                && hasStopId
+                                && hasArrivalTime
+                                && hasDepartureTime) {
+                              return true;
+                            }
+                          }
+                          // Continue checking other trips
+                          return false;
+                        }))
+        .orElse(false);
   }
 
   private void loadZoneBasedDemandResponsiveTransitFeature(GtfsFeedContainer feedContainer) {
@@ -232,11 +249,7 @@ public class FeedMetadata {
       for (GtfsEntity entity : optionalStopTimeTable.get().getEntities()) {
         if (entity instanceof GtfsStopTime) {
           GtfsStopTime stopTime = (GtfsStopTime) entity;
-          if (stopTime.hasTripId()
-              && stopTime.tripId() != null
-              && stopTime.hasLocationId()
-              && stopTime.locationId() != null
-              && (!stopTime.hasStopId() || stopTime.stopId() == null)) {
+          if (stopTime.hasTripId() && stopTime.hasLocationId() && (!stopTime.hasStopId())) {
             return true;
           }
         }
@@ -593,5 +606,14 @@ public class FeedMetadata {
 
   public ImmutableSortedSet<String> getFilenames() {
     return filenames;
+  }
+
+  public Boolean hasFlexFeatures() {
+    return specFeatures.keySet().stream()
+        .anyMatch(
+            feature ->
+                feature.getFeatureGroup() != null
+                    && feature.getFeatureGroup().equals("Flexible Services")
+                    && specFeatures.get(feature));
   }
 }
