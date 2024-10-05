@@ -13,5 +13,5 @@ pytz==2021.1
 requests==2.31.0
 rsa==4.7.2
 six==1.16.0
-urllib3==1.26.6
+urllib3==1.26.19
 numpy==1.22.0
