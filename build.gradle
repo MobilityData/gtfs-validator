@@ -186,6 +186,10 @@ reporting {
     }
 }
 
+tasks.named('verifyGoogleJavaFormat') {
+    dependsOn tasks.named('copyRulesToWebClient')
+}
+
 task copyRulesToWebClient (type: Copy) {
     from "./RULES.md"
     into "./web/client/static"

@@ -27,7 +27,6 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.validator.StopNameValidator.SameNameAndDescriptionForStopNotice;
-import org.mobilitydata.gtfsvalidator.validator.StopNameValidator.StopNameInvalidCharacterNotice;
 
 @RunWith(JUnit4.class)
 public class StopNameValidatorTest {

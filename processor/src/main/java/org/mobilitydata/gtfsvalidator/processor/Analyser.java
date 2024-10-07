@@ -73,6 +73,7 @@ public class Analyser {
       fieldBuilder.setValueRequired(method.getAnnotation(Required.class) != null);
       fieldBuilder.setColumnRecommended(method.getAnnotation(RecommendedColumn.class) != null);
       fieldBuilder.setMixedCase(method.getAnnotation(MixedCase.class) != null);
+      fieldBuilder.setNoInvalidCharacters(method.getAnnotation(NoInvalidCharacters.class) != null);
       PrimaryKey primaryKey = method.getAnnotation(PrimaryKey.class);
       if (primaryKey != null) {
         fieldBuilder.setPrimaryKey(primaryKey);
