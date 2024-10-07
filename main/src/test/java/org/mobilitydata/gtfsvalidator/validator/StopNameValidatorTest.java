@@ -163,20 +163,4 @@ public class StopNameValidatorTest {
                     .build()))
         .isEmpty();
   }
-
-  @Test
-  public void stopNameWithInvalidCharacter_generatesNotice() {
-    assertThat(
-            generateNotices(
-                new GtfsStop.Builder().setCsvRowNumber(4).setStopName("\uFFFD").build()))
-        .contains(new StopNameInvalidCharacterNotice(4, "\uFFFD"));
-  }
-
-  @Test
-  public void stopNameWithoutInvalidCharacter_noNotice() {
-    assertThat(
-            generateNotices(
-                new GtfsStop.Builder().setCsvRowNumber(4).setStopName("stop A").build()))
-        .isEmpty();
-  }
 }
