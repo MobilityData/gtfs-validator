@@ -202,7 +202,7 @@ public class TimepointTimeValidatorTest {
 
   @Test
   public void
-  emptyTimepoint_noArrivalTime_noDepartureTime_noTimePointProvided_shouldNotGenerateNotice() {
+      emptyTimepoint_noArrivalTime_noDepartureTime_noTimePointProvided_shouldNotGenerateNotice() {
     // setting .setTimepoint(null) is used to define a missing value
     // (even if the timepoint value is included in header)
     List<GtfsStopTime> stopTimes = new ArrayList<>();
