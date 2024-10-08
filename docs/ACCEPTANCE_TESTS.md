@@ -106,7 +106,7 @@ We follow this process:
 
 ## Performance metrics within the acceptance reports
 
-There are two man metrics added to the acceptance report comment at the PR level, _Validation Time_ and _Memory Consumption_.
+There are two main metrics added to the acceptance report comment at the PR level, _Validation Time_ and _Memory Consumption_.
 The performance metrics are **not a blocker** as performance might vary due to external factors including GitHub infrastructure performance.
 However, large jumps in performance values should be investigated before approving a PR.
 
