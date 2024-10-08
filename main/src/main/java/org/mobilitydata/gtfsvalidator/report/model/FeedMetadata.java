@@ -605,11 +605,16 @@ public class FeedMetadata {
   }
 
   public Boolean hasFlexFeatures() {
-    return specFeatures.keySet().stream()
-        .anyMatch(
-            feature ->
-                feature.getFeatureGroup() != null
-                    && feature.getFeatureGroup().equals("Flexible Services")
-                    && specFeatures.get(feature));
+    try {
+      return specFeatures.keySet().stream()
+          .anyMatch(
+              feature ->
+                  feature.getFeatureGroup() != null
+                      && feature.getFeatureGroup().equals("Flexible Services")
+                      && specFeatures.get(feature));
+
+    } catch (Exception e) {
+      return false;
+    }
   }
 }
