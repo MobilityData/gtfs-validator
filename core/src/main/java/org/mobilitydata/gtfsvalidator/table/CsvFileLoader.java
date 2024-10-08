@@ -94,6 +94,16 @@ public final class CsvFileLoader extends TableLoader {
     final List<SingleEntityValidator<GtfsEntity>> singleEntityValidators =
         createSingleEntityValidators(tableDescriptor.getEntityClass(), validatorProvider);
 
+    // Remove validators that we should not call because of missing columns.
+    var iterator = singleEntityValidators.iterator();
+    while (iterator.hasNext()) {
+      var validator = iterator.next();
+      var shouldValidate = validator.shouldCallValidate(header, noticeContainer);
+      if (!shouldValidate) {
+        iterator.remove();
+        // TODO: Add the removed validator to a list of validators that were not called
+      }
+    }
     try {
       for (CsvRow row : csvFile) {
         if (row.getRowNumber() % 200000 == 0) {

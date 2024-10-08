@@ -22,6 +22,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.table.GtfsAttribution;
 import org.mobilitydata.gtfsvalidator.table.GtfsAttributionRole;
 import org.mobilitydata.gtfsvalidator.table.GtfsAttributionSchema;
@@ -47,6 +48,15 @@ public class AttributionWithoutRoleValidator extends SingleEntityValidator<GtfsA
           new AttributionWithoutRoleNotice(
               attribution.csvRowNumber(), attribution.attributionId()));
     }
+  }
+
+  public Boolean shouldCallValidate(CsvHeader header, NoticeContainer noticeContainer) {
+    if (!header.hasColumn(GtfsAttribution.IS_PRODUCER_FIELD_NAME)
+        && !header.hasColumn(GtfsAttribution.IS_OPERATOR_FIELD_NAME)
+        && !header.hasColumn(GtfsAttribution.IS_AUTHORITY_FIELD_NAME)) {
+      return false;
+    }
+    return true;
   }
 
   /**

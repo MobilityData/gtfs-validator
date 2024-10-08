@@ -27,6 +27,7 @@ import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.MixedCaseRecommendedFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
 
 /**
@@ -115,6 +116,29 @@ public class MixedCaseValidatorGenerator {
     }
 
     typeSpec.addMethod(validateMethod.build());
+
+    MethodSpec.Builder shouldCallValidateMethod =
+        MethodSpec.methodBuilder("shouldCallValidate")
+            .addModifiers(Modifier.PUBLIC)
+            .addAnnotation(Override.class)
+            .returns(Boolean.class)
+            .addParameter(CsvHeader.class, "header")
+            .addParameter(NoticeContainer.class, "noticeContainer");
+
+    shouldCallValidateMethod
+        .addComment("All mixed case columns must be absent to not call the validate method.")
+        .addStatement("boolean shouldValidate = false");
+    for (GtfsFieldDescriptor mixedCaseField : fileDescriptor.fields()) {
+      if (!mixedCaseField.mixedCase()) {
+        continue;
+      }
+      shouldCallValidateMethod.addStatement(
+          "shouldValidate |= header.hasColumn(\"$L\")",
+          FieldNameConverter.gtfsColumnName(mixedCaseField.name()));
+    }
+    shouldCallValidateMethod.addStatement("return shouldValidate");
+
+    typeSpec.addMethod(shouldCallValidateMethod.build());
 
     return typeSpec.build();
   }

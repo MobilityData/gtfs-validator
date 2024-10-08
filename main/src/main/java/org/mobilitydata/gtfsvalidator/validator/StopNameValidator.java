@@ -23,6 +23,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
@@ -58,6 +59,17 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
           new SameNameAndDescriptionForStopNotice(
               stop.csvRowNumber(), stop.stopId(), stop.stopDesc()));
     }
+  }
+
+  public Boolean shouldCallValidate(CsvHeader header, NoticeContainer noticeContainer) {
+    if (!header.hasColumn(GtfsStop.STOP_NAME_FIELD_NAME)
+        && !header.hasColumn(GtfsStop.LOCATION_TYPE_FIELD_NAME)) {
+      // TODO: No notice here. Instead put validator in list of not run validators (in
+      // CsvFileLoader).
+      noticeContainer.addValidationNotice(new StopNameAndLocationIdColumnsBothMissingNotice());
+      return false;
+    }
+    return true;
   }
 
   private boolean isValidStopDesc(String stopDesc, String stopName) {
@@ -116,5 +128,16 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
       this.csvRowNumber = csvRowNumber;
       this.stopDesc = stopDesc;
     }
+  }
+
+  /**
+   * Name and locationType columns are not found in stops.txt.
+   *
+   * <p>When the locationType column is missing, the default value used is 0 (STOP). In that case,
+   * the stopName cannot undefined.
+   */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopSchema.class))
+  static class StopNameAndLocationIdColumnsBothMissingNotice extends ValidationNotice {
+    StopNameAndLocationIdColumnsBothMissingNotice() {}
   }
 }
