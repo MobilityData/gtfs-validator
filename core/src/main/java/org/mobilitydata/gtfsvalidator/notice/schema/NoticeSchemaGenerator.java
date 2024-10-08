@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.logging.Level;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsJson;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef;
@@ -125,7 +126,12 @@ public class NoticeSchemaGenerator {
   private static ReferencesSchema generateReferences(GtfsValidationNotice noticeAnnotation) {
     ReferencesSchema schema = new ReferencesSchema();
     Arrays.stream(noticeAnnotation.files().value())
-        .map(NoticeSchemaGenerator::getFileIdForTableClass)
+        .map(
+            // Both Table and Json annotations specify a file name, collect them all.
+            fileClass -> {
+              Optional<String> fileId = getFileIdForTableClass(fileClass);
+              return fileId.or(() -> getFileIdForJsonClass(fileClass));
+            })
         .flatMap(Optional::stream)
         .forEach(schema::addFileReference);
     Arrays.stream(noticeAnnotation.bestPractices().value())
@@ -144,6 +150,11 @@ public class NoticeSchemaGenerator {
   private static Optional<String> getFileIdForTableClass(Class<? extends GtfsEntity> tableClass) {
     GtfsTable table = tableClass.getAnnotation(GtfsTable.class);
     return Optional.ofNullable(table).map(GtfsTable::value);
+  }
+
+  private static Optional<String> getFileIdForJsonClass(Class<? extends GtfsEntity> entityClass) {
+    GtfsJson annotation = entityClass.getAnnotation(GtfsJson.class);
+    return Optional.ofNullable(annotation).map(GtfsJson::value);
   }
 
   private static UrlReference convertUrlRef(UrlRef ref) {

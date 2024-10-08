@@ -35,9 +35,9 @@ public class FeedMetadataTest {
   File rootDir;
   NoticeContainer noticeContainer = new NoticeContainer();
 
-  private GtfsTableContainer<GtfsTrip> tripContainer;
-  private GtfsTableContainer<GtfsCalendar> calendarTable;
-  private GtfsTableContainer<GtfsCalendarDate> calendarDateTable;
+  private GtfsTableContainer<GtfsTrip, ?> tripContainer;
+  private GtfsTableContainer<GtfsCalendar, ?> calendarTable;
+  private GtfsTableContainer<GtfsCalendarDate, ?> calendarDateTable;
   private FeedMetadata feedMetadata = new FeedMetadata();
 
   private void createDataFile(String filename, String content) throws IOException {
@@ -136,7 +136,7 @@ public class FeedMetadataTest {
   private void validateSpecFeature(
       String specFeature,
       Boolean expectedValue,
-      ImmutableList<Class<? extends GtfsTableDescriptor<?>>> tableDescriptors)
+      ImmutableList<Class<? extends GtfsFileDescriptor<?>>> tableDescriptors)
       throws IOException, InterruptedException {
     feedLoaderMock = new GtfsFeedLoader(tableDescriptors);
     try (GtfsInput gtfsInput = GtfsInput.createFromPath(rootDir.toPath(), noticeContainer)) {
@@ -512,5 +512,26 @@ public class FeedMetadataTest {
         "Trips Wheelchair Accessibility",
         true,
         ImmutableList.of(GtfsAgencyTableDescriptor.class, GtfsTripTableDescriptor.class));
+  }
+
+  @Test
+  public void containsDeviatedFixedRouteFeatureTest() throws IOException, InterruptedException {
+    // Create stop times with various field combinations for the same trip
+    String stopTimesContent =
+        "trip_id, stop_sequence, arrival_time, departure_time, stop_id, location_id\n"
+            + "trip1,1,01:00:00,01:30:00,stop1,location1\n"
+            + "trip1,2,,02:30:00,,location2\n"
+            + "trip1,3,02:00:00,,stop2,location2";
+
+    createDataFile(GtfsStopTime.FILENAME, stopTimesContent);
+
+    // Validate that the feature is present
+    validateSpecFeature(
+        "Predefined Routes with Deviation",
+        true,
+        ImmutableList.of(
+            GtfsAgencyTableDescriptor.class,
+            GtfsStopTimeTableDescriptor.class,
+            GtfsTripTableDescriptor.class));
   }
 }

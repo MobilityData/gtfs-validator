@@ -27,11 +27,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
-import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTranslation;
-import org.mobilitydata.gtfsvalidator.table.GtfsTranslationSchema;
-import org.mobilitydata.gtfsvalidator.table.GtfsTranslationTableContainer;
+import org.mobilitydata.gtfsvalidator.table.*;
 
 /**
  * Validates that translations are provided in accordance with GTFS Specification.
@@ -125,12 +121,17 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
                 translation, GtfsTranslation.RECORD_SUB_ID_FIELD_NAME, translation.recordSubId()));
       }
     }
-    Optional<GtfsTableContainer<?>> parentTable =
+    Optional<GtfsEntityContainer<GtfsTranslation, GtfsTranslationTableDescriptor>> parentTable =
         feedContainer.getTableForFilename(translation.tableName() + ".txt");
     if (parentTable.isEmpty() || parentTable.get().isMissingFile()) {
       noticeContainer.addValidationNotice(new TranslationUnknownTableNameNotice(translation));
     } else if (!translation.hasFieldValue()) {
-      validateReferenceIntegrity(translation, parentTable.get(), noticeContainer);
+      if (parentTable.isPresent() && parentTable.get() instanceof GtfsTableContainer) {
+        validateReferenceIntegrity(
+            translation, (GtfsTableContainer) parentTable.get(), noticeContainer);
+      } else {
+        //        TODO check for JSON Tables here
+      }
     }
   }
 
@@ -140,7 +141,7 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
    */
   private void validateReferenceIntegrity(
       GtfsTranslation translation,
-      GtfsTableContainer<?> parentTable,
+      GtfsTableContainer<?, ?> parentTable,
       NoticeContainer noticeContainer) {
     ImmutableList<String> keyColumnNames = parentTable.getKeyColumnNames();
     if (isMissingOrUnexpectedField(
