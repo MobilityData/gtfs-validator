@@ -58,10 +58,12 @@ public class FeedMetadata {
   private final List<Pair<FeatureMetadata, String>> FILE_BASED_FEATURES =
       List.of(
           new Pair<>(new FeatureMetadata("Pathway Connections", "Pathways"), GtfsPathway.FILENAME),
+          new Pair<>(new FeatureMetadata("Pathway Signs", "Pathways"), GtfsPathway.FILENAME),
+          new Pair<>(new FeatureMetadata("Pathway Details", "Pathways"), GtfsPathway.FILENAME),
           new Pair<>(new FeatureMetadata("Levels", "Pathways"), GtfsLevel.FILENAME),
           new Pair<>(new FeatureMetadata("Transfers", null), GtfsTransfer.FILENAME),
           new Pair<>(new FeatureMetadata("Shapes", null), GtfsShape.FILENAME),
-          new Pair<>(new FeatureMetadata("Frequency-Based Service", null), GtfsFrequency.FILENAME),
+          new Pair<>(new FeatureMetadata("Frequencies", null), GtfsFrequency.FILENAME),
           new Pair<>(new FeatureMetadata("Feed Information", null), GtfsFeedInfo.FILENAME),
           new Pair<>(new FeatureMetadata("Attributions", null), GtfsAttribution.FILENAME),
           new Pair<>(new FeatureMetadata("Translations", null), GtfsTranslation.FILENAME),
@@ -69,8 +71,7 @@ public class FeedMetadata {
           new Pair<>(new FeatureMetadata("Fare Products", "Fares"), GtfsFareProduct.FILENAME),
           new Pair<>(new FeatureMetadata("Fare Media", "Fares"), GtfsFareMedia.FILENAME),
           new Pair<>(new FeatureMetadata("Zone-Based Fares", "Fares"), GtfsArea.FILENAME),
-          new Pair<>(
-              new FeatureMetadata("Fares Transfers", "Fares"), GtfsFareTransferRule.FILENAME),
+          new Pair<>(new FeatureMetadata("Fare Transfers", "Fares"), GtfsFareTransferRule.FILENAME),
           new Pair<>(new FeatureMetadata("Time-Based Fares", "Fares"), GtfsTimeframe.FILENAME),
           new Pair<>(
               new FeatureMetadata("Booking Rules", "Flexible Services"), GtfsBookingRules.FILENAME),
@@ -181,8 +182,9 @@ public class FeedMetadata {
     loadBikeAllowanceFeature(feedContainer);
     loadLocationTypesFeature(feedContainer);
     loadTraversalTimeFeature(feedContainer);
-    loadPathwayDirectionsFeature(feedContainer);
-    loadPathwayExtraFeature(feedContainer);
+    loadPathwaySignsFeature(feedContainer);
+    loadPathwayDetailsFeature(feedContainer);
+    loadPathwayConnectionsFeature(feedContainer);
     loadRouteBasedFaresFeature(feedContainer);
     loadContinuousStopsFeature(feedContainer);
     loadZoneBasedDemandResponsiveTransitFeature(feedContainer);
@@ -285,18 +287,20 @@ public class FeedMetadata {
             || hasAtLeastOneRecordInFile(feedContainer, GtfsNetwork.FILENAME));
   }
 
-  private void loadPathwayDirectionsFeature(GtfsFeedContainer feedContainer) {
+  private void loadPathwaySignsFeature(GtfsFeedContainer feedContainer) {
     specFeatures.put(
         new FeatureMetadata("Pathway Signs", "Pathways"),
         hasAtLeastOneRecordForFields(
-            feedContainer,
-            GtfsPathway.FILENAME,
-            List.of(
-                GtfsPathway::hasSignpostedAs,
-                (Function<GtfsPathway, Boolean>) GtfsPathway::hasReversedSignpostedAs)));
+                feedContainer,
+                GtfsPathway.FILENAME,
+                List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasSignpostedAs))
+            || hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsPathway.FILENAME,
+                List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasReversedSignpostedAs)));
   }
 
-  private void loadPathwayExtraFeature(GtfsFeedContainer feedContainer) {
+  private void loadPathwayDetailsFeature(GtfsFeedContainer feedContainer) {
     specFeatures.put(
         new FeatureMetadata("Pathway Details", "Pathways"),
         hasAtLeastOneRecordForFields(
@@ -316,6 +320,14 @@ public class FeedMetadata {
                 GtfsPathway.FILENAME,
                 List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasStairCount)));
   }
+
+
+  private void loadPathwayConnectionsFeature(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+            new FeatureMetadata("Pathway Connections", "Pathways"),
+            hasAtLeastOneRecordInFile(feedContainer, GtfsPathway.FILENAME));
+  }
+
 
   private void loadTraversalTimeFeature(GtfsFeedContainer feedContainer) {
     specFeatures.put(
