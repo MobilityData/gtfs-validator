@@ -325,13 +325,11 @@ public class FeedMetadata {
                 List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasStairCount)));
   }
 
-
   private void loadPathwayConnectionsFeature(GtfsFeedContainer feedContainer) {
     specFeatures.put(
-            new FeatureMetadata("Pathway Connections", "Pathways"),
-            hasAtLeastOneRecordInFile(feedContainer, GtfsPathway.FILENAME));
+        new FeatureMetadata("Pathway Connections", "Pathways"),
+        hasAtLeastOneRecordInFile(feedContainer, GtfsPathway.FILENAME));
   }
-
 
   private void loadTraversalTimeFeature(GtfsFeedContainer feedContainer) {
     specFeatures.put(
