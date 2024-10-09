@@ -8,7 +8,7 @@ import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
 
 public class ValidationPerformanceCollector {
 
-  public static final int MEMORY_USAGE_COMPARE_MAX = 25;
+  public static final int MEMORY_USAGE_COMPARE_MAX = 10;
   private final Map<String, Double> referenceTimes;
   private final Map<String, Double> latestTimes;
   private final BoundedPriorityQueue<DatasetMemoryUsage> datasetsDecreasedMemoryUsage;

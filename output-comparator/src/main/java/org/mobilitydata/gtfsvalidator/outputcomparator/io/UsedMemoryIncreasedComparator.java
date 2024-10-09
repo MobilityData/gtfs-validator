@@ -35,14 +35,15 @@ public class UsedMemoryIncreasedComparator implements Comparator<DatasetMemoryUs
     if (o1.getLatestMemoryUsage() == null || o2.getLatestMemoryUsage() == null) {
       return o1.getLatestMemoryUsage() == null ? -1 : 1;
     }
-    long o1MinDiff =
-        getMinimumDifferenceByKey(o1.getReferenceUsedMemoryByKey(), o1.getLatestUsedMemoryByKey());
-    long o2MinDiff =
-        getMinimumDifferenceByKey(o2.getReferenceUsedMemoryByKey(), o2.getLatestUsedMemoryByKey());
-    return Long.compare(o1MinDiff, o2MinDiff);
+    long o1MaxDiff =
+        getMaxDifferenceByKey(o1.getReferenceUsedMemoryByKey(), o1.getLatestUsedMemoryByKey());
+    long o2MaxDiff =
+        getMaxDifferenceByKey(o2.getReferenceUsedMemoryByKey(), o2.getLatestUsedMemoryByKey());
+    // Reversing the comparison as we need the major memory usage first in a sorted list
+    return Long.compare(o2MaxDiff, o1MaxDiff);
   }
 
-  private long getMinimumDifferenceByKey(
+  private long getMaxDifferenceByKey(
       Map<String, Long> referenceMemoryUsage, Map<String, Long> latestMemoryUsage) {
     Set<String> keys = new HashSet<>();
     keys.addAll(latestMemoryUsage.keySet());
@@ -50,8 +51,8 @@ public class UsedMemoryIncreasedComparator implements Comparator<DatasetMemoryUs
     return keys.stream()
         .filter(key -> latestMemoryUsage.containsKey(key) && referenceMemoryUsage.containsKey(key))
         .filter(key -> latestMemoryUsage.get(key) - referenceMemoryUsage.get(key) != 0)
-        .mapToLong(key -> referenceMemoryUsage.get(key) - latestMemoryUsage.get(key))
-        .min()
-        .orElse(Long.MAX_VALUE);
+        .mapToLong(key -> latestMemoryUsage.get(key) - referenceMemoryUsage.get(key))
+        .max()
+        .orElse(Long.MIN_VALUE);
   }
 }
