@@ -20,17 +20,25 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 
 /**
- * An unsupported location type is used in the `locations.geojson` file.
+ * An unsupported feature type is used in the `locations.geojson` file.
  *
- * <p>The supported type is `FeatureCollection`.
+ * <p>Use `Feature` instead to comply with the spec.
  */
 @GtfsValidationNotice(severity = ERROR)
-public class UnsupportedLocationTypeNotice extends ValidationNotice {
+public class UnsupportedFeatureTypeNotice extends ValidationNotice {
 
-  /** The value of the unsupported location type. */
-  private final String locationTypeValue;
+  /** The value of the unsupported GeoJSON type. */
+  Integer featureIndex;
 
-  public UnsupportedLocationTypeNotice(String locationTypeValue) {
-    this.locationTypeValue = locationTypeValue;
+  /** The id of the faulty record. */
+  String featureId;
+
+  /** The feature type of the faulty record. */
+  String featureType;
+
+  public UnsupportedFeatureTypeNotice(Integer featureIndex, String featureId, String featureType) {
+    this.featureIndex = featureIndex;
+    this.featureId = featureId;
+    this.featureType = featureType;
   }
 }

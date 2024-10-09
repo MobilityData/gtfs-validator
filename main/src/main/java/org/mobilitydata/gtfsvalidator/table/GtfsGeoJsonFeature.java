@@ -13,6 +13,8 @@ public final class GtfsGeoJsonFeature implements GtfsEntity {
 
   public static final String FEATURE_ID_FIELD_NAME = "id";
 
+  public static final String FEATURE_TYPE_FIELD_NAME = "type";
+
   public static final String FEATURE_PROPERTIES_FIELD_NAME = "properties";
   public static final String FEATURE_PROPERTIES_STOP_NAME_FIELD_NAME = "stop_name";
   public static final String FEATURE_PROPERTIES_STOP_DESC_FIELD_NAME = "stop_desc";

@@ -67,7 +67,7 @@ public class GeoJsonFileLoader extends TableLoader {
         throw new UnparsableGeoJsonFeatureException("Missing required field 'type'");
       } else if (!jsonObject.get("type").getAsString().equals("FeatureCollection")) {
         noticeContainer.addValidationNotice(
-            new UnsupportedLocationTypeNotice(jsonObject.get("type").getAsString()));
+            new UnsupportedGeoJsonTypeNotice(jsonObject.get("type").getAsString()));
         throw new UnparsableGeoJsonFeatureException("Unsupported GeoJSON type");
       }
       JsonArray featuresArray = jsonObject.getAsJsonArray("features");
@@ -107,6 +107,23 @@ public class GeoJsonFileLoader extends TableLoader {
                   + '.'
                   + GtfsGeoJsonFeature.FEATURE_ID_FIELD_NAME);
         }
+      }
+
+      // Handle feature type
+      if (!featureObject.has(GtfsGeoJsonFeature.FEATURE_TYPE_FIELD_NAME)) {
+        missingRequiredFields.add(
+            GtfsGeoJsonFeature.FEATURE_COLLECTION_FIELD_NAME
+                + '.'
+                + GtfsGeoJsonFeature.FEATURE_TYPE_FIELD_NAME);
+      } else if (!featureObject
+          .get(GtfsGeoJsonFeature.FEATURE_TYPE_FIELD_NAME)
+          .getAsString()
+          .equals("Feature")) {
+        noticeContainer.addValidationNotice(
+            new UnsupportedFeatureTypeNotice(
+                featureIndex,
+                featureId,
+                featureObject.get(GtfsGeoJsonFeature.FEATURE_TYPE_FIELD_NAME).getAsString()));
       }
 
       // Handle properties
