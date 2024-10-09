@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Function;
+import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
+import org.mobilitydata.gtfsvalidator.performance.MemoryUsageRegister;
 import org.mobilitydata.gtfsvalidator.table.*;
 import org.mobilitydata.gtfsvalidator.util.CalendarUtil;
 import org.mobilitydata.gtfsvalidator.util.ServicePeriod;
@@ -54,6 +56,7 @@ public class FeedMetadata {
 
   public double validationTimeSeconds;
 
+  public List<MemoryUsage> memoryUsageRecords;
   // List of features that only require checking the presence of one record in the file.
   private final List<Pair<FeatureMetadata, String>> FILE_BASED_FEATURES =
       List.of(
@@ -116,6 +119,7 @@ public class FeedMetadata {
     }
 
     feedMetadata.loadSpecFeatures(feedContainer);
+    feedMetadata.memoryUsageRecords = MemoryUsageRegister.getInstance().getRegistry();
     return feedMetadata;
   }
 
