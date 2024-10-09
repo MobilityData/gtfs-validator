@@ -331,7 +331,7 @@ public class FeedMetadataTest {
         "trip_id, start_time, end_time, headway_secs\n" + "dummy1, 01:01:01, 01:01:02, 1\n";
     createDataFile(GtfsFrequency.FILENAME, content);
     validateSpecFeature(
-        "Frequency-Based Service",
+        "Frequencies",
         true,
         ImmutableList.of(GtfsFrequencyTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
@@ -341,7 +341,7 @@ public class FeedMetadataTest {
     String content = "trip_id, start_time, end_time, headway_secs\n";
     createDataFile(GtfsFrequency.FILENAME, content);
     validateSpecFeature(
-        "Frequency-Based Service",
+        "Frequencies",
         false,
         ImmutableList.of(GtfsFrequencyTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
