@@ -221,8 +221,7 @@ public class GtfsFeedLoader {
       // Validators with parser-error dependencies will not be returned here, but instead added to
       // the skippedValidators list.
       for (FileValidator validator :
-          validatorProvider.createMultiFileValidators(
-              feed, multiFileValidatorsWithParsingErrors::add)) {
+          validatorProvider.createMultiFileValidators(feed, skippedValidators)) {
         validatorCallables.add(
             () -> {
               NoticeContainer validatorNotices = new NoticeContainer();
@@ -249,7 +248,6 @@ public class GtfsFeedLoader {
         }
       }
     }
-
 
   /** Adds a ThreadExecutionError to the notice container. */
   private void addThreadExecutionError(
