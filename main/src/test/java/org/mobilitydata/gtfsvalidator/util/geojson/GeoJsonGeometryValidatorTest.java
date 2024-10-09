@@ -15,19 +15,19 @@ import org.locationtech.jts.geom.MultiPolygon;
 import org.locationtech.jts.geom.Polygon;
 import org.mobilitydata.gtfsvalidator.notice.InvalidGeometryNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsGeoJSONFeature;
+import org.mobilitydata.gtfsvalidator.table.GtfsGeoJsonFeature;
 
 @RunWith(JUnit4.class)
-public class GeoJSONGeometryValidatorTest {
-  private GeoJSONGeometryValidator validator;
+public class GeoJsonGeometryValidatorTest {
+  private GeoJsonGeometryValidator validator;
   private NoticeContainer noticeContainer;
-  private GtfsGeoJSONFeature feature;
+  private GtfsGeoJsonFeature feature;
 
   @Before
   public void setUp() {
     noticeContainer = new NoticeContainer();
-    validator = new GeoJSONGeometryValidator(noticeContainer);
-    feature = new GtfsGeoJSONFeature();
+    validator = new GeoJsonGeometryValidator(noticeContainer);
+    feature = new GtfsGeoJsonFeature();
     feature.setFeatureId("test_feature");
   }
 

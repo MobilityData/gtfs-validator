@@ -15,18 +15,18 @@ import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.InvalidGeometryNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 
-/** Runs GeoJSONFileLoader on test json data. */
+/** Runs GeoJsonFileLoader on test json data. */
 @RunWith(JUnit4.class)
-public class GeoJSONFileLoaderTest {
+public class GeoJsonFileLoaderTest {
 
-  static String validGeoJSONData;
-  static String invalidPolygonGeoJSONData;
+  static String validGeoJsonData;
+  static String invalidPolygonGeoJsonData;
   NoticeContainer noticeContainer;
 
   @BeforeClass
   public static void setUpBeforeClass() {
     // Create the valid and invalid JSON data strings, using single quotes for readability.
-    validGeoJSONData =
+    validGeoJsonData =
         String.join(
             "\n",
             "{",
@@ -69,7 +69,7 @@ public class GeoJSONFileLoaderTest {
             "  ]",
             "}");
 
-    invalidPolygonGeoJSONData =
+    invalidPolygonGeoJsonData =
         String.join(
             "\n",
             "{",
@@ -95,8 +95,8 @@ public class GeoJSONFileLoaderTest {
             "}");
 
     // Replace single quotes with double quotes for JSON compliance
-    validGeoJSONData = validGeoJSONData.replace("'", "\"");
-    invalidPolygonGeoJSONData = invalidPolygonGeoJSONData.replace("'", "\"");
+    validGeoJsonData = validGeoJsonData.replace("'", "\"");
+    invalidPolygonGeoJsonData = invalidPolygonGeoJsonData.replace("'", "\"");
   }
 
   @Before
@@ -105,15 +105,15 @@ public class GeoJSONFileLoaderTest {
   }
 
   @Test
-  public void testGtfsGeoJSONFileLoader() /*throws ValidatorLoaderException*/ {
+  public void testGtfsGeoJsonFileLoader() /*throws ValidatorLoaderException*/ {
 
-    var container = createLoader(validGeoJSONData);
-    var geoJSONContainer = (GtfsGeoJSONFeaturesContainer) container;
+    var container = createLoader(validGeoJsonData);
+    var geoJsonContainer = (GtfsGeoJsonFeaturesContainer) container;
     assertThat(container).isNotNull();
     assertThat(container.getTableStatus()).isEqualTo(TableStatus.PARSABLE_HEADERS_AND_ROWS);
-    assertThat(geoJSONContainer.entityCount()).isEqualTo(2);
-    assertThat(geoJSONContainer.getEntities().get(0).featureId()).isEqualTo("id1");
-    assertThat(geoJSONContainer.getEntities().get(1).featureId()).isEqualTo("id2");
+    assertThat(geoJsonContainer.entityCount()).isEqualTo(2);
+    assertThat(geoJsonContainer.getEntities().get(0).featureId()).isEqualTo("id1");
+    assertThat(geoJsonContainer.getEntities().get(1).featureId()).isEqualTo("id2");
   }
 
   @Test
@@ -125,7 +125,7 @@ public class GeoJSONFileLoaderTest {
   @Test
   public void testInvalidPolygonGeometry() {
     // Testing for invalid polygon where coordinates do not form a closed ring
-    var container = createLoader(invalidPolygonGeoJSONData);
+    var container = createLoader(invalidPolygonGeoJsonData);
 
     // Check if the container is in the correct state
     assertThat(container.getTableStatus()).isEqualTo(TableStatus.UNPARSABLE_ROWS);
@@ -141,8 +141,8 @@ public class GeoJSONFileLoaderTest {
   }
 
   private GtfsEntityContainer createLoader(String jsonData) {
-    GeoJSONFileLoader loader = new GeoJSONFileLoader();
-    var fileDescriptor = new GtfsGeoJSONFileDescriptor();
+    GeoJsonFileLoader loader = new GeoJsonFileLoader();
+    var fileDescriptor = new GtfsGeoJsonFileDescriptor();
     InputStream inputStream = new ByteArrayInputStream(jsonData.getBytes(StandardCharsets.UTF_8));
     return loader.load(fileDescriptor, null, inputStream, noticeContainer);
   }

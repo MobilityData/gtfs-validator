@@ -15,11 +15,9 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
-import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.TERM_DEFINITIONS;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
 
 /**
  * A polygon in `locations.geojson` is unparsable or invalid.
@@ -28,7 +26,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
  * href="http://www.opengis.net/doc/is/sfa/1.2.1" target="_blank"> OpenGIS Simple Features
  * Specification, section 6.1.11 </a>.
  */
-@GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(TERM_DEFINITIONS))
+@GtfsValidationNotice(severity = ERROR)
 public class InvalidGeometryNotice extends ValidationNotice {
 
   /** The id of the faulty record. */

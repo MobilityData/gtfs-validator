@@ -15,11 +15,9 @@
  */
 package org.mobilitydata.gtfsvalidator.notice;
 
-import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.TERM_DEFINITIONS;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
 
 /**
  * A GeoJSON feature has an unsupported geometry type in `locations.geojson`.
@@ -27,7 +25,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
  * <p>Each feature must have a geometry type that is supported by the GTFS spec. The supported
  * geometry types `Polygon` and `MultiPolygon`.
  */
-@GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(TERM_DEFINITIONS))
+@GtfsValidationNotice(severity = ERROR)
 public class UnsupportedGeometryTypeNotice extends ValidationNotice {
 
   /** The index of the feature in the feature collection. */

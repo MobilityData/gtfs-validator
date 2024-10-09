@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
  * relate to either a csv table or a GeoJSON file.
  *
  * @param <T> The entity that will be extracted from the file. For example, GtfsCalendarDate or
- *     GtfsGeoJSONFeature
+ *     GtfsGeoJsonFeature
  */
 public abstract class GtfsFileDescriptor<T extends GtfsEntity> {
 

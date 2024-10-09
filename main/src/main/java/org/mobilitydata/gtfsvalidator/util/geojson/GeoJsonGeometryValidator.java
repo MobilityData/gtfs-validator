@@ -5,20 +5,20 @@ import org.locationtech.jts.geom.*;
 import org.locationtech.jts.operation.valid.IsValidOp;
 import org.mobilitydata.gtfsvalidator.notice.InvalidGeometryNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsGeoJSONFeature;
+import org.mobilitydata.gtfsvalidator.table.GtfsGeoJsonFeature;
 
 /**
  * Utility class responsible for handling GeoJSON geometry validation and creation. This class
  * provides methods to create and validate Polygon and MultiPolygon geometries from GeoJSON data
  * structures.
  */
-public class GeoJSONGeometryValidator {
+public class GeoJsonGeometryValidator {
 
   // GeometryFactory instance used to create geometric shapes.
   private final GeometryFactory geometryFactory = new GeometryFactory();
   private final NoticeContainer noticeContainer;
 
-  public GeoJSONGeometryValidator(NoticeContainer noticeContainer) {
+  public GeoJsonGeometryValidator(NoticeContainer noticeContainer) {
     this.noticeContainer = noticeContainer;
   }
 
@@ -28,7 +28,7 @@ public class GeoJSONGeometryValidator {
    *
    * @return A valid Polygon object or null if the geometry is invalid.
    */
-  public Polygon createPolygon(JsonArray rings, GtfsGeoJSONFeature feature) {
+  public Polygon createPolygon(JsonArray rings, GtfsGeoJsonFeature feature) {
     Coordinate[][] polygonRings = parseCoordinates(rings);
     try {
       Polygon polygon =
@@ -51,7 +51,7 @@ public class GeoJSONGeometryValidator {
    *
    * @return A valid MultiPolygon object or null if any of the geometries are invalid.
    */
-  public MultiPolygon createMultiPolygon(JsonArray polygons, GtfsGeoJSONFeature feature) {
+  public MultiPolygon createMultiPolygon(JsonArray polygons, GtfsGeoJsonFeature feature) {
     Polygon[] multiPolygonArray = new Polygon[polygons.size()];
     for (int p = 0; p < polygons.size(); p++) {
       Polygon polygon = createPolygon(polygons.get(p).getAsJsonArray(), feature);
@@ -102,7 +102,7 @@ public class GeoJSONGeometryValidator {
   }
 
   /** Adds a validation notice to the NoticeContainer if the geometry is invalid. */
-  private void addInvalidGeometryNotice(Geometry geometry, GtfsGeoJSONFeature feature) {
+  private void addInvalidGeometryNotice(Geometry geometry, GtfsGeoJsonFeature feature) {
     noticeContainer.addValidationNotice(
         new InvalidGeometryNotice(
             feature.featureId(),
@@ -114,7 +114,7 @@ public class GeoJSONGeometryValidator {
    * Adds a validation notice to the NoticeContainer if an exception occurs during geometry
    * creation.
    */
-  private void addInvalidGeometryNotice(IllegalArgumentException e, GtfsGeoJSONFeature feature) {
+  private void addInvalidGeometryNotice(IllegalArgumentException e, GtfsGeoJsonFeature feature) {
     noticeContainer.addValidationNotice(
         new InvalidGeometryNotice(
             feature.featureId(), feature.geometryType().getType(), e.getLocalizedMessage()));

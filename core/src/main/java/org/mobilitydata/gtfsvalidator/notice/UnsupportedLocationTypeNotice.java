@@ -19,22 +19,18 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 
-/** A required element is missing in `locations.geojson`. */
+/**
+ * An unsupported location type is used in the `locations.geojson` file.
+ *
+ * <p>The supported type is `FeatureCollection`.
+ */
 @GtfsValidationNotice(severity = ERROR)
-public class MissingRequiredElementNotice extends ValidationNotice {
-  /** Index of the feature in the feature collection. */
-  private final Integer featureIndex;
+public class UnsupportedLocationTypeNotice extends ValidationNotice {
 
-  /** The id of the faulty record. */
-  private final String featureId;
+  /** The value of the unsupported location type. */
+  private final String locationTypeValue;
 
-  /** The missing required element. */
-  private final String missingElement;
-
-  public MissingRequiredElementNotice(
-      String featureId, String missingElement, Integer featureIndex) {
-    this.featureId = featureId;
-    this.featureIndex = featureIndex;
-    this.missingElement = missingElement;
+  public UnsupportedLocationTypeNotice(String locationTypeValue) {
+    this.locationTypeValue = locationTypeValue;
   }
 }

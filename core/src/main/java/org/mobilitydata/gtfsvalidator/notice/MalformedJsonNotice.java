@@ -19,22 +19,14 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 
-/** A required element is missing in `locations.geojson`. */
+/** A JSON file is malformed. */
 @GtfsValidationNotice(severity = ERROR)
-public class MissingRequiredElementNotice extends ValidationNotice {
-  /** Index of the feature in the feature collection. */
-  private final Integer featureIndex;
+public class MalformedJsonNotice extends ValidationNotice {
 
-  /** The id of the faulty record. */
-  private final String featureId;
+  /** The name of the faulty file. */
+  private final String filename;
 
-  /** The missing required element. */
-  private final String missingElement;
-
-  public MissingRequiredElementNotice(
-      String featureId, String missingElement, Integer featureIndex) {
-    this.featureId = featureId;
-    this.featureIndex = featureIndex;
-    this.missingElement = missingElement;
+  public MalformedJsonNotice(String filename) {
+    this.filename = filename;
   }
 }

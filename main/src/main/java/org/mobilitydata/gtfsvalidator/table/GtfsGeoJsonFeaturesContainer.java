@@ -26,54 +26,54 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
  * Container for GeoJSON features. Contrarily to the csv containers, this class is not auto
  * generated since we have only one such class.
  */
-public class GtfsGeoJSONFeaturesContainer
-    extends GtfsEntityContainer<GtfsGeoJSONFeature, GtfsGeoJSONFileDescriptor> {
+public class GtfsGeoJsonFeaturesContainer
+    extends GtfsEntityContainer<GtfsGeoJsonFeature, GtfsGeoJsonFileDescriptor> {
 
-  private final Map<String, GtfsGeoJSONFeature> byLocationIdMap = new HashMap<>();
+  private final Map<String, GtfsGeoJsonFeature> byLocationIdMap = new HashMap<>();
 
-  private final List<GtfsGeoJSONFeature> entities;
+  private final List<GtfsGeoJsonFeature> entities;
 
-  public GtfsGeoJSONFeaturesContainer(
-      GtfsGeoJSONFileDescriptor descriptor,
-      List<GtfsGeoJSONFeature> entities,
+  public GtfsGeoJsonFeaturesContainer(
+      GtfsGeoJsonFileDescriptor descriptor,
+      List<GtfsGeoJsonFeature> entities,
       NoticeContainer noticeContainer) {
     super(descriptor, TableStatus.PARSABLE_HEADERS_AND_ROWS);
     this.entities = entities;
     setupIndices(noticeContainer);
   }
 
-  public GtfsGeoJSONFeaturesContainer(
-      GtfsGeoJSONFileDescriptor descriptor, TableStatus tableStatus) {
+  public GtfsGeoJsonFeaturesContainer(
+      GtfsGeoJsonFileDescriptor descriptor, TableStatus tableStatus) {
     super(descriptor, tableStatus);
     this.entities = new ArrayList<>();
   }
 
   @Override
-  public Class<GtfsGeoJSONFeature> getEntityClass() {
-    return GtfsGeoJSONFeature.class;
+  public Class<GtfsGeoJsonFeature> getEntityClass() {
+    return GtfsGeoJsonFeature.class;
   }
 
   @Override
-  public List<GtfsGeoJSONFeature> getEntities() {
+  public List<GtfsGeoJsonFeature> getEntities() {
     return entities;
   }
 
   @Override
   public String gtfsFilename() {
-    return "locations.geojson";
+    return GtfsGeoJsonFeature.FILENAME;
   }
 
   @Override
-  public Optional<GtfsGeoJSONFeature> byTranslationKey(String recordId, String recordSubId) {
+  public Optional<GtfsGeoJsonFeature> byTranslationKey(String recordId, String recordSubId) {
     return Optional.empty();
   }
 
   private void setupIndices(NoticeContainer noticeContainer) {
-    for (GtfsGeoJSONFeature newEntity : entities) {
+    for (GtfsGeoJsonFeature newEntity : entities) {
       if (!newEntity.hasFeatureId()) {
         continue;
       }
-      GtfsGeoJSONFeature oldEntity = byLocationIdMap.getOrDefault(newEntity.featureId(), null);
+      GtfsGeoJsonFeature oldEntity = byLocationIdMap.getOrDefault(newEntity.featureId(), null);
       if (oldEntity == null) {
         byLocationIdMap.put(newEntity.featureId(), newEntity);
       }
@@ -81,7 +81,7 @@ public class GtfsGeoJSONFeaturesContainer
       //      else {
       //        noticeContainer.addValidationNotice(
       //            new JsonDuplicateKeyNotice(
-      //                gtfsFilename(), GtfsGeoJSONFeature.FEATURE_ID_FIELD_NAME,
+      //                gtfsFilename(), GtfsGeoJsonFeature.FEATURE_ID_FIELD_NAME,
       // newEntity.featureId()));
       //      }
     }

@@ -6,7 +6,7 @@ import org.locationtech.jts.geom.Polygonal;
 import org.mobilitydata.gtfsvalidator.util.geojson.GeometryType;
 
 /** This class contains the information from one feature in the GeoJSON file. */
-public final class GtfsGeoJSONFeature implements GtfsEntity {
+public final class GtfsGeoJsonFeature implements GtfsEntity {
   public static final String FILENAME = "locations.geojson";
 
   public static final String FEATURE_COLLECTION_FIELD_NAME = "features";
@@ -14,6 +14,8 @@ public final class GtfsGeoJSONFeature implements GtfsEntity {
   public static final String FEATURE_ID_FIELD_NAME = "id";
 
   public static final String FEATURE_PROPERTIES_FIELD_NAME = "properties";
+  public static final String FEATURE_PROPERTIES_STOP_NAME_FIELD_NAME = "stop_name";
+  public static final String FEATURE_PROPERTIES_STOP_DESC_FIELD_NAME = "stop_desc";
 
   public static final String GEOMETRY_FIELD_NAME = "geometry";
   public static final String GEOMETRY_TYPE_FIELD_NAME = "type";
@@ -22,8 +24,10 @@ public final class GtfsGeoJSONFeature implements GtfsEntity {
   private String featureId; // The id of a feature in the GeoJSON file.
   private GeometryType geometryType; // The type of the geometry.
   private Polygonal geometryDefinition; // The geometry of the feature.
+  private String stopName; // The name of the location as displayed to the riders.
+  private String stopDesc; // A description of the location.
 
-  public GtfsGeoJSONFeature() {}
+  public GtfsGeoJsonFeature() {}
 
   // TODO: Change the interface hierarchy so we dont need this. It's not relevant for geojson
   @Override
@@ -66,5 +70,29 @@ public final class GtfsGeoJSONFeature implements GtfsEntity {
 
   public void setGeometryType(GeometryType type) {
     this.geometryType = type;
+  }
+
+  public String stopName() {
+    return stopName;
+  }
+
+  public Boolean hasStopName() {
+    return stopName != null;
+  }
+
+  public void setStopName(@Nullable String stopName) {
+    this.stopName = stopName;
+  }
+
+  public String stopDesc() {
+    return stopDesc;
+  }
+
+  public Boolean hasStopDesc() {
+    return stopDesc != null;
+  }
+
+  public void setStopDesc(@Nullable String stopDesc) {
+    this.stopDesc = stopDesc;
   }
 }
