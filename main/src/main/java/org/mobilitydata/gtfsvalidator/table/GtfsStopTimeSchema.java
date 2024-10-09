@@ -29,7 +29,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.Index;
 import org.mobilitydata.gtfsvalidator.annotation.NonNegative;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
-import org.mobilitydata.gtfsvalidator.annotation.RecommendedColumn;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
@@ -91,7 +90,6 @@ public interface GtfsStopTimeSchema extends GtfsEntity {
   double shapeDistTraveled();
 
   @DefaultValue("1")
-  @RecommendedColumn
   GtfsStopTimeTimepoint timepoint();
 
   @FieldType(FieldTypeEnum.ID)
