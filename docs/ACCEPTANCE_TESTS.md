@@ -106,7 +106,7 @@ We follow this process:
 
 ## Performance metrics within the acceptance reports
 
-There are two man metrics added to the acceptance report comment at the PR level, _Validation Time_ and _Memory Consumption_.
+There are two main metrics added to the acceptance report comment at the PR level, _Validation Time_ and _Memory Consumption_.
 The performance metrics are **not a blocker** as performance might vary due to external factors including GitHub infrastructure performance.
 However, large jumps in performance values should be investigated before approving a PR.
 
@@ -115,6 +115,11 @@ The validation time consists in general metrics like average, median, standard d
 This metrics can be affected by addition of new validators than introduce a penalty in processing time.
 
 ### Memory Consumption
+There are two main patterns on how to take a memory usage snapshot:
+
+- MemoryMonitor annotation: This annotation persists the memory usage in the target method. As a limitation, for methods that have concurrent thread executions, the annotation persists in multiple snapshots. This cannot be very clear when analyzing memory usage.
+- MemoryUsageRegister: using the registry directly give you more flexibility than the annotation and can be used in cases where MemoryMonitor produces multiple entries on concurrent executed methods.
+
 The memory consumption section contains three tables.
 - The first, list the first 25 datasets that the difference increased memory comparing with the main branch.
 - The second, list the first 25 datasets that the difference decreased memory comparing with the main branch.

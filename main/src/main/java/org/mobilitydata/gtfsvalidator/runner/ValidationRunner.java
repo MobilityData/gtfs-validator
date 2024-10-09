@@ -76,6 +76,8 @@ public class ValidationRunner {
   @MemoryMonitor
   public Status run(ValidationRunnerConfig config) {
     MemoryUsageRegister.getInstance().clearRegistry();
+    // Registering the memory metrics manually to avoid multiple entries due to concurrent calls
+    // and exclude from the metric the generation of the reports.
     var memoryBefore =
         MemoryUsageRegister.getInstance().getMemoryUsageSnapshot("ValidationRunner.run", null);
     VersionInfo versionInfo =
