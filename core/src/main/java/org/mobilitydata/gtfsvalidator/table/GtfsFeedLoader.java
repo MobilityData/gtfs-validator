@@ -16,7 +16,10 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import com.google.common.flogger.FluentLogger;
 import java.io.InputStream;
 import java.lang.reflect.Modifier;
@@ -57,6 +60,24 @@ public class GtfsFeedLoader {
   private final List<Class<? extends FileValidator>> multiFileValidatorsWithParsingErrors =
       new ArrayList<>();
 
+  public enum SkippedValidatorReason {
+    SINGLE_ENTITY_VALIDATORS_WITH_ERROR,
+    SINGLE_FILE_VALIDATORS_WITH_ERROR,
+    MULTI_FILE_VALIDATORS_WITH_ERROR,
+    VALIDATORS_NO_NEED_TO_RUN
+  }
+
+  /**
+   * After running, will contain all validators that were skipped, grouped by
+   * SkippedValidatorReason. Get the synchronized version because validation is multithreaded.
+   */
+  private final Multimap<SkippedValidatorReason, Class<?>> skippedValidators =
+      Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
+
+  public Multimap<SkippedValidatorReason, Class<?>> getSkippedValidators() {
+    return skippedValidators;
+  }
+
   public GtfsFeedLoader(
       ImmutableList<Class<? extends GtfsFileDescriptor<?>>> tableDescriptorClasses) {
     for (Class<? extends GtfsFileDescriptor<?>> clazz : tableDescriptorClasses) {
@@ -90,17 +111,13 @@ public class GtfsFeedLoader {
     this.numThreads = numThreads;
   }
 
-  public List<Class<? extends FileValidator>> getMultiFileValidatorsWithParsingErrors() {
-    return Collections.unmodifiableList(multiFileValidatorsWithParsingErrors);
-  }
-
   @SuppressWarnings("unchecked")
   public GtfsFeedContainer loadAndValidate(
       GtfsInput gtfsInput, ValidatorProvider validatorProvider, NoticeContainer noticeContainer)
       throws InterruptedException {
     logger.atInfo().log("Loading in %d threads", numThreads);
     ExecutorService exec = Executors.newFixedThreadPool(numThreads);
-
+    skippedValidators.clear();
     List<Callable<TableAndNoticeContainers>> loaderCallables = new ArrayList<>();
     Map<String, GtfsTableDescriptor<?>> remainingDescriptors =
         (Map<String, GtfsTableDescriptor<?>>) tableDescriptors.clone();
@@ -115,11 +132,16 @@ public class GtfsFeedLoader {
               GtfsEntityContainer<?, ?> tableContainer;
               // The descriptor knows what loader to use to load the file
               TableLoader tableLoader = tableDescriptor.getTableLoader();
+              tableLoader.setSkippedValidators(skippedValidators);
               try (InputStream inputStream = gtfsInput.getFile(filename)) {
                 try {
                   tableContainer =
                       tableLoader.load(
-                          tableDescriptor, validatorProvider, inputStream, loaderNotices);
+                          tableDescriptor,
+                          validatorProvider,
+                          inputStream,
+                          loaderNotices,
+                          skippedValidators);
                 } catch (RuntimeException e) {
                   // This handler should prevent ExecutionException for
                   // this thread. We catch an exception here for storing
@@ -162,8 +184,7 @@ public class GtfsFeedLoader {
       // Validators with parser-error dependencies will not be returned here, but instead added to
       // the skippedValidators list.
       for (FileValidator validator :
-          validatorProvider.createMultiFileValidators(
-              feed, multiFileValidatorsWithParsingErrors::add)) {
+          validatorProvider.createMultiFileValidators(feed, skippedValidators)) {
         validatorCallables.add(
             () -> {
               NoticeContainer validatorNotices = new NoticeContainer();

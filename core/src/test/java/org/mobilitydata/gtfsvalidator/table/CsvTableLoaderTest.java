@@ -5,11 +5,11 @@ import static org.mobilitydata.gtfsvalidator.TestUtils.toInputStream;
 import static org.mobilitydata.gtfsvalidator.TestUtils.validationNoticeTypes;
 import static org.mockito.Mockito.*;
 
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,11 +19,9 @@ import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntity;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestSingleFileValidator;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestTableDescriptor;
-import org.mobilitydata.gtfsvalidator.validator.FileValidator;
 import org.mobilitydata.gtfsvalidator.validator.GtfsFieldValidator;
 import org.mobilitydata.gtfsvalidator.validator.TableHeaderValidator;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
-import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
@@ -51,7 +49,12 @@ public class CsvTableLoaderTest {
 
     var loadedContainer =
         CsvFileLoader.getInstance()
-            .load(testTableDescriptor, validatorProvider, null, loaderNotices);
+            .load(
+                testTableDescriptor,
+                validatorProvider,
+                null,
+                loaderNotices,
+                ArrayListMultimap.create());
 
     assertThat(validationNoticeTypes(loaderNotices)).containsExactly(CsvParsingFailedNotice.class);
     assertThat(loadedContainer).isEqualTo(mockContainer);
@@ -67,7 +70,12 @@ public class CsvTableLoaderTest {
 
     var loadedContainer =
         CsvFileLoader.getInstance()
-            .load(testTableDescriptor, validatorProvider, csvInputStream, loaderNotices);
+            .load(
+                testTableDescriptor,
+                validatorProvider,
+                csvInputStream,
+                loaderNotices,
+                ArrayListMultimap.create());
 
     assertThat(loaderNotices.getValidationNotices())
         .containsExactly(new EmptyFileNotice("filename"));
@@ -100,7 +108,12 @@ public class CsvTableLoaderTest {
 
     var loadedContainer =
         CsvFileLoader.getInstance()
-            .load(testTableDescriptor, validatorProvider, csvInputStream, loaderNotices);
+            .load(
+                testTableDescriptor,
+                validatorProvider,
+                csvInputStream,
+                loaderNotices,
+                ArrayListMultimap.create());
 
     assertThat(loaderNotices.getValidationNotices()).containsExactly(headerValidationNotice);
     assertThat(loadedContainer).isEqualTo(mockContainer);
@@ -116,7 +129,12 @@ public class CsvTableLoaderTest {
 
     var loadedContainer =
         CsvFileLoader.getInstance()
-            .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
+            .load(
+                testTableDescriptor,
+                validatorProvider,
+                inputStream,
+                loaderNotices,
+                ArrayListMultimap.create());
 
     assertThat(loaderNotices.getValidationNotices())
         .containsExactly(new InvalidRowLengthNotice("filename.txt", 2, 1, 2));
@@ -129,15 +147,19 @@ public class CsvTableLoaderTest {
     when(validatorProvider.getTableHeaderValidator()).thenReturn(mock(TableHeaderValidator.class));
     when(validatorProvider.getFieldValidator()).thenReturn(mock(GtfsFieldValidator.class));
     GtfsTestSingleFileValidator validator = mock(GtfsTestSingleFileValidator.class);
-    ArgumentCaptor<Consumer<Class<? extends FileValidator>>> captor =
-        ArgumentCaptor.forClass(Consumer.class);
-    when(validatorProvider.createSingleFileValidators(ArgumentMatchers.any(), captor.capture()))
-        .thenReturn((List.of(validator)));
+    when(validatorProvider.createSingleFileValidators(
+            ArgumentMatchers.any(), ArgumentMatchers.any()))
+        .thenReturn(List.of(validator));
     InputStream inputStream = toInputStream("id,stop_lat,_no_name_\n" + "s1, 23.00, no_value\n");
 
     var loadedContainer =
         CsvFileLoader.getInstance()
-            .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
+            .load(
+                testTableDescriptor,
+                validatorProvider,
+                inputStream,
+                loaderNotices,
+                ArrayListMultimap.create());
 
     assertThat(loadedContainer.getTableStatus()).isEqualTo(TableStatus.PARSABLE_HEADERS_AND_ROWS);
     verify(validator, times(1)).validate(any());
@@ -173,7 +195,12 @@ public class CsvTableLoaderTest {
 
     var loadedContainer =
         CsvFileLoader.getInstance()
-            .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
+            .load(
+                testTableDescriptor,
+                validatorProvider,
+                inputStream,
+                loaderNotices,
+                ArrayListMultimap.create());
 
     assertThat(loaderNotices.getValidationNotices())
         .contains(new MissingRequiredFieldNotice("filename.txt", 2, "code"));

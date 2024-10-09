@@ -23,7 +23,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
-import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
@@ -61,12 +60,9 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
     }
   }
 
-  public Boolean shouldCallValidate(CsvHeader header, NoticeContainer noticeContainer) {
+  public Boolean shouldCallValidate(ColumnInspector header) {
     if (!header.hasColumn(GtfsStop.STOP_NAME_FIELD_NAME)
         && !header.hasColumn(GtfsStop.LOCATION_TYPE_FIELD_NAME)) {
-      // TODO: No notice here. Instead put validator in list of not run validators (in
-      // CsvFileLoader).
-      noticeContainer.addValidationNotice(new StopNameAndLocationIdColumnsBothMissingNotice());
       return false;
     }
     return true;

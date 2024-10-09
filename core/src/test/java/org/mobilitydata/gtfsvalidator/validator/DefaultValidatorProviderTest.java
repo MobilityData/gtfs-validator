@@ -2,8 +2,11 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
+import static org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader.SkippedValidatorReason.*;
 
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Multimap;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
@@ -11,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.TestUtils;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
 import org.mobilitydata.gtfsvalidator.table.TableStatus;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntity;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestEntityValidator;
@@ -34,6 +38,8 @@ public class DefaultValidatorProviderTest {
                     GtfsTestSingleFileValidator.class,
                     WholeFeedValidator.class)));
 
+    Multimap<GtfsFeedLoader.SkippedValidatorReason, Class<?>> skippedValidators =
+        ArrayListMultimap.create();
     GtfsTestTableContainer tableContainer =
         new GtfsTestTableContainer(TableStatus.PARSABLE_HEADERS_AND_ROWS);
     GtfsFeedContainer feedContainer = new GtfsFeedContainer(ImmutableList.of(tableContainer));
@@ -41,27 +47,21 @@ public class DefaultValidatorProviderTest {
         new ArrayList<>();
     assertThat(
             provider
-                .createSingleEntityValidators(
-                    GtfsTestEntity.class, singleEntityValidatorsWithParsingErrors::add)
+                .createSingleEntityValidators(GtfsTestEntity.class, null, skippedValidators)
                 .stream()
                 .map(Object::getClass))
         .containsExactly(GtfsTestEntityValidator.class);
 
-    List<Class<? extends FileValidator>> singleFileValidatorsWithParsingErrors = new ArrayList<>();
     assertThat(
-            provider
-                .createSingleFileValidators(
-                    tableContainer, singleFileValidatorsWithParsingErrors::add)
-                .stream()
+            provider.createSingleFileValidators(tableContainer, skippedValidators).stream()
                 .map(Object::getClass))
         .containsExactly(GtfsTestSingleFileValidator.class);
 
-    List<Class<? extends FileValidator>> skippedValidators = new ArrayList<>();
     assertThat(
-            provider.createMultiFileValidators(feedContainer, skippedValidators::add).stream()
+            provider.createMultiFileValidators(feedContainer, skippedValidators).stream()
                 .map(Object::getClass))
         .containsExactly(WholeFeedValidator.class);
-    assertThat(skippedValidators).isEmpty();
+    assertThat(skippedValidators.get(MULTI_FILE_VALIDATORS_WITH_ERROR)).isEmpty();
   }
 
   @Test
@@ -76,6 +76,8 @@ public class DefaultValidatorProviderTest {
                     GtfsTestSingleFileValidator.class,
                     WholeFeedValidator.class)));
 
+    Multimap<GtfsFeedLoader.SkippedValidatorReason, Class<?>> skippedValidators =
+        ArrayListMultimap.create();
     // Create 2 tables, one with errors and the other not.
     // This will let us test the multi-file validator.
     GtfsTestTableContainer tableContainer = new GtfsTestTableContainer(TableStatus.UNPARSABLE_ROWS);
@@ -85,23 +87,22 @@ public class DefaultValidatorProviderTest {
     GtfsFeedContainer feedContainer =
         new GtfsFeedContainer(ImmutableList.of(tableContainer, tableContainer2));
 
-    List<Class<? extends FileValidator>> skippedValidators = new ArrayList<>();
     // First test the multi file validators. Apparently the FeedContainerValidator is considered a
     // multi-file validator.
     // We should not be able to create any validator since the dependant file container has parsing
     // errors. For the WholeFeedValidator the feedContainer is also in error since one of its
     // file is in error.
-    assertThat(provider.createMultiFileValidators(feedContainer, skippedValidators::add)).isEmpty();
+    assertThat(provider.createMultiFileValidators(feedContainer, skippedValidators)).isEmpty();
     // And the 2 validators should be skipped
-    assertThat(skippedValidators)
+    assertThat(skippedValidators.get(MULTI_FILE_VALIDATORS_WITH_ERROR))
         .containsExactly(WholeFeedValidator.class, GtfsTestMultiFileValidator.class);
 
     skippedValidators.clear();
     // Try with the single file validator.  We should not be able to build any validator since the
     // file has errors.
-    assertThat(provider.createSingleFileValidators(tableContainer, skippedValidators::add))
-        .isEmpty();
+    assertThat(provider.createSingleFileValidators(tableContainer, skippedValidators)).isEmpty();
     // And it should tell us that the single file validator was skipped
-    assertThat(skippedValidators).containsExactly(GtfsTestSingleFileValidator.class);
+    assertThat(skippedValidators.get(SINGLE_FILE_VALIDATORS_WITH_ERROR))
+        .containsExactly(GtfsTestSingleFileValidator.class);
   }
 }

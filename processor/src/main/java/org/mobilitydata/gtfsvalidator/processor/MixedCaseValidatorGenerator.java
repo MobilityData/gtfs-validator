@@ -27,7 +27,7 @@ import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.MixedCaseRecommendedFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
+import org.mobilitydata.gtfsvalidator.validator.ColumnInspector;
 import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
 
 /**
@@ -122,8 +122,7 @@ public class MixedCaseValidatorGenerator {
             .addModifiers(Modifier.PUBLIC)
             .addAnnotation(Override.class)
             .returns(Boolean.class)
-            .addParameter(CsvHeader.class, "header")
-            .addParameter(NoticeContainer.class, "noticeContainer");
+            .addParameter(ColumnInspector.class, "header");
 
     shouldCallValidateMethod
         .addComment("All mixed case columns must be absent to not call the validate method.")

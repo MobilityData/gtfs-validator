@@ -19,9 +19,10 @@ package org.mobilitydata.gtfsvalidator.parsing;
 import com.google.common.base.Strings;
 import java.util.HashMap;
 import javax.annotation.Nullable;
+import org.mobilitydata.gtfsvalidator.validator.ColumnInspector;
 
 /** Read access to a header row in a CSV file. */
-public class CsvHeader {
+public class CsvHeader implements ColumnInspector {
   private final HashMap<String, Integer> columnIndices = new HashMap<>();
   private final String[] columnNames;
 

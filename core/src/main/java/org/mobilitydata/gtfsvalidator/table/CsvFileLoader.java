@@ -2,6 +2,7 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Multimap;
 import com.google.common.flogger.FluentLogger;
 import com.univocity.parsers.common.TextParsingException;
 import com.univocity.parsers.csv.CsvParserSettings;
@@ -43,7 +44,8 @@ public final class CsvFileLoader extends TableLoader {
       GtfsFileDescriptor fileDescriptor,
       ValidatorProvider validatorProvider,
       InputStream csvInputStream,
-      NoticeContainer noticeContainer) {
+      NoticeContainer noticeContainer,
+      Multimap<GtfsFeedLoader.SkippedValidatorReason, Class<?>> skippedValidators) {
     GtfsTableDescriptor tableDescriptor = (GtfsTableDescriptor) fileDescriptor;
     final String gtfsFilename = tableDescriptor.gtfsFilename();
 
@@ -92,18 +94,8 @@ public final class CsvFileLoader extends TableLoader {
     final List<GtfsEntity> entities = new ArrayList<>();
     boolean hasUnparsableRows = false;
     final List<SingleEntityValidator<GtfsEntity>> singleEntityValidators =
-        createSingleEntityValidators(tableDescriptor.getEntityClass(), validatorProvider);
+        createSingleEntityValidators(tableDescriptor.getEntityClass(), header, validatorProvider);
 
-    // Remove validators that we should not call because of missing columns.
-    var iterator = singleEntityValidators.iterator();
-    while (iterator.hasNext()) {
-      var validator = iterator.next();
-      var shouldValidate = validator.shouldCallValidate(header, noticeContainer);
-      if (!shouldValidate) {
-        iterator.remove();
-        // TODO: Add the removed validator to a list of validators that were not called
-      }
-    }
     try {
       for (CsvRow row : csvFile) {
         if (row.getRowNumber() % 200000 == 0) {

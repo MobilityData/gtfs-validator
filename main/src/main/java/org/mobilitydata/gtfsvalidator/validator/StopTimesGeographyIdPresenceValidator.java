@@ -19,7 +19,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.ForbiddenGeographyIdNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 
 /**
@@ -66,7 +65,7 @@ public class StopTimesGeographyIdPresenceValidator extends SingleEntityValidator
   }
 
   @Override
-  public Boolean shouldCallValidate(CsvHeader header, NoticeContainer noticeContainer) {
+  public Boolean shouldCallValidate(ColumnInspector header) {
     if (header.hasColumn("stop_id")
         || header.hasColumn("location_group_id")
         || header.hasColumn("location_id")) {
