@@ -11,24 +11,14 @@ public class ValidationPerformanceCollector {
   public static final int MEMORY_USAGE_COMPARE_MAX = 10;
   private final Map<String, Double> referenceTimes;
   private final Map<String, Double> latestTimes;
-  private final BoundedPriorityQueue<DatasetMemoryUsage> datasetsDecreasedMemoryUsage;
-  private final BoundedPriorityQueue<DatasetMemoryUsage> datasetsIncreasedMemoryUsage;
   private final List<DatasetMemoryUsage> datasetsMemoryUsageNoReference;
+  private final List<DatasetMemoryUsage> datasetsMemoryUsageWithReference;
 
   public ValidationPerformanceCollector() {
     this.referenceTimes = new HashMap<>();
     this.latestTimes = new HashMap<>();
-    this.datasetsDecreasedMemoryUsage =
-        new BoundedPriorityQueue<>(
-            MEMORY_USAGE_COMPARE_MAX,
-            MEMORY_USAGE_COMPARE_MAX,
-            (new UsedMemoryIncreasedComparator().reversed()));
-    this.datasetsIncreasedMemoryUsage =
-        new BoundedPriorityQueue<>(
-            MEMORY_USAGE_COMPARE_MAX,
-            MEMORY_USAGE_COMPARE_MAX,
-            new UsedMemoryIncreasedComparator());
     this.datasetsMemoryUsageNoReference = new ArrayList<>();
+    this.datasetsMemoryUsageWithReference = new ArrayList<>();
   }
 
   public void addReferenceTime(String sourceId, Double time) {
@@ -211,24 +201,26 @@ public class ValidationPerformanceCollector {
 
     b.append("</details>\n\n");
 
-    if (datasetsIncreasedMemoryUsage.size() > 0
-        || datasetsDecreasedMemoryUsage.size() > 0
-        || datasetsMemoryUsageNoReference.size() > 0) {
+    if (datasetsMemoryUsageWithReference.size() > 0) {
       b.append("<details>\n");
       b.append("<summary><strong>📜 Memory Consumption</strong></summary>\n");
-      if (datasetsIncreasedMemoryUsage.size() > 0) {
-        List<DatasetMemoryUsage> increasedMemoryUsages =
-            getDatasetMemoryUsages(datasetsIncreasedMemoryUsage);
-        addMemoryUsageReport(increasedMemoryUsages, "memory has increased", b, true);
-      }
-      if (datasetsDecreasedMemoryUsage.size() > 0) {
-        List<DatasetMemoryUsage> decreasedMemoryUsages =
-            getDatasetMemoryUsages(datasetsDecreasedMemoryUsage);
-        addMemoryUsageReport(decreasedMemoryUsages, "memory has decreased", b, true);
+      if (datasetsMemoryUsageWithReference.size() > 0) {
+        datasetsMemoryUsageWithReference.sort(new UsedMemoryIncreasedComparator());
+        addMemoryUsageReport(
+            datasetsMemoryUsageWithReference.subList(
+                0, Math.min(datasetsMemoryUsageWithReference.size(), MEMORY_USAGE_COMPARE_MAX)),
+            "memory has increased",
+            b,
+            true);
+        datasetsMemoryUsageWithReference.sort(new UsedMemoryDecreasedComparator());
+        var decreasedList =
+            datasetsMemoryUsageWithReference.subList(
+                0, Math.min(datasetsMemoryUsageWithReference.size(), MEMORY_USAGE_COMPARE_MAX));
+        addMemoryUsageReport(decreasedList, "memory has decreased", b, true);
       }
       if (datasetsMemoryUsageNoReference.size() > 0) {
         //        Sorting from the highest to the lowest memory usage
-        datasetsMemoryUsageNoReference.sort((new LatestReportUsedMemoryComparator()).reversed());
+        datasetsMemoryUsageNoReference.sort(new UsedMemoryDecreasedComparator());
         addMemoryUsageReport(
             datasetsMemoryUsageNoReference.subList(
                 0, Math.min(datasetsMemoryUsageNoReference.size(), MEMORY_USAGE_COMPARE_MAX)),
@@ -239,13 +231,6 @@ public class ValidationPerformanceCollector {
       b.append("</details>\n");
     }
     return b.toString();
-  }
-
-  private List<DatasetMemoryUsage> getDatasetMemoryUsages(
-      BoundedPriorityQueue<DatasetMemoryUsage> datasetsMemoryUsage) {
-    List<DatasetMemoryUsage> increasedMemoryUsages = new ArrayList<>(datasetsMemoryUsage);
-    increasedMemoryUsages.sort(datasetsMemoryUsage.comparator());
-    return increasedMemoryUsages;
   }
 
   private void addMemoryUsageReport(
@@ -332,8 +317,7 @@ public class ValidationPerformanceCollector {
         && referenceReport.getMemoryUsageRecords().size() > 0
         && latestReport.getMemoryUsageRecords() != null
         && latestReport.getMemoryUsageRecords().size() > 0) {
-      datasetsIncreasedMemoryUsage.offer(datasetMemoryUsage);
-      datasetsDecreasedMemoryUsage.offer(datasetMemoryUsage);
+      datasetsMemoryUsageWithReference.add(datasetMemoryUsage);
     } else {
       datasetsMemoryUsageNoReference.add(datasetMemoryUsage);
     }
