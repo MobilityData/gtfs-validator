@@ -60,7 +60,7 @@ public class TimepointTimeValidator extends FileValidator {
       return;
     }
     for (GtfsStopTime stopTime : stopTimes.getEntities()) {
-      if (!stopTime.hasTimepoint()) {
+      if ((stopTime.hasArrivalTime() || stopTime.hasDepartureTime()) && !stopTime.hasTimepoint()) {
         noticeContainer.addValidationNotice(new MissingTimepointValueNotice(stopTime));
       }
       if (isTimepoint(stopTime)) {
