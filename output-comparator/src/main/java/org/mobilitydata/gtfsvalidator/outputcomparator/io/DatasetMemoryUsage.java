@@ -1,5 +1,6 @@
 package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
+import com.google.common.flogger.FluentLogger;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,8 @@ import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
  * with the memory usage of a dataset when running the validation process.
  */
 public class DatasetMemoryUsage {
+
+  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
   private String datasetId;
   private List<MemoryUsage> referenceMemoryUsage;
@@ -29,12 +32,28 @@ public class DatasetMemoryUsage {
     if (referenceMemoryUsage != null) {
       this.referenceUsedMemoryByKey =
           referenceMemoryUsage.stream()
-              .collect(Collectors.toUnmodifiableMap(MemoryUsage::getKey, MemoryUsage::usedMemory));
+              .collect(
+                  Collectors.toUnmodifiableMap(
+                      MemoryUsage::getKey,
+                      MemoryUsage::usedMemory,
+                      (existing, replacement) -> {
+                        logger.atWarning().log(
+                            "Duplicate key found in referenceMemoryUsage: " + existing);
+                        return existing;
+                      }));
     }
     if (latestMemoryUsage != null) {
       this.latestUsedMemoryByKey =
           latestMemoryUsage.stream()
-              .collect(Collectors.toUnmodifiableMap(MemoryUsage::getKey, MemoryUsage::usedMemory));
+              .collect(
+                  Collectors.toUnmodifiableMap(
+                      MemoryUsage::getKey,
+                      MemoryUsage::usedMemory,
+                      (existing, replacement) -> {
+                        logger.atWarning().log(
+                            "Duplicate key found in latestMemoryUsage: " + existing);
+                        return existing;
+                      }));
     }
   }
 
