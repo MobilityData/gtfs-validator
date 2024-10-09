@@ -22,7 +22,7 @@ import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
  * @see NoInvalidCharactersNotice
  */
 public class NoInvalidCharactersValidatorGenerator {
-  private static final String REPLACEMENT_CHAR = "\uFFFD";
+  static final String REPLACEMENT_CHAR = "\uFFFD";
 
   public ImmutableList<TypeSpec> generateValidator(List<GtfsFileDescriptor> fileDescriptors) {
     ImmutableList.Builder<TypeSpec> validators = ImmutableList.builder();
@@ -62,10 +62,11 @@ public class NoInvalidCharactersValidatorGenerator {
           .beginControlFlow(
               "if (entity.$L())", FieldNameConverter.hasMethodName(noInvalidCharactersField.name()))
           .addStatement("$T value = entity.$L()", String.class, noInvalidCharactersField.name())
-          .beginControlFlow("if (value.contains(REPLACEMENT_CHAR))")
+          .beginControlFlow("if (value.contains(\"$L\"))", REPLACEMENT_CHAR)
           .addStatement(
-              "noticeContainer.addValidationNotice(new $T(entity.csvRowNumber(), \"$L\", value))",
+              "noticeContainer.addValidationNotice(new $T(\"$L\", \"$L\", value, entity.csvRowNumber()))",
               NoInvalidCharactersNotice.class,
+              fileDescriptor.filename(),
               FieldNameConverter.gtfsColumnName(noInvalidCharactersField.name()))
           .endControlFlow()
           .endControlFlow();
