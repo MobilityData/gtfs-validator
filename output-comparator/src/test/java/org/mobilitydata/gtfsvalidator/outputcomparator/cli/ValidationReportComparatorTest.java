@@ -18,6 +18,7 @@ import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.outputcomparator.cli.ValidationReportComparator.Result;
+import org.mobilitydata.gtfsvalidator.outputcomparator.io.ValidationPerformanceCollector;
 import org.mobilitydata.gtfsvalidator.outputcomparator.model.SourceUrlContainer;
 import org.mobilitydata.gtfsvalidator.outputcomparator.model.report.AcceptanceReport;
 import org.mobilitydata.gtfsvalidator.outputcomparator.model.report.AffectedSource;
@@ -144,7 +145,9 @@ public class ValidationReportComparatorTest {
                 + "</details>\n\n"
                 + "<details>\n"
                 + "<summary><strong>📜 Memory Consumption</strong></summary>\n"
-                + "<p>List of 25 datasets(no reference available).</p>\n\n"
+                + "<p>List of "
+                + ValidationPerformanceCollector.MEMORY_USAGE_COMPARE_MAX
+                + " datasets(no reference available).</p>\n\n"
                 + "| Dataset ID                  | Snapshot Key(Used Memory)  | Reference  | Latest     |\n"
                 + "|-----------------------------|-------------------|----------------|----------------|\n"
                 + "</details>\n\n");
