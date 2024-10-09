@@ -104,6 +104,33 @@ We follow this process:
 
 <img src="/docs/Acceptance-test-process.jpg" width="750">
 
+## Performance metrics within the acceptance reports
+
+There are two main metrics added to the acceptance report comment at the PR level, _Validation Time_ and _Memory Consumption_.
+The performance metrics are **not a blocker** as performance might vary due to external factors including GitHub infrastructure performance.
+However, large jumps in performance values should be investigated before approving a PR.
+
+### Validation Time
+The validation time consists in general metrics like average, median, standard deviation, minimums and maximums.
+This metrics can be affected by addition of new validators than introduce a penalty in processing time.
+
+### Memory Consumption
+There are two main patterns on how to take a memory usage snapshot:
+
+- MemoryMonitor annotation: This annotation persists the memory usage in the target method. As a limitation, for methods that have concurrent thread executions, the annotation persists in multiple snapshots. This cannot be very clear when analyzing memory usage.
+- MemoryUsageRegister: using the registry directly give you more flexibility than the annotation and can be used in cases where MemoryMonitor produces multiple entries on concurrent executed methods.
+
+The memory consumption section contains three tables.
+- The first, list the first 25 datasets that the difference increased memory comparing with the main branch.
+- The second, list the first 25 datasets that the difference decreased memory comparing with the main branch.
+- The third, list(not always visible) the first 25 datasets that were not available for comparison as the main branch didn't contain the memory usage information.
+
+Memory usage is collected in critical points and persists in the JSON report. The added snapshot points are:
+- _GtfsFeedLoader.loadTables_: This is taken after the validator loads all files.
+- _GtfsFeedLoader.executeMultiFileValidators_: This is taken after the validator executed all multi-file validators
+- _org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader.loadAndValidate_: This is taken for the complete load and validation method.
+- _ValidationRunner.run_: This is taken for the complete run of the validator, excluding report generation
+
 ## Instructions to run the pipeline
 
 1. Provide code changes by creating a new PR on the [GitHub repository](https://github.com/MobilityData/gtfs-validator);

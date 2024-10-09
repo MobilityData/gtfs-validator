@@ -37,6 +37,8 @@ import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
+import org.mobilitydata.gtfsvalidator.performance.MemoryMonitor;
+import org.mobilitydata.gtfsvalidator.performance.MemoryUsageRegister;
 import org.mobilitydata.gtfsvalidator.report.HtmlReportGenerator;
 import org.mobilitydata.gtfsvalidator.report.JsonReport;
 import org.mobilitydata.gtfsvalidator.report.JsonReportGenerator;
@@ -71,7 +73,13 @@ public class ValidationRunner {
     this.versionResolver = versionResolver;
   }
 
+  @MemoryMonitor
   public Status run(ValidationRunnerConfig config) {
+    MemoryUsageRegister.getInstance().clearRegistry();
+    // Registering the memory metrics manually to avoid multiple entries due to concurrent calls
+    // and exclude from the metric the generation of the reports.
+    var memoryBefore =
+        MemoryUsageRegister.getInstance().getMemoryUsageSnapshot("ValidationRunner.run", null);
     VersionInfo versionInfo =
         versionResolver.getVersionInfoWithTimeout(
             Duration.ofSeconds(5), config.skipValidatorUpdate());
@@ -133,7 +141,13 @@ public class ValidationRunner {
     }
     FeedMetadata feedMetadata = FeedMetadata.from(feedContainer, gtfsInput.getFilenames());
     closeGtfsInput(gtfsInput, noticeContainer);
+
+    //    Performance metrics
     feedMetadata.validationTimeSeconds = (System.nanoTime() - startNanos) / 1e9;
+    var after =
+        MemoryUsageRegister.getInstance()
+            .getMemoryUsageSnapshot("ValidationRunner.run", memoryBefore);
+    MemoryUsageRegister.getInstance().registerMemoryUsage(after);
 
     // Output
     exportReport(feedMetadata, noticeContainer, config, versionInfo);
