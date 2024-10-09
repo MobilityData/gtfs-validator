@@ -30,7 +30,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
           label = "Best Practices for All Files",
           url = "https://gtfs.org/schedule/reference/#file-requirements")
     })
-public class NoInvalidCharactersNotice extends ValidationNotice {
+public class InvalidCharactersNotice extends ValidationNotice {
 
   /** Name of the faulty file. */
   private final String filename;
@@ -44,7 +44,7 @@ public class NoInvalidCharactersNotice extends ValidationNotice {
   /** The row number of the faulty record. */
   private final int csvRowNumber;
 
-  public NoInvalidCharactersNotice(
+  public InvalidCharactersNotice(
       String filename, String fieldName, String fieldValue, int csvRowNumber) {
     this.filename = filename;
     this.fieldName = fieldName;

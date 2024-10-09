@@ -10,7 +10,7 @@ import javax.lang.model.element.Modifier;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.NoInvalidCharacters;
-import org.mobilitydata.gtfsvalidator.notice.NoInvalidCharactersNotice;
+import org.mobilitydata.gtfsvalidator.notice.InvalidCharactersNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
 
@@ -19,7 +19,7 @@ import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
  * as the replacement character (\uFFFD).
  *
  * @see NoInvalidCharacters
- * @see NoInvalidCharactersNotice
+ * @see InvalidCharactersNotice
  */
 public class NoInvalidCharactersValidatorGenerator {
   static final String REPLACEMENT_CHAR = "\uFFFD";
@@ -65,7 +65,7 @@ public class NoInvalidCharactersValidatorGenerator {
           .beginControlFlow("if (value.contains(\"$L\"))", REPLACEMENT_CHAR)
           .addStatement(
               "noticeContainer.addValidationNotice(new $T(\"$L\", \"$L\", value, entity.csvRowNumber()))",
-              NoInvalidCharactersNotice.class,
+              InvalidCharactersNotice.class,
               fileDescriptor.filename(),
               FieldNameConverter.gtfsColumnName(noInvalidCharactersField.name()))
           .endControlFlow()
