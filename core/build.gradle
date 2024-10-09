@@ -18,6 +18,7 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'signing'
+    id 'io.freefair.aspectj.post-compile-weaving' version '6.4.1'
 }
 
 //publishing {
@@ -42,6 +43,8 @@ dependencies {
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.13'
     implementation 'com.google.flogger:flogger:0.6'
     implementation 'io.github.classgraph:classgraph:4.8.146'
+    implementation 'org.aspectj:aspectjrt:1.9.20'
+    implementation 'org.aspectj:aspectjweaver:1.9.20'
     testImplementation 'com.google.flogger:flogger-system-backend:0.6'
     testImplementation group: 'junit', name: 'junit', version: '4.13'
     testImplementation "com.google.truth:truth:1.0.1"

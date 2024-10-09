@@ -141,7 +141,13 @@ public class ValidationReportComparatorTest {
                 + "\n"
                 + "| Time Metric                      | Dataset ID        | Reference (s)  | Latest (s)     | Difference (s) |\n"
                 + "|-----------------------------|-------------------|----------------|----------------|----------------|\n"
-                + "</details>\n\n\n");
+                + "</details>\n\n"
+                + "<details>\n"
+                + "<summary><strong>📜 Memory Consumption</strong></summary>\n"
+                + "<p>List of 25 datasets(no reference available).</p>\n\n"
+                + "| Dataset ID                  | Snapshot Key(Used Memory)  | Reference  | Latest     |\n"
+                + "|-----------------------------|-------------------|----------------|----------------|\n"
+                + "</details>\n\n");
   }
 
   @Test
