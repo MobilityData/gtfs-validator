@@ -1,7 +1,6 @@
 package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
 import com.google.common.flogger.FluentLogger;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
