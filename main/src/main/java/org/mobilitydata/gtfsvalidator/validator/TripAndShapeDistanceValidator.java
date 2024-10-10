@@ -139,7 +139,8 @@ public class TripAndShapeDistanceValidator extends FileValidator {
   }
 
   /**
-   * The distance between the last shape point and last stop point is less than the 11.1m threshold.
+   * The distance between the last shape point and last stop point is greater than 0 but less than
+   * the 11.1m threshold.
    */
   @GtfsValidationNotice(
       severity = WARNING,

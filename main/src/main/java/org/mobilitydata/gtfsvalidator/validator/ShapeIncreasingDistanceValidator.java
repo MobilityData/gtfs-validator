@@ -239,11 +239,11 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
 
   /**
    * Two consecutive points have equal `shape_dist_traveled` and different lat/lon coordinates in
-   * `shapes.txt` and the distance between the two points is less than 1.11m.
+   * `shapes.txt` and the distance between the two points is greater than 0 but less than 1.11m.
    *
    * <p>When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` must increase
    * along a shape. Two consecutive points with equal values for `shape_dist_traveled` and small
-   * difference of coordinates (less than 1.11 m distance) result in a warning.
+   * difference of coordinates (greater than 0 but less than 1.11 m distance) result in a warning.
    */
   @GtfsValidationNotice(
       severity = WARNING,
