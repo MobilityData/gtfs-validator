@@ -2,6 +2,8 @@ package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.model.ValidationReport;
 import org.mobilitydata.gtfsvalidator.outputcomparator.model.report.ValidationPerformance;
 import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
@@ -9,6 +11,8 @@ import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
 public class ValidationPerformanceCollector {
 
   public static final int MEMORY_USAGE_COMPARE_MAX = 10;
+  public static final String MEMORY_PIVOT_KEY =
+      "org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader.loadAndValidate";
   private final Map<String, Double> referenceTimes;
   private final Map<String, Double> latestTimes;
   private final List<DatasetMemoryUsage> datasetsMemoryUsageNoReference;
@@ -29,11 +33,11 @@ public class ValidationPerformanceCollector {
     latestTimes.put(sourceId, time);
   }
 
-  private Double computeAverage(List<Double> times) {
+  private Double computeAverage(Collection<Double> times) {
     return times.stream().mapToDouble(Double::doubleValue).average().orElse(Double.NaN);
   }
 
-  private Double computeMedian(List<Double> times) {
+  private Double computeMedian(Collection<Double> times) {
     if (times.isEmpty()) {
       return Double.NaN;
     }
@@ -49,31 +53,37 @@ public class ValidationPerformanceCollector {
     return median;
   }
 
-  private Double computeStandardDeviation(List<Double> times) {
+  private Double computeStandardDeviation(Collection<Double> times) {
     double mean = computeAverage(times);
     return Math.sqrt(
         times.stream().mapToDouble(time -> Math.pow(time - mean, 2)).average().orElse(Double.NaN));
   }
 
-  private Double computeMax(List<Double> times) {
+  private Double computeMax(Collection<Double> times) {
     return times.stream().mapToDouble(Double::doubleValue).max().orElse(Double.NaN);
   }
 
-  private Double computeMin(List<Double> times) {
+  private Double computeMin(Collection<Double> times) {
     return times.stream().mapToDouble(Double::doubleValue).min().orElse(Double.NaN);
   }
 
-  private String formatMetrics(String metric, String datasetId, Double reference, Double latest) {
+  private String formatMetrics(
+      String metric,
+      String datasetId,
+      Double reference,
+      Double latest,
+      Function<Double, String> render) {
     String diff;
     if (reference.isNaN() || latest.isNaN()) {
       diff = "N/A";
     } else {
       double difference = latest - reference;
       String arrow = difference > 0 ? "⬆️+" : "⬇️";
-      diff = String.format("%s%.2f", arrow, difference);
+      diff = String.format("%s%s", arrow, render.apply(difference));
     }
     return String.format(
-        "| %s | %s | %.2f | %.2f | %s |\n", metric, datasetId, reference, latest, diff);
+        "| %s | %s | %s | %s | %s |\n",
+        metric, datasetId, render.apply(reference), render.apply(latest), diff);
   }
 
   private static String getMemoryDiff(Long reference, Long latest) {
@@ -124,70 +134,8 @@ public class ValidationPerformanceCollector {
       allLatestTimes.add(latestTimes);
     }
 
-    if (!allReferenceTimes.isEmpty() && !allLatestTimes.isEmpty()) {
-      Double avgReference = computeAverage(allReferenceTimes);
-      Double avgLatest = computeAverage(allLatestTimes);
-      Double medianReference = computeMedian(allReferenceTimes);
-      Double medianLatest = computeMedian(allLatestTimes);
-      Double stdDevReference = computeStandardDeviation(allReferenceTimes);
-      Double stdDevLatest = computeStandardDeviation(allLatestTimes);
-
-      b.append(formatMetrics("Average", "--", avgReference, avgLatest))
-          .append(formatMetrics("Median", "--", medianReference, medianLatest))
-          .append(formatMetrics("Standard Deviation", "--", stdDevReference, stdDevLatest));
-    }
-
-    if (!allReferenceTimes.isEmpty()) {
-      Double minReference = computeMin(allReferenceTimes);
-      String minReferenceId =
-          referenceTimes.entrySet().stream()
-              .filter(entry -> Objects.equals(entry.getValue(), minReference))
-              .map(Map.Entry::getKey)
-              .findFirst()
-              .orElse("N/A");
-
-      Double maxReference = computeMax(allReferenceTimes);
-      String maxReferenceId =
-          referenceTimes.entrySet().stream()
-              .filter(entry -> Objects.equals(entry.getValue(), maxReference))
-              .map(Map.Entry::getKey)
-              .findFirst()
-              .orElse("N/A");
-
-      Double minLatest = latestTimes.getOrDefault(minReferenceId, Double.NaN);
-      Double maxLatest = latestTimes.getOrDefault(maxReferenceId, Double.NaN);
-
-      b.append(
-              formatMetrics(
-                  "Minimum in References Reports", minReferenceId, minReference, minLatest))
-          .append(
-              formatMetrics(
-                  "Maximum in Reference Reports", maxReferenceId, maxReference, maxLatest));
-    }
-
-    if (!allLatestTimes.isEmpty()) {
-      Double minLatest = computeMin(allLatestTimes);
-      String minLatestId =
-          latestTimes.entrySet().stream()
-              .filter(entry -> Objects.equals(entry.getValue(), minLatest))
-              .map(Map.Entry::getKey)
-              .findFirst()
-              .orElse("N/A");
-
-      Double maxLatest = computeMax(allLatestTimes);
-      String maxLatestId =
-          latestTimes.entrySet().stream()
-              .filter(entry -> Objects.equals(entry.getValue(), maxLatest))
-              .map(Map.Entry::getKey)
-              .findFirst()
-              .orElse("N/A");
-
-      Double minReference = referenceTimes.getOrDefault(minLatestId, Double.NaN);
-      Double maxReference = referenceTimes.getOrDefault(maxLatestId, Double.NaN);
-
-      b.append(formatMetrics("Minimum in Latest Reports", minLatestId, minReference, minLatest))
-          .append(formatMetrics("Maximum in Latest Reports", maxLatestId, maxReference, maxLatest));
-    }
+    generatePerformanceMetricsLog(
+        referenceTimes, latestTimes, b, value -> String.format("%.2f", value));
 
     // Add warning message for feeds that are missing validation times either in reference or latest
     if (!warnings.isEmpty()) {
@@ -202,8 +150,48 @@ public class ValidationPerformanceCollector {
     b.append("</details>\n\n");
 
     if (datasetsMemoryUsageWithReference.size() > 0) {
+      Map<String, Double> referenceMemoryUsageById =
+          datasetsMemoryUsageWithReference.stream()
+              .filter(
+                  datasetMemoryUsage ->
+                      datasetMemoryUsage.getReferenceUsedMemoryByKey().get(MEMORY_PIVOT_KEY)
+                          != null)
+              .collect(
+                  Collectors.toMap(
+                      DatasetMemoryUsage::getDatasetId,
+                      datasetMemoryUsage ->
+                          datasetMemoryUsage
+                              .getReferenceUsedMemoryByKey()
+                              .get(MEMORY_PIVOT_KEY)
+                              .doubleValue()));
+      Map<String, Double> latestMemoryUsageById =
+          datasetsMemoryUsageWithReference.stream()
+              .filter(
+                  datasetMemoryUsage ->
+                      datasetMemoryUsage.getLatestUsedMemoryByKey().get(MEMORY_PIVOT_KEY) != null)
+              .collect(
+                  Collectors.toMap(
+                      DatasetMemoryUsage::getDatasetId,
+                      datasetMemoryUsage ->
+                          datasetMemoryUsage
+                              .getLatestUsedMemoryByKey()
+                              .get(MEMORY_PIVOT_KEY)
+                              .doubleValue()));
+
       b.append("<details>\n");
       b.append("<summary><strong>📜 Memory Consumption</strong></summary>\n");
+
+      b.append(
+              "| Metric                      | Dataset ID        | Reference (s)  | Latest (s)     | Difference (s) |\n")
+          .append(
+              "|-----------------------------|-------------------|----------------|----------------|----------------|\n");
+
+      generatePerformanceMetricsLog(
+          referenceMemoryUsageById,
+          latestMemoryUsageById,
+          b,
+          ValidationPerformanceCollector::convertToHumanReadableMemory);
+
       if (datasetsMemoryUsageWithReference.size() > 0) {
         datasetsMemoryUsageWithReference.sort(new UsedMemoryIncreasedComparator());
         addMemoryUsageReport(
@@ -231,6 +219,76 @@ public class ValidationPerformanceCollector {
       b.append("</details>\n");
     }
     return b.toString();
+  }
+
+  private void generatePerformanceMetricsLog(
+      Map<String, Double> references,
+      Map<String, Double> latests,
+      StringBuilder b,
+      Function<Double, String> render) {
+    PerformanceMetrics performanceMetrics = computeMetrics(references, latests);
+    if (!references.isEmpty() && !latests.isEmpty()) {
+      b.append(
+              formatMetrics(
+                  "Average",
+                  "--",
+                  performanceMetrics.avgReference,
+                  performanceMetrics.avgLatest,
+                  render))
+          .append(
+              formatMetrics(
+                  "Median",
+                  "--",
+                  performanceMetrics.medianReference,
+                  performanceMetrics.medianLatest,
+                  render))
+          .append(
+              formatMetrics(
+                  "Standard Deviation",
+                  "--",
+                  performanceMetrics.stdDevReference,
+                  performanceMetrics.stdDevLatest,
+                  render));
+    }
+
+    if (!references.isEmpty()) {
+      Double minLatest = latestTimes.getOrDefault(performanceMetrics.minReferenceId, Double.NaN);
+      Double maxLatest = latestTimes.getOrDefault(performanceMetrics.maxReferenceId, Double.NaN);
+      b.append(
+              formatMetrics(
+                  "Minimum in References Reports",
+                  performanceMetrics.minReferenceId,
+                  performanceMetrics.minReference,
+                  minLatest,
+                  render))
+          .append(
+              formatMetrics(
+                  "Maximum in Reference Reports",
+                  performanceMetrics.maxReferenceId,
+                  performanceMetrics.maxReference,
+                  maxLatest,
+                  render));
+    }
+
+    if (!latests.isEmpty()) {
+      Double minReference = referenceTimes.getOrDefault(performanceMetrics.minLatestId, Double.NaN);
+      Double maxReference = referenceTimes.getOrDefault(performanceMetrics.maxLatestId, Double.NaN);
+
+      b.append(
+              formatMetrics(
+                  "Minimum in Latest Reports",
+                  performanceMetrics.minLatestId,
+                  minReference,
+                  performanceMetrics.minLatest,
+                  render))
+          .append(
+              formatMetrics(
+                  "Maximum in Latest Reports",
+                  performanceMetrics.maxLatestId,
+                  maxReference,
+                  performanceMetrics.maxLatest,
+                  render));
+    }
   }
 
   private void addMemoryUsageReport(
@@ -336,4 +394,78 @@ public class ValidationPerformanceCollector {
     }
     return affectedSources;
   }
+
+  private PerformanceMetrics computeMetrics(
+      Map<String, Double> allReferencesMap, Map<String, Double> allLatestsMap) {
+    Collection<Double> allReferences = allReferencesMap.values();
+    Collection<Double> allLatest = allLatestsMap.values();
+    PerformanceMetrics performanceMetrics = new PerformanceMetrics();
+    if (!allReferences.isEmpty() && !allLatest.isEmpty()) {
+      performanceMetrics.avgReference = computeAverage(allReferences);
+      performanceMetrics.avgLatest = computeAverage(allLatest);
+      performanceMetrics.medianReference = computeMedian(allReferences);
+      performanceMetrics.medianLatest = computeMedian(allLatest);
+      performanceMetrics.stdDevReference = computeStandardDeviation(allReferences);
+      performanceMetrics.stdDevLatest = computeStandardDeviation(allLatest);
+    }
+
+    if (!allReferences.isEmpty()) {
+      performanceMetrics.minReference = computeMin(allReferences);
+      performanceMetrics.minReferenceId =
+          referenceTimes.entrySet().stream()
+              .filter(entry -> Objects.equals(entry.getValue(), performanceMetrics.minReference))
+              .map(Map.Entry::getKey)
+              .findFirst()
+              .orElse("N/A");
+
+      performanceMetrics.maxReference = computeMax(allReferences);
+      performanceMetrics.maxReferenceId =
+          referenceTimes.entrySet().stream()
+              .filter(entry -> Objects.equals(entry.getValue(), performanceMetrics.maxReference))
+              .map(Map.Entry::getKey)
+              .findFirst()
+              .orElse("N/A");
+    }
+
+    if (!allLatest.isEmpty()) {
+      performanceMetrics.minLatest = computeMin(allLatest);
+      performanceMetrics.minLatestId =
+          latestTimes.entrySet().stream()
+              .filter(entry -> Objects.equals(entry.getValue(), performanceMetrics.minLatest))
+              .map(Map.Entry::getKey)
+              .findFirst()
+              .orElse("N/A");
+
+      performanceMetrics.maxLatest = computeMax(allLatest);
+      performanceMetrics.maxLatestId =
+          latestTimes.entrySet().stream()
+              .filter(entry -> Objects.equals(entry.getValue(), performanceMetrics.maxLatest))
+              .map(Map.Entry::getKey)
+              .findFirst()
+              .orElse("N/A");
+    }
+    return performanceMetrics;
+  }
+
+  private static String convertToHumanReadableMemory(Double bytes) {
+    //      Ignoring the decimals in bytes
+    return MemoryUsage.convertToHumanReadableMemory(bytes.longValue());
+  }
+}
+
+class PerformanceMetrics {
+  Double minReference;
+  String minReferenceId;
+  Double maxReference;
+  Double minLatest;
+  Double maxLatest;
+  String minLatestId;
+  String maxLatestId;
+  String maxReferenceId;
+  Double avgReference;
+  Double avgLatest;
+  Double medianReference;
+  Double medianLatest;
+  Double stdDevReference;
+  Double stdDevLatest;
 }
