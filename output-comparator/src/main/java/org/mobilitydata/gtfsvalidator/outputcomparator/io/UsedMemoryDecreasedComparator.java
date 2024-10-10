@@ -11,9 +11,9 @@ import java.util.Set;
  * two objects for each key present in both objects. If a key is present in one object but not in
  * the other, the key it is ignored. This comparator is used to sort DatasetMemoryUsage by the
  * minimum difference between the used memory of the two. This means the order is by the dataset
- * validation that increased the memory.
+ * validation that decreased the memory.
  */
-public class UsedMemoryIncreasedComparator implements Comparator<DatasetMemoryUsage> {
+public class UsedMemoryDecreasedComparator implements Comparator<DatasetMemoryUsage> {
 
   @Override
   public int compare(DatasetMemoryUsage o1, DatasetMemoryUsage o2) {
@@ -35,15 +35,14 @@ public class UsedMemoryIncreasedComparator implements Comparator<DatasetMemoryUs
     if (o1.getLatestMemoryUsage() == null || o2.getLatestMemoryUsage() == null) {
       return o1.getLatestMemoryUsage() == null ? -1 : 1;
     }
-    long o1MaxDiff =
-        getMaxDifferenceByKey(o1.getReferenceUsedMemoryByKey(), o1.getLatestUsedMemoryByKey());
-    long o2MaxDiff =
-        getMaxDifferenceByKey(o2.getReferenceUsedMemoryByKey(), o2.getLatestUsedMemoryByKey());
-    // Reversing the comparison as we need the major memory usage first in a sorted list
-    return Long.compare(o2MaxDiff, o1MaxDiff);
+    long o1MinDiff =
+        getMinDifferenceByKey(o1.getReferenceUsedMemoryByKey(), o1.getLatestUsedMemoryByKey());
+    long o2MinDiff =
+        getMinDifferenceByKey(o2.getReferenceUsedMemoryByKey(), o2.getLatestUsedMemoryByKey());
+    return Long.compare(o1MinDiff, o2MinDiff);
   }
 
-  private long getMaxDifferenceByKey(
+  private long getMinDifferenceByKey(
       Map<String, Long> referenceMemoryUsage, Map<String, Long> latestMemoryUsage) {
     Set<String> keys = new HashSet<>();
     keys.addAll(latestMemoryUsage.keySet());
@@ -53,6 +52,6 @@ public class UsedMemoryIncreasedComparator implements Comparator<DatasetMemoryUs
         .filter(key -> latestMemoryUsage.get(key) - referenceMemoryUsage.get(key) != 0)
         .mapToLong(key -> latestMemoryUsage.get(key) - referenceMemoryUsage.get(key))
         .max()
-        .orElse(Long.MIN_VALUE);
+        .orElse(Long.MAX_VALUE);
   }
 }
