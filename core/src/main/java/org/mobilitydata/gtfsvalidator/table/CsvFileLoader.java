@@ -92,7 +92,7 @@ public final class CsvFileLoader extends TableLoader {
     final List<GtfsEntity> entities = new ArrayList<>();
     boolean hasUnparsableRows = false;
     final List<SingleEntityValidator<GtfsEntity>> singleEntityValidators =
-        createSingleEntityValidators(tableDescriptor.getEntityClass(), validatorProvider);
+        createSingleEntityValidators(tableDescriptor.getEntityClass(), header, validatorProvider);
 
     try {
       for (CsvRow row : csvFile) {

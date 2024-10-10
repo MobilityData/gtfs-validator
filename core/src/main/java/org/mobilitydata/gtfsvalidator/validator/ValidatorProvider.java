@@ -16,11 +16,12 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.collect.Multimap;
 import java.util.List;
-import java.util.function.Consumer;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntityContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader.SkippedValidatorReason;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableDescriptor;
 
 /**
@@ -48,20 +49,22 @@ public interface ValidatorProvider {
    */
   <T extends GtfsEntity> List<SingleEntityValidator<T>> createSingleEntityValidators(
       Class<T> clazz,
-      Consumer<Class<? extends SingleEntityValidator<T>>> singleEntityValidatorsWithParsingErrors);
+      ColumnInspector header,
+      Multimap<SkippedValidatorReason, Class<?>> skippedValidators);
 
   /**
    * Creates a list of validators for the given table.
    *
    * <p>Use {@link ValidatorUtil#invokeSingleFileValidators} to invoke the created validators.
    *
-   * @param table GTFS table to validate
    * @param <T> type of the GTFS entity
+   * @param table GTFS table to validate
+   * @param skippedValidators A map where to put the validators classes that did not run.
    */
   <T extends GtfsEntity, D extends GtfsTableDescriptor>
       List<FileValidator> createSingleFileValidators(
           GtfsEntityContainer<T, D> table,
-          Consumer<Class<? extends FileValidator>> validatorsWithParsingErrors);
+          Multimap<SkippedValidatorReason, Class<?>> skippedValidators);
 
   /**
    * Creates a list of cross-table validators. Any validator that has a dependency with parse errors
@@ -74,5 +77,5 @@ public interface ValidatorProvider {
    * @param skippedValidators
    */
   List<FileValidator> createMultiFileValidators(
-      GtfsFeedContainer feed, Consumer<Class<? extends FileValidator>> skippedValidators);
+      GtfsFeedContainer feed, Multimap<SkippedValidatorReason, Class<?>> skippedValidators);
 }

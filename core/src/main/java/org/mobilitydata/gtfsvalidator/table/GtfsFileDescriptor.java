@@ -17,8 +17,6 @@ public abstract class GtfsFileDescriptor<T extends GtfsEntity> {
   // True if the specified file is required in a feed.
   private boolean required;
 
-  private TableStatus tableStatus;
-
   public abstract boolean isRecommended();
 
   public abstract Class<T> getEntityClass();

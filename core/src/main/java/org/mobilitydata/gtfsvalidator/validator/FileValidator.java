@@ -21,4 +21,14 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 /** Interface for validators that handle one as a whole or several files. */
 public abstract class FileValidator {
   public abstract void validate(NoticeContainer noticeContainer);
+
+  /**
+   * Check if the validate method should be called. For example if the child field is a ForeignKey,
+   * there's no point to validate if the child field column does not exist.
+   *
+   * @return true if the validate method should be called.
+   */
+  public Boolean shouldCallValidate() {
+    return true;
+  }
 }

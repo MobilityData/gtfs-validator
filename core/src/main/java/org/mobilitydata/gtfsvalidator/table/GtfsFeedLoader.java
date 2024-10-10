@@ -16,7 +16,10 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import com.google.common.flogger.FluentLogger;
 import java.io.InputStream;
 import java.lang.reflect.Modifier;
@@ -59,6 +62,24 @@ public class GtfsFeedLoader {
   private final List<Class<? extends FileValidator>> multiFileValidatorsWithParsingErrors =
       new ArrayList<>();
 
+  public enum SkippedValidatorReason {
+    SINGLE_ENTITY_VALIDATORS_WITH_ERROR,
+    SINGLE_FILE_VALIDATORS_WITH_ERROR,
+    MULTI_FILE_VALIDATORS_WITH_ERROR,
+    VALIDATORS_NO_NEED_TO_RUN
+  }
+
+  /**
+   * After running, will contain all validators that were skipped, grouped by
+   * SkippedValidatorReason. Get the synchronized version because validation is multithreaded.
+   */
+  private final Multimap<SkippedValidatorReason, Class<?>> skippedValidators =
+      Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
+
+  public Multimap<SkippedValidatorReason, Class<?>> getSkippedValidators() {
+    return skippedValidators;
+  }
+
   public GtfsFeedLoader(
       ImmutableList<Class<? extends GtfsFileDescriptor<?>>> tableDescriptorClasses) {
     for (Class<? extends GtfsFileDescriptor<?>> clazz : tableDescriptorClasses) {
@@ -92,10 +113,6 @@ public class GtfsFeedLoader {
     this.numThreads = numThreads;
   }
 
-  public List<Class<? extends FileValidator>> getMultiFileValidatorsWithParsingErrors() {
-    return Collections.unmodifiableList(multiFileValidatorsWithParsingErrors);
-  }
-
   @SuppressWarnings("unchecked")
   @MemoryMonitor()
   public GtfsFeedContainer loadAndValidate(
@@ -103,7 +120,7 @@ public class GtfsFeedLoader {
       throws InterruptedException {
     logger.atInfo().log("Loading in %d threads", numThreads);
     ExecutorService exec = Executors.newFixedThreadPool(numThreads);
-
+    skippedValidators.clear();
     List<Callable<TableAndNoticeContainers>> loaderCallables = new ArrayList<>();
     Map<String, GtfsTableDescriptor<?>> remainingDescriptors =
         (Map<String, GtfsTableDescriptor<?>>) tableDescriptors.clone();
@@ -118,6 +135,7 @@ public class GtfsFeedLoader {
               GtfsEntityContainer<?, ?> tableContainer;
               // The descriptor knows what loader to use to load the file
               TableLoader tableLoader = tableDescriptor.getTableLoader();
+              tableLoader.setSkippedValidators(skippedValidators);
               try (InputStream inputStream = gtfsInput.getFile(filename)) {
                 try {
                   tableContainer =
@@ -171,7 +189,7 @@ public class GtfsFeedLoader {
     }
   }
 
-  private static void loadTables(
+  private void loadTables(
       NoticeContainer noticeContainer,
       ExecutorService exec,
       List<Callable<TableAndNoticeContainers>> loaderCallables,
@@ -200,8 +218,7 @@ public class GtfsFeedLoader {
     // Validators with parser-error dependencies will not be returned here, but instead added to
     // the skippedValidators list.
     for (FileValidator validator :
-        validatorProvider.createMultiFileValidators(
-            feed, multiFileValidatorsWithParsingErrors::add)) {
+        validatorProvider.createMultiFileValidators(feed, skippedValidators)) {
       validatorCallables.add(
           () -> {
             NoticeContainer validatorNotices = new NoticeContainer();
@@ -212,7 +229,7 @@ public class GtfsFeedLoader {
     collectMultiFileValidationNotices(noticeContainer, exec, validatorCallables);
   }
 
-  private static void collectMultiFileValidationNotices(
+  private void collectMultiFileValidationNotices(
       NoticeContainer noticeContainer,
       ExecutorService exec,
       List<Callable<NoticeContainer>> validatorCallables)
@@ -229,8 +246,7 @@ public class GtfsFeedLoader {
   }
 
   /** Adds a ThreadExecutionError to the notice container. */
-  private static void addThreadExecutionError(
-      ExecutionException e, NoticeContainer noticeContainer) {
+  private void addThreadExecutionError(ExecutionException e, NoticeContainer noticeContainer) {
     logger.atSevere().withCause(e).log("Execution exception");
     noticeContainer.addSystemError(new ThreadExecutionError(e));
   }

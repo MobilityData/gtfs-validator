@@ -1,12 +1,15 @@
 package org.mobilitydata.gtfsvalidator.table;
 
+import static org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader.*;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.validator.ColumnInspector;
 import org.mobilitydata.gtfsvalidator.validator.FileValidator;
 import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
@@ -15,21 +18,8 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorUtil;
 /** Parent class for the different file loaders. */
 public abstract class TableLoader {
 
-  private static final List<Class<? extends SingleEntityValidator>>
-      singleEntityValidatorsWithParsingErrors = new ArrayList<>();
-
-  private static final List<Class<? extends FileValidator>> singleFileValidatorsWithParsingErrors =
-      new ArrayList<>();
-
-  public static List<Class<? extends FileValidator>> getValidatorsWithParsingErrors() {
-    return Collections.unmodifiableList(singleFileValidatorsWithParsingErrors);
-  }
-
-  public static List<Class<? extends SingleEntityValidator>>
-      getSingleEntityValidatorsWithParsingErrors() {
-    return Collections.unmodifiableList(singleEntityValidatorsWithParsingErrors);
-  }
-
+  protected Multimap<SkippedValidatorReason, Class<?>> skippedValidators =
+      ArrayListMultimap.create();
   /**
    * Load the file
    *
@@ -45,18 +35,20 @@ public abstract class TableLoader {
       InputStream csvInputStream,
       NoticeContainer noticeContainer);
 
+  public void setSkippedValidators(Multimap<SkippedValidatorReason, Class<?>> skippedValidators) {
+    this.skippedValidators = skippedValidators;
+  }
+
   protected <T extends GtfsEntity> List<SingleEntityValidator<T>> createSingleEntityValidators(
-      Class<T> entityClass, ValidatorProvider validatorProvider) {
-    return validatorProvider.createSingleEntityValidators(
-        entityClass, singleEntityValidatorsWithParsingErrors::add);
+      Class<T> entityClass, ColumnInspector header, ValidatorProvider validatorProvider) {
+    return validatorProvider.createSingleEntityValidators(entityClass, header, skippedValidators);
   }
 
   protected <T extends GtfsEntity, D extends GtfsTableDescriptor>
       List<FileValidator> createSingleFileValidators(
           GtfsEntityContainer<T, D> table, ValidatorProvider validatorProvider) {
 
-    return validatorProvider.createSingleFileValidators(
-        table, singleFileValidatorsWithParsingErrors::add);
+    return validatorProvider.createSingleFileValidators(table, skippedValidators);
   }
 
   public GtfsEntityContainer loadMissingFile(

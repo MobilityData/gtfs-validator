@@ -60,6 +60,14 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
     }
   }
 
+  public Boolean shouldCallValidate(ColumnInspector header) {
+    if (!header.hasColumn(GtfsStop.STOP_NAME_FIELD_NAME)
+        && !header.hasColumn(GtfsStop.LOCATION_TYPE_FIELD_NAME)) {
+      return false;
+    }
+    return true;
+  }
+
   private boolean isValidStopDesc(String stopDesc, String stopName) {
     // ignore lower case and upper case difference
     return !stopDesc.equalsIgnoreCase(stopName);
@@ -116,5 +124,16 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
       this.csvRowNumber = csvRowNumber;
       this.stopDesc = stopDesc;
     }
+  }
+
+  /**
+   * Name and locationType columns are not found in stops.txt.
+   *
+   * <p>When the locationType column is missing, the default value used is 0 (STOP). In that case,
+   * the stopName cannot undefined.
+   */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopSchema.class))
+  static class StopNameAndLocationIdColumnsBothMissingNotice extends ValidationNotice {
+    StopNameAndLocationIdColumnsBothMissingNotice() {}
   }
 }

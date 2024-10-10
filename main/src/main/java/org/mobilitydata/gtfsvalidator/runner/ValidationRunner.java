@@ -16,6 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.runner;
 
+import static org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader.SkippedValidatorReason.*;
+
 import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -28,7 +30,6 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import org.mobilitydata.gtfsvalidator.input.DateForValidation;
@@ -44,7 +45,6 @@ import org.mobilitydata.gtfsvalidator.report.JsonReportGenerator;
 import org.mobilitydata.gtfsvalidator.report.model.FeedMetadata;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
-import org.mobilitydata.gtfsvalidator.table.TableLoader;
 import org.mobilitydata.gtfsvalidator.util.VersionInfo;
 import org.mobilitydata.gtfsvalidator.util.VersionResolver;
 import org.mobilitydata.gtfsvalidator.validator.*;
@@ -164,18 +164,21 @@ public class ValidationRunner {
   public static void printSummary(
       FeedMetadata feedMetadata, GtfsFeedContainer feedContainer, GtfsFeedLoader loader) {
     final long endNanos = System.nanoTime();
-    List<Class<? extends FileValidator>> multiFileValidatorsWithParsingErrors =
-        loader.getMultiFileValidatorsWithParsingErrors();
-    List<Class<? extends FileValidator>> singleFileValidatorsWithParsingErrors =
-        TableLoader.getValidatorsWithParsingErrors();
+    var skippedValidators = loader.getSkippedValidators();
+    var multiFileValidatorsWithParsingErrors =
+        skippedValidators.get(MULTI_FILE_VALIDATORS_WITH_ERROR);
+    var singleFileValidatorsWithParsingErrors =
+        skippedValidators.get(SINGLE_FILE_VALIDATORS_WITH_ERROR);
     // In theory single entity validators do not depend on files so there should not be any of these
     // with parsing errors
-    List<Class<? extends SingleEntityValidator>> singleEntityValidatorsWithParsingErrors =
-        TableLoader.getSingleEntityValidatorsWithParsingErrors();
+    var singleEntityValidatorsWithParsingErrors =
+        skippedValidators.get(SINGLE_ENTITY_VALIDATORS_WITH_ERROR);
+
+    StringBuilder b = new StringBuilder();
     if (!singleFileValidatorsWithParsingErrors.isEmpty()
         || !singleEntityValidatorsWithParsingErrors.isEmpty()
         || !multiFileValidatorsWithParsingErrors.isEmpty()) {
-      StringBuilder b = new StringBuilder();
+
       b.append("\n");
       b.append(
           "---------------------------------------------------------------------------------------- \n");
@@ -206,9 +209,30 @@ public class ValidationRunner {
                 .map(Class::getSimpleName)
                 .collect(Collectors.joining("\n   ")));
       }
+    }
 
+    var skippedNoNeedToValidate = skippedValidators.get(VALIDATORS_NO_NEED_TO_RUN);
+
+    if (!skippedNoNeedToValidate.isEmpty()) {
+      b.append("\n");
+      b.append(
+          "----------------------------------------------------------------------------------------\n");
+      b.append(
+          "| Validators that were skipped because the data used by the validator is absent.       |\n");
+      b.append(
+          "----------------------------------------------------------------------------------------\n");
+
+      b.append("   ")
+          .append(
+              skippedNoNeedToValidate.stream()
+                  .map(Class::getSimpleName)
+                  .collect(Collectors.joining("\n   ")));
+    }
+
+    if (b.length() > 0) {
       logger.atSevere().log(b.toString());
     }
+
     logger.atInfo().log("Validation took %.3f seconds%n", feedMetadata.validationTimeSeconds);
     logger.atInfo().log(feedContainer.tableTotalsText());
   }

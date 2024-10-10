@@ -16,14 +16,17 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader.SkippedValidatorReason.*;
+
 import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Multimap;
 import com.google.common.flogger.FluentLogger;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntityContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableDescriptor;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader.ValidatorWithDependencyStatus;
@@ -80,7 +83,8 @@ public class DefaultValidatorProvider implements ValidatorProvider {
   @SuppressWarnings("unchecked")
   public <T extends GtfsEntity> List<SingleEntityValidator<T>> createSingleEntityValidators(
       Class<T> clazz,
-      Consumer<Class<? extends SingleEntityValidator<T>>> singleEntityValidatorsWithParsingErrors) {
+      ColumnInspector header,
+      Multimap<GtfsFeedLoader.SkippedValidatorReason, Class<?>> skippedValidators) {
     List<SingleEntityValidator<T>> validators = new ArrayList<>();
     for (Class<? extends SingleEntityValidator<?>> validatorClass :
         singleEntityValidators.get(clazz)) {
@@ -91,10 +95,14 @@ public class DefaultValidatorProvider implements ValidatorProvider {
                     ((Class<? extends SingleEntityValidator<?>>) validatorClass),
                     validationContext);
         if (validatorWithDependencyStatus.dependenciesHaveErrors()) {
-          singleEntityValidatorsWithParsingErrors.accept(
-              (Class<? extends SingleEntityValidator<T>>) validatorClass);
+          skippedValidators.put(SINGLE_ENTITY_VALIDATORS_WITH_ERROR, validatorClass);
         } else {
-          validators.add((SingleEntityValidator<T>) validatorWithDependencyStatus.validator());
+          var validator = validatorWithDependencyStatus.validator();
+          if (validator.shouldCallValidate(header)) {
+            validators.add((SingleEntityValidator<T>) validator);
+          } else {
+            skippedValidators.put(VALIDATORS_NO_NEED_TO_RUN, validatorClass);
+          }
         }
       } catch (ReflectiveOperationException | ValidatorLoaderException e) {
         logger.atSevere().withCause(e).log(
@@ -109,7 +117,7 @@ public class DefaultValidatorProvider implements ValidatorProvider {
   public <T extends GtfsEntity, D extends GtfsTableDescriptor>
       List<FileValidator> createSingleFileValidators(
           GtfsEntityContainer<T, D> table,
-          Consumer<Class<? extends FileValidator>> validatorsWithParsingErrors) {
+          Multimap<GtfsFeedLoader.SkippedValidatorReason, Class<?>> skippedValidators) {
     List<FileValidator> validators = new ArrayList<>();
     for (Class<? extends FileValidator> validatorClass :
         singleFileValidators.get((Class<? extends GtfsTableContainer<?, ?>>) table.getClass())) {
@@ -117,9 +125,11 @@ public class DefaultValidatorProvider implements ValidatorProvider {
         ValidatorWithDependencyStatus<? extends FileValidator> validatorWithStatus =
             ValidatorLoader.createSingleFileValidator(validatorClass, table, validationContext);
         if (validatorWithStatus.dependenciesHaveErrors()) {
-          validatorsWithParsingErrors.accept(validatorClass);
-        } else {
+          skippedValidators.put(SINGLE_FILE_VALIDATORS_WITH_ERROR, validatorClass);
+        } else if (validatorWithStatus.validator().shouldCallValidate()) {
           validators.add(validatorWithStatus.validator());
+        } else {
+          skippedValidators.put(VALIDATORS_NO_NEED_TO_RUN, validatorClass);
         }
       } catch (ReflectiveOperationException | ValidatorLoaderException e) {
         logger.atSevere().withCause(e).log(
@@ -131,7 +141,8 @@ public class DefaultValidatorProvider implements ValidatorProvider {
 
   @Override
   public List<FileValidator> createMultiFileValidators(
-      GtfsFeedContainer feed, Consumer<Class<? extends FileValidator>> skippedValidators) {
+      GtfsFeedContainer feed,
+      Multimap<GtfsFeedLoader.SkippedValidatorReason, Class<?>> skippedValidators) {
     ArrayList<FileValidator> validators = new ArrayList<>();
     validators.ensureCapacity(multiFileValidators.size());
     for (Class<? extends FileValidator> validatorClass : multiFileValidators) {
@@ -139,9 +150,13 @@ public class DefaultValidatorProvider implements ValidatorProvider {
         ValidatorWithDependencyStatus<? extends FileValidator> validatorWithStatus =
             ValidatorLoader.createMultiFileValidator(validatorClass, feed, validationContext);
         if (validatorWithStatus.dependenciesHaveErrors()) {
-          skippedValidators.accept(validatorClass);
+          skippedValidators.put(MULTI_FILE_VALIDATORS_WITH_ERROR, validatorClass);
         } else {
-          validators.add(validatorWithStatus.validator());
+          if (validatorWithStatus.validator().shouldCallValidate()) {
+            validators.add(validatorWithStatus.validator());
+          } else {
+            skippedValidators.put(VALIDATORS_NO_NEED_TO_RUN, validatorClass);
+          }
         }
       } catch (ReflectiveOperationException | ValidatorLoaderException e) {
         logger.atSevere().withCause(e).log(
