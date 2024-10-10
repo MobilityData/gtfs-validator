@@ -140,11 +140,7 @@ public class GtfsFeedLoader {
                 try {
                   tableContainer =
                       tableLoader.load(
-                          tableDescriptor,
-                          validatorProvider,
-                          inputStream,
-                          loaderNotices,
-                          skippedValidators);
+                          tableDescriptor, validatorProvider, inputStream, loaderNotices);
                 } catch (RuntimeException e) {
                   // This handler should prevent ExecutionException for
                   // this thread. We catch an exception here for storing

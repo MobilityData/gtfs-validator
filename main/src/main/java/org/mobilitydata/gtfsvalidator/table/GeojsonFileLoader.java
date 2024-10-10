@@ -1,6 +1,5 @@
 package org.mobilitydata.gtfsvalidator.table;
 
-import com.google.common.collect.Multimap;
 import com.google.common.flogger.FluentLogger;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -30,8 +29,7 @@ public class GeojsonFileLoader extends TableLoader {
       GtfsFileDescriptor fileDescriptor,
       ValidatorProvider validatorProvider,
       InputStream inputStream,
-      NoticeContainer noticeContainer,
-      Multimap<GtfsFeedLoader.SkippedValidatorReason, Class<?>> skippedValidators) {
+      NoticeContainer noticeContainer) {
     GtfsGeojsonFileDescriptor geojsonFileDescriptor = (GtfsGeojsonFileDescriptor) fileDescriptor;
     try {
       List<GtfsGeojsonFeature> entities = extractFeaturesFromStream(inputStream, noticeContainer);

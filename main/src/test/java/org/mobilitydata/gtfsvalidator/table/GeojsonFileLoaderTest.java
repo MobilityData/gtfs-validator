@@ -19,7 +19,6 @@ package org.mobilitydata.gtfsvalidator.table;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import com.google.common.collect.ArrayListMultimap;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -111,7 +110,6 @@ public class GeojsonFileLoaderTest {
     var fileDescriptor = new GtfsGeojsonFileDescriptor();
     NoticeContainer noticeContainer = new NoticeContainer();
     InputStream inputStream = new ByteArrayInputStream(jsonData.getBytes(StandardCharsets.UTF_8));
-    return loader.load(
-        fileDescriptor, null, inputStream, noticeContainer, ArrayListMultimap.create());
+    return loader.load(fileDescriptor, null, inputStream, noticeContainer);
   }
 }

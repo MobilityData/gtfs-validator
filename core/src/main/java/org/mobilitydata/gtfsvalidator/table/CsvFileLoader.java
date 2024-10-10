@@ -2,7 +2,6 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Multimap;
 import com.google.common.flogger.FluentLogger;
 import com.univocity.parsers.common.TextParsingException;
 import com.univocity.parsers.csv.CsvParserSettings;
@@ -44,8 +43,7 @@ public final class CsvFileLoader extends TableLoader {
       GtfsFileDescriptor fileDescriptor,
       ValidatorProvider validatorProvider,
       InputStream csvInputStream,
-      NoticeContainer noticeContainer,
-      Multimap<GtfsFeedLoader.SkippedValidatorReason, Class<?>> skippedValidators) {
+      NoticeContainer noticeContainer) {
     GtfsTableDescriptor tableDescriptor = (GtfsTableDescriptor) fileDescriptor;
     final String gtfsFilename = tableDescriptor.gtfsFilename();
 

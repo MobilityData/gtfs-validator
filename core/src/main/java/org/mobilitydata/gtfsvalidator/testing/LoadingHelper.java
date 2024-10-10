@@ -15,7 +15,6 @@
  */
 package org.mobilitydata.gtfsvalidator.testing;
 
-import com.google.common.collect.ArrayListMultimap;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -71,8 +70,6 @@ public class LoadingHelper {
             .setDateForValidation(new DateForValidation(dateForValidation))
             .build();
     ValidatorProvider provider = new DefaultValidatorProvider(context, validatorLoader);
-    return (Y)
-        CsvFileLoader.getInstance()
-            .load(tableDescriptor, provider, in, noticeContainer, ArrayListMultimap.create());
+    return (Y) CsvFileLoader.getInstance().load(tableDescriptor, provider, in, noticeContainer);
   }
 }

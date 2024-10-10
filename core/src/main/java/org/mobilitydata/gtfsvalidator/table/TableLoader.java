@@ -27,16 +27,13 @@ public abstract class TableLoader {
    * @param validatorProvider Will provide validators to run on the file.
    * @param csvInputStream Stream to load from
    * @param noticeContainer Where to put the notices if errors occur during the loading.
-   * @param skippedValidators A container where to put the validators that are skipped. Used in
-   *     reporting.
    * @return A container for the loaded entities
    */
   abstract GtfsEntityContainer load(
       GtfsFileDescriptor fileDescriptor,
       ValidatorProvider validatorProvider,
       InputStream csvInputStream,
-      NoticeContainer noticeContainer,
-      Multimap<SkippedValidatorReason, Class<?>> skippedValidators);
+      NoticeContainer noticeContainer);
 
   public void setSkippedValidators(Multimap<SkippedValidatorReason, Class<?>> skippedValidators) {
     this.skippedValidators = skippedValidators;
