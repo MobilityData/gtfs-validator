@@ -59,7 +59,7 @@ public interface ValidatorProvider {
    *
    * @param <T> type of the GTFS entity
    * @param table GTFS table to validate
-   * @param skippedValidators A map where to put the validators classes that did not need to run.
+   * @param skippedValidators A map where to put the validators classes that did not run.
    */
   <T extends GtfsEntity, D extends GtfsTableDescriptor>
       List<FileValidator> createSingleFileValidators(

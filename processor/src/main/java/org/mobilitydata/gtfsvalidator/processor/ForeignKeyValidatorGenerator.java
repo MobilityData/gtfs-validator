@@ -169,7 +169,7 @@ public class ForeignKeyValidatorGenerator {
         .addComment(
             "If the column with the foreign key is absent, there's no point in calling the validator.")
         .addStatement(
-            "return childContainer == null || childContainer.hasColumn(\"$L\")",
+            "return childContainer == null ? false : childContainer.hasColumn(\"$L\")",
             FieldNameConverter.gtfsColumnName(childField.name()));
 
     typeSpec.addMethod(shouldCallValidateMethod.build());
