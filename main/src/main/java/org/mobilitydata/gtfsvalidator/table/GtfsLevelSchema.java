@@ -29,5 +29,6 @@ public interface GtfsLevelSchema extends GtfsEntity {
   double levelIndex();
 
   @MixedCase
+  @NoInvalidCharacters
   String levelName();
 }

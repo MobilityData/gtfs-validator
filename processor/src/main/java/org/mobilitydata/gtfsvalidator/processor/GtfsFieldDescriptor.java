@@ -67,6 +67,8 @@ public abstract class GtfsFieldDescriptor {
 
   public abstract boolean mixedCase();
 
+  public abstract boolean noInvalidCharacters();
+
   public abstract Optional<RowParser.NumberBounds> numberBounds();
 
   @AutoValue.Builder
@@ -86,6 +88,8 @@ public abstract class GtfsFieldDescriptor {
     public abstract Builder setColumnRecommended(boolean value);
 
     public abstract Builder setMixedCase(boolean value);
+
+    public abstract Builder setNoInvalidCharacters(boolean value);
 
     public abstract Builder setPrimaryKey(PrimaryKey annotation);
 

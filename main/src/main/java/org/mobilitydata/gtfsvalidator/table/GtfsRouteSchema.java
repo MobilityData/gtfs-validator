@@ -34,10 +34,12 @@ public interface GtfsRouteSchema extends GtfsEntity {
 
   @MixedCase
   @ConditionallyRequired
+  @NoInvalidCharacters
   String routeShortName();
 
   @MixedCase
   @ConditionallyRequired
+  @NoInvalidCharacters
   String routeLongName();
 
   @MixedCase

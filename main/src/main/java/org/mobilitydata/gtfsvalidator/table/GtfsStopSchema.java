@@ -31,6 +31,7 @@ public interface GtfsStopSchema extends GtfsEntity {
 
   @MixedCase
   @ConditionallyRequired
+  @NoInvalidCharacters
   String stopName();
 
   String ttsStopName();

@@ -118,6 +118,8 @@ public class GtfsAnnotationProcessor extends AbstractProcessor {
         new CurrencyAmountValidatorGenerator().generateValidator(fileDescriptors));
     generatedValidators.addAll(
         new MixedCaseValidatorGenerator().generateValidator(fileDescriptors));
+    generatedValidators.addAll(
+        new NoInvalidCharactersValidatorGenerator().generateValidator(fileDescriptors));
 
     for (TypeSpec typeSpec : generatedValidators) {
       writeJavaFile(JavaFile.builder(VALIDATOR_PACKAGE_NAME, typeSpec).build());

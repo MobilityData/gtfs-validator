@@ -30,6 +30,7 @@ public interface GtfsAgencySchema extends GtfsEntity {
 
   @Required
   @MixedCase
+  @NoInvalidCharacters
   String agencyName();
 
   @FieldType(FieldTypeEnum.URL)
