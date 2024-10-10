@@ -252,8 +252,8 @@ public class ValidationPerformanceCollector {
     }
 
     if (!references.isEmpty()) {
-      Double minLatest = latestTimes.getOrDefault(performanceMetrics.minReferenceId, Double.NaN);
-      Double maxLatest = latestTimes.getOrDefault(performanceMetrics.maxReferenceId, Double.NaN);
+      Double minLatest = latests.getOrDefault(performanceMetrics.minReferenceId, Double.NaN);
+      Double maxLatest = latests.getOrDefault(performanceMetrics.maxReferenceId, Double.NaN);
       b.append(
               formatMetrics(
                   "Minimum in References Reports",
@@ -271,8 +271,8 @@ public class ValidationPerformanceCollector {
     }
 
     if (!latests.isEmpty()) {
-      Double minReference = referenceTimes.getOrDefault(performanceMetrics.minLatestId, Double.NaN);
-      Double maxReference = referenceTimes.getOrDefault(performanceMetrics.maxLatestId, Double.NaN);
+      Double minReference = references.getOrDefault(performanceMetrics.minLatestId, Double.NaN);
+      Double maxReference = references.getOrDefault(performanceMetrics.maxLatestId, Double.NaN);
 
       b.append(
               formatMetrics(
