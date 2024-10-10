@@ -179,7 +179,7 @@ public class ValidationPerformanceCollector {
                               .doubleValue()));
 
       b.append("<details>\n");
-      b.append("<summary><strong>📜 Memory Consumption</strong></summary>\n");
+      b.append("<summary><strong>📜 Memory Consumption</strong></summary>\n\n");
 
       b.append(
               "| Metric                      | Dataset ID        | Reference (s)  | Latest (s)     | Difference (s) |\n")
@@ -396,9 +396,9 @@ public class ValidationPerformanceCollector {
   }
 
   private PerformanceMetrics computeMetrics(
-      Map<String, Double> allReferencesMap, Map<String, Double> allLatestsMap) {
-    Collection<Double> allReferences = allReferencesMap.values();
-    Collection<Double> allLatest = allLatestsMap.values();
+      Map<String, Double> referencesById, Map<String, Double> latestsById) {
+    Collection<Double> allReferences = referencesById.values();
+    Collection<Double> allLatest = latestsById.values();
     PerformanceMetrics performanceMetrics = new PerformanceMetrics();
     if (!allReferences.isEmpty() && !allLatest.isEmpty()) {
       performanceMetrics.avgReference = computeAverage(allReferences);
@@ -412,7 +412,7 @@ public class ValidationPerformanceCollector {
     if (!allReferences.isEmpty()) {
       performanceMetrics.minReference = computeMin(allReferences);
       performanceMetrics.minReferenceId =
-          referenceTimes.entrySet().stream()
+          referencesById.entrySet().stream()
               .filter(entry -> Objects.equals(entry.getValue(), performanceMetrics.minReference))
               .map(Map.Entry::getKey)
               .findFirst()
@@ -420,7 +420,7 @@ public class ValidationPerformanceCollector {
 
       performanceMetrics.maxReference = computeMax(allReferences);
       performanceMetrics.maxReferenceId =
-          referenceTimes.entrySet().stream()
+          referencesById.entrySet().stream()
               .filter(entry -> Objects.equals(entry.getValue(), performanceMetrics.maxReference))
               .map(Map.Entry::getKey)
               .findFirst()
@@ -430,7 +430,7 @@ public class ValidationPerformanceCollector {
     if (!allLatest.isEmpty()) {
       performanceMetrics.minLatest = computeMin(allLatest);
       performanceMetrics.minLatestId =
-          latestTimes.entrySet().stream()
+          latestsById.entrySet().stream()
               .filter(entry -> Objects.equals(entry.getValue(), performanceMetrics.minLatest))
               .map(Map.Entry::getKey)
               .findFirst()
@@ -438,7 +438,7 @@ public class ValidationPerformanceCollector {
 
       performanceMetrics.maxLatest = computeMax(allLatest);
       performanceMetrics.maxLatestId =
-          latestTimes.entrySet().stream()
+          latestsById.entrySet().stream()
               .filter(entry -> Objects.equals(entry.getValue(), performanceMetrics.maxLatest))
               .map(Map.Entry::getKey)
               .findFirst()
