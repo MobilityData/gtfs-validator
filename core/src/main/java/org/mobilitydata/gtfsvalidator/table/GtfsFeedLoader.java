@@ -172,20 +172,20 @@ public class GtfsFeedLoader {
     }
     try {
       var beforeLoading =
-              MemoryUsageRegister.getInstance()
-                      .getMemoryUsageSnapshot("GtfsFeedLoader.loadTables", null);
+          MemoryUsageRegister.getInstance()
+              .getMemoryUsageSnapshot("GtfsFeedLoader.loadTables", null);
       loadTables(noticeContainer, exec, loaderCallables, tableContainers);
       MemoryUsageRegister.getInstance()
-              .registerMemoryUsage("GtfsFeedLoader.loadTables", beforeLoading);
+          .registerMemoryUsage("GtfsFeedLoader.loadTables", beforeLoading);
 
       GtfsFeedContainer feed = new GtfsFeedContainer(tableContainers);
       var beforeMultiFileValidators =
-              MemoryUsageRegister.getInstance()
-                      .getMemoryUsageSnapshot("GtfsFeedLoader.executeMultiFileValidators", null);
+          MemoryUsageRegister.getInstance()
+              .getMemoryUsageSnapshot("GtfsFeedLoader.executeMultiFileValidators", null);
       executeMultiFileValidators(validatorProvider, noticeContainer, feed, exec);
       MemoryUsageRegister.getInstance()
-              .registerMemoryUsage(
-                      "GtfsFeedLoader.executeMultiFileValidators", beforeMultiFileValidators);
+          .registerMemoryUsage(
+              "GtfsFeedLoader.executeMultiFileValidators", beforeMultiFileValidators);
 
       return feed;
     } finally {
@@ -194,11 +194,11 @@ public class GtfsFeedLoader {
   }
 
   private void loadTables(
-          NoticeContainer noticeContainer,
-          ExecutorService exec,
-          List<Callable<TableAndNoticeContainers>> loaderCallables,
-          ArrayList<GtfsEntityContainer<?, ?>> tableContainers)
-          throws InterruptedException {
+      NoticeContainer noticeContainer,
+      ExecutorService exec,
+      List<Callable<TableAndNoticeContainers>> loaderCallables,
+      ArrayList<GtfsEntityContainer<?, ?>> tableContainers)
+      throws InterruptedException {
     for (Future<TableAndNoticeContainers> futureContainer : exec.invokeAll(loaderCallables)) {
       try {
         TableAndNoticeContainers containers = futureContainer.get();
@@ -211,47 +211,46 @@ public class GtfsFeedLoader {
       }
     }
   }
+
   private void executeMultiFileValidators(
-          ValidatorProvider validatorProvider,
-          NoticeContainer noticeContainer,
-          GtfsFeedContainer feed,
-          ExecutorService exec)
-          throws InterruptedException {
-      List<Callable<NoticeContainer>> validatorCallables = new ArrayList<>();
-      // Validators with parser-error dependencies will not be returned here, but instead added to
-      // the skippedValidators list.
-      for (FileValidator validator :
-          validatorProvider.createMultiFileValidators(feed, skippedValidators)) {
-        validatorCallables.add(
-            () -> {
-              NoticeContainer validatorNotices = new NoticeContainer();
-              ValidatorUtil.safeValidate(
-                  validator::validate, validator.getClass(), validatorNotices);
-              return validatorNotices;
-            });
-      }
+      ValidatorProvider validatorProvider,
+      NoticeContainer noticeContainer,
+      GtfsFeedContainer feed,
+      ExecutorService exec)
+      throws InterruptedException {
+    List<Callable<NoticeContainer>> validatorCallables = new ArrayList<>();
+    // Validators with parser-error dependencies will not be returned here, but instead added to
+    // the skippedValidators list.
+    for (FileValidator validator :
+        validatorProvider.createMultiFileValidators(feed, skippedValidators)) {
+      validatorCallables.add(
+          () -> {
+            NoticeContainer validatorNotices = new NoticeContainer();
+            ValidatorUtil.safeValidate(validator::validate, validator.getClass(), validatorNotices);
+            return validatorNotices;
+          });
+    }
     collectMultiFileValidationNotices(noticeContainer, exec, validatorCallables);
   }
 
   private void collectMultiFileValidationNotices(
-          NoticeContainer noticeContainer,
-          ExecutorService exec,
-          List<Callable<NoticeContainer>> validatorCallables)
-          throws InterruptedException {
-      for (Future<NoticeContainer> futureContainer : exec.invokeAll(validatorCallables)) {
-        try {
-          noticeContainer.addAll(futureContainer.get());
-        } catch (ExecutionException e) {
-          // All runtime exceptions should be caught above.
-          // ExecutionException is not expected to happen.
-          addThreadExecutionError(e, noticeContainer);
-        }
+      NoticeContainer noticeContainer,
+      ExecutorService exec,
+      List<Callable<NoticeContainer>> validatorCallables)
+      throws InterruptedException {
+    for (Future<NoticeContainer> futureContainer : exec.invokeAll(validatorCallables)) {
+      try {
+        noticeContainer.addAll(futureContainer.get());
+      } catch (ExecutionException e) {
+        // All runtime exceptions should be caught above.
+        // ExecutionException is not expected to happen.
+        addThreadExecutionError(e, noticeContainer);
       }
     }
+  }
 
   /** Adds a ThreadExecutionError to the notice container. */
-  private void addThreadExecutionError(
-      ExecutionException e, NoticeContainer noticeContainer) {
+  private void addThreadExecutionError(ExecutionException e, NoticeContainer noticeContainer) {
     logger.atSevere().withCause(e).log("Execution exception");
     noticeContainer.addSystemError(new ThreadExecutionError(e));
   }
