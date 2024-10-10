@@ -18,20 +18,16 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
-import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
-import org.mobilitydata.gtfsvalidator.table.GtfsStop;
-import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
-import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
-import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
-import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
+import org.mobilitydata.gtfsvalidator.table.*;
 
 /**
  * Checks that stops and only stops have stop times.
@@ -48,19 +44,40 @@ public class LocationHasStopTimesValidator extends FileValidator {
 
   private final GtfsStopTimeTableContainer stopTimeTable;
 
+  private final GtfsLocationGroupStopsTableContainer locationGroupStopTable;
+
   @Inject
   LocationHasStopTimesValidator(
-      GtfsStopTableContainer stopTable, GtfsStopTimeTableContainer stopTimeTable) {
+      GtfsStopTableContainer stopTable,
+      GtfsStopTimeTableContainer stopTimeTable,
+      GtfsLocationGroupStopsTableContainer locationGroupStopTable) {
     this.stopTable = stopTable;
     this.stopTimeTable = stopTimeTable;
+    this.locationGroupStopTable = locationGroupStopTable;
   }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
+    Set<String> stopIdsInStopTimesandLocationGroupStops = new HashSet<>();
+    Set<String> locationGroupIdsInStopTimes = new HashSet<>();
+
+    for (GtfsStopTime stopTime : stopTimeTable.getEntities()) {
+      stopIdsInStopTimesandLocationGroupStops.add(stopTime.stopId());
+      locationGroupIdsInStopTimes.add(stopTime.locationGroupId());
+    }
+
+    for (String locationGroupId : locationGroupIdsInStopTimes) {
+      for (GtfsLocationGroupStops locationGroupStop : locationGroupStopTable.getEntities()) {
+        if (locationGroupStop.locationGroupId().equals(locationGroupId)) {
+          stopIdsInStopTimesandLocationGroupStops.add(locationGroupStop.stopId());
+        }
+      }
+    }
+
     for (GtfsStop stop : stopTable.getEntities()) {
       List<GtfsStopTime> stopTimes = stopTimeTable.byStopId(stop.stopId());
       if (stop.locationType().equals(GtfsLocationType.STOP)) {
-        if (stopTimes.isEmpty()) {
+        if (stopTimes.isEmpty() && !stopIdsInStopTimesandLocationGroupStops.contains(stop.stopId())) {
           noticeContainer.addValidationNotice(new StopWithoutStopTimeNotice(stop));
         }
       } else if (!stopTimes.isEmpty()) {
