@@ -222,11 +222,11 @@ public class ValidationRunner {
       b.append(
           "----------------------------------------------------------------------------------------\n");
 
-      b.append("Single-file validators:\n   ");
-      b.append(
-          skippedNoNeedToValidate.stream()
-              .map(Class::getSimpleName)
-              .collect(Collectors.joining("\n   ")));
+      b.append("   ")
+          .append(
+              skippedNoNeedToValidate.stream()
+                  .map(Class::getSimpleName)
+                  .collect(Collectors.joining("\n   ")));
     }
 
     if (b.length() > 0) {

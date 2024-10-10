@@ -157,6 +157,23 @@ public class ForeignKeyValidatorGenerator {
     }
     typeSpec.addMethod(hasReferencedKeyMethod.build());
 
+    // Add the shouldCallValidate method, which checks if the source column for the foreign key
+    // check is present.
+    MethodSpec.Builder shouldCallValidateMethod =
+        MethodSpec.methodBuilder("shouldCallValidate")
+            .addModifiers(Modifier.PUBLIC)
+            .addAnnotation(Override.class)
+            .returns(Boolean.class);
+
+    shouldCallValidateMethod
+        .addComment(
+            "If the column with the foreign key is absent, there's no point in calling the validator.")
+        .addStatement(
+            "return childContainer == null || childContainer.hasColumn(\"$L\")",
+            FieldNameConverter.gtfsColumnName(childField.name()));
+
+    typeSpec.addMethod(shouldCallValidateMethod.build());
+
     return typeSpec.build();
   }
 

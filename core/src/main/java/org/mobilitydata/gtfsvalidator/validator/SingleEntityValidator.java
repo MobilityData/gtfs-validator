@@ -23,6 +23,13 @@ import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 public abstract class SingleEntityValidator<T extends GtfsEntity> {
   public abstract void validate(T entity, NoticeContainer noticeContainer);
 
+  /**
+   * Check if the column used by this validator exists at all. If not, no need to call the validate
+   * method.
+   *
+   * @param header A ColumnInspector that can tell if a column exists in the GTFS file.
+   * @return true if the validate method should be called.
+   */
   public Boolean shouldCallValidate(ColumnInspector header) {
     return true;
   }

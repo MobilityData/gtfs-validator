@@ -126,8 +126,10 @@ public class DefaultValidatorProvider implements ValidatorProvider {
             ValidatorLoader.createSingleFileValidator(validatorClass, table, validationContext);
         if (validatorWithStatus.dependenciesHaveErrors()) {
           skippedValidators.put(SINGLE_FILE_VALIDATORS_WITH_ERROR, validatorClass);
-        } else {
+        } else if (validatorWithStatus.validator().shouldCallValidate()) {
           validators.add(validatorWithStatus.validator());
+        } else {
+          skippedValidators.put(VALIDATORS_NO_NEED_TO_RUN, validatorClass);
         }
       } catch (ReflectiveOperationException | ValidatorLoaderException e) {
         logger.atSevere().withCause(e).log(
@@ -150,7 +152,11 @@ public class DefaultValidatorProvider implements ValidatorProvider {
         if (validatorWithStatus.dependenciesHaveErrors()) {
           skippedValidators.put(MULTI_FILE_VALIDATORS_WITH_ERROR, validatorClass);
         } else {
-          validators.add(validatorWithStatus.validator());
+          if (validatorWithStatus.validator().shouldCallValidate()) {
+            validators.add(validatorWithStatus.validator());
+          } else {
+            skippedValidators.put(VALIDATORS_NO_NEED_TO_RUN, validatorClass);
+          }
         }
       } catch (ReflectiveOperationException | ValidatorLoaderException e) {
         logger.atSevere().withCause(e).log(

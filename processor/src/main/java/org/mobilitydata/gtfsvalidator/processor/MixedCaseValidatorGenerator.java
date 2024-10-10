@@ -117,6 +117,7 @@ public class MixedCaseValidatorGenerator {
 
     typeSpec.addMethod(validateMethod.build());
 
+    // Add shouldCallValidate, which checks if the column for the mixed case field is present.
     MethodSpec.Builder shouldCallValidateMethod =
         MethodSpec.methodBuilder("shouldCallValidate")
             .addModifiers(Modifier.PUBLIC)
