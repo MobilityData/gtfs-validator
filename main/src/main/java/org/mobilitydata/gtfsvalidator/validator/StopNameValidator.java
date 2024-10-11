@@ -125,15 +125,4 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
       this.stopDesc = stopDesc;
     }
   }
-
-  /**
-   * Name and locationType columns are not found in stops.txt.
-   *
-   * <p>When the locationType column is missing, the default value used is 0 (STOP). In that case,
-   * the stopName cannot undefined.
-   */
-  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopSchema.class))
-  static class StopNameAndLocationIdColumnsBothMissingNotice extends ValidationNotice {
-    StopNameAndLocationIdColumnsBothMissingNotice() {}
-  }
 }
