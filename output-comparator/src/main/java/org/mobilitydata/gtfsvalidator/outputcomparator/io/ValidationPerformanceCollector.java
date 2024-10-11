@@ -191,31 +191,6 @@ public class ValidationPerformanceCollector {
           latestMemoryUsageById,
           b,
           ValidationPerformanceCollector::convertToHumanReadableMemory);
-
-      if (datasetsMemoryUsageWithReference.size() > 0) {
-        datasetsMemoryUsageWithReference.sort(new UsedMemoryIncreasedComparator());
-        addMemoryUsageReport(
-            datasetsMemoryUsageWithReference.subList(
-                0, Math.min(datasetsMemoryUsageWithReference.size(), MEMORY_USAGE_COMPARE_MAX)),
-            "memory has increased",
-            b,
-            true);
-        datasetsMemoryUsageWithReference.sort(new UsedMemoryDecreasedComparator());
-        var decreasedList =
-            datasetsMemoryUsageWithReference.subList(
-                0, Math.min(datasetsMemoryUsageWithReference.size(), MEMORY_USAGE_COMPARE_MAX));
-        addMemoryUsageReport(decreasedList, "memory has decreased", b, true);
-      }
-      if (datasetsMemoryUsageNoReference.size() > 0) {
-        //        Sorting from the highest to the lowest memory usage
-        datasetsMemoryUsageNoReference.sort(new UsedMemoryDecreasedComparator());
-        addMemoryUsageReport(
-            datasetsMemoryUsageNoReference.subList(
-                0, Math.min(datasetsMemoryUsageNoReference.size(), MEMORY_USAGE_COMPARE_MAX)),
-            "no reference available",
-            b,
-            false);
-      }
       b.append("</details>\n");
     }
     return b.toString();
