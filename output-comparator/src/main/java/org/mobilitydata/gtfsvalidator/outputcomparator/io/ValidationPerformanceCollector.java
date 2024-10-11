@@ -1,7 +1,6 @@
 package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.model.ValidationReport;
@@ -10,7 +9,6 @@ import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
 
 public class ValidationPerformanceCollector {
 
-  public static final int MEMORY_USAGE_COMPARE_MAX = 10;
   public static final String MEMORY_PIVOT_KEY =
       "org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader.loadAndValidate";
   private final Map<String, Double> referenceTimes;
@@ -264,67 +262,6 @@ public class ValidationPerformanceCollector {
                   performanceMetrics.maxLatest,
                   render));
     }
-  }
-
-  private void addMemoryUsageReport(
-      List<DatasetMemoryUsage> memoryUsages,
-      String order,
-      StringBuilder b,
-      boolean includeDifference) {
-    b.append(String.format("<p>List of %s datasets(%s).</p>", MEMORY_USAGE_COMPARE_MAX, order))
-        .append("\n\n")
-        .append(
-            "| Dataset ID                  | Snapshot Key(Used Memory)  | Reference  | Latest     |");
-    if (includeDifference) {
-      b.append(" Difference |");
-    }
-    b.append("\n");
-    b.append(
-        "|-----------------------------|-------------------|----------------|----------------|");
-    if (includeDifference) {
-      b.append("----------------|");
-    }
-    b.append("\n");
-    memoryUsages.stream()
-        .forEachOrdered(
-            datasetMemoryUsage -> {
-              generateMemoryLogByKey(datasetMemoryUsage, b, includeDifference);
-            });
-  }
-
-  private static void generateMemoryLogByKey(
-      DatasetMemoryUsage datasetMemoryUsage, StringBuilder b, boolean includeDifference) {
-    AtomicBoolean isFirst = new AtomicBoolean(true);
-    Set<String> keys = new HashSet<>();
-    keys.addAll(datasetMemoryUsage.getReferenceUsedMemoryByKey().keySet());
-    keys.addAll(datasetMemoryUsage.getLatestUsedMemoryByKey().keySet());
-    keys.stream()
-        .forEach(
-            key -> {
-              var reference = datasetMemoryUsage.getReferenceUsedMemoryByKey().get(key);
-              var latest = datasetMemoryUsage.getLatestUsedMemoryByKey().get(key);
-              if (isFirst.get()) {
-                b.append(String.format("| %s |  |  |  |", datasetMemoryUsage.getDatasetId()));
-                if (includeDifference) {
-                  b.append("  |");
-                }
-                b.append("\n");
-                isFirst.set(false);
-              }
-              String usedMemoryDiff = getMemoryDiff(reference, latest);
-              b.append(
-                  String.format(
-                      "| | %s | %s | %s |",
-                      key,
-                      reference != null
-                          ? MemoryUsage.convertToHumanReadableMemory(reference)
-                          : "N/A",
-                      latest != null ? MemoryUsage.convertToHumanReadableMemory(latest) : "N/A"));
-              if (includeDifference) {
-                b.append(String.format(" %s |", usedMemoryDiff));
-              }
-              b.append("\n");
-            });
   }
 
   public void compareValidationReports(
