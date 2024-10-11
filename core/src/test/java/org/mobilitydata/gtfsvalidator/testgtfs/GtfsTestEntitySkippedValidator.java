@@ -46,7 +46,7 @@ public class GtfsTestEntitySkippedValidator extends SingleEntityValidator<GtfsTe
   }
 
   @Override
-  public Boolean shouldCallValidate(ColumnInspector header) {
+  public boolean shouldCallValidate(ColumnInspector header) {
     return false;
   }
 }

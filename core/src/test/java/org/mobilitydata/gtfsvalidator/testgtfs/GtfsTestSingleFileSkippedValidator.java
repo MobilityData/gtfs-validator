@@ -52,7 +52,7 @@ public class GtfsTestSingleFileSkippedValidator extends FileValidator {
   }
 
   @Override
-  public Boolean shouldCallValidate() {
+  public boolean shouldCallValidate() {
     return false;
   }
 }

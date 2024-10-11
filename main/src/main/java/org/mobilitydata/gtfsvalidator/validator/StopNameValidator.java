@@ -60,7 +60,7 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
     }
   }
 
-  public Boolean shouldCallValidate(ColumnInspector header) {
+  public boolean shouldCallValidate(ColumnInspector header) {
     if (!header.hasColumn(GtfsStop.STOP_NAME_FIELD_NAME)
         && !header.hasColumn(GtfsStop.LOCATION_TYPE_FIELD_NAME)) {
       return false;

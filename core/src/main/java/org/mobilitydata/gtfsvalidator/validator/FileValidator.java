@@ -28,7 +28,7 @@ public abstract class FileValidator {
    *
    * @return true if the validate method should be called.
    */
-  public Boolean shouldCallValidate() {
+  public boolean shouldCallValidate() {
     return true;
   }
 }

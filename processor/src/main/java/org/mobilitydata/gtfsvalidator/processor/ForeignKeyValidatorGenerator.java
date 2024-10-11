@@ -163,7 +163,7 @@ public class ForeignKeyValidatorGenerator {
         MethodSpec.methodBuilder("shouldCallValidate")
             .addModifiers(Modifier.PUBLIC)
             .addAnnotation(Override.class)
-            .returns(Boolean.class);
+            .returns(boolean.class);
 
     shouldCallValidateMethod
         .addComment(

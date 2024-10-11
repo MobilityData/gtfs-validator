@@ -30,7 +30,7 @@ public abstract class SingleEntityValidator<T extends GtfsEntity> {
    * @param header A ColumnInspector that can tell if a column exists in the GTFS file.
    * @return true if the validate method should be called.
    */
-  public Boolean shouldCallValidate(ColumnInspector header) {
+  public boolean shouldCallValidate(ColumnInspector header) {
     return true;
   }
 }

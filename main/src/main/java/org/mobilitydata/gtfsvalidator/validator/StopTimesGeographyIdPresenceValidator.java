@@ -65,10 +65,10 @@ public class StopTimesGeographyIdPresenceValidator extends SingleEntityValidator
   }
 
   @Override
-  public Boolean shouldCallValidate(ColumnInspector header) {
-    if (header.hasColumn("stop_id")
-        || header.hasColumn("location_group_id")
-        || header.hasColumn("location_id")) {
+  public boolean shouldCallValidate(ColumnInspector header) {
+    if (header.hasColumn(GtfsStopTime.STOP_ID_FIELD_NAME)
+        || header.hasColumn(GtfsStopTime.LOCATION_GROUP_ID_FIELD_NAME)
+        || header.hasColumn(GtfsStopTime.LOCATION_ID_FIELD_NAME)) {
       return true;
     }
     return false;

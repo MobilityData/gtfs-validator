@@ -36,7 +36,7 @@ public class GtfsTestMultiFileSkippedValidator extends FileValidator {
   public void validate(NoticeContainer noticeContainer) {}
 
   @Override
-  public Boolean shouldCallValidate() {
+  public boolean shouldCallValidate() {
     return false;
   }
 }

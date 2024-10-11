@@ -122,7 +122,7 @@ public class MixedCaseValidatorGenerator {
         MethodSpec.methodBuilder("shouldCallValidate")
             .addModifiers(Modifier.PUBLIC)
             .addAnnotation(Override.class)
-            .returns(Boolean.class)
+            .returns(boolean.class)
             .addParameter(ColumnInspector.class, "header");
 
     shouldCallValidateMethod
