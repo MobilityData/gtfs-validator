@@ -77,8 +77,8 @@ public class LocationHasStopTimesValidator extends FileValidator {
     for (GtfsStop stop : stopTable.getEntities()) {
       List<GtfsStopTime> stopTimes = stopTimeTable.byStopId(stop.stopId());
       if (stop.locationType().equals(GtfsLocationType.STOP)) {
-        if (stopTimes.isEmpty() || !stopIdsInStopTimesandLocationGroupStops.contains(stop.stopId())) {
-          noticeContainer.addValidationNotice(new StopWithoutStopTimeNotice(stop));
+        if (stopTimes.isEmpty() && !stopIdsInStopTimesandLocationGroupStops.contains(stop.stopId())) {
+            noticeContainer.addValidationNotice(new StopWithoutStopTimeNotice(stop));
         }
       } else if (!stopTimes.isEmpty()) {
         noticeContainer.addValidationNotice(
