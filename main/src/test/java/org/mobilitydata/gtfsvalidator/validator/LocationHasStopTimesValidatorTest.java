@@ -48,13 +48,17 @@ public final class LocationHasStopTimesValidatorTest {
     return noticeContainer.getValidationNotices();
   }
 
-  private static GtfsStop createLocation(GtfsLocationType locationType) {
+  private static GtfsStop createLocation(GtfsLocationType locationType, String stopId) {
     return new GtfsStop.Builder()
         .setCsvRowNumber(2)
-        .setStopId("location1")
+        .setStopId(stopId)
         .setStopName("Location 1")
         .setLocationType(locationType)
         .build();
+  }
+
+  private static GtfsStop createLocation(GtfsLocationType locationType) {
+    return createLocation(locationType, "location1");
   }
 
   private static GtfsStopTime createStopTimeFor(GtfsStop stop) {
@@ -78,6 +82,13 @@ public final class LocationHasStopTimesValidatorTest {
                 ImmutableList.of(createStopTimeFor(stop)),
                 ImmutableList.of(createLocationGroupStops())))
         .isEmpty();
+  }
+
+  @Test
+  public void stopWithoutStopTime_yieldsNotice() {
+    GtfsStop location = createLocation(STOP, "stopId");
+    assertThat(generateNotices(ImmutableList.of(location), ImmutableList.of(), ImmutableList.of()))
+        .containsExactly(new StopWithoutStopTimeNotice(location));
   }
 
   @Test

@@ -34,7 +34,9 @@ import org.mobilitydata.gtfsvalidator.table.*;
  *
  * <ul>
  *   <li>every stop (or platform) should have stop times;
- *   <li>every non-stop location (station, entrance etc) may not have stop times.
+ *   <li>every non-stop location (station, entrance etc) may not have stop times;
+ *   <li>if a stop is part of a location group referenced in stop_times.txt, it should not trigger a
+ *       warning.
  * </ul>
  */
 @GtfsValidator
@@ -77,8 +79,9 @@ public class LocationHasStopTimesValidator extends FileValidator {
     for (GtfsStop stop : stopTable.getEntities()) {
       List<GtfsStopTime> stopTimes = stopTimeTable.byStopId(stop.stopId());
       if (stop.locationType().equals(GtfsLocationType.STOP)) {
-        if (stopTimes.isEmpty() && !stopIdsInStopTimesandLocationGroupStops.contains(stop.stopId())) {
-            noticeContainer.addValidationNotice(new StopWithoutStopTimeNotice(stop));
+        if (stopTimes.isEmpty()
+            && !stopIdsInStopTimesandLocationGroupStops.contains(stop.stopId())) {
+          noticeContainer.addValidationNotice(new StopWithoutStopTimeNotice(stop));
         }
       } else if (!stopTimes.isEmpty()) {
         noticeContainer.addValidationNotice(
