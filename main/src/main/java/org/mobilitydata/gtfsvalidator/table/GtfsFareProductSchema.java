@@ -20,7 +20,6 @@ import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.
 
 import java.math.BigDecimal;
 import java.util.Currency;
-
 import org.mobilitydata.gtfsvalidator.annotation.*;
 
 @GtfsTable("fare_products.txt")

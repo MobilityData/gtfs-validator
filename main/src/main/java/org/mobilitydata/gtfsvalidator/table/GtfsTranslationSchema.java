@@ -19,7 +19,6 @@ package org.mobilitydata.gtfsvalidator.table;
 import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.UNSUPPORTED;
 
 import java.util.Locale;
-
 import org.mobilitydata.gtfsvalidator.annotation.*;
 
 @GtfsTable("translations.txt")
