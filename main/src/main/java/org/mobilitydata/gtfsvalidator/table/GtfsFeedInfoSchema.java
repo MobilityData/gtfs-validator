@@ -24,10 +24,12 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 @ConditionallyRequired
 public interface GtfsFeedInfoSchema extends GtfsEntity {
   @Required
+  @NoInvalidCharacters
   String feedPublisherName();
 
   @Required
   @FieldType(FieldTypeEnum.URL)
+  @NoInvalidCharacters
   String feedPublisherUrl();
 
   @Required
@@ -43,11 +45,14 @@ public interface GtfsFeedInfoSchema extends GtfsEntity {
   GtfsDate feedEndDate();
 
   @Recommended
+  @NoInvalidCharacters
   String feedVersion();
 
   @FieldType(FieldTypeEnum.EMAIL)
+  @NoInvalidCharacters
   String feedContactEmail();
 
   @FieldType(FieldTypeEnum.URL)
+  @NoInvalidCharacters
   String feedContactUrl();
 }

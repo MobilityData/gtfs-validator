@@ -58,8 +58,10 @@ public interface GtfsPathwaySchema extends GtfsEntity {
   double minWidth();
 
   @MixedCase
+  @NoInvalidCharacters
   String signpostedAs();
 
   @MixedCase
+  @NoInvalidCharacters
   String reversedSignpostedAs();
 }

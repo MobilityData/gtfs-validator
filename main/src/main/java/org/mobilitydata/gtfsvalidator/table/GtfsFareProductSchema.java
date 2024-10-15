@@ -20,15 +20,8 @@ import static org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType.
 
 import java.math.BigDecimal;
 import java.util.Currency;
-import org.mobilitydata.gtfsvalidator.annotation.CurrencyAmount;
-import org.mobilitydata.gtfsvalidator.annotation.FieldType;
-import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
-import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.Index;
-import org.mobilitydata.gtfsvalidator.annotation.NonNegative;
-import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
+
+import org.mobilitydata.gtfsvalidator.annotation.*;
 
 @GtfsTable("fare_products.txt")
 public interface GtfsFareProductSchema extends GtfsEntity {
@@ -38,6 +31,7 @@ public interface GtfsFareProductSchema extends GtfsEntity {
   @Index
   String fareProductId();
 
+  @NoInvalidCharacters
   String fareProductName();
 
   @Required

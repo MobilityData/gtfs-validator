@@ -47,11 +47,14 @@ public interface GtfsAttributionSchema extends GtfsEntity {
   GtfsAttributionRole isAuthority();
 
   @FieldType(FieldTypeEnum.URL)
+  @NoInvalidCharacters
   String attributionUrl();
 
   @FieldType(FieldTypeEnum.EMAIL)
+  @NoInvalidCharacters
   String attributionEmail();
 
   @FieldType(FieldTypeEnum.PHONE_NUMBER)
+  @NoInvalidCharacters
   String attributionPhone();
 }

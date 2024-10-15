@@ -27,6 +27,7 @@ public interface GtfsStopSchema extends GtfsEntity {
   @Required
   String stopId();
 
+  @NoInvalidCharacters
   String stopCode();
 
   @MixedCase
@@ -34,8 +35,10 @@ public interface GtfsStopSchema extends GtfsEntity {
   @NoInvalidCharacters
   String stopName();
 
+  @NoInvalidCharacters
   String ttsStopName();
 
+  @NoInvalidCharacters
   String stopDesc();
 
   @FieldType(FieldTypeEnum.LATITUDE)
@@ -52,6 +55,7 @@ public interface GtfsStopSchema extends GtfsEntity {
   String zoneId();
 
   @FieldType(FieldTypeEnum.URL)
+  @NoInvalidCharacters
   String stopUrl();
 
   GtfsLocationType locationType();
@@ -60,6 +64,7 @@ public interface GtfsStopSchema extends GtfsEntity {
   @Index
   @ConditionallyRequired
   @ForeignKey(table = "stops.txt", field = "stop_id")
+  @NoInvalidCharacters
   String parentStation();
 
   @FieldType(FieldTypeEnum.TIMEZONE)
@@ -71,5 +76,6 @@ public interface GtfsStopSchema extends GtfsEntity {
   @ForeignKey(table = "levels.txt", field = "level_id")
   String levelId();
 
+  @NoInvalidCharacters
   String platformCode();
 }

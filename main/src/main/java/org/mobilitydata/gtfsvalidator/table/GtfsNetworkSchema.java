@@ -10,5 +10,6 @@ public interface GtfsNetworkSchema extends GtfsEntity {
   String networkId();
 
   @MixedCase
+  @NoInvalidCharacters
   String networkName();
 }

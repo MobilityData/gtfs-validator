@@ -43,6 +43,7 @@ public interface GtfsRouteSchema extends GtfsEntity {
   String routeLongName();
 
   @MixedCase
+  @NoInvalidCharacters
   String routeDesc();
 
   @Required
@@ -50,6 +51,7 @@ public interface GtfsRouteSchema extends GtfsEntity {
   GtfsRouteType routeType();
 
   @FieldType(FieldTypeEnum.URL)
+  @NoInvalidCharacters
   String routeUrl();
 
   @DefaultValue("FFFFFF")

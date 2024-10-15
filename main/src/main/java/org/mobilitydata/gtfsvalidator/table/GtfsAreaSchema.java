@@ -16,11 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
-import org.mobilitydata.gtfsvalidator.annotation.FieldType;
-import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.*;
 
 @GtfsTable(
     value = "areas.txt",
@@ -35,5 +31,6 @@ public interface GtfsAreaSchema extends GtfsEntity {
   @PrimaryKey
   String areaId();
 
+  @NoInvalidCharacters
   String areaName();
 }

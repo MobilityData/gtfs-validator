@@ -38,9 +38,11 @@ public interface GtfsTripSchema extends GtfsEntity {
   String serviceId();
 
   @MixedCase
+  @NoInvalidCharacters
   String tripHeadsign();
 
   @MixedCase
+  @NoInvalidCharacters
   String tripShortName();
 
   GtfsTripDirectionId directionId();
