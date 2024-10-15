@@ -16,6 +16,7 @@ on:
       - '.github/workflows/web_**.yml'
       - '.github/workflows/stg_web_**.yml'
     types: [ opened, synchronize, reopened, ready_for_review ]
+  workflow_dispatch:
 concurrency:
   group: ${{ github.head_ref }}
   cancel-in-progress: true
