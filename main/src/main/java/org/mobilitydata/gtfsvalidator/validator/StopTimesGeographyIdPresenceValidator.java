@@ -63,4 +63,14 @@ public class StopTimesGeographyIdPresenceValidator extends SingleEntityValidator
     //              stopTime.locationId()));
     //    }
   }
+
+  @Override
+  public boolean shouldCallValidate(ColumnInspector header) {
+    if (header.hasColumn(GtfsStopTime.STOP_ID_FIELD_NAME)
+        || header.hasColumn(GtfsStopTime.LOCATION_GROUP_ID_FIELD_NAME)
+        || header.hasColumn(GtfsStopTime.LOCATION_ID_FIELD_NAME)) {
+      return true;
+    }
+    return false;
+  }
 }
