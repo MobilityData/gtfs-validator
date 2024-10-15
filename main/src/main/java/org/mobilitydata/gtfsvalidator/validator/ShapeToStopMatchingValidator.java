@@ -174,6 +174,10 @@ public class ShapeToStopMatchingValidator extends FileValidator {
       Set<String> reportedStopIds,
       NoticeContainer noticeContainer) {
     for (Problem problem : problems) {
+      if (problem.getStopTime().stopId().isEmpty()) {
+        // Ignore stop times without a stop_id
+        continue;
+      }
       if (problem.getType().equals(ProblemType.STOP_TOO_FAR_FROM_SHAPE)
           && !reportedStopIds.add(problem.getStopTime().stopId())) {
         // Ignore stops already reported before.
