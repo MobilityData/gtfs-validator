@@ -1,7 +1,7 @@
 name: Rule acceptance tests
 on:
   pull_request:
-    branches: [ master ]
+#    branches: [ master ]
     paths-ignore:
       - '**.md'
       - 'Dockerfile'
