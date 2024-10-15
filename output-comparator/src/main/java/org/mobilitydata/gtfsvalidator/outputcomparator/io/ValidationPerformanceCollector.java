@@ -183,6 +183,7 @@ public class ValidationPerformanceCollector {
 
   public void compareValidationReports(
       String sourceId, ValidationReport referenceReport, ValidationReport latestReport) {
+    System.out.println("Computing validation report");
     if (referenceReport.getValidationTimeSeconds() != null) {
       addReferenceTime(sourceId, referenceReport.getValidationTimeSeconds());
     }
