@@ -265,8 +265,7 @@ public class FeedMetadataTest {
 
   @Test
   public void omitsPathwaySignsFeatureTest() throws IOException, InterruptedException {
-    String pathwayContent =
-        "pathway_id,from_stop_id,to_stop_id,pathway_mode,is_bidirectional\n";
+    String pathwayContent = "pathway_id,from_stop_id,to_stop_id,pathway_mode,is_bidirectional\n";
     createDataFile("pathways.txt", pathwayContent);
     validateSpecFeature(
         "Pathway Signs",
@@ -277,26 +276,26 @@ public class FeedMetadataTest {
   @Test
   public void containsPathwayDetailsFeatureTest() throws IOException, InterruptedException {
     String pathwayContent =
-            "pathway_id,from_stop_id,to_stop_id,pathway_mode,is_bidirectional,traversal_time,max_slope\n"
-                    + "pathway1,stop1,stop2,1,1,120,0\n"
-                    + "pathway2,stop2,stop3,2,0,300,1.1\n";
+        "pathway_id,from_stop_id,to_stop_id,pathway_mode,is_bidirectional,traversal_time,max_slope\n"
+            + "pathway1,stop1,stop2,1,1,120,0\n"
+            + "pathway2,stop2,stop3,2,0,300,1.1\n";
     createDataFile("pathways.txt", pathwayContent);
     validateSpecFeature(
-            "Pathway Details",
-            true,
-            ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+        "Pathway Details",
+        true,
+        ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
   @Test
   public void omitsPathwayDetailsFeatureTest() throws IOException, InterruptedException {
-    String pathwayContent =
-            "pathway_id,from_stop_id,to_stop_id,pathway_mode,is_bidirectional\n";
+    String pathwayContent = "pathway_id,from_stop_id,to_stop_id,pathway_mode,is_bidirectional\n";
     createDataFile("pathways.txt", pathwayContent);
     validateSpecFeature(
-            "Pathway Details",
-            false,
-            ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+        "Pathway Details",
+        false,
+        ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
+
   @Test
   public void containsPathwayConnectionFeatureTest() throws IOException, InterruptedException {
     String pathwayContent =
