@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,29 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.validator;
+package org.mobilitydata.gtfsvalidator.testgtfs;
 
+import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.validator.FileValidator;
 
-/** Interface for validators that handle one as a whole or several files. */
-public abstract class FileValidator {
-  public abstract void validate(NoticeContainer noticeContainer);
+public class GtfsTestMultiFileSkippedValidator extends FileValidator {
 
-  /**
-   * Check if the validate method should be called. For example if the child field is a ForeignKey,
-   * there's no point to validate if the child field column does not exist.
-   *
-   * @return true if the validate method should be called.
-   */
+  private final GtfsTestTableContainer table;
+  private final GtfsTestTableContainer2 unparsableTable;
+
+  @Inject
+  public GtfsTestMultiFileSkippedValidator(
+      GtfsTestTableContainer table, GtfsTestTableContainer2 table2) {
+    this.table = table;
+    this.unparsableTable = table2;
+  }
+
+  @Override
+  public void validate(NoticeContainer noticeContainer) {}
+
+  @Override
   public boolean shouldCallValidate() {
-    return true;
+    return false;
   }
 }
