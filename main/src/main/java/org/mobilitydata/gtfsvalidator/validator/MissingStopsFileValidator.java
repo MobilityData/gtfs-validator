@@ -10,18 +10,18 @@ import org.mobilitydata.gtfsvalidator.table.*;
 public class MissingStopsFileValidator extends FileValidator {
 
   private final GtfsStopTableContainer stopTableContainer;
-  private final GtfsGeojsonFeaturesContainer geojsonFeaturesContainer;
+  private final GtfsGeoJsonFeaturesContainer geoJsonFeaturesContainer;
 
   @Inject
   MissingStopsFileValidator(
-      GtfsStopTableContainer table, GtfsGeojsonFeaturesContainer geojsonFeaturesContainer) {
+      GtfsStopTableContainer table, GtfsGeoJsonFeaturesContainer geoJsonFeaturesContainer) {
     this.stopTableContainer = table;
-    this.geojsonFeaturesContainer = geojsonFeaturesContainer;
+    this.geoJsonFeaturesContainer = geoJsonFeaturesContainer;
   }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    if (stopTableContainer.isMissingFile() && geojsonFeaturesContainer.isMissingFile()) {
+    if (stopTableContainer.isMissingFile() && geoJsonFeaturesContainer.isMissingFile()) {
       noticeContainer.addValidationNotice(new MissingRequiredFileNotice("stops.txt"));
     }
   }
