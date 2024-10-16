@@ -1,34 +1,26 @@
 package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.model.ValidationReport;
 import org.mobilitydata.gtfsvalidator.outputcomparator.model.report.ValidationPerformance;
 import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
 
 public class ValidationPerformanceCollector {
 
-  public static final int MEMORY_USAGE_COMPARE_MAX = 25;
+  public static final String MEMORY_PIVOT_KEY =
+      "org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader.loadAndValidate";
   private final Map<String, Double> referenceTimes;
   private final Map<String, Double> latestTimes;
-  private final BoundedPriorityQueue<DatasetMemoryUsage> datasetsDecreasedMemoryUsage;
-  private final BoundedPriorityQueue<DatasetMemoryUsage> datasetsIncreasedMemoryUsage;
   private final List<DatasetMemoryUsage> datasetsMemoryUsageNoReference;
+  private final List<DatasetMemoryUsage> datasetsMemoryUsageWithReference;
 
   public ValidationPerformanceCollector() {
     this.referenceTimes = new HashMap<>();
     this.latestTimes = new HashMap<>();
-    this.datasetsDecreasedMemoryUsage =
-        new BoundedPriorityQueue<>(
-            MEMORY_USAGE_COMPARE_MAX,
-            MEMORY_USAGE_COMPARE_MAX,
-            (new UsedMemoryIncreasedComparator().reversed()));
-    this.datasetsIncreasedMemoryUsage =
-        new BoundedPriorityQueue<>(
-            MEMORY_USAGE_COMPARE_MAX,
-            MEMORY_USAGE_COMPARE_MAX,
-            new UsedMemoryIncreasedComparator());
     this.datasetsMemoryUsageNoReference = new ArrayList<>();
+    this.datasetsMemoryUsageWithReference = new ArrayList<>();
   }
 
   public void addReferenceTime(String sourceId, Double time) {
@@ -39,11 +31,11 @@ public class ValidationPerformanceCollector {
     latestTimes.put(sourceId, time);
   }
 
-  private Double computeAverage(List<Double> times) {
+  private Double computeAverage(Collection<Double> times) {
     return times.stream().mapToDouble(Double::doubleValue).average().orElse(Double.NaN);
   }
 
-  private Double computeMedian(List<Double> times) {
+  private Double computeMedian(Collection<Double> times) {
     if (times.isEmpty()) {
       return Double.NaN;
     }
@@ -59,31 +51,37 @@ public class ValidationPerformanceCollector {
     return median;
   }
 
-  private Double computeStandardDeviation(List<Double> times) {
+  private Double computeStandardDeviation(Collection<Double> times) {
     double mean = computeAverage(times);
     return Math.sqrt(
         times.stream().mapToDouble(time -> Math.pow(time - mean, 2)).average().orElse(Double.NaN));
   }
 
-  private Double computeMax(List<Double> times) {
+  private Double computeMax(Collection<Double> times) {
     return times.stream().mapToDouble(Double::doubleValue).max().orElse(Double.NaN);
   }
 
-  private Double computeMin(List<Double> times) {
+  private Double computeMin(Collection<Double> times) {
     return times.stream().mapToDouble(Double::doubleValue).min().orElse(Double.NaN);
   }
 
-  private String formatMetrics(String metric, String datasetId, Double reference, Double latest) {
+  private String formatMetrics(
+      String metric,
+      String datasetId,
+      Double reference,
+      Double latest,
+      Function<Double, String> render) {
     String diff;
     if (reference.isNaN() || latest.isNaN()) {
       diff = "N/A";
     } else {
       double difference = latest - reference;
       String arrow = difference > 0 ? "⬆️+" : "⬇️";
-      diff = String.format("%s%.2f", arrow, difference);
+      diff = String.format("%s%s", arrow, render.apply(difference));
     }
     return String.format(
-        "| %s | %s | %.2f | %.2f | %s |\n", metric, datasetId, reference, latest, diff);
+        "| %s | %s | %s | %s | %s |\n",
+        metric, datasetId, render.apply(reference), render.apply(latest), diff);
   }
 
   private static String getMemoryDiff(Long reference, Long latest) {
@@ -134,70 +132,8 @@ public class ValidationPerformanceCollector {
       allLatestTimes.add(latestTimes);
     }
 
-    if (!allReferenceTimes.isEmpty() && !allLatestTimes.isEmpty()) {
-      Double avgReference = computeAverage(allReferenceTimes);
-      Double avgLatest = computeAverage(allLatestTimes);
-      Double medianReference = computeMedian(allReferenceTimes);
-      Double medianLatest = computeMedian(allLatestTimes);
-      Double stdDevReference = computeStandardDeviation(allReferenceTimes);
-      Double stdDevLatest = computeStandardDeviation(allLatestTimes);
-
-      b.append(formatMetrics("Average", "--", avgReference, avgLatest))
-          .append(formatMetrics("Median", "--", medianReference, medianLatest))
-          .append(formatMetrics("Standard Deviation", "--", stdDevReference, stdDevLatest));
-    }
-
-    if (!allReferenceTimes.isEmpty()) {
-      Double minReference = computeMin(allReferenceTimes);
-      String minReferenceId =
-          referenceTimes.entrySet().stream()
-              .filter(entry -> Objects.equals(entry.getValue(), minReference))
-              .map(Map.Entry::getKey)
-              .findFirst()
-              .orElse("N/A");
-
-      Double maxReference = computeMax(allReferenceTimes);
-      String maxReferenceId =
-          referenceTimes.entrySet().stream()
-              .filter(entry -> Objects.equals(entry.getValue(), maxReference))
-              .map(Map.Entry::getKey)
-              .findFirst()
-              .orElse("N/A");
-
-      Double minLatest = latestTimes.getOrDefault(minReferenceId, Double.NaN);
-      Double maxLatest = latestTimes.getOrDefault(maxReferenceId, Double.NaN);
-
-      b.append(
-              formatMetrics(
-                  "Minimum in References Reports", minReferenceId, minReference, minLatest))
-          .append(
-              formatMetrics(
-                  "Maximum in Reference Reports", maxReferenceId, maxReference, maxLatest));
-    }
-
-    if (!allLatestTimes.isEmpty()) {
-      Double minLatest = computeMin(allLatestTimes);
-      String minLatestId =
-          latestTimes.entrySet().stream()
-              .filter(entry -> Objects.equals(entry.getValue(), minLatest))
-              .map(Map.Entry::getKey)
-              .findFirst()
-              .orElse("N/A");
-
-      Double maxLatest = computeMax(allLatestTimes);
-      String maxLatestId =
-          latestTimes.entrySet().stream()
-              .filter(entry -> Objects.equals(entry.getValue(), maxLatest))
-              .map(Map.Entry::getKey)
-              .findFirst()
-              .orElse("N/A");
-
-      Double minReference = referenceTimes.getOrDefault(minLatestId, Double.NaN);
-      Double maxReference = referenceTimes.getOrDefault(maxLatestId, Double.NaN);
-
-      b.append(formatMetrics("Minimum in Latest Reports", minLatestId, minReference, minLatest))
-          .append(formatMetrics("Maximum in Latest Reports", maxLatestId, maxReference, maxLatest));
-    }
+    generatePerformanceMetricsLog(
+        referenceTimes, latestTimes, b, value -> String.format("%.2f", value));
 
     // Add warning message for feeds that are missing validation times either in reference or latest
     if (!warnings.isEmpty()) {
@@ -211,102 +147,121 @@ public class ValidationPerformanceCollector {
 
     b.append("</details>\n\n");
 
-    if (datasetsIncreasedMemoryUsage.size() > 0
-        || datasetsDecreasedMemoryUsage.size() > 0
-        || datasetsMemoryUsageNoReference.size() > 0) {
+    if (datasetsMemoryUsageWithReference.size() > 0) {
+      Map<String, Double> referenceMemoryUsageById =
+          datasetsMemoryUsageWithReference.stream()
+              .filter(
+                  datasetMemoryUsage ->
+                      datasetMemoryUsage.getReferenceUsedMemoryByKey().get(MEMORY_PIVOT_KEY)
+                          != null)
+              .collect(
+                  Collectors.toMap(
+                      DatasetMemoryUsage::getDatasetId,
+                      datasetMemoryUsage ->
+                          datasetMemoryUsage
+                              .getReferenceUsedMemoryByKey()
+                              .get(MEMORY_PIVOT_KEY)
+                              .doubleValue()));
+      Map<String, Double> latestMemoryUsageById =
+          datasetsMemoryUsageWithReference.stream()
+              .filter(
+                  datasetMemoryUsage ->
+                      datasetMemoryUsage.getLatestUsedMemoryByKey().get(MEMORY_PIVOT_KEY) != null)
+              .collect(
+                  Collectors.toMap(
+                      DatasetMemoryUsage::getDatasetId,
+                      datasetMemoryUsage ->
+                          datasetMemoryUsage
+                              .getLatestUsedMemoryByKey()
+                              .get(MEMORY_PIVOT_KEY)
+                              .doubleValue()));
+
       b.append("<details>\n");
-      b.append("<summary><strong>📜 Memory Consumption</strong></summary>\n");
-      if (datasetsIncreasedMemoryUsage.size() > 0) {
-        List<DatasetMemoryUsage> increasedMemoryUsages =
-            getDatasetMemoryUsages(datasetsIncreasedMemoryUsage);
-        addMemoryUsageReport(increasedMemoryUsages, "memory has increased", b, true);
-      }
-      if (datasetsDecreasedMemoryUsage.size() > 0) {
-        List<DatasetMemoryUsage> decreasedMemoryUsages =
-            getDatasetMemoryUsages(datasetsDecreasedMemoryUsage);
-        addMemoryUsageReport(decreasedMemoryUsages, "memory has decreased", b, true);
-      }
-      if (datasetsMemoryUsageNoReference.size() > 0) {
-        //        Sorting from the highest to the lowest memory usage
-        datasetsMemoryUsageNoReference.sort((new LatestReportUsedMemoryComparator()).reversed());
-        addMemoryUsageReport(
-            datasetsMemoryUsageNoReference.subList(
-                0, Math.min(datasetsMemoryUsageNoReference.size(), MEMORY_USAGE_COMPARE_MAX)),
-            "no reference available",
-            b,
-            false);
-      }
+      b.append("<summary><strong>📜 Memory Consumption</strong></summary>\n\n");
+
+      b.append(
+              "| Metric                      | Dataset ID        | Reference (s)  | Latest (s)     | Difference (s) |\n")
+          .append(
+              "|-----------------------------|-------------------|----------------|----------------|----------------|\n");
+
+      generatePerformanceMetricsLog(
+          referenceMemoryUsageById,
+          latestMemoryUsageById,
+          b,
+          ValidationPerformanceCollector::convertToHumanReadableMemory);
       b.append("</details>\n");
     }
     return b.toString();
   }
 
-  private List<DatasetMemoryUsage> getDatasetMemoryUsages(
-      BoundedPriorityQueue<DatasetMemoryUsage> datasetsMemoryUsage) {
-    List<DatasetMemoryUsage> increasedMemoryUsages = new ArrayList<>(datasetsMemoryUsage);
-    increasedMemoryUsages.sort(datasetsMemoryUsage.comparator());
-    return increasedMemoryUsages;
-  }
-
-  private void addMemoryUsageReport(
-      List<DatasetMemoryUsage> memoryUsages,
-      String order,
+  private void generatePerformanceMetricsLog(
+      Map<String, Double> references,
+      Map<String, Double> latests,
       StringBuilder b,
-      boolean includeDifference) {
-    b.append(String.format("<p>List of %s datasets(%s).</p>", MEMORY_USAGE_COMPARE_MAX, order))
-        .append("\n\n")
-        .append(
-            "| Dataset ID                  | Snapshot Key(Used Memory)  | Reference  | Latest     |");
-    if (includeDifference) {
-      b.append(" Difference |");
+      Function<Double, String> render) {
+    PerformanceMetrics performanceMetrics = computeMetrics(references, latests);
+    if (!references.isEmpty() && !latests.isEmpty()) {
+      b.append(
+              formatMetrics(
+                  "Average",
+                  "--",
+                  performanceMetrics.avgReference,
+                  performanceMetrics.avgLatest,
+                  render))
+          .append(
+              formatMetrics(
+                  "Median",
+                  "--",
+                  performanceMetrics.medianReference,
+                  performanceMetrics.medianLatest,
+                  render))
+          .append(
+              formatMetrics(
+                  "Standard Deviation",
+                  "--",
+                  performanceMetrics.stdDevReference,
+                  performanceMetrics.stdDevLatest,
+                  render));
     }
-    b.append("\n");
-    b.append(
-        "|-----------------------------|-------------------|----------------|----------------|");
-    if (includeDifference) {
-      b.append("----------------|");
-    }
-    b.append("\n");
-    memoryUsages.stream()
-        .forEachOrdered(
-            datasetMemoryUsage -> {
-              generateMemoryLogByKey(datasetMemoryUsage, b, includeDifference);
-            });
-  }
 
-  private static void generateMemoryLogByKey(
-      DatasetMemoryUsage datasetMemoryUsage, StringBuilder b, boolean includeDifference) {
-    AtomicBoolean isFirst = new AtomicBoolean(true);
-    Set<String> keys = new HashSet<>();
-    keys.addAll(datasetMemoryUsage.getReferenceUsedMemoryByKey().keySet());
-    keys.addAll(datasetMemoryUsage.getLatestUsedMemoryByKey().keySet());
-    keys.stream()
-        .forEach(
-            key -> {
-              var reference = datasetMemoryUsage.getReferenceUsedMemoryByKey().get(key);
-              var latest = datasetMemoryUsage.getLatestUsedMemoryByKey().get(key);
-              if (isFirst.get()) {
-                b.append(String.format("| %s |  |  |  |", datasetMemoryUsage.getDatasetId()));
-                if (includeDifference) {
-                  b.append("  |");
-                }
-                b.append("\n");
-                isFirst.set(false);
-              }
-              String usedMemoryDiff = getMemoryDiff(reference, latest);
-              b.append(
-                  String.format(
-                      "| | %s | %s | %s |",
-                      key,
-                      reference != null
-                          ? MemoryUsage.convertToHumanReadableMemory(reference)
-                          : "N/A",
-                      latest != null ? MemoryUsage.convertToHumanReadableMemory(latest) : "N/A"));
-              if (includeDifference) {
-                b.append(String.format(" %s |", usedMemoryDiff));
-              }
-              b.append("\n");
-            });
+    if (!references.isEmpty()) {
+      Double minLatest = latests.getOrDefault(performanceMetrics.minReferenceId, Double.NaN);
+      Double maxLatest = latests.getOrDefault(performanceMetrics.maxReferenceId, Double.NaN);
+      b.append(
+              formatMetrics(
+                  "Minimum in References Reports",
+                  performanceMetrics.minReferenceId,
+                  performanceMetrics.minReference,
+                  minLatest,
+                  render))
+          .append(
+              formatMetrics(
+                  "Maximum in Reference Reports",
+                  performanceMetrics.maxReferenceId,
+                  performanceMetrics.maxReference,
+                  maxLatest,
+                  render));
+    }
+
+    if (!latests.isEmpty()) {
+      Double minReference = references.getOrDefault(performanceMetrics.minLatestId, Double.NaN);
+      Double maxReference = references.getOrDefault(performanceMetrics.maxLatestId, Double.NaN);
+
+      b.append(
+              formatMetrics(
+                  "Minimum in Latest Reports",
+                  performanceMetrics.minLatestId,
+                  minReference,
+                  performanceMetrics.minLatest,
+                  render))
+          .append(
+              formatMetrics(
+                  "Maximum in Latest Reports",
+                  performanceMetrics.maxLatestId,
+                  maxReference,
+                  performanceMetrics.maxLatest,
+                  render));
+    }
   }
 
   public void compareValidationReports(
@@ -332,8 +287,7 @@ public class ValidationPerformanceCollector {
         && referenceReport.getMemoryUsageRecords().size() > 0
         && latestReport.getMemoryUsageRecords() != null
         && latestReport.getMemoryUsageRecords().size() > 0) {
-      datasetsIncreasedMemoryUsage.offer(datasetMemoryUsage);
-      datasetsDecreasedMemoryUsage.offer(datasetMemoryUsage);
+      datasetsMemoryUsageWithReference.add(datasetMemoryUsage);
     } else {
       datasetsMemoryUsageNoReference.add(datasetMemoryUsage);
     }
@@ -352,4 +306,78 @@ public class ValidationPerformanceCollector {
     }
     return affectedSources;
   }
+
+  private PerformanceMetrics computeMetrics(
+      Map<String, Double> referencesById, Map<String, Double> latestsById) {
+    Collection<Double> allReferences = referencesById.values();
+    Collection<Double> allLatest = latestsById.values();
+    PerformanceMetrics performanceMetrics = new PerformanceMetrics();
+    if (!allReferences.isEmpty() && !allLatest.isEmpty()) {
+      performanceMetrics.avgReference = computeAverage(allReferences);
+      performanceMetrics.avgLatest = computeAverage(allLatest);
+      performanceMetrics.medianReference = computeMedian(allReferences);
+      performanceMetrics.medianLatest = computeMedian(allLatest);
+      performanceMetrics.stdDevReference = computeStandardDeviation(allReferences);
+      performanceMetrics.stdDevLatest = computeStandardDeviation(allLatest);
+    }
+
+    if (!allReferences.isEmpty()) {
+      performanceMetrics.minReference = computeMin(allReferences);
+      performanceMetrics.minReferenceId =
+          referencesById.entrySet().stream()
+              .filter(entry -> Objects.equals(entry.getValue(), performanceMetrics.minReference))
+              .map(Map.Entry::getKey)
+              .findFirst()
+              .orElse("N/A");
+
+      performanceMetrics.maxReference = computeMax(allReferences);
+      performanceMetrics.maxReferenceId =
+          referencesById.entrySet().stream()
+              .filter(entry -> Objects.equals(entry.getValue(), performanceMetrics.maxReference))
+              .map(Map.Entry::getKey)
+              .findFirst()
+              .orElse("N/A");
+    }
+
+    if (!allLatest.isEmpty()) {
+      performanceMetrics.minLatest = computeMin(allLatest);
+      performanceMetrics.minLatestId =
+          latestsById.entrySet().stream()
+              .filter(entry -> Objects.equals(entry.getValue(), performanceMetrics.minLatest))
+              .map(Map.Entry::getKey)
+              .findFirst()
+              .orElse("N/A");
+
+      performanceMetrics.maxLatest = computeMax(allLatest);
+      performanceMetrics.maxLatestId =
+          latestsById.entrySet().stream()
+              .filter(entry -> Objects.equals(entry.getValue(), performanceMetrics.maxLatest))
+              .map(Map.Entry::getKey)
+              .findFirst()
+              .orElse("N/A");
+    }
+    return performanceMetrics;
+  }
+
+  private static String convertToHumanReadableMemory(Double bytes) {
+    //      Ignoring the decimals in bytes
+    return MemoryUsage.convertToHumanReadableMemory(bytes.longValue());
+  }
+}
+
+class PerformanceMetrics {
+  Double minReference;
+  String minReferenceId;
+  Double maxReference;
+  Double minLatest;
+  Double maxLatest;
+  String minLatestId;
+  String maxLatestId;
+  String maxReferenceId;
+  Double avgReference;
+  Double avgLatest;
+  Double medianReference;
+  Double medianLatest;
+  Double stdDevReference;
+  Double stdDevLatest;
 }
