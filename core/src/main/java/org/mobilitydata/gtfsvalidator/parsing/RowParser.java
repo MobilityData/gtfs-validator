@@ -122,12 +122,10 @@ public class RowParser {
     }
     if (s != null) {
       // Validate if the string contains invalid characters
-
       if (containsInvalidCharacters(s)) {
         noticeContainer.addValidationNotice(
             new InvalidCharactersNotice(
                 fileName, getRowNumber(), columnDescriptor.columnName(), s));
-        return null;
       }
 
       s =
