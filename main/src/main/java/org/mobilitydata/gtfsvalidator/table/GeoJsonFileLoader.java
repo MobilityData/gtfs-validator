@@ -211,7 +211,7 @@ public class GeoJsonFileLoader extends TableLoader {
     return null;
   }
 
-  private static void addMissingRequiredFieldsNotice(
+  private static void addMissingRequiredFieldsNotices(
       List<String> missingRequiredFields,
       NoticeContainer noticeContainer,
       String featureId,
