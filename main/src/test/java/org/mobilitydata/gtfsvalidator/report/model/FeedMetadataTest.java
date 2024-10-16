@@ -251,6 +251,52 @@ public class FeedMetadataTest {
   }
 
   @Test
+  public void containsPathwaySignsFeatureTest() throws IOException, InterruptedException {
+    String pathwayContent =
+        "pathway_id,from_stop_id,to_stop_id,pathway_mode,is_bidirectional,signposted_as,reversed_signposted_as\n"
+            + "pathway1,stop1,stop2,1,1,sign1,rsign1\n"
+            + "pathway2,stop2,stop3,2,0,sign2,rsign2\n";
+    createDataFile("pathways.txt", pathwayContent);
+    validateSpecFeature(
+        "Pathway Signs",
+        true,
+        ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsPathwaySignsFeatureTest() throws IOException, InterruptedException {
+    String pathwayContent = "pathway_id,from_stop_id,to_stop_id,pathway_mode,is_bidirectional\n";
+    createDataFile("pathways.txt", pathwayContent);
+    validateSpecFeature(
+        "Pathway Signs",
+        false,
+        ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void containsPathwayDetailsFeatureTest() throws IOException, InterruptedException {
+    String pathwayContent =
+        "pathway_id,from_stop_id,to_stop_id,pathway_mode,is_bidirectional,traversal_time,max_slope\n"
+            + "pathway1,stop1,stop2,1,1,120,0\n"
+            + "pathway2,stop2,stop3,2,0,300,1.1\n";
+    createDataFile("pathways.txt", pathwayContent);
+    validateSpecFeature(
+        "Pathway Details",
+        true,
+        ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsPathwayDetailsFeatureTest() throws IOException, InterruptedException {
+    String pathwayContent = "pathway_id,from_stop_id,to_stop_id,pathway_mode,is_bidirectional\n";
+    createDataFile("pathways.txt", pathwayContent);
+    validateSpecFeature(
+        "Pathway Details",
+        false,
+        ImmutableList.of(GtfsPathwayTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
   public void containsPathwayConnectionFeatureTest() throws IOException, InterruptedException {
     String pathwayContent =
         "pathway_id,from_stop_id,to_stop_id,pathway_mode,is_bidirectional\n"
@@ -331,7 +377,7 @@ public class FeedMetadataTest {
         "trip_id, start_time, end_time, headway_secs\n" + "dummy1, 01:01:01, 01:01:02, 1\n";
     createDataFile(GtfsFrequency.FILENAME, content);
     validateSpecFeature(
-        "Frequency-Based Service",
+        "Frequencies",
         true,
         ImmutableList.of(GtfsFrequencyTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
@@ -341,7 +387,7 @@ public class FeedMetadataTest {
     String content = "trip_id, start_time, end_time, headway_secs\n";
     createDataFile(GtfsFrequency.FILENAME, content);
     validateSpecFeature(
-        "Frequency-Based Service",
+        "Frequencies",
         false,
         ImmutableList.of(GtfsFrequencyTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
