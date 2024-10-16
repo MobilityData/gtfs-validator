@@ -5,13 +5,12 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 
 /**
- * This field contains invalid characters such as the replacement character ("\uFFFD").
+ * This field contains invalid characters, such as the replacement character ("\uFFFD").
  *
- * <p>Fields with customer-facing text should not contain invalid characters to ensure good
- * readability and accessibility.
+ * <p>Check that text was properly encoded in UTF-8 as required by GTFS.
  */
 @GtfsValidationNotice(severity = ERROR)
-public class InvalidCharactersNotice extends ValidationNotice {
+public class InvalidCharacterNotice extends ValidationNotice {
   /** The name of the file containing the invalid characters. */
   private final String filename;
 
@@ -24,7 +23,7 @@ public class InvalidCharactersNotice extends ValidationNotice {
   /** The value of the field containing the invalid characters. */
   private final String fieldValue;
 
-  public InvalidCharactersNotice(
+  public InvalidCharacterNotice(
       String filename, long csvRowNumber, String fieldName, String fieldValue) {
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;

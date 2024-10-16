@@ -124,8 +124,7 @@ public class RowParser {
       // Validate if the string contains invalid characters
       if (containsInvalidCharacters(s)) {
         noticeContainer.addValidationNotice(
-            new InvalidCharactersNotice(
-                fileName, getRowNumber(), columnDescriptor.columnName(), s));
+            new InvalidCharacterNotice(fileName, getRowNumber(), columnDescriptor.columnName(), s));
       }
 
       s =
