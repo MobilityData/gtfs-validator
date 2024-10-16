@@ -207,7 +207,7 @@ public class GeoJsonFileLoader extends TableLoader {
         }
       }
     }
-    addMissingRequiredFieldsNotice(missingRequiredFields, noticeContainer, featureId, featureIndex);
+    addMissingRequiredFieldsNotices(missingRequiredFields, noticeContainer, featureId, featureIndex);
     return null;
   }
 
