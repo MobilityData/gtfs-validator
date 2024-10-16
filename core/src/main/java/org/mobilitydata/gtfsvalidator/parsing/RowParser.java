@@ -122,14 +122,14 @@ public class RowParser {
     }
     if (s != null) {
       // Validate if the string contains invalid characters
-      if (fileName.equals("stops.txt")) {
-        if (containsInvalidCharacters(s)) {
-          noticeContainer.addValidationNotice(
-                  new InvalidCharactersNotice(
-                          fileName, getRowNumber(), columnDescriptor.columnName(), s));
-          return null;
-        }
+
+      if (containsInvalidCharacters(s)) {
+        noticeContainer.addValidationNotice(
+            new InvalidCharactersNotice(
+                fileName, getRowNumber(), columnDescriptor.columnName(), s));
+        return null;
       }
+
       s =
           fieldValidator.validateField(
               s,

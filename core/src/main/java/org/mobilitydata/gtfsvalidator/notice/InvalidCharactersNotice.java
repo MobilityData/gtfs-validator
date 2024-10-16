@@ -5,11 +5,10 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 
 /**
- * Invalid characters.
+ * This field contains invalid characters such as the replacement character ("\uFFFD").
  *
- * <p>This field contains invalid characters such as the replacement character (U+FFFD). Fields with
- * customer-facing text should not contain invalid characters to ensure good readability and
- * accessibility.
+ * <p>Fields with customer-facing text should not contain invalid characters to ensure good
+ * readability and accessibility.
  */
 @GtfsValidationNotice(severity = ERROR)
 public class InvalidCharactersNotice extends ValidationNotice {
