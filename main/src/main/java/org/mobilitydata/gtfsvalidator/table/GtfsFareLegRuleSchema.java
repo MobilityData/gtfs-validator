@@ -33,6 +33,7 @@ public interface GtfsFareLegRuleSchema extends GtfsEntity {
    * org.mobilitydata.gtfsvalidator.validator.GtfsFareLegRuleNetworkIdForeignKeyValidator}.
    */
   @FieldType(FieldTypeEnum.ID)
+  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
   String networkId();
 
   @FieldType(FieldTypeEnum.ID)
