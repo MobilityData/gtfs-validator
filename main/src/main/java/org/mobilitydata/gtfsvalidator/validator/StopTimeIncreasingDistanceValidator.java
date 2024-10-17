@@ -48,12 +48,20 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
   public void validate(NoticeContainer noticeContainer) {
     for (List<GtfsStopTime> stopTimeList : Multimaps.asMap(stopTimeTable.byTripIdMap()).values()) {
       // GtfsStopTime objects are sorted based on @SequenceKey annotation on stop_sequence field.
-      for (int i = 1; i < stopTimeList.size(); ++i) {
-        GtfsStopTime prev = stopTimeList.get(i - 1);
-        GtfsStopTime curr = stopTimeList.get(i);
-        if (prev.hasShapeDistTraveled()
+      // The last good is the last stopTime entity that has a stopId
+      GtfsStopTime lastGood = null;
+      for (var curr : stopTimeList) {
+        if (!curr.hasStopId()) {
+          continue;
+        }
+        if (lastGood == null) {
+          lastGood = curr;
+          continue;
+        }
+
+        if (lastGood.hasShapeDistTraveled()
             && curr.hasShapeDistTraveled()
-            && prev.shapeDistTraveled() >= curr.shapeDistTraveled()) {
+            && lastGood.shapeDistTraveled() >= curr.shapeDistTraveled()) {
           noticeContainer.addValidationNotice(
               new DecreasingOrEqualStopTimeDistanceNotice(
                   curr.tripId(),
@@ -61,14 +69,19 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
                   curr.csvRowNumber(),
                   curr.shapeDistTraveled(),
                   curr.stopSequence(),
-                  prev.csvRowNumber(),
-                  prev.shapeDistTraveled(),
-                  prev.stopSequence()));
+                  lastGood.csvRowNumber(),
+                  lastGood.shapeDistTraveled(),
+                  lastGood.stopSequence()));
         }
+        lastGood = curr;
       }
     }
   }
 
+  @Override
+  public boolean shouldCallValidate() {
+    return stopTimeTable.hasColumn(GtfsStopTime.SHAPE_DIST_TRAVELED_FIELD_NAME);
+  }
   /**
    * Decreasing or equal `shape_dist_traveled` in `stop_times.txt`.
    *
