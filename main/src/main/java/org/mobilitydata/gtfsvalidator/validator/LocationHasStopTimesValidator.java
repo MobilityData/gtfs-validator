@@ -69,10 +69,10 @@ public class LocationHasStopTimesValidator extends FileValidator {
     }
 
     for (String locationGroupId : locationGroupIdsInStopTimes) {
-      for (GtfsLocationGroupStops locationGroupStop : locationGroupStopTable.getEntities()) {
-        if (locationGroupStop.locationGroupId().equals(locationGroupId)) {
-          stopIdsInStopTimesandLocationGroupStops.add(locationGroupStop.stopId());
-        }
+      List<GtfsLocationGroupStops> locationGroupStops =
+          locationGroupStopTable.byLocationGroupId(locationGroupId);
+      for (var locationGroupStop : locationGroupStops) {
+        stopIdsInStopTimesandLocationGroupStops.add(locationGroupStop.stopId());
       }
     }
 
