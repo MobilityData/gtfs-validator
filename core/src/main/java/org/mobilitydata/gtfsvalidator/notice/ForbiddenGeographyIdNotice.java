@@ -33,7 +33,7 @@ public class ForbiddenGeographyIdNotice extends ValidationNotice {
   /** The row of the faulty record. */
   private final int csvRowNumber;
 
-  /** The sThe id that already exists. */
+  /** The id that already exists. */
   private final String stopId;
 
   /** The id that already exists. */
