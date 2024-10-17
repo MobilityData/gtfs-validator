@@ -64,8 +64,12 @@ public class LocationHasStopTimesValidator extends FileValidator {
     Set<String> locationGroupIdsInStopTimes = new HashSet<>();
 
     for (GtfsStopTime stopTime : stopTimeTable.getEntities()) {
-      stopIdsInStopTimesandLocationGroupStops.add(stopTime.stopId());
-      locationGroupIdsInStopTimes.add(stopTime.locationGroupId());
+      if (!stopTime.stopId().isEmpty()) {
+        stopIdsInStopTimesandLocationGroupStops.add(stopTime.stopId());
+      }
+      if (!stopTime.locationGroupId().isEmpty()) {
+        locationGroupIdsInStopTimes.add(stopTime.locationGroupId());
+      }
     }
 
     for (String locationGroupId : locationGroupIdsInStopTimes) {
