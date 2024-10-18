@@ -47,22 +47,20 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
   @Override
   public void validate(NoticeContainer noticeContainer) {
     for (List<GtfsStopTime> stopTimeList : Multimaps.asMap(stopTimeTable.byTripIdMap()).values()) {
-      // DecreasingOrEqualStopTimeDistanceNotice should not be triggered in cases where stop
-      // times has location id, location group id or stop id is not present
-      // See: https://github.com/MobilityData/gtfs-validator/issues/1882
-      if (stopTimeList.stream()
-          .anyMatch(
-              stopTime ->
-                  !stopTime.hasStopId()
-                      || stopTime.hasLocationId()
-                      || stopTime.hasLocationGroupId())) {
-        continue;
-      }
       // GtfsStopTime objects are sorted based on @SequenceKey annotation on stop_sequence field.
-      for (int i = 1; i < stopTimeList.size(); ++i) {
-        GtfsStopTime prev = stopTimeList.get(i - 1);
-        GtfsStopTime curr = stopTimeList.get(i);
-        if (prev.hasShapeDistTraveled()
+      GtfsStopTime prev = null;
+      GtfsStopTime curr;
+      for (int i = 0; i < stopTimeList.size(); ++i) {
+        curr = stopTimeList.get(i);
+        // DecreasingOrEqualStopTimeDistanceNotice should not be triggered in cases where stop
+        // times has location id, location group id or stop id is not present
+        // See: https://github.com/MobilityData/gtfs-validator/issues/1882
+        if (!curr.hasStopId() || curr.stopId().trim().isEmpty()) {
+          continue;
+        }
+
+        if (prev != null
+            && prev.hasShapeDistTraveled()
             && curr.hasShapeDistTraveled()
             && prev.shapeDistTraveled() >= curr.shapeDistTraveled()) {
           noticeContainer.addValidationNotice(
@@ -76,6 +74,7 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
                   prev.shapeDistTraveled(),
                   prev.stopSequence()));
         }
+        prev = curr;
       }
     }
   }
