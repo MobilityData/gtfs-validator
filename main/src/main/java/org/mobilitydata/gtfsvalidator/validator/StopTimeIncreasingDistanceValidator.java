@@ -45,6 +45,12 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
   }
 
   @Override
+  public boolean shouldCallValidate() {
+    return stopTimeTable.hasColumn(GtfsStopTime.STOP_ID_FIELD_NAME)
+        && stopTimeTable.hasColumn(GtfsStopTime.SHAPE_DIST_TRAVELED_FIELD_NAME);
+  }
+
+  @Override
   public void validate(NoticeContainer noticeContainer) {
     for (List<GtfsStopTime> stopTimeList : Multimaps.asMap(stopTimeTable.byTripIdMap()).values()) {
       // GtfsStopTime objects are sorted based on @SequenceKey annotation on stop_sequence field.
