@@ -104,7 +104,7 @@ public class StopTimeIncreasingDistanceValidatorTest {
                 ImmutableList.of(
                     createStopTime(1, "first trip", "s0", 1, 0.0d),
                     createStopTime(2, "first trip", "s1", 2, 45.0d),
-                    createStopTime(3, "first trip", "", 3, 4.0d),
+                    createStopTime(3, "first trip", null, 3, 4.0d),
                     createStopTime(4, "first trip", "s3", 4, 64.0d))))
         .isEmpty();
   }
@@ -116,7 +116,7 @@ public class StopTimeIncreasingDistanceValidatorTest {
                 ImmutableList.of(
                     createStopTime(1, "first trip", "s0", 1, 0.0d),
                     createStopTime(2, "first trip", "s1", 2, 85.0d),
-                    createStopTime(3, "first trip", "", 3, 444.0d),
+                    createStopTime(3, "first trip", null, 3, 444.0d),
                     createStopTime(4, "first trip", "s3", 4, 64.0d))))
         .containsExactly(
             new DecreasingOrEqualStopTimeDistanceNotice(
@@ -131,7 +131,7 @@ public class StopTimeIncreasingDistanceValidatorTest {
                 ImmutableList.of(
                     createStopTime(1, "first trip", "s0", 1, 0.0d),
                     createStopTime(2, "first trip", "s1", 2, 85.0d),
-                    createStopTime(3, "first trip", "", 3, 114.0d),
+                    createStopTime(3, "first trip", null, 3, 114.0d),
                     createStopTime(4, "first trip", null, 4, 444.0d),
                     createStopTime(5, "first trip", "s3", 5, 64.0d))))
         .containsExactly(
@@ -146,10 +146,10 @@ public class StopTimeIncreasingDistanceValidatorTest {
                 ImmutableList.of(
                     createStopTime(1, "first trip", "s0", 1, 0.0d),
                     createStopTime(2, "first trip", "s1", 2, 2.0d),
-                    createStopTime(3, "first trip", "", 3, 114.0d),
+                    createStopTime(3, "first trip", null, 3, 114.0d),
                     createStopTime(4, "first trip", null, 4, 444.0d),
                     createStopTime(5, "first trip", "s3", 5, 3.0d),
-                    createStopTime(6, "first trip", " ", 6, 1.0d))))
+                    createStopTime(6, "first trip", null, 6, 1.0d))))
         .isEmpty();
   }
 }

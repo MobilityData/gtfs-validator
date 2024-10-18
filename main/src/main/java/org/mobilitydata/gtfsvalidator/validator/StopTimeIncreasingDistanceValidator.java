@@ -55,7 +55,7 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
         // DecreasingOrEqualStopTimeDistanceNotice should not be triggered in cases where stop
         // times has location id, location group id or stop id is not present
         // See: https://github.com/MobilityData/gtfs-validator/issues/1882
-        if (!curr.hasStopId() || curr.stopId().trim().isEmpty()) {
+        if (!curr.hasStopId()) {
           continue;
         }
 
