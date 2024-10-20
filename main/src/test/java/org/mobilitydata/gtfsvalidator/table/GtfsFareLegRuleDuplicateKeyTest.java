@@ -2,44 +2,41 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import com.google.common.collect.ImmutableList;
+import org.junit.Before;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.testing.LoadingHelper;
+import org.mobilitydata.gtfsvalidator.validator.ValidatorLoaderException;
 
 public class GtfsFareLegRuleDuplicateKeyTest {
-  private LoadingHelper helper = new LoadingHelper();
+  private LoadingHelper helper;
+  private GtfsFareLegRuleTableDescriptor tableDescriptor;
 
-  private static GtfsFareLegRule createFareLegRule(
-      String networkId,
-      String fromAreaId,
-      String toAreaId,
-      String fromTimeframeGroupId,
-      String toTimeframeGroupId,
-      String fareProductId) {
-    return new GtfsFareLegRule.Builder()
-        .setCsvRowNumber(1)
-        .setNetworkId(networkId)
-        .setFromAreaId(fromAreaId)
-        .setToAreaId(toAreaId)
-        .setFromTimeframeGroupId(fromTimeframeGroupId)
-        .setToTimeframeGroupId(toTimeframeGroupId)
-        .setFareProductId(fareProductId)
-        .build();
+  @Before
+  public void setup() {
+    tableDescriptor = new GtfsFareLegRuleTableDescriptor();
+    helper = new LoadingHelper();
   }
 
   @Test
-  public void noDuplicateKeyNoticeWithNetworkIdAsPrimaryKey() {
-    NoticeContainer noticeContainer = new NoticeContainer();
+  public void noDuplicateKeyNoticeWithNetworkIdAsPrimaryKey() throws ValidatorLoaderException {
     GtfsFareLegRuleTableContainer tableContainer =
-        GtfsFareLegRuleTableContainer.forEntities(
-            ImmutableList.of(
-                createFareLegRule(
-                    "network1", "area1", "area2", "timeframe1", "timeframe2", "fare1"),
-                createFareLegRule(
-                    "network2", "area1", "area2", "timeframe1", "timeframe2", "fare1")),
-            noticeContainer);
-
+        helper.load(
+            tableDescriptor,
+            "network_id,from_area_id,to_area_id,from_timeframe_group_id,to_timeframe_group_id,fare_product_id",
+            "network1,area1,area2,timeframe1,timeframe2,fare1",
+            "network2,area1,area2,timeframe1,timeframe2,fare1");
     assertThat(helper.getValidationNotices()).isEmpty();
+  }
+
+  @Test
+  public void duplicateKeyNoticeWithNetworkIdAsPrimaryKey() throws ValidatorLoaderException {
+    GtfsFareLegRuleTableContainer tableContainer =
+        helper.load(
+            tableDescriptor,
+            "network_id,from_area_id,to_area_id,from_timeframe_group_id,to_timeframe_group_id,fare_product_id",
+            "network1,area1,area2,timeframe1,timeframe2,fare1",
+            "network1,area1,area2,timeframe1,timeframe2,fare1");
+    assertThat(helper.getValidationNotices()).hasSize(1);
+    assertThat(helper.getValidationNotices().get(0).getCode()).isEqualTo("duplicate_key");
   }
 }
