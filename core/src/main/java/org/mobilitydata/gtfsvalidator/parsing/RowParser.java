@@ -23,23 +23,7 @@ import java.util.Locale;
 import java.util.function.Function;
 import javax.annotation.Nullable;
 import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
-import org.mobilitydata.gtfsvalidator.notice.EmptyRowNotice;
-import org.mobilitydata.gtfsvalidator.notice.InvalidColorNotice;
-import org.mobilitydata.gtfsvalidator.notice.InvalidCurrencyNotice;
-import org.mobilitydata.gtfsvalidator.notice.InvalidDateNotice;
-import org.mobilitydata.gtfsvalidator.notice.InvalidFloatNotice;
-import org.mobilitydata.gtfsvalidator.notice.InvalidIntegerNotice;
-import org.mobilitydata.gtfsvalidator.notice.InvalidLanguageCodeNotice;
-import org.mobilitydata.gtfsvalidator.notice.InvalidRowLengthNotice;
-import org.mobilitydata.gtfsvalidator.notice.InvalidTimeNotice;
-import org.mobilitydata.gtfsvalidator.notice.InvalidTimezoneNotice;
-import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFieldNotice;
-import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
-import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.NumberOutOfRangeNotice;
-import org.mobilitydata.gtfsvalidator.notice.TooManyRowsNotice;
-import org.mobilitydata.gtfsvalidator.notice.UnexpectedEnumValueNotice;
-import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.notice.*;
 import org.mobilitydata.gtfsvalidator.table.GtfsColumnDescriptor;
 import org.mobilitydata.gtfsvalidator.table.GtfsEnum;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
@@ -137,6 +121,12 @@ public class RowParser {
               fileName, getRowNumber(), columnDescriptor.columnName()));
     }
     if (s != null) {
+      // Validate if the string contains invalid characters
+      if (containsInvalidCharacters(s)) {
+        noticeContainer.addValidationNotice(
+            new InvalidCharacterNotice(fileName, getRowNumber(), columnDescriptor.columnName(), s));
+      }
+
       s =
           fieldValidator.validateField(
               s,
@@ -144,6 +134,10 @@ public class RowParser {
               noticeContainer);
     }
     return s;
+  }
+
+  private boolean containsInvalidCharacters(String string) {
+    return string.contains("\uFFFD");
   }
 
   @Nullable
