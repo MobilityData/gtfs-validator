@@ -4,10 +4,10 @@ import javax.annotation.Nonnull;
 
 /**
  * This class provides some info about the different files within a GTFS dataset. Its children
- * relate to either a csv table or a geojson file.
+ * relate to either a csv table or a GeoJSON file.
  *
  * @param <T> The entity that will be extracted from the file. For example, GtfsCalendarDate or
- *     GtfsGeojsonFeature
+ *     GtfsGeoJsonFeature
  */
 public abstract class GtfsFileDescriptor<T extends GtfsEntity> {
 
