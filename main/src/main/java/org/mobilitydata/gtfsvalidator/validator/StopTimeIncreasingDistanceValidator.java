@@ -55,9 +55,7 @@ public class StopTimeIncreasingDistanceValidator extends FileValidator {
     for (List<GtfsStopTime> stopTimeList : Multimaps.asMap(stopTimeTable.byTripIdMap()).values()) {
       // GtfsStopTime objects are sorted based on @SequenceKey annotation on stop_sequence field.
       GtfsStopTime prev = null;
-      GtfsStopTime curr;
-      for (int i = 0; i < stopTimeList.size(); ++i) {
-        curr = stopTimeList.get(i);
+      for (var curr : stopTimeList) {
         // DecreasingOrEqualStopTimeDistanceNotice should not be triggered in cases where stop
         // times has location id, location group id or stop id is not present
         // See: https://github.com/MobilityData/gtfs-validator/issues/1882
