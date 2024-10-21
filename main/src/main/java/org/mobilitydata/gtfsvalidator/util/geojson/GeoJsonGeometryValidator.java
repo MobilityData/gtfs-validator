@@ -28,19 +28,19 @@ public class GeoJsonGeometryValidator {
    *
    * @return A valid Polygon object or null if the geometry is invalid.
    */
-  public Polygon createPolygon(JsonArray rings, GtfsGeoJsonFeature feature) {
+  public Polygon createPolygon(JsonArray rings, GtfsGeoJsonFeature feature, int featureIndex) {
     Coordinate[][] polygonRings = parseCoordinates(rings);
     try {
       Polygon polygon =
           geometryFactory.createPolygon(
               geometryFactory.createLinearRing(polygonRings[0]), createInteriorRings(polygonRings));
       if (!IsValidOp.isValid(polygon)) {
-        addInvalidGeometryNotice(polygon, feature);
+        addInvalidGeometryNotice(polygon, feature, featureIndex);
         return null;
       }
       return polygon;
     } catch (IllegalArgumentException e) {
-      addInvalidGeometryNotice(e, feature);
+      addInvalidGeometryNotice(e, feature, featureIndex);
       return null;
     }
   }
@@ -51,10 +51,11 @@ public class GeoJsonGeometryValidator {
    *
    * @return A valid MultiPolygon object or null if any of the geometries are invalid.
    */
-  public MultiPolygon createMultiPolygon(JsonArray polygons, GtfsGeoJsonFeature feature) {
+  public MultiPolygon createMultiPolygon(
+      JsonArray polygons, GtfsGeoJsonFeature feature, int featureIndex) {
     Polygon[] multiPolygonArray = new Polygon[polygons.size()];
     for (int p = 0; p < polygons.size(); p++) {
-      Polygon polygon = createPolygon(polygons.get(p).getAsJsonArray(), feature);
+      Polygon polygon = createPolygon(polygons.get(p).getAsJsonArray(), feature, p);
       if (polygon == null) {
         return null;
       }
@@ -64,12 +65,12 @@ public class GeoJsonGeometryValidator {
     try {
       MultiPolygon multiPolygon = geometryFactory.createMultiPolygon(multiPolygonArray);
       if (!IsValidOp.isValid(multiPolygon)) {
-        addInvalidGeometryNotice(multiPolygon, feature);
+        addInvalidGeometryNotice(multiPolygon, feature, featureIndex);
         return null;
       }
       return multiPolygon;
     } catch (IllegalArgumentException e) {
-      addInvalidGeometryNotice(e, feature);
+      addInvalidGeometryNotice(e, feature, featureIndex);
       return null;
     }
   }
@@ -102,10 +103,12 @@ public class GeoJsonGeometryValidator {
   }
 
   /** Adds a validation notice to the NoticeContainer if the geometry is invalid. */
-  private void addInvalidGeometryNotice(Geometry geometry, GtfsGeoJsonFeature feature) {
+  private void addInvalidGeometryNotice(
+      Geometry geometry, GtfsGeoJsonFeature feature, int featureIndex) {
     noticeContainer.addValidationNotice(
         new InvalidGeometryNotice(
             feature.featureId(),
+            featureIndex,
             feature.geometryType().getType(),
             new IsValidOp(geometry).getValidationError().getMessage()));
   }
@@ -114,9 +117,13 @@ public class GeoJsonGeometryValidator {
    * Adds a validation notice to the NoticeContainer if an exception occurs during geometry
    * creation.
    */
-  private void addInvalidGeometryNotice(IllegalArgumentException e, GtfsGeoJsonFeature feature) {
+  private void addInvalidGeometryNotice(
+      IllegalArgumentException e, GtfsGeoJsonFeature feature, int featureIndex) {
     noticeContainer.addValidationNotice(
         new InvalidGeometryNotice(
-            feature.featureId(), feature.geometryType().getType(), e.getLocalizedMessage()));
+            feature.featureId(),
+            featureIndex,
+            feature.geometryType().getType(),
+            e.getLocalizedMessage()));
   }
 }

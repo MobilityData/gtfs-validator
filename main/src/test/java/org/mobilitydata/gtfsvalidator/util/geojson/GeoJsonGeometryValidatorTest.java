@@ -36,7 +36,7 @@ public class GeoJsonGeometryValidatorTest {
     JsonArray validPolygon = createValidPolygonJsonArray();
     feature.setGeometryType(GeometryType.POLYGON);
 
-    Polygon polygon = validator.createPolygon(validPolygon, feature);
+    Polygon polygon = validator.createPolygon(validPolygon, feature, 0);
 
     assertThat(polygon).isNotNull();
     assertThat(polygon.isValid()).isTrue();
@@ -48,7 +48,7 @@ public class GeoJsonGeometryValidatorTest {
     JsonArray invalidPolygon = createInvalidPolygonJsonArray();
     feature.setGeometryType(GeometryType.POLYGON);
 
-    Polygon polygon = validator.createPolygon(invalidPolygon, feature);
+    Polygon polygon = validator.createPolygon(invalidPolygon, feature, 0);
 
     assertThat(polygon).isNull();
     List<InvalidGeometryNotice> notices =
@@ -64,7 +64,7 @@ public class GeoJsonGeometryValidatorTest {
     JsonArray validMultiPolygon = createValidMultiPolygonJsonArray();
     feature.setGeometryType(GeometryType.MULTI_POLYGON);
 
-    MultiPolygon multiPolygon = validator.createMultiPolygon(validMultiPolygon, feature);
+    MultiPolygon multiPolygon = validator.createMultiPolygon(validMultiPolygon, feature, 0);
 
     assertThat(multiPolygon).isNotNull();
     assertThat(multiPolygon.isValid()).isTrue();
@@ -76,7 +76,7 @@ public class GeoJsonGeometryValidatorTest {
     JsonArray invalidMultiPolygon = createInvalidMultiPolygonJsonArray();
     feature.setGeometryType(GeometryType.MULTI_POLYGON);
 
-    MultiPolygon multiPolygon = validator.createMultiPolygon(invalidMultiPolygon, feature);
+    MultiPolygon multiPolygon = validator.createMultiPolygon(invalidMultiPolygon, feature, 0);
 
     assertThat(multiPolygon).isNull();
     List<InvalidGeometryNotice> notices =

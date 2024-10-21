@@ -171,7 +171,8 @@ public class GeoJsonFileLoader extends TableLoader {
             Polygon polygon =
                 geometryValidator.createPolygon(
                     geometry.getAsJsonArray(GtfsGeoJsonFeature.GEOMETRY_COORDINATES_FIELD_NAME),
-                    gtfsGeoJsonFeature);
+                    gtfsGeoJsonFeature,
+                    featureIndex);
             if (polygon == null) return null;
             gtfsGeoJsonFeature.setGeometryDefinition(polygon);
 
@@ -180,7 +181,8 @@ public class GeoJsonFileLoader extends TableLoader {
             MultiPolygon multiPolygon =
                 geometryValidator.createMultiPolygon(
                     geometry.getAsJsonArray(GtfsGeoJsonFeature.GEOMETRY_COORDINATES_FIELD_NAME),
-                    gtfsGeoJsonFeature);
+                    gtfsGeoJsonFeature,
+                    featureIndex);
             if (multiPolygon == null) return null;
             gtfsGeoJsonFeature.setGeometryDefinition(multiPolygon);
 

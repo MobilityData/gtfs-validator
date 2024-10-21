@@ -32,14 +32,19 @@ public class InvalidGeometryNotice extends ValidationNotice {
   /** The id of the faulty record. */
   private final String featureId;
 
+  /** The index of the feature in the feature collection. */
+  private final int featureIndex;
+
   /** The geometry type of the feature containing the invalid polygon. */
   private final String geometryType;
 
   /** The validation error details. */
   private final String message;
 
-  public InvalidGeometryNotice(String featureId, String geometryType, String validationError) {
+  public InvalidGeometryNotice(
+      String featureId, int featureIndex, String geometryType, String validationError) {
     this.featureId = featureId;
+    this.featureIndex = featureIndex;
     this.geometryType = geometryType;
     this.message = validationError;
   }
