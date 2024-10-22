@@ -42,7 +42,8 @@ URL_PREFIX = "https://storage.googleapis.com/storage/v1/b/mdb-latest/o/"
 URL_SUFFIX = ".zip?alt=media"
 
 # Github constants
-MAX_JOB_NUMBER = 256
+# As per https://docs.github.com/en/actions/administering-github-actions/usage-limits-billing-and-administration#usage-limits
+MAX_JOB_NUMBER = 60
 
 # json keys
 ROOT = "include"
