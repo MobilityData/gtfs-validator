@@ -136,6 +136,44 @@ jobs:
            --app-image "${{ env.MACOS_TARGET_PATH }}" \
            --dest ${{ env.MACOS_TARGET_DEST_PATH }}
 
+      # Package the app for Ubuntu RPM (.rpm)
+      - name: Get the application version from Gradle
+        id: get_version
+        run: |
+          appVersion=$(./gradlew cV -q -Prelease.quiet)
+          appVersion=${appVersion//-SNAPSHOT/} # Remove "-SNAPSHOT" if present
+          echo "APP_VERSION=$appVersion" >> $GITHUB_ENV
+          if ./gradlew cV -q | grep -q "SNAPSHOT"; then
+            echo "IS_SNAPSHOT=true" >> $GITHUB_ENV
+          else
+            echo "IS_SNAPSHOT=false" >> $GITHUB_ENV
+          fi
+
+      # Ubuntu steps for packaging DEB and RPM
+      - name: Install dependencies for packaging (Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install -y rpm build-essential
+
+      - name: Package RPM app installer (Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          gem install --no-document fpm
+          if [ "${{ env.IS_SNAPSHOT }}" = "true" ]; then
+            rpmVersion="${{ env.APP_VERSION }}-SNAPSHOT"
+          else
+            rpmVersion="${{ env.APP_VERSION }}"
+          fi
+          fpm -s dir -t rpm -n gtfs-validator --version $rpmVersion --iteration 1 --description "GTFS Validator" --license "MIT" --vendor "Your Company" --url "https://your-url.com" ./cli/build/libs/gtfs-validator-*-cli.jar=/usr/local/bin/gtfs-validator
+
+      - name: Persist DEB and RPM artifacts
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: "gtfs-validator-packages-${{ env.SHORT_SHA }}"
+          path: |
+            ${{ env.MACOS_TARGET_DEST_PATH }}/*.deb
+            *.rpm
+
       - name: Package cli app jar with Gradle
         if: ${{ matrix.os == 'ubuntu-latest' }}
         uses: gradle/actions/setup-gradle@v3
@@ -158,6 +196,7 @@ jobs:
             ${{ env.MACOS_TARGET_DEST_PATH }}/*.dmg
             ${{ env.MACOS_TARGET_DEST_PATH }}/*.pkg
             ${{ env.MACOS_TARGET_DEST_PATH }}/*.deb
+            ${{ env.MACOS_TARGET_DEST_PATH }}/*.rpm
 
       - name: "Create zip files"
         shell: bash
