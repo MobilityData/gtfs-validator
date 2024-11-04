@@ -164,7 +164,7 @@ jobs:
           else
             rpmVersion="${{ env.APP_VERSION }}"
           fi
-          fpm -s dir -t rpm -n gtfs-validator --version $rpmVersion --iteration 1 --description "GTFS Validator" --license "MIT" --vendor "Your Company" --url "https://your-url.com" ./app/pkg/build/jlinkbase/jlinkjars/gui-*.jar=/usr/local/bin/gtfs-validator
+          fpm -s dir -t rpm -n gtfs-validator --version $rpmVersion --iteration 1 --description "GTFS Validator" --license "MIT" --vendor "Your Company" --url "https://your-url.com" ./app/gui/build/lib/gui-*-all.jar=/usr/local/bin/gtfs-validator
 
       - name: Persist DEB and RPM artifacts
         if: matrix.os == 'ubuntu-latest'
