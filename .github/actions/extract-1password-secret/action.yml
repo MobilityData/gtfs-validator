@@ -9,6 +9,10 @@ inputs:
     description: 'The contents of the ONE_PASSWORD_SECRET_REFERENCES variable'
     required: true
     type: string
+  OP_SERVICE_ACCOUNT_TOKEN:
+    description: 'The 1Password service account token'
+    required: true
+    type: string
 
 outputs:
   value:
@@ -34,3 +38,16 @@ runs:
            echo "$variable_name=\"$value\"" >> $GITHUB_ENV
            echo "$variable_name=\"$value\""
         done
+
+    - name: Load secrets from 1Password
+      id: onepw_secrets
+      uses: 1password/load-secrets-action@v2.0.0
+      with:
+        export-env: true # Export loaded secrets as environment variables
+      env:
+        OP_SERVICE_ACCOUNT_TOKEN: ${{ input.SERVICE_ACCOUNT_TOKEN }} # This is required to connect to the vault in our 1Password account.
+
+
+    - name: print secrets
+      run: |
+        echo "The value for the SONATYPE_TOKEN_USERNAME is ${{ env.SONATYPE_TOKEN_USERNAME }}"
