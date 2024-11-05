@@ -14,9 +14,6 @@ inputs:
     required: true
     type: string
 
-outputs:
-  value:
-    description: 'The extracted value'
 runs:
   using: 'composite'
   steps:
@@ -49,5 +46,6 @@ runs:
 
 
     - name: print secrets
+      shell: bash
       run: |
         echo "The value for the SONATYPE_TOKEN_USERNAME is ${{ env.SONATYPE_TOKEN_USERNAME }}"
