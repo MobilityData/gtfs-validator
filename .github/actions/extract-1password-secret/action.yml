@@ -48,4 +48,4 @@ runs:
     - name: print secrets
       shell: bash
       run: |
-        echo "The value for the SONATYPE_TOKEN_USERNAME is ${{ env.SONATYPE_TOKEN_USERNAME }}"
+        echo "The value for the SONATYPE_TOKEN_USERNAME is $SONATYPE_TOKEN_USERNAME"
