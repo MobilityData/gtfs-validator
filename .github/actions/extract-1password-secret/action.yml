@@ -1,0 +1,36 @@
+name: 'Extract Value'
+description: 'Extracts the value for a given key from a GitHub variable'
+inputs:
+  keys:
+    description: 'A list of space separated keys to extract'
+    required: true
+    type: string
+  ONE_PASSWORD_SECRET_REFERENCES:
+    description: 'The contents of the ONE_PASSWORD_SECRET_REFERENCES variable'
+    required: true
+    type: string
+
+outputs:
+  value:
+    description: 'The extracted value'
+runs:
+  using: 'composite'
+  steps:
+    - name: Extract value for specific key
+      id: extract_value
+      shell: bash
+      continue-on-error: true
+      env:
+        key_values: ${{ inputs.ONE_PASSWORD_SECRET_REFERENCES }}
+      run: |
+        keys="${{ inputs.keys }}"
+        for key in $keys; do
+           variable_name=$key
+           value=$(echo "$key_values" | grep "^$key *=" | cut -d'=' -f2- | sed 's/^ *//;s/[ \r]*$//')
+           echo "key = $key"
+           echo "value = $value"
+           echo "variable_name = $variable_name"
+           export "$variable_name"="$value"
+           echo "$variable_name=\"$value\"" >> $GITHUB_ENV
+           echo "$variable_name=\"$value\""
+        done
