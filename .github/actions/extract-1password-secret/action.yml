@@ -43,7 +43,7 @@ runs:
         export-env: true # Export loaded secrets as environment variables
       env:
         OP_SERVICE_ACCOUNT_TOKEN: ${{ inputs.OP_SERVICE_ACCOUNT_TOKEN }} # This is required to connect to the vault in our 1Password account.
-        SONATYPE_TOKEN_USERNAME_QAZ: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/ifkeehu5gzi7wy5ub5qvwkaire/credential"
+        CREDENTIALS: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/ifkeehu5gzi7wy5ub5qvwkaire/credential"
 
     - name: print secrets
       shell: bash
