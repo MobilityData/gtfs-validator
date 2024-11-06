@@ -43,9 +43,9 @@ runs:
         export-env: true # Export loaded secrets as environment variables
       env:
         OP_SERVICE_ACCOUNT_TOKEN: ${{ inputs.OP_SERVICE_ACCOUNT_TOKEN }} # This is required to connect to the vault in our 1Password account.
-        SONATYPE_TOKEN_USERNAME: $SONATYPE_TOKEN_USERNAME
+        SONATYPE_TOKEN_USERNAME_QAZ: $SONATYPE_TOKEN_USERNAME
 
     - name: print secrets
       shell: bash
       run: |
-        echo "The value for the SONATYPE_TOKEN_USERNAME is $SONATYPE_TOKEN_USERNAME"
+        echo "The value for the SONATYPE_TOKEN_USERNAME_QAZ is $SONATYPE_TOKEN_USERNAME_QAZ"
