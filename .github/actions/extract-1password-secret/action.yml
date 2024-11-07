@@ -24,11 +24,10 @@ runs:
       env:
         key_values: ${{ inputs.ONE_PASSWORD_SECRET_REFERENCES }}
       run: |
-        keys="${{ inputs.keys }}"
+        keys=$(echo "${{ inputs.keys }}" | tr ',' ' ')
         for key in $keys; do
-           variable_name=$key
-           value=$(echo "$key_values" | grep "^$key *=" | cut -d'=' -f2- | sed 's/^ *//;s/[ \r]*$//')
-           echo "key = $key"
+           variable_name=$(echo "$key" | sed 's/^ *//;s/ *$//')
+           value=$(echo "$key_values" | grep "^$variable_name *=" | cut -d'=' -f2- | sed 's/^ *//;s/[ \r]*$//')
            echo "value = $value"
            echo "variable_name = $variable_name"
            echo "$variable_name=$value" >> $GITHUB_ENV
