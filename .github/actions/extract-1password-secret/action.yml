@@ -22,7 +22,8 @@ runs:
       shell: bash
       continue-on-error: true
       env:
-        key_values: ${{ vars.ONE_PASSWORD_SECRET_REFERENCES }}
+#        key_values: ${{ vars.ONE_PASSWORD_SECRET_REFERENCES }}
+        qaz: ${{ secrets.GCP_WEB_VALIDATOR_SA_KEY }}
       run: |
         keys=$(echo "${{ inputs.keys }}" | tr ',' ' ')
         for key in $keys; do
