@@ -15,6 +15,9 @@ jobs:
       - id: get_version
         uses: battila7/get-version-action@v2
 
+      - name: printVersion
+        run: echo "The version is ${{ steps.get_version.outputs.version }}"
+
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -22,11 +25,11 @@ jobs:
           distribution: 'zulu'
 
       - name: Generate CLI jar
-        if: github.event_name == 'release'
+#        if: github.event_name == 'release'
         run: ./gradlew shadowJar
 
       - name: Upload JAR Asset
-        if: github.event_name == 'release'
+#        if: github.event_name == 'release'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -52,11 +55,11 @@ jobs:
           asset_content_type: application/json
 
       - name: Generate JavaDocs
-        if: github.event_name == 'release'
+#        if: github.event_name == 'release'
         run: ./gradlew aggregateJavadoc
 
       - name: Zip JavaDocs
-        if: github.event_name == 'release'
+#        if: github.event_name == 'release'
         run: zip -r javadocs.zip build/docs/aggregateJavadoc
 
       - name: Upload zipped Javadocs

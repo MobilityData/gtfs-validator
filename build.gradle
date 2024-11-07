@@ -17,8 +17,8 @@
  * A note about publishing and signing.
  * Maven central requires that artifacts be signed. And upload is done to Sonatype.
  * To publish you will need these environment variables defined:
- *       SONATYPE_USERNAME
- *       SONATYPE_PASSWORD
+ *       SONATYPE_TOKEN_USERNAME
+ *       SONATYPE_TOKEN_PASSWORD
  *       MAVEN_GPG_PRIVATE_KEY
  *       MAVEN_GPG_PASSPHRASE
  * Suggestion is to put these in a shell script with restricted read permissions, then source it before calling
@@ -109,6 +109,9 @@ subprojects {
         def fullProjectName = 'gtfs-validator-' + project.name
 
         afterEvaluate {
+            println "SONATYPE_TOKEN_USERNAME = " + System.getenv('SONATYPE_TOKEN_USERNAME')
+            println "SONATYPE_TOKEN_PASSWORD = " + System.getenv('SONATYPE_TOKEN_PASSWORD')
+
             publishing {
                 repositories {
                     // This is the sonatype staging repo for maven.
@@ -119,8 +122,8 @@ subprojects {
                     maven {
                         url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2'
                         credentials {
-                            username System.getenv("SONATYPE_USERNAME")
-                            password System.getenv("SONATYPE_PASSWORD")
+                            username System.getenv("SONATYPE_TOKEN_USERNAME")
+                            password System.getenv("SONATYPE_TOKEN_PASSWORD")
                         }
                     }
                 }
@@ -161,6 +164,8 @@ subprojects {
                 }
             }
             signing {
+                println "MAVEN_GPG_PRIVATE_KEY = " + System.getenv('MAVEN_GPG_PRIVATE_KEY')
+                println "MAVEN_GPG_PASSPHRASE = " + System.getenv('MAVEN_GPG_PASSPHRASE')
                 useInMemoryPgpKeys(System.getenv('MAVEN_GPG_PRIVATE_KEY'), System.getenv('MAVEN_GPG_PASSPHRASE'))
                 sign publishing.publications.mavenJava
             }
