@@ -109,8 +109,8 @@ subprojects {
         def fullProjectName = 'gtfs-validator-' + project.name
 
         afterEvaluate {
-            println "SONATYPE_TOKEN_USERNAME = " + System.getenv('SONATYPE_TOKEN_USERNAME')
-            println "SONATYPE_TOKEN_PASSWORD = " + System.getenv('SONATYPE_TOKEN_PASSWORD')
+            println "SONATYPE_USERNAME = " + System.getenv('SONATYPE_USERNAME')
+            println "SONATYPE_PASSWORD = " + System.getenv('SONATYPE_PASSWORD')
 
             publishing {
                 repositories {
@@ -122,8 +122,8 @@ subprojects {
                     maven {
                         url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2'
                         credentials {
-                            username System.getenv("SONATYPE_TOKEN_USERNAME")
-                            password System.getenv("SONATYPE_TOKEN_PASSWORD")
+                            username System.getenv("SONATYPE_USERNAME")
+                            password System.getenv("SONATYPE_PASSWORD")
                         }
                     }
                 }
