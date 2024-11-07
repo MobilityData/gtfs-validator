@@ -38,7 +38,7 @@ runs:
 
     - name: Load secrets from 1Password
       id: onepw_secrets
-      uses: jcpitre/load-secrets-action@v10.0.3
+      uses: jcpitre/load-secrets-action@v10.0.4
       with:
         export-env: true # Export loaded secrets as environment variables
       env:
