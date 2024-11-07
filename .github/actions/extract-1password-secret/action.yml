@@ -21,8 +21,6 @@ runs:
       id: extract_value
       shell: bash
       continue-on-error: true
-#      env:
-#        key_values: ${{ inputs.ONE_PASSWORD_SECRET_REFERENCES }}
       run: |
         keys=$(echo "${{ inputs.VARIABLES_TO_EXTRACT }}" | tr ',' ' ')
         for key in $keys; do
@@ -41,10 +39,6 @@ runs:
         export-env: true # Export loaded secrets as environment variables
       env:
         OP_SERVICE_ACCOUNT_TOKEN: ${{ inputs.OP_SERVICE_ACCOUNT_TOKEN }} # This is required to connect to the vault in our 1Password account.
-#        CREDENTIALS: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/ifkeehu5gzi7wy5ub5qvwkaire/credential"
-#        MAVEN_GPG_PRIVATE_KEY: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/dkkfywvsr3xq6eyeubq6cldaxi/Private Key"
-#        OP_MANAGED_VARIABLES: "MAVEN_GPG_PRIVATE_KEY,MAVEN_GPG_PASSPHRASE,CREDENTIALS"
-#        keys: "${{ inputs.keys }}"
 
     - name: print secrets
       shell: bash
