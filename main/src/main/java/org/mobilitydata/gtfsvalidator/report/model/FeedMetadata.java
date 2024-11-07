@@ -624,6 +624,7 @@ public class FeedMetadata {
             feature ->
                 feature.getFeatureGroup() != null
                     && feature.getFeatureGroup().equals("Flexible Services")
+                    && !Objects.equals(feature.getFeatureName(), "Continuous Stops")
                     && specFeatures.get(feature));
   }
 }
