@@ -5,10 +5,10 @@ inputs:
     description: 'A list of space separated keys to extract'
     required: true
     type: string
-  ONE_PASSWORD_SECRET_REFERENCES:
-    description: 'The contents of the ONE_PASSWORD_SECRET_REFERENCES variable'
-    required: true
-    type: string
+#  ONE_PASSWORD_SECRET_REFERENCES:
+#    description: 'The contents of the ONE_PASSWORD_SECRET_REFERENCES variable'
+#    required: true
+#    type: string
   OP_SERVICE_ACCOUNT_TOKEN:
     description: 'The 1Password service account token'
     required: true
@@ -22,7 +22,7 @@ runs:
       shell: bash
       continue-on-error: true
       env:
-        key_values: ${{ inputs.ONE_PASSWORD_SECRET_REFERENCES }}
+        key_values: ${{ vars.ONE_PASSWORD_SECRET_REFERENCES }}
       run: |
         keys=$(echo "${{ inputs.keys }}" | tr ',' ' ')
         for key in $keys; do
