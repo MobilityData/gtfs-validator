@@ -4,6 +4,9 @@ on:
   release:
     types: [ prereleased, released ]
   workflow_dispatch:
+  push:
+    tags:
+      - 'v20.*'
 
 jobs:
   upload-release-assets:
