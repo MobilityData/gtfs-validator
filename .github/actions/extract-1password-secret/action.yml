@@ -33,7 +33,7 @@ runs:
            echo "variable_name = $variable_name"
 #           export "$variable_name"="$value"
            echo "$variable_name=$value" >> $GITHUB_ENV
-           echo "$variable_name="$value"
+           echo "$variable_name=$value"
         done
 
     - name: Load secrets from 1Password
