@@ -17,10 +17,10 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Extract value for specific key
-      id: extract_value
+    - name: Extract 1password secret references for specific variables
+      id: extract_secret_references
       shell: bash
-      # One possible error is that the specified variable name does not exist in the ONE_PASSWORD_SECRET_REFERENCES variable
+      # One possible error is that the specified variable name does not exist in the ONE_PASSWORD_SECRET_REFERENCES variable.
       # In that case just go over it
       continue-on-error: true
       run: |
