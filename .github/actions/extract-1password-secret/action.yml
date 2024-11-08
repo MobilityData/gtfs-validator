@@ -24,7 +24,7 @@ runs:
       # In that case just go over it
       continue-on-error: true
       run: |
-        # Replace commas with spaces to it's easier to iterate over the key-value pairs
+        # Replace commas with spaces so it's easier to iterate over the key-value pairs
         keys=$(echo "${{ inputs.VARIABLES_TO_EXTRACT }}" | tr ',' ' ')
         for key in $keys; do
            # Remove leading and trailing spaces 
