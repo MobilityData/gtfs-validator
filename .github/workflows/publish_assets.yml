@@ -92,7 +92,7 @@ jobs:
         uses: ./.github/actions/extract-1password-secret
         with:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }} # This is required to connect to the vault in our 1Password account.
-          VARIABLES_TO_EXTRACT: 'MAVEN_GPG_PASSPHRASE, MAVEN_GPG_PRIVATE_KEY'
+          VARIABLES_TO_EXTRACT: 'MAVEN_GPG_PASSPHRASE, MAVEN_GPG_PRIVATE_KEY, SONATYPE_TOKEN_USERNAME, SONATYPE_TOKEN_PASSWORD'
           ONE_PASSWORD_SECRET_REFERENCES: ${{ vars.ONE_PASSWORD_SECRET_REFERENCES }}
 
       - name: Print extracted value
@@ -105,6 +105,6 @@ jobs:
           # The gradle java verifying plugin does not work with java 17.
           # Don't verify since it has already been done when the PR was created.
           ./gradlew publish -x verifyGoogleJavaFormat
-        env:
-          SONATYPE_USERNAME: ${{secrets.SONATYPE_USERNAME}}
-          SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
+#        env:
+#          SONATYPE_TOKEN_USERNAME: ${{secrets.SONATYPE_USERNAME}}
+#          SONATYPE_TOKEN_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
