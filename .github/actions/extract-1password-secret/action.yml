@@ -1,0 +1,51 @@
+name: 'Extract secrets from 1Password'
+description: 'Extracts secrets from 1Password using a Github variable containing multiple secret references'
+inputs:
+  VARIABLES_TO_EXTRACT:
+    description: 'A list of comma separated secrets to extract'
+    required: true
+    type: string
+  ONE_PASSWORD_SECRET_REFERENCES:
+    description: 'The contents of the ONE_PASSWORD_SECRET_REFERENCES variable, containing key-value pairs of secret references'
+    required: true
+    type: string
+  OP_SERVICE_ACCOUNT_TOKEN:
+    description: 'The 1Password service account token'
+    required: true
+    type: string
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Extract value for specific key
+      id: extract_value
+      shell: bash
+      # One possible error is that the specified variable name does not exist in the ONE_PASSWORD_SECRET_REFERENCES variable
+      # In that case just go over it
+      continue-on-error: true
+      run: |
+        # Replace command with spaces to it's easier to iterate over the key-value pairs
+        keys=$(echo "${{ inputs.VARIABLES_TO_EXTRACT }}" | tr ',' ' ')
+        for key in $keys; do
+           # Remove leading and trailing spaces 
+           variable_name=$(echo "$key" | sed 's/^ *//;s/ *$//')
+           value=$(echo "${{ inputs.ONE_PASSWORD_SECRET_REFERENCES }}" | grep "^$variable_name *=" | cut -d'=' -f2- | sed 's/^ *//;s/[ \r]*$//')
+           # For each variable to extract create an env variable with the secret reference as a value
+           echo "$variable_name=$value" >> $GITHUB_ENV
+           echo "$variable_name=$value"
+        done
+
+    - name: Load secrets from 1Password
+      id: onepw_secrets
+      uses: 1password/load-secrets-action@v2.0.0
+      with:
+        export-env: true # Export loaded secrets as environment variables
+      env:
+        # 1password/load-secrets-action will take any defined env variable and try to get the secret value from 1Password
+        # I think it does this only for variables that start with op://
+        # That means all variables defined in the previous step will be loaded from 1Password if they exist.
+        OP_SERVICE_ACCOUNT_TOKEN: ${{ inputs.OP_SERVICE_ACCOUNT_TOKEN }} # This is required to connect to the vault in our 1Password account.
+
+# After the previous step all variables specified in VARIABLES_TO_EXTRACT should have an env variable with the
+# secret as a value. If they don't exist in 1Password they will be left as is, meaning that will still contain the
+# secret reference.
