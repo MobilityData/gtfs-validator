@@ -11,9 +11,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
+      # Get the version from the commit. This will depend on the trigger of the workflow
+      # If the trigger is release, the version will be the tag on the commit.
+      # If the trigger is a workflow_dispatch, the version will be the branch name, which is
+      # not really useful.
       - id: get_version
         uses: battila7/get-version-action@v2
+
+      - name: printVersion
+        run: echo "The version extracted from github.ref is ${{ steps.get_version.outputs.version }}"
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -83,19 +89,15 @@ jobs:
 
       - name: Load secrets from 1Password
         id: onepw_secrets
-        uses: 1password/load-secrets-action@v2.0.0
+        uses: ./.github/actions/extract-1password-secret
         with:
-          export-env: true # Export loaded secrets as environment variables
-        env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }} # This is required to connect to the vault in our 1Password account.
-          MAVEN_GPG_PRIVATE_KEY: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/yztcx47yzp4vizjyaq7ulvkgoi/Private Key"
-          MAVEN_GPG_PASSPHRASE: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/yztcx47yzp4vizjyaq7ulvkgoi/password"
+          VARIABLES_TO_EXTRACT: 'MAVEN_GPG_PASSPHRASE, MAVEN_GPG_PRIVATE_KEY, SONATYPE_TOKEN_USERNAME, SONATYPE_TOKEN_PASSWORD'
+          ONE_PASSWORD_SECRET_REFERENCES: ${{ vars.ONE_PASSWORD_SECRET_REFERENCES }}
 
       - name: Build and Publish to Sonatype
         run: |
           # The gradle java verifying plugin does not work with java 17.
           # Don't verify since it has already been done when the PR was created.
-          ./gradlew publish -x verifyGoogleJavaFormat
-        env:
-          SONATYPE_USERNAME: ${{secrets.SONATYPE_USERNAME}}
-          SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
+          ./gradlew publish --rerun-tasks -x verifyGoogleJavaFormat
+
