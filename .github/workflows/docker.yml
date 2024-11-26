@@ -34,7 +34,7 @@ jobs:
           arguments: testAggregateTestReport
       - name: Persist aggregated test reports on failure
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Test report - Java
           path: build/reports/tests/unit-test/aggregated-results/
