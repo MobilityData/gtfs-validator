@@ -41,7 +41,7 @@ jobs:
           arguments: testAggregateTestReport --continue
       - name: Persist aggregated test reports on failure - Java ${{ matrix.java_version }} on ${{ matrix.os }}
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Test report - Java ${{ matrix.java_version }} on ${{ matrix.os }}
           path: build/reports/tests/unit-test/aggregated-results/
@@ -71,7 +71,7 @@ jobs:
         with:
           arguments: shadowJar
       - name: Persist cli app jar
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Application - CLI executable - Java ${{ matrix.java_version }} JAR file -- ${{ matrix.os }}
           path: cli/build/libs/gtfs-validator-*-cli.jar
@@ -100,7 +100,7 @@ jobs:
         with:
           arguments: aggregateJavadoc
       - name: Persist javadoc
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Documentation - javadoc - Java ${{ matrix.java_version }} - ${{ matrix.java_version }}
           path: build/docs/javadoc/

@@ -58,7 +58,7 @@ jobs:
         with:
           arguments: shadowJar
       - name: Persist gtfs-validator snapshot jar
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: gtfs-validator-snapshot
           path: cli/build/libs/gtfs-validator-*-cli.jar
@@ -78,7 +78,7 @@ jobs:
           echo "matrix=$DATASETS" >> $GITHUB_OUTPUT
       - name: Persist metadata
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: datasets_metadata
           path: scripts/mobility-database-harvester/datasets_metadata
@@ -94,7 +94,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Download latest changes .jar file from previous job
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: gtfs-validator-snapshot
           path: gtfs-validator-snapshot

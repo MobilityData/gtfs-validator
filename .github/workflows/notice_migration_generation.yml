@@ -41,7 +41,7 @@ jobs:
         run: ./gradlew webClientRulesJSON
 
       - name: Upload previous rules.json
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: rules-${{ env.PREVIOUS_VERSION }}
           path: web/client/static/rules.json
@@ -55,13 +55,13 @@ jobs:
         run: ./gradlew webClientRulesJSON
 
       - name: Upload current rules.json
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: rules-${{ github.event.inputs.NEW_VERSION }}
           path: web/client/static/rules.json
 
       - name: Download all workflow artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
 
       - name: Validate download
         run: ls -la rules*
