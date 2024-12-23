@@ -31,6 +31,14 @@ public final class GtfsGeoJsonFeature implements GtfsEntity {
 
   public GtfsGeoJsonFeature() {}
 
+  private GtfsGeoJsonFeature(Builder builder) {
+    this.featureId = builder.featureId;
+    this.geometryType = builder.geometryType;
+    this.geometryDefinition = builder.geometryDefinition;
+    this.stopName = builder.stopName;
+    this.stopDesc = builder.stopDesc;
+  }
+
   // TODO: Change the interface hierarchy so we dont need this. It's not relevant for geojson
   @Override
   public int csvRowNumber() {
@@ -103,5 +111,43 @@ public final class GtfsGeoJsonFeature implements GtfsEntity {
 
   public void setStopDesc(@Nullable String stopDesc) {
     this.stopDesc = stopDesc;
+  }
+
+  /** Builder class for GtfsGeoJsonFeature. */
+  public static class Builder {
+    private String featureId;
+    private GeometryType geometryType;
+    private Geometry geometryDefinition;
+    private String stopName;
+    private String stopDesc;
+
+    public Builder featureId(String featureId) {
+      this.featureId = featureId;
+      return this;
+    }
+
+    public Builder geometryType(GeometryType geometryType) {
+      this.geometryType = geometryType;
+      return this;
+    }
+
+    public Builder geometryDefinition(Geometry geometryDefinition) {
+      this.geometryDefinition = geometryDefinition;
+      return this;
+    }
+
+    public Builder stopName(String stopName) {
+      this.stopName = stopName;
+      return this;
+    }
+
+    public Builder stopDesc(String stopDesc) {
+      this.stopDesc = stopDesc;
+      return this;
+    }
+
+    public GtfsGeoJsonFeature build() {
+      return new GtfsGeoJsonFeature(this);
+    }
   }
 }

@@ -2,7 +2,9 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
@@ -33,14 +35,14 @@ public class OverlappingPickupDropOffZoneValidator extends FileValidator {
     // For all entities with the same trip id
     for (Map.Entry<String, Collection<GtfsStopTime>> entry :
         stopTimeTableContainer.byTripIdMap().asMap().entrySet()) {
-      Collection<GtfsStopTime> stopTimesForTrip = entry.getValue();
+      List<GtfsStopTime> stopTimesForTrip = new ArrayList<>(entry.getValue());
       // Checking entities two by two
-      for (GtfsStopTime stopTime1 : stopTimesForTrip) {
-        for (GtfsStopTime stopTime2 : stopTimesForTrip) {
-          // If the two entities are the same, skip
-          if (stopTime1.equals(stopTime2)) {
-            continue;
-          }
+      // Checking entities two by two
+      for (int i = 0; i < stopTimesForTrip.size(); i++) {
+        GtfsStopTime stopTime1 = stopTimesForTrip.get(i);
+        for (int j = i + 1; j < stopTimesForTrip.size(); j++) {
+          GtfsStopTime stopTime2 = stopTimesForTrip.get(j);
+
           // If the two entities have overlapping pickup/drop-off windows
           if (!(stopTime1.hasEndPickupDropOffWindow()
               && stopTime1.hasStartPickupDropOffWindow()
@@ -50,12 +52,18 @@ public class OverlappingPickupDropOffZoneValidator extends FileValidator {
               && stopTime2.hasLocationId())) {
             continue;
           }
+
+          if (stopTime1.locationId().equals(stopTime2.locationId())) {
+            continue;
+          }
+
           if (stopTime1.startPickupDropOffWindow().isAfter(stopTime2.endPickupDropOffWindow())
               || stopTime1.endPickupDropOffWindow().isBefore(stopTime2.startPickupDropOffWindow())
               || stopTime1.endPickupDropOffWindow().equals(stopTime2.startPickupDropOffWindow())
               || stopTime1.startPickupDropOffWindow().equals(stopTime2.endPickupDropOffWindow())) {
             continue;
           }
+
           // If the two entities have overlapping pickup/drop-off zones
           GtfsGeoJsonFeature stop1GeoJsonFeature =
               geoJsonFeaturesContainer.byLocationId(stopTime1.locationId());
@@ -64,12 +72,16 @@ public class OverlappingPickupDropOffZoneValidator extends FileValidator {
           if (stop1GeoJsonFeature == null || stop2GeoJsonFeature == null) {
             continue;
           }
+
           if (stop1GeoJsonFeature.geometryOverlaps(stop2GeoJsonFeature)) {
             noticeContainer.addValidationNotice(
                 new OverlappingZoneAndPickupDropOffWindowNotice(
+                    stopTime1.tripId(),
+                    stopTime1.stopSequence(),
                     stopTime1.locationId(),
                     stopTime1.startPickupDropOffWindow(),
                     stopTime1.endPickupDropOffWindow(),
+                    stopTime2.stopSequence(),
                     stopTime2.locationId(),
                     stopTime2.startPickupDropOffWindow(),
                     stopTime2.endPickupDropOffWindow()));
@@ -89,38 +101,52 @@ public class OverlappingPickupDropOffZoneValidator extends FileValidator {
       severity = ERROR,
       files = @GtfsValidationNotice.FileRefs({GtfsGeoJsonFeature.class, GtfsStopTime.class}))
   static class OverlappingZoneAndPickupDropOffWindowNotice extends ValidationNotice {
+    /** The `trip_id` of the entities. */
+    private final String tripId;
+
+    /** The `stop_sequence` of the first entity in `stop_times.txt`. */
+    private final Integer stopSequence1;
 
     /** The `location_id` of the first entity. */
-    private final String locationIdA;
+    private final String locationId1;
 
     /** The `start_pickup_drop_off_window` of the first entity in `stop_times.txt`. */
-    private final GtfsTime startPickupDropOffWindowA;
+    private final GtfsTime startPickupDropOffWindow1;
 
     /** The `end_pickup_drop_off_window` of the first entity in `stop_times.txt`. */
-    private final GtfsTime endPickupDropOffWindowA;
+    private final GtfsTime endPickupDropOffWindow1;
+
+    /** The `stop_sequence` of the second entity in `stop_times.txt`. */
+    private final Integer stopSequence2;
 
     /** The `location_id` of the second entity. */
-    private final String locationIdB;
+    private final String locationId2;
 
     /** The `start_pickup_drop_off_window` of the second entity in `stop_times.txt`. */
-    private final GtfsTime startPickupDropOffWindowB;
+    private final GtfsTime startPickupDropOffWindow2;
 
     /** The `end_pickup_drop_off_window` of the second entity in `stop_times.txt`. */
-    private final GtfsTime endPickupDropOffWindowB;
+    private final GtfsTime endPickupDropOffWindow2;
 
     OverlappingZoneAndPickupDropOffWindowNotice(
-        String locationIdA,
-        GtfsTime startPickupDropOffWindowA,
-        GtfsTime endPickupDropOffWindowA,
-        String locationIdB,
-        GtfsTime startPickupDropOffWindowB,
-        GtfsTime endPickupDropOffWindowB) {
-      this.locationIdA = locationIdA;
-      this.startPickupDropOffWindowA = startPickupDropOffWindowA;
-      this.endPickupDropOffWindowA = endPickupDropOffWindowA;
-      this.locationIdB = locationIdB;
-      this.startPickupDropOffWindowB = startPickupDropOffWindowB;
-      this.endPickupDropOffWindowB = endPickupDropOffWindowB;
+        String tripId,
+        Integer stopSequence1,
+        String locationId1,
+        GtfsTime startPickupDropOffWindow1,
+        GtfsTime endPickupDropOffWindow1,
+        Integer stopSequence2,
+        String locationId2,
+        GtfsTime startPickupDropOffWindow2,
+        GtfsTime endPickupDropOffWindow2) {
+      this.tripId = tripId;
+      this.stopSequence1 = stopSequence1;
+      this.locationId1 = locationId1;
+      this.startPickupDropOffWindow1 = startPickupDropOffWindow1;
+      this.endPickupDropOffWindow1 = endPickupDropOffWindow1;
+      this.stopSequence2 = stopSequence2;
+      this.locationId2 = locationId2;
+      this.startPickupDropOffWindow2 = startPickupDropOffWindow2;
+      this.endPickupDropOffWindow2 = endPickupDropOffWindow2;
     }
   }
 }
