@@ -51,9 +51,9 @@ public class OverlappingPickupDropOffZoneValidator extends FileValidator {
             continue;
           }
           if (stopTime1.startPickupDropOffWindow().isAfter(stopTime2.endPickupDropOffWindow())
-              || stopTime1
-                  .endPickupDropOffWindow()
-                  .isBefore(stopTime2.startPickupDropOffWindow())) {
+              || stopTime1.endPickupDropOffWindow().isBefore(stopTime2.startPickupDropOffWindow())
+              || stopTime1.endPickupDropOffWindow().equals(stopTime2.startPickupDropOffWindow())
+              || stopTime1.startPickupDropOffWindow().equals(stopTime2.endPickupDropOffWindow())) {
             continue;
           }
           // If the two entities have overlapping pickup/drop-off zones
