@@ -25,46 +25,56 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 /**
- * Validates the pickup and drop off windows in stop_times.txt.
+ * Validates pickup and drop-off windows in the `stop_times.txt` file to ensure compliance with GTFS
+ * rules.
  *
- * <p>Generated notice: {@link ForbiddenArrivalOrDepartureTimeNotice}, {@link
- * MissingPickupOrDropOffWindowNotice}, {@link InvalidPickupDropOffWindowNotice}
+ * <p>This validator checks for: - Forbidden use of arrival or departure times when pickup or
+ * drop-off windows are provided. - Missing start or end pickup/drop-off windows when one of them is
+ * present. - Invalid pickup/drop-off windows where the end time is not strictly later than the
+ * start time.
+ *
+ * <p>Generated notices include: - {@link ForbiddenArrivalOrDepartureTimeNotice} - {@link
+ * MissingPickupOrDropOffWindowNotice} - {@link InvalidPickupDropOffWindowNotice}
  */
 @GtfsValidator
 public class PickupDropOffWindowValidator extends SingleEntityValidator<GtfsStopTime> {
 
   @Override
   public void validate(GtfsStopTime stopTime, NoticeContainer noticeContainer) {
+    // Skip validation if neither start nor end pickup/drop-off window is present
     if (!stopTime.hasStartPickupDropOffWindow() && !stopTime.hasEndPickupDropOffWindow()) {
       return;
     }
 
+    // Check for forbidden coexistence of arrival/departure times with pickup/drop-off windows
     if (stopTime.hasArrivalTime() || stopTime.hasDepartureTime()) {
-      // forbidden_arrival_or_departure_time
       noticeContainer.addValidationNotice(
           new ForbiddenArrivalOrDepartureTimeNotice(
               stopTime.csvRowNumber(),
-              stopTime.arrivalTime(),
-              stopTime.departureTime(),
-              stopTime.startPickupDropOffWindow(),
-              stopTime.endPickupDropOffWindow()));
+              stopTime.hasArrivalTime() ? stopTime.arrivalTime() : null,
+              stopTime.hasDepartureTime() ? stopTime.departureTime() : null,
+              stopTime.hasStartPickupDropOffWindow() ? stopTime.startPickupDropOffWindow() : null,
+              stopTime.hasEndPickupDropOffWindow() ? stopTime.endPickupDropOffWindow() : null));
     }
+
+    // Check for missing start or end pickup/drop-off window
     if (!stopTime.hasStartPickupDropOffWindow() || !stopTime.hasEndPickupDropOffWindow()) {
       noticeContainer.addValidationNotice(
           new MissingPickupOrDropOffWindowNotice(
               stopTime.csvRowNumber(),
+              stopTime.hasStartPickupDropOffWindow() ? stopTime.startPickupDropOffWindow() : null,
+              stopTime.hasEndPickupDropOffWindow() ? stopTime.endPickupDropOffWindow() : null));
+      return;
+    }
+
+    // Check for invalid pickup/drop-off window (start time must be strictly before end time)
+    if (stopTime.startPickupDropOffWindow().isAfter(stopTime.endPickupDropOffWindow())
+        || stopTime.startPickupDropOffWindow().equals(stopTime.endPickupDropOffWindow())) {
+      noticeContainer.addValidationNotice(
+          new InvalidPickupDropOffWindowNotice(
+              stopTime.csvRowNumber(),
               stopTime.startPickupDropOffWindow(),
               stopTime.endPickupDropOffWindow()));
-    }
-    if (stopTime.hasStartPickupDropOffWindow() && stopTime.hasEndPickupDropOffWindow()) {
-      if (stopTime.startPickupDropOffWindow().isAfter(stopTime.endPickupDropOffWindow())
-          || stopTime.startPickupDropOffWindow().equals(stopTime.endPickupDropOffWindow())) {
-        noticeContainer.addValidationNotice(
-            new InvalidPickupDropOffWindowNotice(
-                stopTime.csvRowNumber(),
-                stopTime.startPickupDropOffWindow(),
-                stopTime.endPickupDropOffWindow()));
-      }
     }
   }
 
@@ -77,8 +87,10 @@ public class PickupDropOffWindowValidator extends SingleEntityValidator<GtfsStop
   }
 
   /**
-   * Arrival and departure times are forbidden in stop_times.txt when pickup and drop off windows
-   * are provided.
+   * The arrival or departure times are provided alongside pickup or drop-off windows in
+   * `stop_times.txt`.
+   *
+   * <p>This violates GTFS specification, as both cannot coexist for a single stop time record.
    */
   @GtfsValidationNotice(severity = ERROR)
   public static class ForbiddenArrivalOrDepartureTimeNotice extends ValidationNotice {
@@ -112,7 +124,12 @@ public class PickupDropOffWindowValidator extends SingleEntityValidator<GtfsStop
     }
   }
 
-  /** Start or end pickup drop off window is missing in stop_times.txt. */
+  /**
+   * Either the start or end pickup/drop-off window is missing in `stop_times.txt`.
+   *
+   * <p>GTFS specification requires both the start and end pickup/drop-off windows to be provided
+   * together, if used.
+   */
   @GtfsValidationNotice(severity = ERROR)
   public static class MissingPickupOrDropOffWindowNotice extends ValidationNotice {
     /** The row of the faulty record. */
@@ -133,9 +150,9 @@ public class PickupDropOffWindowValidator extends SingleEntityValidator<GtfsStop
   }
 
   /**
-   * Start or end pickup drop off window is invalid in stop_times.txt.
+   * The pickup/drop-off window in `stop_times.txt` is invalid.
    *
-   * <p>The value of `end_pickup_drop_off_window` must be strictly greater than the value of
+   * <p>The `end_pickup_drop_off_window` must be strictly later than the
    * `start_pickup_drop_off_window`.
    */
   @GtfsValidationNotice(severity = ERROR)

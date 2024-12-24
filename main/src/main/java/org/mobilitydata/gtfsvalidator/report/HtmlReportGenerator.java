@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.report;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -80,11 +80,19 @@ public class HtmlReportGenerator {
             Collectors.toMap(
                 Map.Entry::getKey, // Notice code
                 entry -> {
-                  // Find the notice with the most fields
-                  return entry.getValue().stream()
-                      .max(Comparator.comparingInt(notice -> notice.getFields().size()))
-                      .map(NoticeView::getFields) // Extract fields from that notice
-                      .orElse(List.of()); // Default to an empty list if no notices
+                  // Collect unique fields from all notices for this code
+                  List<String> uniqueFields =
+                      entry.getValue().stream()
+                          .flatMap(notice -> notice.getFields().stream())
+                          .distinct()
+                          .collect(Collectors.toList());
+
+                  // Start with all fields from the first notice and filter based on unique fields
+                  List<String> filteredFields =
+                      new ArrayList<>(entry.getValue().get(0).getAllFields());
+                  filteredFields.removeIf(field -> !uniqueFields.contains(field));
+
+                  return filteredFields;
                 }));
   }
 }
