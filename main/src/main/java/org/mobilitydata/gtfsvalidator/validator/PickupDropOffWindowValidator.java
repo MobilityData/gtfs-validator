@@ -35,6 +35,10 @@ public class PickupDropOffWindowValidator extends SingleEntityValidator<GtfsStop
 
   @Override
   public void validate(GtfsStopTime stopTime, NoticeContainer noticeContainer) {
+    if (!stopTime.hasStartPickupDropOffWindow() && !stopTime.hasEndPickupDropOffWindow()) {
+      return;
+    }
+
     if (stopTime.hasArrivalTime() || stopTime.hasDepartureTime()) {
       // forbidden_arrival_or_departure_time
       noticeContainer.addValidationNotice(
