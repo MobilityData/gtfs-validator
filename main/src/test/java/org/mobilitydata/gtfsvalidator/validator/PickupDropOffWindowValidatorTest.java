@@ -25,10 +25,7 @@ public class PickupDropOffWindowValidatorTest {
             .setEndPickupDropOffWindow(GtfsTime.fromString("00:00:03"))
             .build();
     validator.validate(stopTime, noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
-        .hasSize(
-            1); //
-                // assertThat(Optional.ofNullable(noticeContainer.getValidationNotices().stream().collect(Collectors.toList()).get(0))).isInstanceOf(PickupDropOffWindowValidator.ForbiddenArrivalOrDepartureTimeNotice.class);
+    assertThat(noticeContainer.getValidationNotices()).hasSize(1);
     assertThat(noticeContainer.getValidationNotices().stream().findFirst().get())
         .isInstanceOf(PickupDropOffWindowValidator.ForbiddenArrivalOrDepartureTimeNotice.class);
   }
@@ -44,10 +41,7 @@ public class PickupDropOffWindowValidatorTest {
             .setEndPickupDropOffWindow(GtfsTime.fromString("00:00:03"))
             .build();
     validator.validate(stopTime, noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
-        .hasSize(
-            1); //
-                // assertThat(Optional.ofNullable(noticeContainer.getValidationNotices().stream().collect(Collectors.toList()).get(0))).isInstanceOf(PickupDropOffWindowValidator.ForbiddenArrivalOrDepartureTimeNotice.class);
+    assertThat(noticeContainer.getValidationNotices()).hasSize(1);
     assertThat(noticeContainer.getValidationNotices().stream().findFirst().get())
         .isInstanceOf(PickupDropOffWindowValidator.MissingPickupOrDropOffWindowNotice.class);
   }
@@ -63,10 +57,7 @@ public class PickupDropOffWindowValidatorTest {
             .setStartPickupDropOffWindow(GtfsTime.fromString("00:00:03"))
             .build();
     validator.validate(stopTime, noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
-        .hasSize(
-            1); //
-                // assertThat(Optional.ofNullable(noticeContainer.getValidationNotices().stream().collect(Collectors.toList()).get(0))).isInstanceOf(PickupDropOffWindowValidator.ForbiddenArrivalOrDepartureTimeNotice.class);
+    assertThat(noticeContainer.getValidationNotices()).hasSize(1);
     assertThat(noticeContainer.getValidationNotices().stream().findFirst().get())
         .isInstanceOf(PickupDropOffWindowValidator.MissingPickupOrDropOffWindowNotice.class);
   }
@@ -83,10 +74,7 @@ public class PickupDropOffWindowValidatorTest {
             .setEndPickupDropOffWindow(GtfsTime.fromString("00:00:02"))
             .build();
     validator.validate(stopTime, noticeContainer);
-    assertThat(noticeContainer.getValidationNotices())
-        .hasSize(
-            1); //
-                // assertThat(Optional.ofNullable(noticeContainer.getValidationNotices().stream().collect(Collectors.toList()).get(0))).isInstanceOf(PickupDropOffWindowValidator.ForbiddenArrivalOrDepartureTimeNotice.class);
+    assertThat(noticeContainer.getValidationNotices()).hasSize(1);
     assertThat(noticeContainer.getValidationNotices().stream().findFirst().get())
         .isInstanceOf(PickupDropOffWindowValidator.InvalidPickupDropOffWindowNotice.class);
   }
