@@ -19,8 +19,13 @@ package org.mobilitydata.gtfsvalidator.report;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.report.model.FeedMetadata;
+import org.mobilitydata.gtfsvalidator.report.model.NoticeView;
 import org.mobilitydata.gtfsvalidator.report.model.ReportSummary;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 import org.mobilitydata.gtfsvalidator.util.VersionInfo;
@@ -56,9 +61,30 @@ public class HtmlReportGenerator {
     context.setVariable("config", config);
     context.setVariable("date", date);
     context.setVariable("is_different_date", is_different_date);
+    context.setVariable(
+        "uniqueFieldsByCode",
+        getUniqueFieldsForCodes(
+            summary.getNoticesMap().values().stream()
+                .flatMap(map -> map.entrySet().stream())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
 
     try (FileWriter writer = new FileWriter(reportPath.toFile())) {
       templateEngine.process("report.html", context, writer);
     }
+  }
+
+  private Map<String, List<String>> getUniqueFieldsForCodes(
+      Map<String, List<NoticeView>> noticesByCode) {
+    return noticesByCode.entrySet().stream()
+        .collect(
+            Collectors.toMap(
+                Map.Entry::getKey, // Notice code
+                entry -> {
+                  // Find the notice with the most fields
+                  return entry.getValue().stream()
+                      .max(Comparator.comparingInt(notice -> notice.getFields().size()))
+                      .map(NoticeView::getFields) // Extract fields from that notice
+                      .orElse(List.of()); // Default to an empty list if no notices
+                }));
   }
 }
