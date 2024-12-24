@@ -29,21 +29,23 @@ public class OverlappingPickupDropOffZoneValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
+    // If either the stop_times file or GeoJSON file is missing, skip validation.
     if (stopTimeTableContainer.isMissingFile() || geoJsonFeaturesContainer.isMissingFile()) {
       return;
     }
-    // For all entities with the same trip id
+
+    // Iterate through all stop times grouped by trip ID.
     for (Map.Entry<String, Collection<GtfsStopTime>> entry :
         stopTimeTableContainer.byTripIdMap().asMap().entrySet()) {
       List<GtfsStopTime> stopTimesForTrip = new ArrayList<>(entry.getValue());
-      // Checking entities two by two
-      // Checking entities two by two
+
+      // Compare each pair of stop times within the same trip.
       for (int i = 0; i < stopTimesForTrip.size(); i++) {
         GtfsStopTime stopTime1 = stopTimesForTrip.get(i);
         for (int j = i + 1; j < stopTimesForTrip.size(); j++) {
           GtfsStopTime stopTime2 = stopTimesForTrip.get(j);
 
-          // If the two entities have overlapping pickup/drop-off windows
+          // Skip validation if any required fields are missing in either stop time.
           if (!(stopTime1.hasEndPickupDropOffWindow()
               && stopTime1.hasStartPickupDropOffWindow()
               && stopTime2.hasEndPickupDropOffWindow()
@@ -53,10 +55,12 @@ public class OverlappingPickupDropOffZoneValidator extends FileValidator {
             continue;
           }
 
+          // Skip validation if both stop times reference the same location.
           if (stopTime1.locationId().equals(stopTime2.locationId())) {
             continue;
           }
 
+          // Skip validation if the pickup/drop-off windows of the two stop times do not overlap.
           if (stopTime1.startPickupDropOffWindow().isAfter(stopTime2.endPickupDropOffWindow())
               || stopTime1.endPickupDropOffWindow().isBefore(stopTime2.startPickupDropOffWindow())
               || stopTime1.endPickupDropOffWindow().equals(stopTime2.startPickupDropOffWindow())
@@ -64,15 +68,18 @@ public class OverlappingPickupDropOffZoneValidator extends FileValidator {
             continue;
           }
 
-          // If the two entities have overlapping pickup/drop-off zones
+          // Retrieve GeoJSON features for the locations referenced by the two stop times.
           GtfsGeoJsonFeature stop1GeoJsonFeature =
               geoJsonFeaturesContainer.byLocationId(stopTime1.locationId());
           GtfsGeoJsonFeature stop2GeoJsonFeature =
               geoJsonFeaturesContainer.byLocationId(stopTime2.locationId());
+
+          // Skip validation if either location has no corresponding GeoJSON feature.
           if (stop1GeoJsonFeature == null || stop2GeoJsonFeature == null) {
             continue;
           }
 
+          // If the geometries of the two locations overlap, generate a validation notice.
           if (stop1GeoJsonFeature.geometryOverlaps(stop2GeoJsonFeature)) {
             noticeContainer.addValidationNotice(
                 new OverlappingZoneAndPickupDropOffWindowNotice(
