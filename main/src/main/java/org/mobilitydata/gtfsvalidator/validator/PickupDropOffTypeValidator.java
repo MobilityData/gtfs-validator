@@ -20,6 +20,15 @@ public class PickupDropOffTypeValidator extends SingleEntityValidator<GtfsStopTi
                       entity.startPickupDropOffWindow(),
                       entity.endPickupDropOffWindow()));
     }
+
+    if ((entity.hasStartPickupDropOffWindow() || entity.hasEndPickupDropOffWindow()) &&
+            entity.dropOffType().equals(GtfsPickupDropOff.ALLOWED)) {
+      noticeContainer.addValidationNotice(
+              new ForbiddenDropOffTypeNotice(
+                      entity.csvRowNumber(),
+                      entity.startPickupDropOffWindow(),
+                      entity.endPickupDropOffWindow()));
+    }
   }
 
   /**
@@ -37,6 +46,27 @@ public class PickupDropOffTypeValidator extends SingleEntityValidator<GtfsStopTi
     private final GtfsTime endPickupDropOffWindow;
 
     public ForbiddenPickupTypeNotice(int csvRowNumber, GtfsTime startPickupDropOffWindow, GtfsTime endPickupDropOffWindow) {
+      this.csvRowNumber = csvRowNumber;
+      this.startPickupDropOffWindow = startPickupDropOffWindow;
+      this.endPickupDropOffWindow = endPickupDropOffWindow;
+    }
+  }
+
+  /**
+   * pickup_drop_off_window fields are forbidden when the drop_off_type is regularly scheduled (0).
+   */
+  @GtfsValidationNotice(severity = ERROR)
+  public static class ForbiddenDropOffTypeNotice extends ValidationNotice {
+    /** The row of the faulty record. */
+    private final int csvRowNumber;
+
+    /** The start pickup drop off window of the faulty record. */
+    private final GtfsTime startPickupDropOffWindow;
+
+    /** The end pickup drop off window of the faulty record. */
+    private final GtfsTime endPickupDropOffWindow;
+
+    public ForbiddenDropOffTypeNotice(int csvRowNumber, GtfsTime startPickupDropOffWindow, GtfsTime endPickupDropOffWindow) {
       this.csvRowNumber = csvRowNumber;
       this.startPickupDropOffWindow = startPickupDropOffWindow;
       this.endPickupDropOffWindow = endPickupDropOffWindow;
