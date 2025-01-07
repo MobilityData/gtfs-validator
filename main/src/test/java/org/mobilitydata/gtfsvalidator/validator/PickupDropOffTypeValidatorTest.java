@@ -24,20 +24,24 @@ public class PickupDropOffTypeValidatorTest {
 
   @Test
   public void forbiddenDropOffTypeShouldGenerateNotice() {
-    GtfsStopTime stopTime = new GtfsStopTime.Builder()
+    GtfsStopTime stopTime =
+        new GtfsStopTime.Builder()
             .setCsvRowNumber(1)
             .setPickupType(GtfsPickupDropOff.NOT_AVAILABLE)
             .setDropOffType(GtfsPickupDropOff.ALLOWED)
             .setStartPickupDropOffWindow(GtfsTime.fromString("00:00:02"))
             .setEndPickupDropOffWindow(GtfsTime.fromString("00:00:03"))
             .build();
-    assertThat(generateNotices(stopTime)).containsExactly(
-            new PickupDropOffTypeValidator.ForbiddenDropOffTypeNotice(1, GtfsTime.fromString("00:00:02"), GtfsTime.fromString("00:00:03")));
+    assertThat(generateNotices(stopTime))
+        .containsExactly(
+            new PickupDropOffTypeValidator.ForbiddenDropOffTypeNotice(
+                1, GtfsTime.fromString("00:00:02"), GtfsTime.fromString("00:00:03")));
   }
 
   @Test
   public void allowedDropOffTypeShouldNotGenerateNotice() {
-    GtfsStopTime stopTime = new GtfsStopTime.Builder()
+    GtfsStopTime stopTime =
+        new GtfsStopTime.Builder()
             .setCsvRowNumber(2)
             .setDropOffType(GtfsPickupDropOff.NOT_AVAILABLE)
             .build();
@@ -46,20 +50,24 @@ public class PickupDropOffTypeValidatorTest {
 
   @Test
   public void forbiddenPickupTypeShouldGenerateNotice() {
-    GtfsStopTime stopTime = new GtfsStopTime.Builder()
+    GtfsStopTime stopTime =
+        new GtfsStopTime.Builder()
             .setCsvRowNumber(3)
             .setPickupType(GtfsPickupDropOff.ALLOWED)
             .setDropOffType(GtfsPickupDropOff.NOT_AVAILABLE)
             .setStartPickupDropOffWindow(GtfsTime.fromString("08:00:00"))
             .setEndPickupDropOffWindow(GtfsTime.fromString("09:00:00"))
             .build();
-    assertThat(generateNotices(stopTime)).containsExactly(
-            new PickupDropOffTypeValidator.ForbiddenPickupTypeNotice(3, GtfsTime.fromString("08:00:00"), GtfsTime.fromString("09:00:00")));
+    assertThat(generateNotices(stopTime))
+        .containsExactly(
+            new PickupDropOffTypeValidator.ForbiddenPickupTypeNotice(
+                3, GtfsTime.fromString("08:00:00"), GtfsTime.fromString("09:00:00")));
   }
 
   @Test
   public void allowedPickupTypeShouldNotGenerateNotice() {
-    GtfsStopTime stopTime = new GtfsStopTime.Builder()
+    GtfsStopTime stopTime =
+        new GtfsStopTime.Builder()
             .setCsvRowNumber(4)
             .setPickupType(GtfsPickupDropOff.NOT_AVAILABLE)
             .build();
