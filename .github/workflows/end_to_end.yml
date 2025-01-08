@@ -31,6 +31,7 @@ on:
       - 'acceptance_test.yml'
       - 'web/**'
       - '.github/workflows/**'
+  workflow_dispatch:
 jobs:
   validate_gradle_wrapper:
     runs-on: ubuntu-latest
