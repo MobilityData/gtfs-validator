@@ -2,7 +2,7 @@ name: End to end
 
 on:
   push:
-    branches: [ master, "chore/upgrade-upload-artifact" ]
+    branches: [ master, chore/upgrade-upload-artifact ]
     paths-ignore:
       - '**.md'
       - '**.py'
