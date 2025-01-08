@@ -105,10 +105,13 @@ jobs:
           bash ./scripts/queue_runner.sh --exclude-master $queue
         env:
           OUTPUT_BASE: ${{ github.sha }}
+      - name: Extract ID from JSON
+        id: extract-id
+        run: echo "feed_id=$(echo '${{ matrix.data }}' | jq -r '.id')" >> $GITHUB_ENV
       - name: Persist reports
         uses: actions/upload-artifact@v4
         with:
-          name: reports_snapshot_${{ matrix.data.id }}
+          name: reports_snapshot_${{ env.feed_id }}
           path: ${{ github.sha }}/output
   merge-reports-artifacts:
     runs-on: ubuntu-latest
