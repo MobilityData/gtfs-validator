@@ -22,14 +22,14 @@ concurrency:
 jobs:
   fail_if_pull_request_is_draft: # Fails in order to indicate that pull request needs to be marked as ready to review to pass.
     if: github.event.pull_request.draft == true
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Fail if PR is a draft
         run: exit 1
   pre_ci:
     name: Prepare CI environment
     if: github.event.pull_request.draft == false # Skip this job and its dependencies if the PR is draft
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout Project
         uses: actions/checkout@v4
@@ -53,13 +53,13 @@ jobs:
   validate-gradle-wrapper:
     if: "!contains(needs.pre_ci.outputs.commit_message, '[acceptance test skip]')"
     needs: pre_ci
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: gradle/actions/wrapper-validation@v3
   pack-snapshot:
     needs: [ validate-gradle-wrapper ]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 11
@@ -89,7 +89,7 @@ jobs:
           path: output-comparator/build/libs/output-comparator-*-cli.jar
   pack-master:
     needs: [ validate-gradle-wrapper ]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
         with:
@@ -117,7 +117,7 @@ jobs:
   fetch-urls:
     if: "!contains(needs.pre_ci.outputs.commit_message, '[acceptance test skip]')"
     needs: pre_ci
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v4
@@ -174,7 +174,7 @@ jobs:
           name: reports_${{ env.CONCATENATED_IDS }}
           path: ${{ github.sha }}/output
   merge-reports-artifacts:
-     runs-on: ubuntu-latest
+     runs-on: ubuntu-22.04
      needs: [ get-reports ]
      steps:
        - name: Merge Artifacts
@@ -185,7 +185,7 @@ jobs:
            delete-merged: true
   compare-outputs:
     needs: [ merge-reports-artifacts ]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - name: Download comparator .jar file from previous job
