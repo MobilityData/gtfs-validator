@@ -2,7 +2,7 @@ name: End to end
 
 on:
   push:
-    branches: [ master, chore/upgrade-upload-artifact ]
+    branches: [ master ]
     paths-ignore:
       - '**.md'
       - '**.py'
@@ -32,7 +32,6 @@ on:
       - 'web/**'
       - '.github/workflows/**'
   workflow_dispatch:
-
 jobs:
   validate_gradle_wrapper:
     runs-on: ubuntu-latest
