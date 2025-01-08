@@ -15,7 +15,6 @@ on:
       - 'triage.yml'
       - 'acceptance_test.yml'
       - 'web/**'
-      - '.github/workflows/**'
   pull_request:
     branches: [ master ]
     paths-ignore:
