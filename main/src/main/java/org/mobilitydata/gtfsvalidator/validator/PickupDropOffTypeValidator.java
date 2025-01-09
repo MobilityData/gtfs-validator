@@ -42,6 +42,12 @@ public class PickupDropOffTypeValidator extends SingleEntityValidator<GtfsStopTi
     }
   }
 
+  @Override
+  public boolean shouldCallValidate(ColumnInspector header) {
+    return header.hasColumn(GtfsStopTime.PICKUP_TYPE_FIELD_NAME)
+        && header.hasColumn(GtfsStopTime.DROP_OFF_TYPE_FIELD_NAME);
+  }
+
   /**
    * pickup_drop_off_window fields are forbidden when the pickup_type is regularly scheduled (0) or
    * must be coordinated with the driver (3).
