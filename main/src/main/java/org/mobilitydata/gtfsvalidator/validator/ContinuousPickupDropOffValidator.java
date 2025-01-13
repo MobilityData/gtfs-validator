@@ -15,16 +15,16 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
  * `stop_times.start_pickup_drop_off_window` or `stop_times.end_pickup_drop_off_window` are not
  * defined for any trip of this route.
  *
- * <p>Generated notice: {@link RouteContinuousPickupDropOffNotice}.
+ * <p>Generated notice: {@link ContinuousPickupDropOffNotice}.
  */
 @GtfsValidator
-public class RouteContinuousPickupDropOffValidator extends FileValidator {
+public class ContinuousPickupDropOffValidator extends FileValidator {
   private final GtfsRouteTableContainer routeTable;
   private final GtfsTripTableContainer tripTable;
   private final GtfsStopTimeTableContainer stopTimeTable;
 
   @Inject
-  public RouteContinuousPickupDropOffValidator(
+  public ContinuousPickupDropOffValidator(
       GtfsRouteTableContainer routeTable,
       GtfsTripTableContainer tripTable,
       GtfsStopTimeTableContainer stopTimeTable) {
@@ -48,7 +48,7 @@ public class RouteContinuousPickupDropOffValidator extends FileValidator {
         for (GtfsStopTime stopTime : stopTimeTable.byTripId(trip.tripId())) {
           if (stopTime.hasStartPickupDropOffWindow() || stopTime.hasEndPickupDropOffWindow()) {
             noticeContainer.addValidationNotice(
-                new RouteContinuousPickupDropOffNotice(
+                new ContinuousPickupDropOffNotice(
                     route.csvRowNumber(),
                     trip.tripId(),
                     stopTime.startPickupDropOffWindow(),
@@ -60,12 +60,12 @@ public class RouteContinuousPickupDropOffValidator extends FileValidator {
   }
 
   /**
-   * Notice generated when `routes.continuous_pickup` or `routes.continuous_drop_off` are included
-   * and `stop_times.start_pickup_drop_off_window` or `stop_times.end_pickup_drop_off_window` are
-   * defined for any trip of this route.
+   * Continuous pickup or drop-off are forbidden when routes.continuous_pickup or
+   * routes.continuous_drop_off are 2 or 3 and stop_times.start_pickup_drop_off_window or
+   * stop_times.end_pickup_drop_off_window are defined for any trip of this route.
    */
   @GtfsValidationNotice(severity = ERROR)
-  public static class RouteContinuousPickupDropOffNotice extends ValidationNotice {
+  public static class ContinuousPickupDropOffNotice extends ValidationNotice {
     /** The row number of the route in the CSV file. */
     private final int routeCsvRowNumber;
 
@@ -78,7 +78,7 @@ public class RouteContinuousPickupDropOffValidator extends FileValidator {
     /** The end time of the pickup/drop-off window. */
     private final GtfsTime endPickupDropOffWindow;
 
-    public RouteContinuousPickupDropOffNotice(
+    public ContinuousPickupDropOffNotice(
         int routeCsvRowNumber,
         String tripId,
         GtfsTime startPickupDropOffWindow,

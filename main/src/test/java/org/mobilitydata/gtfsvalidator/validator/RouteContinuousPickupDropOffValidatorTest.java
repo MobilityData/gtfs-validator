@@ -22,7 +22,7 @@ public class RouteContinuousPickupDropOffValidatorTest {
     GtfsTripTableContainer tripTable = GtfsTripTableContainer.forEntities(trips, noticeContainer);
     GtfsStopTimeTableContainer stopTimeTable =
         GtfsStopTimeTableContainer.forEntities(stopTimes, noticeContainer);
-    new RouteContinuousPickupDropOffValidator(routeTable, tripTable, stopTimeTable)
+    new ContinuousPickupDropOffValidator(routeTable, tripTable, stopTimeTable)
         .validate(noticeContainer);
     return noticeContainer.getValidationNotices();
   }
@@ -52,7 +52,7 @@ public class RouteContinuousPickupDropOffValidatorTest {
                     .build()));
     assertThat(notices)
         .containsExactly(
-            new RouteContinuousPickupDropOffValidator.RouteContinuousPickupDropOffNotice(
+            new ContinuousPickupDropOffValidator.ContinuousPickupDropOffNotice(
                 1, "trip1", GtfsTime.fromString("08:00:00"), GtfsTime.fromString("09:00:00")));
   }
 
@@ -81,7 +81,7 @@ public class RouteContinuousPickupDropOffValidatorTest {
                     .build()));
     assertThat(notices)
         .containsExactly(
-            new RouteContinuousPickupDropOffValidator.RouteContinuousPickupDropOffNotice(
+            new ContinuousPickupDropOffValidator.ContinuousPickupDropOffNotice(
                 1, "trip1", GtfsTime.fromString("08:00:00"), GtfsTime.fromString("09:00:00")));
   }
 
