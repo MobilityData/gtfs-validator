@@ -5,10 +5,12 @@ on:
     branches: [ master ]
     paths-ignore:
       - '**.md'
+      - '.github/**'
   pull_request:
     branches: [ master ]
     paths-ignore:
       - '**.md'
+      - '.github/**'
   release:
     types: [ prereleased, released ]
   workflow_dispatch:
