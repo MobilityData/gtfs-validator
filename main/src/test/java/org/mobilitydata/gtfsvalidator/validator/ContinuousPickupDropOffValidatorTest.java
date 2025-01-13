@@ -12,7 +12,7 @@ import org.mobilitydata.gtfsvalidator.table.*;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 @RunWith(JUnit4.class)
-public class RouteContinuousPickupDropOffValidatorTest {
+public class ContinuousPickupDropOffValidatorTest {
 
   private static List<ValidationNotice> generateNotices(
       List<GtfsRoute> routes, List<GtfsTrip> trips, List<GtfsStopTime> stopTimes) {
