@@ -59,14 +59,6 @@ public class RouteContinuousPickupDropOffValidator extends FileValidator {
     }
   }
 
-  @Override
-  public boolean shouldCallValidate() {
-    return routeTable.hasColumn(GtfsRoute.CONTINUOUS_PICKUP_FIELD_NAME)
-        || routeTable.hasColumn(GtfsRoute.CONTINUOUS_DROP_OFF_FIELD_NAME)
-            && (stopTimeTable.hasColumn(GtfsStopTime.START_PICKUP_DROP_OFF_WINDOW_FIELD_NAME)
-                || stopTimeTable.hasColumn(GtfsStopTime.END_PICKUP_DROP_OFF_WINDOW_FIELD_NAME));
-  }
-
   /**
    * Notice generated when `routes.continuous_pickup` or `routes.continuous_drop_off` are included
    * and `stop_times.start_pickup_drop_off_window` or `stop_times.end_pickup_drop_off_window` are

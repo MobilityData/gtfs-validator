@@ -64,7 +64,7 @@ public class RouteContinuousPickupDropOffValidatorTest {
                 new GtfsRoute.Builder()
                     .setCsvRowNumber(1)
                     .setRouteId("route1")
-                    .setContinuousDropOff(1)
+                    .setContinuousDropOff(2)
                     .build()),
             List.of(
                 new GtfsTrip.Builder()
