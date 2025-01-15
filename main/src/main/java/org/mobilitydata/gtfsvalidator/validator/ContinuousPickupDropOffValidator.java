@@ -15,7 +15,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
  * `stop_times.start_pickup_drop_off_window` or `stop_times.end_pickup_drop_off_window` are not
  * defined for any trip of this route.
  *
- * <p>Generated notice: {@link ContinuousPickupDropOffNotice}.
+ * <p>Generated notice: {@link ForbiddenContinuousPickupDropOffNotice}.
  */
 @GtfsValidator
 public class ContinuousPickupDropOffValidator extends FileValidator {
@@ -48,7 +48,7 @@ public class ContinuousPickupDropOffValidator extends FileValidator {
         for (GtfsStopTime stopTime : stopTimeTable.byTripId(trip.tripId())) {
           if (stopTime.hasStartPickupDropOffWindow() || stopTime.hasEndPickupDropOffWindow()) {
             noticeContainer.addValidationNotice(
-                new ContinuousPickupDropOffNotice(
+                new ForbiddenContinuousPickupDropOffNotice(
                     route.csvRowNumber(),
                     trip.tripId(),
                     stopTime.startPickupDropOffWindow(),
@@ -61,11 +61,11 @@ public class ContinuousPickupDropOffValidator extends FileValidator {
 
   /**
    * Continuous pickup or drop-off are forbidden when routes.continuous_pickup or
-   * routes.continuous_drop_off are 2 or 3 and stop_times.start_pickup_drop_off_window or
+   * routes.continuous_drop_off are 0, 2 or 3 and stop_times.start_pickup_drop_off_window or
    * stop_times.end_pickup_drop_off_window are defined for any trip of this route.
    */
   @GtfsValidationNotice(severity = ERROR)
-  public static class ContinuousPickupDropOffNotice extends ValidationNotice {
+  public static class ForbiddenContinuousPickupDropOffNotice extends ValidationNotice {
     /** The row number of the route in the CSV file. */
     private final int routeCsvRowNumber;
 
@@ -78,7 +78,7 @@ public class ContinuousPickupDropOffValidator extends FileValidator {
     /** The end time of the pickup/drop-off window. */
     private final GtfsTime endPickupDropOffWindow;
 
-    public ContinuousPickupDropOffNotice(
+    public ForbiddenContinuousPickupDropOffNotice(
         int routeCsvRowNumber,
         String tripId,
         GtfsTime startPickupDropOffWindow,
