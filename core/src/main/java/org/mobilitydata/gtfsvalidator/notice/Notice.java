@@ -25,7 +25,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
@@ -46,6 +50,12 @@ public abstract class Notice {
 
   public JsonElement toJsonTree() {
     return GSON.toJsonTree(this);
+  }
+
+  public List<String> getAllFields() {
+    return Arrays.stream(this.getClass().getDeclaredFields())
+        .map(Field::getName) // Extract the name of each field
+        .collect(Collectors.toList()); // Collect as a list of strings
   }
 
   /**

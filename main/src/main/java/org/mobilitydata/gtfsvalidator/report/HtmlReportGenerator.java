@@ -19,8 +19,13 @@ package org.mobilitydata.gtfsvalidator.report;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.report.model.FeedMetadata;
+import org.mobilitydata.gtfsvalidator.report.model.NoticeView;
 import org.mobilitydata.gtfsvalidator.report.model.ReportSummary;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 import org.mobilitydata.gtfsvalidator.util.VersionInfo;
@@ -56,9 +61,38 @@ public class HtmlReportGenerator {
     context.setVariable("config", config);
     context.setVariable("date", date);
     context.setVariable("is_different_date", is_different_date);
+    context.setVariable(
+        "uniqueFieldsByCode",
+        getUniqueFieldsForCodes(
+            summary.getNoticesMap().values().stream()
+                .flatMap(map -> map.entrySet().stream())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
 
     try (FileWriter writer = new FileWriter(reportPath.toFile())) {
       templateEngine.process("report.html", context, writer);
     }
+  }
+
+  private Map<String, List<String>> getUniqueFieldsForCodes(
+      Map<String, List<NoticeView>> noticesByCode) {
+    return noticesByCode.entrySet().stream()
+        .collect(
+            Collectors.toMap(
+                Map.Entry::getKey, // Notice code
+                entry -> {
+                  // Collect unique fields from all notices for this code
+                  List<String> uniqueFields =
+                      entry.getValue().stream()
+                          .flatMap(notice -> notice.getFields().stream())
+                          .distinct()
+                          .collect(Collectors.toList());
+
+                  // Start with all fields from the first notice and filter based on unique fields
+                  List<String> filteredFields =
+                      new ArrayList<>(entry.getValue().get(0).getAllFields());
+                  filteredFields.removeIf(field -> !uniqueFields.contains(field));
+
+                  return filteredFields;
+                }));
   }
 }

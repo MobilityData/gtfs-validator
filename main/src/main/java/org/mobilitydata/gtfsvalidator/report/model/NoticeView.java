@@ -97,4 +97,13 @@ public class NoticeView {
   public String getCode() {
     return notice.getContext().getCode();
   }
+
+  /**
+   * Returns a list of all fields in the notice.
+   *
+   * @return list of all fields in the notice.
+   */
+  public List<String> getAllFields() {
+    return notice.getContext().getAllFields();
+  }
 }
