@@ -46,22 +46,36 @@ public class StopTimesRecordValidatorTest {
   public void containsStopTimesRecordShouldNotGenerateNotice() {
     assertThat(
             generateNotices(
-                ImmutableList.of(
-                    createStopTime(
-                        1,
-                        "trip1",
-                        GtfsPickupDropOff.MUST_PHONE,
-                        GtfsPickupDropOff.ALLOWED,
-                        GtfsTime.fromString("08:00:00"),
-                        GtfsTime.fromString("09:00:00")),
-                    createStopTime(
-                        2,
-                        "trip1",
-                        GtfsPickupDropOff.ALLOWED,
-                        GtfsPickupDropOff.MUST_PHONE,
-                        GtfsTime.fromString("08:00:00"),
-                        GtfsTime.fromString("09:00:00")))))
-        .isEmpty();
+                    ImmutableList.of(
+                            createStopTime(
+                                    1,
+                                    "trip1",
+                                    GtfsPickupDropOff.MUST_PHONE,
+                                    GtfsPickupDropOff.MUST_PHONE,
+                                    GtfsTime.fromString("08:00:00"),
+                                    GtfsTime.fromString("09:00:00")),
+                            createStopTime(2,
+                                    "trip1",
+                                    GtfsPickupDropOff.ALLOWED,
+                                    GtfsPickupDropOff.ALLOWED,
+                                    GtfsTime.fromString("08:00:00"),
+                                    GtfsTime.fromString("09:00:00")))))
+            .isEmpty();
+  }
+
+  @Test
+  public void containsStopTimesRecordShouldNotGenerateNotice1() {
+    assertThat(
+            generateNotices(
+                    ImmutableList.of(
+                            createStopTime(
+                                    1,
+                                    "trip1",
+                                    GtfsPickupDropOff.MUST_PHONE,
+                                    GtfsPickupDropOff.MUST_PHONE,
+                                    GtfsTime.fromString("08:00:00"),
+                                    GtfsTime.fromString("09:00:00")))))
+            .isEmpty();
   }
 
   @Test
@@ -71,11 +85,11 @@ public class StopTimesRecordValidatorTest {
                 ImmutableList.of(
                     createStopTime(
                         1,
-                        "1",
+                        "trip2",
                         GtfsPickupDropOff.MUST_PHONE,
                         GtfsPickupDropOff.MUST_PHONE,
                         GtfsTime.fromString("08:00:00"),
                         GtfsTime.fromString("09:00:00")))))
-        .containsExactly(new StopTimesRecordValidator.MissingStopTimesRecordNotice(2, "trip2"));
+        .containsExactly(new StopTimesRecordValidator.MissingStopTimesRecordNotice(1, "trip2"));
   }
 }

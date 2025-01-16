@@ -10,6 +10,9 @@ import org.mobilitydata.gtfsvalidator.table.GtfsPickupDropOff;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Validates `stop_times.start_pickup_dropoff_window`, `stop_times.end_pickup_dropoff_window`,
  * `stop_times.pickup_type`, and `stop_times.drop_off_type` for a single `GtfsStopTime`.
@@ -30,17 +33,23 @@ public class StopTimesRecordValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
+    Set<String> processedTripIds = new HashSet<>();
     for (GtfsStopTime entity : stopTimeTable.getEntities()) {
+      if (processedTripIds.contains(entity.tripId())) {
+        continue;
+      }
       if (entity.hasStartPickupDropOffWindow()
-          && entity.hasEndPickupDropOffWindow()
-          && entity.pickupType() == GtfsPickupDropOff.MUST_PHONE
-          && entity.dropOffType() == GtfsPickupDropOff.MUST_PHONE) {
+              && entity.hasEndPickupDropOffWindow()
+              && entity.pickupType() == GtfsPickupDropOff.MUST_PHONE
+              && entity.dropOffType() == GtfsPickupDropOff.MUST_PHONE) {
         int tripStopCount = stopTimeTable.byTripId(entity.tripId()).size();
         if (tripStopCount == 1) {
           noticeContainer.addValidationNotice(
-              new MissingStopTimesRecordNotice(entity.csvRowNumber(), entity.tripId()));
+                  new MissingStopTimesRecordNotice(entity.csvRowNumber(), entity.tripId()));
+          processedTripIds.add(entity.tripId());
         }
       }
+
     }
   }
 
