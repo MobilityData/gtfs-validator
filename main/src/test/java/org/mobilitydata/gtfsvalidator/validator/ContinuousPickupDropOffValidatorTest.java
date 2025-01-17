@@ -35,7 +35,7 @@ public class ContinuousPickupDropOffValidatorTest {
                 new GtfsRoute.Builder()
                     .setCsvRowNumber(1)
                     .setRouteId("route1")
-                    .setContinuousPickup(1)
+                    .setContinuousPickup(2)
                     .build()),
             List.of(
                 new GtfsTrip.Builder()
@@ -52,36 +52,7 @@ public class ContinuousPickupDropOffValidatorTest {
                     .build()));
     assertThat(notices)
         .containsExactly(
-            new ContinuousPickupDropOffValidator.ContinuousPickupDropOffNotice(
-                1, "trip1", GtfsTime.fromString("08:00:00"), GtfsTime.fromString("09:00:00")));
-  }
-
-  @Test
-  public void continuousDropOffWithPickupDropOffWindowShouldGenerateNotice() {
-    List<ValidationNotice> notices =
-        generateNotices(
-            List.of(
-                new GtfsRoute.Builder()
-                    .setCsvRowNumber(1)
-                    .setRouteId("route1")
-                    .setContinuousDropOff(2)
-                    .build()),
-            List.of(
-                new GtfsTrip.Builder()
-                    .setCsvRowNumber(2)
-                    .setTripId("trip1")
-                    .setRouteId("route1")
-                    .build()),
-            List.of(
-                new GtfsStopTime.Builder()
-                    .setCsvRowNumber(3)
-                    .setTripId("trip1")
-                    .setStartPickupDropOffWindow(GtfsTime.fromString("08:00:00"))
-                    .setEndPickupDropOffWindow(GtfsTime.fromString("09:00:00"))
-                    .build()));
-    assertThat(notices)
-        .containsExactly(
-            new ContinuousPickupDropOffValidator.ContinuousPickupDropOffNotice(
+            new ContinuousPickupDropOffValidator.ForbiddenContinuousPickupDropOffNotice(
                 1, "trip1", GtfsTime.fromString("08:00:00"), GtfsTime.fromString("09:00:00")));
   }
 
