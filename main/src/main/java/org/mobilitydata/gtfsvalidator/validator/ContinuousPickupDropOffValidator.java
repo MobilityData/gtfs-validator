@@ -37,10 +37,8 @@ public class ContinuousPickupDropOffValidator extends FileValidator {
   public void validate(NoticeContainer noticeContainer) {
     for (GtfsRoute route : routeTable.getEntities()) {
       boolean continuous =
-          (route.hasContinuousPickup()
-                  || route.continuousPickup() != GtfsContinuousPickupDropOff.NOT_AVAILABLE)
-              || (route.hasContinuousDropOff()
-                  || route.continuousDropOff() != GtfsContinuousPickupDropOff.NOT_AVAILABLE);
+          (route.continuousPickup() == GtfsContinuousPickupDropOff.ALLOWED || route.continuousPickup() == GtfsContinuousPickupDropOff.MUST_PHONE || route.continuousPickup() == GtfsContinuousPickupDropOff.ON_REQUEST_TO_DRIVER)
+              || (route.continuousDropOff() == GtfsContinuousPickupDropOff.ALLOWED || route.continuousPickup() == GtfsContinuousPickupDropOff.MUST_PHONE || route.continuousPickup() == GtfsContinuousPickupDropOff.ON_REQUEST_TO_DRIVER);
       if (!continuous) {
         continue;
       }
