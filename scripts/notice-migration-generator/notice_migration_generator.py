@@ -71,6 +71,7 @@ if __name__ == '__main__':
         output += "*No added notice. *\n"
     output += "\n"
 
+
     # Process deleted notices
     diff = jsondiff.diff(rules_2, rules_1)
     try:

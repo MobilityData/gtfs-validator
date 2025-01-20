@@ -5,6 +5,10 @@ on:
     types: [ prereleased, released ]
   workflow_dispatch:
 
+env:
+  java_version: '17.0'
+  java_distribution: 'zulu'
+
 jobs:
   upload-release-assets:
     runs-on: ubuntu-latest
@@ -21,11 +25,11 @@ jobs:
       - name: printVersion
         run: echo "The version extracted from github.ref is ${{ steps.get_version.outputs.version }}"
 
-      - name: Set up JDK 17
+      - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'zulu'
+          java-version: ${{ env.java_version }}
+          distribution: ${{ env.java_distribution }}
 
       - name: Generate CLI jar
         if: github.event_name == 'release'

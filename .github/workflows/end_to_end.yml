@@ -34,8 +34,9 @@ on:
   workflow_dispatch:
 
 env:
-  python-version: '3.11'
+  python_version: '3.11'
   java_version: '11'
+  java_distribution: 'temurin'
 
 jobs:
   validate_gradle_wrapper:
@@ -48,11 +49,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 11
+      - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
         uses: actions/setup-java@v3
         with:
           java-version: ${{ env.java_version }}
-          distribution: 'temurin'
+          distribution: ${{ env.java_distribution }}
       - name: Cache Gradle packages
         uses: actions/cache@v3
         with:
