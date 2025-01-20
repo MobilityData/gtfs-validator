@@ -9,7 +9,7 @@ on:
 
 env:
   python-version: '3.11'
-  java_version: '11'
+  java_version: '17'
   java_distribution: 'zulu'
 
 
