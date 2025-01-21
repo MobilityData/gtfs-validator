@@ -68,7 +68,7 @@ jobs:
       # app will be signed as part of the jpackage build phase.
       - name: "MacOS - Import Certificate: Developer ID Application"
         id: codesign
-        if: matrix.os == 'macos-latest' && (github.event_name == 'push' || github.event_name == 'release')
+        if: matrix.os == 'macos-latest'
         run: |
           # Turn our base64-encoded certificate back to a regular .p12 file
           echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
@@ -85,13 +85,13 @@ jobs:
         with:
           arguments: |
             jpackage
-            -Psign-app=${{github.event_name == 'push' || github.event_name == 'release'}}
+            -Psign-app=true
 
       # On MacOS, we now submit the app for "notarization", where Apple will scan the app for
       # malware and other issues.  This step can take a few minutes or more; the action will wait
       # until the report is available.
       - name: "MacOS - Notarize & Staple Release Build"
-        if: matrix.os == 'macos-latest' && (github.event_name == 'push' || github.event_name == 'release')
+        if: matrix.os == 'macos-latest'
         id: notarize_staple_macos_app
         run: |
           # Store the notarization credentials so that we can prevent a UI password dialog from blocking the CI
