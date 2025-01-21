@@ -7,26 +7,32 @@ on:
         description: 'The release version to add to NOTICE_MIGRATION.md. e.g. v5.0.2'
         required: true
 
+env:
+  python-version: '3.11'
+  java_version: '17'
+  java_distribution: 'zulu'
+
+
 jobs:
   update_notice_migration:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup Python
+      - name: Setup Python ${{ env.python_version }}
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: ${{ env.python_version }}
           cache: 'pip'
 
       - name: Install dependencies
         run: pip install -r scripts/notice-migration-generator/requirements.txt
 
-      - name: Set up JDK 17
+      - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'zulu'
+          java-version: ${{ env.java_version }}
+          distribution: ${{ env.java_distribution }}
 
       - name: Get previous release version
         # The script will set the PREVIOUS_VERSION environment variable
