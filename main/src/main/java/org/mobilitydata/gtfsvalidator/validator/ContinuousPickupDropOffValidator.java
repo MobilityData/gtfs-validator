@@ -39,8 +39,8 @@ public class ContinuousPickupDropOffValidator extends FileValidator {
       boolean continuous =
           (route.continuousPickup() == GtfsContinuousPickupDropOff.MUST_PHONE
                   || route.continuousPickup() == GtfsContinuousPickupDropOff.ON_REQUEST_TO_DRIVER)
-              || (route.continuousPickup() == GtfsContinuousPickupDropOff.MUST_PHONE
-                  || route.continuousPickup() == GtfsContinuousPickupDropOff.ON_REQUEST_TO_DRIVER);
+              || (route.continuousDropOff() == GtfsContinuousPickupDropOff.MUST_PHONE
+                  || route.continuousDropOff() == GtfsContinuousPickupDropOff.ON_REQUEST_TO_DRIVER);
       if (!continuous) {
         continue;
       }
