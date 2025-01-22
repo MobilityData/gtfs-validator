@@ -32,6 +32,12 @@ on:
       - 'web/**'
       - '.github/workflows/**'
   workflow_dispatch:
+
+env:
+  python_version: '3.11'
+  java_version: '11'
+  java_distribution: 'temurin'
+
 jobs:
   validate_gradle_wrapper:
     runs-on: ubuntu-latest
@@ -43,11 +49,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 11
+      - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
         uses: actions/setup-java@v3
         with:
-          java-version: '11'
-          distribution: 'temurin'
+          java-version: ${{ env.java_version }}
+          distribution: ${{ env.java_distribution }}
       - name: Cache Gradle packages
         uses: actions/cache@v3
         with:
@@ -68,6 +74,9 @@ jobs:
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v3
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.python_version }}
       - name: Install dependencies
         run: |
           pip install -r scripts/mobility-database-harvester/requirements.txt

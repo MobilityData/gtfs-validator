@@ -6,6 +6,8 @@ on:
 
 env:
   NODE_VERSION: "20"
+  java_version: '17.0'
+  java_distribution: 'zulu'
 
 jobs:
 
@@ -25,13 +27,13 @@ jobs:
           # can resolve the most recent version tag.
           fetch-depth: 0
 
-      - name: Set up JDK 17
+      - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
         uses: actions/setup-java@v4
         with:
           # We need a recent version of Java with jpackage included.
-          java-version: '17'
+          java-version: ${{ env.java_version }}
           # We use the zulu distribution, which is an OpenJDK distro.
-          distribution: 'zulu'
+          distribution: ${{ env.java_distribution }}
 
       # for npm
       - uses: actions/setup-node@v4
