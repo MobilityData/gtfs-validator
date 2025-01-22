@@ -45,6 +45,12 @@ public class OverlappingPickupDropOffZoneValidator extends FileValidator {
         for (int j = i + 1; j < stopTimesForTrip.size(); j++) {
           GtfsStopTime stopTime2 = stopTimesForTrip.get(j);
 
+          // Skip validation if the two stop times have different pickup/drop-off types.
+          if (stopTime1.pickupType() != stopTime2.pickupType()
+              && stopTime1.dropOffType() != stopTime2.dropOffType()) {
+            continue;
+          }
+
           // Skip validation if any required fields are missing in either stop time.
           if (!(stopTime1.hasEndPickupDropOffWindow()
               && stopTime1.hasStartPickupDropOffWindow()
@@ -101,8 +107,9 @@ public class OverlappingPickupDropOffZoneValidator extends FileValidator {
   /**
    * Two entities have overlapping pickup/drop-off windows and zones.
    *
-   * <p>Two entities in `stop_times.txt` with the same `trip_id` have overlapping pickup/drop-off
-   * windows and have overlapping zones in `locations.geojson`.
+   * <p>Two entities in `stop_times.txt` with the same `trip_id` have the same `pickup_type` or
+   * `drop_off_type`, overlapping pickup/drop-off windows and have overlapping zones in
+   * `locations.geojson`.
    */
   @GtfsValidationNotice(
       severity = ERROR,

@@ -62,6 +62,7 @@ public class OverlappingPickupDropOffZoneValidatorTest {
                     .setTripId("t0")
                     .setStopSequence(1)
                     .setLocationId("1")
+                    .setPickupType(1)
                     .setStartPickupDropOffWindow(GtfsTime.fromString("05:00:00"))
                     .setEndPickupDropOffWindow(GtfsTime.fromString("07:00:00"))
                     .build(),
@@ -69,6 +70,7 @@ public class OverlappingPickupDropOffZoneValidatorTest {
                     .setTripId("t0")
                     .setStopSequence(2)
                     .setLocationId("2")
+                    .setPickupType(1)
                     .setStartPickupDropOffWindow(GtfsTime.fromString("06:00:00"))
                     .setEndPickupDropOffWindow(GtfsTime.fromString("08:00:00"))
                     .build()));
