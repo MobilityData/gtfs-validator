@@ -2,8 +2,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
-import java.util.HashSet;
-import java.util.Set;
+import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -26,6 +25,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 public class StopTimesRecordValidator extends FileValidator {
   private final GtfsStopTimeTableContainer stopTimeTable;
 
+  @Inject
   public StopTimesRecordValidator(GtfsStopTimeTableContainer stopTimeTable) {
     this.stopTimeTable = stopTimeTable;
   }
@@ -46,13 +46,26 @@ public class StopTimesRecordValidator extends FileValidator {
     }
   }
 
+  @Override
+  public boolean shouldCallValidate() {
+    if (stopTimeTable != null) {
+      return stopTimeTable.hasColumn(GtfsStopTime.START_PICKUP_DROP_OFF_WINDOW_FIELD_NAME)
+          && stopTimeTable.hasColumn(GtfsStopTime.END_PICKUP_DROP_OFF_WINDOW_FIELD_NAME)
+          && stopTimeTable.hasColumn(GtfsStopTime.PICKUP_TYPE_FIELD_NAME)
+          && stopTimeTable.hasColumn(GtfsStopTime.DROP_OFF_TYPE_FIELD_NAME);
+    } else {
+      return false;
+    }
+  }
+
   /**
-   * Only one stop_times record is found where two are required. Travel within the same location
-   * group or GeoJSON location requires two records in stop_times.txt with the same
-   * location_group_id or location_id.
+   * Only one stop_times record is found where two are required.
+   *
+   * <p>Travel within the same location group or GeoJSON location requires two records in
+   * stop_times.txt with the same location_group_id or location_id.
    */
   @GtfsValidationNotice(severity = ERROR)
-  static class MissingStopTimesRecordNotice extends ValidationNotice {
+  public static class MissingStopTimesRecordNotice extends ValidationNotice {
     /** The row of the faulty record. */
     private final long csvRowNumber;
 
