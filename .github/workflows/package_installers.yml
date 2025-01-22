@@ -5,10 +5,12 @@ on:
     branches: [ master ]
     paths-ignore:
       - '**.md'
+      - '.github/**'
   pull_request:
     branches: [ master ]
     paths-ignore:
       - '**.md'
+      - '.github/**'
   release:
     types: [ prereleased, released ]
   workflow_dispatch:
@@ -25,6 +27,8 @@ env:
   MACOS_NOTARIZATION_APPLE_ID: ${{ secrets.MACOS_NOTARIZATION_USERNAME }}
   MACOS_NOTARIZATION_TEAM_ID: ${{ secrets.MACOS_NOTARIZATION_TEAM_ID }}
   MACOS_NOTARIZATION_PWD: ${{ secrets.MACOS_NOTARIZATION_PASSWORD }}
+  java_version: '17.0'
+  java_distribution: 'zulu'
 
 jobs:
   validate_gradle_wrapper:
@@ -52,13 +56,13 @@ jobs:
       - name: Get short commit hash
         run: echo "SHORT_SHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
 
-      - name: Set up JDK 17
+      - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
         uses: actions/setup-java@v4
         with:
           # We need a recent version of Java with jpackage included.
-          java-version: '17.0'
+          java-version: ${{ env.java_version }}
           # We use the zulu distribution, which is an OpenJDK distro.
-          distribution: 'zulu'
+          distribution: ${{ env.java_distribution }}
 
       # We create a code-signing keychain on MacOS before building and packaging the app, as the
       # app will be signed as part of the jpackage build phase.

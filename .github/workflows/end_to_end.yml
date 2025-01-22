@@ -31,6 +31,13 @@ on:
       - 'acceptance_test.yml'
       - 'web/**'
       - '.github/workflows/**'
+  workflow_dispatch:
+
+env:
+  python_version: '3.11'
+  java_version: '11'
+  java_distribution: 'temurin'
+
 jobs:
   validate_gradle_wrapper:
     runs-on: ubuntu-latest
@@ -42,11 +49,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 11
+      - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
         uses: actions/setup-java@v3
         with:
-          java-version: '11'
-          distribution: 'temurin'
+          java-version: ${{ env.java_version }}
+          distribution: ${{ env.java_distribution }}
       - name: Cache Gradle packages
         uses: actions/cache@v3
         with:
@@ -67,6 +74,9 @@ jobs:
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v3
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.python_version }}
       - name: Install dependencies
         run: |
           pip install -r scripts/mobility-database-harvester/requirements.txt
@@ -104,8 +114,21 @@ jobs:
           bash ./scripts/queue_runner.sh --exclude-master $queue
         env:
           OUTPUT_BASE: ${{ github.sha }}
+      - name: Extract ID from JSON
+        id: extract-id
+        run: echo "feed_id=$(echo '${{ matrix.data }}' | jq -r '.id')" >> $GITHUB_ENV
       - name: Persist reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports_snapshot_${{ env.feed_id }}
+          path: ${{ github.sha }}/output
+  merge-reports-artifacts:
+    runs-on: ubuntu-latest
+    needs: [ run-on-data ]
+    steps:
+      - name: Merge Artifacts
+        uses: actions/upload-artifact/merge@v4
         with:
           name: reports_snapshot
-          path: ${{ github.sha }}/output
+          pattern: reports_snapshot_*
+          delete-merged: true

@@ -368,9 +368,9 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th:block th:each="field: ${noticesByCode.value[0].fields}">
+                                        <th:block th:each="field: ${uniqueFieldsByCode[noticesByCode.key]}">
                                             <th>
-                                               <span th:text="${field}"></span>
+                                                <span th:text="${field}"></span>
                                                 <a href="#" class="tooltip" onclick="event.preventDefault();"><span>(?)</span>
                                                     <span class="tooltiptext" th:text="${noticesByCode.value[0].getCommentForField(field)}"></span>
                                                 </a>
@@ -379,10 +379,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr th:each="notice, iStat : ${noticesByCode.value}" th:if="${iStat.count <= 50}">
-                                    <th:block th:each="field: ${notice.fields}">
-                                            <td th:text="${notice.getValueForField(field)}" />
-                                    </th:block>
+                                    <tr th:each="notice: ${noticesByCode.value}">
+                                        <th:block th:each="field: ${uniqueFieldsByCode[noticesByCode.key]}">
+                                            <td th:text="${notice.getFields().contains(field) ? notice.getValueForField(field) : 'N/A'}" />
+                                        </th:block>
                                     </tr>
                                 </tbody>
                             </table>
