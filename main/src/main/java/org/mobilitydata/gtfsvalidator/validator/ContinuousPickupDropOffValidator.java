@@ -61,6 +61,18 @@ public class ContinuousPickupDropOffValidator extends FileValidator {
     }
   }
 
+  @Override
+  public boolean shouldCallValidate() {
+    if (routeTable != null && stopTimeTable != null) {
+      return routeTable.hasColumn(GtfsRoute.CONTINUOUS_PICKUP_FIELD_NAME)
+              || routeTable.hasColumn(GtfsRoute.CONTINUOUS_DROP_OFF_FIELD_NAME)
+              && (stopTimeTable.hasColumn(GtfsStopTime.START_PICKUP_DROP_OFF_WINDOW_FIELD_NAME)
+              || stopTimeTable.hasColumn(GtfsStopTime.END_PICKUP_DROP_OFF_WINDOW_FIELD_NAME));
+    } else {
+      return false;
+    }
+  }
+
   /**
    * Continuous pickup or drop-off are forbidden when routes.continuous_pickup or
    * routes.continuous_drop_off are 0, 2 or 3 and stop_times.start_pickup_drop_off_window or
