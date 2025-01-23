@@ -108,7 +108,7 @@ public class OverlappingPickupDropOffZoneValidator extends FileValidator {
    * Two entities have overlapping pickup/drop-off windows and zones.
    *
    * <p>Two entities in `stop_times.txt` with the same `trip_id` have the same `pickup_type` or
-   * `drop_off_type`, overlapping pickup/drop-off windows and have overlapping zones in
+   * `drop_off_type`, overlapping pickup/drop-off windows and overlapping zones in
    * `locations.geojson`.
    */
   @GtfsValidationNotice(
