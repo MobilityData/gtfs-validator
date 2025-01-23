@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.locationtech.jts.geom.*;
 import org.mobilitydata.gtfsvalidator.notice.*;
+import org.mobilitydata.gtfsvalidator.notice.schema.GeoJsonParsingFailedNotice;
 import org.mobilitydata.gtfsvalidator.util.geojson.GeoJsonGeometryValidator;
 import org.mobilitydata.gtfsvalidator.util.geojson.GeometryType;
 import org.mobilitydata.gtfsvalidator.util.geojson.UnparsableGeoJsonFeatureException;
@@ -47,6 +48,8 @@ public class GeoJsonFileLoader extends TableLoader {
       noticeContainer.addSystemError(new IOError(ioex));
       return fileDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS);
     } catch (UnparsableGeoJsonFeatureException ugex) {
+      noticeContainer.addValidationNotice(
+          new GeoJsonParsingFailedNotice(GtfsGeoJsonFeature.FILENAME, ugex.getMessage()));
       logger.atSevere().withCause(ugex).log("Unparsable GeoJSON feature");
       return fileDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS);
     } catch (Exception ex) {
