@@ -77,6 +77,8 @@ public class StopTimesRecordValidatorTest {
                         GtfsPickupDropOff.MUST_PHONE,
                         GtfsTime.fromString("08:00:00"),
                         GtfsTime.fromString("09:00:00")))))
-        .containsExactly(new StopTimesRecordValidator.MissingStopTimesRecordNotice(1, "trip2", "locationGroupId1", "locationId1"));
+        .containsExactly(
+            new StopTimesRecordValidator.MissingStopTimesRecordNotice(
+                1, "trip2", "locationGroupId1", "locationId1"));
   }
 }
