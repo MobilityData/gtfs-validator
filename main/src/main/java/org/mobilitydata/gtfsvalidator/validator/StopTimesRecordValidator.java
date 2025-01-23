@@ -40,7 +40,11 @@ public class StopTimesRecordValidator extends FileValidator {
         int tripStopCount = stopTimeTable.byTripId(entity.tripId()).size();
         if (tripStopCount == 1) {
           noticeContainer.addValidationNotice(
-              new MissingStopTimesRecordNotice(entity.csvRowNumber(), entity.tripId()));
+              new MissingStopTimesRecordNotice(
+                  entity.csvRowNumber(),
+                  entity.tripId(),
+                  entity.locationGroupId(),
+                  entity.locationId()));
         }
       }
     }
@@ -72,9 +76,18 @@ public class StopTimesRecordValidator extends FileValidator {
     /** The `tripId` of the faulty record. */
     private final String tripId;
 
-    public MissingStopTimesRecordNotice(long csvRowNumber, String tripId) {
+    /** The `locationGroupId` of the faulty record. */
+    private final String locationGroupId;
+
+    /** The `locationId` of the faulty record. */
+    private final String locationId;
+
+    public MissingStopTimesRecordNotice(
+        long csvRowNumber, String tripId, String locationGroupId, String locationId) {
       this.csvRowNumber = csvRowNumber;
       this.tripId = tripId;
+      this.locationGroupId = locationGroupId;
+      this.locationId = locationId;
     }
   }
 }

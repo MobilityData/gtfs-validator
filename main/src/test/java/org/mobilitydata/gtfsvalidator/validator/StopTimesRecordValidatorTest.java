@@ -20,6 +20,8 @@ public class StopTimesRecordValidatorTest {
   public static GtfsStopTime createStopTime(
       int csvRowNumber,
       String tripId,
+      String locationGroupId,
+      String locationId,
       GtfsPickupDropOff pickupType,
       GtfsPickupDropOff dropOffType,
       GtfsTime startWindow,
@@ -27,6 +29,8 @@ public class StopTimesRecordValidatorTest {
     return new GtfsStopTime.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setTripId(tripId)
+        .setLocationGroupId(locationGroupId)
+        .setLocationId(locationId)
         .setPickupType(pickupType)
         .setDropOffType(dropOffType)
         .setStartPickupDropOffWindow(startWindow)
@@ -50,6 +54,8 @@ public class StopTimesRecordValidatorTest {
                     createStopTime(
                         1,
                         "trip1",
+                        "locationGroupId1",
+                        "locationId1",
                         GtfsPickupDropOff.ALLOWED,
                         GtfsPickupDropOff.ALLOWED,
                         GtfsTime.fromString("08:00:00"),
@@ -65,10 +71,12 @@ public class StopTimesRecordValidatorTest {
                     createStopTime(
                         1,
                         "trip2",
+                        "locationGroupId1",
+                        "locationId1",
                         GtfsPickupDropOff.MUST_PHONE,
                         GtfsPickupDropOff.MUST_PHONE,
                         GtfsTime.fromString("08:00:00"),
                         GtfsTime.fromString("09:00:00")))))
-        .containsExactly(new StopTimesRecordValidator.MissingStopTimesRecordNotice(1, "trip2"));
+        .containsExactly(new StopTimesRecordValidator.MissingStopTimesRecordNotice(1, "trip2", "locationGroupId1", "locationId1"));
   }
 }
