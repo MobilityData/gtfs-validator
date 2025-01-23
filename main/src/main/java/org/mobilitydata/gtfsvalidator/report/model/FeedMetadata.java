@@ -57,6 +57,9 @@ public class FeedMetadata {
   public double validationTimeSeconds;
 
   public List<MemoryUsage> memoryUsageRecords;
+
+  public String agencyTimezone;
+
   // List of features that only require checking the presence of one record in the file.
   private final List<Pair<FeatureMetadata, String>> FILE_BASED_FEATURES =
       List.of(
@@ -105,6 +108,7 @@ public class FeedMetadata {
       Optional<GtfsTableContainer<GtfsAgency, GtfsAgencyTableDescriptor>> agencyTableOptional =
           feedContainer.getTableForFilename(GtfsAgency.FILENAME);
       feedMetadata.loadAgencyData(agencyTableOptional.get());
+      feedMetadata.loadAgencyTimezone(agencyTableOptional.get());
     }
 
     if (feedContainer.getTableForFilename(GtfsTrip.FILENAME).isPresent()
@@ -122,6 +126,20 @@ public class FeedMetadata {
     feedMetadata.loadSpecFeatures(feedContainer);
     feedMetadata.memoryUsageRecords = MemoryUsageRegister.getInstance().getRegistry();
     return feedMetadata;
+  }
+
+  private void loadAgencyTimezone(
+      GtfsTableContainer<GtfsAgency, GtfsAgencyTableDescriptor>
+          gtfsAgencyGtfsAgencyTableDescriptorGtfsTableContainer) {
+    if (gtfsAgencyGtfsAgencyTableDescriptorGtfsTableContainer.getEntities().isEmpty()) {
+      return;
+    }
+    agencyTimezone =
+        gtfsAgencyGtfsAgencyTableDescriptorGtfsTableContainer
+            .getEntities()
+            .get(0)
+            .agencyTimezone()
+            .getId();
   }
 
   private void setCounts(GtfsFeedContainer feedContainer) {

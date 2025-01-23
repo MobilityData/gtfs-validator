@@ -37,6 +37,7 @@ public class JsonReportSummary {
   private Set<String> files;
   private Double validationTimeSeconds;
   public List<MemoryUsage> memoryUsageRecords;
+  public String agencyTimezone;
 
   @SerializedName("counts")
   private JsonReportCounts jsonReportCounts;
@@ -71,6 +72,7 @@ public class JsonReportSummary {
         this.feedInfo = new JsonReportFeedInfo(feedMetadata.feedInfo);
         this.validationTimeSeconds = feedMetadata.validationTimeSeconds;
         this.memoryUsageRecords = feedMetadata.memoryUsageRecords;
+        this.agencyTimezone = feedMetadata.agencyTimezone;
       } else {
         logger.atSevere().log(
             "No feed info for feed "
@@ -119,6 +121,7 @@ public class JsonReportSummary {
     public JsonReportFeedInfo(Map<String, String> feedInfo) {
       publisherName = feedInfo.get(FeedMetadata.FEED_INFO_PUBLISHER_NAME);
       publisherUrl = feedInfo.get(FeedMetadata.FEED_INFO_PUBLISHER_URL);
+      // here
       feedEmail = feedInfo.get(FeedMetadata.FEED_INFO_FEED_CONTACT_EMAIL);
       feedLanguage = feedInfo.get(FeedMetadata.FEED_INFO_FEED_LANGUAGE);
       feedStartDate = feedInfo.get(FeedMetadata.FEED_INFO_FEED_START_DATE);
