@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.locationtech.jts.geom.*;
 import org.mobilitydata.gtfsvalidator.notice.*;
-import org.mobilitydata.gtfsvalidator.notice.schema.GeoJsonParsingFailedNotice;
 import org.mobilitydata.gtfsvalidator.util.geojson.GeoJsonGeometryValidator;
 import org.mobilitydata.gtfsvalidator.util.geojson.GeometryType;
 import org.mobilitydata.gtfsvalidator.util.geojson.UnparsableGeoJsonFeatureException;
@@ -41,15 +40,15 @@ public class GeoJsonFileLoader extends TableLoader {
       List<GtfsGeoJsonFeature> entities = extractFeaturesFromStream(inputStream, noticeContainer);
       return geoJsonFileDescriptor.createContainerForEntities(entities, noticeContainer);
     } catch (JsonParseException jpex) {
-      noticeContainer.addValidationNotice(new MalformedJsonNotice(GtfsGeoJsonFeature.FILENAME));
+      noticeContainer.addValidationNotice(
+          new MalformedJsonNotice(GtfsGeoJsonFeature.FILENAME, jpex.getMessage()));
       logger.atSevere().withCause(jpex).log("Malformed JSON in locations.geojson");
       return fileDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS);
     } catch (IOException ioex) {
-      noticeContainer.addSystemError(new IOError(ioex));
+      noticeContainer.addSystemError(
+          new IOError(ioex));
       return fileDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS);
     } catch (UnparsableGeoJsonFeatureException ugex) {
-      noticeContainer.addValidationNotice(
-          new GeoJsonParsingFailedNotice(GtfsGeoJsonFeature.FILENAME, ugex.getMessage()));
       logger.atSevere().withCause(ugex).log("Unparsable GeoJSON feature");
       return fileDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS);
     } catch (Exception ex) {
@@ -58,6 +57,15 @@ public class GeoJsonFileLoader extends TableLoader {
     }
   }
 
+  /**
+   * Extracts features from the provided GeoJSON input stream.
+   *
+   * @param inputStream the input stream containing GeoJSON data
+   * @param noticeContainer the container to collect validation notices
+   * @return a list of parsed GeoJSON features
+   * @throws IOException if an I/O error occurs while reading the input stream
+   * @throws UnparsableGeoJsonFeatureException if any GeoJSON feature is unparsable
+   */
   public List<GtfsGeoJsonFeature> extractFeaturesFromStream(
       InputStream inputStream, NoticeContainer noticeContainer)
       throws IOException, UnparsableGeoJsonFeatureException {
@@ -70,7 +78,11 @@ public class GeoJsonFileLoader extends TableLoader {
         throw new UnparsableGeoJsonFeatureException("Missing required field 'type'");
       } else if (!jsonObject.get("type").getAsString().equals("FeatureCollection")) {
         noticeContainer.addValidationNotice(
-            new UnsupportedGeoJsonTypeNotice(jsonObject.get("type").getAsString()));
+            new UnsupportedGeoJsonTypeNotice(
+                jsonObject.get("type").getAsString(),
+                "Unsupported GeoJSON type: "
+                    + jsonObject.get("type").getAsString()
+                    + ". Use 'FeatureCollection' instead."));
         throw new UnparsableGeoJsonFeatureException("Unsupported GeoJSON type");
       }
       JsonArray featuresArray = jsonObject.getAsJsonArray("features");

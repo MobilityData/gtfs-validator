@@ -26,7 +26,11 @@ public class MalformedJsonNotice extends ValidationNotice {
   /** The name of the faulty file. */
   private final String filename;
 
-  public MalformedJsonNotice(String filename) {
+  /** The detailed message describing the error. */
+  private final String message;
+
+  public MalformedJsonNotice(String filename, String message) {
     this.filename = filename;
+    this.message = message;
   }
 }
