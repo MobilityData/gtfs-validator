@@ -45,8 +45,7 @@ public class GeoJsonFileLoader extends TableLoader {
       logger.atSevere().withCause(jpex).log("Malformed JSON in locations.geojson");
       return fileDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS);
     } catch (IOException ioex) {
-      noticeContainer.addSystemError(
-          new IOError(ioex));
+      noticeContainer.addSystemError(new IOError(ioex));
       return fileDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS);
     } catch (UnparsableGeoJsonFeatureException ugex) {
       logger.atSevere().withCause(ugex).log("Unparsable GeoJSON feature");
