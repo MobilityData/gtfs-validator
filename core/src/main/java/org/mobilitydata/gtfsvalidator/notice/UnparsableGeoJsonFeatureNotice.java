@@ -1,8 +1,8 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
-
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 
 /** A GeoJSON feature of locations.geojson could not be parsed. */
 @GtfsValidationNotice(severity = ERROR)

@@ -48,7 +48,8 @@ public class GeoJsonFileLoader extends TableLoader {
       noticeContainer.addSystemError(new IOError(ioex));
       return fileDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS);
     } catch (UnparsableGeoJsonFeatureException ugex) {
-      noticeContainer.addValidationNotice(new UnparsableGeoJsonFeatureNotice(GtfsGeoJsonFeature.FILENAME, ugex.getMessage()));
+      noticeContainer.addValidationNotice(
+          new UnparsableGeoJsonFeatureNotice(GtfsGeoJsonFeature.FILENAME, ugex.getMessage()));
       logger.atSevere().withCause(ugex).log("Unparsable GeoJSON feature");
       return fileDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS);
     } catch (Exception ex) {
