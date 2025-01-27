@@ -27,72 +27,72 @@ public class GeoJsonFileLoaderTest {
   public static void setUpBeforeClass() {
     // Create the valid and invalid JSON data strings, using single quotes for readability.
     validGeoJsonData =
-            String.join(
-                    "\n",
-                    "{",
-                    "  'type': 'FeatureCollection',",
-                    "  'features': [",
-                    "    {",
-                    "      'id': 'id1',",
-                    "      'type': 'Feature',",
-                    "      'geometry': {",
-                    "        'type': 'Polygon',",
-                    "        'coordinates': [",
-                    "          [",
-                    "            [100.0, 0.0],",
-                    "            [101.0, 0.0],",
-                    "            [101.0, 1.0],",
-                    "            [100.0, 1.0],",
-                    "            [100.0, 0.0]",
-                    "          ]",
-                    "        ]",
-                    "      },",
-                    "      'properties': {}",
-                    "    },",
-                    "    {",
-                    "      'id': 'id2',",
-                    "      'type': 'Feature',",
-                    "      'geometry': {",
-                    "        'type': 'Polygon',",
-                    "        'coordinates': [",
-                    "          [",
-                    "            [200.0, 0.0],",
-                    "            [201.0, 0.0],",
-                    "            [201.0, 2.0],",
-                    "            [200.0, 2.0],",
-                    "            [200.0, 0.0]",
-                    "          ]",
-                    "        ]",
-                    "      },",
-                    "      'properties': {}",
-                    "    }",
-                    "  ]",
-                    "}");
+        String.join(
+            "\n",
+            "{",
+            "  'type': 'FeatureCollection',",
+            "  'features': [",
+            "    {",
+            "      'id': 'id1',",
+            "      'type': 'Feature',",
+            "      'geometry': {",
+            "        'type': 'Polygon',",
+            "        'coordinates': [",
+            "          [",
+            "            [100.0, 0.0],",
+            "            [101.0, 0.0],",
+            "            [101.0, 1.0],",
+            "            [100.0, 1.0],",
+            "            [100.0, 0.0]",
+            "          ]",
+            "        ]",
+            "      },",
+            "      'properties': {}",
+            "    },",
+            "    {",
+            "      'id': 'id2',",
+            "      'type': 'Feature',",
+            "      'geometry': {",
+            "        'type': 'Polygon',",
+            "        'coordinates': [",
+            "          [",
+            "            [200.0, 0.0],",
+            "            [201.0, 0.0],",
+            "            [201.0, 2.0],",
+            "            [200.0, 2.0],",
+            "            [200.0, 0.0]",
+            "          ]",
+            "        ]",
+            "      },",
+            "      'properties': {}",
+            "    }",
+            "  ]",
+            "}");
 
     invalidPolygonGeoJsonData =
-            String.join(
-                    "\n",
-                    "{",
-                    "  'type': 'FeatureCollection',",
-                    "  'features': [",
-                    "    {",
-                    "      'id': 'id_invalid',",
-                    "      'type': 'Feature',",
-                    "      'geometry': {",
-                    "        'type': 'Polygon',",
-                    "        'coordinates': [",
-                    "          [",
-                    "            [100.0, 0.0],",
-                    "            [101.0, 0.0],",
-                    "            [100.5, 0.5]"
-                            + // Invalid Polygon: not closed
-                            "          ]",
-                    "        ]",
-                    "      },",
-                    "      'properties': {}",
-                    "    }",
-                    "  ]",
-                    "}");
+        String.join(
+            "\n",
+            "{",
+            "  'type': 'FeatureCollection',",
+            "  'features': [",
+            "    {",
+            "      'id': 'id_invalid',",
+            "      'type': 'Feature',",
+            "      'geometry': {",
+            "        'type': 'Polygon',",
+            "        'coordinates': [",
+            "          [",
+            "            [100.0, 0.0],",
+            "            [101.0, 0.0],",
+            "            [100.5, 0.5]"
+                + // Invalid Polygon: not closed
+                "          ]",
+            "        ]",
+            "      },",
+            "      'properties': {}",
+            "    }",
+            "  ]",
+            "}");
 
     // Replace single quotes with double quotes for JSON compliance
     validGeoJsonData = validGeoJsonData.replace("'", "\"");
@@ -132,10 +132,10 @@ public class GeoJsonFileLoaderTest {
 
     // Check if the correct validation notice is generated for the invalid geometry
     List<InvalidGeometryNotice> notices =
-            noticeContainer.getValidationNotices().stream()
-                    .filter(InvalidGeometryNotice.class::isInstance)
-                    .map(InvalidGeometryNotice.class::cast)
-                    .collect(Collectors.toList());
+        noticeContainer.getValidationNotices().stream()
+            .filter(InvalidGeometryNotice.class::isInstance)
+            .map(InvalidGeometryNotice.class::cast)
+            .collect(Collectors.toList());
 
     assertThat(notices.size()).isGreaterThan(0);
   }
