@@ -57,6 +57,7 @@ public class FeedMetadata {
   public double validationTimeSeconds;
 
   public List<MemoryUsage> memoryUsageRecords;
+
   // List of features that only require checking the presence of one record in the file.
   private final List<Pair<FeatureMetadata, String>> FILE_BASED_FEATURES =
       List.of(
