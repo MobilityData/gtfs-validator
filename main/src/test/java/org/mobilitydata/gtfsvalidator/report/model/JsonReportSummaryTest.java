@@ -50,12 +50,14 @@ public class JsonReportSummaryTest {
   private static FeedMetadata generateFeedMetaData() {
     FeedMetadata feedMetadata = mock(FeedMetadata.class);
     when(feedMetadata.getFilenames()).thenReturn(ImmutableSortedSet.of("file1", "file2"));
-    new AgencyMetadata("agency1", "some URL 1", "phone1", "email1");
+    new AgencyMetadata("agency1", "some URL 1", "phone1", "email1", "America/Los_Angeles");
     feedMetadata.agencies =
         new ArrayList<>(
             Arrays.asList(
-                new AgencyMetadata("agency1", "some URL 1", "phone1", "email1"),
-                new AgencyMetadata("agency1", "some URL 1", "phone1", "email1")));
+                new AgencyMetadata(
+                    "agency1", "some URL 1", "phone1", "email1", "America/Los_Angeles"),
+                new AgencyMetadata(
+                    "agency1", "some URL 1", "phone1", "email1", "America/Los_Angeles")));
     feedMetadata.feedInfo =
         Map.of(
             FeedMetadata.FEED_INFO_PUBLISHER_NAME,
@@ -132,8 +134,8 @@ public class JsonReportSummaryTest {
             + "\"feedInfo\":{\"publisherName\":\"value1\",\"publisherUrl\":\"value2\",\"feedEmail\":\"me@foo.com\",\"feedServiceWindowStart\":\"2024-01-02\", \"feedServiceWindowEnd\":\"2024-11-06\"},"
             + "\"validationTimeSeconds\":100.0,"
             + "\"agencies\":["
-            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"},"
-            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"}],"
+            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\", \"timezone\":\"America/Los_Angeles\"},"
+            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\", \"timezone\":\"America/Los_Angeles\"}],"
             + "\"files\":[\"file1\",\"file2\"],"
             + "\"counts\":{\"Shapes\":1,\"Trips\":2},"
             + "\"gtfsFeatures\":[\"Feature2\"]}";
@@ -154,8 +156,8 @@ public class JsonReportSummaryTest {
             + "\"feedInfo\":{\"publisherName\":\"value1\",\"publisherUrl\":\"value2\",\"feedEmail\":\"me@foo.com\",\"feedServiceWindowStart\":\"2024-01-02\", \"feedServiceWindowEnd\":\"2024-11-06\"},"
             + "\"validationTimeSeconds\":100.0,"
             + "\"agencies\":["
-            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"},"
-            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"}],"
+            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\",\"timezone\":\"America/Los_Angeles\"},"
+            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\",\"timezone\":\"America/Los_Angeles\"}],"
             + "\"files\":[\"file1\",\"file2\"],"
             + "\"counts\":{\"Shapes\":1,\"Trips\":2},"
             + "\"gtfsFeatures\":[\"Feature2\"]}";

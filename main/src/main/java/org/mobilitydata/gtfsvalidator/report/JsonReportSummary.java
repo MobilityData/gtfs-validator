@@ -142,12 +142,14 @@ public class JsonReportSummary {
     private final String url;
     private final String phone;
     private final String email;
+    private final String timezone;
 
     public JsonReportAgencyMetadata(AgencyMetadata agencyMetadata) {
       name = agencyMetadata.name;
       url = agencyMetadata.url;
       phone = agencyMetadata.phone;
       email = agencyMetadata.email;
+      timezone = agencyMetadata.timezone;
     }
   }
 
