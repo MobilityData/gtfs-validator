@@ -50,12 +50,14 @@ public class JsonReportSummaryTest {
   private static FeedMetadata generateFeedMetaData() {
     FeedMetadata feedMetadata = mock(FeedMetadata.class);
     when(feedMetadata.getFilenames()).thenReturn(ImmutableSortedSet.of("file1", "file2"));
-    new AgencyMetadata("agency1", "some URL 1", "phone1", "email1");
+    new AgencyMetadata("agency1", "some URL 1", "phone1", "email1", "America/Los_Angeles");
     feedMetadata.agencies =
         new ArrayList<>(
             Arrays.asList(
-                new AgencyMetadata("agency1", "some URL 1", "phone1", "email1"),
-                new AgencyMetadata("agency1", "some URL 1", "phone1", "email1")));
+                new AgencyMetadata(
+                    "agency1", "some URL 1", "phone1", "email1", "America/Los_Angeles"),
+                new AgencyMetadata(
+                    "agency1", "some URL 1", "phone1", "email1", "America/Los_Angeles")));
     feedMetadata.feedInfo =
         Map.of(
             FeedMetadata.FEED_INFO_PUBLISHER_NAME,
