@@ -90,4 +90,8 @@ public class GtfsGeoJsonFeaturesContainer
   public Map<String, GtfsGeoJsonFeature> byLocationIdMap() {
     return byLocationIdMap;
   }
+
+  public GtfsGeoJsonFeature byLocationId(String locationId) {
+    return byLocationIdMap.get(locationId);
+  }
 }
