@@ -45,9 +45,14 @@ public class OverlappingPickupDropOffZoneValidator extends FileValidator {
         for (int j = i + 1; j < stopTimesForTrip.size(); j++) {
           GtfsStopTime stopTime2 = stopTimesForTrip.get(j);
 
-          // Skip validation if the two stop times have different pickup/drop-off types.
-          if (stopTime1.pickupType() != stopTime2.pickupType()
-              && stopTime1.dropOffType() != stopTime2.dropOffType()) {
+          // Skip validation if the two stop times have different pickup/drop-off types or if
+          // the types are UNRECOGNIZED.
+          if ((stopTime1.pickupType() != stopTime2.pickupType()
+                  && stopTime1.dropOffType() != stopTime2.dropOffType())
+              || (stopTime1.pickupType() == GtfsPickupDropOff.UNRECOGNIZED
+                  || stopTime1.dropOffType() == GtfsPickupDropOff.UNRECOGNIZED
+                  || stopTime2.pickupType() == GtfsPickupDropOff.UNRECOGNIZED
+                  || stopTime2.dropOffType() == GtfsPickupDropOff.UNRECOGNIZED)) {
             continue;
           }
 
