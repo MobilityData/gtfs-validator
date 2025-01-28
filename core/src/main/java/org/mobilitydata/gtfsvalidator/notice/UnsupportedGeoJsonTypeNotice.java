@@ -30,7 +30,11 @@ public class UnsupportedGeoJsonTypeNotice extends ValidationNotice {
   /** The value of the unsupported GeoJSON type. */
   private final String geoJsonType;
 
-  public UnsupportedGeoJsonTypeNotice(String geoJsonType) {
+  /** The detailed message describing the error. */
+  private final String message;
+
+  public UnsupportedGeoJsonTypeNotice(String geoJsonType, String message) {
     this.geoJsonType = geoJsonType;
+    this.message = message;
   }
 }
