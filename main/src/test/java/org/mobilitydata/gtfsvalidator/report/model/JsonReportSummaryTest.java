@@ -134,8 +134,8 @@ public class JsonReportSummaryTest {
             + "\"feedInfo\":{\"publisherName\":\"value1\",\"publisherUrl\":\"value2\",\"feedEmail\":\"me@foo.com\",\"feedServiceWindowStart\":\"2024-01-02\", \"feedServiceWindowEnd\":\"2024-11-06\"},"
             + "\"validationTimeSeconds\":100.0,"
             + "\"agencies\":["
-            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"},"
-            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"}],"
+            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\", \"timezone\":\"America/Los_Angeles\"},"
+            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\", \"timezone\":\"America/Los_Angeles\"}],"
             + "\"files\":[\"file1\",\"file2\"],"
             + "\"counts\":{\"Shapes\":1,\"Trips\":2},"
             + "\"gtfsFeatures\":[\"Feature2\"]}";
@@ -156,8 +156,8 @@ public class JsonReportSummaryTest {
             + "\"feedInfo\":{\"publisherName\":\"value1\",\"publisherUrl\":\"value2\",\"feedEmail\":\"me@foo.com\",\"feedServiceWindowStart\":\"2024-01-02\", \"feedServiceWindowEnd\":\"2024-11-06\"},"
             + "\"validationTimeSeconds\":100.0,"
             + "\"agencies\":["
-            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"},"
-            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\"}],"
+            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\",\"timezone\":\"America/Los_Angeles\"},"
+            + "{\"name\":\"agency1\",\"url\":\"some URL 1\",\"phone\":\"phone1\",\"email\":\"email1\",\"timezone\":\"America/Los_Angeles\"}],"
             + "\"files\":[\"file1\",\"file2\"],"
             + "\"counts\":{\"Shapes\":1,\"Trips\":2},"
             + "\"gtfsFeatures\":[\"Feature2\"]}";
