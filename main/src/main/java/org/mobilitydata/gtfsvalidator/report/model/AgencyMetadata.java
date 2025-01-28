@@ -14,7 +14,7 @@ public class AgencyMetadata {
     this.url = url;
     this.phone = phone.isEmpty() ? "N/A" : phone;
     this.email = email.isEmpty() ? "N/A" : email;
-    this.timezone = timezone;
+    this.timezone = timezone.isEmpty() ? "N/A" : timezone;
   }
 
   public static AgencyMetadata from(GtfsAgency agency) {
