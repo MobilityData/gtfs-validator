@@ -53,7 +53,7 @@ public class ContinuousPickupDropOffValidatorTest {
     assertThat(notices)
         .containsExactly(
             new ContinuousPickupDropOffValidator.ForbiddenContinuousPickupDropOffNotice(
-                1, "trip1", GtfsTime.fromString("08:00:00"), GtfsTime.fromString("09:00:00")));
+                1, "trip1", 3, GtfsTime.fromString("08:00:00"), GtfsTime.fromString("09:00:00")));
   }
 
   @Test

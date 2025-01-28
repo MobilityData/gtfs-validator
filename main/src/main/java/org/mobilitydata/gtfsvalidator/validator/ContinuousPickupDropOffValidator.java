@@ -53,6 +53,7 @@ public class ContinuousPickupDropOffValidator extends FileValidator {
                 new ForbiddenContinuousPickupDropOffNotice(
                     route.csvRowNumber(),
                     trip.tripId(),
+                    stopTime.csvRowNumber(),
                     stopTime.startPickupDropOffWindow(),
                     stopTime.endPickupDropOffWindow()));
           }
@@ -80,11 +81,14 @@ public class ContinuousPickupDropOffValidator extends FileValidator {
    */
   @GtfsValidationNotice(severity = ERROR)
   public static class ForbiddenContinuousPickupDropOffNotice extends ValidationNotice {
-    /** The row number of the route in the CSV file. */
+    /** The row number of the route in the `routes.txt` file. */
     private final int routeCsvRowNumber;
 
     /** The ID of the trip. */
     private final String tripId;
+
+    /** The row number of the stop time in the `stop_times.txt` file. */
+    private final int stopTimeCsvRowNumber;
 
     /** The start time of the pickup/drop-off window. */
     private final GtfsTime startPickupDropOffWindow;
@@ -95,10 +99,12 @@ public class ContinuousPickupDropOffValidator extends FileValidator {
     public ForbiddenContinuousPickupDropOffNotice(
         int routeCsvRowNumber,
         String tripId,
+        int stopTimesCsvRowNumber,
         GtfsTime startPickupDropOffWindow,
         GtfsTime endPickupDropOffWindow) {
       this.routeCsvRowNumber = routeCsvRowNumber;
       this.tripId = tripId;
+      this.stopTimeCsvRowNumber = stopTimesCsvRowNumber;
       this.startPickupDropOffWindow = startPickupDropOffWindow;
       this.endPickupDropOffWindow = endPickupDropOffWindow;
     }
