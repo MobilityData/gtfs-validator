@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 MobilityData
+ * Copyright 2025 MobilityData
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,6 +79,9 @@ public class UniqueGeographyIdValidator extends FileValidator {
         .forEach(
             (id, entries) -> {
               if (entries.size() > 1) {
+                Set<String> uniqueFilenames =
+                    entries.stream().map(IdEntry::filename).collect(Collectors.toSet());
+                if (uniqueFilenames.size() == 1) return;
                 noticeContainer.addValidationNotice(
                     new DuplicateGeographyIdNotice(
                         id,
