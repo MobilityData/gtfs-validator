@@ -29,9 +29,9 @@ plugins {
     id 'maven-publish'
     id 'signing'
     id 'test-report-aggregation'
-    id 'com.github.sherter.google-java-format' version '0.9'
     id "io.freefair.aggregate-javadoc" version "6.4.3"
-    id "pl.allegro.tech.build.axion-release" version "1.13.6"
+    id "pl.allegro.tech.build.axion-release" version "1.15.3"
+    id "com.diffplug.spotless" version "7.0.0.BETA4"
 }
 
 // Setup and configure properties that are consistent across all projects, including sub-modules.
@@ -48,8 +48,8 @@ allprojects {
 
     tasks.withType(JavaCompile) {
         // All Java projects should target the same compatibility version.
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
 
         // Our source files should be encoded in UTF-8, regardless of the platform (e.g. Windows).
         compileJava.options.encoding = "UTF-8"
@@ -80,6 +80,7 @@ allprojects {
 
 subprojects {
     apply plugin: 'java'
+    apply plugin: "com.diffplug.spotless"
 
     // Cannot publish a SNAPSHOT. The provided sonatype url will not accept it.
     tasks.withType(PublishToMavenRepository).all { task ->
@@ -99,6 +100,13 @@ subprojects {
     task sourcesJar(type: Jar) {
         archiveClassifier.set('sources')
         from sourceSets.main.allSource
+    }
+
+    spotless {
+        java {
+            googleJavaFormat("1.17.0")
+            target("src/**/*.java")
+        }
     }
 
     // These modules require the same publishing configuration, apart from the name of the module
