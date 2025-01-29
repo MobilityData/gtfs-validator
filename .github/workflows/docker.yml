@@ -7,8 +7,8 @@ on:
     types: [ prereleased, released ]
 
 env:
-  java_version: '11'
-  java_distribution: 'temurin'
+  java_version: '17'
+  java_distribution: 'zulu'
 
 jobs:
   validate_gradle_wrapper:

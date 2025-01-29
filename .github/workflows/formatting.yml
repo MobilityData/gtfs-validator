@@ -8,7 +8,7 @@ on:
       - '.github/workflows/**'
 
 env:
-  java_version: '17.0'
+  java_version: '17'
   java_distribution: 'zulu'
 
 jobs:
@@ -21,25 +21,50 @@ jobs:
         with:
           java-version: ${{ env.java_version }}
           distribution: ${{ env.java_distribution }}
+
       - name: Cache Gradle packages
         uses: actions/cache@v3
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
-      - name: Check code compliance to google java format standards
-        uses: gradle/gradle-build-action@v2
+
+      - name: Run Spotless Check
+        run: |
+          ./gradlew spotlessCheck --quiet --continue 2>&1 | tee spotless-output.txt
+        continue-on-error: true
+
+      - name: Upload Spotless Output
+        if: failure()
+        uses: actions/upload-artifact@v4
         with:
-          arguments: spotlessCheck --quiet --continue
+          name: spotless-output
+          path: spotless-output.txt
+
+      - name: Extract Affected Files
+        if: failure()
+        run: |
+          grep "\.java" spotless-output.txt > affected-files.txt || true
+
       - name: Comment PR if code does not comply to Google Java style guide
-        if: ${{ failure() }}
+        if: failure()
         uses: actions/github-script@v6
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            const fs = require('fs');
+            const files = fs.existsSync('affected-files.txt') ? fs.readFileSync('affected-files.txt', 'utf8').trim().split('\n') : [];
+            if (files.length === 0) return;
+
+            const commentBody = `### 🚨 Code Formatting Issue 🚨\n\n`
+              + `This contribution does not follow the conventions set by the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html).\n\n`
+              + `Please run the following command at the root of the project to fix formatting errors:\n\n`
+              + "```sh\n./gradlew spotlessApply\n```\n\n"
+              + `**Affected files:**\n${files.map(file => `- \`${file}\``).join('\n')}\n\n`;
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "This contribution does not follow the conventions set by the [Google Java style guide](https://google.github.io/styleguide/javaguide.html). Please run the following command line at the root of the project to fix formatting errors: ```./gradlew goJF```."
-            })
+              body: commentBody
+            });

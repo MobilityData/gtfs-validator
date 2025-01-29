@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  java_version: '17.0'
+  java_version: '17'
   java_distribution: 'zulu'
 
 jobs:
