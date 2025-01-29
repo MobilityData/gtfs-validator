@@ -34,19 +34,19 @@ jobs:
           ./gradlew spotlessCheck --quiet --continue 2>&1 | tee spotless-output.txt
 
       - name: Upload Spotless Output
-        if: failure()
+        if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
           name: spotless-output
           path: spotless-output.txt
 
       - name: Extract Affected Files
-        if: failure()
+        if: ${{ failure() }}
         run: |
           grep "\.java" spotless-output.txt > affected-files.txt || true
 
       - name: Comment PR if code does not comply to Google Java style guide
-        if: failure()
+        if: ${{ failure() }}
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
