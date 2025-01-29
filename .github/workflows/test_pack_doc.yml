@@ -8,6 +8,10 @@ on:
   release:
     types: [ prereleased, released ]
 
+env:
+  java_version: '17'
+  java_distribution: 'zulu'
+  
 jobs:
   validate_gradle_wrapper:
     runs-on: ubuntu-latest
@@ -19,7 +23,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        java_version: [ 11, 17 ]
+        java_version: ${{ env.java_version }}
         os: [ ubuntu-latest, windows-latest ]
     steps:
       - uses: actions/checkout@v3
@@ -27,7 +31,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java_version }}
-          distribution: 'temurin'
+          distribution: ${{ env.java_distribution }}
       - name: Cache Gradle packages
         uses: actions/cache@v3
         with:
@@ -51,7 +55,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        java_version: [ 11, 17 ]
+        java_version: ${{ env.java_version }}
         os: [ ubuntu-latest, windows-latest ]
     steps:
       - uses: actions/checkout@v3
@@ -59,7 +63,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java_version }}
-          distribution: 'temurin'
+          distribution: ${{ env.java_distribution }}
       - name: Cache Gradle packages
         uses: actions/cache@v3
         with:
@@ -80,7 +84,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        java_version: [ 11, 17 ]
+        java_version: ${{ env.java_version }}
         os: [ ubuntu-latest, windows-latest ]
     steps:
       - uses: actions/checkout@v3
@@ -88,7 +92,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java_version }}
-          distribution: 'temurin'
+          distribution: ${{ env.java_distribution }}
       - name: Cache Gradle packages
         uses: actions/cache@v3
         with:
