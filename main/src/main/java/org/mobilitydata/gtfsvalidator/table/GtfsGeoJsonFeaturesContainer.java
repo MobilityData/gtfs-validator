@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.mobilitydata.gtfsvalidator.notice.DuplicateGeoJsonKeyNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 
 /**
@@ -76,14 +77,11 @@ public class GtfsGeoJsonFeaturesContainer
       GtfsGeoJsonFeature oldEntity = byLocationIdMap.getOrDefault(newEntity.featureId(), null);
       if (oldEntity == null) {
         byLocationIdMap.put(newEntity.featureId(), newEntity);
+      } else {
+        noticeContainer.addValidationNotice(
+            new DuplicateGeoJsonKeyNotice(
+                oldEntity.featureId(), oldEntity.featureIndex(), newEntity.featureIndex()));
       }
-      // TODO: Removed that code until the notice is supported.
-      //      else {
-      //        noticeContainer.addValidationNotice(
-      //            new JsonDuplicateKeyNotice(
-      //                gtfsFilename(), GtfsGeoJsonFeature.FEATURE_ID_FIELD_NAME,
-      // newEntity.featureId()));
-      //      }
     }
   }
 
