@@ -8,10 +8,6 @@ on:
   release:
     types: [ prereleased, released ]
 
-env:
-  java_version: '17'
-  java_distribution: 'zulu'
-
 jobs:
   validate_gradle_wrapper:
     runs-on: ubuntu-latest
