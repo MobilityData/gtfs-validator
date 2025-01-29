@@ -1,9 +1,9 @@
 plugins {
 	id 'java'
-  id 'application'
+    id 'application'
 	id 'org.springframework.boot' version '2.7.5'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-  id 'com.github.johnrengelman.shadow' version '5.2.0'
+    alias(libs.plugins.shadow.jar)
 }
 
 def WEB_BUILD_ENV               = System.getenv("WEB_BUILD_ENV") ?: 'dev'

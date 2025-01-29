@@ -31,7 +31,7 @@ plugins {
     id 'test-report-aggregation'
     id "io.freefair.aggregate-javadoc" version "6.4.3"
     id "pl.allegro.tech.build.axion-release" version "1.15.3"
-    id "com.diffplug.spotless" version "7.0.0.BETA4"
+    alias(libs.plugins.spotless)
 }
 
 // Setup and configure properties that are consistent across all projects, including sub-modules.
