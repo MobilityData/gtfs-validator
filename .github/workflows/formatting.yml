@@ -58,11 +58,14 @@ jobs:
             const files = fs.existsSync('affected-files.txt') ? fs.readFileSync('affected-files.txt', 'utf8').trim().split('\n') : [];
             if (files.length === 0) return;
 
+            const actionsDashboardUrl = `https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}`;
+
             const commentBody = `### 🚨 Code Formatting Issue 🚨\n\n`
               + `This contribution does not follow the conventions set by the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html).\n\n`
               + `Please run the following command at the root of the project to fix formatting errors:\n\n`
               + "```sh\n./gradlew spotlessApply\n```\n\n"
-              + `**Affected files:**\n${files.map(file => `- \`${file}\``).join('\n')}\n\n`;
+              + `**Affected files:**\n${files.map(file => `- \`${file.trim()}\``).join('\n')}\n\n`;
+              + `[Go to the Actions Dashboard to download the full Spotless output](${actionsDashboardUrl})\n\n`;
 
             github.rest.issues.createComment({
               issue_number: context.issue.number,
