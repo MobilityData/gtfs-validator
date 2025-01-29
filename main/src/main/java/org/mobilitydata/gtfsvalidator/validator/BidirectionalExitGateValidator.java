@@ -35,8 +35,10 @@ public class BidirectionalExitGateValidator extends SingleEntityValidator<GtfsPa
   static class BidirectionalExitGateNotice extends ValidationNotice {
     /** The row number of the validated record. */
     private final int csvRowNumber;
+
     /** The pathway mode. */
     private final int pathwayMode;
+
     /** Whether the pathway is bidirectional. */
     private final int isBidirectional;
 

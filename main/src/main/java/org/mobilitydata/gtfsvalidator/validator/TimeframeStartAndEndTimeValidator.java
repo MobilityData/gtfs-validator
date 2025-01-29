@@ -75,8 +75,10 @@ public class TimeframeStartAndEndTimeValidator extends SingleEntityValidator<Gtf
   static class TimeframeStartOrEndTimeGreaterThanTwentyFourHoursNotice extends ValidationNotice {
     /** The row number for the faulty record. */
     private final int csvRowNumber;
+
     /** The time field name for the faulty record. */
     private final String fieldName;
+
     /** The invalid time value. */
     private final GtfsTime time;
 

@@ -28,6 +28,7 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorUtil;
 public final class CsvFileLoader extends TableLoader {
 
   private CsvFileLoader() {}
+
   // Create the singleton and add a method to obtain it
   private static final CsvFileLoader INSTANCE = new CsvFileLoader();
 
