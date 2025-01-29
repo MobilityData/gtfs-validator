@@ -11,7 +11,7 @@ on:
 env:
   java_version: '17'
   java_distribution: 'zulu'
-  
+
 jobs:
   validate_gradle_wrapper:
     runs-on: ubuntu-latest
@@ -23,7 +23,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        java_version: ${{ env.java_version }}
+        java_version: [ '17' ]
         os: [ ubuntu-latest, windows-latest ]
     steps:
       - uses: actions/checkout@v3
@@ -31,7 +31,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java_version }}
-          distribution: ${{ env.java_distribution }}
+          distribution: 'zulu'
       - name: Cache Gradle packages
         uses: actions/cache@v3
         with:
@@ -41,7 +41,6 @@ jobs:
       - name: Run tests on Java ${{ matrix.java_version }} and ${{ matrix.os }}
         uses: gradle/gradle-build-action@v2
         with:
-          # We run test aggregation with --continue to make sure all tests run, even if some fail.
           arguments: testAggregateTestReport --continue
       - name: Persist aggregated test reports on failure - Java ${{ matrix.java_version }} on ${{ matrix.os }}
         if: ${{ failure() }}
@@ -55,7 +54,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        java_version: ${{ env.java_version }}
+        java_version: [ '17' ]
         os: [ ubuntu-latest, windows-latest ]
     steps:
       - uses: actions/checkout@v3
@@ -63,7 +62,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java_version }}
-          distribution: ${{ env.java_distribution }}
+          distribution: 'zulu'
       - name: Cache Gradle packages
         uses: actions/cache@v3
         with:
@@ -79,12 +78,13 @@ jobs:
         with:
           name: Application - CLI executable - Java ${{ matrix.java_version }} JAR file -- ${{ matrix.os }}
           path: cli/build/libs/gtfs-validator-*-cli.jar
+
   doc:
     needs: [test]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        java_version: ${{ env.java_version }}
+        java_version: [ '17' ]
         os: [ ubuntu-latest, windows-latest ]
     steps:
       - uses: actions/checkout@v3
@@ -92,7 +92,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java_version }}
-          distribution: ${{ env.java_distribution }}
+          distribution: 'zulu'
       - name: Cache Gradle packages
         uses: actions/cache@v3
         with:
@@ -106,5 +106,5 @@ jobs:
       - name: Persist javadoc
         uses: actions/upload-artifact@v4
         with:
-          name: Documentation - javadoc - Java ${{ matrix.java_version }} - ${{ matrix.java_version }}
+          name: Documentation - javadoc - Java ${{ matrix.java_version }} - ${{ matrix.os }}
           path: build/docs/javadoc/
