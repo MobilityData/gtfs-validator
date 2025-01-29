@@ -32,9 +32,12 @@ jobs:
       - name: Run Spotless Check
         run: |
           ./gradlew spotlessCheck --quiet --continue 2>&1 | tee spotless-output.txt
+          if grep -q "\.java" spotless-output.txt; then
+            exit 1
+          fi
 
       - name: Upload Spotless Output
-        if: ${{ always() }}
+        if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
           name: spotless-output
