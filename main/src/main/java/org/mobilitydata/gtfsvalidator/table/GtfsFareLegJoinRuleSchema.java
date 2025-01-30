@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Google LLC
+ * Copyright 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,12 +22,10 @@ import org.mobilitydata.gtfsvalidator.annotation.*;
 public interface GtfsFareLegJoinRuleSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
   @Required
-  // TODO: foreign key validation either on networks.txt or routes.txt
   String fromNetworkId();
 
   @FieldType(FieldTypeEnum.ID)
   @Required
-  // TODO: foreign key validation either on networks.txt or routes.txt
   String toNetworkId();
 
   @FieldType(FieldTypeEnum.ID)
