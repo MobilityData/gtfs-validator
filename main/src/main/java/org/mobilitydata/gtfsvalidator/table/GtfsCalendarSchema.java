@@ -23,7 +23,6 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 @ConditionallyRequired
 public interface GtfsCalendarSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
-  @ForeignKey(table = "calendar_dates.txt", field = "service_id")
   @PrimaryKey
   @Required
   String serviceId();
