@@ -80,7 +80,7 @@ allprojects {
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: "com.diffplug.spotless"
+    apply plugin: libs.plugins.spotless.get().pluginId
 
     // Cannot publish a SNAPSHOT. The provided sonatype url will not accept it.
     tasks.withType(PublishToMavenRepository).all { task ->

@@ -15,9 +15,9 @@
  */
 
 plugins {
-    alias(libs.plugins.shadow.jar)
     id 'application'
     id 'java'
+    alias(libs.plugins.shadow.jar)
 }
 
 applicationDefaultJvmArgs = [ "-Xmx8G" ]
