@@ -1,4 +1,4 @@
-FROM gradle:7-jdk11-alpine AS build
+FROM --platform=$BUILDPLATFORM eclipse-temurin:11 AS build
 
 COPY --chown=gradle:gradle . /build
 WORKDIR /build
@@ -9,7 +9,7 @@ RUN ./gradlew shadowJar \
     -Prelease.forceVersion="${VERSION_TAG%-SNAPSHOT}"
 
 
-FROM openjdk:11-slim
+FROM --platform=$TARGETPLATFORM openjdk:11-slim
 COPY --from=build /build/cli/build/libs/gtfs-validator-*-cli.jar /gtfs-validator-cli.jar
 WORKDIR /
 

@@ -43,10 +43,13 @@ jobs:
           name: Test report - Java
           path: build/reports/tests/unit-test/aggregated-results/
 
-  build_push:
+  build_test:
     needs: test
-    name: Build and push Docker image
+    name: Build/test Docker image
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [amd64 , arm64]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -101,9 +104,6 @@ jobs:
           echo "tags=${DOCKER_TAGS}" >> $GITHUB_OUTPUT
           echo "created=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
 
-      # Build and push steps are split up in order to test the built contaire image in between
-      # - build-args and labels inputs _must_ be kept matching between both to prevent rebuild
-      # - See: https://github.com/docker/build-push-action/blob/master/docs/advanced/test-before-push.md
       - name: Build Docker container image
         uses: docker/build-push-action@v3
         with:
@@ -112,6 +112,7 @@ jobs:
           build-args: |
             VERSION_TAG=${{ steps.prep.outputs.version }}
           load: true
+          platforms: ${{ matrix.platform }}
           tags: ${{ steps.prep.outputs.tags }}
           labels: |
             org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY,,}.git
@@ -120,6 +121,78 @@ jobs:
             org.opencontainers.image.version=${{ steps.prep.outputs.version }}
       - name: Test Docker container image
         run: docker run --rm ${{ steps.prep.outputs.tags }} --help
+  push_multiplatform:
+    name: Build/Push multi-platform image
+    needs: build_test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # need full clone so `./gradlew currentVersion` can search parents for older tags when needed
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Initialize Gradle
+        run: |
+          # The first time gradlew is invoked it downloads gradle and outputs progress about that to STDOUT.
+          # This "dummy" invokation gets that out of the way so future gradlew commands have clean output
+          ./gradlew --version
+      - name: Prepare version metadata
+        id: prep
+        run: |
+          # ghcr.io path should match current repo but be all lowercase
+          DOCKER_IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}
+          echo "Set DOCKER_IMAGE=${DOCKER_IMAGE}"
+
+          # delegate to axion-release-plugin to generate version string from Git repository state
+          echo "Detecting version with ./gradlew currentVersion"
+          AXION_VERSION="$(./gradlew currentVersion -q -Prelease.quiet)"
+          echo "Set AXION_VERSION=${AXION_VERSION}"
+
+          # determine docker tags
+          if [[ "${GITHUB_EVENT_NAME}" == "release" ]]; then
+            # tag releases with version determined by axion-release-plugin
+            DOCKER_TAGS="${DOCKER_IMAGE}:${AXION_VERSION}"
+          else
+            # tag pushes to master as "latest"
+            DOCKER_TAGS="${DOCKER_IMAGE}:latest"
+          fi
+          echo "Set DOCKER_TAGS=${DOCKER_TAGS}"
+
+          echo ::set-output name=version::${AXION_VERSION}
+          echo ::set-output name=tags::${DOCKER_TAGS}
+          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+      - name: Build Docker container image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./Dockerfile
+          build-args: |
+            VERSION_TAG=${{ steps.prep.outputs.version }}
+          load: false
+          platforms: linux/amd64, linux/arm64
+          tags: ${{ steps.prep.outputs.tags }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY,,}.git
+            org.opencontainers.image.created=${{ steps.prep.outputs.created }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.version=${{ steps.prep.outputs.version }}
       - name: Push Docker container image
         uses: docker/build-push-action@v3
         with:
@@ -128,6 +201,7 @@ jobs:
           build-args: |
             VERSION_TAG=${{ steps.prep.outputs.version }}
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: ${{ steps.prep.outputs.tags }}
           labels: |
             org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY,,}.git
