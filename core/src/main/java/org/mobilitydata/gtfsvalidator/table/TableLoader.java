@@ -20,6 +20,7 @@ public abstract class TableLoader {
 
   protected Multimap<SkippedValidatorReason, Class<?>> skippedValidators =
       ArrayListMultimap.create();
+
   /**
    * Load the file
    *

@@ -15,9 +15,9 @@
  */
 
 plugins {
-    id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'application'
     id 'java'
+    alias(libs.plugins.shadow.jar)
 }
 
 applicationDefaultJvmArgs = [ "-Xmx8G" ]

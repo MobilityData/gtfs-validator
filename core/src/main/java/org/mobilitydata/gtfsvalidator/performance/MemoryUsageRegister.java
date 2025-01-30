@@ -17,7 +17,9 @@ public class MemoryUsageRegister {
     runtime = Runtime.getRuntime();
   }
 
-  /** @return the singleton instance of the memory usage register. */
+  /**
+   * @return the singleton instance of the memory usage register.
+   */
   public static MemoryUsageRegister getInstance() {
     return instance;
   }
