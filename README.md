@@ -50,7 +50,7 @@ Several users have reported issues with the validator when processing their GTFS
 1. Requests that come with custom user agents.
 2. Requests originating from non-browser sources.
 
-To facilitate easier debugging and logging, we have made our user agent header explicit. The user agent string follows the format: "MobilityData GTFS-Validator/{validatorVersion} (Java {java version})". In cases where the `validatorVersion` is null, the `{validatorVersion}` segment in the user agent string will be left blank. The string "MobilityData GTFS-Validator/5.0.1 (Java 11.0.1)" serves as an example of the User Agent string.
+To facilitate easier debugging and logging, we have made our user agent header explicit. The user agent string follows the format: "MobilityData GTFS-Validator/{validatorVersion} (Java {java version})". In cases where the `validatorVersion` is null, the `{validatorVersion}` segment in the user agent string will be left blank. The string "MobilityData GTFS-Validator/5.0.1 (Java 17.0.8)" serves as an example of the User Agent string.
 
 # Using the Desktop app
 ### Setup
@@ -85,8 +85,13 @@ Before running validation, tap the `Advanced` button to configure other aspects 
 * The country code used for phone number validation.
 
 # Using the command line
-### Setup
-1. Install [Java 11 or higher](https://www.oracle.com/java/technologies/javase-downloads.html). To check which version of Java is installed on your computer, type the following command in the terminal: `java --version`.
+### Setup 
+1. Install Java 17 or higher. To check which version of Java is installed on your computer, type the following command in the terminal: `java --version`. You can download Java from one of the following sources:
+    - **[Eclipse Adoptium (Temurin)](https://adoptium.net/temurin/releases/)** – Open-source & widely used
+    - **[Amazon Corretto](https://aws.amazon.com/corretto/)** - AWS-supported, optimized for cloud
+    - **[Azul Zulu](https://www.azul.com/downloads/)** - Enterprise ready
+    - **[Microsoft Build of OpenJDK](https://learn.microsoft.com/en-us/java/openjdk/download/)** - Microsoft's JDK
+    - **[Oracle JDK](https://www.oracle.com/java/technologies/javase-downloads.html)** - Official Java from Oracle 
 2. Navigate to the [Releases page](https://github.com/MobilityData/gtfs-validator/releases) and download the latest `Gtfs Validator` CLI jar (not OS-specific). It is located in the **Assets** section of the release, and it looks like `gtfs-validator-vX.X.X_cli.jar`
 3. Open the terminal on your computer
 4. Navigate to the directory containing the jar file. You can do this by typing the following command in the terminal:`cd {directory path}`, where {directory path} is the absolute or relative path to the directory. You can then make sure you're in the right directory by typing `pwd` in the terminal (this stands for *present working directory*). You can also make sure the jar file is there by typing `ls` in the terminal (this stands for *list* and will display the list of files in this directory). More about commands to navigate file and directories [here](https://help.ubuntu.com/community/UsingTheTerminal#File_.26_Directory_Commands).
