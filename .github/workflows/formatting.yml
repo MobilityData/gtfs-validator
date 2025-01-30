@@ -64,7 +64,7 @@ jobs:
               + `This contribution does not follow the conventions set by the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html).\n\n`
               + `Please run the following command at the root of the project to fix formatting errors:\n\n`
               + "```sh\n./gradlew spotlessApply\n```\n\n"
-              + `<details><summary><strong>🗂️ Affected files</strong></summary>\n${files.map(file => `- \`${file.trim()}\``).join('\n')}</details>\n\n`
+              + `<details><summary><strong>🗂️ Affected files</strong></summary>\n\n${files.map(file => `- \`${file.trim()}\``).join('\n')}</details>\n\n`
               + `[Go to the Actions Dashboard to download the full Spotless output](${actionsDashboardUrl})\n\n`;
 
             github.rest.issues.createComment({
