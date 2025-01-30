@@ -2,7 +2,13 @@
 
 ## Prerequisites for Gradle
 1. Clone this repository
-1. Install [Java Development Kit (JDK 8+)](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+1. Install Java 17 or higher. To check which version of Java is installed on your computer, type the following command in the terminal: `java --version`. You can download Java from one of the following sources:
+    - **[Eclipse Adoptium (Temurin)](https://adoptium.net/temurin/releases/)** – Open-source & widely used
+    - **[Amazon Corretto](https://aws.amazon.com/corretto/)** - AWS-supported, optimized for cloud
+    - **[Azul Zulu](https://www.azul.com/downloads/)** - Enterprise ready
+    - **[Microsoft Build of OpenJDK](https://learn.microsoft.com/en-us/java/openjdk/download/)** - Microsoft's JDK
+    - **[Oracle JDK](https://www.oracle.com/java/technologies/javase-downloads.html)** - Official Java from Oracle
+
 
 ## Building from the command line
 To build the application, run `./gradlew clean build` from the command line at the root of the project.
@@ -16,6 +22,18 @@ To build the application simply click the hammer in the header section
 1. Run the following command at the root of the project to run Java tests:
 ```
 ./gradlew test
+```
+
+## Coding style
+This project uses the [Google Java Style](https://google.github.io/styleguide/javaguide.html). IDE plugins to automatically format your code in this style are [here](https://github.com/google/google-java-format).
+
+Verify proper Java code style via Spotless plugin:
+```
+./gradlew spotlessCheck
+```
+Apply style automatically via Spotless plugin:
+```
+./gradlew spotlessApply
 ```
 
 ## Packaging JAR with all dependencies
