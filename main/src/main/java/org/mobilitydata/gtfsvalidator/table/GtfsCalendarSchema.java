@@ -16,19 +16,14 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
-import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
-import org.mobilitydata.gtfsvalidator.annotation.EndRange;
-import org.mobilitydata.gtfsvalidator.annotation.FieldType;
-import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.*;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
 @GtfsTable("calendar.txt")
 @ConditionallyRequired
 public interface GtfsCalendarSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
+  @ForeignKey(table = "calendar_dates.txt", field = "service_id")
   @PrimaryKey
   @Required
   String serviceId();
