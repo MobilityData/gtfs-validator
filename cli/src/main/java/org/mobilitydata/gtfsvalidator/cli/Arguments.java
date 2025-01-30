@@ -57,8 +57,7 @@ public class Arguments {
   @Parameter(
       names = {"-d", "--date"},
       description =
-          "The date used to validate the feed for time-based rules, e.g feed_expiration_30_days, "
-              + "in ISO_LOCAL_DATE format like '2001-01-30'. By default, the current date is used. "
+          "The date used to validate the feed for time-based rules, e.g feed_expiration_30_days, " + "in ISO_LOCAL_DATE format like '2001-01-30'. By default, the current date is used. "
               + "This option can be used to debug rules like feed expiration.")
   private String dateString;
 
