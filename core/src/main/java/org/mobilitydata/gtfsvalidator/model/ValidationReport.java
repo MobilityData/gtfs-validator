@@ -96,6 +96,7 @@ public class ValidationReport {
   public List<MemoryUsage> getMemoryUsageRecords() {
     return memoryUsageRecords;
   }
+
   /**
    * Determines if two validation reports are equal regardless of the order of the fields in the set
    * of {@code NoticeReport}.

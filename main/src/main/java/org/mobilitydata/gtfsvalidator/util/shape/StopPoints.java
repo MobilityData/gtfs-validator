@@ -97,10 +97,13 @@ public class StopPoints {
 
     /** The location of the stop. */
     private final S2Point location;
+
     /** The user distance along the shape for the stop, if specified. */
     private final double userDistance;
+
     /** CSV data table row for the stop_times.txt entry for this stop. */
     private final GtfsStopTime stopTime;
+
     /**
      * True if this station is treated as large, so a higher distance threshold is used for
      * matching.

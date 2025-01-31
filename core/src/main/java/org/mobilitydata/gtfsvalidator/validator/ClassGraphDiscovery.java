@@ -14,6 +14,7 @@ public class ClassGraphDiscovery {
 
   public static final String DEFAULT_VALIDATOR_PACKAGE = "org.mobilitydata.gtfsvalidator.validator";
   public static final String DEFAULT_TABLE_PACKAGE = "org.mobilitydata.gtfsvalidator.table";
+
   /** Default packages to find notices in open-source validator. */
   public static final ImmutableList<String> DEFAULT_NOTICE_PACKAGES =
       ImmutableList.of(

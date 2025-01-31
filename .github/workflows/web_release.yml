@@ -6,7 +6,7 @@ on:
 
 env:
   NODE_VERSION: "20"
-  java_version: '17.0'
+  java_version: '17'
   java_distribution: 'zulu'
 
 jobs:

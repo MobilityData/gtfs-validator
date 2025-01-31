@@ -1,0 +1,7 @@
+[versions]
+spotless = "7.0.2"
+shadow-jar = '7.1.2'
+
+[plugins]
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+shadow-jar = { id = 'com.github.johnrengelman.shadow', version.ref = 'shadow-jar' }

@@ -160,7 +160,9 @@ public class Arguments {
     return exportNoticeSchema;
   }
 
-  /** @return true if CLI parameter combination is legal, otherwise return false */
+  /**
+   * @return true if CLI parameter combination is legal, otherwise return false
+   */
   public boolean validate() {
     if (getExportNoticeSchema() && abortAfterNoticeSchemaExport()) {
       return true;
