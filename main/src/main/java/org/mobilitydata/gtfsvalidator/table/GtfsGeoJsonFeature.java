@@ -28,6 +28,7 @@ public final class GtfsGeoJsonFeature implements GtfsEntity {
   private Geometry geometryDefinition; // The geometry of the feature.
   private String stopName; // The name of the location as displayed to the riders.
   private String stopDesc; // A description of the location.
+  private int featureIndex;
 
   public GtfsGeoJsonFeature() {}
 
@@ -43,6 +44,10 @@ public final class GtfsGeoJsonFeature implements GtfsEntity {
   @Override
   public int csvRowNumber() {
     return 0;
+  }
+
+  public int featureIndex() {
+    return featureIndex;
   }
 
   @Nonnull
@@ -111,6 +116,10 @@ public final class GtfsGeoJsonFeature implements GtfsEntity {
 
   public void setStopDesc(@Nullable String stopDesc) {
     this.stopDesc = stopDesc;
+  }
+
+  public void setFeatureIndex(int featureIndex) {
+    this.featureIndex = featureIndex;
   }
 
   /** Builder class for GtfsGeoJsonFeature. */

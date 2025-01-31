@@ -22,8 +22,8 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 
 /**
- * Validates that only one of stop_id, location_group_id or location_id is defined in a given record
- * of stop_times.txt
+ * Validates that only one of `stop_id`, `location_group_id` or `location_id` is defined in a given
+ * record of stop_times.txt
  *
  * <p>Generated notice: {@link MissingRequiredFieldNotice}.
  *
@@ -51,26 +51,21 @@ public class StopTimesGeographyIdPresenceValidator extends SingleEntityValidator
       noticeContainer.addValidationNotice(
           new MissingRequiredFieldNotice(
               GtfsStopTime.FILENAME, stopTime.csvRowNumber(), GtfsStopTime.STOP_ID_FIELD_NAME));
+    } else if (presenceCount > 1) {
+      // More than one geography ID is present, but only one is allowed
+      noticeContainer.addValidationNotice(
+          new ForbiddenGeographyIdNotice(
+              stopTime.csvRowNumber(),
+              stopTime.hasStopId() ? stopTime.stopId() : null,
+              stopTime.hasLocationGroupId() ? stopTime.locationGroupId() : null,
+              stopTime.hasLocationId() ? stopTime.locationId() : null));
     }
-    // TODO: Put this back once we are ready to publish this notice.
-    //    else if (presenceCount > 1) {
-    //      // More than one geography ID is present, but only one is allowed
-    //      noticeContainer.addValidationNotice(
-    //          new ForbiddenGeographyIdNotice(
-    //              stopTime.csvRowNumber(),
-    //              stopTime.stopId(),
-    //              stopTime.locationGroupId(),
-    //              stopTime.locationId()));
-    //    }
   }
 
   @Override
   public boolean shouldCallValidate(ColumnInspector header) {
-    if (header.hasColumn(GtfsStopTime.STOP_ID_FIELD_NAME)
+    return header.hasColumn(GtfsStopTime.STOP_ID_FIELD_NAME)
         || header.hasColumn(GtfsStopTime.LOCATION_GROUP_ID_FIELD_NAME)
-        || header.hasColumn(GtfsStopTime.LOCATION_ID_FIELD_NAME)) {
-      return true;
-    }
-    return false;
+        || header.hasColumn(GtfsStopTime.LOCATION_ID_FIELD_NAME);
   }
 }

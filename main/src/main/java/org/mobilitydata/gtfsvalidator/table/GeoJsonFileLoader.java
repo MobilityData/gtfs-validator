@@ -177,6 +177,7 @@ public class GeoJsonFileLoader extends TableLoader {
           gtfsGeoJsonFeature = new GtfsGeoJsonFeature();
           gtfsGeoJsonFeature.setFeatureId(
               featureObject.get(GtfsGeoJsonFeature.FEATURE_ID_FIELD_NAME).getAsString());
+          gtfsGeoJsonFeature.setFeatureIndex(featureIndex);
 
           String type = geometry.get(GtfsGeoJsonFeature.GEOMETRY_TYPE_FIELD_NAME).getAsString();
 
