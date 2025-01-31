@@ -25,15 +25,19 @@ public class StopToShapeMatch {
 
   /** The index of the shape point in the shape sequence. */
   private int index = 0;
+
   /**
    * The user-specified distance from the start of the shape to the matched shape location. This
    * value will be zero if not specified in the data.
    */
   private double userDistance = 0.0;
+
   /** The geo distance from the start of the shape to the matched shape location. */
   private double geoDistance = 0.0;
+
   /** The geo distance from the stop to the matched shape location. */
   private double geoDistanceToShape = 0.0;
+
   /** The location of the best match on the shape for the stop. */
   private S2Point location = new S2Point();
 
@@ -113,6 +117,7 @@ public class StopToShapeMatch {
         && Math.abs(this.geoDistanceToShape - that.geoDistanceToShape) < maxError
         && S2Earth.getDistanceMeters(this.location, that.location) < maxError;
   }
+
   /**
    * Sets geoDistanceToShape to +infinity.
    *

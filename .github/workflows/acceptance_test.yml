@@ -22,8 +22,8 @@ concurrency:
 
 env:
   python_version: '3.11'
-  java_version: '11'
-  java_distribution: 'temurin'
+  java_version: '17'
+  java_distribution: 'zulu'
 
 jobs:
   fail_if_pull_request_is_draft: # Fails in order to indicate that pull request needs to be marked as ready to review to pass.

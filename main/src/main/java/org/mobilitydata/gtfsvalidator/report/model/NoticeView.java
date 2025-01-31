@@ -75,6 +75,7 @@ public class NoticeView {
       return comments.getFieldComment(field);
     }
   }
+
   /**
    * Returns the description text for the notice.
    *

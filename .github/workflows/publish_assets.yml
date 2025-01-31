@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  java_version: '17.0'
+  java_version: '17'
   java_distribution: 'zulu'
 
 jobs:
@@ -101,7 +101,6 @@ jobs:
 
       - name: Build and Publish to Sonatype
         run: |
-          # The gradle java verifying plugin does not work with java 17.
           # Don't verify since it has already been done when the PR was created.
-          ./gradlew publish --rerun-tasks -x verifyGoogleJavaFormat
+          ./gradlew publish --rerun-tasks -x spotlessCheck
 
