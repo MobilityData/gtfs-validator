@@ -29,11 +29,11 @@ import org.mobilitydata.gtfsvalidator.table.*;
 import org.mobilitydata.gtfsvalidator.util.StopUtil;
 
 /**
- * TODO
+ * Validates that the transfer distance between two stops is not too large.
  *
  * <p>Generated notice: {@link TransferDistanceTooLargeNotice}.
  *
- * <p>Generated notice: {@link TransferDistanceAbove2KmNotice}.
+ * <p>Generated notice: {@link TransferDistanceAbove_2KmNotice}.
  */
 @GtfsValidator
 public class TransferDistanceValidator extends FileValidator {
