@@ -111,6 +111,7 @@ public class NoticeFieldsTest {
             "firstIndex",
             "geoDistanceToShape",
             "geoJsonType",
+            "geographyId",
             "geometryType",
             "hasEntrance",
             "hasExit",
