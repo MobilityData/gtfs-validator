@@ -2,12 +2,13 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import com.google.common.flogger.FluentLogger;
 import com.google.gson.*;
-
+import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.locationtech.jts.geom.*;
 import org.mobilitydata.gtfsvalidator.notice.*;
 import org.mobilitydata.gtfsvalidator.notice.GeoJsonDuplicatedElementNotice;
@@ -36,9 +37,9 @@ public class GeoJsonFileLoader extends TableLoader {
       List<GtfsGeoJsonFeature> entities = extractFeaturesFromStream(inputStream, noticeContainer);
       return geoJsonFileDescriptor.createContainerForEntities(entities, noticeContainer);
     } catch (JsonParseException jpex) {
-        noticeContainer.addValidationNotice(
-                new MalformedJsonNotice(GtfsGeoJsonFeature.FILENAME, jpex.getMessage()));
-        logger.atSevere().withCause(jpex).log("Malformed JSON in locations.geojson");
+      noticeContainer.addValidationNotice(
+          new MalformedJsonNotice(GtfsGeoJsonFeature.FILENAME, jpex.getMessage()));
+      logger.atSevere().withCause(jpex).log("Malformed JSON in locations.geojson");
 
       return fileDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS);
     } catch (IOException ioex) {
@@ -68,13 +69,14 @@ public class GeoJsonFileLoader extends TableLoader {
     List<GtfsGeoJsonFeature> features = new ArrayList<>();
     boolean hasUnparsableFeature = false;
     GsonBuilder gsonBuilder = new GsonBuilder();
-    gsonBuilder.registerTypeAdapter(JsonElement.class, new GeoJsonTypeAdapter());
-    //gsonBuilder.registerTypeAdapter(JsonElement.class, new DuplicatedKeyDetectingDeserializer());
+    gsonBuilder.registerTypeAdapter(JsonElement.class, new MapJsonTypeAdapter());
+    // gsonBuilder.registerTypeAdapter(JsonElement.class, new DuplicatedKeyDetectingDeserializer());
 
     Gson gson = gsonBuilder.create();
 
     try (InputStreamReader reader = new InputStreamReader(inputStream)) {
-      JsonElement root = gson.fromJson(reader, JsonObject.class);
+      JsonElement root =
+          gson.toJsonTree(gson.fromJson(reader, new TypeToken<Map<String, Object>>() {}.getType()));
       if (!root.isJsonObject()) {
         throw new JsonParseException("Expected a JSON object at the root");
       }
@@ -84,11 +86,11 @@ public class GeoJsonFileLoader extends TableLoader {
         throw new UnparsableGeoJsonFeatureException("Missing required field 'type'");
       } else if (!jsonObject.get("type").getAsString().equals("FeatureCollection")) {
         noticeContainer.addValidationNotice(
-                new UnsupportedGeoJsonTypeNotice(
-                        jsonObject.get("type").getAsString(),
-                        "Unsupported GeoJSON type: "
-                                + jsonObject.get("type").getAsString()
-                                + ". Use 'FeatureCollection' instead."));
+            new UnsupportedGeoJsonTypeNotice(
+                jsonObject.get("type").getAsString(),
+                "Unsupported GeoJSON type: "
+                    + jsonObject.get("type").getAsString()
+                    + ". Use 'FeatureCollection' instead."));
         throw new UnparsableGeoJsonFeatureException("Unsupported GeoJSON type");
       }
       JsonArray featuresArray = jsonObject.getAsJsonArray("features");
@@ -101,16 +103,16 @@ public class GeoJsonFileLoader extends TableLoader {
         }
       }
     } catch (JsonSyntaxException exception) {
-        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-        String message = exception.getMessage();
-        if (message.contains("Duplicated")) {
-          noticeContainer.addValidationNotice(
-                  new GeoJsonDuplicatedElementNotice(GtfsGeoJsonFeature.FILENAME, "type"));
-        } else if (message.contains("Unknown")) {
-          noticeContainer.addValidationNotice(
-                  new GeoJsonUnknownElementNotice(GtfsGeoJsonFeature.FILENAME, "id"));
-        }
-      } catch (IllegalArgumentException exception) {
+      System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+      String message = exception.getMessage();
+      if (message.contains("Duplicated")) {
+        noticeContainer.addValidationNotice(
+            new GeoJsonDuplicatedElementNotice(GtfsGeoJsonFeature.FILENAME, "type"));
+      } else if (message.contains("Unknown")) {
+        noticeContainer.addValidationNotice(
+            new GeoJsonUnknownElementNotice(GtfsGeoJsonFeature.FILENAME, "id"));
+      }
+    } catch (IllegalArgumentException exception) {
       System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%");
     }
 
