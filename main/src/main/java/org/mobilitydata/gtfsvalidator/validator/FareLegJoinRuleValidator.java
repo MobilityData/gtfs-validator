@@ -57,7 +57,8 @@ public class FareLegJoinRuleValidator extends FileValidator {
 
   public void validate(GtfsFareLegJoinRule entity, NoticeContainer noticeContainer) {
     // Validate foreign key reference - from_network_id references a network or route
-    if (!networkTable.byNetworkId(entity.fromNetworkId()).isPresent()
+    if (entity.hasFromNetworkId()
+        && !networkTable.byNetworkId(entity.fromNetworkId()).isPresent()
         && routeTable.byNetworkId(entity.fromNetworkId()).isEmpty()) {
       noticeContainer.addValidationNotice(
           new ForeignKeyViolationNotice(
@@ -70,7 +71,8 @@ public class FareLegJoinRuleValidator extends FileValidator {
     }
 
     // Validate foreign key reference - to_network_id references a network or route
-    if (!networkTable.byNetworkId(entity.toNetworkId()).isPresent()
+    if (entity.hasToNetworkId()
+        && !networkTable.byNetworkId(entity.toNetworkId()).isPresent()
         && routeTable.byNetworkId(entity.toNetworkId()).isEmpty()) {
       noticeContainer.addValidationNotice(
           new ForeignKeyViolationNotice(
@@ -96,5 +98,13 @@ public class FareLegJoinRuleValidator extends FileValidator {
               entity.csvRowNumber(),
               GtfsFareLegJoinRule.FROM_STOP_ID_FIELD_NAME));
     }
+  }
+
+  @Override
+  public boolean shouldCallValidate() {
+    // At least one of the foreign key fields should be present
+    return fareLegJoinRuleTable != null
+        && (fareLegJoinRuleTable.hasColumn(GtfsFareLegJoinRule.FROM_NETWORK_ID_FIELD_NAME)
+            || fareLegJoinRuleTable.hasColumn(GtfsFareLegJoinRule.TO_NETWORK_ID_FIELD_NAME));
   }
 }
