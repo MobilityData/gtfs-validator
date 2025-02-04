@@ -8,7 +8,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * A custom JSON type adapter for parsing JSON objects with duplicate keys.
+ * A custom JSON type adapter for parsing JSON objects with duplicate keys. The target class is
+ * {@link Map}{@code <String, Object>}. as JSonElement is captured by the default Gson TypeAdapter.
  *
  * <p>When a JSON object has two keys with the same name at the same level, this type adapter throws
  * a {@link DuplicateJsonKeyException}.
