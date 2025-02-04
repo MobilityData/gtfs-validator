@@ -103,8 +103,6 @@ public class FareLegJoinRuleValidator extends FileValidator {
   @Override
   public boolean shouldCallValidate() {
     // At least one of the foreign key fields should be present
-    return fareLegJoinRuleTable != null
-        && (fareLegJoinRuleTable.hasColumn(GtfsFareLegJoinRule.FROM_NETWORK_ID_FIELD_NAME)
-            || fareLegJoinRuleTable.hasColumn(GtfsFareLegJoinRule.TO_NETWORK_ID_FIELD_NAME));
+    return fareLegJoinRuleTable != null;
   }
 }
