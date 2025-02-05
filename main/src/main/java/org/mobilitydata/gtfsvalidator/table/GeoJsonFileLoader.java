@@ -78,7 +78,7 @@ public class GeoJsonFileLoader extends TableLoader {
     GsonBuilder gsonBuilder = new GsonBuilder();
     // Using the MapJsonTypeAdapter to be able to parse JSON objects with duplicate keys and
     // unsupported Gson library features
-    gsonBuilder.registerTypeAdapter(JsonElement.class, new MapJsonTypeAdapter());
+    gsonBuilder.registerTypeAdapter(new TypeToken<Map<String, Object>>() {}.getType(), new MapJsonTypeAdapter());
     Gson gson = gsonBuilder.create();
 
     try (InputStreamReader reader = new InputStreamReader(inputStream)) {
