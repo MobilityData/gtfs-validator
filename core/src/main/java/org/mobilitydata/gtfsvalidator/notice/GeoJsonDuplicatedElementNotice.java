@@ -18,9 +18,14 @@ public class GeoJsonDuplicatedElementNotice extends ValidationNotice {
    * The duplicated element in the GeoJSON file.
    */
   private final String duplicatedElement;
+  /**
+   * The duplicated exception message.
+   */
+  private final String message;
 
-  public GeoJsonDuplicatedElementNotice(String filename, String duplicatedElement) {
+  public GeoJsonDuplicatedElementNotice(String filename, String duplicatedElement, String message) {
     this.filename = filename;
     this.duplicatedElement = duplicatedElement;
+    this.message = message;
   }
 }

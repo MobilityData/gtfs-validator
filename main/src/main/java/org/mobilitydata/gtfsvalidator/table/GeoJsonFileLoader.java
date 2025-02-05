@@ -103,10 +103,10 @@ public class GeoJsonFileLoader extends TableLoader {
       }
     } catch (DuplicateJsonKeyException exception) {
       noticeContainer.addValidationNotice(
-              new GeoJsonDuplicatedElementNotice(GtfsGeoJsonFeature.FILENAME, exception.getKey()));
+              new GeoJsonDuplicatedElementNotice(GtfsGeoJsonFeature.FILENAME, exception.getKey(), exception.getMessage()));
     } catch (UnknownJsonKeyException exception) {
       noticeContainer.addValidationNotice(
-          new GeoJsonUnknownElementNotice(GtfsGeoJsonFeature.FILENAME, exception.getKey()));
+          new GeoJsonUnknownElementNotice(GtfsGeoJsonFeature.FILENAME, exception.getKey(), exception.getMessage()));
     }
     if (hasUnparsableFeature) {
       throw new UnparsableGeoJsonFeatureException("Unparsable GeoJSON feature");

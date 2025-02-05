@@ -37,11 +37,11 @@ public class MapJsonTypeAdapter extends TypeAdapter<Map<String, Object>> {
       String key = in.nextName();
 
       if (map.containsKey(key)) {
-        throw new DuplicateJsonKeyException(key);
+        throw new DuplicateJsonKeyException(key, "Duplicated Key: " + key);
       }
 
       if (!ALLOWED_KEYS.contains(key)) {
-        throw new UnknownJsonKeyException(key);
+        throw new UnknownJsonKeyException(key, "Unknown geo json Key: " + key);
       }
 
       Object value = parseJsonValue(in);

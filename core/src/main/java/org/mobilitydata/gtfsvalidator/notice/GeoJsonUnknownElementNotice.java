@@ -18,9 +18,14 @@ public class GeoJsonUnknownElementNotice extends ValidationNotice {
    * The unknown element in the GeoJSON file.
    */
   private final String unknownElement;
+  /**
+   * The unknown element exception message.
+   */
+  private final String message;
 
-  public GeoJsonUnknownElementNotice(String filename, String unknownElement) {
+  public GeoJsonUnknownElementNotice(String filename, String unknownElement, String message) {
     this.filename = filename;
     this.unknownElement = unknownElement;
+    this.message = message;
   }
 }

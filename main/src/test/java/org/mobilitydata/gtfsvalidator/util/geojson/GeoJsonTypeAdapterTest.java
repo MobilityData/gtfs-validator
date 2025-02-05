@@ -3,9 +3,16 @@ package org.mobilitydata.gtfsvalidator.util.geojson;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+
+import java.io.StringReader;
 import java.util.Map;
+
+import com.google.gson.stream.JsonReader;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 public class GeoJsonTypeAdapterTest {
 
@@ -24,10 +31,20 @@ public class GeoJsonTypeAdapterTest {
    * Test that the custom JSON type adapter can handle a throws DuplicateJsonKeyException when: - A
    * JSON object has two keys with the same name at the same level.
    */
-  @Test(expected = DuplicateJsonKeyException.class)
+  @Test
   public void testDuplicateKeyExceptionSameLevel() {
-    final var json = "{ \"name\": 1, \"name\": 2 }";
-    gson.fromJson(json, new TypeToken<Map<String, Object>>() {}.getType());
+    final var json = "{ \"type\": 1, \"type\": 2 }";
+    JsonReader reader = new JsonReader(new StringReader(json));
+    MapJsonTypeAdapter adapter = new MapJsonTypeAdapter();
+
+    Exception exception = assertThrows(DuplicateJsonKeyException.class, () -> {
+      adapter.read(reader);
+    });
+
+    String expectedMessage = "Duplicated Key: type";
+    String actualMessage = exception.getMessage();
+
+    assertTrue(actualMessage.trim().equals(expectedMessage.trim()));
   }
 
   /**
@@ -35,19 +52,18 @@ public class GeoJsonTypeAdapterTest {
    * duplicate keys.
    */
   @Test
-  public void testDuplicateKeyExceptionDiffLevel() {
-    String json = "{\"name\": \"Alice\", \"age\": 25, \"level2\": { \"name\": \"Bob\"  }  }";
-    gson.fromJson(json, new TypeToken<Map<String, Object>>() {}.getType());
-  }
+  public void testDuplicateKeyExceptionNestedLevel() {
+    String json = "{\"type\": \"Alice\", \"features\": { \"properties\": \"Bob\", \"properties\": \"abc\" }}";
+    JsonReader reader = new JsonReader(new StringReader(json));
+    MapJsonTypeAdapter adapter = new MapJsonTypeAdapter();
 
-  /**
-   * Test that the custom JSON type adapter can handle a throws DuplicateJsonKeyException when: - A
-   * JSON object has two keys with the same name at level different from the root.
-   */
-  @Test(expected = DuplicateJsonKeyException.class)
-  public void testDuplicateKeyExceptionInnerLevel() {
-    String json =
-        "{\"name\": \"Alice\", \"age\": 25, \"level2\": { \"name1\": \"Bob\", \"name1\": \"Bob\"  }  }";
-    gson.fromJson(json, new TypeToken<Map<String, Object>>() {}.getType());
+    Exception exception = assertThrows(DuplicateJsonKeyException.class, () -> {
+      adapter.read(reader);
+    });
+
+    String expectedMessage = "Duplicated Key: properties";
+    String actualMessage = exception.getMessage();
+
+    assertTrue(actualMessage.trim().equals(expectedMessage.trim()));
   }
 }
