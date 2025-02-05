@@ -54,6 +54,9 @@ public class ExpiredCalendarValidator extends FileValidator {
         CalendarUtil.servicePeriodToServiceDatesMap(
             CalendarUtil.buildServicePeriodMap(calendarTable, calendarDateTable));
     boolean isCalendarTableEmpty = calendarTable.getEntities().isEmpty();
+    List<ExpiredCalendarNotice> noticesToReturn = new ArrayList<>();
+    // Notices to return only if there are no calendars in `calendar.txt` and
+    // all calendar dates are in the past.
     List<ExpiredCalendarNotice> expiredCalendarDatesNotices = new ArrayList<>();
     boolean allCalendarAreExpired = true;
     for (var serviceId : servicePeriodMap.keySet()) {
@@ -63,7 +66,7 @@ public class ExpiredCalendarValidator extends FileValidator {
       }
       if (serviceDates.last().isBefore(dateForValidation.getDate())) {
         if (calendarTable.byServiceId(serviceId).isPresent()) {
-          noticeContainer.addValidationNotice(
+          noticesToReturn.add(
               new ExpiredCalendarNotice(
                   calendarTable.byServiceId(serviceId).get().csvRowNumber(), serviceId));
         } else if (isCalendarTableEmpty && allCalendarAreExpired) {
@@ -82,8 +85,11 @@ public class ExpiredCalendarValidator extends FileValidator {
       }
     }
     if (isCalendarTableEmpty && allCalendarAreExpired) {
-      noticeContainer.addValidationNotices(expiredCalendarDatesNotices);
+      noticesToReturn.addAll(expiredCalendarDatesNotices);
     }
+
+    noticesToReturn.sort(Comparator.comparing(ExpiredCalendarNotice::getCsvRowNumber));
+    noticeContainer.addValidationNotices(noticesToReturn);
   }
 
   /**
@@ -110,6 +116,10 @@ public class ExpiredCalendarValidator extends FileValidator {
     ExpiredCalendarNotice(int csvRowNumber, String serviceId) {
       this.csvRowNumber = csvRowNumber;
       this.serviceId = serviceId;
+    }
+
+    public int getCsvRowNumber() {
+      return csvRowNumber;
     }
   }
 }

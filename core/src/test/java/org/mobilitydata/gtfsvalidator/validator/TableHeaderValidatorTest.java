@@ -19,13 +19,11 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.collect.ImmutableSet;
-import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.DuplicatedColumnNotice;
 import org.mobilitydata.gtfsvalidator.notice.EmptyColumnNameNotice;
-import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedColumnNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredColumnNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.UnknownColumnNotice;
@@ -42,7 +40,6 @@ public class TableHeaderValidatorTest {
             new CsvHeader(new String[] {"stop_id", "stop_name"}),
             ImmutableSet.of("stop_id", "stop_name", "stop_lat", "stop_lon"),
             ImmutableSet.of("stop_id"),
-            Set.of(),
             container);
 
     assertThat(container.getValidationNotices()).isEmpty();
@@ -58,7 +55,6 @@ public class TableHeaderValidatorTest {
             new CsvHeader(new String[] {"stop_id", "stop_name", "stop_extra"}),
             ImmutableSet.of("stop_id", "stop_name"),
             ImmutableSet.of("stop_id"),
-            Set.of(),
             container);
 
     assertThat(container.getValidationNotices())
@@ -75,27 +71,10 @@ public class TableHeaderValidatorTest {
             new CsvHeader(new String[] {"stop_name"}),
             ImmutableSet.of("stop_id", "stop_name"),
             ImmutableSet.of("stop_id"),
-            Set.of(),
             container);
 
     assertThat(container.getValidationNotices())
         .containsExactly(new MissingRequiredColumnNotice("stops.txt", "stop_id"));
-  }
-
-  @Test
-  public void missingRecommendedColumnShouldGenerateNotice() {
-    NoticeContainer container = new NoticeContainer();
-    new DefaultTableHeaderValidator()
-        .validate(
-            "stops.txt",
-            new CsvHeader(new String[] {"stop_name"}),
-            Set.of("stop_id", "stop_name"),
-            Set.of(),
-            Set.of("stop_id"),
-            container);
-
-    assertThat(container.getValidationNotices())
-        .containsExactly(new MissingRecommendedColumnNotice("stops.txt", "stop_id"));
   }
 
   @Test
@@ -107,7 +86,6 @@ public class TableHeaderValidatorTest {
             new CsvHeader(new String[] {"stop_id", "stop_name", "stop_id"}),
             ImmutableSet.of("stop_id", "stop_name"),
             ImmutableSet.of("stop_id"),
-            Set.of(),
             container);
 
     assertThat(container.getValidationNotices())
@@ -124,7 +102,6 @@ public class TableHeaderValidatorTest {
             CsvHeader.EMPTY,
             ImmutableSet.of("stop_id", "stop_name"),
             ImmutableSet.of("stop_id"),
-            Set.of(),
             container);
 
     assertThat(container.getValidationNotices()).isEmpty();
@@ -140,7 +117,6 @@ public class TableHeaderValidatorTest {
             new CsvHeader(new String[] {"stop_id", null, "stop_name", ""}),
             ImmutableSet.of("stop_id", "stop_name"),
             ImmutableSet.of("stop_id"),
-            Set.of(),
             container);
 
     assertThat(container.getValidationNotices())

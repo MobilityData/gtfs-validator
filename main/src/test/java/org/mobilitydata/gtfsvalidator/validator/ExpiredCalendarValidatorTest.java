@@ -317,6 +317,12 @@ public class ExpiredCalendarValidatorTest {
                     .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_ADDED)
                     .build(),
                 new GtfsCalendarDate.Builder()
+                    .setCsvRowNumber(4)
+                    .setServiceId("SERVICE_ID_4")
+                    .setDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(7)))
+                    .setExceptionType(GtfsCalendarDateExceptionType.SERVICE_ADDED)
+                    .build(),
+                new GtfsCalendarDate.Builder()
                     .setCsvRowNumber(1)
                     .setServiceId("SERVICE_ID_1")
                     .setDate(GtfsDate.fromLocalDate(TEST_NOW.minusDays(1)))
@@ -326,9 +332,12 @@ public class ExpiredCalendarValidatorTest {
     new ExpiredCalendarValidator(new DateForValidation(TEST_NOW), calendarTable, calendarDateTable)
         .validate(container);
     assertThat(container.getValidationNotices())
+        // We verify that entries are sorted by row number.
         .containsExactly(
-            new ExpiredCalendarValidator.ExpiredCalendarNotice(3, "SERVICE_ID_3"),
+            new ExpiredCalendarValidator.ExpiredCalendarNotice(1, "SERVICE_ID_1"),
             new ExpiredCalendarValidator.ExpiredCalendarNotice(2, "SERVICE_ID_2"),
-            new ExpiredCalendarValidator.ExpiredCalendarNotice(1, "SERVICE_ID_1"));
+            new ExpiredCalendarValidator.ExpiredCalendarNotice(3, "SERVICE_ID_3"),
+            new ExpiredCalendarValidator.ExpiredCalendarNotice(4, "SERVICE_ID_4"))
+        .inOrder();
   }
 }
