@@ -6,6 +6,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A custom JSON type adapter for parsing JSON objects with duplicate keys. The target class is
@@ -15,6 +16,8 @@ import java.util.Map;
  * a {@link DuplicateJsonKeyException}.
  */
 public class MapJsonTypeAdapter extends TypeAdapter<Map<String, Object>> {
+
+  private static final Set<String> ALLOWED_KEYS = Set.of("type", "features", "coordinates", "id", "properties", "geometry");
 
   @Override
   public void write(JsonWriter out, Map<String, Object> value) throws IOException {
@@ -35,6 +38,10 @@ public class MapJsonTypeAdapter extends TypeAdapter<Map<String, Object>> {
 
       if (map.containsKey(key)) {
         throw new DuplicateJsonKeyException(key);
+      }
+
+      if (!ALLOWED_KEYS.contains(key)) {
+        throw new UnknownJsonKeyException(key);
       }
 
       Object value = parseJsonValue(in);
