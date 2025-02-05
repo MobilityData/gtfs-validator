@@ -76,14 +76,3 @@ public class MapJsonTypeAdapter extends TypeAdapter<Map<String, Object>> {
   }
 }
 
-class DuplicateJsonKeyException extends RuntimeException {
-  private String key;
-
-  public DuplicateJsonKeyException(String key) {
-    this.key = key;
-  }
-
-  public String getKey() {
-    return key;
-  }
-}
