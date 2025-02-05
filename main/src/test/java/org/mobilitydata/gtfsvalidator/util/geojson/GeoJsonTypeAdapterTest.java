@@ -1,18 +1,16 @@
 package org.mobilitydata.gtfsvalidator.util.geojson;
 
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-
+import com.google.gson.stream.JsonReader;
 import java.io.StringReader;
 import java.util.Map;
-
-import com.google.gson.stream.JsonReader;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
 
 public class GeoJsonTypeAdapterTest {
 
@@ -37,9 +35,12 @@ public class GeoJsonTypeAdapterTest {
     JsonReader reader = new JsonReader(new StringReader(json));
     MapJsonTypeAdapter adapter = new MapJsonTypeAdapter();
 
-    Exception exception = assertThrows(DuplicateJsonKeyException.class, () -> {
-      adapter.read(reader);
-    });
+    Exception exception =
+        assertThrows(
+            DuplicateJsonKeyException.class,
+            () -> {
+              adapter.read(reader);
+            });
 
     String expectedMessage = "Duplicated Key: type";
     String actualMessage = exception.getMessage();
@@ -53,13 +54,17 @@ public class GeoJsonTypeAdapterTest {
    */
   @Test
   public void testDuplicateKeyExceptionNestedLevel() {
-    String json = "{\"type\": \"Alice\", \"features\": { \"properties\": \"Bob\", \"properties\": \"abc\" }}";
+    String json =
+        "{\"type\": \"Alice\", \"features\": { \"properties\": \"Bob\", \"properties\": \"abc\" }}";
     JsonReader reader = new JsonReader(new StringReader(json));
     MapJsonTypeAdapter adapter = new MapJsonTypeAdapter();
 
-    Exception exception = assertThrows(DuplicateJsonKeyException.class, () -> {
-      adapter.read(reader);
-    });
+    Exception exception =
+        assertThrows(
+            DuplicateJsonKeyException.class,
+            () -> {
+              adapter.read(reader);
+            });
 
     String expectedMessage = "Duplicated Key: properties";
     String actualMessage = exception.getMessage();

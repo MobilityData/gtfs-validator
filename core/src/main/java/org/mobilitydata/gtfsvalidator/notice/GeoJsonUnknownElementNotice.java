@@ -4,23 +4,16 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 
-/**
- * Unknown elements in locations.geojson file.
- */
+/** Unknown elements in locations.geojson file. */
 @GtfsValidationNotice(severity = ERROR)
 public class GeoJsonUnknownElementNotice extends ValidationNotice {
-  /**
-   * The name of the file where the unknown element was found.
-   */
+  /** The name of the file where the unknown element was found. */
   private final String filename;
 
-  /**
-   * The unknown element in the GeoJSON file.
-   */
+  /** The unknown element in the GeoJSON file. */
   private final String unknownElement;
-  /**
-   * The unknown element exception message.
-   */
+
+  /** The unknown element exception message. */
   private final String message;
 
   public GeoJsonUnknownElementNotice(String filename, String unknownElement, String message) {

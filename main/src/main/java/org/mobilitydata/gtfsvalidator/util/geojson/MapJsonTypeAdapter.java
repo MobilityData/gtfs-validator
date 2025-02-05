@@ -17,7 +17,8 @@ import java.util.Set;
  */
 public class MapJsonTypeAdapter extends TypeAdapter<Map<String, Object>> {
 
-  private static final Set<String> ALLOWED_KEYS = Set.of("type", "features", "coordinates", "id", "properties", "geometry");
+  private static final Set<String> ALLOWED_KEYS =
+      Set.of("type", "features", "coordinates", "id", "properties", "geometry");
 
   @Override
   public void write(JsonWriter out, Map<String, Object> value) throws IOException {
@@ -82,4 +83,3 @@ public class MapJsonTypeAdapter extends TypeAdapter<Map<String, Object>> {
     return jsonArray;
   }
 }
-
