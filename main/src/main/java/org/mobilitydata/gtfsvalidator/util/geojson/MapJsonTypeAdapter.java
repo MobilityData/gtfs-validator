@@ -17,9 +17,6 @@ import java.util.Set;
  */
 public class MapJsonTypeAdapter extends TypeAdapter<Map<String, Object>> {
 
-  private static final Set<String> ALLOWED_KEYS =
-      Set.of("type", "features", "coordinates", "id", "properties", "geometry");
-
   @Override
   public void write(JsonWriter out, Map<String, Object> value) throws IOException {
     new Gson().toJson(value, Map.class, out);
@@ -39,10 +36,6 @@ public class MapJsonTypeAdapter extends TypeAdapter<Map<String, Object>> {
 
       if (map.containsKey(key)) {
         throw new DuplicateJsonKeyException(key, "Duplicated Key: " + key);
-      }
-
-      if (!ALLOWED_KEYS.contains(key)) {
-        throw new UnknownJsonKeyException(key, "Unknown geo json Key: " + key);
       }
 
       Object value = parseJsonValue(in);
