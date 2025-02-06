@@ -116,8 +116,8 @@ public class TimepointTimeValidator extends FileValidator {
   /**
    * `stop_times.timepoint` value is missing for a record.
    *
-   * <p>Even though the column `timepoint` is optional in `stop_times.txt` according to the
-   * specification, `stop_times.timepoint` should not be empty when provided.
+   * <p>When at least one of `stop_times.arrival_time` or `stop_times.departure_time` are provided,
+   * `stop_times.timepoint` should be defined
    */
   @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsStopTimeSchema.class))
   static class MissingTimepointValueNotice extends ValidationNotice {
