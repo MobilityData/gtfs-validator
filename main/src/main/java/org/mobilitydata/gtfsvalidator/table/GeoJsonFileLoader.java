@@ -85,7 +85,7 @@ public class GeoJsonFileLoader extends TableLoader {
         String key = entry.getKey();
         if (!"type".equals(key) && !"features".equals(key)) {
           noticeContainer.addValidationNotice(
-                  new GeoJsonUnknownElementNotice(GtfsGeoJsonFeature.FILENAME, key));
+              new GeoJsonUnknownElementNotice(GtfsGeoJsonFeature.FILENAME, key));
         }
       }
       if (!jsonObject.has("type")) {
@@ -131,14 +131,14 @@ public class GeoJsonFileLoader extends TableLoader {
       for (Map.Entry<String, JsonElement> entry : featureObject.entrySet()) {
         String key = entry.getKey();
         if (!GtfsGeoJsonFeature.FEATURE_ID_FIELD_NAME.equals(key)
-                && !GtfsGeoJsonFeature.FEATURE_TYPE_FIELD_NAME.equals(key)
-                && !GtfsGeoJsonFeature.FEATURE_PROPERTIES_FIELD_NAME.equals(key)
-                && !GtfsGeoJsonFeature.GEOMETRY_FIELD_NAME.equals(key)) {
+            && !GtfsGeoJsonFeature.FEATURE_TYPE_FIELD_NAME.equals(key)
+            && !GtfsGeoJsonFeature.FEATURE_PROPERTIES_FIELD_NAME.equals(key)
+            && !GtfsGeoJsonFeature.GEOMETRY_FIELD_NAME.equals(key)) {
           noticeContainer.addValidationNotice(
-                  new GeoJsonUnknownElementNotice(GtfsGeoJsonFeature.FILENAME, key));
+              new GeoJsonUnknownElementNotice(GtfsGeoJsonFeature.FILENAME, key));
         }
       }
-      
+
       // Handle feature id
       if (!featureObject.has(GtfsGeoJsonFeature.FEATURE_ID_FIELD_NAME)) {
         missingRequiredFields.add(
@@ -192,9 +192,9 @@ public class GeoJsonFileLoader extends TableLoader {
         for (Map.Entry<String, JsonElement> entry : geometry.entrySet()) {
           String key = entry.getKey();
           if (!GtfsGeoJsonFeature.GEOMETRY_TYPE_FIELD_NAME.equals(key)
-                  && !GtfsGeoJsonFeature.GEOMETRY_COORDINATES_FIELD_NAME.equals(key)) {
+              && !GtfsGeoJsonFeature.GEOMETRY_COORDINATES_FIELD_NAME.equals(key)) {
             noticeContainer.addValidationNotice(
-                    new GeoJsonUnknownElementNotice(GtfsGeoJsonFeature.FILENAME, key));
+                new GeoJsonUnknownElementNotice(GtfsGeoJsonFeature.FILENAME, key));
           }
         }
         // Handle geometry type and coordinates
