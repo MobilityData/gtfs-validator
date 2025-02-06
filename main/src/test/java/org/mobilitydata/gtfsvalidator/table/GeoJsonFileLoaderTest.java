@@ -12,9 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.notice.DuplicateGeoJsonKeyNotice;
-import org.mobilitydata.gtfsvalidator.notice.InvalidGeometryNotice;
-import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.*;
 
 /** Runs GeoJsonFileLoader on test json data. */
 @RunWith(JUnit4.class)
@@ -23,6 +21,7 @@ public class GeoJsonFileLoaderTest {
   static String validGeoJsonData;
   static String invalidPolygonGeoJsonData;
   static String duplicateGeoJsonKeyData;
+  static String invalidPointsGeoJsonData;
   NoticeContainer noticeContainer;
 
   @BeforeClass
@@ -138,10 +137,54 @@ public class GeoJsonFileLoaderTest {
             "  ]",
             "}");
 
+    invalidPointsGeoJsonData =
+        String.join(
+            "\n",
+            "{",
+            "  'type': 'FeatureCollection',",
+            "  'features': [",
+            "    {",
+            "      'id': 'id1',",
+            "      'type': 'Feature',",
+            "      'geometry': {",
+            "        'type': 'Polygon',",
+            "        'coordinates': [",
+            "          [",
+            "            [0.0, 0.0],",
+            "            [101.0, 0.0],",
+            "            [101.0, 1.0],",
+            "            [100.0, 1.0],",
+            "            [100.0, 0.0]",
+            "          ]",
+            "        ]",
+            "      },",
+            "      'properties': {}",
+            "    },",
+            "    {",
+            "      'id': 'id2',",
+            "      'type': 'Feature',",
+            "      'geometry': {",
+            "        'type': 'Polygon',",
+            "        'coordinates': [",
+            "          [",
+            "            [200.0, 0.0],",
+            "            [201.0, 0.0],",
+            "            [201.0, 2.0],",
+            "            [200.0, -89.75],",
+            "            [200.0, 0.0]",
+            "          ]",
+            "        ]",
+            "      },",
+            "      'properties': {}",
+            "    }",
+            "  ]",
+            "}");
+
     // Replace single quotes with double quotes for JSON compliance
     validGeoJsonData = validGeoJsonData.replace("'", "\"");
     invalidPolygonGeoJsonData = invalidPolygonGeoJsonData.replace("'", "\"");
     duplicateGeoJsonKeyData = duplicateGeoJsonKeyData.replace("'", "\"");
+    invalidPointsGeoJsonData = invalidPointsGeoJsonData.replace("'", "\"");
   }
 
   @Before
@@ -198,6 +241,26 @@ public class GeoJsonFileLoaderTest {
             .collect(Collectors.toList());
 
     assertThat(notices.size()).isGreaterThan(0);
+  }
+
+  @Test
+  public void testPointNearOriginAndPole() {
+    // Testing for invalid points near origin and pole
+    createLoader(invalidPointsGeoJsonData);
+
+    // Check if the correct validation notice is generated for the invalid points
+    List<PointNearOriginNotice> originNotices =
+        noticeContainer.getValidationNotices().stream()
+            .filter(PointNearOriginNotice.class::isInstance)
+            .map(PointNearOriginNotice.class::cast)
+            .collect(Collectors.toList());
+    List<PointNearPoleNotice> poleNotices =
+        noticeContainer.getValidationNotices().stream()
+            .filter(PointNearPoleNotice.class::isInstance)
+            .map(PointNearPoleNotice.class::cast)
+            .collect(Collectors.toList());
+    assertThat(originNotices.size()).isGreaterThan(0);
+    assertThat(poleNotices.size()).isGreaterThan(0);
   }
 
   private GtfsEntityContainer createLoader(String jsonData) {
