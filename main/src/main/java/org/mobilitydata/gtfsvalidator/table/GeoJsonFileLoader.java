@@ -104,7 +104,7 @@ public class GeoJsonFileLoader extends TableLoader {
       }
     } catch (DuplicateJsonKeyException exception) {
       noticeContainer.addValidationNotice(
-              new GeoJsonDuplicatedElementNotice(GtfsGeoJsonFeature.FILENAME, exception.getKey()));
+          new GeoJsonDuplicatedElementNotice(GtfsGeoJsonFeature.FILENAME, exception.getKey()));
     }
     if (hasUnparsableFeature) {
       throw new UnparsableGeoJsonFeatureException("Unparsable GeoJSON feature");
