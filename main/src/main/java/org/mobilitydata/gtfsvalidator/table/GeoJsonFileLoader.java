@@ -181,6 +181,8 @@ public class GeoJsonFileLoader extends TableLoader {
 
           String type = geometry.get(GtfsGeoJsonFeature.GEOMETRY_TYPE_FIELD_NAME).getAsString();
 
+          validateCoordinates(noticeContainer, featureIndex, geometry, gtfsGeoJsonFeature);
+
           if (type.equals(GeometryType.POLYGON.getType())) {
             gtfsGeoJsonFeature.setGeometryType(GeometryType.POLYGON);
             Polygon polygon =
@@ -227,6 +229,40 @@ public class GeoJsonFileLoader extends TableLoader {
     addMissingRequiredFieldsNotices(
         missingRequiredFields, noticeContainer, featureId, featureIndex);
     return null;
+  }
+
+  private static void validateCoordinates(
+      NoticeContainer noticeContainer,
+      int featureIndex,
+      JsonObject geometry,
+      GtfsGeoJsonFeature gtfsGeoJsonFeature) {
+    // Validate that the coordinates are not near the origin or the poles
+    JsonArray coordinates =
+        geometry.getAsJsonArray(GtfsGeoJsonFeature.GEOMETRY_COORDINATES_FIELD_NAME);
+    for (int i = 0; i < coordinates.size(); i++) {
+      for (int j = 0; j < coordinates.get(i).getAsJsonArray().size(); j++) {
+        JsonArray point = coordinates.get(i).getAsJsonArray().get(j).getAsJsonArray();
+        double lon = point.get(0).getAsDouble();
+        double lat = point.get(1).getAsDouble();
+        if (Math.abs(lon) <= 1 && Math.abs(lat) <= 1) {
+          noticeContainer.addValidationNotice(
+              new PointNearOriginNotice(
+                  GtfsGeoJsonFeature.FILENAME,
+                  gtfsGeoJsonFeature.featureId(),
+                  lat,
+                  lon,
+                  featureIndex));
+        } else if (Math.abs(lat) >= 89) {
+          noticeContainer.addValidationNotice(
+              new PointNearPoleNotice(
+                  GtfsGeoJsonFeature.FILENAME,
+                  gtfsGeoJsonFeature.featureId(),
+                  lat,
+                  lon,
+                  featureIndex));
+        }
+      }
+    }
   }
 
   private static void addMissingRequiredFieldsNotices(
