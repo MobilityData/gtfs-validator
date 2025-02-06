@@ -6,7 +6,6 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * A custom JSON type adapter for parsing JSON objects with duplicate keys. The target class is

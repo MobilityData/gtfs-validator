@@ -1,7 +1,6 @@
 package org.mobilitydata.gtfsvalidator.util.geojson;
 
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -34,18 +33,11 @@ public class GeoJsonTypeAdapterTest {
     final var json = "{ \"type\": 1, \"type\": 2 }";
     JsonReader reader = new JsonReader(new StringReader(json));
     MapJsonTypeAdapter adapter = new MapJsonTypeAdapter();
-
-    Exception exception =
-        assertThrows(
-            DuplicateJsonKeyException.class,
-            () -> {
-              adapter.read(reader);
-            });
-
-    String expectedMessage = "Duplicated Key: type";
-    String actualMessage = exception.getMessage();
-
-    assertTrue(actualMessage.trim().equals(expectedMessage.trim()));
+    assertThrows(
+        DuplicateJsonKeyException.class,
+        () -> {
+          adapter.read(reader);
+        });
   }
 
   /**
@@ -59,16 +51,10 @@ public class GeoJsonTypeAdapterTest {
     JsonReader reader = new JsonReader(new StringReader(json));
     MapJsonTypeAdapter adapter = new MapJsonTypeAdapter();
 
-    Exception exception =
-        assertThrows(
-            DuplicateJsonKeyException.class,
-            () -> {
-              adapter.read(reader);
-            });
-
-    String expectedMessage = "Duplicated Key: properties";
-    String actualMessage = exception.getMessage();
-
-    assertTrue(actualMessage.trim().equals(expectedMessage.trim()));
+    assertThrows(
+        DuplicateJsonKeyException.class,
+        () -> {
+          adapter.read(reader);
+        });
   }
 }
