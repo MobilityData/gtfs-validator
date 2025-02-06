@@ -40,7 +40,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
  *
  * <ul>
  *   <li>{@link WrongParentLocationTypeNotice}.
- *   <li>{@link UnusedParentStationNotice}.
+ *   <li>{@link UnusedStationNotice}.
  * </ul>
  */
 @GtfsValidator
@@ -114,7 +114,7 @@ public class ParentStationValidator extends FileValidator {
       }
       GtfsStop stationStop = optionalStationStop.get();
       noticeContainer.addValidationNotice(
-          new UnusedParentStationNotice(
+          new UnusedStationNotice(
               stationStop.csvRowNumber(), stationStop.stopId(), stationStop.stopName()));
     }
   }
@@ -190,12 +190,12 @@ public class ParentStationValidator extends FileValidator {
   }
 
   /**
-   * Unused parent station.
+   * Unused station.
    *
    * <p>A stop has `location_type` STATION (1) but does not appear in any stop's `parent_station`.
    */
   @GtfsValidationNotice(severity = INFO, files = @FileRefs({GtfsStopSchema.class}))
-  static class UnusedParentStationNotice extends ValidationNotice {
+  static class UnusedStationNotice extends ValidationNotice {
     /** The row number of the faulty record. */
     private final int csvRowNumber;
 
@@ -205,7 +205,7 @@ public class ParentStationValidator extends FileValidator {
     /** The name of the faulty stop. */
     private final String stopName;
 
-    UnusedParentStationNotice(int csvRowNumber, String stopId, String stopName) {
+    UnusedStationNotice(int csvRowNumber, String stopId, String stopName) {
       this.csvRowNumber = csvRowNumber;
       this.stopId = stopId;
       this.stopName = stopName;
