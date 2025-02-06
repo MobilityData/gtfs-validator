@@ -56,11 +56,12 @@ public abstract class GtfsInput implements Closeable {
       return new GtfsUnarchivedInput(path);
     }
     String fileName = path.getFileName().toString().replace(".zip", "");
-    ZipFile zipFile = path.getFileSystem().equals(FileSystems.getDefault())
-        // Read from a local ZIP file.
-        ? new ZipFile(path.toFile())
-        // Load a remote ZIP file to memory.
-        : new ZipFile(new SeekableInMemoryByteChannel(Files.readAllBytes(path)));
+    ZipFile zipFile =
+        path.getFileSystem().equals(FileSystems.getDefault())
+            // Read from a local ZIP file.
+            ? new ZipFile(path.toFile())
+            // Load a remote ZIP file to memory.
+            : new ZipFile(new SeekableInMemoryByteChannel(Files.readAllBytes(path)));
 
     if (hasSubfolderWithGtfsFile(path)) {
       noticeContainer.addValidationNotice(
