@@ -28,7 +28,7 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
-import org.mobilitydata.gtfsvalidator.validator.ParentStationValidator.UnusedParentStationNotice;
+import org.mobilitydata.gtfsvalidator.validator.ParentStationValidator.UnusedStationNotice;
 import org.mobilitydata.gtfsvalidator.validator.ParentStationValidator.WrongParentLocationTypeNotice;
 
 @RunWith(JUnit4.class)
@@ -94,7 +94,7 @@ public class ParentStationValidatorTest {
   public void entranceParent() {
     assertThat(validateChildAndParent(GtfsLocationType.ENTRANCE, GtfsLocationType.STATION))
         // No issue with the types, but the station has no stop (just an entrance).
-        .containsExactly(new UnusedParentStationNotice(2, "parent", "Parent location"));
+        .containsExactly(new UnusedStationNotice(2, "parent", "Parent location"));
     assertThat(validateChildAndParent(GtfsLocationType.ENTRANCE, GtfsLocationType.STOP))
         .containsExactly(
             new WrongParentLocationTypeNotice(
@@ -113,7 +113,7 @@ public class ParentStationValidatorTest {
   public void genericNodeParent() {
     assertThat(validateChildAndParent(GtfsLocationType.GENERIC_NODE, GtfsLocationType.STATION))
         // No issue with the types, but the station has no stop.
-        .containsExactly(new UnusedParentStationNotice(2, "parent", "Parent location"));
+        .containsExactly(new UnusedStationNotice(2, "parent", "Parent location"));
     assertThat(validateChildAndParent(GtfsLocationType.GENERIC_NODE, GtfsLocationType.STOP))
         .containsExactly(
             new WrongParentLocationTypeNotice(
@@ -145,7 +145,7 @@ public class ParentStationValidatorTest {
                     "Parent location",
                     GtfsLocationType.STATION.getNumber(),
                     GtfsLocationType.STOP.getNumber()),
-                new UnusedParentStationNotice(2, "parent", "Parent location")));
+                new UnusedStationNotice(2, "parent", "Parent location")));
   }
 
   @Test
@@ -185,7 +185,7 @@ public class ParentStationValidatorTest {
                 noticeContainer))
         .validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new UnusedParentStationNotice(2, "unused_station", "Unused station"));
+        .containsExactly(new UnusedStationNotice(2, "unused_station", "Unused station"));
   }
 
   @Test
