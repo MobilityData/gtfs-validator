@@ -60,25 +60,6 @@ public class TimepointTimeValidatorTest {
     return noticeContainer.getValidationNotices();
   }
 
-  // Using this header will trigger a MissingRecommendedColumnNotice since the timepoint column is
-  // missing.
-  private static CsvHeader createLegacyHeader() {
-    return new CsvHeader(
-        new String[] {
-          TRIP_ID_FIELD_NAME,
-          ARRIVAL_TIME_FIELD_NAME,
-          DEPARTURE_TIME_FIELD_NAME,
-          STOP_ID_FIELD_NAME,
-          STOP_SEQUENCE_FIELD_NAME,
-          STOP_HEADSIGN_FIELD_NAME,
-          PICKUP_TYPE_FIELD_NAME,
-          DROP_OFF_TYPE_FIELD_NAME,
-          CONTINUOUS_PICKUP_FIELD_NAME,
-          CONTINUOUS_DROP_OFF_FIELD_NAME,
-          SHAPE_DIST_TRAVELED_FIELD_NAME
-        });
-  }
-
   private static CsvHeader createHeaderWithTimepointColumn() {
     return new CsvHeader(
         new String[] {

@@ -16,10 +16,6 @@ public class FeatureMetadata {
     return featureName;
   }
 
-  public String getFeatureGroup() {
-    return featureGroup;
-  }
-
   public String getDocUrl() {
     String formattedFeatureName = featureName.toLowerCase().replace(' ', '-');
     String formattedFeatureGroup = featureGroup.toLowerCase().replace(' ', '_');
