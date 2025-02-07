@@ -25,11 +25,6 @@ import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsReportSummary;
 
-/**
- * A processor for {@link }-annotated notices that extracts source-file comments from the Java
- * source and stores them as JSON-serialized {@link } resources in for run-time access later by the
- * validator.
- */
 @AutoService(Processor.class)
 public class SummaryProcessor extends AbstractProcessor {
 
@@ -70,14 +65,12 @@ public class SummaryProcessor extends AbstractProcessor {
         typesIn(roundEnv.getElementsAnnotatedWith(GtfsReportSummary.class));
 
     // If no summary element is found, return false.
-    // TODO: Add test to ensure this is not reached.
     if (gtfsReportSummaryElements.isEmpty()) {
       return false;
     }
 
     // There should be exactly one @GtfsReportSummary annotation; multiple annotations would cause
     // ambiguity.
-    // TODO: Add test to ensure this is not reached.
     if (gtfsReportSummaryElements.size() > 1) {
       return false;
     }
