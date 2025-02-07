@@ -256,6 +256,16 @@ context('GTFS Validator - Confirm error messaging', () => {
       });
     }).as('getDocMarkdown');
 
+    cy.intercept('summary-metadata.json', (req) => {
+      req.reply({
+        statusCode: 404,
+        headers: {
+          'access-control-allow-origin': '*',
+          'Access-Control-Allow-Credentials': 'true',
+        },
+      });
+    }).as('getSummaryMetadata');
+
     cy.visit('/');
 
     // Click "See Documentation" button
