@@ -1,4 +1,4 @@
-package org.mobilitydata.gtfsvalidator.report.model;
+package org.mobilitydata.gtfsvalidator.reportSummary.model;
 
 import java.util.Objects;
 

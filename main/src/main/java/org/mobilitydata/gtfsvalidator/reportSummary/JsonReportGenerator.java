@@ -1,9 +1,9 @@
-package org.mobilitydata.gtfsvalidator.report;
+package org.mobilitydata.gtfsvalidator.reportSummary;
 
 import java.io.IOException;
 import org.mobilitydata.gtfsvalidator.model.ValidationReport;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.report.model.FeedMetadata;
+import org.mobilitydata.gtfsvalidator.reportSummary.model.FeedMetadata;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 import org.mobilitydata.gtfsvalidator.util.VersionInfo;
 
@@ -21,8 +21,9 @@ public class JsonReportGenerator {
     ValidationReport validationReport =
         noticeContainer.createValidationReport(noticeContainer.getResolvedValidationNotices());
 
-    JsonReportSummary summary = new JsonReportSummary(feedMetadata, config, versionInfo, date);
+    JsonReportSummaryGenerator summaryGenerator =
+        new JsonReportSummaryGenerator(feedMetadata, config, versionInfo, date);
 
-    return new JsonReport(summary, validationReport.getNotices());
+    return new JsonReport(summaryGenerator, validationReport.getNotices());
   }
 }

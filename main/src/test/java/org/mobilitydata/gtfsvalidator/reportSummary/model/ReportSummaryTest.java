@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.report.model;
+package org.mobilitydata.gtfsvalidator.reportSummary.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

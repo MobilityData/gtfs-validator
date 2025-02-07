@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.report.model;
+package org.mobilitydata.gtfsvalidator.reportSummary.model;
 
 import java.util.*;
 import java.util.stream.Collectors;

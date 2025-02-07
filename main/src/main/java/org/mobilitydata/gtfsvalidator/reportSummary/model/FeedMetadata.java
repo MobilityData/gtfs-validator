@@ -1,4 +1,4 @@
-package org.mobilitydata.gtfsvalidator.report.model;
+package org.mobilitydata.gtfsvalidator.reportSummary.model;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
@@ -10,39 +10,16 @@ import java.util.*;
 import java.util.function.Function;
 import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
 import org.mobilitydata.gtfsvalidator.performance.MemoryUsageRegister;
+import org.mobilitydata.gtfsvalidator.reportSummary.AgencyMetadata;
+import org.mobilitydata.gtfsvalidator.reportSummary.JsonReportCounts;
+import org.mobilitydata.gtfsvalidator.reportSummary.JsonReportFeedInfo;
 import org.mobilitydata.gtfsvalidator.table.*;
 import org.mobilitydata.gtfsvalidator.util.CalendarUtil;
 import org.mobilitydata.gtfsvalidator.util.ServicePeriod;
 
 public class FeedMetadata {
-  /*
-   * Use these strings as keys in the FeedInfo map. Also used to specify the info that will appear
-   * in the json report. Adding elements to feedInfo will not automatically be included in the json
-   * report and should be explicitly handled in the json report code.
-   */
-  public static final String FEED_INFO_PUBLISHER_NAME = "Publisher Name";
-  public static final String FEED_INFO_PUBLISHER_URL = "Publisher URL";
-  public static final String FEED_INFO_FEED_CONTACT_EMAIL = "Feed Email";
-  public static final String FEED_INFO_FEED_LANGUAGE = "Feed Language";
-  public static final String FEED_INFO_FEED_START_DATE = "Feed Start Date";
-  public static final String FEED_INFO_FEED_END_DATE = "Feed End Date";
-  public static final String FEED_INFO_SERVICE_WINDOW = "Service Window";
-  public static final String FEED_INFO_SERVICE_WINDOW_START = "Service Window Start";
-  public static final String FEED_INFO_SERVICE_WINDOW_END = "Service Window End";
 
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-
-  /*
-   * Use these strings as keys in the counts map. Also used to specify the info that will appear in
-   * the json report. Adding elements to feedInfo will not automatically be included in the json
-   * report and should be explicitly handled in the json report code.
-   */
-  public static final String COUNTS_SHAPES = "Shapes";
-  public static final String COUNTS_STOPS = "Stops";
-  public static final String COUNTS_ROUTES = "Routes";
-  public static final String COUNTS_TRIPS = "Trips";
-  public static final String COUNTS_AGENCIES = "Agencies";
-  public static final String COUNTS_BLOCKS = "Blocks";
 
   private Map<String, TableMetadata> tableMetaData;
   public Map<String, Integer> counts = new TreeMap<>();
@@ -126,17 +103,42 @@ public class FeedMetadata {
   }
 
   private void setCounts(GtfsFeedContainer feedContainer) {
-    setCount(COUNTS_SHAPES, feedContainer, GtfsShape.FILENAME, GtfsShape.class, GtfsShape::shapeId);
-    setCount(COUNTS_STOPS, feedContainer, GtfsStop.FILENAME, GtfsStop.class, GtfsStop::stopId);
-    setCount(COUNTS_ROUTES, feedContainer, GtfsRoute.FILENAME, GtfsRoute.class, GtfsRoute::routeId);
-    setCount(COUNTS_TRIPS, feedContainer, GtfsTrip.FILENAME, GtfsTrip.class, GtfsTrip::tripId);
     setCount(
-        COUNTS_AGENCIES,
+        JsonReportCounts.COUNTS_SHAPES,
+        feedContainer,
+        GtfsShape.FILENAME,
+        GtfsShape.class,
+        GtfsShape::shapeId);
+    setCount(
+        JsonReportCounts.COUNTS_STOPS,
+        feedContainer,
+        GtfsStop.FILENAME,
+        GtfsStop.class,
+        GtfsStop::stopId);
+    setCount(
+        JsonReportCounts.COUNTS_ROUTES,
+        feedContainer,
+        GtfsRoute.FILENAME,
+        GtfsRoute.class,
+        GtfsRoute::routeId);
+    setCount(
+        JsonReportCounts.COUNTS_TRIPS,
+        feedContainer,
+        GtfsTrip.FILENAME,
+        GtfsTrip.class,
+        GtfsTrip::tripId);
+    setCount(
+        JsonReportCounts.COUNTS_AGENCIES,
         feedContainer,
         GtfsAgency.FILENAME,
         GtfsAgency.class,
         GtfsAgency::agencyId);
-    setCount(COUNTS_BLOCKS, feedContainer, GtfsTrip.FILENAME, GtfsTrip.class, GtfsTrip::blockId);
+    setCount(
+        JsonReportCounts.COUNTS_BLOCKS,
+        feedContainer,
+        GtfsTrip.FILENAME,
+        GtfsTrip.class,
+        GtfsTrip::blockId);
   }
 
   private <T extends GtfsEntityContainer, E extends GtfsEntity> void setCount(
@@ -412,7 +414,13 @@ public class FeedMetadata {
   private void loadAgencyData(
       GtfsEntityContainer<GtfsAgency, GtfsAgencyTableDescriptor> agencyTable) {
     for (GtfsAgency agency : agencyTable.getEntities()) {
-      agencies.add(AgencyMetadata.from(agency));
+      agencies.add(
+          new AgencyMetadata(
+              agency.agencyName(),
+              agency.agencyUrl(),
+              agency.agencyPhone(),
+              agency.agencyEmail(),
+              agency.agencyTimezone().getId()));
     }
   }
 
@@ -420,21 +428,27 @@ public class FeedMetadata {
       GtfsTableContainer<GtfsFeedInfo, GtfsFeedInfoTableDescriptor> feedTable) {
     var info = feedTable.getEntities().isEmpty() ? null : feedTable.getEntities().get(0);
 
-    feedInfo.put(FEED_INFO_PUBLISHER_NAME, info == null ? "N/A" : info.feedPublisherName());
-    feedInfo.put(FEED_INFO_PUBLISHER_URL, info == null ? "N/A" : info.feedPublisherUrl());
-    feedInfo.put(FEED_INFO_FEED_CONTACT_EMAIL, info == null ? "N/A" : info.feedContactEmail());
     feedInfo.put(
-        FEED_INFO_FEED_LANGUAGE, info == null ? "N/A" : info.feedLang().getDisplayLanguage());
+        JsonReportFeedInfo.FEED_INFO_PUBLISHER_NAME,
+        info == null ? "N/A" : info.feedPublisherName());
+    feedInfo.put(
+        JsonReportFeedInfo.FEED_INFO_PUBLISHER_URL, info == null ? "N/A" : info.feedPublisherUrl());
+    feedInfo.put(
+        JsonReportFeedInfo.FEED_INFO_FEED_CONTACT_EMAIL,
+        info == null ? "N/A" : info.feedContactEmail());
+    feedInfo.put(
+        JsonReportFeedInfo.FEED_INFO_FEED_LANGUAGE,
+        info == null ? "N/A" : info.feedLang().getDisplayLanguage());
     if (feedTable.hasColumn(GtfsFeedInfo.FEED_START_DATE_FIELD_NAME)) {
       if (info != null) {
         LocalDate localDate = info.feedStartDate().getLocalDate();
-        feedInfo.put(FEED_INFO_FEED_START_DATE, checkLocalDate(localDate));
+        feedInfo.put(JsonReportFeedInfo.FEED_INFO_FEED_START_DATE, checkLocalDate(localDate));
       }
     }
     if (feedTable.hasColumn(GtfsFeedInfo.FEED_END_DATE_FIELD_NAME)) {
       if (info != null) {
         LocalDate localDate = info.feedEndDate().getLocalDate();
-        feedInfo.put(FEED_INFO_FEED_END_DATE, checkLocalDate(localDate));
+        feedInfo.put(JsonReportFeedInfo.FEED_INFO_FEED_END_DATE, checkLocalDate(localDate));
       }
     }
   }
@@ -552,27 +566,29 @@ public class FeedMetadata {
     } finally {
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
       if ((earliestStartDate == null) && (latestEndDate == null)) {
-        feedInfo.put(FEED_INFO_SERVICE_WINDOW, "N/A");
+        feedInfo.put(JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW, "N/A");
       } else if (earliestStartDate == null && latestEndDate != null) {
-        feedInfo.put(FEED_INFO_SERVICE_WINDOW, latestEndDate.format(formatter));
+        feedInfo.put(JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW, latestEndDate.format(formatter));
       } else if (latestEndDate == null && earliestStartDate != null) {
         if (earliestStartDate.isAfter(latestEndDate)) {
-          feedInfo.put(FEED_INFO_SERVICE_WINDOW, "N/A");
+          feedInfo.put(JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW, "N/A");
         } else {
-          feedInfo.put(FEED_INFO_SERVICE_WINDOW, earliestStartDate.format(formatter));
+          feedInfo.put(
+              JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW, earliestStartDate.format(formatter));
         }
       } else {
         StringBuilder serviceWindow = new StringBuilder();
         serviceWindow.append(earliestStartDate);
         serviceWindow.append(" to ");
         serviceWindow.append(latestEndDate);
-        feedInfo.put(FEED_INFO_SERVICE_WINDOW, serviceWindow.toString());
+        feedInfo.put(JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW, serviceWindow.toString());
       }
       feedInfo.put(
-          FEED_INFO_SERVICE_WINDOW_START,
+          JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW_START,
           earliestStartDate == null ? "" : earliestStartDate.toString());
       feedInfo.put(
-          FEED_INFO_SERVICE_WINDOW_END, latestEndDate == null ? "" : latestEndDate.toString());
+          JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW_END,
+          latestEndDate == null ? "" : latestEndDate.toString());
     }
   }
 

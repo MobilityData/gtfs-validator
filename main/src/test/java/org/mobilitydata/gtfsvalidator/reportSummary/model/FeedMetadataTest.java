@@ -1,4 +1,4 @@
-package org.mobilitydata.gtfsvalidator.report.model;
+package org.mobilitydata.gtfsvalidator.reportSummary.model;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -18,6 +18,7 @@ import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.reportSummary.JsonReportFeedInfo;
 import org.mobilitydata.gtfsvalidator.table.*;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.validator.*;
@@ -130,7 +131,8 @@ public class FeedMetadataTest {
     // Verify the result
     String expectedServiceWindow = "2024-01-02 to 2024-12-31";
     assertEquals(
-        expectedServiceWindow, feedMetadata.feedInfo.get(FeedMetadata.FEED_INFO_SERVICE_WINDOW));
+        expectedServiceWindow,
+        feedMetadata.feedInfo.get(JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW));
   }
 
   private void validateSpecFeature(

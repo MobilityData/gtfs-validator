@@ -1,4 +1,4 @@
-package org.mobilitydata.gtfsvalidator.report.model;
+package org.mobilitydata.gtfsvalidator.reportSummary.model;
 
 import org.mobilitydata.gtfsvalidator.table.GtfsEntityContainer;
 import org.mobilitydata.gtfsvalidator.table.TableStatus;

@@ -1,8 +1,9 @@
 /** @type {import('./$types').PageLoad} */
 
 export const load = async ({ fetch }) => {
-  let msgHeading, msgBody, rules = null;
+  let msgHeading, msgBody, rules, summaryMetadata = null;
 
+  // Retrieve rules documentation from rules.json
   try {
     const response = await fetch('/rules.json');
 
@@ -23,7 +24,30 @@ export const load = async ({ fetch }) => {
     msgBody = 'There was a problem loading the rules file.';
   }
 
-  return { rules, msgHeading, msgBody };
+  // Retrieve summary documentation from summary-metadata.json
+  try {
+    const response = await fetch('/summary-metadata.json');
+
+    if (response.ok) {
+      summaryMetadata = await response.json();
+      msgHeading = summaryMetadata.heading;
+      msgBody = summaryMetadata.body;
+    } else {
+      throw new Error(`HTTP Error: ${response.status}`);
+    }
+  }
+  catch (error) {
+    let errorMsg = '';
+
+    if (error instanceof Error && error.message) {
+      errorMsg = error.message;
+    }
+
+    msgHeading = errorMsg ?? 'Error';
+    msgBody = 'There was a problem loading the summary metadata file.';
+  }
+
+  return { rules, summaryMetadata, msgHeading, msgBody };
 };
 
 export const prerender = true;

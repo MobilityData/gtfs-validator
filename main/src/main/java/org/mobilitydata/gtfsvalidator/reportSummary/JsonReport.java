@@ -1,4 +1,4 @@
-package org.mobilitydata.gtfsvalidator.report;
+package org.mobilitydata.gtfsvalidator.reportSummary;
 
 import java.util.Set;
 import org.mobilitydata.gtfsvalidator.model.NoticeReport;
@@ -14,8 +14,8 @@ public class JsonReport {
 
   private final Set<NoticeReport> notices;
 
-  public JsonReport(JsonReportSummary summary, Set<NoticeReport> notices) {
-    this.summary = summary;
+  public JsonReport(JsonReportSummaryGenerator generator, Set<NoticeReport> notices) {
+    this.summary = generator.summary;
     this.notices = notices;
   }
 }

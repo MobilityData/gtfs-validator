@@ -1,4 +1,4 @@
-package org.mobilitydata.gtfsvalidator.report.model;
+package org.mobilitydata.gtfsvalidator.reportSummary.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -18,12 +18,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
-import org.mobilitydata.gtfsvalidator.report.JsonReportSummary;
+import org.mobilitydata.gtfsvalidator.reportSummary.AgencyMetadata;
+import org.mobilitydata.gtfsvalidator.reportSummary.JsonReportCounts;
+import org.mobilitydata.gtfsvalidator.reportSummary.JsonReportFeedInfo;
+import org.mobilitydata.gtfsvalidator.reportSummary.JsonReportSummaryGenerator;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 import org.mobilitydata.gtfsvalidator.util.VersionInfo;
 
 @RunWith(JUnit4.class)
-public class JsonReportSummaryTest {
+public class JsonReportSummaryGeneratorTest {
 
   private static VersionInfo versionInfo =
       VersionInfo.create(Optional.of("1.0"), Optional.of("1.1"));
@@ -60,24 +63,24 @@ public class JsonReportSummaryTest {
                     "agency1", "some URL 1", "phone1", "email1", "America/Los_Angeles")));
     feedMetadata.feedInfo =
         Map.of(
-            FeedMetadata.FEED_INFO_PUBLISHER_NAME,
+            JsonReportFeedInfo.FEED_INFO_PUBLISHER_NAME,
             "value1",
-            FeedMetadata.FEED_INFO_PUBLISHER_URL,
+            JsonReportFeedInfo.FEED_INFO_PUBLISHER_URL,
             "value2",
-            FeedMetadata.FEED_INFO_FEED_CONTACT_EMAIL,
+            JsonReportFeedInfo.FEED_INFO_FEED_CONTACT_EMAIL,
             "me@foo.com",
-            FeedMetadata.FEED_INFO_SERVICE_WINDOW_START,
+            JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW_START,
             "2024-01-02",
-            FeedMetadata.FEED_INFO_SERVICE_WINDOW_END,
+            JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW_END,
             "2024-11-06",
             "Illegal Key",
             "Some Value" // Should not be present in the resulting GSON
             );
     feedMetadata.counts =
         Map.of(
-            FeedMetadata.COUNTS_SHAPES,
+            JsonReportCounts.COUNTS_SHAPES,
             1,
-            FeedMetadata.COUNTS_TRIPS,
+            JsonReportCounts.COUNTS_TRIPS,
             2,
             "Illegal Key",
             3 // Should not be present in the resulting GSON
@@ -95,8 +98,8 @@ public class JsonReportSummaryTest {
   @Test
   public void noFeedMetadataWithConfigTest() throws Exception {
 
-    JsonReportSummary reportSummary =
-        new JsonReportSummary(null, generateValidationRunnerConfig(), versionInfo, "now");
+    JsonReportSummaryGenerator summaryGenerator =
+        new JsonReportSummaryGenerator(null, generateValidationRunnerConfig(), versionInfo, "now");
 
     String expected =
         "{\"validatorVersion\":\"1.0\","
@@ -110,15 +113,16 @@ public class JsonReportSummaryTest {
             + "\"countryCode\":\"GB\","
             + "\"dateForValidation\":\"2020-01-02\"}";
 
-    assertEquals(JsonParser.parseString(expected), gson.toJsonTree(reportSummary));
+    assertEquals(JsonParser.parseString(expected), gson.toJsonTree(summaryGenerator.summary));
   }
 
   @Test
   public void withFeedMetadataWithConfigTest() throws Exception {
 
     FeedMetadata feedMetadata = generateFeedMetaData();
-    JsonReportSummary reportSummary =
-        new JsonReportSummary(feedMetadata, generateValidationRunnerConfig(), versionInfo, "now");
+    JsonReportSummaryGenerator summaryGenerator =
+        new JsonReportSummaryGenerator(
+            feedMetadata, generateValidationRunnerConfig(), versionInfo, "now");
 
     String expected =
         "{\"validatorVersion\":\"1.0\","
@@ -140,14 +144,15 @@ public class JsonReportSummaryTest {
             + "\"counts\":{\"Shapes\":1,\"Trips\":2},"
             + "\"gtfsFeatures\":[\"Feature2\"]}";
 
-    assertEquals(JsonParser.parseString(expected), gson.toJsonTree(reportSummary));
+    assertEquals(JsonParser.parseString(expected), gson.toJsonTree(summaryGenerator.summary));
   }
 
   @Test
   public void withFeedMetadataNoConfigTest() throws Exception {
 
     FeedMetadata feedMetadata = generateFeedMetaData();
-    JsonReportSummary reportSummary = new JsonReportSummary(feedMetadata, null, versionInfo, "now");
+    JsonReportSummaryGenerator summaryGenerator =
+        new JsonReportSummaryGenerator(feedMetadata, null, versionInfo, "now");
 
     String expected =
         "{\"validatorVersion\":\"1.0\","
@@ -162,6 +167,6 @@ public class JsonReportSummaryTest {
             + "\"counts\":{\"Shapes\":1,\"Trips\":2},"
             + "\"gtfsFeatures\":[\"Feature2\"]}";
 
-    assertEquals(JsonParser.parseString(expected), gson.toJsonTree(reportSummary));
+    assertEquals(JsonParser.parseString(expected), gson.toJsonTree(summaryGenerator.summary));
   }
 }
