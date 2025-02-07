@@ -30,8 +30,6 @@ export const load = async ({ fetch }) => {
 
     if (response.ok) {
       summaryMetadata = await response.json();
-      msgHeading = summaryMetadata.heading;
-      msgBody = summaryMetadata.body;
     } else {
       summaryMetadata = [];
       throw new Error(`HTTP Error: ${response.status}`);
