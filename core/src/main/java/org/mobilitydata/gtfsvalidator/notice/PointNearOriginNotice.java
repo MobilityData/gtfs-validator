@@ -35,19 +35,22 @@ public class PointNearOriginNotice extends ValidationNotice {
   private final String filename;
 
   /** The row of the faulty row. */
-  private final int csvRowNumber;
+  @Nullable private final Integer csvRowNumber;
+
+  /** The index of the feature in the feature collection. */
+  @Nullable private final Integer featureIndex;
 
   /** The id of the faulty entity. */
   @Nullable private final String entityId;
 
   /** The name of the field that uses latitude value. */
-  private final String latFieldName;
+  @Nullable private final String latFieldName;
 
   /** The latitude of the faulty row. */
   private final double latFieldValue;
 
   /** The name of the field that uses longitude value. */
-  private final String lonFieldName;
+  @Nullable private final String lonFieldName;
 
   /** The longitude of the faulty row */
   private final double lonFieldValue;
@@ -67,6 +70,7 @@ public class PointNearOriginNotice extends ValidationNotice {
     this.latFieldValue = latFieldValue;
     this.lonFieldName = lonFieldName;
     this.lonFieldValue = lonFieldValue;
+    this.featureIndex = null;
   }
 
   public PointNearOriginNotice(
@@ -83,5 +87,22 @@ public class PointNearOriginNotice extends ValidationNotice {
     this.latFieldValue = latFieldValue;
     this.lonFieldName = lonFieldName;
     this.lonFieldValue = lonFieldValue;
+    this.featureIndex = null;
+  }
+
+  public PointNearOriginNotice(
+      String filename,
+      String entityId,
+      double latFieldValue,
+      double lonFieldValue,
+      int featureIndex) {
+    this.filename = filename;
+    this.csvRowNumber = null;
+    this.entityId = entityId;
+    this.latFieldName = null;
+    this.latFieldValue = latFieldValue;
+    this.lonFieldName = null;
+    this.lonFieldValue = lonFieldValue;
+    this.featureIndex = featureIndex;
   }
 }
