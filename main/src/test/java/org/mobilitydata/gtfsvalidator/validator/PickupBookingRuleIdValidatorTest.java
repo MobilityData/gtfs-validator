@@ -30,7 +30,7 @@ public class PickupBookingRuleIdValidatorTest {
             .build();
     assertThat(generateNotices(stopTime))
         .containsExactly(
-            new PickupBookingRuleIdValidator.MissingPickupBookingRuleIdNotice(
+            new PickupBookingRuleIdValidator.MissingPickupDropOffBookingRuleIdNotice(
                 1, GtfsPickupDropOff.MUST_PHONE, null));
   }
 

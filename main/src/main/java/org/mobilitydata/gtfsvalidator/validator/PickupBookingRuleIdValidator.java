@@ -18,10 +18,19 @@ public class PickupBookingRuleIdValidator extends SingleEntityValidator<GtfsStop
         && entity.pickupType() == GtfsPickupDropOff.MUST_PHONE
         && !entity.hasPickupBookingRuleId()) {
       noticeContainer.addValidationNotice(
-          new MissingPickupBookingRuleIdNotice(
+          new MissingPickupDropOffBookingRuleIdNotice(
               entity.csvRowNumber(),
               entity.pickupType(),
               entity.hasDropOffType() ? entity.dropOffType() : null));
+    }
+    if (entity.hasDropOffType()
+        && entity.dropOffType() == GtfsPickupDropOff.MUST_PHONE
+        && !entity.hasDropOffBookingRuleId()) {
+      noticeContainer.addValidationNotice(
+          new MissingPickupDropOffBookingRuleIdNotice(
+              entity.csvRowNumber(),
+              entity.hasPickupType() ? entity.pickupType() : null,
+              entity.dropOffType()));
     }
   }
 
@@ -30,21 +39,24 @@ public class PickupBookingRuleIdValidator extends SingleEntityValidator<GtfsStop
     return header.hasColumn(GtfsStopTime.PICKUP_TYPE_FIELD_NAME);
   }
 
-  /** `pickup_booking_rule_id` is recommended when `pickup_type=2`. */
+  /**
+   * `pickup_booking_rule_id` is recommended when `pickup_type=2` and `drop_off_booking_rule_id` is
+   * recommended when `drop_off_type=2`
+   */
   @GtfsValidationNotice(
       severity = SeverityLevel.WARNING,
       files = @FileRefs(GtfsStopTimeSchema.class))
-  static class MissingPickupBookingRuleIdNotice extends ValidationNotice {
+  static class MissingPickupDropOffBookingRuleIdNotice extends ValidationNotice {
     /** The row number of the faulty record in `stop_times.txt` */
     private final int csvRowNumber;
 
     /** The pickup type of the faulty record. */
-    private final GtfsPickupDropOff pickupType;
+    @Nullable private final GtfsPickupDropOff pickupType;
 
     /** The drop-off type of the faulty record. */
     @Nullable private final GtfsPickupDropOff dropOffType;
 
-    public MissingPickupBookingRuleIdNotice(
+    public MissingPickupDropOffBookingRuleIdNotice(
         int csvRowNumber, GtfsPickupDropOff pickupType, GtfsPickupDropOff dropOffType) {
       this.csvRowNumber = csvRowNumber;
       this.pickupType = pickupType;
