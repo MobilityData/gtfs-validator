@@ -43,7 +43,8 @@ export const load = async ({ fetch }) => {
     }
 
     msgHeading = errorMsg ?? 'Error';
-    msgBody = 'There was a problem loading the summary metadata file.';
+    msgBody += msgBody ? '\n' : '';
+    msgBody += 'There was a problem loading the summary metadata file.';
   }
 
   return { rules, summaryMetadata, msgHeading, msgBody };

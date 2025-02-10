@@ -1,4 +1,4 @@
-package org.mobilitydata.gtfsvalidator.reportSummary;
+package org.mobilitydata.gtfsvalidator.reportsummary;
 
 public class AgencyMetadata {
   public final String name;

@@ -1,4 +1,4 @@
-package org.mobilitydata.gtfsvalidator.reportSummary.model;
+package org.mobilitydata.gtfsvalidator.reportsummary.model;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
@@ -10,9 +10,9 @@ import java.util.*;
 import java.util.function.Function;
 import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
 import org.mobilitydata.gtfsvalidator.performance.MemoryUsageRegister;
-import org.mobilitydata.gtfsvalidator.reportSummary.AgencyMetadata;
-import org.mobilitydata.gtfsvalidator.reportSummary.JsonReportCounts;
-import org.mobilitydata.gtfsvalidator.reportSummary.JsonReportFeedInfo;
+import org.mobilitydata.gtfsvalidator.reportsummary.AgencyMetadata;
+import org.mobilitydata.gtfsvalidator.reportsummary.JsonReportCounts;
+import org.mobilitydata.gtfsvalidator.reportsummary.JsonReportFeedInfo;
 import org.mobilitydata.gtfsvalidator.table.*;
 import org.mobilitydata.gtfsvalidator.util.CalendarUtil;
 import org.mobilitydata.gtfsvalidator.util.ServicePeriod;

@@ -1,4 +1,4 @@
-package org.mobilitydata.gtfsvalidator.reportSummary.model;
+package org.mobilitydata.gtfsvalidator.reportsummary.model;
 
 import static org.junit.Assert.assertEquals;
 

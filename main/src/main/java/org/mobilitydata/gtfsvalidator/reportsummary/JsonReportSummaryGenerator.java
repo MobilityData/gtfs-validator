@@ -1,10 +1,10 @@
-package org.mobilitydata.gtfsvalidator.reportSummary;
+package org.mobilitydata.gtfsvalidator.reportsummary;
 
 import com.google.common.flogger.FluentLogger;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.mobilitydata.gtfsvalidator.reportSummary.model.FeatureMetadata;
-import org.mobilitydata.gtfsvalidator.reportSummary.model.FeedMetadata;
+import org.mobilitydata.gtfsvalidator.reportsummary.model.FeatureMetadata;
+import org.mobilitydata.gtfsvalidator.reportsummary.model.FeedMetadata;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 import org.mobilitydata.gtfsvalidator.util.VersionInfo;
 

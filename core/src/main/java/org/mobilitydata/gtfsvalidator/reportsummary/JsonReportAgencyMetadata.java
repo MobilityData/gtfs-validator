@@ -1,4 +1,4 @@
-package org.mobilitydata.gtfsvalidator.reportSummary;
+package org.mobilitydata.gtfsvalidator.reportsummary;
 
 public class JsonReportAgencyMetadata {
   /** `agency_name` from `agency.txt`. Full name of the transit agency. */

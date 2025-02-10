@@ -1,4 +1,4 @@
-package org.mobilitydata.gtfsvalidator.reportSummary.model;
+package org.mobilitydata.gtfsvalidator.reportsummary.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -18,10 +18,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
-import org.mobilitydata.gtfsvalidator.reportSummary.AgencyMetadata;
-import org.mobilitydata.gtfsvalidator.reportSummary.JsonReportCounts;
-import org.mobilitydata.gtfsvalidator.reportSummary.JsonReportFeedInfo;
-import org.mobilitydata.gtfsvalidator.reportSummary.JsonReportSummaryGenerator;
+import org.mobilitydata.gtfsvalidator.reportsummary.AgencyMetadata;
+import org.mobilitydata.gtfsvalidator.reportsummary.JsonReportCounts;
+import org.mobilitydata.gtfsvalidator.reportsummary.JsonReportFeedInfo;
+import org.mobilitydata.gtfsvalidator.reportsummary.JsonReportSummaryGenerator;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 import org.mobilitydata.gtfsvalidator.util.VersionInfo;
 

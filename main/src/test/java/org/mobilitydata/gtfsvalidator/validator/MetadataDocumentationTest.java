@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.processor.summary.SummaryDocCommentsFactory;
-import org.mobilitydata.gtfsvalidator.reportSummary.JsonReportSummary;
+import org.mobilitydata.gtfsvalidator.reportsummary.JsonReportSummary;
 
 @RunWith(JUnit4.class)
 public class MetadataDocumentationTest {

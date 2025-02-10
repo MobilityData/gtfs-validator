@@ -1,4 +1,4 @@
-package org.mobilitydata.gtfsvalidator.reportSummary;
+package org.mobilitydata.gtfsvalidator.reportsummary;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
