@@ -3,7 +3,7 @@ spotless = "7.0.2"
 shadow-jar = "7.1.2"
 apacheCommonsLang = "3.6"
 autoService = "1.0.1"
-flogger = "0.6.0"
+flogger = "0.6"
 floggerBackend = "0.6"
 
 [plugins]
