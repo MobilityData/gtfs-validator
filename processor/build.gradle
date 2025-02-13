@@ -11,7 +11,7 @@ dependencies {
     compileOnly 'com.google.auto.value:auto-value-annotations:1.7.4'
     implementation 'javax.inject:javax.inject:1'
     implementation 'com.squareup:javapoet:1.13.0'
-    implementation 'org.apache.commons:commons-lang3:3.6'
+    implementation libs.commons.lang3
     implementation 'com.google.guava:guava:31.0.1-jre'
     implementation 'com.google.flogger:flogger:0.6'
     implementation 'com.univocity:univocity-parsers:2.9.0'

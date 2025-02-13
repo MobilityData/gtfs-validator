@@ -1,7 +1,11 @@
 [versions]
 spotless = "7.0.2"
-shadow-jar = '7.1.2'
+shadow-jar = "7.1.2"
+apacheCommonsLang = "3.6"
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
-shadow-jar = { id = 'com.github.johnrengelman.shadow', version.ref = 'shadow-jar' }
+shadow-jar = { id = "com.github.johnrengelman.shadow", version.ref = "shadow-jar" }
+
+[libraries]
+commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "apacheCommonsLang" }
