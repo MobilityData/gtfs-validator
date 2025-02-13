@@ -27,8 +27,8 @@ repositories {
 
 dependencies {
     implementation project(':model')
-    annotationProcessor 'com.google.auto.service:auto-service:1.0.1'
-    compileOnly 'com.google.auto.service:auto-service:1.0.1'
+    annotationProcessor libs.auto.service
+    compileOnly libs.auto.service
     implementation libs.commons.lang3
     implementation 'com.google.guava:guava:31.0.1-jre'
     implementation 'com.google.code.gson:gson:2.8.6'
