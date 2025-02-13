@@ -25,8 +25,8 @@ mainClassName = 'org.mobilitydata.gtfsvalidator.app.gui.Main'
 dependencies {
     implementation project(':core')
     implementation project(':main')
-    implementation 'com.google.flogger:flogger:0.6'
-    implementation 'com.google.flogger:flogger-system-backend:0.6'
+    implementation libs.flogger
+    implementation libs.flogger.system.backend
     testImplementation group: 'junit', name: 'junit', version: '4.13'
     testImplementation 'com.google.truth:truth:1.0.1'
     testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'

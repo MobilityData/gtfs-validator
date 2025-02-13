@@ -3,6 +3,8 @@ spotless = "7.0.2"
 shadow-jar = "7.1.2"
 apacheCommonsLang = "3.6"
 autoService = "1.0.1"
+flogger = "0.6.0"
+floggerBackend = "0.6"
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
@@ -11,3 +13,5 @@ shadow-jar = { id = "com.github.johnrengelman.shadow", version.ref = "shadow-jar
 [libraries]
 commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "apacheCommonsLang" }
 auto-service = { module = "com.google.auto.service:auto-service", version.ref = "autoService" }
+flogger = { module = "com.google.flogger:flogger", version.ref = "flogger" }
+flogger-system-backend = { module = "com.google.flogger:flogger-system-backend", version.ref = "floggerBackend" }

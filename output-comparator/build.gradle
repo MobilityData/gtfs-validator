@@ -12,8 +12,8 @@ dependencies {
     annotationProcessor 'com.google.auto.value:auto-value:1.7.4'
     compileOnly 'com.google.auto.value:auto-value-annotations:1.7.4'
     implementation 'com.google.guava:guava:31.0.1-jre'
-    implementation 'com.google.flogger:flogger:0.5.1'
-    implementation 'com.google.flogger:flogger-system-backend:0.5.1'
+    implementation libs.flogger
+    implementation libs.flogger.system.backend
     implementation 'com.beust:jcommander:1.48'
     implementation 'com.google.code.gson:gson:2.8.6'
     testImplementation "com.google.truth:truth:1.0.1"

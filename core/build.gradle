@@ -41,11 +41,11 @@ dependencies {
     implementation 'com.google.guava:guava:31.0.1-jre'
     implementation 'commons-validator:commons-validator:1.6'
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.13'
-    implementation 'com.google.flogger:flogger:0.6'
+    implementation libs.flogger
     implementation 'io.github.classgraph:classgraph:4.8.146'
     implementation 'org.aspectj:aspectjrt:1.9.20'
     implementation 'org.aspectj:aspectjweaver:1.9.20'
-    testImplementation 'com.google.flogger:flogger-system-backend:0.6'
+    testImplementation libs.flogger.system.backend
     testImplementation group: 'junit', name: 'junit', version: '4.13'
     testImplementation "com.google.truth:truth:1.0.1"
     testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'
