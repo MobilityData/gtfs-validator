@@ -41,7 +41,7 @@ dependencies {
     implementation libs.univocity.parsers
     implementation libs.geometry
     implementation libs.thymeleaf
-    implementation 'com.vladsch.flexmark:flexmark-all:0.64.8'
+    implementation libs.flexmark
     implementation libs.classgraph
     implementation libs.location.tech
     testImplementation group: 'junit', name: 'junit', version: '4.13'

@@ -22,6 +22,8 @@ libphonenumber = "8.12.13"
 classgraph = "4.8.146"
 thymeleaf = "3.0.15.RELEASE"
 locationtech = "1.20.0"
+flexmark = "0.64.8"
+commonsIO = "2.8.0"
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
@@ -49,3 +51,5 @@ libphonenumber = { module = "com.googlecode.libphonenumber:libphonenumber", vers
 classgraph = { module = "io.github.classgraph:classgraph", version.ref = "classgraph" }
 location-tech = { module = "org.locationtech.jts:jts-core", version.ref = "locationtech" }
 thymeleaf = { module = "org.thymeleaf:thymeleaf", version.ref = "thymeleaf" }
+flexmark = { module = "com.vladsch.flexmark:flexmark-all", version.ref = "flexmark" }
+commons-io = { module = "commons-io:commons-io", version.ref = "commonsIO" }
