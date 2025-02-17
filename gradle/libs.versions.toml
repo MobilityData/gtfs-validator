@@ -10,6 +10,7 @@ autoValue = "1.7.4"
 guava = "31.0.1-jre"
 univocityParsers = "2.9.0"
 commonsCompress = "1.20"
+mockito = "4.5.1"
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
@@ -25,3 +26,4 @@ auto-value = { module = "com.google.auto.value:auto-value", version.ref = "autoV
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 univocity-parsers = { module = "com.univocity:univocity-parsers", version.ref = "univocityParsers" }
 commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commonsCompress" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
