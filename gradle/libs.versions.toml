@@ -9,6 +9,7 @@ gson = "2.8.6"
 autoValue = "1.7.4"
 guava = "31.0.1-jre"
 univocityParsers = "2.9.0"
+commonsCompress = "1.20"
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
@@ -23,3 +24,4 @@ gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 auto-value = { module = "com.google.auto.value:auto-value", version.ref = "autoValue" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 univocity-parsers = { module = "com.univocity:univocity-parsers", version.ref = "univocityParsers" }
+commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commonsCompress" }

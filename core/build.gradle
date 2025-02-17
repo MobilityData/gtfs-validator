@@ -30,7 +30,7 @@ dependencies {
     annotationProcessor project(':processor:notices')
     annotationProcessor libs.auto.value
     compileOnly libs.auto.value
-    implementation 'org.apache.commons:commons-compress:1.20'
+    implementation libs.commons.compress
     implementation libs.commons.lang3
     implementation 'javax.inject:javax.inject:1'
     implementation 'org.apache.httpcomponents:httpclient:4.5.2'
