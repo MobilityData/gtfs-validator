@@ -24,6 +24,7 @@ thymeleaf = "3.0.15.RELEASE"
 locationtech = "1.20.0"
 flexmark = "0.64.8"
 commonsIO = "2.8.0"
+commonsValidator = "1.6"
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
@@ -53,3 +54,4 @@ location-tech = { module = "org.locationtech.jts:jts-core", version.ref = "locat
 thymeleaf = { module = "org.thymeleaf:thymeleaf", version.ref = "thymeleaf" }
 flexmark = { module = "com.vladsch.flexmark:flexmark-all", version.ref = "flexmark" }
 commons-io = { module = "commons-io:commons-io", version.ref = "commonsIO" }
+commons-validator = { module = "commons-validator:commons-validator", version.ref = "commonsValidator" }

@@ -39,7 +39,7 @@ dependencies {
     implementation libs.gson
     implementation libs.geometry
     implementation libs.guava
-    implementation 'commons-validator:commons-validator:1.6'
+    implementation libs.commons.validator
     implementation libs.libphonenumber
     implementation libs.flogger
     implementation libs.classgraph
