@@ -50,7 +50,7 @@ mainClassName = 'org.mobilitydata.gtfsvalidator.cli.Main'
 dependencies {
     implementation project(':core')
     implementation project(':main')
-    implementation 'com.beust:jcommander:1.48'
+    implementation libs.jcommander
     implementation libs.gson
     implementation libs.flogger
     implementation libs.flogger.system.backend

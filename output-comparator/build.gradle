@@ -14,7 +14,7 @@ dependencies {
     implementation libs.guava
     implementation libs.flogger
     implementation libs.flogger.system.backend
-    implementation 'com.beust:jcommander:1.48'
+    implementation libs.jcommander
     implementation libs.gson
     testImplementation libs.truth
     testImplementation group: 'junit', name: 'junit', version: '4.9'
