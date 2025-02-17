@@ -8,6 +8,7 @@ floggerBackend = "0.6"
 gson = "2.8.6"
 autoValue = "1.7.4"
 guava = "31.0.1-jre"
+univocityParsers = "2.9.0"
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
@@ -21,3 +22,4 @@ flogger-system-backend = { module = "com.google.flogger:flogger-system-backend",
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 auto-value = { module = "com.google.auto.value:auto-value", version.ref = "autoValue" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
+univocity-parsers = { module = "com.univocity:univocity-parsers", version.ref = "univocityParsers" }

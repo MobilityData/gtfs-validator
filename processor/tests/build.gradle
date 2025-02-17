@@ -28,7 +28,7 @@ dependencies {
     implementation libs.guava
     implementation libs.flogger
     implementation libs.flogger.system.backend
-    implementation 'com.univocity:univocity-parsers:2.9.0'
+    implementation libs.univocity.parsers
     testImplementation 'junit:junit:4.13'
     testImplementation 'com.google.truth:truth:1.0.1'
     testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'
