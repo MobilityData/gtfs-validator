@@ -12,6 +12,7 @@ guava = "31.0.1-jre"
 univocityParsers = "2.9.0"
 commonsCompress = "1.20"
 mockito = "4.5.1"
+junit = "4.13"
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
@@ -29,3 +30,4 @@ guava = { module = "com.google.guava:guava", version.ref = "guava" }
 univocity-parsers = { module = "com.univocity:univocity-parsers", version.ref = "univocityParsers" }
 commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commonsCompress" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+junit = { module = "junit:junit", version.ref = "junit" }

@@ -13,7 +13,7 @@ dependencies {
     annotationProcessor project(":processor:notices")
     implementation project(':model')
     implementation libs.gson
-    testImplementation 'junit:junit:4.13'
+    testImplementation libs.junit
     testImplementation 'com.google.truth:truth:1.0.1'
     testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'
 }
