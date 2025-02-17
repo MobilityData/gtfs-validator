@@ -33,7 +33,7 @@ dependencies {
     annotationProcessor libs.auto.value
     compileOnly libs.auto.value.annotations
     implementation 'org.apache.httpcomponents.client5:httpclient5:5.0.3'
-    implementation 'javax.inject:javax.inject:1'
+    implementation libs.javax.inject
     implementation libs.gson
     implementation libs.guava
     implementation libs.flogger
