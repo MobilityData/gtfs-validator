@@ -25,7 +25,7 @@ dependencies {
     implementation project(':core')
     annotationProcessor libs.auto.value
     compileOnly libs.auto.value
-    implementation 'com.google.guava:guava:31.0.1-jre'
+    implementation libs.guava
     implementation libs.flogger
     implementation libs.flogger.system.backend
     implementation 'com.univocity:univocity-parsers:2.9.0'

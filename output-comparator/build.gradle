@@ -11,7 +11,7 @@ dependencies {
     implementation 'com.google.api-client:google-api-client:1.31.2'
     annotationProcessor libs.auto.value
     compileOnly libs.auto.value
-    implementation 'com.google.guava:guava:31.0.1-jre'
+    implementation libs.guava
     implementation libs.flogger
     implementation libs.flogger.system.backend
     implementation 'com.beust:jcommander:1.48'

@@ -54,7 +54,7 @@ dependencies {
     implementation libs.gson
     implementation libs.flogger
     implementation libs.flogger.system.backend
-    implementation 'com.google.guava:guava:31.0.1-jre'
+    implementation libs.guava
 
     testImplementation group: 'junit', name: 'junit', version: '4.13'
     testImplementation 'com.google.truth:truth:1.0.1'

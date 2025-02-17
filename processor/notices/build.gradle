@@ -30,7 +30,7 @@ dependencies {
     annotationProcessor libs.auto.service
     compileOnly libs.auto.service
     implementation libs.commons.lang3
-    implementation 'com.google.guava:guava:31.0.1-jre'
+    implementation libs.guava
     implementation libs.gson
     testImplementation group: 'junit', name: 'junit', version: '4.13'
     testImplementation 'com.google.truth:truth:1.1.3'
