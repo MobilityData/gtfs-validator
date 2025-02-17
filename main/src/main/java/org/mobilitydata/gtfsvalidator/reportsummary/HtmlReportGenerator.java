@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.report;
+package org.mobilitydata.gtfsvalidator.reportsummary;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.report.model.FeedMetadata;
-import org.mobilitydata.gtfsvalidator.report.model.NoticeView;
-import org.mobilitydata.gtfsvalidator.report.model.ReportSummary;
+import org.mobilitydata.gtfsvalidator.reportsummary.model.FeedMetadata;
+import org.mobilitydata.gtfsvalidator.reportsummary.model.NoticeView;
+import org.mobilitydata.gtfsvalidator.reportsummary.model.ReportSummary;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 import org.mobilitydata.gtfsvalidator.util.VersionInfo;
 import org.thymeleaf.TemplateEngine;

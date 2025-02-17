@@ -256,6 +256,16 @@ context('GTFS Validator - Confirm error messaging', () => {
       });
     }).as('getDocMarkdown');
 
+    cy.intercept('summary-metadata.json', (req) => {
+      req.reply({
+        statusCode: 404,
+        headers: {
+          'access-control-allow-origin': '*',
+          'Access-Control-Allow-Credentials': 'true',
+        },
+      });
+    }).as('getSummaryMetadata');
+
     cy.visit('/');
 
     // Click "See Documentation" button
@@ -268,12 +278,13 @@ context('GTFS Validator - Confirm error messaging', () => {
 
     // Confirm error content
     cy.get('.container .markdown')
+      .first()
       .should('be.visible')
       .within((div) => {
         cy.get('h1').should('contain.text', 'HTTP Error: 404');
         cy.get('p').should(
           'contain.text',
-          'There was a problem loading the rules file.'
+          'There was a problem loading the rules file.\nThere was a problem loading the summary metadata file.'
         );
       });
   });
