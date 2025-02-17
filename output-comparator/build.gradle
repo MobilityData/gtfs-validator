@@ -15,7 +15,7 @@ dependencies {
     implementation libs.flogger
     implementation libs.flogger.system.backend
     implementation 'com.beust:jcommander:1.48'
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation libs.gson
     testImplementation "com.google.truth:truth:1.0.1"
     testImplementation group: 'junit', name: 'junit', version: '4.9'
 }

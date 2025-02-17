@@ -51,7 +51,7 @@ dependencies {
     implementation project(':core')
     implementation project(':main')
     implementation 'com.beust:jcommander:1.48'
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation libs.gson
     implementation libs.flogger
     implementation libs.flogger.system.backend
     implementation 'com.google.guava:guava:31.0.1-jre'

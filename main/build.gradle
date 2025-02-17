@@ -34,7 +34,7 @@ dependencies {
     compileOnly 'com.google.auto.value:auto-value-annotations:1.7.4'
     implementation 'org.apache.httpcomponents.client5:httpclient5:5.0.3'
     implementation 'javax.inject:javax.inject:1'
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation libs.gson
     implementation 'com.google.guava:guava:31.0.1-jre'
     implementation libs.flogger
     implementation libs.flogger.system.backend
