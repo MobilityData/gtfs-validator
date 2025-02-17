@@ -9,8 +9,8 @@ dependencies {
     implementation project(':core')
     implementation 'commons-io:commons-io:2.8.0'
     implementation 'com.google.api-client:google-api-client:1.31.2'
-    annotationProcessor 'com.google.auto.value:auto-value:1.7.4'
-    compileOnly 'com.google.auto.value:auto-value-annotations:1.7.4'
+    annotationProcessor libs.auto.value
+    compileOnly libs.auto.value
     implementation 'com.google.guava:guava:31.0.1-jre'
     implementation libs.flogger
     implementation libs.flogger.system.backend

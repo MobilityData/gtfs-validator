@@ -6,6 +6,7 @@ autoService = "1.0.1"
 flogger = "0.6"
 floggerBackend = "0.6"
 gson = "2.8.6"
+autoValue = "1.7.4"
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
@@ -17,3 +18,4 @@ auto-service = { module = "com.google.auto.service:auto-service", version.ref = 
 flogger = { module = "com.google.flogger:flogger", version.ref = "flogger" }
 flogger-system-backend = { module = "com.google.flogger:flogger-system-backend", version.ref = "floggerBackend" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+auto-value = { module = "com.google.auto.value:auto-value", version.ref = "autoValue" }

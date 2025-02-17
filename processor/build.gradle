@@ -7,8 +7,8 @@ dependencies {
     implementation project(':core')
     annotationProcessor libs.auto.service
     compileOnly libs.auto.service
-    annotationProcessor 'com.google.auto.value:auto-value:1.7.4'
-    compileOnly 'com.google.auto.value:auto-value-annotations:1.7.4'
+    annotationProcessor libs.auto.value
+    compileOnly libs.auto.value
     implementation 'javax.inject:javax.inject:1'
     implementation 'com.squareup:javapoet:1.13.0'
     implementation libs.commons.lang3
