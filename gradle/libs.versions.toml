@@ -20,6 +20,8 @@ httpClient5 = "5.0.3"
 geometry = "2.0.0"
 libphonenumber = "8.12.13"
 classgraph = "4.8.146"
+thymeleaf = "3.0.15.RELEASE"
+locationtech = "1.20.0"
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
@@ -45,3 +47,5 @@ httpclient5 = { module = "org.apache.httpcomponents.client5:httpclient5", versio
 geometry = { module = "com.google.geometry:s2-geometry", version.ref = "geometry" }
 libphonenumber = { module = "com.googlecode.libphonenumber:libphonenumber", version.ref = "libphonenumber" }
 classgraph = { module = "io.github.classgraph:classgraph", version.ref = "classgraph" }
+location-tech = { module = "org.locationtech.jts:jts-core", version.ref = "locationtech" }
+thymeleaf = { module = "org.thymeleaf:thymeleaf", version.ref = "thymeleaf" }
