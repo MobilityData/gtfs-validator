@@ -58,7 +58,7 @@ dependencies {
 
     testImplementation group: 'junit', name: 'junit', version: '4.13'
     testImplementation libs.truth
-    testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'
+    testImplementation libs.truth.extension
     testImplementation libs.mockito.core
 }
 

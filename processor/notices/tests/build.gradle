@@ -15,7 +15,7 @@ dependencies {
     implementation libs.gson
     testImplementation libs.junit
     testImplementation libs.truth
-    testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'
+    testImplementation libs.truth.extension
 }
 
 test {
