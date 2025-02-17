@@ -223,7 +223,9 @@ public class NoticeFieldsTest {
             "tripIdB",
             "tripIdFieldName",
             "validator",
-            "value");
+            "value",
+            "duplicatedElement",
+            "unknownElement");
   }
 
   private static List<String> discoverValidationNoticeFieldNames() {

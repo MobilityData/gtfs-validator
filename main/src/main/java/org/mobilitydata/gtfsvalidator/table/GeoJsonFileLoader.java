@@ -1,21 +1,18 @@
 package org.mobilitydata.gtfsvalidator.table;
 
 import com.google.common.flogger.FluentLogger;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.locationtech.jts.geom.*;
 import org.mobilitydata.gtfsvalidator.notice.*;
-import org.mobilitydata.gtfsvalidator.util.geojson.GeoJsonGeometryValidator;
-import org.mobilitydata.gtfsvalidator.util.geojson.GeometryType;
-import org.mobilitydata.gtfsvalidator.util.geojson.UnparsableGeoJsonFeatureException;
+import org.mobilitydata.gtfsvalidator.notice.GeoJsonDuplicatedElementNotice;
+import org.mobilitydata.gtfsvalidator.util.geojson.*;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
 
 /**
@@ -70,8 +67,27 @@ public class GeoJsonFileLoader extends TableLoader {
       throws IOException, UnparsableGeoJsonFeatureException {
     List<GtfsGeoJsonFeature> features = new ArrayList<>();
     boolean hasUnparsableFeature = false;
+    GsonBuilder gsonBuilder = new GsonBuilder();
+    // Using the MapJsonTypeAdapter to be able to parse JSON objects with duplicate keys and
+    // unsupported Gson library features
+    gsonBuilder.registerTypeAdapter(
+        new TypeToken<Map<String, Object>>() {}.getType(), new MapJsonTypeAdapter());
+    Gson gson = gsonBuilder.create();
+
     try (InputStreamReader reader = new InputStreamReader(inputStream)) {
-      JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
+      JsonElement root =
+          gson.toJsonTree(gson.fromJson(reader, new TypeToken<Map<String, Object>>() {}.getType()));
+      if (!root.isJsonObject()) {
+        throw new JsonParseException("Expected a JSON object at the root");
+      }
+      JsonObject jsonObject = root.getAsJsonObject();
+      for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
+        String key = entry.getKey();
+        if (!"type".equals(key) && !"features".equals(key)) {
+          noticeContainer.addValidationNotice(
+              new GeoJsonUnknownElementNotice(GtfsGeoJsonFeature.FILENAME, key));
+        }
+      }
       if (!jsonObject.has("type")) {
         noticeContainer.addValidationNotice(new MissingRequiredElementNotice(null, "type", null));
         throw new UnparsableGeoJsonFeatureException("Missing required field 'type'");
@@ -93,6 +109,9 @@ public class GeoJsonFileLoader extends TableLoader {
           features.add(gtfsGeoJsonFeature);
         }
       }
+    } catch (DuplicateJsonKeyException exception) {
+      noticeContainer.addValidationNotice(
+          new GeoJsonDuplicatedElementNotice(GtfsGeoJsonFeature.FILENAME, exception.getKey()));
     }
     if (hasUnparsableFeature) {
       throw new UnparsableGeoJsonFeatureException("Unparsable GeoJSON feature");
@@ -107,6 +126,19 @@ public class GeoJsonFileLoader extends TableLoader {
     String featureId = null;
     if (feature.isJsonObject()) {
       JsonObject featureObject = feature.getAsJsonObject();
+
+      // Check for unknown elements in the featureObject
+      for (Map.Entry<String, JsonElement> entry : featureObject.entrySet()) {
+        String key = entry.getKey();
+        if (!GtfsGeoJsonFeature.FEATURE_ID_FIELD_NAME.equals(key)
+            && !GtfsGeoJsonFeature.FEATURE_TYPE_FIELD_NAME.equals(key)
+            && !GtfsGeoJsonFeature.FEATURE_PROPERTIES_FIELD_NAME.equals(key)
+            && !GtfsGeoJsonFeature.GEOMETRY_FIELD_NAME.equals(key)) {
+          noticeContainer.addValidationNotice(
+              new GeoJsonUnknownElementNotice(GtfsGeoJsonFeature.FILENAME, key));
+        }
+      }
+
       // Handle feature id
       if (!featureObject.has(GtfsGeoJsonFeature.FEATURE_ID_FIELD_NAME)) {
         missingRequiredFields.add(
@@ -156,6 +188,15 @@ public class GeoJsonFileLoader extends TableLoader {
                 + GtfsGeoJsonFeature.GEOMETRY_FIELD_NAME);
       } else {
         JsonObject geometry = featureObject.getAsJsonObject(GtfsGeoJsonFeature.GEOMETRY_FIELD_NAME);
+        // Check for unknown elements in the geometry object
+        for (Map.Entry<String, JsonElement> entry : geometry.entrySet()) {
+          String key = entry.getKey();
+          if (!GtfsGeoJsonFeature.GEOMETRY_TYPE_FIELD_NAME.equals(key)
+              && !GtfsGeoJsonFeature.GEOMETRY_COORDINATES_FIELD_NAME.equals(key)) {
+            noticeContainer.addValidationNotice(
+                new GeoJsonUnknownElementNotice(GtfsGeoJsonFeature.FILENAME, key));
+          }
+        }
         // Handle geometry type and coordinates
         if (!geometry.has(GtfsGeoJsonFeature.GEOMETRY_TYPE_FIELD_NAME)) {
           missingRequiredFields.add(
