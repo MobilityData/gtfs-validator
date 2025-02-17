@@ -30,6 +30,6 @@ dependencies {
     implementation libs.flogger.system.backend
     implementation libs.univocity.parsers
     testImplementation libs.junit
-    testImplementation 'com.google.truth:truth:1.0.1'
+    testImplementation libs.truth
     testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'
 }

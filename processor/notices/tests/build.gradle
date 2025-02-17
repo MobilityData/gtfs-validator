@@ -14,7 +14,7 @@ dependencies {
     implementation project(':model')
     implementation libs.gson
     testImplementation libs.junit
-    testImplementation 'com.google.truth:truth:1.0.1'
+    testImplementation libs.truth
     testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'
 }
 

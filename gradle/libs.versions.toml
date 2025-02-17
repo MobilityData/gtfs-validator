@@ -13,6 +13,7 @@ univocityParsers = "2.9.0"
 commonsCompress = "1.20"
 mockito = "4.5.1"
 junit = "4.13"
+truth = "1.1.3"
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
@@ -31,3 +32,4 @@ univocity-parsers = { module = "com.univocity:univocity-parsers", version.ref = 
 commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commonsCompress" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 junit = { module = "junit:junit", version.ref = "junit" }
+truth = { module = "com.google.truth:truth", version.ref = "truth" }
