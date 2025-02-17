@@ -10,7 +10,7 @@ dependencies {
     annotationProcessor libs.auto.value
     compileOnly libs.auto.value.annotations
     implementation libs.javax.inject
-    implementation 'com.squareup:javapoet:1.13.0'
+    implementation libs.java.poet
     implementation libs.commons.lang3
     implementation libs.guava
     implementation libs.flogger
