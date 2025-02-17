@@ -17,6 +17,7 @@ truth = "1.1.3"
 truthExtension = "1.0.1"
 javaxInject = "1"
 httpClient5 = "5.0.3"
+geometry = "2.0.0"
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
@@ -39,3 +40,4 @@ truth = { module = "com.google.truth:truth", version.ref = "truth" }
 truth-extension = { module = "com.google.truth.extensions:truth-java8-extension", version.ref = "truthExtension" }
 javax-inject = { module = "javax.inject:javax.inject", version.ref = "javaxInject" }
 httpclient5 = { module = "org.apache.httpcomponents.client5:httpclient5", version.ref = "httpClient5" }
+geometry = { module = "com.google.geometry:s2-geometry", version.ref = "geometry" }

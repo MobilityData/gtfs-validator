@@ -37,7 +37,7 @@ dependencies {
     implementation 'commons-io:commons-io:2.8.0'
     implementation libs.univocity.parsers
     implementation libs.gson
-    implementation 'com.google.geometry:s2-geometry:2.0.0'
+    implementation libs.geometry
     implementation libs.guava
     implementation 'commons-validator:commons-validator:1.6'
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.13'

@@ -39,7 +39,7 @@ dependencies {
     implementation libs.flogger
     implementation libs.flogger.system.backend
     implementation libs.univocity.parsers
-    implementation 'com.google.geometry:s2-geometry:2.0.0'
+    implementation libs.geometry
     implementation 'org.thymeleaf:thymeleaf:3.0.15.RELEASE'
     implementation 'com.vladsch.flexmark:flexmark-all:0.64.8'
     implementation 'io.github.classgraph:classgraph:4.8.146'
