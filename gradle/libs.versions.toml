@@ -7,6 +7,7 @@ flogger = "0.6"
 floggerBackend = "0.6"
 gson = "2.8.6"
 autoValue = "1.7.4"
+autoValueAnnotations = "1.7.4"
 guava = "31.0.1-jre"
 univocityParsers = "2.9.0"
 commonsCompress = "1.20"
@@ -23,6 +24,7 @@ flogger = { module = "com.google.flogger:flogger", version.ref = "flogger" }
 flogger-system-backend = { module = "com.google.flogger:flogger-system-backend", version.ref = "floggerBackend" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 auto-value = { module = "com.google.auto.value:auto-value", version.ref = "autoValue" }
+auto-value-annotations = { module = "com.google.auto.value:auto-value-annotations", version.ref = "autoValueAnnotations" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 univocity-parsers = { module = "com.univocity:univocity-parsers", version.ref = "univocityParsers" }
 commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commonsCompress" }

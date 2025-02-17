@@ -29,7 +29,7 @@ dependencies {
     implementation project(':model')
     annotationProcessor project(':processor:notices')
     annotationProcessor libs.auto.value
-    compileOnly libs.auto.value
+    compileOnly libs.auto.value.annotations
     implementation libs.commons.compress
     implementation libs.commons.lang3
     implementation 'javax.inject:javax.inject:1'

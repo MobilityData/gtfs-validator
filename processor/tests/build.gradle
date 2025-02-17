@@ -24,7 +24,7 @@ dependencies {
     implementation project(':model')
     implementation project(':core')
     annotationProcessor libs.auto.value
-    compileOnly libs.auto.value
+    compileOnly libs.auto.value.annotations
     implementation libs.guava
     implementation libs.flogger
     implementation libs.flogger.system.backend

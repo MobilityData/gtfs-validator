@@ -8,7 +8,7 @@ dependencies {
     annotationProcessor libs.auto.service
     compileOnly libs.auto.service
     annotationProcessor libs.auto.value
-    compileOnly libs.auto.value
+    compileOnly libs.auto.value.annotations
     implementation 'javax.inject:javax.inject:1'
     implementation 'com.squareup:javapoet:1.13.0'
     implementation libs.commons.lang3
