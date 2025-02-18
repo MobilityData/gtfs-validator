@@ -43,8 +43,8 @@ dependencies {
     implementation libs.libphonenumber
     implementation libs.flogger
     implementation libs.classgraph
-    implementation 'org.aspectj:aspectjrt:1.9.20'
-    implementation 'org.aspectj:aspectjweaver:1.9.20'
+    implementation libs.aspectjrt
+    implementation libs.aspectjrt.weaver
     testImplementation libs.flogger.system.backend
     testImplementation group: 'junit', name: 'junit', version: '4.13'
     testImplementation libs.truth

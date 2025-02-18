@@ -28,6 +28,10 @@ commonsValidator = "1.6"
 jcommander = "1.48"
 javaPoet = "1.13.0"
 apiClient = "1.31.2"
+jetbrainsAnnotations = "20.1.0"
+aspectjrt = "1.9.20"
+aspectjrtweaver = "1.9.20"
+findbugs = "3.0.2"
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
@@ -61,3 +65,7 @@ commons-validator = { module = "commons-validator:commons-validator", version.re
 jcommander = { module = "com.beust:jcommander", version.ref = "jcommander" }
 java-poet = { module = "com.squareup:javapoet", version.ref = "javaPoet" }
 api-client = { module = "com.google.api-client:google-api-client", version.ref = "apiClient" }
+jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrainsAnnotations" }
+aspectjrt = { module = "org.aspectj:aspectjrt", version.ref = "aspectjrt" }
+aspectjrt-weaver = { module = "org.aspectj:aspectjweaver", version.ref = "aspectjrtweaver" }
+findbugs = { module = "com.google.code.findbugs:jsr305", version.ref = "findbugs" }
