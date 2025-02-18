@@ -33,7 +33,7 @@ dependencies {
     implementation libs.commons.compress
     implementation libs.commons.lang3
     implementation libs.javax.inject
-    implementation 'org.apache.httpcomponents:httpclient:4.5.2'
+    implementation libs.httpclient5
     implementation libs.commons.io
     implementation libs.univocity.parsers
     implementation libs.gson
