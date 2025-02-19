@@ -12,10 +12,10 @@ repositories {
 dependencies {
     annotationProcessor project(":processor:notices")
     implementation project(':model')
-    implementation 'com.google.code.gson:gson:2.8.6'
-    testImplementation 'junit:junit:4.13'
-    testImplementation 'com.google.truth:truth:1.0.1'
-    testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'
+    implementation libs.gson
+    testImplementation libs.junit
+    testImplementation libs.truth
+    testImplementation libs.truth.extension
 }
 
 test {
