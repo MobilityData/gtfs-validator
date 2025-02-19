@@ -47,7 +47,7 @@ shadowJar {
         // loaded via reflection
         exclude(project(':main'))
 
-        exclude(dependency(libs.httpclient5))
+        exclude(dependency(libs.httpclient5.get().toString()))
     }
 
     // Some of our dependencies include their own module-info declarations.  We drop
