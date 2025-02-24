@@ -17,7 +17,7 @@ dependencies {
     implementation libs.jcommander
     implementation libs.gson
     testImplementation libs.truth
-    testImplementation group: 'junit', name: 'junit', version: '4.9'
+    testImplementation libs.junit
 }
 
 jar {
