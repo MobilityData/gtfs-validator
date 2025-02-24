@@ -223,7 +223,8 @@ public class NoticeFieldsTest {
             "validator",
             "value",
             "duplicatedElement",
-            "unknownElement");
+            "unknownElement",
+            "currencyCode");
   }
 
   private static List<String> discoverValidationNoticeFieldNames() {
