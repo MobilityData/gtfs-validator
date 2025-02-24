@@ -27,7 +27,7 @@ dependencies {
     implementation project(':main')
     implementation libs.flogger
     implementation libs.flogger.system.backend
-    testImplementation group: 'junit', name: 'junit', version: '4.13'
+    testImplementation libs.junit
     testImplementation libs.truth
     testImplementation libs.truth.extension
     testImplementation libs.mockito.core

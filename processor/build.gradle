@@ -16,7 +16,7 @@ dependencies {
     implementation libs.flogger
     implementation libs.univocity.parsers
     implementation libs.geometry
-    testImplementation group: 'junit', name: 'junit', version: '4.13'
+    testImplementation libs.junit
     testImplementation libs.truth
 }
 
