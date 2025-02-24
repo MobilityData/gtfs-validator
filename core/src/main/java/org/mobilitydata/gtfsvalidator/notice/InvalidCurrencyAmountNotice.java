@@ -11,9 +11,9 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
  * A currency amount field has a value that does not match the format of its corresponding currency
  * code field.
  *
- * <p>Typically, this means the amount did not have the expected number of decimal places. The
- * number of decimal places is specified by <a
- * href="https://en.wikipedia.org/wiki/ISO_4217#Active_codes">ISO 4217</a>.
+ * <p>Typically, this means the amount did not have the expected number of decimal places. Check the
+ * formatting of your amount field so it matches the number of decimal places specified by the <a
+ * href="https://en.wikipedia.org/wiki/ISO_4217#Active_codes">currency_code value</a>.
  *
  * @see org.mobilitydata.gtfsvalidator.annotation.CurrencyAmount
  */
@@ -24,7 +24,7 @@ public class InvalidCurrencyAmountNotice extends ValidationNotice {
   private final String filename;
 
   /** Faulty record's field name. */
-  private final String fieldName;
+  private final String currencyCode;
 
   /** The row of the faulty record. */
   private final int csvRowNumber;
@@ -33,9 +33,9 @@ public class InvalidCurrencyAmountNotice extends ValidationNotice {
   private final String amount;
 
   public InvalidCurrencyAmountNotice(
-      String filename, String fieldName, int csvRowNumber, BigDecimal amount) {
+      String filename, String currencyCode, int csvRowNumber, BigDecimal amount) {
     this.filename = filename;
-    this.fieldName = fieldName;
+    this.currencyCode = currencyCode;
     this.csvRowNumber = csvRowNumber;
     this.amount = amount.toPlainString();
   }

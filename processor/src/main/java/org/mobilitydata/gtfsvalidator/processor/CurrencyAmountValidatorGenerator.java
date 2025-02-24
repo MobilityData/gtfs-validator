@@ -69,27 +69,27 @@ public class CurrencyAmountValidatorGenerator {
             .addParameter(entityClasses.entityImplementationTypeName(), "entity")
             .addParameter(NoticeContainer.class, "noticeContainer");
 
-    for (GtfsFieldDescriptor amountField : fileDescriptor.fields()) {
-      if (amountField.currencyFieldReference().isEmpty()) {
+    for (GtfsFieldDescriptor currencyCodeField : fileDescriptor.fields()) {
+      if (currencyCodeField.currencyFieldReference().isEmpty()) {
         continue;
       }
       GtfsFieldDescriptor currencyField =
-          fileDescriptor.getFieldByName(amountField.currencyFieldReference().get());
+          fileDescriptor.getFieldByName(currencyCodeField.currencyFieldReference().get());
       if (currencyField == null) {
         throw new IllegalArgumentException(
             fileDescriptor.filename()
                 + " "
-                + amountField.name()
+                + currencyCodeField.name()
                 + ": unknown @CurrencyAmount(currencyField=\""
-                + amountField.currencyFieldReference().get()
+                + currencyCodeField.currencyFieldReference().get()
                 + "\") reference");
       }
       validateMethod
           .beginControlFlow(
               "if (entity.$L() && entity.$L())",
-              FieldNameConverter.hasMethodName(amountField.name()),
+              FieldNameConverter.hasMethodName(currencyCodeField.name()),
               FieldNameConverter.hasMethodName(currencyField.name()))
-          .addStatement("$T amount = entity.$L()", BigDecimal.class, amountField.name())
+          .addStatement("$T amount = entity.$L()", BigDecimal.class, currencyCodeField.name())
           .addStatement("$T currency = entity.$L()", Currency.class, currencyField.name())
           .beginControlFlow("if (amount.scale() != currency.getDefaultFractionDigits())")
           .addStatement(
@@ -97,7 +97,7 @@ public class CurrencyAmountValidatorGenerator {
                   + " amount))",
               InvalidCurrencyAmountNotice.class,
               fileDescriptor.filename(),
-              amountField.name())
+              currencyCodeField.name())
           .endControlFlow()
           .endControlFlow();
     }
