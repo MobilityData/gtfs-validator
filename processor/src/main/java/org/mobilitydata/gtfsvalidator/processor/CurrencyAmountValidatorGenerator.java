@@ -89,19 +89,16 @@ public class CurrencyAmountValidatorGenerator {
               "if (entity.$L() && entity.$L())",
               FieldNameConverter.hasMethodName(currencyCodeField.name()),
               FieldNameConverter.hasMethodName(currencyField.name()))
-          .addStatement("$T amount = entity.$L()", BigDecimal.class, currencyCodeField.name()) 
+          .addStatement("$T amount = entity.$L()", BigDecimal.class, currencyCodeField.name())
           .addStatement("$T currency = entity.$L()", Currency.class, currencyField.name())
           .beginControlFlow("if (amount.scale() != currency.getDefaultFractionDigits())")
           .addStatement(
-              "noticeContainer.addValidationNotice(new $T(\"$L\", entity.csvRowNumber(), \"$L\","
+              "noticeContainer.addValidationNotice(new $T(\"$L\", entity.csvRowNumber(), currency.getCurrencyCode(),"
                   + " amount))",
               InvalidCurrencyAmountNotice.class,
-              fileDescriptor.filename(),
-              currencyCodeField.name())
+              fileDescriptor.filename())
           .endControlFlow()
           .endControlFlow();
-      System.out.println("$$$$$$$$$$$$$$$$$$currencyCodeField name is " + currencyCodeField.name());
-      System.out.println("$$$$$$$$$$$$$$$$$$currencyField name is " + currencyField.name());
     }
 
     typeSpec.addMethod(validateMethod.build());

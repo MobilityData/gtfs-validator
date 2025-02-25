@@ -14,7 +14,6 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
  * <p>Typically, this means the amount did not have the expected number of decimal places. Check the
  * formatting of your amount field so it matches the number of decimal places specified by the <a
  * href="https://en.wikipedia.org/wiki/ISO_4217#Active_codes">currency_code value</a>.
- *
  */
 @GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILED_TYPES))
 public class InvalidCurrencyAmountNotice extends ValidationNotice {
