@@ -52,4 +52,9 @@ public interface GtfsFareProductSchema extends GtfsEntity {
   @ForeignKey(table = "fare_media.txt", field = "fare_media_id")
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)
   String fareMediaId();
+
+  @FieldType(FieldTypeEnum.ID)
+  @ForeignKey(table = "rider_categories.txt", field = "rider_category_id")
+  @PrimaryKey(translationRecordIdType = UNSUPPORTED)
+  String riderCategoryId();
 }
