@@ -45,12 +45,19 @@ public class PickupBookingRuleIdValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    if (bookingRulesTable.isMissingFile()) {
-      return;
-    }
     for (GtfsStopTime stopTime : stopTimeTable.getEntities()) {
       validate(stopTime, noticeContainer);
     }
+  }
+
+  @Override
+  public boolean shouldCallValidate() {
+    return bookingRulesTable != null
+        && !bookingRulesTable.isMissingFile()
+        && stopTimeTable != null
+        && !stopTimeTable.isMissingFile()
+        && (stopTimeTable.hasColumn(GtfsStopTime.PICKUP_TYPE_FIELD_NAME)
+            || stopTimeTable.hasColumn(GtfsStopTime.DROP_OFF_TYPE_FIELD_NAME));
   }
 
   /**
