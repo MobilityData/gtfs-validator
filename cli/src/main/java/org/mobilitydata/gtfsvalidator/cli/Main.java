@@ -53,9 +53,6 @@ public class Main {
       System.exit(0);
     }
 
-    // TODO: remove before merge
-    exportNoticeSchema(args);
-    System.exit(0);
     if (!args.validate()) {
       System.exit(1);
     }
