@@ -2,7 +2,6 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
@@ -15,10 +14,12 @@ import org.mobilitydata.gtfsvalidator.table.*;
 public class PickupBookingRuleIdValidator extends FileValidator {
   private final GtfsStopTimeTableContainer stopTimeTable;
   private final GtfsBookingRulesTableContainer bookingRulesTable;
+
   @Inject
-  public PickupBookingRuleIdValidator(GtfsStopTimeTableContainer stopTimeTable, GtfsBookingRulesTableContainer bookingRulesTable) {
+  public PickupBookingRuleIdValidator(
+      GtfsStopTimeTableContainer stopTimeTable, GtfsBookingRulesTableContainer bookingRulesTable) {
     this.stopTimeTable = stopTimeTable;
-      this.bookingRulesTable = bookingRulesTable;
+    this.bookingRulesTable = bookingRulesTable;
   }
 
   public void validate(GtfsStopTime entity, NoticeContainer noticeContainer) {
@@ -42,14 +43,12 @@ public class PickupBookingRuleIdValidator extends FileValidator {
     }
   }
 
-
-
   @Override
   public void validate(NoticeContainer noticeContainer) {
     if (bookingRulesTable.isMissingFile()) {
       return;
     }
-    for (GtfsStopTime stopTime: stopTimeTable.getEntities()) {
+    for (GtfsStopTime stopTime : stopTimeTable.getEntities()) {
       validate(stopTime, noticeContainer);
     }
   }
