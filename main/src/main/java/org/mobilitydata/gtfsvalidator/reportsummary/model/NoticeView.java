@@ -1,4 +1,4 @@
-package org.mobilitydata.gtfsvalidator.report.model;
+package org.mobilitydata.gtfsvalidator.reportsummary.model;
 
 import com.google.gson.JsonObject;
 import com.vladsch.flexmark.html.HtmlRenderer;

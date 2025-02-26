@@ -32,6 +32,7 @@ jetbrainsAnnotations = "20.1.0"
 aspectjrt = "1.9.20"
 aspectjrtweaver = "1.9.20"
 findbugs = "3.0.2"
+jacksonDatabind = "2.14.1"
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
@@ -69,3 +70,4 @@ jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "j
 aspectjrt = { module = "org.aspectj:aspectjrt", version.ref = "aspectjrt" }
 aspectjrt-weaver = { module = "org.aspectj:aspectjweaver", version.ref = "aspectjrtweaver" }
 findbugs = { module = "com.google.code.findbugs:jsr305", version.ref = "findbugs" }
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jacksonDatabind" }

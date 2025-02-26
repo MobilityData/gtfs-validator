@@ -7,10 +7,43 @@ import org.apache.commons.lang3.StringUtils;
 public class MemoryUsage {
   private static final DecimalFormat TWO_DECIMAL_FORMAT = new DecimalFormat("0.00");
 
+  /**
+   * The key value associated with the method is the registered memory usage. Example,
+   * GtfsFeedLoader.loadTables
+   */
   private String key;
+
+  /**
+   * The total amount of memory currently available for current and future objects, measured in
+   * bytes. <a
+   * href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runtime.html#totalMemory()"
+   * target="_blank">Reference</a>
+   */
   private long totalMemory;
+
+  /**
+   * The total amount of memory currently available for future allocated objects, measured in bytes.
+   * <a
+   * href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runtime.html#freeMemory()"
+   * target="_blank">Reference</a>
+   */
   private long freeMemory;
+
+  /**
+   * The maximum amount of memory that the virtual machine will attempt to use, measured in bytes.
+   * <a
+   * href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runtime.html#maxMemory()"
+   * target="_blank">Reference</a>
+   */
   private long maxMemory;
+
+  /**
+   * This is only applicable when the memory snapshot has the reference of its “previous” register,
+   * for example, at the start and end of a method. The value reflects the free memory minus the
+   * memory of the previous register(freeMemory - previousFreeMemory), measured in bytes. This
+   * supports negative and positive values. Negative values mean the memory decreased at the end of
+   * the method. Positive values mean the memory increased.
+   */
   private Long diffMemory;
 
   public MemoryUsage() {}

@@ -1,6 +1,4 @@
-package org.mobilitydata.gtfsvalidator.report.model;
-
-import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
+package org.mobilitydata.gtfsvalidator.reportsummary;
 
 public class AgencyMetadata {
   public final String name;
@@ -15,14 +13,5 @@ public class AgencyMetadata {
     this.phone = phone.isEmpty() ? "N/A" : phone;
     this.email = email.isEmpty() ? "N/A" : email;
     this.timezone = timezone.isEmpty() ? "N/A" : timezone;
-  }
-
-  public static AgencyMetadata from(GtfsAgency agency) {
-    return new AgencyMetadata(
-        agency.agencyName(),
-        agency.agencyUrl(),
-        agency.agencyPhone(),
-        agency.agencyEmail(),
-        agency.agencyTimezone().getId());
   }
 }
