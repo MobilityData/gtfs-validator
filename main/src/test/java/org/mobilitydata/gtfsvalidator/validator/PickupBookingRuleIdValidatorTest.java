@@ -13,7 +13,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 
 @RunWith(JUnit4.class)
 public class PickupBookingRuleIdValidatorTest {
-  static PickupBookingRuleIdValidator validator = new PickupBookingRuleIdValidator();
+  static PickupBookingRuleIdValidator validator = new PickupBookingRuleIdValidator(null, null);
 
   private static List<ValidationNotice> generateNotices(GtfsStopTime stopTime) {
     NoticeContainer noticeContainer = new NoticeContainer();

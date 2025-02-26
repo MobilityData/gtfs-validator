@@ -1,6 +1,8 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
@@ -10,9 +12,15 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.*;
 
 @GtfsValidator
-public class PickupBookingRuleIdValidator extends SingleEntityValidator<GtfsStopTime> {
+public class PickupBookingRuleIdValidator extends FileValidator {
+  private final GtfsStopTimeTableContainer stopTimeTable;
+  private final GtfsBookingRulesTableContainer bookingRulesTable;
+  @Inject
+  public PickupBookingRuleIdValidator(GtfsStopTimeTableContainer stopTimeTable, GtfsBookingRulesTableContainer bookingRulesTable) {
+    this.stopTimeTable = stopTimeTable;
+      this.bookingRulesTable = bookingRulesTable;
+  }
 
-  @Override
   public void validate(GtfsStopTime entity, NoticeContainer noticeContainer) {
     if (entity.hasPickupType()
         && entity.pickupType() == GtfsPickupDropOff.MUST_PHONE
@@ -34,9 +42,16 @@ public class PickupBookingRuleIdValidator extends SingleEntityValidator<GtfsStop
     }
   }
 
+
+
   @Override
-  public boolean shouldCallValidate(ColumnInspector header) {
-    return header.hasColumn(GtfsStopTime.PICKUP_TYPE_FIELD_NAME);
+  public void validate(NoticeContainer noticeContainer) {
+    if (bookingRulesTable.isMissingFile()) {
+      return;
+    }
+    for (GtfsStopTime stopTime: stopTimeTable.getEntities()) {
+      validate(stopTime, noticeContainer);
+    }
   }
 
   /**
