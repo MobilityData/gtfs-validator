@@ -25,9 +25,14 @@ plugins {
 //    publishing and signing are done in gtfs-validator build.gradle to minimize repetition
 //}
 
+tasks.withType(JavaCompile) {
+    options.compilerArgs += ["-AsummaryMetadataOutputDir=${project.rootDir}/web/client/static"]
+}
+
 dependencies {
     implementation project(':model')
     annotationProcessor project(':processor:notices')
+    annotationProcessor project(':processor:summary')
     annotationProcessor libs.auto.value
     compileOnly libs.auto.value.annotations
     implementation libs.commons.compress

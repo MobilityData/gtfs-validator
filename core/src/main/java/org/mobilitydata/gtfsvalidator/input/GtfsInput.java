@@ -64,8 +64,7 @@ public abstract class GtfsInput implements Closeable {
             : new ZipFile(new SeekableInMemoryByteChannel(Files.readAllBytes(path)));
 
     if (hasSubfolderWithGtfsFile(path)) {
-      noticeContainer.addValidationNotice(
-          new InvalidInputFilesInSubfolderNotice(invalidInputMessage));
+      noticeContainer.addValidationNotice(new InvalidInputFilesInSubfolderNotice());
     }
     return new GtfsZipFileInput(zipFile, fileName);
   }
@@ -150,8 +149,7 @@ public abstract class GtfsInput implements Closeable {
       String fileName = zipFile.getName().replace(".zip", "");
       if (containsGtfsFileInSubfolder(
           new ZipInputStream(new ByteArrayInputStream(outputStream.toByteArray())))) {
-        noticeContainer.addValidationNotice(
-            new InvalidInputFilesInSubfolderNotice(invalidInputMessage));
+        noticeContainer.addValidationNotice(new InvalidInputFilesInSubfolderNotice());
       }
       return new GtfsZipFileInput(
           new ZipFile(new SeekableInMemoryByteChannel(outputStream.toByteArray())), fileName);
