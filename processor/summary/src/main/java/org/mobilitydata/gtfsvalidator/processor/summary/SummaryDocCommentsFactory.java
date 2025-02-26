@@ -15,12 +15,11 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
-import org.mobilitydata.gtfsvalidator.notice.NoticeDocComments;
 import org.mobilitydata.gtfsvalidator.processor.notices.CommentCleaner;
 
 /**
- * Provides methods for constructing {@link NoticeDocComments} from a Notice class' {@link
- * TypeElement}.
+ * Provides methods for constructing {@link SummaryMetadata} from summary class variables' {@link
+ * VariableElement}.
  */
 public class SummaryDocCommentsFactory {
 
