@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC, MobilityData IO
+ * Copyright 2025 MobilityData
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,13 +27,14 @@ repositories {
 
 dependencies {
     implementation project(':model')
-    annotationProcessor libs.auto.service
-    compileOnly libs.auto.service
-    implementation libs.commons.lang3
-    implementation libs.guava
-    implementation libs.gson
-    testImplementation libs.junit
-    testImplementation libs.truth
+    implementation project(':processor:notices')
+    annotationProcessor 'com.google.auto.service:auto-service:1.0.1'
+    compileOnly 'com.google.auto.service:auto-service:1.0.1'
+    implementation 'org.apache.commons:commons-lang3:3.0'
+    implementation 'com.google.guava:guava:31.0.1-jre'
+    implementation 'com.google.code.gson:gson:2.9.1'
+    testImplementation group: 'junit', name: 'junit', version: '4.13'
+    testImplementation 'com.google.truth:truth:1.1.3'
 }
 
 test {

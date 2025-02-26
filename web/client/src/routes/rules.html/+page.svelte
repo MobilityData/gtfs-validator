@@ -6,6 +6,7 @@
   import SectionRefLink from './SectionRefLink.svelte';
 
   const rules = $page.data.rules;
+  const summaryMetadata = $page.data.summaryMetadata;
 
   // Group rules by severity level
   $: categories = _.chain(rules)
@@ -50,7 +51,7 @@
     {#if $page.data.msgHeading}
       <h1 class="h1">{$page.data.msgHeading}</h1>
     {:else}
-      <h1 class="h1">Validator Rules</h1>
+      <h1 class="h1">Validation Rules and Metadata</h1>
     {/if}
 
     {#if $page.data.msgBody}
@@ -70,6 +71,7 @@
               <li><a href="#{category}-table">Table of {category} notices</a></li>
             {/each}
             <li><a href="#notice-details">Notice details</a></li>
+            <li><a href="#summary-metadata">Summary metadata details</a></li>
           </ul>
         </div>
 
@@ -174,9 +176,8 @@
               <tr>
                 <th>Notice code</th>
                 <th>Severity</th>
-                <th>Deprecation version</th>
+                <th>Deprecated since</th>
                 <th>Deprecation reason</th>
-                <th>Description</th>
               </tr>
               </thead>
               <tbody>
@@ -195,10 +196,6 @@
                     </td>
                     <td>
                       {@html marked.parse(rule.deprecationReason ?? '')}
-                    </td>
-                    <td>
-                      <div class="font-bold">{@html marked.parse(rule.shortSummary ?? '')}</div>
-                      {@html marked.parse(rule.description ?? '')}
                     </td>
                   </tr>
               {/each}
@@ -325,4 +322,86 @@
       {/each}
     {/if}
   </div>
+  <h2 class="h2" id="summary-metadata">Summary metadata details</h2>
+  <div>
+    This section provides a detailed breakdown of the key elements in the validator’s JSON summary report.
+    They capture essential information about your dataset and its compliance with GTFS standards, revealing how related
+    fields are structured and interlinked. This section explains the organization and purpose of the elements found in
+    the <code>summary</code> section of the report so you can understand the underlying data architecture and how each component
+    contributes to the overall summary.
+  </div>
+  <div class="overflow-x-auto markdown">
+    <table class="w-full table-collapse-responsive sm:block lg:table" id="summary-metadata-table">
+      <thead>
+      <tr>
+        <th>Field name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+      </thead>
+      <tbody>
+      {#each summaryMetadata as meta}
+        <tr>
+          <td><code class="break-all" id="summary-{meta.name}">{meta.name}</code></td>
+          {#if (meta.fields)}
+            <td><a href="#{meta.type.replaceAll('[]', '')}-type"><code>{meta.type}</code></a></td>
+          {:else}
+            <td>{meta.type}</td>
+          {/if}
+          <td>{@html marked.parse(meta.description)}</td>
+        </tr>
+      {/each}
+      </tbody>
+    </table>
+  </div>
+  <div class="markdown">
+    <h4>Summary metadata custom classes</h4>
+    <div class="overflow-x-auto">
+      {#each summaryMetadata as meta}
+        {#if meta.fields}
+          <div id="{meta.type.replaceAll('[]', '')}-type" class="table-sm">
+            <h3 class="h3 md:flex items-baseline justify-between">
+              <a class="text-base order-last" href="#summary-{meta.name}">
+                <i class="fas fa-arrow-up"></i> Table
+              </a>
+              <div>
+                <span class="break-all"><code>{meta.name}</code></span>
+                <a
+                  class="text-base"
+                  href="#{meta.type.replaceAll('[]', '')}-type"
+                  title="Link to this section"
+                >
+                  <i class="fa-solid fa-hashtag text-black/30"/>
+                </a>
+              </div>
+            </h3>
+          </div>
+          <span>Type of <code>{meta.type}</code></span>
+          <blockquote>
+            {@html marked.parse(meta.description ?? '')}
+          </blockquote>
+
+          <table class="w-full table-collapse-responsive sm:block lg:table">
+            <thead>
+            <tr>
+              <th>Field name</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            {#each meta.fields as nested}
+              <tr>
+                <td><code class="break-all">{nested.name}</code></td>
+                <td>{nested.type}</td>
+                <td>{@html marked.parse(nested.description)}</td>
+              </tr>
+            {/each}
+            </tbody>
+          </table>
+        {/if}
+      {/each}
+    </div>
+  </div>
+
 </div>

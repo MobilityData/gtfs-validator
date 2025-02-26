@@ -25,12 +25,12 @@ mainClassName = 'org.mobilitydata.gtfsvalidator.app.gui.Main'
 dependencies {
     implementation project(':core')
     implementation project(':main')
-    implementation 'com.google.flogger:flogger:0.6'
-    implementation 'com.google.flogger:flogger-system-backend:0.6'
-    testImplementation group: 'junit', name: 'junit', version: '4.13'
-    testImplementation 'com.google.truth:truth:1.0.1'
-    testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'
-    testImplementation 'org.mockito:mockito-core:4.5.1'
+    implementation libs.flogger
+    implementation libs.flogger.system.backend
+    testImplementation libs.junit
+    testImplementation libs.truth
+    testImplementation libs.truth.extension
+    testImplementation libs.mockito.core
 }
 
 jar {
@@ -47,7 +47,7 @@ shadowJar {
         // loaded via reflection
         exclude(project(':main'))
 
-        exclude(dependency('org.apache.httpcomponents:httpclient'))
+        exclude(dependency(libs.httpclient5.get().toString()))
     }
 
     // Some of our dependencies include their own module-info declarations.  We drop

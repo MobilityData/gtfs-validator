@@ -109,6 +109,7 @@ public class NoticeFieldsTest {
             "fileNameB",
             "filename",
             "firstIndex",
+            "fromStopId",
             "geoDistanceToShape",
             "geoJsonType",
             "geographyId",
@@ -213,6 +214,7 @@ public class NoticeFieldsTest {
             "tableName",
             "time",
             "timeframeGroupId",
+            "toStopId",
             "transferCount",
             "tripCsvRowNumber",
             "tripFieldName",
@@ -222,7 +224,8 @@ public class NoticeFieldsTest {
             "tripIdFieldName",
             "validator",
             "value",
-            "duplicatedElement");
+            "duplicatedElement",
+            "unknownElement");
   }
 
   private static List<String> discoverValidationNoticeFieldNames() {
