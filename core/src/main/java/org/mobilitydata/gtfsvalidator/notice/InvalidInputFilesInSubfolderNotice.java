@@ -20,11 +20,4 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
  * </pre>
  */
 @GtfsValidationNotice(severity = ERROR)
-public class InvalidInputFilesInSubfolderNotice extends ValidationNotice {
-  /** The error message that explains the reason for the exception. */
-  private final String message;
-
-  public InvalidInputFilesInSubfolderNotice(String message) {
-    this.message = message;
-  }
-}
+public class InvalidInputFilesInSubfolderNotice extends ValidationNotice {}
