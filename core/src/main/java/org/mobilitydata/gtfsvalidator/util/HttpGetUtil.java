@@ -20,10 +20,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
 
 public class HttpGetUtil {
 
@@ -49,16 +49,14 @@ public class HttpGetUtil {
    * @param sourceUrl the fully qualified URL
    * @param outputStream the output stream
    * @param validatorVersion the version of the validator
-   * @throws IOException if no file could not be found at the specified location
-   * @throws URISyntaxException if URL is malformed
    */
   public static void loadFromUrl(URL sourceUrl, OutputStream outputStream, String validatorVersion)
       throws IOException, URISyntaxException {
     try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-      HttpGet httpGet = new HttpGet(sourceUrl.toURI());
-      httpGet.setHeader("User-Agent", getUserAgent(validatorVersion));
-      try (CloseableHttpResponse httpResponse = httpClient.execute(httpGet)) {
-        httpResponse.getEntity().writeTo(outputStream);
+      HttpGet request = new HttpGet(sourceUrl.toString());
+      request.addHeader("User-Agent", getUserAgent(validatorVersion));
+      try (CloseableHttpResponse response = httpClient.execute(request)) {
+        response.getEntity().writeTo(outputStream);
       }
     }
   }

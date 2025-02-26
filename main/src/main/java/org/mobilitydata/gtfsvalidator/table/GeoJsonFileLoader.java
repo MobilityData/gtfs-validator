@@ -81,6 +81,13 @@ public class GeoJsonFileLoader extends TableLoader {
         throw new JsonParseException("Expected a JSON object at the root");
       }
       JsonObject jsonObject = root.getAsJsonObject();
+      for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
+        String key = entry.getKey();
+        if (!"type".equals(key) && !"features".equals(key)) {
+          noticeContainer.addValidationNotice(
+              new GeoJsonUnknownElementNotice(GtfsGeoJsonFeature.FILENAME, key));
+        }
+      }
       if (!jsonObject.has("type")) {
         noticeContainer.addValidationNotice(new MissingRequiredElementNotice(null, "type", null));
         throw new UnparsableGeoJsonFeatureException("Missing required field 'type'");
@@ -119,6 +126,19 @@ public class GeoJsonFileLoader extends TableLoader {
     String featureId = null;
     if (feature.isJsonObject()) {
       JsonObject featureObject = feature.getAsJsonObject();
+
+      // Check for unknown elements in the featureObject
+      for (Map.Entry<String, JsonElement> entry : featureObject.entrySet()) {
+        String key = entry.getKey();
+        if (!GtfsGeoJsonFeature.FEATURE_ID_FIELD_NAME.equals(key)
+            && !GtfsGeoJsonFeature.FEATURE_TYPE_FIELD_NAME.equals(key)
+            && !GtfsGeoJsonFeature.FEATURE_PROPERTIES_FIELD_NAME.equals(key)
+            && !GtfsGeoJsonFeature.GEOMETRY_FIELD_NAME.equals(key)) {
+          noticeContainer.addValidationNotice(
+              new GeoJsonUnknownElementNotice(GtfsGeoJsonFeature.FILENAME, key));
+        }
+      }
+
       // Handle feature id
       if (!featureObject.has(GtfsGeoJsonFeature.FEATURE_ID_FIELD_NAME)) {
         missingRequiredFields.add(
@@ -168,6 +188,15 @@ public class GeoJsonFileLoader extends TableLoader {
                 + GtfsGeoJsonFeature.GEOMETRY_FIELD_NAME);
       } else {
         JsonObject geometry = featureObject.getAsJsonObject(GtfsGeoJsonFeature.GEOMETRY_FIELD_NAME);
+        // Check for unknown elements in the geometry object
+        for (Map.Entry<String, JsonElement> entry : geometry.entrySet()) {
+          String key = entry.getKey();
+          if (!GtfsGeoJsonFeature.GEOMETRY_TYPE_FIELD_NAME.equals(key)
+              && !GtfsGeoJsonFeature.GEOMETRY_COORDINATES_FIELD_NAME.equals(key)) {
+            noticeContainer.addValidationNotice(
+                new GeoJsonUnknownElementNotice(GtfsGeoJsonFeature.FILENAME, key));
+          }
+        }
         // Handle geometry type and coordinates
         if (!geometry.has(GtfsGeoJsonFeature.GEOMETRY_TYPE_FIELD_NAME)) {
           missingRequiredFields.add(
