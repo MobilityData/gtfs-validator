@@ -24,8 +24,13 @@ plugins {
 //    publishing and signing are done in gtfs-validator build.gradle to minimize repetition
 //}
 
+tasks.withType(JavaCompile) {
+    options.compilerArgs += ["-AsummaryMetadataOutputDir=${project.rootDir}/web/client/static"]
+}
+
 dependencies {
     annotationProcessor project(':processor:notices')
+    annotationProcessor project(':processor:summary')
     annotationProcessor project(':processor')
     compileOnly project(':processor')
     implementation project(':model')
@@ -48,4 +53,6 @@ dependencies {
     testImplementation libs.truth
     testImplementation libs.truth.extension
     testImplementation libs.mockito.core
+    testImplementation libs.jackson.databind
+    testImplementation project(':processor:summary')
 }
