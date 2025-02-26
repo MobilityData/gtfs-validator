@@ -1,7 +1,73 @@
 [versions]
 spotless = "7.0.2"
-shadow-jar = '7.1.2'
+shadow-jar = "7.1.2"
+apacheCommonsLang = "3.6"
+autoService = "1.0.1"
+flogger = "0.6"
+floggerBackend = "0.6"
+gson = "2.8.6"
+autoValue = "1.7.4"
+autoValueAnnotations = "1.7.4"
+guava = "31.0.1-jre"
+univocityParsers = "2.9.0"
+commonsCompress = "1.20"
+mockito = "4.5.1"
+junit = "4.13"
+truth = "1.1.3"
+truthExtension = "1.0.1"
+javaxInject = "1"
+httpClient5 = "5.0.3"
+geometry = "2.0.0"
+libphonenumber = "8.12.13"
+classgraph = "4.8.146"
+thymeleaf = "3.0.15.RELEASE"
+locationtech = "1.20.0"
+flexmark = "0.64.8"
+commonsIO = "2.8.0"
+commonsValidator = "1.6"
+jcommander = "1.48"
+javaPoet = "1.13.0"
+apiClient = "1.31.2"
+jetbrainsAnnotations = "20.1.0"
+aspectjrt = "1.9.20"
+aspectjrtweaver = "1.9.20"
+findbugs = "3.0.2"
+jacksonDatabind = "2.14.1"
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
-shadow-jar = { id = 'com.github.johnrengelman.shadow', version.ref = 'shadow-jar' }
+shadow-jar = { id = "com.github.johnrengelman.shadow", version.ref = "shadow-jar" }
+
+[libraries]
+commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "apacheCommonsLang" }
+auto-service = { module = "com.google.auto.service:auto-service", version.ref = "autoService" }
+flogger = { module = "com.google.flogger:flogger", version.ref = "flogger" }
+flogger-system-backend = { module = "com.google.flogger:flogger-system-backend", version.ref = "floggerBackend" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+auto-value = { module = "com.google.auto.value:auto-value", version.ref = "autoValue" }
+auto-value-annotations = { module = "com.google.auto.value:auto-value-annotations", version.ref = "autoValueAnnotations" }
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
+univocity-parsers = { module = "com.univocity:univocity-parsers", version.ref = "univocityParsers" }
+commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commonsCompress" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+junit = { module = "junit:junit", version.ref = "junit" }
+truth = { module = "com.google.truth:truth", version.ref = "truth" }
+truth-extension = { module = "com.google.truth.extensions:truth-java8-extension", version.ref = "truthExtension" }
+javax-inject = { module = "javax.inject:javax.inject", version.ref = "javaxInject" }
+httpclient5 = { module = "org.apache.httpcomponents.client5:httpclient5", version.ref = "httpClient5" }
+geometry = { module = "com.google.geometry:s2-geometry", version.ref = "geometry" }
+libphonenumber = { module = "com.googlecode.libphonenumber:libphonenumber", version.ref = "libphonenumber" }
+classgraph = { module = "io.github.classgraph:classgraph", version.ref = "classgraph" }
+location-tech = { module = "org.locationtech.jts:jts-core", version.ref = "locationtech" }
+thymeleaf = { module = "org.thymeleaf:thymeleaf", version.ref = "thymeleaf" }
+flexmark = { module = "com.vladsch.flexmark:flexmark-all", version.ref = "flexmark" }
+commons-io = { module = "commons-io:commons-io", version.ref = "commonsIO" }
+commons-validator = { module = "commons-validator:commons-validator", version.ref = "commonsValidator" }
+jcommander = { module = "com.beust:jcommander", version.ref = "jcommander" }
+java-poet = { module = "com.squareup:javapoet", version.ref = "javaPoet" }
+api-client = { module = "com.google.api-client:google-api-client", version.ref = "apiClient" }
+jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrainsAnnotations" }
+aspectjrt = { module = "org.aspectj:aspectjrt", version.ref = "aspectjrt" }
+aspectjrt-weaver = { module = "org.aspectj:aspectjweaver", version.ref = "aspectjrtweaver" }
+findbugs = { module = "com.google.code.findbugs:jsr305", version.ref = "findbugs" }
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jacksonDatabind" }
