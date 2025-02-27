@@ -12,8 +12,9 @@ public interface GtfsRiderCategoriesSchema extends GtfsEntity {
   @Required
   String riderCategoryName();
 
-  @Required
-  GtfsRiderCategory isDefaultFareCategory();
+  @RequiredColumn
+  @DefaultValue("0")
+  GtfsRiderFareCategory isDefaultFareCategory();
 
   @FieldType(FieldTypeEnum.URL)
   String eligibilityUrl();
