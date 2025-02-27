@@ -1,12 +1,12 @@
 <script>
   import {marked} from 'marked';
   import {page} from '$app/stores';
-  import _, {fromPairs} from 'lodash';
+  import _ from 'lodash';
 
   import SectionRefLink from './SectionRefLink.svelte';
 
-  const rules = $page.data.rules;
-  const summaryMetadata = $page.data.summaryMetadata;
+  const rules = $page.data.rules || [];
+  const summaryMetadata = $page.data.summaryMetadata || [];
 
   // Group rules by severity level
   $: categories = _.chain(rules)
@@ -18,9 +18,7 @@
   $: deprecatedRules = _.chain(rules)
     .filter(rule => rule.deprecated)
     .groupBy('severityLevel')
-    .toPairs()
     .sortBy(([severityLevel]) => ['ERROR', 'WARNING', 'INFO'].indexOf(severityLevel))
-    .fromPairs()
     .flatMap()
     .value();
 
@@ -162,7 +160,7 @@
               Table of deprecated notices
               <a
                 class="text-xl"
-                href="#deprecated-table"
+                href="#deprecated-rules-table"
                 title="Link to this section"
               >
                 <i class="fa-solid fa-hashtag text-black/30"/>
@@ -190,12 +188,12 @@
                     </td>
                     <td>{rule.severityLevel}</td>
                     <td>
-                      <a href="https://github.com/MobilityData/gtfs-validator/releases/tag/v{rule.deprecationVersion}">
+                      <a href="https://github.com/MobilityData/gtfs-validator/releases/tag/v{rule.deprecationVersion}" target="_blank" rel="noreferrer">
                         {rule.deprecationVersion}
                       </a>
                     </td>
                     <td>
-                      {@html marked.parse(rule.deprecationReason ?? '')}
+                      {@html marked.parse(rule?.deprecationReason ?? '')}
                     </td>
                   </tr>
               {/each}
@@ -229,17 +227,20 @@
             </div>
           </h3>
           <div style="display: {rule.deprecated ? 'inline' : 'none'}">
-            This rule is deprecated from the validator since version <b><a
-            href="https://github.com/MobilityData/gtfs-validator/releases/tag/v{rule.deprecationVersion}"
-            target="_blank"
-          >{rule.deprecationVersion}</a></b>.
-            <span style="display: {rule.replacementNoticeCode ? 'inline':'none'}">
-              It has been replaced by
-              <code><a href="#{rule.replacementNoticeCode}-rule">{rule.replacementNoticeCode}</a></code>.
-            </span>
+            This rule is deprecated from the validator since version <b>
+            <a
+              href="https://github.com/MobilityData/gtfs-validator/releases/tag/v{rule.deprecationVersion}"
+              target="_blank" rel="noreferrer"
+            >
+              {rule.deprecationVersion}
+            </a></b>.
+              {#if (rule.replacementNoticeCode)}
+                It has been replaced by
+                <code><a href="#{rule.replacementNoticeCode}-rule">{rule.replacementNoticeCode}</a></code>.
+              {/if}
             <blockquote>
               <b>Deprecation reason:</b>
-              {@html marked.parse(rule.deprecationReason ?? '')}
+              {@html marked.parse(rule?.deprecationReason ?? '')}
             </blockquote>
           </div>
 
