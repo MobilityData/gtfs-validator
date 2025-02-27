@@ -22,6 +22,30 @@ public @interface GtfsValidationNotice {
   SeverityLevel severity();
 
   /**
+   * Whether the notice is deprecated. Deprecated notices are still supported in the documentation
+   * but are not actively used in validation.
+   */
+  boolean deprecated() default false;
+
+  /**
+   * Reason for the deprecation of the notice. This field is only used if {@link #deprecated()} is
+   * true.
+   */
+  String deprecationReason() default "";
+
+  /**
+   * Version on which the notice was deprecated. This field is only used if {@link #deprecated()} is
+   * true.
+   */
+  String deprecationVersion() default "";
+
+  /**
+   * Replacement notice class for the deprecated notice. This field is only used if {@link
+   * #deprecated()} is true and the notice has a replacement.
+   */
+  Class<?> replacementNotice() default Void.class;
+
+  /**
    * GTFS specification section references. For specific file references, use {@link #files()}
    * instead.
    */

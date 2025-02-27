@@ -1,7 +1,7 @@
 <script>
   import {marked} from 'marked';
   import {page} from '$app/stores';
-  import _ from 'lodash';
+  import _, {fromPairs} from 'lodash';
 
   import SectionRefLink from './SectionRefLink.svelte';
 
@@ -14,6 +14,14 @@
     .toPairs()
     .sortBy(([severityLevel]) => ['ERROR', 'WARNING', 'INFO'].indexOf(severityLevel))
     .fromPairs()
+    .value();
+  $: deprecatedRules = _.chain(rules)
+    .filter(rule => rule.deprecated)
+    .groupBy('severityLevel')
+    .toPairs()
+    .sortBy(([severityLevel]) => ['ERROR', 'WARNING', 'INFO'].indexOf(severityLevel))
+    .fromPairs()
+    .flatMap()
     .value();
 
   /** @param {string} filename */
@@ -125,6 +133,7 @@
               </thead>
               <tbody>
               {#each rules as rule}
+                {#if !rule.deprecated}
                 <tr>
                   <td>
                     <a href="#{rule.code}-rule" id="{rule.code}-table">
@@ -136,12 +145,66 @@
                     {@html marked.parse(rule.description ?? '')}
                   </td>
                 </tr>
+                {/if}
               {/each}
               </tbody>
             </table>
           </div>
         </div>
       {/each}
+
+      <!--{#each Object.entries(categories) as [category, rules]}-->
+        <div id="deprecated-rules-table" class="mt-8">
+          <h2 class="h2 md:flex items-baseline justify-between">
+            <a class="text-base order-last" href="#_top"><i class="fas fa-arrow-up"></i> Top</a>
+
+            <div>
+              Table of deprecated notices
+              <a
+                class="text-xl"
+                href="#deprecated-table"
+                title="Link to this section"
+              >
+                <i class="fa-solid fa-hashtag text-black/30"/>
+              </a>
+            </div>
+          </h2>
+
+          <div class="overflow-x-auto">
+            <table class="w-full table-collapse-responsive sm:block lg:table">
+              <thead>
+              <tr>
+                <th>Notice code</th>
+                <th>Severity</th>
+                <th>Deprecated since</th>
+                <th>Deprecation reason</th>
+              </tr>
+              </thead>
+              <tbody>
+              {#each deprecatedRules as rule}
+                  <tr>
+                    <td>
+                      <a href="#{rule.code}-rule" id="{rule.code}-table">
+                        <code class="break-all">{rule.code}</code>
+                      </a>
+                    </td>
+                    <td>{rule.severityLevel}</td>
+                    <td>
+                      <a href="https://github.com/MobilityData/gtfs-validator/releases/tag/v{rule.deprecationVersion}">
+                        {rule.deprecationVersion}
+                      </a>
+                    </td>
+                    <td>
+                      {@html marked.parse(rule.deprecationReason ?? '')}
+                    </td>
+                  </tr>
+              {/each}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      <!--{/each}-->
+
 
       <h2 class="h2" id="notice-details">Notice details</h2>
 
@@ -154,6 +217,8 @@
 
             <div>
               <span class="break-all">{code}</span>
+              <span class="text-base deprecated-tag"
+                    style="display: {rule.deprecated ? 'inline' : 'none'}">Deprecated</span>
               <a
                 class="text-base"
                 href="#{rule.code}-rule"
@@ -163,6 +228,20 @@
               </a>
             </div>
           </h3>
+          <div style="display: {rule.deprecated ? 'inline' : 'none'}">
+            This rule is deprecated from the validator since version <b><a
+            href="https://github.com/MobilityData/gtfs-validator/releases/tag/v{rule.deprecationVersion}"
+            target="_blank"
+          >{rule.deprecationVersion}</a></b>.
+            <span style="display: {rule.replacementNoticeCode ? 'inline':'none'}">
+              It has been replaced by
+              <code><a href="#{rule.replacementNoticeCode}-rule">{rule.replacementNoticeCode}</a></code>.
+            </span>
+            <blockquote>
+              <b>Deprecation reason:</b>
+              {@html marked.parse(rule.deprecationReason ?? '')}
+            </blockquote>
+          </div>
 
           <blockquote>
             {@html marked.parse(rule.shortSummary ?? '')}
