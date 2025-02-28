@@ -79,6 +79,6 @@ public class CurrencyAmountSchemaTest {
     assertThat(helper.getValidationNotices())
         .containsExactly(
             new InvalidCurrencyAmountNotice(
-                "currency_amount.txt", 2, "ISK", "amount",  new BigDecimal("5.0")));
+                "currency_amount.txt", 2, "ISK", "amount", new BigDecimal("5.0")));
   }
 }

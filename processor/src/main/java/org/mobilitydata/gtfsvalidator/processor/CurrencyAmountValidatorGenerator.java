@@ -97,7 +97,7 @@ public class CurrencyAmountValidatorGenerator {
                   + " amount))",
               InvalidCurrencyAmountNotice.class,
               fileDescriptor.filename(),
-                  amountField.name())
+              amountField.name())
           .endControlFlow()
           .endControlFlow();
     }
