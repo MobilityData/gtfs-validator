@@ -55,6 +55,8 @@ public class FeedMetadata {
           new Pair<>(new FeatureMetadata("Fare Transfers", "Fares"), GtfsFareTransferRule.FILENAME),
           new Pair<>(new FeatureMetadata("Time-Based Fares", "Fares"), GtfsTimeframe.FILENAME),
           new Pair<>(
+              new FeatureMetadata("Rider Categories", "Fares"), GtfsRiderCategories.FILENAME),
+          new Pair<>(
               new FeatureMetadata("Booking Rules", "Flexible Services"), GtfsBookingRules.FILENAME),
           new Pair<>(
               new FeatureMetadata("Fixed-Stops Demand Responsive Transit", "Flexible Services"),
