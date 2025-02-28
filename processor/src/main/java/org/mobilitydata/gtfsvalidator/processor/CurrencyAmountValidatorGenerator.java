@@ -69,34 +69,35 @@ public class CurrencyAmountValidatorGenerator {
             .addParameter(entityClasses.entityImplementationTypeName(), "entity")
             .addParameter(NoticeContainer.class, "noticeContainer");
 
-    for (GtfsFieldDescriptor currencyCodeField : fileDescriptor.fields()) {
-      if (currencyCodeField.currencyFieldReference().isEmpty()) {
+    for (GtfsFieldDescriptor amountField : fileDescriptor.fields()) {
+      if (amountField.currencyFieldReference().isEmpty()) {
         continue;
       }
       GtfsFieldDescriptor currencyField =
-          fileDescriptor.getFieldByName(currencyCodeField.currencyFieldReference().get());
+          fileDescriptor.getFieldByName(amountField.currencyFieldReference().get());
       if (currencyField == null) {
         throw new IllegalArgumentException(
             fileDescriptor.filename()
                 + " "
-                + currencyCodeField.name()
+                + amountField.name()
                 + ": unknown @CurrencyAmount(currencyField=\""
-                + currencyCodeField.currencyFieldReference().get()
+                + amountField.currencyFieldReference().get()
                 + "\") reference");
       }
       validateMethod
           .beginControlFlow(
               "if (entity.$L() && entity.$L())",
-              FieldNameConverter.hasMethodName(currencyCodeField.name()),
+              FieldNameConverter.hasMethodName(amountField.name()),
               FieldNameConverter.hasMethodName(currencyField.name()))
-          .addStatement("$T amount = entity.$L()", BigDecimal.class, currencyCodeField.name())
+          .addStatement("$T amount = entity.$L()", BigDecimal.class, amountField.name())
           .addStatement("$T currency = entity.$L()", Currency.class, currencyField.name())
           .beginControlFlow("if (amount.scale() != currency.getDefaultFractionDigits())")
           .addStatement(
-              "noticeContainer.addValidationNotice(new $T(\"$L\", entity.csvRowNumber(), currency.getCurrencyCode(),"
+              "noticeContainer.addValidationNotice(new $T(\"$L\", entity.csvRowNumber(), currency.getCurrencyCode(),  \"$L\", "
                   + " amount))",
               InvalidCurrencyAmountNotice.class,
-              fileDescriptor.filename())
+              fileDescriptor.filename(),
+                  amountField.name())
           .endControlFlow()
           .endControlFlow();
     }

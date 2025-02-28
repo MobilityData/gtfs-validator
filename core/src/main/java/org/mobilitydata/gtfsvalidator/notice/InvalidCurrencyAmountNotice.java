@@ -27,14 +27,18 @@ public class InvalidCurrencyAmountNotice extends ValidationNotice {
   /** Faulty record's currency code. */
   private final String currencyCode;
 
-  /** Faulty currency amount value. */
-  private final String amount;
+  /** Faulty record's field name. */
+  private final String fieldName;
+
+  /** Faulty currency field amount value. */
+  private final String fieldValue;
 
   public InvalidCurrencyAmountNotice(
-      String filename, int csvRowNumber, String currencyCode, BigDecimal amount) {
+      String filename, int csvRowNumber, String currencyCode, String fieldName, BigDecimal amount) {
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
     this.currencyCode = currencyCode;
-    this.amount = amount.toPlainString();
+    this.fieldName = fieldName;
+    this.fieldValue = amount.toPlainString();
   }
 }
