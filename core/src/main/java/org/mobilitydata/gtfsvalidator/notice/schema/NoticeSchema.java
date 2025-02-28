@@ -62,41 +62,6 @@ public class NoticeSchema {
    */
   @Nullable private String replacementNoticeCode;
 
-  public boolean isDeprecated() {
-    return deprecated;
-  }
-
-  public void setDeprecated(boolean deprecated) {
-    this.deprecated = deprecated;
-  }
-
-  @Nullable
-  public String getDeprecationReason() {
-    return deprecationReason;
-  }
-
-  public void setDeprecationReason(@Nullable String deprecationReason) {
-    this.deprecationReason = deprecationReason;
-  }
-
-  @Nullable
-  public String getDeprecationVersion() {
-    return deprecationVersion;
-  }
-
-  public void setDeprecationVersion(@Nullable String deprecationVersion) {
-    this.deprecationVersion = deprecationVersion;
-  }
-
-  @Nullable
-  public String getReplacementNoticeCode() {
-    return replacementNoticeCode;
-  }
-
-  public void setReplacementNoticeCode(@Nullable String replacementNoticeCode) {
-    this.replacementNoticeCode = replacementNoticeCode;
-  }
-
   public NoticeSchema(String code, SeverityLevel severityLevel) {
     this.code = code;
     this.severityLevel = severityLevel;
@@ -141,5 +106,40 @@ public class NoticeSchema {
 
   public Map<String, FieldSchema> getFields() {
     return properties;
+  }
+
+  public boolean isDeprecated() {
+    return deprecated;
+  }
+
+  public void setDeprecated(boolean deprecated) {
+    this.deprecated = deprecated;
+  }
+
+  @Nullable
+  public String getDeprecationReason() {
+    return deprecationReason;
+  }
+
+  public void setDeprecationReason(@Nullable String deprecationReason) {
+    this.deprecationReason = deprecationReason;
+  }
+
+  @Nullable
+  public String getDeprecationVersion() {
+    return deprecationVersion;
+  }
+
+  public void setDeprecationVersion(@Nullable String deprecationVersion) {
+    this.deprecationVersion = deprecationVersion;
+  }
+
+  @Nullable
+  public String getReplacementNoticeCode() {
+    return replacementNoticeCode;
+  }
+
+  public void setReplacementNoticeCode(@Nullable String replacementNoticeCode) {
+    this.replacementNoticeCode = replacementNoticeCode;
   }
 }
